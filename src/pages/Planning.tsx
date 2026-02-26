@@ -405,9 +405,6 @@ function SessionDetail({
                   {agentsByRole(slot.role).map((a: any) => (
                     <SelectItem key={a.id} value={a.id}>@{a.name}</SelectItem>
                   ))}
-                  {agentsByRole(slot.role).length === 0 && (
-                    <SelectItem value="none" disabled>Sem agentes {slot.role}</SelectItem>
-                  )}
                 </SelectContent>
               </Select>
             </div>
