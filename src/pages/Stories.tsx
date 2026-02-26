@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { Plus, Trash2, Edit, ChevronDown, ChevronRight, BookOpen } from "lucide-react";
+import { SubtaskList } from "@/components/SubtaskList";
 import { motion, AnimatePresence } from "framer-motion";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -318,15 +319,18 @@ export default function Stories() {
                               </div>
                               <div className="space-y-2">
                                 {phases.map((phase: any) => (
-                                  <div key={phase.id} className="flex items-center gap-3 rounded-lg border border-border/50 p-3">
-                                    <div className={`h-2 w-2 rounded-full ${
-                                      phase.status === "completed" ? "bg-success" :
-                                      phase.status === "in_progress" ? "bg-info" : "bg-muted-foreground/30"
-                                    }`} />
-                                    <span className="text-sm flex-1">{phase.name}</span>
-                                    <Badge variant="outline" className="text-xs">
-                                      {phase.story_subtasks?.length ?? 0} subtasks
-                                    </Badge>
+                                  <div key={phase.id} className="space-y-2 rounded-lg border border-border/50 p-3">
+                                    <div className="flex items-center gap-3">
+                                      <div className={`h-2 w-2 rounded-full shrink-0 ${
+                                        phase.status === "completed" ? "bg-success" :
+                                        phase.status === "in_progress" ? "bg-info" : "bg-muted-foreground/30"
+                                      }`} />
+                                      <span className="text-sm flex-1 font-medium">{phase.name}</span>
+                                      <Badge variant="outline" className="text-xs">
+                                        {(phase.story_subtasks || []).filter((s: any) => s.status === "completed").length}/{(phase.story_subtasks || []).length}
+                                      </Badge>
+                                    </div>
+                                    <SubtaskList phaseId={phase.id} subtasks={phase.story_subtasks || []} />
                                   </div>
                                 ))}
                               </div>
