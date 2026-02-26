@@ -324,6 +324,7 @@ function SessionDetail({
   const { toast } = useToast();
   const [generatingPrd, setGeneratingPrd] = useState(false);
   const [generatingArch, setGeneratingArch] = useState(false);
+  const [generatingStories, setGeneratingStories] = useState(false);
   const stepIdx = getStepIndex(session.status);
   const currentStep = PIPELINE_STEPS[stepIdx];
   const isCompleted = session.status === "completed";
@@ -489,12 +490,49 @@ function SessionDetail({
 
       {isCompleted && (
         <Card className="border-success/30 bg-success/5">
-          <CardContent className="flex items-center gap-3 p-4">
-            <CheckCircle2 className="h-5 w-5 text-success" />
-            <div>
-              <p className="text-sm font-medium text-success">Planejamento Concluído</p>
-              <p className="text-xs text-muted-foreground">Crie stories a partir deste planejamento na página de Stories</p>
+          <CardContent className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="h-5 w-5 text-success" />
+              <div>
+                <p className="text-sm font-medium text-success">Planejamento Concluído</p>
+                <p className="text-xs text-muted-foreground">Gere stories automaticamente a partir deste planejamento</p>
+              </div>
             </div>
+            <Button
+              size="sm"
+              className="gap-1.5"
+              onClick={async () => {
+                setGeneratingStories(true);
+                try {
+                  const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-stories`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+                    },
+                    body: JSON.stringify({
+                      title: session.title,
+                      prdContent: session.prd_content,
+                      architectureContent: session.architecture_content,
+                    }),
+                  });
+                  if (!resp.ok) {
+                    const err = await resp.json().catch(() => ({ error: "Erro" }));
+                    throw new Error(err.error);
+                  }
+                  const data = await resp.json();
+                  toast({ title: `${data.stories.length} stories criadas com sucesso!` });
+                } catch (e: any) {
+                  toast({ variant: "destructive", title: "Erro ao gerar stories", description: e.message });
+                } finally {
+                  setGeneratingStories(false);
+                }
+              }}
+              disabled={generatingStories}
+            >
+              {generatingStories ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+              {generatingStories ? "Gerando Stories..." : "Gerar Stories com IA"}
+            </Button>
           </CardContent>
         </Card>
       )}
