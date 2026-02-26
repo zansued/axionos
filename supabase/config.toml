@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.generate-stories]
 verify_jwt = false
+
+[functions.generate-agents]
+verify_jwt = false
