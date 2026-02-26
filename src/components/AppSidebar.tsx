@@ -1,4 +1,4 @@
-import { Bot, Users, BookOpen, LayoutDashboard, LogOut, ChevronLeft, Columns3, Shield } from "lucide-react";
+import { Bot, Users, BookOpen, LayoutDashboard, LogOut, ChevronLeft, Columns3, Shield, Radio } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -22,6 +22,7 @@ const navItems = [
   { title: "Stories", url: "/stories", icon: BookOpen },
   { title: "Kanban", url: "/kanban", icon: Columns3 },
   { title: "Auditoria", url: "/audit", icon: Shield },
+  { title: "Observabilidade", url: "/observability", icon: Radio },
 ];
 
 export function AppSidebar() {
