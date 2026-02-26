@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Agents from "./pages/Agents";
 import Stories from "./pages/Stories";
+import Kanban from "./pages/Kanban";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
             <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
+            <Route path="/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
