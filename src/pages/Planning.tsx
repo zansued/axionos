@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,8 +13,64 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, FileText, Cpu, BookOpen, Users, ArrowRight, CheckCircle2, Circle, Clock, Trash2 } from "lucide-react";
+import { Plus, FileText, Cpu, BookOpen, Users, ArrowRight, CheckCircle2, Circle, Clock, Trash2, Sparkles, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+const GENERATE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-planning-content`;
+
+async function streamAIContent({
+  title, type, existingPrd, onDelta, onDone, onError,
+}: {
+  title: string; type: "prd" | "architecture"; existingPrd?: string;
+  onDelta: (text: string) => void; onDone: () => void; onError: (err: string) => void;
+}) {
+  const resp = await fetch(GENERATE_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+    },
+    body: JSON.stringify({ title, type, existingPrd }),
+  });
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({ error: "Erro desconhecido" }));
+    onError(err.error || `Erro ${resp.status}`);
+    return;
+  }
+
+  if (!resp.body) { onError("Sem resposta do servidor"); return; }
+
+  const reader = resp.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+
+    let newlineIndex: number;
+    while ((newlineIndex = buffer.indexOf("\n")) !== -1) {
+      let line = buffer.slice(0, newlineIndex);
+      buffer = buffer.slice(newlineIndex + 1);
+      if (line.endsWith("\r")) line = line.slice(0, -1);
+      if (line.startsWith(":") || line.trim() === "") continue;
+      if (!line.startsWith("data: ")) continue;
+      const jsonStr = line.slice(6).trim();
+      if (jsonStr === "[DONE]") { onDone(); return; }
+      try {
+        const parsed = JSON.parse(jsonStr);
+        const content = parsed.choices?.[0]?.delta?.content;
+        if (content) onDelta(content);
+      } catch {
+        buffer = line + "\n" + buffer;
+        break;
+      }
+    }
+  }
+  onDone();
+}
 
 const PIPELINE_STEPS = [
   { key: "prd_draft", label: "PRD", sublabel: "Analyst", icon: FileText, agentRole: "analyst", color: "text-info", bg: "bg-info/10", border: "border-info/30" },
@@ -265,9 +321,37 @@ function SessionDetail({
   onGoBack: () => void;
   onDelete: () => void;
 }) {
+  const { toast } = useToast();
+  const [generatingPrd, setGeneratingPrd] = useState(false);
+  const [generatingArch, setGeneratingArch] = useState(false);
   const stepIdx = getStepIndex(session.status);
   const currentStep = PIPELINE_STEPS[stepIdx];
   const isCompleted = session.status === "completed";
+
+  const handleGeneratePrd = useCallback(() => {
+    setGeneratingPrd(true);
+    let content = "";
+    streamAIContent({
+      title: session.title,
+      type: "prd",
+      onDelta: (text) => { content += text; onUpdate({ prd_content: content }); },
+      onDone: () => { setGeneratingPrd(false); toast({ title: "PRD gerado com sucesso!" }); },
+      onError: (err) => { setGeneratingPrd(false); toast({ variant: "destructive", title: "Erro ao gerar PRD", description: err }); },
+    });
+  }, [session.title, onUpdate, toast]);
+
+  const handleGenerateArch = useCallback(() => {
+    setGeneratingArch(true);
+    let content = "";
+    streamAIContent({
+      title: session.title,
+      type: "architecture",
+      existingPrd: session.prd_content,
+      onDelta: (text) => { content += text; onUpdate({ architecture_content: content }); },
+      onDone: () => { setGeneratingArch(false); toast({ title: "Arquitetura gerada com sucesso!" }); },
+      onError: (err) => { setGeneratingArch(false); toast({ variant: "destructive", title: "Erro ao gerar arquitetura", description: err }); },
+    });
+  }, [session.title, session.prd_content, onUpdate, toast]);
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={session.id} className="space-y-5">
@@ -335,10 +419,18 @@ function SessionDetail({
         {/* PRD */}
         <Card className={`border-border/50 ${stepIdx === 0 ? "ring-1 ring-info/30" : ""}`}>
           <CardHeader className="pb-2">
-            <CardTitle className="font-display text-sm flex items-center gap-2">
-              <FileText className="h-4 w-4 text-info" /> PRD
-              {stepIdx > 0 && <CheckCircle2 className="h-3.5 w-3.5 text-success" />}
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="font-display text-sm flex items-center gap-2">
+                <FileText className="h-4 w-4 text-info" /> PRD
+                {stepIdx > 0 && <CheckCircle2 className="h-3.5 w-3.5 text-success" />}
+              </CardTitle>
+              {!isCompleted && (
+                <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5" onClick={handleGeneratePrd} disabled={generatingPrd}>
+                  {generatingPrd ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+                  {generatingPrd ? "Gerando..." : "Gerar com IA"}
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             <Textarea
@@ -354,10 +446,18 @@ function SessionDetail({
         {/* Architecture */}
         <Card className={`border-border/50 ${stepIdx === 1 ? "ring-1 ring-accent/30" : ""}`}>
           <CardHeader className="pb-2">
-            <CardTitle className="font-display text-sm flex items-center gap-2">
-              <Cpu className="h-4 w-4 text-accent" /> Arquitetura
-              {stepIdx > 1 && <CheckCircle2 className="h-3.5 w-3.5 text-success" />}
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="font-display text-sm flex items-center gap-2">
+                <Cpu className="h-4 w-4 text-accent" /> Arquitetura
+                {stepIdx > 1 && <CheckCircle2 className="h-3.5 w-3.5 text-success" />}
+              </CardTitle>
+              {!isCompleted && stepIdx >= 1 && (
+                <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5" onClick={handleGenerateArch} disabled={generatingArch}>
+                  {generatingArch ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+                  {generatingArch ? "Gerando..." : "Gerar com IA"}
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             <Textarea
