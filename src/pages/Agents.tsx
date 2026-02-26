@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Trash2, Edit, Shield, Bot } from "lucide-react";
+import { Plus, Trash2, Edit, Shield, Bot, Sparkles, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ROLES = [
@@ -43,6 +43,9 @@ export default function Agents() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [aiOpen, setAiOpen] = useState(false);
+  const [aiDescription, setAiDescription] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
   const [editAgent, setEditAgent] = useState<any>(null);
   const [form, setForm] = useState({ name: "", role: "dev", description: "", authorities: "" });
 
@@ -154,12 +157,74 @@ export default function Agents() {
             <h1 className="font-display text-3xl font-bold tracking-tight">Agentes</h1>
             <p className="text-muted-foreground mt-1">Gerencie os agentes do seu sistema AIOS</p>
           </div>
-          <Dialog open={open} onOpenChange={(v) => { if (!v) resetForm(); setOpen(v); }}>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" /> Novo Agente
-              </Button>
-            </DialogTrigger>
+          <div className="flex gap-2">
+            <Dialog open={aiOpen} onOpenChange={setAiOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="gap-2">
+                  <Sparkles className="h-4 w-4" /> Criar com IA
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="font-display flex items-center gap-2">
+                    <Sparkles className="h-5 w-5" /> Gerar Time de Agentes com IA
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Descreva seu projeto</Label>
+                    <Textarea
+                      value={aiDescription}
+                      onChange={(e) => setAiDescription(e.target.value)}
+                      placeholder="Ex: Sistema de e-commerce com pagamentos, gestão de estoque e painel admin..."
+                      className="min-h-[100px]"
+                    />
+                  </div>
+                  <Button
+                    className="w-full gap-2"
+                    onClick={async () => {
+                      if (!aiDescription.trim()) return;
+                      setAiLoading(true);
+                      try {
+                        const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-agents`, {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+                          },
+                          body: JSON.stringify({ projectDescription: aiDescription.trim() }),
+                        });
+                        if (!resp.ok) {
+                          const err = await resp.json().catch(() => ({ error: "Erro" }));
+                          throw new Error(err.error);
+                        }
+                        const data = await resp.json();
+                        queryClient.invalidateQueries({ queryKey: ["agents"] });
+                        queryClient.invalidateQueries({ queryKey: ["agent-count"] });
+                        queryClient.invalidateQueries({ queryKey: ["active-agents"] });
+                        toast({ title: `${data.agents.length} agentes criados com sucesso!` });
+                        setAiDescription("");
+                        setAiOpen(false);
+                      } catch (e: any) {
+                        toast({ variant: "destructive", title: "Erro ao gerar agentes", description: e.message });
+                      } finally {
+                        setAiLoading(false);
+                      }
+                    }}
+                    disabled={!aiDescription.trim() || aiLoading}
+                  >
+                    {aiLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                    {aiLoading ? "Gerando time..." : "Gerar Agentes"}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <Dialog open={open} onOpenChange={(v) => { if (!v) resetForm(); setOpen(v); }}>
+              <DialogTrigger asChild>
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" /> Novo Agente
+                </Button>
+              </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className="font-display">
@@ -197,6 +262,7 @@ export default function Agents() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         {isLoading ? (
