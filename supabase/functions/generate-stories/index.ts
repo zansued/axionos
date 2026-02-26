@@ -36,10 +36,10 @@ serve(async (req) => {
     const userId = claimsData.claims.sub;
 
     const { title, prdContent, architectureContent } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
+    if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY is not configured");
 
-    const systemPrompt = `Você é um Product Manager sênior. Com base no PRD e na Arquitetura fornecidos, gere user stories bem definidas. Cada story deve ter título, descrição, prioridade e fases com subtasks. Use a função generate_stories para retornar os dados estruturados.`;
+    const systemPrompt = `Você é um Product Manager sênior. Com base no PRD e na Arquitetura fornecidos, gere user stories bem definidas. Cada story deve ter título, descrição, prioridade e fases com subtasks. Retorne APENAS um JSON válido no formato especificado, sem markdown ou texto extra.`;
 
     const userPrompt = `Projeto: ${title}
 
@@ -49,91 +49,39 @@ ${prdContent || "Não disponível"}
 Arquitetura:
 ${architectureContent || "Não disponível"}
 
-Gere de 3 a 8 user stories cobrindo os principais requisitos do PRD. Cada story deve ter fases (ex: "Desenvolvimento", "Testes", "Deploy") e subtasks dentro de cada fase.`;
+Gere de 3 a 8 user stories cobrindo os principais requisitos do PRD. Retorne um JSON com esta estrutura exata:
+{"stories": [{"title": "string", "description": "string", "priority": "low|medium|high|critical", "phases": [{"name": "string", "subtasks": ["string"]}]}]}`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "deepseek-chat",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        tools: [{
-          type: "function",
-          function: {
-            name: "generate_stories",
-            description: "Generate structured user stories with phases and subtasks",
-            parameters: {
-              type: "object",
-              properties: {
-                stories: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      title: { type: "string", description: "Story title" },
-                      description: { type: "string", description: "Story description" },
-                      priority: { type: "string", enum: ["low", "medium", "high", "critical"] },
-                      phases: {
-                        type: "array",
-                        items: {
-                          type: "object",
-                          properties: {
-                            name: { type: "string" },
-                            subtasks: {
-                              type: "array",
-                              items: { type: "string" },
-                            },
-                          },
-                          required: ["name", "subtasks"],
-                          additionalProperties: false,
-                        },
-                      },
-                    },
-                    required: ["title", "description", "priority", "phases"],
-                    additionalProperties: false,
-                  },
-                },
-              },
-              required: ["stories"],
-              additionalProperties: false,
-            },
-          },
-        }],
-        tool_choice: { type: "function", function: { name: "generate_stories" } },
+        response_format: { type: "json_object" },
       }),
     });
 
     if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit excedido." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
       const t = await response.text();
-      console.error("AI error:", response.status, t);
-      return new Response(JSON.stringify({ error: "Erro no gateway de IA" }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      console.error("DeepSeek error:", response.status, t);
+      return new Response(JSON.stringify({ error: `Erro na API DeepSeek (${response.status})` }), {
+        status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const aiData = await response.json();
-    const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall) throw new Error("AI did not return structured data");
+    const content = aiData.choices?.[0]?.message?.content;
+    if (!content) throw new Error("AI did not return data");
 
-    const { stories } = JSON.parse(toolCall.function.arguments);
+    const { stories } = JSON.parse(content);
 
-    // Insert stories, phases, and subtasks
     const createdStories = [];
     for (const story of stories) {
       const { data: storyData, error: storyError } = await supabase

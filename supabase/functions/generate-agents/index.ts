@@ -36,10 +36,10 @@ serve(async (req) => {
     const userId = claimsData.claims.sub;
 
     const { projectDescription } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
+    if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY is not configured");
 
-    const systemPrompt = `Você é um especialista em montagem de equipes de IA para o framework AIOS. Com base na descrição do projeto, sugira os agentes ideais para compor o time. Cada agente deve ter um nome curto (estilo @agent-name), um papel (role), uma descrição do que faz e autoridades exclusivas quando aplicável. Use a função generate_agents para retornar os dados.`;
+    const systemPrompt = `Você é um especialista em montagem de equipes de IA para o framework AIOS. Com base na descrição do projeto, sugira os agentes ideais para compor o time. Retorne APENAS um JSON válido no formato especificado, sem markdown ou texto extra.`;
 
     const userPrompt = `Projeto: ${projectDescription}
 
@@ -56,75 +56,38 @@ Gere um time de 4 a 8 agentes IA otimizado para este projeto. Os papéis dispon�
 - aios_master: Controlador master do AIOS
 - aios_orchestrator: Orquestrador de agentes
 
-Escolha os papéis mais relevantes para o projeto descrito. Dê nomes criativos e descritivos aos agentes.`;
+Retorne um JSON com esta estrutura exata:
+{"agents": [{"name": "string (estilo agent-name)", "role": "string (um dos papéis acima)", "description": "string", "exclusive_authorities": ["string"]}]}`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "deepseek-chat",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        tools: [{
-          type: "function",
-          function: {
-            name: "generate_agents",
-            description: "Generate a team of AI agents for the project",
-            parameters: {
-              type: "object",
-              properties: {
-                agents: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      name: { type: "string", description: "Agent name (e.g. atlas-analyst)" },
-                      role: { type: "string", enum: ["analyst", "pm", "architect", "ux_expert", "sm", "po", "dev", "devops", "qa", "aios_master", "aios_orchestrator"] },
-                      description: { type: "string", description: "What this agent does" },
-                      exclusive_authorities: { type: "array", items: { type: "string" }, description: "Exclusive permissions" },
-                    },
-                    required: ["name", "role", "description", "exclusive_authorities"],
-                    additionalProperties: false,
-                  },
-                },
-              },
-              required: ["agents"],
-              additionalProperties: false,
-            },
-          },
-        }],
-        tool_choice: { type: "function", function: { name: "generate_agents" } },
+        response_format: { type: "json_object" },
       }),
     });
 
     if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit excedido." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
       const t = await response.text();
-      console.error("AI error:", response.status, t);
-      return new Response(JSON.stringify({ error: "Erro no gateway de IA" }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      console.error("DeepSeek error:", response.status, t);
+      return new Response(JSON.stringify({ error: `Erro na API DeepSeek (${response.status})` }), {
+        status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const aiData = await response.json();
-    const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall) throw new Error("AI did not return structured data");
+    const content = aiData.choices?.[0]?.message?.content;
+    if (!content) throw new Error("AI did not return data");
 
-    const { agents } = JSON.parse(toolCall.function.arguments);
+    const { agents } = JSON.parse(content);
 
     const createdAgents = [];
     for (const agent of agents) {
