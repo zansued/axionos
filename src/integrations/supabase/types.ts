@@ -238,7 +238,18 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      agent_role: "devops" | "qa" | "architect" | "sm" | "po" | "dev"
+      agent_role:
+        | "devops"
+        | "qa"
+        | "architect"
+        | "sm"
+        | "po"
+        | "dev"
+        | "analyst"
+        | "pm"
+        | "ux_expert"
+        | "aios_master"
+        | "aios_orchestrator"
       agent_status: "active" | "inactive"
       phase_status: "pending" | "in_progress" | "completed"
       story_priority: "low" | "medium" | "high" | "critical"
@@ -371,7 +382,19 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      agent_role: ["devops", "qa", "architect", "sm", "po", "dev"],
+      agent_role: [
+        "devops",
+        "qa",
+        "architect",
+        "sm",
+        "po",
+        "dev",
+        "analyst",
+        "pm",
+        "ux_expert",
+        "aios_master",
+        "aios_orchestrator",
+      ],
       agent_status: ["active", "inactive"],
       phase_status: ["pending", "in_progress", "completed"],
       story_priority: ["low", "medium", "high", "critical"],

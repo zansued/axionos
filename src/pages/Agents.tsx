@@ -17,12 +17,17 @@ import { Plus, Trash2, Edit, Shield, Bot } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ROLES = [
+  { value: "aios_master", label: "AIOS Master", color: "bg-destructive/20 text-destructive" },
+  { value: "aios_orchestrator", label: "AIOS Orchestrator", color: "bg-primary/20 text-primary" },
+  { value: "analyst", label: "Analyst", color: "bg-info/20 text-info" },
+  { value: "pm", label: "Product Manager", color: "bg-accent/20 text-accent" },
+  { value: "architect", label: "Architect", color: "bg-warning/20 text-warning" },
+  { value: "ux_expert", label: "UX Expert", color: "bg-success/20 text-success" },
+  { value: "sm", label: "Scrum Master", color: "bg-muted-foreground/20 text-muted-foreground" },
+  { value: "po", label: "Product Owner", color: "bg-primary/20 text-primary" },
+  { value: "dev", label: "Developer", color: "bg-accent/20 text-accent" },
   { value: "devops", label: "DevOps", color: "bg-info/20 text-info" },
   { value: "qa", label: "QA", color: "bg-warning/20 text-warning" },
-  { value: "architect", label: "Architect", color: "bg-accent/20 text-accent" },
-  { value: "sm", label: "Scrum Master", color: "bg-success/20 text-success" },
-  { value: "po", label: "Product Owner", color: "bg-primary/20 text-primary" },
-  { value: "dev", label: "Developer", color: "bg-muted-foreground/20 text-muted-foreground" },
 ];
 
 function getRoleStyle(role: string) {
