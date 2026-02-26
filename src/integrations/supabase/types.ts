@@ -92,6 +92,83 @@ export type Database = {
         }
         Relationships: []
       }
+      planning_sessions: {
+        Row: {
+          architecture_content: string | null
+          assigned_analyst_id: string | null
+          assigned_architect_id: string | null
+          assigned_pm_id: string | null
+          assigned_sm_id: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          prd_content: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          architecture_content?: string | null
+          assigned_analyst_id?: string | null
+          assigned_architect_id?: string | null
+          assigned_pm_id?: string | null
+          assigned_sm_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          prd_content?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          architecture_content?: string | null
+          assigned_analyst_id?: string | null
+          assigned_architect_id?: string | null
+          assigned_pm_id?: string | null
+          assigned_sm_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          prd_content?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "planning_sessions_assigned_analyst_id_fkey"
+            columns: ["assigned_analyst_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planning_sessions_assigned_architect_id_fkey"
+            columns: ["assigned_architect_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planning_sessions_assigned_pm_id_fkey"
+            columns: ["assigned_pm_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planning_sessions_assigned_sm_id_fkey"
+            columns: ["assigned_sm_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null

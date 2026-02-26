@@ -1,4 +1,4 @@
-import { Bot, Users, BookOpen, LayoutDashboard, LogOut, ChevronLeft, Columns3, Shield, Radio } from "lucide-react";
+import { Bot, Users, BookOpen, LayoutDashboard, LogOut, ChevronLeft, Columns3, Shield, Radio, Map } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 
 const navItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
+  { title: "Planejamento", url: "/planning", icon: Map },
   { title: "Agentes", url: "/agents", icon: Users },
   { title: "Stories", url: "/stories", icon: BookOpen },
   { title: "Kanban", url: "/kanban", icon: Columns3 },
