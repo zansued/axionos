@@ -229,10 +229,10 @@ export default function Stories() {
                 </div>
                 <div className="space-y-2">
                   <Label>Agente Responsável</Label>
-                  <Select value={form.assigned_agent_id} onValueChange={(v) => setForm({ ...form, assigned_agent_id: v })}>
+                  <Select value={form.assigned_agent_id || "none"} onValueChange={(v) => setForm({ ...form, assigned_agent_id: v === "none" ? "" : v })}>
                     <SelectTrigger><SelectValue placeholder="Selecione um agente..." /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Nenhum</SelectItem>
+                      <SelectItem value="none">Nenhum</SelectItem>
                       {agents.map((a: any) => (
                         <SelectItem key={a.id} value={a.id}>@{a.name} ({a.role})</SelectItem>
                       ))}
