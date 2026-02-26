@@ -1,4 +1,4 @@
-import { Bot, Users, BookOpen, LayoutDashboard, LogOut, ChevronLeft } from "lucide-react";
+import { Bot, Users, BookOpen, LayoutDashboard, LogOut, ChevronLeft, Columns3 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -20,6 +20,7 @@ const navItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Agentes", url: "/agents", icon: Users },
   { title: "Stories", url: "/stories", icon: BookOpen },
+  { title: "Kanban", url: "/kanban", icon: Columns3 },
 ];
 
 export function AppSidebar() {
