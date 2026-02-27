@@ -495,14 +495,24 @@ function SessionDetail({
         </CardContent>
       </Card>
 
-      {isCompleted && (
-        <Card className="border-success/30 bg-success/5">
+      {stepIdx >= 2 && (
+        <Card className={`${isCompleted ? "border-success/30 bg-success/5" : "border-warning/30 bg-warning/5"}`}>
           <CardContent className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="h-5 w-5 text-success" />
+              {isCompleted ? (
+                <CheckCircle2 className="h-5 w-5 text-success" />
+              ) : (
+                <BookOpen className="h-5 w-5 text-warning" />
+              )}
               <div>
-                <p className="text-sm font-medium text-success">Planejamento Concluído</p>
-                <p className="text-xs text-muted-foreground">Gere stories automaticamente a partir deste planejamento</p>
+                <p className={`text-sm font-medium ${isCompleted ? "text-success" : "text-warning"}`}>
+                  {isCompleted ? "Planejamento Concluído" : "Geração de Stories"}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {isCompleted
+                    ? "Stories geradas a partir deste planejamento"
+                    : "Gere user stories automaticamente a partir do PRD e Arquitetura"}
+                </p>
               </div>
             </div>
             <Button
@@ -529,6 +539,7 @@ function SessionDetail({
                   }
                   const data = await resp.json();
                   toast({ title: `${data.stories.length} stories criadas com sucesso!` });
+                  if (!isCompleted) onAdvance();
                 } catch (e: any) {
                   toast({ variant: "destructive", title: "Erro ao gerar stories", description: e.message });
                 } finally {
