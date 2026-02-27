@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
-import { Plus, Trash2, Edit, ChevronDown, ChevronRight, BookOpen } from "lucide-react";
+import { Plus, Trash2, Edit, ChevronDown, ChevronRight, BookOpen, Wand2, Loader2, Bot } from "lucide-react";
 import { SubtaskList } from "@/components/SubtaskList";
 import { motion, AnimatePresence } from "framer-motion";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -39,6 +39,8 @@ export default function Stories() {
   const [open, setOpen] = useState(false);
   const [editStory, setEditStory] = useState<any>(null);
   const [expandedStory, setExpandedStory] = useState<string | null>(null);
+  const [organizing, setOrganizing] = useState(false);
+  const [lastOrganization, setLastOrganization] = useState<any[] | null>(null);
   const [form, setForm] = useState({ title: "", description: "", status: "todo", priority: "medium", assigned_agent_id: "" });
 
   const { data: stories = [], isLoading } = useQuery({
@@ -152,6 +154,33 @@ export default function Stories() {
     setOpen(false);
   };
 
+  const handleOrganize = useCallback(async () => {
+    setOrganizing(true);
+    setLastOrganization(null);
+    try {
+      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/organize-stories`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+        },
+        body: JSON.stringify({}),
+      });
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({ error: "Erro" }));
+        throw new Error(err.error);
+      }
+      const data = await resp.json();
+      setLastOrganization(data.assignments);
+      queryClient.invalidateQueries({ queryKey: ["stories"] });
+      toast({ title: `IA organizou ${data.assignments.length} stories com sucesso!` });
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Erro ao organizar", description: e.message });
+    } finally {
+      setOrganizing(false);
+    }
+  }, [queryClient, toast]);
+
   const openEdit = (story: any) => {
     setEditStory(story);
     setForm({
@@ -187,10 +216,20 @@ export default function Stories() {
             <h1 className="font-display text-3xl font-bold tracking-tight">Stories</h1>
             <p className="text-muted-foreground mt-1">Gerencie stories e épicos do sistema</p>
           </div>
-          <Dialog open={open} onOpenChange={(v) => { if (!v) resetForm(); setOpen(v); }}>
-            <DialogTrigger asChild>
-              <Button className="gap-2"><Plus className="h-4 w-4" /> Nova Story</Button>
-            </DialogTrigger>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={handleOrganize}
+              disabled={organizing || stories.length === 0}
+            >
+              {organizing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+              Organizar com IA
+            </Button>
+            <Dialog open={open} onOpenChange={(v) => { if (!v) resetForm(); setOpen(v); }}>
+              <DialogTrigger asChild>
+                <Button className="gap-2"><Plus className="h-4 w-4" /> Nova Story</Button>
+              </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className="font-display">{editStory ? "Editar Story" : "Nova Story"}</DialogTitle>
@@ -246,7 +285,33 @@ export default function Stories() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
+
+        {/* AI Organization Results */}
+        {lastOrganization && lastOrganization.length > 0 && (
+          <Card className="border-primary/30 bg-primary/5">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Wand2 className="h-4 w-4 text-primary" />
+                <span className="text-sm font-semibold font-display">Organização da IA</span>
+                <Button variant="ghost" size="sm" className="ml-auto h-6 text-xs" onClick={() => setLastOrganization(null)}>Fechar</Button>
+              </div>
+              <div className="space-y-1.5">
+                {lastOrganization.map((a: any, i: number) => (
+                  <div key={i} className="flex items-center gap-2 text-xs">
+                    <Bot className="h-3 w-3 text-primary shrink-0" />
+                    <span className="font-medium">@{a.agent_name}</span>
+                    <Badge variant="outline" className="text-[10px]">{a.agent_role}</Badge>
+                    <span className="text-muted-foreground">→</span>
+                    <span className="truncate">{a.story_title}</span>
+                    <span className="text-muted-foreground/60 hidden sm:inline ml-1">— {a.reasoning}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {isLoading ? (
           <div className="space-y-4">
