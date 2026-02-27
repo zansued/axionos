@@ -259,7 +259,7 @@ export default function Planning() {
                 </CardContent>
               </Card>
             ) : (
-              <ScrollArea className="h-[calc(100vh-260px)]">
+              <ScrollArea className="max-h-[calc(100vh-260px)]">
                 <div className="space-y-2 pr-2">
                   <AnimatePresence>
                     {sessions.map((session: any) => {
