@@ -22,26 +22,47 @@ serve(async (req) => {
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_PUBLISHABLE_KEY")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    const token = authHeader.replace("Bearer ", "");
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const userId = claimsData.claims.sub;
+    const userId = user.id;
 
-    const { projectDescription } = await req.json();
+    const { projectDescription, missingRoles } = await req.json();
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
     if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY is not configured");
 
+    const rolesToGenerate = missingRoles && missingRoles.length > 0 ? missingRoles : null;
+
     const systemPrompt = `Você é um especialista em montagem de equipes de IA para o framework AIOS. Com base na descrição do projeto, sugira os agentes ideais para compor o time. Retorne APENAS um JSON válido no formato especificado, sem markdown ou texto extra.`;
 
-    const userPrompt = `Projeto: ${projectDescription}
+    const userPrompt = rolesToGenerate
+      ? `Projeto: ${projectDescription}
+
+Gere exatamente ${rolesToGenerate.length} agente(s) IA para os seguintes papéis faltantes: ${rolesToGenerate.join(", ")}.
+
+Descrição dos papéis:
+- analyst: Analista de requisitos e negócios
+- pm: Product Manager
+- architect: Arquiteto de software
+- ux_expert: Especialista em UX/UI
+- sm: Scrum Master
+- po: Product Owner
+- dev: Desenvolvedor
+- devops: DevOps / Infraestrutura
+- qa: Quality Assurance
+- aios_master: Controlador master do AIOS
+- aios_orchestrator: Orquestrador de agentes
+
+Retorne um JSON com esta estrutura exata:
+{"agents": [{"name": "string (estilo agent-name)", "role": "string (um dos papéis acima)", "description": "string", "exclusive_authorities": ["string"]}]}`
+      : `Projeto: ${projectDescription}
 
 Gere um time de 4 a 8 agentes IA otimizado para este projeto. Os papéis disponíveis são:
 - analyst: Analista de requisitos e negócios

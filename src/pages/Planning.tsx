@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, FileText, Cpu, BookOpen, Users, ArrowRight, CheckCircle2, Circle, Clock, Trash2, Sparkles, Loader2 } from "lucide-react";
+import { Plus, FileText, Cpu, BookOpen, Users, ArrowRight, CheckCircle2, Circle, Clock, Trash2, Sparkles, Loader2, AlertTriangle, Wand2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const GENERATE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-planning-content`;
@@ -299,6 +299,7 @@ export default function Planning() {
               onAdvance={() => advanceStep(selectedSession)}
               onGoBack={() => goBackStep(selectedSession)}
               onDelete={() => deleteMutation.mutate(selectedSession.id)}
+              onRefreshAgents={() => queryClient.invalidateQueries({ queryKey: ["agents-active"] })}
             />
           ) : (
             <Card className="border-dashed border-2 border-border flex items-center justify-center min-h-[400px]">
@@ -322,6 +323,7 @@ function SessionDetail({
   onAdvance,
   onGoBack,
   onDelete,
+  onRefreshAgents,
 }: {
   session: any;
   agents: any[];
@@ -330,14 +332,88 @@ function SessionDetail({
   onAdvance: () => void;
   onGoBack: () => void;
   onDelete: () => void;
+  onRefreshAgents: () => void;
 }) {
   const { toast } = useToast();
   const [generatingPrd, setGeneratingPrd] = useState(false);
   const [generatingArch, setGeneratingArch] = useState(false);
   const [generatingStories, setGeneratingStories] = useState(false);
+  const [generatingMissingAgents, setGeneratingMissingAgents] = useState(false);
   const stepIdx = getStepIndex(session.status);
   const currentStep = PIPELINE_STEPS[stepIdx];
   const isCompleted = session.status === "completed";
+
+  const REQUIRED_ROLES = [
+    { role: "analyst", field: "assigned_analyst_id", label: "Analyst" },
+    { role: "architect", field: "assigned_architect_id", label: "Architect" },
+    { role: "pm", field: "assigned_pm_id", label: "PM" },
+    { role: "sm", field: "assigned_sm_id", label: "SM" },
+  ];
+
+  const missingRoles = REQUIRED_ROLES.filter(
+    (r) => !session[r.field] && agentsByRole(r.role).length === 0
+  );
+  const unassignedRoles = REQUIRED_ROLES.filter(
+    (r) => !session[r.field] && agentsByRole(r.role).length > 0
+  );
+
+  // Auto-suggest: assign existing agents to empty slots
+  const handleAutoSuggest = useCallback(() => {
+    const updates: any = {};
+    for (const r of REQUIRED_ROLES) {
+      if (!session[r.field]) {
+        const available = agentsByRole(r.role);
+        if (available.length > 0) {
+          updates[r.field] = available[0].id;
+        }
+      }
+    }
+    if (Object.keys(updates).length > 0) {
+      onUpdate(updates);
+      toast({ title: "Agentes sugeridos atribuídos!" });
+    }
+  }, [session, agentsByRole, onUpdate, toast]);
+
+  // Generate missing agents via AI
+  const handleGenerateMissing = useCallback(async () => {
+    if (missingRoles.length === 0) return;
+    setGeneratingMissingAgents(true);
+    try {
+      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-agents`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+        },
+        body: JSON.stringify({
+          projectDescription: session.title,
+          missingRoles: missingRoles.map((r) => r.role),
+        }),
+      });
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({ error: "Erro" }));
+        throw new Error(err.error);
+      }
+      const data = await resp.json();
+      onRefreshAgents();
+      // Auto-assign newly created agents
+      const updates: any = {};
+      for (const agent of data.agents) {
+        const slot = REQUIRED_ROLES.find((r) => r.role === agent.role);
+        if (slot && !session[slot.field]) {
+          updates[slot.field] = agent.id;
+        }
+      }
+      if (Object.keys(updates).length > 0) {
+        onUpdate(updates);
+      }
+      toast({ title: `${data.agents.length} agente(s) criados e atribuídos!` });
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Erro ao gerar agentes", description: e.message });
+    } finally {
+      setGeneratingMissingAgents(false);
+    }
+  }, [session, missingRoles, onUpdate, onRefreshAgents, toast]);
 
   const handleGeneratePrd = useCallback(() => {
     setGeneratingPrd(true);
@@ -394,31 +470,62 @@ function SessionDetail({
       {/* Agent Assignments */}
       <Card className="border-border/50">
         <CardHeader className="pb-3">
-          <CardTitle className="font-display text-sm">Agentes Designados</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {[
-            { label: "Analyst", field: "assigned_analyst_id", role: "analyst" },
-            { label: "Architect", field: "assigned_architect_id", role: "architect" },
-            { label: "PM", field: "assigned_pm_id", role: "pm" },
-            { label: "SM", field: "assigned_sm_id", role: "sm" },
-          ].map((slot) => (
-            <div key={slot.field} className="space-y-1">
-              <Label className="text-xs text-muted-foreground">{slot.label}</Label>
-              <Select
-                value={session[slot.field] || "none"}
-                onValueChange={(v) => onUpdate({ [slot.field]: v === "none" ? null : v })}
-              >
-                <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Selecionar..." /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Nenhum</SelectItem>
-                  {agentsByRole(slot.role).map((a: any) => (
-                    <SelectItem key={a.id} value={a.id}>@{a.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <div className="flex items-center justify-between">
+            <CardTitle className="font-display text-sm">Agentes Designados</CardTitle>
+            <div className="flex gap-2">
+              {unassignedRoles.length > 0 && (
+                <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5" onClick={handleAutoSuggest}>
+                  <Wand2 className="h-3 w-3" /> Sugerir existentes
+                </Button>
+              )}
+              {missingRoles.length > 0 && (
+                <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5" onClick={handleGenerateMissing} disabled={generatingMissingAgents}>
+                  {generatingMissingAgents ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+                  {generatingMissingAgents ? "Gerando..." : `Gerar ${missingRoles.length} faltante(s)`}
+                </Button>
+              )}
             </div>
-          ))}
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {missingRoles.length > 0 && (
+            <div className="flex items-start gap-2 rounded-md border border-warning/30 bg-warning/5 p-3">
+              <AlertTriangle className="h-4 w-4 text-warning shrink-0 mt-0.5" />
+              <div>
+                <p className="text-xs font-medium text-warning">Papéis sem agentes disponíveis</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {missingRoles.map((r) => r.label).join(", ")} — clique em "Gerar faltantes" para criá-los com IA.
+                </p>
+              </div>
+            </div>
+          )}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {REQUIRED_ROLES.map((slot) => {
+              const available = agentsByRole(slot.role);
+              const isMissing = !session[slot.field] && available.length === 0;
+              return (
+                <div key={slot.field} className="space-y-1">
+                  <Label className={`text-xs ${isMissing ? "text-warning" : "text-muted-foreground"}`}>
+                    {slot.label} {isMissing && "⚠"}
+                  </Label>
+                  <Select
+                    value={session[slot.field] || "none"}
+                    onValueChange={(v) => onUpdate({ [slot.field]: v === "none" ? null : v })}
+                  >
+                    <SelectTrigger className={`h-8 text-xs ${isMissing ? "border-warning/50" : ""}`}>
+                      <SelectValue placeholder="Selecionar..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Nenhum</SelectItem>
+                      {available.map((a: any) => (
+                        <SelectItem key={a.id} value={a.id}>@{a.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              );
+            })}
+          </div>
         </CardContent>
       </Card>
 
