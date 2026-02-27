@@ -279,7 +279,10 @@ export type Database = {
         Row: {
           created_at: string
           description: string
+          executed_at: string | null
+          executed_by_agent_id: string | null
           id: string
+          output: string | null
           phase_id: string
           sort_order: number
           status: Database["public"]["Enums"]["subtask_status"]
@@ -287,7 +290,10 @@ export type Database = {
         Insert: {
           created_at?: string
           description: string
+          executed_at?: string | null
+          executed_by_agent_id?: string | null
           id?: string
+          output?: string | null
           phase_id: string
           sort_order?: number
           status?: Database["public"]["Enums"]["subtask_status"]
@@ -295,12 +301,22 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string
+          executed_at?: string | null
+          executed_by_agent_id?: string | null
           id?: string
+          output?: string | null
           phase_id?: string
           sort_order?: number
           status?: Database["public"]["Enums"]["subtask_status"]
         }
         Relationships: [
+          {
+            foreignKeyName: "story_subtasks_executed_by_agent_id_fkey"
+            columns: ["executed_by_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "story_subtasks_phase_id_fkey"
             columns: ["phase_id"]

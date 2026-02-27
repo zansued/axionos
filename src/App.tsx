@@ -12,6 +12,7 @@ import Kanban from "./pages/Kanban";
 import AuditLogs from "./pages/AuditLogs";
 import Observability from "./pages/Observability";
 import Planning from "./pages/Planning";
+import Workspace from "./pages/Workspace";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/audit" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
             <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
             <Route path="/planning" element={<ProtectedRoute><Planning /></ProtectedRoute>} />
+            <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
