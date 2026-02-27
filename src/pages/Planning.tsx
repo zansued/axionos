@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -163,10 +163,20 @@ export default function Planning() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["planning-sessions"] });
-      toast({ title: "Sessão atualizada!" });
     },
     onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: e.message }),
   });
+
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const debouncedUpdate = useCallback((updates: any) => {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
+      if (selectedSession) {
+        updateMutation.mutate({ id: selectedSession.id, ...updates });
+      }
+    }, 800);
+  }, [selectedSession, updateMutation]);
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -285,7 +295,7 @@ export default function Planning() {
               session={selectedSession}
               agents={agents}
               agentsByRole={agentsByRole}
-              onUpdate={(updates: any) => { updateMutation.mutate({ id: selectedSession.id, ...updates }); setSelectedSession({ ...selectedSession, ...updates }); }}
+              onUpdate={(updates: any) => { setSelectedSession((s: any) => ({ ...s, ...updates })); debouncedUpdate(updates); }}
               onAdvance={() => advanceStep(selectedSession)}
               onGoBack={() => goBackStep(selectedSession)}
               onDelete={() => deleteMutation.mutate(selectedSession.id)}
