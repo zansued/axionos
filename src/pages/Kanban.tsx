@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { getUserFriendlyError } from "@/lib/error-utils";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -203,7 +204,7 @@ export default function Kanban() {
       queryClient.invalidateQueries({ queryKey: ["in-progress-stories"] });
     },
     onError: (e: any) =>
-      toast({ variant: "destructive", title: "Erro ao mover", description: e.message }),
+      toast({ variant: "destructive", title: "Erro ao mover", description: getUserFriendlyError(e) }),
   });
 
   const storiesByStatus = useMemo(() => {
