@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { checkRateLimit } from "../_shared/rate-limit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -33,6 +34,15 @@ serve(async (req) => {
       });
     }
     const userId = user.id;
+
+    // Rate limit check
+    const { allowed } = await checkRateLimit(userId, "generate-stories");
+    if (!allowed) {
+      return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em breve." }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const { title, prdContent, architectureContent } = await req.json();
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");

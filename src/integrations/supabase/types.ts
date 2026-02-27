@@ -50,6 +50,27 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_rate_limits: {
+        Row: {
+          function_name: string
+          id: string
+          requested_at: string
+          user_id: string
+        }
+        Insert: {
+          function_name: string
+          id?: string
+          requested_at?: string
+          user_id: string
+        }
+        Update: {
+          function_name?: string
+          id?: string
+          requested_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string

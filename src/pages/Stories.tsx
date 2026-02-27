@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { getUserFriendlyError } from "@/lib/error-utils";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -98,7 +99,7 @@ export default function Stories() {
       toast({ title: "Story criada!" });
       resetForm();
     },
-    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: e.message }),
+    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: getUserFriendlyError(e) }),
   });
 
   const updateMutation = useMutation({
@@ -117,7 +118,7 @@ export default function Stories() {
       toast({ title: "Story atualizada!" });
       resetForm();
     },
-    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: e.message }),
+    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: getUserFriendlyError(e) }),
   });
 
   const deleteMutation = useMutation({
@@ -131,7 +132,7 @@ export default function Stories() {
       queryClient.invalidateQueries({ queryKey: ["in-progress-stories"] });
       toast({ title: "Story removida" });
     },
-    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: e.message }),
+    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: getUserFriendlyError(e) }),
   });
 
   const addPhaseMutation = useMutation({
@@ -145,7 +146,7 @@ export default function Stories() {
       if (error) throw error;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["story-phases"] }),
-    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: e.message }),
+    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: getUserFriendlyError(e) }),
   });
 
   const resetForm = () => {
@@ -175,7 +176,7 @@ export default function Stories() {
       queryClient.invalidateQueries({ queryKey: ["stories"] });
       toast({ title: `IA organizou ${data.assignments.length} stories com sucesso!` });
     } catch (e: any) {
-      toast({ variant: "destructive", title: "Erro ao organizar", description: e.message });
+      toast({ variant: "destructive", title: "Erro ao organizar", description: getUserFriendlyError(e) });
     } finally {
       setOrganizing(false);
     }

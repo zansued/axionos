@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { getUserFriendlyError } from "@/lib/error-utils";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -77,7 +78,7 @@ export default function Workspace() {
       toast({ title: "Subtask executada com sucesso!" });
       queryClient.invalidateQueries({ queryKey: ["stories-with-phases"] });
     } catch (e: any) {
-      toast({ variant: "destructive", title: "Erro na execução", description: e.message });
+      toast({ variant: "destructive", title: "Erro na execução", description: getUserFriendlyError(e) });
     } finally {
       setExecutingSubtasks((prev) => {
         const next = new Set(prev);

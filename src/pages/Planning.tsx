@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from "react";
+import { getUserFriendlyError } from "@/lib/error-utils";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,11 +25,16 @@ async function streamAIContent({
   title: string; type: "prd" | "architecture"; existingPrd?: string;
   onDelta: (text: string) => void; onDone: () => void; onError: (err: string) => void;
 }) {
+  const session = (await supabase.auth.getSession()).data.session;
+  if (!session?.access_token) {
+    onError("Usuário não autenticado");
+    return;
+  }
   const resp = await fetch(GENERATE_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      Authorization: `Bearer ${session.access_token}`,
     },
     body: JSON.stringify({ title, type, existingPrd }),
   });
@@ -155,7 +161,7 @@ export default function Planning() {
       setSelectedSession(data);
       toast({ title: "Sessão de planejamento criada!" });
     },
-    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: e.message }),
+    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: getUserFriendlyError(e) }),
   });
 
   const updateMutation = useMutation({
@@ -166,7 +172,7 @@ export default function Planning() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["planning-sessions"] });
     },
-    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: e.message }),
+    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: getUserFriendlyError(e) }),
   });
 
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -415,7 +421,7 @@ function SessionDetail({
       }
       toast({ title: `${data.agents.length} agente(s) criados e atribuídos!` });
     } catch (e: any) {
-      toast({ variant: "destructive", title: "Erro ao gerar agentes", description: e.message });
+      toast({ variant: "destructive", title: "Erro ao gerar agentes", description: getUserFriendlyError(e) });
     } finally {
       setGeneratingMissingAgents(false);
     }
@@ -654,7 +660,7 @@ function SessionDetail({
                   toast({ title: `${data.stories.length} stories criadas com sucesso!` });
                   if (!isCompleted) onAdvance();
                 } catch (e: any) {
-                  toast({ variant: "destructive", title: "Erro ao gerar stories", description: e.message });
+                  toast({ variant: "destructive", title: "Erro ao gerar stories", description: getUserFriendlyError(e) });
                 } finally {
                   setGeneratingStories(false);
                 }
