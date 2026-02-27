@@ -118,6 +118,7 @@ export default function Planning() {
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [newTitle, setNewTitle] = useState("");
+  const [newDescription, setNewDescription] = useState("");
 
   const { data: sessions = [], isLoading } = useQuery({
     queryKey: ["planning-sessions"],
@@ -141,14 +142,15 @@ export default function Planning() {
   });
 
   const createMutation = useMutation({
-    mutationFn: async (title: string) => {
-      const { data, error } = await supabase.from("planning_sessions").insert({ user_id: user!.id, title }).select().single();
+    mutationFn: async ({ title, description }: { title: string; description: string }) => {
+      const { data, error } = await supabase.from("planning_sessions").insert({ user_id: user!.id, title, description: description || null }).select().single();
       if (error) throw error;
       return data;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["planning-sessions"] });
       setNewTitle("");
+      setNewDescription("");
       setCreateOpen(false);
       setSelectedSession(data);
       toast({ title: "Sessão de planejamento criada!" });
@@ -229,9 +231,13 @@ export default function Planning() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Título do Projeto/Feature</Label>
-                  <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Ex: Sistema de Notificações" autoFocus onKeyDown={(e) => e.key === "Enter" && newTitle.trim() && createMutation.mutate(newTitle.trim())} />
+                  <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Ex: Sistema de Notificações" autoFocus />
                 </div>
-                <Button className="w-full" onClick={() => newTitle.trim() && createMutation.mutate(newTitle.trim())} disabled={!newTitle.trim() || createMutation.isPending}>
+                <div className="space-y-2">
+                  <Label>Descrição do Projeto <span className="text-muted-foreground font-normal">(opcional)</span></Label>
+                  <Textarea value={newDescription} onChange={(e) => setNewDescription(e.target.value)} placeholder="Descreva o contexto, objetivos e escopo do projeto. Isso ajuda a IA a gerar agentes mais adequados..." className="min-h-[80px] text-sm resize-y" />
+                </div>
+                <Button className="w-full" onClick={() => newTitle.trim() && createMutation.mutate({ title: newTitle.trim(), description: newDescription.trim() })} disabled={!newTitle.trim() || createMutation.isPending}>
                   Criar Sessão
                 </Button>
               </div>
@@ -386,7 +392,7 @@ function SessionDetail({
           Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
         },
         body: JSON.stringify({
-          projectDescription: session.title,
+          projectDescription: `${session.title}${session.description ? ` — ${session.description}` : ""}`,
           missingRoles: missingRoles.map((r) => r.role),
         }),
       });

@@ -100,6 +100,7 @@ export type Database = {
           assigned_pm_id: string | null
           assigned_sm_id: string | null
           created_at: string
+          description: string | null
           id: string
           notes: string | null
           prd_content: string | null
@@ -115,6 +116,7 @@ export type Database = {
           assigned_pm_id?: string | null
           assigned_sm_id?: string | null
           created_at?: string
+          description?: string | null
           id?: string
           notes?: string | null
           prd_content?: string | null
@@ -130,6 +132,7 @@ export type Database = {
           assigned_pm_id?: string | null
           assigned_sm_id?: string | null
           created_at?: string
+          description?: string | null
           id?: string
           notes?: string | null
           prd_content?: string | null

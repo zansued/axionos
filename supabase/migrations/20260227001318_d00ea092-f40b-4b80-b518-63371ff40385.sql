@@ -1,0 +1,1 @@
+ALTER TABLE public.planning_sessions ADD COLUMN description text;
