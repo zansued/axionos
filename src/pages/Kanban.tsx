@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,7 +17,9 @@ import {
 } from "@dnd-kit/core";
 import { useDroppable } from "@dnd-kit/core";
 import { motion } from "framer-motion";
-import { GripVertical, User } from "lucide-react";
+import { GripVertical, User, Radio, WifiOff } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const COLUMNS: { id: string; label: string; accent: string }[] = [
   { id: "todo", label: "A Fazer", accent: "border-muted-foreground/30" },
@@ -140,6 +142,7 @@ export default function Kanban() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [realtimeEnabled, setRealtimeEnabled] = useState(true);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -156,6 +159,35 @@ export default function Kanban() {
       return data as Story[];
     },
   });
+
+  // Realtime subscription for auto-updating
+  useEffect(() => {
+    if (!realtimeEnabled) return;
+
+    const channel = supabase
+      .channel("kanban-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "stories" },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["stories"] });
+          queryClient.invalidateQueries({ queryKey: ["story-count"] });
+          queryClient.invalidateQueries({ queryKey: ["in-progress-stories"] });
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "story_subtasks" },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["stories-with-phases"] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [realtimeEnabled, queryClient]);
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
@@ -206,11 +238,28 @@ export default function Kanban() {
   return (
     <AppLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="font-display text-3xl font-bold tracking-tight">Kanban</h1>
-          <p className="text-muted-foreground mt-1">
-            Arraste stories entre colunas para alterar o status
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="font-display text-3xl font-bold tracking-tight">Kanban</h1>
+            <p className="text-muted-foreground mt-1">
+              Arraste stories entre colunas para alterar o status
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {realtimeEnabled ? (
+              <Radio className="h-3.5 w-3.5 text-success animate-pulse-glow" />
+            ) : (
+              <WifiOff className="h-3.5 w-3.5 text-muted-foreground" />
+            )}
+            <Label htmlFor="realtime-toggle" className="text-xs text-muted-foreground cursor-pointer">
+              {realtimeEnabled ? "Tempo real ativo" : "Tempo real desativado"}
+            </Label>
+            <Switch
+              id="realtime-toggle"
+              checked={realtimeEnabled}
+              onCheckedChange={setRealtimeEnabled}
+            />
+          </div>
         </div>
 
         {isLoading ? (
