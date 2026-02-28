@@ -1,5 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { getUserFriendlyError } from "@/lib/error-utils";
+import { useArtifactReview } from "@/hooks/useArtifactReview";
+import { ArtifactReviewActions } from "@/components/artifacts/ArtifactReviewActions";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOrg } from "@/contexts/OrgContext";
@@ -38,6 +40,7 @@ export default function Workspace() {
   const [selectedAgent, setSelectedAgent] = useState<string>("all");
   const [expandedStory, setExpandedStory] = useState<string | null>(null);
   const [executingSubtasks, setExecutingSubtasks] = useState<Set<string>>(new Set());
+  const reviewActions = useArtifactReview();
   const [activeTab, setActiveTab] = useState("execution");
 
   // --- Data queries ---
@@ -394,6 +397,8 @@ export default function Workspace() {
             ) : (
               outputs.map((o: any) => {
                 const typeLabels: Record<string, string> = { code: "Código", content: "Conteúdo", decision: "Decisão", analysis: "Análise" };
+                const artifactValidations = validations.filter((v: any) => v.artifact_id === o.id);
+                const hasPassingValidation = artifactValidations.some((v: any) => v.result === "pass");
                 return (
                   <Card key={o.id} className="border-border/50">
                     <CardContent className="p-4">
@@ -407,9 +412,19 @@ export default function Workspace() {
                             <span>${Number(o.cost_estimate || 0).toFixed(4)}</span>
                           </div>
                         </div>
-                        <div className="flex flex-col items-end gap-1 shrink-0">
-                          <Badge variant="outline" className="text-[10px]">{typeLabels[o.type] || o.type}</Badge>
-                          <Badge variant="secondary" className="text-[10px]">{o.status}</Badge>
+                        <div className="flex flex-col items-end gap-1.5 shrink-0">
+                          <div className="flex items-center gap-1.5">
+                            <Badge variant="outline" className="text-[10px]">{typeLabels[o.type] || o.type}</Badge>
+                            <StatusBadge status={o.status} />
+                          </div>
+                          <ArtifactReviewActions
+                            status={o.status}
+                            onSubmitForReview={() => reviewActions.submitForReview(o.id)}
+                            onApprove={() => reviewActions.approve(o.id)}
+                            onReject={() => reviewActions.reject(o.id)}
+                            onDeploy={() => reviewActions.deploy(o.id, validations)}
+                            deployBlocked={!hasPassingValidation}
+                          />
                         </div>
                       </div>
                     </CardContent>
@@ -473,6 +488,30 @@ function EmptyState({ icon: Icon, text }: { icon: any; text: string }) {
         <p className="text-muted-foreground text-sm">{text}</p>
       </CardContent>
     </Card>
+  );
+}
+
+const STATUS_STYLES: Record<string, string> = {
+  draft: "bg-muted text-muted-foreground",
+  pending_review: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+  approved: "bg-green-500/20 text-green-400 border-green-500/30",
+  rejected: "bg-red-500/20 text-red-400 border-red-500/30",
+  deployed: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  draft: "Rascunho",
+  pending_review: "Em Revisão",
+  approved: "Aprovado",
+  rejected: "Rejeitado",
+  deployed: "Deployed",
+};
+
+function StatusBadge({ status }: { status: string }) {
+  return (
+    <Badge className={`text-[10px] ${STATUS_STYLES[status] || ""}`}>
+      {STATUS_LABELS[status] || status}
+    </Badge>
   );
 }
 
