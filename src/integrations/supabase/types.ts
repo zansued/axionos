@@ -14,6 +14,136 @@ export type Database = {
   }
   public: {
     Tables: {
+      adrs: {
+        Row: {
+          approved_by: string | null
+          consequences: string | null
+          context: string | null
+          created_at: string
+          decision: string | null
+          id: string
+          output_id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_by?: string | null
+          consequences?: string | null
+          context?: string | null
+          created_at?: string
+          decision?: string | null
+          id?: string
+          output_id: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_by?: string | null
+          consequences?: string | null
+          context?: string | null
+          created_at?: string
+          decision?: string | null
+          id?: string
+          output_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adrs_output_id_fkey"
+            columns: ["output_id"]
+            isOneToOne: false
+            referencedRelation: "agent_outputs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_outputs: {
+        Row: {
+          agent_id: string | null
+          cost_estimate: number | null
+          created_at: string
+          id: string
+          model_used: string | null
+          organization_id: string
+          prompt_used: string | null
+          raw_output: Json
+          status: Database["public"]["Enums"]["output_status"]
+          subtask_id: string | null
+          summary: string | null
+          tokens_used: number | null
+          type: Database["public"]["Enums"]["output_type"]
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          agent_id?: string | null
+          cost_estimate?: number | null
+          created_at?: string
+          id?: string
+          model_used?: string | null
+          organization_id: string
+          prompt_used?: string | null
+          raw_output?: Json
+          status?: Database["public"]["Enums"]["output_status"]
+          subtask_id?: string | null
+          summary?: string | null
+          tokens_used?: number | null
+          type?: Database["public"]["Enums"]["output_type"]
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          agent_id?: string | null
+          cost_estimate?: number | null
+          created_at?: string
+          id?: string
+          model_used?: string | null
+          organization_id?: string
+          prompt_used?: string | null
+          raw_output?: Json
+          status?: Database["public"]["Enums"]["output_status"]
+          subtask_id?: string | null
+          summary?: string | null
+          tokens_used?: number | null
+          type?: Database["public"]["Enums"]["output_type"]
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_outputs_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_outputs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_outputs_subtask_id_fkey"
+            columns: ["subtask_id"]
+            isOneToOne: false
+            referencedRelation: "story_subtasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_outputs_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agents: {
         Row: {
           created_at: string
@@ -141,6 +271,110 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      code_artifacts: {
+        Row: {
+          branch_name: string | null
+          build_status: string | null
+          created_at: string
+          diff_patch: string | null
+          files_affected: Json | null
+          id: string
+          output_id: string
+          pr_url: string | null
+          preview_url: string | null
+          repository: string | null
+          test_status: string | null
+        }
+        Insert: {
+          branch_name?: string | null
+          build_status?: string | null
+          created_at?: string
+          diff_patch?: string | null
+          files_affected?: Json | null
+          id?: string
+          output_id: string
+          pr_url?: string | null
+          preview_url?: string | null
+          repository?: string | null
+          test_status?: string | null
+        }
+        Update: {
+          branch_name?: string | null
+          build_status?: string | null
+          created_at?: string
+          diff_patch?: string | null
+          files_affected?: Json | null
+          id?: string
+          output_id?: string
+          pr_url?: string | null
+          preview_url?: string | null
+          repository?: string | null
+          test_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "code_artifacts_output_id_fkey"
+            columns: ["output_id"]
+            isOneToOne: false
+            referencedRelation: "agent_outputs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_documents: {
+        Row: {
+          created_at: string
+          html: string | null
+          id: string
+          markdown: string | null
+          output_id: string
+          parent_version: string | null
+          performance_metrics: Json | null
+          slug: string | null
+          status: string | null
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          html?: string | null
+          id?: string
+          markdown?: string | null
+          output_id: string
+          parent_version?: string | null
+          performance_metrics?: Json | null
+          slug?: string | null
+          status?: string | null
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          html?: string | null
+          id?: string
+          markdown?: string | null
+          output_id?: string
+          parent_version?: string | null
+          performance_metrics?: Json | null
+          slug?: string | null
+          status?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_documents_output_id_fkey"
+            columns: ["output_id"]
+            isOneToOne: false
+            referencedRelation: "agent_outputs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_documents_parent_version_fkey"
+            columns: ["parent_version"]
+            isOneToOne: false
+            referencedRelation: "content_documents"
             referencedColumns: ["id"]
           },
         ]
@@ -471,6 +705,44 @@ export type Database = {
           },
         ]
       }
+      validation_runs: {
+        Row: {
+          artifact_id: string
+          duration: number | null
+          executed_at: string
+          id: string
+          logs: string | null
+          result: string
+          type: string
+        }
+        Insert: {
+          artifact_id: string
+          duration?: number | null
+          executed_at?: string
+          id?: string
+          logs?: string | null
+          result?: string
+          type: string
+        }
+        Update: {
+          artifact_id?: string
+          duration?: number | null
+          executed_at?: string
+          id?: string
+          logs?: string | null
+          result?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "validation_runs_artifact_id_fkey"
+            columns: ["artifact_id"]
+            isOneToOne: false
+            referencedRelation: "agent_outputs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workspaces: {
         Row: {
           created_at: string
@@ -545,6 +817,13 @@ export type Database = {
         | "aios_orchestrator"
       agent_status: "active" | "inactive"
       org_role: "owner" | "admin" | "editor" | "reviewer" | "viewer"
+      output_status:
+        | "draft"
+        | "pending_review"
+        | "approved"
+        | "rejected"
+        | "deployed"
+      output_type: "code" | "content" | "decision" | "analysis"
       phase_status: "pending" | "in_progress" | "completed"
       story_priority: "low" | "medium" | "high" | "critical"
       story_status: "todo" | "in_progress" | "done" | "blocked"
@@ -691,6 +970,14 @@ export const Constants = {
       ],
       agent_status: ["active", "inactive"],
       org_role: ["owner", "admin", "editor", "reviewer", "viewer"],
+      output_status: [
+        "draft",
+        "pending_review",
+        "approved",
+        "rejected",
+        "deployed",
+      ],
+      output_type: ["code", "content", "decision", "analysis"],
       phase_status: ["pending", "in_progress", "completed"],
       story_priority: ["low", "medium", "high", "critical"],
       story_status: ["todo", "in_progress", "done", "blocked"],

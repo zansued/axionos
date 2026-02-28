@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { getUserFriendlyError } from "@/lib/error-utils";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOrg } from "@/contexts/OrgContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -29,6 +30,7 @@ const SUBTASK_STATUS: Record<string, { label: string; icon: any; color: string }
 
 export default function Workspace() {
   const { user } = useAuth();
+  const { currentOrg, currentWorkspace } = useOrg();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedAgent, setSelectedAgent] = useState<string>("all");
@@ -69,7 +71,7 @@ export default function Workspace() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
         },
-        body: JSON.stringify({ subtaskId, agentId }),
+        body: JSON.stringify({ subtaskId, agentId, organizationId: currentOrg?.id, workspaceId: currentWorkspace?.id }),
       });
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({ error: "Erro" }));
