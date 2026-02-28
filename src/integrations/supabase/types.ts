@@ -21,10 +21,12 @@ export type Database = {
           exclusive_authorities: string[] | null
           id: string
           name: string
+          organization_id: string | null
           role: Database["public"]["Enums"]["agent_role"]
           status: Database["public"]["Enums"]["agent_status"]
           updated_at: string
           user_id: string
+          workspace_id: string | null
         }
         Insert: {
           created_at?: string
@@ -32,10 +34,12 @@ export type Database = {
           exclusive_authorities?: string[] | null
           id?: string
           name: string
+          organization_id?: string | null
           role?: Database["public"]["Enums"]["agent_role"]
           status?: Database["public"]["Enums"]["agent_status"]
           updated_at?: string
           user_id: string
+          workspace_id?: string | null
         }
         Update: {
           created_at?: string
@@ -43,12 +47,29 @@ export type Database = {
           exclusive_authorities?: string[] | null
           id?: string
           name?: string
+          organization_id?: string | null
           role?: Database["public"]["Enums"]["agent_role"]
           status?: Database["public"]["Enums"]["agent_status"]
           updated_at?: string
           user_id?: string
+          workspace_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "agents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agents_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ai_rate_limits: {
         Row: {
@@ -82,6 +103,7 @@ export type Database = {
           ip_address: string | null
           message: string
           metadata: Json | null
+          organization_id: string | null
           severity: string
           user_id: string
         }
@@ -95,6 +117,7 @@ export type Database = {
           ip_address?: string | null
           message: string
           metadata?: Json | null
+          organization_id?: string | null
           severity?: string
           user_id: string
         }
@@ -108,8 +131,79 @@ export type Database = {
           ip_address?: string | null
           message?: string
           metadata?: Json | null
+          organization_id?: string | null
           severity?: string
           user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_members: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          role: Database["public"]["Enums"]["org_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          role?: Database["public"]["Enums"]["org_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          role?: Database["public"]["Enums"]["org_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          created_at: string
+          id: string
+          logo_url: string | null
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          slug?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -124,6 +218,7 @@ export type Database = {
           description: string | null
           id: string
           notes: string | null
+          organization_id: string | null
           prd_content: string | null
           status: string
           title: string
@@ -140,6 +235,7 @@ export type Database = {
           description?: string | null
           id?: string
           notes?: string | null
+          organization_id?: string | null
           prd_content?: string | null
           status?: string
           title: string
@@ -156,6 +252,7 @@ export type Database = {
           description?: string | null
           id?: string
           notes?: string | null
+          organization_id?: string | null
           prd_content?: string | null
           status?: string
           title?: string
@@ -191,6 +288,13 @@ export type Database = {
             referencedRelation: "agents"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "planning_sessions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -223,33 +327,39 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          organization_id: string | null
           priority: Database["public"]["Enums"]["story_priority"]
           status: Database["public"]["Enums"]["story_status"]
           title: string
           updated_at: string
           user_id: string
+          workspace_id: string | null
         }
         Insert: {
           assigned_agent_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
+          organization_id?: string | null
           priority?: Database["public"]["Enums"]["story_priority"]
           status?: Database["public"]["Enums"]["story_status"]
           title: string
           updated_at?: string
           user_id: string
+          workspace_id?: string | null
         }
         Update: {
           assigned_agent_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
+          organization_id?: string | null
           priority?: Database["public"]["Enums"]["story_priority"]
           status?: Database["public"]["Enums"]["story_status"]
           title?: string
           updated_at?: string
           user_id?: string
+          workspace_id?: string | null
         }
         Relationships: [
           {
@@ -257,6 +367,20 @@ export type Database = {
             columns: ["assigned_agent_id"]
             isOneToOne: false
             referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stories_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
@@ -347,12 +471,60 @@ export type Database = {
           },
         ]
       }
+      workspaces: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          organization_id: string
+          settings: Json | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          settings?: Json | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          settings?: Json | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workspaces_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_org_role: {
+        Args: { _org_id: string; _user_id: string }
+        Returns: Database["public"]["Enums"]["org_role"]
+      }
+      is_org_member: {
+        Args: { _org_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       agent_role:
@@ -368,6 +540,7 @@ export type Database = {
         | "aios_master"
         | "aios_orchestrator"
       agent_status: "active" | "inactive"
+      org_role: "owner" | "admin" | "editor" | "reviewer" | "viewer"
       phase_status: "pending" | "in_progress" | "completed"
       story_priority: "low" | "medium" | "high" | "critical"
       story_status: "todo" | "in_progress" | "done" | "blocked"
@@ -513,6 +686,7 @@ export const Constants = {
         "aios_orchestrator",
       ],
       agent_status: ["active", "inactive"],
+      org_role: ["owner", "admin", "editor", "reviewer", "viewer"],
       phase_status: ["pending", "in_progress", "completed"],
       story_priority: ["low", "medium", "high", "critical"],
       story_status: ["todo", "in_progress", "done", "blocked"],

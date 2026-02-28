@@ -1,7 +1,8 @@
-import { Bot, Users, BookOpen, LayoutDashboard, LogOut, ChevronLeft, Columns3, Shield, Radio, Map, Hammer } from "lucide-react";
+import { Bot, Users, BookOpen, LayoutDashboard, LogOut, ChevronLeft, Columns3, Shield, Radio, Map, Hammer, Building2 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOrg } from "@/contexts/OrgContext";
 import {
   Sidebar,
   SidebarContent,
@@ -25,6 +26,7 @@ const navItems = [
   { title: "Kanban", url: "/kanban", icon: Columns3 },
   { title: "Auditoria", url: "/audit", icon: Shield },
   { title: "Observabilidade", url: "/observability", icon: Radio },
+  { title: "Organização", url: "/org", icon: Building2 },
 ];
 
 export function AppSidebar() {
@@ -32,6 +34,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const { signOut, user } = useAuth();
+  const { currentOrg, currentWorkspace } = useOrg();
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">

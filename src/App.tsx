@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { OrgProvider } from "@/contexts/OrgContext";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Agents from "./pages/Agents";
@@ -13,6 +14,7 @@ import AuditLogs from "./pages/AuditLogs";
 import Observability from "./pages/Observability";
 import Planning from "./pages/Planning";
 import Workspace from "./pages/Workspace";
+import OrgSettings from "./pages/OrgSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,18 +40,21 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
-            <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
-            <Route path="/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
-            <Route path="/audit" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
-            <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
-            <Route path="/planning" element={<ProtectedRoute><Planning /></ProtectedRoute>} />
-            <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <OrgProvider>
+            <Routes>
+              <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+              <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
+              <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
+              <Route path="/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
+              <Route path="/audit" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
+              <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
+              <Route path="/planning" element={<ProtectedRoute><Planning /></ProtectedRoute>} />
+              <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
+              <Route path="/org" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </OrgProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
