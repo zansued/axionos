@@ -1,11 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
 import { getUserFriendlyError } from "@/lib/error-utils";
 import { AppLayout } from "@/components/AppLayout";
-import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { Badge } from "@/components/ui/badge";
 import {
   DndContext,
   DragOverlay,
@@ -16,128 +14,13 @@ import {
   type DragStartEvent,
   type DragEndEvent,
 } from "@dnd-kit/core";
-import { useDroppable } from "@dnd-kit/core";
-import { motion } from "framer-motion";
-import { GripVertical, User, Radio, WifiOff } from "lucide-react";
+import { Radio, WifiOff, DollarSign, AlertTriangle, Clock, ShieldCheck } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-
-const COLUMNS: { id: string; label: string; accent: string }[] = [
-  { id: "todo", label: "A Fazer", accent: "border-muted-foreground/30" },
-  { id: "in_progress", label: "Em Progresso", accent: "border-info" },
-  { id: "done", label: "Concluído", accent: "border-success" },
-  { id: "blocked", label: "Bloqueado", accent: "border-destructive" },
-];
-
-const PRIORITY_MAP: Record<string, { label: string; color: string }> = {
-  low: { label: "Baixa", color: "bg-muted-foreground/20 text-muted-foreground" },
-  medium: { label: "Média", color: "bg-info/20 text-info" },
-  high: { label: "Alta", color: "bg-warning/20 text-warning" },
-  critical: { label: "Crítica", color: "bg-destructive/20 text-destructive" },
-};
-
-type Story = {
-  id: string;
-  title: string;
-  description: string | null;
-  status: string;
-  priority: string;
-  assigned_agent_id: string | null;
-  agents: { name: string; role: string } | null;
-};
-
-function KanbanCard({ story, isDragging }: { story: Story; isDragging?: boolean }) {
-  return (
-    <div
-      className={`rounded-lg border border-border/50 bg-card p-3 space-y-2 cursor-grab active:cursor-grabbing transition-shadow ${
-        isDragging ? "shadow-lg shadow-primary/20 ring-1 ring-primary/30 opacity-90" : "hover:border-primary/20"
-      }`}
-    >
-      <div className="flex items-start gap-2">
-        <GripVertical className="h-4 w-4 text-muted-foreground/40 mt-0.5 shrink-0" />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium font-display leading-tight truncate">{story.title}</p>
-          {story.description && (
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{story.description}</p>
-          )}
-        </div>
-      </div>
-      <div className="flex items-center gap-1.5 flex-wrap">
-        <Badge className={`text-[10px] px-1.5 py-0 ${PRIORITY_MAP[story.priority]?.color}`}>
-          {PRIORITY_MAP[story.priority]?.label}
-        </Badge>
-        {story.agents && (
-          <Badge variant="outline" className="text-[10px] px-1.5 py-0 gap-1">
-            <User className="h-2.5 w-2.5" />
-            {story.agents.name}
-          </Badge>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function DroppableColumn({
-  column,
-  stories,
-}: {
-  column: (typeof COLUMNS)[0];
-  stories: Story[];
-}) {
-  const { setNodeRef, isOver } = useDroppable({ id: column.id });
-
-  return (
-    <div className="flex flex-col min-w-[260px] w-full">
-      <div className={`flex items-center gap-2 mb-3 pb-2 border-b-2 ${column.accent}`}>
-        <h3 className="font-display text-sm font-semibold">{column.label}</h3>
-        <span className="text-xs text-muted-foreground font-mono bg-muted/50 rounded px-1.5">
-          {stories.length}
-        </span>
-      </div>
-      <div
-        ref={setNodeRef}
-        className={`flex-1 space-y-2 rounded-lg p-2 min-h-[200px] transition-colors ${
-          isOver ? "bg-primary/5 ring-1 ring-primary/20" : "bg-muted/20"
-        }`}
-      >
-        {stories.map((story) => (
-          <DraggableCard key={story.id} story={story} />
-        ))}
-        {stories.length === 0 && (
-          <div className="flex items-center justify-center h-20 text-xs text-muted-foreground/50 border border-dashed border-border/30 rounded-lg">
-            Arraste stories aqui
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function DraggableCard({ story }: { story: Story }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable(story.id);
-
-  return (
-    <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      style={{
-        transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
-        opacity: isDragging ? 0.3 : 1,
-      }}
-    >
-      <KanbanCard story={story} />
-    </div>
-  );
-}
-
-function useDraggable(id: string) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDndDraggable({ id });
-  return { attributes, listeners, setNodeRef, transform, isDragging };
-}
-
-// We need to use the actual dnd-kit draggable hook
-import { useDraggable as useDndDraggable } from "@dnd-kit/core";
+import { KanbanCard } from "@/components/kanban/KanbanCard";
+import { DroppableColumn } from "@/components/kanban/DroppableColumn";
+import { useKanbanMetrics } from "@/components/kanban/useKanbanMetrics";
+import { COLUMNS, type Story } from "@/components/kanban/types";
 
 export default function Kanban() {
   const { toast } = useToast();
@@ -161,47 +44,33 @@ export default function Kanban() {
     },
   });
 
-  // Realtime subscription for auto-updating
+  const metricsMap = useKanbanMetrics(stories);
+
+  // Realtime subscription
   useEffect(() => {
     if (!realtimeEnabled) return;
-
     const channel = supabase
       .channel("kanban-realtime")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "stories" },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ["stories"] });
-          queryClient.invalidateQueries({ queryKey: ["story-count"] });
-          queryClient.invalidateQueries({ queryKey: ["in-progress-stories"] });
-        }
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "story_subtasks" },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ["stories-with-phases"] });
-        }
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "stories" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["stories"] });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "story_subtasks" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["kanban-phases"] });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "agent_outputs" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["kanban-outputs"] });
+      })
       .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, [realtimeEnabled, queryClient]);
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const { error } = await supabase
-        .from("stories")
-        .update({ status: status as any })
-        .eq("id", id);
+      const { error } = await supabase.from("stories").update({ status: status as any }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stories"] });
-      queryClient.invalidateQueries({ queryKey: ["story-count"] });
-      queryClient.invalidateQueries({ queryKey: ["in-progress-stories"] });
     },
     onError: (e: any) =>
       toast({ variant: "destructive", title: "Erro ao mover", description: getUserFriendlyError(e) }),
@@ -218,19 +87,27 @@ export default function Kanban() {
 
   const activeStory = activeId ? stories.find((s) => s.id === activeId) : null;
 
-  const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
-  };
+  // Aggregate stats
+  const totalCost = useMemo(() => Object.values(metricsMap).reduce((s, m) => s + m.cost, 0), [metricsMap]);
+  const highRiskCount = useMemo(() => Object.values(metricsMap).filter((m) => m.riskLevel === "high" || m.riskLevel === "critical").length, [metricsMap]);
+  const avgExecTime = useMemo(() => {
+    const times = Object.values(metricsMap).filter((m) => m.avgTime > 0);
+    return times.length > 0 ? times.reduce((s, m) => s + m.avgTime, 0) / times.length : 0;
+  }, [metricsMap]);
+  const passRate = useMemo(() => {
+    const validated = Object.values(metricsMap).filter((m) => m.validationStatus !== "none");
+    if (validated.length === 0) return null;
+    return (validated.filter((m) => m.validationStatus === "pass").length / validated.length) * 100;
+  }, [metricsMap]);
 
+  const handleDragStart = (event: DragStartEvent) => setActiveId(event.active.id as string);
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveId(null);
     const { active, over } = event;
     if (!over) return;
-
     const storyId = active.id as string;
     const newStatus = over.id as string;
     const story = stories.find((s) => s.id === storyId);
-
     if (story && story.status !== newStatus && COLUMNS.some((c) => c.id === newStatus)) {
       updateStatusMutation.mutate({ id: storyId, status: newStatus });
     }
@@ -255,13 +132,35 @@ export default function Kanban() {
             <Label htmlFor="realtime-toggle" className="text-xs text-muted-foreground cursor-pointer">
               {realtimeEnabled ? "Tempo real ativo" : "Tempo real desativado"}
             </Label>
-            <Switch
-              id="realtime-toggle"
-              checked={realtimeEnabled}
-              onCheckedChange={setRealtimeEnabled}
-            />
+            <Switch id="realtime-toggle" checked={realtimeEnabled} onCheckedChange={setRealtimeEnabled} />
           </div>
         </div>
+
+        {/* Summary stats bar */}
+        {stories.length > 0 && (
+          <div className="flex items-center gap-4 p-3 rounded-lg bg-muted/30 border border-border/30 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <DollarSign className="h-3 w-3" /> Custo total: <strong className="text-foreground">${totalCost.toFixed(2)}</strong>
+            </span>
+            <span className="flex items-center gap-1">
+              <AlertTriangle className="h-3 w-3" /> Alto risco: <strong className={highRiskCount > 0 ? "text-warning" : "text-foreground"}>{highRiskCount}</strong>
+            </span>
+            <span className="flex items-center gap-1">
+              <Clock className="h-3 w-3" /> Tempo médio:{" "}
+              <strong className="text-foreground">
+                {avgExecTime < 1000 ? `${Math.round(avgExecTime)}ms` : `${(avgExecTime / 1000).toFixed(1)}s`}
+              </strong>
+            </span>
+            {passRate !== null && (
+              <span className="flex items-center gap-1">
+                <ShieldCheck className="h-3 w-3" /> Validação:{" "}
+                <strong className={passRate >= 80 ? "text-success" : passRate >= 50 ? "text-warning" : "text-destructive"}>
+                  {passRate.toFixed(0)}%
+                </strong>
+              </span>
+            )}
+          </div>
+        )}
 
         {isLoading ? (
           <div className="grid grid-cols-4 gap-4">
@@ -282,11 +181,12 @@ export default function Kanban() {
                   key={col.id}
                   column={col}
                   stories={storiesByStatus[col.id] || []}
+                  metricsMap={metricsMap}
                 />
               ))}
             </div>
             <DragOverlay>
-              {activeStory ? <KanbanCard story={activeStory} isDragging /> : null}
+              {activeStory ? <KanbanCard story={activeStory} metrics={metricsMap[activeStory.id]} isDragging /> : null}
             </DragOverlay>
           </DndContext>
         )}
