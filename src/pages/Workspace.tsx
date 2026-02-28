@@ -354,10 +354,12 @@ export default function Workspace() {
                           </div>
                           <ArtifactReviewActions
                             status={o.status}
-                            onSubmitForReview={() => reviewActions.submitForReview(o.id)}
-                            onApprove={() => reviewActions.approve(o.id)}
-                            onReject={() => reviewActions.reject(o.id)}
-                            onDeploy={() => reviewActions.deploy(o.id, validations)}
+                            onSubmitForReview={(c) => reviewActions.submitForReview(o.id, c)}
+                            onApprove={(c) => reviewActions.approve(o.id, c)}
+                            onReject={(c) => reviewActions.reject(o.id, c)}
+                            onRequestChanges={(c) => reviewActions.requestChanges(o.id, c)}
+                            onDeploy={(c) => reviewActions.deploy(o.id, validations, c)}
+                            onComment={(c) => reviewActions.addComment(o.id, o.status, c)}
                             deployBlocked={!hasPassingValidation}
                           />
                         </div>

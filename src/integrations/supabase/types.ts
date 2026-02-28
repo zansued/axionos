@@ -222,6 +222,47 @@ export type Database = {
         }
         Relationships: []
       }
+      artifact_reviews: {
+        Row: {
+          action: string
+          comment: string | null
+          created_at: string
+          id: string
+          new_status: string | null
+          output_id: string
+          previous_status: string | null
+          reviewer_id: string
+        }
+        Insert: {
+          action: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          new_status?: string | null
+          output_id: string
+          previous_status?: string | null
+          reviewer_id: string
+        }
+        Update: {
+          action?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          new_status?: string | null
+          output_id?: string
+          previous_status?: string | null
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artifact_reviews_output_id_fkey"
+            columns: ["output_id"]
+            isOneToOne: false
+            referencedRelation: "agent_outputs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: string

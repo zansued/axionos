@@ -17,6 +17,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useArtifactReview } from "@/hooks/useArtifactReview";
 import { ArtifactReviewActions } from "@/components/artifacts/ArtifactReviewActions";
+import { ArtifactReviewHistory } from "@/components/artifacts/ArtifactReviewHistory";
 
 const TYPE_CONFIG: Record<string, { label: string; icon: any; color: string }> = {
   code: { label: "Código", icon: Code2, color: "text-blue-400" },
@@ -218,10 +219,12 @@ export default function Artifacts() {
                                   </span>
                                   <ArtifactReviewActions
                                     status={output.status}
-                                    onSubmitForReview={() => reviewActions.submitForReview(output.id)}
-                                    onApprove={() => reviewActions.approve(output.id)}
-                                    onReject={() => reviewActions.reject(output.id)}
-                                    onDeploy={() => reviewActions.deploy(output.id, validations)}
+                                    onSubmitForReview={(c) => reviewActions.submitForReview(output.id, c)}
+                                    onApprove={(c) => reviewActions.approve(output.id, c)}
+                                    onReject={(c) => reviewActions.reject(output.id, c)}
+                                    onRequestChanges={(c) => reviewActions.requestChanges(output.id, c)}
+                                    onDeploy={(c) => reviewActions.deploy(output.id, validations, c)}
+                                    onComment={(c) => reviewActions.addComment(output.id, output.status, c)}
                                     deployBlocked={!validations.some((v: any) => v.artifact_id === output.id && v.result === "pass")}
                                   />
                                 </div>
@@ -253,13 +256,18 @@ export default function Artifacts() {
 
                     <div>
                       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Output</p>
-                      <ScrollArea className="h-[400px] rounded-md border border-border/30 bg-muted/20 p-3">
+                      <ScrollArea className="h-[250px] rounded-md border border-border/30 bg-muted/20 p-3">
                         <pre className="text-xs whitespace-pre-wrap text-foreground/80">
                           {typeof selected.raw_output === "object" && selected.raw_output !== null && !Array.isArray(selected.raw_output) && "text" in selected.raw_output
                             ? String((selected.raw_output as Record<string, unknown>).text)
                             : JSON.stringify(selected.raw_output, null, 2)}
                         </pre>
                       </ScrollArea>
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Histórico de Revisão</p>
+                      <ArtifactReviewHistory outputId={selected.id} />
                     </div>
                   </CardContent>
                 </Card>
