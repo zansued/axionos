@@ -70,26 +70,32 @@ export function OrgProvider({ children }: { children: ReactNode }) {
       const found = orgs.find((o) => o.id === savedOrgId);
       setCurrentOrg(found || orgs[0]);
     } else {
-      // Auto-create default org for new users
-      const { data: newOrg } = await supabase
-        .from("organizations")
-        .insert({ name: "Minha Organização", slug: `org-${user.id.slice(0, 8)}` })
-        .select()
-        .single();
+      // Auto-create default org for new users using atomic RPC
+      try {
+        const { data: result, error: rpcErr } = await supabase.rpc(
+          "create_organization_with_owner",
+          { _name: "Minha Organização", _slug: `org-${user.id.slice(0, 8)}` }
+        );
 
-      if (newOrg) {
-        // Add user as owner
-        await supabase
-          .from("organization_members")
-          .insert({ organization_id: newOrg.id, user_id: user.id, role: "owner" });
+        if (rpcErr) {
+          // Might fail if slug already exists (user already has an org but RLS hides it)
+          console.error("Failed to create org:", rpcErr);
+          setLoading(false);
+          return;
+        }
 
-        // Create default workspace
-        await supabase
-          .from("workspaces")
-          .insert({ organization_id: newOrg.id, name: "Default", slug: "default" });
+        // Re-fetch to get data through RLS (now user is a member)
+        const { data: refreshedOrgs } = await supabase
+          .from("organizations")
+          .select("*")
+          .order("created_at", { ascending: true });
 
-        setOrganizations([newOrg]);
-        setCurrentOrg(newOrg);
+        if (refreshedOrgs && refreshedOrgs.length > 0) {
+          setOrganizations(refreshedOrgs);
+          setCurrentOrg(refreshedOrgs[0]);
+        }
+      } catch (e) {
+        console.error("Org setup error:", e);
       }
     }
     setLoading(false);
@@ -146,19 +152,13 @@ export function OrgProvider({ children }: { children: ReactNode }) {
   }, [fetchOrgs]);
 
   const createOrganization = async (name: string, slug: string) => {
-    const { data, error } = await supabase
-      .from("organizations")
-      .insert({ name, slug })
-      .select()
-      .single();
+    const { data, error } = await supabase.rpc("create_organization_with_owner", {
+      _name: name,
+      _slug: slug,
+    });
     if (error) throw error;
-
-    await supabase
-      .from("organization_members")
-      .insert({ organization_id: data.id, user_id: user!.id, role: "owner" });
-
     await fetchOrgs();
-    return data;
+    return data as unknown as Organization;
   };
 
   const createWorkspace = async (name: string, slug: string, description?: string) => {

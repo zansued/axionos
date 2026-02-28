@@ -18,7 +18,7 @@ const roleColors: Record<string, string> = {
 };
 
 export default function OrgSettings() {
-  const { currentOrg, workspaces, members, userRole, createWorkspace, organizations, setCurrentOrg } = useOrg();
+  const { currentOrg, workspaces, members, userRole, createWorkspace, organizations, setCurrentOrg, loading } = useOrg();
   const [newWsName, setNewWsName] = useState("");
   const [creating, setCreating] = useState(false);
 
@@ -36,6 +36,16 @@ export default function OrgSettings() {
       setCreating(false);
     }
   };
+
+  if (loading) {
+    return (
+      <AppLayout>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      </AppLayout>
+    );
+  }
 
   if (!currentOrg) return null;
 
