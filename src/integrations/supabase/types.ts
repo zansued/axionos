@@ -517,6 +517,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_organization_with_owner: {
+        Args: { _name: string; _slug: string }
+        Returns: Json
+      }
       get_user_org_role: {
         Args: { _org_id: string; _user_id: string }
         Returns: Database["public"]["Enums"]["org_role"]
