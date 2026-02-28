@@ -11,7 +11,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -19,11 +18,20 @@ import {
 } from "@/components/ui/select";
 import {
   Bot, Play, CheckCircle2, Clock, AlertTriangle, Loader2, Sparkles,
-  ChevronDown, ChevronRight, FileText, Zap, BarChart3, Map, Hammer,
-  GitCompare, ShieldCheck, Lightbulb, Package, Radio, Eye,
+  ChevronDown, ChevronRight, FileText, Map, Hammer,
+  GitCompare, ShieldCheck, Lightbulb, Package, RefreshCw, Shield,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+// Modular workspace components
+import { WorkspacePlan } from "@/components/workspace/WorkspacePlan";
+import { WorkspaceDiff } from "@/components/workspace/WorkspaceDiff";
+import { WorkspaceValidation } from "@/components/workspace/WorkspaceValidation";
+import { WorkspacePoliciesPanel } from "@/components/workspace/WorkspacePolicies";
+import { WorkspaceReplay } from "@/components/workspace/WorkspaceReplay";
+import { EmptyState, StatusBadge } from "@/components/workspace/WorkspaceShared";
 
 const SUBTASK_STATUS: Record<string, { label: string; icon: any; color: string }> = {
   pending: { label: "Pendente", icon: Clock, color: "text-muted-foreground" },
@@ -34,7 +42,7 @@ const SUBTASK_STATUS: Record<string, { label: string; icon: any; color: string }
 
 export default function Workspace() {
   const { user } = useAuth();
-  const { currentOrg, currentWorkspace } = useOrg();
+  const { currentOrg, currentWorkspace, userRole } = useOrg();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedAgent, setSelectedAgent] = useState<string>("all");
@@ -120,17 +128,16 @@ export default function Workspace() {
     },
   });
 
-  const { data: auditLogs = [] } = useQuery({
-    queryKey: ["workspace-audit"],
+  const { data: codeArtifacts = [] } = useQuery({
+    queryKey: ["workspace-code-artifacts", currentOrg?.id],
+    enabled: !!currentOrg,
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("audit_logs")
-        .select("*")
-        .eq("category", "execution")
-        .order("created_at", { ascending: false })
-        .limit(30);
+        .from("code_artifacts")
+        .select("*, agent_outputs(organization_id)")
+        .order("created_at", { ascending: false });
       if (error) throw error;
-      return data;
+      return data?.filter((c: any) => c.agent_outputs?.organization_id === currentOrg!.id) || [];
     },
   });
 
@@ -158,7 +165,6 @@ export default function Workspace() {
       queryClient.invalidateQueries({ queryKey: ["stories-with-phases"] });
       queryClient.invalidateQueries({ queryKey: ["workspace-outputs"] });
       queryClient.invalidateQueries({ queryKey: ["workspace-adrs"] });
-      queryClient.invalidateQueries({ queryKey: ["workspace-audit"] });
     } catch (e: any) {
       toast({ variant: "destructive", title: "Erro na execução", description: getUserFriendlyError(e) });
     } finally {
@@ -231,45 +237,23 @@ export default function Workspace() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-7 h-9">
+          <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 h-9">
             <TabsTrigger value="plan" className="text-xs gap-1"><Map className="h-3 w-3" /> Plano</TabsTrigger>
             <TabsTrigger value="execution" className="text-xs gap-1"><Hammer className="h-3 w-3" /> Execução</TabsTrigger>
             <TabsTrigger value="diff" className="text-xs gap-1"><GitCompare className="h-3 w-3" /> Diff</TabsTrigger>
             <TabsTrigger value="validation" className="text-xs gap-1"><ShieldCheck className="h-3 w-3" /> Validação</TabsTrigger>
-            <TabsTrigger value="decisions" className="text-xs gap-1"><Lightbulb className="h-3 w-3" /> Decisões</TabsTrigger>
+            <TabsTrigger value="decisions" className="text-xs gap-1"><Lightbulb className="h-3 w-3" /> ADRs</TabsTrigger>
             <TabsTrigger value="artifacts" className="text-xs gap-1"><Package className="h-3 w-3" /> Artefatos</TabsTrigger>
-            <TabsTrigger value="observability" className="text-xs gap-1"><Radio className="h-3 w-3" /> Obs</TabsTrigger>
+            <TabsTrigger value="policies" className="text-xs gap-1"><Shield className="h-3 w-3" /> Políticas</TabsTrigger>
+            <TabsTrigger value="replay" className="text-xs gap-1"><RefreshCw className="h-3 w-3" /> Replay</TabsTrigger>
           </TabsList>
 
-          {/* ===== PLANO ===== */}
-          <TabsContent value="plan" className="mt-4 space-y-4">
-            {planning.length === 0 ? (
-              <EmptyState icon={Map} text="Nenhuma sessão de planejamento. Acesse a página de Planejamento para criar." />
-            ) : (
-              planning.map((p: any) => (
-                <Card key={p.id} className="border-border/50">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-display">{p.title}</CardTitle>
-                    <p className="text-xs text-muted-foreground">{p.description}</p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex gap-2 flex-wrap">
-                      <Badge variant="outline">{p.status}</Badge>
-                      {p.prd_content && <Badge variant="secondary" className="text-[10px]">PRD ✓</Badge>}
-                      {p.architecture_content && <Badge variant="secondary" className="text-[10px]">Arquitetura ✓</Badge>}
-                    </div>
-                    {p.prd_content && (
-                      <ScrollArea className="mt-3 max-h-[200px] rounded border border-border/30 bg-muted/20 p-3">
-                        <pre className="text-xs whitespace-pre-wrap">{p.prd_content.slice(0, 2000)}</pre>
-                      </ScrollArea>
-                    )}
-                  </CardContent>
-                </Card>
-              ))
-            )}
+          {/* PLANO */}
+          <TabsContent value="plan" className="mt-4">
+            <WorkspacePlan planning={planning} />
           </TabsContent>
 
-          {/* ===== EXECUÇÃO ===== */}
+          {/* EXECUÇÃO */}
           <TabsContent value="execution" className="mt-4">
             {isLoading ? (
               <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
@@ -294,66 +278,17 @@ export default function Workspace() {
             )}
           </TabsContent>
 
-          {/* ===== DIFF ===== */}
-          <TabsContent value="diff" className="mt-4 space-y-3">
-            {outputs.filter((o: any) => o.type === "code").length === 0 ? (
-              <EmptyState icon={GitCompare} text="Nenhum artefato de código gerado. Execute subtasks com agentes Dev/DevOps." />
-            ) : (
-              outputs.filter((o: any) => o.type === "code").map((o: any) => (
-                <Card key={o.id} className="border-border/50">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <GitCompare className="h-4 w-4 text-blue-400" />
-                        <span className="text-sm font-medium">{o.summary || "Artefato de código"}</span>
-                      </div>
-                      <Badge variant="outline">{o.status}</Badge>
-                    </div>
-                    <ScrollArea className="max-h-[300px] rounded border border-border/30 bg-muted/20 p-3">
-                      <pre className="text-xs whitespace-pre-wrap font-mono">
-                        {getOutputText(o.raw_output)}
-                      </pre>
-                    </ScrollArea>
-                    <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground">
-                      {o.agents && <span>@{o.agents.name}</span>}
-                      <span>{o.tokens_used?.toLocaleString()} tokens</span>
-                      <span>{new Date(o.created_at).toLocaleString("pt-BR")}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            )}
+          {/* DIFF */}
+          <TabsContent value="diff" className="mt-4">
+            <WorkspaceDiff outputs={outputs} codeArtifacts={codeArtifacts} />
           </TabsContent>
 
-          {/* ===== VALIDAÇÃO ===== */}
-          <TabsContent value="validation" className="mt-4 space-y-3">
-            {validations.length === 0 ? (
-              <EmptyState icon={ShieldCheck} text="Nenhuma validação executada. Valide artefatos na página de Artefatos." />
-            ) : (
-              validations.map((v: any) => (
-                <Card key={v.id} className="border-border/50">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <ShieldCheck className={`h-4 w-4 ${v.result === "pass" ? "text-green-400" : v.result === "fail" ? "text-destructive" : "text-muted-foreground"}`} />
-                        <span className="text-sm font-medium">{v.type}</span>
-                        <span className="text-xs text-muted-foreground">— {v.agent_outputs?.summary || "Artefato"}</span>
-                      </div>
-                      <Badge variant={v.result === "pass" ? "default" : "destructive"}>{v.result}</Badge>
-                    </div>
-                    {v.logs && (
-                      <pre className="mt-2 text-xs whitespace-pre-wrap text-muted-foreground bg-muted/20 rounded p-2 max-h-[150px] overflow-y-auto">{v.logs}</pre>
-                    )}
-                    <p className="text-[10px] text-muted-foreground mt-1">
-                      {v.duration && `${v.duration}ms • `}{new Date(v.executed_at).toLocaleString("pt-BR")}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))
-            )}
+          {/* VALIDAÇÃO */}
+          <TabsContent value="validation" className="mt-4">
+            <WorkspaceValidation validations={validations} outputs={outputs} orgId={currentOrg?.id} />
           </TabsContent>
 
-          {/* ===== DECISÕES (ADRs) ===== */}
+          {/* DECISÕES (ADRs) */}
           <TabsContent value="decisions" className="mt-4 space-y-3">
             {adrs.length === 0 ? (
               <EmptyState icon={Lightbulb} text="Nenhuma ADR. Decisões são geradas automaticamente por agentes Architect." />
@@ -390,10 +325,10 @@ export default function Workspace() {
             )}
           </TabsContent>
 
-          {/* ===== ARTEFATOS ===== */}
+          {/* ARTEFATOS */}
           <TabsContent value="artifacts" className="mt-4 space-y-3">
             {outputs.length === 0 ? (
-              <EmptyState icon={Package} text="Nenhum artefato. Execute subtasks no Workspace para gerar artefatos rastreáveis." />
+              <EmptyState icon={Package} text="Nenhum artefato. Execute subtasks para gerar artefatos rastreáveis." />
             ) : (
               outputs.map((o: any) => {
                 const typeLabels: Record<string, string> = { code: "Código", content: "Conteúdo", decision: "Decisão", analysis: "Análise" };
@@ -434,43 +369,19 @@ export default function Workspace() {
             )}
           </TabsContent>
 
-          {/* ===== OBSERVABILIDADE ===== */}
-          <TabsContent value="observability" className="mt-4 space-y-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <StatCard label="Subtasks" value={totalSubtasks} />
-              <StatCard label="Concluídas" value={completedSubtasks} />
-              <StatCard label="Artefatos" value={outputs.length} />
-              <StatCard label="ADRs" value={adrs.length} />
-            </div>
+          {/* POLÍTICAS */}
+          <TabsContent value="policies" className="mt-4">
+            <WorkspacePoliciesPanel workspace={currentWorkspace} userRole={userRole} />
+          </TabsContent>
 
-            <Card className="border-border/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-display flex items-center gap-2">
-                  <Radio className="h-4 w-4 text-primary" /> Timeline de Execução
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="max-h-[400px]">
-                  {auditLogs.length === 0 ? (
-                    <p className="text-xs text-muted-foreground py-4 text-center">Sem eventos de execução registrados.</p>
-                  ) : (
-                    <div className="space-y-2">
-                      {auditLogs.map((log: any) => (
-                        <div key={log.id} className="flex items-start gap-3 rounded-md border border-border/30 bg-muted/10 p-3">
-                          <div className="h-2 w-2 rounded-full bg-primary mt-1.5 shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs">{log.message}</p>
-                            <p className="text-[10px] text-muted-foreground mt-0.5">
-                              {new Date(log.created_at).toLocaleString("pt-BR")}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </ScrollArea>
-              </CardContent>
-            </Card>
+          {/* REPLAY */}
+          <TabsContent value="replay" className="mt-4">
+            <WorkspaceReplay
+              outputs={outputs}
+              agents={agents}
+              orgId={currentOrg?.id}
+              workspaceId={currentWorkspace?.id}
+            />
           </TabsContent>
         </Tabs>
       </div>
@@ -478,53 +389,7 @@ export default function Workspace() {
   );
 }
 
-// --- Reusable sub-components ---
-
-function EmptyState({ icon: Icon, text }: { icon: any; text: string }) {
-  return (
-    <Card className="border-dashed border-2">
-      <CardContent className="flex flex-col items-center py-12 text-center">
-        <Icon className="h-12 w-12 text-muted-foreground/30 mb-3" />
-        <p className="text-muted-foreground text-sm">{text}</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-const STATUS_STYLES: Record<string, string> = {
-  draft: "bg-muted text-muted-foreground",
-  pending_review: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-  approved: "bg-green-500/20 text-green-400 border-green-500/30",
-  rejected: "bg-red-500/20 text-red-400 border-red-500/30",
-  deployed: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  draft: "Rascunho",
-  pending_review: "Em Revisão",
-  approved: "Aprovado",
-  rejected: "Rejeitado",
-  deployed: "Deployed",
-};
-
-function StatusBadge({ status }: { status: string }) {
-  return (
-    <Badge className={`text-[10px] ${STATUS_STYLES[status] || ""}`}>
-      {STATUS_LABELS[status] || status}
-    </Badge>
-  );
-}
-
-function StatCard({ label, value }: { label: string; value: number }) {
-  return (
-    <Card className="border-border/50">
-      <CardContent className="p-3 text-center">
-        <p className="text-2xl font-bold">{value}</p>
-        <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{label}</p>
-      </CardContent>
-    </Card>
-  );
-}
+// --- Sub-components ---
 
 function StoryCard({ story, isExpanded, onToggle, executingSubtasks, executeSubtask, executeAllPending }: any) {
   const phases = story.story_phases || [];
@@ -631,12 +496,4 @@ function StoryCard({ story, isExpanded, onToggle, executingSubtasks, executeSubt
       </Card>
     </motion.div>
   );
-}
-
-function getOutputText(raw: any): string {
-  if (typeof raw === "string") return raw;
-  if (typeof raw === "object" && raw !== null && !Array.isArray(raw) && "text" in raw) {
-    return String(raw.text);
-  }
-  return JSON.stringify(raw, null, 2);
 }
