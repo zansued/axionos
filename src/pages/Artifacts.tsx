@@ -5,7 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -16,6 +15,8 @@ import {
   Package, Eye, CheckCircle2, XCircle, Clock, Send,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useArtifactReview } from "@/hooks/useArtifactReview";
+import { ArtifactReviewActions } from "@/components/artifacts/ArtifactReviewActions";
 
 const TYPE_CONFIG: Record<string, { label: string; icon: any; color: string }> = {
   code: { label: "Código", icon: Code2, color: "text-blue-400" },
@@ -34,6 +35,7 @@ const STATUS_CONFIG: Record<string, { label: string; icon: any; className: strin
 
 export default function Artifacts() {
   const { currentOrg } = useOrg();
+  const reviewActions = useArtifactReview();
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedArtifact, setSelectedArtifact] = useState<string | null>(null);
@@ -62,6 +64,19 @@ export default function Artifacts() {
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data?.filter((a: any) => a.agent_outputs?.organization_id === currentOrg!.id) || [];
+    },
+  });
+
+  const { data: validations = [] } = useQuery({
+    queryKey: ["artifact-validations", currentOrg?.id],
+    enabled: !!currentOrg,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("validation_runs")
+        .select("*, agent_outputs(organization_id)")
+        .order("executed_at", { ascending: false });
+      if (error) throw error;
+      return data?.filter((v: any) => v.agent_outputs?.organization_id === currentOrg!.id) || [];
     },
   });
 
@@ -196,11 +211,19 @@ export default function Artifacts() {
                                     </div>
                                   </div>
                                 </div>
-                                <div className="flex flex-col items-end gap-1 shrink-0">
+                                <div className="flex flex-col items-end gap-1.5 shrink-0">
                                   <Badge className={`text-[10px] ${statusInfo.className}`}>{statusInfo.label}</Badge>
                                   <span className="text-[10px] text-muted-foreground">
                                     {new Date(output.created_at).toLocaleDateString("pt-BR")}
                                   </span>
+                                  <ArtifactReviewActions
+                                    status={output.status}
+                                    onSubmitForReview={() => reviewActions.submitForReview(output.id)}
+                                    onApprove={() => reviewActions.approve(output.id)}
+                                    onReject={() => reviewActions.reject(output.id)}
+                                    onDeploy={() => reviewActions.deploy(output.id, validations)}
+                                    deployBlocked={!validations.some((v: any) => v.artifact_id === output.id && v.result === "pass")}
+                                  />
                                 </div>
                               </div>
                             </CardContent>
