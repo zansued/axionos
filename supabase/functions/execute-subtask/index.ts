@@ -43,7 +43,7 @@ serve(async (req) => {
       });
     }
 
-    const { subtaskId, agentId, storyContext } = await req.json();
+    const { subtaskId, agentId, storyContext, organizationId, workspaceId } = await req.json();
     if (!subtaskId || !agentId) {
       return new Response(JSON.stringify({ error: "subtaskId and agentId are required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -134,6 +134,7 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
 
     const aiData = await response.json();
     const output = aiData.choices?.[0]?.message?.content;
+    const tokensUsed = aiData.usage?.total_tokens || 0;
 
     if (!output) {
       await supabase.from("story_subtasks").update({ status: "failed" }).eq("id", subtaskId);
@@ -147,6 +148,49 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
       executed_at: new Date().toISOString(),
     }).eq("id", subtaskId);
 
+    // Create versioned agent_output artifact (using service role for org-scoped insert)
+    let artifactId: string | null = null;
+    if (organizationId) {
+      const serviceClient = createClient(
+        Deno.env.get("SUPABASE_URL")!,
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      );
+
+      const outputType = agent.role === "architect" ? "decision" 
+        : agent.role === "dev" || agent.role === "devops" ? "code"
+        : agent.role === "analyst" || agent.role === "po" ? "content"
+        : "analysis";
+
+      const { data: artifact } = await serviceClient.from("agent_outputs").insert({
+        organization_id: organizationId,
+        workspace_id: workspaceId || null,
+        agent_id: agentId,
+        subtask_id: subtaskId,
+        type: outputType,
+        status: "draft",
+        summary: subtask.description?.slice(0, 200),
+        raw_output: { text: output, model_response: aiData },
+        model_used: "deepseek-chat",
+        prompt_used: userPrompt.slice(0, 2000),
+        tokens_used: tokensUsed,
+        cost_estimate: tokensUsed * 0.000001, // rough estimate
+      }).select("id").single();
+
+      artifactId = artifact?.id || null;
+
+      // Auto-create ADR for architect decisions
+      if (outputType === "decision" && artifactId) {
+        await serviceClient.from("adrs").insert({
+          output_id: artifactId,
+          title: `Decisão: ${subtask.description?.slice(0, 100)}`,
+          context: storyContext || storyDesc,
+          decision: output.slice(0, 5000),
+          consequences: "",
+          status: "proposed",
+        });
+      }
+    }
+
     // Log audit event
     await supabase.from("audit_logs").insert({
       user_id: user.id,
@@ -156,10 +200,10 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
       entity_id: subtaskId,
       message: `Agente @${agent.name} (${agent.role}) executou subtask: ${subtask.description}`,
       severity: "info",
-      metadata: { agent_id: agentId, agent_name: agent.name, agent_role: agent.role },
+      metadata: { agent_id: agentId, agent_name: agent.name, agent_role: agent.role, artifact_id: artifactId },
     });
 
-    return new Response(JSON.stringify({ output, status: "completed" }), {
+    return new Response(JSON.stringify({ output, status: "completed", artifact_id: artifactId }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {

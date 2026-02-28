@@ -14,6 +14,7 @@ import AuditLogs from "./pages/AuditLogs";
 import Observability from "./pages/Observability";
 import Planning from "./pages/Planning";
 import Workspace from "./pages/Workspace";
+import Artifacts from "./pages/Artifacts";
 import OrgSettings from "./pages/OrgSettings";
 import NotFound from "./pages/NotFound";
 
@@ -51,6 +52,7 @@ const App = () => (
               <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
               <Route path="/planning" element={<ProtectedRoute><Planning /></ProtectedRoute>} />
               <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
+              <Route path="/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
               <Route path="/org" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
