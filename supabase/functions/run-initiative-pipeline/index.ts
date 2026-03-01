@@ -45,15 +45,10 @@ serve(async (req) => {
       });
     }
 
-    const serviceClient = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
-    const userClient = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
-      { global: { headers: { Authorization: authHeader } } }
-    );
+    const serviceClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const userClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, {
+      global: { headers: { Authorization: authHeader } },
+    });
 
     const { data: { user }, error: userError } = await userClient.auth.getUser();
     if (userError || !user) {
@@ -69,164 +64,221 @@ serve(async (req) => {
       });
     }
 
-    const { initiativeId } = await req.json();
-    if (!initiativeId) throw new Error("initiativeId is required");
+    const { initiativeId, stage } = await req.json();
+    if (!initiativeId || !stage) throw new Error("initiativeId and stage are required");
 
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
     if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY not configured");
 
-    // Fetch initiative
     const { data: initiative, error: initErr } = await serviceClient
       .from("initiatives").select("*").eq("id", initiativeId).single();
     if (initErr || !initiative) throw new Error("Initiative not found");
 
     const log = async (action: string, message: string, meta: any = {}) => {
       await serviceClient.from("audit_logs").insert({
-        user_id: user.id,
-        action,
-        category: "pipeline",
-        entity_type: "initiatives",
-        entity_id: initiativeId,
-        message,
-        severity: "info",
-        organization_id: initiative.organization_id,
-        metadata: meta,
+        user_id: user.id, action, category: "pipeline", entity_type: "initiatives",
+        entity_id: initiativeId, message, severity: "info",
+        organization_id: initiative.organization_id, metadata: meta,
       });
     };
 
-    const updateStatus = async (status: string) => {
-      await serviceClient.from("initiatives").update({ status }).eq("id", initiativeId);
+    const updateInit = async (fields: any) => {
+      await serviceClient.from("initiatives").update(fields).eq("id", initiativeId);
     };
 
-    const steps: any = { squad: null, prd: null, architecture: null, stories: [] };
+    // ========== STAGE 1: DISCOVERY ==========
+    if (stage === "discovery") {
+      await updateInit({ status: "discovery" });
+      await log("pipeline_discovery_start", "Iniciando descoberta inteligente...");
 
-    // === STEP 1: Generate Squad ===
-    await updateStatus("planning");
-    await log("pipeline_step", "Gerando squad de agentes...");
+      const result = await callDeepSeek(
+        DEEPSEEK_API_KEY,
+        `Você é um consultor de produto e estratégia sênior. Analise a ideia do usuário e produza uma descoberta inteligente completa. Retorne APENAS JSON válido.`,
+        `Ideia do usuário: "${initiative.title}"
+${initiative.description ? `Descrição: ${initiative.description}` : ""}
 
-    const squadResult = await callDeepSeek(
-      DEEPSEEK_API_KEY,
-      "Você é um especialista em montagem de equipes de IA. Retorne APENAS JSON válido.",
-      `Projeto: ${initiative.title}\nDescrição: ${initiative.description || "Sem descrição"}\n\nGere um time de 4-6 agentes IA otimizado. Papéis: analyst, pm, architect, sm, dev, qa, devops, ux_expert.\n\nJSON: {"agents": [{"name": "string", "role": "string", "description": "string"}]}`,
-      true
-    );
-    const { agents } = JSON.parse(squadResult.content);
+Produza uma análise completa no seguinte formato JSON:
+{
+  "refined_idea": "Versão refinada e expandida da ideia original (2-3 parágrafos)",
+  "business_model": "Modelo de negócio sugerido (SaaS, marketplace, freemium etc.) com justificativa",
+  "mvp_scope": "Definição clara do MVP - o que entra e o que fica para depois",
+  "complexity": "low|medium|high|critical",
+  "risk_level": "low|medium|high|critical",
+  "suggested_stack": "Stack tecnológica sugerida com justificativa técnica",
+  "strategic_vision": "Visão estratégica do produto em 3 horizontes (3, 6, 12 meses)",
+  "market_analysis": "Análise de mercado: concorrentes, diferenciação, público-alvo",
+  "feasibility_analysis": "Análise de viabilidade técnica e de negócio",
+  "initial_estimate": {
+    "effort_weeks": 0,
+    "team_size": 0,
+    "estimated_stories": 0,
+    "complexity_score": 0
+  }
+}`,
+        true
+      );
 
-    // Create squad
-    const { data: squad } = await serviceClient.from("squads").insert({
-      initiative_id: initiativeId,
-      name: `Squad ${initiative.title.slice(0, 30)}`,
-      auto_generated: true,
-      organization_id: initiative.organization_id,
-    }).select().single();
+      const discovery = JSON.parse(result.content);
 
-    // Create agents and squad members
-    for (const ag of agents) {
-      const { data: agentData } = await serviceClient.from("agents").insert({
-        user_id: user.id,
-        name: ag.name,
-        role: ag.role,
-        description: ag.description,
-        organization_id: initiative.organization_id,
-        workspace_id: initiative.workspace_id,
-        status: "active",
-      }).select("id").single();
+      await updateInit({
+        status: "discovery",
+        refined_idea: discovery.refined_idea,
+        business_model: discovery.business_model,
+        mvp_scope: discovery.mvp_scope,
+        complexity: discovery.complexity,
+        risk_level: discovery.risk_level,
+        suggested_stack: discovery.suggested_stack,
+        strategic_vision: discovery.strategic_vision,
+        market_analysis: discovery.market_analysis,
+        feasibility_analysis: discovery.feasibility_analysis,
+        initial_estimate: discovery.initial_estimate,
+      });
 
-      if (agentData && squad) {
-        await serviceClient.from("squad_members").insert({
-          squad_id: squad.id,
-          agent_id: agentData.id,
-          role_in_squad: ag.role,
-        });
-      }
+      await log("pipeline_discovery_complete", "Descoberta inteligente concluída", { tokens: result.tokens, complexity: discovery.complexity });
+
+      return new Response(JSON.stringify({ success: true, discovery, tokens: result.tokens }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
-    steps.squad = { id: squad?.id, agentCount: agents.length };
-    await log("pipeline_step", `Squad criado com ${agents.length} agentes`, { agents: agents.map((a: any) => a.role) });
 
-    // === STEP 2: Generate PRD ===
-    await log("pipeline_step", "Gerando PRD...");
-    const prdResult = await callDeepSeek(
-      DEEPSEEK_API_KEY,
-      "Você é um Analista de Produto sênior. Crie um PRD detalhado em português brasileiro usando markdown.",
-      `Crie um PRD completo para: "${initiative.title}"\n${initiative.description ? `Descrição: ${initiative.description}` : ""}\n\nInclua: Visão Geral, Problema, Personas, Requisitos Funcionais, Requisitos Não-Funcionais, Critérios de Aceite, Métricas de Sucesso, Riscos.`
-    );
-    await serviceClient.from("initiatives").update({ prd_content: prdResult.content }).eq("id", initiativeId);
-    steps.prd = { tokens: prdResult.tokens };
-    await log("pipeline_step", "PRD gerado com sucesso", { tokens: prdResult.tokens });
+    // ========== STAGE 2: SQUAD FORMATION ==========
+    if (stage === "squad_formation") {
+      await updateInit({ status: "squad_formation" });
+      await log("pipeline_squad_start", "Formando squad de agentes...");
 
-    // === STEP 3: Generate Architecture ===
-    await updateStatus("architecting");
-    await log("pipeline_step", "Gerando arquitetura...");
-    const archResult = await callDeepSeek(
-      DEEPSEEK_API_KEY,
-      "Você é um Arquiteto de Software sênior. Crie um documento de arquitetura técnica em português brasileiro usando markdown.",
-      `Com base no PRD abaixo, crie a arquitetura técnica:\n\nPRD:\n${prdResult.content.slice(0, 6000)}\n\nInclua: Stack Tecnológica, Arquitetura do Sistema, Componentes, Modelo de Dados, APIs, Segurança, Escalabilidade, Plano de Deploy.`
-    );
-    await serviceClient.from("initiatives").update({ architecture_content: archResult.content }).eq("id", initiativeId);
-    steps.architecture = { tokens: archResult.tokens };
-    await log("pipeline_step", "Arquitetura gerada com sucesso", { tokens: archResult.tokens });
+      const context = `Projeto: ${initiative.title}
+Ideia refinada: ${initiative.refined_idea || initiative.description || ""}
+Complexidade: ${initiative.complexity}
+Stack sugerida: ${initiative.suggested_stack || "A definir"}
+MVP: ${initiative.mvp_scope || "A definir"}`;
 
-    // === STEP 4: Generate Stories ===
-    await updateStatus("ready");
-    await log("pipeline_step", "Gerando stories...");
-    const storiesResult = await callDeepSeek(
-      DEEPSEEK_API_KEY,
-      "Você é um Product Manager sênior. Gere user stories bem definidas. Retorne APENAS JSON válido.",
-      `Projeto: ${initiative.title}\n\nPRD:\n${prdResult.content.slice(0, 4000)}\n\nArquitetura:\n${archResult.content.slice(0, 4000)}\n\nGere 3-8 user stories cobrindo os principais requisitos.\nJSON: {"stories": [{"title": "string", "description": "string", "priority": "low|medium|high|critical", "phases": [{"name": "string", "subtasks": ["string"]}]}]}`,
-      true
-    );
-    const { stories } = JSON.parse(storiesResult.content);
+      const result = await callDeepSeek(
+        DEEPSEEK_API_KEY,
+        "Você é um especialista em montagem de equipes de IA para desenvolvimento de software. Monte o squad ideal baseado no tipo e complexidade do projeto. Retorne APENAS JSON válido.",
+        `${context}
 
-    for (const story of stories) {
-      const { data: storyData, error: storyErr } = await serviceClient
-        .from("stories")
-        .insert({
+Monte um squad de agentes IA otimizado para este projeto.
+Papéis disponíveis: analyst, pm, architect, sm, dev, qa, devops, ux_expert, po
+Para projetos simples: 3-4 agentes. Médios: 5-6. Complexos: 6-8.
+
+JSON: {"agents": [{"name": "string", "role": "string", "description": "string", "justification": "string"}], "squad_strategy": "string explicando a estratégia de composição"}`,
+        true
+      );
+
+      const { agents, squad_strategy } = JSON.parse(result.content);
+
+      const { data: squad } = await serviceClient.from("squads").insert({
+        initiative_id: initiativeId,
+        name: `Squad ${initiative.title.slice(0, 30)}`,
+        auto_generated: true,
+        organization_id: initiative.organization_id,
+      }).select().single();
+
+      const createdAgents = [];
+      for (const ag of agents) {
+        const { data: agentData } = await serviceClient.from("agents").insert({
           user_id: user.id,
-          title: story.title,
-          description: story.description,
-          priority: story.priority || "medium",
-          status: "todo",
+          name: ag.name,
+          role: ag.role,
+          description: `${ag.description}\n\nJustificativa: ${ag.justification}`,
           organization_id: initiative.organization_id,
           workspace_id: initiative.workspace_id,
-          initiative_id: initiativeId,
-        })
-        .select("id")
-        .single();
+          status: "active",
+        }).select("id, name, role").single();
 
-      if (storyErr || !storyData) {
-        console.error("Story insert error:", storyErr);
-        continue;
-      }
-
-      for (let pi = 0; pi < (story.phases || []).length; pi++) {
-        const phase = story.phases[pi];
-        const { data: phaseData } = await serviceClient.from("story_phases").insert({
-          story_id: storyData.id,
-          name: phase.name,
-          sort_order: pi,
-        }).select("id").single();
-
-        if (phaseData) {
-          for (let si = 0; si < (phase.subtasks || []).length; si++) {
-            await serviceClient.from("story_subtasks").insert({
-              phase_id: phaseData.id,
-              description: phase.subtasks[si],
-              sort_order: si,
-            });
-          }
+        if (agentData && squad) {
+          await serviceClient.from("squad_members").insert({
+            squad_id: squad.id, agent_id: agentData.id, role_in_squad: ag.role,
+          });
+          createdAgents.push(agentData);
         }
       }
-      steps.stories.push({ id: storyData.id, title: story.title });
+
+      await log("pipeline_squad_complete", `Squad formado: ${createdAgents.length} agentes`, {
+        tokens: result.tokens, agents: createdAgents.map(a => a.role), strategy: squad_strategy,
+      });
+
+      return new Response(JSON.stringify({
+        success: true, squad_id: squad?.id, agents: createdAgents,
+        strategy: squad_strategy, tokens: result.tokens,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    await updateStatus("in_progress");
-    await log("pipeline_complete", `Pipeline completo: ${agents.length} agentes, ${steps.stories.length} stories`, {
-      totalTokens: squadResult.tokens + prdResult.tokens + archResult.tokens + storiesResult.tokens,
-    });
+    // ========== STAGE 3: PLANNING (Formalização Técnica) ==========
+    if (stage === "planning") {
+      await updateInit({ status: "planning" });
+      await log("pipeline_planning_start", "Iniciando formalização técnica...");
 
-    return new Response(JSON.stringify({ success: true, steps }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+      const context = `Projeto: ${initiative.title}
+Ideia refinada: ${initiative.refined_idea || initiative.description || ""}
+Modelo de Negócio: ${initiative.business_model || "N/A"}
+MVP: ${initiative.mvp_scope || "N/A"}
+Stack: ${initiative.suggested_stack || "N/A"}
+Visão Estratégica: ${initiative.strategic_vision || "N/A"}`;
+
+      // 3A: PRD
+      const prdResult = await callDeepSeek(
+        DEEPSEEK_API_KEY,
+        "Você é um Product Manager sênior. Crie um PRD detalhado e executável em português brasileiro usando markdown. Este não é um documento de ideação — é o blueprint de execução.",
+        `${context}\n\nCrie um PRD completo e técnico incluindo:\n## Visão Geral\n## Problema a Resolver\n## Personas e Casos de Uso\n## Requisitos Funcionais (detalhados)\n## Requisitos Não-Funcionais\n## Critérios de Aceite\n## Dependências Técnicas\n## Métricas de Sucesso\n## Riscos e Mitigações`
+      );
+      await updateInit({ prd_content: prdResult.content });
+
+      // 3B: Architecture
+      await updateInit({ status: "architecting" });
+      const archResult = await callDeepSeek(
+        DEEPSEEK_API_KEY,
+        "Você é um Arquiteto de Software sênior. Crie um documento de arquitetura técnica executável baseado no PRD. Use markdown.",
+        `PRD:\n${prdResult.content.slice(0, 6000)}\n\nStack sugerida: ${initiative.suggested_stack || "A definir"}\n\nCrie a arquitetura incluindo:\n## Stack Tecnológica Final\n## Arquitetura do Sistema (diagrama textual)\n## Componentes Principais\n## Modelo de Dados (entidades e relacionamentos)\n## APIs e Contratos\n## Fluxos de Dados\n## Segurança\n## Escalabilidade\n## Plano de Deploy`
+      );
+      await updateInit({ architecture_content: archResult.content });
+
+      // 3C: Stories
+      await updateInit({ status: "ready" });
+      const storiesResult = await callDeepSeek(
+        DEEPSEEK_API_KEY,
+        "Você é um Product Manager sênior. Gere user stories executáveis. Retorne APENAS JSON válido.",
+        `Projeto: ${initiative.title}\n\nPRD:\n${prdResult.content.slice(0, 4000)}\n\nArquitetura:\n${archResult.content.slice(0, 4000)}\n\nGere 3-8 user stories executáveis com fases e subtasks granulares.\nJSON: {"stories": [{"title": "string", "description": "string", "priority": "low|medium|high|critical", "phases": [{"name": "string", "subtasks": ["string"]}]}]}`,
+        true
+      );
+      const { stories } = JSON.parse(storiesResult.content);
+
+      const createdStories = [];
+      for (const story of stories) {
+        const { data: storyData } = await serviceClient.from("stories").insert({
+          user_id: user.id, title: story.title, description: story.description,
+          priority: story.priority || "medium", status: "todo",
+          organization_id: initiative.organization_id,
+          workspace_id: initiative.workspace_id, initiative_id: initiativeId,
+        }).select("id").single();
+
+        if (!storyData) continue;
+        for (let pi = 0; pi < (story.phases || []).length; pi++) {
+          const phase = story.phases[pi];
+          const { data: phaseData } = await serviceClient.from("story_phases").insert({
+            story_id: storyData.id, name: phase.name, sort_order: pi,
+          }).select("id").single();
+          if (phaseData) {
+            for (let si = 0; si < (phase.subtasks || []).length; si++) {
+              await serviceClient.from("story_subtasks").insert({
+                phase_id: phaseData.id, description: phase.subtasks[si], sort_order: si,
+              });
+            }
+          }
+        }
+        createdStories.push({ id: storyData.id, title: story.title });
+      }
+
+      await updateInit({ status: "in_progress" });
+      const totalTokens = prdResult.tokens + archResult.tokens + storiesResult.tokens;
+      await log("pipeline_planning_complete", `Planning completo: PRD + Arquitetura + ${createdStories.length} stories`, { totalTokens });
+
+      return new Response(JSON.stringify({
+        success: true, stories: createdStories, tokens: totalTokens,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning`);
   } catch (e) {
     console.error("run-initiative-pipeline error:", e);
     return new Response(
