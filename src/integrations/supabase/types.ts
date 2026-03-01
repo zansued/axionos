@@ -420,6 +420,63 @@ export type Database = {
           },
         ]
       }
+      git_connections: {
+        Row: {
+          connected_by: string
+          created_at: string
+          default_branch: string
+          id: string
+          organization_id: string
+          provider: string
+          repo_name: string
+          repo_owner: string
+          status: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          connected_by: string
+          created_at?: string
+          default_branch?: string
+          id?: string
+          organization_id: string
+          provider?: string
+          repo_name: string
+          repo_owner: string
+          status?: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          connected_by?: string
+          created_at?: string
+          default_branch?: string
+          id?: string
+          organization_id?: string
+          provider?: string
+          repo_name?: string
+          repo_owner?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "git_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "git_connections_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_members: {
         Row: {
           created_at: string
