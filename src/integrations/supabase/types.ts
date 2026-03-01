@@ -477,6 +477,66 @@ export type Database = {
           },
         ]
       }
+      initiatives: {
+        Row: {
+          architecture_content: string | null
+          created_at: string
+          description: string | null
+          id: string
+          notes: string | null
+          organization_id: string
+          prd_content: string | null
+          status: Database["public"]["Enums"]["initiative_status"]
+          title: string
+          updated_at: string
+          user_id: string
+          workspace_id: string | null
+        }
+        Insert: {
+          architecture_content?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          notes?: string | null
+          organization_id: string
+          prd_content?: string | null
+          status?: Database["public"]["Enums"]["initiative_status"]
+          title: string
+          updated_at?: string
+          user_id: string
+          workspace_id?: string | null
+        }
+        Update: {
+          architecture_content?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          prd_content?: string | null
+          status?: Database["public"]["Enums"]["initiative_status"]
+          title?: string
+          updated_at?: string
+          user_id?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "initiatives_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "initiatives_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_members: {
         Row: {
           created_at: string
@@ -653,12 +713,97 @@ export type Database = {
         }
         Relationships: []
       }
+      squad_members: {
+        Row: {
+          agent_id: string
+          assigned_at: string
+          id: string
+          role_in_squad: string | null
+          squad_id: string
+        }
+        Insert: {
+          agent_id: string
+          assigned_at?: string
+          id?: string
+          role_in_squad?: string | null
+          squad_id: string
+        }
+        Update: {
+          agent_id?: string
+          assigned_at?: string
+          id?: string
+          role_in_squad?: string | null
+          squad_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "squad_members_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "squad_members_squad_id_fkey"
+            columns: ["squad_id"]
+            isOneToOne: false
+            referencedRelation: "squads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      squads: {
+        Row: {
+          auto_generated: boolean
+          created_at: string
+          id: string
+          initiative_id: string
+          name: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          auto_generated?: boolean
+          created_at?: string
+          id?: string
+          initiative_id: string
+          name: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          auto_generated?: boolean
+          created_at?: string
+          id?: string
+          initiative_id?: string
+          name?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "squads_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "squads_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stories: {
         Row: {
           assigned_agent_id: string | null
           created_at: string
           description: string | null
           id: string
+          initiative_id: string | null
           organization_id: string | null
           priority: Database["public"]["Enums"]["story_priority"]
           status: Database["public"]["Enums"]["story_status"]
@@ -672,6 +817,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          initiative_id?: string | null
           organization_id?: string | null
           priority?: Database["public"]["Enums"]["story_priority"]
           status?: Database["public"]["Enums"]["story_status"]
@@ -685,6 +831,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          initiative_id?: string | null
           organization_id?: string | null
           priority?: Database["public"]["Enums"]["story_priority"]
           status?: Database["public"]["Enums"]["story_status"]
@@ -699,6 +846,13 @@ export type Database = {
             columns: ["assigned_agent_id"]
             isOneToOne: false
             referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stories_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
             referencedColumns: ["id"]
           },
           {
@@ -914,6 +1068,15 @@ export type Database = {
         | "aios_master"
         | "aios_orchestrator"
       agent_status: "active" | "inactive"
+      initiative_status:
+        | "idea"
+        | "planning"
+        | "architecting"
+        | "ready"
+        | "in_progress"
+        | "validating"
+        | "publishing"
+        | "completed"
       org_role: "owner" | "admin" | "editor" | "reviewer" | "viewer"
       output_status:
         | "draft"
@@ -1067,6 +1230,16 @@ export const Constants = {
         "aios_orchestrator",
       ],
       agent_status: ["active", "inactive"],
+      initiative_status: [
+        "idea",
+        "planning",
+        "architecting",
+        "ready",
+        "in_progress",
+        "validating",
+        "publishing",
+        "completed",
+      ],
       org_role: ["owner", "admin", "editor", "reviewer", "viewer"],
       output_status: [
         "draft",

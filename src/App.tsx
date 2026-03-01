@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { OrgProvider } from "@/contexts/OrgContext";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Initiatives from "./pages/Initiatives";
 import Agents from "./pages/Agents";
 import Stories from "./pages/Stories";
 import Kanban from "./pages/Kanban";
@@ -45,6 +46,8 @@ const App = () => (
             <Routes>
               <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
               <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
+              <Route path="/squads" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
               <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
               <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
               <Route path="/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
