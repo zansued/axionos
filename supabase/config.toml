@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.rework-artifact]
 verify_jwt = false
+
+[functions.run-initiative-pipeline]
+verify_jwt = false
