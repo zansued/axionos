@@ -95,9 +95,12 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
                 {runningStage === "discovery" && "IA analisando ideia, mercado e viabilidade..."}
                 {runningStage === "squad_formation" && "Montando squad ideal de agentes..."}
                 {runningStage === "planning" && "Gerando PRD → Arquitetura → Stories..."}
+                {runningStage === "execution" && "Agentes executando subtasks automaticamente..."}
               </p>
               <p className="text-xs text-muted-foreground">
-                {runningStage === "planning" ? "Isso pode levar ~2 minutos." : "Isso pode levar ~30 segundos."}
+                {runningStage === "planning" ? "Isso pode levar ~2 minutos." :
+                 runningStage === "execution" ? "Isso pode levar vários minutos dependendo do número de subtasks." :
+                 "Isso pode levar ~30 segundos."}
               </p>
             </div>
           </CardContent>
