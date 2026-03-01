@@ -232,7 +232,7 @@ export default function Artifacts() {
                                   />
                                   <ArtifactAiAnalysis
                                     artifactId={output.id}
-                                    analysis={aiAnalysis.results[output.id]}
+                                    analysisResult={aiAnalysis.results[output.id]}
                                     isAnalyzing={aiAnalysis.analyzing === output.id}
                                     onAnalyze={() => aiAnalysis.analyze(output.id)}
                                     onApplyVerdict={(verdict) => {

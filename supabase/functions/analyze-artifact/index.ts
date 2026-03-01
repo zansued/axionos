@@ -36,7 +36,6 @@ serve(async (req) => {
       });
     }
 
-    // Rate limit
     const { allowed } = await checkRateLimit(user.id, "analyze-artifact");
     if (!allowed) {
       return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em breve." }), {
@@ -48,7 +47,6 @@ serve(async (req) => {
     const { artifactId } = await req.json();
     if (!artifactId) throw new Error("artifactId is required");
 
-    // Fetch artifact with related data
     const { data: artifact, error: artErr } = await supabase
       .from("agent_outputs")
       .select("*, agents(name, role)")
@@ -57,7 +55,6 @@ serve(async (req) => {
 
     if (artErr || !artifact) throw new Error("Artefato não encontrado");
 
-    // Fetch previous reviews
     const { data: reviews } = await supabase
       .from("artifact_reviews")
       .select("action, comment, created_at")
@@ -65,7 +62,6 @@ serve(async (req) => {
       .order("created_at", { ascending: false })
       .limit(5);
 
-    // Fetch related validations
     const { data: validations } = await supabase
       .from("validation_runs")
       .select("type, result, logs")
@@ -73,7 +69,6 @@ serve(async (req) => {
       .order("executed_at", { ascending: false })
       .limit(3);
 
-    // Build context for AI
     const rawOutputStr = typeof artifact.raw_output === "object"
       ? JSON.stringify(artifact.raw_output, null, 2)
       : String(artifact.raw_output);
@@ -93,37 +88,25 @@ serve(async (req) => {
       analysis: "Análise Técnica",
     };
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
+    if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY is not configured");
 
-    const systemPrompt = `Você é um revisor técnico sênior do AxionOS, um sistema de governança de pipelines de IA. Sua função é analisar artefatos produzidos por agentes de IA e emitir um veredito técnico fundamentado.
+    const userPrompt = `Você é um revisor técnico sênior do AxionOS, um sistema de governança de pipelines de IA. Analise o artefato abaixo e emita um veredito técnico fundamentado.
 
-Você deve avaliar com base em:
-1. **Qualidade técnica**: O conteúdo é bem estruturado, completo e correto?
-2. **Aderência ao padrão**: Segue boas práticas da área (código, documentação, decisão)?
-3. **Riscos**: Existem riscos de segurança, performance ou manutenibilidade?
-4. **Completude**: Cobre todos os aspectos esperados para o tipo de artefato?
+Avalie com base em:
+1. Qualidade técnica: O conteúdo é bem estruturado, completo e correto?
+2. Aderência ao padrão: Segue boas práticas da área?
+3. Riscos: Existem riscos de segurança, performance ou manutenibilidade?
+4. Completude: Cobre todos os aspectos esperados?
 
-Responda SEMPRE em português brasileiro com o seguinte formato JSON:
-{
-  "verdict": "approve" | "reject" | "request_changes",
-  "confidence": number (0-100),
-  "summary": "Resumo de 1-2 frases do veredito",
-  "strengths": ["pontos fortes"],
-  "issues": ["problemas encontrados"],
-  "suggestions": ["sugestões de melhoria"],
-  "risk_level": "low" | "medium" | "high" | "critical"
-}`;
+**Artefato:**
+- Tipo: ${typeLabels[artifact.type] || artifact.type}
+- Status atual: ${artifact.status}
+- Agente: ${artifact.agents?.name || "Desconhecido"} (${artifact.agents?.role || "N/A"})
+- Modelo: ${artifact.model_used || "N/A"}
+- Resumo: ${artifact.summary || "Sem resumo"}
 
-    const userPrompt = `Analise o seguinte artefato:
-
-**Tipo:** ${typeLabels[artifact.type] || artifact.type}
-**Status atual:** ${artifact.status}
-**Agente responsável:** ${artifact.agents?.name || "Desconhecido"} (${artifact.agents?.role || "N/A"})
-**Modelo usado:** ${artifact.model_used || "N/A"}
-**Resumo:** ${artifact.summary || "Sem resumo"}
-
-**Conteúdo do artefato:**
+**Conteúdo:**
 \`\`\`
 ${rawOutputStr.substring(0, 8000)}
 \`\`\`
@@ -134,89 +117,51 @@ ${reviewHistory}
 **Validações:**
 ${validationHistory}
 
-Com base nesta análise, emita seu veredito técnico.`;
+Responda APENAS com um JSON válido neste formato exato, sem markdown ou texto extra:
+{"verdict":"approve|reject|request_changes","confidence":0-100,"summary":"resumo 1-2 frases","strengths":["pontos fortes"],"issues":["problemas"],"suggestions":["sugestões"],"risk_level":"low|medium|high|critical"}`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "deepseek-reasoner",
         messages: [
-          { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "emit_verdict",
-              description: "Emite o veredito técnico da análise do artefato",
-              parameters: {
-                type: "object",
-                properties: {
-                  verdict: { type: "string", enum: ["approve", "reject", "request_changes"] },
-                  confidence: { type: "number" },
-                  summary: { type: "string" },
-                  strengths: { type: "array", items: { type: "string" } },
-                  issues: { type: "array", items: { type: "string" } },
-                  suggestions: { type: "array", items: { type: "string" } },
-                  risk_level: { type: "string", enum: ["low", "medium", "high", "critical"] },
-                },
-                required: ["verdict", "confidence", "summary", "strengths", "issues", "suggestions", "risk_level"],
-                additionalProperties: false,
-              },
-            },
-          },
-        ],
-        tool_choice: { type: "function", function: { name: "emit_verdict" } },
       }),
     });
 
     if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Limite de requisições da IA excedido. Tente novamente em alguns minutos." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos de IA insuficientes. Adicione créditos ao workspace." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
       const t = await response.text();
-      console.error("AI gateway error:", response.status, t);
-      throw new Error(`Erro na análise IA (${response.status})`);
+      console.error("DeepSeek error:", response.status, t);
+      throw new Error(`Erro na API DeepSeek (${response.status})`);
     }
 
     const aiData = await response.json();
-    const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
-    
-    let analysis;
-    if (toolCall?.function?.arguments) {
-      analysis = JSON.parse(toolCall.function.arguments);
-    } else {
-      // Fallback: try parsing content as JSON
-      const content = aiData.choices?.[0]?.message?.content;
-      if (content) {
-        const jsonMatch = content.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          analysis = JSON.parse(jsonMatch[0]);
-        }
-      }
-    }
+    const content = aiData.choices?.[0]?.message?.content;
+    if (!content) throw new Error("DeepSeek não retornou dados");
 
-    if (!analysis) throw new Error("IA não retornou análise válida");
+    // Extract JSON from response (handle possible markdown wrapping)
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error("Resposta da IA não contém JSON válido");
 
-    // Record the AI analysis as a review
+    const analysis = JSON.parse(jsonMatch[0]);
+
+    // Capture reasoning_content if available
+    const reasoning = aiData.choices?.[0]?.message?.reasoning_content || null;
+
+    // Record the AI analysis as a review (include reasoning in comment)
     const serviceSupabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
+
+    const reviewComment = reasoning
+      ? JSON.stringify({ ...analysis, reasoning_summary: reasoning.substring(0, 1000) })
+      : JSON.stringify(analysis);
 
     await serviceSupabase.from("artifact_reviews").insert({
       output_id: artifactId,
@@ -224,10 +169,10 @@ Com base nesta análise, emita seu veredito técnico.`;
       action: "ai_analysis",
       previous_status: artifact.status,
       new_status: artifact.status,
-      comment: JSON.stringify(analysis),
+      comment: reviewComment,
     });
 
-    return new Response(JSON.stringify({ success: true, analysis }), {
+    return new Response(JSON.stringify({ success: true, analysis, reasoning: reasoning?.substring(0, 2000) || null }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
