@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.analyze-artifact]
 verify_jwt = false
+
+[functions.rework-artifact]
+verify_jwt = false

@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface AiAnalysis {
   verdict: "approve" | "reject" | "request_changes";
@@ -17,10 +18,30 @@ export interface AnalysisResult {
   reasoning: string | null;
 }
 
+export interface ReworkResult {
+  success: boolean;
+  iteration: number;
+  max_iterations: number;
+  tokens_used: number;
+  auto_mode: boolean;
+  reanalysis: AiAnalysis | null;
+  new_status: string;
+  escalated?: boolean;
+  message?: string;
+}
+
 export function useArtifactAnalysis() {
   const [analyzing, setAnalyzing] = useState<string | null>(null);
+  const [reworking, setReworking] = useState<string | null>(null);
   const [results, setResults] = useState<Record<string, AnalysisResult>>({});
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const invalidate = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ["agent-outputs"] });
+    queryClient.invalidateQueries({ queryKey: ["artifact-reviews"] });
+    queryClient.invalidateQueries({ queryKey: ["workspace-outputs"] });
+  }, [queryClient]);
 
   const analyze = useCallback(async (artifactId: string) => {
     setAnalyzing(artifactId);
@@ -28,7 +49,6 @@ export function useArtifactAnalysis() {
       const { data, error } = await supabase.functions.invoke("analyze-artifact", {
         body: { artifactId },
       });
-
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
 
@@ -40,16 +60,81 @@ export function useArtifactAnalysis() {
       toast({ title: "Análise IA concluída", description: result.analysis.summary });
       return result;
     } catch (e: any) {
-      toast({
-        variant: "destructive",
-        title: "Erro na análise IA",
-        description: e.message || "Erro desconhecido",
-      });
+      toast({ variant: "destructive", title: "Erro na análise IA", description: e.message });
       return null;
     } finally {
       setAnalyzing(null);
     }
   }, [toast]);
 
-  return { analyze, analyzing, results };
+  const rework = useCallback(async (artifactId: string, feedback?: string, autoMode = false): Promise<ReworkResult | null> => {
+    setReworking(artifactId);
+    try {
+      const { data, error } = await supabase.functions.invoke("rework-artifact", {
+        body: { artifactId, feedback, autoMode },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      const result = data as ReworkResult;
+
+      if (result.escalated) {
+        toast({
+          title: "⚠️ Escalado para revisão humana",
+          description: result.message,
+        });
+      } else if (result.reanalysis?.verdict === "approve") {
+        toast({
+          title: "✅ Artefato aprovado automaticamente",
+          description: `Aprovado pela IA após retrabalho (iteração ${result.iteration}). Confiança: ${result.reanalysis.confidence}%`,
+        });
+        // Update local analysis result
+        setResults((prev) => ({
+          ...prev,
+          [artifactId]: { analysis: result.reanalysis!, reasoning: null },
+        }));
+      } else {
+        toast({
+          title: `🔄 Retrabalho concluído (${result.iteration}/${result.max_iterations})`,
+          description: result.reanalysis
+            ? `Nova análise: ${result.reanalysis.verdict === "request_changes" ? "ainda precisa de ajustes" : result.reanalysis.verdict}`
+            : "Artefato atualizado. Envie para revisão.",
+        });
+        if (result.reanalysis) {
+          setResults((prev) => ({
+            ...prev,
+            [artifactId]: { analysis: result.reanalysis!, reasoning: null },
+          }));
+        }
+      }
+
+      invalidate();
+      return result;
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Erro no retrabalho", description: e.message });
+      return null;
+    } finally {
+      setReworking(null);
+    }
+  }, [toast, invalidate]);
+
+  const analyzeAndAutoRework = useCallback(async (artifactId: string) => {
+    // Step 1: Analyze
+    const analysisResult = await analyze(artifactId);
+    if (!analysisResult) return null;
+
+    // Step 2: If needs changes, auto-rework
+    if (analysisResult.analysis.verdict === "request_changes" || analysisResult.analysis.verdict === "reject") {
+      const feedback = [
+        ...analysisResult.analysis.issues.map(i => `Problema: ${i}`),
+        ...analysisResult.analysis.suggestions.map(s => `Sugestão: ${s}`),
+      ].join("\n");
+
+      return await rework(artifactId, feedback, true);
+    }
+
+    return analysisResult;
+  }, [analyze, rework]);
+
+  return { analyze, analyzing, results, rework, reworking, analyzeAndAutoRework };
 }
