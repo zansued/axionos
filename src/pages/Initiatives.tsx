@@ -98,6 +98,7 @@ export default function Initiatives() {
         squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
         planning: `Planning completo: ${result.stories?.length || 0} stories criadas ✅`,
         approve: "Stage aprovado ✅",
+        execution: `Execução concluída: ${result.executed || 0} subtasks executadas ✅`,
       };
       toast({ title: stageLabels[stage] || "Concluído!" });
       queryClient.invalidateQueries({ queryKey: ["initiatives"] });

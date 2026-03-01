@@ -42,6 +42,20 @@ async function callDeepSeek(apiKey: string, systemPrompt: string, userPrompt: st
   };
 }
 
+// Smart agent assignment: pick best agent based on subtask content keywords
+function pickAgent(description: string, agentsByRole: Record<string, any>, fallback: any) {
+  const lower = description.toLowerCase();
+  if (/arquitetura|design|padr[ãa]o|diagrama|componente/i.test(lower) && agentsByRole["architect"]) return agentsByRole["architect"];
+  if (/teste|qa|qualidade|validar|cenário/i.test(lower) && agentsByRole["qa"]) return agentsByRole["qa"];
+  if (/deploy|ci\/cd|infra|docker|pipeline/i.test(lower) && agentsByRole["devops"]) return agentsByRole["devops"];
+  if (/ux|interface|usabilidade|layout|wireframe/i.test(lower) && agentsByRole["ux_expert"]) return agentsByRole["ux_expert"];
+  if (/requisito|análise|negócio|stakeholder/i.test(lower) && agentsByRole["analyst"]) return agentsByRole["analyst"];
+  if (/história|prioridade|backlog|aceite/i.test(lower) && agentsByRole["po"]) return agentsByRole["po"];
+  if (/sprint|cerimônia|impedimento|equipe/i.test(lower) && agentsByRole["sm"]) return agentsByRole["sm"];
+  if (/código|implementar|api|endpoint|função|banco/i.test(lower) && agentsByRole["dev"]) return agentsByRole["dev"];
+  return fallback;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -339,7 +353,6 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
 
     // ========== APPROVE STAGE ==========
     if (stage === "approve") {
-      const { approve_stage } = await req.json().catch(() => ({}));
       const currentStatus = initiative.stage_status;
 
       const approvalMap: Record<string, { field: string; nextStatus: string }> = {
@@ -362,7 +375,174 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
       });
     }
 
-    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve`);
+    // ========== STAGE 4: EXECUTION ==========
+    if (stage === "execution") {
+      const jobId = await createJob("execution", { initiative_id: initiativeId });
+      await updateInit({ stage_status: "in_progress" });
+      await log("pipeline_execution_start", "Iniciando execução automática de subtasks...");
+
+      try {
+        // 1. Fetch all stories for this initiative
+        const { data: stories } = await serviceClient.from("stories")
+          .select("id, title, description")
+          .eq("initiative_id", initiativeId)
+          .eq("status", "todo");
+
+        if (!stories || stories.length === 0) {
+          throw new Error("Nenhuma story encontrada para execução");
+        }
+
+        // 2. Fetch squad agents
+        const { data: squads } = await serviceClient.from("squads")
+          .select("id, squad_members(agent_id, role_in_squad, agents(id, name, role, description, exclusive_authorities))")
+          .eq("initiative_id", initiativeId);
+
+        const squadMembers = squads?.[0]?.squad_members || [];
+        if (squadMembers.length === 0) {
+          throw new Error("Nenhum agente no squad para executar");
+        }
+
+        // Role-to-agent mapping for smart assignment
+        const agentsByRole: Record<string, any> = {};
+        for (const sm of squadMembers) {
+          agentsByRole[sm.role_in_squad] = sm.agents;
+        }
+
+        // Fallback agent (first dev or first agent)
+        const defaultAgent = agentsByRole["dev"] || agentsByRole["architect"] || squadMembers[0]?.agents;
+
+        let totalTokens = 0;
+        let totalCost = 0;
+        let executedCount = 0;
+        let failedCount = 0;
+
+        // 3. Process each story
+        for (const story of stories) {
+          // Update story to in_progress
+          await serviceClient.from("stories").update({ status: "in_progress" }).eq("id", story.id);
+
+          // Fetch phases and subtasks
+          const { data: phases } = await serviceClient.from("story_phases")
+            .select("id, name, sort_order, story_subtasks(id, description, status, sort_order)")
+            .eq("story_id", story.id)
+            .order("sort_order");
+
+          if (!phases) continue;
+
+          for (const phase of phases) {
+            await serviceClient.from("story_phases").update({ status: "in_progress" }).eq("id", phase.id);
+
+            const subtasks = (phase.story_subtasks || [])
+              .filter((st: any) => st.status === "pending")
+              .sort((a: any, b: any) => a.sort_order - b.sort_order);
+
+            for (const subtask of subtasks) {
+              // Smart agent assignment based on subtask content
+              const assignedAgent = pickAgent(subtask.description, agentsByRole, defaultAgent);
+
+              // Mark subtask in_progress
+              await serviceClient.from("story_subtasks").update({
+                status: "in_progress",
+                executed_by_agent_id: assignedAgent.id,
+              }).eq("id", subtask.id);
+
+              try {
+                const start = Date.now();
+                const result = await callDeepSeek(
+                  DEEPSEEK_API_KEY,
+                  `Você é o agente "${assignedAgent.name}" com o papel de "${assignedAgent.role}" no AxionOS.
+${assignedAgent.description || ""}
+Sua tarefa é executar a subtask abaixo com maestria, produzindo um output técnico e completo.
+Responda em português do Brasil.`,
+                  `## Contexto
+- **Story**: ${story.title}
+- **Descrição**: ${story.description || ""}
+- **Fase**: ${phase.name}
+
+## Subtask a executar
+${subtask.description}
+
+Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quando aplicável.`
+                );
+
+                // Update subtask with output
+                await serviceClient.from("story_subtasks").update({
+                  output: result.content,
+                  status: "completed",
+                  executed_at: new Date().toISOString(),
+                }).eq("id", subtask.id);
+
+                // Create traceable artifact
+                const outputType = assignedAgent.role === "architect" ? "decision"
+                  : ["dev", "devops"].includes(assignedAgent.role) ? "code"
+                  : ["analyst", "po", "pm"].includes(assignedAgent.role) ? "content"
+                  : "analysis";
+
+                await serviceClient.from("agent_outputs").insert({
+                  organization_id: initiative.organization_id,
+                  workspace_id: initiative.workspace_id || null,
+                  agent_id: assignedAgent.id,
+                  subtask_id: subtask.id,
+                  type: outputType,
+                  status: "draft",
+                  summary: subtask.description?.slice(0, 200),
+                  raw_output: { text: result.content },
+                  model_used: result.model,
+                  prompt_used: subtask.description,
+                  tokens_used: result.tokens,
+                  cost_estimate: result.costUsd,
+                });
+
+                totalTokens += result.tokens;
+                totalCost += result.costUsd;
+                executedCount++;
+              } catch (subtaskErr) {
+                await serviceClient.from("story_subtasks").update({ status: "failed" }).eq("id", subtask.id);
+                failedCount++;
+                console.error(`Subtask ${subtask.id} failed:`, subtaskErr);
+              }
+            }
+
+            // Mark phase completed if all subtasks done
+            const { count: pendingCount } = await serviceClient.from("story_subtasks")
+              .select("*", { count: "exact", head: true })
+              .eq("phase_id", phase.id)
+              .neq("status", "completed");
+            if (pendingCount === 0) {
+              await serviceClient.from("story_phases").update({ status: "completed" }).eq("id", phase.id);
+            }
+          }
+
+          // Mark story done if all phases completed
+          const { count: pendingPhases } = await serviceClient.from("story_phases")
+            .select("*", { count: "exact", head: true })
+            .eq("story_id", story.id)
+            .neq("status", "completed");
+          if (pendingPhases === 0) {
+            await serviceClient.from("stories").update({ status: "done" }).eq("id", story.id);
+          }
+        }
+
+        await updateInit({ stage_status: "validating" });
+        if (jobId) await completeJob(jobId, {
+          executed: executedCount, failed: failedCount, total_tokens: totalTokens,
+        }, { model: "deepseek-chat", costUsd: totalCost, durationMs: 0 });
+
+        await log("pipeline_execution_complete", `Execução concluída: ${executedCount} subtasks executadas, ${failedCount} falhas`, {
+          total_tokens: totalTokens, cost_usd: totalCost,
+        });
+
+        return new Response(JSON.stringify({
+          success: true, executed: executedCount, failed: failedCount,
+          tokens: totalTokens, cost_usd: totalCost, job_id: jobId,
+        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      } catch (e) {
+        if (jobId) await failJob(jobId, e instanceof Error ? e.message : "Unknown error");
+        throw e;
+      }
+    }
+
+    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve, execution`);
   } catch (e) {
     console.error("run-initiative-pipeline error:", e);
     return new Response(
