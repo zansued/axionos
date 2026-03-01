@@ -189,15 +189,15 @@ export default function Artifacts() {
                       return (
                         <motion.div key={output.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                           <Card
-                            className={`border-border/50 cursor-pointer transition-colors hover:bg-muted/20 ${isSelected ? "ring-1 ring-primary" : ""}`}
+                            className={`border-border/50 cursor-pointer transition-colors hover:bg-muted/20 overflow-hidden ${isSelected ? "ring-1 ring-primary" : ""}`}
                             onClick={() => setSelectedArtifact(isSelected ? null : output.id)}
                           >
-                            <CardContent className="p-4">
+                            <CardContent className="p-4 space-y-0">
                               <div className="flex items-start justify-between gap-3">
                                 <div className="flex items-start gap-3 flex-1 min-w-0">
                                   <TypeIcon className={`h-5 w-5 mt-0.5 shrink-0 ${typeInfo.color}`} />
                                   <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-medium truncate">{output.summary || "Sem resumo"}</p>
+                                    <p className="text-sm font-medium break-words">{output.summary || "Sem resumo"}</p>
                                     <div className="flex items-center gap-2 mt-1 flex-wrap">
                                       {output.agents && (
                                         <span className="text-[10px] text-muted-foreground">
@@ -230,18 +230,21 @@ export default function Artifacts() {
                                     onComment={(c) => reviewActions.addComment(output.id, output.status, c)}
                                     deployBlocked={!validations.some((v: any) => v.artifact_id === output.id && v.result === "pass")}
                                   />
-                                  <ArtifactAiAnalysis
-                                    artifactId={output.id}
-                                    analysisResult={aiAnalysis.results[output.id]}
-                                    isAnalyzing={aiAnalysis.analyzing === output.id}
-                                    onAnalyze={() => aiAnalysis.analyze(output.id)}
-                                    onApplyVerdict={(verdict) => {
-                                      if (verdict === "approve") reviewActions.approve(output.id, "Aprovado por análise IA");
-                                      else if (verdict === "reject") reviewActions.reject(output.id, "Rejeitado por análise IA");
-                                      else reviewActions.requestChanges(output.id, "Alterações sugeridas pela análise IA");
-                                    }}
-                                  />
                                 </div>
+                              </div>
+                              {/* AI Analysis button + expanded panel below the card content */}
+                              <div className="mt-2 flex justify-end" onClick={(e) => e.stopPropagation()}>
+                                <ArtifactAiAnalysis
+                                  artifactId={output.id}
+                                  analysisResult={aiAnalysis.results[output.id]}
+                                  isAnalyzing={aiAnalysis.analyzing === output.id}
+                                  onAnalyze={() => aiAnalysis.analyze(output.id)}
+                                  onApplyVerdict={(verdict) => {
+                                    if (verdict === "approve") reviewActions.approve(output.id, "Aprovado por análise IA");
+                                    else if (verdict === "reject") reviewActions.reject(output.id, "Rejeitado por análise IA");
+                                    else reviewActions.requestChanges(output.id, "Alterações sugeridas pela análise IA");
+                                  }}
+                                />
                               </div>
                             </CardContent>
                           </Card>
