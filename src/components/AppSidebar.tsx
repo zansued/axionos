@@ -45,7 +45,7 @@ export function AppSidebar() {
             <Bot className="h-5 w-5 text-primary shrink-0" />
             {!collapsed && (
               <span className="font-display text-sm font-bold tracking-tight">
-                <span className="text-gradient">Synkra</span> AIOS
+                <span className="text-gradient">Axion</span>OS
               </span>
             )}
           </SidebarGroupLabel>

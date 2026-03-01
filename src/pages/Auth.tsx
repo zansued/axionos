@@ -62,11 +62,11 @@ export default function Auth() {
             <Bot className="h-8 w-8 text-primary-foreground" />
           </motion.div>
           <h1 className="font-display text-3xl font-bold tracking-tight">
-            <span className="text-gradient">Synkra</span> AIOS
+            <span className="text-gradient">Axion</span>OS
           </h1>
           <p className="mt-2 text-sm text-muted-foreground flex items-center justify-center gap-1">
             <Zap className="h-3 w-3 text-primary" />
-            AI Operating System Control Panel
+            Governed AI Pipelines
           </p>
         </div>
 
