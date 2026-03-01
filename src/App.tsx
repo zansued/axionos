@@ -8,6 +8,7 @@ import { OrgProvider } from "@/contexts/OrgContext";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Initiatives from "./pages/Initiatives";
+import Squads from "./pages/Squads";
 import Agents from "./pages/Agents";
 import Stories from "./pages/Stories";
 import Kanban from "./pages/Kanban";
@@ -47,13 +48,13 @@ const App = () => (
               <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
               <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
-              <Route path="/squads" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
+              <Route path="/squads" element={<ProtectedRoute><Squads /></ProtectedRoute>} />
               <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
               <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
               <Route path="/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
               <Route path="/audit" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
               <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
-              <Route path="/planning" element={<ProtectedRoute><Planning /></ProtectedRoute>} />
+              <Route path="/planning" element={<Navigate to="/initiatives" replace />} />
               <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
               <Route path="/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
               <Route path="/org" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
