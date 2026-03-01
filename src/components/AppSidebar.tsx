@@ -1,4 +1,4 @@
-import { Lightbulb, Users, BookOpen, LayoutDashboard, LogOut, Columns3, Shield, Radio, Hammer, Building2, Package, GitBranch, Rocket, CheckSquare } from "lucide-react";
+import { Lightbulb, Users, BookOpen, LayoutDashboard, LogOut, Columns3, Shield, Radio, Hammer, Building2, Package, GitBranch, Rocket, CheckSquare, CreditCard } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -32,6 +32,7 @@ const governanceItems = [
   { title: "Auditoria", url: "/audit", icon: Shield },
   { title: "Observabilidade", url: "/observability", icon: Radio },
   { title: "Organização", url: "/org", icon: Building2 },
+  { title: "Billing & Usage", url: "/billing", icon: CreditCard },
 ];
 
 export function AppSidebar() {
