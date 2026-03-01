@@ -159,10 +159,12 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
                 {runningStage === "squad_formation" && "Montando squad ideal de agentes..."}
                 {runningStage === "planning" && "Gerando PRD → Arquitetura → Stories..."}
                 {runningStage === "execution" && "Agentes executando subtasks automaticamente..."}
+                {runningStage === "validation" && "Validando qualidade dos artefatos com IA..."}
               </p>
               <p className="text-xs text-muted-foreground">
                 {runningStage === "planning" ? "Isso pode levar ~2 minutos." :
                  runningStage === "execution" ? "Isso pode levar vários minutos dependendo do número de subtasks." :
+                 runningStage === "validation" ? "Cada artefato será analisado individualmente. ~1 min." :
                  "Isso pode levar ~30 segundos."}
               </p>
             </div>

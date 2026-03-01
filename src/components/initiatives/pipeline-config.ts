@@ -15,6 +15,7 @@ export const PIPELINE_STEPS = [
   { key: "planned", label: "Planejado", icon: FileText, color: "text-accent", bg: "bg-accent/10" },
   { key: "in_progress", label: "Execução", icon: Hammer, color: "text-primary", bg: "bg-primary/10" },
   { key: "validating", label: "Validação", icon: Shield, color: "text-warning", bg: "bg-warning/10" },
+  { key: "ready_to_publish", label: "Pronto", icon: Rocket, color: "text-accent", bg: "bg-accent/10" },
   { key: "completed", label: "Concluído", icon: CheckCircle2, color: "text-success", bg: "bg-success/10" },
 ];
 
@@ -23,6 +24,7 @@ export const MACRO_STAGES = [
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
+  { key: "validation", label: "Validação", icon: Shield },
   { key: "done", label: "Concluído", icon: CheckCircle2 },
 ];
 
@@ -36,8 +38,9 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["draft", "discovering", "discovered"].includes(s)) return 0;
   if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 1;
   if (["planning_ready", "planning", "planned"].includes(s)) return 2;
-  if (["in_progress", "validating", "ready_to_publish"].includes(s)) return 3;
-  if (["published", "completed"].includes(s)) return 4;
+  if (["in_progress"].includes(s)) return 3;
+  if (["validating", "ready_to_publish"].includes(s)) return 4;
+  if (["published", "completed"].includes(s)) return 5;
   return 0;
 }
 
@@ -77,6 +80,12 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "validating":
       return [
+        { stage: "validation", label: "Rodar Validação", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "ready_to_publish":
+      return [
+        { stage: "approve", label: "Aprovar para Publicação", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     default:
