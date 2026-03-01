@@ -19,7 +19,7 @@ import {
 import {
   Bot, Play, CheckCircle2, Clock, AlertTriangle, Loader2, Sparkles,
   ChevronDown, ChevronRight, FileText, Map, Hammer,
-  GitCompare, ShieldCheck, Lightbulb, Package, RefreshCw, Shield,
+  GitCompare, ShieldCheck, Lightbulb, Package, RefreshCw, Shield, GitBranch,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -31,6 +31,7 @@ import { WorkspaceDiff } from "@/components/workspace/WorkspaceDiff";
 import { WorkspaceValidation } from "@/components/workspace/WorkspaceValidation";
 import { WorkspacePoliciesPanel } from "@/components/workspace/WorkspacePolicies";
 import { WorkspaceReplay } from "@/components/workspace/WorkspaceReplay";
+import { WorkspaceGit } from "@/components/workspace/WorkspaceGit";
 import { EmptyState, StatusBadge } from "@/components/workspace/WorkspaceShared";
 
 const SUBTASK_STATUS: Record<string, { label: string; icon: any; color: string }> = {
@@ -237,13 +238,14 @@ export default function Workspace() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 h-9">
+          <TabsList className="grid w-full grid-cols-4 md:grid-cols-9 h-9">
             <TabsTrigger value="plan" className="text-xs gap-1"><Map className="h-3 w-3" /> Plano</TabsTrigger>
             <TabsTrigger value="execution" className="text-xs gap-1"><Hammer className="h-3 w-3" /> Execução</TabsTrigger>
             <TabsTrigger value="diff" className="text-xs gap-1"><GitCompare className="h-3 w-3" /> Diff</TabsTrigger>
             <TabsTrigger value="validation" className="text-xs gap-1"><ShieldCheck className="h-3 w-3" /> Validação</TabsTrigger>
             <TabsTrigger value="decisions" className="text-xs gap-1"><Lightbulb className="h-3 w-3" /> ADRs</TabsTrigger>
             <TabsTrigger value="artifacts" className="text-xs gap-1"><Package className="h-3 w-3" /> Artefatos</TabsTrigger>
+            <TabsTrigger value="git" className="text-xs gap-1"><GitBranch className="h-3 w-3" /> Git</TabsTrigger>
             <TabsTrigger value="policies" className="text-xs gap-1"><Shield className="h-3 w-3" /> Políticas</TabsTrigger>
             <TabsTrigger value="replay" className="text-xs gap-1"><RefreshCw className="h-3 w-3" /> Replay</TabsTrigger>
           </TabsList>
@@ -369,6 +371,11 @@ export default function Workspace() {
                 );
               })
             )}
+          </TabsContent>
+
+          {/* GIT */}
+          <TabsContent value="git" className="mt-4">
+            <WorkspaceGit />
           </TabsContent>
 
           {/* POLÍTICAS */}
