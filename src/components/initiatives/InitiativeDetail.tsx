@@ -18,15 +18,27 @@ import {
 } from "lucide-react";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
+
+interface GitConnection {
+  id: string;
+  repo_owner: string;
+  repo_name: string;
+  default_branch: string;
+}
+
 interface InitiativeDetailProps {
   initiative: any;
   jobs: any[];
   runningStage: string | null;
+  gitConnections?: GitConnection[];
   onRunStage: (stage: string, comment?: string, publishParams?: { github_token: string; owner: string; repo: string; base_branch: string }) => void;
   onApprove: () => void;
 }
 
-export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, onApprove }: InitiativeDetailProps) {
+export function InitiativeDetail({ initiative, jobs, runningStage, gitConnections = [], onRunStage, onApprove }: InitiativeDetailProps) {
   const stageStatus = initiative.stage_status || initiative.status || "draft";
   const macroIdx = getMacroStageIndex(stageStatus);
   const actions = getAvailableActions(stageStatus);
@@ -37,9 +49,26 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
 
   const [publishOpen, setPublishOpen] = useState(false);
   const [ghToken, setGhToken] = useState("");
-  const [ghOwner, setGhOwner] = useState("");
-  const [ghRepo, setGhRepo] = useState("");
-  const [ghBranch, setGhBranch] = useState("main");
+  const [ghOwner, setGhOwner] = useState(gitConnections[0]?.repo_owner || "");
+  const [ghRepo, setGhRepo] = useState(gitConnections[0]?.repo_name || "");
+  const [ghBranch, setGhBranch] = useState(gitConnections[0]?.default_branch || "main");
+  const [selectedConnectionId, setSelectedConnectionId] = useState(gitConnections[0]?.id || "manual");
+
+  const handleSelectConnection = (connId: string) => {
+    setSelectedConnectionId(connId);
+    if (connId === "manual") {
+      setGhOwner("");
+      setGhRepo("");
+      setGhBranch("main");
+    } else {
+      const conn = gitConnections.find(c => c.id === connId);
+      if (conn) {
+        setGhOwner(conn.repo_owner);
+        setGhRepo(conn.repo_name);
+        setGhBranch(conn.default_branch);
+      }
+    }
+  };
 
   const handleReject = () => {
     if (rejectComment.trim().length < 10) return;
@@ -195,20 +224,40 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
+            {gitConnections.length > 0 && (
+              <div>
+                <Label className="text-xs">Repositório conectado</Label>
+                <Select value={selectedConnectionId} onValueChange={handleSelectConnection}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione um repositório" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {gitConnections.map(conn => (
+                      <SelectItem key={conn.id} value={conn.id}>
+                        {conn.repo_owner}/{conn.repo_name}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="manual">Inserir manualmente...</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div>
               <Label htmlFor="gh-token" className="text-xs">GitHub Token (PAT)</Label>
               <Input id="gh-token" type="password" placeholder="ghp_..." value={ghToken} onChange={(e) => setGhToken(e.target.value)} />
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <Label htmlFor="gh-owner" className="text-xs">Owner / Org</Label>
-                <Input id="gh-owner" placeholder="minha-org" value={ghOwner} onChange={(e) => setGhOwner(e.target.value)} />
+            {selectedConnectionId === "manual" && (
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <Label htmlFor="gh-owner" className="text-xs">Owner / Org</Label>
+                  <Input id="gh-owner" placeholder="minha-org" value={ghOwner} onChange={(e) => setGhOwner(e.target.value)} />
+                </div>
+                <div>
+                  <Label htmlFor="gh-repo" className="text-xs">Repositório</Label>
+                  <Input id="gh-repo" placeholder="meu-projeto" value={ghRepo} onChange={(e) => setGhRepo(e.target.value)} />
+                </div>
               </div>
-              <div>
-                <Label htmlFor="gh-repo" className="text-xs">Repositório</Label>
-                <Input id="gh-repo" placeholder="meu-projeto" value={ghRepo} onChange={(e) => setGhRepo(e.target.value)} />
-              </div>
-            </div>
+            )}
             <div>
               <Label htmlFor="gh-branch" className="text-xs">Branch base</Label>
               <Input id="gh-branch" placeholder="main" value={ghBranch} onChange={(e) => setGhBranch(e.target.value)} />

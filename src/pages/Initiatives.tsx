@@ -122,6 +122,22 @@ export default function Initiatives() {
     }
   }, [toast, queryClient]);
 
+  const { data: gitConnections = [] } = useQuery({
+    queryKey: ["git-connections", currentOrg?.id],
+    queryFn: async () => {
+      if (!currentOrg) return [];
+      const { data, error } = await supabase
+        .from("git_connections")
+        .select("*")
+        .eq("organization_id", currentOrg.id)
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!currentOrg,
+  });
+
   const selected = initiatives.find((i: any) => i.id === selectedId);
 
   return (
@@ -151,6 +167,7 @@ export default function Initiatives() {
               initiative={selected}
               jobs={jobs}
               runningStage={runningStage}
+              gitConnections={gitConnections}
               onRunStage={(stage, comment, publishParams) => runStage(selected.id, stage, comment, publishParams)}
               onApprove={() => runStage(selected.id, "approve")}
             />
