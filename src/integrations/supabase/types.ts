@@ -647,6 +647,44 @@ export type Database = {
           },
         ]
       }
+      org_usage_limits: {
+        Row: {
+          alert_threshold_pct: number
+          created_at: string
+          hard_limit: boolean
+          id: string
+          monthly_budget_usd: number
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          alert_threshold_pct?: number
+          created_at?: string
+          hard_limit?: boolean
+          id?: string
+          monthly_budget_usd?: number
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          alert_threshold_pct?: number
+          created_at?: string
+          hard_limit?: boolean
+          id?: string
+          monthly_budget_usd?: number
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_usage_limits_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_members: {
         Row: {
           created_at: string
@@ -1063,6 +1101,47 @@ export type Database = {
             columns: ["phase_id"]
             isOneToOne: false
             referencedRelation: "story_phases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      usage_monthly_snapshots: {
+        Row: {
+          created_at: string
+          id: string
+          month_start: string
+          organization_id: string
+          total_artifacts: number
+          total_cost_usd: number
+          total_jobs: number
+          total_tokens: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          month_start: string
+          organization_id: string
+          total_artifacts?: number
+          total_cost_usd?: number
+          total_jobs?: number
+          total_tokens?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          month_start?: string
+          organization_id?: string
+          total_artifacts?: number
+          total_cost_usd?: number
+          total_jobs?: number
+          total_tokens?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_monthly_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
