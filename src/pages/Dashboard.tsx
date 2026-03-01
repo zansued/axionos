@@ -10,8 +10,10 @@ import {
   ResponsiveContainer, Legend,
 } from "recharts";
 import { useDashboardKPIs } from "@/hooks/useDashboardKPIs";
+import { useStrategicKPIs } from "@/hooks/useStrategicKPIs";
 import { KPICards } from "@/components/dashboard/KPICards";
 import { TopAgentsTable } from "@/components/dashboard/TopAgentsTable";
+import { StrategicDashboard } from "@/components/dashboard/StrategicDashboard";
 
 const STORY_STATUS_COLORS: Record<string, string> = {
   todo: "hsl(215, 15%, 55%)", in_progress: "hsl(210, 100%, 52%)",
@@ -45,7 +47,7 @@ const container = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } 
 
 export default function Dashboard() {
   const { data: kpis, isLoading } = useDashboardKPIs();
-
+  const { data: strategicKpis } = useStrategicKPIs();
   // Stories by status
   const { data: storiesByStatus = [] } = useQuery({
     queryKey: ["stories-by-status"],
@@ -159,6 +161,11 @@ export default function Dashboard() {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+        )}
+
+        {/* Strategic Dashboard */}
+        {strategicKpis && strategicKpis.totalJobs > 0 && (
+          <StrategicDashboard kpis={strategicKpis} />
         )}
 
         {!hasChartData && !kpis?.storiesTotal && (
