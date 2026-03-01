@@ -335,6 +335,7 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
         discovered: { field: "approved_at_discovery", nextStatus: "squad_ready" },
         squad_formed: { field: "approved_at_squad", nextStatus: "planning_ready" },
         planned: { field: "approved_at_planning", nextStatus: "in_progress" },
+        ready_to_publish: { field: "approved_at_planning", nextStatus: "completed" },
       };
 
       const approval = approvalMap[currentStatus];
@@ -623,7 +624,159 @@ Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quan
       }
     }
 
-    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve, reject, execution`);
+    // ========== STAGE 5: VALIDATION ==========
+    if (stage === "validation") {
+      const jobId = await createJob("validation", { initiative_id: initiativeId });
+      await log("pipeline_validation_start", "Iniciando validação de qualidade dos artefatos...");
+
+      try {
+        // Fetch all artifacts for this initiative's subtasks
+        const { data: stories } = await serviceClient.from("stories")
+          .select("id").eq("initiative_id", initiativeId);
+        
+        if (!stories || stories.length === 0) throw new Error("Nenhuma story encontrada");
+
+        const storyIds = stories.map((s: any) => s.id);
+        const { data: phases } = await serviceClient.from("story_phases")
+          .select("id").in("story_id", storyIds);
+        
+        const phaseIds = (phases || []).map((p: any) => p.id);
+        const { data: subtasks } = await serviceClient.from("story_subtasks")
+          .select("id").in("phase_id", phaseIds);
+        
+        const subtaskIds = (subtasks || []).map((st: any) => st.id);
+
+        const { data: artifacts } = await serviceClient.from("agent_outputs")
+          .select("id, type, summary, raw_output, agent_id, tokens_used, model_used, agents(name, role)")
+          .in("subtask_id", subtaskIds)
+          .eq("organization_id", initiative.organization_id);
+
+        if (!artifacts || artifacts.length === 0) throw new Error("Nenhum artefato encontrado para validar");
+
+        let totalTokens = 0;
+        let totalCost = 0;
+        let passCount = 0;
+        let failCount = 0;
+        const validationResults: any[] = [];
+
+        for (const artifact of artifacts) {
+          const artifactText = typeof artifact.raw_output === "object" 
+            ? (artifact.raw_output as any)?.text || JSON.stringify(artifact.raw_output)
+            : String(artifact.raw_output);
+
+          const validationStart = Date.now();
+          const result = await callDeepSeek(
+            DEEPSEEK_API_KEY,
+            `Você é um revisor de qualidade sênior do AxionOS. Analise o artefato produzido por um agente de IA e avalie sua qualidade.
+Retorne APENAS JSON válido.`,
+            `## Artefato para validação
+- **Tipo**: ${artifact.type}
+- **Agente**: ${(artifact as any).agents?.name || "?"} (${(artifact as any).agents?.role || "?"})
+- **Resumo**: ${artifact.summary || "N/A"}
+
+## Conteúdo do artefato (primeiros 4000 chars)
+${artifactText.slice(0, 4000)}
+
+## Avalie nos seguintes critérios (0-100 cada):
+Retorne JSON:
+{
+  "scores": {
+    "completeness": 0,
+    "technical_quality": 0,
+    "clarity": 0,
+    "best_practices": 0,
+    "actionability": 0
+  },
+  "overall_score": 0,
+  "result": "pass|fail|warning",
+  "issues": ["lista de problemas encontrados"],
+  "suggestions": ["lista de melhorias sugeridas"],
+  "summary": "resumo da avaliação em 1-2 frases"
+}
+
+Regras:
+- overall_score >= 70 → "pass"
+- overall_score 50-69 → "warning"  
+- overall_score < 50 → "fail"`,
+            true
+          );
+
+          let validation: any;
+          try {
+            validation = JSON.parse(result.content);
+          } catch {
+            validation = { overall_score: 50, result: "warning", summary: "Falha ao parsear validação", issues: [], suggestions: [], scores: {} };
+          }
+
+          const validationDuration = Date.now() - validationStart;
+
+          // Create validation_run record
+          await serviceClient.from("validation_runs").insert({
+            artifact_id: artifact.id,
+            type: "ai_quality_review",
+            result: validation.result || "warning",
+            logs: JSON.stringify({
+              scores: validation.scores,
+              overall_score: validation.overall_score,
+              issues: validation.issues,
+              suggestions: validation.suggestions,
+              summary: validation.summary,
+            }),
+            duration: validationDuration,
+          });
+
+          if (validation.result === "pass") passCount++;
+          else if (validation.result === "fail") failCount++;
+
+          totalTokens += result.tokens;
+          totalCost += result.costUsd;
+
+          validationResults.push({
+            artifact_id: artifact.id,
+            type: artifact.type,
+            agent: (artifact as any).agents?.name,
+            score: validation.overall_score,
+            result: validation.result,
+            summary: validation.summary,
+          });
+        }
+
+        const overallPass = failCount === 0;
+        const nextStatus = overallPass ? "ready_to_publish" : "validating";
+
+        await updateInit({ stage_status: nextStatus });
+
+        if (jobId) await completeJob(jobId, {
+          artifacts_validated: artifacts.length,
+          passed: passCount,
+          failed: failCount,
+          warnings: artifacts.length - passCount - failCount,
+          results: validationResults,
+          overall_pass: overallPass,
+        }, { model: "deepseek-chat", costUsd: totalCost, durationMs: 0 });
+
+        await log("pipeline_validation_complete", 
+          `Validação concluída: ${passCount} pass, ${failCount} fail de ${artifacts.length} artefatos`, {
+          total_tokens: totalTokens, cost_usd: totalCost, overall_pass: overallPass,
+        });
+
+        return new Response(JSON.stringify({
+          success: true,
+          artifacts_validated: artifacts.length,
+          passed: passCount, failed: failCount,
+          overall_pass: overallPass,
+          results: validationResults,
+          tokens: totalTokens,
+          cost_usd: totalCost,
+          job_id: jobId,
+        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      } catch (e) {
+        if (jobId) await failJob(jobId, e instanceof Error ? e.message : "Unknown error");
+        throw e;
+      }
+    }
+
+    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve, reject, execution, validation`);
   } catch (e) {
     console.error("run-initiative-pipeline error:", e);
     return new Response(

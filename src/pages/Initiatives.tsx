@@ -100,6 +100,9 @@ export default function Initiatives() {
         approve: "Stage aprovado ✅",
         reject: "Ajustes solicitados — pipeline retornou ao estágio anterior ⟲",
         execution: `Execução concluída: ${result.executed || 0} subtasks executadas ✅`,
+        validation: result.overall_pass
+          ? `Validação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos ✅`
+          : `Validação: ${result.failed || 0} falhas de ${result.artifacts_validated || 0} artefatos ⚠️`,
       };
       toast({ title: stageLabels[stage] || "Concluído!" });
       queryClient.invalidateQueries({ queryKey: ["initiatives"] });
