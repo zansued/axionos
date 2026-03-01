@@ -480,13 +480,23 @@ export type Database = {
       initiatives: {
         Row: {
           architecture_content: string | null
+          business_model: string | null
+          complexity: string | null
           created_at: string
           description: string | null
+          feasibility_analysis: string | null
           id: string
+          initial_estimate: Json | null
+          market_analysis: string | null
+          mvp_scope: string | null
           notes: string | null
           organization_id: string
           prd_content: string | null
+          refined_idea: string | null
+          risk_level: string | null
           status: Database["public"]["Enums"]["initiative_status"]
+          strategic_vision: string | null
+          suggested_stack: string | null
           title: string
           updated_at: string
           user_id: string
@@ -494,13 +504,23 @@ export type Database = {
         }
         Insert: {
           architecture_content?: string | null
+          business_model?: string | null
+          complexity?: string | null
           created_at?: string
           description?: string | null
+          feasibility_analysis?: string | null
           id?: string
+          initial_estimate?: Json | null
+          market_analysis?: string | null
+          mvp_scope?: string | null
           notes?: string | null
           organization_id: string
           prd_content?: string | null
+          refined_idea?: string | null
+          risk_level?: string | null
           status?: Database["public"]["Enums"]["initiative_status"]
+          strategic_vision?: string | null
+          suggested_stack?: string | null
           title: string
           updated_at?: string
           user_id: string
@@ -508,13 +528,23 @@ export type Database = {
         }
         Update: {
           architecture_content?: string | null
+          business_model?: string | null
+          complexity?: string | null
           created_at?: string
           description?: string | null
+          feasibility_analysis?: string | null
           id?: string
+          initial_estimate?: Json | null
+          market_analysis?: string | null
+          mvp_scope?: string | null
           notes?: string | null
           organization_id?: string
           prd_content?: string | null
+          refined_idea?: string | null
+          risk_level?: string | null
           status?: Database["public"]["Enums"]["initiative_status"]
+          strategic_vision?: string | null
+          suggested_stack?: string | null
           title?: string
           updated_at?: string
           user_id?: string
@@ -1070,6 +1100,8 @@ export type Database = {
       agent_status: "active" | "inactive"
       initiative_status:
         | "idea"
+        | "discovery"
+        | "squad_formation"
         | "planning"
         | "architecting"
         | "ready"
@@ -1232,6 +1264,8 @@ export const Constants = {
       agent_status: ["active", "inactive"],
       initiative_status: [
         "idea",
+        "discovery",
+        "squad_formation",
         "planning",
         "architecting",
         "ready",
