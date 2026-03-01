@@ -78,7 +78,7 @@ export default function Initiatives() {
     onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: getUserFriendlyError(e) }),
   });
 
-  const runStage = useCallback(async (initiativeId: string, stage: string, comment?: string) => {
+  const runStage = useCallback(async (initiativeId: string, stage: string, comment?: string, publishParams?: { github_token: string; owner: string; repo: string; base_branch: string }) => {
     setRunningStage(stage);
     try {
       const session = (await supabase.auth.getSession()).data.session;
@@ -86,7 +86,11 @@ export default function Initiatives() {
       const resp = await fetch(PIPELINE_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
-        body: JSON.stringify({ initiativeId, stage, ...(comment ? { comment } : {}) }),
+        body: JSON.stringify({
+          initiativeId, stage,
+          ...(comment ? { comment } : {}),
+          ...(publishParams || {}),
+        }),
       });
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({ error: "Erro" }));
@@ -103,6 +107,9 @@ export default function Initiatives() {
         validation: result.overall_pass
           ? `Validação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos ✅`
           : `Validação: ${result.failed || 0} falhas de ${result.artifacts_validated || 0} artefatos ⚠️`,
+        publish: result.pr_url
+          ? `PR criado: ${result.files_committed || 0} arquivos commitados ✅`
+          : `Publicação concluída: ${result.files_committed || 0} arquivos ✅`,
       };
       toast({ title: stageLabels[stage] || "Concluído!" });
       queryClient.invalidateQueries({ queryKey: ["initiatives"] });
@@ -144,7 +151,7 @@ export default function Initiatives() {
               initiative={selected}
               jobs={jobs}
               runningStage={runningStage}
-              onRunStage={(stage, comment) => runStage(selected.id, stage, comment)}
+              onRunStage={(stage, comment, publishParams) => runStage(selected.id, stage, comment, publishParams)}
               onApprove={() => runStage(selected.id, "approve")}
             />
           ) : (

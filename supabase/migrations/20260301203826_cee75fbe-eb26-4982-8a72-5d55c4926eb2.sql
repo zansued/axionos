@@ -1,0 +1,1 @@
+ALTER TYPE public.initiative_stage_status ADD VALUE IF NOT EXISTS 'published' AFTER 'ready_to_publish';

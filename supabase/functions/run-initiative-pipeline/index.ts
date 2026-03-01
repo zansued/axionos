@@ -78,7 +78,7 @@ serve(async (req) => {
       });
     }
 
-    const { initiativeId, stage, comment } = await req.json();
+    const { initiativeId, stage, comment, github_token, owner, repo, base_branch } = await req.json();
     if (!initiativeId || !stage) throw new Error("initiativeId and stage are required");
 
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
@@ -335,7 +335,7 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
         discovered: { field: "approved_at_discovery", nextStatus: "squad_ready" },
         squad_formed: { field: "approved_at_squad", nextStatus: "planning_ready" },
         planned: { field: "approved_at_planning", nextStatus: "in_progress" },
-        ready_to_publish: { field: "approved_at_planning", nextStatus: "completed" },
+        ready_to_publish: { field: "approved_at_planning", nextStatus: "published" },
       };
 
       const approval = approvalMap[currentStatus];
@@ -369,6 +369,7 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
         planned: { rollbackTo: "planning_ready", stageLabel: "planning" },
         in_progress: { rollbackTo: "planned", stageLabel: "execution" },
         validating: { rollbackTo: "in_progress", stageLabel: "validation" },
+        ready_to_publish: { rollbackTo: "validating", stageLabel: "publish" },
       };
 
       const rollback = rollbackMap[currentStatus];
@@ -776,7 +777,162 @@ Regras:
       }
     }
 
-    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve, reject, execution, validation`);
+    // ========== STAGE 6: PUBLISH (create branch, commit artifacts, open PR) ==========
+    if (stage === "publish") {
+      if (!github_token || !owner || !repo) {
+        return new Response(JSON.stringify({ error: "github_token, owner e repo são obrigatórios para publicar." }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const jobId = await createJob("publish", { owner, repo, base_branch: base_branch || "main" });
+      await log("pipeline_publish_start", "Iniciando publicação via GitHub...");
+
+      const ghHeaders = {
+        Authorization: `Bearer ${github_token}`,
+        Accept: "application/vnd.github.v3+json",
+        "Content-Type": "application/json",
+      };
+      const GITHUB_API = "https://api.github.com";
+      const branchName = `axion/initiative-${initiativeId.slice(0, 8)}-${Date.now()}`;
+      const baseBranch = base_branch || "main";
+
+      try {
+        // 1. Get base branch SHA
+        const refResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/ref/heads/${baseBranch}`, { headers: ghHeaders });
+        if (!refResp.ok) {
+          const t = await refResp.text();
+          throw new Error(`Branch base '${baseBranch}' não encontrada: ${t}`);
+        }
+        const refData = await refResp.json();
+        const baseSha = refData.object.sha;
+
+        // 2. Create branch
+        const createBranchResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/refs`, {
+          method: "POST", headers: ghHeaders,
+          body: JSON.stringify({ ref: `refs/heads/${branchName}`, sha: baseSha }),
+        });
+        if (!createBranchResp.ok) {
+          const err = await createBranchResp.json();
+          throw new Error(`Falha ao criar branch: ${err.message}`);
+        }
+
+        // 3. Collect all artifacts
+        const { data: stories } = await serviceClient.from("stories")
+          .select("id, title").eq("initiative_id", initiativeId);
+        const storyIds = (stories || []).map((s: any) => s.id);
+
+        const { data: phases } = await serviceClient.from("story_phases")
+          .select("id").in("story_id", storyIds);
+        const phaseIds = (phases || []).map((p: any) => p.id);
+
+        const { data: subtasks } = await serviceClient.from("story_subtasks")
+          .select("id, description").in("phase_id", phaseIds);
+        const subtaskIds = (subtasks || []).map((st: any) => st.id);
+
+        const { data: artifacts } = await serviceClient.from("agent_outputs")
+          .select("id, type, summary, raw_output, agents(name, role)")
+          .in("subtask_id", subtaskIds)
+          .eq("organization_id", initiative.organization_id);
+
+        if (!artifacts || artifacts.length === 0) throw new Error("Nenhum artefato encontrado para publicar");
+
+        // 4. Commit each artifact as a file
+        const committedFiles: string[] = [];
+        for (let i = 0; i < artifacts.length; i++) {
+          const art = artifacts[i];
+          const artText = typeof art.raw_output === "object"
+            ? (art.raw_output as any)?.text || JSON.stringify(art.raw_output, null, 2)
+            : String(art.raw_output);
+
+          const safeTitle = (art.summary || `artifact-${i}`).replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 60);
+          const ext = art.type === "code" ? "ts" : "md";
+          const filePath = `axion-outputs/${art.type}/${safeTitle}.${ext}`;
+
+          const fileContent = art.type === "code" ? artText : `# ${art.summary || "Artifact"}\n\n**Agente**: ${(art as any).agents?.name || "?"} (${(art as any).agents?.role || "?"})\n**Tipo**: ${art.type}\n\n---\n\n${artText}`;
+
+          const commitResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/contents/${filePath}`, {
+            method: "PUT", headers: ghHeaders,
+            body: JSON.stringify({
+              message: `[AxionOS] ${art.type}: ${art.summary?.slice(0, 60) || "artifact"}`,
+              content: btoa(unescape(encodeURIComponent(fileContent))),
+              branch: branchName,
+            }),
+          });
+          if (commitResp.ok) {
+            committedFiles.push(filePath);
+          } else {
+            console.error(`Failed to commit ${filePath}:`, await commitResp.text());
+          }
+        }
+
+        if (committedFiles.length === 0) throw new Error("Nenhum arquivo foi commitado com sucesso");
+
+        // 5. Open PR
+        const prBody = `## 🚀 AxionOS — Delivery Automatizado
+
+### Iniciativa: ${initiative.title}
+${initiative.description || ""}
+
+### Artefatos publicados (${committedFiles.length})
+${committedFiles.map(f => `- \`${f}\``).join("\n")}
+
+### Pipeline
+- **Discovery**: ${initiative.approved_at_discovery ? "✅" : "⏳"}
+- **Squad**: ${initiative.approved_at_squad ? "✅" : "⏳"}
+- **Planning**: ${initiative.approved_at_planning ? "✅" : "⏳"}
+- **Execução**: ✅
+- **Validação**: ✅
+
+---
+*Gerado automaticamente pelo AxionOS Pipeline*`;
+
+        const prResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/pulls`, {
+          method: "POST", headers: ghHeaders,
+          body: JSON.stringify({
+            title: `[AxionOS] ${initiative.title}`,
+            head: branchName,
+            base: baseBranch,
+            body: prBody,
+          }),
+        });
+
+        let prUrl = null;
+        let prNumber = null;
+        if (prResp.ok) {
+          const prData = await prResp.json();
+          prUrl = prData.html_url;
+          prNumber = prData.number;
+        }
+
+        await updateInit({ stage_status: "published" });
+
+        if (jobId) await completeJob(jobId, {
+          branch: branchName,
+          files_committed: committedFiles.length,
+          pr_url: prUrl,
+          pr_number: prNumber,
+        }, { model: "github-api", costUsd: 0, durationMs: 0 });
+
+        await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos, PR #${prNumber || "N/A"}`, {
+          branch: branchName, pr_url: prUrl,
+        });
+
+        return new Response(JSON.stringify({
+          success: true,
+          branch: branchName,
+          files_committed: committedFiles.length,
+          pr_url: prUrl,
+          pr_number: prNumber,
+          job_id: jobId,
+        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      } catch (e) {
+        if (jobId) await failJob(jobId, e instanceof Error ? e.message : "Unknown error");
+        throw e;
+      }
+    }
+
+    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve, reject, execution, validation, publish`);
   } catch (e) {
     console.error("run-initiative-pipeline error:", e);
     return new Response(
