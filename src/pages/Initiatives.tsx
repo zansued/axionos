@@ -78,7 +78,7 @@ export default function Initiatives() {
     onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: getUserFriendlyError(e) }),
   });
 
-  const runStage = useCallback(async (initiativeId: string, stage: string) => {
+  const runStage = useCallback(async (initiativeId: string, stage: string, comment?: string) => {
     setRunningStage(stage);
     try {
       const session = (await supabase.auth.getSession()).data.session;
@@ -86,7 +86,7 @@ export default function Initiatives() {
       const resp = await fetch(PIPELINE_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
-        body: JSON.stringify({ initiativeId, stage }),
+        body: JSON.stringify({ initiativeId, stage, ...(comment ? { comment } : {}) }),
       });
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({ error: "Erro" }));
@@ -98,6 +98,7 @@ export default function Initiatives() {
         squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
         planning: `Planning completo: ${result.stories?.length || 0} stories criadas ✅`,
         approve: "Stage aprovado ✅",
+        reject: "Ajustes solicitados — pipeline retornou ao estágio anterior ⟲",
         execution: `Execução concluída: ${result.executed || 0} subtasks executadas ✅`,
       };
       toast({ title: stageLabels[stage] || "Concluído!" });
@@ -140,7 +141,7 @@ export default function Initiatives() {
               initiative={selected}
               jobs={jobs}
               runningStage={runningStage}
-              onRunStage={(stage) => runStage(selected.id, stage)}
+              onRunStage={(stage, comment) => runStage(selected.id, stage, comment)}
               onApprove={() => runStage(selected.id, "approve")}
             />
           ) : (

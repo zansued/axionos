@@ -31,18 +31,10 @@ async function callDeepSeek(apiKey: string, systemPrompt: string, userPrompt: st
   const data = await resp.json();
   const durationMs = Date.now() - start;
   const tokens = data.usage?.total_tokens || 0;
-  // Rough cost estimate for deepseek-chat
   const costUsd = tokens * 0.00000014;
-  return {
-    content: data.choices?.[0]?.message?.content || "",
-    tokens,
-    durationMs,
-    costUsd,
-    model: "deepseek-chat",
-  };
+  return { content: data.choices?.[0]?.message?.content || "", tokens, durationMs, costUsd, model: "deepseek-chat" };
 }
 
-// Smart agent assignment: pick best agent based on subtask content keywords
 function pickAgent(description: string, agentsByRole: Record<string, any>, fallback: any) {
   const lower = description.toLowerCase();
   if (/arquitetura|design|padr[ãa]o|diagrama|componente/i.test(lower) && agentsByRole["architect"]) return agentsByRole["architect"];
@@ -86,7 +78,7 @@ serve(async (req) => {
       });
     }
 
-    const { initiativeId, stage } = await req.json();
+    const { initiativeId, stage, comment } = await req.json();
     if (!initiativeId || !stage) throw new Error("initiativeId and stage are required");
 
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
@@ -108,34 +100,23 @@ serve(async (req) => {
       await serviceClient.from("initiatives").update(fields).eq("id", initiativeId);
     };
 
-    // Create a job record for traceability
     const createJob = async (jobStage: string, inputs: any) => {
       const { data } = await serviceClient.from("initiative_jobs").insert({
-        initiative_id: initiativeId,
-        stage: jobStage,
-        status: "running",
-        inputs,
-        user_id: user.id,
+        initiative_id: initiativeId, stage: jobStage, status: "running", inputs, user_id: user.id,
       }).select("id").single();
       return data?.id;
     };
 
     const completeJob = async (jobId: string, outputs: any, result: any) => {
       await serviceClient.from("initiative_jobs").update({
-        status: "success",
-        outputs,
-        model: result.model,
-        cost_usd: result.costUsd,
-        duration_ms: result.durationMs,
-        completed_at: new Date().toISOString(),
+        status: "success", outputs, model: result.model, cost_usd: result.costUsd,
+        duration_ms: result.durationMs, completed_at: new Date().toISOString(),
       }).eq("id", jobId);
     };
 
     const failJob = async (jobId: string, error: string) => {
       await serviceClient.from("initiative_jobs").update({
-        status: "failed",
-        error,
-        completed_at: new Date().toISOString(),
+        status: "failed", error, completed_at: new Date().toISOString(),
       }).eq("id", jobId);
     };
 
@@ -175,8 +156,6 @@ Produza uma análise completa no seguinte formato JSON:
         );
 
         const discovery = JSON.parse(result.content);
-
-        // Store main fields + full payload in discovery_payload
         await updateInit({
           stage_status: "discovered",
           idea_raw: initiative.description || initiative.title,
@@ -284,7 +263,6 @@ MVP: ${dp.mvp_scope || initiative.mvp_scope || "N/A"}
 Stack: ${dp.suggested_stack || "N/A"}
 Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
 
-        // 3A: PRD
         const prdResult = await callDeepSeek(
           DEEPSEEK_API_KEY,
           "Você é um Product Manager sênior. Crie um PRD detalhado e executável em português brasileiro usando markdown.",
@@ -292,7 +270,6 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
         );
         await updateInit({ prd_content: prdResult.content });
 
-        // 3B: Architecture
         const archResult = await callDeepSeek(
           DEEPSEEK_API_KEY,
           "Você é um Arquiteto de Software sênior. Crie um documento de arquitetura técnica baseado no PRD. Use markdown.",
@@ -300,7 +277,6 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
         );
         await updateInit({ architecture_content: archResult.content });
 
-        // 3C: Stories
         const storiesResult = await callDeepSeek(
           DEEPSEEK_API_KEY,
           "Você é um Product Manager sênior. Gere user stories executáveis. Retorne APENAS JSON válido.",
@@ -375,40 +351,138 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
       });
     }
 
-    // ========== STAGE 4: EXECUTION ==========
+    // ========== REJECT / SOLICITAR AJUSTES ==========
+    if (stage === "reject") {
+      if (!comment || comment.trim().length < 10) {
+        return new Response(JSON.stringify({ error: "Comentário obrigatório (mínimo 10 caracteres) para solicitar ajustes." }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const currentStatus = initiative.stage_status;
+
+      // Rollback map: which status to go back to, and what stage label
+      const rollbackMap: Record<string, { rollbackTo: string; stageLabel: string }> = {
+        discovered: { rollbackTo: "draft", stageLabel: "discovery" },
+        squad_formed: { rollbackTo: "squad_ready", stageLabel: "squad_formation" },
+        planned: { rollbackTo: "planning_ready", stageLabel: "planning" },
+        in_progress: { rollbackTo: "planned", stageLabel: "execution" },
+        validating: { rollbackTo: "in_progress", stageLabel: "validation" },
+      };
+
+      const rollback = rollbackMap[currentStatus];
+      if (!rollback) {
+        return new Response(JSON.stringify({ error: `Não é possível solicitar ajustes no status: ${currentStatus}` }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Create rework job for traceability
+      const jobId = await createJob("rework", {
+        previous_status: currentStatus,
+        rollback_to: rollback.rollbackTo,
+        stage_affected: rollback.stageLabel,
+        comment: comment.trim(),
+      });
+
+      // Rollback initiative status
+      await updateInit({ stage_status: rollback.rollbackTo });
+
+      // Mark related artifacts as needing revision (if execution was done)
+      if (["in_progress", "validating"].includes(currentStatus)) {
+        // Find stories for this initiative
+        const { data: stories } = await serviceClient.from("stories")
+          .select("id").eq("initiative_id", initiativeId);
+        
+        if (stories && stories.length > 0) {
+          const storyIds = stories.map((s: any) => s.id);
+          
+          // Find subtask IDs through phases
+          const { data: phases } = await serviceClient.from("story_phases")
+            .select("id").in("story_id", storyIds);
+          
+          if (phases && phases.length > 0) {
+            const phaseIds = phases.map((p: any) => p.id);
+            
+            const { data: subtasks } = await serviceClient.from("story_subtasks")
+              .select("id").in("phase_id", phaseIds).eq("status", "completed");
+            
+            if (subtasks && subtasks.length > 0) {
+              const subtaskIds = subtasks.map((st: any) => st.id);
+              
+              // Mark related agent_outputs as rejected (needs_revision)
+              await serviceClient.from("agent_outputs")
+                .update({ status: "rejected" })
+                .in("subtask_id", subtaskIds)
+                .eq("organization_id", initiative.organization_id);
+
+              // Reset subtasks to pending for re-execution
+              await serviceClient.from("story_subtasks")
+                .update({ status: "pending", output: null, executed_at: null, executed_by_agent_id: null })
+                .in("phase_id", phaseIds);
+
+              // Reset phases to pending
+              await serviceClient.from("story_phases")
+                .update({ status: "pending" })
+                .in("story_id", storyIds);
+
+              // Reset stories to todo
+              await serviceClient.from("stories")
+                .update({ status: "todo" })
+                .in("id", storyIds);
+            }
+          }
+        }
+      }
+
+      if (jobId) {
+        await serviceClient.from("initiative_jobs").update({
+          status: "success",
+          outputs: { action: "rework_requested", comment: comment.trim(), rollback_to: rollback.rollbackTo },
+          completed_at: new Date().toISOString(),
+        }).eq("id", jobId);
+      }
+
+      await log("pipeline_stage_rejected", `Ajustes solicitados em ${rollback.stageLabel}: ${comment.trim().slice(0, 200)}`, {
+        previous_status: currentStatus,
+        rollback_to: rollback.rollbackTo,
+        comment: comment.trim(),
+      });
+
+      return new Response(JSON.stringify({
+        success: true,
+        action: "rework_requested",
+        previous_status: currentStatus,
+        new_status: rollback.rollbackTo,
+        job_id: jobId,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // ========== STAGE 4: EXECUTION (per-subtask jobs) ==========
     if (stage === "execution") {
-      const jobId = await createJob("execution", { initiative_id: initiativeId });
+      const masterJobId = await createJob("execution", { initiative_id: initiativeId });
       await updateInit({ stage_status: "in_progress" });
       await log("pipeline_execution_start", "Iniciando execução automática de subtasks...");
 
       try {
-        // 1. Fetch all stories for this initiative
         const { data: stories } = await serviceClient.from("stories")
           .select("id, title, description")
           .eq("initiative_id", initiativeId)
-          .eq("status", "todo");
+          .in("status", ["todo", "in_progress"]);
 
         if (!stories || stories.length === 0) {
           throw new Error("Nenhuma story encontrada para execução");
         }
 
-        // 2. Fetch squad agents
         const { data: squads } = await serviceClient.from("squads")
           .select("id, squad_members(agent_id, role_in_squad, agents(id, name, role, description, exclusive_authorities))")
           .eq("initiative_id", initiativeId);
 
         const squadMembers = squads?.[0]?.squad_members || [];
-        if (squadMembers.length === 0) {
-          throw new Error("Nenhum agente no squad para executar");
-        }
+        if (squadMembers.length === 0) throw new Error("Nenhum agente no squad para executar");
 
-        // Role-to-agent mapping for smart assignment
         const agentsByRole: Record<string, any> = {};
-        for (const sm of squadMembers) {
-          agentsByRole[sm.role_in_squad] = sm.agents;
-        }
-
-        // Fallback agent (first dev or first agent)
+        for (const sm of squadMembers) agentsByRole[sm.role_in_squad] = sm.agents;
         const defaultAgent = agentsByRole["dev"] || agentsByRole["architect"] || squadMembers[0]?.agents;
 
         let totalTokens = 0;
@@ -416,12 +490,9 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
         let executedCount = 0;
         let failedCount = 0;
 
-        // 3. Process each story
         for (const story of stories) {
-          // Update story to in_progress
           await serviceClient.from("stories").update({ status: "in_progress" }).eq("id", story.id);
 
-          // Fetch phases and subtasks
           const { data: phases } = await serviceClient.from("story_phases")
             .select("id, name, sort_order, story_subtasks(id, description, status, sort_order)")
             .eq("story_id", story.id)
@@ -437,17 +508,25 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
               .sort((a: any, b: any) => a.sort_order - b.sort_order);
 
             for (const subtask of subtasks) {
-              // Smart agent assignment based on subtask content
               const assignedAgent = pickAgent(subtask.description, agentsByRole, defaultAgent);
 
-              // Mark subtask in_progress
+              // Per-subtask job for granular traceability
+              const subtaskJobId = await createJob("execution", {
+                subtask_id: subtask.id,
+                agent_id: assignedAgent.id,
+                agent_name: assignedAgent.name,
+                agent_role: assignedAgent.role,
+                story_title: story.title,
+                phase_name: phase.name,
+                subtask_description: subtask.description,
+              });
+
               await serviceClient.from("story_subtasks").update({
                 status: "in_progress",
                 executed_by_agent_id: assignedAgent.id,
               }).eq("id", subtask.id);
 
               try {
-                const start = Date.now();
                 const result = await callDeepSeek(
                   DEEPSEEK_API_KEY,
                   `Você é o agente "${assignedAgent.name}" com o papel de "${assignedAgent.role}" no AxionOS.
@@ -465,20 +544,18 @@ ${subtask.description}
 Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quando aplicável.`
                 );
 
-                // Update subtask with output
                 await serviceClient.from("story_subtasks").update({
                   output: result.content,
                   status: "completed",
                   executed_at: new Date().toISOString(),
                 }).eq("id", subtask.id);
 
-                // Create traceable artifact
                 const outputType = assignedAgent.role === "architect" ? "decision"
                   : ["dev", "devops"].includes(assignedAgent.role) ? "code"
                   : ["analyst", "po", "pm"].includes(assignedAgent.role) ? "content"
                   : "analysis";
 
-                await serviceClient.from("agent_outputs").insert({
+                const { data: artifact } = await serviceClient.from("agent_outputs").insert({
                   organization_id: initiative.organization_id,
                   workspace_id: initiative.workspace_id || null,
                   agent_id: assignedAgent.id,
@@ -491,19 +568,24 @@ Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quan
                   prompt_used: subtask.description,
                   tokens_used: result.tokens,
                   cost_estimate: result.costUsd,
-                });
+                }).select("id").single();
+
+                if (subtaskJobId) await completeJob(subtaskJobId, {
+                  artifact_id: artifact?.id,
+                  tokens: result.tokens,
+                }, result);
 
                 totalTokens += result.tokens;
                 totalCost += result.costUsd;
                 executedCount++;
               } catch (subtaskErr) {
                 await serviceClient.from("story_subtasks").update({ status: "failed" }).eq("id", subtask.id);
+                if (subtaskJobId) await failJob(subtaskJobId, subtaskErr instanceof Error ? subtaskErr.message : "Unknown");
                 failedCount++;
                 console.error(`Subtask ${subtask.id} failed:`, subtaskErr);
               }
             }
 
-            // Mark phase completed if all subtasks done
             const { count: pendingCount } = await serviceClient.from("story_subtasks")
               .select("*", { count: "exact", head: true })
               .eq("phase_id", phase.id)
@@ -513,7 +595,6 @@ Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quan
             }
           }
 
-          // Mark story done if all phases completed
           const { count: pendingPhases } = await serviceClient.from("story_phases")
             .select("*", { count: "exact", head: true })
             .eq("story_id", story.id)
@@ -524,7 +605,7 @@ Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quan
         }
 
         await updateInit({ stage_status: "validating" });
-        if (jobId) await completeJob(jobId, {
+        if (masterJobId) await completeJob(masterJobId, {
           executed: executedCount, failed: failedCount, total_tokens: totalTokens,
         }, { model: "deepseek-chat", costUsd: totalCost, durationMs: 0 });
 
@@ -534,15 +615,15 @@ Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quan
 
         return new Response(JSON.stringify({
           success: true, executed: executedCount, failed: failedCount,
-          tokens: totalTokens, cost_usd: totalCost, job_id: jobId,
+          tokens: totalTokens, cost_usd: totalCost, job_id: masterJobId,
         }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       } catch (e) {
-        if (jobId) await failJob(jobId, e instanceof Error ? e.message : "Unknown error");
+        if (masterJobId) await failJob(masterJobId, e instanceof Error ? e.message : "Unknown error");
         throw e;
       }
     }
 
-    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve, execution`);
+    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve, reject, execution`);
   } catch (e) {
     console.error("run-initiative-pipeline error:", e);
     return new Response(
