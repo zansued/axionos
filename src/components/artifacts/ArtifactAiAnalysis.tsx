@@ -62,15 +62,15 @@ export function ArtifactAiAnalysis({ artifactId, analysisResult, isAnalyzing, on
   const RiskIcon = risk.icon;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-      <Card className="border-border/50 bg-muted/10 mt-3">
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="w-full">
+      <Card className="border-border/50 bg-muted/10 mt-3 overflow-hidden">
         <CardContent className="p-4 space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Brain className="h-4 w-4 text-purple-400" />
+              <Brain className="h-4 w-4 text-purple-400 shrink-0" />
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Análise IA</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5">
               <Badge className={`text-[10px] ${verdict.className}`}>
                 <VerdictIcon className="h-3 w-3 mr-1" />
                 {verdict.label}
@@ -85,7 +85,7 @@ export function ArtifactAiAnalysis({ artifactId, analysisResult, isAnalyzing, on
             </div>
           </div>
 
-          <p className="text-sm text-foreground/90">{analysis.summary}</p>
+          <p className="text-sm text-foreground/90 break-words">{analysis.summary}</p>
 
           <ScrollArea className="max-h-[200px]">
             <div className="space-y-3">
@@ -96,7 +96,7 @@ export function ArtifactAiAnalysis({ artifactId, analysisResult, isAnalyzing, on
                   </p>
                   <ul className="space-y-0.5">
                     {analysis.strengths.map((s, i) => (
-                      <li key={i} className="text-xs text-foreground/70 pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-green-400">{s}</li>
+                      <li key={i} className="text-xs text-foreground/70 pl-3 relative break-words before:content-['•'] before:absolute before:left-0 before:text-green-400">{s}</li>
                     ))}
                   </ul>
                 </div>
@@ -109,7 +109,7 @@ export function ArtifactAiAnalysis({ artifactId, analysisResult, isAnalyzing, on
                   </p>
                   <ul className="space-y-0.5">
                     {analysis.issues.map((s, i) => (
-                      <li key={i} className="text-xs text-foreground/70 pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-red-400">{s}</li>
+                      <li key={i} className="text-xs text-foreground/70 pl-3 relative break-words before:content-['•'] before:absolute before:left-0 before:text-red-400">{s}</li>
                     ))}
                   </ul>
                 </div>
@@ -122,7 +122,7 @@ export function ArtifactAiAnalysis({ artifactId, analysisResult, isAnalyzing, on
                   </p>
                   <ul className="space-y-0.5">
                     {analysis.suggestions.map((s, i) => (
-                      <li key={i} className="text-xs text-foreground/70 pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-yellow-400">{s}</li>
+                      <li key={i} className="text-xs text-foreground/70 pl-3 relative break-words before:content-['•'] before:absolute before:left-0 before:text-yellow-400">{s}</li>
                     ))}
                   </ul>
                 </div>
