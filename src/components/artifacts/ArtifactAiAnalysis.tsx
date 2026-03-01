@@ -7,7 +7,7 @@ import { useState } from "react";
 import {
   Brain, CheckCircle2, XCircle, RotateCcw, Loader2,
   ShieldCheck, ShieldAlert, AlertTriangle, Shield,
-  ThumbsUp, AlertCircle, Lightbulb,
+  ThumbsUp, AlertCircle, Lightbulb, Zap, User,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -28,31 +28,53 @@ interface Props {
   artifactId: string;
   analysisResult: AnalysisResult | undefined;
   isAnalyzing: boolean;
+  isReworking: boolean;
   onAnalyze: () => void;
+  onAutoAnalyzeAndRework: () => void;
+  onManualRework: (feedback?: string) => void;
   onApplyVerdict?: (verdict: "approve" | "reject" | "request_changes") => void;
 }
 
-export function ArtifactAiAnalysis({ artifactId, analysisResult, isAnalyzing, onAnalyze, onApplyVerdict }: Props) {
+export function ArtifactAiAnalysis({
+  artifactId,
+  analysisResult,
+  isAnalyzing,
+  isReworking,
+  onAnalyze,
+  onAutoAnalyzeAndRework,
+  onManualRework,
+  onApplyVerdict,
+}: Props) {
   const [showReasoning, setShowReasoning] = useState(false);
   const analysis = analysisResult?.analysis;
   const reasoning = analysisResult?.reasoning;
+  const isBusy = isAnalyzing || isReworking;
 
   if (!analysis) {
     return (
-      <Button
-        variant="outline"
-        size="sm"
-        className="h-7 text-xs gap-1 border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
-        onClick={(e) => { e.stopPropagation(); onAnalyze(); }}
-        disabled={isAnalyzing}
-      >
-        {isAnalyzing ? (
-          <Loader2 className="h-3 w-3 animate-spin" />
-        ) : (
-          <Brain className="h-3 w-3" />
-        )}
-        {isAnalyzing ? "Analisando..." : "Análise IA"}
-      </Button>
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-7 text-xs gap-1 border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
+          onClick={(e) => { e.stopPropagation(); onAnalyze(); }}
+          disabled={isBusy}
+        >
+          {isAnalyzing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Brain className="h-3 w-3" />}
+          {isAnalyzing ? "Analisando..." : "Análise IA"}
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-7 text-xs gap-1 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10"
+          onClick={(e) => { e.stopPropagation(); onAutoAnalyzeAndRework(); }}
+          disabled={isBusy}
+          title="Analisa e corrige automaticamente se necessário"
+        >
+          {isReworking ? <Loader2 className="h-3 w-3 animate-spin" /> : <Zap className="h-3 w-3" />}
+          {isReworking ? "Corrigindo..." : "Auto-Revisão"}
+        </Button>
+      </div>
     );
   }
 
@@ -65,6 +87,7 @@ export function ArtifactAiAnalysis({ artifactId, analysisResult, isAnalyzing, on
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="w-full">
       <Card className="border-border/50 bg-muted/10 mt-3 overflow-hidden">
         <CardContent className="p-4 space-y-3">
+          {/* Header with verdict badges */}
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Brain className="h-4 w-4 text-purple-400 shrink-0" />
@@ -85,8 +108,10 @@ export function ArtifactAiAnalysis({ artifactId, analysisResult, isAnalyzing, on
             </div>
           </div>
 
+          {/* Summary */}
           <p className="text-sm text-foreground/90 break-words">{analysis.summary}</p>
 
+          {/* Details */}
           <ScrollArea className="max-h-[200px]">
             <div className="space-y-3">
               {analysis.strengths.length > 0 && (
@@ -130,6 +155,7 @@ export function ArtifactAiAnalysis({ artifactId, analysisResult, isAnalyzing, on
             </div>
           </ScrollArea>
 
+          {/* Reasoning */}
           {reasoning && (
             <div className="border-t border-border/30 pt-2">
               <Button
@@ -143,34 +169,53 @@ export function ArtifactAiAnalysis({ artifactId, analysisResult, isAnalyzing, on
               </Button>
               {showReasoning && (
                 <ScrollArea className="max-h-[200px] mt-2 rounded-md border border-border/30 bg-muted/20 p-3">
-                  <pre className="text-[11px] whitespace-pre-wrap text-muted-foreground italic">{reasoning}</pre>
+                  <pre className="text-[11px] whitespace-pre-wrap text-muted-foreground italic break-words">{reasoning}</pre>
                 </ScrollArea>
               )}
             </div>
           )}
 
-          {onApplyVerdict && (
-            <div className="flex items-center gap-2 pt-1 border-t border-border/30">
-              <span className="text-[10px] text-muted-foreground">Aplicar veredito:</span>
+          {/* Actions */}
+          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/30">
+            {/* Auto mode: analyze + rework automatically */}
+            {(analysis.verdict === "request_changes" || analysis.verdict === "reject") && (
               <Button
                 variant="outline"
                 size="sm"
-                className="h-6 text-[10px] gap-1"
-                onClick={() => onApplyVerdict(analysis.verdict)}
+                className="h-7 text-xs gap-1 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10"
+                onClick={onAutoAnalyzeAndRework}
+                disabled={isBusy}
               >
-                <VerdictIcon className="h-3 w-3" />
-                {analysis.verdict === "approve" ? "Aprovar" : analysis.verdict === "reject" ? "Rejeitar" : "Solicitar Alterações"}
+                {isReworking ? <Loader2 className="h-3 w-3 animate-spin" /> : <Zap className="h-3 w-3" />}
+                {isReworking ? "Retrabalhando..." : "Auto-Corrigir"}
               </Button>
+            )}
+
+            {/* Manual mode: human applies verdict */}
+            {onApplyVerdict && (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="h-6 text-[10px] gap-1"
-                onClick={onAnalyze}
+                className="h-7 text-xs gap-1"
+                onClick={() => onApplyVerdict(analysis.verdict)}
+                disabled={isBusy}
               >
-                <Brain className="h-3 w-3" /> Reanalisar
+                <User className="h-3 w-3" />
+                {analysis.verdict === "approve" ? "Aprovar Manual" : analysis.verdict === "reject" ? "Rejeitar Manual" : "Solicitar Alterações"}
               </Button>
-            </div>
-          )}
+            )}
+
+            {/* Re-analyze */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs gap-1"
+              onClick={onAnalyze}
+              disabled={isBusy}
+            >
+              <Brain className="h-3 w-3" /> Reanalisar
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </motion.div>

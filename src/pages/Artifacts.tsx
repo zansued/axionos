@@ -238,7 +238,10 @@ export default function Artifacts() {
                                   artifactId={output.id}
                                   analysisResult={aiAnalysis.results[output.id]}
                                   isAnalyzing={aiAnalysis.analyzing === output.id}
+                                  isReworking={aiAnalysis.reworking === output.id}
                                   onAnalyze={() => aiAnalysis.analyze(output.id)}
+                                  onAutoAnalyzeAndRework={() => aiAnalysis.analyzeAndAutoRework(output.id)}
+                                  onManualRework={(feedback) => aiAnalysis.rework(output.id, feedback, false)}
                                   onApplyVerdict={(verdict) => {
                                     if (verdict === "approve") reviewActions.approve(output.id, "Aprovado por análise IA");
                                     else if (verdict === "reject") reviewActions.reject(output.id, "Rejeitado por análise IA");
