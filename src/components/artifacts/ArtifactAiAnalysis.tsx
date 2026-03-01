@@ -1,8 +1,9 @@
-import { AiAnalysis } from "@/hooks/useArtifactAnalysis";
+import { AiAnalysis, AnalysisResult } from "@/hooks/useArtifactAnalysis";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState } from "react";
 import {
   Brain, CheckCircle2, XCircle, RotateCcw, Loader2,
   ShieldCheck, ShieldAlert, AlertTriangle, Shield,
@@ -25,13 +26,17 @@ const RISK_CONFIG = {
 
 interface Props {
   artifactId: string;
-  analysis: AiAnalysis | undefined;
+  analysisResult: AnalysisResult | undefined;
   isAnalyzing: boolean;
   onAnalyze: () => void;
   onApplyVerdict?: (verdict: "approve" | "reject" | "request_changes") => void;
 }
 
-export function ArtifactAiAnalysis({ artifactId, analysis, isAnalyzing, onAnalyze, onApplyVerdict }: Props) {
+export function ArtifactAiAnalysis({ artifactId, analysisResult, isAnalyzing, onAnalyze, onApplyVerdict }: Props) {
+  const [showReasoning, setShowReasoning] = useState(false);
+  const analysis = analysisResult?.analysis;
+  const reasoning = analysisResult?.reasoning;
+
   if (!analysis) {
     return (
       <Button
@@ -124,6 +129,25 @@ export function ArtifactAiAnalysis({ artifactId, analysis, isAnalyzing, onAnalyz
               )}
             </div>
           </ScrollArea>
+
+          {reasoning && (
+            <div className="border-t border-border/30 pt-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 text-[10px] gap-1 text-muted-foreground"
+                onClick={() => setShowReasoning(!showReasoning)}
+              >
+                <Brain className="h-3 w-3" />
+                {showReasoning ? "Ocultar raciocínio" : "Ver raciocínio da IA"}
+              </Button>
+              {showReasoning && (
+                <ScrollArea className="max-h-[200px] mt-2 rounded-md border border-border/30 bg-muted/20 p-3">
+                  <pre className="text-[11px] whitespace-pre-wrap text-muted-foreground italic">{reasoning}</pre>
+                </ScrollArea>
+              )}
+            </div>
+          )}
 
           {onApplyVerdict && (
             <div className="flex items-center gap-2 pt-1 border-t border-border/30">

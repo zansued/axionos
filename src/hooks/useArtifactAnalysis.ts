@@ -12,9 +12,14 @@ export interface AiAnalysis {
   risk_level: "low" | "medium" | "high" | "critical";
 }
 
+export interface AnalysisResult {
+  analysis: AiAnalysis;
+  reasoning: string | null;
+}
+
 export function useArtifactAnalysis() {
   const [analyzing, setAnalyzing] = useState<string | null>(null);
-  const [results, setResults] = useState<Record<string, AiAnalysis>>({});
+  const [results, setResults] = useState<Record<string, AnalysisResult>>({});
   const { toast } = useToast();
 
   const analyze = useCallback(async (artifactId: string) => {
@@ -27,10 +32,13 @@ export function useArtifactAnalysis() {
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
 
-      const analysis = data.analysis as AiAnalysis;
-      setResults((prev) => ({ ...prev, [artifactId]: analysis }));
-      toast({ title: "Análise IA concluída", description: analysis.summary });
-      return analysis;
+      const result: AnalysisResult = {
+        analysis: data.analysis as AiAnalysis,
+        reasoning: data.reasoning || null,
+      };
+      setResults((prev) => ({ ...prev, [artifactId]: result }));
+      toast({ title: "Análise IA concluída", description: result.analysis.summary });
+      return result;
     } catch (e: any) {
       toast({
         variant: "destructive",
