@@ -477,15 +477,79 @@ export type Database = {
           },
         ]
       }
+      initiative_jobs: {
+        Row: {
+          completed_at: string | null
+          cost_usd: number | null
+          created_at: string
+          duration_ms: number | null
+          error: string | null
+          id: string
+          initiative_id: string
+          inputs: Json | null
+          model: string | null
+          outputs: Json | null
+          prompt_hash: string | null
+          stage: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          cost_usd?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          initiative_id: string
+          inputs?: Json | null
+          model?: string | null
+          outputs?: Json | null
+          prompt_hash?: string | null
+          stage: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          cost_usd?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          initiative_id?: string
+          inputs?: Json | null
+          model?: string | null
+          outputs?: Json | null
+          prompt_hash?: string | null
+          stage?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "initiative_jobs_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       initiatives: {
         Row: {
+          approved_at_discovery: string | null
+          approved_at_planning: string | null
+          approved_at_squad: string | null
           architecture_content: string | null
           business_model: string | null
           complexity: string | null
           created_at: string
           description: string | null
+          discovery_payload: Json | null
           feasibility_analysis: string | null
           id: string
+          idea_raw: string | null
           initial_estimate: Json | null
           market_analysis: string | null
           mvp_scope: string | null
@@ -494,22 +558,29 @@ export type Database = {
           prd_content: string | null
           refined_idea: string | null
           risk_level: string | null
+          stage_status: Database["public"]["Enums"]["initiative_stage_status"]
           status: Database["public"]["Enums"]["initiative_status"]
           strategic_vision: string | null
           suggested_stack: string | null
+          target_user: string | null
           title: string
           updated_at: string
           user_id: string
           workspace_id: string | null
         }
         Insert: {
+          approved_at_discovery?: string | null
+          approved_at_planning?: string | null
+          approved_at_squad?: string | null
           architecture_content?: string | null
           business_model?: string | null
           complexity?: string | null
           created_at?: string
           description?: string | null
+          discovery_payload?: Json | null
           feasibility_analysis?: string | null
           id?: string
+          idea_raw?: string | null
           initial_estimate?: Json | null
           market_analysis?: string | null
           mvp_scope?: string | null
@@ -518,22 +589,29 @@ export type Database = {
           prd_content?: string | null
           refined_idea?: string | null
           risk_level?: string | null
+          stage_status?: Database["public"]["Enums"]["initiative_stage_status"]
           status?: Database["public"]["Enums"]["initiative_status"]
           strategic_vision?: string | null
           suggested_stack?: string | null
+          target_user?: string | null
           title: string
           updated_at?: string
           user_id: string
           workspace_id?: string | null
         }
         Update: {
+          approved_at_discovery?: string | null
+          approved_at_planning?: string | null
+          approved_at_squad?: string | null
           architecture_content?: string | null
           business_model?: string | null
           complexity?: string | null
           created_at?: string
           description?: string | null
+          discovery_payload?: Json | null
           feasibility_analysis?: string | null
           id?: string
+          idea_raw?: string | null
           initial_estimate?: Json | null
           market_analysis?: string | null
           mvp_scope?: string | null
@@ -542,9 +620,11 @@ export type Database = {
           prd_content?: string | null
           refined_idea?: string | null
           risk_level?: string | null
+          stage_status?: Database["public"]["Enums"]["initiative_stage_status"]
           status?: Database["public"]["Enums"]["initiative_status"]
           strategic_vision?: string | null
           suggested_stack?: string | null
+          target_user?: string | null
           title?: string
           updated_at?: string
           user_id?: string
@@ -1098,6 +1178,24 @@ export type Database = {
         | "aios_master"
         | "aios_orchestrator"
       agent_status: "active" | "inactive"
+      initiative_stage_status:
+        | "draft"
+        | "discovery_ready"
+        | "discovering"
+        | "discovered"
+        | "squad_ready"
+        | "forming_squad"
+        | "squad_formed"
+        | "planning_ready"
+        | "planning"
+        | "planned"
+        | "in_progress"
+        | "validating"
+        | "ready_to_publish"
+        | "published"
+        | "completed"
+        | "rejected"
+        | "archived"
       initiative_status:
         | "idea"
         | "discovery"
@@ -1262,6 +1360,25 @@ export const Constants = {
         "aios_orchestrator",
       ],
       agent_status: ["active", "inactive"],
+      initiative_stage_status: [
+        "draft",
+        "discovery_ready",
+        "discovering",
+        "discovered",
+        "squad_ready",
+        "forming_squad",
+        "squad_formed",
+        "planning_ready",
+        "planning",
+        "planned",
+        "in_progress",
+        "validating",
+        "ready_to_publish",
+        "published",
+        "completed",
+        "rejected",
+        "archived",
+      ],
       initiative_status: [
         "idea",
         "discovery",
