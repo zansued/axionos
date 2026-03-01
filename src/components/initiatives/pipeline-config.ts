@@ -1,6 +1,6 @@
 import {
   Lightbulb, Brain, Users, FileText, Cpu, BookOpen, Hammer, CheckCircle2,
-  Shield, Clock, Rocket, XCircle, Archive
+  Shield, Clock, Rocket, XCircle, Archive, GitBranch
 } from "lucide-react";
 
 export const PIPELINE_STEPS = [
@@ -16,6 +16,7 @@ export const PIPELINE_STEPS = [
   { key: "in_progress", label: "Execução", icon: Hammer, color: "text-primary", bg: "bg-primary/10" },
   { key: "validating", label: "Validação", icon: Shield, color: "text-warning", bg: "bg-warning/10" },
   { key: "ready_to_publish", label: "Pronto", icon: Rocket, color: "text-accent", bg: "bg-accent/10" },
+  { key: "published", label: "Publicado", icon: GitBranch, color: "text-primary", bg: "bg-primary/10" },
   { key: "completed", label: "Concluído", icon: CheckCircle2, color: "text-success", bg: "bg-success/10" },
 ];
 
@@ -25,6 +26,7 @@ export const MACRO_STAGES = [
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
   { key: "validation", label: "Validação", icon: Shield },
+  { key: "publish", label: "Publicação", icon: GitBranch },
   { key: "done", label: "Concluído", icon: CheckCircle2 },
 ];
 
@@ -40,14 +42,15 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["planning_ready", "planning", "planned"].includes(s)) return 2;
   if (["in_progress"].includes(s)) return 3;
   if (["validating", "ready_to_publish"].includes(s)) return 4;
-  if (["published", "completed"].includes(s)) return 5;
+  if (["published"].includes(s)) return 5;
+  if (["completed"].includes(s)) return 6;
   return 0;
 }
 
 export type StageAction = {
   stage: string;
   label: string;
-  type: "run" | "approve" | "reject";
+  type: "run" | "approve" | "reject" | "publish";
 };
 
 export function getAvailableActions(stageStatus: string): StageAction[] {
@@ -85,8 +88,12 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "ready_to_publish":
       return [
-        { stage: "approve", label: "Aprovar para Publicação", type: "approve" },
+        { stage: "publish", label: "Publicar no GitHub", type: "publish" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "published":
+      return [
+        { stage: "approve", label: "Marcar como Concluído", type: "approve" },
       ];
     default:
       return [];

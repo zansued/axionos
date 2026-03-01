@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
@@ -12,7 +14,7 @@ import {
 import {
   Brain, Users, FileText, Cpu, Loader2, Target, TrendingUp, Shield,
   Layers, AlertTriangle, ArrowRight, Sparkles, Rocket, BookOpen,
-  CheckCircle2, Clock, DollarSign, Zap, RotateCcw
+  CheckCircle2, Clock, DollarSign, Zap, RotateCcw, GitBranch, ExternalLink
 } from "lucide-react";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 
@@ -20,7 +22,7 @@ interface InitiativeDetailProps {
   initiative: any;
   jobs: any[];
   runningStage: string | null;
-  onRunStage: (stage: string, comment?: string) => void;
+  onRunStage: (stage: string, comment?: string, publishParams?: { github_token: string; owner: string; repo: string; base_branch: string }) => void;
   onApprove: () => void;
 }
 
@@ -33,12 +35,28 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectComment, setRejectComment] = useState("");
 
+  const [publishOpen, setPublishOpen] = useState(false);
+  const [ghToken, setGhToken] = useState("");
+  const [ghOwner, setGhOwner] = useState("");
+  const [ghRepo, setGhRepo] = useState("");
+  const [ghBranch, setGhBranch] = useState("main");
+
   const handleReject = () => {
     if (rejectComment.trim().length < 10) return;
     onRunStage("reject", rejectComment.trim());
     setRejectOpen(false);
     setRejectComment("");
   };
+
+  const handlePublish = () => {
+    if (!ghToken || !ghOwner || !ghRepo) return;
+    onRunStage("publish", undefined, { github_token: ghToken, owner: ghOwner, repo: ghRepo, base_branch: ghBranch || "main" });
+    setPublishOpen(false);
+  };
+
+  // Find publish job with PR URL
+  const publishJob = jobs.find((j: any) => j.stage === "publish" && j.status === "success");
+  const prUrl = publishJob?.outputs?.pr_url;
 
   return (
     <div className="space-y-4">
@@ -64,6 +82,16 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
                     <RotateCcw className="h-3.5 w-3.5" />
                     {action.label}
                   </Button>
+                ) : action.type === "publish" ? (
+                  <Button
+                    key={action.stage}
+                    onClick={() => setPublishOpen(true)}
+                    disabled={!!runningStage}
+                    className="gap-2 bg-foreground text-background hover:bg-foreground/90"
+                  >
+                    {runningStage === "publish" ? <Loader2 className="h-4 w-4 animate-spin" /> : <GitBranch className="h-4 w-4" />}
+                    {runningStage === "publish" ? "Publicando..." : action.label}
+                  </Button>
                 ) : (
                   <Button
                     key={action.stage}
@@ -81,7 +109,7 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
             </div>
           </div>
           {/* Macro pipeline steps */}
-          <div className="flex items-center gap-1 mt-4">
+          <div className="flex items-center gap-1 mt-4 overflow-x-auto">
             {MACRO_STAGES.map((stage, i) => {
               const Icon = stage.icon;
               const isDone = i < macroIdx;
@@ -100,8 +128,8 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
               );
             })}
           </div>
-          {/* Approval timestamps */}
-          <div className="flex gap-3 mt-2 text-[10px] text-muted-foreground">
+          {/* Approval timestamps + PR link */}
+          <div className="flex gap-3 mt-2 text-[10px] text-muted-foreground flex-wrap">
             {initiative.approved_at_discovery && (
               <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-success" /> Discovery aprovado</span>
             )}
@@ -110,6 +138,12 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
             )}
             {initiative.approved_at_planning && (
               <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-success" /> Planning aprovado</span>
+            )}
+            {prUrl && (
+              <a href={prUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-primary hover:underline">
+                <GitBranch className="h-3 w-3" /> Pull Request
+                <ExternalLink className="h-2.5 w-2.5" />
+              </a>
             )}
           </div>
         </CardHeader>
@@ -148,6 +182,52 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
         </DialogContent>
       </Dialog>
 
+      {/* Publish dialog */}
+      <Dialog open={publishOpen} onOpenChange={setPublishOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <GitBranch className="h-5 w-5 text-primary" />
+              Publicar no GitHub
+            </DialogTitle>
+            <DialogDescription>
+              Informe os dados do repositório. O AxionOS criará uma branch, commitará os artefatos e abrirá um Pull Request.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="gh-token" className="text-xs">GitHub Token (PAT)</Label>
+              <Input id="gh-token" type="password" placeholder="ghp_..." value={ghToken} onChange={(e) => setGhToken(e.target.value)} />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label htmlFor="gh-owner" className="text-xs">Owner / Org</Label>
+                <Input id="gh-owner" placeholder="minha-org" value={ghOwner} onChange={(e) => setGhOwner(e.target.value)} />
+              </div>
+              <div>
+                <Label htmlFor="gh-repo" className="text-xs">Repositório</Label>
+                <Input id="gh-repo" placeholder="meu-projeto" value={ghRepo} onChange={(e) => setGhRepo(e.target.value)} />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="gh-branch" className="text-xs">Branch base</Label>
+              <Input id="gh-branch" placeholder="main" value={ghBranch} onChange={(e) => setGhBranch(e.target.value)} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPublishOpen(false)}>Cancelar</Button>
+            <Button
+              onClick={handlePublish}
+              disabled={!ghToken || !ghOwner || !ghRepo}
+              className="gap-1.5"
+            >
+              <GitBranch className="h-4 w-4" />
+              Publicar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Running indicator */}
       {runningStage && runningStage !== "approve" && runningStage !== "reject" && (
         <Card className="border-primary/30 bg-primary/5">
@@ -160,14 +240,36 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
                 {runningStage === "planning" && "Gerando PRD → Arquitetura → Stories..."}
                 {runningStage === "execution" && "Agentes executando subtasks automaticamente..."}
                 {runningStage === "validation" && "Validando qualidade dos artefatos com IA..."}
+                {runningStage === "publish" && "Criando branch, commitando artefatos e abrindo PR..."}
               </p>
               <p className="text-xs text-muted-foreground">
                 {runningStage === "planning" ? "Isso pode levar ~2 minutos." :
                  runningStage === "execution" ? "Isso pode levar vários minutos dependendo do número de subtasks." :
                  runningStage === "validation" ? "Cada artefato será analisado individualmente. ~1 min." :
+                 runningStage === "publish" ? "Commitando arquivos no GitHub..." :
                  "Isso pode levar ~30 segundos."}
               </p>
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* PR Result Card */}
+      {prUrl && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardContent className="p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <GitBranch className="h-5 w-5 text-primary" />
+              <div>
+                <p className="text-sm font-medium">Pull Request criado com sucesso</p>
+                <p className="text-xs text-muted-foreground">{publishJob?.outputs?.branch}</p>
+              </div>
+            </div>
+            <a href={prUrl} target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="sm" className="gap-1.5">
+                Ver PR <ExternalLink className="h-3.5 w-3.5" />
+              </Button>
+            </a>
           </CardContent>
         </Card>
       )}
@@ -278,6 +380,11 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
                     <span className="font-medium">{job.stage}</span>
                     {job.stage === "rework" && (
                       <span className="text-destructive text-[10px]">⟲ rollback</span>
+                    )}
+                    {job.stage === "publish" && job.outputs?.pr_url && (
+                      <a href={job.outputs.pr_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-0.5">
+                        PR <ExternalLink className="h-2.5 w-2.5" />
+                      </a>
                     )}
                   </div>
                   <div className="flex items-center gap-3 text-muted-foreground">
