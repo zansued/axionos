@@ -16,8 +16,10 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useArtifactReview } from "@/hooks/useArtifactReview";
+import { useArtifactAnalysis } from "@/hooks/useArtifactAnalysis";
 import { ArtifactReviewActions } from "@/components/artifacts/ArtifactReviewActions";
 import { ArtifactReviewHistory } from "@/components/artifacts/ArtifactReviewHistory";
+import { ArtifactAiAnalysis } from "@/components/artifacts/ArtifactAiAnalysis";
 
 const TYPE_CONFIG: Record<string, { label: string; icon: any; color: string }> = {
   code: { label: "Código", icon: Code2, color: "text-blue-400" },
@@ -37,6 +39,7 @@ const STATUS_CONFIG: Record<string, { label: string; icon: any; className: strin
 export default function Artifacts() {
   const { currentOrg } = useOrg();
   const reviewActions = useArtifactReview();
+  const aiAnalysis = useArtifactAnalysis();
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedArtifact, setSelectedArtifact] = useState<string | null>(null);
@@ -226,6 +229,17 @@ export default function Artifacts() {
                                     onDeploy={(c) => reviewActions.deploy(output.id, validations, c)}
                                     onComment={(c) => reviewActions.addComment(output.id, output.status, c)}
                                     deployBlocked={!validations.some((v: any) => v.artifact_id === output.id && v.result === "pass")}
+                                  />
+                                  <ArtifactAiAnalysis
+                                    artifactId={output.id}
+                                    analysis={aiAnalysis.results[output.id]}
+                                    isAnalyzing={aiAnalysis.analyzing === output.id}
+                                    onAnalyze={() => aiAnalysis.analyze(output.id)}
+                                    onApplyVerdict={(verdict) => {
+                                      if (verdict === "approve") reviewActions.approve(output.id, "Aprovado por análise IA");
+                                      else if (verdict === "reject") reviewActions.reject(output.id, "Rejeitado por análise IA");
+                                      else reviewActions.requestChanges(output.id, "Alterações sugeridas pela análise IA");
+                                    }}
                                   />
                                 </div>
                               </div>
