@@ -1,12 +1,18 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter,
+  DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Brain, Users, FileText, Cpu, Loader2, Target, TrendingUp, Shield,
   Layers, AlertTriangle, ArrowRight, Sparkles, Rocket, BookOpen,
-  CheckCircle2, Clock, DollarSign, Zap
+  CheckCircle2, Clock, DollarSign, Zap, RotateCcw
 } from "lucide-react";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 
@@ -14,7 +20,7 @@ interface InitiativeDetailProps {
   initiative: any;
   jobs: any[];
   runningStage: string | null;
-  onRunStage: (stage: string) => void;
+  onRunStage: (stage: string, comment?: string) => void;
   onApprove: () => void;
 }
 
@@ -23,6 +29,16 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
   const macroIdx = getMacroStageIndex(stageStatus);
   const actions = getAvailableActions(stageStatus);
   const dp = initiative.discovery_payload || {};
+
+  const [rejectOpen, setRejectOpen] = useState(false);
+  const [rejectComment, setRejectComment] = useState("");
+
+  const handleReject = () => {
+    if (rejectComment.trim().length < 10) return;
+    onRunStage("reject", rejectComment.trim());
+    setRejectOpen(false);
+    setRejectComment("");
+  };
 
   return (
     <div className="space-y-4">
@@ -34,19 +50,33 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
               <CardTitle className="font-display text-xl">{initiative.title}</CardTitle>
               {initiative.description && <p className="text-sm text-muted-foreground mt-1 break-words">{initiative.description}</p>}
             </div>
-            <div className="flex gap-2 shrink-0">
+            <div className="flex gap-2 shrink-0 flex-wrap justify-end">
               {actions.map((action) => (
-                <Button
-                  key={action.stage}
-                  onClick={() => action.type === "approve" ? onApprove() : onRunStage(action.stage)}
-                  disabled={!!runningStage}
-                  variant={action.type === "approve" ? "default" : "secondary"}
-                  className="gap-2"
-                >
-                  {runningStage === action.stage ? <Loader2 className="h-4 w-4 animate-spin" /> :
-                    action.type === "approve" ? <CheckCircle2 className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
-                  {runningStage === action.stage ? "Processando..." : action.label}
-                </Button>
+                action.type === "reject" ? (
+                  <Button
+                    key={action.stage}
+                    onClick={() => setRejectOpen(true)}
+                    disabled={!!runningStage}
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 text-destructive border-destructive/30 hover:bg-destructive/10"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    {action.label}
+                  </Button>
+                ) : (
+                  <Button
+                    key={action.stage}
+                    onClick={() => action.type === "approve" ? onApprove() : onRunStage(action.stage)}
+                    disabled={!!runningStage}
+                    variant={action.type === "approve" ? "default" : "secondary"}
+                    className="gap-2"
+                  >
+                    {runningStage === action.stage ? <Loader2 className="h-4 w-4 animate-spin" /> :
+                      action.type === "approve" ? <CheckCircle2 className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
+                    {runningStage === action.stage ? "Processando..." : action.label}
+                  </Button>
+                )
               ))}
             </div>
           </div>
@@ -85,8 +115,41 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
         </CardHeader>
       </Card>
 
+      {/* Reject dialog */}
+      <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <RotateCcw className="h-5 w-5 text-destructive" />
+              Solicitar Ajustes
+            </DialogTitle>
+            <DialogDescription>
+              Descreva o que precisa ser corrigido. O pipeline voltará ao estágio anterior e um job de rework será registrado.
+            </DialogDescription>
+          </DialogHeader>
+          <Textarea
+            placeholder="Descreva os ajustes necessários (mínimo 10 caracteres)..."
+            value={rejectComment}
+            onChange={(e) => setRejectComment(e.target.value)}
+            rows={4}
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRejectOpen(false)}>Cancelar</Button>
+            <Button
+              variant="destructive"
+              onClick={handleReject}
+              disabled={rejectComment.trim().length < 10}
+              className="gap-1.5"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Confirmar Ajustes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Running indicator */}
-      {runningStage && runningStage !== "approve" && (
+      {runningStage && runningStage !== "approve" && runningStage !== "reject" && (
         <Card className="border-primary/30 bg-primary/5">
           <CardContent className="p-4 flex items-center gap-3">
             <Loader2 className="h-5 w-5 animate-spin text-primary shrink-0" />
@@ -107,7 +170,7 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
         </Card>
       )}
 
-      {/* Discovery Results (from discovery_payload) */}
+      {/* Discovery Results */}
       {(dp.refined_idea || initiative.refined_idea) && (
         <Card className="border-border/50">
           <CardHeader className="pb-2">
@@ -191,7 +254,7 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
         </Card>
       )}
 
-      {/* Jobs History (CFO da verdade) */}
+      {/* Jobs History */}
       {jobs.length > 0 && (
         <Card className="border-border/50">
           <CardHeader className="pb-2">
@@ -204,10 +267,16 @@ export function InitiativeDetail({ initiative, jobs, runningStage, onRunStage, o
               {jobs.map((job: any) => (
                 <div key={job.id} className="flex items-center justify-between gap-2 text-xs border border-border/30 rounded-lg p-2">
                   <div className="flex items-center gap-2">
-                    <Badge variant={job.status === "success" ? "default" : job.status === "failed" ? "destructive" : "secondary"} className="text-[10px]">
+                    <Badge
+                      variant={job.status === "success" ? "default" : job.status === "failed" ? "destructive" : "secondary"}
+                      className="text-[10px]"
+                    >
                       {job.status}
                     </Badge>
                     <span className="font-medium">{job.stage}</span>
+                    {job.stage === "rework" && (
+                      <span className="text-destructive text-[10px]">⟲ rollback</span>
+                    )}
                   </div>
                   <div className="flex items-center gap-3 text-muted-foreground">
                     {job.duration_ms && <span className="flex items-center gap-0.5"><Clock className="h-3 w-3" />{(job.duration_ms / 1000).toFixed(1)}s</span>}

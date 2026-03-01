@@ -14,10 +14,10 @@ export const PIPELINE_STEPS = [
   { key: "planning", label: "Planejando", icon: FileText, color: "text-warning", bg: "bg-warning/10" },
   { key: "planned", label: "Planejado", icon: FileText, color: "text-accent", bg: "bg-accent/10" },
   { key: "in_progress", label: "Execução", icon: Hammer, color: "text-primary", bg: "bg-primary/10" },
+  { key: "validating", label: "Validação", icon: Shield, color: "text-warning", bg: "bg-warning/10" },
   { key: "completed", label: "Concluído", icon: CheckCircle2, color: "text-success", bg: "bg-success/10" },
 ];
 
-// Simplified visual pipeline (just the 5 macro stages for the progress bar)
 export const MACRO_STAGES = [
   { key: "discovery", label: "Descoberta", icon: Brain },
   { key: "squad", label: "Squad", icon: Users },
@@ -41,11 +41,10 @@ export function getMacroStageIndex(stageStatus: string): number {
   return 0;
 }
 
-// What action buttons to show based on current stage_status
 export type StageAction = {
   stage: string;
   label: string;
-  type: "run" | "approve";
+  type: "run" | "approve" | "reject";
 };
 
 export function getAvailableActions(stageStatus: string): StageAction[] {
@@ -53,17 +52,33 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
     case "draft":
       return [{ stage: "discovery", label: "Rodar Discovery", type: "run" }];
     case "discovered":
-      return [{ stage: "approve", label: "Aprovar Descoberta", type: "approve" }];
+      return [
+        { stage: "approve", label: "Aprovar Descoberta", type: "approve" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
     case "squad_ready":
       return [{ stage: "squad_formation", label: "Gerar Squad", type: "run" }];
     case "squad_formed":
-      return [{ stage: "approve", label: "Aprovar Squad", type: "approve" }];
+      return [
+        { stage: "approve", label: "Aprovar Squad", type: "approve" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
     case "planning_ready":
       return [{ stage: "planning", label: "Gerar Planning", type: "run" }];
     case "planned":
-      return [{ stage: "approve", label: "Aprovar Planning", type: "approve" }];
+      return [
+        { stage: "approve", label: "Aprovar Planning", type: "approve" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
     case "in_progress":
-      return [{ stage: "execution", label: "Executar Subtasks", type: "run" }];
+      return [
+        { stage: "execution", label: "Iniciar Execução", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "validating":
+      return [
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
     default:
       return [];
   }
