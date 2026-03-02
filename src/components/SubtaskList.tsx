@@ -5,7 +5,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, GripVertical } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Trash2, GripVertical, FileCode2 } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -28,6 +29,8 @@ type Subtask = {
   status: "pending" | "in_progress" | "completed" | "failed";
   sort_order: number;
   phase_id: string;
+  file_path?: string | null;
+  file_type?: string | null;
 };
 
 function SortableSubtaskItem({
@@ -71,6 +74,14 @@ function SortableSubtaskItem({
       <span
         className={`text-sm flex-1 ${isCompleted ? "line-through text-muted-foreground/60" : ""}`}
       >
+        {subtask.file_path && (
+          <span className="inline-flex items-center gap-1 mr-1.5">
+            <FileCode2 className="h-3 w-3 text-primary/70" />
+            <Badge variant="outline" className="text-[10px] px-1 py-0 font-mono">
+              {subtask.file_path}
+            </Badge>
+          </span>
+        )}
         {subtask.description}
       </span>
       <Button
