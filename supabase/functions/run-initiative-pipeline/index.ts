@@ -591,11 +591,11 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // ========== STAGE 4: EXECUTION (per-subtask jobs) ==========
+    // ========== STAGE 4: EXECUTION (Code-Aware per-subtask) ==========
     if (stage === "execution") {
       const masterJobId = await createJob("execution", { initiative_id: initiativeId });
       await updateInit({ stage_status: "in_progress" });
-      await log("pipeline_execution_start", "Iniciando execução automática de subtasks...");
+      await log("pipeline_execution_start", "Iniciando execução de código...");
 
       try {
         const { data: stories } = await serviceClient.from("stories")
@@ -618,16 +618,34 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         for (const sm of squadMembers) agentsByRole[sm.role_in_squad] = sm.agents;
         const defaultAgent = agentsByRole["dev"] || agentsByRole["architect"] || squadMembers[0]?.agents;
 
+        // Collect ALL subtasks with file_path to build context of the full project
+        const allProjectFiles: { file_path: string; description: string }[] = [];
+        for (const story of stories) {
+          const { data: phases } = await serviceClient.from("story_phases")
+            .select("id, story_subtasks(file_path, description)")
+            .eq("story_id", story.id);
+          for (const phase of (phases || [])) {
+            for (const st of (phase.story_subtasks || [])) {
+              if (st.file_path) allProjectFiles.push({ file_path: st.file_path, description: st.description });
+            }
+          }
+        }
+        const projectStructure = allProjectFiles.map(f => `- ${f.file_path}: ${f.description}`).join("\n");
+
         let totalTokens = 0;
         let totalCost = 0;
         let executedCount = 0;
         let failedCount = 0;
+        let codeFilesGenerated = 0;
+
+        // Track generated code for cross-file context
+        const generatedFiles: Record<string, string> = {};
 
         for (const story of stories) {
           await serviceClient.from("stories").update({ status: "in_progress" }).eq("id", story.id);
 
           const { data: phases } = await serviceClient.from("story_phases")
-            .select("id, name, sort_order, story_subtasks(id, description, status, sort_order)")
+            .select("id, name, sort_order, story_subtasks(id, description, status, sort_order, file_path, file_type)")
             .eq("story_id", story.id)
             .order("sort_order");
 
@@ -641,9 +659,11 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
               .sort((a: any, b: any) => a.sort_order - b.sort_order);
 
             for (const subtask of subtasks) {
-              const assignedAgent = pickAgent(subtask.description, agentsByRole, defaultAgent);
+              const hasFilePath = !!subtask.file_path;
+              const assignedAgent = hasFilePath
+                ? (agentsByRole["dev"] || defaultAgent)
+                : pickAgent(subtask.description, agentsByRole, defaultAgent);
 
-              // Per-subtask job for granular traceability
               const subtaskJobId = await createJob("execution", {
                 subtask_id: subtask.id,
                 agent_id: assignedAgent.id,
@@ -652,6 +672,8 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                 story_title: story.title,
                 phase_name: phase.name,
                 subtask_description: subtask.description,
+                file_path: subtask.file_path || null,
+                file_type: subtask.file_type || null,
               });
 
               await serviceClient.from("story_subtasks").update({
@@ -660,13 +682,124 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
               }).eq("id", subtask.id);
 
               try {
-                const result = await callDeepSeek(
-                  DEEPSEEK_API_KEY,
-                  `Você é o agente "${assignedAgent.name}" com o papel de "${assignedAgent.role}" no AxionOS.
+                let result: any;
+
+                if (hasFilePath) {
+                  // ===== CODE GENERATION MODE =====
+                  const ext = subtask.file_path.split(".").pop() || "ts";
+                  const langMap: Record<string, string> = {
+                    tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS",
+                    json: "JSON", js: "JavaScript", html: "HTML",
+                  };
+                  const language = langMap[ext] || "TypeScript";
+
+                  // Build context from already generated files (max 6000 chars)
+                  const contextFiles = Object.entries(generatedFiles);
+                  let contextStr = "";
+                  for (const [fp, content] of contextFiles) {
+                    const entry = `\n--- ${fp} ---\n${content.slice(0, 800)}\n`;
+                    if (contextStr.length + entry.length > 6000) break;
+                    contextStr += entry;
+                  }
+
+                  const codeSystemPrompt = `Você é um desenvolvedor expert em Vite + React + TypeScript + Tailwind CSS + shadcn/ui.
+Você está gerando o arquivo "${subtask.file_path}" para o projeto.
+
+REGRAS CRÍTICAS:
+- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.
+- O código deve ser COMPLETO e FUNCIONAL, pronto para uso.
+- Use imports corretos e relativos ao projeto.
+- Para componentes React: use export default ou named export.
+- Para CSS: use @tailwind directives e CSS custom properties.
+- Para config files (package.json, vite.config.ts, etc.): conteúdo completo e válido.
+- Use shadcn/ui components quando apropriado (import from "@/components/ui/...").
+- Use Tailwind CSS para estilização, NUNCA CSS inline.
+- Siga as melhores práticas de ${language}.`;
+
+                  const codeUserPrompt = `## Projeto: ${initiative.title}
+## Descrição: ${initiative.description || initiative.refined_idea || ""}
+
+## Estrutura completa do projeto:
+${projectStructure}
+
+## Arquivos já gerados (contexto):
+${contextStr || "(nenhum ainda - este pode ser um dos primeiros arquivos)"}
+
+## Arquivo a gerar: ${subtask.file_path}
+## Tipo: ${subtask.file_type || "code"}
+## Linguagem: ${language}
+## Descrição da tarefa: ${subtask.description}
+
+${initiative.prd_content ? `## PRD (resumo):\n${initiative.prd_content.slice(0, 1500)}` : ""}
+${initiative.architecture_content ? `## Arquitetura (resumo):\n${initiative.architecture_content.slice(0, 1500)}` : ""}
+
+Gere o conteúdo COMPLETO e FUNCIONAL do arquivo "${subtask.file_path}".
+Retorne APENAS o código, sem wrappers markdown.`;
+
+                  result = await callDeepSeek(DEEPSEEK_API_KEY, codeSystemPrompt, codeUserPrompt);
+
+                  // Clean output: remove markdown code blocks if AI added them
+                  let codeContent = result.content;
+                  codeContent = codeContent.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+
+                  // Store for cross-file context
+                  generatedFiles[subtask.file_path] = codeContent;
+
+                  // Save subtask output
+                  await serviceClient.from("story_subtasks").update({
+                    output: codeContent,
+                    status: "completed",
+                    executed_at: new Date().toISOString(),
+                  }).eq("id", subtask.id);
+
+                  // Create agent_output artifact with code type
+                  const { data: artifact } = await serviceClient.from("agent_outputs").insert({
+                    organization_id: initiative.organization_id,
+                    workspace_id: initiative.workspace_id || null,
+                    agent_id: assignedAgent.id,
+                    subtask_id: subtask.id,
+                    type: "code",
+                    status: "draft",
+                    summary: `${subtask.file_path} — ${subtask.description.slice(0, 150)}`,
+                    raw_output: {
+                      file_path: subtask.file_path,
+                      file_type: subtask.file_type,
+                      language: ext,
+                      content: codeContent,
+                    },
+                    model_used: result.model,
+                    prompt_used: subtask.description,
+                    tokens_used: result.tokens,
+                    cost_estimate: result.costUsd,
+                  }).select("id").single();
+
+                  // Create code_artifact record
+                  if (artifact?.id) {
+                    await serviceClient.from("code_artifacts").insert({
+                      output_id: artifact.id,
+                      files_affected: [{ path: subtask.file_path, type: subtask.file_type, language: ext }],
+                      build_status: "pending",
+                      test_status: "pending",
+                    });
+                  }
+
+                  if (subtaskJobId) await completeJob(subtaskJobId, {
+                    artifact_id: artifact?.id,
+                    file_path: subtask.file_path,
+                    tokens: result.tokens,
+                    code_length: codeContent.length,
+                  }, result);
+
+                  codeFilesGenerated++;
+                } else {
+                  // ===== LEGACY TEXT MODE (non-code subtasks) =====
+                  result = await callDeepSeek(
+                    DEEPSEEK_API_KEY,
+                    `Você é o agente "${assignedAgent.name}" com o papel de "${assignedAgent.role}" no AxionOS.
 ${assignedAgent.description || ""}
 Sua tarefa é executar a subtask abaixo com maestria, produzindo um output técnico e completo.
 Responda em português do Brasil.`,
-                  `## Contexto
+                    `## Contexto
 - **Story**: ${story.title}
 - **Descrição**: ${story.description || ""}
 - **Fase**: ${phase.name}
@@ -675,38 +808,39 @@ Responda em português do Brasil.`,
 ${subtask.description}
 
 Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quando aplicável.`
-                );
+                  );
 
-                await serviceClient.from("story_subtasks").update({
-                  output: result.content,
-                  status: "completed",
-                  executed_at: new Date().toISOString(),
-                }).eq("id", subtask.id);
+                  await serviceClient.from("story_subtasks").update({
+                    output: result.content,
+                    status: "completed",
+                    executed_at: new Date().toISOString(),
+                  }).eq("id", subtask.id);
 
-                const outputType = assignedAgent.role === "architect" ? "decision"
-                  : ["dev", "devops"].includes(assignedAgent.role) ? "code"
-                  : ["analyst", "po", "pm"].includes(assignedAgent.role) ? "content"
-                  : "analysis";
+                  const outputType = assignedAgent.role === "architect" ? "decision"
+                    : ["dev", "devops"].includes(assignedAgent.role) ? "code"
+                    : ["analyst", "po", "pm"].includes(assignedAgent.role) ? "content"
+                    : "analysis";
 
-                const { data: artifact } = await serviceClient.from("agent_outputs").insert({
-                  organization_id: initiative.organization_id,
-                  workspace_id: initiative.workspace_id || null,
-                  agent_id: assignedAgent.id,
-                  subtask_id: subtask.id,
-                  type: outputType,
-                  status: "draft",
-                  summary: subtask.description?.slice(0, 200),
-                  raw_output: { text: result.content },
-                  model_used: result.model,
-                  prompt_used: subtask.description,
-                  tokens_used: result.tokens,
-                  cost_estimate: result.costUsd,
-                }).select("id").single();
+                  const { data: artifact } = await serviceClient.from("agent_outputs").insert({
+                    organization_id: initiative.organization_id,
+                    workspace_id: initiative.workspace_id || null,
+                    agent_id: assignedAgent.id,
+                    subtask_id: subtask.id,
+                    type: outputType,
+                    status: "draft",
+                    summary: subtask.description?.slice(0, 200),
+                    raw_output: { text: result.content },
+                    model_used: result.model,
+                    prompt_used: subtask.description,
+                    tokens_used: result.tokens,
+                    cost_estimate: result.costUsd,
+                  }).select("id").single();
 
-                if (subtaskJobId) await completeJob(subtaskJobId, {
-                  artifact_id: artifact?.id,
-                  tokens: result.tokens,
-                }, result);
+                  if (subtaskJobId) await completeJob(subtaskJobId, {
+                    artifact_id: artifact?.id,
+                    tokens: result.tokens,
+                  }, result);
+                }
 
                 totalTokens += result.tokens;
                 totalCost += result.costUsd;
@@ -739,15 +873,17 @@ Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quan
 
         await updateInit({ stage_status: "validating" });
         if (masterJobId) await completeJob(masterJobId, {
-          executed: executedCount, failed: failedCount, total_tokens: totalTokens,
+          executed: executedCount, failed: failedCount,
+          code_files: codeFilesGenerated, total_tokens: totalTokens,
         }, { model: "deepseek-chat", costUsd: totalCost, durationMs: 0 });
 
-        await log("pipeline_execution_complete", `Execução concluída: ${executedCount} subtasks executadas, ${failedCount} falhas`, {
-          total_tokens: totalTokens, cost_usd: totalCost,
+        await log("pipeline_execution_complete", `Execução concluída: ${executedCount} subtasks (${codeFilesGenerated} arquivos de código), ${failedCount} falhas`, {
+          total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated,
         });
 
         return new Response(JSON.stringify({
           success: true, executed: executedCount, failed: failedCount,
+          code_files: codeFilesGenerated,
           tokens: totalTokens, cost_usd: totalCost, job_id: masterJobId,
         }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       } catch (e) {

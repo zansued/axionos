@@ -103,7 +103,7 @@ export default function Initiatives() {
         planning: `Planning completo: ${result.stories?.length || 0} stories criadas ✅`,
         approve: "Stage aprovado ✅",
         reject: "Ajustes solicitados — pipeline retornou ao estágio anterior ⟲",
-        execution: `Execução concluída: ${result.executed || 0} subtasks executadas ✅`,
+        execution: `Execução concluída: ${result.code_files || 0} arquivos de código, ${result.executed || 0} subtasks ✅`,
         validation: result.overall_pass
           ? `Validação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos ✅`
           : `Validação: ${result.failed || 0} falhas de ${result.artifacts_validated || 0} artefatos ⚠️`,
