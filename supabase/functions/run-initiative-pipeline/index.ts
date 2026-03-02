@@ -1084,7 +1084,7 @@ Regras:
           throw new Error(`Falha ao criar branch: ${err.message}`);
         }
 
-        // 3. Collect all artifacts
+        // 3. Collect all artifacts WITH their subtask file_path
         const { data: stories } = await serviceClient.from("stories")
           .select("id, title").eq("initiative_id", initiativeId);
         const storyIds = (stories || []).map((s: any) => s.id);
@@ -1094,55 +1094,101 @@ Regras:
         const phaseIds = (phases || []).map((p: any) => p.id);
 
         const { data: subtasks } = await serviceClient.from("story_subtasks")
-          .select("id, description").in("phase_id", phaseIds);
+          .select("id, description, file_path, file_type").in("phase_id", phaseIds);
+        
+        // Build a map of subtask_id -> file_path for quick lookup
+        const subtaskFileMap = new Map<string, { file_path: string | null; file_type: string | null }>();
+        for (const st of (subtasks || [])) {
+          subtaskFileMap.set(st.id, { file_path: st.file_path, file_type: st.file_type });
+        }
         const subtaskIds = (subtasks || []).map((st: any) => st.id);
 
         const { data: artifacts } = await serviceClient.from("agent_outputs")
-          .select("id, type, summary, raw_output, agents(name, role)")
+          .select("id, type, summary, raw_output, subtask_id, agents(name, role)")
           .in("subtask_id", subtaskIds)
           .eq("organization_id", initiative.organization_id);
 
         if (!artifacts || artifacts.length === 0) throw new Error("Nenhum artefato encontrado para publicar");
 
-        // 4. Commit each artifact as a file
+        // 4. Commit each artifact using real file_path from subtask
         const committedFiles: string[] = [];
+        const skippedFiles: string[] = [];
+
         for (let i = 0; i < artifacts.length; i++) {
           const art = artifacts[i];
-          const artText = typeof art.raw_output === "object"
-            ? (art.raw_output as any)?.text || JSON.stringify(art.raw_output, null, 2)
-            : String(art.raw_output);
+          const rawOutput = art.raw_output as any;
+          
+          // Get file_path: priority is raw_output.file_path > subtask.file_path > fallback
+          const subtaskInfo = art.subtask_id ? subtaskFileMap.get(art.subtask_id) : null;
+          const filePath = rawOutput?.file_path || subtaskInfo?.file_path || null;
+          
+          // Extract content: for code artifacts, use raw_output.content; otherwise raw_output.text
+          let fileContent: string;
+          if (rawOutput?.content) {
+            fileContent = rawOutput.content;
+          } else if (rawOutput?.text) {
+            fileContent = rawOutput.text;
+          } else if (typeof rawOutput === "string") {
+            fileContent = rawOutput;
+          } else {
+            fileContent = JSON.stringify(rawOutput, null, 2);
+          }
 
-          const safeTitle = (art.summary || `artifact-${i}`).replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 60);
-          const ext = art.type === "code" ? "ts" : "md";
-          const filePath = `axion-outputs/${art.type}/${safeTitle}.${ext}`;
+          // If no file_path, use legacy fallback path
+          let commitPath: string;
+          if (filePath) {
+            commitPath = filePath;
+          } else {
+            const safeTitle = (art.summary || `artifact-${i}`).replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 60);
+            const ext = art.type === "code" ? "ts" : "md";
+            commitPath = `axion-outputs/${art.type}/${safeTitle}.${ext}`;
+            // For non-code artifacts without file_path, wrap in markdown
+            if (art.type !== "code") {
+              fileContent = `# ${art.summary || "Artifact"}\n\n**Agente**: ${(art as any).agents?.name || "?"} (${(art as any).agents?.role || "?"})\n**Tipo**: ${art.type}\n\n---\n\n${fileContent}`;
+            }
+          }
 
-          const fileContent = art.type === "code" ? artText : `# ${art.summary || "Artifact"}\n\n**Agente**: ${(art as any).agents?.name || "?"} (${(art as any).agents?.role || "?"})\n**Tipo**: ${art.type}\n\n---\n\n${artText}`;
-
-          const commitResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/contents/${filePath}`, {
+          const commitResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/contents/${commitPath}`, {
             method: "PUT", headers: ghHeaders,
             body: JSON.stringify({
-              message: `[AxionOS] ${art.type}: ${art.summary?.slice(0, 60) || "artifact"}`,
+              message: `[AxionOS] ${filePath ? commitPath : art.type + ": " + (art.summary?.slice(0, 60) || "artifact")}`,
               content: btoa(unescape(encodeURIComponent(fileContent))),
               branch: branchName,
             }),
           });
           if (commitResp.ok) {
-            committedFiles.push(filePath);
+            committedFiles.push(commitPath);
           } else {
-            console.error(`Failed to commit ${filePath}:`, await commitResp.text());
+            const errText = await commitResp.text();
+            console.error(`Failed to commit ${commitPath}:`, errText);
+            skippedFiles.push(commitPath);
           }
         }
 
         if (committedFiles.length === 0) throw new Error("Nenhum arquivo foi commitado com sucesso");
 
         // 5. Open PR
-        const prBody = `## 🚀 AxionOS — Delivery Automatizado
+        // Organize files by directory for a nice tree view
+        const filesByDir = new Map<string, string[]>();
+        for (const f of committedFiles) {
+          const dir = f.includes("/") ? f.substring(0, f.lastIndexOf("/")) : ".";
+          if (!filesByDir.has(dir)) filesByDir.set(dir, []);
+          filesByDir.get(dir)!.push(f);
+        }
+
+        const fileTree = Array.from(filesByDir.entries())
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([dir, files]) => `**${dir}/**\n${files.map(f => `  - \`${f.split("/").pop()}\``).join("\n")}`)
+          .join("\n\n");
+
+        const prBody = `## 🚀 AxionOS — Code Generation Engine
 
 ### Iniciativa: ${initiative.title}
 ${initiative.description || ""}
 
-### Artefatos publicados (${committedFiles.length})
-${committedFiles.map(f => `- \`${f}\``).join("\n")}
+### 📁 Arquivos gerados (${committedFiles.length})
+${fileTree}
+${skippedFiles.length > 0 ? `\n### ⚠️ Arquivos não commitados (${skippedFiles.length})\n${skippedFiles.map(f => `- \`${f}\``).join("\n")}` : ""}
 
 ### Pipeline
 - **Discovery**: ${initiative.approved_at_discovery ? "✅" : "⏳"}
@@ -1151,8 +1197,11 @@ ${committedFiles.map(f => `- \`${f}\``).join("\n")}
 - **Execução**: ✅
 - **Validação**: ✅
 
+### 🛠️ Stack
+Vite + React + TypeScript + Tailwind CSS + shadcn/ui
+
 ---
-*Gerado automaticamente pelo AxionOS Pipeline*`;
+*Projeto funcional gerado automaticamente pelo AxionOS Code Generation Engine*`;
 
         const prResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/pulls`, {
           method: "POST", headers: ghHeaders,
