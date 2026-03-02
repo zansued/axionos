@@ -248,21 +248,22 @@ JSON: {"agents": [{"name": "string", "role": "string", "description": "string", 
       }
     }
 
-    // ========== STAGE 3: PLANNING ==========
+    // ========== STAGE 3: PLANNING (Code-Aware) ==========
     if (stage === "planning") {
       const dp = initiative.discovery_payload || {};
       const jobId = await createJob("planning", { title: initiative.title });
       await updateInit({ stage_status: "planning" });
-      await log("pipeline_planning_start", "Iniciando formalização técnica...");
+      await log("pipeline_planning_start", "Iniciando formalização técnica com geração de código...");
 
       try {
         const context = `Projeto: ${initiative.title}
 Ideia refinada: ${dp.refined_idea || initiative.refined_idea || ""}
 Modelo de Negócio: ${dp.business_model || initiative.business_model || "N/A"}
 MVP: ${dp.mvp_scope || initiative.mvp_scope || "N/A"}
-Stack: ${dp.suggested_stack || "N/A"}
+Stack: Vite + React + TypeScript + Tailwind CSS + shadcn/ui
 Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
 
+        // Step 1: PRD
         const prdResult = await callDeepSeek(
           DEEPSEEK_API_KEY,
           "Você é um Product Manager sênior. Crie um PRD detalhado e executável em português brasileiro usando markdown.",
@@ -270,22 +271,127 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
         );
         await updateInit({ prd_content: prdResult.content });
 
+        // Step 2: Architecture
         const archResult = await callDeepSeek(
           DEEPSEEK_API_KEY,
-          "Você é um Arquiteto de Software sênior. Crie um documento de arquitetura técnica baseado no PRD. Use markdown.",
-          `PRD:\n${prdResult.content.slice(0, 6000)}\n\nStack sugerida: ${dp.suggested_stack || "A definir"}\n\nCrie a arquitetura incluindo:\n## Stack Tecnológica Final\n## Arquitetura do Sistema\n## Componentes Principais\n## Modelo de Dados\n## APIs e Contratos\n## Segurança\n## Escalabilidade\n## Plano de Deploy`
+          "Você é um Arquiteto de Software sênior. Crie um documento de arquitetura técnica baseado no PRD. A stack é obrigatoriamente: Vite + React + TypeScript + Tailwind CSS + shadcn/ui. Use markdown.",
+          `PRD:\n${prdResult.content.slice(0, 6000)}\n\nStack OBRIGATÓRIA: Vite + React + TypeScript + Tailwind CSS + shadcn/ui\n\nCrie a arquitetura incluindo:\n## Stack Tecnológica Final\n## Estrutura de Diretórios do Projeto\n## Componentes Principais (com file paths)\n## Modelo de Dados\n## APIs e Contratos\n## Roteamento (React Router)\n## Segurança\n## Plano de Deploy`
         );
         await updateInit({ architecture_content: archResult.content });
 
+        // Step 3: Generate code-aware stories with file paths
         const storiesResult = await callDeepSeek(
           DEEPSEEK_API_KEY,
-          "Você é um Product Manager sênior. Gere user stories executáveis. Retorne APENAS JSON válido.",
-          `Projeto: ${initiative.title}\n\nPRD:\n${prdResult.content.slice(0, 4000)}\n\nArquitetura:\n${archResult.content.slice(0, 4000)}\n\nGere 3-8 user stories com fases e subtasks.\nJSON: {"stories": [{"title": "string", "description": "string", "priority": "low|medium|high|critical", "phases": [{"name": "string", "subtasks": ["string"]}]}]}`,
+          `Você é um Product Manager e Arquiteto sênior especializado em projetos Vite + React + TypeScript + Tailwind.
+Gere user stories executáveis onde CADA SUBTASK corresponde a UM ARQUIVO de código real.
+Retorne APENAS JSON válido.
+
+IMPORTANTE:
+- Cada subtask DEVE ter um file_path (caminho do arquivo no projeto)
+- Cada subtask DEVE ter um file_type (tipo do arquivo)
+- A primeira story DEVE ser "Scaffold do Projeto" com os arquivos base
+- file_type pode ser: scaffold, component, page, style, config, hook, util, test, type
+- Subtasks de scaffold incluem: package.json, vite.config.ts, tsconfig.json, tailwind.config.ts, index.html, src/main.tsx, src/App.tsx, src/index.css
+- Use paths relativos ao root do projeto (ex: src/components/Header.tsx)`,
+          `Projeto: ${initiative.title}
+
+PRD (resumo):
+${prdResult.content.slice(0, 3000)}
+
+Arquitetura (resumo):
+${archResult.content.slice(0, 3000)}
+
+Gere as stories no formato JSON. A PRIMEIRA story obrigatoriamente deve ser o scaffold do projeto base.
+
+JSON esperado:
+{
+  "stories": [
+    {
+      "title": "Scaffold do Projeto",
+      "description": "Configuração inicial do projeto Vite + React + TypeScript + Tailwind",
+      "priority": "critical",
+      "phases": [
+        {
+          "name": "Configuração Base",
+          "subtasks": [
+            {
+              "description": "Criar package.json com dependências do projeto",
+              "file_path": "package.json",
+              "file_type": "config"
+            },
+            {
+              "description": "Criar configuração do Vite",
+              "file_path": "vite.config.ts",
+              "file_type": "config"
+            },
+            {
+              "description": "Criar tsconfig.json",
+              "file_path": "tsconfig.json",
+              "file_type": "config"
+            },
+            {
+              "description": "Criar configuração do Tailwind",
+              "file_path": "tailwind.config.ts",
+              "file_type": "config"
+            },
+            {
+              "description": "Criar postcss.config.js",
+              "file_path": "postcss.config.js",
+              "file_type": "config"
+            },
+            {
+              "description": "Criar index.html com meta tags",
+              "file_path": "index.html",
+              "file_type": "scaffold"
+            },
+            {
+              "description": "Criar ponto de entrada da aplicação",
+              "file_path": "src/main.tsx",
+              "file_type": "scaffold"
+            },
+            {
+              "description": "Criar componente App com roteamento",
+              "file_path": "src/App.tsx",
+              "file_type": "scaffold"
+            },
+            {
+              "description": "Criar estilos globais e design tokens",
+              "file_path": "src/index.css",
+              "file_type": "style"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Nome da Feature",
+      "description": "Descrição da feature",
+      "priority": "high",
+      "phases": [
+        {
+          "name": "Componentes",
+          "subtasks": [
+            {
+              "description": "Descrição detalhada do que o componente deve fazer, props, comportamento",
+              "file_path": "src/components/NomeComponente.tsx",
+              "file_type": "component"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
           true
         );
         const { stories } = JSON.parse(storiesResult.content);
 
         const createdStories = [];
+        let totalSubtasks = 0;
+        let scaffoldFiles = 0;
+
         for (const story of stories) {
           const { data: storyData } = await serviceClient.from("stories").insert({
             user_id: user.id, title: story.title, description: story.description,
@@ -295,30 +401,55 @@ Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
           }).select("id").single();
 
           if (!storyData) continue;
+          const storyFiles: string[] = [];
+
           for (let pi = 0; pi < (story.phases || []).length; pi++) {
             const phase = story.phases[pi];
             const { data: phaseData } = await serviceClient.from("story_phases").insert({
               story_id: storyData.id, name: phase.name, sort_order: pi,
             }).select("id").single();
+
             if (phaseData) {
-              for (let si = 0; si < (phase.subtasks || []).length; si++) {
+              const subtasks = phase.subtasks || [];
+              for (let si = 0; si < subtasks.length; si++) {
+                const st = subtasks[si];
+                // Support both old format (string) and new format (object with file_path)
+                const isObject = typeof st === "object" && st !== null;
+                const description = isObject ? st.description : st;
+                const filePath = isObject ? st.file_path : null;
+                const fileType = isObject ? st.file_type : null;
+
                 await serviceClient.from("story_subtasks").insert({
-                  phase_id: phaseData.id, description: phase.subtasks[si], sort_order: si,
+                  phase_id: phaseData.id,
+                  description,
+                  sort_order: si,
+                  file_path: filePath || null,
+                  file_type: fileType || null,
                 });
+
+                totalSubtasks++;
+                if (filePath) storyFiles.push(filePath);
+                if (fileType === "scaffold" || fileType === "config") scaffoldFiles++;
               }
             }
           }
-          createdStories.push({ id: storyData.id, title: story.title });
+          createdStories.push({ id: storyData.id, title: story.title, files: storyFiles });
         }
 
         await updateInit({ stage_status: "planned" });
         const totalTokens = prdResult.tokens + archResult.tokens + storiesResult.tokens;
         const totalCost = prdResult.costUsd + archResult.costUsd + storiesResult.costUsd;
-        if (jobId) await completeJob(jobId, { stories_count: createdStories.length, total_tokens: totalTokens }, { model: "deepseek-chat", costUsd: totalCost, durationMs: prdResult.durationMs + archResult.durationMs + storiesResult.durationMs });
-        await log("pipeline_planning_complete", `Planning completo: ${createdStories.length} stories`, { totalTokens, cost_usd: totalCost });
+        if (jobId) await completeJob(jobId, {
+          stories_count: createdStories.length,
+          total_subtasks: totalSubtasks,
+          scaffold_files: scaffoldFiles,
+          total_tokens: totalTokens,
+        }, { model: "deepseek-chat", costUsd: totalCost, durationMs: prdResult.durationMs + archResult.durationMs + storiesResult.durationMs });
+        await log("pipeline_planning_complete", `Planning completo: ${createdStories.length} stories, ${totalSubtasks} subtasks (${scaffoldFiles} scaffold)`, { totalTokens, cost_usd: totalCost });
 
         return new Response(JSON.stringify({
-          success: true, stories: createdStories, tokens: totalTokens, job_id: jobId,
+          success: true, stories: createdStories, total_subtasks: totalSubtasks,
+          scaffold_files: scaffoldFiles, tokens: totalTokens, job_id: jobId,
         }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       } catch (e) {
         if (jobId) await failJob(jobId, e instanceof Error ? e.message : "Unknown error");

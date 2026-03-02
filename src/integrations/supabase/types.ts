@@ -1060,6 +1060,8 @@ export type Database = {
           description: string
           executed_at: string | null
           executed_by_agent_id: string | null
+          file_path: string | null
+          file_type: string | null
           id: string
           output: string | null
           phase_id: string
@@ -1071,6 +1073,8 @@ export type Database = {
           description: string
           executed_at?: string | null
           executed_by_agent_id?: string | null
+          file_path?: string | null
+          file_type?: string | null
           id?: string
           output?: string | null
           phase_id: string
@@ -1082,6 +1086,8 @@ export type Database = {
           description?: string
           executed_at?: string | null
           executed_by_agent_id?: string | null
+          file_path?: string | null
+          file_type?: string | null
           id?: string
           output?: string | null
           phase_id?: string
