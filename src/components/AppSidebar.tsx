@@ -1,4 +1,4 @@
-import { Lightbulb, Users, BookOpen, LayoutDashboard, LogOut, Columns3, Shield, Radio, Hammer, Building2, Package, GitBranch, Rocket, CheckSquare, CreditCard } from "lucide-react";
+import { Lightbulb, Users, BookOpen, LayoutDashboard, LogOut, Columns3, Shield, Radio, Hammer, Building2, Package, GitBranch, Rocket, CheckSquare, CreditCard, Code2 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -26,6 +26,7 @@ const pipelineItems = [
   { title: "Validação", url: "/artifacts", icon: CheckSquare },
   { title: "Kanban", url: "/kanban", icon: Columns3 },
   { title: "Repositórios", url: "/workspace", icon: GitBranch },
+  { title: "Código", url: "/code", icon: Code2 },
 ];
 
 const governanceItems = [
