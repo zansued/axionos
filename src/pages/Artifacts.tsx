@@ -53,6 +53,7 @@ export default function Artifacts() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedArtifact, setSelectedArtifact] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selectedAdrIds, setSelectedAdrIds] = useState<Set<string>>(new Set());
   const [isDeleting, setIsDeleting] = useState(false);
 
   const { data: outputs = [], isLoading } = useQuery({
@@ -132,6 +133,23 @@ export default function Artifacts() {
     }
   };
 
+  const allAdrIds = adrs.map((a: any) => a.id);
+  const allAdrsSelected = allAdrIds.length > 0 && allAdrIds.every((id: string) => selectedAdrIds.has(id));
+  const someAdrsSelected = selectedAdrIds.size > 0;
+
+  const toggleAdrSelect = (id: string) => {
+    setSelectedAdrIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAdrSelectAll = () => {
+    if (allAdrsSelected) setSelectedAdrIds(new Set());
+    else setSelectedAdrIds(new Set(allAdrIds));
+  };
+
   const handleBulkDelete = async () => {
     if (selectedIds.size === 0) return;
     setIsDeleting(true);
@@ -146,6 +164,26 @@ export default function Artifacts() {
       setSelectedIds(new Set());
       setSelectedArtifact(null);
       queryClient.invalidateQueries({ queryKey: ["agent-outputs"] });
+    } catch (e: any) {
+      toast.error("Erro ao excluir: " + e.message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleBulkDeleteAdrs = async () => {
+    if (selectedAdrIds.size === 0) return;
+    setIsDeleting(true);
+    try {
+      const ids = Array.from(selectedAdrIds);
+      const { error } = await supabase
+        .from("adrs")
+        .delete()
+        .in("id", ids);
+      if (error) throw error;
+      toast.success(`${ids.length} decisão(ões) excluída(s)`);
+      setSelectedAdrIds(new Set());
+      queryClient.invalidateQueries({ queryKey: ["adrs"] });
     } catch (e: any) {
       toast.error("Erro ao excluir: " + e.message);
     } finally {
@@ -390,6 +428,40 @@ export default function Artifacts() {
 
           <TabsContent value="decisions" className="mt-4">
             <div className="space-y-3">
+              {adrs.length > 0 && (
+                <div className="flex items-center gap-3 p-2 rounded-md border border-border/50 bg-muted/30">
+                  <Checkbox
+                    checked={allAdrsSelected}
+                    onCheckedChange={toggleAdrSelectAll}
+                    aria-label="Selecionar todas decisões"
+                  />
+                  <span className="text-xs text-muted-foreground">
+                    {someAdrsSelected ? `${selectedAdrIds.size} selecionada(s)` : "Selecionar todas"}
+                  </span>
+                  {someAdrsSelected && (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" size="sm" className="ml-auto gap-1.5" disabled={isDeleting}>
+                          <Trash2 className="h-3.5 w-3.5" />
+                          Excluir ({selectedAdrIds.size})
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Excluir decisões?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Tem certeza que deseja excluir {selectedAdrIds.size} decisão(ões)? Esta ação não pode ser desfeita.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction onClick={handleBulkDeleteAdrs}>Excluir</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
+                </div>
+              )}
               {adrs.length === 0 ? (
                 <Card className="border-dashed border-2">
                   <CardContent className="flex flex-col items-center py-12 text-center">
@@ -402,10 +474,18 @@ export default function Artifacts() {
                   <Card key={adr.id} className="border-border/50">
                     <CardHeader className="pb-2">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-sm font-display flex items-center gap-2">
-                          <Lightbulb className="h-4 w-4 text-yellow-400" />
-                          {adr.title}
-                        </CardTitle>
+                        <div className="flex items-center gap-2">
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <Checkbox
+                              checked={selectedAdrIds.has(adr.id)}
+                              onCheckedChange={() => toggleAdrSelect(adr.id)}
+                            />
+                          </div>
+                          <CardTitle className="text-sm font-display flex items-center gap-2">
+                            <Lightbulb className="h-4 w-4 text-yellow-400" />
+                            {adr.title}
+                          </CardTitle>
+                        </div>
                         <Badge variant="outline">{adr.status}</Badge>
                       </div>
                     </CardHeader>
