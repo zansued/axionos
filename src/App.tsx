@@ -8,6 +8,7 @@ import { OrgProvider } from "@/contexts/OrgContext";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Initiatives from "./pages/Initiatives";
+import CodeExplorer from "./pages/CodeExplorer";
 import Squads from "./pages/Squads";
 import Agents from "./pages/Agents";
 import Stories from "./pages/Stories";
@@ -49,6 +50,7 @@ const App = () => (
               <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
               <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
+              <Route path="/code" element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
               <Route path="/squads" element={<ProtectedRoute><Squads /></ProtectedRoute>} />
               <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
               <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
