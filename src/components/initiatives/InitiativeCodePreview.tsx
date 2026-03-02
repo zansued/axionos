@@ -21,11 +21,10 @@ interface CodeFile {
   file_type: string | null;
   language: string | null;
   content: string;
-  agent_name: string;
-  agent_role: string;
+  description: string;
+  status: string;
 }
 
-// Build a nested tree from flat file paths
 interface TreeNode {
   name: string;
   path: string;
@@ -63,7 +62,6 @@ function buildTree(files: CodeFile[]): TreeNode {
     }
   }
 
-  // Sort: directories first, then files, alphabetically
   const sortNodes = (nodes: TreeNode[]) => {
     nodes.sort((a, b) => {
       const aIsDir = a.children.length > 0 && !a.file;
@@ -87,16 +85,23 @@ function getFileIcon(fileName: string) {
   return <FileText className="h-3.5 w-3.5 text-muted-foreground" />;
 }
 
+function getFileTypeFromPath(filePath: string): string {
+  if (filePath.includes("/components/")) return "component";
+  if (filePath.includes("/pages/") || filePath.includes("/views/")) return "page";
+  if (filePath.includes("/hooks/")) return "hook";
+  if (filePath.includes("/utils/") || filePath.includes("/lib/")) return "util";
+  if (filePath.includes("/types/") || filePath.endsWith(".d.ts")) return "type";
+  if (filePath.includes("/test") || filePath.includes(".test.") || filePath.includes(".spec.")) return "test";
+  if (filePath.endsWith(".css") || filePath.endsWith(".scss")) return "style";
+  if (filePath.endsWith(".json") || filePath.includes("config")) return "config";
+  if (filePath.includes("package.json") || filePath.includes("vite.config") || filePath.includes("tsconfig")) return "scaffold";
+  return "other";
+}
+
 function TreeItem({
-  node,
-  depth,
-  selectedPath,
-  onSelect,
+  node, depth, selectedPath, onSelect,
 }: {
-  node: TreeNode;
-  depth: number;
-  selectedPath: string | null;
-  onSelect: (file: CodeFile) => void;
+  node: TreeNode; depth: number; selectedPath: string | null; onSelect: (file: CodeFile) => void;
 }) {
   const isDir = node.children.length > 0;
   const [open, setOpen] = useState(depth < 2);
@@ -139,13 +144,6 @@ function TreeItem({
   return null;
 }
 
-// Simple syntax coloring via regex - returns spans with color classes
-function highlightCode(code: string, language: string | null): JSX.Element {
-  // For simplicity, just render as preformatted text with monospace
-  // A full syntax highlighter would be heavy; this gives a good enough preview
-  return <>{code}</>;
-}
-
 export function InitiativeCodePreview({ initiativeId, organizationId }: InitiativeCodePreviewProps) {
   const [selectedFile, setSelectedFile] = useState<CodeFile | null>(null);
   const [copied, setCopied] = useState(false);
@@ -170,41 +168,30 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
       if (!phases?.length) return [];
 
       const phaseIds = phases.map((p) => p.id);
+      
+      // Get subtasks that have been completed and have output
       const { data: subtasks } = await supabase
         .from("story_subtasks")
-        .select("id, file_path, file_type")
+        .select("id, description, file_path, file_type, output, status")
         .in("phase_id", phaseIds)
-        .not("file_path", "is", null);
+        .eq("status", "completed")
+        .not("output", "is", null);
 
       if (!subtasks?.length) return [];
 
-      const subtaskIds = subtasks.map((st) => st.id);
-      const subtaskMap = new Map(subtasks.map((st) => [st.id, st]));
-
-      const { data: artifacts } = await supabase
-        .from("agent_outputs")
-        .select("id, raw_output, subtask_id, agents(name, role)")
-        .in("subtask_id", subtaskIds)
-        .eq("organization_id", organizationId)
-        .eq("type", "code");
-
-      if (!artifacts?.length) return [];
-
       const files: CodeFile[] = [];
-      for (const art of artifacts) {
-        const raw = art.raw_output as any;
-        const subtask = art.subtask_id ? subtaskMap.get(art.subtask_id) : null;
-        const filePath = raw?.file_path || subtask?.file_path;
-        if (!filePath) continue;
-
+      for (const st of subtasks) {
+        // Use file_path if available, otherwise create a virtual path from description
+        const filePath = st.file_path || `docs/${st.description.slice(0, 60).replace(/[^a-zA-Z0-9-_]/g, '-')}.md`;
+        
         files.push({
-          id: art.id,
+          id: st.id,
           file_path: filePath,
-          file_type: raw?.file_type || subtask?.file_type || null,
-          language: raw?.language || null,
-          content: raw?.content || raw?.text || "",
-          agent_name: (art as any).agents?.name || "?",
-          agent_role: (art as any).agents?.role || "?",
+          file_type: st.file_type || getFileTypeFromPath(filePath),
+          language: filePath.endsWith(".ts") || filePath.endsWith(".tsx") ? "typescript" : null,
+          content: st.output || "",
+          description: st.description,
+          status: st.status,
         });
       }
 
@@ -265,7 +252,6 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
           </CardTitle>
           <span className="text-xs text-muted-foreground">{codeFiles.length} arquivos</span>
         </div>
-        {/* File type counts */}
         <div className="flex flex-wrap gap-1.5 mt-2">
           {Object.entries(fileTypeCounts)
             .sort(([, a], [, b]) => b - a)
@@ -278,7 +264,6 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-[220px,1fr] gap-3 min-h-[350px]">
-          {/* Tree View */}
           <ScrollArea className="h-[400px] rounded border border-border/30 bg-muted/10 p-1.5">
             {tree.children.map((node) => (
               <TreeItem
@@ -291,7 +276,6 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
             ))}
           </ScrollArea>
 
-          {/* Code Preview */}
           <div className="rounded border border-border/30 bg-[hsl(var(--card))] overflow-hidden flex flex-col">
             {selectedFile ? (
               <>
@@ -306,16 +290,14 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
                     )}
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-[10px] text-muted-foreground">
-                      {selectedFile.agent_name} ({selectedFile.agent_role})
-                    </span>
+                    <Badge variant="outline" className="text-[9px]">{selectedFile.status}</Badge>
                     <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopy}>
                       {copied ? <Check className="h-3 w-3 text-green-400" /> : <Copy className="h-3 w-3" />}
                     </Button>
                   </div>
                 </div>
                 <ScrollArea className="flex-1 h-[360px]">
-                  <pre className="text-xs font-mono p-3 leading-5 text-foreground/90 whitespace-pre overflow-x-auto">
+                  <pre className="text-xs font-mono p-3 leading-5 text-foreground/90 whitespace-pre-wrap overflow-x-auto">
                     <code>{selectedFile.content}</code>
                   </pre>
                 </ScrollArea>

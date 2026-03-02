@@ -21,7 +21,7 @@ export default function CodeExplorer() {
         .from("initiatives")
         .select("id, title, stage_status")
         .eq("organization_id", currentOrg.id)
-        .in("stage_status", ["in_progress", "validating", "ready_to_publish", "published", "completed"])
+        .not("stage_status", "eq", "draft")
         .order("updated_at", { ascending: false });
       if (error) throw error;
       return data;
