@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { useOrg } from "@/contexts/OrgContext";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import {
   Code2, FileText, GitBranch, Lightbulb, BarChart3, Loader2,
-  Package, Eye, CheckCircle2, XCircle, Clock, Send,
+  Package, Eye, CheckCircle2, XCircle, Clock, Send, Trash2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useArtifactReview } from "@/hooks/useArtifactReview";
@@ -20,6 +20,14 @@ import { useArtifactAnalysis } from "@/hooks/useArtifactAnalysis";
 import { ArtifactReviewActions } from "@/components/artifacts/ArtifactReviewActions";
 import { ArtifactReviewHistory } from "@/components/artifacts/ArtifactReviewHistory";
 import { ArtifactAiAnalysis } from "@/components/artifacts/ArtifactAiAnalysis";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const TYPE_CONFIG: Record<string, { label: string; icon: any; color: string }> = {
   code: { label: "Código", icon: Code2, color: "text-blue-400" },
@@ -38,11 +46,14 @@ const STATUS_CONFIG: Record<string, { label: string; icon: any; className: strin
 
 export default function Artifacts() {
   const { currentOrg } = useOrg();
+  const queryClient = useQueryClient();
   const reviewActions = useArtifactReview();
   const aiAnalysis = useArtifactAnalysis();
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedArtifact, setSelectedArtifact] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { data: outputs = [], isLoading } = useQuery({
     queryKey: ["agent-outputs", currentOrg?.id],
@@ -99,6 +110,47 @@ export default function Artifacts() {
     })),
     totalTokens: outputs.reduce((acc: number, o: any) => acc + (o.tokens_used || 0), 0),
     totalCost: outputs.reduce((acc: number, o: any) => acc + Number(o.cost_estimate || 0), 0),
+  };
+
+  const allFilteredIds = filtered.map((o: any) => o.id);
+  const allSelected = allFilteredIds.length > 0 && allFilteredIds.every((id: string) => selectedIds.has(id));
+  const someSelected = selectedIds.size > 0;
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(allFilteredIds));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    setIsDeleting(true);
+    try {
+      const ids = Array.from(selectedIds);
+      const { error } = await supabase
+        .from("agent_outputs")
+        .delete()
+        .in("id", ids);
+      if (error) throw error;
+      toast.success(`${ids.length} artefato(s) excluído(s)`);
+      setSelectedIds(new Set());
+      setSelectedArtifact(null);
+      queryClient.invalidateQueries({ queryKey: ["agent-outputs"] });
+    } catch (e: any) {
+      toast.error("Erro ao excluir: " + e.message);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -167,6 +219,41 @@ export default function Artifacts() {
             <div className="grid gap-4 lg:grid-cols-[1fr_400px]">
               {/* List */}
               <div className="space-y-2">
+                {/* Bulk actions bar */}
+                {filtered.length > 0 && (
+                  <div className="flex items-center gap-3 p-2 rounded-md border border-border/50 bg-muted/30">
+                    <Checkbox
+                      checked={allSelected}
+                      onCheckedChange={toggleSelectAll}
+                      aria-label="Selecionar todos"
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      {someSelected ? `${selectedIds.size} selecionado(s)` : "Selecionar todos"}
+                    </span>
+                    {someSelected && (
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="destructive" size="sm" className="ml-auto gap-1.5" disabled={isDeleting}>
+                            <Trash2 className="h-3.5 w-3.5" />
+                            Excluir ({selectedIds.size})
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Excluir artefatos?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Tem certeza que deseja excluir {selectedIds.size} artefato(s)? Esta ação não pode ser desfeita.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={handleBulkDelete}>Excluir</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    )}
+                  </div>
+                )}
                 {isLoading ? (
                   <div className="flex justify-center py-12">
                     <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -195,6 +282,12 @@ export default function Artifacts() {
                             <CardContent className="p-4 space-y-0">
                               <div className="flex items-start justify-between gap-3">
                                 <div className="flex items-start gap-3 flex-1 min-w-0">
+                                  <div className="mt-0.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+                                    <Checkbox
+                                      checked={selectedIds.has(output.id)}
+                                      onCheckedChange={() => toggleSelect(output.id)}
+                                    />
+                                  </div>
                                   <TypeIcon className={`h-5 w-5 mt-0.5 shrink-0 ${typeInfo.color}`} />
                                   <div className="min-w-0 flex-1">
                                     <p className="text-sm font-medium break-words">{output.summary || "Sem resumo"}</p>
