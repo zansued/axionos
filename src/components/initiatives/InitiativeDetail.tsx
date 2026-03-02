@@ -16,6 +16,7 @@ import {
   Layers, AlertTriangle, ArrowRight, Sparkles, Rocket, BookOpen,
   CheckCircle2, Clock, DollarSign, Zap, RotateCcw, GitBranch, ExternalLink
 } from "lucide-react";
+import { InitiativeCodePreview } from "./InitiativeCodePreview";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 
 import {
@@ -406,6 +407,9 @@ export function InitiativeDetail({ initiative, jobs, runningStage, gitConnection
           </CardContent>
         </Card>
       )}
+
+      {/* Code Preview */}
+      <InitiativeCodePreview initiativeId={initiative.id} organizationId={initiative.organization_id} />
 
       {/* Jobs History */}
       {jobs.length > 0 && (
