@@ -26,7 +26,7 @@ async function callAI(apiKey: string, systemPrompt: string, userPrompt: string, 
     ? "https://api.openai.com/v1/chat/completions"
     : "https://ai.gateway.lovable.dev/v1/chat/completions";
   const aiKey = useOpenAI ? OPENAI_API_KEY : apiKey;
-  const aiModel = useOpenAI ? "gpt-4o" : "google/gemini-2.5-flash";
+  const aiModel = useOpenAI ? "gpt-4o-mini" : "google/gemini-2.5-flash";
 
   let lastError: Error | null = null;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -62,8 +62,8 @@ async function callAI(apiKey: string, systemPrompt: string, userPrompt: string, 
       const data = await resp.json();
       const durationMs = Date.now() - start;
       const tokens = data.usage?.total_tokens || 0;
-      // OpenAI gpt-4o pricing: ~$2.50/1M input + $10/1M output, rough avg ~$5/1M
-      const costUsd = useOpenAI ? tokens * 0.000005 : tokens * 0.000001;
+      // OpenAI gpt-4o-mini pricing: ~$0.15/1M input + $0.60/1M output, rough avg ~$0.40/1M
+      const costUsd = useOpenAI ? tokens * 0.0000004 : tokens * 0.000001;
       return { content: data.choices?.[0]?.message?.content || "", tokens, durationMs, costUsd, model: aiModel };
     } catch (e) {
       lastError = e instanceof Error ? e : new Error(String(e));

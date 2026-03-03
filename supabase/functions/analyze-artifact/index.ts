@@ -123,7 +123,7 @@ Responda APENAS com um JSON válido neste formato exato, sem markdown ou texto e
     const OPENAI_KEY = Deno.env.get("OPENAI_API_KEY");
     const aiUrl = OPENAI_KEY ? "https://api.openai.com/v1/chat/completions" : "https://ai.gateway.lovable.dev/v1/chat/completions";
     const aiKey = OPENAI_KEY || LOVABLE_API_KEY;
-    const aiModel = OPENAI_KEY ? "gpt-4o" : "google/gemini-2.5-pro";
+    const aiModel = OPENAI_KEY ? "gpt-4o-mini" : "google/gemini-2.5-pro";
 
     const response = await fetch(aiUrl, {
       method: "POST",
