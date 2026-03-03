@@ -16,7 +16,8 @@ import {
 import {
   Brain, Users, FileText, Cpu, Loader2, Target, TrendingUp, Shield,
   Layers, AlertTriangle, ArrowRight, Sparkles, Rocket, BookOpen,
-  CheckCircle2, Clock, DollarSign, Zap, RotateCcw, GitBranch, ExternalLink
+  CheckCircle2, Clock, DollarSign, Zap, RotateCcw, GitBranch, ExternalLink,
+  Download, Globe
 } from "lucide-react";
 import { InitiativeCodePreview } from "./InitiativeCodePreview";
 import { AgentMessagesTimeline } from "./AgentMessagesTimeline";
@@ -348,19 +349,50 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
       {/* PR Result Card */}
       {prUrl && (
         <Card className="border-primary/30 bg-primary/5">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <GitBranch className="h-5 w-5 text-primary" />
-              <div>
-                <p className="text-sm font-medium">Pull Request criado com sucesso</p>
-                <p className="text-xs text-muted-foreground">{publishJob?.outputs?.branch}</p>
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <GitBranch className="h-5 w-5 text-primary" />
+                <div>
+                  <p className="text-sm font-medium">Pull Request criado com sucesso</p>
+                  <p className="text-xs text-muted-foreground">{publishJob?.outputs?.branch}</p>
+                </div>
               </div>
+              <a href={prUrl} target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  Ver PR <ExternalLink className="h-3.5 w-3.5" />
+                </Button>
+              </a>
             </div>
-            <a href={prUrl} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="sm" className="gap-1.5">
-                Ver PR <ExternalLink className="h-3.5 w-3.5" />
-              </Button>
-            </a>
+            <Separator />
+            <div className="flex gap-2 flex-wrap">
+              {/* Download ZIP */}
+              {publishJob?.outputs?.owner && publishJob?.outputs?.repo && (
+                <a
+                  href={`https://github.com/${publishJob.outputs.owner}/${publishJob.outputs.repo}/archive/refs/heads/${publishJob.outputs.branch || "main"}.zip`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button variant="outline" size="sm" className="gap-1.5">
+                    <Download className="h-3.5 w-3.5" />
+                    Download ZIP
+                  </Button>
+                </a>
+              )}
+              {/* Deploy to Vercel */}
+              {publishJob?.outputs?.owner && publishJob?.outputs?.repo && (
+                <a
+                  href={`https://vercel.com/new/clone?repository-url=https://github.com/${publishJob.outputs.owner}/${publishJob.outputs.repo}/tree/${encodeURIComponent(publishJob.outputs.branch || "main")}&project-name=${encodeURIComponent(initiative.title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button variant="outline" size="sm" className="gap-1.5">
+                    <Globe className="h-3.5 w-3.5" />
+                    Deploy no Vercel
+                  </Button>
+                </a>
+              )}
+            </div>
           </CardContent>
         </Card>
       )}
