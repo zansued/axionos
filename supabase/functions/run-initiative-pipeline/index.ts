@@ -1319,16 +1319,48 @@ Complexidade: ${initiative.complexity || "medium"}`,
       const baseBranch = base_branch || "main";
 
       try {
-        // 1. Get base branch SHA
+        // 1. Get base branch SHA (handle empty repos)
+        let baseSha: string;
+        let repoWasEmpty = false;
         const refResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/ref/heads/${baseBranch}`, { headers: ghHeaders });
         if (!refResp.ok) {
-          const t = await refResp.text();
-          throw new Error(`Branch base '${baseBranch}' não encontrada: ${t}`);
-        }
-        const refData = await refResp.json();
-        const baseSha = refData.object.sha;
+          // Check if repo is empty (409 = empty repo)
+          if (refResp.status === 409 || refResp.status === 404) {
+            console.log("Repository appears empty, creating initial commit...");
+            // Create an empty initial commit via the Trees + Commits API
+            const treeResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/trees`, {
+              method: "POST", headers: ghHeaders,
+              body: JSON.stringify({ tree: [{ path: "README.md", mode: "100644", type: "blob", content: `# ${initiative.title}\n\nGerado pelo AxionOS` }] }),
+            });
+            if (!treeResp.ok) throw new Error("Falha ao criar tree inicial no repositório vazio");
+            const treeData = await treeResp.json();
 
-        // 2. Create branch
+            const commitResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/commits`, {
+              method: "POST", headers: ghHeaders,
+              body: JSON.stringify({ message: "chore: initial commit", tree: treeData.sha }),
+            });
+            if (!commitResp.ok) throw new Error("Falha ao criar commit inicial");
+            const commitData = await commitResp.json();
+
+            // Create the base branch pointing to this commit
+            const createRefResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/refs`, {
+              method: "POST", headers: ghHeaders,
+              body: JSON.stringify({ ref: `refs/heads/${baseBranch}`, sha: commitData.sha }),
+            });
+            if (!createRefResp.ok) throw new Error("Falha ao criar branch base inicial");
+
+            baseSha = commitData.sha;
+            repoWasEmpty = true;
+          } else {
+            const t = await refResp.text();
+            throw new Error(`Branch base '${baseBranch}' não encontrada: ${t}`);
+          }
+        } else {
+          const refData = await refResp.json();
+          baseSha = refData.object.sha;
+        }
+
+        // 2. Create feature branch
         const createBranchResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/refs`, {
           method: "POST", headers: ghHeaders,
           body: JSON.stringify({ ref: `refs/heads/${branchName}`, sha: baseSha }),
