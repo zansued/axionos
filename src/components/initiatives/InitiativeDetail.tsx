@@ -17,6 +17,7 @@ import {
   CheckCircle2, Clock, DollarSign, Zap, RotateCcw, GitBranch, ExternalLink
 } from "lucide-react";
 import { InitiativeCodePreview } from "./InitiativeCodePreview";
+import { AgentMessagesTimeline } from "./AgentMessagesTimeline";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 
 import {
@@ -477,6 +478,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
           </CardContent>
         </Card>
       )}
+
+      {/* Chain-of-Agents Timeline */}
+      <AgentMessagesTimeline initiativeId={initiative.id} />
 
       {/* Code Preview */}
       <InitiativeCodePreview initiativeId={initiative.id} organizationId={initiative.organization_id} />

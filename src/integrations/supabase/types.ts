@@ -61,6 +61,96 @@ export type Database = {
           },
         ]
       }
+      agent_messages: {
+        Row: {
+          content: string
+          created_at: string
+          from_agent_id: string | null
+          id: string
+          initiative_id: string
+          iteration: number
+          message_type: string
+          model_used: string | null
+          role_from: string
+          role_to: string
+          stage: string
+          story_id: string | null
+          subtask_id: string | null
+          to_agent_id: string | null
+          tokens_used: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          from_agent_id?: string | null
+          id?: string
+          initiative_id: string
+          iteration?: number
+          message_type?: string
+          model_used?: string | null
+          role_from: string
+          role_to: string
+          stage?: string
+          story_id?: string | null
+          subtask_id?: string | null
+          to_agent_id?: string | null
+          tokens_used?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          from_agent_id?: string | null
+          id?: string
+          initiative_id?: string
+          iteration?: number
+          message_type?: string
+          model_used?: string | null
+          role_from?: string
+          role_to?: string
+          stage?: string
+          story_id?: string | null
+          subtask_id?: string | null
+          to_agent_id?: string | null
+          tokens_used?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_messages_from_agent_id_fkey"
+            columns: ["from_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_messages_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_messages_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "stories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_messages_subtask_id_fkey"
+            columns: ["subtask_id"]
+            isOneToOne: false
+            referencedRelation: "story_subtasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_messages_to_agent_id_fkey"
+            columns: ["to_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_outputs: {
         Row: {
           agent_id: string | null

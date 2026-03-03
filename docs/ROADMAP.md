@@ -18,14 +18,14 @@
 
 ## Fase 2 — Chain-of-Agents (Colaboração entre Agentes)
 
-- [ ] Criar tabela `agent_messages` (from_agent, to_agent, initiative_id, stage, content, created_at)
-- [ ] Implementar padrão sequencial no estágio **Execution**:
+- [x] Criar tabela `agent_messages` (from_agent, to_agent, initiative_id, stage, content, created_at)
+- [x] Implementar padrão sequencial no estágio **Execution**:
   1. Architect analisa story e define estrutura técnica
   2. Dev recebe output do Architect e gera código
   3. QA recebe código do Dev e faz review
   4. Dev recebe feedback do QA e corrige (loop até aprovação)
-- [ ] Registrar cada troca como `agent_message` para rastreabilidade
-- [ ] Exibir timeline de conversação entre agentes na UI (InitiativeDetail)
+- [x] Registrar cada troca como `agent_message` para rastreabilidade
+- [x] Exibir timeline de conversação entre agentes na UI (InitiativeDetail)
 
 ---
 
