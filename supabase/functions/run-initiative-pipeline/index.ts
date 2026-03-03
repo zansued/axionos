@@ -492,7 +492,16 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
       };
 
       const approval = approvalMap[currentStatus];
-      if (!approval) throw new Error(`Cannot approve at status: ${currentStatus}`);
+      if (!approval) {
+        // If already in a terminal/advanced state, just return success
+        const terminalStates = ["published", "completed", "archived", "in_progress"];
+        if (terminalStates.includes(currentStatus)) {
+          return new Response(JSON.stringify({ success: true, new_status: currentStatus, message: "Already approved/advanced" }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        throw new Error(`Cannot approve at status: ${currentStatus}`);
+      }
 
       await updateInit({
         stage_status: approval.nextStatus,
