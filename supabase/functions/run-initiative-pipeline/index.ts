@@ -1868,7 +1868,242 @@ Just output the raw modified code.`,
       }
     }
 
-    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve, reject, execution, validation, publish, fast_modify`);
+    // ========== FULL REVIEW (AI reviews entire project and fixes multiple files) ==========
+    if (stage === "full_review") {
+      const reviewPrompt = modification?.prompt;
+      if (!reviewPrompt) {
+        throw new Error("modification.prompt is required for full_review");
+      }
+
+      let jobId: string | null = null;
+      try {
+        jobId = await createJob("full_review", { prompt: reviewPrompt });
+
+        // 1. Gather ALL code files from this initiative
+        const { data: stories } = await serviceClient
+          .from("stories").select("id").eq("initiative_id", initiativeId);
+        
+        if (!stories?.length) throw new Error("Nenhuma story encontrada para esta iniciativa");
+
+        const storyIds = stories.map(s => s.id);
+        const { data: phases } = await serviceClient
+          .from("story_phases").select("id").in("story_id", storyIds);
+        
+        if (!phases?.length) throw new Error("Nenhuma phase encontrada");
+
+        const phaseIds = phases.map(p => p.id);
+        const { data: subtasks } = await serviceClient
+          .from("story_subtasks")
+          .select("id, description, file_path, output, status, phase_id")
+          .in("phase_id", phaseIds)
+          .eq("status", "completed")
+          .not("output", "is", null);
+
+        if (!subtasks?.length) throw new Error("Nenhum arquivo gerado encontrado");
+
+        // Build full project context
+        const projectContext = subtasks
+          .filter(st => st.file_path && st.output)
+          .map(st => `=== FILE: ${st.file_path} ===\n${st.output}`)
+          .join("\n\n");
+
+        const totalFiles = subtasks.filter(st => st.file_path && st.output).length;
+
+        // 2. Ask AI to analyze the full project and return fixes
+        const reviewResult = await callAI(
+          LOVABLE_API_KEY,
+          `You are an expert full-stack developer performing a code review of an entire project.
+The user will describe a problem they encountered (e.g., deploy errors, 404 pages, missing configs, broken functionality).
+
+Your job:
+1. Analyze ALL project files provided
+2. Identify which files need to be modified or created to fix the problem
+3. Return a JSON object with the fixes
+
+IMPORTANT RULES:
+- Return ONLY valid JSON, no markdown fences
+- Each fix must contain the COMPLETE file content (not just the diff)
+- For new files that need to be created, include them with is_new: true
+- Focus on the root cause, not symptoms
+
+Return format:
+{
+  "diagnosis": "Brief explanation of what's wrong",
+  "fixes": [
+    {
+      "file_path": "path/to/file.ts",
+      "reason": "Why this file needs changes",
+      "content": "COMPLETE new file content here",
+      "is_new": false
+    }
+  ]
+}`,
+          `PROBLEM REPORTED:\n${reviewPrompt}\n\nPROJECT FILES (${totalFiles} files):\n\n${projectContext}`,
+          true,
+        );
+
+        let reviewData: any;
+        try {
+          reviewData = JSON.parse(reviewResult.content);
+        } catch {
+          // Try extracting JSON from possible markdown wrapping
+          const jsonMatch = reviewResult.content.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            reviewData = JSON.parse(jsonMatch[0]);
+          } else {
+            throw new Error("AI não retornou JSON válido na análise");
+          }
+        }
+
+        const fixes = reviewData.fixes || [];
+        const diagnosis = reviewData.diagnosis || "Análise concluída";
+        let filesModified = 0;
+        let filesCommitted = 0;
+        let prUrl: string | null = null;
+
+        // 3. Apply fixes to subtasks in database
+        for (const fix of fixes) {
+          if (!fix.file_path || !fix.content) continue;
+
+          // Find matching subtask
+          const matchingSubtask = subtasks.find(st => st.file_path === fix.file_path);
+          
+          if (matchingSubtask) {
+            await serviceClient.from("story_subtasks").update({
+              output: fix.content,
+              executed_at: new Date().toISOString(),
+            }).eq("id", matchingSubtask.id);
+            filesModified++;
+          } else if (fix.is_new) {
+            // Create a new subtask for new files
+            const firstPhaseId = phaseIds[0];
+            await serviceClient.from("story_subtasks").insert({
+              phase_id: firstPhaseId,
+              description: `[Auto-fix] ${fix.reason || fix.file_path}`,
+              file_path: fix.file_path,
+              file_type: fix.file_path.endsWith(".json") ? "config" : "other",
+              output: fix.content,
+              status: "completed",
+              executed_at: new Date().toISOString(),
+            });
+            filesModified++;
+          }
+        }
+
+        // 4. Auto-republish ALL fixed files to GitHub
+        const { data: gitConns } = await serviceClient
+          .from("git_connections")
+          .select("*")
+          .eq("organization_id", initiative.organization_id)
+          .eq("status", "active")
+          .limit(1);
+
+        const gitConn = gitConns?.[0];
+        if (gitConn?.github_token && fixes.length > 0) {
+          const ghHeaders = {
+            Authorization: `Bearer ${gitConn.github_token}`,
+            Accept: "application/vnd.github.v3+json",
+            "Content-Type": "application/json",
+          };
+          const ghOwner = gitConn.repo_owner;
+          const ghRepo = gitConn.repo_name;
+          const GITHUB_API = "https://api.github.com";
+          const branchName = `fix/${initiative.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40)}-review`;
+          const baseBranch = gitConn.default_branch || "main";
+
+          const refResp = await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/git/ref/heads/${baseBranch}`, { headers: ghHeaders });
+          
+          if (refResp.ok) {
+            const refData = await refResp.json();
+            const baseSha = refData.object.sha;
+
+            // Create branch
+            await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/git/refs`, {
+              method: "POST",
+              headers: ghHeaders,
+              body: JSON.stringify({ ref: `refs/heads/${branchName}`, sha: baseSha }),
+            });
+
+            // Commit each fixed file
+            for (const fix of fixes) {
+              if (!fix.file_path || !fix.content) continue;
+
+              let fileSha: string | undefined;
+              const existingFile = await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/contents/${fix.file_path}?ref=${branchName}`, { headers: ghHeaders });
+              if (existingFile.ok) {
+                const fileData = await existingFile.json();
+                fileSha = fileData.sha;
+              }
+
+              const commitBody: any = {
+                message: `fix(review): ${fix.reason?.slice(0, 72) || fix.file_path}`,
+                content: btoa(unescape(encodeURIComponent(fix.content))),
+                branch: branchName,
+              };
+              if (fileSha) commitBody.sha = fileSha;
+
+              const commitResp = await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/contents/${fix.file_path}`, {
+                method: "PUT",
+                headers: ghHeaders,
+                body: JSON.stringify(commitBody),
+              });
+
+              if (commitResp.ok) filesCommitted++;
+            }
+
+            // Create or find PR
+            const prsResp = await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/pulls?head=${ghOwner}:${branchName}&state=open`, { headers: ghHeaders });
+            const existingPrs = prsResp.ok ? await prsResp.json() : [];
+
+            if (existingPrs.length > 0) {
+              prUrl = existingPrs[0].html_url;
+            } else {
+              const prResp = await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/pulls`, {
+                method: "POST",
+                headers: ghHeaders,
+                body: JSON.stringify({
+                  title: `fix(review): ${reviewPrompt.slice(0, 72)}`,
+                  head: branchName,
+                  base: baseBranch,
+                  body: `## Revisão Completa via AxionOS\n\n**Problema:** ${reviewPrompt}\n\n**Diagnóstico:** ${diagnosis}\n\n**Arquivos corrigidos:** ${filesModified}\n\n---\n*Revisão automática do projeto inteiro*`,
+                }),
+              });
+              if (prResp.ok) {
+                const prData = await prResp.json();
+                prUrl = prData.html_url;
+              }
+            }
+          }
+        }
+
+        if (jobId) await completeJob(jobId, {
+          diagnosis,
+          files_analyzed: totalFiles,
+          files_modified: filesModified,
+          files_committed: filesCommitted,
+          pr_url: prUrl,
+          fixes: fixes.map((f: any) => ({ file_path: f.file_path, reason: f.reason, is_new: f.is_new })),
+          tokens: reviewResult.tokens,
+        }, { model: reviewResult.model, costUsd: reviewResult.costUsd, durationMs: reviewResult.durationMs });
+
+        await log("full_review", `Full review: ${filesModified} files fixed`, { pr_url: prUrl, diagnosis });
+
+        return new Response(JSON.stringify({
+          success: true,
+          diagnosis,
+          files_analyzed: totalFiles,
+          files_modified: filesModified,
+          files_committed: filesCommitted,
+          pr_url: prUrl,
+          fixes: fixes.map((f: any) => ({ file_path: f.file_path, reason: f.reason, is_new: f.is_new })),
+        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      } catch (e) {
+        if (jobId) await failJob(jobId, e instanceof Error ? e.message : "Unknown error");
+        throw e;
+      }
+    }
+
+    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve, reject, execution, validation, publish, fast_modify, full_review`);
   } catch (e) {
     console.error("run-initiative-pipeline error:", e);
     return new Response(
