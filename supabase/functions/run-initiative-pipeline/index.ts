@@ -8,31 +8,53 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-async function callAI(apiKey: string, systemPrompt: string, userPrompt: string, jsonMode = false) {
-  const start = Date.now();
-  const body: any = {
-    model: "google/gemini-2.5-flash",
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: userPrompt },
-    ],
-  };
-  if (jsonMode) body.response_format = { type: "json_object" };
+async function callAI(apiKey: string, systemPrompt: string, userPrompt: string, jsonMode = false, maxRetries = 3) {
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const start = Date.now();
+      const body: any = {
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+      };
+      if (jsonMode) body.response_format = { type: "json_object" };
 
-  const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!resp.ok) {
-    const t = await resp.text();
-    throw new Error(`AI Gateway error ${resp.status}: ${t}`);
+      const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (resp.status === 429 || resp.status >= 500) {
+        const backoffMs = Math.min(1000 * Math.pow(2, attempt), 15000) + Math.random() * 1000;
+        console.warn(`AI Gateway ${resp.status}, retry ${attempt + 1}/${maxRetries} after ${Math.round(backoffMs)}ms`);
+        await new Promise(r => setTimeout(r, backoffMs));
+        lastError = new Error(`AI Gateway error ${resp.status}`);
+        continue;
+      }
+
+      if (!resp.ok) {
+        const t = await resp.text();
+        throw new Error(`AI Gateway error ${resp.status}: ${t}`);
+      }
+      const data = await resp.json();
+      const durationMs = Date.now() - start;
+      const tokens = data.usage?.total_tokens || 0;
+      const costUsd = tokens * 0.000001;
+      return { content: data.choices?.[0]?.message?.content || "", tokens, durationMs, costUsd, model: "google/gemini-2.5-flash" };
+    } catch (e) {
+      lastError = e instanceof Error ? e : new Error(String(e));
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.min(1000 * Math.pow(2, attempt), 15000) + Math.random() * 1000;
+        console.warn(`callAI error, retry ${attempt + 1}/${maxRetries} after ${Math.round(backoffMs)}ms:`, lastError.message);
+        await new Promise(r => setTimeout(r, backoffMs));
+      }
+    }
   }
-  const data = await resp.json();
-  const durationMs = Date.now() - start;
-  const tokens = data.usage?.total_tokens || 0;
-  const costUsd = tokens * 0.000001;
-  return { content: data.choices?.[0]?.message?.content || "", tokens, durationMs, costUsd, model: "google/gemini-2.5-flash" };
+  throw lastError || new Error("callAI failed after retries");
 }
 
 function pickAgent(description: string, agentsByRole: Record<string, any>, fallback: any) {
@@ -661,6 +683,34 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         const generatedFiles: Record<string, string> = {};
         const MAX_QA_ITERATIONS = 2;
 
+        // Count total pending subtasks for progress tracking
+        let totalSubtasks = 0;
+        for (const story of stories) {
+          const { data: phases } = await serviceClient.from("story_phases")
+            .select("id, story_subtasks(id, status)")
+            .eq("story_id", story.id);
+          for (const phase of (phases || [])) {
+            totalSubtasks += (phase.story_subtasks || []).filter((st: any) => st.status === "pending").length;
+          }
+        }
+
+        // Helper to update real-time progress
+        const updateProgress = async (current: number, currentFile?: string, currentAgent?: string) => {
+          await serviceClient.from("initiatives").update({
+            execution_progress: {
+              current, total: totalSubtasks,
+              percent: totalSubtasks > 0 ? Math.round((current / totalSubtasks) * 100) : 0,
+              executed: executedCount, failed: failedCount,
+              code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
+              current_file: currentFile || null, current_agent: currentAgent || null,
+              chain_of_agents: hasChain, started_at: new Date().toISOString(),
+              status: "running",
+            },
+          }).eq("id", initiativeId);
+        };
+
+        await updateProgress(0);
+
         for (const story of stories) {
           await serviceClient.from("stories").update({ status: "in_progress" }).eq("id", story.id);
 
@@ -866,10 +916,12 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                 }
 
                 executedCount++;
+                await updateProgress(executedCount + failedCount, subtask.file_path);
               } catch (subtaskErr) {
                 await serviceClient.from("story_subtasks").update({ status: "failed" }).eq("id", subtask.id);
                 if (subtaskJobId) await failJob(subtaskJobId, subtaskErr instanceof Error ? subtaskErr.message : "Unknown");
                 failedCount++;
+                await updateProgress(executedCount + failedCount);
                 console.error(`Subtask ${subtask.id} failed:`, subtaskErr);
               }
             }
@@ -886,7 +938,17 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
           if (pendingPhases === 0) await serviceClient.from("stories").update({ status: "done" }).eq("id", story.id);
         }
 
-        await updateInit({ stage_status: "validating" });
+        // Mark progress as complete
+        await serviceClient.from("initiatives").update({
+          stage_status: "validating",
+          execution_progress: {
+            current: totalSubtasks, total: totalSubtasks, percent: 100,
+            executed: executedCount, failed: failedCount,
+            code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
+            chain_of_agents: hasChain, status: "completed",
+            completed_at: new Date().toISOString(),
+          },
+        }).eq("id", initiativeId);
         if (masterJobId) await completeJob(masterJobId, {
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, total_tokens: totalTokens,

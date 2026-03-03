@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { InitiativeCodePreview } from "./InitiativeCodePreview";
 import { AgentMessagesTimeline } from "./AgentMessagesTimeline";
+import { ExecutionProgress } from "./ExecutionProgress";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 
 import {
@@ -305,6 +306,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
           </CardContent>
         </Card>
       )}
+
+      {/* Execution Progress (real-time) */}
+      <ExecutionProgress initiativeId={initiative.id} stageStatus={stageStatus} />
 
       {/* PR Result Card */}
       {prUrl && (

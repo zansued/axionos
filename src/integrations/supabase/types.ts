@@ -637,6 +637,7 @@ export type Database = {
           created_at: string
           description: string | null
           discovery_payload: Json | null
+          execution_progress: Json | null
           feasibility_analysis: string | null
           id: string
           idea_raw: string | null
@@ -668,6 +669,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           discovery_payload?: Json | null
+          execution_progress?: Json | null
           feasibility_analysis?: string | null
           id?: string
           idea_raw?: string | null
@@ -699,6 +701,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           discovery_payload?: Json | null
+          execution_progress?: Json | null
           feasibility_analysis?: string | null
           id?: string
           idea_raw?: string | null
