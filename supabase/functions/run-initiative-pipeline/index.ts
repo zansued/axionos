@@ -100,7 +100,8 @@ serve(async (req) => {
       });
     }
 
-    const { initiativeId, stage, comment, github_token, owner, repo, base_branch } = await req.json();
+    const reqBody = await req.json();
+    const { initiativeId, stage, comment, github_token, owner, repo, base_branch, modification } = reqBody;
     if (!initiativeId || !stage) throw new Error("initiativeId and stage are required");
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
@@ -1594,7 +1595,171 @@ ${skippedFiles.length > 0 ? `\n### ⚠️ Arquivos não commitados (${skippedFil
       }
     }
 
-    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve, reject, execution, validation, publish`);
+    // ========== FAST MODIFY (modify + republish) ==========
+    if (stage === "fast_modify") {
+      if (!modification?.file_path || !modification?.prompt) {
+        throw new Error("modification.file_path and modification.prompt are required");
+      }
+
+      let jobId: string | null = null;
+      try {
+        jobId = await createJob("fast_modify", { file_path: modification.file_path, prompt: modification.prompt });
+
+        // 1. Use AI to modify the file
+        const modifyResult = await callAI(
+          LOVABLE_API_KEY,
+          `You are an expert developer. You will receive a source code file and a modification request.
+Return ONLY the complete modified file content. Do not add explanations, markdown fences, or comments about changes.
+Just output the raw modified code.`,
+          `File: ${modification.file_path}\n\nCurrent content:\n\`\`\`\n${modification.file_content}\n\`\`\`\n\nModification requested: ${modification.prompt}`,
+        );
+
+        const modifiedContent = modifyResult.content.replace(/^```[\w]*\n?/, '').replace(/\n?```$/, '').trim();
+
+        // 2. Update the subtask output in the database
+        const { data: subtasks } = await serviceClient
+          .from("story_subtasks")
+          .select("id, file_path, phase_id")
+          .eq("file_path", modification.file_path)
+          .eq("status", "completed");
+
+        // Filter subtasks belonging to this initiative
+        let targetSubtask: any = null;
+        if (subtasks?.length) {
+          for (const st of subtasks) {
+            const { data: phase } = await serviceClient.from("story_phases").select("story_id").eq("id", st.phase_id).single();
+            if (phase) {
+              const { data: story } = await serviceClient.from("stories").select("initiative_id").eq("id", phase.story_id).single();
+              if (story?.initiative_id === initiativeId) {
+                targetSubtask = st;
+                break;
+              }
+            }
+          }
+        }
+
+        if (targetSubtask) {
+          await serviceClient.from("story_subtasks").update({
+            output: modifiedContent,
+            executed_at: new Date().toISOString(),
+          }).eq("id", targetSubtask.id);
+        }
+
+        // 3. Auto-republish to GitHub if git connection exists
+        let prUrl: string | null = null;
+        let filesCommitted = 0;
+
+        const { data: gitConns } = await serviceClient
+          .from("git_connections")
+          .select("*")
+          .eq("organization_id", initiative.organization_id)
+          .eq("status", "active")
+          .limit(1);
+
+        const gitConn = gitConns?.[0];
+        if (gitConn?.github_token) {
+          const ghHeaders = {
+            Authorization: `Bearer ${gitConn.github_token}`,
+            Accept: "application/vnd.github.v3+json",
+            "Content-Type": "application/json",
+          };
+          const ghOwner = gitConn.repo_owner;
+          const ghRepo = gitConn.repo_name;
+          const GITHUB_API = "https://api.github.com";
+
+          // Find or create branch
+          const branchName = `fix/${initiative.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40)}-patch`;
+          
+          // Get default branch SHA
+          const baseBranch = gitConn.default_branch || "main";
+          const refResp = await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/git/ref/heads/${baseBranch}`, { headers: ghHeaders });
+          
+          if (refResp.ok) {
+            const refData = await refResp.json();
+            const baseSha = refData.object.sha;
+
+            // Try to create branch (ignore error if exists)
+            await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/git/refs`, {
+              method: "POST",
+              headers: ghHeaders,
+              body: JSON.stringify({ ref: `refs/heads/${branchName}`, sha: baseSha }),
+            });
+
+            // Get existing file SHA if it exists
+            let fileSha: string | undefined;
+            const existingFile = await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/contents/${modification.file_path}?ref=${branchName}`, { headers: ghHeaders });
+            if (existingFile.ok) {
+              const fileData = await existingFile.json();
+              fileSha = fileData.sha;
+            }
+
+            // Commit the modified file
+            const commitBody: any = {
+              message: `fix: ${modification.prompt.slice(0, 72)}`,
+              content: btoa(unescape(encodeURIComponent(modifiedContent))),
+              branch: branchName,
+            };
+            if (fileSha) commitBody.sha = fileSha;
+
+            const commitResp = await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/contents/${modification.file_path}`, {
+              method: "PUT",
+              headers: ghHeaders,
+              body: JSON.stringify(commitBody),
+            });
+
+            if (commitResp.ok) {
+              filesCommitted = 1;
+
+              // Check if PR already exists for this branch
+              const prsResp = await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/pulls?head=${ghOwner}:${branchName}&state=open`, { headers: ghHeaders });
+              const existingPrs = prsResp.ok ? await prsResp.json() : [];
+
+              if (existingPrs.length > 0) {
+                prUrl = existingPrs[0].html_url;
+              } else {
+                // Create new PR
+                const prResp = await fetch(`${GITHUB_API}/repos/${ghOwner}/${ghRepo}/pulls`, {
+                  method: "POST",
+                  headers: ghHeaders,
+                  body: JSON.stringify({
+                    title: `fix: ${modification.prompt.slice(0, 72)}`,
+                    head: branchName,
+                    base: baseBranch,
+                    body: `## Modificação via AxionOS\n\n**Arquivo:** \`${modification.file_path}\`\n\n**Prompt:** ${modification.prompt}\n\n---\n*Modificação automática fast-track*`,
+                  }),
+                });
+                if (prResp.ok) {
+                  const prData = await prResp.json();
+                  prUrl = prData.html_url;
+                }
+              }
+            }
+          }
+        }
+
+        if (jobId) await completeJob(jobId, {
+          file_path: modification.file_path,
+          files_modified: 1,
+          files_committed: filesCommitted,
+          pr_url: prUrl,
+          tokens: modifyResult.tokens,
+        }, { model: modifyResult.model, costUsd: modifyResult.costUsd, durationMs: modifyResult.durationMs });
+
+        await log("fast_modify", `Fast modify: ${modification.file_path}`, { pr_url: prUrl });
+
+        return new Response(JSON.stringify({
+          success: true,
+          files_modified: 1,
+          files_committed: filesCommitted,
+          pr_url: prUrl,
+        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      } catch (e) {
+        if (jobId) await failJob(jobId, e instanceof Error ? e.message : "Unknown error");
+        throw e;
+      }
+    }
+
+    throw new Error(`Stage inválido: ${stage}. Use: discovery, squad_formation, planning, approve, reject, execution, validation, publish, fast_modify`);
   } catch (e) {
     console.error("run-initiative-pipeline error:", e);
     return new Response(
