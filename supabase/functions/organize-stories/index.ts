@@ -74,8 +74,8 @@ serve(async (req) => {
       });
     }
 
-    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
-    if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY is not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     // Build context for AI
     const agentsSummary = agents.map((a) =>
@@ -107,14 +107,14 @@ ${storiesSummary}
 Retorne um JSON com esta estrutura:
 {"assignments": [{"story_id": "uuid", "agent_id": "uuid", "reasoning": "breve justificativa"}]}`;
 
-    const response = await fetch("https://api.deepseek.com/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
+        model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -125,8 +125,8 @@ Retorne um JSON com esta estrutura:
 
     if (!response.ok) {
       const t = await response.text();
-      console.error("DeepSeek error:", response.status, t);
-      return new Response(JSON.stringify({ error: `Erro na API DeepSeek (${response.status})` }), {
+      console.error("AI Gateway error:", response.status, t);
+      return new Response(JSON.stringify({ error: `Erro na AI Gateway (${response.status})` }), {
         status: response.status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
