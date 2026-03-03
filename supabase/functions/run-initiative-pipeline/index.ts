@@ -1003,91 +1003,249 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         let totalCost = 0;
         let passCount = 0;
         let failCount = 0;
+        let reworkedCount = 0;
+        let autoApprovedCount = 0;
+        let autoRejectedCount = 0;
         const validationResults: any[] = [];
+        const MAX_REWORK_ATTEMPTS = 2;
+        const APPROVAL_THRESHOLD = 70;
+        const REWORK_THRESHOLD = 50;
 
         for (const artifact of artifacts) {
-          const artifactText = typeof artifact.raw_output === "object" 
-            ? (artifact.raw_output as any)?.text || JSON.stringify(artifact.raw_output)
-            : String(artifact.raw_output);
+          let currentOutput = artifact.raw_output;
+          let currentArtifactId = artifact.id;
+          let finalValidation: any = null;
+          let reworkAttempts = 0;
 
-          const validationStart = Date.now();
-          const result = await callAI(
-            LOVABLE_API_KEY,
-            `Você é um revisor de qualidade sênior do AxionOS. Analise o artefato produzido por um agente de IA e avalie sua qualidade.
-Retorne APENAS JSON válido.`,
-            `## Artefato para validação
+          // === Validation + Auto-Rework Loop ===
+          for (let attempt = 0; attempt <= MAX_REWORK_ATTEMPTS; attempt++) {
+            const artifactText = typeof currentOutput === "object"
+              ? (currentOutput as any)?.text || (currentOutput as any)?.content || JSON.stringify(currentOutput)
+              : String(currentOutput);
+
+            const validationStart = Date.now();
+            const result = await callAI(
+              LOVABLE_API_KEY,
+              `Você é um revisor de qualidade sênior do AxionOS. Analise o artefato e avalie sua qualidade.
+Retorne APENAS JSON válido. Seja rigoroso mas justo.`,
+              `## Artefato para validação
 - **Tipo**: ${artifact.type}
 - **Agente**: ${(artifact as any).agents?.name || "?"} (${(artifact as any).agents?.role || "?"})
 - **Resumo**: ${artifact.summary || "N/A"}
+${attempt > 0 ? `\n- **Tentativa de retrabalho**: ${attempt}/${MAX_REWORK_ATTEMPTS}` : ""}
 
-## Conteúdo do artefato (primeiros 4000 chars)
-${artifactText.slice(0, 4000)}
+## Conteúdo do artefato
+${artifactText.slice(0, 5000)}
 
-## Avalie nos seguintes critérios (0-100 cada):
-Retorne JSON:
+## Avalie nos critérios (0-100 cada):
 {
-  "scores": {
-    "completeness": 0,
-    "technical_quality": 0,
-    "clarity": 0,
-    "best_practices": 0,
-    "actionability": 0
-  },
+  "scores": { "completeness": 0, "technical_quality": 0, "clarity": 0, "best_practices": 0, "actionability": 0 },
   "overall_score": 0,
   "result": "pass|fail|warning",
-  "issues": ["lista de problemas encontrados"],
-  "suggestions": ["lista de melhorias sugeridas"],
-  "summary": "resumo da avaliação em 1-2 frases"
+  "issues": ["problemas"],
+  "suggestions": ["melhorias"],
+  "summary": "resumo 1-2 frases",
+  "verdict": "approve|reject|request_changes"
 }
 
-Regras:
-- overall_score >= 70 → "pass"
-- overall_score 50-69 → "warning"  
-- overall_score < 50 → "fail"`,
-            true
-          );
+Regras de decisão:
+- overall_score >= ${APPROVAL_THRESHOLD} → result="pass", verdict="approve"
+- overall_score ${REWORK_THRESHOLD}-${APPROVAL_THRESHOLD - 1} → result="warning", verdict="request_changes"
+- overall_score < ${REWORK_THRESHOLD} → result="fail", verdict="reject"`,
+              true
+            );
 
-          let validation: any;
-          try {
-            validation = JSON.parse(result.content);
-          } catch {
-            validation = { overall_score: 50, result: "warning", summary: "Falha ao parsear validação", issues: [], suggestions: [], scores: {} };
+            let validation: any;
+            try {
+              validation = JSON.parse(result.content);
+            } catch {
+              validation = { overall_score: 50, result: "warning", verdict: "request_changes", summary: "Falha ao parsear validação", issues: [], suggestions: [], scores: {} };
+            }
+
+            const validationDuration = Date.now() - validationStart;
+            totalTokens += result.tokens;
+            totalCost += result.costUsd;
+
+            // Record validation run
+            await serviceClient.from("validation_runs").insert({
+              artifact_id: currentArtifactId,
+              type: attempt > 0 ? "ai_quality_review_post_rework" : "ai_quality_review",
+              result: validation.result || "warning",
+              logs: JSON.stringify({
+                scores: validation.scores,
+                overall_score: validation.overall_score,
+                issues: validation.issues,
+                suggestions: validation.suggestions,
+                summary: validation.summary,
+                verdict: validation.verdict,
+                attempt: attempt,
+              }),
+              duration: validationDuration,
+            });
+
+            // Record AI analysis as review
+            await serviceClient.from("artifact_reviews").insert({
+              output_id: currentArtifactId,
+              reviewer_id: user.id,
+              action: "ai_analysis",
+              previous_status: artifact.status,
+              new_status: artifact.status,
+              comment: JSON.stringify(validation),
+            });
+
+            finalValidation = validation;
+            const score = validation.overall_score || 0;
+
+            // === AUTO-APPROVE: score >= threshold ===
+            if (score >= APPROVAL_THRESHOLD) {
+              await serviceClient.from("agent_outputs")
+                .update({ status: "approved" })
+                .eq("id", currentArtifactId);
+
+              await serviceClient.from("artifact_reviews").insert({
+                output_id: currentArtifactId,
+                reviewer_id: user.id,
+                action: "auto_approved",
+                previous_status: artifact.status,
+                new_status: "approved",
+                comment: `Aprovado automaticamente pela IA. Score: ${score}/100. Confiança alta. ${attempt > 0 ? `Aprovado após ${attempt} retrabalho(s).` : "Aprovado na primeira análise."}`,
+              });
+
+              passCount++;
+              autoApprovedCount++;
+              await log("artifact_auto_approved", `Artefato ${artifact.summary?.slice(0, 50)} aprovado automaticamente (score ${score})`, { artifact_id: currentArtifactId, score, attempt });
+              break;
+            }
+
+            // === AUTO-REJECT: score < rework threshold ===
+            if (score < REWORK_THRESHOLD) {
+              await serviceClient.from("agent_outputs")
+                .update({ status: "rejected" })
+                .eq("id", currentArtifactId);
+
+              await serviceClient.from("artifact_reviews").insert({
+                output_id: currentArtifactId,
+                reviewer_id: user.id,
+                action: "auto_rejected",
+                previous_status: artifact.status,
+                new_status: "rejected",
+                comment: `Rejeitado automaticamente pela IA. Score: ${score}/100. Problemas graves: ${(validation.issues || []).join("; ")}`,
+              });
+
+              failCount++;
+              autoRejectedCount++;
+              await log("artifact_auto_rejected", `Artefato ${artifact.summary?.slice(0, 50)} rejeitado (score ${score})`, { artifact_id: currentArtifactId, score });
+              break;
+            }
+
+            // === AUTO-REWORK: score between thresholds, still has attempts ===
+            if (attempt < MAX_REWORK_ATTEMPTS) {
+              reworkAttempts++;
+              reworkedCount++;
+
+              const feedbackForRework = [
+                ...(validation.issues || []).map((i: string) => `Problema: ${i}`),
+                ...(validation.suggestions || []).map((s: string) => `Sugestão: ${s}`),
+              ].join("\n");
+
+              const reworkResult = await callAI(
+                LOVABLE_API_KEY,
+                `Você é o agente "${(artifact as any).agents?.name || "Dev"}" (${(artifact as any).agents?.role || "dev"}).
+Está fazendo RETRABALHO de um artefato que recebeu score ${score}/100 na validação automática.
+Corrija TODOS os problemas e incorpore as sugestões. Retorne o output COMPLETO e corrigido.`,
+                `## Output Atual
+\`\`\`
+${artifactText.slice(0, 6000)}
+\`\`\`
+
+## Feedback da Validação (score: ${score}/100)
+${feedbackForRework}
+
+## Resumo da Validação
+${validation.summary}
+
+Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações extras.`
+              );
+
+              const newOutput = reworkResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+              totalTokens += reworkResult.tokens;
+              totalCost += reworkResult.costUsd;
+
+              // Update artifact with reworked content
+              currentOutput = artifact.type === "code"
+                ? { ...(typeof artifact.raw_output === "object" ? artifact.raw_output : {}), content: newOutput, text: newOutput }
+                : { text: newOutput };
+
+              await serviceClient.from("agent_outputs").update({
+                raw_output: currentOutput,
+                tokens_used: (artifact.tokens_used || 0) + reworkResult.tokens,
+                cost_estimate: Number(artifact.cost_estimate || 0) + reworkResult.costUsd,
+                updated_at: new Date().toISOString(),
+              }).eq("id", currentArtifactId);
+
+              // Update subtask output if linked
+              if (artifact.subtask_id) {
+                await serviceClient.from("story_subtasks").update({
+                  output: newOutput,
+                  executed_at: new Date().toISOString(),
+                }).eq("id", artifact.subtask_id);
+              }
+
+              await serviceClient.from("artifact_reviews").insert({
+                output_id: currentArtifactId,
+                reviewer_id: user.id,
+                action: "auto_rework",
+                previous_status: artifact.status,
+                new_status: "draft",
+                comment: JSON.stringify({
+                  iteration: attempt + 1,
+                  previous_score: score,
+                  trigger: "validation_gate",
+                  feedback_summary: feedbackForRework.slice(0, 500),
+                }),
+              });
+
+              await log("artifact_auto_reworked", `Artefato ${artifact.summary?.slice(0, 50)} retrabalhado automaticamente (score ${score} → tentativa ${attempt + 1})`, {
+                artifact_id: currentArtifactId, score, attempt: attempt + 1,
+              });
+
+              // Loop continues to re-validate...
+            } else {
+              // Max rework attempts reached, escalate to human
+              await serviceClient.from("agent_outputs")
+                .update({ status: "pending_review" })
+                .eq("id", currentArtifactId);
+
+              await serviceClient.from("artifact_reviews").insert({
+                output_id: currentArtifactId,
+                reviewer_id: user.id,
+                action: "escalated_to_human",
+                previous_status: artifact.status,
+                new_status: "pending_review",
+                comment: `Escalado para revisão humana após ${MAX_REWORK_ATTEMPTS} retrabalhos automáticos. Último score: ${score}/100. Issues: ${(validation.issues || []).join("; ")}`,
+              });
+
+              await log("artifact_escalated", `Artefato ${artifact.summary?.slice(0, 50)} escalado para revisão humana (score ${score}, ${MAX_REWORK_ATTEMPTS} tentativas)`, {
+                artifact_id: currentArtifactId, score,
+              });
+              break;
+            }
           }
 
-          const validationDuration = Date.now() - validationStart;
-
-          // Create validation_run record
-          await serviceClient.from("validation_runs").insert({
-            artifact_id: artifact.id,
-            type: "ai_quality_review",
-            result: validation.result || "warning",
-            logs: JSON.stringify({
-              scores: validation.scores,
-              overall_score: validation.overall_score,
-              issues: validation.issues,
-              suggestions: validation.suggestions,
-              summary: validation.summary,
-            }),
-            duration: validationDuration,
-          });
-
-          if (validation.result === "pass") passCount++;
-          else if (validation.result === "fail") failCount++;
-
-          totalTokens += result.tokens;
-          totalCost += result.costUsd;
-
           validationResults.push({
-            artifact_id: artifact.id,
+            artifact_id: currentArtifactId,
             type: artifact.type,
             agent: (artifact as any).agents?.name,
-            score: validation.overall_score,
-            result: validation.result,
-            summary: validation.summary,
+            score: finalValidation?.overall_score || 0,
+            result: finalValidation?.result || "warning",
+            verdict: finalValidation?.verdict || "request_changes",
+            summary: finalValidation?.summary,
+            rework_attempts: reworkAttempts,
+            final_status: passCount > 0 && validationResults.length === 0 ? "approved" : undefined,
           });
         }
 
-        const overallPass = failCount === 0;
+        const overallPass = failCount === 0 && autoApprovedCount === artifacts.length;
         const nextStatus = overallPass ? "ready_to_publish" : "validating";
 
         await updateInit({ stage_status: nextStatus });
@@ -1096,20 +1254,27 @@ Regras:
           artifacts_validated: artifacts.length,
           passed: passCount,
           failed: failCount,
+          reworked: reworkedCount,
+          auto_approved: autoApprovedCount,
+          auto_rejected: autoRejectedCount,
           warnings: artifacts.length - passCount - failCount,
           results: validationResults,
           overall_pass: overallPass,
         }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
 
-        await log("pipeline_validation_complete", 
-          `Validação concluída: ${passCount} pass, ${failCount} fail de ${artifacts.length} artefatos`, {
+        await log("pipeline_validation_complete",
+          `Validação inteligente concluída: ${autoApprovedCount} auto-aprovados, ${reworkedCount} retrabalhados, ${failCount} rejeitados de ${artifacts.length} artefatos`, {
           total_tokens: totalTokens, cost_usd: totalCost, overall_pass: overallPass,
+          auto_approved: autoApprovedCount, reworked: reworkedCount, auto_rejected: autoRejectedCount,
         });
 
         return new Response(JSON.stringify({
           success: true,
           artifacts_validated: artifacts.length,
           passed: passCount, failed: failCount,
+          reworked: reworkedCount,
+          auto_approved: autoApprovedCount,
+          auto_rejected: autoRejectedCount,
           overall_pass: overallPass,
           results: validationResults,
           tokens: totalTokens,
