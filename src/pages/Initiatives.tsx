@@ -123,9 +123,7 @@ export default function Initiatives() {
         validation: result.overall_pass
           ? `Validação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos ✅`
           : `Validação: ${result.failed || 0} falhas de ${result.artifacts_validated || 0} artefatos ⚠️`,
-        publish: result.pr_url
-          ? `PR criado: ${result.files_committed || 0} arquivos commitados ✅`
-          : `Publicação concluída: ${result.files_committed || 0} arquivos ✅`,
+        publish: `Publicação concluída: ${result.files_committed || 0} arquivos commitados no main ✅`,
       };
       toast({ title: stageLabels[stage] || "Concluído!" });
       queryClient.invalidateQueries({ queryKey: ["initiatives"] });
