@@ -594,7 +594,12 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
     // ========== STAGE 4: EXECUTION (Code-Aware per-subtask) ==========
     if (stage === "execution") {
       const masterJobId = await createJob("execution", { initiative_id: initiativeId });
-      await updateInit({ stage_status: "in_progress" });
+      // Auto-approve planning if coming from "planned" status
+      const updateFields: any = { stage_status: "in_progress" };
+      if (initiative.stage_status === "planned" && !initiative.approved_at_planning) {
+        updateFields.approved_at_planning = new Date().toISOString();
+      }
+      await updateInit(updateFields);
       await log("pipeline_execution_start", "Iniciando execução de código...");
 
       try {

@@ -73,6 +73,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       return [{ stage: "planning", label: "Gerar Planning", type: "run" }];
     case "planned":
       return [
+        { stage: "execution", label: "Iniciar Execução", type: "run" },
         { stage: "approve", label: "Aprovar Planning", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
