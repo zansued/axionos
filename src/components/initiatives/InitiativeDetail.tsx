@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -30,6 +32,7 @@ interface GitConnection {
   repo_owner: string;
   repo_name: string;
   default_branch: string;
+  github_token?: string | null;
 }
 
 interface InitiativeDetailProps {
@@ -47,6 +50,7 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
   const macroIdx = getMacroStageIndex(stageStatus);
   const actions = getAvailableActions(stageStatus);
   const dp = initiative.discovery_payload || {};
+  const { toast: publishToast } = useToast();
 
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectComment, setRejectComment] = useState("");
@@ -57,6 +61,17 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
   const [ghRepo, setGhRepo] = useState(gitConnections[0]?.repo_name || "");
   const [ghBranch, setGhBranch] = useState(gitConnections[0]?.default_branch || "main");
   const [selectedConnectionId, setSelectedConnectionId] = useState(gitConnections[0]?.id || "manual");
+  const [saveToken, setSaveToken] = useState(true);
+
+  // Load saved token when connection changes
+  useEffect(() => {
+    if (selectedConnectionId && selectedConnectionId !== "manual") {
+      const conn = gitConnections.find(c => c.id === selectedConnectionId);
+      if (conn?.github_token) {
+        setGhToken(conn.github_token);
+      }
+    }
+  }, [selectedConnectionId, gitConnections]);
 
   const handleSelectConnection = (connId: string) => {
     setSelectedConnectionId(connId);
@@ -64,12 +79,14 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
       setGhOwner("");
       setGhRepo("");
       setGhBranch("main");
+      setGhToken("");
     } else {
       const conn = gitConnections.find(c => c.id === connId);
       if (conn) {
         setGhOwner(conn.repo_owner);
         setGhRepo(conn.repo_name);
         setGhBranch(conn.default_branch);
+        if (conn.github_token) setGhToken(conn.github_token);
       }
     }
   };
@@ -81,8 +98,20 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
     setRejectComment("");
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     if (!ghToken || !ghOwner || !ghRepo) return;
+    // Save token to git_connection if requested
+    if (saveToken && selectedConnectionId && selectedConnectionId !== "manual") {
+      const { error } = await supabase
+        .from("git_connections")
+        .update({ github_token: ghToken } as any)
+        .eq("id", selectedConnectionId);
+      if (error) {
+        console.error("Failed to save token:", error);
+      } else {
+        publishToast({ title: "Token salvo na conexão Git" });
+      }
+    }
     onRunStage("publish", undefined, { github_token: ghToken, owner: ghOwner, repo: ghRepo, base_branch: ghBranch || "main" });
     setPublishOpen(false);
   };
@@ -249,6 +278,12 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
             <div>
               <Label htmlFor="gh-token" className="text-xs">GitHub Token (PAT)</Label>
               <Input id="gh-token" type="password" placeholder="ghp_..." value={ghToken} onChange={(e) => setGhToken(e.target.value)} />
+              {selectedConnectionId !== "manual" && (
+                <label className="flex items-center gap-2 mt-1 cursor-pointer">
+                  <input type="checkbox" checked={saveToken} onChange={(e) => setSaveToken(e.target.checked)} className="rounded border-border" />
+                  <span className="text-xs text-muted-foreground">Salvar token nesta conexão para uso futuro</span>
+                </label>
+              )}
             </div>
             {selectedConnectionId === "manual" && (
               <div className="grid grid-cols-2 gap-2">

@@ -515,6 +515,7 @@ export type Database = {
           connected_by: string
           created_at: string
           default_branch: string
+          github_token: string | null
           id: string
           organization_id: string
           provider: string
@@ -528,6 +529,7 @@ export type Database = {
           connected_by: string
           created_at?: string
           default_branch?: string
+          github_token?: string | null
           id?: string
           organization_id: string
           provider?: string
@@ -541,6 +543,7 @@ export type Database = {
           connected_by?: string
           created_at?: string
           default_branch?: string
+          github_token?: string | null
           id?: string
           organization_id?: string
           provider?: string
