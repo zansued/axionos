@@ -1943,16 +1943,22 @@ Return format:
         );
 
         let reviewData: any;
-        try {
-          reviewData = JSON.parse(reviewResult.content);
-        } catch {
-          // Try extracting JSON from possible markdown wrapping
-          const jsonMatch = reviewResult.content.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            reviewData = JSON.parse(jsonMatch[0]);
-          } else {
-            throw new Error("AI não retornou JSON válido na análise");
+        const parseJsonSafe = (raw: string) => {
+          let cleaned = raw.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim();
+          const jsonStart = cleaned.search(/[\{\[]/);
+          const jsonEnd = cleaned.lastIndexOf('}');
+          if (jsonStart === -1 || jsonEnd === -1) throw new Error("No JSON found");
+          cleaned = cleaned.substring(jsonStart, jsonEnd + 1);
+          try { return JSON.parse(cleaned); } catch {
+            cleaned = cleaned.replace(/,\s*}/g, "}").replace(/,\s*]/g, "]").replace(/[\x00-\x1F\x7F]/g, " ");
+            return JSON.parse(cleaned);
           }
+        };
+        try {
+          reviewData = parseJsonSafe(reviewResult.content);
+        } catch (parseErr) {
+          console.error("JSON parse failed:", parseErr, "Raw content (first 500):", reviewResult.content.slice(0, 500));
+          throw new Error("AI não retornou JSON válido na análise");
         }
 
         const fixes = reviewData.fixes || [];
