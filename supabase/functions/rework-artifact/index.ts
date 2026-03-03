@@ -46,8 +46,8 @@ serve(async (req) => {
     const { artifactId, feedback, autoMode } = await req.json();
     if (!artifactId) throw new Error("artifactId is required");
 
-    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
-    if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY is not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const serviceClient = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -168,15 +168,15 @@ ${feedbackHistory}
 
 Produza o output COMPLETO e revisado, corrigindo todos os problemas apontados.`;
 
-    // Execute rework with DeepSeek
-    const response = await fetch("https://api.deepseek.com/chat/completions", {
+    // Execute rework with AI Gateway
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
+        model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -186,8 +186,8 @@ Produza o output COMPLETO e revisado, corrigindo todos os problemas apontados.`;
 
     if (!response.ok) {
       const t = await response.text();
-      console.error("DeepSeek error:", response.status, t);
-      throw new Error(`Erro na API DeepSeek (${response.status})`);
+      console.error("AI Gateway error:", response.status, t);
+      throw new Error(`Erro na AI Gateway (${response.status})`);
     }
 
     const aiData = await response.json();
@@ -201,7 +201,7 @@ Produza o output COMPLETO e revisado, corrigindo todos os problemas apontados.`;
       raw_output: { text: newOutput, model_response: aiData, previous_version: artifact.raw_output },
       tokens_used: (artifact.tokens_used || 0) + tokensUsed,
       cost_estimate: Number(artifact.cost_estimate || 0) + (tokensUsed * 0.000001),
-      model_used: "deepseek-chat",
+      model_used: "google/gemini-2.5-flash",
       status: autoMode ? "draft" : "pending_review",
       updated_at: new Date().toISOString(),
     }).eq("id", artifactId);

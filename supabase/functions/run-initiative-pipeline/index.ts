@@ -8,10 +8,10 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-async function callDeepSeek(apiKey: string, systemPrompt: string, userPrompt: string, jsonMode = false) {
+async function callAI(apiKey: string, systemPrompt: string, userPrompt: string, jsonMode = false) {
   const start = Date.now();
   const body: any = {
-    model: "deepseek-chat",
+    model: "google/gemini-2.5-flash",
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt },
@@ -19,20 +19,20 @@ async function callDeepSeek(apiKey: string, systemPrompt: string, userPrompt: st
   };
   if (jsonMode) body.response_format = { type: "json_object" };
 
-  const resp = await fetch("https://api.deepseek.com/chat/completions", {
+  const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
   if (!resp.ok) {
     const t = await resp.text();
-    throw new Error(`DeepSeek error ${resp.status}: ${t}`);
+    throw new Error(`AI Gateway error ${resp.status}: ${t}`);
   }
   const data = await resp.json();
   const durationMs = Date.now() - start;
   const tokens = data.usage?.total_tokens || 0;
-  const costUsd = tokens * 0.00000014;
-  return { content: data.choices?.[0]?.message?.content || "", tokens, durationMs, costUsd, model: "deepseek-chat" };
+  const costUsd = tokens * 0.000001;
+  return { content: data.choices?.[0]?.message?.content || "", tokens, durationMs, costUsd, model: "google/gemini-2.5-flash" };
 }
 
 function pickAgent(description: string, agentsByRole: Record<string, any>, fallback: any) {
@@ -81,8 +81,8 @@ serve(async (req) => {
     const { initiativeId, stage, comment, github_token, owner, repo, base_branch } = await req.json();
     if (!initiativeId || !stage) throw new Error("initiativeId and stage are required");
 
-    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
-    if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
     const { data: initiative, error: initErr } = await serviceClient
       .from("initiatives").select("*").eq("id", initiativeId).single();
@@ -127,8 +127,8 @@ serve(async (req) => {
       await log("pipeline_discovery_start", "Iniciando descoberta inteligente...");
 
       try {
-        const result = await callDeepSeek(
-          DEEPSEEK_API_KEY,
+        const result = await callAI(
+          LOVABLE_API_KEY,
           `Você é um consultor de produto e estratégia sênior. Analise a ideia do usuário e produza uma descoberta inteligente completa. Retorne APENAS JSON válido.`,
           `Ideia do usuário: "${initiative.title}"
 ${initiative.description ? `Descrição: ${initiative.description}` : ""}
@@ -195,8 +195,8 @@ Complexidade: ${initiative.complexity}
 Stack sugerida: ${dp.suggested_stack || "A definir"}
 MVP: ${dp.mvp_scope || initiative.mvp_scope || "A definir"}`;
 
-        const result = await callDeepSeek(
-          DEEPSEEK_API_KEY,
+        const result = await callAI(
+          LOVABLE_API_KEY,
           "Você é um especialista em montagem de equipes de IA para desenvolvimento de software. Monte o squad ideal. Retorne APENAS JSON válido.",
           `${context}
 
@@ -264,24 +264,24 @@ Stack: Vite + React + TypeScript + Tailwind CSS + shadcn/ui
 Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
 
         // Step 1: PRD
-        const prdResult = await callDeepSeek(
-          DEEPSEEK_API_KEY,
+        const prdResult = await callAI(
+          LOVABLE_API_KEY,
           "Você é um Product Manager sênior. Crie um PRD detalhado e executável em português brasileiro usando markdown.",
           `${context}\n\nCrie um PRD completo incluindo:\n## Visão Geral\n## Problema a Resolver\n## Personas e Casos de Uso\n## Requisitos Funcionais\n## Requisitos Não-Funcionais\n## Critérios de Aceite\n## Dependências Técnicas\n## Métricas de Sucesso\n## Riscos e Mitigações`
         );
         await updateInit({ prd_content: prdResult.content });
 
         // Step 2: Architecture
-        const archResult = await callDeepSeek(
-          DEEPSEEK_API_KEY,
+        const archResult = await callAI(
+          LOVABLE_API_KEY,
           "Você é um Arquiteto de Software sênior. Crie um documento de arquitetura técnica baseado no PRD. A stack é obrigatoriamente: Vite + React + TypeScript + Tailwind CSS + shadcn/ui. Use markdown.",
           `PRD:\n${prdResult.content.slice(0, 6000)}\n\nStack OBRIGATÓRIA: Vite + React + TypeScript + Tailwind CSS + shadcn/ui\n\nCrie a arquitetura incluindo:\n## Stack Tecnológica Final\n## Estrutura de Diretórios do Projeto\n## Componentes Principais (com file paths)\n## Modelo de Dados\n## APIs e Contratos\n## Roteamento (React Router)\n## Segurança\n## Plano de Deploy`
         );
         await updateInit({ architecture_content: archResult.content });
 
         // Step 3: Generate code-aware stories with file paths
-        const storiesResult = await callDeepSeek(
-          DEEPSEEK_API_KEY,
+        const storiesResult = await callAI(
+          LOVABLE_API_KEY,
           `Você é um Product Manager e Arquiteto sênior especializado em projetos Vite + React + TypeScript + Tailwind.
 Gere user stories executáveis onde CADA SUBTASK corresponde a UM ARQUIVO de código real.
 Retorne APENAS JSON válido.
@@ -444,7 +444,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
           total_subtasks: totalSubtasks,
           scaffold_files: scaffoldFiles,
           total_tokens: totalTokens,
-        }, { model: "deepseek-chat", costUsd: totalCost, durationMs: prdResult.durationMs + archResult.durationMs + storiesResult.durationMs });
+        }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: prdResult.durationMs + archResult.durationMs + storiesResult.durationMs });
         await log("pipeline_planning_complete", `Planning completo: ${createdStories.length} stories, ${totalSubtasks} subtasks (${scaffoldFiles} scaffold)`, { totalTokens, cost_usd: totalCost });
 
         return new Response(JSON.stringify({
@@ -741,7 +741,7 @@ ${initiative.architecture_content ? `## Arquitetura (resumo):\n${initiative.arch
 Gere o conteúdo COMPLETO e FUNCIONAL do arquivo "${subtask.file_path}".
 Retorne APENAS o código, sem wrappers markdown.`;
 
-                  result = await callDeepSeek(DEEPSEEK_API_KEY, codeSystemPrompt, codeUserPrompt);
+                  result = await callAI(LOVABLE_API_KEY, codeSystemPrompt, codeUserPrompt);
 
                   // Clean output: remove markdown code blocks if AI added them
                   let codeContent = result.content;
@@ -798,8 +798,8 @@ Retorne APENAS o código, sem wrappers markdown.`;
                   codeFilesGenerated++;
                 } else {
                   // ===== LEGACY TEXT MODE (non-code subtasks) =====
-                  result = await callDeepSeek(
-                    DEEPSEEK_API_KEY,
+                  result = await callAI(
+                    LOVABLE_API_KEY,
                     `Você é o agente "${assignedAgent.name}" com o papel de "${assignedAgent.role}" no AxionOS.
 ${assignedAgent.description || ""}
 Sua tarefa é executar a subtask abaixo com maestria, produzindo um output técnico e completo.
@@ -880,7 +880,7 @@ Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quan
         if (masterJobId) await completeJob(masterJobId, {
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, total_tokens: totalTokens,
-        }, { model: "deepseek-chat", costUsd: totalCost, durationMs: 0 });
+        }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
 
         await log("pipeline_execution_complete", `Execução concluída: ${executedCount} subtasks (${codeFilesGenerated} arquivos de código), ${failedCount} falhas`, {
           total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated,
@@ -938,8 +938,8 @@ Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quan
             : String(artifact.raw_output);
 
           const validationStart = Date.now();
-          const result = await callDeepSeek(
-            DEEPSEEK_API_KEY,
+          const result = await callAI(
+            LOVABLE_API_KEY,
             `Você é um revisor de qualidade sênior do AxionOS. Analise o artefato produzido por um agente de IA e avalie sua qualidade.
 Retorne APENAS JSON válido.`,
             `## Artefato para validação
@@ -1026,7 +1026,7 @@ Regras:
           warnings: artifacts.length - passCount - failCount,
           results: validationResults,
           overall_pass: overallPass,
-        }, { model: "deepseek-chat", costUsd: totalCost, durationMs: 0 });
+        }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
 
         await log("pipeline_validation_complete", 
           `Validação concluída: ${passCount} pass, ${failCount} fail de ${artifacts.length} artefatos`, {

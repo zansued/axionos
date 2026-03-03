@@ -34,12 +34,10 @@ serve(async (req) => {
       });
     }
 
-    // Rate limit check
     const { allowed } = await checkRateLimit(user.id, "execute-subtask");
     if (!allowed) {
       return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em breve." }), {
-        status: 429,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -50,8 +48,8 @@ serve(async (req) => {
       });
     }
 
-    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
-    if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY is not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     // Fetch subtask details
     const { data: subtask, error: subtaskError } = await supabase
@@ -107,14 +105,14 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
       executed_by_agent_id: agentId,
     }).eq("id", subtaskId);
 
-    const response = await fetch("https://api.deepseek.com/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
+        model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -123,11 +121,10 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
     });
 
     if (!response.ok) {
-      // Mark as failed
       await supabase.from("story_subtasks").update({ status: "failed" }).eq("id", subtaskId);
       const t = await response.text();
-      console.error("DeepSeek error:", response.status, t);
-      return new Response(JSON.stringify({ error: `Erro na API DeepSeek (${response.status})` }), {
+      console.error("AI Gateway error:", response.status, t);
+      return new Response(JSON.stringify({ error: `Erro na AI Gateway (${response.status})` }), {
         status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -148,7 +145,7 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
       executed_at: new Date().toISOString(),
     }).eq("id", subtaskId);
 
-    // Create versioned agent_output artifact (using service role for org-scoped insert)
+    // Create versioned agent_output artifact
     let artifactId: string | null = null;
     if (organizationId) {
       const serviceClient = createClient(
@@ -170,10 +167,10 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
         status: "draft",
         summary: subtask.description?.slice(0, 200),
         raw_output: { text: output, model_response: aiData },
-        model_used: "deepseek-chat",
+        model_used: "google/gemini-2.5-flash",
         prompt_used: userPrompt.slice(0, 2000),
         tokens_used: tokensUsed,
-        cost_estimate: tokensUsed * 0.000001, // rough estimate
+        cost_estimate: tokensUsed * 0.000001,
       }).select("id").single();
 
       artifactId = artifact?.id || null;

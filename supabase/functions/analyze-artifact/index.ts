@@ -88,8 +88,8 @@ serve(async (req) => {
       analysis: "Análise Técnica",
     };
 
-    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
-    if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY is not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const userPrompt = `Você é um revisor técnico sênior do AxionOS, um sistema de governança de pipelines de IA. Analise o artefato abaixo e emita um veredito técnico fundamentado.
 
@@ -120,14 +120,14 @@ ${validationHistory}
 Responda APENAS com um JSON válido neste formato exato, sem markdown ou texto extra:
 {"verdict":"approve|reject|request_changes","confidence":0-100,"summary":"resumo 1-2 frases","strengths":["pontos fortes"],"issues":["problemas"],"suggestions":["sugestões"],"risk_level":"low|medium|high|critical"}`;
 
-    const response = await fetch("https://api.deepseek.com/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek-reasoner",
+        model: "google/gemini-2.5-pro",
         messages: [
           { role: "user", content: userPrompt },
         ],
@@ -136,13 +136,13 @@ Responda APENAS com um JSON válido neste formato exato, sem markdown ou texto e
 
     if (!response.ok) {
       const t = await response.text();
-      console.error("DeepSeek error:", response.status, t);
-      throw new Error(`Erro na API DeepSeek (${response.status})`);
+      console.error("AI Gateway error:", response.status, t);
+      throw new Error(`Erro na AI Gateway (${response.status})`);
     }
 
     const aiData = await response.json();
     const content = aiData.choices?.[0]?.message?.content;
-    if (!content) throw new Error("DeepSeek não retornou dados");
+    if (!content) throw new Error("AI não retornou dados");
 
     // Extract JSON from response (handle possible markdown wrapping)
     const jsonMatch = content.match(/\{[\s\S]*\}/);

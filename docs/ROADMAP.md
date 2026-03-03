@@ -7,12 +7,12 @@
 
 ## Fase 1 — Migrar para Lovable AI Gateway (eliminar DeepSeek)
 
-- [ ] Migrar `execute-subtask` para usar Lovable AI Gateway (`google/gemini-2.5-flash`)
-- [ ] Migrar `run-initiative-pipeline` (stages discovery, planning, execution, validation)
-- [ ] Migrar `generate-agents`, `generate-stories`, `organize-stories`
-- [ ] Migrar `generate-planning-content`
-- [ ] Migrar `analyze-artifact` e `rework-artifact`
-- [ ] Remover dependência da secret `DEEPSEEK_API_KEY`
+- [x] Migrar `execute-subtask` para usar Lovable AI Gateway (`google/gemini-2.5-flash`)
+- [x] Migrar `run-initiative-pipeline` (stages discovery, planning, execution, validation)
+- [x] Migrar `generate-agents`, `generate-stories`, `organize-stories`
+- [x] Migrar `generate-planning-content`
+- [x] Migrar `analyze-artifact` e `rework-artifact`
+- [x] Remover dependência da secret `DEEPSEEK_API_KEY`
 
 ---
 
