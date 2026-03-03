@@ -751,6 +751,13 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         const generatedFiles: Record<string, string> = {};
         const MAX_QA_ITERATIONS = 2;
 
+        // Deterministic overrides for deploy-critical files (never trust AI for these)
+        const DETERMINISTIC_FILES: Record<string, string> = {
+          "vercel.json": JSON.stringify({ buildCommand: "npm run build", outputDirectory: "dist", installCommand: "npm install", rewrites: [{ source: "/(.*)", destination: "/index.html" }] }, null, 2),
+          "public/_redirects": "/* /index.html 200",
+          "netlify.toml": "[build]\n  command = \"npm run build\"\n  publish = \"dist\"\n\n[[redirects]]\n  from = \"/*\"\n  to = \"/index.html\"\n  status = 200",
+        };
+
         // Count total pending subtasks for progress tracking
         let totalSubtasks = 0;
         for (const story of stories) {
@@ -877,6 +884,12 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                     totalTokens += fixResult.tokens; totalCost += fixResult.costUsd;
                   }
 
+                  // Override deploy-critical files with deterministic content
+                  if (DETERMINISTIC_FILES[subtask.file_path]) {
+                    codeContent = DETERMINISTIC_FILES[subtask.file_path];
+                    console.log(`[DETERMINISTIC] Overriding AI output for ${subtask.file_path}`);
+                  }
+
                   // Save final output
                   generatedFiles[subtask.file_path] = codeContent;
                   await serviceClient.from("story_subtasks").update({
@@ -930,6 +943,13 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                   );
 
                   let codeContent = result.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+                  
+                  // Override deploy-critical files with deterministic content
+                  if (DETERMINISTIC_FILES[subtask.file_path]) {
+                    codeContent = DETERMINISTIC_FILES[subtask.file_path];
+                    console.log(`[DETERMINISTIC] Overriding AI output for ${subtask.file_path}`);
+                  }
+                  
                   generatedFiles[subtask.file_path] = codeContent;
 
                   await serviceClient.from("story_subtasks").update({
