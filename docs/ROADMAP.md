@@ -42,11 +42,14 @@
 
 ## Fase 4 — Validação Inteligente
 
-- [ ] QA Agent analisa cada artefato de código automaticamente
-- [ ] Checklist automático: lint, type-check, coverage estimado
+- [x] QA Agent analisa cada artefato de código automaticamente
+- [x] Score de qualidade por artefato (0-100) com 5 critérios
+- [x] Gate automático: só avança para Publish se todos artefatos score >= 70
+- [x] Auto-aprovação: artefatos com score >= 70 aprovados automaticamente
+- [x] Auto-retrabalho: artefatos com score 50-69 retrabalhados e re-validados (até 2x)
+- [x] Auto-rejeição: artefatos com score < 50 rejeitados automaticamente
+- [x] Escalação para revisão humana quando retrabalho excede limite
 - [ ] Cross-review: Architect valida decisões arquiteturais do código gerado
-- [ ] Score de qualidade por artefato (0-100)
-- [ ] Gate automático: só avança para Publish se score > threshold
 
 ---
 

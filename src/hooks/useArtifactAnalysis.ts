@@ -43,11 +43,11 @@ export function useArtifactAnalysis() {
     queryClient.invalidateQueries({ queryKey: ["workspace-outputs"] });
   }, [queryClient]);
 
-  const analyze = useCallback(async (artifactId: string) => {
+  const analyze = useCallback(async (artifactId: string, autoDecide = false) => {
     setAnalyzing(artifactId);
     try {
       const { data, error } = await supabase.functions.invoke("analyze-artifact", {
-        body: { artifactId },
+        body: { artifactId, autoDecide },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
@@ -57,7 +57,18 @@ export function useArtifactAnalysis() {
         reasoning: data.reasoning || null,
       };
       setResults((prev) => ({ ...prev, [artifactId]: result }));
-      toast({ title: "Análise IA concluída", description: result.analysis.summary });
+
+      if (data.autoDecision) {
+        const actionLabels: Record<string, string> = {
+          auto_approved: "✅ Aprovado automaticamente pela IA",
+          auto_rejected: "❌ Rejeitado automaticamente pela IA",
+          request_changes: "🔄 IA solicitou alterações",
+        };
+        toast({ title: actionLabels[data.autoDecision.action] || "Análise concluída", description: result.analysis.summary });
+      } else {
+        toast({ title: "Análise IA concluída", description: result.analysis.summary });
+      }
+      invalidate();
       return result;
     } catch (e: any) {
       toast({ variant: "destructive", title: "Erro na análise IA", description: e.message });
@@ -65,7 +76,7 @@ export function useArtifactAnalysis() {
     } finally {
       setAnalyzing(null);
     }
-  }, [toast]);
+  }, [toast, invalidate]);
 
   const rework = useCallback(async (artifactId: string, feedback?: string, autoMode = false): Promise<ReworkResult | null> => {
     setReworking(artifactId);
@@ -119,8 +130,8 @@ export function useArtifactAnalysis() {
   }, [toast, invalidate]);
 
   const analyzeAndAutoRework = useCallback(async (artifactId: string) => {
-    // Step 1: Analyze
-    const analysisResult = await analyze(artifactId);
+    // Step 1: Analyze with auto-decide enabled
+    const analysisResult = await analyze(artifactId, true);
     if (!analysisResult) return null;
 
     // Step 2: If needs changes, auto-rework

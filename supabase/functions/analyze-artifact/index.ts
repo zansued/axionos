@@ -44,7 +44,7 @@ serve(async (req) => {
       });
     }
 
-    const { artifactId } = await req.json();
+    const { artifactId, autoDecide } = await req.json();
     if (!artifactId) throw new Error("artifactId is required");
 
     const { data: artifact, error: artErr } = await supabase
@@ -172,7 +172,60 @@ Responda APENAS com um JSON válido neste formato exato, sem markdown ou texto e
       comment: reviewComment,
     });
 
-    return new Response(JSON.stringify({ success: true, analysis, reasoning: reasoning?.substring(0, 2000) || null }), {
+    // === Auto-decide mode: automatically approve/reject based on verdict ===
+    let autoDecision = null;
+    if (autoDecide && analysis.verdict) {
+      const confidence = analysis.confidence || 0;
+
+      if (analysis.verdict === "approve" && confidence >= 70) {
+        await serviceSupabase.from("agent_outputs")
+          .update({ status: "approved" })
+          .eq("id", artifactId);
+
+        await serviceSupabase.from("artifact_reviews").insert({
+          output_id: artifactId,
+          reviewer_id: user.id,
+          action: "auto_approved",
+          previous_status: artifact.status,
+          new_status: "approved",
+          comment: `Aprovado automaticamente pela IA. Confiança: ${confidence}%. Risco: ${analysis.risk_level}.`,
+        });
+
+        autoDecision = { action: "auto_approved", new_status: "approved" };
+      } else if (analysis.verdict === "reject" && confidence >= 60) {
+        await serviceSupabase.from("agent_outputs")
+          .update({ status: "rejected" })
+          .eq("id", artifactId);
+
+        await serviceSupabase.from("artifact_reviews").insert({
+          output_id: artifactId,
+          reviewer_id: user.id,
+          action: "auto_rejected",
+          previous_status: artifact.status,
+          new_status: "rejected",
+          comment: `Rejeitado automaticamente pela IA. Confiança: ${confidence}%. Issues: ${(analysis.issues || []).join("; ")}`,
+        });
+
+        autoDecision = { action: "auto_rejected", new_status: "rejected" };
+      } else if (analysis.verdict === "request_changes") {
+        await serviceSupabase.from("agent_outputs")
+          .update({ status: "pending_review" })
+          .eq("id", artifactId);
+
+        await serviceSupabase.from("artifact_reviews").insert({
+          output_id: artifactId,
+          reviewer_id: user.id,
+          action: "ai_request_changes",
+          previous_status: artifact.status,
+          new_status: "pending_review",
+          comment: `IA solicita alterações. Score de confiança: ${confidence}%. Sugestões: ${(analysis.suggestions || []).join("; ")}`,
+        });
+
+        autoDecision = { action: "request_changes", new_status: "pending_review" };
+      }
+    }
+
+    return new Response(JSON.stringify({ success: true, analysis, reasoning: reasoning?.substring(0, 2000) || null, autoDecision }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
