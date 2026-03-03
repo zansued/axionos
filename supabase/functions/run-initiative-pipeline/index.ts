@@ -1297,16 +1297,24 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
       }
     }
 
-    // ========== STAGE 6: PUBLISH (create branch, commit artifacts, open PR) ==========
+    // ========== STAGE 6: PUBLISH (create NEW repo, commit artifacts, open PR or push to main) ==========
     if (stage === "publish") {
-      if (!github_token || !owner || !repo) {
-        return new Response(JSON.stringify({ error: "github_token, owner e repo são obrigatórios para publicar." }), {
+      if (!github_token || !owner) {
+        return new Response(JSON.stringify({ error: "github_token e owner são obrigatórios para publicar." }), {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      const jobId = await createJob("publish", { owner, repo, base_branch: base_branch || "main" });
-      await log("pipeline_publish_start", "Iniciando publicação via GitHub com IA...");
+      // Generate a slug for the new repo name
+      const repoSlug = (repo || initiative.title)
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "")
+        .slice(0, 50) || `axion-${initiativeId.slice(0, 8)}`;
+
+      const jobId = await createJob("publish", { owner, repo: repoSlug, base_branch: "main" });
+      await log("pipeline_publish_start", "Criando novo repositório e publicando artefatos...");
 
       const ghHeaders = {
         Authorization: `Bearer ${github_token}`,
@@ -1326,45 +1334,66 @@ Descrição: "${initiative.description || ""}"
 Complexidade: ${initiative.complexity || "medium"}`,
       );
       const branchName = branchAI.content.trim().replace(/[^a-zA-Z0-9/_-]/g, "-").slice(0, 60) || `feat/initiative-${initiativeId.slice(0, 8)}`;
-      const baseBranch = base_branch || "main";
 
       try {
-        // 1. Get base branch SHA (handle empty repos)
-        let baseSha: string;
-        let repoWasEmpty = false;
-        const refResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/ref/heads/${baseBranch}`, { headers: ghHeaders });
-        if (!refResp.ok) {
-          // Check if repo is empty (409 = empty repo)
-          if (refResp.status === 409 || refResp.status === 404) {
-            console.log("Repository appears empty, creating initial commit via Contents API...");
-            // Use Contents API which handles empty repos automatically
-            const initResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/contents/README.md`, {
-              method: "PUT", headers: ghHeaders,
-              body: JSON.stringify({
-                message: "chore: initial commit",
-                content: btoa(`# ${initiative.title}\n\nGerado pelo AxionOS`),
-                branch: baseBranch,
-              }),
-            });
-            if (!initResp.ok) {
-              const errText = await initResp.text();
-              console.error("Init commit error:", errText);
-              throw new Error(`Falha ao criar commit inicial: ${initResp.status}`);
-            }
-            const initData = await initResp.json();
-            baseSha = initData.commit.sha;
-            repoWasEmpty = true;
-          } else {
-            const t = await refResp.text();
-            throw new Error(`Branch base '${baseBranch}' não encontrada: ${t}`);
-          }
-        } else {
-          const refData = await refResp.json();
-          baseSha = refData.object.sha;
+        // 1. CREATE NEW REPOSITORY via GitHub API
+        let actualOwner = owner;
+        let actualRepo = repoSlug;
+        let repoHtmlUrl: string;
+
+        // Check if creating under an org or user
+        let createUrl = `${GITHUB_API}/user/repos`;
+        const createBody: any = {
+          name: repoSlug,
+          description: `${initiative.title} — Gerado pelo AxionOS`,
+          private: false,
+          auto_init: true,
+        };
+
+        // Check if owner is an org
+        const orgCheck = await fetch(`${GITHUB_API}/orgs/${owner}`, { headers: ghHeaders });
+        if (orgCheck.ok) {
+          createUrl = `${GITHUB_API}/orgs/${owner}/repos`;
         }
 
-        // 2. Create feature branch
-        const createBranchResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/refs`, {
+        const createRepoResp = await fetch(createUrl, {
+          method: "POST",
+          headers: ghHeaders,
+          body: JSON.stringify(createBody),
+        });
+
+        if (createRepoResp.ok) {
+          const repoData = await createRepoResp.json();
+          actualOwner = repoData.owner?.login || owner;
+          actualRepo = repoData.name || repoSlug;
+          repoHtmlUrl = repoData.html_url;
+          console.log(`Created new repo: ${actualOwner}/${actualRepo}`);
+        } else {
+          const errData = await createRepoResp.json();
+          // If repo already exists, use it
+          if (errData.errors?.[0]?.message?.includes("name already exists")) {
+            console.log(`Repo ${owner}/${repoSlug} already exists, using it`);
+            repoHtmlUrl = `https://github.com/${owner}/${repoSlug}`;
+          } else {
+            throw new Error(`Falha ao criar repositório: ${errData.message}`);
+          }
+        }
+
+        // Wait a moment for GitHub to initialize the repo
+        await new Promise(r => setTimeout(r, 2000));
+
+        // 2. Get base branch SHA
+        const baseBranch = "main";
+        let baseSha: string;
+        const refResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/ref/heads/${baseBranch}`, { headers: ghHeaders });
+        if (!refResp.ok) {
+          throw new Error(`Branch base '${baseBranch}' não encontrada no novo repositório. Tente novamente.`);
+        }
+        const refData = await refResp.json();
+        baseSha = refData.object.sha;
+
+        // 3. Create feature branch
+        const createBranchResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/refs`, {
           method: "POST", headers: ghHeaders,
           body: JSON.stringify({ ref: `refs/heads/${branchName}`, sha: baseSha }),
         });
@@ -1462,7 +1491,7 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
           // Use AI-generated commit message or fallback
           const commitMsg = commitMessages[i] || `feat: add ${commitPath.split("/").pop()}`;
 
-          const commitResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/contents/${commitPath}`, {
+          const commitResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${commitPath}`, {
             method: "PUT", headers: ghHeaders,
             body: JSON.stringify({
               message: commitMsg,
@@ -1540,7 +1569,7 @@ ${skippedFiles.length > 0 ? `\n### ⚠️ Arquivos não commitados (${skippedFil
 ---
 *Gerado automaticamente pelo AxionOS com revisão e validação por agentes de IA*`;
 
-        const prResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/pulls`, {
+        const prResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/pulls`, {
           method: "POST", headers: ghHeaders,
           body: JSON.stringify({
             title: prTitle,
@@ -1569,13 +1598,14 @@ ${skippedFiles.length > 0 ? `\n### ⚠️ Arquivos não commitados (${skippedFil
           pr_url: prUrl,
           pr_number: prNumber,
           pr_title: prTitle,
-          owner,
-          repo,
+          owner: actualOwner,
+          repo: actualRepo,
+          repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
           ai_generated: { branch: branchName, pr_title: prTitle, commit_count: commitMessages.length },
         }, { model: "google/gemini-2.5-flash", costUsd: totalAiCost, durationMs: 0 });
 
-        await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos, PR #${prNumber || "N/A"} (${prTitle})`, {
-          branch: branchName, pr_url: prUrl, ai_tokens: totalAiTokens,
+        await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos em ${actualOwner}/${actualRepo}, PR #${prNumber || "N/A"}`, {
+          branch: branchName, pr_url: prUrl, ai_tokens: totalAiTokens, repo: `${actualOwner}/${actualRepo}`,
         });
 
         return new Response(JSON.stringify({
@@ -1585,8 +1615,9 @@ ${skippedFiles.length > 0 ? `\n### ⚠️ Arquivos não commitados (${skippedFil
           pr_url: prUrl,
           pr_number: prNumber,
           pr_title: prTitle,
-          owner,
-          repo,
+          owner: actualOwner,
+          repo: actualRepo,
+          repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
           job_id: jobId,
         }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       } catch (e) {

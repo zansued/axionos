@@ -29,7 +29,8 @@ Deno.serve(async (req) => {
     const { action, github_token, owner, repo, ...params } = body;
 
     if (!github_token) throw new Error("GitHub token is required");
-    if (!owner || !repo) throw new Error("owner and repo are required");
+    // owner and repo not required for create_repo
+    if (action !== "create_repo" && (!owner || !repo)) throw new Error("owner and repo are required");
 
     const ghHeaders = {
       Authorization: `Bearer ${github_token}`,
@@ -139,6 +140,53 @@ Deno.serve(async (req) => {
           throw new Error(err.message || "Failed to commit");
         }
         result = await resp.json();
+        break;
+      }
+
+      case "create_repo": {
+        const { name, description, is_private } = params;
+        if (!name) throw new Error("name is required for create_repo");
+
+        // Check if creating under an org or user
+        // Try org first, fallback to user
+        let createUrl = `${GITHUB_API}/user/repos`;
+        const createBody: any = {
+          name,
+          description: description || "",
+          private: is_private !== false,
+          auto_init: true, // Creates with README so repo isn't empty
+        };
+
+        // If owner looks like an org (not the authenticated user), use org endpoint
+        if (owner && owner !== "user") {
+          // Check if owner is an org
+          const orgCheck = await fetch(`${GITHUB_API}/orgs/${owner}`, { headers: ghHeaders });
+          if (orgCheck.ok) {
+            createUrl = `${GITHUB_API}/orgs/${owner}/repos`;
+          } else {
+            // It's a user account, use user/repos
+            createBody.name = name;
+          }
+        }
+
+        const resp = await fetch(createUrl, {
+          method: "POST",
+          headers: ghHeaders,
+          body: JSON.stringify(createBody),
+        });
+        if (!resp.ok) {
+          const err = await resp.json();
+          throw new Error(err.message || "Failed to create repository");
+        }
+        const repoData = await resp.json();
+        result = {
+          full_name: repoData.full_name,
+          html_url: repoData.html_url,
+          clone_url: repoData.clone_url,
+          default_branch: repoData.default_branch,
+          owner: repoData.owner?.login,
+          name: repoData.name,
+        };
         break;
       }
 
