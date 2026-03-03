@@ -9,7 +9,7 @@ export function getAIConfig() {
       ? "https://api.openai.com/v1/chat/completions"
       : "https://ai.gateway.lovable.dev/v1/chat/completions",
     key: useOpenAI ? OPENAI_API_KEY! : (Deno.env.get("LOVABLE_API_KEY") || ""),
-    model: useOpenAI ? "gpt-4o" : "google/gemini-2.5-flash",
-    proModel: useOpenAI ? "gpt-4o" : "google/gemini-2.5-pro",
+    model: useOpenAI ? "gpt-4o-mini" : "google/gemini-2.5-flash",
+    proModel: useOpenAI ? "gpt-4o-mini" : "google/gemini-2.5-pro",
   };
 }
