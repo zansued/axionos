@@ -145,16 +145,53 @@ serve(async (req) => {
 
     // ========== STAGE 1: DISCOVERY ==========
     if (stage === "discovery") {
-      const jobId = await createJob("discovery", { title: initiative.title, description: initiative.description });
+      const jobId = await createJob("discovery", { title: initiative.title, description: initiative.description, reference_url: initiative.reference_url });
       await updateInit({ stage_status: "discovering" });
       await log("pipeline_discovery_start", "Iniciando descoberta inteligente...");
 
       try {
+        // Scrape reference URL if provided
+        let referenceContent = "";
+        if (initiative.reference_url) {
+          const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
+          if (FIRECRAWL_API_KEY) {
+            try {
+              console.log("Scraping reference URL:", initiative.reference_url);
+              const scrapeResp = await fetch("https://api.firecrawl.dev/v1/scrape", {
+                method: "POST",
+                headers: {
+                  "Authorization": `Bearer ${FIRECRAWL_API_KEY}`,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  url: initiative.reference_url,
+                  formats: ["markdown"],
+                  onlyMainContent: true,
+                }),
+              });
+              if (scrapeResp.ok) {
+                const scrapeData = await scrapeResp.json();
+                const md = scrapeData?.data?.markdown || scrapeData?.markdown || "";
+                referenceContent = md.slice(0, 8000);
+                console.log(`Scraped ${referenceContent.length} chars from reference URL`);
+              } else {
+                console.warn("Firecrawl scrape failed:", scrapeResp.status);
+              }
+            } catch (scrapeErr) {
+              console.warn("Firecrawl scrape error:", scrapeErr);
+            }
+          }
+        }
+
+        const referenceBlock = referenceContent
+          ? `\n\nSITE DE REFERÊNCIA (${initiative.reference_url}):\n---\n${referenceContent}\n---\nUse este site como inspiração e referência para a análise. Identifique funcionalidades, estrutura, público-alvo e modelo de negócio com base no conteúdo do site.`
+          : "";
+
         const result = await callAI(
           LOVABLE_API_KEY,
           `Você é um consultor de produto e estratégia sênior. Analise a ideia do usuário e produza uma descoberta inteligente completa. Retorne APENAS JSON válido.`,
           `Ideia do usuário: "${initiative.title}"
-${initiative.description ? `Descrição: ${initiative.description}` : ""}
+${initiative.description ? `Descrição: ${initiative.description}` : ""}${referenceBlock}
 
 Produza uma análise completa no seguinte formato JSON:
 {
@@ -188,11 +225,11 @@ Produza uma análise completa no seguinte formato JSON:
           complexity: discovery.complexity,
           risk_level: discovery.risk_level,
           target_user: discovery.target_user,
-          discovery_payload: discovery,
+          discovery_payload: { ...discovery, reference_url: initiative.reference_url, reference_scraped: !!referenceContent },
         });
 
         if (jobId) await completeJob(jobId, discovery, result);
-        await log("pipeline_discovery_complete", "Descoberta inteligente concluída", { tokens: result.tokens, cost_usd: result.costUsd });
+        await log("pipeline_discovery_complete", "Descoberta inteligente concluída", { tokens: result.tokens, cost_usd: result.costUsd, reference_scraped: !!referenceContent });
 
         return new Response(JSON.stringify({ success: true, discovery, tokens: result.tokens, job_id: jobId }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -284,7 +321,9 @@ Ideia refinada: ${dp.refined_idea || initiative.refined_idea || ""}
 Modelo de Negócio: ${dp.business_model || initiative.business_model || "N/A"}
 MVP: ${dp.mvp_scope || initiative.mvp_scope || "N/A"}
 Stack: Vite + React + TypeScript + Tailwind CSS + shadcn/ui
-Visão Estratégica: ${dp.strategic_vision || "N/A"}`;
+Visão Estratégica: ${dp.strategic_vision || "N/A"}
+${dp.reference_url ? `URL de Referência: ${dp.reference_url}` : ""}
+${dp.reference_scraped ? "NOTA: O conteúdo do site de referência foi analisado durante o Discovery. Use as conclusões do Discovery para guiar o planejamento." : ""}`;
 
         // Step 1: PRD
         const prdResult = await callAI(

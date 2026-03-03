@@ -650,6 +650,7 @@ export type Database = {
           notes: string | null
           organization_id: string
           prd_content: string | null
+          reference_url: string | null
           refined_idea: string | null
           risk_level: string | null
           stage_status: Database["public"]["Enums"]["initiative_stage_status"]
@@ -682,6 +683,7 @@ export type Database = {
           notes?: string | null
           organization_id: string
           prd_content?: string | null
+          reference_url?: string | null
           refined_idea?: string | null
           risk_level?: string | null
           stage_status?: Database["public"]["Enums"]["initiative_stage_status"]
@@ -714,6 +716,7 @@ export type Database = {
           notes?: string | null
           organization_id?: string
           prd_content?: string | null
+          reference_url?: string | null
           refined_idea?: string | null
           risk_level?: string | null
           stage_status?: Database["public"]["Enums"]["initiative_stage_status"]
