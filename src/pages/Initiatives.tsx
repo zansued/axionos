@@ -130,6 +130,16 @@ export default function Initiatives() {
       queryClient.invalidateQueries({ queryKey: ["initiatives"] });
       queryClient.invalidateQueries({ queryKey: ["initiative-jobs"] });
       queryClient.invalidateQueries({ queryKey: ["squads"] });
+
+      // === Auto-trigger validation after execution completes ===
+      if (stage === "execution" && result.success) {
+        toast({ title: "🔍 Iniciando validação automática dos artefatos..." });
+        // Small delay to let UI update before starting validation
+        setTimeout(() => {
+          runStage(initiativeId, "validation");
+        }, 1500);
+        return; // Don't clear runningStage yet, validation will handle it
+      }
     } catch (e: any) {
       toast({ variant: "destructive", title: "Erro", description: e.message });
     } finally {
