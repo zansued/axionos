@@ -31,10 +31,11 @@
 
 ## Fase 3 — Execução Autônoma Real
 
-- [ ] Subtasks executadas automaticamente em sequência (sem clique manual por subtask)
+- [x] Subtasks executadas automaticamente em sequência (sem clique manual por subtask)
+- [x] Retry automático com backoff exponencial em caso de falha (até 3 tentativas)
+- [x] Barra de progresso em tempo real (Realtime via Supabase)
+- [x] Progresso salvo incrementalmente (resume em caso de timeout)
 - [ ] Paralelização: subtasks independentes executam em paralelo
-- [ ] Retry automático com backoff em caso de falha
-- [ ] Barra de progresso em tempo real (Realtime via Supabase)
 - [ ] Notificação quando execução completa (toast + badge no menu)
 
 ---
