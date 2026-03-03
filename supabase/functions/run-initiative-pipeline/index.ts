@@ -8,6 +8,15 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const DEPLOY_VERCEL_CONFIG = {
+  framework: "vite",
+  installCommand: "npm install --include=dev",
+  buildCommand: "npm run build",
+  outputDirectory: "dist",
+  rewrites: [{ source: "/(.*)", destination: "/index.html" }],
+};
+const DEPLOY_VERCEL_JSON = JSON.stringify(DEPLOY_VERCEL_CONFIG, null, 2);
+
 async function callAI(apiKey: string, systemPrompt: string, userPrompt: string, jsonMode = false, maxRetries = 3) {
   let lastError: Error | null = null;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -361,7 +370,7 @@ IMPORTANTE:
 - A primeira story DEVE ser "Scaffold do Projeto" com os arquivos base
 - file_type pode ser: scaffold, component, page, style, config, hook, util, test, type
 - Subtasks de scaffold incluem: package.json, vite.config.ts, tsconfig.json, tailwind.config.ts, index.html, src/main.tsx, src/App.tsx, src/index.css, vercel.json, public/_redirects
-- vercel.json DEVE conter: { "framework": "vite", "buildCommand": "npm run build", "outputDirectory": "dist", "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+- vercel.json DEVE conter: { "framework": "vite", "installCommand": "npm install --include=dev", "buildCommand": "npm run build", "outputDirectory": "dist", "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
 - public/_redirects DEVE conter: /* /index.html 200  (para Netlify)
 - Use paths relativos ao root do projeto (ex: src/components/Header.tsx)`,
           `Projeto: ${initiative.title}
@@ -753,7 +762,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
 
         // Deterministic overrides for deploy-critical files (never trust AI for these)
         const DETERMINISTIC_FILES: Record<string, string> = {
-          "vercel.json": JSON.stringify({ buildCommand: "npm run build", outputDirectory: "dist", installCommand: "npm install", rewrites: [{ source: "/(.*)", destination: "/index.html" }] }, null, 2),
+          "vercel.json": DEPLOY_VERCEL_JSON,
           "public/_redirects": "/* /index.html 200",
           "netlify.toml": "[build]\n  command = \"npm run build\"\n  publish = \"dist\"\n\n[[redirects]]\n  from = \"/*\"\n  to = \"/index.html\"\n  status = 200",
         };
@@ -845,7 +854,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                   // --- Step 2: DEV generates code using Architect's spec ---
                   const devResult = await callAI(
                     LOVABLE_API_KEY,
-                    `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use shadcn/ui, Tailwind CSS, imports corretos.\n- Siga as melhores práticas de ${language}.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use React Helmet para SEO dinâmico.`,
+                    `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use shadcn/ui, Tailwind CSS, imports corretos.\n- Siga as melhores práticas de ${language}.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use React Helmet para SEO dinâmico.`,
                     `${baseContext}\n\n## Especificação do Architect:\n${archResult.content}`
                   );
                   let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
@@ -938,7 +947,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
 
                   const result = await callAI(
                     LOVABLE_API_KEY,
-                    `Você é um desenvolvedor expert em Vite + React + TypeScript + Tailwind CSS + shadcn/ui.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use shadcn/ui, Tailwind CSS.\n- Siga as melhores práticas de ${language}.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use caminhos absolutos ou omita canonical.`,
+                    `Você é um desenvolvedor expert em Vite + React + TypeScript + Tailwind CSS + shadcn/ui.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use shadcn/ui, Tailwind CSS.\n- Siga as melhores práticas de ${language}.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use caminhos absolutos ou omita canonical.`,
                     `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1500)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1500)}` : ""}\n\nGere o conteúdo COMPLETO do arquivo. Retorne APENAS o código.`
                   );
 
@@ -1961,7 +1970,27 @@ Return format:
           throw new Error("AI não retornou JSON válido na análise");
         }
 
-        const fixes = reviewData.fixes || [];
+        const fixes = Array.isArray(reviewData.fixes) ? reviewData.fixes : [];
+        const needsViteDeployHotfix = /vite:\s*command not found|command\s+"vite build"\s+exited\s+with\s+127/i.test(reviewPrompt);
+
+        // Enforce deterministic Vercel config on review fixes
+        for (const fix of fixes) {
+          if (fix?.file_path === "vercel.json") {
+            fix.content = DEPLOY_VERCEL_JSON;
+            fix.reason = fix.reason || "Garantir build Vite com devDependencies no ambiente de deploy";
+          }
+        }
+
+        // Auto-add vercel.json hotfix when user reports missing vite in build logs
+        if (needsViteDeployHotfix && !fixes.some((f: any) => f?.file_path === "vercel.json")) {
+          fixes.push({
+            file_path: "vercel.json",
+            reason: "Corrigir deploy: instalar devDependencies para disponibilizar o binário do Vite",
+            content: DEPLOY_VERCEL_JSON,
+            is_new: true,
+          });
+        }
+
         const diagnosis = reviewData.diagnosis || "Análise concluída";
         let filesModified = 0;
         let filesCommitted = 0;
