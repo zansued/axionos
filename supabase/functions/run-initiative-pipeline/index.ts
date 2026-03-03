@@ -1296,7 +1296,7 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
       }
 
       const jobId = await createJob("publish", { owner, repo, base_branch: base_branch || "main" });
-      await log("pipeline_publish_start", "Iniciando publicação via GitHub...");
+      await log("pipeline_publish_start", "Iniciando publicação via GitHub com IA...");
 
       const ghHeaders = {
         Authorization: `Bearer ${github_token}`,
@@ -1304,7 +1304,18 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
         "Content-Type": "application/json",
       };
       const GITHUB_API = "https://api.github.com";
-      const branchName = `axion/initiative-${initiativeId.slice(0, 8)}-${Date.now()}`;
+
+      // === AI: Generate semantic branch name ===
+      const branchAI = await callAI(
+        LOVABLE_API_KEY,
+        `Você gera nomes de branch Git seguindo conventional naming.
+Regras: prefixo feat/ fix/ ou chore/, kebab-case, max 50 chars, sem caracteres especiais, sem acentos.
+Retorne APENAS o nome da branch, nada mais.`,
+        `Título da iniciativa: "${initiative.title}"
+Descrição: "${initiative.description || ""}"
+Complexidade: ${initiative.complexity || "medium"}`,
+      );
+      const branchName = branchAI.content.trim().replace(/[^a-zA-Z0-9/_-]/g, "-").slice(0, 60) || `feat/initiative-${initiativeId.slice(0, 8)}`;
       const baseBranch = base_branch || "main";
 
       try {
@@ -1340,9 +1351,9 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
           .select("id, description, file_path, file_type").in("phase_id", phaseIds);
         
         // Build a map of subtask_id -> file_path for quick lookup
-        const subtaskFileMap = new Map<string, { file_path: string | null; file_type: string | null }>();
+        const subtaskFileMap = new Map<string, { file_path: string | null; file_type: string | null; description: string }>();
         for (const st of (subtasks || [])) {
-          subtaskFileMap.set(st.id, { file_path: st.file_path, file_type: st.file_type });
+          subtaskFileMap.set(st.id, { file_path: st.file_path, file_type: st.file_type, description: st.description });
         }
         const subtaskIds = (subtasks || []).map((st: any) => st.id);
 
@@ -1353,7 +1364,29 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
 
         if (!artifacts || artifacts.length === 0) throw new Error("Nenhum artefato encontrado para publicar");
 
-        // 4. Commit each artifact using real file_path from subtask
+        // === AI: Generate semantic commit messages in batch ===
+        const fileList = artifacts.map((art: any, i: number) => {
+          const si = art.subtask_id ? subtaskFileMap.get(art.subtask_id) : null;
+          const fp = (art.raw_output as any)?.file_path || si?.file_path || `artifact-${i}`;
+          return `${i}. ${fp} (${si?.file_type || art.type}) — ${si?.description || art.summary || fp}`;
+        });
+
+        const commitMsgResult = await callAI(
+          LOVABLE_API_KEY,
+          `Você gera commit messages seguindo Conventional Commits (feat:, fix:, chore:, docs:, style:, refactor:, test:).
+Regras: max 72 chars por mensagem, imperativo, em inglês, sem ponto final.
+Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem.`,
+          `Arquivos para commit (na ordem):\n${fileList.join("\n")}\n\nRetorne JSON: ["feat: add header component", ...]`,
+          true
+        );
+
+        let commitMessages: string[] = [];
+        try {
+          const parsed = JSON.parse(commitMsgResult.content);
+          commitMessages = Array.isArray(parsed) ? parsed : (parsed.messages || parsed.commits || []);
+        } catch { commitMessages = []; }
+
+        // 4. Commit each artifact with semantic commit messages
         const committedFiles: string[] = [];
         const skippedFiles: string[] = [];
 
@@ -1391,10 +1424,13 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
             }
           }
 
+          // Use AI-generated commit message or fallback
+          const commitMsg = commitMessages[i] || `feat: add ${commitPath.split("/").pop()}`;
+
           const commitResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/contents/${commitPath}`, {
             method: "PUT", headers: ghHeaders,
             body: JSON.stringify({
-              message: `[AxionOS] ${filePath ? commitPath : art.type + ": " + (art.summary?.slice(0, 60) || "artifact")}`,
+              message: commitMsg,
               content: btoa(unescape(encodeURIComponent(fileContent))),
               branch: branchName,
             }),
@@ -1424,32 +1460,55 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
           .map(([dir, files]) => `**${dir}/**\n${files.map(f => `  - \`${f.split("/").pop()}\``).join("\n")}`)
           .join("\n\n");
 
+        // === AI: Generate rich PR description ===
+        const prDescResult = await callAI(
+          LOVABLE_API_KEY,
+          `Você é um engenheiro sênior criando a descrição de um Pull Request no GitHub.
+Escreva em português brasileiro, use markdown. Seja conciso mas completo.
+Inclua: resumo executivo, principais mudanças, decisões arquiteturais, como testar, e riscos conhecidos.
+NÃO inclua o título do PR. Comece direto com o conteúdo.`,
+          `Iniciativa: "${initiative.title}"
+Descrição: "${initiative.description || "N/A"}"
+Stack: ${initiative.suggested_stack || "Vite + React + TypeScript + Tailwind CSS + shadcn/ui"}
+Complexidade: ${initiative.complexity || "medium"}
+Arquivos (${committedFiles.length}): ${committedFiles.slice(0, 30).join(", ")}
+Stories: ${(stories || []).map((s: any) => s.title).join(", ")}`
+        );
+
+        // === AI: Generate semantic PR title ===
+        const prTitleResult = await callAI(
+          LOVABLE_API_KEY,
+          `Gere um título de Pull Request seguindo Conventional Commits. Formato: "feat: descrição curta" ou "feat(escopo): descrição". Max 72 chars, em inglês, imperativo. Retorne APENAS o título.`,
+          `Iniciativa: "${initiative.title}"\nDescrição: "${initiative.description || ""}"\nArquivos: ${committedFiles.length}`
+        );
+        const prTitle = prTitleResult.content.trim().slice(0, 80) || `feat: ${initiative.title}`;
+
         const prBody = `## 🚀 AxionOS — Code Generation Engine
 
-### Iniciativa: ${initiative.title}
-${initiative.description || ""}
+${prDescResult.content}
 
-### 📁 Arquivos gerados (${committedFiles.length})
+---
+
+### 📁 Estrutura de Arquivos (${committedFiles.length})
 ${fileTree}
 ${skippedFiles.length > 0 ? `\n### ⚠️ Arquivos não commitados (${skippedFiles.length})\n${skippedFiles.map(f => `- \`${f}\``).join("\n")}` : ""}
 
-### Pipeline
-- **Discovery**: ${initiative.approved_at_discovery ? "✅" : "⏳"}
-- **Squad**: ${initiative.approved_at_squad ? "✅" : "⏳"}
-- **Planning**: ${initiative.approved_at_planning ? "✅" : "⏳"}
-- **Execução**: ✅
-- **Validação**: ✅
-
-### 🛠️ Stack
-Vite + React + TypeScript + Tailwind CSS + shadcn/ui
+### Pipeline de Governança
+| Estágio | Status |
+|---------|--------|
+| Discovery | ${initiative.approved_at_discovery ? "✅ Aprovado" : "⏳"} |
+| Squad | ${initiative.approved_at_squad ? "✅ Aprovado" : "⏳"} |
+| Planning | ${initiative.approved_at_planning ? "✅ Aprovado" : "⏳"} |
+| Execução | ✅ Concluído |
+| Validação | ✅ Concluído |
 
 ---
-*Projeto funcional gerado automaticamente pelo AxionOS Code Generation Engine*`;
+*Gerado automaticamente pelo AxionOS com revisão e validação por agentes de IA*`;
 
         const prResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/pulls`, {
           method: "POST", headers: ghHeaders,
           body: JSON.stringify({
-            title: `[AxionOS] ${initiative.title}`,
+            title: prTitle,
             head: branchName,
             base: baseBranch,
             body: prBody,
@@ -1466,15 +1525,20 @@ Vite + React + TypeScript + Tailwind CSS + shadcn/ui
 
         await updateInit({ stage_status: "published" });
 
+        const totalAiTokens = (branchAI.tokens || 0) + (commitMsgResult.tokens || 0) + (prDescResult.tokens || 0) + (prTitleResult.tokens || 0);
+        const totalAiCost = (branchAI.costUsd || 0) + (commitMsgResult.costUsd || 0) + (prDescResult.costUsd || 0) + (prTitleResult.costUsd || 0);
+
         if (jobId) await completeJob(jobId, {
           branch: branchName,
           files_committed: committedFiles.length,
           pr_url: prUrl,
           pr_number: prNumber,
-        }, { model: "github-api", costUsd: 0, durationMs: 0 });
+          pr_title: prTitle,
+          ai_generated: { branch: branchName, pr_title: prTitle, commit_count: commitMessages.length },
+        }, { model: "google/gemini-2.5-flash", costUsd: totalAiCost, durationMs: 0 });
 
-        await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos, PR #${prNumber || "N/A"}`, {
-          branch: branchName, pr_url: prUrl,
+        await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos, PR #${prNumber || "N/A"} (${prTitle})`, {
+          branch: branchName, pr_url: prUrl, ai_tokens: totalAiTokens,
         });
 
         return new Response(JSON.stringify({
@@ -1483,6 +1547,7 @@ Vite + React + TypeScript + Tailwind CSS + shadcn/ui
           files_committed: committedFiles.length,
           pr_url: prUrl,
           pr_number: prNumber,
+          pr_title: prTitle,
           job_id: jobId,
         }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       } catch (e) {

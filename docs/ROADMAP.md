@@ -55,9 +55,9 @@
 
 ## Fase 5 — Publish & Git Avançado
 
-- [ ] Geração automática de branch name baseada na initiative
-- [ ] Commit messages semânticos gerados pelo agente
-- [ ] PR description gerada automaticamente com resumo do que foi feito
+- [x] Geração automática de branch name baseada na initiative
+- [x] Commit messages semânticos gerados pelo agente
+- [x] PR description gerada automaticamente com resumo do que foi feito
 - [ ] Suporte a múltiplos repositórios por organização
 - [ ] Webhook para notificar quando PR é mergeado → atualizar status
 
