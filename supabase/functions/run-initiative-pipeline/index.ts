@@ -1568,6 +1568,8 @@ ${skippedFiles.length > 0 ? `\n### ⚠️ Arquivos não commitados (${skippedFil
           pr_url: prUrl,
           pr_number: prNumber,
           pr_title: prTitle,
+          owner,
+          repo,
           ai_generated: { branch: branchName, pr_title: prTitle, commit_count: commitMessages.length },
         }, { model: "google/gemini-2.5-flash", costUsd: totalAiCost, durationMs: 0 });
 
@@ -1582,6 +1584,8 @@ ${skippedFiles.length > 0 ? `\n### ⚠️ Arquivos não commitados (${skippedFil
           pr_url: prUrl,
           pr_number: prNumber,
           pr_title: prTitle,
+          owner,
+          repo,
           job_id: jobId,
         }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       } catch (e) {
