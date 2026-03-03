@@ -153,14 +153,21 @@ serve(async (req) => {
         // Scrape reference URL if provided
         let referenceContent = "";
         if (initiative.reference_url) {
-          const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
-          if (FIRECRAWL_API_KEY) {
+          // Prefer self-hosted Firecrawl, fallback to cloud
+          const selfHostedUrl = Deno.env.get("FIRECRAWL_SELF_HOSTED_URL");
+          const selfHostedKey = Deno.env.get("FIRECRAWL_SELF_HOSTED_KEY");
+          const cloudKey = Deno.env.get("FIRECRAWL_API_KEY");
+
+          const firecrawlBaseUrl = selfHostedUrl || "https://api.firecrawl.dev";
+          const firecrawlApiKey = selfHostedUrl ? selfHostedKey : cloudKey;
+
+          if (firecrawlApiKey) {
             try {
-              console.log("Scraping reference URL:", initiative.reference_url);
-              const scrapeResp = await fetch("https://api.firecrawl.dev/v1/scrape", {
+              console.log("Scraping reference URL:", initiative.reference_url, "via", selfHostedUrl ? "self-hosted" : "cloud");
+              const scrapeResp = await fetch(`${firecrawlBaseUrl}/v1/scrape`, {
                 method: "POST",
                 headers: {
-                  "Authorization": `Bearer ${FIRECRAWL_API_KEY}`,
+                  "Authorization": `Bearer ${firecrawlApiKey}`,
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
