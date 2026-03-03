@@ -117,9 +117,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
     setPublishOpen(false);
   };
 
-  // Find publish job with PR URL
+  // Find publish job with repo URL
   const publishJob = jobs.find((j: any) => j.stage === "publish" && j.status === "success");
-  const prUrl = publishJob?.outputs?.pr_url;
+  const repoUrl = publishJob?.outputs?.repo_url;
 
   return (
     <div className="space-y-4">
@@ -202,9 +202,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
             {initiative.approved_at_planning && (
               <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-success" /> Planning aprovado</span>
             )}
-            {prUrl && (
-              <a href={prUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-primary hover:underline">
-                <GitBranch className="h-3 w-3" /> Pull Request
+            {repoUrl && (
+              <a href={repoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-primary hover:underline">
+                <GitBranch className="h-3 w-3" /> Repositório
                 <ExternalLink className="h-2.5 w-2.5" />
               </a>
             )}
@@ -339,36 +339,26 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
       {/* Execution Progress (real-time) */}
       <ExecutionProgress initiativeId={initiative.id} stageStatus={stageStatus} />
 
-      {/* PR Result Card */}
-      {prUrl && (
+      {/* Repo Result Card */}
+      {repoUrl && (
         <Card className="border-primary/30 bg-primary/5">
           <CardContent className="p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <GitBranch className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-sm font-medium">Repositório criado com sucesso</p>
+                  <p className="text-sm font-medium">Código publicado direto no main ✅</p>
                   <p className="text-xs text-muted-foreground font-mono">
-                    {publishJob?.outputs?.owner}/{publishJob?.outputs?.repo}
-                    {publishJob?.outputs?.branch && ` → ${publishJob.outputs.branch}`}
+                    {publishJob?.outputs?.owner}/{publishJob?.outputs?.repo} → main
                   </p>
                 </div>
               </div>
               <div className="flex gap-1.5">
-                {publishJob?.outputs?.repo_url && (
-                  <a href={publishJob.outputs.repo_url} target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline" size="sm" className="gap-1.5">
-                      Repo <ExternalLink className="h-3.5 w-3.5" />
-                    </Button>
-                  </a>
-                )}
-                {prUrl && (
-                  <a href={prUrl} target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline" size="sm" className="gap-1.5">
-                      PR <ExternalLink className="h-3.5 w-3.5" />
-                    </Button>
-                  </a>
-                )}
+                <a href={repoUrl} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm" className="gap-1.5">
+                    Repositório <ExternalLink className="h-3.5 w-3.5" />
+                  </Button>
+                </a>
               </div>
             </div>
             <Separator />
@@ -586,9 +576,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                     {job.stage === "rework" && (
                       <span className="text-destructive text-[10px]">⟲ rollback</span>
                     )}
-                    {job.stage === "publish" && job.outputs?.pr_url && (
-                      <a href={job.outputs.pr_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-0.5">
-                        PR <ExternalLink className="h-2.5 w-2.5" />
+                    {job.stage === "publish" && job.outputs?.repo_url && (
+                      <a href={job.outputs.repo_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-0.5">
+                        Repo <ExternalLink className="h-2.5 w-2.5" />
                       </a>
                     )}
                   </div>

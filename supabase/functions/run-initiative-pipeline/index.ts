@@ -1410,17 +1410,7 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
       };
       const GITHUB_API = "https://api.github.com";
 
-      // === AI: Generate semantic branch name ===
-      const branchAI = await callAI(
-        LOVABLE_API_KEY,
-        `Você gera nomes de branch Git seguindo conventional naming.
-Regras: prefixo feat/ fix/ ou chore/, kebab-case, max 50 chars, sem caracteres especiais, sem acentos.
-Retorne APENAS o nome da branch, nada mais.`,
-        `Título da iniciativa: "${initiative.title}"
-Descrição: "${initiative.description || ""}"
-Complexidade: ${initiative.complexity || "medium"}`,
-      );
-      const branchName = branchAI.content.trim().replace(/[^a-zA-Z0-9/_-]/g, "-").slice(0, 60) || `feat/initiative-${initiativeId.slice(0, 8)}`;
+      // Publish directly to main (no branch/PR)
 
       try {
         // 1. CREATE NEW REPOSITORY via GitHub API
@@ -1479,15 +1469,7 @@ Complexidade: ${initiative.complexity || "medium"}`,
         const refData = await refResp.json();
         baseSha = refData.object.sha;
 
-        // 3. Create feature branch
-        const createBranchResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/refs`, {
-          method: "POST", headers: ghHeaders,
-          body: JSON.stringify({ ref: `refs/heads/${branchName}`, sha: baseSha }),
-        });
-        if (!createBranchResp.ok) {
-          const err = await createBranchResp.json();
-          throw new Error(`Falha ao criar branch: ${err.message}`);
-        }
+        // Commits go directly to main
 
         // 3. Collect all artifacts WITH their subtask file_path
         const { data: stories } = await serviceClient.from("stories")
@@ -1583,7 +1565,7 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
             body: JSON.stringify({
               message: commitMsg,
               content: btoa(unescape(encodeURIComponent(fileContent))),
-              branch: branchName,
+              branch: "main",
             }),
           });
           if (commitResp.ok) {
@@ -1597,111 +1579,29 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
 
         if (committedFiles.length === 0) throw new Error("Nenhum arquivo foi commitado com sucesso");
 
-        // 5. Open PR
-        // Organize files by directory for a nice tree view
-        const filesByDir = new Map<string, string[]>();
-        for (const f of committedFiles) {
-          const dir = f.includes("/") ? f.substring(0, f.lastIndexOf("/")) : ".";
-          if (!filesByDir.has(dir)) filesByDir.set(dir, []);
-          filesByDir.get(dir)!.push(f);
-        }
-
-        const fileTree = Array.from(filesByDir.entries())
-          .sort(([a], [b]) => a.localeCompare(b))
-          .map(([dir, files]) => `**${dir}/**\n${files.map(f => `  - \`${f.split("/").pop()}\``).join("\n")}`)
-          .join("\n\n");
-
-        // === AI: Generate rich PR description ===
-        const prDescResult = await callAI(
-          LOVABLE_API_KEY,
-          `Você é um engenheiro sênior criando a descrição de um Pull Request no GitHub.
-Escreva em português brasileiro, use markdown. Seja conciso mas completo.
-Inclua: resumo executivo, principais mudanças, decisões arquiteturais, como testar, e riscos conhecidos.
-NÃO inclua o título do PR. Comece direto com o conteúdo.`,
-          `Iniciativa: "${initiative.title}"
-Descrição: "${initiative.description || "N/A"}"
-Stack: ${initiative.suggested_stack || "Vite + React + TypeScript + Tailwind CSS + shadcn/ui"}
-Complexidade: ${initiative.complexity || "medium"}
-Arquivos (${committedFiles.length}): ${committedFiles.slice(0, 30).join(", ")}
-Stories: ${(stories || []).map((s: any) => s.title).join(", ")}`
-        );
-
-        // === AI: Generate semantic PR title ===
-        const prTitleResult = await callAI(
-          LOVABLE_API_KEY,
-          `Gere um título de Pull Request seguindo Conventional Commits. Formato: "feat: descrição curta" ou "feat(escopo): descrição". Max 72 chars, em inglês, imperativo. Retorne APENAS o título.`,
-          `Iniciativa: "${initiative.title}"\nDescrição: "${initiative.description || ""}"\nArquivos: ${committedFiles.length}`
-        );
-        const prTitle = prTitleResult.content.trim().slice(0, 80) || `feat: ${initiative.title}`;
-
-        const prBody = `## 🚀 AxionOS — Code Generation Engine
-
-${prDescResult.content}
-
----
-
-### 📁 Estrutura de Arquivos (${committedFiles.length})
-${fileTree}
-${skippedFiles.length > 0 ? `\n### ⚠️ Arquivos não commitados (${skippedFiles.length})\n${skippedFiles.map(f => `- \`${f}\``).join("\n")}` : ""}
-
-### Pipeline de Governança
-| Estágio | Status |
-|---------|--------|
-| Discovery | ${initiative.approved_at_discovery ? "✅ Aprovado" : "⏳"} |
-| Squad | ${initiative.approved_at_squad ? "✅ Aprovado" : "⏳"} |
-| Planning | ${initiative.approved_at_planning ? "✅ Aprovado" : "⏳"} |
-| Execução | ✅ Concluído |
-| Validação | ✅ Concluído |
-
----
-*Gerado automaticamente pelo AxionOS com revisão e validação por agentes de IA*`;
-
-        const prResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/pulls`, {
-          method: "POST", headers: ghHeaders,
-          body: JSON.stringify({
-            title: prTitle,
-            head: branchName,
-            base: baseBranch,
-            body: prBody,
-          }),
-        });
-
-        let prUrl = null;
-        let prNumber = null;
-        if (prResp.ok) {
-          const prData = await prResp.json();
-          prUrl = prData.html_url;
-          prNumber = prData.number;
-        }
-
         await updateInit({ stage_status: "published" });
 
-        const totalAiTokens = (branchAI.tokens || 0) + (commitMsgResult.tokens || 0) + (prDescResult.tokens || 0) + (prTitleResult.tokens || 0);
-        const totalAiCost = (branchAI.costUsd || 0) + (commitMsgResult.costUsd || 0) + (prDescResult.costUsd || 0) + (prTitleResult.costUsd || 0);
+        const totalAiTokens = (commitMsgResult.tokens || 0);
+        const totalAiCost = (commitMsgResult.costUsd || 0);
 
         if (jobId) await completeJob(jobId, {
-          branch: branchName,
+          branch: "main",
           files_committed: committedFiles.length,
-          pr_url: prUrl,
-          pr_number: prNumber,
-          pr_title: prTitle,
           owner: actualOwner,
           repo: actualRepo,
           repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
-          ai_generated: { branch: branchName, pr_title: prTitle, commit_count: commitMessages.length },
+          ai_generated: { branch: "main", commit_count: commitMessages.length },
         }, { model: "google/gemini-2.5-flash", costUsd: totalAiCost, durationMs: 0 });
 
-        await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos em ${actualOwner}/${actualRepo}, PR #${prNumber || "N/A"}`, {
-          branch: branchName, pr_url: prUrl, ai_tokens: totalAiTokens, repo: `${actualOwner}/${actualRepo}`,
+        await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos direto no main em ${actualOwner}/${actualRepo}`, {
+          branch: "main", ai_tokens: totalAiTokens, repo: `${actualOwner}/${actualRepo}`,
         });
 
         return new Response(JSON.stringify({
           success: true,
-          branch: branchName,
+          branch: "main",
           files_committed: committedFiles.length,
-          pr_url: prUrl,
-          pr_number: prNumber,
-          pr_title: prTitle,
+          skipped_files: skippedFiles,
           owner: actualOwner,
           repo: actualRepo,
           repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
