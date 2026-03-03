@@ -57,6 +57,10 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
   switch (stageStatus) {
     case "draft":
       return [{ stage: "discovery", label: "Rodar Discovery", type: "run" }];
+    case "discovering":
+      return [
+        { stage: "discovery", label: "Re-executar Discovery", type: "run" },
+      ];
     case "discovered":
       return [
         { stage: "approve", label: "Aprovar Descoberta", type: "approve" },
@@ -64,6 +68,10 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "squad_ready":
       return [{ stage: "squad_formation", label: "Gerar Squad", type: "run" }];
+    case "forming_squad":
+      return [
+        { stage: "squad_formation", label: "Re-executar Squad", type: "run" },
+      ];
     case "squad_formed":
       return [
         { stage: "approve", label: "Aprovar Squad", type: "approve" },
@@ -71,6 +79,11 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "planning_ready":
       return [{ stage: "planning", label: "Gerar Planning", type: "run" }];
+    case "planning":
+      return [
+        { stage: "planning", label: "Re-executar Planning", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
     case "planned":
       return [
         { stage: "execution", label: "Iniciar Execução", type: "run" },
