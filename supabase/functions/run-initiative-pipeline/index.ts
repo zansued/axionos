@@ -1656,6 +1656,64 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
           }
         }
 
+        // Ensure deploy-critical root files always exist in published repos
+        const requiredPublishFiles: Record<string, string> = {
+          "tsconfig.node.json": JSON.stringify({
+            compilerOptions: {
+              target: "ES2022",
+              lib: ["ES2023"],
+              module: "ESNext",
+              skipLibCheck: true,
+              moduleResolution: "bundler",
+              allowImportingTsExtensions: true,
+              isolatedModules: true,
+              moduleDetection: "force",
+              noEmit: true,
+              strict: true,
+              noUnusedLocals: false,
+              noUnusedParameters: false,
+              noFallthroughCasesInSwitch: true,
+            },
+            include: ["vite.config.ts"],
+          }, null, 2),
+        };
+
+        for (const [requiredPath, requiredContent] of Object.entries(requiredPublishFiles)) {
+          try {
+            // Check if file already exists to include sha on update
+            let existingSha: string | undefined;
+            const existingResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${requiredPath}?ref=main`, {
+              headers: ghHeaders,
+            });
+            if (existingResp.ok) {
+              const existingData = await existingResp.json();
+              existingSha = existingData?.sha;
+            }
+
+            const ensureResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${requiredPath}`, {
+              method: "PUT",
+              headers: ghHeaders,
+              body: JSON.stringify({
+                message: `chore: ensure ${requiredPath}`,
+                content: btoa(unescape(encodeURIComponent(requiredContent))),
+                branch: "main",
+                ...(existingSha ? { sha: existingSha } : {}),
+              }),
+            });
+
+            if (ensureResp.ok) {
+              if (!committedFiles.includes(requiredPath)) committedFiles.push(requiredPath);
+            } else {
+              const errText = await ensureResp.text();
+              console.error(`Failed to ensure ${requiredPath}:`, errText);
+              if (!skippedFiles.includes(requiredPath)) skippedFiles.push(requiredPath);
+            }
+          } catch (e) {
+            console.error(`Error ensuring ${requiredPath}:`, e);
+            if (!skippedFiles.includes(requiredPath)) skippedFiles.push(requiredPath);
+          }
+        }
+
         if (committedFiles.length === 0) throw new Error("Nenhum arquivo foi commitado com sucesso");
 
         await updateInit({ stage_status: "published" });
