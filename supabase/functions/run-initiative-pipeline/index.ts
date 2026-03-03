@@ -1326,30 +1326,23 @@ Complexidade: ${initiative.complexity || "medium"}`,
         if (!refResp.ok) {
           // Check if repo is empty (409 = empty repo)
           if (refResp.status === 409 || refResp.status === 404) {
-            console.log("Repository appears empty, creating initial commit...");
-            // Create an empty initial commit via the Trees + Commits API
-            const treeResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/trees`, {
-              method: "POST", headers: ghHeaders,
-              body: JSON.stringify({ tree: [{ path: "README.md", mode: "100644", type: "blob", content: `# ${initiative.title}\n\nGerado pelo AxionOS` }] }),
+            console.log("Repository appears empty, creating initial commit via Contents API...");
+            // Use Contents API which handles empty repos automatically
+            const initResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/contents/README.md`, {
+              method: "PUT", headers: ghHeaders,
+              body: JSON.stringify({
+                message: "chore: initial commit",
+                content: btoa(`# ${initiative.title}\n\nGerado pelo AxionOS`),
+                branch: baseBranch,
+              }),
             });
-            if (!treeResp.ok) throw new Error("Falha ao criar tree inicial no repositório vazio");
-            const treeData = await treeResp.json();
-
-            const commitResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/commits`, {
-              method: "POST", headers: ghHeaders,
-              body: JSON.stringify({ message: "chore: initial commit", tree: treeData.sha }),
-            });
-            if (!commitResp.ok) throw new Error("Falha ao criar commit inicial");
-            const commitData = await commitResp.json();
-
-            // Create the base branch pointing to this commit
-            const createRefResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/refs`, {
-              method: "POST", headers: ghHeaders,
-              body: JSON.stringify({ ref: `refs/heads/${baseBranch}`, sha: commitData.sha }),
-            });
-            if (!createRefResp.ok) throw new Error("Falha ao criar branch base inicial");
-
-            baseSha = commitData.sha;
+            if (!initResp.ok) {
+              const errText = await initResp.text();
+              console.error("Init commit error:", errText);
+              throw new Error(`Falha ao criar commit inicial: ${initResp.status}`);
+            }
+            const initData = await initResp.json();
+            baseSha = initData.commit.sha;
             repoWasEmpty = true;
           } else {
             const t = await refResp.text();
