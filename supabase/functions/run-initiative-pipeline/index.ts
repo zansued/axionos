@@ -765,6 +765,74 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
           "vercel.json": DEPLOY_VERCEL_JSON,
           "public/_redirects": "/* /index.html 200",
           "netlify.toml": "[build]\n  command = \"npm run build\"\n  publish = \"dist\"\n\n[[redirects]]\n  from = \"/*\"\n  to = \"/index.html\"\n  status = 200",
+          // ESM-compatible postcss config (required for "type": "module")
+          "postcss.config.js": `export default {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n};`,
+          // ESM-compatible tailwind config
+          "tailwind.config.js": `/** @type {import('tailwindcss').Config} */\nexport default {\n  content: [\n    "./index.html",\n    "./src/**/*.{js,ts,jsx,tsx}",\n  ],\n  theme: {\n    extend: {},\n  },\n  plugins: [],\n};`,
+          // tsconfig.node.json (required by tsconfig.json references)
+          "tsconfig.node.json": JSON.stringify({
+            compilerOptions: {
+              target: "ES2022",
+              lib: ["ES2023"],
+              module: "ESNext",
+              skipLibCheck: true,
+              moduleResolution: "bundler",
+              allowImportingTsExtensions: true,
+              isolatedModules: true,
+              moduleDetection: "force",
+              noEmit: true,
+              strict: true,
+              noUnusedLocals: false,
+              noUnusedParameters: false,
+              noFallthroughCasesInSwitch: true,
+            },
+            include: ["vite.config.ts"],
+          }, null, 2),
+          // tsconfig.json with proper references
+          "tsconfig.json": JSON.stringify({
+            compilerOptions: {
+              target: "ES2020",
+              useDefineForClassFields: true,
+              lib: ["ES2020", "DOM", "DOM.Iterable"],
+              module: "ESNext",
+              skipLibCheck: true,
+              moduleResolution: "bundler",
+              allowImportingTsExtensions: true,
+              resolveJsonModule: true,
+              isolatedModules: true,
+              noEmit: true,
+              jsx: "react-jsx",
+              strict: false,
+              noUnusedLocals: false,
+              noUnusedParameters: false,
+              paths: { "@/*": ["./src/*"] },
+            },
+            include: ["src"],
+            references: [{ path: "./tsconfig.node.json" }],
+          }, null, 2),
+          // tsconfig.app.json
+          "tsconfig.app.json": JSON.stringify({
+            compilerOptions: {
+              target: "ES2020",
+              useDefineForClassFields: true,
+              lib: ["ES2020", "DOM", "DOM.Iterable"],
+              module: "ESNext",
+              skipLibCheck: true,
+              moduleResolution: "bundler",
+              allowImportingTsExtensions: true,
+              resolveJsonModule: true,
+              isolatedModules: true,
+              noEmit: true,
+              jsx: "react-jsx",
+              strict: false,
+              noUnusedLocals: false,
+              noUnusedParameters: false,
+              paths: { "@/*": ["./src/*"] },
+            },
+            include: ["src"],
+          }, null, 2),
+          // Vite config (ESM, with path alias)
+          "vite.config.ts": `import { defineConfig } from "vite";\nimport react from "@vitejs/plugin-react";\nimport path from "path";\n\nexport default defineConfig({\n  plugins: [react()],\n  resolve: {\n    alias: {\n      "@": path.resolve(__dirname, "./src"),\n    },\n  },\n});`,
         };
 
         // Count total pending subtasks for progress tracking
