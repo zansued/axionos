@@ -68,7 +68,7 @@ export default function Initiatives() {
   });
 
   const createMutation = useMutation({
-    mutationFn: async ({ title, description }: { title: string; description: string }) => {
+    mutationFn: async ({ title, description, referenceUrl }: { title: string; description: string; referenceUrl?: string }) => {
       if (!currentOrg || !user) throw new Error("Sem organização");
       const { data, error } = await supabase
         .from("initiatives")
@@ -80,7 +80,8 @@ export default function Initiatives() {
           user_id: user.id,
           stage_status: "draft" as any,
           status: "idea",
-        })
+          reference_url: referenceUrl || null,
+        } as any)
         .select().single();
       if (error) throw error;
       return data;
@@ -174,7 +175,7 @@ export default function Initiatives() {
             <p className="text-muted-foreground mt-1">Da ideia ao software — pipeline governado com aprovação humana</p>
           </div>
           <CreateInitiativeDialog
-            onSubmit={(title, desc) => createMutation.mutate({ title, description: desc })}
+            onSubmit={(title, desc, referenceUrl) => createMutation.mutate({ title, description: desc, referenceUrl })}
             isPending={createMutation.isPending}
           />
         </div>
