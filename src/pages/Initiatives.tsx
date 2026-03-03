@@ -153,7 +153,7 @@ export default function Initiatives() {
       if (!currentOrg) return [];
       const { data, error } = await supabase
         .from("git_connections")
-        .select("*")
+        .select("*, github_token")
         .eq("organization_id", currentOrg.id)
         .eq("status", "active")
         .order("created_at", { ascending: false });
