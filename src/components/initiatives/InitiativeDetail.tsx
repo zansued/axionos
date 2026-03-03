@@ -100,7 +100,7 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
   };
 
   const handlePublish = async () => {
-    if (!ghToken || !ghOwner || !ghRepo) return;
+    if (!ghToken || !ghOwner) return;
     // Save token to git_connection if requested
     if (saveToken && selectedConnectionId && selectedConnectionId !== "manual") {
       const { error } = await supabase
@@ -245,7 +245,7 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
         </DialogContent>
       </Dialog>
 
-      {/* Publish dialog */}
+      {/* Publish dialog — creates a NEW repo */}
       <Dialog open={publishOpen} onOpenChange={setPublishOpen}>
         <DialogContent>
           <DialogHeader>
@@ -254,64 +254,57 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
               Publicar no GitHub
             </DialogTitle>
             <DialogDescription>
-              Informe os dados do repositório. O AxionOS criará uma branch, commitará os artefatos e abrirá um Pull Request.
+              Um <strong>novo repositório</strong> será criado automaticamente para esta iniciativa. O AxionOS commitará os artefatos e abrirá um Pull Request.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
-            {gitConnections.length > 0 && (
-              <div>
-                <Label className="text-xs">Repositório conectado</Label>
-                <Select value={selectedConnectionId} onValueChange={handleSelectConnection}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione um repositório" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {gitConnections.map(conn => (
-                      <SelectItem key={conn.id} value={conn.id}>
-                        {conn.repo_owner}/{conn.repo_name}
-                      </SelectItem>
-                    ))}
-                    <SelectItem value="manual">Inserir manualmente...</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
             <div>
-              <Label htmlFor="gh-token" className="text-xs">GitHub Token (PAT)</Label>
+              <Label htmlFor="gh-token" className="text-xs">GitHub Token (PAT com escopo <code className="text-[10px] bg-muted px-1 rounded">repo</code>)</Label>
               <Input id="gh-token" type="password" placeholder="ghp_..." value={ghToken} onChange={(e) => setGhToken(e.target.value)} />
-              {selectedConnectionId !== "manual" && (
-                <label className="flex items-center gap-2 mt-1 cursor-pointer">
-                  <input type="checkbox" checked={saveToken} onChange={(e) => setSaveToken(e.target.checked)} className="rounded border-border" />
-                  <span className="text-xs text-muted-foreground">Salvar token nesta conexão para uso futuro</span>
-                </label>
+              {gitConnections.length > 0 && (
+                <div className="mt-2">
+                  <Label className="text-xs text-muted-foreground">Ou usar token de uma conexão existente:</Label>
+                  <Select value={selectedConnectionId} onValueChange={handleSelectConnection}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="manual">Inserir manualmente</SelectItem>
+                      {gitConnections.map(conn => (
+                        <SelectItem key={conn.id} value={conn.id}>
+                          {conn.repo_owner}/{conn.repo_name} {conn.github_token ? "🔑" : ""}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               )}
             </div>
-            {selectedConnectionId === "manual" && (
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <Label htmlFor="gh-owner" className="text-xs">Owner / Org</Label>
-                  <Input id="gh-owner" placeholder="minha-org" value={ghOwner} onChange={(e) => setGhOwner(e.target.value)} />
-                </div>
-                <div>
-                  <Label htmlFor="gh-repo" className="text-xs">Repositório</Label>
-                  <Input id="gh-repo" placeholder="meu-projeto" value={ghRepo} onChange={(e) => setGhRepo(e.target.value)} />
-                </div>
-              </div>
-            )}
             <div>
-              <Label htmlFor="gh-branch" className="text-xs">Branch base</Label>
-              <Input id="gh-branch" placeholder="main" value={ghBranch} onChange={(e) => setGhBranch(e.target.value)} />
+              <Label htmlFor="gh-owner" className="text-xs">Owner / Organização GitHub</Label>
+              <Input id="gh-owner" placeholder="meu-usuario-ou-org" value={ghOwner} onChange={(e) => setGhOwner(e.target.value)} />
+              <p className="text-[10px] text-muted-foreground mt-0.5">O repositório será criado sob este usuário/org.</p>
+            </div>
+            <div>
+              <Label htmlFor="gh-repo" className="text-xs">Nome do repositório (opcional)</Label>
+              <Input
+                id="gh-repo"
+                placeholder={initiative.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40) || "meu-app"}
+                value={ghRepo}
+                onChange={(e) => setGhRepo(e.target.value)}
+              />
+              <p className="text-[10px] text-muted-foreground mt-0.5">Se vazio, será gerado a partir do título da iniciativa.</p>
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setPublishOpen(false)}>Cancelar</Button>
             <Button
               onClick={handlePublish}
-              disabled={!ghToken || !ghOwner || !ghRepo}
+              disabled={!ghToken || !ghOwner}
               className="gap-1.5"
             >
-              <GitBranch className="h-4 w-4" />
-              Publicar
+              <Rocket className="h-4 w-4" />
+              Criar Repo & Publicar
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -354,15 +347,29 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
               <div className="flex items-center gap-3">
                 <GitBranch className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-sm font-medium">Pull Request criado com sucesso</p>
-                  <p className="text-xs text-muted-foreground">{publishJob?.outputs?.branch}</p>
+                  <p className="text-sm font-medium">Repositório criado com sucesso</p>
+                  <p className="text-xs text-muted-foreground font-mono">
+                    {publishJob?.outputs?.owner}/{publishJob?.outputs?.repo}
+                    {publishJob?.outputs?.branch && ` → ${publishJob.outputs.branch}`}
+                  </p>
                 </div>
               </div>
-              <a href={prUrl} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="sm" className="gap-1.5">
-                  Ver PR <ExternalLink className="h-3.5 w-3.5" />
-                </Button>
-              </a>
+              <div className="flex gap-1.5">
+                {publishJob?.outputs?.repo_url && (
+                  <a href={publishJob.outputs.repo_url} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" size="sm" className="gap-1.5">
+                      Repo <ExternalLink className="h-3.5 w-3.5" />
+                    </Button>
+                  </a>
+                )}
+                {prUrl && (
+                  <a href={prUrl} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" size="sm" className="gap-1.5">
+                      PR <ExternalLink className="h-3.5 w-3.5" />
+                    </Button>
+                  </a>
+                )}
+              </div>
             </div>
             <Separator />
             <div className="flex gap-2 flex-wrap">
@@ -379,10 +386,10 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                   </Button>
                 </a>
               )}
-              {/* Deploy to Vercel */}
+              {/* Deploy to Vercel — uses the repo directly (main branch) */}
               {publishJob?.outputs?.owner && publishJob?.outputs?.repo && (
                 <a
-                  href={`https://vercel.com/new/clone?repository-url=https://github.com/${publishJob.outputs.owner}/${publishJob.outputs.repo}/tree/${encodeURIComponent(publishJob.outputs.branch || "main")}&project-name=${encodeURIComponent(initiative.title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""))}`}
+                  href={`https://vercel.com/new/clone?repository-url=${encodeURIComponent(`https://github.com/${publishJob.outputs.owner}/${publishJob.outputs.repo}`)}&project-name=${encodeURIComponent(publishJob.outputs.repo)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
