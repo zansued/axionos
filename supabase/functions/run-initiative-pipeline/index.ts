@@ -783,6 +783,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
           // tsconfig.node.json (required by tsconfig.json references)
           "tsconfig.node.json": JSON.stringify({
             compilerOptions: {
+              composite: true,
               target: "ES2022",
               lib: ["ES2023"],
               module: "ESNext",
@@ -791,7 +792,6 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
               allowImportingTsExtensions: true,
               isolatedModules: true,
               moduleDetection: "force",
-              noEmit: true,
               strict: true,
               noUnusedLocals: false,
               noUnusedParameters: false,
@@ -1660,6 +1660,7 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
         const requiredPublishFiles: Record<string, string> = {
           "tsconfig.node.json": JSON.stringify({
             compilerOptions: {
+              composite: true,
               target: "ES2022",
               lib: ["ES2023"],
               module: "ESNext",
@@ -1668,7 +1669,6 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
               allowImportingTsExtensions: true,
               isolatedModules: true,
               moduleDetection: "force",
-              noEmit: true,
               strict: true,
               noUnusedLocals: false,
               noUnusedParameters: false,
