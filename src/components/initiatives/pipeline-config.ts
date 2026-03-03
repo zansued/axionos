@@ -107,6 +107,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "published":
       return [
+        { stage: "publish", label: "Re-publicar no GitHub", type: "publish" },
         { stage: "approve", label: "Marcar como Concluído", type: "approve" },
       ];
     default:
