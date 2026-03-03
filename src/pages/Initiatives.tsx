@@ -52,6 +52,21 @@ export default function Initiatives() {
     enabled: !!selectedId,
   });
 
+  const { data: initiativeStories = [] } = useQuery({
+    queryKey: ["initiative-stories", selectedId],
+    queryFn: async () => {
+      if (!selectedId) return [];
+      const { data, error } = await supabase
+        .from("stories")
+        .select("*, story_phases(*, story_subtasks(*))")
+        .eq("initiative_id", selectedId)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!selectedId,
+  });
+
   const createMutation = useMutation({
     mutationFn: async ({ title, description }: { title: string; description: string }) => {
       if (!currentOrg || !user) throw new Error("Sem organização");
@@ -166,6 +181,7 @@ export default function Initiatives() {
             <InitiativeDetail
               initiative={selected}
               jobs={jobs}
+              stories={initiativeStories}
               runningStage={runningStage}
               gitConnections={gitConnections}
               onRunStage={(stage, comment, publishParams) => runStage(selected.id, stage, comment, publishParams)}
