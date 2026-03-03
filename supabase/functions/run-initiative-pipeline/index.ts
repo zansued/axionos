@@ -591,16 +591,34 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // ========== STAGE 4: EXECUTION (Code-Aware per-subtask) ==========
+    // ========== STAGE 4: EXECUTION (Chain-of-Agents: Architect → Dev → QA) ==========
     if (stage === "execution") {
       const masterJobId = await createJob("execution", { initiative_id: initiativeId });
-      // Auto-approve planning if coming from "planned" status
       const updateFields: any = { stage_status: "in_progress" };
       if (initiative.stage_status === "planned" && !initiative.approved_at_planning) {
         updateFields.approved_at_planning = new Date().toISOString();
       }
       await updateInit(updateFields);
-      await log("pipeline_execution_start", "Iniciando execução de código...");
+      await log("pipeline_execution_start", "Iniciando execução Chain-of-Agents (Architect → Dev → QA)...");
+
+      // Helper to record agent_message
+      const recordMessage = async (storyId: string | null, subtaskId: string | null, fromAgent: any, toAgent: any, content: string, msgType: string, iteration: number, tokens = 0, model = "") => {
+        await serviceClient.from("agent_messages").insert({
+          initiative_id: initiativeId,
+          story_id: storyId,
+          subtask_id: subtaskId,
+          from_agent_id: fromAgent?.id || null,
+          to_agent_id: toAgent?.id || null,
+          role_from: fromAgent?.role || "system",
+          role_to: toAgent?.role || "system",
+          content,
+          message_type: msgType,
+          iteration,
+          tokens_used: tokens,
+          model_used: model,
+          stage: "execution",
+        });
+      };
 
       try {
         const { data: stories } = await serviceClient.from("stories")
@@ -608,9 +626,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
           .eq("initiative_id", initiativeId)
           .in("status", ["todo", "in_progress"]);
 
-        if (!stories || stories.length === 0) {
-          throw new Error("Nenhuma story encontrada para execução");
-        }
+        if (!stories || stories.length === 0) throw new Error("Nenhuma story encontrada para execução");
 
         const { data: squads } = await serviceClient.from("squads")
           .select("id, squad_members(agent_id, role_in_squad, agents(id, name, role, description, exclusive_authorities))")
@@ -621,9 +637,13 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
 
         const agentsByRole: Record<string, any> = {};
         for (const sm of squadMembers) agentsByRole[sm.role_in_squad] = sm.agents;
-        const defaultAgent = agentsByRole["dev"] || agentsByRole["architect"] || squadMembers[0]?.agents;
+        const architectAgent = agentsByRole["architect"];
+        const devAgent = agentsByRole["dev"];
+        const qaAgent = agentsByRole["qa"];
+        const defaultAgent = devAgent || architectAgent || squadMembers[0]?.agents;
+        const hasChain = !!architectAgent && !!devAgent && !!qaAgent;
 
-        // Collect ALL subtasks with file_path to build context of the full project
+        // Collect ALL subtasks with file_path
         const allProjectFiles: { file_path: string; description: string }[] = [];
         for (const story of stories) {
           const { data: phases } = await serviceClient.from("story_phases")
@@ -637,14 +657,9 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         }
         const projectStructure = allProjectFiles.map(f => `- ${f.file_path}: ${f.description}`).join("\n");
 
-        let totalTokens = 0;
-        let totalCost = 0;
-        let executedCount = 0;
-        let failedCount = 0;
-        let codeFilesGenerated = 0;
-
-        // Track generated code for cross-file context
+        let totalTokens = 0, totalCost = 0, executedCount = 0, failedCount = 0, codeFilesGenerated = 0;
         const generatedFiles: Record<string, string> = {};
+        const MAX_QA_ITERATIONS = 2;
 
         for (const story of stories) {
           await serviceClient.from("stories").update({ status: "in_progress" }).eq("id", story.id);
@@ -665,40 +680,24 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
 
             for (const subtask of subtasks) {
               const hasFilePath = !!subtask.file_path;
-              const assignedAgent = hasFilePath
-                ? (agentsByRole["dev"] || defaultAgent)
-                : pickAgent(subtask.description, agentsByRole, defaultAgent);
 
               const subtaskJobId = await createJob("execution", {
-                subtask_id: subtask.id,
-                agent_id: assignedAgent.id,
-                agent_name: assignedAgent.name,
-                agent_role: assignedAgent.role,
-                story_title: story.title,
-                phase_name: phase.name,
-                subtask_description: subtask.description,
-                file_path: subtask.file_path || null,
-                file_type: subtask.file_type || null,
+                subtask_id: subtask.id, story_title: story.title, phase_name: phase.name,
+                subtask_description: subtask.description, file_path: subtask.file_path || null,
+                chain_of_agents: hasChain && hasFilePath,
               });
 
               await serviceClient.from("story_subtasks").update({
-                status: "in_progress",
-                executed_by_agent_id: assignedAgent.id,
+                status: "in_progress", executed_by_agent_id: (devAgent || defaultAgent).id,
               }).eq("id", subtask.id);
 
               try {
-                let result: any;
-
-                if (hasFilePath) {
-                  // ===== CODE GENERATION MODE =====
+                if (hasFilePath && hasChain) {
+                  // ===== CHAIN-OF-AGENTS: Architect → Dev → QA =====
                   const ext = subtask.file_path.split(".").pop() || "ts";
-                  const langMap: Record<string, string> = {
-                    tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS",
-                    json: "JSON", js: "JavaScript", html: "HTML",
-                  };
+                  const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML" };
                   const language = langMap[ext] || "TypeScript";
 
-                  // Build context from already generated files (max 6000 chars)
                   const contextFiles = Object.entries(generatedFiles);
                   let contextStr = "";
                   for (const [fp, content] of contextFiles) {
@@ -707,148 +706,165 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                     contextStr += entry;
                   }
 
-                  const codeSystemPrompt = `Você é um desenvolvedor expert em Vite + React + TypeScript + Tailwind CSS + shadcn/ui.
-Você está gerando o arquivo "${subtask.file_path}" para o projeto.
+                  const baseContext = `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum ainda)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Linguagem: ${language}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1200)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1200)}` : ""}`;
 
-REGRAS CRÍTICAS:
-- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.
-- O código deve ser COMPLETO e FUNCIONAL, pronto para uso.
-- Use imports corretos e relativos ao projeto.
-- Para componentes React: use export default ou named export.
-- Para CSS: use @tailwind directives e CSS custom properties.
-- Para config files (package.json, vite.config.ts, etc.): conteúdo completo e válido.
-- Use shadcn/ui components quando apropriado (import from "@/components/ui/...").
-- Use Tailwind CSS para estilização, NUNCA CSS inline.
-- Siga as melhores práticas de ${language}.`;
+                  // --- Step 1: ARCHITECT defines technical structure ---
+                  const archResult = await callAI(
+                    LOVABLE_API_KEY,
+                    `Você é o Architect "${architectAgent.name}" no AxionOS. Sua função é analisar a tarefa e definir a estrutura técnica ANTES do Dev implementar.\n\nProduz uma especificação técnica concisa incluindo:\n1. Decisões arquiteturais para este arquivo\n2. Interfaces/tipos necessários\n3. Dependências e imports\n4. Padrões a seguir\n5. Edge cases a considerar\n\nSeja direto e técnico. Responda em pt-BR.`,
+                    baseContext
+                  );
+                  await recordMessage(story.id, subtask.id, architectAgent, devAgent, archResult.content, "handoff", 1, archResult.tokens, archResult.model);
+                  totalTokens += archResult.tokens; totalCost += archResult.costUsd;
 
-                  const codeUserPrompt = `## Projeto: ${initiative.title}
-## Descrição: ${initiative.description || initiative.refined_idea || ""}
+                  // --- Step 2: DEV generates code using Architect's spec ---
+                  const devResult = await callAI(
+                    LOVABLE_API_KEY,
+                    `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use shadcn/ui, Tailwind CSS, imports corretos.\n- Siga as melhores práticas de ${language}.`,
+                    `${baseContext}\n\n## Especificação do Architect:\n${archResult.content}`
+                  );
+                  let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+                  await recordMessage(story.id, subtask.id, devAgent, qaAgent, codeContent, "handoff", 1, devResult.tokens, devResult.model);
+                  totalTokens += devResult.tokens; totalCost += devResult.costUsd;
 
-## Estrutura completa do projeto:
-${projectStructure}
+                  // --- Step 3: QA reviews the code ---
+                  let qaApproved = false;
+                  for (let iteration = 1; iteration <= MAX_QA_ITERATIONS; iteration++) {
+                    const qaResult = await callAI(
+                      LOVABLE_API_KEY,
+                      `Você é o QA "${qaAgent.name}" no AxionOS. Revise o código do Dev abaixo. Retorne APENAS JSON válido.\n\n{"approved": true/false, "issues": ["lista de problemas encontrados"], "suggestions": ["lista de melhorias"], "score": 0-100}`,
+                      `## Arquivo: ${subtask.file_path}\n## Especificação do Architect:\n${archResult.content.slice(0, 2000)}\n\n## Código do Dev:\n${codeContent.slice(0, 8000)}`,
+                      true
+                    );
+                    totalTokens += qaResult.tokens; totalCost += qaResult.costUsd;
 
-## Arquivos já gerados (contexto):
-${contextStr || "(nenhum ainda - este pode ser um dos primeiros arquivos)"}
+                    let qaFeedback: any;
+                    try { qaFeedback = JSON.parse(qaResult.content); } catch { qaFeedback = { approved: true, issues: [], score: 70 }; }
 
-## Arquivo a gerar: ${subtask.file_path}
-## Tipo: ${subtask.file_type || "code"}
-## Linguagem: ${language}
-## Descrição da tarefa: ${subtask.description}
+                    await recordMessage(story.id, subtask.id, qaAgent, devAgent, qaResult.content, "review", iteration, qaResult.tokens, qaResult.model);
 
-${initiative.prd_content ? `## PRD (resumo):\n${initiative.prd_content.slice(0, 1500)}` : ""}
-${initiative.architecture_content ? `## Arquitetura (resumo):\n${initiative.architecture_content.slice(0, 1500)}` : ""}
+                    if (qaFeedback.approved || qaFeedback.score >= 80 || iteration >= MAX_QA_ITERATIONS) {
+                      qaApproved = true;
+                      break;
+                    }
 
-Gere o conteúdo COMPLETO e FUNCIONAL do arquivo "${subtask.file_path}".
-Retorne APENAS o código, sem wrappers markdown.`;
+                    // Dev fixes based on QA feedback
+                    const fixResult = await callAI(
+                      LOVABLE_API_KEY,
+                      `Você é o Dev "${devAgent.name}". O QA encontrou problemas no seu código. Corrija TODOS os issues abaixo e retorne APENAS o código corrigido completo, sem markdown, sem explicações.`,
+                      `## Arquivo: ${subtask.file_path}\n\n## Código atual:\n${codeContent.slice(0, 8000)}\n\n## Feedback do QA:\n${JSON.stringify(qaFeedback.issues)}\n\n## Sugestões:\n${JSON.stringify(qaFeedback.suggestions)}\n\nRetorne o código COMPLETO corrigido.`
+                    );
+                    codeContent = fixResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+                    await recordMessage(story.id, subtask.id, devAgent, qaAgent, codeContent, "fix", iteration + 1, fixResult.tokens, fixResult.model);
+                    totalTokens += fixResult.tokens; totalCost += fixResult.costUsd;
+                  }
 
-                  result = await callAI(LOVABLE_API_KEY, codeSystemPrompt, codeUserPrompt);
-
-                  // Clean output: remove markdown code blocks if AI added them
-                  let codeContent = result.content;
-                  codeContent = codeContent.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
-
-                  // Store for cross-file context
+                  // Save final output
                   generatedFiles[subtask.file_path] = codeContent;
-
-                  // Save subtask output
                   await serviceClient.from("story_subtasks").update({
-                    output: codeContent,
-                    status: "completed",
-                    executed_at: new Date().toISOString(),
+                    output: codeContent, status: "completed", executed_at: new Date().toISOString(),
                   }).eq("id", subtask.id);
 
-                  // Create agent_output artifact with code type
                   const { data: artifact } = await serviceClient.from("agent_outputs").insert({
                     organization_id: initiative.organization_id,
                     workspace_id: initiative.workspace_id || null,
-                    agent_id: assignedAgent.id,
-                    subtask_id: subtask.id,
-                    type: "code",
-                    status: "draft",
+                    agent_id: devAgent.id, subtask_id: subtask.id,
+                    type: "code", status: qaApproved ? "draft" : "pending_review",
                     summary: `${subtask.file_path} — ${subtask.description.slice(0, 150)}`,
-                    raw_output: {
-                      file_path: subtask.file_path,
-                      file_type: subtask.file_type,
-                      language: ext,
-                      content: codeContent,
-                    },
-                    model_used: result.model,
-                    prompt_used: subtask.description,
-                    tokens_used: result.tokens,
-                    cost_estimate: result.costUsd,
+                    raw_output: { file_path: subtask.file_path, file_type: subtask.file_type, language: ext, content: codeContent, chain_of_agents: true },
+                    model_used: "google/gemini-2.5-flash", prompt_used: subtask.description,
+                    tokens_used: totalTokens, cost_estimate: totalCost,
                   }).select("id").single();
 
-                  // Create code_artifact record
                   if (artifact?.id) {
                     await serviceClient.from("code_artifacts").insert({
                       output_id: artifact.id,
                       files_affected: [{ path: subtask.file_path, type: subtask.file_type, language: ext }],
-                      build_status: "pending",
-                      test_status: "pending",
+                      build_status: "pending", test_status: "pending",
                     });
                   }
 
                   if (subtaskJobId) await completeJob(subtaskJobId, {
-                    artifact_id: artifact?.id,
-                    file_path: subtask.file_path,
-                    tokens: result.tokens,
-                    code_length: codeContent.length,
-                  }, result);
+                    artifact_id: artifact?.id, file_path: subtask.file_path,
+                    chain_of_agents: true, qa_approved: qaApproved,
+                  }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
 
                   codeFilesGenerated++;
-                } else {
-                  // ===== LEGACY TEXT MODE (non-code subtasks) =====
-                  result = await callAI(
+                } else if (hasFilePath) {
+                  // ===== SINGLE AGENT CODE MODE (no chain) =====
+                  const ext = subtask.file_path.split(".").pop() || "ts";
+                  const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML" };
+                  const language = langMap[ext] || "TypeScript";
+                  const assignedAgent = devAgent || defaultAgent;
+
+                  const contextFiles = Object.entries(generatedFiles);
+                  let contextStr = "";
+                  for (const [fp, content] of contextFiles) {
+                    const entry = `\n--- ${fp} ---\n${content.slice(0, 800)}\n`;
+                    if (contextStr.length + entry.length > 6000) break;
+                    contextStr += entry;
+                  }
+
+                  const result = await callAI(
                     LOVABLE_API_KEY,
-                    `Você é o agente "${assignedAgent.name}" com o papel de "${assignedAgent.role}" no AxionOS.
-${assignedAgent.description || ""}
-Sua tarefa é executar a subtask abaixo com maestria, produzindo um output técnico e completo.
-Responda em português do Brasil.`,
-                    `## Contexto
-- **Story**: ${story.title}
-- **Descrição**: ${story.description || ""}
-- **Fase**: ${phase.name}
+                    `Você é um desenvolvedor expert em Vite + React + TypeScript + Tailwind CSS + shadcn/ui.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use shadcn/ui, Tailwind CSS.\n- Siga as melhores práticas de ${language}.`,
+                    `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1500)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1500)}` : ""}\n\nGere o conteúdo COMPLETO do arquivo. Retorne APENAS o código.`
+                  );
 
-## Subtask a executar
-${subtask.description}
+                  let codeContent = result.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+                  generatedFiles[subtask.file_path] = codeContent;
 
-Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quando aplicável.`
+                  await serviceClient.from("story_subtasks").update({
+                    output: codeContent, status: "completed", executed_at: new Date().toISOString(),
+                  }).eq("id", subtask.id);
+
+                  const { data: artifact } = await serviceClient.from("agent_outputs").insert({
+                    organization_id: initiative.organization_id, workspace_id: initiative.workspace_id || null,
+                    agent_id: assignedAgent.id, subtask_id: subtask.id, type: "code", status: "draft",
+                    summary: `${subtask.file_path} — ${subtask.description.slice(0, 150)}`,
+                    raw_output: { file_path: subtask.file_path, file_type: subtask.file_type, language: ext, content: codeContent },
+                    model_used: result.model, prompt_used: subtask.description,
+                    tokens_used: result.tokens, cost_estimate: result.costUsd,
+                  }).select("id").single();
+
+                  if (artifact?.id) {
+                    await serviceClient.from("code_artifacts").insert({
+                      output_id: artifact.id,
+                      files_affected: [{ path: subtask.file_path, type: subtask.file_type, language: ext }],
+                      build_status: "pending", test_status: "pending",
+                    });
+                  }
+
+                  if (subtaskJobId) await completeJob(subtaskJobId, { artifact_id: artifact?.id, file_path: subtask.file_path, tokens: result.tokens }, result);
+                  totalTokens += result.tokens; totalCost += result.costUsd;
+                  codeFilesGenerated++;
+                } else {
+                  // ===== TEXT MODE (non-code subtasks) =====
+                  const assignedAgent = pickAgent(subtask.description, agentsByRole, defaultAgent);
+                  const result = await callAI(
+                    LOVABLE_API_KEY,
+                    `Você é o agente "${assignedAgent.name}" (${assignedAgent.role}) no AxionOS.\n${assignedAgent.description || ""}\nExecute a subtask abaixo com maestria. Responda em pt-BR.`,
+                    `## Story: ${story.title}\n## Fase: ${phase.name}\n## Subtask: ${subtask.description}\n\nProduza o output completo.`
                   );
 
                   await serviceClient.from("story_subtasks").update({
-                    output: result.content,
-                    status: "completed",
-                    executed_at: new Date().toISOString(),
+                    output: result.content, status: "completed", executed_at: new Date().toISOString(),
                   }).eq("id", subtask.id);
 
-                  const outputType = assignedAgent.role === "architect" ? "decision"
-                    : ["dev", "devops"].includes(assignedAgent.role) ? "code"
-                    : ["analyst", "po", "pm"].includes(assignedAgent.role) ? "content"
-                    : "analysis";
+                  const outputType = assignedAgent.role === "architect" ? "decision" : ["dev", "devops"].includes(assignedAgent.role) ? "code" : ["analyst", "po", "pm"].includes(assignedAgent.role) ? "content" : "analysis";
 
                   const { data: artifact } = await serviceClient.from("agent_outputs").insert({
-                    organization_id: initiative.organization_id,
-                    workspace_id: initiative.workspace_id || null,
-                    agent_id: assignedAgent.id,
-                    subtask_id: subtask.id,
-                    type: outputType,
-                    status: "draft",
-                    summary: subtask.description?.slice(0, 200),
-                    raw_output: { text: result.content },
-                    model_used: result.model,
-                    prompt_used: subtask.description,
-                    tokens_used: result.tokens,
-                    cost_estimate: result.costUsd,
+                    organization_id: initiative.organization_id, workspace_id: initiative.workspace_id || null,
+                    agent_id: assignedAgent.id, subtask_id: subtask.id, type: outputType, status: "draft",
+                    summary: subtask.description?.slice(0, 200), raw_output: { text: result.content },
+                    model_used: result.model, prompt_used: subtask.description,
+                    tokens_used: result.tokens, cost_estimate: result.costUsd,
                   }).select("id").single();
 
-                  if (subtaskJobId) await completeJob(subtaskJobId, {
-                    artifact_id: artifact?.id,
-                    tokens: result.tokens,
-                  }, result);
+                  if (subtaskJobId) await completeJob(subtaskJobId, { artifact_id: artifact?.id, tokens: result.tokens }, result);
+                  totalTokens += result.tokens; totalCost += result.costUsd;
                 }
 
-                totalTokens += result.tokens;
-                totalCost += result.costUsd;
                 executedCount++;
               } catch (subtaskErr) {
                 await serviceClient.from("story_subtasks").update({ status: "failed" }).eq("id", subtask.id);
@@ -860,35 +876,30 @@ Produza o output completo. Inclua detalhes técnicos, decisões e artefatos quan
 
             const { count: pendingCount } = await serviceClient.from("story_subtasks")
               .select("*", { count: "exact", head: true })
-              .eq("phase_id", phase.id)
-              .neq("status", "completed");
-            if (pendingCount === 0) {
-              await serviceClient.from("story_phases").update({ status: "completed" }).eq("id", phase.id);
-            }
+              .eq("phase_id", phase.id).neq("status", "completed");
+            if (pendingCount === 0) await serviceClient.from("story_phases").update({ status: "completed" }).eq("id", phase.id);
           }
 
           const { count: pendingPhases } = await serviceClient.from("story_phases")
             .select("*", { count: "exact", head: true })
-            .eq("story_id", story.id)
-            .neq("status", "completed");
-          if (pendingPhases === 0) {
-            await serviceClient.from("stories").update({ status: "done" }).eq("id", story.id);
-          }
+            .eq("story_id", story.id).neq("status", "completed");
+          if (pendingPhases === 0) await serviceClient.from("stories").update({ status: "done" }).eq("id", story.id);
         }
 
         await updateInit({ stage_status: "validating" });
         if (masterJobId) await completeJob(masterJobId, {
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, total_tokens: totalTokens,
+          chain_of_agents: hasChain,
         }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
 
-        await log("pipeline_execution_complete", `Execução concluída: ${executedCount} subtasks (${codeFilesGenerated} arquivos de código), ${failedCount} falhas`, {
-          total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated,
+        await log("pipeline_execution_complete", `Execução Chain-of-Agents concluída: ${executedCount} subtasks (${codeFilesGenerated} arquivos), ${failedCount} falhas`, {
+          total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated, chain_of_agents: hasChain,
         });
 
         return new Response(JSON.stringify({
           success: true, executed: executedCount, failed: failedCount,
-          code_files: codeFilesGenerated,
+          code_files: codeFilesGenerated, chain_of_agents: hasChain,
           tokens: totalTokens, cost_usd: totalCost, job_id: masterJobId,
         }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       } catch (e) {
