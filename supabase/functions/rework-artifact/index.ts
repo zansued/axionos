@@ -168,15 +168,20 @@ ${feedbackHistory}
 
 Produza o output COMPLETO e revisado, corrigindo todos os problemas apontados.`;
 
-    // Execute rework with AI Gateway
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    // Execute rework with AI
+    const OPENAI_KEY = Deno.env.get("OPENAI_API_KEY");
+    const aiUrl = OPENAI_KEY ? "https://api.openai.com/v1/chat/completions" : "https://ai.gateway.lovable.dev/v1/chat/completions";
+    const aiKey = OPENAI_KEY || LOVABLE_API_KEY;
+    const aiModel = OPENAI_KEY ? "gpt-4o" : "google/gemini-2.5-flash";
+
+    const response = await fetch(aiUrl, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${aiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: aiModel,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },

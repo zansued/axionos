@@ -120,14 +120,19 @@ ${validationHistory}
 Responda APENAS com um JSON válido neste formato exato, sem markdown ou texto extra:
 {"verdict":"approve|reject|request_changes","confidence":0-100,"summary":"resumo 1-2 frases","strengths":["pontos fortes"],"issues":["problemas"],"suggestions":["sugestões"],"risk_level":"low|medium|high|critical"}`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const OPENAI_KEY = Deno.env.get("OPENAI_API_KEY");
+    const aiUrl = OPENAI_KEY ? "https://api.openai.com/v1/chat/completions" : "https://ai.gateway.lovable.dev/v1/chat/completions";
+    const aiKey = OPENAI_KEY || LOVABLE_API_KEY;
+    const aiModel = OPENAI_KEY ? "gpt-4o" : "google/gemini-2.5-pro";
+
+    const response = await fetch(aiUrl, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${aiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-pro",
+        model: aiModel,
         messages: [
           { role: "user", content: userPrompt },
         ],

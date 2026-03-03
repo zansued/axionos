@@ -18,12 +18,22 @@ const DEPLOY_VERCEL_CONFIG = {
 const DEPLOY_VERCEL_JSON = JSON.stringify(DEPLOY_VERCEL_CONFIG, null, 2);
 
 async function callAI(apiKey: string, systemPrompt: string, userPrompt: string, jsonMode = false, maxRetries = 3) {
+  const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+  
+  // Use OpenAI directly if key is available, otherwise fallback to Lovable AI Gateway
+  const useOpenAI = !!OPENAI_API_KEY;
+  const aiUrl = useOpenAI
+    ? "https://api.openai.com/v1/chat/completions"
+    : "https://ai.gateway.lovable.dev/v1/chat/completions";
+  const aiKey = useOpenAI ? OPENAI_API_KEY : apiKey;
+  const aiModel = useOpenAI ? "gpt-4o" : "google/gemini-2.5-flash";
+
   let lastError: Error | null = null;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       const start = Date.now();
       const body: any = {
-        model: "google/gemini-2.5-flash",
+        model: aiModel,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -31,29 +41,30 @@ async function callAI(apiKey: string, systemPrompt: string, userPrompt: string, 
       };
       if (jsonMode) body.response_format = { type: "json_object" };
 
-      const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      const resp = await fetch(aiUrl, {
         method: "POST",
-        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${aiKey}`, "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
 
       if (resp.status === 429 || resp.status >= 500) {
         const backoffMs = Math.min(1000 * Math.pow(2, attempt), 15000) + Math.random() * 1000;
-        console.warn(`AI Gateway ${resp.status}, retry ${attempt + 1}/${maxRetries} after ${Math.round(backoffMs)}ms`);
+        console.warn(`AI ${resp.status}, retry ${attempt + 1}/${maxRetries} after ${Math.round(backoffMs)}ms`);
         await new Promise(r => setTimeout(r, backoffMs));
-        lastError = new Error(`AI Gateway error ${resp.status}`);
+        lastError = new Error(`AI error ${resp.status}`);
         continue;
       }
 
       if (!resp.ok) {
         const t = await resp.text();
-        throw new Error(`AI Gateway error ${resp.status}: ${t}`);
+        throw new Error(`AI error ${resp.status}: ${t}`);
       }
       const data = await resp.json();
       const durationMs = Date.now() - start;
       const tokens = data.usage?.total_tokens || 0;
-      const costUsd = tokens * 0.000001;
-      return { content: data.choices?.[0]?.message?.content || "", tokens, durationMs, costUsd, model: "google/gemini-2.5-flash" };
+      // OpenAI gpt-4o pricing: ~$2.50/1M input + $10/1M output, rough avg ~$5/1M
+      const costUsd = useOpenAI ? tokens * 0.000005 : tokens * 0.000001;
+      return { content: data.choices?.[0]?.message?.content || "", tokens, durationMs, costUsd, model: aiModel };
     } catch (e) {
       lastError = e instanceof Error ? e : new Error(String(e));
       if (attempt < maxRetries - 1) {
