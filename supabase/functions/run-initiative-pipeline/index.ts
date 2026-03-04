@@ -411,8 +411,10 @@ ${dp.reference_scraped ? "NOTA: O conteúdo do site de referência foi analisado
         // Step 1: PRD
         const prdResult = await callAI(
           LOVABLE_API_KEY,
-          "Você é um Product Manager sênior. Crie um PRD detalhado e executável em português brasileiro usando markdown.",
-          `${context}\n\nCrie um PRD completo incluindo:\n## Visão Geral\n## Problema a Resolver\n## Personas e Casos de Uso\n## Requisitos Funcionais\n## Requisitos Não-Funcionais\n## Critérios de Aceite\n## Dependências Técnicas\n## Métricas de Sucesso\n## Riscos e Mitigações`
+          `Você é um Product Manager sênior. Crie um PRD detalhado e executável em português brasileiro usando markdown.
+
+IMPORTANTE: Analise se o projeto necessita de backend (banco de dados, autenticação, APIs, storage de arquivos). Se sim, inclua isso explicitamente nos requisitos. A maioria dos projetos reais precisa de persistência de dados.`,
+          `${context}\n\nCrie um PRD completo incluindo:\n## Visão Geral\n## Problema a Resolver\n## Personas e Casos de Uso\n## Requisitos Funcionais\n## Requisitos Não-Funcionais (incluir requisitos de backend se aplicável)\n## Necessidades de Backend\nAnalise e liste: banco de dados (tabelas/entidades), autenticação (login/signup), storage (uploads), APIs/integrações externas. Se o projeto NÃO precisa de backend, justifique.\n## Critérios de Aceite\n## Dependências Técnicas\n## Métricas de Sucesso\n## Riscos e Mitigações`
         );
         await updateInit({ prd_content: prdResult.content });
 
