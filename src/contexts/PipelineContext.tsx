@@ -3,8 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
-const PIPELINE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/run-initiative-pipeline`;
-
 interface PipelineState {
   /** initiative_id → stage currently running */
   running: Record<string, string>;
@@ -41,24 +39,26 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       try {
         const session = (await supabase.auth.getSession()).data.session;
         if (!session) throw new Error("Não autenticado");
-        const resp = await fetch(PIPELINE_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            initiativeId,
-            stage,
-            ...(comment ? { comment } : {}),
-            ...(publishParams || {}),
-          }),
+        const payload = {
+          initiativeId,
+          stage,
+          ...(comment ? { comment } : {}),
+          ...(publishParams || {}),
+        };
+
+        const { data: result, error } = await supabase.functions.invoke("run-initiative-pipeline", {
+          body: payload,
         });
-        if (!resp.ok) {
-          const err = await resp.json().catch(() => ({ error: "Erro" }));
-          throw new Error(err.error || `Erro ${resp.status}`);
+
+        if (error) {
+          let message = error.message || "Erro ao executar pipeline";
+          const context = (error as any)?.context;
+          if (context && typeof context.json === "function") {
+            const errJson = await context.json().catch(() => null);
+            if (errJson?.error) message = errJson.error;
+          }
+          throw new Error(message);
         }
-        const result = await resp.json();
         const stageLabels: Record<string, string> = {
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
