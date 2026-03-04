@@ -421,8 +421,19 @@ IMPORTANTE: Analise se o projeto necessita de backend (banco de dados, autentica
         // Step 2: Architecture
         const archResult = await callAI(
           LOVABLE_API_KEY,
-          "Você é um Arquiteto de Software sênior. Crie um documento de arquitetura técnica baseado no PRD. A stack é obrigatoriamente: Vite + React + TypeScript + Tailwind CSS + shadcn/ui. Use markdown.",
-          `PRD:\n${prdResult.content.slice(0, 6000)}\n\nStack OBRIGATÓRIA: Vite + React + TypeScript + Tailwind CSS + shadcn/ui\n\nCrie a arquitetura incluindo:\n## Stack Tecnológica Final\n## Estrutura de Diretórios do Projeto\n## Componentes Principais (com file paths)\n## Modelo de Dados\n## APIs e Contratos\n## Roteamento (React Router)\n## Segurança\n## Plano de Deploy`
+          `Você é um Arquiteto de Software sênior. Crie um documento de arquitetura técnica baseado no PRD.
+
+Stack Frontend OBRIGATÓRIA: Vite + React + TypeScript + Tailwind CSS + shadcn/ui
+Stack Backend (quando o PRD indicar necessidade): Supabase
+- Banco de dados: PostgreSQL via Supabase (tabelas no schema public)
+- Autenticação: Supabase Auth (email/password, OAuth)
+- Edge Functions: Deno/TypeScript (para lógica de servidor, APIs externas)
+- Storage: Supabase Storage (para uploads de arquivos)
+- Segurança: Row Level Security (RLS) obrigatória em todas as tabelas
+- Client SDK: @supabase/supabase-js
+
+Use markdown.`,
+          `PRD:\n${prdResult.content.slice(0, 6000)}\n\nCrie a arquitetura incluindo:\n## Stack Tecnológica Final\n(Frontend + Backend se necessário)\n## Estrutura de Diretórios do Projeto\n(Incluir pasta supabase/ se houver backend)\n## Componentes Principais (com file paths)\n## Modelo de Dados (SQL)\nSe o projeto precisa de banco, defina as tabelas SQL com CREATE TABLE, tipos, constraints e políticas RLS.\n## Edge Functions\nSe o projeto precisa de APIs ou lógica de servidor, liste as edge functions necessárias.\n## Autenticação\nSe o projeto precisa de auth, defina o fluxo (signup, login, proteção de rotas).\n## APIs e Contratos\n## Roteamento (React Router)\n## Segurança (RLS, validação)\n## Plano de Deploy`
         );
         await updateInit({ architecture_content: archResult.content });
 
