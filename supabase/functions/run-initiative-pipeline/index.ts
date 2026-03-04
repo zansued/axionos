@@ -1042,6 +1042,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                   const { data: artifact } = await serviceClient.from("agent_outputs").insert({
                     organization_id: initiative.organization_id,
                     workspace_id: initiative.workspace_id || null,
+                    initiative_id: initiativeId,
                     agent_id: devAgent.id, subtask_id: subtask.id,
                     type: "code", status: qaApproved ? "draft" : "pending_review",
                     summary: `${subtask.file_path} — ${subtask.description.slice(0, 150)}`,
