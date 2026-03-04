@@ -1220,6 +1220,60 @@ export type Database = {
           },
         ]
       }
+      supabase_connections: {
+        Row: {
+          connected_by: string
+          created_at: string
+          id: string
+          label: string
+          organization_id: string
+          status: string
+          supabase_anon_key: string
+          supabase_url: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          connected_by: string
+          created_at?: string
+          id?: string
+          label?: string
+          organization_id: string
+          status?: string
+          supabase_anon_key: string
+          supabase_url: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          connected_by?: string
+          created_at?: string
+          id?: string
+          label?: string
+          organization_id?: string
+          status?: string
+          supabase_anon_key?: string
+          supabase_url?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "supabase_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supabase_connections_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       usage_monthly_snapshots: {
         Row: {
           created_at: string
