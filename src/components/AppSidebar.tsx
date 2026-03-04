@@ -21,12 +21,11 @@ import { Separator } from "@/components/ui/separator";
 const pipelineItems = [
   { title: "Iniciativas", url: "/initiatives", icon: Lightbulb },
   { title: "Squads", url: "/squads", icon: Users },
-  
   { title: "Execução", url: "/stories", icon: Hammer },
   { title: "Validação", url: "/artifacts", icon: CheckSquare },
-  { title: "Kanban", url: "/kanban", icon: Columns3 },
-  { title: "Repositórios", url: "/workspace", icon: GitBranch },
   { title: "Código", url: "/code", icon: Code2 },
+  { title: "Workspace", url: "/workspace", icon: GitBranch },
+  { title: "Kanban", url: "/kanban", icon: Columns3 },
 ];
 
 const governanceItems = [
