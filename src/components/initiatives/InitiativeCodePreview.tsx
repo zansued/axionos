@@ -14,7 +14,7 @@ import {
 import {
   Code2, FolderTree, FileCode, FileJson, FileType, FileText,
   ChevronRight, ChevronDown, Copy, Check, Loader2,
-  Download, Archive, Sparkles, Search, CheckCircle2
+  Download, Archive, Sparkles, Search, CheckCircle2, Rocket
 } from "lucide-react";
 
 interface InitiativeCodePreviewProps {
@@ -161,6 +161,7 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
   const [reviewPrompt, setReviewPrompt] = useState("");
   const [isReviewing, setIsReviewing] = useState(false);
   const [reviewResult, setReviewResult] = useState<any>(null);
+  const [isDeploying, setIsDeploying] = useState(false);
   const { toast } = useToast();
 
   const { data: codeFiles = [], isLoading } = useQuery({
@@ -323,6 +324,54 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
       toast({ variant: "destructive", title: "Erro", description: e.message });
     } finally {
       setIsModifying(false);
+    }
+  };
+
+  const handleDeployAfterReview = async () => {
+    setIsDeploying(true);
+    try {
+      const session = (await supabase.auth.getSession()).data.session;
+      if (!session) throw new Error("Não autenticado");
+
+      const { data: gitConn } = await supabase
+        .from("git_connections")
+        .select("github_token, repo_owner, repo_name, default_branch")
+        .eq("organization_id", organizationId)
+        .eq("status", "active")
+        .limit(1)
+        .single();
+
+      if (!gitConn?.github_token) {
+        toast({ variant: "destructive", title: "Conexão Git não encontrada", description: "Publique primeiro pela tela de iniciativas para configurar o repositório." });
+        return;
+      }
+
+      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/run-initiative-pipeline`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+        body: JSON.stringify({
+          initiativeId,
+          stage: "publish",
+          publishParams: {
+            github_token: gitConn.github_token,
+            repo_owner: gitConn.repo_owner,
+            repo_name: gitConn.repo_name,
+            branch: gitConn.default_branch || "main",
+          },
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({ error: "Erro" }));
+        throw new Error(err.error || `Erro ${resp.status}`);
+      }
+
+      const result = await resp.json();
+      toast({ title: "Deploy realizado! 🚀", description: `${result.files_committed || 0} arquivo(s) commitados em ${gitConn.repo_owner}/${gitConn.repo_name}.` });
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Erro no deploy", description: e.message });
+    } finally {
+      setIsDeploying(false);
     }
   };
 
@@ -545,6 +594,26 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setReviewOpen(false)}>Fechar</Button>
+            {reviewResult && reviewResult.files_modified > 0 && (
+              <Button
+                onClick={handleDeployAfterReview}
+                disabled={isDeploying}
+                variant="default"
+                className="gap-1.5 bg-green-600 hover:bg-green-700"
+              >
+                {isDeploying ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Fazendo deploy...
+                  </>
+                ) : (
+                  <>
+                    <Rocket className="h-4 w-4" />
+                    Fazer Deploy
+                  </>
+                )}
+              </Button>
+            )}
             <Button
               onClick={handleFullReview}
               disabled={reviewPrompt.trim().length < 10 || isReviewing}
