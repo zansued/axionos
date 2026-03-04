@@ -1310,24 +1310,38 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
 
     // ========== STAGE 5: VALIDATION ==========
     if (stage === "validation") {
-      const jobId = await createJob("validation", { initiative_id: initiativeId });
+      const jobId = await createJob("validation", { initiative_id: initiativeId, mode: "batched" });
+
+      // Mark stale validation jobs as failed to avoid permanent "running" state after timeout/redeploy
+      if (jobId) {
+        await serviceClient.from("initiative_jobs").update({
+          status: "failed",
+          error: "Execução interrompida antes de finalizar (timeout/redeploy).",
+          completed_at: new Date().toISOString(),
+        })
+          .eq("initiative_id", initiativeId)
+          .eq("stage", "validation")
+          .eq("status", "running")
+          .neq("id", jobId);
+      }
+
       await log("pipeline_validation_start", "Iniciando validação de qualidade dos artefatos...");
 
       try {
         // Fetch all artifacts for this initiative's subtasks
         const { data: stories } = await serviceClient.from("stories")
           .select("id").eq("initiative_id", initiativeId);
-        
+
         if (!stories || stories.length === 0) throw new Error("Nenhuma story encontrada");
 
         const storyIds = stories.map((s: any) => s.id);
         const { data: phases } = await serviceClient.from("story_phases")
           .select("id").in("story_id", storyIds);
-        
+
         const phaseIds = (phases || []).map((p: any) => p.id);
         const { data: subtasks } = await serviceClient.from("story_subtasks")
           .select("id").in("phase_id", phaseIds);
-        
+
         const subtaskIds = (subtasks || []).map((st: any) => st.id);
 
         const { data: artifacts } = await serviceClient.from("agent_outputs")
@@ -1336,6 +1350,45 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
           .eq("organization_id", initiative.organization_id);
 
         if (!artifacts || artifacts.length === 0) throw new Error("Nenhum artefato encontrado para validar");
+
+        // Batch mode: only process a subset each run to avoid edge runtime timeout
+        const artifactsToValidate = artifacts.filter((artifact: any) => artifact.status !== "approved");
+        const VALIDATION_BATCH_SIZE = 8;
+        const artifactsBatch = artifactsToValidate.slice(0, VALIDATION_BATCH_SIZE);
+
+        if (artifactsToValidate.length === 0) {
+          await updateInit({ stage_status: "ready_to_publish" });
+          if (jobId) {
+            await completeJob(jobId, {
+              artifacts_validated: artifacts.length,
+              passed: artifacts.length,
+              failed: 0,
+              reworked: 0,
+              auto_approved: 0,
+              auto_rejected: 0,
+              warnings: 0,
+              remaining_to_validate: 0,
+              batch_incomplete: false,
+              overall_pass: true,
+              skipped: "all_already_approved",
+            }, { model: "google/gemini-2.5-flash", costUsd: 0, durationMs: 0 });
+          }
+
+          return new Response(JSON.stringify({
+            success: true,
+            artifacts_validated: artifacts.length,
+            passed: artifacts.length,
+            failed: 0,
+            reworked: 0,
+            auto_approved: 0,
+            auto_rejected: 0,
+            warnings: 0,
+            remaining_to_validate: 0,
+            batch_incomplete: false,
+            overall_pass: true,
+            job_id: jobId,
+          }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
 
         let totalTokens = 0;
         let totalCost = 0;
@@ -1349,7 +1402,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
         const APPROVAL_THRESHOLD = 70;
         const REWORK_THRESHOLD = 50;
 
-        for (const artifact of artifacts) {
+        for (const artifact of artifactsBatch) {
           let currentOutput = artifact.raw_output;
           let currentArtifactId = artifact.id;
           let finalValidation: any = null;
@@ -1579,40 +1632,74 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
             verdict: finalValidation?.verdict || "request_changes",
             summary: finalValidation?.summary,
             rework_attempts: reworkAttempts,
-            final_status: passCount > 0 && validationResults.length === 0 ? "approved" : undefined,
+            final_status:
+              finalValidation?.verdict === "approve"
+                ? "approved"
+                : finalValidation?.verdict === "reject"
+                  ? "rejected"
+                  : "pending_review",
           });
         }
 
-        const overallPass = failCount === 0 && autoApprovedCount === artifacts.length;
+        // Recalculate final status based on all artifacts after batch processing
+        const { data: artifactsAfter } = await serviceClient.from("agent_outputs")
+          .select("id, status")
+          .in("subtask_id", subtaskIds.length > 0 ? subtaskIds : ["00000000-0000-0000-0000-000000000000"])
+          .eq("organization_id", initiative.organization_id);
+
+        const artifactsFinal = artifactsAfter || artifacts;
+        const artifactsTotal = artifactsFinal.length;
+        const approvedCountFinal = artifactsFinal.filter((a: any) => a.status === "approved").length;
+        const rejectedCountFinal = artifactsFinal.filter((a: any) => a.status === "rejected").length;
+        const pendingReviewCountFinal = artifactsFinal.filter((a: any) => a.status === "pending_review").length;
+        const remainingToValidate = Math.max(artifactsTotal - approvedCountFinal, 0);
+        const batchIncomplete = artifactsToValidate.length > artifactsBatch.length;
+
+        const overallPass = artifactsTotal > 0 && approvedCountFinal === artifactsTotal;
         const nextStatus = overallPass ? "ready_to_publish" : "validating";
 
         await updateInit({ stage_status: nextStatus });
 
         if (jobId) await completeJob(jobId, {
-          artifacts_validated: artifacts.length,
-          passed: passCount,
-          failed: failCount,
+          artifacts_validated: artifactsTotal,
+          processed_in_batch: artifactsBatch.length,
+          passed: approvedCountFinal,
+          failed: rejectedCountFinal,
+          pending_review: pendingReviewCountFinal,
           reworked: reworkedCount,
           auto_approved: autoApprovedCount,
           auto_rejected: autoRejectedCount,
-          warnings: artifacts.length - passCount - failCount,
+          warnings: pendingReviewCountFinal,
           results: validationResults,
+          remaining_to_validate: remainingToValidate,
+          batch_incomplete: batchIncomplete,
           overall_pass: overallPass,
         }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
 
         await log("pipeline_validation_complete",
-          `Validação inteligente concluída: ${autoApprovedCount} auto-aprovados, ${reworkedCount} retrabalhados, ${failCount} rejeitados de ${artifacts.length} artefatos`, {
-          total_tokens: totalTokens, cost_usd: totalCost, overall_pass: overallPass,
-          auto_approved: autoApprovedCount, reworked: reworkedCount, auto_rejected: autoRejectedCount,
+          `Validação em lote concluída: ${artifactsBatch.length} processados, ${remainingToValidate} pendentes para aprovação, ${rejectedCountFinal} rejeitados`, {
+          total_tokens: totalTokens,
+          cost_usd: totalCost,
+          overall_pass: overallPass,
+          batch_incomplete: batchIncomplete,
+          remaining_to_validate: remainingToValidate,
+          auto_approved: autoApprovedCount,
+          reworked: reworkedCount,
+          auto_rejected: autoRejectedCount,
         });
 
         return new Response(JSON.stringify({
           success: true,
-          artifacts_validated: artifacts.length,
-          passed: passCount, failed: failCount,
+          artifacts_validated: artifactsTotal,
+          processed_in_batch: artifactsBatch.length,
+          passed: approvedCountFinal,
+          failed: rejectedCountFinal,
+          pending_review: pendingReviewCountFinal,
           reworked: reworkedCount,
           auto_approved: autoApprovedCount,
           auto_rejected: autoRejectedCount,
+          remaining_to_validate: remainingToValidate,
+          batch_incomplete: batchIncomplete,
           overall_pass: overallPass,
           results: validationResults,
           tokens: totalTokens,
