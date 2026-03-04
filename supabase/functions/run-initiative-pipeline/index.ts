@@ -1059,9 +1059,18 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                   totalTokens += archResult.tokens; totalCost += archResult.costUsd;
 
                   // --- Step 2: DEV generates code using Architect's spec ---
+                  const backendRules = isBackendFile ? `
+REGRAS PARA ARQUIVOS BACKEND (Supabase):
+- Para file_type "schema" (.sql): Gere CREATE TABLE, ALTER TABLE ENABLE RLS, CREATE POLICY. Use UUID como PK com gen_random_uuid(). Adicione created_at/updated_at com defaults.
+- Para file_type "edge_function": Gere uma Edge Function Deno/TypeScript com CORS headers, validação de auth, e lógica de negócio. Use imports de "https://deno.land/std@0.168.0/" e "https://esm.sh/@supabase/supabase-js@2".
+- Para file_type "supabase_client": Gere um client usando createClient do @supabase/supabase-js com URL e anon key de import.meta.env.
+- Para file_type "seed": Gere INSERT statements para dados iniciais.
+- Para file_type "auth_config": Gere configuração de autenticação.
+- Para .env.example: Liste VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.` : "";
+
                   const devResult = await callAI(
                     LOVABLE_API_KEY,
-                    `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use shadcn/ui, Tailwind CSS, imports corretos.\n- Siga as melhores práticas de ${language}.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use React Helmet para SEO dinâmico.`,
+                    `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use shadcn/ui, Tailwind CSS, imports corretos (para arquivos frontend).\n- Siga as melhores práticas de ${language}.\n${backendRules}\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use React Helmet para SEO dinâmico.`,
                     `${baseContext}\n\n## Especificação do Architect:\n${archResult.content}`
                   );
                   let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
