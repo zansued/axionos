@@ -1035,8 +1035,9 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                 if (hasFilePath && hasChain) {
                   // ===== CHAIN-OF-AGENTS: Architect → Dev → QA =====
                   const ext = subtask.file_path.split(".").pop() || "ts";
-                  const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML" };
+                  const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML", sql: "SQL (PostgreSQL)" };
                   const language = langMap[ext] || "TypeScript";
+                  const isBackendFile = ["schema", "migration", "edge_function", "seed", "supabase_client", "auth_config"].includes(subtask.file_type || "");
 
                   const contextFiles = Object.entries(generatedFiles);
                   let contextStr = "";
