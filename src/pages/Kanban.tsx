@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { getUserFriendlyError } from "@/lib/error-utils";
+import { InitiativeFilter } from "@/components/InitiativeFilter";
 import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
