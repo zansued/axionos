@@ -32,6 +32,7 @@ const pipelineItems = [
 const governanceItems = [
   { title: "Auditoria", url: "/audit", icon: Shield },
   { title: "Observabilidade", url: "/observability", icon: Radio },
+  { title: "Conexões", url: "/connections", icon: Package },
   { title: "Organização", url: "/org", icon: Building2 },
   { title: "Billing & Usage", url: "/billing", icon: CreditCard },
 ];
