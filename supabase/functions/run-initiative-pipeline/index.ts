@@ -1627,35 +1627,59 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
 
     // ========== STAGE 6: PUBLISH (create NEW repo, commit artifacts, open PR or push to main) ==========
     if (stage === "publish") {
-      if (!github_token || !owner) {
-        return new Response(JSON.stringify({ error: "github_token e owner são obrigatórios para publicar." }), {
+      let resolvedGithubToken = github_token;
+      let resolvedOwner = owner;
+      let resolvedRepo = repo;
+      let resolvedBaseBranch = base_branch || "main";
+
+      // Fallback to active Git connection when publish params are not explicitly provided
+      if (!resolvedGithubToken || !resolvedOwner) {
+        const { data: gitConns } = await serviceClient
+          .from("git_connections")
+          .select("github_token, repo_owner, repo_name, default_branch")
+          .eq("organization_id", initiative.organization_id)
+          .eq("status", "active")
+          .order("updated_at", { ascending: false })
+          .limit(1);
+
+        const fallbackConn = gitConns?.[0];
+        if (fallbackConn) {
+          resolvedGithubToken = resolvedGithubToken || fallbackConn.github_token;
+          resolvedOwner = resolvedOwner || fallbackConn.repo_owner;
+          resolvedRepo = resolvedRepo || fallbackConn.repo_name;
+          resolvedBaseBranch = base_branch || fallbackConn.default_branch || "main";
+        }
+      }
+
+      if (!resolvedGithubToken || !resolvedOwner) {
+        return new Response(JSON.stringify({ error: "github_token e owner são obrigatórios para publicar. Configure uma conexão Git ativa ou informe os parâmetros no request." }), {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
       // Generate a slug for the new repo name
-      const repoSlug = (repo || initiative.title)
+      const repoSlug = (resolvedRepo || initiative.title)
         .toLowerCase()
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "")
         .slice(0, 50) || `axion-${initiativeId.slice(0, 8)}`;
 
-      const jobId = await createJob("publish", { owner, repo: repoSlug, base_branch: "main" });
+      const jobId = await createJob("publish", { owner: resolvedOwner, repo: repoSlug, base_branch: resolvedBaseBranch });
       await log("pipeline_publish_start", "Criando novo repositório e publicando artefatos...");
 
       const ghHeaders = {
-        Authorization: `Bearer ${github_token}`,
+        Authorization: `Bearer ${resolvedGithubToken}`,
         Accept: "application/vnd.github.v3+json",
         "Content-Type": "application/json",
       };
       const GITHUB_API = "https://api.github.com";
 
-      // Publish directly to main (no branch/PR)
+      // Publish directly to base branch (no branch/PR)
 
       try {
         // 1. CREATE NEW REPOSITORY via GitHub API
-        let actualOwner = owner;
+        let actualOwner = resolvedOwner;
         let actualRepo = repoSlug;
         let repoHtmlUrl: string;
 
@@ -1669,9 +1693,9 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
         };
 
         // Check if owner is an org
-        const orgCheck = await fetch(`${GITHUB_API}/orgs/${owner}`, { headers: ghHeaders });
+        const orgCheck = await fetch(`${GITHUB_API}/orgs/${resolvedOwner}`, { headers: ghHeaders });
         if (orgCheck.ok) {
-          createUrl = `${GITHUB_API}/orgs/${owner}/repos`;
+          createUrl = `${GITHUB_API}/orgs/${resolvedOwner}/repos`;
         }
 
         const createRepoResp = await fetch(createUrl, {
@@ -1682,7 +1706,7 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
 
         if (createRepoResp.ok) {
           const repoData = await createRepoResp.json();
-          actualOwner = repoData.owner?.login || owner;
+          actualOwner = repoData.owner?.login || resolvedOwner;
           actualRepo = repoData.name || repoSlug;
           repoHtmlUrl = repoData.html_url;
           console.log(`Created new repo: ${actualOwner}/${actualRepo}`);
@@ -1690,8 +1714,8 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
           const errData = await createRepoResp.json();
           // If repo already exists, use it
           if (errData.errors?.[0]?.message?.includes("name already exists")) {
-            console.log(`Repo ${owner}/${repoSlug} already exists, using it`);
-            repoHtmlUrl = `https://github.com/${owner}/${repoSlug}`;
+            console.log(`Repo ${resolvedOwner}/${repoSlug} already exists, using it`);
+            repoHtmlUrl = `https://github.com/${resolvedOwner}/${repoSlug}`;
           } else {
             throw new Error(`Falha ao criar repositório: ${errData.message}`);
           }
@@ -1701,7 +1725,7 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
         await new Promise(r => setTimeout(r, 2000));
 
         // 2. Get base branch SHA
-        const baseBranch = "main";
+        const baseBranch = resolvedBaseBranch;
         let baseSha: string;
         const refResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/ref/heads/${baseBranch}`, { headers: ghHeaders });
         if (!refResp.ok) {
@@ -1806,7 +1830,7 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
             body: JSON.stringify({
               message: commitMsg,
               content: btoa(unescape(encodeURIComponent(fileContent))),
-              branch: "main",
+              branch: baseBranch,
             }),
           });
           if (commitResp.ok) {
@@ -1838,13 +1862,17 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
             },
             include: ["vite.config.ts"],
           }, null, 2),
+          "vercel.json": DEPLOY_VERCEL_JSON,
+          "public/_redirects": "/* /index.html 200",
+          "netlify.toml": "[build]\n  command = \"npm run build\"\n  publish = \"dist\"\n\n[[redirects]]\n  from = \"/*\"\n  to = \"/index.html\"\n  status = 200",
+          "postcss.config.js": `export default {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n};`,
         };
 
         for (const [requiredPath, requiredContent] of Object.entries(requiredPublishFiles)) {
           try {
             // Check if file already exists to include sha on update
             let existingSha: string | undefined;
-            const existingResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${requiredPath}?ref=main`, {
+            const existingResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${requiredPath}?ref=${baseBranch}`, {
               headers: ghHeaders,
             });
             if (existingResp.ok) {
@@ -1858,7 +1886,7 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
               body: JSON.stringify({
                 message: `chore: ensure ${requiredPath}`,
                 content: btoa(unescape(encodeURIComponent(requiredContent))),
-                branch: "main",
+                branch: baseBranch,
                 ...(existingSha ? { sha: existingSha } : {}),
               }),
             });
@@ -1884,21 +1912,21 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
         const totalAiCost = (commitMsgResult.costUsd || 0);
 
         if (jobId) await completeJob(jobId, {
-          branch: "main",
+          branch: baseBranch,
           files_committed: committedFiles.length,
           owner: actualOwner,
           repo: actualRepo,
           repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
-          ai_generated: { branch: "main", commit_count: commitMessages.length },
+          ai_generated: { branch: baseBranch, commit_count: commitMessages.length },
         }, { model: "google/gemini-2.5-flash", costUsd: totalAiCost, durationMs: 0 });
 
-        await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos direto no main em ${actualOwner}/${actualRepo}`, {
-          branch: "main", ai_tokens: totalAiTokens, repo: `${actualOwner}/${actualRepo}`,
+        await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos direto na branch ${baseBranch} em ${actualOwner}/${actualRepo}`, {
+          branch: baseBranch, ai_tokens: totalAiTokens, repo: `${actualOwner}/${actualRepo}`,
         });
 
         return new Response(JSON.stringify({
           success: true,
-          branch: "main",
+          branch: baseBranch,
           files_committed: committedFiles.length,
           skipped_files: skippedFiles,
           owner: actualOwner,
