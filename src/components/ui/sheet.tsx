@@ -11,7 +11,10 @@ const SheetTrigger = SheetPrimitive.Trigger;
 
 const SheetClose = SheetPrimitive.Close;
 
-const SheetPortal = SheetPrimitive.Portal;
+const SheetPortal = ({ ...props }: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Portal>) => (
+  <SheetPrimitive.Portal {...props} />
+);
+SheetPortal.displayName = SheetPrimitive.Portal.displayName;
 
 const SheetOverlay = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Overlay>,
