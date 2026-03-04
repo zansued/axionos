@@ -56,16 +56,21 @@ export default function Artifacts() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [selectedAdrIds, setSelectedAdrIds] = useState<Set<string>>(new Set());
   const [isDeleting, setIsDeleting] = useState(false);
+  const [initiativeFilter, setInitiativeFilter] = useState<string>("all");
 
   const { data: outputs = [], isLoading } = useQuery({
-    queryKey: ["agent-outputs", currentOrg?.id],
+    queryKey: ["agent-outputs", currentOrg?.id, initiativeFilter],
     enabled: !!currentOrg,
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("agent_outputs")
         .select("*, agents(name, role)")
         .eq("organization_id", currentOrg!.id)
         .order("created_at", { ascending: false });
+      if (initiativeFilter !== "all") {
+        query = query.eq("initiative_id", initiativeFilter);
+      }
+      const { data, error } = await query;
       if (error) throw error;
       return data;
     },
