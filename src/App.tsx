@@ -20,6 +20,7 @@ import Workspace from "./pages/Workspace";
 import Artifacts from "./pages/Artifacts";
 import OrgSettings from "./pages/OrgSettings";
 import Billing from "./pages/Billing";
+import Connections from "./pages/Connections";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -61,6 +62,7 @@ const App = () => (
               <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
               <Route path="/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
               <Route path="/org" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
+              <Route path="/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
               <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
