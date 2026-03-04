@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { getUserFriendlyError } from "@/lib/error-utils";
+import { InitiativeFilter } from "@/components/InitiativeFilter";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -43,14 +44,19 @@ export default function Stories() {
   const [organizing, setOrganizing] = useState(false);
   const [lastOrganization, setLastOrganization] = useState<any[] | null>(null);
   const [form, setForm] = useState({ title: "", description: "", status: "todo", priority: "medium", assigned_agent_id: "" });
+  const [initiativeFilter, setInitiativeFilter] = useState<string>("all");
 
   const { data: stories = [], isLoading } = useQuery({
-    queryKey: ["stories"],
+    queryKey: ["stories", initiativeFilter],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("stories")
         .select("*, agents(name, role)")
         .order("created_at", { ascending: false });
+      if (initiativeFilter !== "all") {
+        query = query.eq("initiative_id", initiativeFilter);
+      }
+      const { data, error } = await query;
       if (error) throw error;
       return data;
     },
@@ -218,6 +224,7 @@ export default function Stories() {
             <p className="text-muted-foreground mt-1">Gerencie stories e épicos do sistema</p>
           </div>
           <div className="flex items-center gap-2">
+            <InitiativeFilter value={initiativeFilter} onChange={setInitiativeFilter} />
             <Button
               variant="outline"
               className="gap-2"

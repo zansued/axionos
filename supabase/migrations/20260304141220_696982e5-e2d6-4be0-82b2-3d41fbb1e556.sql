@@ -1,0 +1,1 @@
+ALTER TABLE public.agent_outputs ADD COLUMN initiative_id uuid REFERENCES public.initiatives(id) ON DELETE SET NULL;

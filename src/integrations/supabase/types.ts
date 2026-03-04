@@ -157,6 +157,7 @@ export type Database = {
           cost_estimate: number | null
           created_at: string
           id: string
+          initiative_id: string | null
           model_used: string | null
           organization_id: string
           prompt_used: string | null
@@ -174,6 +175,7 @@ export type Database = {
           cost_estimate?: number | null
           created_at?: string
           id?: string
+          initiative_id?: string | null
           model_used?: string | null
           organization_id: string
           prompt_used?: string | null
@@ -191,6 +193,7 @@ export type Database = {
           cost_estimate?: number | null
           created_at?: string
           id?: string
+          initiative_id?: string | null
           model_used?: string | null
           organization_id?: string
           prompt_used?: string | null
@@ -209,6 +212,13 @@ export type Database = {
             columns: ["agent_id"]
             isOneToOne: false
             referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_outputs_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
             referencedColumns: ["id"]
           },
           {

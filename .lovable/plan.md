@@ -1,55 +1,32 @@
 
 
-## Organização por Iniciativa
+## Botão de Deploy Automático no Agente Revisor
 
-Concordo totalmente. Conforme o sistema cresce, stories, artefatos e cards de kanban sem contexto de iniciativa se tornam ruído. A proposta é adicionar um **filtro global por iniciativa** nas páginas de Execução (Stories), Validação (Artifacts) e Kanban.
+### Objetivo
+Adicionar um botão "Deploy Automático" no dialog do Agente Revisor que aparece **após a revisão ser concluída com sucesso** (quando `reviewResult` existe com correções). Esse botão vai disparar o estágio `publish` do pipeline, re-publicando os arquivos corrigidos no GitHub (o que automaticamente aciona o deploy no Vercel).
 
-### Estado Atual
+### Alterações
 
-- **Stories**: query busca todas as stories do usuário sem filtro por `initiative_id` (coluna já existe na tabela)
-- **Artifacts (agent_outputs)**: filtra por `organization_id` mas não por iniciativa (não tem coluna `initiative_id` direta, mas tem `subtask_id` que conecta via story)
-- **Kanban**: busca todas as stories sem filtro
-- **agent_outputs**: não tem `initiative_id` direto, mas os dados são gerados no contexto de iniciativas via pipeline
+**Arquivo: `src/components/initiatives/InitiativeCodePreview.tsx`**
 
-### Plano
+1. Adicionar estado `isDeploying` para controlar o loading do botão de deploy.
+2. Adicionar ícones `Rocket` e `GitBranch` aos imports do lucide-react.
+3. Criar função `handleDeployAfterReview` que:
+   - Busca as `git_connections` da organização para obter o token GitHub, owner, repo e branch.
+   - Chama o pipeline com `stage: "publish"` e os parâmetros de GitHub.
+   - Mostra toast de sucesso/erro.
+4. Renderizar o botão "Fazer Deploy" no dialog, ao lado do botão "Fechar", **apenas quando `reviewResult` existe e tem correções** (`reviewResult.files_modified > 0`).
+   - Se não houver conexão Git configurada, mostrar mensagem informando que é necessário publicar primeiro pela tela de iniciativas.
 
-#### 1. Componente de filtro por iniciativa (compartilhado)
-Criar um componente `InitiativeFilter` com um `Select` que lista as iniciativas da organização. Será reutilizado em Stories, Artifacts e Kanban.
+### Fluxo do Usuário
+1. Usuário descreve o problema → clica "Revisar e Corrigir"
+2. Agente analisa e corrige os arquivos
+3. Resultado aparece com diagnóstico e lista de arquivos corrigidos
+4. Novo botão **"Fazer Deploy"** (com ícone Rocket) aparece no footer
+5. Ao clicar, re-publica no GitHub automaticamente → Vercel detecta e faz deploy
 
-#### 2. Stories (Execução) - Filtrar por `initiative_id`
-- A coluna `initiative_id` já existe na tabela `stories`
-- Adicionar o `InitiativeFilter` no header da página
-- Filtrar a query com `.eq("initiative_id", selectedInitiativeId)` quando selecionado
-- Opção "Todas" como padrão para não quebrar o fluxo atual
-
-#### 3. Kanban - Mesmo filtro
-- Kanban já usa a mesma query de stories
-- Aplicar o mesmo filtro por `initiative_id`
-
-#### 4. Artifacts (Validação) - Filtrar via relacionamento
-- `agent_outputs` não tem `initiative_id` direto, mas os subtasks e stories têm
-- Duas opções:
-  - **A) Adicionar coluna `initiative_id` em `agent_outputs`** (mais limpo para queries)
-  - **B) Filtrar via join** (sem migration, mas query mais complexa)
-- Recomendo **opção A**: adicionar `initiative_id` nullable em `agent_outputs` via migration e popular no pipeline
-
-#### 5. Código Gerado - Já filtra por iniciativa (ok)
-
-### Alterações Técnicas
-
-| Arquivo | Mudança |
-|---|---|
-| `src/components/InitiativeFilter.tsx` | Novo componente Select reutilizável |
-| `src/pages/Stories.tsx` | Adicionar filtro, ajustar query |
-| `src/pages/Kanban.tsx` | Adicionar filtro, ajustar query |
-| `src/pages/Artifacts.tsx` | Adicionar filtro, ajustar query |
-| Migration SQL | Adicionar `initiative_id` em `agent_outputs` (nullable, FK) |
-| `supabase/functions/run-initiative-pipeline/index.ts` | Popular `initiative_id` ao criar outputs |
-
-### Comportamento
-
-- Filtro aparece no header de cada página, ao lado do título
-- Valor padrão: "Todas as iniciativas"
-- Ao selecionar uma, todas as queries filtram por ela
-- Opcional futuro: persistir seleção no localStorage ou contexto global
+### Detalhes Técnicos
+- Reutiliza a mesma chamada ao `run-initiative-pipeline` com `stage: "publish"` que já existe no `InitiativeDetail.tsx`.
+- Precisa buscar as credenciais Git da organização (`git_connections` table) para montar os `publishParams`.
+- Componente precisa receber ou buscar as conexões Git disponíveis (a prop `organizationId` já existe).
 

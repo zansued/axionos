@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { InitiativeFilter } from "@/components/InitiativeFilter";
 import { AppLayout } from "@/components/AppLayout";
 import { useOrg } from "@/contexts/OrgContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -55,16 +56,21 @@ export default function Artifacts() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [selectedAdrIds, setSelectedAdrIds] = useState<Set<string>>(new Set());
   const [isDeleting, setIsDeleting] = useState(false);
+  const [initiativeFilter, setInitiativeFilter] = useState<string>("all");
 
   const { data: outputs = [], isLoading } = useQuery({
-    queryKey: ["agent-outputs", currentOrg?.id],
+    queryKey: ["agent-outputs", currentOrg?.id, initiativeFilter],
     enabled: !!currentOrg,
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("agent_outputs")
         .select("*, agents(name, role)")
         .eq("organization_id", currentOrg!.id)
         .order("created_at", { ascending: false });
+      if (initiativeFilter !== "all") {
+        query = query.eq("initiative_id", initiativeFilter);
+      }
+      const { data, error } = await query;
       if (error) throw error;
       return data;
     },
@@ -200,6 +206,7 @@ export default function Artifacts() {
             <p className="text-muted-foreground mt-1">Outputs versionados e rastreáveis dos agentes</p>
           </div>
           <div className="flex gap-2">
+            <InitiativeFilter value={initiativeFilter} onChange={setInitiativeFilter} />
             <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="Tipo" />
