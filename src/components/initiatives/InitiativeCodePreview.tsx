@@ -93,6 +93,8 @@ function getFileIcon(fileName: string) {
   if (fileName.endsWith(".json")) return <FileJson className="h-3.5 w-3.5 text-yellow-400" />;
   if (fileName.endsWith(".css")) return <FileType className="h-3.5 w-3.5 text-purple-400" />;
   if (fileName.endsWith(".html")) return <FileText className="h-3.5 w-3.5 text-orange-400" />;
+  if (fileName.endsWith(".sql")) return <FileCode className="h-3.5 w-3.5 text-emerald-400" />;
+  if (fileName.endsWith(".env") || fileName.endsWith(".env.example")) return <FileText className="h-3.5 w-3.5 text-green-400" />;
   return <FileText className="h-3.5 w-3.5 text-muted-foreground" />;
 }
 
