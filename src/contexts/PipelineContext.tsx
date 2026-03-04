@@ -52,6 +52,10 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
 
         if (error) {
           let message = error.message || "Erro ao executar pipeline";
+          // Detect timeout / network errors
+          if (message.includes("Failed to send a request") || message.includes("FunctionsFetchError")) {
+            message = "A função excedeu o tempo limite ou falhou na conexão. Tente novamente — a validação agora processa em lotes menores.";
+          }
           const context = (error as any)?.context;
           if (context && typeof context.json === "function") {
             const errJson = await context.json().catch(() => null);
