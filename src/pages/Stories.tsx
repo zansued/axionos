@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { getUserFriendlyError } from "@/lib/error-utils";
+import { InitiativeFilter } from "@/components/InitiativeFilter";
 import { AppLayout } from "@/components/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
