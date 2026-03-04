@@ -402,7 +402,8 @@ JSON: {"agents": [{"name": "string", "role": "string", "description": "string", 
 Ideia refinada: ${dp.refined_idea || initiative.refined_idea || ""}
 Modelo de Negócio: ${dp.business_model || initiative.business_model || "N/A"}
 MVP: ${dp.mvp_scope || initiative.mvp_scope || "N/A"}
-Stack: Vite + React + TypeScript + Tailwind CSS + shadcn/ui
+Stack Frontend: Vite + React + TypeScript + Tailwind CSS + shadcn/ui
+Stack Backend (quando necessário): Supabase (Postgres, Auth, Edge Functions, Storage, RLS)
 Visão Estratégica: ${dp.strategic_vision || "N/A"}
 ${dp.reference_url ? `URL de Referência: ${dp.reference_url}` : ""}
 ${dp.reference_scraped ? "NOTA: O conteúdo do site de referência foi analisado durante o Discovery. Use as conclusões do Discovery para guiar o planejamento." : ""}`;
@@ -410,23 +411,36 @@ ${dp.reference_scraped ? "NOTA: O conteúdo do site de referência foi analisado
         // Step 1: PRD
         const prdResult = await callAI(
           LOVABLE_API_KEY,
-          "Você é um Product Manager sênior. Crie um PRD detalhado e executável em português brasileiro usando markdown.",
-          `${context}\n\nCrie um PRD completo incluindo:\n## Visão Geral\n## Problema a Resolver\n## Personas e Casos de Uso\n## Requisitos Funcionais\n## Requisitos Não-Funcionais\n## Critérios de Aceite\n## Dependências Técnicas\n## Métricas de Sucesso\n## Riscos e Mitigações`
+          `Você é um Product Manager sênior. Crie um PRD detalhado e executável em português brasileiro usando markdown.
+
+IMPORTANTE: Analise se o projeto necessita de backend (banco de dados, autenticação, APIs, storage de arquivos). Se sim, inclua isso explicitamente nos requisitos. A maioria dos projetos reais precisa de persistência de dados.`,
+          `${context}\n\nCrie um PRD completo incluindo:\n## Visão Geral\n## Problema a Resolver\n## Personas e Casos de Uso\n## Requisitos Funcionais\n## Requisitos Não-Funcionais (incluir requisitos de backend se aplicável)\n## Necessidades de Backend\nAnalise e liste: banco de dados (tabelas/entidades), autenticação (login/signup), storage (uploads), APIs/integrações externas. Se o projeto NÃO precisa de backend, justifique.\n## Critérios de Aceite\n## Dependências Técnicas\n## Métricas de Sucesso\n## Riscos e Mitigações`
         );
         await updateInit({ prd_content: prdResult.content });
 
         // Step 2: Architecture
         const archResult = await callAI(
           LOVABLE_API_KEY,
-          "Você é um Arquiteto de Software sênior. Crie um documento de arquitetura técnica baseado no PRD. A stack é obrigatoriamente: Vite + React + TypeScript + Tailwind CSS + shadcn/ui. Use markdown.",
-          `PRD:\n${prdResult.content.slice(0, 6000)}\n\nStack OBRIGATÓRIA: Vite + React + TypeScript + Tailwind CSS + shadcn/ui\n\nCrie a arquitetura incluindo:\n## Stack Tecnológica Final\n## Estrutura de Diretórios do Projeto\n## Componentes Principais (com file paths)\n## Modelo de Dados\n## APIs e Contratos\n## Roteamento (React Router)\n## Segurança\n## Plano de Deploy`
+          `Você é um Arquiteto de Software sênior. Crie um documento de arquitetura técnica baseado no PRD.
+
+Stack Frontend OBRIGATÓRIA: Vite + React + TypeScript + Tailwind CSS + shadcn/ui
+Stack Backend (quando o PRD indicar necessidade): Supabase
+- Banco de dados: PostgreSQL via Supabase (tabelas no schema public)
+- Autenticação: Supabase Auth (email/password, OAuth)
+- Edge Functions: Deno/TypeScript (para lógica de servidor, APIs externas)
+- Storage: Supabase Storage (para uploads de arquivos)
+- Segurança: Row Level Security (RLS) obrigatória em todas as tabelas
+- Client SDK: @supabase/supabase-js
+
+Use markdown.`,
+          `PRD:\n${prdResult.content.slice(0, 6000)}\n\nCrie a arquitetura incluindo:\n## Stack Tecnológica Final\n(Frontend + Backend se necessário)\n## Estrutura de Diretórios do Projeto\n(Incluir pasta supabase/ se houver backend)\n## Componentes Principais (com file paths)\n## Modelo de Dados (SQL)\nSe o projeto precisa de banco, defina as tabelas SQL com CREATE TABLE, tipos, constraints e políticas RLS.\n## Edge Functions\nSe o projeto precisa de APIs ou lógica de servidor, liste as edge functions necessárias.\n## Autenticação\nSe o projeto precisa de auth, defina o fluxo (signup, login, proteção de rotas).\n## APIs e Contratos\n## Roteamento (React Router)\n## Segurança (RLS, validação)\n## Plano de Deploy`
         );
         await updateInit({ architecture_content: archResult.content });
 
         // Step 3: Generate code-aware stories with file paths
         const storiesResult = await callAI(
           LOVABLE_API_KEY,
-          `Você é um Product Manager e Arquiteto sênior especializado em projetos Vite + React + TypeScript + Tailwind.
+          `Você é um Product Manager e Arquiteto sênior especializado em projetos Full-Stack com Vite + React + TypeScript + Tailwind + Supabase.
 Gere user stories executáveis onde CADA SUBTASK corresponde a UM ARQUIVO de código real.
 Retorne APENAS JSON válido.
 
@@ -434,11 +448,29 @@ IMPORTANTE:
 - Cada subtask DEVE ter um file_path (caminho do arquivo no projeto)
 - Cada subtask DEVE ter um file_type (tipo do arquivo)
 - A primeira story DEVE ser "Scaffold do Projeto" com os arquivos base
-- file_type pode ser: scaffold, component, page, style, config, hook, util, test, type
+- file_type para FRONTEND: scaffold, component, page, style, config, hook, util, test, type
+- file_type para BACKEND: schema, migration, edge_function, auth_config, seed, supabase_client
 - Subtasks de scaffold incluem: package.json, vite.config.ts, tsconfig.json, tailwind.config.ts, index.html, src/main.tsx, src/App.tsx, src/index.css, vercel.json, public/_redirects
 - vercel.json DEVE conter: { "framework": "vite", "installCommand": "npm install --include=dev", "buildCommand": "npm run build", "outputDirectory": "dist", "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
 - public/_redirects DEVE conter: /* /index.html 200  (para Netlify)
-- Use paths relativos ao root do projeto (ex: src/components/Header.tsx)`,
+- Use paths relativos ao root do projeto (ex: src/components/Header.tsx)
+
+BACKEND COM SUPABASE (quando o PRD/Arquitetura indicar necessidade):
+- Se o projeto precisa de banco de dados, CRIE uma story "Backend Setup" LOGO APÓS o Scaffold com:
+  - supabase/schema.sql (file_type: "schema") - CREATE TABLE com RLS policies
+  - supabase/seed.sql (file_type: "seed") - dados iniciais se necessário
+  - src/lib/supabase.ts (file_type: "supabase_client") - client SDK config
+  - src/hooks/useAuth.tsx (file_type: "hook") - hook de autenticação se necessário
+  - src/contexts/AuthContext.tsx (file_type: "component") - contexto de auth se necessário
+  - .env.example (file_type: "config") - variáveis de ambiente necessárias
+- Se precisa de Edge Functions (APIs, webhooks, lógica de servidor):
+  - supabase/functions/<nome>/index.ts (file_type: "edge_function")
+- Arquivo de schema SQL deve incluir:
+  - CREATE TABLE statements
+  - ALTER TABLE ... ENABLE ROW LEVEL SECURITY
+  - CREATE POLICY statements
+  - Triggers se necessário
+- O client Supabase (src/lib/supabase.ts) deve usar createClient com URL e anon key do .env`,
           `Projeto: ${initiative.title}
 
 PRD (resumo):
@@ -448,6 +480,7 @@ Arquitetura (resumo):
 ${archResult.content.slice(0, 3000)}
 
 Gere as stories no formato JSON. A PRIMEIRA story obrigatoriamente deve ser o scaffold do projeto base.
+Se o PRD/Arquitetura indicar necessidade de backend, a SEGUNDA story deve ser "Backend Setup" com schema SQL, client Supabase e hooks de auth.
 
 JSON esperado:
 {
@@ -461,7 +494,7 @@ JSON esperado:
           "name": "Configuração Base",
           "subtasks": [
             {
-              "description": "Criar package.json com dependências do projeto",
+              "description": "Criar package.json com dependências (incluir @supabase/supabase-js se backend)",
               "file_path": "package.json",
               "file_type": "config"
             },
@@ -520,6 +553,43 @@ JSON esperado:
       ]
     },
     {
+      "title": "Backend Setup (Supabase)",
+      "description": "Configuração do backend: schema SQL, RLS, client SDK e autenticação",
+      "priority": "critical",
+      "phases": [
+        {
+          "name": "Banco de Dados",
+          "subtasks": [
+            {
+              "description": "Criar schema SQL completo com tabelas, RLS policies e triggers",
+              "file_path": "supabase/schema.sql",
+              "file_type": "schema"
+            },
+            {
+              "description": "Criar .env.example com variáveis Supabase",
+              "file_path": ".env.example",
+              "file_type": "config"
+            }
+          ]
+        },
+        {
+          "name": "Client e Auth",
+          "subtasks": [
+            {
+              "description": "Criar client Supabase com createClient e tipagem",
+              "file_path": "src/lib/supabase.ts",
+              "file_type": "supabase_client"
+            },
+            {
+              "description": "Criar hook de autenticação useAuth",
+              "file_path": "src/hooks/useAuth.tsx",
+              "file_type": "hook"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "title": "Nome da Feature",
       "description": "Descrição da feature",
       "priority": "high",
@@ -538,6 +608,8 @@ JSON esperado:
     }
   ]
 }
+
+NOTA: A story "Backend Setup" só deve ser incluída se o PRD/Arquitetura indicar necessidade de banco de dados, autenticação ou APIs. Se o projeto for puramente frontend (landing page estática, portfolio, etc), omita essa story.
 
 Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
           true
@@ -899,6 +971,9 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
           }, null, 2),
           // Vite config (ESM, with path alias)
           "vite.config.ts": `import { defineConfig } from "vite";\nimport react from "@vitejs/plugin-react";\nimport path from "path";\n\nexport default defineConfig({\n  plugins: [react()],\n  resolve: {\n    alias: {\n      "@": path.resolve(__dirname, "./src"),\n    },\n  },\n});`,
+          // Backend deterministic files
+          ".env.example": `VITE_SUPABASE_URL=https://your-project.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key`,
+          "src/lib/supabase.ts": `import { createClient } from '@supabase/supabase-js';\n\nconst supabaseUrl = import.meta.env.VITE_SUPABASE_URL;\nconst supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;\n\nif (!supabaseUrl || !supabaseAnonKey) {\n  throw new Error('Missing Supabase environment variables. Check .env file.');\n}\n\nexport const supabase = createClient(supabaseUrl, supabaseAnonKey);`,
         };
 
         // Count total pending subtasks for progress tracking
@@ -963,8 +1038,9 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                 if (hasFilePath && hasChain) {
                   // ===== CHAIN-OF-AGENTS: Architect → Dev → QA =====
                   const ext = subtask.file_path.split(".").pop() || "ts";
-                  const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML" };
+                  const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML", sql: "SQL (PostgreSQL)" };
                   const language = langMap[ext] || "TypeScript";
+                  const isBackendFile = ["schema", "migration", "edge_function", "seed", "supabase_client", "auth_config"].includes(subtask.file_type || "");
 
                   const contextFiles = Object.entries(generatedFiles);
                   let contextStr = "";
@@ -986,9 +1062,18 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                   totalTokens += archResult.tokens; totalCost += archResult.costUsd;
 
                   // --- Step 2: DEV generates code using Architect's spec ---
+                  const backendRules = isBackendFile ? `
+REGRAS PARA ARQUIVOS BACKEND (Supabase):
+- Para file_type "schema" (.sql): Gere CREATE TABLE, ALTER TABLE ENABLE RLS, CREATE POLICY. Use UUID como PK com gen_random_uuid(). Adicione created_at/updated_at com defaults.
+- Para file_type "edge_function": Gere uma Edge Function Deno/TypeScript com CORS headers, validação de auth, e lógica de negócio. Use imports de "https://deno.land/std@0.168.0/" e "https://esm.sh/@supabase/supabase-js@2".
+- Para file_type "supabase_client": Gere um client usando createClient do @supabase/supabase-js com URL e anon key de import.meta.env.
+- Para file_type "seed": Gere INSERT statements para dados iniciais.
+- Para file_type "auth_config": Gere configuração de autenticação.
+- Para .env.example: Liste VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.` : "";
+
                   const devResult = await callAI(
                     LOVABLE_API_KEY,
-                    `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use shadcn/ui, Tailwind CSS, imports corretos.\n- Siga as melhores práticas de ${language}.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use React Helmet para SEO dinâmico.`,
+                    `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use shadcn/ui, Tailwind CSS, imports corretos (para arquivos frontend).\n- Siga as melhores práticas de ${language}.\n${backendRules}\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use React Helmet para SEO dinâmico.`,
                     `${baseContext}\n\n## Especificação do Architect:\n${archResult.content}`
                   );
                   let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
@@ -1068,9 +1153,10 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                 } else if (hasFilePath) {
                   // ===== SINGLE AGENT CODE MODE (no chain) =====
                   const ext = subtask.file_path.split(".").pop() || "ts";
-                  const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML" };
+                  const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML", sql: "SQL (PostgreSQL)" };
                   const language = langMap[ext] || "TypeScript";
                   const assignedAgent = devAgent || defaultAgent;
+                  const isBackendFileSingle = ["schema", "migration", "edge_function", "seed", "supabase_client", "auth_config"].includes(subtask.file_type || "");
 
                   const contextFiles = Object.entries(generatedFiles);
                   let contextStr = "";
@@ -1080,9 +1166,17 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                     contextStr += entry;
                   }
 
+                  const singleBackendRules = isBackendFileSingle ? `
+REGRAS PARA ARQUIVOS BACKEND (Supabase):
+- Para file_type "schema" (.sql): Gere CREATE TABLE, ALTER TABLE ENABLE RLS, CREATE POLICY. Use UUID como PK com gen_random_uuid(). Adicione created_at/updated_at.
+- Para file_type "edge_function": Gere Edge Function Deno/TypeScript com CORS headers e validação de auth. Use "https://deno.land/std@0.168.0/" e "https://esm.sh/@supabase/supabase-js@2".
+- Para file_type "supabase_client": Use createClient com import.meta.env.VITE_SUPABASE_URL e import.meta.env.VITE_SUPABASE_ANON_KEY.
+- Para file_type "seed": Gere INSERT statements.
+- Para .env.example: Liste VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.` : "";
+
                   const result = await callAI(
                     LOVABLE_API_KEY,
-                    `Você é um desenvolvedor expert em Vite + React + TypeScript + Tailwind CSS + shadcn/ui.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use shadcn/ui, Tailwind CSS.\n- Siga as melhores práticas de ${language}.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use caminhos absolutos ou omita canonical.`,
+                    `Você é um desenvolvedor expert em Full-Stack com Vite + React + TypeScript + Tailwind CSS + shadcn/ui + Supabase.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use shadcn/ui, Tailwind CSS (para frontend).\n- Siga as melhores práticas de ${language}.\n${singleBackendRules}\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use caminhos absolutos ou omita canonical.`,
                     `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1500)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1500)}` : ""}\n\nGere o conteúdo COMPLETO do arquivo. Retorne APENAS o código.`
                   );
 

@@ -93,6 +93,8 @@ function getFileIcon(fileName: string) {
   if (fileName.endsWith(".json")) return <FileJson className="h-3.5 w-3.5 text-yellow-400" />;
   if (fileName.endsWith(".css")) return <FileType className="h-3.5 w-3.5 text-purple-400" />;
   if (fileName.endsWith(".html")) return <FileText className="h-3.5 w-3.5 text-orange-400" />;
+  if (fileName.endsWith(".sql")) return <FileCode className="h-3.5 w-3.5 text-emerald-400" />;
+  if (fileName.endsWith(".env") || fileName.endsWith(".env.example")) return <FileText className="h-3.5 w-3.5 text-green-400" />;
   return <FileText className="h-3.5 w-3.5 text-muted-foreground" />;
 }
 
@@ -104,6 +106,11 @@ function getFileTypeFromPath(filePath: string): string {
   if (filePath.includes("/types/") || filePath.endsWith(".d.ts")) return "type";
   if (filePath.includes("/test") || filePath.includes(".test.") || filePath.includes(".spec.")) return "test";
   if (filePath.endsWith(".css") || filePath.endsWith(".scss")) return "style";
+  if (filePath.endsWith(".sql") && filePath.includes("schema")) return "schema";
+  if (filePath.endsWith(".sql") && filePath.includes("seed")) return "seed";
+  if (filePath.endsWith(".sql")) return "migration";
+  if (filePath.includes("supabase/functions/")) return "edge_function";
+  if (filePath.includes("supabase.ts") || filePath.includes("supabase-client")) return "supabase_client";
   if (filePath.endsWith(".json") || filePath.includes("config")) return "config";
   if (filePath.includes("package.json") || filePath.includes("vite.config") || filePath.includes("tsconfig")) return "scaffold";
   return "other";
@@ -423,6 +430,12 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
     util: "bg-orange-500/15 text-orange-400",
     type: "bg-pink-500/15 text-pink-400",
     test: "bg-red-500/15 text-red-400",
+    schema: "bg-emerald-500/15 text-emerald-400",
+    migration: "bg-emerald-500/15 text-emerald-400",
+    edge_function: "bg-teal-500/15 text-teal-400",
+    seed: "bg-lime-500/15 text-lime-400",
+    supabase_client: "bg-green-500/15 text-green-400",
+    auth_config: "bg-violet-500/15 text-violet-400",
     other: "bg-muted text-muted-foreground",
   };
 
