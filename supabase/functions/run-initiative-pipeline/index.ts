@@ -464,7 +464,7 @@ IMPORTANTE:
 
 BACKEND COM SUPABASE (quando o PRD/Arquitetura indicar necessidade):
 - Se o projeto precisa de banco de dados, CRIE uma story "Backend Setup" LOGO APÓS o Scaffold com:
-  - supabase/schema.sql (file_type: "schema") - CREATE TABLE com RLS policies
+  - supabase/schema.sql (file_type: "schema") - CREATE TABLE IF NOT EXISTS com RLS policies
   - supabase/seed.sql (file_type: "seed") - dados iniciais se necessário
   - src/lib/supabase.ts (file_type: "supabase_client") - client SDK config
   - src/hooks/useAuth.tsx (file_type: "hook") - hook de autenticação se necessário
@@ -472,6 +472,7 @@ BACKEND COM SUPABASE (quando o PRD/Arquitetura indicar necessidade):
   - .env.example (file_type: "config") - variáveis de ambiente necessárias
 - Se precisa de Edge Functions (APIs, webhooks, lógica de servidor):
   - supabase/functions/<nome>/index.ts (file_type: "edge_function")
+- REGRA DE PREFIXO: Todas as tabelas DEVEM ter prefixo curto do projeto (ex: "tf_" para TaskFlow). Use CREATE TABLE IF NOT EXISTS.
 - Arquivo de schema SQL deve incluir:
   - CREATE TABLE statements
   - ALTER TABLE ... ENABLE ROW LEVEL SECURITY
