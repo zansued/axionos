@@ -1138,6 +1138,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
 
                   const { data: artifact } = await serviceClient.from("agent_outputs").insert({
                     organization_id: initiative.organization_id, workspace_id: initiative.workspace_id || null,
+                    initiative_id: initiativeId,
                     agent_id: assignedAgent.id, subtask_id: subtask.id, type: outputType, status: "draft",
                     summary: subtask.description?.slice(0, 200), raw_output: { text: result.content },
                     model_used: result.model, prompt_used: subtask.description,

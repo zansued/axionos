@@ -206,6 +206,7 @@ export default function Artifacts() {
             <p className="text-muted-foreground mt-1">Outputs versionados e rastreáveis dos agentes</p>
           </div>
           <div className="flex gap-2">
+            <InitiativeFilter value={initiativeFilter} onChange={setInitiativeFilter} />
             <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="Tipo" />

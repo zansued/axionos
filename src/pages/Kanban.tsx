@@ -130,6 +130,7 @@ export default function Kanban() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <InitiativeFilter value={initiativeFilter} onChange={setInitiativeFilter} />
             {realtimeEnabled ? (
               <Radio className="h-3.5 w-3.5 text-success animate-pulse-glow" />
             ) : (

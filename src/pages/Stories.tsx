@@ -224,6 +224,7 @@ export default function Stories() {
             <p className="text-muted-foreground mt-1">Gerencie stories e épicos do sistema</p>
           </div>
           <div className="flex items-center gap-2">
+            <InitiativeFilter value={initiativeFilter} onChange={setInitiativeFilter} />
             <Button
               variant="outline"
               className="gap-2"
