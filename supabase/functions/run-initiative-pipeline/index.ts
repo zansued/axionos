@@ -1331,8 +1331,8 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
         const subtaskIds = (subtasks || []).map((st: any) => st.id);
 
         const { data: artifacts } = await serviceClient.from("agent_outputs")
-          .select("id, type, summary, raw_output, agent_id, tokens_used, model_used, agents(name, role)")
-          .in("subtask_id", subtaskIds)
+          .select("id, type, summary, raw_output, agent_id, tokens_used, model_used, status, subtask_id, cost_estimate, agents(name, role)")
+          .in("subtask_id", subtaskIds.length > 0 ? subtaskIds : ["00000000-0000-0000-0000-000000000000"])
           .eq("organization_id", initiative.organization_id);
 
         if (!artifacts || artifacts.length === 0) throw new Error("Nenhum artefato encontrado para validar");
