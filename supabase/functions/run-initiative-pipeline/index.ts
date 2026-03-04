@@ -440,7 +440,7 @@ Use markdown.`,
         // Step 3: Generate code-aware stories with file paths
         const storiesResult = await callAI(
           LOVABLE_API_KEY,
-          `Você é um Product Manager e Arquiteto sênior especializado em projetos Vite + React + TypeScript + Tailwind.
+          `Você é um Product Manager e Arquiteto sênior especializado em projetos Full-Stack com Vite + React + TypeScript + Tailwind + Supabase.
 Gere user stories executáveis onde CADA SUBTASK corresponde a UM ARQUIVO de código real.
 Retorne APENAS JSON válido.
 
@@ -448,11 +448,29 @@ IMPORTANTE:
 - Cada subtask DEVE ter um file_path (caminho do arquivo no projeto)
 - Cada subtask DEVE ter um file_type (tipo do arquivo)
 - A primeira story DEVE ser "Scaffold do Projeto" com os arquivos base
-- file_type pode ser: scaffold, component, page, style, config, hook, util, test, type
+- file_type para FRONTEND: scaffold, component, page, style, config, hook, util, test, type
+- file_type para BACKEND: schema, migration, edge_function, auth_config, seed, supabase_client
 - Subtasks de scaffold incluem: package.json, vite.config.ts, tsconfig.json, tailwind.config.ts, index.html, src/main.tsx, src/App.tsx, src/index.css, vercel.json, public/_redirects
 - vercel.json DEVE conter: { "framework": "vite", "installCommand": "npm install --include=dev", "buildCommand": "npm run build", "outputDirectory": "dist", "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
 - public/_redirects DEVE conter: /* /index.html 200  (para Netlify)
-- Use paths relativos ao root do projeto (ex: src/components/Header.tsx)`,
+- Use paths relativos ao root do projeto (ex: src/components/Header.tsx)
+
+BACKEND COM SUPABASE (quando o PRD/Arquitetura indicar necessidade):
+- Se o projeto precisa de banco de dados, CRIE uma story "Backend Setup" LOGO APÓS o Scaffold com:
+  - supabase/schema.sql (file_type: "schema") - CREATE TABLE com RLS policies
+  - supabase/seed.sql (file_type: "seed") - dados iniciais se necessário
+  - src/lib/supabase.ts (file_type: "supabase_client") - client SDK config
+  - src/hooks/useAuth.tsx (file_type: "hook") - hook de autenticação se necessário
+  - src/contexts/AuthContext.tsx (file_type: "component") - contexto de auth se necessário
+  - .env.example (file_type: "config") - variáveis de ambiente necessárias
+- Se precisa de Edge Functions (APIs, webhooks, lógica de servidor):
+  - supabase/functions/<nome>/index.ts (file_type: "edge_function")
+- Arquivo de schema SQL deve incluir:
+  - CREATE TABLE statements
+  - ALTER TABLE ... ENABLE ROW LEVEL SECURITY
+  - CREATE POLICY statements
+  - Triggers se necessário
+- O client Supabase (src/lib/supabase.ts) deve usar createClient com URL e anon key do .env`,
           `Projeto: ${initiative.title}
 
 PRD (resumo):
@@ -462,6 +480,7 @@ Arquitetura (resumo):
 ${archResult.content.slice(0, 3000)}
 
 Gere as stories no formato JSON. A PRIMEIRA story obrigatoriamente deve ser o scaffold do projeto base.
+Se o PRD/Arquitetura indicar necessidade de backend, a SEGUNDA story deve ser "Backend Setup" com schema SQL, client Supabase e hooks de auth.
 
 JSON esperado:
 {
@@ -475,7 +494,7 @@ JSON esperado:
           "name": "Configuração Base",
           "subtasks": [
             {
-              "description": "Criar package.json com dependências do projeto",
+              "description": "Criar package.json com dependências (incluir @supabase/supabase-js se backend)",
               "file_path": "package.json",
               "file_type": "config"
             },
@@ -534,6 +553,43 @@ JSON esperado:
       ]
     },
     {
+      "title": "Backend Setup (Supabase)",
+      "description": "Configuração do backend: schema SQL, RLS, client SDK e autenticação",
+      "priority": "critical",
+      "phases": [
+        {
+          "name": "Banco de Dados",
+          "subtasks": [
+            {
+              "description": "Criar schema SQL completo com tabelas, RLS policies e triggers",
+              "file_path": "supabase/schema.sql",
+              "file_type": "schema"
+            },
+            {
+              "description": "Criar .env.example com variáveis Supabase",
+              "file_path": ".env.example",
+              "file_type": "config"
+            }
+          ]
+        },
+        {
+          "name": "Client e Auth",
+          "subtasks": [
+            {
+              "description": "Criar client Supabase com createClient e tipagem",
+              "file_path": "src/lib/supabase.ts",
+              "file_type": "supabase_client"
+            },
+            {
+              "description": "Criar hook de autenticação useAuth",
+              "file_path": "src/hooks/useAuth.tsx",
+              "file_type": "hook"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "title": "Nome da Feature",
       "description": "Descrição da feature",
       "priority": "high",
@@ -552,6 +608,8 @@ JSON esperado:
     }
   ]
 }
+
+NOTA: A story "Backend Setup" só deve ser incluída se o PRD/Arquitetura indicar necessidade de banco de dados, autenticação ou APIs. Se o projeto for puramente frontend (landing page estática, portfolio, etc), omita essa story.
 
 Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
           true
