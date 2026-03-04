@@ -75,6 +75,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
     case "squad_formed":
       return [
         { stage: "approve", label: "Aprovar Squad", type: "approve" },
+        { stage: "squad_formation", label: "Re-gerar Squad", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "planning_ready":
