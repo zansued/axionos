@@ -44,14 +44,19 @@ export default function Stories() {
   const [organizing, setOrganizing] = useState(false);
   const [lastOrganization, setLastOrganization] = useState<any[] | null>(null);
   const [form, setForm] = useState({ title: "", description: "", status: "todo", priority: "medium", assigned_agent_id: "" });
+  const [initiativeFilter, setInitiativeFilter] = useState<string>("all");
 
   const { data: stories = [], isLoading } = useQuery({
-    queryKey: ["stories"],
+    queryKey: ["stories", initiativeFilter],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("stories")
         .select("*, agents(name, role)")
         .order("created_at", { ascending: false });
+      if (initiativeFilter !== "all") {
+        query = query.eq("initiative_id", initiativeFilter);
+      }
+      const { data, error } = await query;
       if (error) throw error;
       return data;
     },
