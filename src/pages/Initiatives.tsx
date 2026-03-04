@@ -146,6 +146,32 @@ export default function Initiatives() {
     }
   }, [toast, queryClient]);
 
+  const rollbackToStage = useCallback(async (initiativeId: string, macroKey: string) => {
+    // Map macro stage key to the stage_status that allows re-running it
+    const rollbackMap: Record<string, string> = {
+      discovery: "draft",
+      squad: "squad_ready",
+      planning: "planning_ready",
+      execution: "planned",
+      validation: "in_progress",
+      publish: "ready_to_publish",
+    };
+    const targetStatus = rollbackMap[macroKey];
+    if (!targetStatus) return;
+
+    try {
+      const { error } = await supabase
+        .from("initiatives")
+        .update({ stage_status: targetStatus } as any)
+        .eq("id", initiativeId);
+      if (error) throw error;
+      toast({ title: `Pipeline retornado para refazer "${macroKey}" ⟲` });
+      queryClient.invalidateQueries({ queryKey: ["initiatives"] });
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Erro no rollback", description: e.message });
+    }
+  }, [toast, queryClient]);
+
   const { data: gitConnections = [] } = useQuery({
     queryKey: ["git-connections", currentOrg?.id],
     queryFn: async () => {
@@ -195,6 +221,7 @@ export default function Initiatives() {
               gitConnections={gitConnections}
               onRunStage={(stage, comment, publishParams) => runStage(selected.id, stage, comment, publishParams)}
               onApprove={() => runStage(selected.id, "approve")}
+              onRollbackToStage={(macroKey) => rollbackToStage(selected.id, macroKey)}
             />
           ) : (
             <Card className="border-dashed border-2 flex items-center justify-center min-h-[400px]">

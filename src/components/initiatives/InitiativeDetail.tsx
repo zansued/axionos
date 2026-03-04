@@ -44,14 +44,16 @@ interface InitiativeDetailProps {
   gitConnections?: GitConnection[];
   onRunStage: (stage: string, comment?: string, publishParams?: { github_token: string; owner: string; repo: string; base_branch: string }) => void;
   onApprove: () => void;
+  onRollbackToStage?: (macroKey: string) => void;
 }
 
-export function InitiativeDetail({ initiative, jobs, stories = [], runningStage, gitConnections = [], onRunStage, onApprove }: InitiativeDetailProps) {
+export function InitiativeDetail({ initiative, jobs, stories = [], runningStage, gitConnections = [], onRunStage, onApprove, onRollbackToStage }: InitiativeDetailProps) {
   const stageStatus = initiative.stage_status || initiative.status || "draft";
   const macroIdx = getMacroStageIndex(stageStatus);
   const actions = getAvailableActions(stageStatus);
   const dp = initiative.discovery_payload || {};
   const { toast: publishToast } = useToast();
+  const [rollbackConfirm, setRollbackConfirm] = useState<{ key: string; label: string } | null>(null);
 
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectComment, setRejectComment] = useState("");
@@ -171,21 +173,28 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
               ))}
             </div>
           </div>
-          {/* Macro pipeline steps */}
+          {/* Macro pipeline steps — click completed stages to rollback */}
           <div className="flex items-center gap-1 mt-4 overflow-x-auto">
             {MACRO_STAGES.map((stage, i) => {
               const Icon = stage.icon;
               const isDone = i < macroIdx;
               const isActive = i === macroIdx;
+              const canClick = isDone && !runningStage && onRollbackToStage && stage.key !== "done";
               return (
                 <div key={stage.key} className="flex items-center shrink-0">
-                  <div className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium whitespace-nowrap transition-colors ${
-                    isActive ? "bg-primary/15 text-primary border border-primary/30" :
-                    isDone ? "bg-success/10 text-success" : "bg-muted/30 text-muted-foreground"
-                  }`}>
+                  <button
+                    type="button"
+                    disabled={!canClick}
+                    onClick={() => canClick && setRollbackConfirm({ key: stage.key, label: stage.label })}
+                    className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium whitespace-nowrap transition-colors ${
+                      isActive ? "bg-primary/15 text-primary border border-primary/30" :
+                      isDone ? "bg-success/10 text-success" : "bg-muted/30 text-muted-foreground"
+                    } ${canClick ? "cursor-pointer hover:bg-warning/15 hover:text-warning hover:border hover:border-warning/30" : ""}`}
+                    title={canClick ? `Clique para voltar e refazer "${stage.label}"` : undefined}
+                  >
                     {isDone ? <CheckCircle2 className="h-3 w-3" /> : <Icon className="h-3 w-3" />}
                     <span className="hidden sm:inline">{stage.label}</span>
-                  </div>
+                  </button>
                   {i < MACRO_STAGES.length - 1 && <ArrowRight className={`h-3 w-3 mx-0.5 shrink-0 ${isDone ? "text-success" : "text-muted-foreground/20"}`} />}
                 </div>
               );
@@ -240,6 +249,37 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
             >
               <RotateCcw className="h-4 w-4" />
               Confirmar Ajustes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Rollback confirmation dialog */}
+      <Dialog open={!!rollbackConfirm} onOpenChange={(open) => !open && setRollbackConfirm(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <RotateCcw className="h-5 w-5 text-warning" />
+              Voltar para "{rollbackConfirm?.label}"
+            </DialogTitle>
+            <DialogDescription>
+              O pipeline será retornado para o estágio <strong>{rollbackConfirm?.label}</strong>, permitindo refazer essa etapa. Os dados posteriores serão preservados mas poderão ser sobrescritos ao re-executar.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRollbackConfirm(null)}>Cancelar</Button>
+            <Button
+              variant="default"
+              className="gap-1.5 bg-warning text-warning-foreground hover:bg-warning/90"
+              onClick={() => {
+                if (rollbackConfirm && onRollbackToStage) {
+                  onRollbackToStage(rollbackConfirm.key);
+                }
+                setRollbackConfirm(null);
+              }}
+            >
+              <RotateCcw className="h-4 w-4" />
+              Confirmar Rollback
             </Button>
           </DialogFooter>
         </DialogContent>
