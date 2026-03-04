@@ -66,9 +66,11 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           approve: "Stage aprovado ✅",
           reject: "Ajustes solicitados — pipeline retornou ao estágio anterior ⟲",
           execution: `Execução concluída: ${result.code_files || 0} arquivos de código, ${result.executed || 0} subtasks ✅`,
-          validation: result.overall_pass
-            ? `Validação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos ✅`
-            : `Validação: ${result.failed || 0} falhas de ${result.artifacts_validated || 0} artefatos ⚠️`,
+          validation: result.batch_incomplete
+            ? `Validação em lote: ${result.processed_in_batch || 0} processados, ${result.remaining_to_validate || 0} restantes ⏳`
+            : result.overall_pass
+              ? `Validação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos ✅`
+              : `Validação: ${result.failed || 0} falhas de ${result.artifacts_validated || 0} artefatos ⚠️`,
           publish: `Publicação concluída: ${result.files_committed || 0} arquivos commitados no main ✅`,
         };
         toast({ title: stageLabels[stage] || "Concluído!" });
@@ -83,6 +85,15 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
             runStage(initiativeId, "validation");
           }, 1500);
           return; // Don't clear running yet
+        }
+
+        // Continue validation automatically while there are remaining batched artifacts
+        if (stage === "validation" && result.success && result.batch_incomplete) {
+          toast({ title: `🔁 Continuando validação automática (${result.remaining_to_validate || 0} restantes)...` });
+          setTimeout(() => {
+            runStage(initiativeId, "validation");
+          }, 1200);
+          return;
         }
       } catch (e: any) {
         toast({ variant: "destructive", title: "Erro", description: e.message });
