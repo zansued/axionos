@@ -9,11 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { GitBranch, Plus, Trash2, Loader2, CheckCircle2, ExternalLink, Plug } from "lucide-react";
+import { GitBranch, Plus, Trash2, Loader2, CheckCircle2, ExternalLink, Plug, Database } from "lucide-react";
 import { toast } from "sonner";
 
 interface GitConnection {
@@ -28,20 +29,36 @@ interface GitConnection {
   created_at: string;
 }
 
+interface SupabaseConnection {
+  id: string;
+  label: string;
+  supabase_url: string;
+  supabase_anon_key: string;
+  status: string;
+  workspace_id: string;
+  created_at: string;
+}
+
 export default function Connections() {
   const { currentOrg, workspaces, userRole, loading: orgLoading } = useOrg();
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  const [addOpen, setAddOpen] = useState(false);
-  const [form, setForm] = useState({
+  const [addGitOpen, setAddGitOpen] = useState(false);
+  const [addSupabaseOpen, setAddSupabaseOpen] = useState(false);
+  const [gitForm, setGitForm] = useState({
     repo_owner: "",
     repo_name: "",
     default_branch: "main",
     github_token: "",
   });
+  const [sbForm, setSbForm] = useState({
+    label: "",
+    supabase_url: "",
+    supabase_anon_key: "",
+  });
 
-  const { data: connections = [], isLoading } = useQuery({
+  const { data: gitConnections = [], isLoading: gitLoading } = useQuery({
     queryKey: ["git-connections-page", currentOrg?.id],
     queryFn: async () => {
       if (!currentOrg) return [];
@@ -56,33 +73,71 @@ export default function Connections() {
     enabled: !!currentOrg,
   });
 
-  const addMutation = useMutation({
+  const { data: sbConnections = [], isLoading: sbLoading } = useQuery({
+    queryKey: ["supabase-connections-page", currentOrg?.id],
+    queryFn: async () => {
+      if (!currentOrg) return [];
+      const { data, error } = await supabase
+        .from("supabase_connections")
+        .select("*")
+        .eq("organization_id", currentOrg.id)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data || []) as SupabaseConnection[];
+    },
+    enabled: !!currentOrg,
+  });
+
+  const addGitMutation = useMutation({
     mutationFn: async () => {
       if (!currentOrg || !user) throw new Error("Sem organização");
       const wsId = workspaces[0]?.id;
       if (!wsId) throw new Error("Nenhum workspace disponível");
-
       const { error } = await supabase.from("git_connections").insert({
         organization_id: currentOrg.id,
         workspace_id: wsId,
         connected_by: user.id,
-        repo_owner: form.repo_owner.trim(),
-        repo_name: form.repo_name.trim(),
-        default_branch: form.default_branch.trim() || "main",
-        github_token: form.github_token.trim() || null,
+        repo_owner: gitForm.repo_owner.trim(),
+        repo_name: gitForm.repo_name.trim(),
+        default_branch: gitForm.default_branch.trim() || "main",
+        github_token: gitForm.github_token.trim() || null,
       });
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Conexão adicionada!");
+      toast.success("Conexão Git adicionada!");
       queryClient.invalidateQueries({ queryKey: ["git-connections-page"] });
-      setAddOpen(false);
-      setForm({ repo_owner: "", repo_name: "", default_branch: "main", github_token: "" });
+      setAddGitOpen(false);
+      setGitForm({ repo_owner: "", repo_name: "", default_branch: "main", github_token: "" });
     },
     onError: (e: any) => toast.error(e.message || "Erro ao salvar"),
   });
 
-  const deleteMutation = useMutation({
+  const addSbMutation = useMutation({
+    mutationFn: async () => {
+      if (!currentOrg || !user) throw new Error("Sem organização");
+      const wsId = workspaces[0]?.id;
+      if (!wsId) throw new Error("Nenhum workspace disponível");
+      const { error } = await supabase.from("supabase_connections").insert({
+        organization_id: currentOrg.id,
+        workspace_id: wsId,
+        connected_by: user.id,
+        label: sbForm.label.trim() || "Supabase",
+        supabase_url: sbForm.supabase_url.trim(),
+        supabase_anon_key: sbForm.supabase_anon_key.trim(),
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Conexão Supabase adicionada!");
+      queryClient.invalidateQueries({ queryKey: ["supabase-connections-page"] });
+      setAddSupabaseOpen(false);
+      setSbForm({ label: "", supabase_url: "", supabase_anon_key: "" });
+    },
+    onError: (e: any) => toast.error(e.message || "Erro ao salvar"),
+  });
+
+  const deleteGitMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("git_connections").delete().eq("id", id);
       if (error) throw error;
@@ -90,6 +145,18 @@ export default function Connections() {
     onSuccess: () => {
       toast.success("Conexão removida");
       queryClient.invalidateQueries({ queryKey: ["git-connections-page"] });
+    },
+    onError: (e: any) => toast.error(e.message || "Erro ao remover"),
+  });
+
+  const deleteSbMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("supabase_connections").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Conexão removida");
+      queryClient.invalidateQueries({ queryKey: ["supabase-connections-page"] });
     },
     onError: (e: any) => toast.error(e.message || "Erro ao remover"),
   });
@@ -109,100 +176,197 @@ export default function Connections() {
   return (
     <AppLayout>
       <div className="space-y-6 p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Conexões</h1>
-            <p className="text-muted-foreground text-sm">Gerencie suas conexões Git para deploy automático.</p>
-          </div>
-          {canManage && (
-            <Button onClick={() => setAddOpen(true)} className="gap-1.5">
-              <Plus className="h-4 w-4" /> Nova Conexão
-            </Button>
-          )}
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Conexões</h1>
+          <p className="text-muted-foreground text-sm">Gerencie suas conexões Git e Supabase.</p>
         </div>
 
-        {isLoading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Tabs defaultValue="git" className="w-full">
+          <div className="flex items-center justify-between">
+            <TabsList>
+              <TabsTrigger value="git" className="gap-1.5">
+                <GitBranch className="h-4 w-4" /> Git
+              </TabsTrigger>
+              <TabsTrigger value="supabase" className="gap-1.5">
+                <Database className="h-4 w-4" /> Supabase
+              </TabsTrigger>
+            </TabsList>
           </div>
-        ) : connections.length === 0 ? (
-          <Card className="border-dashed border-2 border-border/50">
-            <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-              <Plug className="h-10 w-10 text-muted-foreground/50 mb-3" />
-              <h3 className="font-semibold text-lg">Nenhuma conexão configurada</h3>
-              <p className="text-sm text-muted-foreground mt-1 max-w-md">
-                Adicione uma conexão Git para habilitar deploy automático e publicação de código nos seus repositórios.
-              </p>
+
+          {/* Git Tab */}
+          <TabsContent value="git" className="mt-4 space-y-4">
+            <div className="flex justify-end">
               {canManage && (
-                <Button onClick={() => setAddOpen(true)} variant="outline" className="mt-4 gap-1.5">
-                  <Plus className="h-4 w-4" /> Adicionar Conexão
+                <Button onClick={() => setAddGitOpen(true)} className="gap-1.5">
+                  <Plus className="h-4 w-4" /> Nova Conexão Git
                 </Button>
               )}
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {connections.map((conn) => (
-              <Card key={conn.id} className="border-border/50 bg-card/80 backdrop-blur">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <GitBranch className="h-5 w-5 text-primary shrink-0" />
-                      <div>
-                        <CardTitle className="text-sm font-semibold">
-                          {conn.repo_owner}/{conn.repo_name}
-                        </CardTitle>
-                        <CardDescription className="text-xs mt-0.5">
-                          Branch: {conn.default_branch}
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className={conn.status === "active"
-                        ? "bg-green-500/15 text-green-400 border-green-500/30"
-                        : "bg-muted text-muted-foreground"}
-                    >
-                      {conn.status === "active" ? (
-                        <><CheckCircle2 className="h-3 w-3 mr-1" /> Ativo</>
-                      ) : conn.status}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>Token: {conn.github_token ? "••••••••" : "Não configurado"}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <a
-                      href={`https://github.com/${conn.repo_owner}/${conn.repo_name}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-primary hover:underline flex items-center gap-1"
-                    >
-                      <ExternalLink className="h-3 w-3" /> Ver no GitHub
-                    </a>
-                    {canManage && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="ml-auto text-destructive hover:text-destructive h-7 px-2"
-                        onClick={() => deleteMutation.mutate(conn.id)}
-                        disabled={deleteMutation.isPending}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    )}
-                  </div>
+            </div>
+            {gitLoading ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : gitConnections.length === 0 ? (
+              <Card className="border-dashed border-2 border-border/50">
+                <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                  <Plug className="h-10 w-10 text-muted-foreground/50 mb-3" />
+                  <h3 className="font-semibold text-lg">Nenhuma conexão Git</h3>
+                  <p className="text-sm text-muted-foreground mt-1 max-w-md">
+                    Adicione uma conexão Git para habilitar deploy automático.
+                  </p>
+                  {canManage && (
+                    <Button onClick={() => setAddGitOpen(true)} variant="outline" className="mt-4 gap-1.5">
+                      <Plus className="h-4 w-4" /> Adicionar
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        )}
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {gitConnections.map((conn) => (
+                  <Card key={conn.id} className="border-border/50 bg-card/80 backdrop-blur">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-2">
+                          <GitBranch className="h-5 w-5 text-primary shrink-0" />
+                          <div>
+                            <CardTitle className="text-sm font-semibold">
+                              {conn.repo_owner}/{conn.repo_name}
+                            </CardTitle>
+                            <CardDescription className="text-xs mt-0.5">
+                              Branch: {conn.default_branch}
+                            </CardDescription>
+                          </div>
+                        </div>
+                        <Badge
+                          variant="secondary"
+                          className={conn.status === "active"
+                            ? "bg-green-500/15 text-green-400 border-green-500/30"
+                            : "bg-muted text-muted-foreground"}
+                        >
+                          {conn.status === "active" ? (
+                            <><CheckCircle2 className="h-3 w-3 mr-1" /> Ativo</>
+                          ) : conn.status}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <span>Token: {conn.github_token ? "••••••••" : "Não configurado"}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={`https://github.com/${conn.repo_owner}/${conn.repo_name}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-primary hover:underline flex items-center gap-1"
+                        >
+                          <ExternalLink className="h-3 w-3" /> Ver no GitHub
+                        </a>
+                        {canManage && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="ml-auto text-destructive hover:text-destructive h-7 px-2"
+                            onClick={() => deleteGitMutation.mutate(conn.id)}
+                            disabled={deleteGitMutation.isPending}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Supabase Tab */}
+          <TabsContent value="supabase" className="mt-4 space-y-4">
+            <div className="flex justify-end">
+              {canManage && (
+                <Button onClick={() => setAddSupabaseOpen(true)} className="gap-1.5">
+                  <Plus className="h-4 w-4" /> Nova Conexão Supabase
+                </Button>
+              )}
+            </div>
+            {sbLoading ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : sbConnections.length === 0 ? (
+              <Card className="border-dashed border-2 border-border/50">
+                <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                  <Database className="h-10 w-10 text-muted-foreground/50 mb-3" />
+                  <h3 className="font-semibold text-lg">Nenhuma conexão Supabase</h3>
+                  <p className="text-sm text-muted-foreground mt-1 max-w-md">
+                    Conecte um projeto Supabase externo para usar como backend dos sistemas gerados.
+                  </p>
+                  {canManage && (
+                    <Button onClick={() => setAddSupabaseOpen(true)} variant="outline" className="mt-4 gap-1.5">
+                      <Plus className="h-4 w-4" /> Adicionar
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {sbConnections.map((conn) => (
+                  <Card key={conn.id} className="border-border/50 bg-card/80 backdrop-blur">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-2">
+                          <Database className="h-5 w-5 text-primary shrink-0" />
+                          <div>
+                            <CardTitle className="text-sm font-semibold">
+                              {conn.label || "Supabase"}
+                            </CardTitle>
+                            <CardDescription className="text-xs mt-0.5 truncate max-w-[180px]">
+                              {conn.supabase_url}
+                            </CardDescription>
+                          </div>
+                        </div>
+                        <Badge
+                          variant="secondary"
+                          className={conn.status === "active"
+                            ? "bg-green-500/15 text-green-400 border-green-500/30"
+                            : "bg-muted text-muted-foreground"}
+                        >
+                          {conn.status === "active" ? (
+                            <><CheckCircle2 className="h-3 w-3 mr-1" /> Ativo</>
+                          ) : conn.status}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <span>Anon Key: ••••••••</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {canManage && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="ml-auto text-destructive hover:text-destructive h-7 px-2"
+                            onClick={() => deleteSbMutation.mutate(conn.id)}
+                            disabled={deleteSbMutation.isPending}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
 
-      {/* Add Connection Dialog */}
-      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+      {/* Add Git Connection Dialog */}
+      <Dialog open={addGitOpen} onOpenChange={setAddGitOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -219,16 +383,16 @@ export default function Connections() {
                 <Label className="text-xs">Owner / Org</Label>
                 <Input
                   placeholder="minha-org"
-                  value={form.repo_owner}
-                  onChange={(e) => setForm((f) => ({ ...f, repo_owner: e.target.value }))}
+                  value={gitForm.repo_owner}
+                  onChange={(e) => setGitForm((f) => ({ ...f, repo_owner: e.target.value }))}
                 />
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">Repositório</Label>
                 <Input
                   placeholder="meu-repo"
-                  value={form.repo_name}
-                  onChange={(e) => setForm((f) => ({ ...f, repo_name: e.target.value }))}
+                  value={gitForm.repo_name}
+                  onChange={(e) => setGitForm((f) => ({ ...f, repo_name: e.target.value }))}
                 />
               </div>
             </div>
@@ -236,8 +400,8 @@ export default function Connections() {
               <Label className="text-xs">Branch padrão</Label>
               <Input
                 placeholder="main"
-                value={form.default_branch}
-                onChange={(e) => setForm((f) => ({ ...f, default_branch: e.target.value }))}
+                value={gitForm.default_branch}
+                onChange={(e) => setGitForm((f) => ({ ...f, default_branch: e.target.value }))}
               />
             </div>
             <div className="space-y-1.5">
@@ -245,8 +409,8 @@ export default function Connections() {
               <Input
                 type="password"
                 placeholder="ghp_..."
-                value={form.github_token}
-                onChange={(e) => setForm((f) => ({ ...f, github_token: e.target.value }))}
+                value={gitForm.github_token}
+                onChange={(e) => setGitForm((f) => ({ ...f, github_token: e.target.value }))}
               />
               <p className="text-[10px] text-muted-foreground">
                 Personal Access Token com permissão de escrita no repositório.
@@ -254,12 +418,70 @@ export default function Connections() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAddOpen(false)}>Cancelar</Button>
+            <Button variant="outline" onClick={() => setAddGitOpen(false)}>Cancelar</Button>
             <Button
-              onClick={() => addMutation.mutate()}
-              disabled={!form.repo_owner.trim() || !form.repo_name.trim() || addMutation.isPending}
+              onClick={() => addGitMutation.mutate()}
+              disabled={!gitForm.repo_owner.trim() || !gitForm.repo_name.trim() || addGitMutation.isPending}
             >
-              {addMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
+              {addGitMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
+              Salvar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Supabase Connection Dialog */}
+      <Dialog open={addSupabaseOpen} onOpenChange={setAddSupabaseOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Database className="h-5 w-5 text-primary" />
+              Nova Conexão Supabase
+            </DialogTitle>
+            <DialogDescription>
+              Conecte um projeto Supabase externo para usar como backend.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <Label className="text-xs">Nome / Label</Label>
+              <Input
+                placeholder="Meu Projeto Supabase"
+                value={sbForm.label}
+                onChange={(e) => setSbForm((f) => ({ ...f, label: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs">Supabase URL</Label>
+              <Input
+                placeholder="https://xxxxx.supabase.co"
+                value={sbForm.supabase_url}
+                onChange={(e) => setSbForm((f) => ({ ...f, supabase_url: e.target.value }))}
+              />
+              <p className="text-[10px] text-muted-foreground">
+                Encontre em Settings → API no dashboard do Supabase.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs">Anon / Public Key</Label>
+              <Input
+                type="password"
+                placeholder="eyJhbGciOiJI..."
+                value={sbForm.supabase_anon_key}
+                onChange={(e) => setSbForm((f) => ({ ...f, supabase_anon_key: e.target.value }))}
+              />
+              <p className="text-[10px] text-muted-foreground">
+                Chave pública (anon key) do projeto Supabase.
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAddSupabaseOpen(false)}>Cancelar</Button>
+            <Button
+              onClick={() => addSbMutation.mutate()}
+              disabled={!sbForm.supabase_url.trim() || !sbForm.supabase_anon_key.trim() || addSbMutation.isPending}
+            >
+              {addSbMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
               Salvar
             </Button>
           </DialogFooter>
