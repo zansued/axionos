@@ -35,6 +35,7 @@
 - [x] Retry automático com backoff exponencial em caso de falha (até 3 tentativas)
 - [x] Barra de progresso em tempo real (Realtime via Supabase)
 - [x] Progresso salvo incrementalmente (resume em caso de timeout)
+- [x] Pipeline roda em background (PipelineContext global — não para ao navegar)
 - [ ] Paralelização: subtasks independentes executam em paralelo
 - [ ] Notificação quando execução completa (toast + badge no menu)
 
@@ -63,7 +64,22 @@
 
 ---
 
-## Fase 6 — Memória e Contexto Compartilhado
+## Fase 6 — Geração Full-Stack (Frontend + Backend)
+
+- [x] Planning detecta necessidade de backend automaticamente
+- [x] Novos `file_type` para backend: `schema`, `migration`, `edge_function`, `seed`, `supabase_client`, `auth_config`
+- [x] Prompts especializados para gerar SQL, Edge Functions, Auth, RLS
+- [x] Geração de `.env.example` e `src/lib/supabase.ts` determinísticos
+- [x] Story automática "Backend Setup" quando projeto precisa de persistência
+- [x] UI de Code Explorer mostra ícones e badges para arquivos de backend
+- [x] Conexão com Supabase externo (tabela `supabase_connections`, UI em Conexões)
+- [ ] Integrar `supabase_connections` no pipeline: sistemas gerados usam conexão cadastrada
+- [ ] Botão "Testar Conexão" que valida URL e Anon Key antes de salvar
+- [ ] Gerar README.md automático com instruções de setup do Supabase
+
+---
+
+## Fase 7 — Memória e Contexto Compartilhado
 
 - [ ] Criar tabela `agent_memory` (agent_id, key, value, scope, ttl)
 - [ ] Agentes herdam contexto de iniciativas anteriores da mesma org
@@ -72,7 +88,7 @@
 
 ---
 
-## Fase 7 — Observabilidade & Custos
+## Fase 8 — Observabilidade & Custos
 
 - [ ] Dashboard de custo por iniciativa (tokens + USD)
 - [ ] Dashboard de custo por agente
@@ -82,7 +98,7 @@
 
 ---
 
-## Fase 8 — UX & Polish
+## Fase 9 — UX & Polish
 
 - [ ] Onboarding guiado para novos usuários
 - [ ] Templates de iniciativas pré-configurados
@@ -93,7 +109,7 @@
 
 ---
 
-## Fase 9 — Governança Avançada
+## Fase 10 — Governança Avançada
 
 - [ ] Roles granulares: quem pode aprovar cada gate do pipeline
 - [ ] Approval chain: múltiplos aprovadores por estágio
@@ -112,12 +128,16 @@
 - [x] Discovery inteligente (análise de mercado, viabilidade, MVP)
 - [x] Planning com geração de PRD e arquitetura
 - [x] Geração de Stories e Subtasks via AI
-- [x] Execução de subtasks individuais via AI (DeepSeek)
+- [x] Execução de subtasks via AI (Lovable AI Gateway)
 - [x] Artefatos versionados com review humano
 - [x] ADRs automáticos para decisões arquiteturais
-- [x] Validação de artefatos
+- [x] Validação de artefatos com auto-aprovação/retrabalho/rejeição
 - [x] Publish com criação de PR no GitHub
 - [x] Kanban board com drag-and-drop
 - [x] Audit logs
 - [x] Observabilidade básica
 - [x] Billing e controle de uso
+- [x] Geração Full-Stack (Frontend + Backend com Supabase)
+- [x] Conexões com Supabase externo
+- [x] Pipeline global em background (PipelineContext)
+- [x] Deploy automático via Agente Revisor
