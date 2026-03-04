@@ -906,82 +906,127 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         const generatedFiles: Record<string, string> = {};
         const MAX_QA_ITERATIONS = 2;
 
+        // Sanitize package.json: fix common AI mistakes (invalid package names, wrong versions)
+        const INVALID_PACKAGES = new Set([
+          "shadcn/ui", "shadcn-ui", "@shadcn/ui", "shadcn", "tailwindcss-animate/latest",
+          "radix-ui", "@radix/ui", "lucide", "framer", "next-themes/latest",
+        ]);
+        const PACKAGE_RENAMES: Record<string, string> = {
+          "shadcn/ui": null as any, // remove entirely — installed via npx
+          "shadcn-ui": null as any,
+          "@shadcn/ui": null as any,
+          "shadcn": null as any,
+          "radix-ui": null as any,
+          "@radix/ui": null as any,
+          "lucide": "lucide-react",
+        };
+        const sanitizePackageJson = (content: string): string => {
+          try {
+            const pkg = JSON.parse(content);
+            // Fix dependencies
+            for (const depKey of ["dependencies", "devDependencies"]) {
+              const deps = pkg[depKey];
+              if (!deps || typeof deps !== "object") continue;
+              for (const [name, ver] of Object.entries(deps)) {
+                if (INVALID_PACKAGES.has(name) || name in PACKAGE_RENAMES) {
+                  const replacement = PACKAGE_RENAMES[name];
+                  delete deps[name];
+                  if (replacement) deps[replacement] = ver;
+                  console.log(`[SANITIZE] package.json: removed "${name}"${replacement ? ` → "${replacement}"` : ""}`);
+                }
+                // Fix names with spaces or invalid chars
+                if (/[^a-zA-Z0-9@/_.-]/.test(name)) {
+                  delete deps[name];
+                  console.log(`[SANITIZE] package.json: removed invalid "${name}"`);
+                }
+              }
+            }
+            // Ensure "type": "module" for ESM
+            pkg.type = "module";
+            // Ensure build script exists
+            if (!pkg.scripts) pkg.scripts = {};
+            if (!pkg.scripts.dev) pkg.scripts.dev = "vite";
+            if (!pkg.scripts.build) pkg.scripts.build = "tsc && vite build";
+            if (!pkg.scripts.preview) pkg.scripts.preview = "vite preview";
+            // Ensure critical deps exist
+            const ensureDep = (name: string, version: string) => {
+              if (!pkg.dependencies) pkg.dependencies = {};
+              if (!pkg.dependencies[name] && !pkg.devDependencies?.[name]) {
+                pkg.dependencies[name] = version;
+              }
+            };
+            const ensureDevDep = (name: string, version: string) => {
+              if (!pkg.devDependencies) pkg.devDependencies = {};
+              if (!pkg.devDependencies[name] && !pkg.dependencies?.[name]) {
+                pkg.devDependencies[name] = version;
+              }
+            };
+            ensureDep("react", "^18.3.1");
+            ensureDep("react-dom", "^18.3.1");
+            ensureDep("react-router-dom", "^6.30.0");
+            ensureDep("lucide-react", "^0.462.0");
+            ensureDep("tailwind-merge", "^2.6.0");
+            ensureDep("clsx", "^2.1.1");
+            ensureDep("class-variance-authority", "^0.7.1");
+            ensureDevDep("vite", "^5.4.0");
+            ensureDevDep("@vitejs/plugin-react", "^4.3.0");
+            ensureDevDep("typescript", "^5.6.0");
+            ensureDevDep("tailwindcss", "^3.4.0");
+            ensureDevDep("autoprefixer", "^10.4.0");
+            ensureDevDep("postcss", "^8.4.0");
+            ensureDevDep("@types/react", "^18.3.0");
+            ensureDevDep("@types/react-dom", "^18.3.0");
+            return JSON.stringify(pkg, null, 2);
+          } catch {
+            return content; // If can't parse, return as-is
+          }
+        };
+
         // Deterministic overrides for deploy-critical files (never trust AI for these)
         const DETERMINISTIC_FILES: Record<string, string> = {
           "vercel.json": DEPLOY_VERCEL_JSON,
           "public/_redirects": "/* /index.html 200",
           "netlify.toml": "[build]\n  command = \"npm run build\"\n  publish = \"dist\"\n\n[[redirects]]\n  from = \"/*\"\n  to = \"/index.html\"\n  status = 200",
-          // ESM-compatible postcss config (required for "type": "module")
           "postcss.config.js": `export default {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n};`,
-          // ESM-compatible tailwind config
           "tailwind.config.js": `/** @type {import('tailwindcss').Config} */\nexport default {\n  content: [\n    "./index.html",\n    "./src/**/*.{js,ts,jsx,tsx}",\n  ],\n  theme: {\n    extend: {},\n  },\n  plugins: [],\n};`,
-          // tsconfig.node.json (required by tsconfig.json references)
           "tsconfig.node.json": JSON.stringify({
             compilerOptions: {
-              composite: true,
-              target: "ES2022",
-              lib: ["ES2023"],
-              module: "ESNext",
-              skipLibCheck: true,
-              moduleResolution: "bundler",
-              allowImportingTsExtensions: true,
-              isolatedModules: true,
-              moduleDetection: "force",
-              strict: true,
-              noUnusedLocals: false,
-              noUnusedParameters: false,
-              noFallthroughCasesInSwitch: true,
+              composite: true, target: "ES2022", lib: ["ES2023"], module: "ESNext",
+              skipLibCheck: true, moduleResolution: "bundler", allowImportingTsExtensions: true,
+              isolatedModules: true, moduleDetection: "force", strict: true,
+              noUnusedLocals: false, noUnusedParameters: false, noFallthroughCasesInSwitch: true,
             },
             include: ["vite.config.ts"],
           }, null, 2),
-          // tsconfig.json with proper references
           "tsconfig.json": JSON.stringify({
             compilerOptions: {
-              target: "ES2020",
-              useDefineForClassFields: true,
-              lib: ["ES2020", "DOM", "DOM.Iterable"],
-              module: "ESNext",
-              skipLibCheck: true,
-              moduleResolution: "bundler",
-              allowImportingTsExtensions: true,
-              resolveJsonModule: true,
-              isolatedModules: true,
-              noEmit: true,
-              jsx: "react-jsx",
-              strict: false,
-              noUnusedLocals: false,
-              noUnusedParameters: false,
-              paths: { "@/*": ["./src/*"] },
+              target: "ES2020", useDefineForClassFields: true, lib: ["ES2020", "DOM", "DOM.Iterable"],
+              module: "ESNext", skipLibCheck: true, moduleResolution: "bundler",
+              allowImportingTsExtensions: true, resolveJsonModule: true, isolatedModules: true,
+              noEmit: true, jsx: "react-jsx", strict: false,
+              noUnusedLocals: false, noUnusedParameters: false, paths: { "@/*": ["./src/*"] },
             },
             include: ["src"],
             references: [{ path: "./tsconfig.node.json" }],
           }, null, 2),
-          // tsconfig.app.json
           "tsconfig.app.json": JSON.stringify({
             compilerOptions: {
-              target: "ES2020",
-              useDefineForClassFields: true,
-              lib: ["ES2020", "DOM", "DOM.Iterable"],
-              module: "ESNext",
-              skipLibCheck: true,
-              moduleResolution: "bundler",
-              allowImportingTsExtensions: true,
-              resolveJsonModule: true,
-              isolatedModules: true,
-              noEmit: true,
-              jsx: "react-jsx",
-              strict: false,
-              noUnusedLocals: false,
-              noUnusedParameters: false,
-              paths: { "@/*": ["./src/*"] },
+              target: "ES2020", useDefineForClassFields: true, lib: ["ES2020", "DOM", "DOM.Iterable"],
+              module: "ESNext", skipLibCheck: true, moduleResolution: "bundler",
+              allowImportingTsExtensions: true, resolveJsonModule: true, isolatedModules: true,
+              noEmit: true, jsx: "react-jsx", strict: false,
+              noUnusedLocals: false, noUnusedParameters: false, paths: { "@/*": ["./src/*"] },
             },
             include: ["src"],
           }, null, 2),
-          // Vite config (ESM, with path alias)
           "vite.config.ts": `import { defineConfig } from "vite";\nimport react from "@vitejs/plugin-react";\nimport path from "path";\n\nexport default defineConfig({\n  plugins: [react()],\n  resolve: {\n    alias: {\n      "@": path.resolve(__dirname, "./src"),\n    },\n  },\n});`,
-          // Backend deterministic files
           ".env.example": `VITE_SUPABASE_URL=https://your-project.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key`,
           "src/lib/supabase.ts": `import { createClient } from '@supabase/supabase-js';\n\nconst supabaseUrl = import.meta.env.VITE_SUPABASE_URL;\nconst supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;\n\nif (!supabaseUrl || !supabaseAnonKey) {\n  throw new Error('Missing Supabase environment variables. Check .env file.');\n}\n\nexport const supabase = createClient(supabaseUrl, supabaseAnonKey);`,
+        };
+
+        // Post-processors: apply after AI generates but before saving
+        const POST_PROCESSORS: Record<string, (content: string) => string> = {
+          "package.json": sanitizePackageJson,
         };
 
         // Count total pending subtasks for progress tracking
@@ -1088,7 +1133,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
 
                   const devResult = await callAI(
                     LOVABLE_API_KEY,
-                    `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use shadcn/ui, Tailwind CSS, imports corretos (para arquivos frontend).\n- Siga as melhores práticas de ${language}.\n${backendRules}\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use React Helmet para SEO dinâmico.`,
+                    `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use componentes shadcn/ui e Tailwind CSS para frontend.\n- Siga as melhores práticas de ${language}.\n${backendRules}\n\nREGRAS PARA package.json:\n- NÃO inclua "shadcn/ui", "shadcn-ui", "@shadcn/ui" ou "shadcn" como dependência. Componentes shadcn/ui são copiados localmente, não são pacotes npm.\n- NÃO inclua "@radix/ui" ou "radix-ui". Use pacotes individuais como "@radix-ui/react-dialog".\n- Use "lucide-react" (não "lucide").\n- SEMPRE inclua "type": "module" no package.json.\n- SEMPRE inclua @vitejs/plugin-react, typescript, tailwindcss, autoprefixer, postcss em devDependencies.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical.`,
                     `${baseContext}\n\n## Especificação do Architect:\n${archResult.content}`
                   );
                   let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
@@ -1131,6 +1176,10 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
                   if (DETERMINISTIC_FILES[subtask.file_path]) {
                     codeContent = DETERMINISTIC_FILES[subtask.file_path];
                     console.log(`[DETERMINISTIC] Overriding AI output for ${subtask.file_path}`);
+                  }
+                  // Post-process (e.g., sanitize package.json)
+                  if (POST_PROCESSORS[subtask.file_path]) {
+                    codeContent = POST_PROCESSORS[subtask.file_path](codeContent);
                   }
 
                   // Save final output
@@ -1192,7 +1241,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
 
                   const result = await callAI(
                     LOVABLE_API_KEY,
-                    `Você é um desenvolvedor expert em Full-Stack com Vite + React + TypeScript + Tailwind CSS + shadcn/ui + Supabase.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use shadcn/ui, Tailwind CSS (para frontend).\n- Siga as melhores práticas de ${language}.\n${singleBackendRules}\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use caminhos absolutos ou omita canonical.`,
+                    `Você é um desenvolvedor expert em Full-Stack com Vite + React + TypeScript + Tailwind CSS + Supabase.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use componentes shadcn/ui e Tailwind CSS (para frontend).\n- Siga as melhores práticas de ${language}.\n${singleBackendRules}\n\nREGRAS PARA package.json:\n- NÃO inclua "shadcn/ui", "shadcn-ui", "@shadcn/ui" ou "shadcn" como dependência. Componentes shadcn/ui são copiados localmente, não são pacotes npm.\n- NÃO inclua "@radix/ui" ou "radix-ui". Use pacotes individuais como "@radix-ui/react-dialog".\n- Use "lucide-react" (não "lucide").\n- SEMPRE inclua "type": "module" no package.json.\n- SEMPRE inclua @vitejs/plugin-react, typescript, tailwindcss, autoprefixer, postcss em devDependencies.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical.`,
                     `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1500)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1500)}` : ""}\n\nGere o conteúdo COMPLETO do arquivo. Retorne APENAS o código.`
                   );
 
@@ -1202,6 +1251,10 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
                   if (DETERMINISTIC_FILES[subtask.file_path]) {
                     codeContent = DETERMINISTIC_FILES[subtask.file_path];
                     console.log(`[DETERMINISTIC] Overriding AI output for ${subtask.file_path}`);
+                  }
+                  // Post-process (e.g., sanitize package.json)
+                  if (POST_PROCESSORS[subtask.file_path]) {
+                    codeContent = POST_PROCESSORS[subtask.file_path](codeContent);
                   }
                   
                   generatedFiles[subtask.file_path] = codeContent;
