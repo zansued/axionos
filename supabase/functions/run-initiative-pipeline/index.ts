@@ -1029,7 +1029,13 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
               .filter((st: any) => st.status === "pending")
               .sort((a: any, b: any) => a.sort_order - b.sort_order);
 
-            for (const subtask of subtasks) {
+            // Parallelization: split subtasks into independent (config/scaffold) and sequential (code/components)
+            const PARALLEL_FILE_TYPES = new Set(["config", "scaffold", "style"]);
+            const parallelSubtasks = subtasks.filter((st: any) => st.file_type && PARALLEL_FILE_TYPES.has(st.file_type));
+            const sequentialSubtasks = subtasks.filter((st: any) => !st.file_type || !PARALLEL_FILE_TYPES.has(st.file_type));
+
+            // Helper to execute a single subtask (extracted for reuse in parallel/sequential)
+            const executeOneSubtask = async (subtask: any) => {
               const hasFilePath = !!subtask.file_path;
 
               const subtaskJobId = await createJob("execution", {
@@ -1262,6 +1268,21 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
                 await updateProgress(executedCount + failedCount);
                 console.error(`Subtask ${subtask.id} failed:`, subtaskErr);
               }
+            }; // end executeOneSubtask
+
+            // Execute independent subtasks in parallel (batches of 3)
+            const PARALLEL_BATCH = 3;
+            if (parallelSubtasks.length > 0) {
+              console.log(`[PARALLEL] Executing ${parallelSubtasks.length} independent subtasks (config/scaffold/style)`);
+              for (let bi = 0; bi < parallelSubtasks.length; bi += PARALLEL_BATCH) {
+                const batch = parallelSubtasks.slice(bi, bi + PARALLEL_BATCH);
+                await Promise.all(batch.map(st => executeOneSubtask(st)));
+              }
+            }
+
+            // Execute dependent subtasks sequentially
+            for (const subtask of sequentialSubtasks) {
+              await executeOneSubtask(subtask);
             }
 
             const { count: pendingCount } = await serviceClient.from("story_subtasks")
@@ -1402,6 +1423,17 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
         const APPROVAL_THRESHOLD = 70;
         const REWORK_THRESHOLD = 50;
 
+        // Fetch squad for cross-review (Architect validates code artifacts)
+        let architectAgentForReview: any = null;
+        const { data: squadsForReview } = await serviceClient.from("squads")
+          .select("id, squad_members(role_in_squad, agents(id, name, role))")
+          .eq("initiative_id", initiativeId)
+          .limit(1);
+        if (squadsForReview?.[0]?.squad_members) {
+          const archMember = squadsForReview[0].squad_members.find((sm: any) => sm.role_in_squad === "architect");
+          architectAgentForReview = archMember?.agents || null;
+        }
+
         for (const artifact of artifactsBatch) {
           let currentOutput = artifact.raw_output;
           let currentArtifactId = artifact.id;
@@ -1486,6 +1518,70 @@ Regras de decisão:
 
             finalValidation = validation;
             const score = validation.overall_score || 0;
+
+            // === CROSS-REVIEW: Architect validates architectural decisions for code artifacts ===
+            if (score >= APPROVAL_THRESHOLD && artifact.type === "code" && architectAgentForReview) {
+              try {
+                const archCrossReview = await callAI(
+                  LOVABLE_API_KEY,
+                  `Você é o Architect "${architectAgentForReview.name}" no AxionOS. Faça uma CROSS-REVIEW arquitetural deste artefato de código.
+Avalie APENAS aspectos arquiteturais: padrões de projeto, separação de responsabilidades, escalabilidade, naming conventions, integração com o ecossistema.
+Retorne APENAS JSON: {"arch_approved": true/false, "arch_score": 0-100, "arch_issues": ["lista"], "arch_notes": "observações"}`,
+                  `## Artefato: ${artifact.summary || "código"}
+## Conteúdo:
+${artifactText.slice(0, 4000)}`,
+                  true
+                );
+
+                totalTokens += archCrossReview.tokens;
+                totalCost += archCrossReview.costUsd;
+
+                let archFeedback: any;
+                try { archFeedback = JSON.parse(archCrossReview.content); } catch { archFeedback = { arch_approved: true, arch_score: 80, arch_issues: [], arch_notes: "" }; }
+
+                // Record architectural cross-review
+                await serviceClient.from("validation_runs").insert({
+                  artifact_id: currentArtifactId,
+                  type: "architect_cross_review",
+                  result: archFeedback.arch_approved ? "pass" : "warning",
+                  logs: JSON.stringify(archFeedback),
+                  duration: archCrossReview.durationMs,
+                });
+
+                await serviceClient.from("artifact_reviews").insert({
+                  output_id: currentArtifactId,
+                  reviewer_id: user.id,
+                  action: "architect_cross_review",
+                  previous_status: artifact.status,
+                  new_status: artifact.status,
+                  comment: JSON.stringify(archFeedback),
+                });
+
+                // If Architect disapproves and score is low, downgrade to warning
+                if (!archFeedback.arch_approved && (archFeedback.arch_score || 0) < 60) {
+                  validation.overall_score = Math.round((score + (archFeedback.arch_score || 50)) / 2);
+                  validation.issues = [...(validation.issues || []), ...(archFeedback.arch_issues || [])];
+                  validation.arch_cross_review = archFeedback;
+                  finalValidation = validation;
+                  // Don't approve yet — let it fall through to rework
+                  if (validation.overall_score < APPROVAL_THRESHOLD) {
+                    if (attempt < MAX_REWORK_ATTEMPTS) {
+                      // Continue to rework
+                    } else {
+                      // Escalate
+                      await serviceClient.from("agent_outputs")
+                        .update({ status: "pending_review" })
+                        .eq("id", currentArtifactId);
+                      failCount++;
+                      break;
+                    }
+                    continue;
+                  }
+                }
+              } catch (archErr) {
+                console.warn("Architect cross-review failed, continuing with QA result:", archErr);
+              }
+            }
 
             // === AUTO-APPROVE: score >= threshold ===
             if (score >= APPROVAL_THRESHOLD) {
@@ -1632,6 +1728,7 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
             verdict: finalValidation?.verdict || "request_changes",
             summary: finalValidation?.summary,
             rework_attempts: reworkAttempts,
+            arch_cross_review: finalValidation?.arch_cross_review || null,
             final_status:
               finalValidation?.verdict === "approve"
                 ? "approved"

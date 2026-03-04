@@ -8,8 +8,20 @@ interface PipelineState {
   running: Record<string, string>;
 }
 
+/** Completed pipeline events for badge notifications */
+export interface PipelineEvent {
+  id: string;
+  initiativeId: string;
+  stage: string;
+  label: string;
+  timestamp: number;
+  read: boolean;
+}
+
 interface PipelineContextValue {
   running: Record<string, string>;
+  events: PipelineEvent[];
+  unreadCount: number;
   isRunning: (initiativeId: string) => boolean;
   getRunningStage: (initiativeId: string) => string | null;
   runStage: (
@@ -19,6 +31,7 @@ interface PipelineContextValue {
     publishParams?: { github_token: string; owner: string; repo: string; base_branch: string }
   ) => void;
   rollbackToStage: (initiativeId: string, macroKey: string) => Promise<void>;
+  markAllRead: () => void;
 }
 
 const PipelineContext = createContext<PipelineContextValue | null>(null);
@@ -27,6 +40,20 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [running, setRunning] = useState<Record<string, string>>({});
+  const [events, setEvents] = useState<PipelineEvent[]>([]);
+
+  const addEvent = useCallback((initiativeId: string, stage: string, label: string) => {
+    setEvents((prev) => [
+      { id: crypto.randomUUID(), initiativeId, stage, label, timestamp: Date.now(), read: false },
+      ...prev.slice(0, 49), // keep last 50
+    ]);
+  }, []);
+
+  const markAllRead = useCallback(() => {
+    setEvents((prev) => prev.map((e) => ({ ...e, read: true })));
+  }, []);
+
+  const unreadCount = events.filter((e) => !e.read).length;
 
   const runStage = useCallback(
     async (
@@ -77,7 +104,15 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
               : `Validação: ${result.failed || 0} falhas de ${result.artifacts_validated || 0} artefatos ⚠️`,
           publish: `Publicação concluída: ${result.files_committed || 0} arquivos commitados no main ✅`,
         };
-        toast({ title: stageLabels[stage] || "Concluído!" });
+        const label = stageLabels[stage] || "Concluído!";
+        toast({ title: label });
+
+        // Add event for completed stages (not intermediate batch steps)
+        const isFinalStep = stage !== "validation" || !result.batch_incomplete;
+        if (isFinalStep && !["approve", "reject"].includes(stage)) {
+          addEvent(initiativeId, stage, label);
+        }
+
         queryClient.invalidateQueries({ queryKey: ["initiatives"] });
         queryClient.invalidateQueries({ queryKey: ["initiative-jobs"] });
         queryClient.invalidateQueries({ queryKey: ["squads"] });
@@ -101,6 +136,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
         }
       } catch (e: any) {
         toast({ variant: "destructive", title: "Erro", description: e.message });
+        addEvent(initiativeId, stage, `❌ Erro em ${stage}: ${e.message?.slice(0, 80)}`);
       } finally {
         setRunning((prev) => {
           const next = { ...prev };
@@ -112,7 +148,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
         });
       }
     },
-    [toast, queryClient]
+    [toast, queryClient, addEvent]
   );
 
   const rollbackToStage = useCallback(
@@ -146,10 +182,13 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
     <PipelineContext.Provider
       value={{
         running,
+        events,
+        unreadCount,
         isRunning: (id) => !!running[id],
         getRunningStage: (id) => running[id] || null,
         runStage,
         rollbackToStage,
+        markAllRead,
       }}
     >
       {children}
