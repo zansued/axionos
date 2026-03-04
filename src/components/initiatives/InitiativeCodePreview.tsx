@@ -4,9 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
@@ -14,7 +18,7 @@ import {
 import {
   Code2, FolderTree, FileCode, FileJson, FileType, FileText,
   ChevronRight, ChevronDown, Copy, Check, Loader2,
-  Download, Archive, Sparkles, Search, CheckCircle2, Rocket
+  Download, Archive, Sparkles, Search, CheckCircle2, Rocket, GitBranch
 } from "lucide-react";
 
 interface InitiativeCodePreviewProps {
@@ -162,7 +166,22 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
   const [isReviewing, setIsReviewing] = useState(false);
   const [reviewResult, setReviewResult] = useState<any>(null);
   const [isDeploying, setIsDeploying] = useState(false);
+  const [deployDialogOpen, setDeployDialogOpen] = useState(false);
+  const [selectedGitConnId, setSelectedGitConnId] = useState<string>("");
   const { toast } = useToast();
+
+  const { data: gitConnections = [] } = useQuery({
+    queryKey: ["git-connections", organizationId],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("git_connections")
+        .select("id, repo_owner, repo_name, default_branch, github_token")
+        .eq("organization_id", organizationId)
+        .eq("status", "active");
+      return (data || []) as Array<{ id: string; repo_owner: string; repo_name: string; default_branch: string; github_token: string | null }>;
+    },
+    enabled: !!organizationId,
+  });
 
   const { data: codeFiles = [], isLoading } = useQuery({
     queryKey: ["initiative-code-files", initiativeId],
@@ -327,24 +346,31 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
     }
   };
 
-  const handleDeployAfterReview = async () => {
+  const handleOpenDeployDialog = () => {
+    if (gitConnections.length === 0) {
+      toast({ variant: "destructive", title: "Conexão Git não encontrada", description: "Publique primeiro pela tela de iniciativas para configurar o repositório." });
+      return;
+    }
+    if (gitConnections.length === 1) {
+      // Auto-select the only connection and deploy directly
+      executeDeploy(gitConnections[0]);
+      return;
+    }
+    // Multiple connections: show selector
+    setSelectedGitConnId(gitConnections[0]?.id || "");
+    setDeployDialogOpen(true);
+  };
+
+  const executeDeploy = async (conn: { github_token: string | null; repo_owner: string; repo_name: string; default_branch: string }) => {
+    if (!conn.github_token) {
+      toast({ variant: "destructive", title: "Token não configurado", description: "O token GitHub desta conexão não está salvo. Publique pela tela de iniciativas para configurá-lo." });
+      return;
+    }
     setIsDeploying(true);
+    setDeployDialogOpen(false);
     try {
       const session = (await supabase.auth.getSession()).data.session;
       if (!session) throw new Error("Não autenticado");
-
-      const { data: gitConn } = await supabase
-        .from("git_connections")
-        .select("github_token, repo_owner, repo_name, default_branch")
-        .eq("organization_id", organizationId)
-        .eq("status", "active")
-        .limit(1)
-        .single();
-
-      if (!gitConn?.github_token) {
-        toast({ variant: "destructive", title: "Conexão Git não encontrada", description: "Publique primeiro pela tela de iniciativas para configurar o repositório." });
-        return;
-      }
 
       const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/run-initiative-pipeline`, {
         method: "POST",
@@ -353,10 +379,10 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
           initiativeId,
           stage: "publish",
           publishParams: {
-            github_token: gitConn.github_token,
-            repo_owner: gitConn.repo_owner,
-            repo_name: gitConn.repo_name,
-            branch: gitConn.default_branch || "main",
+            github_token: conn.github_token,
+            repo_owner: conn.repo_owner,
+            repo_name: conn.repo_name,
+            branch: conn.default_branch || "main",
           },
         }),
       });
@@ -367,7 +393,7 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
       }
 
       const result = await resp.json();
-      toast({ title: "Deploy realizado! 🚀", description: `${result.files_committed || 0} arquivo(s) commitados em ${gitConn.repo_owner}/${gitConn.repo_name}.` });
+      toast({ title: "Deploy realizado! 🚀", description: `${result.files_committed || 0} arquivo(s) commitados em ${conn.repo_owner}/${conn.repo_name}.` });
     } catch (e: any) {
       toast({ variant: "destructive", title: "Erro no deploy", description: e.message });
     } finally {
@@ -596,7 +622,7 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
             <Button variant="outline" onClick={() => setReviewOpen(false)}>Fechar</Button>
             {reviewResult && reviewResult.files_modified > 0 && (
               <Button
-                onClick={handleDeployAfterReview}
+                onClick={handleOpenDeployDialog}
                 disabled={isDeploying}
                 variant="default"
                 className="gap-1.5 bg-green-600 hover:bg-green-700"
@@ -630,6 +656,47 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
                   Revisar e Corrigir
                 </>
               )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Deploy Git Selector Dialog */}
+      <Dialog open={deployDialogOpen} onOpenChange={setDeployDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <GitBranch className="h-5 w-5 text-primary" />
+              Selecionar Repositório
+            </DialogTitle>
+            <DialogDescription>
+              Escolha o repositório Git para fazer o deploy das correções.
+            </DialogDescription>
+          </DialogHeader>
+          <Select value={selectedGitConnId} onValueChange={setSelectedGitConnId}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione um repositório..." />
+            </SelectTrigger>
+            <SelectContent>
+              {gitConnections.map(conn => (
+                <SelectItem key={conn.id} value={conn.id}>
+                  {conn.repo_owner}/{conn.repo_name} {conn.github_token ? "🔑" : "⚠️"}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeployDialogOpen(false)}>Cancelar</Button>
+            <Button
+              onClick={() => {
+                const conn = gitConnections.find(c => c.id === selectedGitConnId);
+                if (conn) executeDeploy(conn);
+              }}
+              disabled={!selectedGitConnId}
+              className="gap-1.5"
+            >
+              <Rocket className="h-4 w-4" />
+              Fazer Deploy
             </Button>
           </DialogFooter>
         </DialogContent>
