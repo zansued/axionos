@@ -324,29 +324,45 @@ JSON: {"agents": [{"name": "string", "role": "string", "description": "string", 
           organization_id: initiative.organization_id,
         }).select().single();
 
+        // Normalize AI role names to valid enum values
+        const validRoles = ["analyst", "pm", "architect", "sm", "po", "dev", "qa", "devops", "ux_expert", "aios_master", "aios_orchestrator"];
+        const roleAliases: Record<string, string> = {
+          developer: "dev", backend: "dev", frontend: "dev", fullstack: "dev", engineer: "dev",
+          product_manager: "pm", "product manager": "pm", product_owner: "po", "product owner": "po",
+          scrum_master: "sm", "scrum master": "sm", designer: "ux_expert", ux: "ux_expert", ui: "ux_expert",
+          "ux/ui": "ux_expert", tester: "qa", quality: "qa", infrastructure: "devops", ops: "devops",
+          analysis: "analyst", business_analyst: "analyst", "business analyst": "analyst",
+        };
+        const normalizeRole = (r: string) => {
+          const lower = (r || "").toLowerCase().trim();
+          if (validRoles.includes(lower)) return lower;
+          return roleAliases[lower] || "dev";
+        };
+
         const createdAgents = [];
         const failedAgents = [];
         for (const ag of agents) {
-          if (!ag.name || !ag.role) {
+          if (!ag.name) {
             failedAgents.push(ag);
             continue;
           }
+          const normalizedRole = normalizeRole(ag.role);
           const { data: agentData, error: agentErr } = await serviceClient.from("agents").insert({
-            user_id: user.id, name: ag.name, role: ag.role,
+            user_id: user.id, name: ag.name, role: normalizedRole,
             description: `${ag.description || ""}\n\nJustificativa: ${ag.justification || ""}`,
             organization_id: initiative.organization_id,
             workspace_id: initiative.workspace_id, status: "active",
           }).select("id, name, role").single();
 
           if (agentErr) {
-            console.error("Failed to create agent:", ag.name, agentErr.message);
-            failedAgents.push({ ...ag, error: agentErr.message });
+            console.error("Failed to create agent:", ag.name, "role:", ag.role, "->", normalizedRole, "error:", agentErr.message);
+            failedAgents.push({ ...ag, normalizedRole, error: agentErr.message });
             continue;
           }
 
           if (agentData && squad) {
             await serviceClient.from("squad_members").insert({
-              squad_id: squad.id, agent_id: agentData.id, role_in_squad: ag.role,
+              squad_id: squad.id, agent_id: agentData.id, role_in_squad: normalizedRole,
             });
             createdAgents.push(agentData);
           }
