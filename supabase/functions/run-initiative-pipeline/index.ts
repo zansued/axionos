@@ -276,6 +276,20 @@ Produza uma análise completa no seguinte formato JSON:
       await log("pipeline_squad_start", "Formando squad de agentes...");
 
       try {
+        // Cleanup old squads for this initiative (re-run scenario)
+        const { data: oldSquads } = await serviceClient
+          .from("squads")
+          .select("id")
+          .eq("initiative_id", initiativeId);
+
+        if (oldSquads && oldSquads.length > 0) {
+          for (const sq of oldSquads) {
+            await serviceClient.from("squad_members").delete().eq("squad_id", sq.id);
+          }
+          await serviceClient.from("squads").delete().eq("initiative_id", initiativeId);
+          console.log(`Cleaned up ${oldSquads.length} old squad(s) for re-run`);
+        }
+
         const context = `Projeto: ${initiative.title}
 Ideia refinada: ${dp.refined_idea || initiative.refined_idea || initiative.description || ""}
 Complexidade: ${initiative.complexity}
@@ -294,7 +308,14 @@ JSON: {"agents": [{"name": "string", "role": "string", "description": "string", 
           true
         );
 
-        const { agents, squad_strategy } = JSON.parse(result.content);
+        const parsed = JSON.parse(result.content);
+        const agents = parsed.agents || [];
+        const squad_strategy = parsed.squad_strategy || "";
+
+        // Validate AI returned agents
+        if (!Array.isArray(agents) || agents.length === 0) {
+          throw new Error("A IA não retornou agentes válidos. Tente novamente.");
+        }
 
         const { data: squad } = await serviceClient.from("squads").insert({
           initiative_id: initiativeId,
@@ -304,13 +325,24 @@ JSON: {"agents": [{"name": "string", "role": "string", "description": "string", 
         }).select().single();
 
         const createdAgents = [];
+        const failedAgents = [];
         for (const ag of agents) {
-          const { data: agentData } = await serviceClient.from("agents").insert({
+          if (!ag.name || !ag.role) {
+            failedAgents.push(ag);
+            continue;
+          }
+          const { data: agentData, error: agentErr } = await serviceClient.from("agents").insert({
             user_id: user.id, name: ag.name, role: ag.role,
-            description: `${ag.description}\n\nJustificativa: ${ag.justification}`,
+            description: `${ag.description || ""}\n\nJustificativa: ${ag.justification || ""}`,
             organization_id: initiative.organization_id,
             workspace_id: initiative.workspace_id, status: "active",
           }).select("id, name, role").single();
+
+          if (agentErr) {
+            console.error("Failed to create agent:", ag.name, agentErr.message);
+            failedAgents.push({ ...ag, error: agentErr.message });
+            continue;
+          }
 
           if (agentData && squad) {
             await serviceClient.from("squad_members").insert({
@@ -320,17 +352,24 @@ JSON: {"agents": [{"name": "string", "role": "string", "description": "string", 
           }
         }
 
+        if (createdAgents.length === 0) {
+          // All agents failed - rollback
+          if (squad) await serviceClient.from("squads").delete().eq("id", squad.id);
+          throw new Error(`Nenhum agente foi criado com sucesso. ${failedAgents.length} falha(s). Tente novamente.`);
+        }
+
         await updateInit({ stage_status: "squad_formed" });
-        if (jobId) await completeJob(jobId, { agents: createdAgents, squad_id: squad?.id, strategy: squad_strategy }, result);
-        await log("pipeline_squad_complete", `Squad formado: ${createdAgents.length} agentes`, { tokens: result.tokens, cost_usd: result.costUsd });
+        if (jobId) await completeJob(jobId, { agents: createdAgents, squad_id: squad?.id, strategy: squad_strategy, failed: failedAgents }, result);
+        await log("pipeline_squad_complete", `Squad formado: ${createdAgents.length} agentes (${failedAgents.length} falhas)`, { tokens: result.tokens, cost_usd: result.costUsd });
 
         return new Response(JSON.stringify({
           success: true, squad_id: squad?.id, agents: createdAgents,
           strategy: squad_strategy, tokens: result.tokens, job_id: jobId,
+          failed_agents: failedAgents.length,
         }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       } catch (e) {
         if (jobId) await failJob(jobId, e instanceof Error ? e.message : "Unknown error");
-        await updateInit({ stage_status: "discovered" });
+        await updateInit({ stage_status: "squad_ready" });
         throw e;
       }
     }
