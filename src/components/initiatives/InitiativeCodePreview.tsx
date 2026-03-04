@@ -376,30 +376,27 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
     setIsDeploying(true);
     setDeployDialogOpen(false);
     try {
-      const session = (await supabase.auth.getSession()).data.session;
-      if (!session) throw new Error("Não autenticado");
-
-      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/run-initiative-pipeline`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
-        body: JSON.stringify({
+      const { data: result, error } = await supabase.functions.invoke("run-initiative-pipeline", {
+        body: {
           initiativeId,
           stage: "publish",
-          publishParams: {
-            github_token: conn.github_token,
-            repo_owner: conn.repo_owner,
-            repo_name: conn.repo_name,
-            branch: conn.default_branch || "main",
-          },
-        }),
+          github_token: conn.github_token,
+          owner: conn.repo_owner,
+          repo: conn.repo_name,
+          base_branch: conn.default_branch || "main",
+        },
       });
 
-      if (!resp.ok) {
-        const err = await resp.json().catch(() => ({ error: "Erro" }));
-        throw new Error(err.error || `Erro ${resp.status}`);
+      if (error) {
+        let message = error.message || "Erro ao publicar";
+        const context = (error as any)?.context;
+        if (context && typeof context.json === "function") {
+          const errJson = await context.json().catch(() => null);
+          if (errJson?.error) message = errJson.error;
+        }
+        throw new Error(message);
       }
 
-      const result = await resp.json();
       toast({ title: "Deploy realizado! 🚀", description: `${result.files_committed || 0} arquivo(s) commitados em ${conn.repo_owner}/${conn.repo_name}.` });
     } catch (e: any) {
       toast({ variant: "destructive", title: "Erro no deploy", description: e.message });
