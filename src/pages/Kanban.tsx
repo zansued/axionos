@@ -28,18 +28,23 @@ export default function Kanban() {
   const queryClient = useQueryClient();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [realtimeEnabled, setRealtimeEnabled] = useState(true);
+  const [initiativeFilter, setInitiativeFilter] = useState<string>("all");
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   );
 
   const { data: stories = [], isLoading } = useQuery({
-    queryKey: ["stories"],
+    queryKey: ["stories", initiativeFilter],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("stories")
         .select("*, agents(name, role)")
         .order("created_at", { ascending: false });
+      if (initiativeFilter !== "all") {
+        query = query.eq("initiative_id", initiativeFilter);
+      }
+      const { data, error } = await query;
       if (error) throw error;
       return data as Story[];
     },
