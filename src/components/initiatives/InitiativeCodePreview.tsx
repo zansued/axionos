@@ -430,6 +430,12 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
     util: "bg-orange-500/15 text-orange-400",
     type: "bg-pink-500/15 text-pink-400",
     test: "bg-red-500/15 text-red-400",
+    schema: "bg-emerald-500/15 text-emerald-400",
+    migration: "bg-emerald-500/15 text-emerald-400",
+    edge_function: "bg-teal-500/15 text-teal-400",
+    seed: "bg-lime-500/15 text-lime-400",
+    supabase_client: "bg-green-500/15 text-green-400",
+    auth_config: "bg-violet-500/15 text-violet-400",
     other: "bg-muted text-muted-foreground",
   };
 
