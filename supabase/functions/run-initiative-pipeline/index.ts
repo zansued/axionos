@@ -402,7 +402,8 @@ JSON: {"agents": [{"name": "string", "role": "string", "description": "string", 
 Ideia refinada: ${dp.refined_idea || initiative.refined_idea || ""}
 Modelo de Negócio: ${dp.business_model || initiative.business_model || "N/A"}
 MVP: ${dp.mvp_scope || initiative.mvp_scope || "N/A"}
-Stack: Vite + React + TypeScript + Tailwind CSS + shadcn/ui
+Stack Frontend: Vite + React + TypeScript + Tailwind CSS + shadcn/ui
+Stack Backend (quando necessário): Supabase (Postgres, Auth, Edge Functions, Storage, RLS)
 Visão Estratégica: ${dp.strategic_vision || "N/A"}
 ${dp.reference_url ? `URL de Referência: ${dp.reference_url}` : ""}
 ${dp.reference_scraped ? "NOTA: O conteúdo do site de referência foi analisado durante o Discovery. Use as conclusões do Discovery para guiar o planejamento." : ""}`;
