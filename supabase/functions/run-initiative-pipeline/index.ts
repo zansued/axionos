@@ -430,6 +430,13 @@ Stack Backend (quando o PRD indicar necessidade): Supabase
 - Edge Functions: Deno/TypeScript (para lógica de servidor, APIs externas)
 - Storage: Supabase Storage (para uploads de arquivos)
 - Segurança: Row Level Security (RLS) obrigatória em todas as tabelas
+
+REGRA OBRIGATÓRIA DE NOMENCLATURA DE TABELAS:
+- Todas as tabelas DEVEM ter um prefixo curto derivado do nome do projeto (ex: projeto "TaskFlow" → prefixo "tf_", projeto "MedAgenda" → prefixo "ma_")
+- Use CREATE TABLE IF NOT EXISTS para idempotência
+- Exemplos: tf_users, tf_tasks, tf_categories, ma_patients, ma_appointments
+- O prefixo deve ser consistente em TODAS as tabelas do projeto
+- Defina o prefixo escolhido no início do documento de arquitetura
 - Client SDK: @supabase/supabase-js
 
 Use markdown.`,
