@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { OrgProvider } from "@/contexts/OrgContext";
+import { PipelineProvider } from "@/contexts/PipelineContext";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Initiatives from "./pages/Initiatives";
@@ -47,25 +48,27 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <OrgProvider>
-            <Routes>
-              <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-              <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
-              <Route path="/code" element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
-              <Route path="/squads" element={<ProtectedRoute><Squads /></ProtectedRoute>} />
-              <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
-              <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
-              <Route path="/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
-              <Route path="/audit" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
-              <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
-              <Route path="/planning" element={<Navigate to="/initiatives" replace />} />
-              <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
-              <Route path="/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
-              <Route path="/org" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
-              <Route path="/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
-              <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <PipelineProvider>
+              <Routes>
+                <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+                <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
+                <Route path="/code" element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
+                <Route path="/squads" element={<ProtectedRoute><Squads /></ProtectedRoute>} />
+                <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
+                <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
+                <Route path="/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
+                <Route path="/audit" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
+                <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
+                <Route path="/planning" element={<Navigate to="/initiatives" replace />} />
+                <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
+                <Route path="/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
+                <Route path="/org" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
+                <Route path="/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
+                <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </PipelineProvider>
           </OrgProvider>
         </AuthProvider>
       </BrowserRouter>
