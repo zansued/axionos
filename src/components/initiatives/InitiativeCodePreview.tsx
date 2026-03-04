@@ -106,6 +106,11 @@ function getFileTypeFromPath(filePath: string): string {
   if (filePath.includes("/types/") || filePath.endsWith(".d.ts")) return "type";
   if (filePath.includes("/test") || filePath.includes(".test.") || filePath.includes(".spec.")) return "test";
   if (filePath.endsWith(".css") || filePath.endsWith(".scss")) return "style";
+  if (filePath.endsWith(".sql") && filePath.includes("schema")) return "schema";
+  if (filePath.endsWith(".sql") && filePath.includes("seed")) return "seed";
+  if (filePath.endsWith(".sql")) return "migration";
+  if (filePath.includes("supabase/functions/")) return "edge_function";
+  if (filePath.includes("supabase.ts") || filePath.includes("supabase-client")) return "supabase_client";
   if (filePath.endsWith(".json") || filePath.includes("config")) return "config";
   if (filePath.includes("package.json") || filePath.includes("vite.config") || filePath.includes("tsconfig")) return "scaffold";
   return "other";

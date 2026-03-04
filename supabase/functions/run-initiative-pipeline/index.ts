@@ -1150,9 +1150,10 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
                 } else if (hasFilePath) {
                   // ===== SINGLE AGENT CODE MODE (no chain) =====
                   const ext = subtask.file_path.split(".").pop() || "ts";
-                  const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML" };
+                  const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML", sql: "SQL (PostgreSQL)" };
                   const language = langMap[ext] || "TypeScript";
                   const assignedAgent = devAgent || defaultAgent;
+                  const isBackendFileSingle = ["schema", "migration", "edge_function", "seed", "supabase_client", "auth_config"].includes(subtask.file_type || "");
 
                   const contextFiles = Object.entries(generatedFiles);
                   let contextStr = "";
@@ -1162,9 +1163,17 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
                     contextStr += entry;
                   }
 
+                  const singleBackendRules = isBackendFileSingle ? `
+REGRAS PARA ARQUIVOS BACKEND (Supabase):
+- Para file_type "schema" (.sql): Gere CREATE TABLE, ALTER TABLE ENABLE RLS, CREATE POLICY. Use UUID como PK com gen_random_uuid(). Adicione created_at/updated_at.
+- Para file_type "edge_function": Gere Edge Function Deno/TypeScript com CORS headers e validação de auth. Use "https://deno.land/std@0.168.0/" e "https://esm.sh/@supabase/supabase-js@2".
+- Para file_type "supabase_client": Use createClient com import.meta.env.VITE_SUPABASE_URL e import.meta.env.VITE_SUPABASE_ANON_KEY.
+- Para file_type "seed": Gere INSERT statements.
+- Para .env.example: Liste VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.` : "";
+
                   const result = await callAI(
                     LOVABLE_API_KEY,
-                    `Você é um desenvolvedor expert em Vite + React + TypeScript + Tailwind CSS + shadcn/ui.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use shadcn/ui, Tailwind CSS.\n- Siga as melhores práticas de ${language}.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use caminhos absolutos ou omita canonical.`,
+                    `Você é um desenvolvedor expert em Full-Stack com Vite + React + TypeScript + Tailwind CSS + shadcn/ui + Supabase.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use shadcn/ui, Tailwind CSS (para frontend).\n- Siga as melhores práticas de ${language}.\n${singleBackendRules}\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical. Use caminhos absolutos ou omita canonical.`,
                     `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1500)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1500)}` : ""}\n\nGere o conteúdo COMPLETO do arquivo. Retorne APENAS o código.`
                   );
 
