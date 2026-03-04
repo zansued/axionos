@@ -430,6 +430,13 @@ Stack Backend (quando o PRD indicar necessidade): Supabase
 - Edge Functions: Deno/TypeScript (para lógica de servidor, APIs externas)
 - Storage: Supabase Storage (para uploads de arquivos)
 - Segurança: Row Level Security (RLS) obrigatória em todas as tabelas
+
+REGRA OBRIGATÓRIA DE NOMENCLATURA DE TABELAS:
+- Todas as tabelas DEVEM ter um prefixo curto derivado do nome do projeto (ex: projeto "TaskFlow" → prefixo "tf_", projeto "MedAgenda" → prefixo "ma_")
+- Use CREATE TABLE IF NOT EXISTS para idempotência
+- Exemplos: tf_users, tf_tasks, tf_categories, ma_patients, ma_appointments
+- O prefixo deve ser consistente em TODAS as tabelas do projeto
+- Defina o prefixo escolhido no início do documento de arquitetura
 - Client SDK: @supabase/supabase-js
 
 Use markdown.`,
@@ -457,7 +464,7 @@ IMPORTANTE:
 
 BACKEND COM SUPABASE (quando o PRD/Arquitetura indicar necessidade):
 - Se o projeto precisa de banco de dados, CRIE uma story "Backend Setup" LOGO APÓS o Scaffold com:
-  - supabase/schema.sql (file_type: "schema") - CREATE TABLE com RLS policies
+  - supabase/schema.sql (file_type: "schema") - CREATE TABLE IF NOT EXISTS com RLS policies
   - supabase/seed.sql (file_type: "seed") - dados iniciais se necessário
   - src/lib/supabase.ts (file_type: "supabase_client") - client SDK config
   - src/hooks/useAuth.tsx (file_type: "hook") - hook de autenticação se necessário
@@ -465,6 +472,7 @@ BACKEND COM SUPABASE (quando o PRD/Arquitetura indicar necessidade):
   - .env.example (file_type: "config") - variáveis de ambiente necessárias
 - Se precisa de Edge Functions (APIs, webhooks, lógica de servidor):
   - supabase/functions/<nome>/index.ts (file_type: "edge_function")
+- REGRA DE PREFIXO: Todas as tabelas DEVEM ter prefixo curto do projeto (ex: "tf_" para TaskFlow). Use CREATE TABLE IF NOT EXISTS.
 - Arquivo de schema SQL deve incluir:
   - CREATE TABLE statements
   - ALTER TABLE ... ENABLE ROW LEVEL SECURITY
@@ -1064,10 +1072,11 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                   // --- Step 2: DEV generates code using Architect's spec ---
                   const backendRules = isBackendFile ? `
 REGRAS PARA ARQUIVOS BACKEND (Supabase):
-- Para file_type "schema" (.sql): Gere CREATE TABLE, ALTER TABLE ENABLE RLS, CREATE POLICY. Use UUID como PK com gen_random_uuid(). Adicione created_at/updated_at com defaults.
+- Para file_type "schema" (.sql): Gere CREATE TABLE IF NOT EXISTS, ALTER TABLE ENABLE RLS, CREATE POLICY. Use UUID como PK com gen_random_uuid(). Adicione created_at/updated_at com defaults.
+- REGRA OBRIGATÓRIA: Todas as tabelas DEVEM ter um prefixo curto derivado do nome do projeto (ex: projeto "TaskFlow" → tf_users, tf_tasks). Use sempre CREATE TABLE IF NOT EXISTS para idempotência.
 - Para file_type "edge_function": Gere uma Edge Function Deno/TypeScript com CORS headers, validação de auth, e lógica de negócio. Use imports de "https://deno.land/std@0.168.0/" e "https://esm.sh/@supabase/supabase-js@2".
 - Para file_type "supabase_client": Gere um client usando createClient do @supabase/supabase-js com URL e anon key de import.meta.env.
-- Para file_type "seed": Gere INSERT statements para dados iniciais.
+- Para file_type "seed": Gere INSERT statements para dados iniciais. Use os nomes de tabela COM prefixo.
 - Para file_type "auth_config": Gere configuração de autenticação.
 - Para .env.example: Liste VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.` : "";
 
@@ -1168,10 +1177,11 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
 
                   const singleBackendRules = isBackendFileSingle ? `
 REGRAS PARA ARQUIVOS BACKEND (Supabase):
-- Para file_type "schema" (.sql): Gere CREATE TABLE, ALTER TABLE ENABLE RLS, CREATE POLICY. Use UUID como PK com gen_random_uuid(). Adicione created_at/updated_at.
+- Para file_type "schema" (.sql): Gere CREATE TABLE IF NOT EXISTS, ALTER TABLE ENABLE RLS, CREATE POLICY. Use UUID como PK com gen_random_uuid(). Adicione created_at/updated_at.
+- REGRA OBRIGATÓRIA: Todas as tabelas DEVEM ter um prefixo curto derivado do nome do projeto (ex: projeto "TaskFlow" → tf_users, tf_tasks). Use sempre CREATE TABLE IF NOT EXISTS para idempotência.
 - Para file_type "edge_function": Gere Edge Function Deno/TypeScript com CORS headers e validação de auth. Use "https://deno.land/std@0.168.0/" e "https://esm.sh/@supabase/supabase-js@2".
 - Para file_type "supabase_client": Use createClient com import.meta.env.VITE_SUPABASE_URL e import.meta.env.VITE_SUPABASE_ANON_KEY.
-- Para file_type "seed": Gere INSERT statements.
+- Para file_type "seed": Gere INSERT statements. Use os nomes de tabela COM prefixo.
 - Para .env.example: Liste VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.` : "";
 
                   const result = await callAI(
