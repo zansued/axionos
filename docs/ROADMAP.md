@@ -36,8 +36,8 @@
 - [x] Barra de progresso em tempo real (Realtime via Supabase)
 - [x] Progresso salvo incrementalmente (resume em caso de timeout)
 - [x] Pipeline roda em background (PipelineContext global — não para ao navegar)
-- [ ] Paralelização: subtasks independentes executam em paralelo
-- [ ] Notificação quando execução completa (toast + badge no menu)
+- [x] Paralelização: subtasks independentes executam em paralelo
+- [x] Notificação quando execução completa (toast + badge no menu)
 
 ---
 
@@ -50,7 +50,7 @@
 - [x] Auto-retrabalho: artefatos com score 50-69 retrabalhados e re-validados (até 2x)
 - [x] Auto-rejeição: artefatos com score < 50 rejeitados automaticamente
 - [x] Escalação para revisão humana quando retrabalho excede limite
-- [ ] Cross-review: Architect valida decisões arquiteturais do código gerado
+- [x] Cross-review: Architect valida decisões arquiteturais do código gerado
 
 ---
 
