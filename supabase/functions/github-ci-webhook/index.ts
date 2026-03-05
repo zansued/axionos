@@ -164,6 +164,17 @@ async function handleGitHubEvent(
     return jsonResponse({ success: true, message: "pong", hook_id: payload.hook_id });
   }
 
+  // ── Repo lifecycle events ──
+  if (event === "repository") {
+    return await handleRepoLifecycleEvent(serviceClient, payload);
+  }
+  if (event === "delete") {
+    return await handleBranchDeleteEvent(serviceClient, payload);
+  }
+  if (event === "deployment_status") {
+    return await handleDeploymentStatusEvent(serviceClient, payload);
+  }
+
   if (!["workflow_run", "check_run", "status"].includes(event)) {
     return jsonResponse({ success: true, message: `Event '${event}' ignored` });
   }
