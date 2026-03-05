@@ -117,6 +117,34 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
               queryClient.invalidateQueries({ queryKey: ["initiatives"] });
             }
           }
+
+          // ── Repo lifecycle alerts ──
+          const progress = newRow.execution_progress;
+          const oldProgress = oldRow?.execution_progress;
+          if (progress?.repo_alert && progress.repo_alert !== oldProgress?.repo_alert) {
+            const repoStatus = progress.repo_status;
+            const isDestructive = ["deleted", "branch_deleted", "failed"].includes(repoStatus);
+            const icon = repoStatus === "deleted" ? "🗑️" :
+              repoStatus === "branch_deleted" ? "⚠️" :
+              repoStatus === "archived" ? "📦" :
+              repoStatus === "privatized" ? "🔒" :
+              progress.deploy_status === "failed" ? "❌" :
+              progress.deploy_status === "success" ? "✅" : "ℹ️";
+
+            const label = `${icon} ${progress.repo_alert}`;
+            toast({ variant: isDestructive ? "destructive" : "default", title: label });
+            addEvent(initiativeId, "repo_lifecycle", label);
+            queryClient.invalidateQueries({ queryKey: ["initiatives"] });
+          }
+
+          // Deploy success notification
+          if (progress?.deploy_status === "success" && oldProgress?.deploy_status !== "success") {
+            const url = progress.deploy_url || "";
+            const label = `✅ Deploy concluído${url ? `: ${url}` : ""}`;
+            toast({ title: label });
+            addEvent(initiativeId, "deploy", label);
+            queryClient.invalidateQueries({ queryKey: ["initiatives"] });
+          }
         }
       )
       .subscribe();
