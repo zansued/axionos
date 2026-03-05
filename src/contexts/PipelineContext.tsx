@@ -121,10 +121,10 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           reject: "Ajustes solicitados — pipeline retornou ao estágio anterior ⟲",
           execution: `Implementação concluída: ${result.code_files || 0} arquivos (Code Architect → Developer → Integration) ✅`,
           validation: result.batch_incomplete
-            ? `Verificação: ${result.processed_in_batch || 0} processados (Static Analysis → Runtime QA → Fix Agent), ${result.remaining_to_validate || 0} restantes ⏳`
+            ? `Fix Loop: ${result.processed_in_batch || 0} processados, ${result.fixed || 0} corrigidos, ${result.remaining_to_validate || 0} restantes ⏳`
             : result.overall_pass
-              ? `Verificação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos${result.fixed ? `, ${result.fixed} corrigidos pelo Fix Agent` : ""} ✅`
-              : `Verificação: ${result.failed || 0} falhas, ${result.fixed || 0} corrigidos de ${result.artifacts_validated || 0} artefatos ⚠️`,
+              ? `Verificação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos${result.fixed ? `, ${result.fixed} corrigidos pelo Fix Agent (max 3x)` : ""} ✅`
+              : `Fix Loop: ${result.failed || 0} falhas, ${result.fixed || 0} corrigidos, ${result.pending_review || 0} escalados para humano de ${result.artifacts_validated || 0} artefatos ⚠️`,
           publish: `Release Agent: ${result.files_committed || 0} arquivos publicados v${result.version || "1.0.0"} (Pre-flight → Changelog → Push → Verificação) ✅`,
         };
         const label = stageLabels[stage] || "Concluído!";

@@ -126,9 +126,9 @@ config(0) → scaffold(1) → schema(2) → migration(3) → type(4) → style(5
 → util(6) → service(7) → hook(8) → component(9) → page(10) → test(11)
 ```
 
-#### Layer 5: Validation
+#### Layer 5: Validation + Fix Loop Automático
 **Edge Function:** `pipeline-validation`  
-**Process:** AI reviews each artifact with 5 criteria, auto-approve/rework/reject  
+**Process:** Fix Loop v2 — each artifact passes through Static Analysis (Agent 15) + Runtime QA (Agent 16). If score < 70 or critical issues found, Fix Agent (Agent 17) corrects and the full validation cycle repeats (max 3x). Exhausted attempts escalate to human review (`pending_review`). Successful fixes are recorded in `agent_memory` for learning.  
 **Gate:** All approved → `ready_to_publish`
 
 #### Layer 6: Publish
@@ -280,8 +280,8 @@ organizations ──┬── workspaces
 ### 3.1 🔴 No Real Code Validation
 The validation stage is purely AI-based text analysis. No TypeScript compilation, build verification, or runtime testing.
 
-### 3.2 🔴 No Fix Loop
-When validation fails, there's no automated cycle to re-execute failed subtasks with error context. Currently requires manual re-run.
+### 3.2 ✅ Fix Loop (Resolved)
+Fix Loop v2 implemented: full Static + Runtime re-validation after each fix, up to 3 attempts, then human escalation. Fix patterns stored in `agent_memory`.
 
 ### 3.3 🟡 Single-File Commit Strategy
 Publish commits files one-by-one via GitHub Contents API instead of atomic Git Tree API operations.
@@ -299,17 +299,16 @@ Reject resets all subtasks. No way to re-generate only affected files.
 
 ## 4. Future Architecture Targets
 
-### 4.1 Fix Loop (Validation → Execution Feedback)
+### 4.1 ✅ Fix Loop (Implemented)
 ```
-Execution → Validation
-    ↓ (if failures)
-Fix Agent receives exact errors + file content
+Execution → Validation (Static Analysis + Runtime QA)
+    ↓ (if score < 70 or critical issues)
+Fix Agent corrects all error/warning issues
     ↓
-Fix Agent produces corrected files
-    ↓
-Re-validation (max 3 iterations)
-    ↓
-Human escalation or publish
+Full re-validation (Static + Runtime again)
+    ↓ (max 3 iterations)
+Success → auto-approve + record fix pattern in agent_memory
+Failure → escalate to human (pending_review) + record in project_errors
 ```
 
 ### 4.2 Runtime Sandbox Validation
@@ -347,7 +346,7 @@ Add embedding column to `project_brain_nodes` for similarity-based context injec
 | Agent Swarm | ✅ Complete | Orchestrator + Worker, parallel execution (6 workers) |
 | Chain-of-Agents | ✅ Complete | Code Architect → Developer → Integration Agent |
 | Brain Edge Extraction | ✅ Complete | Regex-based import parsing, auto-edge creation |
-| Fix Loop | ❌ Missing | No automated error → re-execution cycle |
+| Fix Loop Automático | ✅ Complete | 3x fix cycle with full re-validation, human escalation, pattern learning |
 | Runtime Validation | ❌ Missing | No tsc/build verification |
 | Atomic Git Commits | ❌ Missing | Still file-by-file via Contents API |
 | Vector Embeddings | ❌ Missing | tsvector only, no pgvector |
