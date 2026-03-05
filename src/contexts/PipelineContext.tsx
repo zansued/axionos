@@ -244,6 +244,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
             : `DB Provisioning: ${result.tables_created?.length || 0} tabelas, RLS ${result.rls_enabled ? "✅" : "⚠️"}, bucket ${result.bucket_created ? "✅" : "⚠️"}`,
           domain_model_analysis: `Domain Analysis: ${result.entities_detected || 0} entidades, ${result.relationships_detected || 0} relacionamentos, ${result.attributes_detected || 0} atributos ✅`,
           business_logic_synthesis: `Business Logic: ${result.services_generated || 0} serviços, ${result.total_actions || 0} ações, ${result.validation_rules || 0} validações, ${result.workflows_count || 0} workflows ✅`,
+          api_generation: `API Generator: ${result.entities_exposed || 0} entidades, ${result.endpoints_created || 0} endpoints, ${result.rpc_functions || 0} RPCs, ${result.webhooks_created || 0} webhooks ✅`,
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
           planning: `Planejamento concluído: 3 agentes, ${result.stories?.length || result.stories_created || 0} stories, ${result.total_subtasks || 0} subtasks ✅`,
