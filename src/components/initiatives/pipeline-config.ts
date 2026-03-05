@@ -92,7 +92,6 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
     case "architected":
       return [
         { stage: "architecture_simulation", label: "🌀 Simulação de Arquitetura", type: "run" },
-        { stage: "approve", label: "Aprovar Arquitetura (pular simulação)", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "simulating_architecture":
