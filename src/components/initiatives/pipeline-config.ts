@@ -90,14 +90,15 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["provisioning_db", "db_provisioned"].includes(s)) return 9;
   if (["analyzing_domain", "domain_analyzed"].includes(s)) return 10;
   if (["synthesizing_logic", "logic_synthesized"].includes(s)) return 11;
-  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 12;
-  if (["planning_ready", "planning", "planned"].includes(s)) return 13;
-  if (["in_progress"].includes(s)) return 14;
-  if (["validating"].includes(s)) return 15;
-  if (["repairing_build", "build_repaired", "repair_failed"].includes(s)) return 16;
-  if (["ready_to_publish"].includes(s)) return 17;
-  if (["published"].includes(s)) return 18;
-  if (["completed"].includes(s)) return 19;
+  if (["generating_api", "api_generated"].includes(s)) return 12;
+  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 13;
+  if (["planning_ready", "planning", "planned"].includes(s)) return 14;
+  if (["in_progress"].includes(s)) return 15;
+  if (["validating"].includes(s)) return 16;
+  if (["repairing_build", "build_repaired", "repair_failed"].includes(s)) return 17;
+  if (["ready_to_publish"].includes(s)) return 18;
+  if (["published"].includes(s)) return 19;
+  if (["completed"].includes(s)) return 20;
   return 0;
 }
 
