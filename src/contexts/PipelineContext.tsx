@@ -185,6 +185,15 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           }, 1500);
           return;
         }
+
+        // Auto-trigger runtime validation after drift detection passes
+        if (stage === "drift_detection" && result.success && result.passed) {
+          toast({ title: "🚀 Iniciando Runtime Validation (tsc + vite build via CI)..." });
+          setTimeout(() => {
+            runStage(initiativeId, "runtime_validation");
+          }, 1500);
+          return;
+        }
       } catch (e: any) {
         toast({ variant: "destructive", title: "Erro", description: e.message });
         addEvent(initiativeId, stage, `❌ Erro em ${stage}: ${e.message?.slice(0, 80)}`);

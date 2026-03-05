@@ -264,14 +264,26 @@ async function handleGitHubEvent(
       `CI passed: ${workflowName} (${repoFullName}@${commitSha.slice(0, 7)})`,
       { run_id: runId, workflow: workflowName });
 
+    // Preserve existing execution_progress fields and merge CI success data
+    const { data: currentInit } = await serviceClient
+      .from("initiatives")
+      .select("execution_progress")
+      .eq("id", initiativeId)
+      .single();
+
+    const existingProgress = (currentInit?.execution_progress as Record<string, unknown>) || {};
+
     await serviceClient.from("initiatives").update({
       execution_progress: {
+        ...existingProgress,
         ci_status: "success",
         ci_run_id: runId,
         ci_passed_at: new Date().toISOString(),
         ci_workflow: workflowName,
         ci_commit_sha: commitSha,
+        runtime_validation_status: "passed",
       },
+      stage_status: "ready_to_publish",
     }).eq("id", initiativeId);
 
     if (jobId) await completeJob(ctx, jobId, {
