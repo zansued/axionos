@@ -79,8 +79,9 @@ const App = () => (
                       <Route path="/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
                       <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </OnboardingProvider>
+                      </Routes>
+                    </OnboardingProvider>
+                  </WorkspaceProvider>
                 </PipelineProvider>
               </OrgProvider>
             </AuthProvider>
