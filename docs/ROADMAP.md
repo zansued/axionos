@@ -244,3 +244,17 @@
 - [x] Resultado armazenado no Project Brain para contexto futuro
 - [x] Novos estágios: `simulating_architecture` / `architecture_simulated`
 - [x] Pipeline atualizado: Arquitetura → Simulação → Validação Preventiva → Squad → Execução
+
+---
+
+## Fase 22 — Foundation Scaffold Engine ✅
+
+- [x] **`pipeline-foundation-scaffold`** — gera scaffold mínimo buildável antes da geração de features
+- [x] Template React+Vite com package.json, index.html, src/main.tsx, src/App.tsx, vite.config.ts, tsconfig.json
+- [x] Detecção automática de stack via discovery_payload
+- [x] **Validação de scaffold**: verifica scripts, imports, entrypoints e dependências
+- [x] **Auto-reparo**: injeta arquivos faltantes a partir de templates padrão
+- [x] **Simulação de build via IA**: prevê se `npm install && vite build` passaria
+- [x] Scaffold armazenado no Project Brain como nós com status "scaffold"
+- [x] Novos estágios: `scaffolding` / `scaffolded`
+- [x] Pipeline atualizado: Arquitetura → Simulação → Validação Preventiva → **Scaffold** → Squad → Execução
