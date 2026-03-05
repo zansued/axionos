@@ -1595,6 +1595,24 @@ export type Database = {
         | "ux_expert"
         | "aios_master"
         | "aios_orchestrator"
+        | "vision_agent"
+        | "market_analyst"
+        | "requirements_agent"
+        | "product_architect"
+        | "system_architect"
+        | "data_architect"
+        | "api_architect"
+        | "dependency_planner"
+        | "task_planner"
+        | "story_generator"
+        | "file_planner"
+        | "code_architect"
+        | "developer"
+        | "integration_agent"
+        | "static_analysis"
+        | "runtime_qa"
+        | "fix_agent"
+        | "release_agent"
       agent_status: "active" | "inactive"
       initiative_stage_status:
         | "draft"
@@ -1776,6 +1794,24 @@ export const Constants = {
         "ux_expert",
         "aios_master",
         "aios_orchestrator",
+        "vision_agent",
+        "market_analyst",
+        "requirements_agent",
+        "product_architect",
+        "system_architect",
+        "data_architect",
+        "api_architect",
+        "dependency_planner",
+        "task_planner",
+        "story_generator",
+        "file_planner",
+        "code_architect",
+        "developer",
+        "integration_agent",
+        "static_analysis",
+        "runtime_qa",
+        "fix_agent",
+        "release_agent",
       ],
       agent_status: ["active", "inactive"],
       initiative_stage_status: [

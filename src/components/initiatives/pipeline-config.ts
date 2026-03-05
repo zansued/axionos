@@ -5,8 +5,8 @@ import {
 
 export const PIPELINE_STEPS = [
   { key: "draft", label: "Rascunho", icon: Lightbulb, color: "text-muted-foreground", bg: "bg-muted/20" },
-  { key: "discovering", label: "Descobrindo", icon: Brain, color: "text-warning", bg: "bg-warning/10" },
-  { key: "discovered", label: "Descoberto", icon: Brain, color: "text-accent", bg: "bg-accent/10" },
+  { key: "discovering", label: "Compreensão", icon: Brain, color: "text-warning", bg: "bg-warning/10" },
+  { key: "discovered", label: "Compreendido", icon: Brain, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
   { key: "forming_squad", label: "Formando", icon: Users, color: "text-warning", bg: "bg-warning/10" },
   { key: "squad_formed", label: "Squad ✓", icon: Users, color: "text-accent", bg: "bg-accent/10" },
@@ -21,7 +21,7 @@ export const PIPELINE_STEPS = [
 ];
 
 export const MACRO_STAGES = [
-  { key: "discovery", label: "Descoberta", icon: Brain },
+  { key: "discovery", label: "Compreensão", icon: Brain },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
@@ -56,14 +56,14 @@ export type StageAction = {
 export function getAvailableActions(stageStatus: string): StageAction[] {
   switch (stageStatus) {
     case "draft":
-      return [{ stage: "discovery", label: "Rodar Discovery", type: "run" }];
+      return [{ stage: "comprehension", label: "Iniciar Compreensão (4 agentes)", type: "run" }];
     case "discovering":
       return [
-        { stage: "discovery", label: "Re-executar Discovery", type: "run" },
+        { stage: "comprehension", label: "Re-executar Compreensão", type: "run" },
       ];
     case "discovered":
       return [
-        { stage: "approve", label: "Aprovar Descoberta", type: "approve" },
+        { stage: "approve", label: "Aprovar Compreensão", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
