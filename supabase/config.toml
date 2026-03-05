@@ -92,3 +92,6 @@ verify_jwt = false
 
 [functions.pipeline-preventive-validation]
 verify_jwt = false
+
+[functions.pipeline-architecture-simulation]
+verify_jwt = false

@@ -375,7 +375,7 @@ Crie o grafo de dependências para geração de código:
       success: true,
       agents_executed: 4,
       layers_completed: [2],
-      next_stage: "preventive_validation",
+      next_stage: "architecture_simulation",
       system_architecture: systemArch.result,
       data_architecture: dataArch.result,
       api_architecture: apiArch.result,
