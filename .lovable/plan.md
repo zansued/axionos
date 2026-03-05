@@ -55,15 +55,21 @@ Arquitetura distribuída:
 - `ArchitecturalDriftStatus` — UI com drift score e lista de violações
 - Violations registradas em `project_errors` + prevention rules geradas
 
+### 9. Atomic Git Commits (Tree API)
+- `pipeline-publish` e `pipeline-fix-orchestrator` refatorados para usar Git Tree API
+- Fluxo: Create Blobs (paralelo) → Build Tree → Single Commit → Update Ref
+- Elimina N requests sequenciais por 1 commit atômico
+- Blobs criados em batches paralelos de 5
+
 ---
 
 ## 🔜 Próximos Passos (em ordem de prioridade)
 
 | # | Fase | Impacto | Complexidade | Descrição |
 |---|------|---------|-------------|-----------|
-| 1 | Atomic Git Commits (Tree API) | 🟡 Médio | Médio | Usar Git Tree API para commit atômico ao invés de commits individuais por arquivo |
-| 2 | Runtime Validation (tsc + vite) | 🔴 Alto | Alto | Validação real com compilador TypeScript (hoje é AI-simulated) |
-| 3 | Smart Context Window | 🟡 Médio | Alto | Reduzir tokens via AST parsing — enviar apenas interfaces/exports relevantes |
-| 4 | Incremental Re-execution | 🟡 Médio | Médio | Re-executar apenas arquivos cujo content_hash mudou |
-| 5 | Vector Embeddings (pgvector) | 🟠 Baixo | Alto | Busca semântica no Brain para contexto mais relevante |
+| 1 | Runtime Validation (tsc + vite) | 🔴 Alto | Alto | Validação real com compilador TypeScript (hoje é AI-simulated) |
+| 2 | Smart Context Window | 🟡 Médio | Alto | Reduzir tokens via AST parsing — enviar apenas interfaces/exports relevantes |
+| 3 | Incremental Re-execution | 🟡 Médio | Médio | Re-executar apenas arquivos cujo content_hash mudou |
+| 4 | Vector Embeddings (pgvector) | 🟠 Baixo | Alto | Busca semântica no Brain para contexto mais relevante |
+| 5 | Templates de Iniciativas | 🟠 Baixo | Baixo | Modelos pré-prontos (SaaS, API, Landing Page) |
 | 6 | Templates de Iniciativas | 🟠 Baixo | Baixo | Modelos pré-prontos (SaaS, API, Landing Page) |

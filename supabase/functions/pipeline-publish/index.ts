@@ -161,8 +161,8 @@ Retorne APENAS JSON:
 
     const commitMessages = changelog.commit_messages || [];
 
-    // ═══ PHASE 3: GitHub Push ═══
-    await pipelineLog(ctx, "release_push_start", `Release Agent: Publicando ${fileEntries.length} arquivos no GitHub...`);
+    // ═══ PHASE 3: GitHub Push (Atomic via Tree API) ═══
+    await pipelineLog(ctx, "release_push_start", `Release Agent: Publicando ${fileEntries.length} arquivos atomicamente no GitHub...`);
 
     // Create repository
     let actualOwner = resolvedOwner;
@@ -193,63 +193,134 @@ Retorne APENAS JSON:
     const refResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/ref/heads/${resolvedBaseBranch}`, { headers: ghHeaders });
     if (!refResp.ok) throw new Error(`Branch base '${resolvedBaseBranch}' não encontrada.`);
     const refData = await refResp.json();
+    const baseSha = refData.object.sha;
 
-    // Commit files
+    // Get base commit to find its tree
+    const baseCommitResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/commits/${baseSha}`, { headers: ghHeaders });
+    if (!baseCommitResp.ok) throw new Error("Falha ao obter commit base");
+    const baseCommit = await baseCommitResp.json();
+    const baseTreeSha = baseCommit.tree.sha;
+
+    // ── Atomic Tree API: Create blobs → Build tree → Single commit ──
     const committedFiles: string[] = [];
     const skippedFiles: string[] = [];
 
-    for (let i = 0; i < fileEntries.length; i++) {
-      const file = fileEntries[i];
-      const commitMsg = commitMessages[i] || `feat: add ${file.path}`;
-
-      try {
-        let fileSha: string | undefined;
-        const existingFile = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${file.path}?ref=${resolvedBaseBranch}`, { headers: ghHeaders });
-        if (existingFile.ok) {
-          const fileData = await existingFile.json();
-          fileSha = fileData.sha;
-        }
-
-        const commitBody: any = {
-          message: commitMsg,
-          content: btoa(unescape(encodeURIComponent(file.content))),
-          branch: resolvedBaseBranch,
-        };
-        if (fileSha) commitBody.sha = fileSha;
-
-        const commitResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${file.path}`, {
-          method: "PUT", headers: ghHeaders, body: JSON.stringify(commitBody),
-        });
-
-        if (commitResp.ok) committedFiles.push(file.path);
-        else { const errText = await commitResp.text(); console.error(`Failed to commit ${file.path}:`, errText); skippedFiles.push(file.path); }
-      } catch (e) { console.error(`Error committing ${file.path}:`, e); skippedFiles.push(file.path); }
-    }
-
-    // Ensure required files
+    // Combine all file entries + required files
     const requiredFiles: Record<string, string> = {
       "vercel.json": DETERMINISTIC_FILES["vercel.json"],
       "public/_redirects": DETERMINISTIC_FILES["public/_redirects"],
     };
-
-    for (const [requiredPath, requiredContent] of Object.entries(requiredFiles)) {
-      if (committedFiles.includes(requiredPath)) continue;
-      try {
-        let fileSha: string | undefined;
-        const existingFile = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${requiredPath}?ref=${resolvedBaseBranch}`, { headers: ghHeaders });
-        if (existingFile.ok) { const fd = await existingFile.json(); fileSha = fd.sha; }
-        const commitBody: any = {
-          message: `chore: ensure ${requiredPath}`,
-          content: btoa(unescape(encodeURIComponent(requiredContent))),
-          branch: resolvedBaseBranch,
-        };
-        if (fileSha) commitBody.sha = fileSha;
-        const ensureResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${requiredPath}`, {
-          method: "PUT", headers: ghHeaders, body: JSON.stringify(commitBody),
-        });
-        if (ensureResp.ok && !committedFiles.includes(requiredPath)) committedFiles.push(requiredPath);
-      } catch (e) { console.error(`Error ensuring ${requiredPath}:`, e); }
+    for (const [reqPath, reqContent] of Object.entries(requiredFiles)) {
+      if (!fileEntries.some(f => f.path === reqPath)) {
+        fileEntries.push({ path: reqPath, content: reqContent, type: "config", summary: `Ensure ${reqPath}` });
+      }
     }
+
+    // Step 1: Create blobs for all files (parallel batches of 5)
+    const BLOB_BATCH = 5;
+    const treeItems: Array<{ path: string; mode: string; type: string; sha: string }> = [];
+
+    for (let i = 0; i < fileEntries.length; i += BLOB_BATCH) {
+      const batch = fileEntries.slice(i, i + BLOB_BATCH);
+      const blobResults = await Promise.allSettled(
+        batch.map(async (file) => {
+          const blobResp = await fetch(
+            `${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/blobs`,
+            {
+              method: "POST",
+              headers: ghHeaders,
+              body: JSON.stringify({
+                content: file.content,
+                encoding: "utf-8",
+              }),
+            }
+          );
+          if (!blobResp.ok) {
+            const errText = await blobResp.text();
+            throw new Error(`Blob creation failed for ${file.path}: ${errText}`);
+          }
+          const blobData = await blobResp.json();
+          return { path: file.path, sha: blobData.sha };
+        })
+      );
+
+      for (let j = 0; j < blobResults.length; j++) {
+        const result = blobResults[j];
+        const file = batch[j];
+        if (result.status === "fulfilled") {
+          treeItems.push({
+            path: result.value.path,
+            mode: "100644",
+            type: "blob",
+            sha: result.value.sha,
+          });
+          committedFiles.push(file.path);
+        } else {
+          console.error(`Blob failed for ${file.path}:`, result.reason);
+          skippedFiles.push(file.path);
+        }
+      }
+    }
+
+    if (treeItems.length === 0) throw new Error("Nenhum blob criado — falha total");
+
+    // Step 2: Create a new tree referencing all blobs (inherits from base tree)
+    const treeResp = await fetch(
+      `${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/trees`,
+      {
+        method: "POST",
+        headers: ghHeaders,
+        body: JSON.stringify({
+          base_tree: baseTreeSha,
+          tree: treeItems,
+        }),
+      }
+    );
+    if (!treeResp.ok) {
+      const errText = await treeResp.text();
+      throw new Error(`Tree creation failed: ${errText}`);
+    }
+    const newTree = await treeResp.json();
+
+    // Step 3: Create a single atomic commit
+    const commitMessage = `feat: ${initiative.title} v${changelog.version || "1.0.0"}\n\n${
+      committedFiles.length} files generated by SynkrAIOS Release Agent\n\n${
+      commitMessages.slice(0, 10).map((m: string) => `- ${m}`).join("\n")}`;
+
+    const commitResp = await fetch(
+      `${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/commits`,
+      {
+        method: "POST",
+        headers: ghHeaders,
+        body: JSON.stringify({
+          message: commitMessage,
+          tree: newTree.sha,
+          parents: [baseSha],
+        }),
+      }
+    );
+    if (!commitResp.ok) {
+      const errText = await commitResp.text();
+      throw new Error(`Commit creation failed: ${errText}`);
+    }
+    const newCommit = await commitResp.json();
+
+    // Step 4: Update branch reference to point to new commit
+    const updateRefResp = await fetch(
+      `${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/refs/heads/${resolvedBaseBranch}`,
+      {
+        method: "PATCH",
+        headers: ghHeaders,
+        body: JSON.stringify({ sha: newCommit.sha, force: false }),
+      }
+    );
+    if (!updateRefResp.ok) {
+      const errText = await updateRefResp.text();
+      throw new Error(`Ref update failed: ${errText}`);
+    }
+
+    await pipelineLog(ctx, "release_atomic_commit",
+      `Atomic commit: ${committedFiles.length} arquivos em 1 commit (${newCommit.sha.slice(0, 7)})`);
 
     if (committedFiles.length === 0) throw new Error("Nenhum arquivo foi commitado com sucesso");
 
