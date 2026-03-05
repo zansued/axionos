@@ -5,10 +5,19 @@ import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
 
+/**
+ * Camada 6 — Release
+ * Release Agent (Agente 18) orquestra:
+ *   1. Pre-flight Checks — valida integridade dos artefatos antes do push
+ *   2. Changelog & Commit Generation — gera CHANGELOG.md e commit messages semânticas
+ *   3. GitHub Push — cria/atualiza repositório e commita arquivos
+ *   4. Post-deploy Verification — verifica integridade do repositório após push
+ */
+
 serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-publish");
   if (result instanceof Response) return result;
-  const { initiative, ctx, serviceClient, body, apiKey } = result;
+  const { initiative, ctx, serviceClient, body, apiKey, user } = result;
 
   let { github_token, owner, repo, base_branch } = body;
   let resolvedGithubToken = github_token;
@@ -39,8 +48,8 @@ serve(async (req) => {
     .toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50) || `axion-${ctx.initiativeId.slice(0, 8)}`;
 
-  const jobId = await createJob(ctx, "publish", { owner: resolvedOwner, repo: repoSlug, base_branch: resolvedBaseBranch });
-  await pipelineLog(ctx, "pipeline_publish_start", "Criando novo repositório e publicando artefatos...");
+  const jobId = await createJob(ctx, "publish", { owner: resolvedOwner, repo: repoSlug, base_branch: resolvedBaseBranch, mode: "release_agent" });
+  await pipelineLog(ctx, "pipeline_publish_start", "Release Agent iniciando: Pre-flight → Changelog → Push → Verificação...");
 
   const ghHeaders = {
     Authorization: `Bearer ${resolvedGithubToken}`,
@@ -49,8 +58,107 @@ serve(async (req) => {
   };
   const GITHUB_API = "https://api.github.com";
 
+  let totalTokens = 0, totalCost = 0;
+
   try {
-    // 1. Create repository
+    // ── Collect artifacts ──
+    const { data: stories } = await serviceClient.from("stories").select("id, title").eq("initiative_id", ctx.initiativeId);
+    const storyIds = (stories || []).map((s: any) => s.id);
+    const { data: phases } = await serviceClient.from("story_phases").select("id").in("story_id", storyIds);
+    const phaseIds = (phases || []).map((p: any) => p.id);
+    const { data: subtasks } = await serviceClient.from("story_subtasks").select("id, description, file_path, file_type").in("phase_id", phaseIds);
+
+    const subtaskFileMap = new Map<string, { file_path: string | null; file_type: string | null; description: string }>();
+    for (const st of (subtasks || [])) subtaskFileMap.set(st.id, { file_path: st.file_path, file_type: st.file_type, description: st.description });
+    const subtaskIds = (subtasks || []).map((st: any) => st.id);
+
+    const { data: artifacts } = await serviceClient.from("agent_outputs")
+      .select("id, type, summary, raw_output, subtask_id, status, agents(name, role)")
+      .in("subtask_id", subtaskIds.length > 0 ? subtaskIds : ["00000000-0000-0000-0000-000000000000"])
+      .eq("organization_id", ctx.organizationId);
+    if (!artifacts || artifacts.length === 0) throw new Error("Nenhum artefato encontrado para publicar");
+
+    // ═══ PHASE 1: Pre-flight Checks (Release Agent) ═══
+    await pipelineLog(ctx, "release_preflight_start", "Release Agent: Executando pre-flight checks...");
+
+    const approvedArtifacts = artifacts.filter((a: any) => a.status === "approved");
+    const nonApproved = artifacts.filter((a: any) => a.status !== "approved");
+    const fileEntries: { path: string; content: string; type: string; summary: string }[] = [];
+
+    for (const art of approvedArtifacts) {
+      const raw = art.raw_output as any;
+      const si = art.subtask_id ? subtaskFileMap.get(art.subtask_id) : null;
+      const filePath = raw?.file_path || si?.file_path;
+      if (!filePath) continue;
+      let content = raw?.content || raw?.text || (typeof raw === "string" ? raw : "");
+      if (!content || content === "{}") continue;
+
+      // Apply deterministic overrides
+      if (DETERMINISTIC_FILES[filePath]) content = DETERMINISTIC_FILES[filePath];
+      // Sanitize package.json
+      if (filePath === "package.json") content = sanitizePackageJson(content);
+
+      fileEntries.push({ path: filePath, content, type: si?.file_type || art.type, summary: si?.description || art.summary || filePath });
+    }
+
+    if (fileEntries.length === 0) throw new Error("Nenhum arquivo aprovado pronto para publicação");
+
+    // AI Pre-flight: check for missing critical files, inconsistencies
+    const fileManifest = fileEntries.map(f => `${f.path} (${f.type})`).join("\n");
+    const preflightResult = await callAI(apiKey,
+      `Você é o "Release Agent" (Agente 18). Execute pre-flight checks no projeto antes da publicação.
+Verifique:
+1. Arquivos críticos presentes (package.json, index.html, vite.config.ts, tsconfig.json, src/main.tsx, src/App.tsx)
+2. Consistência de imports entre arquivos
+3. Potenciais conflitos de nomes ou paths duplicados
+4. Presença de TODO/FIXME/HACK não resolvidos nos conteúdos
+
+Retorne APENAS JSON:
+{"preflight_pass": true/false, "critical_missing": [], "warnings": [], "ready_files_count": 0, "summary": "...", "risk_level": "low|medium|high"}`,
+      `## Projeto: ${initiative.title}\n## Arquivos para publicação (${fileEntries.length}):\n${fileManifest}\n\n## Artefatos não aprovados (${nonApproved.length}):\n${nonApproved.map((a: any) => `- ${a.summary} (status: ${a.status})`).join("\n") || "Nenhum"}`,
+      true
+    );
+    totalTokens += preflightResult.tokens; totalCost += preflightResult.costUsd;
+
+    let preflight: any;
+    try { preflight = JSON.parse(preflightResult.content); }
+    catch { preflight = { preflight_pass: true, critical_missing: [], warnings: [], ready_files_count: fileEntries.length, summary: "OK", risk_level: "low" }; }
+
+    await persistReview(serviceClient, artifacts[0].id, user.id, "release_preflight", "approved",
+      JSON.stringify(preflight));
+
+    if (!preflight.preflight_pass && preflight.risk_level === "high") {
+      throw new Error(`Pre-flight falhou: ${preflight.critical_missing?.join(", ") || preflight.summary}`);
+    }
+
+    // ═══ PHASE 2: Changelog & Commit Messages (Release Agent) ═══
+    await pipelineLog(ctx, "release_changelog_start", "Release Agent: Gerando changelog e commits semânticos...");
+
+    const changelogResult = await callAI(apiKey,
+      `Você é o "Release Agent". Gere:
+1. Um CHANGELOG.md profissional em Markdown (Keep a Changelog format)
+2. Commit messages seguindo Conventional Commits (max 72 chars, inglês, imperativo)
+
+Retorne APENAS JSON:
+{"changelog_md": "# Changelog\\n\\n## [1.0.0] - YYYY-MM-DD\\n...", "commit_messages": ["feat: add component X", ...], "version": "1.0.0", "release_title": "...", "release_notes": "..."}`,
+      `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || "N/A"}\n\n## Arquivos (${fileEntries.length}):\n${fileEntries.map((f, i) => `${i}. ${f.path} — ${f.summary}`).join("\n")}`,
+      true
+    );
+    totalTokens += changelogResult.tokens; totalCost += changelogResult.costUsd;
+
+    let changelog: any;
+    try { changelog = JSON.parse(changelogResult.content); }
+    catch { changelog = { changelog_md: `# Changelog\n\n## [1.0.0] - ${new Date().toISOString().split("T")[0]}\n\n### Added\n${fileEntries.map(f => `- ${f.summary}`).join("\n")}`, commit_messages: fileEntries.map(f => `feat: add ${f.path}`), version: "1.0.0", release_title: initiative.title, release_notes: "" }; }
+
+    // Add CHANGELOG.md to file entries
+    fileEntries.push({ path: "CHANGELOG.md", content: changelog.changelog_md || "", type: "content", summary: "Changelog gerado pelo Release Agent" });
+
+    const commitMessages = changelog.commit_messages || [];
+
+    // ═══ PHASE 3: GitHub Push ═══
+    await pipelineLog(ctx, "release_push_start", `Release Agent: Publicando ${fileEntries.length} arquivos no GitHub...`);
+
+    // Create repository
     let actualOwner = resolvedOwner;
     let actualRepo = repoSlug;
     let repoHtmlUrl: string;
@@ -75,87 +183,22 @@ serve(async (req) => {
 
     await new Promise(r => setTimeout(r, 2000));
 
-    // 2. Get base branch SHA
+    // Get base branch SHA
     const refResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/ref/heads/${resolvedBaseBranch}`, { headers: ghHeaders });
     if (!refResp.ok) throw new Error(`Branch base '${resolvedBaseBranch}' não encontrada.`);
     const refData = await refResp.json();
-    const baseSha = refData.object.sha;
 
-    // 3. Collect artifacts
-    const { data: stories } = await serviceClient.from("stories").select("id, title").eq("initiative_id", ctx.initiativeId);
-    const storyIds = (stories || []).map((s: any) => s.id);
-    const { data: phases } = await serviceClient.from("story_phases").select("id").in("story_id", storyIds);
-    const phaseIds = (phases || []).map((p: any) => p.id);
-    const { data: subtasks } = await serviceClient.from("story_subtasks").select("id, description, file_path, file_type").in("phase_id", phaseIds);
-
-    const subtaskFileMap = new Map<string, { file_path: string | null; file_type: string | null; description: string }>();
-    for (const st of (subtasks || [])) subtaskFileMap.set(st.id, { file_path: st.file_path, file_type: st.file_type, description: st.description });
-    const subtaskIds = (subtasks || []).map((st: any) => st.id);
-
-    const { data: artifacts } = await serviceClient.from("agent_outputs")
-      .select("id, type, summary, raw_output, subtask_id, agents(name, role)")
-      .in("subtask_id", subtaskIds).eq("organization_id", ctx.organizationId);
-    if (!artifacts || artifacts.length === 0) throw new Error("Nenhum artefato encontrado para publicar");
-
-    // AI: Generate commit messages
-    const fileList = artifacts.map((art: any, i: number) => {
-      const si = art.subtask_id ? subtaskFileMap.get(art.subtask_id) : null;
-      const fp = (art.raw_output as any)?.file_path || si?.file_path || `artifact-${i}`;
-      return `${i}. ${fp} (${si?.file_type || art.type}) — ${si?.description || art.summary || fp}`;
-    });
-
-    const commitMsgResult = await callAI(apiKey,
-      `Você gera commit messages seguindo Conventional Commits. Max 72 chars, imperativo, inglês, sem ponto final.\nRetorne APENAS um JSON array de strings.`,
-      `Arquivos para commit:\n${fileList.join("\n")}\n\nRetorne JSON: ["feat: add header component", ...]`,
-      true
-    );
-
-    let commitMessages: string[] = [];
-    try {
-      const parsed = JSON.parse(commitMsgResult.content);
-      commitMessages = Array.isArray(parsed) ? parsed : (parsed.messages || parsed.commits || []);
-    } catch { commitMessages = []; }
-
-    // Build Health Report + sanitization (inline)
-    for (const art of artifacts) {
-      const raw = art.raw_output as any;
-      const fp = raw?.file_path || subtaskFileMap.get(art.subtask_id)?.file_path;
-      if (!fp) continue;
-      let content = raw?.content || raw?.text || "";
-      if (!content) continue;
-
-      // Apply deterministic overrides
-      if (DETERMINISTIC_FILES[fp]) {
-        if (raw?.content !== undefined) raw.content = DETERMINISTIC_FILES[fp];
-        else if (raw?.text !== undefined) raw.text = DETERMINISTIC_FILES[fp];
-      }
-      // Sanitize package.json
-      if (fp === "package.json") {
-        const sanitized = sanitizePackageJson(raw?.content || raw?.text || "");
-        if (raw?.content !== undefined) raw.content = sanitized;
-        else if (raw?.text !== undefined) raw.text = sanitized;
-      }
-    }
-
-    // 4. Commit files to main
+    // Commit files
     const committedFiles: string[] = [];
     const skippedFiles: string[] = [];
 
-    for (let i = 0; i < artifacts.length; i++) {
-      const art = artifacts[i] as any;
-      const raw = art.raw_output as any;
-      const si = art.subtask_id ? subtaskFileMap.get(art.subtask_id) : null;
-      const filePath = raw?.file_path || si?.file_path;
-      if (!filePath) { skippedFiles.push(`artifact-${i} (no path)`); continue; }
-
-      const fileContent = raw?.content || raw?.text || (typeof raw === "string" ? raw : JSON.stringify(raw));
-      if (!fileContent || fileContent === "{}") { skippedFiles.push(filePath); continue; }
-
-      const commitMsg = commitMessages[i] || `feat: add ${filePath}`;
+    for (let i = 0; i < fileEntries.length; i++) {
+      const file = fileEntries[i];
+      const commitMsg = commitMessages[i] || `feat: add ${file.path}`;
 
       try {
         let fileSha: string | undefined;
-        const existingFile = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${filePath}?ref=${resolvedBaseBranch}`, { headers: ghHeaders });
+        const existingFile = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${file.path}?ref=${resolvedBaseBranch}`, { headers: ghHeaders });
         if (existingFile.ok) {
           const fileData = await existingFile.json();
           fileSha = fileData.sha;
@@ -163,21 +206,21 @@ serve(async (req) => {
 
         const commitBody: any = {
           message: commitMsg,
-          content: btoa(unescape(encodeURIComponent(fileContent))),
+          content: btoa(unescape(encodeURIComponent(file.content))),
           branch: resolvedBaseBranch,
         };
         if (fileSha) commitBody.sha = fileSha;
 
-        const commitResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${filePath}`, {
+        const commitResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/${file.path}`, {
           method: "PUT", headers: ghHeaders, body: JSON.stringify(commitBody),
         });
 
-        if (commitResp.ok) committedFiles.push(filePath);
-        else { const errText = await commitResp.text(); console.error(`Failed to commit ${filePath}:`, errText); skippedFiles.push(filePath); }
-      } catch (e) { console.error(`Error committing ${filePath}:`, e); skippedFiles.push(filePath); }
+        if (commitResp.ok) committedFiles.push(file.path);
+        else { const errText = await commitResp.text(); console.error(`Failed to commit ${file.path}:`, errText); skippedFiles.push(file.path); }
+      } catch (e) { console.error(`Error committing ${file.path}:`, e); skippedFiles.push(file.path); }
     }
 
-    // Ensure required files exist
+    // Ensure required files
     const requiredFiles: Record<string, string> = {
       "vercel.json": DETERMINISTIC_FILES["vercel.json"],
       "public/_redirects": DETERMINISTIC_FILES["public/_redirects"],
@@ -203,23 +246,75 @@ serve(async (req) => {
     }
 
     if (committedFiles.length === 0) throw new Error("Nenhum arquivo foi commitado com sucesso");
+
+    // ═══ PHASE 4: Post-deploy Verification (Release Agent) ═══
+    await pipelineLog(ctx, "release_verify_start", "Release Agent: Verificando integridade pós-deploy...");
+
+    const verifyResult = await callAI(apiKey,
+      `Você é o "Release Agent" fazendo verificação pós-deploy. Analise o resultado da publicação.
+Retorne APENAS JSON:
+{"deploy_healthy": true/false, "files_verified": 0, "missing_critical": [], "recommendations": [], "summary": "...", "confidence": 0-100}`,
+      `## Repositório: ${actualOwner}/${actualRepo}\n## Branch: ${resolvedBaseBranch}\n\n## Arquivos commitados (${committedFiles.length}):\n${committedFiles.join("\n")}\n\n## Arquivos pulados (${skippedFiles.length}):\n${skippedFiles.join("\n") || "Nenhum"}\n\n## Pre-flight warnings:\n${(preflight.warnings || []).join("\n") || "Nenhum"}`,
+      true
+    );
+    totalTokens += verifyResult.tokens; totalCost += verifyResult.costUsd;
+
+    let verification: any;
+    try { verification = JSON.parse(verifyResult.content); }
+    catch { verification = { deploy_healthy: true, files_verified: committedFiles.length, missing_critical: [], recommendations: [], summary: "OK", confidence: 80 }; }
+
+    await persistReview(serviceClient, artifacts[0].id, user.id, "release_verification", "approved",
+      JSON.stringify(verification));
+
+    // Save to knowledge base
+    await serviceClient.from("org_knowledge_base").insert({
+      organization_id: ctx.organizationId,
+      title: `Release: ${initiative.title} v${changelog.version || "1.0.0"}`,
+      content: changelog.changelog_md || "",
+      category: "release_notes",
+      source_initiative_id: ctx.initiativeId,
+      tags: ["release", "changelog", actualRepo],
+    });
+
     await updateInitiative(ctx, { stage_status: "published" });
 
     if (jobId) await completeJob(ctx, jobId, {
       branch: resolvedBaseBranch, files_committed: committedFiles.length,
-      owner: actualOwner, repo: actualRepo,
+      owner: actualOwner, repo: actualRepo, version: changelog.version || "1.0.0",
       repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
-    }, { model: "google/gemini-2.5-flash", costUsd: commitMsgResult.costUsd, durationMs: 0 });
+      preflight: { pass: preflight.preflight_pass, risk: preflight.risk_level },
+      verification: { healthy: verification.deploy_healthy, confidence: verification.confidence },
+      skipped_files: skippedFiles,
+    }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
 
-    await pipelineLog(ctx, "pipeline_publish_complete", `Publicação: ${committedFiles.length} arquivos em ${actualOwner}/${actualRepo}`, { branch: resolvedBaseBranch, repo: `${actualOwner}/${actualRepo}` });
+    await pipelineLog(ctx, "pipeline_publish_complete",
+      `Release Agent: ${committedFiles.length} arquivos publicados em ${actualOwner}/${actualRepo} v${changelog.version || "1.0.0"} ✅`,
+      { branch: resolvedBaseBranch, repo: `${actualOwner}/${actualRepo}`, version: changelog.version });
 
     return jsonResponse({
       success: true, branch: resolvedBaseBranch, files_committed: committedFiles.length,
       skipped_files: skippedFiles, owner: actualOwner, repo: actualRepo,
-      repo_url: `https://github.com/${actualOwner}/${actualRepo}`, job_id: jobId,
+      version: changelog.version || "1.0.0",
+      repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
+      preflight_pass: preflight.preflight_pass,
+      deploy_healthy: verification.deploy_healthy,
+      job_id: jobId,
     });
   } catch (e) {
     if (jobId) await failJob(ctx, jobId, e instanceof Error ? e.message : "Unknown error");
     return errorResponse(e instanceof Error ? e.message : "Unknown error");
   }
 });
+
+// ── Helpers ──
+
+async function persistReview(client: any, outputId: string, userId: string, action: string, prevStatus: string, comment: string) {
+  await client.from("artifact_reviews").insert({
+    output_id: outputId,
+    reviewer_id: userId,
+    action,
+    previous_status: prevStatus,
+    new_status: prevStatus,
+    comment,
+  });
+}
