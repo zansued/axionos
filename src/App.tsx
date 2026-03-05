@@ -9,6 +9,8 @@ import { PipelineProvider } from "@/contexts/PipelineContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { OnboardingProvider } from "@/components/OnboardingGuide";
 import { I18nProvider } from "@/contexts/I18nContext";
+import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
+import { CommandPalette } from "@/components/CommandPalette";
 import { KeyboardShortcutsManager } from "@/components/KeyboardShortcutsManager";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
@@ -55,9 +57,11 @@ const App = () => (
             <AuthProvider>
               <OrgProvider>
                 <PipelineProvider>
-                  <OnboardingProvider>
-                    <KeyboardShortcutsManager />
-                    <Routes>
+                  <WorkspaceProvider>
+                    <OnboardingProvider>
+                      <CommandPalette />
+                      <KeyboardShortcutsManager />
+                      <Routes>
                       <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
                       <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                       <Route path="/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
@@ -75,8 +79,9 @@ const App = () => (
                       <Route path="/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
                       <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </OnboardingProvider>
+                      </Routes>
+                    </OnboardingProvider>
+                  </WorkspaceProvider>
                 </PipelineProvider>
               </OrgProvider>
             </AuthProvider>

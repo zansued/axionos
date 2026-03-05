@@ -1,192 +1,118 @@
 import { AppLayout } from "@/components/AppLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Activity } from "lucide-react";
+import { Activity, ArrowUpRight, Cpu, Layers, Zap } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import {
-  PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip,
-  ResponsiveContainer, Legend,
-} from "recharts";
 import { useDashboardKPIs } from "@/hooks/useDashboardKPIs";
-import { useStrategicKPIs } from "@/hooks/useStrategicKPIs";
-import { KPICards } from "@/components/dashboard/KPICards";
-import { TopAgentsTable } from "@/components/dashboard/TopAgentsTable";
-import { StrategicDashboard } from "@/components/dashboard/StrategicDashboard";
 
-const STORY_STATUS_COLORS: Record<string, string> = {
-  todo: "hsl(215, 15%, 55%)", in_progress: "hsl(210, 100%, 52%)",
-  done: "hsl(160, 84%, 39%)", blocked: "hsl(0, 72%, 51%)",
-};
-const STORY_STATUS_LABELS: Record<string, string> = {
-  todo: "A Fazer", in_progress: "Em Progresso", done: "Concluído", blocked: "Bloqueado",
-};
-const ROLE_COLORS: Record<string, string> = {
-  devops: "hsl(210, 100%, 52%)", qa: "hsl(38, 92%, 50%)", architect: "hsl(270, 60%, 60%)",
-  sm: "hsl(160, 84%, 39%)", po: "hsl(160, 84%, 39%)", dev: "hsl(215, 15%, 55%)",
-};
-const ROLE_LABELS: Record<string, string> = {
-  devops: "DevOps", qa: "QA", architect: "Architect", sm: "Scrum Master",
-  po: "Product Owner", dev: "Developer",
-};
-const PRIORITY_COLORS: Record<string, string> = {
-  low: "hsl(215, 15%, 55%)", medium: "hsl(210, 100%, 52%)",
-  high: "hsl(38, 92%, 50%)", critical: "hsl(0, 72%, 51%)",
-};
-const PRIORITY_LABELS: Record<string, string> = {
-  low: "Baixa", medium: "Média", high: "Alta", critical: "Crítica",
-};
+const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
+const item = { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0 } };
 
-const tooltipStyle = {
-  backgroundColor: "hsl(225, 22%, 11%)", border: "1px solid hsl(225, 15%, 18%)",
-  borderRadius: "8px", color: "hsl(210, 20%, 92%)", fontSize: "12px",
-};
-
-const container = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
+function MetricCard({ label, value, subtext, icon: Icon }: { label: string; value: string | number; subtext?: string; icon: React.ElementType }) {
+  return (
+    <motion.div variants={item} className="border border-border rounded-lg p-4 bg-card">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{label}</span>
+        <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+      </div>
+      <p className="text-2xl font-semibold tracking-tight">{value}</p>
+      {subtext && <p className="text-xs text-muted-foreground mt-1">{subtext}</p>}
+    </motion.div>
+  );
+}
 
 export default function Dashboard() {
   const { data: kpis, isLoading } = useDashboardKPIs();
-  const { data: strategicKpis } = useStrategicKPIs();
-  // Stories by status
-  const { data: storiesByStatus = [] } = useQuery({
-    queryKey: ["stories-by-status"],
+
+  const { data: recentInitiatives = [] } = useQuery({
+    queryKey: ["recent-initiatives"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("stories").select("status");
+      const { data, error } = await supabase
+        .from("initiatives")
+        .select("id, title, status, stage_status, updated_at")
+        .order("updated_at", { ascending: false })
+        .limit(8);
       if (error) throw error;
-      const counts: Record<string, number> = {};
-      data.forEach((s: any) => { counts[s.status] = (counts[s.status] || 0) + 1; });
-      return Object.entries(counts).map(([status, count]) => ({
-        name: STORY_STATUS_LABELS[status] || status, value: count,
-        color: STORY_STATUS_COLORS[status] || "hsl(215, 15%, 55%)",
-      }));
+      return data;
     },
   });
-
-  // Agents by role
-  const { data: agentsByRole = [] } = useQuery({
-    queryKey: ["agents-by-role"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("agents").select("role");
-      if (error) throw error;
-      const counts: Record<string, number> = {};
-      data.forEach((a: any) => { counts[a.role] = (counts[a.role] || 0) + 1; });
-      return Object.entries(counts).map(([role, count]) => ({
-        name: ROLE_LABELS[role] || role, value: count,
-        fill: ROLE_COLORS[role] || "hsl(215, 15%, 55%)",
-      }));
-    },
-  });
-
-  // Stories by priority
-  const { data: storiesByPriority = [] } = useQuery({
-    queryKey: ["stories-by-priority"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("stories").select("priority");
-      if (error) throw error;
-      const counts: Record<string, number> = {};
-      data.forEach((s: any) => { counts[s.priority] = (counts[s.priority] || 0) + 1; });
-      return ["low", "medium", "high", "critical"]
-        .filter((p) => counts[p])
-        .map((priority) => ({
-          name: PRIORITY_LABELS[priority], value: counts[priority],
-          fill: PRIORITY_COLORS[priority],
-        }));
-    },
-  });
-
-  const hasChartData = storiesByStatus.length > 0 || agentsByRole.length > 0 || storiesByPriority.length > 0;
 
   return (
     <AppLayout>
-      <motion.div className="space-y-8" variants={container} initial="hidden" animate="show">
-        <div>
-          <h1 className="font-display text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">KPIs e visão geral do sistema AIOS</p>
-        </div>
+      <div className="p-6 max-w-6xl mx-auto">
+        <motion.div className="space-y-8" variants={container} initial="hidden" animate="show">
+          {/* Header */}
+          <motion.div variants={item}>
+            <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+            <p className="text-sm text-muted-foreground mt-1">Overview of your engineering workspace</p>
+          </motion.div>
 
-        {/* KPI Cards */}
-        {kpis && <KPICards kpis={kpis} />}
+          {/* Metric cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <MetricCard
+              label="Stories"
+              value={kpis?.storiesTotal ?? 0}
+              subtext={kpis ? `${kpis.storiesDone} completed` : undefined}
+              icon={Zap}
+            />
+            <MetricCard
+              label="Done"
+              value={kpis?.storiesDone ?? 0}
+              icon={Layers}
+            />
+            <MetricCard
+              label="Pending Review"
+              value={kpis?.pendingReview ?? 0}
+              icon={Cpu}
+            />
+            <MetricCard
+              label="Monthly Cost"
+              value={kpis ? `$${kpis.monthlyCost.toFixed(2)}` : "$0.00"}
+              icon={Activity}
+            />
+          </div>
 
-        {/* Charts + Top Agents */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {storiesByStatus.length > 0 && (
-            <Card className="border-border/50">
-              <CardHeader><CardTitle className="font-display text-base">Stories por Status</CardTitle></CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={220}>
-                  <PieChart>
-                    <Pie data={storiesByStatus} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} innerRadius={45} strokeWidth={0}>
-                      {storiesByStatus.map((entry: any, idx: number) => <Cell key={idx} fill={entry.color} />)}
-                    </Pie>
-                    <Tooltip contentStyle={tooltipStyle} />
-                    <Legend wrapperStyle={{ fontSize: "11px" }} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          )}
+          {/* Recent initiatives */}
+          <motion.div variants={item}>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-sm font-medium">Recent Initiatives</h2>
+            </div>
+            <div className="border border-border rounded-lg divide-y divide-border bg-card">
+              {recentInitiatives.length === 0 ? (
+                <div className="p-8 text-center">
+                  <p className="text-sm text-muted-foreground">No initiatives yet. Create one to get started.</p>
+                </div>
+              ) : (
+                recentInitiatives.map((init: any) => (
+                  <a
+                    key={init.id}
+                    href="/initiatives"
+                    className="flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors group"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="h-2 w-2 rounded-full bg-success shrink-0" />
+                      <span className="text-sm truncate">{init.title}</span>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Badge variant="outline" className="text-[10px] font-mono">
+                        {init.stage_status}
+                      </Badge>
+                      <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  </a>
+                ))
+              )}
+            </div>
+          </motion.div>
 
-          {agentsByRole.length > 0 && (
-            <Card className="border-border/50">
-              <CardHeader><CardTitle className="font-display text-base">Agentes por Role</CardTitle></CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={220}>
-                  <BarChart data={agentsByRole} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
-                    <XAxis dataKey="name" tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                    <Tooltip contentStyle={tooltipStyle} />
-                    <Bar dataKey="value" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Top agents in third column */}
-          {kpis && <TopAgentsTable agents={kpis.topAgents} />}
-        </div>
-
-        {storiesByPriority.length > 0 && (
-          <Card className="border-border/50">
-            <CardHeader><CardTitle className="font-display text-base">Stories por Prioridade</CardTitle></CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={storiesByPriority} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
-                  <XAxis dataKey="name" tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                  <Tooltip contentStyle={tooltipStyle} />
-                  <Bar dataKey="value" radius={[6, 6, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Strategic Dashboard */}
-        {strategicKpis && strategicKpis.totalJobs > 0 && (
-          <StrategicDashboard kpis={strategicKpis} />
-        )}
-
-        {!hasChartData && !kpis?.storiesTotal && (
-          <Card className="border-dashed border-2 border-border">
-            <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-              <Activity className="h-12 w-12 text-muted-foreground/50 mb-4" />
-              <h3 className="font-display text-lg font-semibold">Sem dados ainda</h3>
-              <p className="text-sm text-muted-foreground mt-1">Crie agentes e stories para ver os KPIs aqui</p>
-            </CardContent>
-          </Card>
-        )}
-
-        <Card className="border-border/50">
-          <CardHeader><CardTitle className="font-display text-lg">Status do Sistema</CardTitle></CardHeader>
-          <CardContent className="flex items-center gap-3">
-            <div className="h-3 w-3 rounded-full bg-success animate-pulse-glow" />
-            <span className="text-sm text-muted-foreground">Todos os sistemas operacionais</span>
-            <Badge variant="outline" className="ml-auto border-success/30 text-success">Online</Badge>
-          </CardContent>
-        </Card>
-      </motion.div>
+          {/* System status */}
+          <motion.div variants={item} className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="h-2 w-2 rounded-full bg-success" />
+            <span>All systems operational</span>
+          </motion.div>
+        </motion.div>
+      </div>
     </AppLayout>
   );
 }
