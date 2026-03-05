@@ -1,6 +1,6 @@
 import {
   Lightbulb, Brain, Users, FileText, Cpu, BookOpen, Hammer, CheckCircle2,
-  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap, Package, Wrench
+  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap, Package, Wrench, Database
 } from "lucide-react";
 
 export const PIPELINE_STEPS = [
@@ -22,6 +22,8 @@ export const PIPELINE_STEPS = [
   { key: "modules_simulated", label: "Module Graph ✓", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
   { key: "analyzing_dependencies", label: "Dep Intelligence ▶", icon: Package, color: "text-warning", bg: "bg-warning/10" },
   { key: "dependencies_analyzed", label: "Dep Intelligence ✓", icon: Package, color: "text-accent", bg: "bg-accent/10" },
+  { key: "bootstrapping_schema", label: "Schema Bootstrap ▶", icon: Database, color: "text-warning", bg: "bg-warning/10" },
+  { key: "schema_bootstrapped", label: "Schema Bootstrap ✓", icon: Database, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
   { key: "forming_squad", label: "Formando", icon: Users, color: "text-warning", bg: "bg-warning/10" },
   { key: "squad_formed", label: "Squad ✓", icon: Users, color: "text-accent", bg: "bg-accent/10" },
@@ -47,6 +49,7 @@ export const MACRO_STAGES = [
   { key: "scaffold", label: "Scaffold", icon: Hammer },
   { key: "module_graph", label: "Module Graph", icon: Layers },
   { key: "dependency_intelligence", label: "Dep Intelligence", icon: Package },
+  { key: "schema_bootstrap", label: "Schema Bootstrap", icon: Database },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
@@ -71,14 +74,15 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["scaffolding", "scaffolded"].includes(s)) return 5;
   if (["simulating_modules", "modules_simulated"].includes(s)) return 6;
   if (["analyzing_dependencies", "dependencies_analyzed"].includes(s)) return 7;
-  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 8;
-  if (["planning_ready", "planning", "planned"].includes(s)) return 9;
-  if (["in_progress"].includes(s)) return 10;
-  if (["validating"].includes(s)) return 11;
-  if (["repairing_build", "build_repaired", "repair_failed"].includes(s)) return 12;
-  if (["ready_to_publish"].includes(s)) return 13;
-  if (["published"].includes(s)) return 14;
-  if (["completed"].includes(s)) return 15;
+  if (["bootstrapping_schema", "schema_bootstrapped"].includes(s)) return 8;
+  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 9;
+  if (["planning_ready", "planning", "planned"].includes(s)) return 10;
+  if (["in_progress"].includes(s)) return 11;
+  if (["validating"].includes(s)) return 12;
+  if (["repairing_build", "build_repaired", "repair_failed"].includes(s)) return 13;
+  if (["ready_to_publish"].includes(s)) return 14;
+  if (["published"].includes(s)) return 15;
+  if (["completed"].includes(s)) return 16;
   return 0;
 }
 
@@ -168,9 +172,20 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "dependencies_analyzed":
       return [
+        { stage: "supabase_schema_bootstrap", label: "🗄️ Schema Bootstrap", type: "run" },
         { stage: "ecosystem_drift", label: "🌐 Ecosystem Drift Analysis", type: "run" },
         { stage: "approve", label: "Aprovar Dependencies", type: "approve" },
         { stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "bootstrapping_schema":
+      return [
+        { stage: "supabase_schema_bootstrap", label: "Re-executar Schema Bootstrap", type: "run" },
+      ];
+    case "schema_bootstrapped":
+      return [
+        { stage: "approve", label: "Aprovar Schema → Squad", type: "approve" },
+        { stage: "supabase_schema_bootstrap", label: "Re-executar Schema Bootstrap", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
