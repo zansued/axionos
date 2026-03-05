@@ -120,6 +120,16 @@ Arquitetura distribuída:
 - Resultado armazenado no Project Brain para contexto futuro
 - Novo fluxo: Arquitetura → **Simulação** → Validação Preventiva → Squad → Execução
 
+### 21. Foundation Scaffold Engine
+- **`pipeline-foundation-scaffold`** — gera scaffold mínimo buildável antes da geração de features
+- Template React+Vite: package.json, index.html, src/main.tsx, src/App.tsx, vite.config.ts, tsconfig.json
+- Detecção automática de stack via discovery_payload
+- **Validação de scaffold**: verifica scripts, imports, entrypoints e dependências
+- **Auto-reparo**: injeta arquivos faltantes a partir de templates padrão
+- **Simulação de build via IA**: prevê se `npm install && vite build` passaria
+- Scaffold armazenado no Project Brain como nós com status "scaffold"
+- Novo fluxo: Validação Preventiva → **Scaffold** → Squad → Execução
+
 ---
 
 ## 🔜 Próximos Passos
