@@ -191,25 +191,56 @@
 
 ---
 
-## 🔜 Próximos Passos (Fases Pendentes)
-
-### Fase 17 — Templates de Iniciativas ✅
+## Fase 17 — Templates de Iniciativas ✅
 
 - [x] 6 templates pré-prontos (SaaS, API REST, Landing Page, E-commerce, Dashboard, CRM)
 - [x] Template picker integrado ao dialog de criação
 - [x] Pre-popula discovery_payload + campos de discovery (target_user, stack, complexity, risk, mvp)
 - [x] Acelera as 2 primeiras camadas do pipeline
 
-### Fase 18 — UX & Polish ✅
+---
+
+## Fase 18 — UX & Polish ✅
 
 - [x] Atalhos de teclado (g+d, g+i, g+k, g+c, t, ?) com dialog de ajuda
 - [x] Internacionalização pt-BR / en-US com toggle de idioma
 - [x] Exportação de relatórios CSV e PDF (iniciativas)
 - [x] Dark/Light theme refinements (melhor contraste, transições suaves)
 
-### Fase 19 — Governança Avançada (Parcial)
+---
+
+## Fase 19 — Governança Avançada (Parcial)
 
 - [ ] Roles granulares por gate do pipeline
 - [ ] Approval chains com múltiplos aprovadores
 - [x] Compliance e exportação de evidências (Audit Trail, Governança, Reviews com CSV/PDF)
 - [ ] Webhook notifications (Slack, Discord)
+
+---
+
+## Fase 20 — Adaptive Engineering System ✅
+
+- [x] **Error Intelligence Engine** (`error-intelligence/index.ts`)
+  - Coleta e analisa padrões de falha cross-project
+  - Gera prevention rules automaticamente a partir de padrões recorrentes
+  - Rastreia métricas: taxa de sucesso de build, tentativas de reparo, tempo para build
+- [x] **Preventive Architecture Validator** (`pipeline-preventive-validation/index.ts`)
+  - Validação pré-geração: checa entrypoints, scripts, configs obrigatórios
+  - Compatibilidade de dependências (conflitos npm, peer dependencies)
+  - Aplica prevention rules aprendidas para auto-correção do plano
+- [x] Integração com Build Self-Healing para disparo assíncrono de aprendizado
+- [x] Novos estágios no pipeline: `validating_architecture` / `architecture_validated`
+
+---
+
+## Fase 21 — Architecture Simulation Engine ✅
+
+- [x] **`pipeline-architecture-simulation`** — simula a arquitetura antes da geração de código
+- [x] Converte plano de arquitetura em grafo dirigido (módulos, serviços, APIs, DB)
+- [x] **Validação estrutural**: entrypoints válidos, módulos conectados, ciclos detectados
+- [x] **Validação de dependências**: conflitos npm, peer dependencies faltantes, plugins obrigatórios
+- [x] **Predição de falhas via IA**: analisa o modelo e prediz problemas de build
+- [x] **Auto-reparo**: corrige automaticamente o plano de arquitetura antes da execução
+- [x] Resultado armazenado no Project Brain para contexto futuro
+- [x] Novos estágios: `simulating_architecture` / `architecture_simulated`
+- [x] Pipeline atualizado: Arquitetura → Simulação → Validação Preventiva → Squad → Execução
