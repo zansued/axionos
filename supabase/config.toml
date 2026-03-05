@@ -50,3 +50,6 @@ verify_jwt = false
 
 [functions.pipeline-full-review]
 verify_jwt = false
+
+[functions.pipeline-comprehension]
+verify_jwt = false

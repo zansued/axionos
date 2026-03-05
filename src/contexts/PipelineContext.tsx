@@ -58,6 +58,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
   // Map stage names to dedicated edge function names
   const getStageFunctionName = (stage: string): string => {
     const functionMap: Record<string, string> = {
+      comprehension: "pipeline-comprehension",
       discovery: "pipeline-discovery",
       squad_formation: "pipeline-squad",
       planning: "pipeline-planning",
@@ -109,6 +110,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           throw new Error(message);
         }
         const stageLabels: Record<string, string> = {
+          comprehension: `Compreensão concluída: 4 agentes (Vision, Market, Requirements, Product Architect) ✅`,
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
           planning: `Planning completo: ${result.stories?.length || 0} stories criadas ✅`,
