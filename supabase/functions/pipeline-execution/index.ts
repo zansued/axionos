@@ -6,6 +6,7 @@ import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob, recordAgentMessage } from "../_shared/pipeline-helpers.ts";
 import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
+import { generateBrainContext, upsertNode, addEdge, getNodeByPath, updateNodeStatus } from "../_shared/brain-helpers.ts";
 
 serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-execution");
@@ -97,6 +98,13 @@ serve(async (req) => {
       }
     }
     const projectStructure = allProjectFiles.map(f => `- ${f.file_path}: ${f.description}`).join("\n");
+
+    // Brain context for consistent code generation
+    let brainContext = "";
+    try {
+      brainContext = await generateBrainContext(ctx);
+    } catch (e) { console.error("Brain context error:", e); }
+    const brainBlock = brainContext ? `\n\n${brainContext}` : "";
 
     // Architecture context from Layer 2
     const dataArchContext = dp.data_architecture ? `\n## Schema DB:\n${JSON.stringify(dp.data_architecture, null, 2).slice(0, 2000)}` : "";
@@ -196,7 +204,7 @@ serve(async (req) => {
 ## Tipo: ${subtask.file_type || "code"} | Linguagem: ${language}
 ## Tarefa: ${subtask.description}
 ${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1000)}` : ""}
-${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1000)}` : ""}${dataArchContext}${apiContext}${fileTreeContext}${supabaseConnInfo}${memoryContext}`;
+${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1000)}` : ""}${dataArchContext}${apiContext}${fileTreeContext}${supabaseConnInfo}${memoryContext}${brainBlock}`;
 
               // ──── Step 1: CODE ARCHITECT ────
               const codeArchResult = await callAI(apiKey,
@@ -321,6 +329,18 @@ Verifique integração e retorne o código final (corrigido se necessário).`
                   build_status: "pending", test_status: "pending",
                 });
               }
+
+              // ──── Update Project Brain: mark node as generated ────
+              try {
+                const existingNode = await getNodeByPath(ctx, subtask.file_path);
+                if (existingNode) {
+                  await updateNodeStatus(ctx, existingNode.id, "generated");
+                } else {
+                  const nodeType = subtask.file_type === "page" ? "page" : subtask.file_type === "hook" ? "hook" : subtask.file_type === "service" ? "service" : subtask.file_type === "component" ? "component" : "file";
+                  await upsertNode(ctx, { node_type: nodeType as any, name: subtask.file_path.split("/").pop() || subtask.file_path, file_path: subtask.file_path, content_hash: String(codeContent.length), status: "generated" });
+                }
+              } catch (e) { console.error("Brain update error:", e); }
+
               if (subtaskJobId) await completeJob(ctx, subtaskJobId, { artifact_id: artifact?.id, file_path: subtask.file_path }, devResult);
               codeFilesGenerated++;
 

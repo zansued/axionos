@@ -5,6 +5,7 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
+import { generateBrainContext, upsertNode, addEdge, recordDecision } from "../_shared/brain-helpers.ts";
 
 interface AgentOutput {
   role: string;
@@ -62,6 +63,9 @@ serve(async (req) => {
   await pipelineLog(ctx, "pipeline_comprehension_start", "Camada 1 — Compreensão do Problema iniciada (4 agentes)");
 
   try {
+    // Brain context (empty for first run, useful for re-runs)
+    const brainContext = await generateBrainContext(ctx);
+
     // Scrape reference
     let referenceContent = "";
     if (initiative.reference_url) {
@@ -71,7 +75,8 @@ serve(async (req) => {
       ? `\n\nSITE DE REFERÊNCIA (${initiative.reference_url}):\n---\n${referenceContent}\n---`
       : "";
 
-    const ideaContext = `Título: "${initiative.title}"\n${initiative.description ? `Descrição: ${initiative.description}` : ""}${refBlock}`;
+    const brainBlock = brainContext ? `\n\n${brainContext}` : "";
+    const ideaContext = `Título: "${initiative.title}"\n${initiative.description ? `Descrição: ${initiative.description}` : ""}${refBlock}${brainBlock}`;
 
     // ──── Agent 1: Vision Agent ────
     await pipelineLog(ctx, "agent_vision_start", "🔭 Vision Agent analisando a ideia...");
@@ -263,6 +268,27 @@ Crie o PRD e arquitetura de produto:
       tokens_used: productArch.tokens,
       cost_estimate: productArch.costUsd,
     });
+
+    // ──── Write to Project Brain ────
+    try {
+      // Record domain entities as nodes
+      const entities = (requirements.result.entities as any[]) || [];
+      for (const entity of entities.slice(0, 20)) {
+        await upsertNode(ctx, { node_type: "type", name: entity.name, metadata: { attributes: entity.attributes, relationships: entity.relationships, source: "comprehension" }, status: "planned" });
+      }
+      // Record key decisions
+      if (productArch.result.suggested_stack) {
+        await recordDecision(ctx, `Stack: ${productArch.result.suggested_stack}`, (productArch.result as any).justification || "Recomendação do Product Architect", "high", "architecture");
+      }
+      if (market.result.business_model) {
+        await recordDecision(ctx, `Business Model: ${(market.result.business_model as any)?.type || ""}`, "Análise do Market Analyst", "medium", "business");
+      }
+      // Record modules as nodes
+      const modules = (productArch.result.modules as any[]) || [];
+      for (const mod of modules.slice(0, 15)) {
+        await upsertNode(ctx, { node_type: "component", name: mod.name, metadata: { responsibility: mod.responsibility, features: mod.features, source: "comprehension" }, status: "planned" });
+      }
+    } catch (e) { console.error("Brain write error (comprehension):", e); }
 
     // ──── Consolidate results ────
     const totalTokens = vision.tokens + market.tokens + requirements.tokens + productArch.tokens;

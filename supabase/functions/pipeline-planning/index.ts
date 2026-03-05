@@ -5,6 +5,7 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
+import { generateBrainContext, upsertNode, addEdge } from "../_shared/brain-helpers.ts";
 
 interface AgentOutput {
   role: string;
@@ -34,11 +35,15 @@ serve(async (req) => {
   await pipelineLog(ctx, "pipeline_planning_start", "Camada 3 — Planejamento de Desenvolvimento iniciado (3 agentes)");
 
   try {
+    // Brain context from previous layers
+    const brainContext = await generateBrainContext(ctx);
+    const brainBlock = brainContext ? `\n\n${brainContext}` : "";
+
     const projectContext = `Projeto: ${initiative.title}
 Ideia: ${initiative.refined_idea || initiative.description || ""}
 MVP: ${initiative.mvp_scope || dp.mvp_definition || "N/A"}
 Stack: ${initiative.suggested_stack || "Vite + React + TypeScript + Tailwind + Supabase"}
-Complexidade: ${initiative.complexity || "medium"}`;
+Complexidade: ${initiative.complexity || "medium"}${brainBlock}`;
 
     const requirementsData = dp.requirements ? JSON.stringify(dp.requirements, null, 2).slice(0, 4000) : "N/A";
     const productArchData = dp.product_architecture ? JSON.stringify(dp.product_architecture, null, 2).slice(0, 3000) : "N/A";
@@ -212,6 +217,26 @@ Valide e defina a árvore completa de arquivos:
       raw_output: { agent: "file_planner", layer: 3, ...filePlanner.result },
       model_used: filePlanner.model, tokens_used: filePlanner.tokens, cost_estimate: filePlanner.costUsd,
     });
+
+    // ──── Write planned files to Project Brain ────
+    try {
+      const fileTree = (filePlanner.result.file_tree as any[]) || [];
+      const nodeIds: Record<string, string> = {};
+      for (const f of fileTree.slice(0, 100)) {
+        const nodeType = f.type === "page" ? "page" : f.type === "hook" ? "hook" : f.type === "service" ? "service" : f.type === "component" ? "component" : f.type === "type" ? "type" : f.type === "edge_function" ? "edge_function" : "file";
+        const nodeId = await upsertNode(ctx, { node_type: nodeType as any, name: f.path.split("/").pop() || f.path, file_path: f.path, metadata: { layer: f.layer, description: f.description, exports: f.exports, source: "planning" }, status: "planned" });
+        nodeIds[f.path] = nodeId;
+      }
+      // Create dependency edges
+      for (const f of fileTree.slice(0, 100)) {
+        const fromId = nodeIds[f.path];
+        if (!fromId) continue;
+        for (const imp of (f.imports_from || []).slice(0, 10)) {
+          const toId = nodeIds[imp];
+          if (toId) await addEdge(ctx, { source_node_id: fromId, target_node_id: toId, relation_type: "imports" });
+        }
+      }
+    } catch (e) { console.error("Brain write error (planning):", e); }
 
     // ──── Persist stories to database ────
     const stories = (storyGen.result.stories as any[]) || [];
