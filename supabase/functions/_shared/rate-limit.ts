@@ -1,6 +1,12 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const MAX_REQUESTS_PER_HOUR = 30;
+const DEFAULT_MAX_REQUESTS_PER_HOUR = 30;
+
+/** Per-function rate limit overrides */
+const FUNCTION_LIMITS: Record<string, number> = {
+  "analyze-artifact": 120,
+  "rework-artifact": 60,
+};
 
 /**
  * Check and record rate limit for a user+function combo.
