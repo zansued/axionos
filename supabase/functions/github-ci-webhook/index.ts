@@ -164,6 +164,17 @@ async function handleGitHubEvent(
     return jsonResponse({ success: true, message: "pong", hook_id: payload.hook_id });
   }
 
+  // ── Repo lifecycle events ──
+  if (event === "repository") {
+    return await handleRepoLifecycleEvent(serviceClient, payload);
+  }
+  if (event === "delete") {
+    return await handleBranchDeleteEvent(serviceClient, payload);
+  }
+  if (event === "deployment_status") {
+    return await handleDeploymentStatusEvent(serviceClient, payload);
+  }
+
   if (!["workflow_run", "check_run", "status"].includes(event)) {
     return jsonResponse({ success: true, message: `Event '${event}' ignored` });
   }
@@ -568,4 +579,279 @@ async function handleInternalCIWebhook(
       message: "CI errors recorded. Fix Swarm trigger failed.",
     });
   }
+}
+
+// ═══════════════════════════════════════════════
+// REPO LIFECYCLE HANDLERS
+// ═══════════════════════════════════════════════
+
+/** Find initiative + context for a repo */
+async function findInitiativeForRepo(
+  serviceClient: ReturnType<typeof createClient>,
+  repoOwner: string,
+  repoName: string
+): Promise<{ ctx: PipelineContext; initiativeId: string; orgId: string } | null> {
+  const { data: gitConns } = await serviceClient
+    .from("git_connections")
+    .select("organization_id")
+    .eq("repo_owner", repoOwner)
+    .eq("repo_name", repoName)
+    .eq("status", "active")
+    .limit(1);
+
+  if (!gitConns?.length) return null;
+  const orgId = gitConns[0].organization_id;
+
+  const { data: initiatives } = await serviceClient
+    .from("initiatives")
+    .select("id")
+    .eq("organization_id", orgId)
+    .in("stage_status", ["published", "ready_to_publish", "validating", "in_progress", "completed"])
+    .order("updated_at", { ascending: false })
+    .limit(1);
+
+  if (!initiatives?.length) return null;
+
+  const initiativeId = initiatives[0].id;
+  return {
+    ctx: { serviceClient, userId: "system", initiativeId, organizationId: orgId },
+    initiativeId,
+    orgId,
+  };
+}
+
+/** Handle repository deleted, archived, privatized */
+async function handleRepoLifecycleEvent(
+  serviceClient: ReturnType<typeof createClient>,
+  payload: any
+): Promise<Response> {
+  const action = payload.action; // deleted, archived, privatized, publicized, unarchived
+  const repo = payload.repository;
+  const repoOwner = repo?.owner?.login || "";
+  const repoName = repo?.name || "";
+  const fullName = `${repoOwner}/${repoName}`;
+
+  console.log(`Repository event: ${action} on ${fullName}`);
+
+  const found = await findInitiativeForRepo(serviceClient, repoOwner, repoName);
+  if (!found) {
+    return jsonResponse({ success: true, message: `No linked initiative for ${fullName}` });
+  }
+  const { ctx, initiativeId } = found;
+
+  if (action === "deleted") {
+    await pipelineLog(ctx, "repo_deleted",
+      `⚠️ Repositório ${fullName} foi DELETADO! Pipeline bloqueado.`,
+      { repo: fullName });
+
+    const { data: currentInit } = await serviceClient
+      .from("initiatives").select("execution_progress").eq("id", initiativeId).single();
+    const existing = (currentInit?.execution_progress as Record<string, unknown>) || {};
+
+    await serviceClient.from("initiatives").update({
+      execution_progress: {
+        ...existing,
+        repo_status: "deleted",
+        repo_deleted_at: new Date().toISOString(),
+        repo_alert: `Repositório ${fullName} foi deletado. Re-publicação necessária.`,
+      },
+    }).eq("id", initiativeId);
+
+    // Auto-republish: trigger pipeline-publish
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      await fetch(`${supabaseUrl}/functions/v1/pipeline-publish`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${serviceRoleKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ initiativeId, stage: "publish" }),
+      });
+      await pipelineLog(ctx, "auto_republish_triggered",
+        `Auto re-publicação acionada após deleção do repositório ${fullName}`);
+    } catch (e) {
+      console.error("Auto-republish failed:", e);
+      await pipelineLog(ctx, "auto_republish_failed",
+        `Falha ao tentar re-publicar automaticamente: ${e instanceof Error ? e.message : "Unknown"}`);
+    }
+
+    return jsonResponse({ success: true, action: "repo_deleted", initiative_id: initiativeId, auto_republish: true });
+  }
+
+  if (action === "archived" || action === "privatized") {
+    const label = action === "archived" ? "ARQUIVADO" : "tornado PRIVADO";
+    await pipelineLog(ctx, `repo_${action}`,
+      `⚠️ Repositório ${fullName} foi ${label}.`,
+      { repo: fullName, action });
+
+    const { data: currentInit } = await serviceClient
+      .from("initiatives").select("execution_progress").eq("id", initiativeId).single();
+    const existing = (currentInit?.execution_progress as Record<string, unknown>) || {};
+
+    await serviceClient.from("initiatives").update({
+      execution_progress: {
+        ...existing,
+        repo_status: action,
+        [`repo_${action}_at`]: new Date().toISOString(),
+        repo_alert: `Repositório ${fullName} foi ${label}.`,
+      },
+    }).eq("id", initiativeId);
+
+    return jsonResponse({ success: true, action: `repo_${action}`, initiative_id: initiativeId });
+  }
+
+  return jsonResponse({ success: true, message: `Repository action '${action}' noted` });
+}
+
+/** Handle branch deletion */
+async function handleBranchDeleteEvent(
+  serviceClient: ReturnType<typeof createClient>,
+  payload: any
+): Promise<Response> {
+  const refType = payload.ref_type; // "branch" or "tag"
+  const ref = payload.ref; // branch name
+  const repo = payload.repository;
+  const repoOwner = repo?.owner?.login || "";
+  const repoName = repo?.name || "";
+  const fullName = `${repoOwner}/${repoName}`;
+
+  if (refType !== "branch") {
+    return jsonResponse({ success: true, message: `Delete of ${refType} '${ref}' ignored` });
+  }
+
+  console.log(`Branch deleted: ${ref} on ${fullName}`);
+
+  const found = await findInitiativeForRepo(serviceClient, repoOwner, repoName);
+  if (!found) {
+    return jsonResponse({ success: true, message: `No linked initiative for ${fullName}` });
+  }
+  const { ctx, initiativeId } = found;
+
+  // Check if it's the default branch
+  const { data: gitConn } = await serviceClient.from("git_connections")
+    .select("default_branch")
+    .eq("repo_owner", repoOwner).eq("repo_name", repoName).eq("status", "active").single();
+
+  const isDefault = gitConn?.default_branch === ref || ref === "main";
+
+  await pipelineLog(ctx, "branch_deleted",
+    `⚠️ Branch '${ref}' deletada em ${fullName}${isDefault ? " (BRANCH PRINCIPAL!)" : ""}`,
+    { repo: fullName, branch: ref, is_default: isDefault });
+
+  if (isDefault) {
+    const { data: currentInit } = await serviceClient
+      .from("initiatives").select("execution_progress").eq("id", initiativeId).single();
+    const existing = (currentInit?.execution_progress as Record<string, unknown>) || {};
+
+    await serviceClient.from("initiatives").update({
+      execution_progress: {
+        ...existing,
+        repo_status: "branch_deleted",
+        deleted_branch: ref,
+        branch_deleted_at: new Date().toISOString(),
+        repo_alert: `Branch principal '${ref}' deletada em ${fullName}. Re-publicação necessária.`,
+      },
+    }).eq("id", initiativeId);
+
+    // Auto-republish
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      await fetch(`${supabaseUrl}/functions/v1/pipeline-publish`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${serviceRoleKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ initiativeId, stage: "publish" }),
+      });
+      await pipelineLog(ctx, "auto_republish_triggered",
+        `Auto re-publicação acionada após deleção da branch '${ref}'`);
+    } catch (e) {
+      console.error("Auto-republish after branch delete failed:", e);
+    }
+  }
+
+  return jsonResponse({ success: true, action: "branch_deleted", branch: ref, is_default: isDefault, initiative_id: initiativeId });
+}
+
+/** Handle Vercel/deployment status events */
+async function handleDeploymentStatusEvent(
+  serviceClient: ReturnType<typeof createClient>,
+  payload: any
+): Promise<Response> {
+  const state = payload.deployment_status?.state; // success, failure, error, pending
+  const envUrl = payload.deployment_status?.environment_url || payload.deployment?.payload?.web_url || "";
+  const repo = payload.repository;
+  const repoOwner = repo?.owner?.login || "";
+  const repoName = repo?.name || "";
+  const fullName = `${repoOwner}/${repoName}`;
+
+  console.log(`Deployment status: ${state} on ${fullName}`);
+
+  if (!state || state === "pending" || state === "inactive") {
+    return jsonResponse({ success: true, message: `Deployment state '${state}' ignored` });
+  }
+
+  const found = await findInitiativeForRepo(serviceClient, repoOwner, repoName);
+  if (!found) {
+    return jsonResponse({ success: true, message: `No linked initiative for ${fullName}` });
+  }
+  const { ctx, initiativeId } = found;
+
+  const { data: currentInit } = await serviceClient
+    .from("initiatives").select("execution_progress").eq("id", initiativeId).single();
+  const existing = (currentInit?.execution_progress as Record<string, unknown>) || {};
+
+  if (state === "success") {
+    await pipelineLog(ctx, "deploy_success",
+      `✅ Deploy bem-sucedido em ${fullName}${envUrl ? ` → ${envUrl}` : ""}`,
+      { repo: fullName, environment_url: envUrl });
+
+    await serviceClient.from("initiatives").update({
+      execution_progress: {
+        ...existing,
+        deploy_status: "success",
+        deploy_url: envUrl,
+        deployed_at: new Date().toISOString(),
+      },
+    }).eq("id", initiativeId);
+  } else if (state === "failure" || state === "error") {
+    const desc = payload.deployment_status?.description || "Deploy failed";
+    await pipelineLog(ctx, "deploy_failed",
+      `❌ Deploy falhou em ${fullName}: ${desc}`,
+      { repo: fullName, error: desc });
+
+    await serviceClient.from("initiatives").update({
+      execution_progress: {
+        ...existing,
+        deploy_status: "failed",
+        deploy_error: desc,
+        deploy_failed_at: new Date().toISOString(),
+        repo_alert: `Deploy falhou em ${fullName}: ${desc}`,
+      },
+    }).eq("id", initiativeId);
+
+    // Auto-republish on deploy failure
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      await fetch(`${supabaseUrl}/functions/v1/pipeline-publish`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${serviceRoleKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ initiativeId, stage: "publish" }),
+      });
+      await pipelineLog(ctx, "auto_republish_triggered",
+        `Auto re-publicação acionada após falha de deploy em ${fullName}`);
+    } catch (e) {
+      console.error("Auto-republish after deploy failure:", e);
+    }
+  }
+
+  return jsonResponse({ success: true, action: `deploy_${state}`, initiative_id: initiativeId });
 }
