@@ -40,7 +40,7 @@ export default function Dashboard() {
 
   return (
     <AppLayout>
-      <div className="p-6 max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <motion.div className="space-y-8" variants={container} initial="hidden" animate="show">
           {/* Header */}
           <motion.div variants={item}>
