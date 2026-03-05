@@ -598,7 +598,51 @@ ${brainContext.slice(0, 2000)}`,
       );
     }
 
-    // ── 10. Update initiative ──
+    // ── 10. Update artifact statuses for fixed files ──
+    const fixedPaths = commit.files;
+    if (fixedPaths.length > 0) {
+      // Find agent_outputs (code artifacts) linked to this initiative whose files were fixed
+      const { data: outputs } = await serviceClient
+        .from("agent_outputs")
+        .select("id, raw_output, status")
+        .eq("initiative_id", ctx.initiativeId)
+        .in("status", ["draft", "failed", "review", "rework"]);
+
+      if (outputs && outputs.length > 0) {
+        for (const output of outputs) {
+          const raw = output.raw_output as any;
+          const filePath = raw?.file_path || raw?.path || raw?.filePath || "";
+          const isFixed = fixedPaths.some(fp =>
+            fp === filePath || filePath.endsWith(fp) || fp.endsWith(filePath)
+          );
+          if (isFixed) {
+            await serviceClient
+              .from("agent_outputs")
+              .update({ status: "validated" as any, updated_at: new Date().toISOString() })
+              .eq("id", output.id);
+            await pipelineLog(ctx, "build_repair_artifact_updated",
+              `✅ Artifact ${output.id} status → validated (file: ${filePath})`);
+          }
+        }
+      }
+
+      // Also update code_artifacts build_status for fixed files
+      const { data: codeArts } = await serviceClient
+        .from("code_artifacts")
+        .select("id, output_id")
+        .in("output_id", (outputs || []).map(o => o.id));
+
+      if (codeArts && codeArts.length > 0) {
+        for (const ca of codeArts) {
+          await serviceClient
+            .from("code_artifacts")
+            .update({ build_status: "repaired", test_status: "pending" })
+            .eq("id", ca.id);
+        }
+      }
+    }
+
+    // ── 11. Update initiative ──
     await updateInitiative(ctx, {
       stage_status: "build_repaired",
       execution_progress: {
@@ -609,6 +653,7 @@ ${brainContext.slice(0, 2000)}`,
           patches_applied: commit.files.length,
           commit_sha: commit.sha,
           files_fixed: commit.files,
+          artifacts_updated: fixedPaths.length,
           status: "patch_applied",
           repaired_at: new Date().toISOString(),
         },
