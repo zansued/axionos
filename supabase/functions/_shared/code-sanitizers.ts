@@ -100,6 +100,9 @@ export function sanitizePackageJson(content: string): string {
   }
 }
 
+/** Pre-built deterministic file overrides (no Supabase conn info) */
+export const DETERMINISTIC_FILES: Record<string, string> = getDeterministicFiles();
+
 /** Get deterministic file overrides for deploy-critical files */
 export function getDeterministicFiles(supabaseConnInfo?: { url: string; anonKey: string } | null): Record<string, string> {
   return {
