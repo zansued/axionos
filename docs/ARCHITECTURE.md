@@ -647,3 +647,433 @@ Human escalation or publish
 - Templates, i18n, keyboard shortcuts
 - Visual component preview
 - Advanced governance (approval chains)
+
+---
+
+## 11. Project Brain Architecture
+
+> The Project Brain is a structured knowledge system that gives agents a complete understanding of the software they are generating. It eliminates blind spots that cause duplicated components, inconsistent APIs, broken imports, and contradictory architectural decisions.
+
+### 11.1 Why the Project Brain Exists
+
+Without a centralized knowledge system, agents operate with fragmented context:
+
+| Problem | Root Cause | Impact |
+|---------|-----------|--------|
+| Duplicated components | Agents don't know what already exists | Bloated codebase, conflicting implementations |
+| Inconsistent APIs | No shared contract registry | Frontend calls endpoints that don't match backend |
+| Broken imports | No dependency tracking | Runtime errors, build failures |
+| Type mismatches | Each agent invents its own types | TypeScript compilation failures |
+| Contradictory decisions | No shared memory of "why" | Architecture degrades over iterations |
+| Repeated errors | No learning from past mistakes | Same bugs appear across initiatives |
+
+The Project Brain solves all of these by maintaining a **live, queryable representation** of the entire project.
+
+### 11.2 Architecture Overview
+
+The Project Brain consists of four interconnected subsystems:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          PROJECT BRAIN                                   │
+│                                                                          │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐  │
+│  │  1. PROJECT GRAPH │  │  2. PROJECT      │  │  3. ERROR LEARNING   │  │
+│  │                   │  │     MEMORY       │  │     SYSTEM           │  │
+│  │  Nodes: files,    │  │                  │  │                      │  │
+│  │  components,      │  │  Architectural   │  │  Historical errors,  │  │
+│  │  hooks, services, │  │  decisions,      │  │  root causes,        │  │
+│  │  APIs, tables,    │  │  patterns,       │  │  fixes applied,      │  │
+│  │  types, schemas   │  │  constraints,    │  │  prevention rules    │  │
+│  │                   │  │  conventions     │  │                      │  │
+│  │  Edges: imports,  │  │                  │  │                      │  │
+│  │  depends_on,      │  │                  │  │                      │  │
+│  │  uses_component,  │  │                  │  │                      │  │
+│  │  calls_api,       │  │                  │  │                      │  │
+│  │  stores_in_table  │  │                  │  │                      │  │
+│  └──────────────────┘  └──────────────────┘  └──────────────────────┘  │
+│                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │  4. SEMANTIC KNOWLEDGE LAYER                                      │   │
+│  │                                                                    │   │
+│  │  Vector embeddings of code artifacts, decisions, and descriptions │   │
+│  │  Enables queries like: "components related to authentication"     │   │
+│  │  Powered by pgvector or external embedding service                │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### 11.3 Subsystem 1: Project Graph
+
+The Project Graph is a **directed acyclic graph (DAG)** representing every entity in the generated project and their relationships.
+
+#### Node Types
+
+| Node Type | Description | Example |
+|-----------|-------------|---------|
+| `file` | A source file in the project | `src/components/Header.tsx` |
+| `component` | A React component (may be inside a file) | `Header`, `UserAvatar` |
+| `hook` | A custom React hook | `useAuth`, `useUsers` |
+| `service` | A service/utility module | `api-client.ts`, `auth-service.ts` |
+| `api_endpoint` | A backend API endpoint | `POST /api/users`, Edge Function |
+| `database_table` | A Supabase/PostgreSQL table | `users`, `orders` |
+| `type` | A TypeScript type/interface | `User`, `OrderStatus` |
+| `schema` | A database schema or validation schema | Zod schema, SQL DDL |
+| `edge_function` | A Supabase Edge Function | `create-order/index.ts` |
+| `route` | A frontend route/page | `/dashboard`, `/settings` |
+| `context` | A React Context provider | `AuthContext`, `ThemeContext` |
+
+#### Edge Types (Relationships)
+
+| Edge Type | Meaning | Example |
+|-----------|---------|---------|
+| `imports` | File A imports from File B | `Header.tsx` → `useAuth.ts` |
+| `uses_component` | Component A renders Component B | `Dashboard` → `KPICard` |
+| `calls_api` | Frontend calls a backend endpoint | `useUsers` → `GET /api/users` |
+| `depends_on` | General dependency relationship | `OrderService` → `UserService` |
+| `stores_in_table` | API/service writes to a DB table | `create-order` → `orders` table |
+| `reads_from_table` | API/service reads from a DB table | `GET /api/users` → `users` table |
+| `implements_interface` | Code implements a TypeScript interface | `UserCard` → `UserCardProps` |
+| `extends` | Type or component extends another | `AdminUser` → `User` |
+| `routes_to` | Route renders a page component | `/dashboard` → `DashboardPage` |
+| `provides_context` | Context provider wraps children | `AuthProvider` → `App` |
+| `validates_with` | Uses a validation schema | `CreateUserForm` → `userSchema` |
+
+#### Database Schema
+
+```sql
+CREATE TABLE project_brain_nodes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  initiative_id UUID NOT NULL REFERENCES initiatives(id) ON DELETE CASCADE,
+  organization_id UUID NOT NULL REFERENCES organizations(id),
+  node_type TEXT NOT NULL,          -- 'file', 'component', 'hook', etc.
+  name TEXT NOT NULL,               -- Human-readable name
+  file_path TEXT,                   -- Full path (e.g., 'src/components/Header.tsx')
+  description TEXT,                 -- What this entity does
+  metadata JSONB DEFAULT '{}',      -- Exports, props, interfaces, dependencies
+  content_hash TEXT,                -- Hash of last known content (for change detection)
+  status TEXT DEFAULT 'planned',    -- 'planned', 'generated', 'validated', 'published'
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_brain_nodes_initiative ON project_brain_nodes(initiative_id);
+CREATE INDEX idx_brain_nodes_type ON project_brain_nodes(node_type);
+CREATE INDEX idx_brain_nodes_file_path ON project_brain_nodes(file_path);
+
+CREATE TABLE project_brain_edges (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  initiative_id UUID NOT NULL REFERENCES initiatives(id) ON DELETE CASCADE,
+  source_node_id UUID NOT NULL REFERENCES project_brain_nodes(id) ON DELETE CASCADE,
+  target_node_id UUID NOT NULL REFERENCES project_brain_nodes(id) ON DELETE CASCADE,
+  relation_type TEXT NOT NULL,      -- 'imports', 'depends_on', 'calls_api', etc.
+  metadata JSONB DEFAULT '{}',      -- Extra context about the relationship
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(source_node_id, target_node_id, relation_type)
+);
+
+CREATE INDEX idx_brain_edges_initiative ON project_brain_edges(initiative_id);
+CREATE INDEX idx_brain_edges_source ON project_brain_edges(source_node_id);
+CREATE INDEX idx_brain_edges_target ON project_brain_edges(target_node_id);
+```
+
+#### Graph Operations
+
+| Operation | When | Purpose |
+|-----------|------|---------|
+| `getNodesByType(type)` | Execution | "Give me all existing hooks" |
+| `getDependencies(nodeId)` | Execution | "What does this file import?" |
+| `getDependents(nodeId)` | Validation | "What breaks if I change this file?" |
+| `getTopologicalOrder()` | Planning/Execution | "In what order should files be generated?" |
+| `findByFilePath(path)` | Execution | "Does this file already exist?" |
+| `getNeighborhood(nodeId, depth)` | Context injection | "Give me all related entities for context" |
+
+### 11.4 Subsystem 2: Project Memory (Decisions)
+
+Project Memory stores **architectural decisions and conventions** that guide all agents throughout the project lifecycle.
+
+#### Categories of Decisions
+
+| Category | Examples |
+|----------|---------|
+| `technology_choice` | "Using Supabase for backend because..." |
+| `pattern_adoption` | "All API calls go through a centralized service layer" |
+| `convention` | "File naming: kebab-case for files, PascalCase for components" |
+| `constraint` | "No client-side state management library — use React Query + Context" |
+| `security` | "All RLS policies must include organization_id filtering" |
+| `performance` | "Lazy load all routes except Dashboard" |
+
+#### Database Schema
+
+```sql
+CREATE TABLE project_decisions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  initiative_id UUID NOT NULL REFERENCES initiatives(id) ON DELETE CASCADE,
+  organization_id UUID NOT NULL REFERENCES organizations(id),
+  category TEXT NOT NULL,           -- 'technology_choice', 'pattern_adoption', etc.
+  decision TEXT NOT NULL,           -- What was decided
+  reason TEXT,                      -- Why it was decided
+  impact TEXT,                      -- What this affects
+  decided_by TEXT,                  -- Agent name or 'human'
+  stage TEXT,                       -- Pipeline stage where this was decided
+  supersedes_id UUID REFERENCES project_decisions(id), -- If this replaces a previous decision
+  status TEXT DEFAULT 'active',     -- 'active', 'superseded', 'revoked'
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_decisions_initiative ON project_decisions(initiative_id);
+CREATE INDEX idx_decisions_category ON project_decisions(category);
+```
+
+#### How Agents Use Decisions
+
+1. **Before generating code:** Agent queries all active decisions for the initiative
+2. **During architecture:** Architect stores fundamental decisions (stack, patterns, conventions)
+3. **During execution:** Dev agents check conventions before writing code
+4. **On contradiction:** New decision explicitly supersedes old one via `supersedes_id`
+
+### 11.5 Subsystem 3: Error Learning System
+
+The Error Learning System captures **every error encountered during validation** and how it was resolved, creating an institutional memory that prevents recurring mistakes.
+
+#### Database Schema
+
+```sql
+CREATE TABLE project_errors (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  initiative_id UUID NOT NULL REFERENCES initiatives(id) ON DELETE CASCADE,
+  organization_id UUID NOT NULL REFERENCES organizations(id),
+  file_path TEXT,                   -- File where the error occurred
+  error_type TEXT NOT NULL,         -- 'typescript', 'import', 'schema', 'runtime', 'lint', 'build'
+  error_message TEXT NOT NULL,      -- The actual error message
+  error_context TEXT,               -- Surrounding code or situation
+  root_cause TEXT,                  -- AI-determined root cause
+  fix_applied TEXT,                 -- What was done to fix it
+  fixed_by_agent TEXT,              -- Which agent fixed it
+  prevention_rule TEXT,             -- Rule to prevent this in future
+  severity TEXT DEFAULT 'error',    -- 'error', 'warning', 'info'
+  recurrence_count INT DEFAULT 1,   -- How many times this error pattern appeared
+  detected_at TIMESTAMPTZ DEFAULT now(),
+  fixed_at TIMESTAMPTZ
+);
+
+CREATE INDEX idx_errors_initiative ON project_errors(initiative_id);
+CREATE INDEX idx_errors_type ON project_errors(error_type);
+CREATE INDEX idx_errors_org ON project_errors(organization_id);
+```
+
+#### Error Learning Flow
+
+```
+Validation detects error
+      ↓
+Error recorded in project_errors
+      ↓
+Fix Agent resolves it
+      ↓
+fix_applied and prevention_rule stored
+      ↓
+Next execution: agents receive relevant prevention_rules in their prompts
+      ↓
+Organization-wide: common errors aggregated across initiatives
+```
+
+#### Cross-Initiative Learning
+
+Errors with `prevention_rule` are promoted to `org_knowledge_base` when they recur across 3+ initiatives, becoming organization-wide guidance.
+
+### 11.6 Subsystem 4: Semantic Knowledge Layer
+
+The Semantic Knowledge Layer enables **natural language queries** against the project structure using vector embeddings.
+
+#### How It Works
+
+1. Each node in the Project Graph gets a text description embedded as a vector
+2. Each decision gets embedded
+3. Agents can query: "Find all entities related to user authentication"
+4. Results come back as ranked nodes, enabling intelligent context injection
+
+#### Implementation Strategy
+
+**Phase 1 (Current):** Keyword-based search using PostgreSQL `tsvector` + `ts_rank`
+- No external dependencies
+- Good enough for structured queries
+- Uses existing `metadata` JSONB fields for full-text search
+
+**Phase 2 (Future):** Vector embeddings using `pgvector`
+- Add embedding column to `project_brain_nodes`
+- Generate embeddings via AI during node creation
+- Enable similarity search: `ORDER BY embedding <=> query_embedding`
+
+#### Metadata Schema for Semantic Search
+
+```jsonb
+-- project_brain_nodes.metadata example for a component:
+{
+  "exports": ["Header", "HeaderProps"],
+  "imports": ["react", "@/hooks/useAuth", "@/components/ui/button"],
+  "props": {"title": "string", "showUser": "boolean"},
+  "domain_tags": ["navigation", "layout", "authentication"],
+  "description_vector_id": "uuid-of-embedding"  -- Phase 2
+}
+```
+
+### 11.7 Pipeline Integration Map
+
+Each pipeline stage interacts with the Project Brain differently:
+
+```
+┌─────────────┬──────────────────────┬──────────────────────────────────────┐
+│ Stage       │ Reads From           │ Writes To                            │
+├─────────────┼──────────────────────┼──────────────────────────────────────┤
+│ Discovery   │ org_knowledge_base   │ project_decisions (technology,       │
+│             │ project_errors (org) │   constraints, domain entities)      │
+│             │                      │ project_brain_nodes (domain entities)│
+├─────────────┼──────────────────────┼──────────────────────────────────────┤
+│ Architecture│ project_decisions    │ project_brain_nodes (all planned     │
+│             │ project_errors       │   files, components, APIs, tables)   │
+│             │                      │ project_brain_edges (dependency DAG) │
+│             │                      │ project_decisions (patterns, stack)  │
+├─────────────┼──────────────────────┼──────────────────────────────────────┤
+│ Planning    │ project_brain_nodes  │ Updates node.status → 'planned'      │
+│             │ project_brain_edges  │ Links subtasks → brain nodes         │
+│             │ project_decisions    │ Topological sort from edges          │
+├─────────────┼──────────────────────┼──────────────────────────────────────┤
+│ Execution   │ project_brain_nodes  │ Updates node.status → 'generated'    │
+│             │ project_brain_edges  │ Updates node.metadata (actual exports │
+│             │ project_decisions    │   props, interfaces discovered)      │
+│             │ project_errors       │ New edges from actual imports        │
+│             │                      │ node.content_hash updated            │
+├─────────────┼──────────────────────┼──────────────────────────────────────┤
+│ Validation  │ project_brain_nodes  │ project_errors (detected issues)     │
+│             │ project_brain_edges  │ Updates node.status → 'validated'    │
+│             │ project_errors       │ Validates edge consistency           │
+│             │                      │   (all imports resolve to real nodes)│
+├─────────────┼──────────────────────┼──────────────────────────────────────┤
+│ Publish     │ project_brain_nodes  │ Updates node.status → 'published'    │
+│             │ project_decisions    │ Exports final graph as project doc   │
+│             │ project_brain_edges  │ Promotes errors → org knowledge base │
+└─────────────┴──────────────────────┴──────────────────────────────────────┘
+```
+
+### 11.8 Context Injection Strategy
+
+When an agent needs to generate or modify a file, the Project Brain provides **smart context** instead of raw file dumps:
+
+```
+Agent receives:
+├── 1. DIRECT DEPENDENCIES (full content)
+│   Files that this file imports from
+│   Retrieved via: graph.getDependencies(currentNode)
+│   Budget: 40% of context window
+│
+├── 2. DEPENDENTS (type signatures only)  
+│   Files that import from this file
+│   Retrieved via: graph.getDependents(currentNode)
+│   Budget: 15% of context window
+│
+├── 3. RELATED ENTITIES (summaries)
+│   Components, hooks, APIs in the same domain
+│   Retrieved via: semantic search or graph.getNeighborhood()
+│   Budget: 15% of context window
+│
+├── 4. ARCHITECTURAL CONTEXT
+│   Active project_decisions for this initiative
+│   Architecture document summary
+│   Budget: 15% of context window
+│
+├── 5. ERROR PREVENTION
+│   Relevant project_errors with prevention_rules
+│   Filtered by file_path pattern or error_type
+│   Budget: 10% of context window
+│
+└── 6. PROJECT MAP
+    File tree with one-line descriptions
+    Budget: 5% of context window
+```
+
+### 11.9 Graph Consistency Checks
+
+During Validation, the Project Brain enables structural verification:
+
+| Check | Query | Action on Failure |
+|-------|-------|-------------------|
+| **Orphan imports** | Find edges where target node has no content | Flag as error |
+| **Circular dependencies** | DFS cycle detection on import edges | Flag as warning |
+| **Missing API consumers** | API endpoints with no `calls_api` edges | Flag as warning |
+| **Unused exports** | Nodes with exports but no incoming edges | Flag as info |
+| **Table without RLS** | DB table nodes missing security metadata | Flag as error |
+| **Route without component** | Route nodes with no `routes_to` edge | Flag as error |
+
+### 11.10 Improvements Over Original Proposal
+
+| Original Design | Improvement | Rationale |
+|-----------------|-------------|-----------|
+| Flat `metadata JSON` | Typed metadata schemas per node_type | Enables structured queries, not just JSON grep |
+| No node status | `status` field tracks lifecycle | Agents know what's planned vs. generated vs. validated |
+| No content hash | `content_hash` for change detection | Incremental re-validation: only check changed files |
+| No `supersedes_id` on decisions | Decision versioning chain | Agents can trace why a decision changed |
+| No `prevention_rule` on errors | Actionable prevention rules | Transforms errors into reusable guidance |
+| Vector embeddings required from day 1 | Phased: tsvector → pgvector | Avoid premature complexity; tsvector works for MVP |
+| No cross-initiative learning | Error promotion to `org_knowledge_base` | Organization gets smarter over time |
+| No relationship to subtasks | Brain nodes linkable to subtasks | Traceability: which agent generated which node |
+| No organization_id on brain tables | Multi-tenant isolation | RLS enforcement, consistent with existing patterns |
+
+### 11.11 Data Flow Example
+
+**Scenario:** Generating `src/hooks/useOrders.ts` during Execution
+
+```
+1. Agent queries Project Brain:
+   - GET nodes WHERE file_path = 'src/hooks/useOrders.ts'
+   → Found: planned node with metadata.expected_exports = ['useOrders']
+
+2. Agent gets dependencies:
+   - GET edges WHERE source = this_node AND type = 'imports'
+   → Results: 
+     - src/integrations/supabase/client.ts (get full content)
+     - src/types/order.ts (get full content)
+
+3. Agent gets related entities:
+   - GET nodes WHERE node_type = 'database_table' AND name LIKE '%order%'
+   → Results:
+     - orders table (columns, RLS policies in metadata)
+
+4. Agent gets decisions:
+   - GET decisions WHERE initiative_id = X AND status = 'active'
+   → Results:
+     - "Use React Query for all data fetching"
+     - "All hooks follow useX naming convention"
+     - "Error handling via toast notifications"
+
+5. Agent gets error prevention:
+   - GET errors WHERE error_type = 'import' AND organization_id = Y
+   → Results:
+     - "Always import supabase from @/integrations/supabase/client"
+     - "Use .from() not .rpc() for simple CRUD"
+
+6. Agent generates code with FULL CONTEXT
+   → Output: correct imports, matching types, consistent patterns
+
+7. After generation, brain is updated:
+   - Node status → 'generated'
+   - metadata.actual_exports = ['useOrders', 'useOrderById']
+   - content_hash = sha256(generated_code)
+   - New edges created for actual imports discovered
+```
+
+### 11.12 Implementation Phases
+
+| Phase | Scope | Priority |
+|-------|-------|----------|
+| **Phase 1: Schema** | Create tables, RLS policies, indexes | P0 |
+| **Phase 2: Architecture Integration** | Architecture stage populates graph from planned files | P0 |
+| **Phase 3: Planning Integration** | Planning uses topological sort from graph edges | P0 |
+| **Phase 4: Execution Integration** | Agents read from and write to brain during code generation | P0 |
+| **Phase 5: Validation Integration** | Graph consistency checks during validation | P1 |
+| **Phase 6: Error Learning** | Capture and reuse errors across pipeline runs | P1 |
+| **Phase 7: Semantic Search** | tsvector-based search for related entities | P2 |
+| **Phase 8: Vector Embeddings** | pgvector for natural language queries | P3 |
+
+---
