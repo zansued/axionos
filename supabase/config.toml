@@ -125,3 +125,6 @@ verify_jwt = false
 
 [functions.ai-business-logic-synthesizer]
 verify_jwt = false
+
+[functions.autonomous-api-generator]
+verify_jwt = false

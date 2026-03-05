@@ -233,8 +233,19 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "logic_synthesized":
       return [
+        { stage: "api_generation", label: "🔌 API Generation", type: "run" },
         { stage: "approve", label: "Aprovar Logic → Squad", type: "approve" },
         { stage: "business_logic_synthesis", label: "Re-executar Business Logic", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "generating_api":
+      return [
+        { stage: "api_generation", label: "Re-executar API Generation", type: "run" },
+      ];
+    case "api_generated":
+      return [
+        { stage: "approve", label: "Aprovar API → Squad", type: "approve" },
+        { stage: "api_generation", label: "Re-executar API Generation", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
