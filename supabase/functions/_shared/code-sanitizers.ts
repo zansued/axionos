@@ -142,6 +142,7 @@ export function getDeterministicFiles(supabaseConnInfo?: { url: string; anonKey:
       include: ["src"],
     }, null, 2),
     "vite.config.ts": `import { defineConfig } from "vite";\nimport react from "@vitejs/plugin-react-swc";\nimport path from "path";\n\nexport default defineConfig({\n  plugins: [react()],\n  resolve: {\n    alias: {\n      "@": path.resolve(__dirname, "./src"),\n    },\n  },\n});`,
+    "index.html": `<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="UTF-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n    <title>App</title>\n  </head>\n  <body>\n    <div id="root"></div>\n    <script type="module" src="/src/main.tsx"></script>\n  </body>\n</html>`,
     ".env.example": supabaseConnInfo
       ? `VITE_SUPABASE_URL=${supabaseConnInfo.url}\nVITE_SUPABASE_ANON_KEY=${supabaseConnInfo.anonKey}`
       : `VITE_SUPABASE_URL=https://your-project.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key`,
