@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Building2, Users, FolderOpen, Plus, Shield } from "lucide-react";
 import { toast } from "sonner";
+import { SLAConfigPanel } from "@/components/governance/SLAConfigPanel";
 
 const roleColors: Record<string, string> = {
   owner: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
@@ -145,6 +146,9 @@ export default function OrgSettings() {
             )}
           </CardContent>
         </Card>
+
+        {/* SLA Config */}
+        {(userRole === "owner" || userRole === "admin") && <SLAConfigPanel />}
       </div>
     </AppLayout>
   );

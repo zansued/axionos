@@ -10,6 +10,8 @@ import { getUserFriendlyError } from "@/lib/error-utils";
 import { InitiativeList } from "@/components/initiatives/InitiativeList";
 import { InitiativeDetail } from "@/components/initiatives/InitiativeDetail";
 import { CreateInitiativeDialog } from "@/components/initiatives/CreateInitiativeDialog";
+import { SLABreachAlerts } from "@/components/governance/SLABreachAlerts";
+import { useSLABreaches } from "@/hooks/useStageSLA";
 import { Card, CardContent } from "@/components/ui/card";
 import { Lightbulb } from "lucide-react";
 
@@ -111,6 +113,7 @@ export default function Initiatives() {
 
   const selected = initiatives.find((i: any) => i.id === selectedId);
   const runningStage = selectedId ? getRunningStage(selectedId) : null;
+  const { breaches } = useSLABreaches(initiatives);
 
   return (
     <AppLayout>
@@ -125,6 +128,10 @@ export default function Initiatives() {
             isPending={createMutation.isPending}
           />
         </div>
+
+        {breaches.length > 0 && (
+          <SLABreachAlerts breaches={breaches} onNavigate={(id) => setSelectedId(id)} />
+        )}
 
         <div className="grid gap-6 lg:grid-cols-[340px,1fr]">
           <InitiativeList

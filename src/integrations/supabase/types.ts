@@ -1182,6 +1182,44 @@ export type Database = {
           },
         ]
       }
+      stage_sla_configs: {
+        Row: {
+          alert_enabled: boolean
+          created_at: string
+          id: string
+          max_hours: number
+          organization_id: string
+          stage: string
+          updated_at: string
+        }
+        Insert: {
+          alert_enabled?: boolean
+          created_at?: string
+          id?: string
+          max_hours?: number
+          organization_id: string
+          stage: string
+          updated_at?: string
+        }
+        Update: {
+          alert_enabled?: boolean
+          created_at?: string
+          id?: string
+          max_hours?: number
+          organization_id?: string
+          stage?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stage_sla_configs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stories: {
         Row: {
           assigned_agent_id: string | null
