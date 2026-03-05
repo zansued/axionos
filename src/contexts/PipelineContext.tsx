@@ -236,6 +236,9 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           supabase_schema_bootstrap: result.skipped
             ? `Schema Bootstrap: pulado (sem conexão Supabase)`
             : `Schema Bootstrap: ${result.schema_name || "?"} criado (${result.creation_method || "?"}) ${result.schema_validated ? "✅" : "⚠️"}`,
+          supabase_provisioning: result.skipped
+            ? `DB Provisioning: pulado (sem schema)`
+            : `DB Provisioning: ${result.tables_created?.length || 0} tabelas, RLS ${result.rls_enabled ? "✅" : "⚠️"}, bucket ${result.bucket_created ? "✅" : "⚠️"}`,
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
           planning: `Planejamento concluído: 3 agentes, ${result.stories?.length || result.stories_created || 0} stories, ${result.total_subtasks || 0} subtasks ✅`,
