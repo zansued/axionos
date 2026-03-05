@@ -211,7 +211,7 @@ serve(async (req) => {
           headers: ghHeaders,
           body: JSON.stringify({
             message: "chore: initialize repository for runtime validation",
-            content: btoa("# Runtime Validation\n\nRepository initialized automatically by SynkrAIOS pipeline.\n"),
+            content: btoa("# Runtime Validation\n\nRepository initialized automatically by AxionOS pipeline.\n"),
             branch: baseBranch,
           }),
         }
@@ -289,7 +289,7 @@ serve(async (req) => {
 
     // ── Create commit ──
     const commitBody: any = {
-      message: `chore: runtime validation for ${initiative.title}\n\nTriggered by SynkrAIOS pipeline`,
+      message: `chore: runtime validation for ${initiative.title}\n\nTriggered by AxionOS pipeline`,
       tree: newTree.sha,
     };
     if (baseSha) commitBody.parents = [baseSha];
@@ -383,7 +383,7 @@ serve(async (req) => {
 // ── CI Workflow for validate/* branches ──
 function generateValidateWorkflow(supabaseUrl: string, initiativeId: string, organizationId: string): string {
   const webhookUrl = `${supabaseUrl}/functions/v1/pipeline-ci-webhook`;
-  return `name: SynkrAIOS Validate
+  return `name: AxionOS Validate
 
 on:
   push:

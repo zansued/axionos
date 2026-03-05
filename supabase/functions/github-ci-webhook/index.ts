@@ -12,7 +12,7 @@ import type { PipelineContext } from "../_shared/pipeline-helpers.ts";
  * On CI failure: records errors, triggers Fix Swarm.
  * On CI success: marks initiative as validated.
  *
- * Security: validates x-hub-signature-256 using SYNKRAIOS_WEBHOOK_SECRET
+ * Security: validates x-hub-signature-256 using AXIONOS_WEBHOOK_SECRET
  */
 
 async function verifyGitHubSignature(

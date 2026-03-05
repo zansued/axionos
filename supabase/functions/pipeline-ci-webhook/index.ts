@@ -14,7 +14,7 @@ import type { PipelineContext } from "../_shared/pipeline-helpers.ts";
  *   2. Triggers Fix Orchestrator to auto-fix and create PR
  *   3. Updates initiative status
  *
- * Auth: SYNKRAIOS_WEBHOOK_SECRET
+ * Auth: AXIONOS_WEBHOOK_SECRET
  */
 
 interface CIError {
