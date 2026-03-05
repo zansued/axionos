@@ -118,7 +118,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           planning: `Planejamento concluído: 3 agentes, ${result.stories?.length || result.stories_created || 0} stories, ${result.total_subtasks || 0} subtasks ✅`,
           approve: "Stage aprovado ✅",
           reject: "Ajustes solicitados — pipeline retornou ao estágio anterior ⟲",
-          execution: `Execução concluída: ${result.code_files || 0} arquivos de código, ${result.executed || 0} subtasks ✅`,
+          execution: `Implementação concluída: ${result.code_files || 0} arquivos (Code Architect → Developer → Integration) ✅`,
           validation: result.batch_incomplete
             ? `Validação em lote: ${result.processed_in_batch || 0} processados, ${result.remaining_to_validate || 0} restantes ⏳`
             : result.overall_pass
