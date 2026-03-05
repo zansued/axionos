@@ -113,3 +113,6 @@ verify_jwt = false
 
 [functions.autonomous-build-repair]
 verify_jwt = false
+
+[functions.supabase-schema-bootstrap]
+verify_jwt = false

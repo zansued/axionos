@@ -172,9 +172,20 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "dependencies_analyzed":
       return [
+        { stage: "supabase_schema_bootstrap", label: "🗄️ Schema Bootstrap", type: "run" },
         { stage: "ecosystem_drift", label: "🌐 Ecosystem Drift Analysis", type: "run" },
         { stage: "approve", label: "Aprovar Dependencies", type: "approve" },
         { stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "bootstrapping_schema":
+      return [
+        { stage: "supabase_schema_bootstrap", label: "Re-executar Schema Bootstrap", type: "run" },
+      ];
+    case "schema_bootstrapped":
+      return [
+        { stage: "approve", label: "Aprovar Schema → Squad", type: "approve" },
+        { stage: "supabase_schema_bootstrap", label: "Re-executar Schema Bootstrap", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
