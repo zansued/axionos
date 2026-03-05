@@ -211,7 +211,7 @@
 
 ## Fase 19 — Governança Avançada (Parcial)
 
-- [ ] Roles granulares por gate do pipeline
+- [x] Roles granulares por gate do pipeline
 - [ ] Approval chains com múltiplos aprovadores
 - [x] Compliance e exportação de evidências (Audit Trail, Governança, Reviews com CSV/PDF)
 - [ ] Webhook notifications (Slack, Discord)
