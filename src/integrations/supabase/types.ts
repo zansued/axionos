@@ -984,6 +984,44 @@ export type Database = {
         }
         Relationships: []
       }
+      pipeline_gate_permissions: {
+        Row: {
+          action_type: string
+          created_at: string
+          id: string
+          min_role: Database["public"]["Enums"]["org_role"]
+          organization_id: string
+          stage: string
+          updated_at: string
+        }
+        Insert: {
+          action_type?: string
+          created_at?: string
+          id?: string
+          min_role?: Database["public"]["Enums"]["org_role"]
+          organization_id: string
+          stage: string
+          updated_at?: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          id?: string
+          min_role?: Database["public"]["Enums"]["org_role"]
+          organization_id?: string
+          stage?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pipeline_gate_permissions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       planning_sessions: {
         Row: {
           architecture_content: string | null
@@ -1925,6 +1963,15 @@ export type Database = {
       get_user_org_role: {
         Args: { _org_id: string; _user_id: string }
         Returns: Database["public"]["Enums"]["org_role"]
+      }
+      has_gate_permission: {
+        Args: {
+          _action_type: string
+          _org_id: string
+          _stage: string
+          _user_id: string
+        }
+        Returns: boolean
       }
       is_org_member: {
         Args: { _org_id: string; _user_id: string }
