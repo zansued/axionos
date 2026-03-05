@@ -150,6 +150,9 @@ export default function OrgSettings() {
 
         {/* SLA Config */}
         {(userRole === "owner" || userRole === "admin") && <SLAConfigPanel />}
+
+        {/* Gate Permissions */}
+        {(userRole === "owner" || userRole === "admin") && <GatePermissionsPanel />}
       </div>
     </AppLayout>
   );
