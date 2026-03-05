@@ -93,7 +93,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       content: `export default function App() {
   return (
     <div>
-      <h1>App initialized</h1>
+      AxionOS App Bootstrapped
     </div>
   )
 }`,
