@@ -65,6 +65,29 @@ export function RuntimeValidationStatus({ executionProgress, initiativeId, onSta
     ? `https://github.com/${repoOwner}/${repoName}/actions`
     : null;
 
+  const handleMarkAsPassed = async () => {
+    if (!initiativeId) return;
+    setMarking(true);
+    try {
+      const { error } = await supabase.from("initiatives").update({
+        execution_progress: {
+          ...ep,
+          ci_status: "success",
+          ci_passed_at: new Date().toISOString(),
+          ci_manual_override: true,
+        },
+      }).eq("id", initiativeId);
+
+      if (error) throw error;
+      toast({ title: "CI marcado como aprovado", description: "Status atualizado manualmente." });
+      onStatusUpdated?.();
+    } catch (e: any) {
+      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    } finally {
+      setMarking(false);
+    }
+  };
+
   const statusColor = passed ? "text-primary" : failed ? "text-destructive" : "text-accent-foreground";
   const StatusIcon = passed ? CheckCircle2 : failed ? XCircle : isRunning ? Loader2 : AlertTriangle;
 
