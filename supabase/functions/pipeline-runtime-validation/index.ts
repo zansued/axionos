@@ -114,7 +114,8 @@ serve(async (req) => {
     if (!repoCheck.ok) {
       throw new Error(`Repositório ${owner}/${repo} não encontrado. Publique primeiro antes de rodar Runtime Validation.`);
     }
-    await repoCheck.text(); // consume body
+    const repoData = await repoCheck.json();
+    const isRepoEmpty = Number(repoData?.size ?? 0) === 0;
 
     // ── Get base branch SHA (handle empty repos) ──
     let baseSha: string | null = null;
