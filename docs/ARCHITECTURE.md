@@ -18,8 +18,8 @@ A human provides an idea → AI agents autonomously analyze, plan, architect, co
 | Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
 | State Management | TanStack React Query + React Context |
 | Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
-| AI Engine | Hybrid: OpenAI GPT-4o-mini or Google Gemini 2.5 Flash/Pro via Lovable AI Gateway |
-| Git Integration | GitHub API v3 (create repo, commit files, create PRs) |
+| AI Engine | Hybrid: Google Gemini 2.5 Flash/Pro via Lovable AI Gateway |
+| Git Integration | GitHub API v3 (Tree API for atomic commits, PRs) |
 | URL Scraping | Firecrawl (self-hosted or cloud) |
 | Deployment | Vercel/Netlify configs auto-generated |
 
@@ -44,8 +44,12 @@ Idea Input
   → Squad Formation (pipeline-squad)
   → Layer 3: Planning (pipeline-planning)
   → Layer 4: Execution (pipeline-execution-orchestrator + workers)
-  → Layer 5: Validation (pipeline-validation)
-  → Layer 6: Publish (pipeline-publish)
+  → Layer 5: Validation
+      → AI Validation (pipeline-validation) — Fix Loop (3x)
+      → Deep Static Analysis (pipeline-deep-validation) — Import/Type/Build checks
+      → Architectural Drift Detection (pipeline-drift-detection) — Layer violations
+      → Runtime Validation (pipeline-runtime-validation) — Real tsc + vite build via CI
+  → Layer 6: Publish (pipeline-publish) — Atomic Git Tree API
   → Completed
 ```
 
@@ -100,12 +104,13 @@ draft → discovering → discovered → architecture_ready → architecting →
 1. Builds Execution DAG from Project Brain (nodes + edges)
 2. Computes execution waves via topological sort (Kahn's algorithm)
 3. Dispatches workers in parallel (max 6 concurrent)
-4. Monitors completion, triggers next waves
-5. Handles retries (up to 2x per node)
-6. Records errors in `project_errors` on permanent failure
+4. **Smart Context Window** — sends only API surfaces (exports/types) instead of full files (~60-80% token reduction)
+5. Monitors completion, triggers next waves
+6. Handles retries (up to 2x per node)
+7. Records errors in `project_errors` on permanent failure
 
 **Worker responsibilities (per file):**
-1. Receives node context + dependency code
+1. Receives node context + smart dependency context (compact API surfaces)
 2. Runs agent chain: Code Architect → Developer → Integration Agent
 3. Stores artifact (`agent_outputs` + `code_artifacts`)
 4. Updates Project Brain node status → `generated`
@@ -126,21 +131,44 @@ config(0) → scaffold(1) → schema(2) → migration(3) → type(4) → style(5
 → util(6) → service(7) → hook(8) → component(9) → page(10) → test(11)
 ```
 
-#### Layer 5: Validation + Fix Loop Automático
+#### Layer 5: Validation (4-Stage Pipeline)
+
+**Stage 5a: AI Validation + Fix Loop**  
 **Edge Function:** `pipeline-validation`  
-**Process:** Fix Loop v2 — each artifact passes through Static Analysis (Agent 15) + Runtime QA (Agent 16). If score < 70 or critical issues found, Fix Agent (Agent 17) corrects and the full validation cycle repeats (max 3x). Exhausted attempts escalate to human review (`pending_review`). Successful fixes are recorded in `agent_memory` for learning.  
-**Gate:** All approved → `ready_to_publish`
+Fix Loop v2 — each artifact passes through Static Analysis (Agent 15) + Runtime QA (Agent 16). If score < 70 or critical issues found, Fix Agent (Agent 17) corrects and the full validation cycle repeats (max 3x). Exhausted attempts escalate to human review (`pending_review`).
 
-#### Layer 6: Publish
+**Stage 5b: Deep Static Analysis**  
+**Edge Function:** `pipeline-deep-validation`  
+AI-simulated compiler checks: import resolution, cross-file type consistency, dependency audit, build config validation, prevention rules check.
+
+**Stage 5c: Architectural Drift Detection**  
+**Edge Function:** `pipeline-drift-detection`  
+Hybrid detection (rule-based + AI): classifies files by layer (pages → components → hooks → services → data), detects inverted dependencies, missing layers, boundary violations. Violations recorded in `project_errors` + prevention rules generated.
+
+**Stage 5d: Runtime Validation (Real tsc + vite build)**  
+**Edge Function:** `pipeline-runtime-validation`  
+Pushes code to temporary `validate/{id}` branch on GitHub. GitHub Actions runs `npm install → tsc --noEmit → vite build`. Results come back via `pipeline-ci-webhook`. Real compiler errors feed into Fix Swarm.
+
+**Auto-trigger chain:** Execution → AI Validation → Deep Analysis → Drift Detection → (optional) Runtime Validation → Ready to Publish
+
+#### Layer 6: Publish (Atomic Git Tree API)
 **Edge Function:** `pipeline-publish`  
-**Process:** Creates GitHub repo, generates semantic commits, pushes code  
-**Output:** GitHub repo URL
+**Process:**
+1. Pre-flight Checks (Release Agent) — validates artifact integrity
+2. Changelog & Commit Messages — generates CHANGELOG.md + Conventional Commits
+3. **Atomic GitHub Push via Tree API** — Create Blobs (parallel batches of 5) → Build Tree → Single Commit → Update Ref
+4. Post-deploy Verification — checks repository integrity
+5. CI Workflow injection — adds `.github/workflows/validate.yml`
 
-#### Additional Functions
-- `pipeline-fast-modify` — Single-file AI modification + auto-republish via PR
-- `pipeline-full-review` — AI reviews entire project, fixes multiple files, creates PR
-- `pipeline-approve` / `pipeline-reject` — Gate actions
-- `brain-sync` — Synchronize Project Brain state
+**Output:** GitHub repo URL with single atomic commit
+
+#### CI-Triggered Fix Swarm
+**Edge Functions:** `pipeline-ci-webhook` + `pipeline-fix-orchestrator`  
+When GitHub CI fails:
+1. `pipeline-ci-webhook` receives workflow results, records errors in `project_errors`
+2. `pipeline-fix-orchestrator` groups errors by file, dispatches fix workers in parallel
+3. Creates atomic PR via Git Tree API with all fixes
+4. Learning Agent generates prevention rules from fixes
 
 ### 2.2 Project Brain (Fully Implemented ✅)
 
@@ -151,10 +179,10 @@ A structured knowledge system representing the entire generated project:
 - `project_brain_edges` — imports, depends_on, calls_api, uses_component, etc.
 - `project_decisions` — Architectural decisions with categories and supersedes chain
 - `project_errors` — Historical errors with root causes and prevention rules
+- `project_prevention_rules` — Self-healing rules with confidence scoring
 
 **Features:**
 - Full-text search via `tsvector` on nodes
-- Semantic search via `search_vector` column
 - RLS policies for multi-tenant isolation
 - Context generation for AI prompts (`generateBrainContext()`)
 - Edge extraction from generated code (regex-based import parsing)
@@ -162,76 +190,87 @@ A structured knowledge system representing the entire generated project:
 
 ### 2.3 Dependency Scheduler (Fully Implemented ✅)
 
-DAG-based execution ordering system:
-
-**Components:**
+DAG-based execution ordering system in `_shared/dependency-scheduler.ts`:
 - `buildExecutionDAG()` — Builds DAG from brain nodes/edges + subtask mapping
 - `computeWaves()` — Topological sort (Kahn's algorithm) grouping nodes by wave level
 - `getReadyNodes()` — Returns nodes with all dependencies satisfied
 - `applyLayerPriorities()` — Soft dependencies based on file type layers
 - `breakCycles()` — DFS cycle detection and edge removal
 - `updateBrainEdgesFromImports()` — Parses generated code to discover real imports
-- `formatExecutionPlan()` — Human-readable execution plan for logging
 
-**File:** `supabase/functions/_shared/dependency-scheduler.ts`
+### 2.4 Smart Context Window (Fully Implemented ✅)
 
-### 2.4 Agent Swarm (Fully Implemented ✅)
+AST-like parser in `_shared/smart-context.ts` that extracts only public API surfaces:
 
-Distributed execution via Orchestrator + Worker architecture:
+**Extraction targets:**
+- Import statements (static + dynamic)
+- Exported types, interfaces, enums, classes
+- Function/hook signatures (without body)
+- Component props types
+- Re-exports
 
-**Orchestrator** (`pipeline-execution-orchestrator`):
-- Builds DAG, creates waves, dispatches workers via `fetch()` to worker Edge Function
-- Parallel execution with configurable `MAX_WORKERS = 6`
-- Batch processing within waves when nodes exceed worker limit
-- Progress tracking via `execution_progress` JSON in `initiatives` table
-- Memory extraction after completion
+**Context budget allocation:**
+- 60% → Direct dependency files (full compact context: imports + exports + types)
+- 40% → Other files (export signatures only, prioritized: types > hooks > services > components > pages)
 
-**Worker** (`pipeline-execution-worker`):
-- Receives single node payload with full context
-- Executes 3-agent chain: Code Architect → Developer → Integration Agent
-- Returns generated code + metrics to orchestrator
-- Updates brain autonomously (node status + edge extraction)
+**Compression:** ~60-80% reduction in tokens sent to AI
 
-### 2.5 Edge Function Architecture
+**Integration:** Used by `pipeline-execution-orchestrator` when building worker payloads.
+
+### 2.5 Self-Healing Codebase (Fully Implemented ✅)
+
+- Learning Agent generates prevention rules after each fix
+- `upsertPreventionRule()` — incremental confidence scoring
+- Rules injected into all AI prompts via `generateBrainContext()`
+- Aba Self-Healing no `ProjectBrainPanel`
+- `project_prevention_rules` table with scope (initiative/org-wide)
+
+### 2.6 Edge Function Architecture
 
 ```
 supabase/functions/
-├── pipeline-comprehension/        Layer 1 — Understanding
-├── pipeline-architecture/         Layer 2 — Architecture + Brain Population
-├── pipeline-squad/                Squad Formation
-├── pipeline-planning/             Layer 3 — Planning
-├── pipeline-execution/            Layer 4 — Execution (legacy sequential)
+├── pipeline-comprehension/          Layer 1 — Understanding (4 agents)
+├── pipeline-architecture/           Layer 2 — Architecture + Brain Population (4 agents)
+├── pipeline-squad/                  Squad Formation
+├── pipeline-planning/               Layer 3 — Planning
+├── pipeline-execution/              Layer 4 — Execution (legacy sequential)
 ├── pipeline-execution-orchestrator/ Layer 4 — Execution Orchestrator (swarm)
-├── pipeline-execution-worker/     Layer 4 — Execution Worker (single file)
-├── pipeline-validation/           Layer 5 — Validation
-├── pipeline-publish/              Layer 6 — Publish to GitHub
-├── pipeline-approve/              Gate: Approve
-├── pipeline-reject/               Gate: Reject
-├── pipeline-fast-modify/          Quick single-file modification
-├── pipeline-full-review/          Full project review
-├── brain-sync/                    Project Brain synchronization
-├── execute-subtask/               Legacy single subtask execution
-├── generate-agents/               Agent generation
-├── generate-stories/              Story generation
-├── organize-stories/              Story organization
-├── generate-planning-content/     Planning content generation
-├── analyze-artifact/              Artifact AI analysis
-├── rework-artifact/               Artifact rework
-├── run-initiative-pipeline/       Legacy pipeline router
-├── github-proxy/                  GitHub API proxy
+├── pipeline-execution-worker/       Layer 4 — Execution Worker (single file)
+├── pipeline-validation/             Layer 5a — AI Validation + Fix Loop
+├── pipeline-deep-validation/        Layer 5b — Deep Static Analysis
+├── pipeline-drift-detection/        Layer 5c — Architectural Drift Detection
+├── pipeline-runtime-validation/     Layer 5d — Runtime Validation (tsc + vite via CI)
+├── pipeline-ci-webhook/             CI Results Webhook
+├── pipeline-fix-orchestrator/       CI Fix Swarm (auto-fix + PR)
+├── pipeline-publish/                Layer 6 — Publish (Atomic Tree API)
+├── pipeline-approve/                Gate: Approve
+├── pipeline-reject/                 Gate: Reject
+├── pipeline-fast-modify/            Quick single-file modification
+├── pipeline-full-review/            Full project review
+├── brain-sync/                      Project Brain synchronization
+├── execute-subtask/                 Legacy single subtask execution
+├── generate-agents/                 Agent generation
+├── generate-stories/                Story generation
+├── organize-stories/                Story organization
+├── generate-planning-content/       Planning content generation
+├── analyze-artifact/                Artifact AI analysis
+├── rework-artifact/                 Artifact rework
+├── run-initiative-pipeline/         Legacy pipeline router
+├── github-proxy/                    GitHub API proxy
 ├── _shared/
-│   ├── ai-client.ts               Unified AI client (OpenAI + Lovable Gateway)
-│   ├── pipeline-helpers.ts        Logging, jobs, agent messages
-│   ├── pipeline-bootstrap.ts      Auth, CORS, rate limiting, initiative fetch
-│   ├── dependency-scheduler.ts    DAG builder + wave computation
-│   ├── brain-helpers.ts           Project Brain CRUD operations
-│   ├── code-sanitizers.ts         Deterministic files, package.json sanitizer
-│   ├── auth.ts                    Authentication utilities
-│   ├── cors.ts                    CORS headers + response helpers
-│   └── rate-limit.ts              Rate limiting per user+function
+│   ├── ai-client.ts                 Unified AI client (Lovable Gateway + retry + cost)
+│   ├── pipeline-helpers.ts          Logging, jobs, agent messages
+│   ├── pipeline-bootstrap.ts        Auth, CORS, rate limiting, initiative fetch
+│   ├── dependency-scheduler.ts      DAG builder + wave computation
+│   ├── brain-helpers.ts             Project Brain CRUD + context generation
+│   ├── smart-context.ts             Smart Context Window (AST-like parser)
+│   ├── code-sanitizers.ts           Deterministic files, package.json sanitizer
+│   ├── auth.ts                      Authentication utilities
+│   ├── cors.ts                      CORS headers + response helpers
+│   └── rate-limit.ts                Rate limiting per user+function
 ```
 
-### 2.6 Data Model
+### 2.7 Data Model
 
 ```
 organizations ──┬── workspaces
@@ -240,13 +279,13 @@ organizations ──┬── workspaces
                 │                 ├── agent_outputs ──┬── code_artifacts
                 │                 │                   ├── artifact_reviews
                 │                 │                   ├── adrs
-                │                 │                   ├── content_documents
-                │                 │                   └── validation_runs
+                │                 │                   └── content_documents
                 │                 ├── agent_messages
                 │                 ├── initiative_jobs
                 │                 ├── project_brain_nodes ←→ project_brain_edges
                 │                 ├── project_decisions
-                │                 └── project_errors
+                │                 ├── project_errors
+                │                 └── project_prevention_rules
                 ├── agent_memory
                 ├── org_knowledge_base
                 ├── git_connections
@@ -256,100 +295,64 @@ organizations ──┬── workspaces
                 └── audit_logs
 ```
 
-### 2.7 Agent Roles
+### 2.8 Agent Roles (18 Agents)
 
-| Role | Layer | Responsibilities |
-|------|-------|-----------------|
-| `architect` | L1-L2 | Technical structure, interfaces, patterns, ADRs |
-| `code_architect` | L4 | Pre-implementation specs: interfaces, contracts, imports |
-| `dev` / `developer` | L4 | Code generation, implementation |
-| `integration_agent` | L4 | Import verification, dependency checking, consistency |
-| `qa` | L5 | Code review, quality scoring |
-| `pm` | L3 | Product management, PRD |
-| `po` | L3 | Product ownership, backlog |
-| `sm` | L3 | Scrum master, team organization |
-| `analyst` | L1 | Requirements, business analysis |
-| `devops` | L6 | Infrastructure, CI/CD |
-| `ux_expert` | L2 | UX/UI design |
-| `aios_master` | All | System orchestrator |
-
----
-
-## 3. Remaining Gaps & Problems
-
-### 3.1 🔴 No Real Code Validation
-The validation stage is purely AI-based text analysis. No TypeScript compilation, build verification, or runtime testing.
-
-### 3.2 ✅ Fix Loop (Resolved)
-Fix Loop v2 implemented: full Static + Runtime re-validation after each fix, up to 3 attempts, then human escalation. Fix patterns stored in `agent_memory`.
-
-### 3.3 🟡 Single-File Commit Strategy
-Publish commits files one-by-one via GitHub Contents API instead of atomic Git Tree API operations.
-
-### 3.4 🟡 Context Window Could Be Smarter
-Workers receive dependency code but limited to string truncation. No AST-based type signature extraction for indirect dependencies.
-
-### 3.5 🟡 No Semantic Vector Search
-Project Brain uses `tsvector` for keyword search. Vector embeddings (`pgvector`) not yet implemented for natural language queries.
-
-### 3.6 🟠 No Incremental Re-execution
-Reject resets all subtasks. No way to re-generate only affected files.
+| # | Role | Layer | Responsibilities |
+|---|------|-------|-----------------|
+| 1 | Vision Agent | L1 | Strategic vision, product goals |
+| 2 | Market Analyst | L1 | Market analysis, competitors, positioning |
+| 3 | Requirements Agent | L1 | Requirements, constraints, scope |
+| 4 | Product Architect | L1 | MVP scope, feasibility, risk assessment |
+| 5 | System Architect | L2 | Technical structure, patterns, deployment |
+| 6 | Data Architect | L2 | Database schema, relationships, RLS |
+| 7 | API Architect | L2 | Endpoints, contracts, auth flows |
+| 8 | Dependency Planner | L2 | File tree, dependency graph, generation order |
+| 9 | Squad Manager | L2 | Squad composition, role assignment |
+| 10 | Task Planner | L3 | Story decomposition, subtask creation |
+| 11 | Story Generator | L3 | User stories, acceptance criteria |
+| 12 | File Planner | L3 | File-level planning, path assignment |
+| 13 | Code Architect | L4 | Interfaces, types, contracts, imports |
+| 14 | Developer Agent | L4 | Full code implementation |
+| 15 | Integration Agent | L4 | Import verification, dependency checking |
+| 16 | Static Analysis Agent | L5 | Code quality scoring (0-100) |
+| 17 | Runtime QA Agent | L5 | Runtime behavior analysis |
+| 18 | Release Agent | L6 | Pre-flight, changelog, publish, verification |
 
 ---
 
-## 4. Future Architecture Targets
+## 3. Implementation Status Summary
 
-### 4.1 ✅ Fix Loop (Implemented)
-```
-Execution → Validation (Static Analysis + Runtime QA)
-    ↓ (if score < 70 or critical issues)
-Fix Agent corrects all error/warning issues
-    ↓
-Full re-validation (Static + Runtime again)
-    ↓ (max 3 iterations)
-Success → auto-approve + record fix pattern in agent_memory
-Failure → escalate to human (pending_review) + record in project_errors
-```
-
-### 4.2 Runtime Sandbox Validation
-```
-1. Assemble virtual filesystem
-2. npm install (dependency resolution)
-3. tsc --noEmit (TypeScript compilation)
-4. vite build (build verification)
-5. Report errors → Fix Agent
-```
-
-### 4.3 Atomic Git Operations
-Replace file-by-file commits with Git Tree API for single atomic commits.
-
-### 4.4 Vector Embeddings (pgvector)
-Add embedding column to `project_brain_nodes` for similarity-based context injection.
-
-### 4.5 Smart Context Window
-- 40% → Direct dependency files (full content)
-- 20% → Indirect dependencies (type signatures via AST)
-- 15% → Architecture + PRD context
-- 15% → Agent memory + knowledge base
-- 10% → Project file tree
+| # | System | Status | Details |
+|---|--------|--------|---------|
+| 1 | Pipeline Decomposition | ✅ | 20+ independent Edge Functions |
+| 2 | Project Brain | ✅ | Nodes, edges, decisions, errors, prevention rules, tsvector |
+| 3 | Dependency Scheduler | ✅ | DAG builder, topological sort, wave computation |
+| 4 | Agent Swarm | ✅ | Orchestrator + Worker, parallel execution (6 workers) |
+| 5 | DAG Visualization | ✅ | Interactive graph in ProjectBrainPanel |
+| 6 | CI-Triggered Fix Swarm | ✅ | Webhook + Fix Orchestrator + auto-PR |
+| 7 | Self-Healing Codebase | ✅ | Prevention rules with confidence scoring |
+| 8 | Architectural Drift Detection | ✅ | Rule-based + AI hybrid, layer violations |
+| 9 | Atomic Git Commits | ✅ | Tree API for publish + fix PRs |
+| 10 | Runtime Validation | ✅ | Real tsc + vite build via GitHub Actions CI |
+| 11 | Smart Context Window | ✅ | AST-like parser, ~60-80% token reduction |
+| 12 | Vector Embeddings | ❌ | tsvector only, no pgvector |
+| 13 | Incremental Re-execution | ❌ | Full reset on reject |
+| 14 | Initiative Templates | ❌ | No pre-built templates |
 
 ---
 
-## 5. Implementation Status Summary
+## 4. Remaining Gaps
 
-| System | Status | Details |
-|--------|--------|---------|
-| Pipeline Decomposition | ✅ Complete | 15+ independent Edge Functions |
-| Unified AI Client | ✅ Complete | `_shared/ai-client.ts` with retry + cost tracking |
-| Project Brain | ✅ Complete | Nodes, edges, decisions, errors, tsvector search |
-| Dependency Scheduler | ✅ Complete | DAG builder, topological sort, wave computation |
-| Agent Swarm | ✅ Complete | Orchestrator + Worker, parallel execution (6 workers) |
-| Chain-of-Agents | ✅ Complete | Code Architect → Developer → Integration Agent |
-| Brain Edge Extraction | ✅ Complete | Regex-based import parsing, auto-edge creation |
-| Fix Loop Automático | ✅ Complete | 3x fix cycle with full re-validation, human escalation, pattern learning |
-| Runtime Validation | ❌ Missing | No tsc/build verification |
-| Atomic Git Commits | ❌ Missing | Still file-by-file via Contents API |
-| Vector Embeddings | ❌ Missing | tsvector only, no pgvector |
-| Incremental Re-execution | ❌ Missing | Full reset on reject |
+### 4.1 🟡 No Semantic Vector Search
+Project Brain uses `tsvector` for keyword search. Vector embeddings (`pgvector`) not yet implemented for natural language queries and similarity-based context injection.
+
+### 4.2 🟡 No Incremental Re-execution
+Reject resets all subtasks. No way to re-generate only affected files based on `content_hash` changes.
+
+### 4.3 🟠 No Initiative Templates
+No pre-built templates for common project types (SaaS, API, Landing Page, etc.).
+
+### 4.4 🟠 Export & Reporting
+No CSV/PDF export of observability data, audit logs, or cost reports.
 
 ---

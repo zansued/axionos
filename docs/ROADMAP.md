@@ -16,14 +16,18 @@
 
 ## Fase 2 — Pipeline Decomposition ✅
 
-- [x] Decompor pipeline monolítico em Edge Functions independentes por estágio
+- [x] Decompor pipeline monolítico em 20+ Edge Functions independentes
 - [x] `pipeline-comprehension` (Layer 1 — 4 agentes de compreensão)
 - [x] `pipeline-architecture` (Layer 2 — 4 agentes de arquitetura)
 - [x] `pipeline-squad` (Formação de squad)
 - [x] `pipeline-planning` (Layer 3 — Planejamento)
-- [x] `pipeline-execution` (Layer 4 — Execução sequencial)
-- [x] `pipeline-validation` (Layer 5 — Validação)
-- [x] `pipeline-publish` (Layer 6 — Publicação GitHub)
+- [x] `pipeline-execution-orchestrator` + `pipeline-execution-worker` (Layer 4 — Swarm)
+- [x] `pipeline-validation` (Layer 5a — AI Validation + Fix Loop)
+- [x] `pipeline-deep-validation` (Layer 5b — Deep Static Analysis)
+- [x] `pipeline-drift-detection` (Layer 5c — Architectural Drift Detection)
+- [x] `pipeline-runtime-validation` (Layer 5d — Runtime Validation via CI)
+- [x] `pipeline-publish` (Layer 6 — Atomic Tree API Publish)
+- [x] `pipeline-ci-webhook` + `pipeline-fix-orchestrator` (CI Fix Swarm)
 - [x] `pipeline-approve` / `pipeline-reject` (Gates)
 - [x] `pipeline-fast-modify` / `pipeline-full-review` (Modificações)
 - [x] Shared bootstrap (`pipeline-bootstrap.ts`) para auth, CORS, rate limiting
@@ -45,12 +49,13 @@
 - [x] Tabela `project_brain_edges` com relações: imports, depends_on, calls_api, uses_component, implements_interface, exports, renders, stores_in_table
 - [x] Tabela `project_decisions` com categorias, supersedes chain, status
 - [x] Tabela `project_errors` com root cause, prevention rules, fix tracking
+- [x] Tabela `project_prevention_rules` com confidence scoring + scope
 - [x] Full-text search via `tsvector` + `search_vector`
 - [x] CRUD helpers em `_shared/brain-helpers.ts`
 - [x] Context generation para prompts AI (`generateBrainContext()`)
 - [x] RLS policies para isolamento multi-tenant
 - [x] Integração com Layer 2 (Architecture popula o Brain)
-- [x] UI do Project Brain (`ProjectBrainPanel`)
+- [x] UI do Project Brain (`ProjectBrainPanel` com Graph, Decisions, Errors, Self-Healing)
 
 ---
 
@@ -63,7 +68,6 @@
 - [x] `breakCycles()` — detecção e remoção de ciclos via DFS
 - [x] `updateBrainEdgesFromImports()` — extração de imports do código gerado
 - [x] `formatExecutionPlan()` — plano de execução legível para logs
-- [x] Módulo compartilhado: `_shared/dependency-scheduler.ts`
 
 ---
 
@@ -75,55 +79,82 @@
 - [x] Workers invocados via `fetch()` ao endpoint da Edge Function
 - [x] Comunicação via Project Brain (sem comunicação direta entre workers)
 - [x] Retry automático (até 2x) com fallback para `project_errors`
-- [x] Context injection com código das dependências diretas
 - [x] Progress tracking em tempo real via `execution_progress` JSON
-- [x] Memory extraction pós-execução
-- [x] Registro no `config.toml` com `verify_jwt = false`
 
 ---
 
-## Fase 7 — Execução Autônoma ✅
+## Fase 7 — CI-Triggered Fix Swarm ✅
 
-- [x] Subtasks executadas automaticamente (sem clique manual)
-- [x] Retry automático com backoff exponencial
-- [x] Barra de progresso em tempo real (Supabase Realtime)
-- [x] Pipeline roda em background (`PipelineContext` global)
-- [x] Paralelização de subtasks independentes
-- [x] Notificação quando execução completa
-
----
-
-## Fase 8 — Validação Inteligente ✅
-
-- [x] QA Agent analisa cada artefato com 5 critérios (0-100)
-- [x] Auto-aprovação (≥70), auto-retrabalho (50-69), auto-rejeição (<50)
-- [x] Cross-review arquitetural
-- [x] Escalação para revisão humana
+- [x] `pipeline-ci-webhook` — recebe resultados do GitHub Actions
+- [x] `pipeline-fix-orchestrator` — agrupa erros por arquivo, despacha fix workers
+- [x] Criação de PR atômico via Git Tree API com correções
+- [x] Learning Agent gera prevention rules pós-fix
+- [x] `CIFixSwarmStatus` — componente de monitoramento na UI
 
 ---
 
-## Fase 9 — Publish & Git ✅ (parcial)
+## Fase 8 — Self-Healing Codebase ✅
 
-- [x] Branch name automática
-- [x] Commit messages semânticos
-- [x] PR description automática
-- [x] Build Health Report
-- [ ] **Atomic Git commits via Tree API** (ainda usa file-by-file)
-- [ ] Suporte a múltiplos repositórios por organização
-- [ ] Webhook para PR merge → atualizar status
+- [x] `project_prevention_rules` — regras com confidence scoring incremental
+- [x] `upsertPreventionRule()` — bump de confidence em padrões recorrentes
+- [x] Regras injetadas em todos os prompts via `generateBrainContext()`
+- [x] Aba Self-Healing no `ProjectBrainPanel`
+- [x] Escopo: initiative-specific + org-wide
 
 ---
 
-## Fase 10 — Geração Full-Stack ✅
+## Fase 9 — Architectural Drift Detection ✅
 
-- [x] Detecção automática de necessidade de backend
-- [x] File types: schema, migration, edge_function, seed, supabase_client, auth_config
-- [x] Prompts especializados para SQL, Edge Functions, Auth, RLS
-- [x] Conexão com Supabase externo
+- [x] `pipeline-drift-detection` — detecção híbrida (rule-based + AI)
+- [x] Classificação de arquivos por camada (pages → components → hooks → services → data)
+- [x] Detecção de dependências invertidas, camadas ausentes, violações de fronteira
+- [x] Auto-trigger após Deep Validation
+- [x] `ArchitecturalDriftStatus` — UI com drift score e lista de violações
+- [x] Violations registradas em `project_errors` + prevention rules geradas
 
 ---
 
-## Fase 11 — Memória e Contexto ✅
+## Fase 10 — Atomic Git Commits (Tree API) ✅
+
+- [x] `pipeline-publish` refatorado para Git Tree API
+- [x] `pipeline-fix-orchestrator` refatorado para Git Tree API
+- [x] Fluxo: Create Blobs (paralelo, batches de 5) → Build Tree → Single Commit → Update Ref
+- [x] Elimina N requests sequenciais por 1 commit atômico
+
+---
+
+## Fase 11 — Runtime Validation (tsc + vite build) ✅
+
+- [x] `pipeline-runtime-validation` — push para branch temporária `validate/{id}`
+- [x] GitHub Actions executa: `npm install → tsc --noEmit → vite build`
+- [x] Resultados voltam via `pipeline-ci-webhook` existente
+- [x] Erros reais do compilador alimentam Fix Swarm
+- [x] `RuntimeValidationStatus` — UI com status do CI, erros e build log
+- [x] Disponível nos stages `validating` e `ready_to_publish`
+
+---
+
+## Fase 12 — Smart Context Window (AST-based) ✅
+
+- [x] `_shared/smart-context.ts` — parser regex-based que extrai API pública
+- [x] Extrai: imports, exports, interfaces, types, function signatures, component props
+- [x] `buildSmartContextWindow()` — contexto compacto com priorização por tipo
+- [x] Compressão de ~60-80% no volume de tokens
+- [x] Integrado ao `pipeline-execution-orchestrator`
+- [x] Stats de compressão logados periodicamente
+
+---
+
+## Fase 13 — Observabilidade & Custos ✅
+
+- [x] Dashboard de custo por iniciativa e agente
+- [x] Tempo médio por estágio
+- [x] Alertas de budget
+- [x] SLA configs por estágio
+
+---
+
+## Fase 14 — Memória e Contexto ✅
 
 - [x] Tabela `agent_memory`
 - [x] Herança de contexto entre iniciativas
@@ -132,58 +163,33 @@
 
 ---
 
-## Fase 12 — Observabilidade & Custos ✅
-
-- [x] Dashboard de custo por iniciativa e agente
-- [x] Tempo médio por estágio
-- [x] Alertas de budget
-- [ ] Exportação de relatórios (CSV/PDF)
-
----
-
 ## 🔜 Próximos Passos (Fases Pendentes)
 
-### Fase 13 — Fix Loop Automático
-- [ ] Quando validação falha, re-executar subtasks com contexto do erro
-- [ ] Ciclo: Validation → Fix Agent → Re-validation (max 3 iterações)
-- [ ] Escalação automática para humano após limite
-
-### Fase 14 — Runtime Validation (Sandbox)
-- [ ] Montar filesystem virtual com todos os arquivos gerados
-- [ ] Executar `tsc --noEmit` para verificação de tipos
-- [ ] Executar `vite build` para verificação de build
-- [ ] Alimentar erros reais ao Fix Agent
-
-### Fase 15 — Atomic Git Operations
-- [ ] Migrar de GitHub Contents API para Git Tree API
-- [ ] Um único commit atômico para todo o projeto
-- [ ] Suporte a `.gitignore` e arquivos binários
-
-### Fase 16 — Visualização do DAG
-- [ ] Mostrar grafo de execução no `ProjectBrainPanel` (waves, dependências, status)
-- [ ] Visualização interativa com nós clicáveis
-- [ ] Status em tempo real durante execução
-
-### Fase 17 — Smart Context Window (AST-based)
-- [ ] Extrair type signatures via AST (não apenas truncar strings)
-- [ ] 40% direct deps (full) + 20% indirect (types only) + 15% architecture + 15% memory + 10% file tree
-
-### Fase 18 — Vector Embeddings (pgvector)
-- [ ] Adicionar coluna de embedding aos `project_brain_nodes`
-- [ ] Gerar embeddings durante criação de nós
-- [ ] Similarity search para context injection inteligente
-
-### Fase 19 — Incremental Re-execution
+### Fase 15 — Incremental Re-execution
 - [ ] Reject re-gera apenas arquivos afetados (não reset total)
+- [ ] Comparação via `content_hash` no Project Brain
 - [ ] Diff-based rework mostrando o que mudou
 - [ ] Versionamento de arquivos gerados
 
-### Fase 20 — UX & Polish
-- [ ] Templates de iniciativas pré-configurados
+### Fase 16 — Vector Embeddings (pgvector)
+- [ ] Adicionar coluna de embedding aos `project_brain_nodes`
+- [ ] Gerar embeddings durante criação de nós
+- [ ] Similarity search para context injection inteligente
+- [ ] Substituir truncamento por relevância semântica
+
+### Fase 17 — Templates de Iniciativas
+- [ ] Modelos pré-prontos (SaaS, API REST, Landing Page, E-commerce, Dashboard)
+- [ ] Pre-popula discovery_payload + architecture
+- [ ] Acelera as 2 primeiras camadas do pipeline
+
+### Fase 18 — UX & Polish
 - [ ] Atalhos de teclado
 - [ ] Internacionalização (pt-BR / en-US)
+- [ ] Exportação de relatórios (CSV/PDF)
+- [ ] Dark/Light theme refinements
 
-### Fase 21 — Governança Avançada
+### Fase 19 — Governança Avançada
 - [ ] Roles granulares por gate do pipeline
 - [ ] Approval chains com múltiplos aprovadores
 - [ ] Compliance e exportação de evidências
+- [ ] Webhook notifications (Slack, Discord)
