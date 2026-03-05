@@ -16,17 +16,17 @@
 
 ## Fase 2 — Pipeline Decomposition ✅
 
-- [x] Decompor pipeline monolítico em 20+ Edge Functions independentes
-- [x] `pipeline-comprehension` (Layer 1 — 4 agentes de compreensão)
-- [x] `pipeline-architecture` (Layer 2 — 4 agentes de arquitetura)
+- [x] Decompor pipeline monolítico em 35+ Edge Functions independentes
+- [x] `pipeline-comprehension` (Stage 1 — 4 agentes de compreensão)
+- [x] `pipeline-architecture` (Stage 2 — 4 agentes de arquitetura)
 - [x] `pipeline-squad` (Formação de squad)
-- [x] `pipeline-planning` (Layer 3 — Planejamento)
-- [x] `pipeline-execution-orchestrator` + `pipeline-execution-worker` (Layer 4 — Swarm)
-- [x] `pipeline-validation` (Layer 5a — AI Validation + Fix Loop)
-- [x] `pipeline-deep-validation` (Layer 5b — Deep Static Analysis)
-- [x] `pipeline-drift-detection` (Layer 5c — Architectural Drift Detection)
-- [x] `pipeline-runtime-validation` (Layer 5d — Runtime Validation via CI)
-- [x] `pipeline-publish` (Layer 6 — Atomic Tree API Publish)
+- [x] `pipeline-planning` (Planejamento)
+- [x] `pipeline-execution-orchestrator` + `pipeline-execution-worker` (Swarm)
+- [x] `pipeline-validation` (AI Validation + Fix Loop)
+- [x] `pipeline-deep-validation` (Deep Static Analysis)
+- [x] `pipeline-drift-detection` (Architectural Drift Detection)
+- [x] `pipeline-runtime-validation` (Runtime Validation via CI)
+- [x] `pipeline-publish` (Atomic Tree API Publish)
 - [x] `pipeline-ci-webhook` + `pipeline-fix-orchestrator` (CI Fix Swarm)
 - [x] `pipeline-approve` / `pipeline-reject` (Gates)
 - [x] `pipeline-fast-modify` / `pipeline-full-review` (Modificações)
@@ -45,12 +45,13 @@
 
 ## Fase 4 — Project Brain ✅
 
-- [x] Tabela `project_brain_nodes` com tipos: file, component, hook, service, api, table, type, schema, edge_function, page, context, util
+- [x] Tabela `project_brain_nodes` com tipos: file, component, hook, service, api, table, type, schema, edge_function, page, context, util, domain_model, business_logic, api_spec
 - [x] Tabela `project_brain_edges` com relações: imports, depends_on, calls_api, uses_component, implements_interface, exports, renders, stores_in_table
 - [x] Tabela `project_decisions` com categorias, supersedes chain, status
 - [x] Tabela `project_errors` com root cause, prevention rules, fix tracking
 - [x] Tabela `project_prevention_rules` com confidence scoring + scope
 - [x] Full-text search via `tsvector` + `search_vector`
+- [x] Vector embeddings via `pgvector` (768-dim) com cosine similarity
 - [x] CRUD helpers em `_shared/brain-helpers.ts`
 - [x] Context generation para prompts AI (`generateBrainContext()`)
 - [x] RLS policies para isolamento multi-tenant
@@ -221,13 +222,7 @@
 ## Fase 20 — Adaptive Engineering System ✅
 
 - [x] **Error Intelligence Engine** (`error-intelligence/index.ts`)
-  - Coleta e analisa padrões de falha cross-project
-  - Gera prevention rules automaticamente a partir de padrões recorrentes
-  - Rastreia métricas: taxa de sucesso de build, tentativas de reparo, tempo para build
 - [x] **Preventive Architecture Validator** (`pipeline-preventive-validation/index.ts`)
-  - Validação pré-geração: checa entrypoints, scripts, configs obrigatórios
-  - Compatibilidade de dependências (conflitos npm, peer dependencies)
-  - Aplica prevention rules aprendidas para auto-correção do plano
 - [x] Integração com Build Self-Healing para disparo assíncrono de aprendizado
 - [x] Novos estágios no pipeline: `validating_architecture` / `architecture_validated`
 
@@ -235,43 +230,112 @@
 
 ## Fase 21 — Architecture Simulation Engine ✅
 
-- [x] **`pipeline-architecture-simulation`** — simula a arquitetura antes da geração de código
-- [x] Converte plano de arquitetura em grafo dirigido (módulos, serviços, APIs, DB)
-- [x] **Validação estrutural**: entrypoints válidos, módulos conectados, ciclos detectados
-- [x] **Validação de dependências**: conflitos npm, peer dependencies faltantes, plugins obrigatórios
-- [x] **Predição de falhas via IA**: analisa o modelo e prediz problemas de build
-- [x] **Auto-reparo**: corrige automaticamente o plano de arquitetura antes da execução
-- [x] Resultado armazenado no Project Brain para contexto futuro
+- [x] **`pipeline-architecture-simulation`** — simula arquitetura antes da geração
+- [x] Grafo dirigido, validação estrutural, predição de falhas, auto-reparo
 - [x] Novos estágios: `simulating_architecture` / `architecture_simulated`
-- [x] Pipeline atualizado: Arquitetura → Simulação → Validação Preventiva → Squad → Execução
 
 ---
 
 ## Fase 22 — Foundation Scaffold Engine ✅
 
-- [x] **`pipeline-foundation-scaffold`** — gera scaffold mínimo buildável antes da geração de features
-- [x] Template React+Vite com package.json, index.html, src/main.tsx, src/App.tsx, vite.config.ts, tsconfig.json
-- [x] Detecção automática de stack via discovery_payload
-- [x] **Validação de scaffold**: verifica scripts, imports, entrypoints e dependências
-- [x] **Auto-reparo**: injeta arquivos faltantes a partir de templates padrão
-- [x] **Simulação de build via IA**: prevê se `npm install && vite build` passaria
-- [x] Scaffold armazenado no Project Brain como nós com status "scaffold"
+- [x] **`pipeline-foundation-scaffold`** — scaffold mínimo buildável
+- [x] Template React+Vite, validação, auto-reparo, simulação de build
 - [x] Novos estágios: `scaffolding` / `scaffolded`
-- [x] Pipeline atualizado: Arquitetura → Simulação → Validação Preventiva → **Scaffold** → Squad → Execução
 
 ---
 
 ## Fase 23 — Project Bootstrap Intelligence ✅
 
-- [x] **`project-bootstrap-intelligence`** — valida buildabilidade estrutural ANTES do Foundation Scaffold
-- [x] Detecção multi-stack: `react-vite`, `nextjs`, `node-api`, `python-fastapi`
-- [x] Templates de bootstrap por stack com arquivos mínimos necessários
-- [x] **Validação de entrypoints**: parse de index.html → verifica script referenciado
-- [x] **Validação de scripts**: dev/build/preview com valores corretos
-- [x] **Validação de dependências**: react, react-dom, vite, typescript
-- [x] **Predição de build via IA**: simula `npm install && tsc --noEmit && vite build`
-- [x] Auto-injeção de arquivos faltantes no Project Brain como nós `bootstrap`
-- [x] Reparo emergencial se predição de build falhar
+- [x] **`project-bootstrap-intelligence`** — validação de buildabilidade multi-stack
 - [x] Novos estágios: `bootstrapping` / `bootstrapped`
-- [x] Pipeline atualizado: Arquitetura → Simulação → Validação Preventiva → **Bootstrap Intelligence** → Scaffold → Squad → Execução
-- [x] Aprovação intermediária removida — pipeline agora é estritamente sequencial
+- [x] Pipeline sequencial sem aprovações intermediárias
+
+---
+
+## Fase 24 — Module Graph Simulation ✅
+
+- [x] **`pipeline-module-graph-simulation`** — análise de imports e circularidade via DFS
+- [x] Reconstrói grafo de módulos do bundler (Vite/Rollup)
+- [x] Novos estágios: `simulating_modules` / `modules_simulated`
+
+---
+
+## Fase 25 — Dependency Intelligence Engine ✅
+
+- [x] **`pipeline-dependency-intelligence`** — auditoria de saúde dos pacotes NPM
+- [x] Consulta NPM Registry + Firecrawl, Health Score com bloqueio se < 0.75
+- [x] Novos estágios: `analyzing_dependencies` / `dependencies_analyzed`
+
+---
+
+## Fase 26 — Ecosystem Drift Intelligence ✅
+
+- [x] **`ecosystem-drift-intelligence`** — análise de drift do ecossistema
+- [x] Integrado como ação opcional no pipeline
+
+---
+
+## Fase 27 — Supabase Schema Bootstrap ✅
+
+- [x] **`supabase-schema-bootstrap`** — cria schema PostgreSQL isolado (`app_{project_id}`)
+- [x] Novos estágios: `bootstrapping_schema` / `schema_bootstrapped`
+
+---
+
+## Fase 28 — Supabase Provisioning Engine ✅
+
+- [x] **`supabase-provisioning-engine`** — tabelas base, RLS, storage bucket
+- [x] Cria users, settings, audit_logs no schema do projeto
+- [x] Habilita RLS com policies de isolamento
+- [x] Cria bucket privado `files_{project_id}`
+- [x] Validação via `information_schema.tables`
+- [x] Novos estágios: `provisioning_db` / `db_provisioned`
+
+---
+
+## Fase 29 — AI Domain Model Analyzer ✅
+
+- [x] **`ai-domain-model-analyzer`** — extração de modelo de domínio via LLM
+- [x] Entidades com atributos tipados, relacionamentos (FK), regras de negócio
+- [x] Fallback para templates genéricos se análise falhar
+- [x] Armazena `domain_model` + `domain_model_report` no Project Brain
+- [x] Novos estágios: `analyzing_domain` / `domain_analyzed`
+
+---
+
+## Fase 30 — AI Business Logic Synthesizer ✅
+
+- [x] **`ai-business-logic-synthesizer`** — gera lógica de negócio a partir do domain model
+- [x] Services (CRUD + custom actions), validations, workflows (estados + transições)
+- [x] Access control (RLS-compatible), computed fields
+- [x] Fallback CRUD para entidades sem serviço
+- [x] Armazena `business_logic` + `business_logic_report` no Project Brain
+- [x] Novos estágios: `synthesizing_logic` / `logic_synthesized`
+
+---
+
+## Fase 31 — Autonomous API Generator ✅
+
+- [x] **`autonomous-api-generator`** — gera camada de API completa
+- [x] REST endpoints (CRUD + custom), RPC functions, event triggers, webhooks
+- [x] Validação: toda entidade tem CRUD coverage
+- [x] Armazena `api_spec` + `api_generation_report` no Project Brain
+- [x] Novos estágios: `generating_api` / `api_generated`
+
+---
+
+## Fase 32 — Autonomous Build Repair ✅
+
+- [x] **`autonomous-build-repair`** — auto-reparo de falhas de build
+- [x] Novos estágios: `repairing_build` / `build_repaired` / `repair_failed`
+
+---
+
+## 🔜 Próximos Passos
+
+| # | Fase | Impacto | Complexidade | Descrição |
+|---|------|---------|-------------|-----------|
+| 1 | Supabase Data Model Generator | 🔴 Alto | Médio | Gera tabelas SQL no schema do projeto a partir do domain_model |
+| 2 | Approval chains | 🟡 Médio | Alto | Múltiplos aprovadores com quórum |
+| 3 | Webhook notifications | 🟠 Baixo | Baixo | Slack/Discord em gates e SLA |
+| 4 | UI para Domain Model / Business Logic / API Spec | 🟡 Médio | Médio | Visualizações dos artefatos gerados nos novos estágios |
