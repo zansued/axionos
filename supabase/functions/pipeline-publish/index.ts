@@ -298,14 +298,13 @@ Retorne APENAS JSON:
 
     if (treeItems.length === 0) throw new Error("Nenhum blob criado — falha total");
 
-    // Step 2: Create a new tree referencing all blobs (inherits from base tree)
+    // Step 2: Create a NEW tree (no base_tree = overwrite/clean repo with only our files)
     const treeResp = await fetch(
       `${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/trees`,
       {
         method: "POST",
         headers: ghHeaders,
         body: JSON.stringify({
-          base_tree: baseTreeSha,
           tree: treeItems,
         }),
       }
