@@ -138,8 +138,18 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "scaffolded":
       return [
-        { stage: "approve", label: "Aprovar Scaffold", type: "approve" },
+        { stage: "module_graph_simulation", label: "🔗 Module Graph Simulation", type: "run" },
         { stage: "foundation_scaffold", label: "Re-gerar Scaffold", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "simulating_modules":
+      return [
+        { stage: "module_graph_simulation", label: "Re-executar Module Graph", type: "run" },
+      ];
+    case "modules_simulated":
+      return [
+        { stage: "approve", label: "Aprovar Module Graph", type: "approve" },
+        { stage: "module_graph_simulation", label: "Re-executar Module Graph", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
