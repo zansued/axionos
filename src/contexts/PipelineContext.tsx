@@ -216,8 +216,18 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
   );
 }
 
+const NOOP_PIPELINE: PipelineContextValue = {
+  running: {},
+  events: [],
+  unreadCount: 0,
+  isRunning: () => false,
+  getRunningStage: () => null,
+  runStage: () => {},
+  rollbackToStage: async () => {},
+  markAllRead: () => {},
+};
+
 export function usePipeline() {
   const ctx = useContext(PipelineContext);
-  if (!ctx) throw new Error("usePipeline must be used within PipelineProvider");
-  return ctx;
+  return ctx || NOOP_PIPELINE;
 }
