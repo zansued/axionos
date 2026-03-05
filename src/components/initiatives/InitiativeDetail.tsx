@@ -23,6 +23,7 @@ import { InitiativeCodePreview } from "./InitiativeCodePreview";
 import { AgentMessagesTimeline } from "./AgentMessagesTimeline";
 import { ExecutionProgress } from "./ExecutionProgress";
 import { BuildHealthReport } from "./BuildHealthReport";
+import { CIFixSwarmStatus } from "./CIFixSwarmStatus";
 import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 
@@ -422,6 +423,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
 
       {/* Execution Progress (real-time) */}
       <ExecutionProgress initiativeId={initiative.id} stageStatus={stageStatus} />
+
+      {/* CI / Fix Swarm Status */}
+      <CIFixSwarmStatus initiativeId={initiative.id} />
 
       {/* Repo Result Card */}
       {repoUrl && (

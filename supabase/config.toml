@@ -71,3 +71,6 @@ verify_jwt = false
 
 [functions.pipeline-ci-webhook]
 verify_jwt = false
+
+[functions.pipeline-fix-orchestrator]
+verify_jwt = false
