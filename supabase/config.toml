@@ -74,3 +74,6 @@ verify_jwt = false
 
 [functions.pipeline-fix-orchestrator]
 verify_jwt = false
+
+[functions.pipeline-drift-detection]
+verify_jwt = false
