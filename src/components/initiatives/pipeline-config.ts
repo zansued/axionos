@@ -111,7 +111,6 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
     case "architecture_validated":
       return [
         { stage: "foundation_scaffold", label: "🏗️ Gerar Foundation Scaffold", type: "run" },
-        { stage: "approve", label: "Aprovar (pular scaffold)", type: "approve" },
         { stage: "preventive_validation", label: "Re-executar Validação", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
