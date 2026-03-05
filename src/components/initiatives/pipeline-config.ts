@@ -18,6 +18,8 @@ export const PIPELINE_STEPS = [
   { key: "bootstrapped", label: "Bootstrap ✓", icon: Zap, color: "text-accent", bg: "bg-accent/10" },
   { key: "scaffolding", label: "Scaffold ▶", icon: Hammer, color: "text-warning", bg: "bg-warning/10" },
   { key: "scaffolded", label: "Scaffold ✓", icon: Hammer, color: "text-accent", bg: "bg-accent/10" },
+  { key: "simulating_modules", label: "Module Graph ▶", icon: Layers, color: "text-warning", bg: "bg-warning/10" },
+  { key: "modules_simulated", label: "Module Graph ✓", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
   { key: "forming_squad", label: "Formando", icon: Users, color: "text-warning", bg: "bg-warning/10" },
   { key: "squad_formed", label: "Squad ✓", icon: Users, color: "text-accent", bg: "bg-accent/10" },
