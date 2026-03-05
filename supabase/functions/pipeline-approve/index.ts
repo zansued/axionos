@@ -24,7 +24,8 @@ serve(async (req) => {
 
   const approvalMap: Record<string, { field: string; nextStatus: string }> = {
     discovered: { field: "approved_at_discovery", nextStatus: "architecture_ready" },
-    scaffolded: { field: "approved_at_discovery", nextStatus: "squad_ready" },
+    scaffolded: { field: "approved_at_discovery", nextStatus: "simulating_modules" },
+    modules_simulated: { field: "approved_at_discovery", nextStatus: "squad_ready" },
     squad_formed: { field: "approved_at_squad", nextStatus: "planning_ready" },
     planned: { field: "approved_at_planning", nextStatus: "in_progress" },
     validating: { field: "approved_at_planning", nextStatus: "ready_to_publish" },

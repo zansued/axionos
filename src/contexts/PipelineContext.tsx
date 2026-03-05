@@ -177,6 +177,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       architecture_simulation: "pipeline-architecture-simulation",
       bootstrap_intelligence: "project-bootstrap-intelligence",
       foundation_scaffold: "pipeline-foundation-scaffold",
+      module_graph_simulation: "pipeline-module-graph-simulation",
       error_intelligence: "error-intelligence",
     };
     return functionMap[stage] || "run-initiative-pipeline";
@@ -224,6 +225,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           architecture_simulation: `Simulação de arquitetura concluída: score ${result.score || 0}/100, ${result.repairs?.length || 0} reparos ${result.passed ? "✅" : "⚠️"}`,
           bootstrap_intelligence: `Bootstrap Intelligence: ${result.stack || "react-vite"} stack, ${result.files_injected || 0} arquivos injetados, build confidence ${((result.build_confidence || 0) * 100).toFixed(0)}% ${result.build_prediction ? "✅" : "⚠️"}`,
           foundation_scaffold: `Foundation Scaffold: ${result.files_generated || 0} arquivos (${result.stack || "react-vite"}). Build confidence: ${((result.build_confidence || 0) * 100).toFixed(0)}% ${result.validation_passed ? "✅" : "⚠️"}`,
+          module_graph_simulation: `Module Graph: ${result.total_files || 0} arquivos, ${result.total_imports || 0} imports, ${result.broken_imports || 0} broken, score ${result.graph_health_score || 0} ${result.passed ? "✅" : "⚠️"}`,
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
           planning: `Planejamento concluído: 3 agentes, ${result.stories?.length || result.stories_created || 0} stories, ${result.total_subtasks || 0} subtasks ✅`,
@@ -325,7 +327,8 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       architecture: "architecture_ready",
       bootstrap: "architecture_validated",
       scaffold: "bootstrapped",
-      squad: "squad_ready",
+      module_graph: "scaffolded",
+      squad: "modules_simulated",
       planning: "planning_ready",
       execution: "planned",
       validation: "in_progress",

@@ -18,6 +18,8 @@ export const PIPELINE_STEPS = [
   { key: "bootstrapped", label: "Bootstrap ✓", icon: Zap, color: "text-accent", bg: "bg-accent/10" },
   { key: "scaffolding", label: "Scaffold ▶", icon: Hammer, color: "text-warning", bg: "bg-warning/10" },
   { key: "scaffolded", label: "Scaffold ✓", icon: Hammer, color: "text-accent", bg: "bg-accent/10" },
+  { key: "simulating_modules", label: "Module Graph ▶", icon: Layers, color: "text-warning", bg: "bg-warning/10" },
+  { key: "modules_simulated", label: "Module Graph ✓", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
   { key: "forming_squad", label: "Formando", icon: Users, color: "text-warning", bg: "bg-warning/10" },
   { key: "squad_formed", label: "Squad ✓", icon: Users, color: "text-accent", bg: "bg-accent/10" },
@@ -38,6 +40,7 @@ export const MACRO_STAGES = [
   { key: "preventive_validation", label: "Validação Preventiva", icon: ShieldCheck },
   { key: "bootstrap", label: "Bootstrap", icon: Zap },
   { key: "scaffold", label: "Scaffold", icon: Hammer },
+  { key: "module_graph", label: "Module Graph", icon: Layers },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
@@ -59,12 +62,13 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["validating_architecture", "architecture_validated"].includes(s)) return 3;
   if (["bootstrapping", "bootstrapped"].includes(s)) return 4;
   if (["scaffolding", "scaffolded"].includes(s)) return 5;
-  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 6;
-  if (["planning_ready", "planning", "planned"].includes(s)) return 7;
-  if (["in_progress"].includes(s)) return 8;
-  if (["validating", "ready_to_publish"].includes(s)) return 9;
-  if (["published"].includes(s)) return 10;
-  if (["completed"].includes(s)) return 11;
+  if (["simulating_modules", "modules_simulated"].includes(s)) return 6;
+  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 7;
+  if (["planning_ready", "planning", "planned"].includes(s)) return 8;
+  if (["in_progress"].includes(s)) return 9;
+  if (["validating", "ready_to_publish"].includes(s)) return 10;
+  if (["published"].includes(s)) return 11;
+  if (["completed"].includes(s)) return 12;
   return 0;
 }
 
@@ -134,8 +138,18 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "scaffolded":
       return [
-        { stage: "approve", label: "Aprovar Scaffold", type: "approve" },
+        { stage: "module_graph_simulation", label: "🔗 Module Graph Simulation", type: "run" },
         { stage: "foundation_scaffold", label: "Re-gerar Scaffold", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "simulating_modules":
+      return [
+        { stage: "module_graph_simulation", label: "Re-executar Module Graph", type: "run" },
+      ];
+    case "modules_simulated":
+      return [
+        { stage: "approve", label: "Aprovar Module Graph", type: "approve" },
+        { stage: "module_graph_simulation", label: "Re-executar Module Graph", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
