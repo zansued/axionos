@@ -109,10 +109,52 @@ serve(async (req) => {
     await pipelineLog(ctx, "runtime_validation_collecting",
       `Coletados ${fileEntries.length} arquivos para validação runtime`);
 
-    // ── Check if repo exists ──
-    const repoCheck = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, { headers: ghHeaders });
+    // ── Check if repo exists, create if not ──
+    let repoCheck = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, { headers: ghHeaders });
     if (!repoCheck.ok) {
-      throw new Error(`Repositório ${owner}/${repo} não encontrado. Publique primeiro antes de rodar Runtime Validation.`);
+      await pipelineLog(ctx, "runtime_validation_creating_repo",
+        `Repositório ${owner}/${repo} não encontrado — criando automaticamente...`);
+
+      // Try creating the repo
+      const createRepoResp = await fetch(`${GITHUB_API}/user/repos`, {
+        method: "POST",
+        headers: ghHeaders,
+        body: JSON.stringify({
+          name: repo,
+          private: false,
+          auto_init: false,
+          description: `Runtime validation for ${initiative.title}`,
+        }),
+      });
+
+      if (!createRepoResp.ok) {
+        // Maybe it's an org repo, try org endpoint
+        const orgCreateResp = await fetch(`${GITHUB_API}/orgs/${owner}/repos`, {
+          method: "POST",
+          headers: ghHeaders,
+          body: JSON.stringify({
+            name: repo,
+            private: false,
+            auto_init: false,
+            description: `Runtime validation for ${initiative.title}`,
+          }),
+        });
+
+        if (!orgCreateResp.ok) {
+          const errText = await orgCreateResp.text();
+          await createRepoResp.text();
+          throw new Error(`Falha ao criar repositório ${owner}/${repo}: ${errText}`);
+        }
+        await orgCreateResp.json();
+      } else {
+        await createRepoResp.json();
+      }
+
+      // Re-check after creation
+      repoCheck = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, { headers: ghHeaders });
+      if (!repoCheck.ok) {
+        throw new Error(`Repositório ${owner}/${repo} não encontrado mesmo após tentativa de criação.`);
+      }
     }
     const repoData = await repoCheck.json();
     const isRepoEmpty = Number(repoData?.size ?? 0) === 0;
