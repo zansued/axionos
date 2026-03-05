@@ -55,6 +55,77 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
 
   const unreadCount = events.filter((e) => !e.read).length;
 
+  // Track which initiatives already had their CI completion handled
+  const handledCIRef = useRef<Set<string>>(new Set());
+
+  // ── Realtime: listen for initiative stage_status changes from webhook ──
+  useEffect(() => {
+    const channel = supabase
+      .channel("pipeline-initiative-updates")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "initiatives" },
+        (payload) => {
+          const newRow = payload.new as any;
+          const oldRow = payload.old as any;
+          const initiativeId = newRow.id;
+
+          // CI webhook updated stage_status to ready_to_publish
+          if (
+            newRow.stage_status === "ready_to_publish" &&
+            oldRow?.stage_status !== "ready_to_publish" &&
+            !handledCIRef.current.has(initiativeId)
+          ) {
+            handledCIRef.current.add(initiativeId);
+            const label = "✅ CI passou! Runtime Validation concluída — pronto para publicar";
+            toast({ title: label });
+            addEvent(initiativeId, "runtime_validation", label);
+
+            // Clear running state if still waiting on runtime_validation
+            setRunning((prev) => {
+              const next = { ...prev };
+              if (next[initiativeId] === "runtime_validation") {
+                delete next[initiativeId];
+              }
+              return next;
+            });
+
+            // Invalidate queries so UI refreshes
+            queryClient.invalidateQueries({ queryKey: ["initiatives"] });
+            queryClient.invalidateQueries({ queryKey: ["initiative-jobs"] });
+          }
+
+          // CI webhook reported failure — trigger fix swarm notification
+          if (
+            newRow.stage_status === "validating" &&
+            oldRow?.stage_status !== "validating"
+          ) {
+            const progress = newRow.execution_progress;
+            if (progress?.ci_status === "failed") {
+              const label = `❌ CI falhou — Fix Swarm acionado automaticamente`;
+              toast({ variant: "destructive", title: label });
+              addEvent(initiativeId, "runtime_validation", label);
+
+              setRunning((prev) => {
+                const next = { ...prev };
+                if (next[initiativeId] === "runtime_validation") {
+                  delete next[initiativeId];
+                }
+                return next;
+              });
+
+              queryClient.invalidateQueries({ queryKey: ["initiatives"] });
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [toast, addEvent, queryClient]);
+
   // Map stage names to dedicated edge function names
   const getStageFunctionName = (stage: string): string => {
     const functionMap: Record<string, string> = {
