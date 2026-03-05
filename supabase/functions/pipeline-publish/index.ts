@@ -175,7 +175,7 @@ Retorne APENAS JSON:
     if (!repoCheckResp.ok) {
       // Repo doesn't exist, create it
       let createUrl = `${GITHUB_API}/user/repos`;
-      const createBody: any = { name: actualRepo, description: `${initiative.title} — Gerado pelo SynkrAIOS`, private: false, auto_init: true };
+      const createBody: any = { name: actualRepo, description: `${initiative.title} — Gerado pelo AxionOS`, private: false, auto_init: true };
       const orgCheck = await fetch(`${GITHUB_API}/orgs/${actualOwner}`, { headers: ghHeaders });
       if (orgCheck.ok) createUrl = `${GITHUB_API}/orgs/${actualOwner}/repos`;
 
