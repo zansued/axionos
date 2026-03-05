@@ -40,6 +40,7 @@ export const MACRO_STAGES = [
   { key: "preventive_validation", label: "Validação Preventiva", icon: ShieldCheck },
   { key: "bootstrap", label: "Bootstrap", icon: Zap },
   { key: "scaffold", label: "Scaffold", icon: Hammer },
+  { key: "module_graph", label: "Module Graph", icon: Layers },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
