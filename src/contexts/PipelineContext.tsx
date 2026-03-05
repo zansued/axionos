@@ -182,6 +182,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       ecosystem_drift: "ecosystem-drift-intelligence",
       supabase_schema_bootstrap: "supabase-schema-bootstrap",
       supabase_provisioning: "supabase-provisioning-engine",
+      domain_model_analysis: "ai-domain-model-analyzer",
       error_intelligence: "error-intelligence",
       build_repair: "autonomous-build-repair",
     };
