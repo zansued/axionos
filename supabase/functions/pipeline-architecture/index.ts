@@ -367,9 +367,9 @@ Crie o grafo de dependências para geração de código:
       { tokens: totalTokens, cost_usd: totalCost }
     );
 
-    // ── Trigger Preventive Architecture Validation (next stage) ──
-    await pipelineLog(ctx, "pipeline_preventive_validation_queued",
-      "🛡️ Preventive Architecture Validation queued as next stage");
+    // ── Trigger Architecture Simulation (next stage) ──
+    await pipelineLog(ctx, "pipeline_architecture_simulation_queued",
+      "🌀 Architecture Simulation queued as next stage");
 
     return jsonResponse({
       success: true,
