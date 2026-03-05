@@ -15,6 +15,7 @@ serve(async (req) => {
     architected: { field: "approved_at_discovery", nextStatus: "squad_ready" },
     squad_formed: { field: "approved_at_squad", nextStatus: "planning_ready" },
     planned: { field: "approved_at_planning", nextStatus: "in_progress" },
+    validating: { field: "approved_at_planning", nextStatus: "ready_to_publish" },
     ready_to_publish: { field: "approved_at_planning", nextStatus: "published" },
   };
 
