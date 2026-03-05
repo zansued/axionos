@@ -135,12 +135,12 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
       {/* Header + Macro Pipeline */}
       <Card className="border-border/50">
         <CardHeader className="pb-3">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <CardTitle className="font-display text-xl">{initiative.title}</CardTitle>
-              {initiative.description && <p className="text-sm text-muted-foreground mt-1 break-words">{initiative.description}</p>}
-            </div>
-            <div className="flex gap-2 shrink-0 flex-wrap justify-end">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <CardTitle className="font-display text-xl truncate">{initiative.title}</CardTitle>
+              </div>
+              <div className="flex gap-2 shrink-0 flex-wrap justify-end">
               {actions.map((action) => (
                 action.type === "reject" ? (
                   <Button
@@ -190,6 +190,8 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                 </Button>
               )}
             </div>
+            </div>
+            {initiative.description && <p className="text-sm text-muted-foreground line-clamp-2 break-words">{initiative.description}</p>}
           </div>
           {/* Macro pipeline steps — click completed stages to rollback */}
           <div className="flex items-center gap-1 mt-4 overflow-x-auto">
