@@ -10,6 +10,8 @@ export const PIPELINE_STEPS = [
   { key: "architecture_ready", label: "Arquitetura ▶", icon: Layers, color: "text-info", bg: "bg-info/10" },
   { key: "architecting", label: "Arquitetando", icon: Layers, color: "text-warning", bg: "bg-warning/10" },
   { key: "architected", label: "Arquitetado", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
+  { key: "simulating_architecture", label: "Simulação", icon: Layers, color: "text-warning", bg: "bg-warning/10" },
+  { key: "architecture_simulated", label: "Simulado", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
   { key: "validating_architecture", label: "Validação Preventiva", icon: ShieldCheck, color: "text-warning", bg: "bg-warning/10" },
   { key: "architecture_validated", label: "Arquitetura Validada", icon: ShieldCheck, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
@@ -28,6 +30,7 @@ export const PIPELINE_STEPS = [
 export const MACRO_STAGES = [
   { key: "discovery", label: "Compreensão", icon: Brain },
   { key: "architecture", label: "Arquitetura", icon: Layers },
+  { key: "simulation", label: "Simulação", icon: Layers },
   { key: "preventive_validation", label: "Validação Preventiva", icon: ShieldCheck },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
@@ -46,13 +49,14 @@ export function getMacroStageIndex(stageStatus: string): number {
   const s = stageStatus;
   if (["draft", "discovering", "discovered"].includes(s)) return 0;
   if (["architecture_ready", "architecting", "architected"].includes(s)) return 1;
-  if (["validating_architecture", "architecture_validated"].includes(s)) return 2;
-  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 3;
-  if (["planning_ready", "planning", "planned"].includes(s)) return 4;
-  if (["in_progress"].includes(s)) return 5;
-  if (["validating", "ready_to_publish"].includes(s)) return 6;
-  if (["published"].includes(s)) return 7;
-  if (["completed"].includes(s)) return 8;
+  if (["simulating_architecture", "architecture_simulated"].includes(s)) return 2;
+  if (["validating_architecture", "architecture_validated"].includes(s)) return 3;
+  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 4;
+  if (["planning_ready", "planning", "planned"].includes(s)) return 5;
+  if (["in_progress"].includes(s)) return 6;
+  if (["validating", "ready_to_publish"].includes(s)) return 7;
+  if (["published"].includes(s)) return 8;
+  if (["completed"].includes(s)) return 9;
   return 0;
 }
 
@@ -83,8 +87,19 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "architected":
       return [
+        { stage: "architecture_simulation", label: "🌀 Simulação de Arquitetura", type: "run" },
+        { stage: "approve", label: "Aprovar Arquitetura (pular simulação)", type: "approve" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "simulating_architecture":
+      return [
+        { stage: "architecture_simulation", label: "Re-executar Simulação", type: "run" },
+      ];
+    case "architecture_simulated":
+      return [
         { stage: "preventive_validation", label: "🛡️ Validação Preventiva", type: "run" },
-        { stage: "approve", label: "Aprovar Arquitetura (pular validação)", type: "approve" },
+        { stage: "architecture_simulation", label: "Re-executar Simulação", type: "run" },
+        { stage: "approve", label: "Aprovar (pular validação)", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "validating_architecture":
