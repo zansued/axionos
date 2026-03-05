@@ -48,7 +48,8 @@ export function getMacroStageIndex(stageStatus: string): number {
   const s = stageStatus;
   if (["draft", "discovering", "discovered"].includes(s)) return 0;
   if (["architecture_ready", "architecting", "architected"].includes(s)) return 1;
-  if (["validating_architecture", "architecture_validated"].includes(s)) return 2;
+  if (["simulating_architecture", "architecture_simulated"].includes(s)) return 2;
+  if (["validating_architecture", "architecture_validated"].includes(s)) return 3;
   if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 3;
   if (["planning_ready", "planning", "planned"].includes(s)) return 4;
   if (["in_progress"].includes(s)) return 5;
