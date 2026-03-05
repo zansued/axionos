@@ -28,6 +28,8 @@ export const PIPELINE_STEPS = [
   { key: "db_provisioned", label: "DB Provisioned ✓", icon: Database, color: "text-accent", bg: "bg-accent/10" },
   { key: "analyzing_domain", label: "Domain Analysis ▶", icon: Brain, color: "text-warning", bg: "bg-warning/10" },
   { key: "domain_analyzed", label: "Domain Analyzed ✓", icon: Brain, color: "text-accent", bg: "bg-accent/10" },
+  { key: "synthesizing_logic", label: "Business Logic ▶", icon: Cpu, color: "text-warning", bg: "bg-warning/10" },
+  { key: "logic_synthesized", label: "Business Logic ✓", icon: Cpu, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
   { key: "forming_squad", label: "Formando", icon: Users, color: "text-warning", bg: "bg-warning/10" },
   { key: "squad_formed", label: "Squad ✓", icon: Users, color: "text-accent", bg: "bg-accent/10" },
@@ -56,6 +58,7 @@ export const MACRO_STAGES = [
   { key: "schema_bootstrap", label: "Schema Bootstrap", icon: Database },
   { key: "db_provisioning", label: "DB Provisioning", icon: Database },
   { key: "domain_analysis", label: "Domain Analysis", icon: Brain },
+  { key: "business_logic", label: "Business Logic", icon: Cpu },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
@@ -83,14 +86,15 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["bootstrapping_schema", "schema_bootstrapped"].includes(s)) return 8;
   if (["provisioning_db", "db_provisioned"].includes(s)) return 9;
   if (["analyzing_domain", "domain_analyzed"].includes(s)) return 10;
-  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 11;
-  if (["planning_ready", "planning", "planned"].includes(s)) return 12;
-  if (["in_progress"].includes(s)) return 13;
-  if (["validating"].includes(s)) return 14;
-  if (["repairing_build", "build_repaired", "repair_failed"].includes(s)) return 15;
-  if (["ready_to_publish"].includes(s)) return 16;
-  if (["published"].includes(s)) return 17;
-  if (["completed"].includes(s)) return 18;
+  if (["synthesizing_logic", "logic_synthesized"].includes(s)) return 11;
+  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 12;
+  if (["planning_ready", "planning", "planned"].includes(s)) return 13;
+  if (["in_progress"].includes(s)) return 14;
+  if (["validating"].includes(s)) return 15;
+  if (["repairing_build", "build_repaired", "repair_failed"].includes(s)) return 16;
+  if (["ready_to_publish"].includes(s)) return 17;
+  if (["published"].includes(s)) return 18;
+  if (["completed"].includes(s)) return 19;
   return 0;
 }
 
@@ -214,8 +218,19 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "domain_analyzed":
       return [
+        { stage: "business_logic_synthesis", label: "⚙️ Business Logic Synthesis", type: "run" },
         { stage: "approve", label: "Aprovar Domain → Squad", type: "approve" },
         { stage: "domain_model_analysis", label: "Re-executar Domain Analysis", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "synthesizing_logic":
+      return [
+        { stage: "business_logic_synthesis", label: "Re-executar Business Logic", type: "run" },
+      ];
+    case "logic_synthesized":
+      return [
+        { stage: "approve", label: "Aprovar Logic → Squad", type: "approve" },
+        { stage: "business_logic_synthesis", label: "Re-executar Business Logic", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
