@@ -63,8 +63,8 @@ export default function Connections() {
     if (connId) setTestingConnectionId(connId);
     try {
       // Validate URL format
-      if (!url.match(/^https:\/\/.+\.supabase\.co$/)) {
-        toast.error("URL inválida. Formato esperado: https://xxxxx.supabase.co");
+      if (!url.match(/^https?:\/\/.+/)) {
+        toast.error("URL inválida. Informe uma URL válida (ex: https://xxxxx.supabase.co ou domínio próprio)");
         return false;
       }
       // Try to reach the Supabase REST endpoint
