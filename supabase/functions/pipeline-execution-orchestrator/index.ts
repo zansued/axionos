@@ -14,6 +14,7 @@ import {
   formatExecutionPlan,
   type DAGNode, type ExecutionDAG,
 } from "../_shared/dependency-scheduler.ts";
+import { computeIncrementalDiff, simpleHash, type IncrementalStats } from "../_shared/incremental-engine.ts";
 
 const MAX_WORKERS = 6;
 const MAX_RETRIES = 2;
@@ -130,20 +131,53 @@ serve(async (req) => {
     }
 
     const projectStructure = allProjectFiles.map(f => `- ${f.file_path}: ${f.description}`).join("\n");
+    const generatedFiles: Record<string, string> = {};
 
-    // ── Build DAG ──
-    const dag = await buildExecutionDAG(ctx, allSubtasks.map(st => ({ ...st, story_id: st.story_id })));
+    // ── Incremental Detection ──
+    const incremental = await computeIncrementalDiff(ctx, allSubtasks.map(st => ({ ...st, story_id: st.story_id })));
+    let incrementalStats: IncrementalStats = incremental.stats;
+
+    if (incremental.stats.cleanFiles > 0) {
+      await pipelineLog(ctx, "incremental_detection",
+        `Incremental: ${incremental.stats.cleanFiles} clean, ${incremental.stats.dirtyFiles} dirty (${incremental.stats.newFiles} new, ${incremental.stats.hashMismatch} changed, ${incremental.stats.cascadeDirty} cascade). Savings: ~${incremental.stats.savingsPercent}%`,
+        incremental.stats
+      );
+    }
+
+    // Filter to only dirty subtasks for execution
+    const dirtySubtasks = allSubtasks.filter(st => {
+      if (!st.file_path) return true; // non-file subtasks always run
+      return incremental.dirtySubtaskIds.has(st.id);
+    });
+
+    // For clean subtasks, mark them as skipped and load their existing output
+    for (const st of allSubtasks) {
+      if (st.file_path && incremental.cleanFilePaths.has(st.file_path)) {
+        // Load existing output into generatedFiles for context injection
+        const { data: existing } = await serviceClient.from("story_subtasks")
+          .select("output").eq("id", st.id).single();
+        if (existing?.output) {
+          generatedFiles[st.file_path] = existing.output;
+        }
+      }
+    }
+
+    // ── Build DAG (only dirty file subtasks) ──
+    const dirtyFileSubtasks = dirtySubtasks.filter(st => !!st.file_path);
+    const dag = await buildExecutionDAG(ctx, dirtyFileSubtasks.map(st => ({ ...st, story_id: st.story_id })));
     const executionPlan = formatExecutionPlan(dag);
     await pipelineLog(ctx, "dag_execution_plan", executionPlan, {
       total_nodes: dag.totalNodes, total_waves: dag.waves.length,
+      incremental: true, skipped: incremental.stats.cleanFiles,
     });
 
-    const nonFileSubtasks = allSubtasks.filter(st => !st.file_path);
+    const nonFileSubtasks = dirtySubtasks.filter(st => !st.file_path);
 
     // ── Execution state ──
     let totalTokens = 0, totalCost = 0, executedCount = 0, failedCount = 0, codeFilesGenerated = 0;
-    const generatedFiles: Record<string, string> = {};
+    // generatedFiles already pre-populated with clean file outputs above
     const totalNodes = dag.totalNodes + nonFileSubtasks.length;
+    const skippedCount = incremental.stats.cleanFiles;
     const retryCount: Record<string, number> = {};
 
     const updateProgress = async (currentFile?: string, currentAgent?: string, waveNum?: number) => {
@@ -158,6 +192,8 @@ serve(async (req) => {
           current_wave: waveNum, total_waves: dag.waves.length,
           chain_of_agents: true, started_at: new Date().toISOString(),
           status: "running", scheduler: "swarm",
+          incremental: true, skipped: skippedCount,
+          savings_percent: incremental.stats.savingsPercent,
         },
       }).eq("id", ctx.initiativeId);
     };
@@ -363,6 +399,8 @@ serve(async (req) => {
         code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
         chain_of_agents: true, status: "completed", completed_at: new Date().toISOString(),
         scheduler: "swarm", waves_executed: waveNum, max_workers: MAX_WORKERS,
+        incremental: true, skipped: skippedCount,
+        savings_percent: incremental.stats.savingsPercent,
       },
     }).eq("id", ctx.initiativeId);
 
@@ -371,11 +409,12 @@ serve(async (req) => {
       total_tokens: totalTokens, waves_executed: waveNum,
       chain: ["code_architect", "developer", "integration_agent"],
       scheduler: "swarm", max_workers: MAX_WORKERS,
+      skipped: skippedCount, savings_percent: incremental.stats.savingsPercent,
     }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
 
     await pipelineLog(ctx, "orchestrator_complete",
-      `Orchestrator concluído: ${executedCount} arquivos (${codeFilesGenerated} código) em ${waveNum} waves, ${failedCount} falhas, ${MAX_WORKERS} max workers`,
-      { total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated, waves: waveNum }
+      `Orchestrator concluído: ${executedCount} gerados, ${skippedCount} reutilizados (${incremental.stats.savingsPercent}% economia), ${failedCount} falhas, ${waveNum} waves`,
+      { total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated, waves: waveNum, skipped: skippedCount }
     );
 
     // ── Memory extraction ──

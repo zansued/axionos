@@ -10,6 +10,7 @@ import { pipelineLog, recordAgentMessage, createJob, completeJob, failJob } from
 import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
 import { generateBrainContext, upsertNode, getNodeByPath, updateNodeStatus, recordError } from "../_shared/brain-helpers.ts";
 import { updateBrainEdgesFromImports } from "../_shared/dependency-scheduler.ts";
+import { simpleHash } from "../_shared/incremental-engine.ts";
 import type { PipelineContext } from "../_shared/pipeline-helpers.ts";
 
 interface WorkerPayload {
@@ -241,17 +242,21 @@ Verifique integração e retorne o código final (corrigido se necessário).`
       });
     }
 
-    // ── Update Project Brain ──
+    // ── Update Project Brain with content hash ──
+    const contentHash = simpleHash(codeContent);
     try {
       const existingNode = await getNodeByPath(ctx, payload.filePath);
       if (existingNode) {
-        await updateNodeStatus(ctx, existingNode.id, "generated");
+        await ctx.serviceClient.from("project_brain_nodes").update({
+          status: "generated",
+          content_hash: contentHash,
+        }).eq("id", existingNode.id);
       } else {
         await upsertNode(ctx, {
           node_type: payload.nodeType as any,
           name: payload.fileName,
           file_path: payload.filePath,
-          content_hash: String(codeContent.length),
+          content_hash: contentHash,
           status: "generated",
         });
       }

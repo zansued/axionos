@@ -163,13 +163,19 @@
 
 ---
 
-## 🔜 Próximos Passos (Fases Pendentes)
+## Fase 15 — Incremental Re-execution ✅
 
-### Fase 15 — Incremental Re-execution
-- [ ] Reject re-gera apenas arquivos afetados (não reset total)
-- [ ] Comparação via `content_hash` no Project Brain
-- [ ] Diff-based rework mostrando o que mudou
-- [ ] Versionamento de arquivos gerados
+- [x] Engine de detecção incremental (`incremental-engine.ts`) com hash DJB2
+- [x] Classificação dirty/clean por `content_hash` no Project Brain
+- [x] Propagação em cascata: dependentes de nós dirty são marcados dirty
+- [x] Orchestrator filtra subtasks e só re-gera dirty nodes
+- [x] Reutiliza outputs existentes de subtasks limpas para context injection
+- [x] Worker armazena `content_hash` determinístico via `simpleHash`
+- [x] UI mostra badge "Incremental", contagem de reusados e % de economia
+
+---
+
+## 🔜 Próximos Passos (Fases Pendentes)
 
 ### Fase 16 — Vector Embeddings (pgvector)
 - [ ] Adicionar coluna de embedding aos `project_brain_nodes`

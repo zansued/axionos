@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Cpu, Loader2, CheckCircle2, AlertTriangle, DollarSign, Zap } from "lucide-react";
+import { Cpu, Loader2, CheckCircle2, AlertTriangle, DollarSign, Zap, SkipForward, TrendingDown } from "lucide-react";
 
 interface ExecutionProgressProps {
   initiativeId: string;
@@ -25,13 +25,15 @@ interface ProgressData {
   status: string;
   started_at?: string;
   completed_at?: string;
+  incremental?: boolean;
+  skipped?: number;
+  savings_percent?: number;
 }
 
 export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgressProps) {
   const [progress, setProgress] = useState<ProgressData | null>(null);
 
   useEffect(() => {
-    // Fetch initial progress
     const fetchProgress = async () => {
       const { data } = await supabase
         .from("initiatives")
@@ -44,7 +46,6 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
     };
     fetchProgress();
 
-    // Subscribe to realtime updates
     const channel = supabase
       .channel(`execution-progress-${initiativeId}`)
       .on(
@@ -67,12 +68,12 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
     return () => { supabase.removeChannel(channel); };
   }, [initiativeId]);
 
-  // Only show during or after execution
   if (!progress || !progress.total || progress.total === 0) return null;
   if (stageStatus !== "in_progress" && progress.status !== "completed") return null;
 
   const isRunning = progress.status === "running";
   const isCompleted = progress.status === "completed";
+  const hasIncremental = progress.incremental && (progress.skipped || 0) > 0;
 
   return (
     <Card className={`border-border/50 ${isRunning ? "border-primary/30 bg-primary/5" : isCompleted ? "border-success/30 bg-success/5" : ""}`}>
@@ -93,12 +94,28 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
             {progress.chain_of_agents && (
               <Badge variant="secondary" className="text-[10px]">Chain-of-Agents</Badge>
             )}
+            {hasIncremental && (
+              <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-400">
+                <SkipForward className="h-3 w-3 mr-1" />
+                Incremental
+              </Badge>
+            )}
           </div>
           <span className="text-sm font-bold text-primary">{progress.percent}%</span>
         </div>
 
         {/* Progress bar */}
         <Progress value={progress.percent} className="h-2" />
+
+        {/* Incremental savings banner */}
+        {hasIncremental && (
+          <div className="flex items-center gap-2 text-[11px] bg-emerald-500/10 border border-emerald-500/20 rounded px-2 py-1.5">
+            <TrendingDown className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+            <span className="text-emerald-300">
+              <strong>{progress.skipped}</strong> arquivos reutilizados ({progress.savings_percent}% economia em tokens)
+            </span>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="flex items-center gap-4 text-[11px] text-muted-foreground flex-wrap">
@@ -109,7 +126,13 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
           {progress.code_files > 0 && (
             <span className="flex items-center gap-1">
               <Cpu className="h-3 w-3" />
-              {progress.code_files} arquivos
+              {progress.code_files} gerados
+            </span>
+          )}
+          {hasIncremental && (
+            <span className="flex items-center gap-1 text-emerald-400">
+              <SkipForward className="h-3 w-3" />
+              {progress.skipped} reusados
             </span>
           )}
           {progress.failed > 0 && (
