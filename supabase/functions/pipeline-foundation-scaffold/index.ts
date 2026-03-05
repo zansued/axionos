@@ -553,10 +553,11 @@ Return JSON: { "would_build": boolean, "issues": string[], "confidence": number 
         name: file.path.split("/").pop() || file.path,
         file_path: file.path,
         node_type: file.path.endsWith(".json") ? "config" : file.path.endsWith(".tsx") ? "component" : "file",
-        status: "scaffold",
+        status: "generated",
         metadata: {
           scaffold: true,
           required: file.required,
+          content: file.content,
           content_preview: file.content.slice(0, 200),
         },
       });
