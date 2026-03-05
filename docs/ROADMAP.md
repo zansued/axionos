@@ -207,8 +207,9 @@
 - [x] Exportação de relatórios CSV e PDF (iniciativas)
 - [x] Dark/Light theme refinements (melhor contraste, transições suaves)
 
-### Fase 19 — Governança Avançada
+### Fase 19 — Governança Avançada (Parcial)
+
 - [ ] Roles granulares por gate do pipeline
 - [ ] Approval chains com múltiplos aprovadores
-- [ ] Compliance e exportação de evidências
+- [x] Compliance e exportação de evidências (Audit Trail, Governança, Reviews com CSV/PDF)
 - [ ] Webhook notifications (Slack, Discord)
