@@ -8,13 +8,14 @@ import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob, recordAgentMessage } from "../_shared/pipeline-helpers.ts";
 import { generateBrainContext, recordError } from "../_shared/brain-helpers.ts";
-import { buildSmartContextWindow } from "../_shared/smart-context.ts";
+import { buildSmartContextWindow, buildSmartContextWithSemantic } from "../_shared/smart-context.ts";
 import {
   buildExecutionDAG, getReadyNodes, hasPendingNodes, markNodeStatus,
   formatExecutionPlan,
   type DAGNode, type ExecutionDAG,
 } from "../_shared/dependency-scheduler.ts";
 import { computeIncrementalDiff, simpleHash, type IncrementalStats } from "../_shared/incremental-engine.ts";
+import { semanticSearch, batchEmbedNodes } from "../_shared/embedding-helpers.ts";
 
 const MAX_WORKERS = 6;
 const MAX_RETRIES = 2;
@@ -207,17 +208,29 @@ serve(async (req) => {
       markNodeStatus(dag, node.id, "generating");
       await updateProgress(node.filePath, "worker_dispatched", waveNum);
 
-      // ── Smart Context Window: send only API surfaces instead of full files ──
+      // ── Smart Context Window + Semantic Search ──
       const depPaths = [...node.dependencies]
         .map(d => dag.nodes.get(d)?.filePath)
         .filter(Boolean) as string[];
 
-      const { context: smartDependencyContext, stats: contextStats } = buildSmartContextWindow(
-        generatedFiles,
-        node.filePath,
-        depPaths,
-        12000, // ~3K tokens budget
-      );
+      // Use semantic search to find related files beyond explicit dependencies
+      let semanticPaths: string[] = [];
+      try {
+        const semanticResults = await semanticSearch(
+          ctx,
+          `${node.filePath} ${node.description}`,
+          apiKey,
+          0.4,
+          5,
+        );
+        semanticPaths = semanticResults
+          .map(r => r.file_path)
+          .filter((fp): fp is string => !!fp && fp !== node.filePath && !depPaths.includes(fp));
+      } catch {}
+
+      const { context: smartDependencyContext, stats: contextStats } = semanticPaths.length > 0
+        ? buildSmartContextWithSemantic(generatedFiles, node.filePath, depPaths, semanticPaths, 12000)
+        : buildSmartContextWindow(generatedFiles, node.filePath, depPaths, 12000);
 
       // Log compression stats periodically
       if (executedCount % 5 === 0 && contextStats.compressionRatio > 0) {
@@ -437,11 +450,23 @@ serve(async (req) => {
       }
     } catch {}
 
+    // ── Batch embed any remaining unembedded nodes ──
+    try {
+      const embedResult = await batchEmbedNodes(ctx, apiKey, 30);
+      if (embedResult.embedded > 0) {
+        await pipelineLog(ctx, "embeddings_batch",
+          `Embeddings gerados: ${embedResult.embedded} nós`,
+          embedResult
+        );
+      }
+    } catch {}
+
     return jsonResponse({
       success: true, executed: executedCount, failed: failedCount,
       code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
-      job_id: masterJobId, waves_executed: waveNum,
+      job_id: masterJobId, waves_executed: waveNum, skipped: skippedCount,
       scheduler: "swarm", max_workers: MAX_WORKERS,
+      savings_percent: incremental.stats.savingsPercent,
     });
 
   } catch (e) {

@@ -1164,6 +1164,9 @@ export type Database = {
         Row: {
           content_hash: string | null
           created_at: string
+          embedded_at: string | null
+          embedding: string | null
+          embedding_model: string | null
           file_path: string | null
           id: string
           initiative_id: string
@@ -1178,6 +1181,9 @@ export type Database = {
         Insert: {
           content_hash?: string | null
           created_at?: string
+          embedded_at?: string | null
+          embedding?: string | null
+          embedding_model?: string | null
           file_path?: string | null
           id?: string
           initiative_id: string
@@ -1192,6 +1198,9 @@ export type Database = {
         Update: {
           content_hash?: string | null
           created_at?: string
+          embedded_at?: string | null
+          embedding?: string | null
+          embedding_model?: string | null
           file_path?: string | null
           id?: string
           initiative_id?: string
@@ -1903,6 +1912,16 @@ export type Database = {
         Args: { p_initiative_id: string }
         Returns: undefined
       }
+      get_unembedded_nodes: {
+        Args: { p_initiative_id: string; p_limit?: number }
+        Returns: {
+          file_path: string
+          id: string
+          metadata: Json
+          name: string
+          node_type: string
+        }[]
+      }
       get_user_org_role: {
         Args: { _org_id: string; _user_id: string }
         Returns: Database["public"]["Enums"]["org_role"]
@@ -1910,6 +1929,24 @@ export type Database = {
       is_org_member: {
         Args: { _org_id: string; _user_id: string }
         Returns: boolean
+      }
+      match_brain_nodes: {
+        Args: {
+          match_count?: number
+          match_initiative_id: string
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          content_hash: string
+          file_path: string
+          id: string
+          metadata: Json
+          name: string
+          node_type: string
+          similarity: number
+          status: string
+        }[]
       }
     }
     Enums: {

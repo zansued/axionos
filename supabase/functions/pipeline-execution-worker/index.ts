@@ -11,6 +11,7 @@ import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-saniti
 import { generateBrainContext, upsertNode, getNodeByPath, updateNodeStatus, recordError } from "../_shared/brain-helpers.ts";
 import { updateBrainEdgesFromImports } from "../_shared/dependency-scheduler.ts";
 import { simpleHash } from "../_shared/incremental-engine.ts";
+import { embedBrainNode } from "../_shared/embedding-helpers.ts";
 import type { PipelineContext } from "../_shared/pipeline-helpers.ts";
 
 interface WorkerPayload {
@@ -242,17 +243,19 @@ Verifique integração e retorne o código final (corrigido se necessário).`
       });
     }
 
-    // ── Update Project Brain with content hash ──
+    // ── Update Project Brain with content hash + embedding ──
     const contentHash = simpleHash(codeContent);
     try {
       const existingNode = await getNodeByPath(ctx, payload.filePath);
+      let nodeId: string;
       if (existingNode) {
         await ctx.serviceClient.from("project_brain_nodes").update({
           status: "generated",
           content_hash: contentHash,
         }).eq("id", existingNode.id);
+        nodeId = existingNode.id;
       } else {
-        await upsertNode(ctx, {
+        nodeId = await upsertNode(ctx, {
           node_type: payload.nodeType as any,
           name: payload.fileName,
           file_path: payload.filePath,
@@ -261,6 +264,13 @@ Verifique integração e retorne o código final (corrigido se necessário).`
         });
       }
       await updateBrainEdgesFromImports(ctx, payload.filePath, codeContent);
+
+      // Generate embedding asynchronously (non-blocking)
+      embedBrainNode(
+        ctx, nodeId,
+        `File: ${payload.filePath}\nType: ${payload.fileType}\nDescription: ${payload.description}\n\n${codeContent.slice(0, 3000)}`,
+        apiKey,
+      ).catch(e => console.warn("[worker] Embedding generation failed:", e));
     } catch (e) { console.error("Brain update error:", e); }
 
     if (jobId) await completeJob(ctx, jobId, {

@@ -175,13 +175,23 @@
 
 ---
 
-## 🔜 Próximos Passos (Fases Pendentes)
+## Fase 16 — Vector Embeddings (pgvector) ✅
 
-### Fase 16 — Vector Embeddings (pgvector)
-- [ ] Adicionar coluna de embedding aos `project_brain_nodes`
-- [ ] Gerar embeddings durante criação de nós
-- [ ] Similarity search para context injection inteligente
-- [ ] Substituir truncamento por relevância semântica
+- [x] Extensão pgvector habilitada com coluna `embedding vector(768)` em `project_brain_nodes`
+- [x] Colunas `embedding_model` e `embedded_at` para rastreabilidade
+- [x] Índice IVFFlat para busca vetorial rápida
+- [x] Função `match_brain_nodes` para similarity search por cosine distance
+- [x] Função `get_unembedded_nodes` para processamento em lote
+- [x] `embedding-helpers.ts`: geração de embeddings via Lovable AI Gateway
+- [x] Worker gera embedding automaticamente após cada arquivo
+- [x] Orchestrator executa batch embedding pós-execução
+- [x] Semantic search integrada ao Smart Context Window
+- [x] Edge Function `generate-embeddings` para embedding on-demand
+- [x] Fallback determinístico (hash-based) quando AI falha
+
+---
+
+## 🔜 Próximos Passos (Fases Pendentes)
 
 ### Fase 17 — Templates de Iniciativas
 - [ ] Modelos pré-prontos (SaaS, API REST, Landing Page, E-commerce, Dashboard)
