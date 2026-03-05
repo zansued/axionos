@@ -193,10 +193,12 @@
 
 ## 🔜 Próximos Passos (Fases Pendentes)
 
-### Fase 17 — Templates de Iniciativas
-- [ ] Modelos pré-prontos (SaaS, API REST, Landing Page, E-commerce, Dashboard)
-- [ ] Pre-popula discovery_payload + architecture
-- [ ] Acelera as 2 primeiras camadas do pipeline
+### Fase 17 — Templates de Iniciativas ✅
+
+- [x] 6 templates pré-prontos (SaaS, API REST, Landing Page, E-commerce, Dashboard, CRM)
+- [x] Template picker integrado ao dialog de criação
+- [x] Pre-popula discovery_payload + campos de discovery (target_user, stack, complexity, risk, mvp)
+- [x] Acelera as 2 primeiras camadas do pipeline
 
 ### Fase 18 — UX & Polish
 - [ ] Atalhos de teclado

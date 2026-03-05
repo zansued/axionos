@@ -10,6 +10,7 @@ import { getUserFriendlyError } from "@/lib/error-utils";
 import { InitiativeList } from "@/components/initiatives/InitiativeList";
 import { InitiativeDetail } from "@/components/initiatives/InitiativeDetail";
 import { CreateInitiativeDialog } from "@/components/initiatives/CreateInitiativeDialog";
+import type { InitiativeTemplate } from "@/components/initiatives/initiative-templates";
 import { SLABreachAlerts } from "@/components/governance/SLABreachAlerts";
 import { useSLABreaches } from "@/hooks/useStageSLA";
 import { Card, CardContent } from "@/components/ui/card";
@@ -69,20 +70,29 @@ export default function Initiatives() {
   });
 
   const createMutation = useMutation({
-    mutationFn: async ({ title, description, referenceUrl }: { title: string; description: string; referenceUrl?: string }) => {
+    mutationFn: async ({ title, description, referenceUrl, template }: { title: string; description: string; referenceUrl?: string; template?: InitiativeTemplate }) => {
       if (!currentOrg || !user) throw new Error("Sem organização");
+      const insertData: any = {
+        title,
+        description: description || null,
+        idea_raw: description || title,
+        organization_id: currentOrg.id,
+        user_id: user.id,
+        stage_status: "draft",
+        status: "idea",
+        reference_url: referenceUrl || null,
+      };
+      if (template) {
+        insertData.target_user = template.discoveryHints.targetUser;
+        insertData.suggested_stack = template.discoveryHints.suggestedStack;
+        insertData.complexity = template.discoveryHints.complexity;
+        insertData.risk_level = template.discoveryHints.riskLevel;
+        insertData.mvp_scope = template.discoveryHints.mvpScope;
+        insertData.discovery_payload = { template_id: template.id, template_name: template.name, category: template.category };
+      }
       const { data, error } = await supabase
         .from("initiatives")
-        .insert({
-          title,
-          description: description || null,
-          idea_raw: description || title,
-          organization_id: currentOrg.id,
-          user_id: user.id,
-          stage_status: "draft" as any,
-          status: "idea",
-          reference_url: referenceUrl || null,
-        } as any)
+        .insert(insertData)
         .select().single();
       if (error) throw error;
       return data;
@@ -136,7 +146,7 @@ export default function Initiatives() {
             <p className="text-muted-foreground mt-1">Da ideia ao software — pipeline governado com aprovação humana</p>
           </div>
           <CreateInitiativeDialog
-            onSubmit={(title, desc, referenceUrl) => createMutation.mutate({ title, description: desc, referenceUrl })}
+            onSubmit={(title, desc, referenceUrl, template) => createMutation.mutate({ title, description: desc, referenceUrl, template })}
             isPending={createMutation.isPending}
           />
         </div>
