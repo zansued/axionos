@@ -162,6 +162,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "dependencies_analyzed":
       return [
+        { stage: "ecosystem_drift", label: "🌐 Ecosystem Drift Analysis", type: "run" },
         { stage: "approve", label: "Aprovar Dependencies", type: "approve" },
         { stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
