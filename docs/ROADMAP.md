@@ -1,4 +1,4 @@
-# SynkrAIOS — Roadmap de Implementação
+# AxionOS — Roadmap de Implementação
 
 > Checklist ordenado do que falta para completar o AIOS.  
 > Marque com `[x]` conforme for concluído.  
