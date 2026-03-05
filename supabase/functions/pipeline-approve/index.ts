@@ -6,17 +6,33 @@ import { pipelineLog, updateInitiative } from "../_shared/pipeline-helpers.ts";
 serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-approve");
   if (result instanceof Response) return result;
-  const { initiative, ctx } = result;
+  const { initiative, ctx, serviceClient } = result;
 
   const currentStatus = initiative.stage_status;
+
+  // Check gate permission
+  const { data: hasPermission } = await serviceClient.rpc("has_gate_permission", {
+    _user_id: ctx.userId,
+    _org_id: ctx.organizationId,
+    _stage: currentStatus,
+    _action_type: "approve",
+  });
+
+  if (hasPermission === false) {
+    return errorResponse("Você não tem permissão para aprovar este gate. Contate um administrador.", 403);
+  }
 
   const approvalMap: Record<string, { field: string; nextStatus: string }> = {
     discovered: { field: "approved_at_discovery", nextStatus: "architecture_ready" },
     architected: { field: "approved_at_discovery", nextStatus: "squad_ready" },
+    architecture_simulated: { field: "approved_at_discovery", nextStatus: "squad_ready" },
+    architecture_validated: { field: "approved_at_discovery", nextStatus: "scaffolding" },
+    scaffolded: { field: "approved_at_discovery", nextStatus: "squad_ready" },
     squad_formed: { field: "approved_at_squad", nextStatus: "planning_ready" },
     planned: { field: "approved_at_planning", nextStatus: "in_progress" },
     validating: { field: "approved_at_planning", nextStatus: "ready_to_publish" },
     ready_to_publish: { field: "approved_at_planning", nextStatus: "published" },
+    published: { field: "approved_at_planning", nextStatus: "completed" },
   };
 
   const approval = approvalMap[currentStatus];
