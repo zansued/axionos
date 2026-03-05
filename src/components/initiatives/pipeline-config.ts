@@ -102,7 +102,6 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       return [
         { stage: "preventive_validation", label: "🛡️ Validação Preventiva", type: "run" },
         { stage: "architecture_simulation", label: "Re-executar Simulação", type: "run" },
-        { stage: "approve", label: "Aprovar (pular validação)", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "validating_architecture":
