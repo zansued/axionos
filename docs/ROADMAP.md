@@ -91,10 +91,10 @@
 
 ## Fase 8 — Observabilidade & Custos
 
-- [ ] Dashboard de custo por iniciativa (tokens + USD)
-- [ ] Dashboard de custo por agente
-- [ ] Tempo médio por estágio do pipeline
-- [ ] Alertas quando budget mensal atinge threshold
+- [x] Dashboard de custo por iniciativa (tokens + USD)
+- [x] Dashboard de custo por agente
+- [x] Tempo médio por estágio do pipeline
+- [x] Alertas quando budget mensal atinge threshold
 - [ ] Exportação de relatórios (CSV/PDF)
 
 ---
