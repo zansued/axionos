@@ -51,6 +51,7 @@ export const MACRO_STAGES = [
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
   { key: "validation", label: "Validação", icon: Shield },
+  { key: "build_repair", label: "Build Repair", icon: Wrench },
   { key: "publish", label: "Publicação", icon: GitBranch },
   { key: "done", label: "Concluído", icon: CheckCircle2 },
 ];
