@@ -2078,6 +2078,30 @@ export type Database = {
         | "ui_generated"
         | "learning_system"
         | "system_learned"
+        | "opportunity_discovering"
+        | "opportunity_discovered"
+        | "analyzing_market_signals"
+        | "market_signals_analyzed"
+        | "validating_product"
+        | "product_validated"
+        | "strategizing_revenue"
+        | "revenue_strategized"
+        | "observing_product"
+        | "product_observed"
+        | "analyzing_product_metrics"
+        | "product_metrics_analyzed"
+        | "analyzing_user_behavior"
+        | "user_behavior_analyzed"
+        | "optimizing_growth"
+        | "growth_optimized"
+        | "evolving_product"
+        | "product_evolved"
+        | "evolving_architecture"
+        | "architecture_evolved"
+        | "managing_portfolio"
+        | "portfolio_managed"
+        | "evolving_system"
+        | "system_evolved"
       initiative_status:
         | "idea"
         | "discovery"
@@ -2310,6 +2334,30 @@ export const Constants = {
         "ui_generated",
         "learning_system",
         "system_learned",
+        "opportunity_discovering",
+        "opportunity_discovered",
+        "analyzing_market_signals",
+        "market_signals_analyzed",
+        "validating_product",
+        "product_validated",
+        "strategizing_revenue",
+        "revenue_strategized",
+        "observing_product",
+        "product_observed",
+        "analyzing_product_metrics",
+        "product_metrics_analyzed",
+        "analyzing_user_behavior",
+        "user_behavior_analyzed",
+        "optimizing_growth",
+        "growth_optimized",
+        "evolving_product",
+        "product_evolved",
+        "evolving_architecture",
+        "architecture_evolved",
+        "managing_portfolio",
+        "portfolio_managed",
+        "evolving_system",
+        "system_evolved",
       ],
       initiative_status: [
         "idea",

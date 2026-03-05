@@ -157,6 +157,12 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
   // Map stage names to dedicated edge function names
   const getStageFunctionName = (stage: string): string => {
     const functionMap: Record<string, string> = {
+      // v3 Venture Intelligence Layer
+      opportunity_discovery: "opportunity-discovery-engine",
+      market_signal_analysis: "market-signal-analyzer",
+      product_validation: "product-validation-engine",
+      revenue_strategy: "revenue-strategy-engine",
+      // v2 Core Pipeline
       comprehension: "pipeline-comprehension",
       architecture: "pipeline-architecture",
       discovery: "pipeline-discovery",
@@ -190,6 +196,15 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       adaptive_learning: "adaptive-learning-engine",
       error_intelligence: "error-intelligence",
       build_repair: "autonomous-build-repair",
+      // v3 Growth & Evolution Layer
+      observability: "observability-engine",
+      product_analytics: "product-analytics-engine",
+      user_behavior_analysis: "user-behavior-analyzer",
+      growth_optimization: "growth-optimization-engine",
+      product_evolution: "product-evolution-engine",
+      architecture_evolution: "architecture-evolution-engine",
+      portfolio_management: "startup-portfolio-manager",
+      system_evolution: "system-evolution-engine",
     };
     return functionMap[stage] || "run-initiative-pipeline";
   };
@@ -231,6 +246,12 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           throw new Error(message);
         }
         const stageLabels: Record<string, string> = {
+          // v3 Venture Intelligence Layer
+          opportunity_discovery: `Opportunity Discovery: ${result.opportunities_found || 0} oportunidades, viability score ${result.viability_score || 0}/100 ✅`,
+          market_signal_analysis: `Market Signals: demand ${result.demand_level || "?"}, competition ${result.competition_level || "?"}, viability ${result.viability_index || 0}/100 ✅`,
+          product_validation: `Product Validation: score ${result.validation_score || 0}/100, adoption ${result.estimated_adoption || "?"}, risk ${result.risk_level || "?"} ✅`,
+          revenue_strategy: `Revenue Strategy: ${result.pricing_model || "SaaS"}, ${result.tiers_count || 0} tiers definidos ✅`,
+          // v2 Core Pipeline
           comprehension: `Compreensão concluída: 4 agentes (Vision, Market, Requirements, Product Architect) ✅`,
           architecture: `Arquitetura técnica concluída: 4 agentes (System, Data, API Architect, Dependency Planner) ✅`,
           architecture_simulation: `Simulação de arquitetura concluída: score ${result.score || 0}/100, ${result.repairs?.length || 0} reparos ${result.passed ? "✅" : "⚠️"}`,
@@ -273,6 +294,15 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           build_repair: result.success
             ? `Build Repair: attempt ${result.attempt || 1}, ${result.patches_applied || 0} patches, commit ${(result.commit_sha || "").slice(0, 7)} ✅`
             : `Build Repair: attempt ${result.attempt || 1} falhou — ${result.message || "erro"} ❌`,
+          // v3 Growth & Evolution Layer
+          observability: `Observability: ${result.metrics_collected || 0} métricas coletadas ✅`,
+          product_analytics: `Product Analytics: ${result.users_tracked || 0} usuários, ${result.events_analyzed || 0} eventos ✅`,
+          user_behavior_analysis: `User Behavior: ${result.patterns_detected || 0} padrões, ${result.friction_points || 0} pontos de fricção ✅`,
+          growth_optimization: `Growth: ${result.optimizations_suggested || 0} otimizações sugeridas ✅`,
+          product_evolution: `Product Evolution: ${result.features_added || 0} features, ${result.modules_removed || 0} removidos ✅`,
+          architecture_evolution: `Architecture Evolution: ${result.patterns_learned || 0} padrões aprendidos ✅`,
+          portfolio_management: `Portfolio: ${result.products_managed || 0} produtos gerenciados ✅`,
+          system_evolution: `System Evolution: ${result.improvements_applied || 0} melhorias aplicadas ✅`,
         };
         const label = stageLabels[stage] || "Concluído!";
         toast({ title: label });
@@ -351,7 +381,13 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
   const rollbackToStage = useCallback(
     async (initiativeId: string, macroKey: string) => {
     const rollbackMap: Record<string, string> = {
-      discovery: "draft",
+      // v3 Venture Intelligence
+      opportunity_discovery: "draft",
+      market_signals: "opportunity_discovered",
+      product_validation: "market_signals_analyzed",
+      revenue_strategy: "product_validated",
+      // v2 Core Pipeline
+      discovery: "revenue_strategized",
       architecture: "architecture_ready",
       bootstrap: "architecture_validated",
       scaffold: "bootstrapped",
@@ -370,6 +406,16 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       validation: "in_progress",
       build_repair: "validating",
       publish: "ready_to_publish",
+      // v3 Growth & Evolution
+      observability: "published",
+      product_analytics: "product_observed",
+      user_behavior: "product_metrics_analyzed",
+      growth_optimization: "user_behavior_analyzed",
+      adaptive_learning: "growth_optimized",
+      product_evolution: "system_learned",
+      architecture_evolution: "product_evolved",
+      portfolio_management: "architecture_evolved",
+      system_evolution: "portfolio_managed",
     };
       const targetStatus = rollbackMap[macroKey];
       if (!targetStatus) return;
