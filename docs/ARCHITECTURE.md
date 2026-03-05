@@ -1,4 +1,4 @@
-# SynkrAIOS — Architectural Review & Evolution Plan
+# AxionOS — Architectural Review & Evolution Plan
 
 > Deep technical analysis of the AI-orchestrated software generation system.  
 > Last updated: 2026-03-05
