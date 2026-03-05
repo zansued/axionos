@@ -173,6 +173,8 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       brain_sync: "brain-sync",
       drift_detection: "pipeline-drift-detection",
       runtime_validation: "pipeline-runtime-validation",
+      preventive_validation: "pipeline-preventive-validation",
+      error_intelligence: "error-intelligence",
     };
     return functionMap[stage] || "run-initiative-pipeline";
   };

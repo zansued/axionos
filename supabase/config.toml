@@ -86,3 +86,9 @@ verify_jwt = false
 
 [functions.github-ci-webhook]
 verify_jwt = false
+
+[functions.error-intelligence]
+verify_jwt = false
+
+[functions.pipeline-preventive-validation]
+verify_jwt = false
