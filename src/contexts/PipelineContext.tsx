@@ -178,6 +178,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       bootstrap_intelligence: "project-bootstrap-intelligence",
       foundation_scaffold: "pipeline-foundation-scaffold",
       module_graph_simulation: "pipeline-module-graph-simulation",
+      dependency_intelligence: "pipeline-dependency-intelligence",
       error_intelligence: "error-intelligence",
     };
     return functionMap[stage] || "run-initiative-pipeline";
