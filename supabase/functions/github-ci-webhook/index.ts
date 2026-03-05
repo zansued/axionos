@@ -403,7 +403,7 @@ async function handleGitHubEvent(
 
     // ── Trigger Build Self-Healing Pipeline ──
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const currentAttempt = (execProgress?.self_healing_attempt as number) || 0;
+    const currentAttempt = (existingProgressFail?.self_healing_attempt as number) || 0;
     try {
       const healResp = await fetch(`${supabaseUrl}/functions/v1/build-self-healing`, {
         method: "POST",
