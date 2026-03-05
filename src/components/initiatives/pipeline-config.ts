@@ -203,8 +203,19 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "db_provisioned":
       return [
+        { stage: "domain_model_analysis", label: "🧠 Domain Model Analysis", type: "run" },
         { stage: "approve", label: "Aprovar DB → Squad", type: "approve" },
         { stage: "supabase_provisioning", label: "Re-executar Provisioning", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "analyzing_domain":
+      return [
+        { stage: "domain_model_analysis", label: "Re-executar Domain Analysis", type: "run" },
+      ];
+    case "domain_analyzed":
+      return [
+        { stage: "approve", label: "Aprovar Domain → Squad", type: "approve" },
+        { stage: "domain_model_analysis", label: "Re-executar Domain Analysis", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
