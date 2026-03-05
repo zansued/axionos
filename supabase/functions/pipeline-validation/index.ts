@@ -4,14 +4,22 @@ import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 
+/**
+ * Camada 5 — Verificação
+ * 3 agentes especializados por artefato:
+ *   1. Static Analysis (Agente 15) — lint, tipos, imports, complexidade
+ *   2. Runtime QA     (Agente 16) — cenários de teste, edge cases, segurança
+ *   3. Fix Agent      (Agente 17) — corrige automaticamente issues encontrados
+ */
+
 serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-validation");
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey } = result;
 
-  const jobId = await createJob(ctx, "validation", { initiative_id: ctx.initiativeId, mode: "batched" });
+  const jobId = await createJob(ctx, "validation", { initiative_id: ctx.initiativeId, mode: "layer5_verification" });
 
-  // Mark stale validation jobs as failed
+  // Mark stale jobs as failed
   if (jobId) {
     await serviceClient.from("initiative_jobs").update({
       status: "failed", error: "Execução interrompida antes de finalizar (timeout/redeploy).",
@@ -19,9 +27,10 @@ serve(async (req) => {
     }).eq("initiative_id", ctx.initiativeId).eq("stage", "validation").eq("status", "running").neq("id", jobId);
   }
 
-  await pipelineLog(ctx, "pipeline_validation_start", "Iniciando validação de qualidade dos artefatos...");
+  await pipelineLog(ctx, "pipeline_validation_start", "Iniciando verificação: Static Analysis → Runtime QA → Fix Agent...");
 
   try {
+    // ── Collect artifacts ──
     const { data: stories } = await serviceClient.from("stories").select("id").eq("initiative_id", ctx.initiativeId);
     if (!stories || stories.length === 0) throw new Error("Nenhuma story encontrada");
 
@@ -39,235 +48,231 @@ serve(async (req) => {
     if (!artifacts || artifacts.length === 0) throw new Error("Nenhum artefato encontrado para validar");
 
     const artifactsToValidate = artifacts.filter((a: any) => a.status !== "approved");
-    const VALIDATION_BATCH_SIZE = 8;
-    const artifactsBatch = artifactsToValidate.slice(0, VALIDATION_BATCH_SIZE);
+    const BATCH_SIZE = 6;
+    const batch = artifactsToValidate.slice(0, BATCH_SIZE);
 
+    // All already approved → skip
     if (artifactsToValidate.length === 0) {
       await updateInitiative(ctx, { stage_status: "ready_to_publish" });
       if (jobId) await completeJob(ctx, jobId, {
-        artifacts_validated: artifacts.length, passed: artifacts.length, failed: 0, reworked: 0,
-        auto_approved: 0, auto_rejected: 0, warnings: 0, remaining_to_validate: 0,
-        batch_incomplete: false, overall_pass: true, skipped: "all_already_approved",
+        artifacts_validated: artifacts.length, passed: artifacts.length, failed: 0, fixed: 0,
+        remaining_to_validate: 0, batch_incomplete: false, overall_pass: true, skipped: "all_already_approved",
       }, { model: "google/gemini-2.5-flash", costUsd: 0, durationMs: 0 });
-      return jsonResponse({
-        success: true, artifacts_validated: artifacts.length, passed: artifacts.length,
-        failed: 0, reworked: 0, auto_approved: 0, auto_rejected: 0, warnings: 0,
-        remaining_to_validate: 0, batch_incomplete: false, overall_pass: true, job_id: jobId,
-      });
+      return jsonResponse({ success: true, artifacts_validated: artifacts.length, passed: artifacts.length, failed: 0, fixed: 0, remaining_to_validate: 0, batch_incomplete: false, overall_pass: true, job_id: jobId });
     }
 
-    let totalTokens = 0, totalCost = 0, passCount = 0, failCount = 0, reworkedCount = 0;
-    let autoApprovedCount = 0, autoRejectedCount = 0;
+    // ── Fetch architecture context for Static Analysis ──
+    let archContext = "";
+    if (initiative.architecture_content) {
+      archContext = String(initiative.architecture_content).slice(0, 2000);
+    }
+
+    let totalTokens = 0, totalCost = 0;
+    let passCount = 0, failCount = 0, fixedCount = 0;
     const validationResults: any[] = [];
-    const MAX_REWORK_ATTEMPTS = 2;
     const APPROVAL_THRESHOLD = 70;
-    const REWORK_THRESHOLD = 50;
+    const MAX_FIX_ATTEMPTS = 2;
 
-    // Fetch architect for cross-review
-    let architectAgentForReview: any = null;
-    const { data: squadsForReview } = await serviceClient.from("squads")
-      .select("id, squad_members(role_in_squad, agents(id, name, role))")
-      .eq("initiative_id", ctx.initiativeId).limit(1);
-    if (squadsForReview?.[0]?.squad_members) {
-      const archMember = squadsForReview[0].squad_members.find((sm: any) => sm.role_in_squad === "architect");
-      architectAgentForReview = archMember?.agents || null;
-    }
+    // ── Process each artifact through the 3-agent chain ──
+    for (const artifact of batch) {
+      const artifactText = extractText(artifact.raw_output);
+      const agentName = (artifact as any).agents?.name || "?";
+      const isCode = artifact.type === "code";
+      let currentText = artifactText;
+      let fixAttempts = 0;
+      let finalResult: any = null;
 
-    for (const artifact of artifactsBatch) {
-      let currentOutput = artifact.raw_output;
-      let currentArtifactId = artifact.id;
-      let finalValidation: any = null;
-      let reworkAttempts = 0;
+      // ═══ AGENT 15: Static Analysis ═══
+      const staticResult = await callAI(apiKey,
+        `Você é o agente "Static Analysis" (Agente 15). Analise o artefato quanto a:
+- Lint: erros de sintaxe, nomes inconsistentes, formatação
+- Tipos: type safety, interfaces faltando, any desnecessário
+- Imports: dependências circulares, imports faltando ou não utilizados
+- Complexidade: funções longas (>50 linhas), nesting profundo (>3), alta complexidade ciclomática
+- Padrões: violações de Clean Architecture, naming conventions, SOLID
+${archContext ? `\n## Contexto Arquitetural\n${archContext}` : ""}
 
-      for (let attempt = 0; attempt <= MAX_REWORK_ATTEMPTS; attempt++) {
-        const artifactText = typeof currentOutput === "object"
-          ? (currentOutput as any)?.text || (currentOutput as any)?.content || JSON.stringify(currentOutput)
-          : String(currentOutput);
+Retorne APENAS JSON válido:
+{"static_score": 0-100, "issues": [{"severity": "error|warning|info", "category": "lint|types|imports|complexity|patterns", "message": "...", "suggestion": "..."}], "summary": "...", "imports_valid": true/false, "type_safety_score": 0-100, "complexity_score": 0-100}`,
+        `## Artefato: ${artifact.summary || "N/A"}\n- Tipo: ${artifact.type}\n- Agente: ${agentName}\n\n## Conteúdo\n${currentText.slice(0, 5000)}`,
+        true
+      );
+      totalTokens += staticResult.tokens; totalCost += staticResult.costUsd;
 
-        const validationStart = Date.now();
-        const aiResult = await callAI(apiKey,
-          `Você é um revisor de qualidade sênior. Analise o artefato e avalie sua qualidade. Retorne APENAS JSON válido. Seja rigoroso mas justo.`,
-          `## Artefato para validação\n- **Tipo**: ${artifact.type}\n- **Agente**: ${(artifact as any).agents?.name || "?"} (${(artifact as any).agents?.role || "?"})\n- **Resumo**: ${artifact.summary || "N/A"}\n${attempt > 0 ? `\n- **Tentativa de retrabalho**: ${attempt}/${MAX_REWORK_ATTEMPTS}` : ""}\n\n## Conteúdo\n${artifactText.slice(0, 5000)}\n\n## Avalie nos critérios (0-100 cada):\n{"scores": {"completeness": 0, "technical_quality": 0, "clarity": 0, "best_practices": 0, "actionability": 0}, "overall_score": 0, "result": "pass|fail|warning", "issues": [], "suggestions": [], "summary": "", "verdict": "approve|reject|request_changes"}\n\nRegras: overall_score >= ${APPROVAL_THRESHOLD} → approve; ${REWORK_THRESHOLD}-${APPROVAL_THRESHOLD - 1} → request_changes; < ${REWORK_THRESHOLD} → reject`,
-          true
-        );
+      let staticAnalysis: any;
+      try { staticAnalysis = JSON.parse(staticResult.content); }
+      catch { staticAnalysis = { static_score: 60, issues: [], summary: "Falha ao parsear", imports_valid: true, type_safety_score: 60, complexity_score: 60 }; }
 
-        let validation: any;
-        try { validation = JSON.parse(aiResult.content); }
-        catch { validation = { overall_score: 50, result: "warning", verdict: "request_changes", summary: "Falha ao parsear", issues: [], suggestions: [], scores: {} }; }
+      await persistValidationRun(serviceClient, artifact.id, "static_analysis", staticAnalysis, staticResult.durationMs);
+      await persistReview(serviceClient, artifact.id, user.id, "static_analysis", artifact.status, JSON.stringify(staticAnalysis));
 
-        const validationDuration = Date.now() - validationStart;
-        totalTokens += aiResult.tokens; totalCost += aiResult.costUsd;
+      // ═══ AGENT 16: Runtime QA ═══
+      const runtimeResult = await callAI(apiKey,
+        `Você é o agente "Runtime QA" (Agente 16). Analise o artefato quanto a comportamento em runtime:
+- Cenários de teste: happy path, edge cases, inputs inválidos
+- Segurança: XSS, injection, dados sensíveis expostos, auth bypass
+- Performance: N+1 queries, loops desnecessários, memory leaks
+- Resiliência: tratamento de erros, timeouts, retry logic, null safety
+- Integração: compatibilidade com APIs, contratos, schema de banco
 
-        await serviceClient.from("validation_runs").insert({
-          artifact_id: currentArtifactId,
-          type: attempt > 0 ? "ai_quality_review_post_rework" : "ai_quality_review",
-          result: validation.result || "warning",
-          logs: JSON.stringify({ scores: validation.scores, overall_score: validation.overall_score, issues: validation.issues, suggestions: validation.suggestions, summary: validation.summary, verdict: validation.verdict, attempt }),
-          duration: validationDuration,
-        });
+Retorne APENAS JSON:
+{"runtime_score": 0-100, "test_scenarios": [{"name": "...", "type": "happy|edge|error|security", "expected": "...", "risk": "low|medium|high"}], "security_issues": [], "performance_issues": [], "resilience_score": 0-100, "summary": "..."}`,
+        `## Artefato: ${artifact.summary || "N/A"}\n- Tipo: ${artifact.type}\n\n## Static Analysis Issues\n${JSON.stringify(staticAnalysis.issues?.slice(0, 10) || [])}\n\n## Conteúdo\n${currentText.slice(0, 5000)}`,
+        true
+      );
+      totalTokens += runtimeResult.tokens; totalCost += runtimeResult.costUsd;
 
-        await serviceClient.from("artifact_reviews").insert({
-          output_id: currentArtifactId, reviewer_id: user.id, action: "ai_analysis",
-          previous_status: artifact.status, new_status: artifact.status,
-          comment: JSON.stringify(validation),
-        });
+      let runtimeQA: any;
+      try { runtimeQA = JSON.parse(runtimeResult.content); }
+      catch { runtimeQA = { runtime_score: 60, test_scenarios: [], security_issues: [], performance_issues: [], resilience_score: 60, summary: "Falha ao parsear" }; }
 
-        finalValidation = validation;
-        const score = validation.overall_score || 0;
+      await persistValidationRun(serviceClient, artifact.id, "runtime_qa", runtimeQA, runtimeResult.durationMs);
+      await persistReview(serviceClient, artifact.id, user.id, "runtime_qa", artifact.status, JSON.stringify(runtimeQA));
 
-        // Architect cross-review for code artifacts
-        if (score >= APPROVAL_THRESHOLD && artifact.type === "code" && architectAgentForReview) {
-          try {
-            const archCrossReview = await callAI(apiKey,
-              `Você é o Architect "${architectAgentForReview.name}". Faça uma CROSS-REVIEW arquitetural.\nRetorne APENAS JSON: {"arch_approved": true/false, "arch_score": 0-100, "arch_issues": [], "arch_notes": ""}`,
-              `## Artefato: ${artifact.summary || "código"}\n## Conteúdo:\n${artifactText.slice(0, 4000)}`,
-              true
-            );
-            totalTokens += archCrossReview.tokens; totalCost += archCrossReview.costUsd;
-            let archFeedback: any;
-            try { archFeedback = JSON.parse(archCrossReview.content); }
-            catch { archFeedback = { arch_approved: true, arch_score: 80, arch_issues: [], arch_notes: "" }; }
+      // Combined score
+      const combinedScore = Math.round(((staticAnalysis.static_score || 0) + (runtimeQA.runtime_score || 0)) / 2);
+      const hasErrors = (staticAnalysis.issues || []).some((i: any) => i.severity === "error");
+      const hasSecurityIssues = (runtimeQA.security_issues || []).length > 0;
 
-            await serviceClient.from("validation_runs").insert({
-              artifact_id: currentArtifactId, type: "architect_cross_review",
-              result: archFeedback.arch_approved ? "pass" : "warning",
-              logs: JSON.stringify(archFeedback), duration: archCrossReview.durationMs,
-            });
-            await serviceClient.from("artifact_reviews").insert({
-              output_id: currentArtifactId, reviewer_id: user.id, action: "architect_cross_review",
-              previous_status: artifact.status, new_status: artifact.status,
-              comment: JSON.stringify(archFeedback),
-            });
+      // ═══ AGENT 17: Fix Agent (if needed) ═══
+      if (combinedScore < APPROVAL_THRESHOLD || hasErrors || hasSecurityIssues) {
+        for (let fixAttempt = 0; fixAttempt < MAX_FIX_ATTEMPTS; fixAttempt++) {
+          fixAttempts++;
+          const allIssues = [
+            ...(staticAnalysis.issues || []).filter((i: any) => i.severity !== "info").map((i: any) => `[${i.category}] ${i.message}${i.suggestion ? " → " + i.suggestion : ""}`),
+            ...(runtimeQA.security_issues || []).map((s: string) => `[security] ${s}`),
+            ...(runtimeQA.performance_issues || []).map((p: string) => `[performance] ${p}`),
+          ].join("\n");
 
-            if (!archFeedback.arch_approved && (archFeedback.arch_score || 0) < 60) {
-              validation.overall_score = Math.round((score + (archFeedback.arch_score || 50)) / 2);
-              validation.issues = [...(validation.issues || []), ...(archFeedback.arch_issues || [])];
-              finalValidation = validation;
-              if (validation.overall_score < APPROVAL_THRESHOLD) {
-                if (attempt < MAX_REWORK_ATTEMPTS) continue;
-                await serviceClient.from("agent_outputs").update({ status: "pending_review" }).eq("id", currentArtifactId);
-                failCount++; break;
-              }
-            }
-          } catch (archErr) { console.warn("Architect cross-review failed:", archErr); }
-        }
-
-        // Auto-approve
-        if (score >= APPROVAL_THRESHOLD) {
-          await serviceClient.from("agent_outputs").update({ status: "approved" }).eq("id", currentArtifactId);
-          await serviceClient.from("artifact_reviews").insert({
-            output_id: currentArtifactId, reviewer_id: user.id, action: "auto_approved",
-            previous_status: artifact.status, new_status: "approved",
-            comment: `Aprovado automaticamente. Score: ${score}/100. ${attempt > 0 ? `Após ${attempt} retrabalho(s).` : "Primeira análise."}`,
-          });
-          passCount++; autoApprovedCount++;
-          await pipelineLog(ctx, "artifact_auto_approved", `Artefato ${artifact.summary?.slice(0, 50)} aprovado (score ${score})`, { artifact_id: currentArtifactId, score, attempt });
-          break;
-        }
-
-        // Auto-reject
-        if (score < REWORK_THRESHOLD) {
-          await serviceClient.from("agent_outputs").update({ status: "rejected" }).eq("id", currentArtifactId);
-          await serviceClient.from("artifact_reviews").insert({
-            output_id: currentArtifactId, reviewer_id: user.id, action: "auto_rejected",
-            previous_status: artifact.status, new_status: "rejected",
-            comment: `Rejeitado. Score: ${score}/100. Problemas: ${(validation.issues || []).join("; ")}`,
-          });
-          failCount++; autoRejectedCount++;
-          break;
-        }
-
-        // Auto-rework
-        if (attempt < MAX_REWORK_ATTEMPTS) {
-          reworkAttempts++; reworkedCount++;
-          const feedbackForRework = [...(validation.issues || []).map((i: string) => `Problema: ${i}`), ...(validation.suggestions || []).map((s: string) => `Sugestão: ${s}`)].join("\n");
-
-          const reworkResult = await callAI(apiKey,
-            `Você é o agente "${(artifact as any).agents?.name || "Dev"}". Está fazendo RETRABALHO de um artefato que recebeu score ${score}/100. Corrija TODOS os problemas. Retorne o output COMPLETO corrigido.`,
-            `## Output Atual\n${artifactText.slice(0, 6000)}\n\n## Feedback (score: ${score}/100)\n${feedbackForRework}\n\n## Resumo\n${validation.summary}\n\nRetorne o output COMPLETO corrigido. Sem markdown wrapping.`
+          const fixResult = await callAI(apiKey,
+            `Você é o "Fix Agent" (Agente 17). Seu trabalho é CORRIGIR código/artefatos com base nos issues de Static Analysis e Runtime QA.
+Regras:
+1. Corrija TODOS os issues de severidade "error" e "warning"
+2. Corrija issues de segurança OBRIGATORIAMENTE
+3. Melhore performance quando possível
+4. NÃO adicione comentários explicativos no código — apenas corrija
+5. Retorne o artefato COMPLETO corrigido, sem markdown wrapping
+6. Se não for código, retorne o texto corrigido e melhorado`,
+            `## Artefato Original (score: ${combinedScore}/100)\n${currentText.slice(0, 6000)}\n\n## Issues Encontrados\n${allIssues}\n\n## Resumo Static Analysis\n${staticAnalysis.summary}\n\n## Resumo Runtime QA\n${runtimeQA.summary}\n\nRetorne o output COMPLETO corrigido.`
           );
+          totalTokens += fixResult.tokens; totalCost += fixResult.costUsd;
 
-          const newOutput = reworkResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
-          totalTokens += reworkResult.tokens; totalCost += reworkResult.costUsd;
+          const fixedOutput = fixResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+          currentText = fixedOutput;
 
-          currentOutput = artifact.type === "code"
-            ? { ...(typeof artifact.raw_output === "object" ? artifact.raw_output : {}), content: newOutput, text: newOutput }
-            : { text: newOutput };
+          // Update artifact with fixed content
+          const newRawOutput = isCode
+            ? { ...(typeof artifact.raw_output === "object" ? artifact.raw_output : {}), content: fixedOutput, text: fixedOutput }
+            : { text: fixedOutput };
 
           await serviceClient.from("agent_outputs").update({
-            raw_output: currentOutput,
-            tokens_used: (artifact.tokens_used || 0) + reworkResult.tokens,
-            cost_estimate: Number(artifact.cost_estimate || 0) + reworkResult.costUsd,
+            raw_output: newRawOutput,
+            tokens_used: (artifact.tokens_used || 0) + fixResult.tokens,
+            cost_estimate: Number(artifact.cost_estimate || 0) + fixResult.costUsd,
             updated_at: new Date().toISOString(),
-          }).eq("id", currentArtifactId);
+          }).eq("id", artifact.id);
 
           if (artifact.subtask_id) {
             await serviceClient.from("story_subtasks").update({
-              output: newOutput, executed_at: new Date().toISOString(),
+              output: fixedOutput, executed_at: new Date().toISOString(),
             }).eq("id", artifact.subtask_id);
           }
 
-          await serviceClient.from("artifact_reviews").insert({
-            output_id: currentArtifactId, reviewer_id: user.id, action: "auto_rework",
-            previous_status: artifact.status, new_status: "draft",
-            comment: JSON.stringify({ iteration: attempt + 1, previous_score: score, trigger: "validation_gate", feedback_summary: feedbackForRework.slice(0, 500) }),
-          });
-        } else {
-          // Escalate to human
-          await serviceClient.from("agent_outputs").update({ status: "pending_review" }).eq("id", currentArtifactId);
-          await serviceClient.from("artifact_reviews").insert({
-            output_id: currentArtifactId, reviewer_id: user.id, action: "escalated_to_human",
-            previous_status: artifact.status, new_status: "pending_review",
-            comment: `Escalado para revisão humana após ${MAX_REWORK_ATTEMPTS} retrabalhos. Score: ${score}/100.`,
-          });
-          break;
+          await persistReview(serviceClient, artifact.id, user.id, "fix_agent",
+            artifact.status, `Fix attempt ${fixAttempt + 1}/${MAX_FIX_ATTEMPTS}. Previous score: ${combinedScore}/100`);
+
+          // Re-validate after fix (lightweight static check)
+          const revalidateResult = await callAI(apiKey,
+            `Você é o Static Analysis. Faça uma re-validação rápida do artefato corrigido. Retorne APENAS JSON: {"score": 0-100, "remaining_issues": [], "fixed_issues_count": 0, "pass": true/false}`,
+            `## Artefato corrigido\n${fixedOutput.slice(0, 5000)}\n\n## Issues originais\n${allIssues.slice(0, 2000)}`,
+            true
+          );
+          totalTokens += revalidateResult.tokens; totalCost += revalidateResult.costUsd;
+
+          let revalidation: any;
+          try { revalidation = JSON.parse(revalidateResult.content); }
+          catch { revalidation = { score: combinedScore + 10, remaining_issues: [], fixed_issues_count: 0, pass: false }; }
+
+          await persistValidationRun(serviceClient, artifact.id, "post_fix_revalidation", revalidation, revalidateResult.durationMs);
+
+          if ((revalidation.score || 0) >= APPROVAL_THRESHOLD && revalidation.pass !== false) {
+            // Fixed successfully
+            await serviceClient.from("agent_outputs").update({ status: "approved" }).eq("id", artifact.id);
+            await persistReview(serviceClient, artifact.id, user.id, "auto_approved", artifact.status,
+              `Aprovado após ${fixAttempts} fix(es). Score: ${revalidation.score}/100`);
+            passCount++; fixedCount++;
+            finalResult = { score: revalidation.score, result: "pass", fixed: true };
+            await pipelineLog(ctx, "artifact_fixed_approved",
+              `Artefato ${artifact.summary?.slice(0, 50)} corrigido e aprovado (${revalidation.score}/100)`,
+              { artifact_id: artifact.id, fix_attempts: fixAttempts });
+            break;
+          }
+
+          if (fixAttempt === MAX_FIX_ATTEMPTS - 1) {
+            // Exhausted fix attempts → escalate
+            await serviceClient.from("agent_outputs").update({ status: "pending_review" }).eq("id", artifact.id);
+            await persistReview(serviceClient, artifact.id, user.id, "escalated_to_human", artifact.status,
+              `Escalado após ${MAX_FIX_ATTEMPTS} tentativas de fix. Score: ${revalidation.score || combinedScore}/100`);
+            failCount++;
+            finalResult = { score: revalidation.score || combinedScore, result: "fail", fixed: false };
+          }
         }
+      } else {
+        // Already passes threshold → auto-approve
+        await serviceClient.from("agent_outputs").update({ status: "approved" }).eq("id", artifact.id);
+        await persistReview(serviceClient, artifact.id, user.id, "auto_approved", artifact.status,
+          `Aprovado na primeira verificação. Static: ${staticAnalysis.static_score}, Runtime: ${runtimeQA.runtime_score}, Combined: ${combinedScore}/100`);
+        passCount++;
+        finalResult = { score: combinedScore, result: "pass", fixed: false };
+        await pipelineLog(ctx, "artifact_auto_approved",
+          `Artefato ${artifact.summary?.slice(0, 50)} aprovado (${combinedScore}/100)`,
+          { artifact_id: artifact.id, static: staticAnalysis.static_score, runtime: runtimeQA.runtime_score });
       }
 
       validationResults.push({
-        artifact_id: currentArtifactId, type: artifact.type,
-        agent: (artifact as any).agents?.name,
-        score: finalValidation?.overall_score || 0,
-        result: finalValidation?.result || "warning",
-        rework_attempts: reworkAttempts,
+        artifact_id: artifact.id, type: artifact.type,
+        agent: agentName,
+        static_score: staticAnalysis.static_score || 0,
+        runtime_score: runtimeQA.runtime_score || 0,
+        combined_score: finalResult?.score || combinedScore,
+        result: finalResult?.result || "warning",
+        fix_attempts: fixAttempts,
+        fixed: finalResult?.fixed || false,
       });
     }
 
-    // Recalculate final status
+    // ── Recalculate final status ──
     const { data: artifactsAfter } = await serviceClient.from("agent_outputs")
       .select("id, status")
       .in("subtask_id", subtaskIds.length > 0 ? subtaskIds : ["00000000-0000-0000-0000-000000000000"])
       .eq("organization_id", ctx.organizationId);
 
     const artifactsFinal = artifactsAfter || artifacts;
-    const artifactsTotal = artifactsFinal.length;
-    const approvedCountFinal = artifactsFinal.filter((a: any) => a.status === "approved").length;
-    const rejectedCountFinal = artifactsFinal.filter((a: any) => a.status === "rejected").length;
-    const pendingReviewCountFinal = artifactsFinal.filter((a: any) => a.status === "pending_review").length;
-    const remainingToValidate = Math.max(artifactsTotal - approvedCountFinal, 0);
-    const batchIncomplete = artifactsToValidate.length > artifactsBatch.length;
-    const overallPass = artifactsTotal > 0 && approvedCountFinal === artifactsTotal;
-    const nextStatus = overallPass ? "ready_to_publish" : "validating";
+    const total = artifactsFinal.length;
+    const approved = artifactsFinal.filter((a: any) => a.status === "approved").length;
+    const rejected = artifactsFinal.filter((a: any) => a.status === "rejected").length;
+    const pending = artifactsFinal.filter((a: any) => a.status === "pending_review").length;
+    const remaining = Math.max(total - approved, 0);
+    const batchIncomplete = artifactsToValidate.length > batch.length;
+    const overallPass = total > 0 && approved === total;
 
-    await updateInitiative(ctx, { stage_status: nextStatus });
+    await updateInitiative(ctx, { stage_status: overallPass ? "ready_to_publish" : "validating" });
 
     if (jobId) await completeJob(ctx, jobId, {
-      artifacts_validated: artifactsTotal, processed_in_batch: artifactsBatch.length,
-      passed: approvedCountFinal, failed: rejectedCountFinal, pending_review: pendingReviewCountFinal,
-      reworked: reworkedCount, auto_approved: autoApprovedCount, auto_rejected: autoRejectedCount,
-      warnings: pendingReviewCountFinal, results: validationResults,
-      remaining_to_validate: remainingToValidate, batch_incomplete: batchIncomplete, overall_pass: overallPass,
+      artifacts_validated: total, processed_in_batch: batch.length,
+      passed: approved, failed: rejected, pending_review: pending,
+      fixed: fixedCount, results: validationResults,
+      remaining_to_validate: remaining, batch_incomplete: batchIncomplete, overall_pass: overallPass,
     }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
 
     await pipelineLog(ctx, "pipeline_validation_complete",
-      `Validação: ${artifactsBatch.length} processados, ${remainingToValidate} pendentes, ${rejectedCountFinal} rejeitados`,
-      { total_tokens: totalTokens, cost_usd: totalCost, overall_pass: overallPass, batch_incomplete: batchIncomplete });
+      `Verificação: ${batch.length} processados (Static Analysis → Runtime QA → Fix Agent), ${remaining} pendentes`,
+      { total_tokens: totalTokens, cost_usd: totalCost, overall_pass: overallPass, fixed: fixedCount });
 
     return jsonResponse({
-      success: true, artifacts_validated: artifactsTotal, processed_in_batch: artifactsBatch.length,
-      passed: approvedCountFinal, failed: rejectedCountFinal, pending_review: pendingReviewCountFinal,
-      reworked: reworkedCount, auto_approved: autoApprovedCount, auto_rejected: autoRejectedCount,
-      warnings: pendingReviewCountFinal, remaining_to_validate: remainingToValidate,
+      success: true, artifacts_validated: total, processed_in_batch: batch.length,
+      passed: approved, failed: rejected, pending_review: pending,
+      fixed: fixedCount, remaining_to_validate: remaining,
       batch_incomplete: batchIncomplete, overall_pass: overallPass, job_id: jobId,
     });
   } catch (e) {
@@ -275,3 +280,32 @@ serve(async (req) => {
     return errorResponse(e instanceof Error ? e.message : "Unknown error");
   }
 });
+
+// ── Helpers ──
+
+function extractText(raw: any): string {
+  if (typeof raw === "string") return raw;
+  if (typeof raw === "object") return raw?.text || raw?.content || JSON.stringify(raw);
+  return String(raw);
+}
+
+async function persistValidationRun(client: any, artifactId: string, type: string, data: any, duration: number) {
+  await client.from("validation_runs").insert({
+    artifact_id: artifactId,
+    type,
+    result: (data.score || data.static_score || data.runtime_score || 0) >= 70 ? "pass" : "warning",
+    logs: JSON.stringify(data),
+    duration: duration || 0,
+  });
+}
+
+async function persistReview(client: any, outputId: string, userId: string, action: string, prevStatus: string, comment: string) {
+  await client.from("artifact_reviews").insert({
+    output_id: outputId,
+    reviewer_id: userId,
+    action,
+    previous_status: prevStatus,
+    new_status: prevStatus,
+    comment,
+  });
+}
