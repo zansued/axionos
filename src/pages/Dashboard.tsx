@@ -51,25 +51,24 @@ export default function Dashboard() {
           {/* Metric cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <MetricCard
-              label="Initiatives"
-              value={kpis?.initiativesTotal ?? 0}
-              icon={Layers}
-            />
-            <MetricCard
               label="Stories"
               value={kpis?.storiesTotal ?? 0}
               subtext={kpis ? `${kpis.storiesDone} completed` : undefined}
               icon={Zap}
             />
             <MetricCard
-              label="Agents"
-              value={kpis?.agentsTotal ?? 0}
-              subtext={kpis ? `${kpis.agentsActive} active` : undefined}
+              label="Done"
+              value={kpis?.storiesDone ?? 0}
+              icon={Layers}
+            />
+            <MetricCard
+              label="Pending Review"
+              value={kpis?.pendingReview ?? 0}
               icon={Cpu}
             />
             <MetricCard
-              label="Outputs"
-              value={kpis?.outputsTotal ?? 0}
+              label="Monthly Cost"
+              value={kpis ? `$${kpis.monthlyCost.toFixed(2)}` : "$0.00"}
               icon={Activity}
             />
           </div>
