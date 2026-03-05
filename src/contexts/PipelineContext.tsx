@@ -250,6 +250,9 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
             : `Drift Detection: ${result.errors_count || 0} violações, drift score ${result.drift_score || 0}% ⚠️`,
           runtime_validation: `Runtime Validation: ${result.files_pushed || 0} arquivos enviados para CI (tsc + vite build). Resultados via webhook ⏳`,
           publish: `Release Agent: ${result.files_committed || 0} arquivos publicados v${result.version || "1.0.0"} (Pre-flight → Changelog → Push → Verificação) ✅`,
+          build_repair: result.success
+            ? `Build Repair: attempt ${result.attempt || 1}, ${result.patches_applied || 0} patches, commit ${(result.commit_sha || "").slice(0, 7)} ✅`
+            : `Build Repair: attempt ${result.attempt || 1} falhou — ${result.message || "erro"} ❌`,
         };
         const label = stageLabels[stage] || "Concluído!";
         toast({ title: label });
