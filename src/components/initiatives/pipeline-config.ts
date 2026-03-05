@@ -112,8 +112,19 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "architecture_validated":
       return [
-        { stage: "approve", label: "Aprovar Arquitetura Validada", type: "approve" },
+        { stage: "foundation_scaffold", label: "🏗️ Gerar Foundation Scaffold", type: "run" },
+        { stage: "approve", label: "Aprovar (pular scaffold)", type: "approve" },
         { stage: "preventive_validation", label: "Re-executar Validação", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "scaffolding":
+      return [
+        { stage: "foundation_scaffold", label: "Re-executar Scaffold", type: "run" },
+      ];
+    case "scaffolded":
+      return [
+        { stage: "approve", label: "Aprovar Scaffold", type: "approve" },
+        { stage: "foundation_scaffold", label: "Re-gerar Scaffold", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":

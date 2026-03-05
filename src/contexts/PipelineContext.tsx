@@ -175,6 +175,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       runtime_validation: "pipeline-runtime-validation",
       preventive_validation: "pipeline-preventive-validation",
       architecture_simulation: "pipeline-architecture-simulation",
+      foundation_scaffold: "pipeline-foundation-scaffold",
       error_intelligence: "error-intelligence",
     };
     return functionMap[stage] || "run-initiative-pipeline";
