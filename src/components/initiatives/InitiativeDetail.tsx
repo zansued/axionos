@@ -17,7 +17,7 @@ import {
   Brain, Users, FileText, Cpu, Loader2, Target, TrendingUp, Shield,
   Layers, AlertTriangle, ArrowRight, Sparkles, Rocket, BookOpen,
   CheckCircle2, Clock, DollarSign, Zap, RotateCcw, GitBranch, ExternalLink,
-  Download, Globe
+  Download, Globe, Trash2
 } from "lucide-react";
 import { InitiativeCodePreview } from "./InitiativeCodePreview";
 import { AgentMessagesTimeline } from "./AgentMessagesTimeline";
@@ -46,9 +46,10 @@ interface InitiativeDetailProps {
   onRunStage: (stage: string, comment?: string, publishParams?: { github_token: string; owner: string; repo: string; base_branch: string }) => void;
   onApprove: () => void;
   onRollbackToStage?: (macroKey: string) => void;
+  onDelete?: () => void;
 }
 
-export function InitiativeDetail({ initiative, jobs, stories = [], runningStage, gitConnections = [], onRunStage, onApprove, onRollbackToStage }: InitiativeDetailProps) {
+export function InitiativeDetail({ initiative, jobs, stories = [], runningStage, gitConnections = [], onRunStage, onApprove, onRollbackToStage, onDelete }: InitiativeDetailProps) {
   const stageStatus = initiative.stage_status || initiative.status || "draft";
   const macroIdx = getMacroStageIndex(stageStatus);
   const actions = getAvailableActions(stageStatus);
@@ -58,6 +59,7 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
 
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectComment, setRejectComment] = useState("");
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const [publishOpen, setPublishOpen] = useState(false);
   const [ghToken, setGhToken] = useState("");
@@ -172,6 +174,17 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                   </Button>
                 )
               ))}
+              {onDelete && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1.5 text-destructive hover:bg-destructive/10"
+                  onClick={() => setDeleteOpen(true)}
+                  disabled={!!runningStage}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              )}
             </div>
           </div>
           {/* Macro pipeline steps — click completed stages to rollback */}
@@ -281,6 +294,35 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
             >
               <RotateCcw className="h-4 w-4" />
               Confirmar Rollback
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete confirmation dialog */}
+      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <Trash2 className="h-5 w-5" />
+              Excluir Iniciativa
+            </DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja excluir <strong>"{initiative.title}"</strong>? Esta ação é irreversível e removerá todos os dados associados: stories, subtasks, artefatos, código, validações, mensagens de agentes e jobs do pipeline.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteOpen(false)}>Cancelar</Button>
+            <Button
+              variant="destructive"
+              className="gap-1.5"
+              onClick={() => {
+                setDeleteOpen(false);
+                onDelete?.();
+              }}
+            >
+              <Trash2 className="h-4 w-4" />
+              Excluir Permanentemente
             </Button>
           </DialogFooter>
         </DialogContent>
