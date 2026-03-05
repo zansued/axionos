@@ -1098,6 +1098,269 @@ export type Database = {
         }
         Relationships: []
       }
+      project_brain_edges: {
+        Row: {
+          created_at: string
+          id: string
+          initiative_id: string
+          metadata: Json | null
+          organization_id: string
+          relation_type: string
+          source_node_id: string
+          target_node_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          initiative_id: string
+          metadata?: Json | null
+          organization_id: string
+          relation_type?: string
+          source_node_id: string
+          target_node_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          initiative_id?: string
+          metadata?: Json | null
+          organization_id?: string
+          relation_type?: string
+          source_node_id?: string
+          target_node_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_brain_edges_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_brain_edges_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_brain_edges_source_node_id_fkey"
+            columns: ["source_node_id"]
+            isOneToOne: false
+            referencedRelation: "project_brain_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_brain_edges_target_node_id_fkey"
+            columns: ["target_node_id"]
+            isOneToOne: false
+            referencedRelation: "project_brain_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_brain_nodes: {
+        Row: {
+          content_hash: string | null
+          created_at: string
+          file_path: string | null
+          id: string
+          initiative_id: string
+          metadata: Json | null
+          name: string
+          node_type: string
+          organization_id: string
+          search_vector: unknown
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          content_hash?: string | null
+          created_at?: string
+          file_path?: string | null
+          id?: string
+          initiative_id: string
+          metadata?: Json | null
+          name: string
+          node_type?: string
+          organization_id: string
+          search_vector?: unknown
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          content_hash?: string | null
+          created_at?: string
+          file_path?: string | null
+          id?: string
+          initiative_id?: string
+          metadata?: Json | null
+          name?: string
+          node_type?: string
+          organization_id?: string
+          search_vector?: unknown
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_brain_nodes_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_brain_nodes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_decisions: {
+        Row: {
+          category: string
+          created_at: string
+          decided_by_agent_id: string | null
+          decision: string
+          id: string
+          impact: string | null
+          initiative_id: string
+          organization_id: string
+          reason: string
+          status: string
+          supersedes_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          decided_by_agent_id?: string | null
+          decision: string
+          id?: string
+          impact?: string | null
+          initiative_id: string
+          organization_id: string
+          reason: string
+          status?: string
+          supersedes_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          decided_by_agent_id?: string | null
+          decision?: string
+          id?: string
+          impact?: string | null
+          initiative_id?: string
+          organization_id?: string
+          reason?: string
+          status?: string
+          supersedes_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_decisions_decided_by_agent_id_fkey"
+            columns: ["decided_by_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_decisions_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_decisions_supersedes_id_fkey"
+            columns: ["supersedes_id"]
+            isOneToOne: false
+            referencedRelation: "project_decisions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_errors: {
+        Row: {
+          detected_at: string
+          error_message: string
+          error_type: string
+          file_path: string | null
+          fixed: boolean
+          fixed_at: string | null
+          fixed_by_agent_id: string | null
+          id: string
+          initiative_id: string
+          organization_id: string
+          prevention_rule: string | null
+          root_cause: string | null
+        }
+        Insert: {
+          detected_at?: string
+          error_message: string
+          error_type?: string
+          file_path?: string | null
+          fixed?: boolean
+          fixed_at?: string | null
+          fixed_by_agent_id?: string | null
+          id?: string
+          initiative_id: string
+          organization_id: string
+          prevention_rule?: string | null
+          root_cause?: string | null
+        }
+        Update: {
+          detected_at?: string
+          error_message?: string
+          error_type?: string
+          file_path?: string | null
+          fixed?: boolean
+          fixed_at?: string | null
+          fixed_by_agent_id?: string | null
+          id?: string
+          initiative_id?: string
+          organization_id?: string
+          prevention_rule?: string | null
+          root_cause?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_errors_fixed_by_agent_id_fkey"
+            columns: ["fixed_by_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_errors_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_errors_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       squad_members: {
         Row: {
           agent_id: string

@@ -70,6 +70,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       publish: "pipeline-publish",
       fast_modify: "pipeline-fast-modify",
       full_review: "pipeline-full-review",
+      brain_sync: "brain-sync",
     };
     return functionMap[stage] || "run-initiative-pipeline";
   };
