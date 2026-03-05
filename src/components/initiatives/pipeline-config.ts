@@ -26,6 +26,8 @@ export const PIPELINE_STEPS = [
   { key: "schema_bootstrapped", label: "Schema Bootstrap ✓", icon: Database, color: "text-accent", bg: "bg-accent/10" },
   { key: "provisioning_db", label: "DB Provisioning ▶", icon: Database, color: "text-warning", bg: "bg-warning/10" },
   { key: "db_provisioned", label: "DB Provisioned ✓", icon: Database, color: "text-accent", bg: "bg-accent/10" },
+  { key: "analyzing_domain", label: "Domain Analysis ▶", icon: Brain, color: "text-warning", bg: "bg-warning/10" },
+  { key: "domain_analyzed", label: "Domain Analyzed ✓", icon: Brain, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
   { key: "forming_squad", label: "Formando", icon: Users, color: "text-warning", bg: "bg-warning/10" },
   { key: "squad_formed", label: "Squad ✓", icon: Users, color: "text-accent", bg: "bg-accent/10" },
