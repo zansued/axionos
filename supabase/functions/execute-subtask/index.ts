@@ -1,81 +1,40 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { checkRateLimit } from "../_shared/rate-limit.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { handleCors, corsHeaders, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { callAI } from "../_shared/ai-client.ts";
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const corsResp = handleCors(req);
+  if (corsResp) return corsResp;
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
-      { global: { headers: { Authorization: authHeader } } }
-    );
-
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const { allowed } = await checkRateLimit(user.id, "execute-subtask");
-    if (!allowed) {
-      return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em breve." }), {
-        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const auth = await authenticateWithRateLimit(req, "execute-subtask");
+    if (auth instanceof Response) return auth;
+    const { user, userClient, serviceClient } = auth;
 
     const { subtaskId, agentId, storyContext, organizationId, workspaceId } = await req.json();
     if (!subtaskId || !agentId) {
-      return new Response(JSON.stringify({ error: "subtaskId and agentId are required" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return errorResponse("subtaskId and agentId are required", 400);
     }
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
-
     // Fetch subtask details
-    const { data: subtask, error: subtaskError } = await supabase
+    const { data: subtask, error: subtaskError } = await userClient
       .from("story_subtasks")
       .select("*, story_phases(name, story_id, stories(title, description))")
       .eq("id", subtaskId)
       .single();
 
-    if (subtaskError || !subtask) {
-      return new Response(JSON.stringify({ error: "Subtask not found" }), {
-        status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    if (subtaskError || !subtask) return errorResponse("Subtask not found", 404);
 
     // Fetch agent details
-    const { data: agent, error: agentError } = await supabase
+    const { data: agent, error: agentError } = await userClient
       .from("agents")
       .select("*")
       .eq("id", agentId)
       .single();
 
-    if (agentError || !agent) {
-      return new Response(JSON.stringify({ error: "Agent not found" }), {
-        status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    if (agentError || !agent) return errorResponse("Agent not found", 404);
 
     const storyTitle = subtask.story_phases?.stories?.title || "Unknown";
     const storyDesc = subtask.story_phases?.stories?.description || "";
@@ -100,52 +59,22 @@ ${subtask.description}
 Produza o output completo para esta subtask. Inclua detalhes técnicos, decisões tomadas e artefatos gerados quando aplicável.`;
 
     // Mark as in_progress
-    await supabase.from("story_subtasks").update({
+    await userClient.from("story_subtasks").update({
       status: "in_progress",
       executed_by_agent_id: agentId,
     }).eq("id", subtaskId);
 
-    const OPENAI_KEY = Deno.env.get("OPENAI_API_KEY");
-    const aiUrl = OPENAI_KEY ? "https://api.openai.com/v1/chat/completions" : "https://ai.gateway.lovable.dev/v1/chat/completions";
-    const aiKey = OPENAI_KEY || LOVABLE_API_KEY;
-    const aiModel = OPENAI_KEY ? "gpt-4o-mini" : "google/gemini-2.5-flash";
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY") || "";
+    const result = await callAI(LOVABLE_API_KEY, systemPrompt, userPrompt);
 
-    const response = await fetch(aiUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${aiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: aiModel,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      await supabase.from("story_subtasks").update({ status: "failed" }).eq("id", subtaskId);
-      const t = await response.text();
-      console.error("AI Gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: `Erro na AI Gateway (${response.status})` }), {
-        status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const aiData = await response.json();
-    const output = aiData.choices?.[0]?.message?.content;
-    const tokensUsed = aiData.usage?.total_tokens || 0;
-
-    if (!output) {
-      await supabase.from("story_subtasks").update({ status: "failed" }).eq("id", subtaskId);
+    if (!result.content) {
+      await userClient.from("story_subtasks").update({ status: "failed" }).eq("id", subtaskId);
       throw new Error("AI did not return output");
     }
 
     // Update subtask with output
-    await supabase.from("story_subtasks").update({
-      output,
+    await userClient.from("story_subtasks").update({
+      output: result.content,
       status: "completed",
       executed_at: new Date().toISOString(),
     }).eq("id", subtaskId);
@@ -153,12 +82,7 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
     // Create versioned agent_output artifact
     let artifactId: string | null = null;
     if (organizationId) {
-      const serviceClient = createClient(
-        Deno.env.get("SUPABASE_URL")!,
-        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-      );
-
-      const outputType = agent.role === "architect" ? "decision" 
+      const outputType = agent.role === "architect" ? "decision"
         : agent.role === "dev" || agent.role === "devops" ? "code"
         : agent.role === "analyst" || agent.role === "po" ? "content"
         : "analysis";
@@ -171,11 +95,11 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
         type: outputType,
         status: "draft",
         summary: subtask.description?.slice(0, 200),
-        raw_output: { text: output, model_response: aiData },
-        model_used: "google/gemini-2.5-flash",
+        raw_output: { text: result.content },
+        model_used: result.model,
         prompt_used: userPrompt.slice(0, 2000),
-        tokens_used: tokensUsed,
-        cost_estimate: tokensUsed * 0.000001,
+        tokens_used: result.tokens,
+        cost_estimate: result.costUsd,
       }).select("id").single();
 
       artifactId = artifact?.id || null;
@@ -186,7 +110,7 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
           output_id: artifactId,
           title: `Decisão: ${subtask.description?.slice(0, 100)}`,
           context: storyContext || storyDesc,
-          decision: output.slice(0, 5000),
+          decision: result.content.slice(0, 5000),
           consequences: "",
           status: "proposed",
         });
@@ -194,7 +118,7 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
     }
 
     // Log audit event
-    await supabase.from("audit_logs").insert({
+    await userClient.from("audit_logs").insert({
       user_id: user.id,
       action: "agent_executed_subtask",
       category: "execution",
@@ -205,14 +129,9 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
       metadata: { agent_id: agentId, agent_name: agent.name, agent_role: agent.role, artifact_id: artifactId },
     });
 
-    return new Response(JSON.stringify({ output, status: "completed", artifact_id: artifactId }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return jsonResponse({ output: result.content, status: "completed", artifact_id: artifactId });
   } catch (e) {
     console.error("execute-subtask error:", e);
-    return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Erro desconhecido" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return errorResponse(e instanceof Error ? e.message : "Erro desconhecido");
   }
 });
