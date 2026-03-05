@@ -2149,6 +2149,96 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
           commitMessages = Array.isArray(parsed) ? parsed : (parsed.messages || parsed.commits || []);
         } catch { commitMessages = []; }
 
+        // ===== PRE-PUBLISH VALIDATION: detect & fix incompatible Vite/plugin combos =====
+        const prePublishValidate = (artifacts: any[], subtaskFileMap: Map<string, any>) => {
+          const issues: string[] = [];
+          for (const art of artifacts) {
+            const si = art.subtask_id ? subtaskFileMap.get(art.subtask_id) : null;
+            const fp = (art.raw_output as any)?.file_path || si?.file_path;
+            if (!fp) continue;
+
+            const raw = art.raw_output as any;
+            const content = raw?.content || raw?.text || (typeof raw === "string" ? raw : "");
+
+            // Validate package.json
+            if (fp === "package.json" && content) {
+              try {
+                const pkg = JSON.parse(content);
+                const allDeps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
+                
+                // Check for @vitejs/plugin-react without -swc
+                if (allDeps["@vitejs/plugin-react"] && !allDeps["@vitejs/plugin-react-swc"]) {
+                  issues.push("package.json uses @vitejs/plugin-react instead of @vitejs/plugin-react-swc");
+                  // Auto-fix
+                  if (pkg.devDependencies?.["@vitejs/plugin-react"]) {
+                    delete pkg.devDependencies["@vitejs/plugin-react"];
+                    pkg.devDependencies["@vitejs/plugin-react-swc"] = "^3.11.0";
+                  }
+                  if (pkg.dependencies?.["@vitejs/plugin-react"]) {
+                    delete pkg.dependencies["@vitejs/plugin-react"];
+                  }
+                }
+                
+                // Check Vite version compatibility
+                const viteVer = allDeps["vite"];
+                if (viteVer && /\^[1-4]\./.test(viteVer)) {
+                  issues.push(`package.json has outdated vite version: ${viteVer}`);
+                  if (pkg.devDependencies) pkg.devDependencies["vite"] = "^5.4.19";
+                  if (pkg.dependencies?.["vite"]) { delete pkg.dependencies["vite"]; pkg.devDependencies = pkg.devDependencies || {}; pkg.devDependencies["vite"] = "^5.4.19"; }
+                }
+
+                // Check for invalid package names
+                for (const depKey of ["dependencies", "devDependencies"]) {
+                  const deps = pkg[depKey];
+                  if (!deps) continue;
+                  for (const name of Object.keys(deps)) {
+                    if (/[^a-zA-Z0-9@/_.-]/.test(name)) {
+                      issues.push(`Invalid package name: "${name}"`);
+                      delete deps[name];
+                    }
+                  }
+                  const banned = ["shadcn/ui", "shadcn-ui", "@shadcn/ui", "shadcn", "radix-ui", "@radix/ui"];
+                  for (const b of banned) {
+                    if (deps[b]) { issues.push(`Banned package: "${b}"`); delete deps[b]; }
+                  }
+                }
+
+                // Ensure build script is correct
+                if (pkg.scripts?.build?.includes("tsc &&")) {
+                  pkg.scripts.build = "vite build";
+                  issues.push("Fixed build script: removed tsc && prefix");
+                }
+
+                // Write back fixed content
+                if (issues.length > 0) {
+                  const fixed = JSON.stringify(pkg, null, 2);
+                  if (raw?.content) raw.content = fixed;
+                  else if (raw?.text) raw.text = fixed;
+                }
+              } catch { /* not valid JSON, skip */ }
+            }
+
+            // Validate vite.config.ts
+            if (fp === "vite.config.ts" && content) {
+              if (content.includes("@vitejs/plugin-react\"") && !content.includes("@vitejs/plugin-react-swc")) {
+                issues.push("vite.config.ts imports @vitejs/plugin-react instead of @vitejs/plugin-react-swc");
+                const fixed = content.replace(/@vitejs\/plugin-react"/g, '@vitejs/plugin-react-swc"');
+                if (raw?.content) raw.content = fixed;
+                else if (raw?.text) raw.text = fixed;
+              }
+            }
+          }
+          if (issues.length > 0) {
+            console.log(`[PRE-PUBLISH] Fixed ${issues.length} issues:`, issues);
+          }
+          return issues;
+        };
+
+        const validationIssues = prePublishValidate(artifacts, subtaskFileMap);
+        if (validationIssues.length > 0) {
+          await log("pre_publish_validation", `Pre-publish: corrigidos ${validationIssues.length} problemas`, { issues: validationIssues });
+        }
+
         // 4. Commit each artifact with semantic commit messages
         const committedFiles: string[] = [];
         const skippedFiles: string[] = [];
