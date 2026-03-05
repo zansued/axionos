@@ -1,73 +1,257 @@
-# Welcome to your Lovable project
+<p align="center">
+  <h1 align="center">⚡ AxionOS</h1>
+  <p align="center"><strong>Autonomous Software Factory for Builders</strong></p>
+  <p align="center">
+    Transforme qualquer ideia complexa em um sistema de software completo,<br/>
+    funcional e pronto para produção — em minutos, não meses.
+  </p>
+</p>
 
-## Project info
+---
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🧠 O que é o AxionOS?
 
-## How can I edit this code?
+**AxionOS não gera apenas código.**  
+Ele opera uma **fábrica autônoma de engenharia de software**.
 
-There are several ways of editing your application.
+Enquanto ferramentas tradicionais ajudam você a escrever código, o AxionOS coordena **todo o ciclo de engenharia**:
 
-**Use Lovable**
+| Etapa | Descrição |
+|-------|-----------|
+| 🏗️ Arquitetura | Projeta a estrutura completa do sistema |
+| 📋 Planejamento | Gera PRD, epics, stories e subtasks |
+| ⚙️ Construção | Swarm de agentes gera todo o código |
+| ✅ Validação | Análise estática + build real (tsc + vite) |
+| 🔧 Correção automática | Self-healing loop corrige erros automaticamente |
+| 🚀 Entrega | Repositório Git pronto com atomic commits |
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+**Tudo dentro de um pipeline autônomo.**
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 🔥 O Problema
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Se você é um fundador técnico ou indie hacker, conhece este ciclo:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+> Você tem uma ideia clara. Mas transformar essa ideia em um repositório funcional envolve: configurar arquitetura, integrar bibliotecas, resolver dependências, corrigir erros de build, estruturar CI/CD, depurar bugs iniciais...
 
-Follow these steps:
+**Isso consome semanas.**
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Mesmo usando IA para gerar código, a maior parte do tempo continua sendo gasto em **integração e correção**.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 💡 A Solução
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+AxionOS opera como uma **Autonomous Software Factory**.
+
+1. Você descreve o que deseja construir
+2. Um **swarm de agentes especializados** executa o processo completo
+3. **Arquitetura → Código → Validação → Correção → Repositório pronto**
+
+---
+
+## ⚙️ Como Funciona
+
+O sistema segue um **pipeline de engenharia de 8 camadas**:
+
+### 1️⃣ Compreensão
+
+O sistema analisa a ideia e extrai: objetivo, escopo, requisitos técnicos e restrições arquiteturais.
+
+**Resultado:** definição estruturada do projeto.
+
+### 2️⃣ Arquitetura
+
+Um agente arquiteto projeta a estrutura completa: stack tecnológica, estrutura de pastas, módulos e contratos de API.
+
+**Resultado:** esqueleto completo do software + Project Brain populado.
+
+### 3️⃣ Squad Formation
+
+AxionOS monta automaticamente uma equipe de agentes especializados:
+
+- 🏗️ **Arquiteto** — estrutura do sistema
+- ⚙️ **Engenheiro Backend** — APIs e serviços
+- 🎨 **Engenheiro Frontend** — componentes e UI
+- 🧪 **QA Agent** — validação e testes
+- 🔒 **Security Agent** — segurança e RLS
+
+### 4️⃣ Planning
+
+O sistema gera um plano executável: **PRD → Epics → User Stories → Subtasks**. Cada tarefa é mapeada a um arquivo específico.
+
+### 5️⃣ Execution (Agent Swarm)
+
+Os agentes geram o código do sistema em **ondas paralelas** usando DAG topológico:
+
+```
+Wave 1: types.ts, schema.sql         (sem dependências)
+Wave 2: auth-service.ts, api.ts      (dependem de types)
+Wave 3: useAuth.ts, useUsers.ts      (dependem de services)
+Wave 4: UserCard.tsx, Dashboard.tsx   (dependem de hooks)
 ```
 
-**Edit a file directly in GitHub**
+Todos os arquivos são enviados via **Git Tree API** em um único atomic commit.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 6️⃣ Deep Static Analysis
 
-**Use GitHub Codespaces**
+Antes do build real, o código passa por análise estática:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- ✅ Tipagens TypeScript
+- ✅ Imports inválidos
+- ✅ Erros de sintaxe
+- ✅ Dependências quebradas
+- ✅ Drift arquitetural (violação de camadas)
 
-## What technologies are used for this project?
+### 7️⃣ Runtime Validation
 
-This project is built with:
+O sistema executa validação real via GitHub Actions:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```bash
+npm install → tsc --noEmit → vite build
+```
 
-## How can I deploy this project?
+**Se compila e builda, está pronto.**
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+### 8️⃣ Radar Fix Loop (Self-Healing)
 
-## Can I connect a custom domain to my Lovable project?
+Se qualquer erro for detectado:
 
-Yes, you can!
+1. Logs são analisados
+2. Arquivos problemáticos são identificados
+3. Um agente de correção gera patches
+4. O código é corrigido automaticamente
+5. O pipeline roda novamente
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+> Esse loop continua até que o sistema esteja **100% funcional**.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+## 🏛️ Arquitetura do Sistema
+
+AxionOS é baseado em **três pilares**:
+
+### 🐝 Swarm de Agentes
+
+Uma equipe coordenada de **18 agentes especializados** executa tarefas de engenharia em paralelo (até 6 workers simultâneos).
+
+### 🧠 Project Brain
+
+Memória arquitetural persistente baseada em **grafo de conhecimento**:
+
+- Decisões de arquitetura registradas
+- Erros anteriores catalogados
+- Padrões e prevention rules aprendidos
+- Contexto inteligente injetado em cada prompt (~60-80% redução de tokens)
+
+### 🔄 Self-Healing Pipeline
+
+Sistema de validação contínua com correção automática:
+
+- AI Validation (score 0-100)
+- Deep Static Analysis
+- Architectural Drift Detection
+- Runtime Validation (tsc + vite reais)
+- Fix Swarm automático com PR
+
+---
+
+## 🎯 O Que Torna AxionOS Diferente
+
+| Ferramentas de IA tradicionais | AxionOS |
+|-------------------------------|---------|
+| Geram código | Automatiza **engenharia de software** |
+| Snippets isolados | **Sistema funcional completo** |
+| Você integra manualmente | **Integração automática** |
+| Você corrige erros | **Correção autônoma** |
+| Sem validação real | **Build real (tsc + vite)** |
+
+**O resultado não é um snippet. É um sistema funcional completo.**
+
+---
+
+## 👤 Para Quem
+
+- 🚀 **Indie Hackers** — lance MVPs em horas
+- 🏗️ **Fundadores Técnicos** — valide ideias rapidamente
+- 💰 **Criadores de Micro SaaS** — construa e itere rápido
+- 🧪 **Prototipagem Rápida** — explore conceitos sem setup
+- 👥 **Equipes Early-Stage** — multiplique a capacidade do time
+
+---
+
+## 📖 Exemplo de Workflow
+
+**Descreva sua ideia:**
+
+> *"Create a SaaS platform for managing remote teams with task tracking and analytics."*
+
+**AxionOS irá:**
+
+1. ✅ Gerar arquitetura completa
+2. ✅ Montar squad de agentes
+3. ✅ Planejar epics e stories
+4. ✅ Construir todo o sistema
+5. ✅ Validar com build real
+6. ✅ Corrigir erros automaticamente
+7. ✅ Entregar repositório funcional
+
+---
+
+## 🗺️ Roadmap
+
+| Feature | Status |
+|---------|--------|
+| Pipeline de 8 camadas | ✅ Implementado |
+| Swarm de agentes paralelos | ✅ Implementado |
+| Project Brain (grafo) | ✅ Implementado |
+| Self-Healing Pipeline | ✅ Implementado |
+| Runtime Validation (CI real) | ✅ Implementado |
+| Smart Context Window | ✅ Implementado |
+| Atomic Git Commits (Tree API) | ✅ Implementado |
+| Vector Embeddings (pgvector) | 🔜 Em breve |
+| Re-execução incremental | 🔜 Em breve |
+| Templates de iniciativas | 🔜 Em breve |
+| Multi-provider CI | 🔜 Planejado |
+
+---
+
+## 🧭 Filosofia
+
+> **Software não deveria levar semanas para nascer.**
+
+A maior parte do tempo gasto em desenvolvimento é **complexidade incidental**.
+
+AxionOS existe para **eliminar essa complexidade** e devolver aos criadores o foco no que realmente importa:
+
+- 🎯 O produto
+- 👤 O usuário
+- 💡 A ideia
+
+---
+
+## 🤝 Contribuições
+
+Contribuições são bem-vindas!
+
+- Abra uma **issue**
+- Proponha **melhorias**
+- Envie **pull requests**
+
+---
+
+## 📄 Licença
+
+MIT License
+
+---
+
+## 📜 Manifesto
+
+> O modelo tradicional de desenvolvimento de software foi criado para equipes grandes.  
+> Mas a nova geração de criadores **trabalha sozinha**.  
+>  
+> AxionOS foi construído para essa realidade.  
+>  
+> **Para que um único construtor possa operar com o poder de uma equipe inteira.**
