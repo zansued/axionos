@@ -1,6 +1,6 @@
 import {
   Lightbulb, Brain, Users, FileText, Cpu, BookOpen, Hammer, CheckCircle2,
-  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap
+  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap, Package
 } from "lucide-react";
 
 export const PIPELINE_STEPS = [
@@ -20,6 +20,8 @@ export const PIPELINE_STEPS = [
   { key: "scaffolded", label: "Scaffold ✓", icon: Hammer, color: "text-accent", bg: "bg-accent/10" },
   { key: "simulating_modules", label: "Module Graph ▶", icon: Layers, color: "text-warning", bg: "bg-warning/10" },
   { key: "modules_simulated", label: "Module Graph ✓", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
+  { key: "analyzing_dependencies", label: "Dep Intelligence ▶", icon: Package, color: "text-warning", bg: "bg-warning/10" },
+  { key: "dependencies_analyzed", label: "Dep Intelligence ✓", icon: Package, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
   { key: "forming_squad", label: "Formando", icon: Users, color: "text-warning", bg: "bg-warning/10" },
   { key: "squad_formed", label: "Squad ✓", icon: Users, color: "text-accent", bg: "bg-accent/10" },
@@ -41,6 +43,7 @@ export const MACRO_STAGES = [
   { key: "bootstrap", label: "Bootstrap", icon: Zap },
   { key: "scaffold", label: "Scaffold", icon: Hammer },
   { key: "module_graph", label: "Module Graph", icon: Layers },
+  { key: "dependency_intelligence", label: "Dep Intelligence", icon: Package },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
@@ -63,12 +66,13 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["bootstrapping", "bootstrapped"].includes(s)) return 4;
   if (["scaffolding", "scaffolded"].includes(s)) return 5;
   if (["simulating_modules", "modules_simulated"].includes(s)) return 6;
-  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 7;
-  if (["planning_ready", "planning", "planned"].includes(s)) return 8;
-  if (["in_progress"].includes(s)) return 9;
-  if (["validating", "ready_to_publish"].includes(s)) return 10;
-  if (["published"].includes(s)) return 11;
-  if (["completed"].includes(s)) return 12;
+  if (["analyzing_dependencies", "dependencies_analyzed"].includes(s)) return 7;
+  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 8;
+  if (["planning_ready", "planning", "planned"].includes(s)) return 9;
+  if (["in_progress"].includes(s)) return 10;
+  if (["validating", "ready_to_publish"].includes(s)) return 11;
+  if (["published"].includes(s)) return 12;
+  if (["completed"].includes(s)) return 13;
   return 0;
 }
 
@@ -148,8 +152,18 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "modules_simulated":
       return [
-        { stage: "approve", label: "Aprovar Module Graph", type: "approve" },
+        { stage: "dependency_intelligence", label: "📦 Dependency Intelligence", type: "run" },
         { stage: "module_graph_simulation", label: "Re-executar Module Graph", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "analyzing_dependencies":
+      return [
+        { stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" },
+      ];
+    case "dependencies_analyzed":
+      return [
+        { stage: "approve", label: "Aprovar Dependencies", type: "approve" },
+        { stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
