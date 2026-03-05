@@ -177,7 +177,7 @@ export default function Initiatives() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-display text-3xl font-bold tracking-tight">{t("initiatives.title")}</h1>
+            <h1 className="font-display text-2xl font-semibold tracking-tight">{t("initiatives.title")}</h1>
             <p className="text-muted-foreground mt-1">{t("initiatives.subtitle")}</p>
           </div>
           <div className="flex items-center gap-2">
