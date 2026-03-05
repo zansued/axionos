@@ -11,8 +11,24 @@ serve(async (req) => {
   const { comment = "" } = body;
   const currentStatus = initiative.stage_status;
 
+  // Check gate permission
+  const { data: hasPermission } = await serviceClient.rpc("has_gate_permission", {
+    _user_id: ctx.userId,
+    _org_id: ctx.organizationId,
+    _stage: currentStatus,
+    _action_type: "reject",
+  });
+
+  if (hasPermission === false) {
+    return errorResponse("Você não tem permissão para rejeitar neste gate. Contate um administrador.", 403);
+  }
+
   const rollbackMap: Record<string, { rollbackTo: string; stageLabel: string }> = {
     discovered: { rollbackTo: "draft", stageLabel: "Discovery" },
+    architected: { rollbackTo: "architecture_ready", stageLabel: "Arquitetura" },
+    architecture_simulated: { rollbackTo: "architected", stageLabel: "Simulação" },
+    architecture_validated: { rollbackTo: "architecture_simulated", stageLabel: "Validação Preventiva" },
+    scaffolded: { rollbackTo: "architecture_validated", stageLabel: "Scaffold" },
     squad_formed: { rollbackTo: "squad_ready", stageLabel: "Squad" },
     planned: { rollbackTo: "planning_ready", stageLabel: "Planning" },
     in_progress: { rollbackTo: "planned", stageLabel: "Execução" },

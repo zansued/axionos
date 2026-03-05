@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Building2, Users, FolderOpen, Plus, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { SLAConfigPanel } from "@/components/governance/SLAConfigPanel";
+import { GatePermissionsPanel } from "@/components/governance/GatePermissionsPanel";
 
 const roleColors: Record<string, string> = {
   owner: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
@@ -149,6 +150,9 @@ export default function OrgSettings() {
 
         {/* SLA Config */}
         {(userRole === "owner" || userRole === "admin") && <SLAConfigPanel />}
+
+        {/* Gate Permissions */}
+        {(userRole === "owner" || userRole === "admin") && <GatePermissionsPanel />}
       </div>
     </AppLayout>
   );

@@ -136,6 +136,5 @@ Arquitetura distribuída:
 
 | # | Fase | Impacto | Complexidade | Descrição |
 |---|------|---------|-------------|-----------|
-| 1 | Roles granulares por gate | 🟡 Médio | Médio | Permissões por estágio do pipeline |
-| 2 | Approval chains | 🟡 Médio | Alto | Múltiplos aprovadores com quórum |
-| 3 | Webhook notifications | 🟠 Baixo | Baixo | Slack/Discord em gates e SLA |
+| 1 | Approval chains | 🟡 Médio | Alto | Múltiplos aprovadores com quórum |
+| 2 | Webhook notifications | 🟠 Baixo | Baixo | Slack/Discord em gates e SLA |
