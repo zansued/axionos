@@ -341,6 +341,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       planning: "planning_ready",
       execution: "planned",
       validation: "in_progress",
+      build_repair: "validating",
       publish: "ready_to_publish",
     };
       const targetStatus = rollbackMap[macroKey];
