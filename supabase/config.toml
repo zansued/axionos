@@ -102,5 +102,8 @@ verify_jwt = false
 [functions.pipeline-module-graph-simulation]
 verify_jwt = false
 
+[functions.pipeline-dependency-intelligence]
+verify_jwt = false
+
 [functions.project-bootstrap-intelligence]
 verify_jwt = false

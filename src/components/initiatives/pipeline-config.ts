@@ -152,8 +152,18 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "modules_simulated":
       return [
-        { stage: "approve", label: "Aprovar Module Graph", type: "approve" },
+        { stage: "dependency_intelligence", label: "📦 Dependency Intelligence", type: "run" },
         { stage: "module_graph_simulation", label: "Re-executar Module Graph", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "analyzing_dependencies":
+      return [
+        { stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" },
+      ];
+    case "dependencies_analyzed":
+      return [
+        { stage: "approve", label: "Aprovar Dependencies", type: "approve" },
+        { stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
