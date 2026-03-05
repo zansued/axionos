@@ -114,7 +114,7 @@
 
 - [ ] Roles granulares: quem pode aprovar cada gate do pipeline
 - [ ] Approval chain: múltiplos aprovadores por estágio
-- [ ] SLA por estágio: alertas se ficou parado mais de X horas
+- [x] SLA por estágio: alertas se ficou parado mais de X horas
 - [ ] Audit trail completo com diff de cada mudança
 - [ ] Compliance: exportação de evidências de governança
 

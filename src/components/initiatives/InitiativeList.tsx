@@ -1,9 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Lightbulb, AlertTriangle, Users } from "lucide-react";
+import { Lightbulb, AlertTriangle, Users, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PIPELINE_STEPS, getStepIndex } from "./pipeline-config";
+import { useSLABreaches } from "@/hooks/useStageSLA";
 
 interface InitiativeListProps {
   initiatives: any[];
@@ -13,6 +14,8 @@ interface InitiativeListProps {
 }
 
 export function InitiativeList({ initiatives, isLoading, selectedId, onSelect }: InitiativeListProps) {
+  const { breaches } = useSLABreaches(initiatives);
+  const breachMap = new Map(breaches.map((b) => [b.initiativeId, b]));
   return (
     <div className="space-y-3">
       <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Iniciativas</h2>
@@ -31,9 +34,10 @@ export function InitiativeList({ initiatives, isLoading, selectedId, onSelect }:
                 const stepIdx = getStepIndex(init.stage_status || init.status);
                 const step = PIPELINE_STEPS[stepIdx];
                 const isSelected = selectedId === init.id;
+                const breach = breachMap.get(init.id);
                 return (
                   <motion.div key={init.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-                    <Card className={`cursor-pointer transition-all ${isSelected ? "border-primary/50 bg-primary/5" : "border-border/50 hover:border-primary/20"}`} onClick={() => onSelect(init.id)}>
+                    <Card className={`cursor-pointer transition-all ${isSelected ? "border-primary/50 bg-primary/5" : breach ? "border-warning/40 hover:border-warning/60" : "border-border/50 hover:border-primary/20"}`} onClick={() => onSelect(init.id)}>
                       <CardContent className="p-3 space-y-2">
                         <div className="flex items-start justify-between gap-2">
                           <p className="font-display text-sm font-medium leading-tight">{init.title}</p>
@@ -45,6 +49,11 @@ export function InitiativeList({ initiatives, isLoading, selectedId, onSelect }:
                           ))}
                         </div>
                         <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                          {breach && (
+                            <span className={`flex items-center gap-0.5 ${breach.severity === "critical" ? "text-destructive" : "text-warning"}`}>
+                              <Clock className="h-3 w-3" />{breach.hoursStuck}h
+                            </span>
+                          )}
                           {init.risk_level && init.risk_level !== "medium" && (
                             <span className="flex items-center gap-0.5">
                               <AlertTriangle className="h-3 w-3" />Risco {init.risk_level}
