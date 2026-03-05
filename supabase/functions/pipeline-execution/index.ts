@@ -1,8 +1,10 @@
+// Layer 4 — Implementation
+// Orchestrates: Code Architect → Developer → Integration Agent
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
-import { pipelineLog, updateInitiative, createJob, completeJob, failJob, recordAgentMessage, pickAgentByDescription } from "../_shared/pipeline-helpers.ts";
+import { pipelineLog, updateInitiative, createJob, completeJob, failJob, recordAgentMessage } from "../_shared/pipeline-helpers.ts";
 import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
 
 serve(async (req) => {
@@ -10,36 +12,69 @@ serve(async (req) => {
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey } = result;
 
+  const dp = initiative.discovery_payload || {};
   const masterJobId = await createJob(ctx, "execution", { initiative_id: ctx.initiativeId });
+
   const updateFields: Record<string, unknown> = { stage_status: "in_progress" };
   if (initiative.stage_status === "planned" && !initiative.approved_at_planning) {
     updateFields.approved_at_planning = new Date().toISOString();
   }
   await updateInitiative(ctx, updateFields);
-  await pipelineLog(ctx, "pipeline_execution_start", "Iniciando execução Chain-of-Agents (Architect → Dev → QA)...");
+  await pipelineLog(ctx, "pipeline_execution_start", "Camada 4 — Implementação iniciada (Code Architect → Developer → Integration Agent)");
 
   try {
+    // Fetch stories
     const { data: stories } = await serviceClient.from("stories")
       .select("id, title, description")
       .eq("initiative_id", ctx.initiativeId)
       .in("status", ["todo", "in_progress"]);
-    if (!stories || stories.length === 0) throw new Error("Nenhuma story encontrada para execução");
+    if (!stories?.length) throw new Error("Nenhuma story encontrada para execução");
 
+    // Fetch squad agents
     const { data: squads } = await serviceClient.from("squads")
       .select("id, squad_members(agent_id, role_in_squad, agents(id, name, role, description, exclusive_authorities))")
       .eq("initiative_id", ctx.initiativeId);
     const squadMembers = squads?.[0]?.squad_members || [];
-    if (squadMembers.length === 0) throw new Error("Nenhum agente no squad para executar");
+    if (!squadMembers.length) throw new Error("Nenhum agente no squad");
 
     const agentsByRole: Record<string, any> = {};
     for (const sm of squadMembers) agentsByRole[sm.role_in_squad] = sm.agents;
-    const architectAgent = agentsByRole["architect"];
-    const devAgent = agentsByRole["dev"];
-    const qaAgent = agentsByRole["qa"];
-    const defaultAgent = devAgent || architectAgent || squadMembers[0]?.agents;
-    const hasChain = !!architectAgent && !!devAgent && !!qaAgent;
 
-    // Fetch Supabase connection
+    // Layer 4 agents (with fallback to old roles)
+    const codeArchAgent = agentsByRole["code_architect"] || agentsByRole["architect"];
+    const devAgent = agentsByRole["developer"] || agentsByRole["dev"];
+    const integrationAgent = agentsByRole["integration_agent"] || agentsByRole["qa"];
+    const defaultAgent = devAgent || codeArchAgent || squadMembers[0]?.agents;
+    const hasChain = !!codeArchAgent && !!devAgent && !!integrationAgent;
+
+    // Create Layer 4 agents if not in squad
+    if (!agentsByRole["code_architect"] && !agentsByRole["developer"] && !agentsByRole["integration_agent"]) {
+      const squadId = squads?.[0]?.id;
+      if (squadId) {
+        const layer4Roles = [
+          { name: "Code Architect", role: "code_architect", desc: "Define interfaces, tipos e contratos antes da implementação" },
+          { name: "Developer Agent", role: "developer", desc: "Gera código completo e funcional baseado nas especificações" },
+          { name: "Integration Agent", role: "integration_agent", desc: "Verifica imports, dependências e conecta componentes" },
+        ];
+        for (const ag of layer4Roles) {
+          const { data: agent } = await serviceClient.from("agents").insert({
+            user_id: user.id, name: ag.name, role: ag.role as any,
+            description: ag.desc, organization_id: ctx.organizationId,
+            workspace_id: initiative.workspace_id, status: "active",
+          }).select("id, name, role, description").single();
+          if (agent) {
+            await serviceClient.from("squad_members").insert({ squad_id: squadId, agent_id: agent.id, role_in_squad: ag.role });
+            agentsByRole[ag.role] = agent;
+          }
+        }
+      }
+    }
+
+    const effectiveCodeArch = agentsByRole["code_architect"] || codeArchAgent || defaultAgent;
+    const effectiveDev = agentsByRole["developer"] || devAgent || defaultAgent;
+    const effectiveIntegration = agentsByRole["integration_agent"] || integrationAgent || defaultAgent;
+
+    // Supabase connection info
     let supabaseConnInfo = "";
     const { data: sbConns } = await serviceClient.from("supabase_connections")
       .select("supabase_url, supabase_anon_key, label")
@@ -47,10 +82,10 @@ serve(async (req) => {
       .order("updated_at", { ascending: false }).limit(1);
     const sbConn = sbConns?.[0];
     if (sbConn) {
-      supabaseConnInfo = `\n\n## Conexão Supabase Configurada:\n- URL: ${sbConn.supabase_url}\n- Anon Key: ${sbConn.supabase_anon_key}\nUse estes valores REAIS nos arquivos .env.example e src/lib/supabase.ts.`;
+      supabaseConnInfo = `\n\n## Conexão Supabase:\n- URL: ${sbConn.supabase_url}\n- Anon Key: ${sbConn.supabase_anon_key}`;
     }
 
-    // Collect ALL subtasks with file_path for project structure
+    // Collect all project files
     const allProjectFiles: { file_path: string; description: string }[] = [];
     for (const story of stories) {
       const { data: phases } = await serviceClient.from("story_phases")
@@ -63,37 +98,30 @@ serve(async (req) => {
     }
     const projectStructure = allProjectFiles.map(f => `- ${f.file_path}: ${f.description}`).join("\n");
 
-    // Fetch agent memories and org knowledge base
+    // Architecture context from Layer 2
+    const dataArchContext = dp.data_architecture ? `\n## Schema DB:\n${JSON.stringify(dp.data_architecture, null, 2).slice(0, 2000)}` : "";
+    const apiContext = dp.api_architecture ? `\n## API Contracts:\n${JSON.stringify(dp.api_architecture, null, 2).slice(0, 1500)}` : "";
+    const fileTreeContext = dp.file_tree ? `\n## File Tree:\n${JSON.stringify((dp.file_tree as any).generation_order || [], null, 2).slice(0, 1500)}` : "";
+
+    // Memory context
     let memoryContext = "";
     try {
       const { data: memories } = await serviceClient.from("agent_memory")
-        .select("key, value, memory_type, relevance_score")
-        .eq("organization_id", ctx.organizationId)
-        .order("relevance_score", { ascending: false }).limit(15);
-      const { data: kbEntries } = await serviceClient.from("org_knowledge_base")
-        .select("title, content, category, tags")
-        .eq("organization_id", ctx.organizationId)
-        .order("created_at", { ascending: false }).limit(10);
-      const memoryLines = (memories || []).map(m => `- [${m.memory_type}] ${m.key}: ${m.value}`);
-      const kbLines = (kbEntries || []).map(k => `- [${k.category}] ${k.title}: ${k.content.slice(0, 200)}`);
-      if (memoryLines.length > 0 || kbLines.length > 0) {
-        memoryContext = `\n\n## Memória Organizacional:\n`;
-        if (memoryLines.length > 0) memoryContext += `### Lições dos Agentes:\n${memoryLines.join("\n")}\n`;
-        if (kbLines.length > 0) memoryContext += `### Base de Conhecimento:\n${kbLines.join("\n")}\n`;
+        .select("key, value, memory_type").eq("organization_id", ctx.organizationId)
+        .order("relevance_score", { ascending: false }).limit(10);
+      if (memories?.length) {
+        memoryContext = `\n## Memória:\n${memories.map(m => `- [${m.memory_type}] ${m.key}: ${m.value}`).join("\n")}`;
       }
-    } catch (memErr) { console.warn("[MEMORY] Failed to fetch:", memErr); }
+    } catch {}
 
     let totalTokens = 0, totalCost = 0, executedCount = 0, failedCount = 0, codeFilesGenerated = 0;
     const generatedFiles: Record<string, string> = {};
-    const MAX_QA_ITERATIONS = 2;
-
-    // Deterministic files with Supabase connection
     const deterministicFiles: Record<string, string> = { ...DETERMINISTIC_FILES };
     if (sbConn) {
       deterministicFiles[".env.example"] = `VITE_SUPABASE_URL=${sbConn.supabase_url}\nVITE_SUPABASE_ANON_KEY=${sbConn.supabase_anon_key}`;
     }
 
-    // Count total pending subtasks
+    // Count total subtasks
     let totalSubtasks = 0;
     for (const story of stories) {
       const { data: phases } = await serviceClient.from("story_phases")
@@ -110,7 +138,7 @@ serve(async (req) => {
           percent: totalSubtasks > 0 ? Math.round((current / totalSubtasks) * 100) : 0,
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
-          current_file: currentFile || null, current_agent: currentAgent || null,
+          current_file: currentFile, current_agent: currentAgent,
           chain_of_agents: hasChain, started_at: new Date().toISOString(), status: "running",
         },
       }).eq("id", ctx.initiativeId);
@@ -130,139 +158,139 @@ serve(async (req) => {
           .filter((st: any) => st.status === "pending")
           .sort((a: any, b: any) => a.sort_order - b.sort_order);
 
-        const PARALLEL_FILE_TYPES = new Set(["config", "scaffold", "style"]);
-        const parallelSubtasks = subtasks.filter((st: any) => st.file_type && PARALLEL_FILE_TYPES.has(st.file_type));
-        const sequentialSubtasks = subtasks.filter((st: any) => !st.file_type || !PARALLEL_FILE_TYPES.has(st.file_type));
+        const PARALLEL_TYPES = new Set(["config", "scaffold", "style"]);
+        const parallelSubtasks = subtasks.filter((st: any) => st.file_type && PARALLEL_TYPES.has(st.file_type));
+        const sequentialSubtasks = subtasks.filter((st: any) => !st.file_type || !PARALLEL_TYPES.has(st.file_type));
 
-        const executeOneSubtask = async (subtask: any) => {
+        const executeSubtask = async (subtask: any) => {
           const hasFilePath = !!subtask.file_path;
           const subtaskJobId = await createJob(ctx, "execution", {
-            subtask_id: subtask.id, story_title: story.title, phase_name: phase.name,
-            subtask_description: subtask.description, file_path: subtask.file_path || null,
-            chain_of_agents: hasChain && hasFilePath,
+            subtask_id: subtask.id, file_path: subtask.file_path,
           });
 
           await serviceClient.from("story_subtasks").update({
-            status: "in_progress", executed_by_agent_id: (devAgent || defaultAgent).id,
+            status: "in_progress", executed_by_agent_id: effectiveDev.id,
           }).eq("id", subtask.id);
+          await updateProgress(executedCount + failedCount, subtask.file_path, "developer");
 
           try {
-            if (hasFilePath && hasChain) {
-              // CHAIN-OF-AGENTS: Architect → Dev → QA
+            if (hasFilePath) {
               const ext = subtask.file_path.split(".").pop() || "ts";
-              const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML", sql: "SQL (PostgreSQL)" };
+              const langMap: Record<string, string> = { tsx: "TypeScript React", ts: "TypeScript", css: "CSS", json: "JSON", sql: "SQL", html: "HTML" };
               const language = langMap[ext] || "TypeScript";
-              const isBackendFile = ["schema", "migration", "edge_function", "seed", "supabase_client", "auth_config"].includes(subtask.file_type || "");
+              const isBackend = ["schema", "migration", "edge_function", "seed", "supabase_client", "auth_config"].includes(subtask.file_type || "");
 
               const contextFiles = Object.entries(generatedFiles);
               let contextStr = "";
               for (const [fp, content] of contextFiles) {
-                const entry = `\n--- ${fp} ---\n${content.slice(0, 800)}\n`;
-                if (contextStr.length + entry.length > 6000) break;
+                const entry = `\n--- ${fp} ---\n${content.slice(0, 600)}\n`;
+                if (contextStr.length + entry.length > 5000) break;
                 contextStr += entry;
               }
 
-              const baseContext = `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum ainda)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Linguagem: ${language}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1200)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1200)}` : ""}${supabaseConnInfo}${memoryContext}`;
+              const baseContext = `## Projeto: ${initiative.title}
+## Descrição: ${initiative.refined_idea || initiative.description || ""}
+## Estrutura:\n${projectStructure}
+## Arquivos gerados:\n${contextStr || "(nenhum)"}
+## Arquivo: ${subtask.file_path}
+## Tipo: ${subtask.file_type || "code"} | Linguagem: ${language}
+## Tarefa: ${subtask.description}
+${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1000)}` : ""}
+${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1000)}` : ""}${dataArchContext}${apiContext}${fileTreeContext}${supabaseConnInfo}${memoryContext}`;
 
-              // Step 1: ARCHITECT
-              const archResult = await callAI(apiKey,
-                `Você é o Architect "${architectAgent.name}" no AxionOS. Sua função é analisar a tarefa e definir a estrutura técnica ANTES do Dev implementar.\n\nProduz uma especificação técnica concisa incluindo:\n1. Decisões arquiteturais para este arquivo\n2. Interfaces/tipos necessários\n3. Dependências e imports\n4. Padrões a seguir\n5. Edge cases a considerar\n\nSeja direto e técnico. Responda em pt-BR.`,
+              // ──── Step 1: CODE ARCHITECT ────
+              const codeArchResult = await callAI(apiKey,
+                `Você é o Code Architect "${effectiveCodeArch.name}" no AxionOS.
+Antes do Developer implementar, você define:
+1. Interfaces e tipos TypeScript necessários
+2. Contratos de função (parâmetros, retornos)
+3. Imports necessários e de onde vêm
+4. Padrões de design a seguir
+5. Edge cases e validações
+
+Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
                 baseContext
               );
-              await recordAgentMessage(ctx, { storyId: story.id, subtaskId: subtask.id, fromAgent: architectAgent, toAgent: devAgent, content: archResult.content, messageType: "handoff", iteration: 1, tokens: archResult.tokens, model: archResult.model, stage: "execution" });
-              totalTokens += archResult.tokens; totalCost += archResult.costUsd;
+              totalTokens += codeArchResult.tokens;
+              totalCost += codeArchResult.costUsd;
+              await recordAgentMessage(ctx, {
+                storyId: story.id, subtaskId: subtask.id,
+                fromAgent: effectiveCodeArch, toAgent: effectiveDev,
+                content: codeArchResult.content, messageType: "handoff",
+                iteration: 1, tokens: codeArchResult.tokens, model: codeArchResult.model, stage: "execution",
+              });
 
-              // Step 2: DEV
-              const backendRules = isBackendFile ? `\nREGRAS PARA ARQUIVOS BACKEND (Supabase):\n- Para file_type "schema" (.sql): Gere CREATE TABLE IF NOT EXISTS, ALTER TABLE ENABLE RLS, CREATE POLICY.\n- REGRA OBRIGATÓRIA: Todas as tabelas DEVEM ter um prefixo curto derivado do nome do projeto.\n- Para file_type "edge_function": Gere Edge Function Deno/TypeScript com CORS headers e auth.\n- Para file_type "supabase_client": Use createClient com import.meta.env.` : "";
-
+              // ──── Step 2: DEVELOPER ────
+              const backendRules = isBackend ? `\nREGRAS BACKEND:\n- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto\n- edge_function: Deno/TS com CORS headers e auth\n- supabase_client: createClient com import.meta.env` : "";
               const devResult = await callAI(apiKey,
-                `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use componentes shadcn/ui e Tailwind CSS para frontend.\n${backendRules}\n\nREGRAS PARA package.json:\n- NÃO inclua "shadcn/ui" ou "@shadcn/ui" como dependência.\n- Use "lucide-react" (não "lucide").\n- SEMPRE inclua "type": "module".\n- Use @vitejs/plugin-react-swc.\n\nARQUIVOS DE DEPLOY:\n- vercel.json: {"framework":"vite","installCommand":"rm -f package-lock.json && npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}`,
-                `${baseContext}\n\n## Especificação do Architect:\n${archResult.content}`
+                `Você é o Developer "${effectiveDev.name}" no AxionOS.
+Recebeu a especificação do Code Architect. Implemente o código COMPLETO.
+
+REGRAS:
+- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações
+- Código COMPLETO e FUNCIONAL
+- Siga EXATAMENTE a especificação do Code Architect
+- Use shadcn/ui + Tailwind para frontend
+${backendRules}
+
+REGRAS package.json:
+- NÃO inclua "shadcn/ui" como dependência
+- Use "lucide-react" (não "lucide")
+- SEMPRE inclua "type": "module"
+- Use @vitejs/plugin-react-swc`,
+                `${baseContext}\n\n## Especificação do Code Architect:\n${codeArchResult.content}`
               );
               let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
-              await recordAgentMessage(ctx, { storyId: story.id, subtaskId: subtask.id, fromAgent: devAgent, toAgent: qaAgent, content: codeContent, messageType: "handoff", iteration: 1, tokens: devResult.tokens, model: devResult.model, stage: "execution" });
-              totalTokens += devResult.tokens; totalCost += devResult.costUsd;
+              totalTokens += devResult.tokens;
+              totalCost += devResult.costUsd;
+              await recordAgentMessage(ctx, {
+                storyId: story.id, subtaskId: subtask.id,
+                fromAgent: effectiveDev, toAgent: effectiveIntegration,
+                content: codeContent, messageType: "handoff",
+                iteration: 1, tokens: devResult.tokens, model: devResult.model, stage: "execution",
+              });
 
-              // Step 3: QA
-              let qaApproved = false;
-              for (let iteration = 1; iteration <= MAX_QA_ITERATIONS; iteration++) {
-                const qaResult = await callAI(apiKey,
-                  `Você é o QA "${qaAgent.name}" no AxionOS. Revise o código do Dev abaixo. Retorne APENAS JSON válido.\n\n{"approved": true/false, "issues": ["lista de problemas"], "suggestions": ["lista de melhorias"], "score": 0-100}`,
-                  `## Arquivo: ${subtask.file_path}\n## Especificação do Architect:\n${archResult.content.slice(0, 2000)}\n\n## Código do Dev:\n${codeContent.slice(0, 8000)}`,
-                  true
-                );
-                totalTokens += qaResult.tokens; totalCost += qaResult.costUsd;
-                let qaFeedback: any;
-                try { qaFeedback = JSON.parse(qaResult.content); } catch { qaFeedback = { approved: true, issues: [], score: 70 }; }
-                await recordAgentMessage(ctx, { storyId: story.id, subtaskId: subtask.id, fromAgent: qaAgent, toAgent: devAgent, content: qaResult.content, messageType: "review", iteration, tokens: qaResult.tokens, model: qaResult.model, stage: "execution" });
+              // ──── Step 3: INTEGRATION AGENT ────
+              const integrationResult = await callAI(apiKey,
+                `Você é o Integration Agent "${effectiveIntegration.name}" no AxionOS.
+Sua função é verificar e corrigir problemas de integração no código gerado:
 
-                if (qaFeedback.approved || qaFeedback.score >= 80 || iteration >= MAX_QA_ITERATIONS) {
-                  qaApproved = true; break;
-                }
+1. IMPORTS: Todos os imports existem e apontam para arquivos corretos?
+2. DEPENDÊNCIAS: O arquivo usa pacotes que estão no package.json?
+3. TIPOS: Os tipos usados são compatíveis com as interfaces definidas?
+4. CONEXÕES: APIs, hooks e serviços estão conectados corretamente?
+5. CONSISTÊNCIA: O código segue os padrões dos outros arquivos do projeto?
 
-                const fixResult = await callAI(apiKey,
-                  `Você é o Dev "${devAgent.name}". O QA encontrou problemas. Corrija TODOS e retorne APENAS o código corrigido completo.`,
-                  `## Arquivo: ${subtask.file_path}\n\n## Código atual:\n${codeContent.slice(0, 8000)}\n\n## Feedback do QA:\n${JSON.stringify(qaFeedback.issues)}\n\nRetorne o código COMPLETO corrigido.`
-                );
-                codeContent = fixResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
-                await recordAgentMessage(ctx, { storyId: story.id, subtaskId: subtask.id, fromAgent: devAgent, toAgent: qaAgent, content: codeContent, messageType: "fix", iteration: iteration + 1, tokens: fixResult.tokens, model: fixResult.model, stage: "execution" });
-                totalTokens += fixResult.tokens; totalCost += fixResult.costUsd;
+Se encontrar problemas, retorne o código CORRIGIDO completo.
+Se tudo estiver correto, retorne o código original sem alterações.
+
+REGRA: Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.`,
+                `## Arquivo: ${subtask.file_path}
+## Especificação do Code Architect:\n${codeArchResult.content.slice(0, 2000)}
+
+## Código do Developer:\n${codeContent.slice(0, 8000)}
+
+## Arquivos já gerados (para verificar imports):\n${contextStr || "(nenhum)"}
+
+Verifique integração e retorne o código final (corrigido se necessário).`
+              );
+              totalTokens += integrationResult.tokens;
+              totalCost += integrationResult.costUsd;
+
+              const integrationCode = integrationResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+              // Use integration result if it looks like valid code (not just review text)
+              if (integrationCode.length > 20 && !integrationCode.startsWith("{\"")) {
+                codeContent = integrationCode;
               }
+
+              await recordAgentMessage(ctx, {
+                storyId: story.id, subtaskId: subtask.id,
+                fromAgent: effectiveIntegration, toAgent: effectiveDev,
+                content: integrationResult.content, messageType: "review",
+                iteration: 1, tokens: integrationResult.tokens, model: integrationResult.model, stage: "execution",
+              });
 
               // Override deterministic files
-              if (deterministicFiles[subtask.file_path]) {
-                codeContent = deterministicFiles[subtask.file_path];
-              }
-              if (subtask.file_path === "package.json") {
-                codeContent = sanitizePackageJson(codeContent);
-              }
-
-              generatedFiles[subtask.file_path] = codeContent;
-              await serviceClient.from("story_subtasks").update({
-                output: codeContent, status: "completed", executed_at: new Date().toISOString(),
-              }).eq("id", subtask.id);
-
-              const { data: artifact } = await serviceClient.from("agent_outputs").insert({
-                organization_id: ctx.organizationId, workspace_id: initiative.workspace_id || null,
-                initiative_id: ctx.initiativeId, agent_id: devAgent.id, subtask_id: subtask.id,
-                type: "code", status: qaApproved ? "draft" : "pending_review",
-                summary: `${subtask.file_path} — ${subtask.description.slice(0, 150)}`,
-                raw_output: { file_path: subtask.file_path, file_type: subtask.file_type, language: ext, content: codeContent, chain_of_agents: true },
-                model_used: "google/gemini-2.5-flash", prompt_used: subtask.description,
-                tokens_used: totalTokens, cost_estimate: totalCost,
-              }).select("id").single();
-
-              if (artifact?.id) {
-                await serviceClient.from("code_artifacts").insert({
-                  output_id: artifact.id,
-                  files_affected: [{ path: subtask.file_path, type: subtask.file_type, language: ext }],
-                  build_status: "pending", test_status: "pending",
-                });
-              }
-              if (subtaskJobId) await completeJob(ctx, subtaskJobId, { artifact_id: artifact?.id, file_path: subtask.file_path, chain_of_agents: true, qa_approved: qaApproved }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
-              codeFilesGenerated++;
-
-            } else if (hasFilePath) {
-              // SINGLE AGENT CODE MODE
-              const ext = subtask.file_path.split(".").pop() || "ts";
-              const langMap: Record<string, string> = { tsx: "TypeScript React (TSX)", ts: "TypeScript", css: "CSS", json: "JSON", js: "JavaScript", html: "HTML", sql: "SQL (PostgreSQL)" };
-              const language = langMap[ext] || "TypeScript";
-              const assignedAgent = devAgent || defaultAgent;
-
-              const contextFiles = Object.entries(generatedFiles);
-              let contextStr = "";
-              for (const [fp, content] of contextFiles) {
-                const entry = `\n--- ${fp} ---\n${content.slice(0, 800)}\n`;
-                if (contextStr.length + entry.length > 6000) break;
-                contextStr += entry;
-              }
-
-              const aiResult = await callAI(apiKey,
-                `Você é um desenvolvedor expert em Full-Stack.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use componentes shadcn/ui e Tailwind CSS.\n\nREGRAS PARA package.json:\n- NÃO inclua "shadcn/ui" como dependência.\n- Use "lucide-react".\n- SEMPRE inclua "type": "module".\n- Use @vitejs/plugin-react-swc.`,
-                `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1500)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1500)}` : ""}${supabaseConnInfo}${memoryContext}\n\nGere o conteúdo COMPLETO do arquivo.`
-              );
-
-              let codeContent = aiResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
               if (deterministicFiles[subtask.file_path]) codeContent = deterministicFiles[subtask.file_path];
               if (subtask.file_path === "package.json") codeContent = sanitizePackageJson(codeContent);
 
@@ -273,12 +301,17 @@ serve(async (req) => {
 
               const { data: artifact } = await serviceClient.from("agent_outputs").insert({
                 organization_id: ctx.organizationId, workspace_id: initiative.workspace_id || null,
-                initiative_id: ctx.initiativeId, agent_id: assignedAgent.id, subtask_id: subtask.id,
+                initiative_id: ctx.initiativeId, agent_id: effectiveDev.id, subtask_id: subtask.id,
                 type: "code", status: "draft",
                 summary: `${subtask.file_path} — ${subtask.description.slice(0, 150)}`,
-                raw_output: { file_path: subtask.file_path, file_type: subtask.file_type, language: ext, content: codeContent },
-                model_used: aiResult.model, prompt_used: subtask.description,
-                tokens_used: aiResult.tokens, cost_estimate: aiResult.costUsd,
+                raw_output: {
+                  file_path: subtask.file_path, file_type: subtask.file_type,
+                  language: ext, content: codeContent,
+                  chain: ["code_architect", "developer", "integration_agent"],
+                },
+                model_used: devResult.model, prompt_used: subtask.description,
+                tokens_used: codeArchResult.tokens + devResult.tokens + integrationResult.tokens,
+                cost_estimate: codeArchResult.costUsd + devResult.costUsd + integrationResult.costUsd,
               }).select("id").single();
 
               if (artifact?.id) {
@@ -288,64 +321,52 @@ serve(async (req) => {
                   build_status: "pending", test_status: "pending",
                 });
               }
-              if (subtaskJobId) await completeJob(ctx, subtaskJobId, { artifact_id: artifact?.id, file_path: subtask.file_path, tokens: aiResult.tokens }, aiResult);
-              totalTokens += aiResult.tokens; totalCost += aiResult.costUsd;
+              if (subtaskJobId) await completeJob(ctx, subtaskJobId, { artifact_id: artifact?.id, file_path: subtask.file_path }, devResult);
               codeFilesGenerated++;
 
             } else {
-              // TEXT MODE (non-code subtasks)
-              const assignedAgent = pickAgentByDescription(subtask.description, agentsByRole, defaultAgent) as any;
+              // Non-code subtask
               const aiResult = await callAI(apiKey,
-                `Você é o agente "${assignedAgent.name}" (${assignedAgent.role}).\nExecute a subtask abaixo com maestria.`,
-                `## Story: ${story.title}\n## Fase: ${phase.name}\n## Subtask: ${subtask.description}\n\nProduza o output completo.`
+                `Você é o Developer "${effectiveDev.name}". Execute a subtask.`,
+                `## Story: ${story.title}\n## Subtask: ${subtask.description}\n\nProduza o output completo.`
               );
-
               await serviceClient.from("story_subtasks").update({
                 output: aiResult.content, status: "completed", executed_at: new Date().toISOString(),
               }).eq("id", subtask.id);
-
-              const outputType = assignedAgent.role === "architect" ? "decision" : ["dev", "devops"].includes(assignedAgent.role) ? "code" : ["analyst", "po", "pm"].includes(assignedAgent.role) ? "content" : "analysis";
-              const { data: artifact } = await serviceClient.from("agent_outputs").insert({
-                organization_id: ctx.organizationId, workspace_id: initiative.workspace_id || null,
-                initiative_id: ctx.initiativeId, agent_id: assignedAgent.id, subtask_id: subtask.id,
-                type: outputType, status: "draft",
+              await serviceClient.from("agent_outputs").insert({
+                organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
+                agent_id: effectiveDev.id, subtask_id: subtask.id,
+                type: "analysis", status: "draft",
                 summary: subtask.description?.slice(0, 200), raw_output: { text: aiResult.content },
-                model_used: aiResult.model, prompt_used: subtask.description,
-                tokens_used: aiResult.tokens, cost_estimate: aiResult.costUsd,
-              }).select("id").single();
-              if (subtaskJobId) await completeJob(ctx, subtaskJobId, { artifact_id: artifact?.id, tokens: aiResult.tokens }, aiResult);
-              totalTokens += aiResult.tokens; totalCost += aiResult.costUsd;
+                model_used: aiResult.model, tokens_used: aiResult.tokens, cost_estimate: aiResult.costUsd,
+              });
+              if (subtaskJobId) await completeJob(ctx, subtaskJobId, {}, aiResult);
+              totalTokens += aiResult.tokens;
+              totalCost += aiResult.costUsd;
             }
 
             executedCount++;
-            await updateProgress(executedCount + failedCount, subtask.file_path);
-          } catch (subtaskErr) {
+            await updateProgress(executedCount + failedCount, subtask.file_path, "completed");
+          } catch (err) {
             await serviceClient.from("story_subtasks").update({ status: "failed" }).eq("id", subtask.id);
-            if (subtaskJobId) await failJob(ctx, subtaskJobId, subtaskErr instanceof Error ? subtaskErr.message : "Unknown");
+            if (subtaskJobId) await failJob(ctx, subtaskJobId, err instanceof Error ? err.message : "Unknown");
             failedCount++;
             await updateProgress(executedCount + failedCount);
-            console.error(`Subtask ${subtask.id} failed:`, subtaskErr);
+            console.error(`Subtask ${subtask.id} failed:`, err);
           }
         };
 
-        // Execute parallel subtasks in batches of 3
-        const PARALLEL_BATCH = 3;
-        if (parallelSubtasks.length > 0) {
-          for (let bi = 0; bi < parallelSubtasks.length; bi += PARALLEL_BATCH) {
-            const batch = parallelSubtasks.slice(bi, bi + PARALLEL_BATCH);
-            await Promise.all(batch.map(st => executeOneSubtask(st)));
-          }
+        // Parallel batch for config/scaffold
+        const BATCH = 3;
+        for (let i = 0; i < parallelSubtasks.length; i += BATCH) {
+          await Promise.all(parallelSubtasks.slice(i, i + BATCH).map(executeSubtask));
         }
+        for (const st of sequentialSubtasks) await executeSubtask(st);
 
-        // Execute sequential subtasks
-        for (const subtask of sequentialSubtasks) {
-          await executeOneSubtask(subtask);
-        }
-
-        const { count: pendingCount } = await serviceClient.from("story_subtasks")
+        const { count: pending } = await serviceClient.from("story_subtasks")
           .select("*", { count: "exact", head: true })
           .eq("phase_id", phase.id).neq("status", "completed");
-        if (pendingCount === 0) await serviceClient.from("story_phases").update({ status: "completed" }).eq("id", phase.id);
+        if (pending === 0) await serviceClient.from("story_phases").update({ status: "completed" }).eq("id", phase.id);
       }
 
       const { count: pendingPhases } = await serviceClient.from("story_phases")
@@ -354,7 +375,7 @@ serve(async (req) => {
       if (pendingPhases === 0) await serviceClient.from("stories").update({ status: "done" }).eq("id", story.id);
     }
 
-    // Mark progress as complete
+    // Final progress
     await serviceClient.from("initiatives").update({
       stage_status: "validating",
       execution_progress: {
@@ -364,40 +385,36 @@ serve(async (req) => {
         chain_of_agents: hasChain, status: "completed", completed_at: new Date().toISOString(),
       },
     }).eq("id", ctx.initiativeId);
+
     if (masterJobId) await completeJob(ctx, masterJobId, {
-      executed: executedCount, failed: failedCount, code_files: codeFilesGenerated, total_tokens: totalTokens, chain_of_agents: hasChain,
+      executed: executedCount, failed: failedCount, code_files: codeFilesGenerated,
+      total_tokens: totalTokens, chain: ["code_architect", "developer", "integration_agent"],
     }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
 
-    await pipelineLog(ctx, "pipeline_execution_complete", `Execução concluída: ${executedCount} subtasks (${codeFilesGenerated} arquivos), ${failedCount} falhas`, { total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated, chain_of_agents: hasChain });
+    await pipelineLog(ctx, "pipeline_execution_complete",
+      `Camada 4 concluída: ${executedCount} subtasks (${codeFilesGenerated} arquivos), ${failedCount} falhas`,
+      { total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated }
+    );
 
     // Memory extraction
     try {
-      const memoryResult = await callAI(apiKey,
-        `Você é um sistema de memória organizacional. Extraia lições aprendidas.\nRetorne APENAS JSON válido.`,
-        `Projeto: "${initiative.title}"\nArquivos gerados: ${Object.keys(generatedFiles).join(", ")}\nExecutadas: ${executedCount}, falhas: ${failedCount}\n\n{"memories": [{"key": "nome_curto", "value": "descrição (max 200 chars)", "type": "lesson_learned|pattern|architectural_decision|best_practice"}]}`,
+      const memResult = await callAI(apiKey,
+        `Extraia lições aprendidas desta execução. Retorne APENAS JSON: {"memories": [{"key": "string", "value": "string (max 200 chars)", "type": "lesson_learned|pattern|architectural_decision|best_practice"}]}`,
+        `Projeto: "${initiative.title}", ${executedCount} arquivos gerados, ${failedCount} falhas.`,
         true
       );
-      const memParsed = JSON.parse(memoryResult.content);
-      const newMemories = memParsed.memories || [];
+      const parsed = JSON.parse(memResult.content);
       const agentIds = squadMembers.map((sm: any) => sm.agents?.id).filter(Boolean);
-      for (const mem of newMemories.slice(0, 5)) {
-        for (const agentId of agentIds) {
+      for (const mem of (parsed.memories || []).slice(0, 5)) {
+        for (const aid of agentIds) {
           await serviceClient.from("agent_memory").insert({
-            agent_id: agentId, organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
-            memory_type: mem.type || "lesson_learned", key: (mem.key || "unknown").slice(0, 200),
-            value: (mem.value || "").slice(0, 500), scope: "organization", relevance_score: 0.8,
+            agent_id: aid, organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
+            memory_type: mem.type || "lesson_learned", key: (mem.key || "").slice(0, 200),
+            value: (mem.value || "").slice(0, 500), scope: "organization",
           });
         }
       }
-      const archDecisions = newMemories.filter((m: any) => m.type === "architectural_decision");
-      for (const dec of archDecisions) {
-        await serviceClient.from("org_knowledge_base").insert({
-          organization_id: ctx.organizationId, category: "architectural_decision",
-          title: dec.key, content: dec.value, source_initiative_id: ctx.initiativeId,
-          tags: [initiative.suggested_stack || "general"].filter(Boolean),
-        });
-      }
-    } catch (memErr) { console.warn("[MEMORY] Failed to extract:", memErr); }
+    } catch {}
 
     return jsonResponse({
       success: true, executed: executedCount, failed: failedCount,
