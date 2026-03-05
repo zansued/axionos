@@ -939,6 +939,39 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         }
         const projectStructure = allProjectFiles.map(f => `- ${f.file_path}: ${f.description}`).join("\n");
 
+        // Fetch agent memories and org knowledge base for context injection
+        let memoryContext = "";
+        try {
+          // Get relevant agent memories from previous initiatives
+          const { data: memories } = await serviceClient
+            .from("agent_memory")
+            .select("key, value, memory_type, relevance_score")
+            .eq("organization_id", initiative.organization_id)
+            .order("relevance_score", { ascending: false })
+            .limit(15);
+
+          // Get org knowledge base (ADRs, patterns)
+          const { data: kbEntries } = await serviceClient
+            .from("org_knowledge_base")
+            .select("title, content, category, tags")
+            .eq("organization_id", initiative.organization_id)
+            .order("created_at", { ascending: false })
+            .limit(10);
+
+          const memoryLines = (memories || []).map(m => `- [${m.memory_type}] ${m.key}: ${m.value}`);
+          const kbLines = (kbEntries || []).map(k => `- [${k.category}] ${k.title}: ${k.content.slice(0, 200)}`);
+
+          if (memoryLines.length > 0 || kbLines.length > 0) {
+            memoryContext = `\n\n## Memória Organizacional (lições aprendidas de projetos anteriores):\n`;
+            if (memoryLines.length > 0) memoryContext += `### Lições dos Agentes:\n${memoryLines.join("\n")}\n`;
+            if (kbLines.length > 0) memoryContext += `### Base de Conhecimento:\n${kbLines.join("\n")}\n`;
+            memoryContext += `\nUse essas lições para evitar erros passados e seguir os padrões da organização.\n`;
+            console.log(`[MEMORY] Injected ${memoryLines.length} memories + ${kbLines.length} KB entries into context`);
+          }
+        } catch (memErr) {
+          console.warn("[MEMORY] Failed to fetch memories:", memErr);
+        }
+
         let totalTokens = 0, totalCost = 0, executedCount = 0, failedCount = 0, codeFilesGenerated = 0;
         const generatedFiles: Record<string, string> = {};
         const MAX_QA_ITERATIONS = 2;
@@ -1148,7 +1181,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                     contextStr += entry;
                   }
 
-                  const baseContext = `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum ainda)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Linguagem: ${language}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1200)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1200)}` : ""}${supabaseConnInfo}`;
+                  const baseContext = `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum ainda)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Linguagem: ${language}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1200)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1200)}` : ""}${supabaseConnInfo}${memoryContext}`;
 
                   // --- Step 1: ARCHITECT defines technical structure ---
                   const archResult = await callAI(
@@ -1281,7 +1314,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
                   const result = await callAI(
                     LOVABLE_API_KEY,
                     `Você é um desenvolvedor expert em Full-Stack com Vite + React + TypeScript + Tailwind CSS + Supabase.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use componentes shadcn/ui e Tailwind CSS (para frontend).\n- Siga as melhores práticas de ${language}.\n${singleBackendRules}\n\nREGRAS PARA package.json:\n- NÃO inclua "shadcn/ui", "shadcn-ui", "@shadcn/ui" ou "shadcn" como dependência. Componentes shadcn/ui são copiados localmente, não são pacotes npm.\n- NÃO inclua "@radix/ui" ou "radix-ui". Use pacotes individuais como "@radix-ui/react-dialog".\n- Use "lucide-react" (não "lucide").\n- SEMPRE inclua "type": "module" no package.json.\n- SEMPRE inclua @vitejs/plugin-react, typescript, tailwindcss, autoprefixer, postcss em devDependencies.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical.`,
-                    `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1500)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1500)}` : ""}${supabaseConnInfo}\n\nGere o conteúdo COMPLETO do arquivo. Retorne APENAS o código.`
+                    `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1500)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1500)}` : ""}${supabaseConnInfo}${memoryContext}\n\nGere o conteúdo COMPLETO do arquivo. Retorne APENAS o código.`
                   );
 
                   let codeContent = result.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
@@ -1409,6 +1442,53 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
         await log("pipeline_execution_complete", `Execução Chain-of-Agents concluída: ${executedCount} subtasks (${codeFilesGenerated} arquivos), ${failedCount} falhas`, {
           total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated, chain_of_agents: hasChain,
         });
+
+        // === MEMORY EXTRACTION: Learn from this execution ===
+        try {
+          const memoryResult = await callAI(
+            LOVABLE_API_KEY,
+            `Você é um sistema de memória organizacional. Analise a execução de um projeto e extraia lições aprendidas, padrões úteis e decisões arquiteturais que devem ser lembradas para projetos futuros.\n\nRetorne APENAS JSON válido.`,
+            `Projeto: "${initiative.title}"\nDescrição: ${initiative.description || initiative.refined_idea || ""}\nStack: ${initiative.suggested_stack || "React + Vite + TypeScript"}\nArquivos gerados: ${Object.keys(generatedFiles).join(", ")}\nSubtasks executadas: ${executedCount}, falhas: ${failedCount}\n\nExtraia 3-5 lições aprendidas no formato JSON:\n{"memories": [{"key": "nome_curto_da_lição", "value": "descrição da lição (max 200 chars)", "type": "lesson_learned|pattern|architectural_decision|best_practice"}]}`,
+            true
+          );
+
+          const memParsed = JSON.parse(memoryResult.content);
+          const newMemories = memParsed.memories || [];
+          
+          // Save memories for each agent in the squad
+          const agentIds = squadMembers.map((sm: any) => sm.agents?.id).filter(Boolean);
+          for (const mem of newMemories.slice(0, 5)) {
+            for (const agentId of agentIds) {
+              await serviceClient.from("agent_memory").insert({
+                agent_id: agentId,
+                organization_id: initiative.organization_id,
+                initiative_id: initiativeId,
+                memory_type: mem.type || "lesson_learned",
+                key: (mem.key || "unknown").slice(0, 200),
+                value: (mem.value || "").slice(0, 500),
+                scope: "organization",
+                relevance_score: 0.8,
+              });
+            }
+          }
+
+          // Save architectural decisions to org knowledge base
+          const archDecisions = newMemories.filter((m: any) => m.type === "architectural_decision");
+          for (const dec of archDecisions) {
+            await serviceClient.from("org_knowledge_base").insert({
+              organization_id: initiative.organization_id,
+              category: "architectural_decision",
+              title: dec.key,
+              content: dec.value,
+              source_initiative_id: initiativeId,
+              tags: [initiative.suggested_stack || "general"].filter(Boolean),
+            });
+          }
+
+          console.log(`[MEMORY] Extracted ${newMemories.length} memories, ${archDecisions.length} ADRs from execution`);
+        } catch (memErr) {
+          console.warn("[MEMORY] Failed to extract memories:", memErr);
+        }
 
         return new Response(JSON.stringify({
           success: true, executed: executedCount, failed: failedCount,

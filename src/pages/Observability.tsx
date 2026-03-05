@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
@@ -10,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Activity, Radio, Users, Zap, Clock, CircleDot, Pause, Play,
-  DollarSign, AlertTriangle, TrendingUp, BarChart3, Timer, Trophy,
+  DollarSign, AlertTriangle, TrendingUp, BarChart3, Timer, Trophy, Brain,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -291,10 +292,11 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full grid-cols-4 h-9">
+          <TabsList className="grid w-full grid-cols-5 h-9">
             <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Performance</TabsTrigger>
             <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>
             <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Qualidade</TabsTrigger>
+            <TabsTrigger value="memory" className="text-xs gap-1"><Brain className="h-3 w-3" /> Memória</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live Feed</TabsTrigger>
           </TabsList>
 
@@ -513,6 +515,11 @@ export default function Observability() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          {/* ===== MEMORY ===== */}
+          <TabsContent value="memory" className="mt-4">
+            <AgentMemoryPanel />
           </TabsContent>
 
           {/* ===== LIVE FEED ===== */}

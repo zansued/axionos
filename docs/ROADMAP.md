@@ -82,10 +82,10 @@
 
 ## Fase 7 — Memória e Contexto Compartilhado
 
-- [ ] Criar tabela `agent_memory` (agent_id, key, value, scope, ttl)
-- [ ] Agentes herdam contexto de iniciativas anteriores da mesma org
-- [ ] Knowledge base organizacional: decisões arquiteturais (ADRs) alimentam futuros agents
-- [ ] Padrões de código da org influenciam output do Dev agent
+- [x] Criar tabela `agent_memory` (agent_id, key, value, scope, ttl)
+- [x] Agentes herdam contexto de iniciativas anteriores da mesma org
+- [x] Knowledge base organizacional: decisões arquiteturais (ADRs) alimentam futuros agents
+- [x] Padrões de código da org influenciam output do Dev agent
 
 ---
 
