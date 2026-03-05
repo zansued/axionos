@@ -344,8 +344,8 @@ export async function upsertPreventionRule(
 
 // ── CONTEXT GENERATION ──
 
-/** Generate a compact project context string for AI prompts */
-export async function generateBrainContext(ctx: PipelineContext): Promise<string> {
+/** Generate a compact project context string for AI prompts (uses Smart Context Window) */
+export async function generateBrainContext(ctx: PipelineContext, targetFile?: string): Promise<string> {
   const [nodes, decisions, legacyRules, preventionRules] = await Promise.all([
     getBrainNodes(ctx),
     getDecisions(ctx),
@@ -357,7 +357,7 @@ export async function generateBrainContext(ctx: PipelineContext): Promise<string
 
   const sections: string[] = ["=== PROJECT BRAIN CONTEXT ==="];
 
-  // Project map
+  // Project map — compact: just file paths grouped by type
   if (nodes.length > 0) {
     const byType: Record<string, any[]> = {};
     for (const n of nodes) {
@@ -365,15 +365,15 @@ export async function generateBrainContext(ctx: PipelineContext): Promise<string
     }
     sections.push("\n## Project Structure");
     for (const [type, items] of Object.entries(byType)) {
-      sections.push(`### ${type}s (${items.length})`);
-      for (const item of items.slice(0, 30)) {
+      const paths = items.slice(0, 30).map(item => {
         const path = item.file_path ? ` → ${item.file_path}` : "";
-        sections.push(`- ${item.name}${path} [${item.status}]`);
-      }
+        return `- ${item.name}${path} [${item.status}]`;
+      });
+      sections.push(`### ${type}s (${items.length})\n${paths.join("\n")}`);
     }
   }
 
-  // Decisions
+  // Decisions — keep concise
   if (decisions.length > 0) {
     sections.push("\n## Architectural Decisions");
     for (const d of decisions.slice(0, 15)) {
@@ -389,7 +389,6 @@ export async function generateBrainContext(ctx: PipelineContext): Promise<string
   for (const r of preventionRules) {
     allRules.push({ rule: `[${r.error_pattern}] → ${r.prevention_rule}`, confidence: r.confidence_score });
   }
-  // Deduplicate and sort
   const uniqueRules = [...new Map(allRules.map(r => [r.rule, r])).values()]
     .sort((a, b) => b.confidence - a.confidence)
     .slice(0, 20);

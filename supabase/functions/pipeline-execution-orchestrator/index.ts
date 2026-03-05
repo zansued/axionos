@@ -8,6 +8,7 @@ import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob, recordAgentMessage } from "../_shared/pipeline-helpers.ts";
 import { generateBrainContext, recordError } from "../_shared/brain-helpers.ts";
+import { buildSmartContextWindow } from "../_shared/smart-context.ts";
 import {
   buildExecutionDAG, getReadyNodes, hasPendingNodes, markNodeStatus,
   formatExecutionPlan,
@@ -170,24 +171,24 @@ serve(async (req) => {
       markNodeStatus(dag, node.id, "generating");
       await updateProgress(node.filePath, "worker_dispatched", waveNum);
 
-      // Build dependency context for this node
+      // ── Smart Context Window: send only API surfaces instead of full files ──
       const depPaths = [...node.dependencies]
         .map(d => dag.nodes.get(d)?.filePath)
         .filter(Boolean) as string[];
-      let dependencyCode = "";
-      for (const fp of depPaths) {
-        if (generatedFiles[fp]) {
-          const entry = `\n--- ${fp} (DEPENDENCY) ---\n${generatedFiles[fp].slice(0, 800)}\n`;
-          if (dependencyCode.length + entry.length > 4000) break;
-          dependencyCode += entry;
-        }
-      }
-      let otherGeneratedCode = "";
-      for (const [fp, content] of Object.entries(generatedFiles)) {
-        if (depPaths.includes(fp)) continue;
-        const entry = `\n--- ${fp} ---\n${content.slice(0, 400)}\n`;
-        if (otherGeneratedCode.length + entry.length > 3000) break;
-        otherGeneratedCode += entry;
+
+      const { context: smartDependencyContext, stats: contextStats } = buildSmartContextWindow(
+        generatedFiles,
+        node.filePath,
+        depPaths,
+        12000, // ~3K tokens budget
+      );
+
+      // Log compression stats periodically
+      if (executedCount % 5 === 0 && contextStats.compressionRatio > 0) {
+        await pipelineLog(ctx, "smart_context_stats",
+          `Smart Context: ${contextStats.compressionRatio}% compression (${contextStats.includedFiles}/${contextStats.totalFiles} files, ${contextStats.originalChars} → ${contextStats.compactChars} chars)`,
+          contextStats
+        );
       }
 
       const workerPayload = {
@@ -207,8 +208,9 @@ serve(async (req) => {
         projectTitle: initiative.title,
         projectDescription: initiative.refined_idea || initiative.description || "",
         projectStructure,
-        dependencyCode,
-        otherGeneratedCode,
+        // Smart Context Window — compact API surfaces instead of full files
+        dependencyCode: smartDependencyContext,
+        otherGeneratedCode: "", // already included in smart context
         prdSnippet: initiative.prd_content?.slice(0, 1000) || "",
         architectureSnippet: initiative.architecture_content?.slice(0, 1000) || "",
         dataArchContext,
@@ -216,6 +218,7 @@ serve(async (req) => {
         fileTreeContext,
         supabaseConnInfo,
         memoryContext,
+        smartContextStats: contextStats,
         codeArchitect: effectiveCodeArch ? { id: effectiveCodeArch.id, name: effectiveCodeArch.name, role: effectiveCodeArch.role, description: effectiveCodeArch.description } : null,
         developer: effectiveDev ? { id: effectiveDev.id, name: effectiveDev.name, role: effectiveDev.role, description: effectiveDev.description } : null,
         integrationAgent: effectiveIntegration ? { id: effectiveIntegration.id, name: effectiveIntegration.name, role: effectiveIntegration.role, description: effectiveIntegration.description } : null,
