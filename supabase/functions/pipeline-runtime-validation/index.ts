@@ -160,7 +160,31 @@ serve(async (req) => {
       baseTreeSha = fallbackResult.treeSha;
     } else if (isRepoEmpty) {
       await pipelineLog(ctx, "runtime_validation_empty_repo",
-        `Repo vazio detectado — gerando commit inicial direto via tree API`);
+        `Repo vazio detectado — inicializando branch '${baseBranch}' com commit seed`);
+
+      const seedResp = await fetch(
+        `${GITHUB_API}/repos/${owner}/${repo}/contents/README.md`,
+        {
+          method: "PUT",
+          headers: ghHeaders,
+          body: JSON.stringify({
+            message: "chore: initialize repository for runtime validation",
+            content: btoa("# Runtime Validation\n\nRepository initialized automatically by SynkrAIOS pipeline.\n"),
+            branch: baseBranch,
+          }),
+        }
+      );
+      if (!seedResp.ok) {
+        throw new Error(`Falha ao inicializar repositório vazio: ${await seedResp.text()}`);
+      }
+      await seedResp.text();
+
+      const seededResult = await loadBaseCommit(baseBranch);
+      if (!seededResult.ok) {
+        throw new Error(`Branch '${baseBranch}' não encontrada após inicialização: ${seededResult.errText}`);
+      }
+      baseSha = seededResult.sha;
+      baseTreeSha = seededResult.treeSha;
     } else {
       throw new Error(`Branch '${baseBranch}' não encontrada: ${baseResult.errText}`);
     }
