@@ -95,3 +95,6 @@ verify_jwt = false
 
 [functions.pipeline-architecture-simulation]
 verify_jwt = false
+
+[functions.pipeline-foundation-scaffold]
+verify_jwt = false
