@@ -1361,6 +1361,73 @@ export type Database = {
           },
         ]
       }
+      project_prevention_rules: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          error_pattern: string
+          id: string
+          initiative_id: string
+          last_triggered_at: string
+          organization_id: string
+          prevention_rule: string
+          scope: string
+          source_error_id: string | null
+          times_triggered: number
+          updated_at: string
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          error_pattern: string
+          id?: string
+          initiative_id: string
+          last_triggered_at?: string
+          organization_id: string
+          prevention_rule: string
+          scope?: string
+          source_error_id?: string | null
+          times_triggered?: number
+          updated_at?: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          error_pattern?: string
+          id?: string
+          initiative_id?: string
+          last_triggered_at?: string
+          organization_id?: string
+          prevention_rule?: string
+          scope?: string
+          source_error_id?: string | null
+          times_triggered?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_prevention_rules_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_prevention_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_prevention_rules_source_error_id_fkey"
+            columns: ["source_error_id"]
+            isOneToOne: false
+            referencedRelation: "project_errors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       squad_members: {
         Row: {
           agent_id: string

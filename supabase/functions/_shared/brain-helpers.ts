@@ -272,17 +272,88 @@ export async function updateNodeStatus(ctx: PipelineContext, nodeId: string, sta
     .eq("id", nodeId);
 }
 
+// ── PREVENTION RULES (Self-Healing) ──
+
+/** Get high-confidence prevention rules from the dedicated table */
+export async function getPreventionRulesV2(ctx: PipelineContext, scope?: string): Promise<any[]> {
+  let query = ctx.serviceClient
+    .from("project_prevention_rules")
+    .select("*")
+    .eq("organization_id", ctx.organizationId)
+    .gte("confidence_score", 0.3)
+    .order("confidence_score", { ascending: false })
+    .limit(30);
+
+  // Include both initiative-specific and org-wide rules
+  if (scope === "initiative") {
+    query = query.eq("initiative_id", ctx.initiativeId);
+  }
+
+  const { data } = await query;
+  return data || [];
+}
+
+/** Upsert a prevention rule — bumps confidence if pattern already exists */
+export async function upsertPreventionRule(
+  ctx: PipelineContext,
+  errorPattern: string,
+  preventionRule: string,
+  scope = "initiative",
+  sourceErrorId?: string
+): Promise<string> {
+  // Check for existing similar pattern
+  const { data: existing } = await ctx.serviceClient
+    .from("project_prevention_rules")
+    .select("id, confidence_score, times_triggered")
+    .eq("organization_id", ctx.organizationId)
+    .eq("error_pattern", errorPattern)
+    .maybeSingle();
+
+  if (existing) {
+    // Bump confidence (max 1.0) and increment trigger count
+    const newConfidence = Math.min((existing.confidence_score || 0.5) + 0.1, 1.0);
+    await ctx.serviceClient
+      .from("project_prevention_rules")
+      .update({
+        confidence_score: newConfidence,
+        times_triggered: (existing.times_triggered || 1) + 1,
+        last_triggered_at: new Date().toISOString(),
+        prevention_rule: preventionRule, // Update with latest fix knowledge
+      })
+      .eq("id", existing.id);
+    return existing.id;
+  }
+
+  // Insert new rule
+  const { data } = await ctx.serviceClient
+    .from("project_prevention_rules")
+    .insert({
+      initiative_id: ctx.initiativeId,
+      organization_id: ctx.organizationId,
+      error_pattern: errorPattern,
+      prevention_rule: preventionRule,
+      scope,
+      confidence_score: 0.5,
+      source_error_id: sourceErrorId || null,
+    })
+    .select("id")
+    .single();
+
+  return data?.id || "";
+}
+
 // ── CONTEXT GENERATION ──
 
 /** Generate a compact project context string for AI prompts */
 export async function generateBrainContext(ctx: PipelineContext): Promise<string> {
-  const [nodes, decisions, preventionRules] = await Promise.all([
+  const [nodes, decisions, legacyRules, preventionRules] = await Promise.all([
     getBrainNodes(ctx),
     getDecisions(ctx),
     getPreventionRules(ctx),
+    getPreventionRulesV2(ctx),
   ]);
 
-  if (nodes.length === 0 && decisions.length === 0) return "";
+  if (nodes.length === 0 && decisions.length === 0 && preventionRules.length === 0) return "";
 
   const sections: string[] = ["=== PROJECT BRAIN CONTEXT ==="];
 
@@ -310,11 +381,25 @@ export async function generateBrainContext(ctx: PipelineContext): Promise<string
     }
   }
 
-  // Error prevention
-  if (preventionRules.length > 0) {
-    sections.push("\n## Error Prevention Rules");
-    for (const rule of preventionRules.slice(0, 10)) {
-      sections.push(`- ⚠️ ${rule}`);
+  // Prevention rules (combined: legacy + v2, deduplicated, sorted by confidence)
+  const allRules: Array<{ rule: string; confidence: number }> = [];
+  for (const rule of legacyRules) {
+    allRules.push({ rule, confidence: 0.4 });
+  }
+  for (const r of preventionRules) {
+    allRules.push({ rule: `[${r.error_pattern}] → ${r.prevention_rule}`, confidence: r.confidence_score });
+  }
+  // Deduplicate and sort
+  const uniqueRules = [...new Map(allRules.map(r => [r.rule, r])).values()]
+    .sort((a, b) => b.confidence - a.confidence)
+    .slice(0, 20);
+
+  if (uniqueRules.length > 0) {
+    sections.push("\n## ⚠️ KNOWN ERRORS TO AVOID (Self-Healing Rules)");
+    sections.push("These rules were learned from previous CI failures. MUST follow them:");
+    for (const r of uniqueRules) {
+      const stars = r.confidence >= 0.8 ? "🔴" : r.confidence >= 0.6 ? "🟡" : "⚪";
+      sections.push(`- ${stars} ${r.rule} (confidence: ${(r.confidence * 100).toFixed(0)}%)`);
     }
   }
 

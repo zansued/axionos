@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain, AlertTriangle, Lightbulb, Loader2 } from "lucide-react";
+import { Brain, AlertTriangle, Lightbulb, Loader2, Shield } from "lucide-react";
 import { BrainDAGGraph } from "./BrainDAGGraph";
 
 interface ProjectBrainPanelProps {
@@ -64,7 +64,21 @@ export function ProjectBrainPanel({ initiativeId }: ProjectBrainPanelProps) {
     enabled: !!initiativeId,
   });
 
-  const isLoading = nodesLoading || edgesLoading || decisionsLoading || errorsLoading;
+  const { data: preventionRules = [], isLoading: rulesLoading } = useQuery({
+    queryKey: ["brain-prevention-rules", initiativeId],
+    queryFn: async () => {
+      const { data, error } = await (supabase.from("project_prevention_rules") as any)
+        .select("*")
+        .eq("initiative_id", initiativeId)
+        .order("confidence_score", { ascending: false })
+        .limit(30);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!initiativeId,
+  });
+
+  const isLoading = nodesLoading || edgesLoading || decisionsLoading || errorsLoading || rulesLoading;
   const unfixedErrors = errors.filter((e: any) => !e.fixed);
 
   return (
@@ -87,6 +101,12 @@ export function ProjectBrainPanel({ initiativeId }: ProjectBrainPanelProps) {
             <AlertTriangle className="h-4 w-4" /> Erros
             {unfixedErrors.length > 0 && (
               <Badge variant="destructive" className="ml-1 h-5 px-1.5 text-[10px]">{unfixedErrors.length}</Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="rules" className="gap-1.5">
+            <Shield className="h-4 w-4" /> Self-Healing
+            {preventionRules.length > 0 && (
+              <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-[10px]">{preventionRules.length}</Badge>
             )}
           </TabsTrigger>
         </TabsList>
@@ -195,6 +215,54 @@ export function ProjectBrainPanel({ initiativeId }: ProjectBrainPanelProps) {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="rules" className="mt-4">
+          {rulesLoading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : preventionRules.length === 0 ? (
+            <Card className="border-dashed border-2 border-border/50">
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <Shield className="h-10 w-10 text-muted-foreground/50 mb-3" />
+                <h3 className="font-semibold text-lg">Nenhuma regra aprendida</h3>
+                <p className="text-sm text-muted-foreground mt-1 max-w-md">
+                  Regras de prevenção serão geradas automaticamente quando o Fix Swarm corrigir erros de CI.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-2">
+              {preventionRules.map((rule: any) => {
+                const confidence = rule.confidence_score || 0;
+                const confidenceColor = confidence >= 0.8 ? "text-red-400 border-red-500/30 bg-red-500/10" :
+                  confidence >= 0.6 ? "text-yellow-400 border-yellow-500/30 bg-yellow-500/10" :
+                  "text-muted-foreground border-border bg-muted/30";
+                return (
+                  <Card key={rule.id} className="border-border/50 bg-card/80">
+                    <CardContent className="p-3 space-y-1.5">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-xs font-medium">{rule.error_pattern}</p>
+                        <div className="flex gap-1 shrink-0">
+                          <Badge variant="outline" className={`text-[10px] ${confidenceColor}`}>
+                            {(confidence * 100).toFixed(0)}%
+                          </Badge>
+                          {rule.times_triggered > 1 && (
+                            <Badge variant="outline" className="text-[10px]">×{rule.times_triggered}</Badge>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground">→ {rule.prevention_rule}</p>
+                      <div className="flex gap-1.5">
+                        <Badge variant="outline" className="text-[9px]">{rule.scope}</Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </TabsContent>
