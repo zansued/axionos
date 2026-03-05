@@ -84,10 +84,33 @@ Arquitetura distribuída:
 
 ---
 
-## 🔜 Próximos Passos (em ordem de prioridade)
+### 12. Observabilidade & Custos
+- Dashboard de custo por iniciativa e agente, alertas de budget, SLA configs
+
+### 13. Memória e Contexto
+- `agent_memory` com herança de contexto, knowledge base organizacional
+
+### 14. Incremental Re-execution
+- Engine com hash DJB2, propagação dirty em cascata, reuso de subtasks limpas
+
+### 15. Vector Embeddings (pgvector)
+- `embedding vector(768)`, `match_brain_nodes`, semantic search no Smart Context
+
+### 16. Templates de Iniciativas
+- 6 templates pré-prontos, pre-popula discovery_payload
+
+### 17. UX & Polish
+- Atalhos de teclado, i18n pt-BR/en-US, exportação CSV/PDF, dark/light refinements
+
+### 18. Governança — Compliance & Evidências
+- Auditoria com abas (Audit Trail, Governança, Reviews), exportação CSV/PDF
+
+---
+
+## 🔜 Próximos Passos
 
 | # | Fase | Impacto | Complexidade | Descrição |
 |---|------|---------|-------------|-----------|
-| 1 | Incremental Re-execution | 🟡 Médio | Médio | Re-executar apenas arquivos cujo content_hash mudou |
-| 2 | Vector Embeddings (pgvector) | 🟠 Baixo | Alto | Busca semântica no Brain para contexto mais relevante |
-| 3 | Templates de Iniciativas | 🟠 Baixo | Baixo | Modelos pré-prontos (SaaS, API, Landing Page) |
+| 1 | Roles granulares por gate | 🟡 Médio | Médio | Permissões por estágio do pipeline |
+| 2 | Approval chains | 🟡 Médio | Alto | Múltiplos aprovadores com quórum |
+| 3 | Webhook notifications | 🟠 Baixo | Baixo | Slack/Discord em gates e SLA |
