@@ -344,7 +344,7 @@ Retorne APENAS JSON:
       {
         method: "PATCH",
         headers: ghHeaders,
-        body: JSON.stringify({ sha: newCommit.sha, force: false }),
+        body: JSON.stringify({ sha: newCommit.sha, force: true }),
       }
     );
     if (!updateRefResp.ok) {
