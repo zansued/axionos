@@ -23,6 +23,8 @@ export async function checkRateLimit(
 
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
 
+  const maxRequests = FUNCTION_LIMITS[functionName] || DEFAULT_MAX_REQUESTS_PER_HOUR;
+
   // Count recent requests
   const { count, error } = await supabase
     .from("ai_rate_limits")
@@ -33,14 +35,13 @@ export async function checkRateLimit(
 
   if (error) {
     console.error("Rate limit check error:", error);
-    // Fail open — allow request if rate limit check fails
-    return { allowed: true, remaining: MAX_REQUESTS_PER_HOUR };
+    return { allowed: true, remaining: maxRequests };
   }
 
   const used = count || 0;
-  const remaining = Math.max(0, MAX_REQUESTS_PER_HOUR - used);
+  const remaining = Math.max(0, maxRequests - used);
 
-  if (used >= MAX_REQUESTS_PER_HOUR) {
+  if (used >= maxRequests) {
     return { allowed: false, remaining: 0 };
   }
 
