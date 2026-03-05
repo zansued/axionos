@@ -435,7 +435,7 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
       <ArchitecturalDriftStatus initiativeId={initiative.id} />
 
       {/* Runtime Validation (tsc + vite build) */}
-      <RuntimeValidationStatus executionProgress={initiative.execution_progress} initiativeId={initiative.id} onStatusUpdated={onRefresh} />
+      <RuntimeValidationStatus executionProgress={initiative.execution_progress} initiativeId={initiative.id} />
 
       {/* Repo Result Card */}
       {repoUrl && (
