@@ -45,22 +45,21 @@ export function RuntimeValidationStatus({ executionProgress }: RuntimeValidation
   const repoOwner = ep.runtime_validation_repo_owner;
   const repoName = ep.runtime_validation_repo_name;
 
-  if (!rtStatus && !ciStatus) return null;
-
   const isRunning = rtStatus === "running" && ciStatus !== "success" && ciStatus !== "failed";
   const passed = ciStatus === "success";
   const failed = ciStatus === "failed";
 
   const elapsed = useElapsedTime(startedAt, isRunning);
 
-  // Timeout warning after 5 minutes
+  if (!rtStatus && !ciStatus) return null;
+
   const isLong = startedAt && isRunning && (Date.now() - new Date(startedAt).getTime()) > 5 * 60 * 1000;
 
   const ghActionsUrl = repoOwner && repoName
     ? `https://github.com/${repoOwner}/${repoName}/actions`
     : null;
 
-  const statusColor = passed ? "text-green-500" : failed ? "text-destructive" : "text-yellow-500";
+  const statusColor = passed ? "text-primary" : failed ? "text-destructive" : "text-accent-foreground";
   const StatusIcon = passed ? CheckCircle2 : failed ? XCircle : isRunning ? Loader2 : AlertTriangle;
 
   return (
