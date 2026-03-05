@@ -47,7 +47,19 @@ function parseBuildErrors(log: string): BuildError[] {
     regex: RegExp;
     extract: (m: RegExpExecArray) => BuildError | null;
   }> = [
-    // Rollup failed to resolve import
+    // Vite entrypoint — "Could not resolve './src/main.tsx' from index.html"
+    {
+      regex: /Could not resolve\s+['"]\.?\/?(src\/main\.tsx?)['"](?:\s+from\s+['"]([^'"]+)['"])?/gi,
+      extract: (m) => ({
+        errorType: "vite_missing_entrypoint",
+        file: m[1] || "src/main.tsx",
+        line: null,
+        message: `Vite entrypoint missing: ${m[1] || "src/main.tsx"} (from ${m[2] || "index.html"})`,
+        missingImport: m[1] || "src/main.tsx",
+        category: "entrypoint",
+      }),
+    },
+    // Rollup failed to resolve import (generic)
     {
       regex: /\[rollup\]\s*(?:Rollup failed to resolve import|Could not resolve)\s+"([^"]+)"(?:\s+from\s+"([^"]+)")?/gi,
       extract: (m) => ({
@@ -56,14 +68,14 @@ function parseBuildErrors(log: string): BuildError[] {
         line: null,
         message: `Rollup failed to resolve import "${m[1]}"`,
         missingImport: m[1],
-        category: "import",
+        category: m[1].includes("main.tsx") ? "entrypoint" as const : "import" as const,
       }),
     },
     // Vite entrypoint — "Could not resolve entry module" or rollup on /src/main.tsx
     {
       regex: /(?:Could not resolve entry module|failed to resolve import)\s*"?([^\s"]+main\.\w+)"?/gi,
       extract: (m) => ({
-        errorType: "missing_entrypoint",
+        errorType: "vite_missing_entrypoint",
         file: m[1],
         line: null,
         message: `Vite entrypoint missing: ${m[1]}`,
