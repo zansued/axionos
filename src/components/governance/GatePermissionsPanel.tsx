@@ -13,6 +13,7 @@ const GATE_STAGES = [
   { stage: "architected", label: "Arquitetura" },
   { stage: "architecture_simulated", label: "Simulação" },
   { stage: "architecture_validated", label: "Validação Preventiva" },
+  { stage: "bootstrapped", label: "Bootstrap Intelligence" },
   { stage: "scaffolded", label: "Scaffold" },
   { stage: "squad_formed", label: "Squad" },
   { stage: "planned", label: "Planning" },

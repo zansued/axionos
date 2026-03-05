@@ -258,3 +258,20 @@
 - [x] Scaffold armazenado no Project Brain como nós com status "scaffold"
 - [x] Novos estágios: `scaffolding` / `scaffolded`
 - [x] Pipeline atualizado: Arquitetura → Simulação → Validação Preventiva → **Scaffold** → Squad → Execução
+
+---
+
+## Fase 23 — Project Bootstrap Intelligence ✅
+
+- [x] **`project-bootstrap-intelligence`** — valida buildabilidade estrutural ANTES do Foundation Scaffold
+- [x] Detecção multi-stack: `react-vite`, `nextjs`, `node-api`, `python-fastapi`
+- [x] Templates de bootstrap por stack com arquivos mínimos necessários
+- [x] **Validação de entrypoints**: parse de index.html → verifica script referenciado
+- [x] **Validação de scripts**: dev/build/preview com valores corretos
+- [x] **Validação de dependências**: react, react-dom, vite, typescript
+- [x] **Predição de build via IA**: simula `npm install && tsc --noEmit && vite build`
+- [x] Auto-injeção de arquivos faltantes no Project Brain como nós `bootstrap`
+- [x] Reparo emergencial se predição de build falhar
+- [x] Novos estágios: `bootstrapping` / `bootstrapped`
+- [x] Pipeline atualizado: Arquitetura → Simulação → Validação Preventiva → **Bootstrap Intelligence** → Scaffold → Squad → Execução
+- [x] Aprovação intermediária removida — pipeline agora é estritamente sequencial

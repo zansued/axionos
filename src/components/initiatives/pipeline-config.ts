@@ -1,6 +1,6 @@
 import {
   Lightbulb, Brain, Users, FileText, Cpu, BookOpen, Hammer, CheckCircle2,
-  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck
+  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap
 } from "lucide-react";
 
 export const PIPELINE_STEPS = [
@@ -14,6 +14,8 @@ export const PIPELINE_STEPS = [
   { key: "architecture_simulated", label: "Simulado", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
   { key: "validating_architecture", label: "Validação Preventiva", icon: ShieldCheck, color: "text-warning", bg: "bg-warning/10" },
   { key: "architecture_validated", label: "Arquitetura Validada", icon: ShieldCheck, color: "text-accent", bg: "bg-accent/10" },
+  { key: "bootstrapping", label: "Bootstrap ▶", icon: Zap, color: "text-warning", bg: "bg-warning/10" },
+  { key: "bootstrapped", label: "Bootstrap ✓", icon: Zap, color: "text-accent", bg: "bg-accent/10" },
   { key: "scaffolding", label: "Scaffold ▶", icon: Hammer, color: "text-warning", bg: "bg-warning/10" },
   { key: "scaffolded", label: "Scaffold ✓", icon: Hammer, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
@@ -34,6 +36,7 @@ export const MACRO_STAGES = [
   { key: "architecture", label: "Arquitetura", icon: Layers },
   { key: "simulation", label: "Simulação", icon: Layers },
   { key: "preventive_validation", label: "Validação Preventiva", icon: ShieldCheck },
+  { key: "bootstrap", label: "Bootstrap", icon: Zap },
   { key: "scaffold", label: "Scaffold", icon: Hammer },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
@@ -54,13 +57,14 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["architecture_ready", "architecting", "architected"].includes(s)) return 1;
   if (["simulating_architecture", "architecture_simulated"].includes(s)) return 2;
   if (["validating_architecture", "architecture_validated"].includes(s)) return 3;
-  if (["scaffolding", "scaffolded"].includes(s)) return 4;
-  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 5;
-  if (["planning_ready", "planning", "planned"].includes(s)) return 6;
-  if (["in_progress"].includes(s)) return 7;
-  if (["validating", "ready_to_publish"].includes(s)) return 8;
-  if (["published"].includes(s)) return 9;
-  if (["completed"].includes(s)) return 10;
+  if (["bootstrapping", "bootstrapped"].includes(s)) return 4;
+  if (["scaffolding", "scaffolded"].includes(s)) return 5;
+  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 6;
+  if (["planning_ready", "planning", "planned"].includes(s)) return 7;
+  if (["in_progress"].includes(s)) return 8;
+  if (["validating", "ready_to_publish"].includes(s)) return 9;
+  if (["published"].includes(s)) return 10;
+  if (["completed"].includes(s)) return 11;
   return 0;
 }
 
@@ -110,8 +114,18 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "architecture_validated":
       return [
-        { stage: "foundation_scaffold", label: "🏗️ Gerar Foundation Scaffold", type: "run" },
+        { stage: "bootstrap_intelligence", label: "🧠 Bootstrap Intelligence", type: "run" },
         { stage: "preventive_validation", label: "Re-executar Validação", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "bootstrapping":
+      return [
+        { stage: "bootstrap_intelligence", label: "Re-executar Bootstrap", type: "run" },
+      ];
+    case "bootstrapped":
+      return [
+        { stage: "foundation_scaffold", label: "🏗️ Gerar Foundation Scaffold", type: "run" },
+        { stage: "bootstrap_intelligence", label: "Re-executar Bootstrap", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "scaffolding":

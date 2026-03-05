@@ -98,3 +98,6 @@ verify_jwt = false
 
 [functions.pipeline-foundation-scaffold]
 verify_jwt = false
+
+[functions.project-bootstrap-intelligence]
+verify_jwt = false
