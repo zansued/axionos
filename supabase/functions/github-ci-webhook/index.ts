@@ -401,10 +401,11 @@ async function handleGitHubEvent(
       workflow: workflowName,
     }, { costUsd: 0, durationMs: 0 });
 
-    // ── Trigger Fix Swarm ──
+    // ── Trigger Build Self-Healing Pipeline ──
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const currentAttempt = (execProgress?.self_healing_attempt as number) || 0;
     try {
-      const orchResp = await fetch(`${supabaseUrl}/functions/v1/pipeline-fix-orchestrator`, {
+      const healResp = await fetch(`${supabaseUrl}/functions/v1/build-self-healing`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${webhookSecret}`,
@@ -413,16 +414,17 @@ async function handleGitHubEvent(
         body: JSON.stringify({
           initiative_id: initiativeId,
           organization_id: orgId,
-          ci_run_id: runId,
+          build_log: buildLog.slice(0, 10000),
+          attempt: currentAttempt + 1,
           owner: repoOwner,
           repo: repoName,
         }),
       });
 
-      const orchResult = await orchResp.json();
-      await pipelineLog(ctx, "fix_swarm_triggered",
-        `Fix Swarm triggered: ${orchResult.files_fixed || 0} fixes, PR: ${orchResult.pr_url || "pending"}`,
-        { orchestrator_result: orchResult });
+      const healResult = await healResp.json();
+      await pipelineLog(ctx, "self_healing_triggered",
+        `Build Self-Healing triggered (attempt ${currentAttempt + 1}): ${healResult.patches_applied || 0} patches applied`,
+        { self_healing_result: healResult });
 
       return jsonResponse({
         success: true,
@@ -430,15 +432,37 @@ async function handleGitHubEvent(
         conclusion,
         initiative_id: initiativeId,
         errors_count: extractedErrors.length,
-        fix_swarm_triggered: true,
-        fix_result: orchResult,
-        message: "CI failure recorded. Fix Swarm triggered.",
+        self_healing_triggered: true,
+        self_healing_result: healResult,
+        message: "CI failure recorded. Build Self-Healing triggered.",
       });
-    } catch (orchError) {
-      console.error("Fix Orchestrator trigger failed:", orchError);
-      await pipelineLog(ctx, "fix_swarm_trigger_failed",
-        `Fix Orchestrator failed: ${orchError instanceof Error ? orchError.message : "Unknown"}`,
-        { error: String(orchError) });
+    } catch (healError) {
+      console.error("Build Self-Healing trigger failed:", healError);
+      await pipelineLog(ctx, "self_healing_trigger_failed",
+        `Build Self-Healing failed: ${healError instanceof Error ? healError.message : "Unknown"}`,
+        { error: String(healError) });
+
+      // Fallback to Fix Orchestrator (PR-based)
+      try {
+        const orchResp = await fetch(`${supabaseUrl}/functions/v1/pipeline-fix-orchestrator`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${webhookSecret}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            initiative_id: initiativeId,
+            organization_id: orgId,
+            ci_run_id: runId,
+            owner: repoOwner,
+            repo: repoName,
+          }),
+        });
+        const orchResult = await orchResp.json();
+        await pipelineLog(ctx, "fix_swarm_fallback",
+          `Fallback Fix Swarm triggered: ${orchResult.files_fixed || 0} fixes`,
+          { orchestrator_result: orchResult });
+      } catch { /* ignore fallback failure */ }
 
       return jsonResponse({
         success: true,
@@ -446,8 +470,8 @@ async function handleGitHubEvent(
         conclusion,
         initiative_id: initiativeId,
         errors_count: extractedErrors.length,
-        fix_swarm_triggered: false,
-        message: "CI failure recorded. Fix Swarm trigger failed.",
+        self_healing_triggered: false,
+        message: "CI failure recorded. Self-Healing trigger failed.",
       });
     }
   }
