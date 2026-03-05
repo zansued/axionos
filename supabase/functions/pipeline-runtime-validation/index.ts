@@ -305,6 +305,8 @@ serve(async (req) => {
         runtime_validation_commit: newCommit.sha,
         runtime_validation_started_at: new Date().toISOString(),
         runtime_validation_files: fileEntries.length,
+        runtime_validation_repo_owner: owner,
+        runtime_validation_repo_name: repo,
       },
     });
 
