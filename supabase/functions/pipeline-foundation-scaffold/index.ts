@@ -28,6 +28,31 @@ interface ScaffoldValidation {
   repairs: string[];
 }
 
+const REQUIRED_REACT_VITE_FILES = [
+  "index.html",
+  "src/main.tsx",
+  "src/App.tsx",
+  "vite.config.ts",
+  "tsconfig.json",
+  "package.json",
+] as const;
+
+const REQUIRED_PACKAGE_SCRIPTS = {
+  dev: "vite",
+  build: "vite build",
+  preview: "vite preview",
+} as const;
+
+function normalizeScriptPath(path: string): string {
+  return path.replace(/^\.?\//, "");
+}
+
+function extractIndexEntrypoint(indexHtml: string): string | null {
+  const scriptMatch = indexHtml.match(/<script[^>]+type=["']module["'][^>]+src=["']([^"']+)["']/i)
+    || indexHtml.match(/<script[^>]+src=["']([^"']+)["'][^>]*><\/script>/i);
+  return scriptMatch?.[1] ? normalizeScriptPath(scriptMatch[1]) : null;
+}
+
 // Default React + Vite scaffold
 function getReactViteScaffold(projectName: string): ScaffoldFile[] {
   return [
