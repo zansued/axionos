@@ -211,7 +211,7 @@ serve(async (req) => {
           headers: ghHeaders,
           body: JSON.stringify({
             message: "chore: initialize repository for runtime validation",
-            content: btoa("# Runtime Validation\n\nRepository initialized automatically by SynkrAIOS pipeline.\n"),
+            content: btoa("# Runtime Validation\n\nRepository initialized automatically by AxionOS pipeline.\n"),
             branch: baseBranch,
           }),
         }
