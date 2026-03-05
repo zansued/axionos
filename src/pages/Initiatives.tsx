@@ -115,6 +115,18 @@ export default function Initiatives() {
   const runningStage = selectedId ? getRunningStage(selectedId) : null;
   const { breaches } = useSLABreaches(initiatives);
 
+  const handleDeleteInitiative = async (id: string) => {
+    try {
+      const { error } = await supabase.rpc("delete_initiative_cascade", { p_initiative_id: id });
+      if (error) throw error;
+      toast({ title: "Iniciativa excluída", description: "Todos os dados associados foram removidos." });
+      setSelectedId(null);
+      queryClient.invalidateQueries({ queryKey: ["initiatives"] });
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Erro ao excluir", description: getUserFriendlyError(e) });
+    }
+  };
+
   return (
     <AppLayout>
       <div className="space-y-6">
@@ -151,6 +163,7 @@ export default function Initiatives() {
               onRunStage={(stage, comment, publishParams) => runStage(selected.id, stage, comment, publishParams)}
               onApprove={() => runStage(selected.id, "approve")}
               onRollbackToStage={(macroKey) => rollbackToStage(selected.id, macroKey)}
+              onDelete={() => handleDeleteInitiative(selected.id)}
             />
           ) : (
             <Card className="border-dashed border-2 flex items-center justify-center min-h-[400px]">
