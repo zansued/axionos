@@ -72,6 +72,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       fast_modify: "pipeline-fast-modify",
       full_review: "pipeline-full-review",
       brain_sync: "brain-sync",
+      drift_detection: "pipeline-drift-detection",
     };
     return functionMap[stage] || "run-initiative-pipeline";
   };
@@ -129,6 +130,9 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           deep_validation: result.passed
             ? `Deep Static Analysis: ${result.total_files || 0} arquivos verificados, ${result.warnings_count || 0} warnings ✅`
             : `Deep Static Analysis: ${result.errors_count || 0} erros, ${result.warnings_count || 0} warnings em ${result.total_files || 0} arquivos ❌`,
+          drift_detection: result.passed
+            ? `Drift Detection: ${result.files_analyzed || 0} arquivos, drift score ${result.drift_score || 0}% ✅`
+            : `Drift Detection: ${result.errors_count || 0} violações, drift score ${result.drift_score || 0}% ⚠️`,
           publish: `Release Agent: ${result.files_committed || 0} arquivos publicados v${result.version || "1.0.0"} (Pre-flight → Changelog → Push → Verificação) ✅`,
         };
         const label = stageLabels[stage] || "Concluído!";
@@ -167,6 +171,15 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           toast({ title: "🔬 Iniciando Deep Static Analysis (imports, tipos, build)..." });
           setTimeout(() => {
             runStage(initiativeId, "deep_validation");
+          }, 1500);
+          return;
+        }
+
+        // Auto-trigger drift detection after deep validation passes
+        if (stage === "deep_validation" && result.success && result.passed) {
+          toast({ title: "🏗️ Iniciando Architectural Drift Detection..." });
+          setTimeout(() => {
+            runStage(initiativeId, "drift_detection");
           }, 1500);
           return;
         }
