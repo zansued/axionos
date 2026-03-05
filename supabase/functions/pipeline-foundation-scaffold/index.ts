@@ -448,8 +448,28 @@ ${brainContext ? `\nProject context:\n${brainContext}` : ""}`;
       files: scaffold.map(f => f.path),
     });
 
-    // ── Step 2: Validate scaffold ──
+    // ── Step 2: Validate scaffold + entrypoints ──
+    const { data: existingBrainNodes } = await serviceClient
+      .from("project_brain_nodes")
+      .select("file_path")
+      .eq("initiative_id", ctx.initiativeId)
+      .in("file_path", [...REQUIRED_REACT_VITE_FILES]);
+
+    const projectBrainPaths = new Set(
+      (existingBrainNodes || [])
+        .map((node: any) => node.file_path)
+        .filter((path: string | null): path is string => Boolean(path)),
+    );
+
     let validation = validateScaffold(scaffold);
+    const initialEntrypointValidation = validateEntrypoints(scaffold, projectBrainPaths);
+    if (!initialEntrypointValidation.passed) {
+      validation = {
+        passed: false,
+        issues: [...validation.issues, ...initialEntrypointValidation.issues],
+      };
+    }
+
     let repairs: string[] = [];
 
     if (!validation.passed) {
@@ -462,8 +482,13 @@ ${brainContext ? `\nProject context:\n${brainContext}` : ""}`;
       scaffold = repairResult.repaired;
       repairs = repairResult.repairs;
 
-      // Re-validate after repair
-      validation = validateScaffold(scaffold);
+      // Re-validate after repair (includes validateEntrypoints)
+      const postRepairValidation = validateScaffold(scaffold);
+      const postRepairEntrypointValidation = validateEntrypoints(scaffold, projectBrainPaths);
+      validation = {
+        passed: postRepairValidation.passed && postRepairEntrypointValidation.passed,
+        issues: [...postRepairValidation.issues, ...postRepairEntrypointValidation.issues],
+      };
 
       if (repairs.length > 0) {
         await pipelineLog(ctx, "scaffold_auto_repair", `Auto-repaired ${repairs.length} issues`, { repairs });
