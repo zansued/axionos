@@ -181,6 +181,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       dependency_intelligence: "pipeline-dependency-intelligence",
       ecosystem_drift: "ecosystem-drift-intelligence",
       error_intelligence: "error-intelligence",
+      build_repair: "autonomous-build-repair",
     };
     return functionMap[stage] || "run-initiative-pipeline";
   };
