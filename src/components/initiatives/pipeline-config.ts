@@ -117,6 +117,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "validation", label: "Rodar Fix Loop (AI)", type: "run" },
         { stage: "deep_validation", label: "Deep Static Analysis", type: "run" },
         { stage: "runtime_validation", label: "Runtime Validation (tsc + vite)", type: "run" },
+        { stage: "approve", label: "✅ Aprovar Validação → Publicar", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "ready_to_publish":
