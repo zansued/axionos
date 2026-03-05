@@ -367,10 +367,15 @@ Crie o grafo de dependências para geração de código:
       { tokens: totalTokens, cost_usd: totalCost }
     );
 
+    // ── Trigger Preventive Architecture Validation (next stage) ──
+    await pipelineLog(ctx, "pipeline_preventive_validation_queued",
+      "🛡️ Preventive Architecture Validation queued as next stage");
+
     return jsonResponse({
       success: true,
       agents_executed: 4,
       layers_completed: [2],
+      next_stage: "preventive_validation",
       system_architecture: systemArch.result,
       data_architecture: dataArch.result,
       api_architecture: apiArch.result,

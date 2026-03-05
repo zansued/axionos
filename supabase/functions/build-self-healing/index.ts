@@ -811,7 +811,23 @@ ${brainContext.slice(0, 2000)}`,
       `🔧 Self-Healing attempt ${attempt} complete. ${committedFiles.length} files patched. Build will re-trigger via CI.`,
       { attempt, files: committedFiles });
 
-    // ═══ STEP 6: Build re-trigger happens automatically via GitHub push webhook ═══
+    // ═══ STEP 6: Trigger Error Intelligence Engine (async, non-blocking) ═══
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      fetch(`${supabaseUrl}/functions/v1/error-intelligence`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "analyze_patterns",
+          organization_id: organization_id,
+        }),
+      }).catch(e => console.error("Error Intelligence trigger failed:", e));
+    } catch { /* non-blocking */ }
+
+    // ═══ STEP 7: Build re-trigger happens automatically via GitHub push webhook ═══
     // When the commit is pushed, Vercel/CI will rebuild.
     // On failure, github-ci-webhook will call build-self-healing again with attempt+1.
 
