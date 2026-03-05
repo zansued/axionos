@@ -2064,6 +2064,8 @@ export type Database = {
         | "repair_failed"
         | "bootstrapping_schema"
         | "schema_bootstrapped"
+        | "provisioning_db"
+        | "db_provisioned"
       initiative_status:
         | "idea"
         | "discovery"
@@ -2282,6 +2284,8 @@ export const Constants = {
         "repair_failed",
         "bootstrapping_schema",
         "schema_bootstrapped",
+        "provisioning_db",
+        "db_provisioned",
       ],
       initiative_status: [
         "idea",
