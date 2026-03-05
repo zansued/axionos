@@ -2169,7 +2169,14 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
             const fp = (art.raw_output as any)?.file_path || si?.file_path;
             if (!fp) continue;
             const raw = art.raw_output as any;
-            const content = raw?.content || raw?.text || (typeof raw === "string" ? raw : "");
+            let content = raw?.content || raw?.text || (typeof raw === "string" ? raw : "");
+            // If raw_output is the actual JSON object (e.g. package.json stored as object), stringify it
+            if (!content && raw && typeof raw === "object" && !Array.isArray(raw) && raw.file_path === undefined) {
+              // Check if this looks like a package.json object (has name or dependencies)
+              if (raw.name || raw.dependencies || raw.devDependencies || raw.scripts) {
+                content = JSON.stringify(raw, null, 2);
+              }
+            }
             if (content) fileMap[fp] = { content, artRef: raw };
           }
 
