@@ -1,4 +1,4 @@
-## SynkrAIOS — Plano de Evolução
+## AxionOS — Plano de Evolução
 
 > Última atualização: 2026-03-05
 
