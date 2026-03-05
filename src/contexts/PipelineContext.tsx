@@ -246,6 +246,12 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           throw new Error(message);
         }
         const stageLabels: Record<string, string> = {
+          // v3 Venture Intelligence Layer
+          opportunity_discovery: `Opportunity Discovery: ${result.opportunities_found || 0} oportunidades, viability score ${result.viability_score || 0}/100 ✅`,
+          market_signal_analysis: `Market Signals: demand ${result.demand_level || "?"}, competition ${result.competition_level || "?"}, viability ${result.viability_index || 0}/100 ✅`,
+          product_validation: `Product Validation: score ${result.validation_score || 0}/100, adoption ${result.estimated_adoption || "?"}, risk ${result.risk_level || "?"} ✅`,
+          revenue_strategy: `Revenue Strategy: ${result.pricing_model || "SaaS"}, ${result.tiers_count || 0} tiers definidos ✅`,
+          // v2 Core Pipeline
           comprehension: `Compreensão concluída: 4 agentes (Vision, Market, Requirements, Product Architect) ✅`,
           architecture: `Arquitetura técnica concluída: 4 agentes (System, Data, API Architect, Dependency Planner) ✅`,
           architecture_simulation: `Simulação de arquitetura concluída: score ${result.score || 0}/100, ${result.repairs?.length || 0} reparos ${result.passed ? "✅" : "⚠️"}`,
@@ -288,6 +294,15 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           build_repair: result.success
             ? `Build Repair: attempt ${result.attempt || 1}, ${result.patches_applied || 0} patches, commit ${(result.commit_sha || "").slice(0, 7)} ✅`
             : `Build Repair: attempt ${result.attempt || 1} falhou — ${result.message || "erro"} ❌`,
+          // v3 Growth & Evolution Layer
+          observability: `Observability: ${result.metrics_collected || 0} métricas coletadas ✅`,
+          product_analytics: `Product Analytics: ${result.users_tracked || 0} usuários, ${result.events_analyzed || 0} eventos ✅`,
+          user_behavior_analysis: `User Behavior: ${result.patterns_detected || 0} padrões, ${result.friction_points || 0} pontos de fricção ✅`,
+          growth_optimization: `Growth: ${result.optimizations_suggested || 0} otimizações sugeridas ✅`,
+          product_evolution: `Product Evolution: ${result.features_added || 0} features, ${result.modules_removed || 0} removidos ✅`,
+          architecture_evolution: `Architecture Evolution: ${result.patterns_learned || 0} padrões aprendidos ✅`,
+          portfolio_management: `Portfolio: ${result.products_managed || 0} produtos gerenciados ✅`,
+          system_evolution: `System Evolution: ${result.improvements_applied || 0} melhorias aplicadas ✅`,
         };
         const label = stageLabels[stage] || "Concluído!";
         toast({ title: label });
