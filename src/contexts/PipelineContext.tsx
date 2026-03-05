@@ -124,7 +124,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
             : result.overall_pass
               ? `Verificação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos${result.fixed ? `, ${result.fixed} corrigidos pelo Fix Agent` : ""} ✅`
               : `Verificação: ${result.failed || 0} falhas, ${result.fixed || 0} corrigidos de ${result.artifacts_validated || 0} artefatos ⚠️`,
-          publish: `Publicação concluída: ${result.files_committed || 0} arquivos commitados no main ✅`,
+          publish: `Release Agent: ${result.files_committed || 0} arquivos publicados v${result.version || "1.0.0"} (Pre-flight → Changelog → Push → Verificação) ✅`,
         };
         const label = stageLabels[stage] || "Concluído!";
         toast({ title: label });
