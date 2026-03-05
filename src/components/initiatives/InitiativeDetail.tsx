@@ -190,6 +190,8 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                 </Button>
               )}
             </div>
+            </div>
+            {initiative.description && <p className="text-sm text-muted-foreground line-clamp-2 break-words">{initiative.description}</p>}
           </div>
           {/* Macro pipeline steps — click completed stages to rollback */}
           <div className="flex items-center gap-1 mt-4 overflow-x-auto">
