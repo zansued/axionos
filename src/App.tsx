@@ -9,6 +9,8 @@ import { PipelineProvider } from "@/contexts/PipelineContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { OnboardingProvider } from "@/components/OnboardingGuide";
 import { I18nProvider } from "@/contexts/I18nContext";
+import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
+import { CommandPalette } from "@/components/CommandPalette";
 import { KeyboardShortcutsManager } from "@/components/KeyboardShortcutsManager";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
