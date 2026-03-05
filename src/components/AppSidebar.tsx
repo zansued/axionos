@@ -1,18 +1,15 @@
-import { Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Hammer, Building2, Package, GitBranch, Rocket, CheckSquare, CreditCard, Code2, Bell, HelpCircle, Keyboard } from "lucide-react";
+import {
+  Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio,
+  Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search,
+} from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { LanguageToggle } from "@/components/LanguageToggle";
-import { useOnboarding } from "@/components/OnboardingGuide";
-import { useOrg } from "@/contexts/OrgContext";
-import { usePipeline } from "@/contexts/PipelineContext";
-import { useI18n } from "@/contexts/I18nContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -21,66 +18,60 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+const mainItems = [
+  { title: "Dashboard", url: "/", icon: LayoutDashboard },
+  { title: "Initiatives", url: "/initiatives", icon: Lightbulb },
+  { title: "Agents", url: "/agents", icon: Users },
+  { title: "Stories", url: "/stories", icon: Hammer },
+  { title: "Code", url: "/code", icon: Code2 },
+  { title: "Workspace", url: "/workspace", icon: GitBranch },
+  { title: "Kanban", url: "/kanban", icon: Columns3 },
+  { title: "Deployments", url: "/artifacts", icon: Rocket },
+];
+
+const bottomItems = [
+  { title: "Audit", url: "/audit", icon: Shield },
+  { title: "Observability", url: "/observability", icon: Radio },
+  { title: "Connections", url: "/connections", icon: Package },
+  { title: "Billing", url: "/billing", icon: CreditCard },
+  { title: "Settings", url: "/org", icon: Settings },
+];
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const { signOut, user } = useAuth();
-  const { currentOrg } = useOrg();
-  const { events, unreadCount, markAllRead, running } = usePipeline();
-  const { showOnboarding } = useOnboarding();
-  const { t } = useI18n();
-  const runningCount = Object.keys(running).length;
+  const { setCommandOpen } = useWorkspace();
 
-  const pipelineItems = [
-    { title: t("nav.initiatives"), url: "/initiatives", icon: Lightbulb },
-    { title: t("nav.squads"), url: "/squads", icon: Users },
-    { title: t("nav.execution"), url: "/stories", icon: Hammer },
-    { title: t("nav.validation"), url: "/artifacts", icon: CheckSquare },
-    { title: t("nav.code"), url: "/code", icon: Code2 },
-    { title: t("nav.workspace"), url: "/workspace", icon: GitBranch },
-    { title: t("nav.kanban"), url: "/kanban", icon: Columns3 },
-  ];
-
-  const governanceItems = [
-    { title: t("nav.audit"), url: "/audit", icon: Shield },
-    { title: t("nav.observability"), url: "/observability", icon: Radio },
-    { title: t("nav.connections"), url: "/connections", icon: Package },
-    { title: t("nav.org"), url: "/org", icon: Building2 },
-    { title: t("nav.billing"), url: "/billing", icon: CreditCard },
-  ];
-
-  const renderGroup = (label: string, items: typeof pipelineItems) => (
-    <SidebarGroup>
-      <SidebarGroupLabel className="text-[10px] uppercase tracking-widest text-muted-foreground/60 px-3">
-        {!collapsed && label}
-      </SidebarGroupLabel>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild>
-                <NavLink
-                  to={item.url}
-                  end={item.url === "/"}
-                  className="hover:bg-sidebar-accent/50 transition-colors"
-                  activeClassName="bg-sidebar-accent text-primary font-medium"
-                >
-                  <item.icon className="mr-2 h-4 w-4 shrink-0" />
-                  {!collapsed && <span>{item.title}</span>}
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
+  const renderItem = (item: typeof mainItems[0]) => (
+    <SidebarMenuItem key={item.title}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <SidebarMenuButton asChild>
+            <NavLink
+              to={item.url}
+              end={item.url === "/"}
+              className="flex items-center gap-3 px-3 py-2 rounded-md text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
+              activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+            >
+              <item.icon className="h-4 w-4 shrink-0" />
+              {!collapsed && <span className="text-sm">{item.title}</span>}
+            </NavLink>
+          </SidebarMenuButton>
+        </TooltipTrigger>
+        {collapsed && (
+          <TooltipContent side="right" className="text-xs">
+            {item.title}
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </SidebarMenuItem>
   );
 
   return (
@@ -88,109 +79,83 @@ export function AppSidebar() {
       <SidebarContent>
         {/* Brand */}
         <SidebarGroup>
-          <SidebarGroupLabel className="flex items-center gap-2 px-3 py-4">
-            <Rocket className="h-5 w-5 text-primary shrink-0" />
-            {!collapsed && (
-              <span className="font-display text-sm font-bold tracking-tight">
-                <span className="text-gradient">Axion</span>OS
-              </span>
-            )}
-          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <div className="flex items-center gap-2 px-3 py-3">
+              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shrink-0">
+                <Rocket className="h-4 w-4 text-primary-foreground" />
+              </div>
+              {!collapsed && (
+                <span className="font-display text-sm font-bold tracking-tight">
+                  Axion<span className="text-muted-foreground font-normal">OS</span>
+                </span>
+              )}
+            </div>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Search trigger */}
+        {!collapsed && (
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <button
+                onClick={() => setCommandOpen(true)}
+                className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-muted-foreground rounded-md border border-border bg-muted/30 hover:bg-muted/50 transition-colors"
+              >
+                <Search className="h-3.5 w-3.5" />
+                <span>Search...</span>
+                <kbd className="ml-auto text-[10px] font-mono bg-muted px-1.5 py-0.5 rounded">⌘K</kbd>
+              </button>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {collapsed && (
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SidebarMenuButton onClick={() => setCommandOpen(true)}>
+                        <Search className="h-4 w-4 mx-auto" />
+                      </SidebarMenuButton>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="text-xs">Search ⌘K</TooltipContent>
+                  </Tooltip>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        <Separator className="mx-3 w-auto" />
+
+        {/* Main nav */}
+        <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <NavLink to="/" end className="hover:bg-sidebar-accent/50 transition-colors" activeClassName="bg-sidebar-accent text-primary font-medium">
-                    <LayoutDashboard className="mr-2 h-4 w-4 shrink-0" />
-                    {!collapsed && <span>{t("nav.dashboard")}</span>}
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {mainItems.map(renderItem)}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {!collapsed && <Separator className="mx-3 w-auto" />}
+        <Separator className="mx-3 w-auto" />
 
-        {renderGroup(t("nav.pipeline"), pipelineItems)}
-
-        {!collapsed && <Separator className="mx-3 w-auto" />}
-
-        {renderGroup(t("nav.governance"), governanceItems)}
+        {/* Bottom nav */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {bottomItems.map(renderItem)}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="p-2 space-y-1">
-        {/* Pipeline notifications */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start text-muted-foreground relative"
-              onClick={markAllRead}
-            >
-              <Bell className="mr-2 h-4 w-4 shrink-0" />
-              {!collapsed && t("nav.notifications")}
-              {(unreadCount > 0 || runningCount > 0) && (
-                <Badge
-                  variant="default"
-                  className="ml-auto h-5 min-w-5 px-1 text-[10px] font-bold animate-pulse"
-                >
-                  {runningCount > 0 ? `⚡${runningCount}` : unreadCount}
-                </Badge>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent side="right" align="end" className="w-80 p-0">
-            <div className="p-3 border-b">
-              <h4 className="font-semibold text-sm">{t("notifications.title")}</h4>
-              {runningCount > 0 && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  ⚡ {runningCount} {t("notifications.running")}
-                </p>
-              )}
-            </div>
-            <div className="max-h-64 overflow-y-auto">
-              {events.length === 0 ? (
-                <p className="text-xs text-muted-foreground p-4 text-center">{t("notifications.empty")}</p>
-              ) : (
-                events.slice(0, 15).map((ev) => (
-                  <div
-                    key={ev.id}
-                    className={`px-3 py-2 text-xs border-b last:border-0 ${!ev.read ? "bg-accent/30" : ""}`}
-                  >
-                    <p className="font-medium">{ev.label}</p>
-                    <p className="text-muted-foreground mt-0.5">
-                      {new Date(ev.timestamp).toLocaleTimeString("pt-BR")}
-                    </p>
-                  </div>
-                ))
-              )}
-            </div>
-          </PopoverContent>
-        </Popover>
 
-        <ThemeToggle collapsed={collapsed} />
-        <LanguageToggle collapsed={collapsed} />
-
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start text-muted-foreground"
-          onClick={showOnboarding}
-        >
-          <HelpCircle className="mr-2 h-4 w-4 shrink-0" />
-          {!collapsed && t("nav.guide")}
-        </Button>
-
-        {!collapsed && (
-          <div className="flex items-center gap-1 px-3">
-            <Keyboard className="h-3 w-3 text-muted-foreground/50" />
-            <span className="text-[10px] text-muted-foreground/50">? = atalhos</span>
-          </div>
-        )}
-
+      <SidebarFooter className="p-2">
         {!collapsed && user && (
-          <p className="px-3 text-xs text-muted-foreground truncate">{user.email}</p>
+          <div className="px-3 py-1">
+            <p className="text-[11px] text-muted-foreground truncate">{user.email}</p>
+          </div>
         )}
         <Button
           variant="ghost"
@@ -199,7 +164,7 @@ export function AppSidebar() {
           onClick={signOut}
         >
           <LogOut className="mr-2 h-4 w-4 shrink-0" />
-          {!collapsed && t("nav.logout")}
+          {!collapsed && <span className="text-sm">Sign Out</span>}
         </Button>
       </SidebarFooter>
     </Sidebar>
