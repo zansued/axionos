@@ -1,16 +1,21 @@
-# AxionOS v2 — Architectural Review & Evolution Plan
+# AxionOS v3 — Autonomous Startup Factory Architecture
 
-> Deep technical analysis of the AI-orchestrated software generation system.  
+> Deep technical analysis of the AI-orchestrated autonomous venture creation system.  
 > Last updated: 2026-03-05
 
 ---
 
 ## 1. Project Overview
 
-**AxionOS v2** is a multi-tenant SaaS platform that orchestrates multiple AI agents to autonomously generate complete production-ready applications — from a natural language description to a deployed GitHub repository.
+**AxionOS v3** is a multi-tenant SaaS platform that evolves from an AI-assisted code generator into a fully autonomous venture creation system. It orchestrates multiple AI agents to autonomously discover product opportunities, validate market demand, generate complete production-ready applications, launch digital products, analyze market feedback, and evolve products automatically.
 
 ### Core Value Proposition
-A human provides an idea → AI agents autonomously understand, design, model, generate schema, generate logic, generate APIs, generate UI, validate, self-heal, learn, and publish a working application.
+The system operates as an **AI-powered venture studio** — continuously generating and testing digital products, learning from real user behavior and improving future projects.
+
+### Traditional Startup Process (Automated by AxionOS v3)
+```
+idea → validation → product → launch → growth → iteration
+```
 
 ### Technology Stack
 | Layer | Technology |
@@ -31,131 +36,255 @@ A human provides an idea → AI agents autonomously understand, design, model, g
 
 ---
 
-## 2. Pipeline — 22-Stage Model
+## 2. System Architecture Layers
+
+### Layer 1 — Venture Intelligence Layer (NEW in v3)
+Responsible for product discovery and market validation **before** the build pipeline begins.
+
+| Engine | Purpose |
+|--------|---------|
+| **Opportunity Discovery Engine** | Identify potential product ideas from market data, trends, communities |
+| **Market Signal Analyzer** | Analyze search volume, competitor products, pricing, trend acceleration |
+| **Product Validation Engine** | Simulate landing pages, synthetic user testing, demand estimation |
+| **Revenue Strategy Engine** | Define pricing models, subscription tiers, market positioning |
+
+### Layer 2 — Software Generation Pipeline (AxionOS v2 — preserved)
+The original 22-stage deterministic pipeline for autonomous software engineering.
+
+### Layer 3 — Growth & Evolution Layer (NEW in v3)
+Post-launch intelligence for continuous product improvement.
+
+| Engine | Purpose |
+|--------|---------|
+| **Product Analytics Engine** | Monitor user acquisition, activation, retention, conversion, revenue |
+| **User Behavior Analyzer** | Analyze feature usage, drop-off points, session patterns |
+| **Growth Optimization Engine** | Landing page optimization, feature prioritization, onboarding |
+| **Product Evolution Engine** | Automatically add features, remove unused modules, optimize UI |
+| **Startup Portfolio Manager** | Track and manage multiple products, allocate resources |
+| **Architecture Evolution Engine** | Learn architectural patterns that lead to successful products |
+| **System Evolution Engine** | Meta-learning for continuous platform improvement |
+
+---
+
+## 3. Pipeline — 32-Stage Model
 
 ```
-Idea Input
-  → Stage 1:  Comprehension (pipeline-comprehension) — 4 agents
-  → Stage 2:  Architecture (pipeline-architecture) — 4 agents
-  → Stage 3:  Architecture Simulation (pipeline-architecture-simulation)
-  → Stage 4:  Preventive Validation (pipeline-preventive-validation)
-  → Stage 5:  Bootstrap Intelligence (project-bootstrap-intelligence)
-  → Stage 6:  Foundation Scaffold (pipeline-foundation-scaffold)
-  → Stage 7:  Module Graph Simulation (pipeline-module-graph-simulation)
-  → Stage 8:  Dependency Intelligence (pipeline-dependency-intelligence)
-  → Stage 9:  Schema Bootstrap (supabase-schema-bootstrap)
-  → Stage 10: DB Provisioning (supabase-provisioning-engine)
-  → Stage 11: Domain Model Analysis (ai-domain-model-analyzer)
-  → Stage 12: Data Model Generation (supabase-data-model-generator) ← NEW
-  → Stage 13: Business Logic Synthesis (ai-business-logic-synthesizer)
-  → Stage 14: API Generation (autonomous-api-generator)
-  → Stage 15: Autonomous UI Generation (autonomous-ui-generator) ← NEW
-  → Stage 16: Squad Formation (pipeline-squad)
-  → Stage 17: Planning (pipeline-planning)
-  → Stage 18: Execution (pipeline-execution-orchestrator + workers)
-  → Stage 19: Validation
+═══════════════════════════════════════════════════════
+  VENTURE INTELLIGENCE LAYER (Stages 1-5)
+═══════════════════════════════════════════════════════
+
+  → Stage 01: Idea Intake
+  → Stage 02: Opportunity Discovery Engine ← NEW v3
+  → Stage 03: Market Signal Analyzer ← NEW v3
+  → Stage 04: Product Validation Engine ← NEW v3
+  → Stage 05: Revenue Strategy Engine ← NEW v3
+
+═══════════════════════════════════════════════════════
+  DISCOVERY & ARCHITECTURE (Stages 6-10)
+═══════════════════════════════════════════════════════
+
+  → Stage 06: Discovery Intelligence (pipeline-comprehension) — 4 agents
+  → Stage 07: Market Intelligence (pipeline-architecture) — 4 agents
+  → Stage 08: Technical Feasibility (pipeline-architecture-simulation)
+  → Stage 09: Project Structuring (pipeline-preventive-validation)
+  → Stage 10: Squad Formation (pipeline-squad)
+
+═══════════════════════════════════════════════════════
+  INFRASTRUCTURE & MODELING (Stages 11-16)
+═══════════════════════════════════════════════════════
+
+  → Stage 11: Architecture Planning (project-bootstrap-intelligence + pipeline-foundation-scaffold)
+  → Stage 12: Domain Model Generation (pipeline-module-graph-simulation + pipeline-dependency-intelligence)
+  → Stage 13: AI Domain Model Analyzer (ai-domain-model-analyzer)
+  → Stage 14: Supabase Schema Bootstrap (supabase-schema-bootstrap)
+  → Stage 15: Supabase Provisioning Engine (supabase-provisioning-engine)
+  → Stage 16: Supabase Data Model Generator (supabase-data-model-generator)
+
+═══════════════════════════════════════════════════════
+  CODE GENERATION (Stages 17-19)
+═══════════════════════════════════════════════════════
+
+  → Stage 17: AI Business Logic Synthesizer (ai-business-logic-synthesizer)
+  → Stage 18: Autonomous API Generator (autonomous-api-generator)
+  → Stage 19: Autonomous UI Generator (autonomous-ui-generator)
+
+═══════════════════════════════════════════════════════
+  VALIDATION & PUBLISH (Stages 20-23)
+═══════════════════════════════════════════════════════
+
+  → Stage 20: Validation Engine
       → AI Validation (pipeline-validation) — Fix Loop (3x)
       → Deep Static Analysis (pipeline-deep-validation)
       → Architectural Drift Detection (pipeline-drift-detection)
-      → Runtime Validation (pipeline-runtime-validation) — Real tsc + vite build via CI
-  → Stage 20: Autonomous Build Repair (autonomous-build-repair)
-  → Stage 21: Adaptive Learning Engine (adaptive-learning-engine) ← NEW
-  → Stage 22: Publish (pipeline-publish) — Atomic Git Tree API
-  → Completed
+  → Stage 21: Build Engine (pipeline-runtime-validation) — Real tsc + vite build via CI
+  → Stage 22: Test Engine (autonomous-build-repair) — Self-healing builds
+  → Stage 23: Publish Engine (pipeline-publish) — Atomic Git Tree API
+
+═══════════════════════════════════════════════════════
+  GROWTH & EVOLUTION LAYER (Stages 24-32) ← NEW v3
+═══════════════════════════════════════════════════════
+
+  → Stage 24: Observability Engine ← NEW v3
+  → Stage 25: Product Analytics Engine ← NEW v3
+  → Stage 26: User Behavior Analyzer ← NEW v3
+  → Stage 27: Growth Optimization Engine ← NEW v3
+  → Stage 28: Adaptive Learning Engine (adaptive-learning-engine)
+  → Stage 29: Product Evolution Engine ← NEW v3
+  → Stage 30: Architecture Evolution Engine ← NEW v3
+  → Stage 31: Startup Portfolio Manager ← NEW v3
+  → Stage 32: System Evolution Engine ← NEW v3
 ```
 
 ---
 
-## 3. New v2 Modules
+## 4. v3 Module Specifications
 
-### 3.1 Supabase Data Model Generator (Stage 12)
+### 4.1 Opportunity Discovery Engine (Stage 02)
+**Purpose:** Identify potential product ideas automatically  
+**Inputs:** Market data, search trends, developer communities, startup datasets, internal product performance  
+**Outputs:** `opportunity_report`, `problem_statement`, `target_audience`, `product_type`  
+**Example:**
+```
+Opportunity: AI tools for local government service automation
+Audience: Municipal administrations
+Problem: Manual citizen service workflows
+```
+
+### 4.2 Market Signal Analyzer (Stage 03)
+**Purpose:** Analyze signals indicating market demand  
+**Signals:** Search volume, community discussions, competitor products, pricing models, trend acceleration  
+**Outputs:** `market_score`, `demand_level`, `competition_level`, `viability_index`  
+**Gate:** Only opportunities above viability threshold enter the build pipeline
+
+### 4.3 Product Validation Engine (Stage 04)
+**Purpose:** Validate before building  
+**Methods:** Landing page simulation, synthetic user testing, market simulation models, AI demand estimation  
+**Outputs:** `validation_score`, `estimated_adoption`, `risk_level`  
+**Gate:** Only validated opportunities proceed to software generation
+
+### 4.4 Revenue Strategy Engine (Stage 05)
+**Purpose:** Define monetization strategy for every generated product  
+**Outputs:** Pricing model, subscription tiers, freemium options, upsells, market positioning  
+**Example:**
+```
+pricing_model: SaaS subscription
+tiers: [starter, pro, enterprise]
+```
+
+### 4.5 Product Analytics Engine (Stage 25)
+**Purpose:** Monitor real usage after deployment  
+**Metrics:** User acquisition, activation rate, retention, conversion, revenue  
+**Output feeds:** Evolution engines
+
+### 4.6 User Behavior Analyzer (Stage 26)
+**Purpose:** Analyze user interaction patterns  
+**Signals:** Feature usage, drop-off points, session duration, interaction patterns  
+**Identifies:** Friction points, unused features, engagement drivers
+
+### 4.7 Growth Optimization Engine (Stage 27)
+**Purpose:** Improve product adoption  
+**Capabilities:** Landing page optimization, feature prioritization, onboarding improvements, pricing experiments
+
+### 4.8 Product Evolution Engine (Stage 29)
+**Purpose:** Automatically evolve products after launch  
+**Actions:** Add new features, remove unused modules, improve UI flows, optimize database structures
+
+### 4.9 Startup Portfolio Manager (Stage 31)
+**Purpose:** Manage multiple products simultaneously  
+**Tracks:** Active products, growth stage, revenue, user base, risk level  
+**Behavior:** Allocates more resources to products with stronger traction
+
+### 4.10 Architecture Evolution Engine (Stage 30)
+**Purpose:** Learn architectural patterns from successful products  
+**Learns:** Better schema structures, onboarding patterns, feature sets  
+**Output:** Internal architecture library for future projects
+
+### 4.11 System Evolution Engine (Stage 32)
+**Purpose:** Meta-learning for continuous platform improvement  
+**Scope:** Improve the AxionOS system itself based on aggregate results
+
+---
+
+## 5. Existing v2 Modules (Preserved)
+
+### 5.1 Supabase Data Model Generator (Stage 16)
 **Edge Function:** `supabase-data-model-generator`  
 **Input:** `domain_model` from Project Brain  
 **Output:** `data_model` — normalized relational schema  
-**Process:**
-1. Load domain model entities and relationships
-2. AI generates tables with columns, types, defaults, constraints
-3. Generate foreign key relationships
-4. Generate indexes for performance
-5. Generate RLS policies for isolation
-6. Fallback: basic CRUD tables for unmapped entities
-7. Store `data_model` and `data_model_report` in Project Brain
 
-### 3.2 Autonomous UI Generator (Stage 15)
+### 5.2 Autonomous UI Generator (Stage 19)
 **Edge Function:** `autonomous-ui-generator`  
 **Input:** `domain_model` + `data_model` + `business_logic` + `api_spec`  
 **Output:** `ui_structure` — complete frontend specification  
-**Generated artifacts:**
-- Pages (Dashboard, CRUD pages per entity)
-- Components (Tables, Forms, Cards, Dialogs, Filters)
-- Hooks (TanStack Query + Supabase client per entity)
-- Navigation (Sidebar with icons and routes)
-- Layouts (Responsive with sidebar, header, main content)
-- Creates brain nodes for each page and component
 
-### 3.3 Adaptive Learning Engine (Stage 21)
+### 5.3 Adaptive Learning Engine (Stage 28)
 **Edge Function:** `adaptive-learning-engine`  
 **Input:** `project_errors`, `initiative_jobs`, `prevention_rules`, brain nodes  
 **Output:** New prevention rules + dependency constraints + architectural patterns  
-**Learning loop:**
-1. Analyze build errors and validation failures
-2. Detect recurring patterns across projects
-3. Generate prevention rules with confidence scoring
-4. Update existing rules (incremental confidence)
-5. Store `engineering_patterns` in Project Brain
-6. Cross-project learning via `org_knowledge_base`
 
 ---
 
-## 4. Project Brain Extensions
+## 6. Project Brain Extensions
 
-### New Node Types
+### Node Types
 | Type | Source | Description |
 |------|--------|-------------|
+| `file` | Scaffold/Execution | Source code files |
+| `domain_model` | Domain Analyzer | Entities, attributes, relationships |
 | `data_model` | Data Model Generator | Tables, columns, FK, indexes, RLS |
+| `business_logic` | Logic Synthesizer | Services, workflows, validations |
+| `api_spec` | API Generator | Endpoints, RPCs, webhooks |
 | `ui_structure` | UI Generator | Pages, components, hooks, navigation |
 | `engineering_patterns` | Adaptive Learning | Patterns, constraints, learned rules |
+| `opportunity_report` | Opportunity Discovery | Market opportunities (v3) |
+| `market_signal` | Market Signal Analyzer | Demand/viability signals (v3) |
+| `product_analytics` | Product Analytics | Usage metrics, growth data (v3) |
+| `evolution_plan` | Product Evolution | Auto-evolution roadmap (v3) |
 
-### New Edge Types
+### Edge Types
 | Type | Description |
 |------|-------------|
+| `depends_on` | File/module dependency |
+| `imports` | Import relationship |
 | `renders_component` | Page → Component |
 | `calls_service` | Component → Service/Hook |
 | `stores_entity` | Service → Database Table |
+| `validates_opportunity` | Signal → Opportunity (v3) |
+| `evolves_from` | Product version chain (v3) |
 
 ---
 
-## 5. Edge Function Architecture
+## 7. Edge Function Architecture
 
 ```
 supabase/functions/
-├── pipeline-comprehension/              Stage 1 — Understanding (4 agents)
-├── pipeline-architecture/               Stage 2 — Architecture + Brain (4 agents)
-├── pipeline-architecture-simulation/    Stage 3 — Architecture Simulation
-├── pipeline-preventive-validation/      Stage 4 — Preventive Validation
-├── project-bootstrap-intelligence/      Stage 5 — Bootstrap Intelligence
-├── pipeline-foundation-scaffold/        Stage 6 — Foundation Scaffold
-├── pipeline-module-graph-simulation/    Stage 7 — Module Graph Simulation
-├── pipeline-dependency-intelligence/    Stage 8 — Dependency Intelligence
+├── pipeline-comprehension/              Stage 06 — Understanding (4 agents)
+├── pipeline-architecture/               Stage 07 — Architecture (4 agents)
+├── pipeline-architecture-simulation/    Stage 08 — Architecture Simulation
+├── pipeline-preventive-validation/      Stage 09 — Preventive Validation
+├── project-bootstrap-intelligence/      Stage 11 — Bootstrap Intelligence
+├── pipeline-foundation-scaffold/        Stage 11 — Foundation Scaffold
+├── pipeline-module-graph-simulation/    Stage 12 — Module Graph Simulation
+├── pipeline-dependency-intelligence/    Stage 12 — Dependency Intelligence
 ├── ecosystem-drift-intelligence/        Ecosystem Drift Analysis (optional)
-├── supabase-schema-bootstrap/           Stage 9 — Schema Bootstrap
-├── supabase-provisioning-engine/        Stage 10 — DB Provisioning
-├── ai-domain-model-analyzer/            Stage 11 — Domain Model Analysis
-├── supabase-data-model-generator/       Stage 12 — Data Model Generation ← NEW
-├── ai-business-logic-synthesizer/       Stage 13 — Business Logic Synthesis
-├── autonomous-api-generator/            Stage 14 — API Generation
-├── autonomous-ui-generator/             Stage 15 — Autonomous UI Generation ← NEW
-├── pipeline-squad/                      Stage 16 — Squad Formation
-├── pipeline-planning/                   Stage 17 — Planning
-├── pipeline-execution-orchestrator/     Stage 18 — Execution Orchestrator
-├── pipeline-execution-worker/           Stage 18 — Execution Worker
-├── pipeline-validation/                 Stage 19a — AI Validation + Fix Loop
-├── pipeline-deep-validation/            Stage 19b — Deep Static Analysis
-├── pipeline-drift-detection/            Stage 19c — Drift Detection
-├── pipeline-runtime-validation/         Stage 19d — Runtime Validation (CI)
-├── autonomous-build-repair/             Stage 20 — Build Repair
-├── adaptive-learning-engine/            Stage 21 — Adaptive Learning ← NEW
-├── pipeline-publish/                    Stage 22 — Publish (Atomic Tree API)
+├── supabase-schema-bootstrap/           Stage 14 — Schema Bootstrap
+├── supabase-provisioning-engine/        Stage 15 — DB Provisioning
+├── ai-domain-model-analyzer/            Stage 13 — Domain Model Analysis
+├── supabase-data-model-generator/       Stage 16 — Data Model Generation
+├── ai-business-logic-synthesizer/       Stage 17 — Business Logic Synthesis
+├── autonomous-api-generator/            Stage 18 — API Generation
+├── autonomous-ui-generator/             Stage 19 — Autonomous UI Generation
+├── pipeline-squad/                      Stage 10 — Squad Formation
+├── pipeline-planning/                   Planning
+├── pipeline-execution-orchestrator/     Execution Orchestrator
+├── pipeline-execution-worker/           Execution Worker
+├── pipeline-validation/                 Stage 20 — AI Validation + Fix Loop
+├── pipeline-deep-validation/            Stage 20 — Deep Static Analysis
+├── pipeline-drift-detection/            Stage 20 — Drift Detection
+├── pipeline-runtime-validation/         Stage 21 — Runtime Validation (CI)
+├── autonomous-build-repair/             Stage 22 — Build Repair
+├── adaptive-learning-engine/            Stage 28 — Adaptive Learning
+├── pipeline-publish/                    Stage 23 — Publish (Atomic Tree API)
 ├── pipeline-approve/                    Gate: Approve
 ├── pipeline-reject/                     Gate: Reject
 ├── pipeline-ci-webhook/                 CI Results Webhook
@@ -191,11 +320,13 @@ supabase/functions/
 
 ---
 
-## 6. Implementation Status
+## 8. Implementation Status
+
+### ✅ Implemented (v2 Complete)
 
 | # | System | Status | Details |
 |---|--------|--------|---------|
-| 1 | Pipeline (22 stages) | ✅ | 38+ independent Edge Functions |
+| 1 | Pipeline (22 stages core) | ✅ | 38+ independent Edge Functions |
 | 2 | Project Brain | ✅ | Nodes, edges, decisions, errors, prevention rules, tsvector, pgvector |
 | 3 | Dependency Scheduler | ✅ | DAG builder, topological sort, wave computation |
 | 4 | Agent Swarm | ✅ | Orchestrator + Worker, parallel execution (6 workers) |
@@ -211,17 +342,30 @@ supabase/functions/
 | 14 | Vector Embeddings | ✅ | pgvector 768-dim, cosine similarity |
 | 15 | Incremental Re-execution | ✅ | Hash-based dirty detection |
 
----
+### 🔜 Pending (v3 — Autonomous Startup Factory)
 
-## 7. Remaining Gaps
+| # | Module | Priority | Status |
+|---|--------|----------|--------|
+| 1 | Opportunity Discovery Engine | P0 | 📋 Planned |
+| 2 | Market Signal Analyzer | P0 | 📋 Planned |
+| 3 | Product Validation Engine | P0 | 📋 Planned |
+| 4 | Revenue Strategy Engine | P1 | 📋 Planned |
+| 5 | Observability Engine | P1 | 📋 Planned |
+| 6 | Product Analytics Engine | P1 | 📋 Planned |
+| 7 | User Behavior Analyzer | P2 | 📋 Planned |
+| 8 | Growth Optimization Engine | P2 | 📋 Planned |
+| 9 | Product Evolution Engine | P2 | 📋 Planned |
+| 10 | Architecture Evolution Engine | P3 | 📋 Planned |
+| 11 | Startup Portfolio Manager | P3 | 📋 Planned |
+| 12 | System Evolution Engine | P3 | 📋 Planned |
 
-### 7.1 🟡 Approval Chains
-No multi-approver workflow with quorum. Currently single human gate per stage.
+### 🟡 Remaining Gaps
 
-### 7.2 🟡 Webhook Notifications
-No Slack/Discord notifications for pipeline events and SLA breaches.
-
-### 7.3 🟡 UI Visualizations for New Stages
-Missing visual representations for Data Model (ER diagram), UI Structure (component tree), Engineering Patterns.
+| Gap | Description |
+|-----|-------------|
+| Approval Chains | No multi-approver workflow with quorum |
+| Webhook Notifications | No Slack/Discord notifications |
+| UI Visualizations | Missing ER diagrams, component trees, patterns view |
+| v3 Database Schema | New tables for opportunities, signals, portfolios, analytics |
 
 ---
