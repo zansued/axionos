@@ -289,7 +289,7 @@ serve(async (req) => {
 
     // ── Create commit ──
     const commitBody: any = {
-      message: `chore: runtime validation for ${initiative.title}\n\nTriggered by SynkrAIOS pipeline`,
+      message: `chore: runtime validation for ${initiative.title}\n\nTriggered by AxionOS pipeline`,
       tree: newTree.sha,
     };
     if (baseSha) commitBody.parents = [baseSha];
