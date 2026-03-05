@@ -2059,6 +2059,9 @@ export type Database = {
         | "modules_simulated"
         | "analyzing_dependencies"
         | "dependencies_analyzed"
+        | "repairing_build"
+        | "build_repaired"
+        | "repair_failed"
       initiative_status:
         | "idea"
         | "discovery"
@@ -2272,6 +2275,9 @@ export const Constants = {
         "modules_simulated",
         "analyzing_dependencies",
         "dependencies_analyzed",
+        "repairing_build",
+        "build_repaired",
+        "repair_failed",
       ],
       initiative_status: [
         "idea",
