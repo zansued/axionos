@@ -439,7 +439,7 @@ async function persistReview(client: any, outputId: string, userId: string, acti
 
 function generateCIWorkflow(supabaseUrl: string, initiativeId: string, organizationId: string): string {
   const webhookUrl = `${supabaseUrl}/functions/v1/pipeline-ci-webhook`;
-  return `name: SynkrAIOS Validate
+  return `name: AxionOS Validate
 
 on:
   push:

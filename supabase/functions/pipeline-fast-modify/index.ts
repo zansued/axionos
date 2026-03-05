@@ -93,7 +93,7 @@ Return ONLY the complete modified file content. Do not add explanations, markdow
           } else {
             const prResp = await fetch(`${GITHUB_API}/repos/${gitConn.repo_owner}/${gitConn.repo_name}/pulls`, {
               method: "POST", headers: ghHeaders,
-              body: JSON.stringify({ title: `fix: ${modification.prompt.slice(0, 72)}`, head: branchName, base: baseBranch, body: `## Modificação via SynkrAIOS\n\n**Arquivo:** \`${modification.file_path}\`\n\n**Prompt:** ${modification.prompt}` }),
+              body: JSON.stringify({ title: `fix: ${modification.prompt.slice(0, 72)}`, head: branchName, base: baseBranch, body: `## Modificação via AxionOS\n\n**Arquivo:** \`${modification.file_path}\`\n\n**Prompt:** ${modification.prompt}` }),
             });
             if (prResp.ok) prUrl = (await prResp.json()).html_url;
           }

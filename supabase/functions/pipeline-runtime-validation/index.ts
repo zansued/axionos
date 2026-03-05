@@ -383,7 +383,7 @@ serve(async (req) => {
 // ── CI Workflow for validate/* branches ──
 function generateValidateWorkflow(supabaseUrl: string, initiativeId: string, organizationId: string): string {
   const webhookUrl = `${supabaseUrl}/functions/v1/pipeline-ci-webhook`;
-  return `name: SynkrAIOS Validate
+  return `name: AxionOS Validate
 
 on:
   push:
