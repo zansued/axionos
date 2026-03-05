@@ -3,13 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import {
   CheckCircle2, XCircle, AlertTriangle, Loader2, Terminal,
-  GitBranch, Clock, ExternalLink, RefreshCw,
+  GitBranch, Clock, ExternalLink, RefreshCw, CheckCheck,
 } from "lucide-react";
 
 interface RuntimeValidationStatusProps {
   executionProgress: any;
+  initiativeId?: string;
+  onStatusUpdated?: () => void;
 }
 
 function useElapsedTime(startedAt: string | undefined, isActive: boolean) {
