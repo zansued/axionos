@@ -157,6 +157,12 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
   // Map stage names to dedicated edge function names
   const getStageFunctionName = (stage: string): string => {
     const functionMap: Record<string, string> = {
+      // v3 Venture Intelligence Layer
+      opportunity_discovery: "opportunity-discovery-engine",
+      market_signal_analysis: "market-signal-analyzer",
+      product_validation: "product-validation-engine",
+      revenue_strategy: "revenue-strategy-engine",
+      // v2 Core Pipeline
       comprehension: "pipeline-comprehension",
       architecture: "pipeline-architecture",
       discovery: "pipeline-discovery",
@@ -190,6 +196,15 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       adaptive_learning: "adaptive-learning-engine",
       error_intelligence: "error-intelligence",
       build_repair: "autonomous-build-repair",
+      // v3 Growth & Evolution Layer
+      observability: "observability-engine",
+      product_analytics: "product-analytics-engine",
+      user_behavior_analysis: "user-behavior-analyzer",
+      growth_optimization: "growth-optimization-engine",
+      product_evolution: "product-evolution-engine",
+      architecture_evolution: "architecture-evolution-engine",
+      portfolio_management: "startup-portfolio-manager",
+      system_evolution: "system-evolution-engine",
     };
     return functionMap[stage] || "run-initiative-pipeline";
   };
