@@ -21,20 +21,20 @@
     --secondary: 220 14% 92%;
     --secondary-foreground: 220 25% 10%;
     --muted: 220 14% 95%;
-    --muted-foreground: 220 10% 46%;
+    --muted-foreground: 220 10% 40%;
     --accent: 260 60% 55%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
     --border: 220 13% 88%;
-    --input: 220 13% 88%;
+    --input: 220 13% 85%;
     --ring: 160 84% 39%;
     --radius: 0.75rem;
-    --sidebar-background: 220 20% 97%;
-    --sidebar-foreground: 220 10% 30%;
+    --sidebar-background: 220 18% 96%;
+    --sidebar-foreground: 220 12% 28%;
     --sidebar-primary: 160 84% 39%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 92%;
+    --sidebar-accent: 220 14% 90%;
     --sidebar-accent-foreground: 220 25% 10%;
     --sidebar-border: 220 13% 88%;
     --sidebar-ring: 160 84% 39%;
@@ -45,32 +45,32 @@
   }
 
   .dark {
-    --background: 225 25% 8%;
-    --foreground: 210 20% 92%;
-    --card: 225 22% 11%;
-    --card-foreground: 210 20% 92%;
-    --popover: 225 22% 11%;
-    --popover-foreground: 210 20% 92%;
+    --background: 225 28% 7%;
+    --foreground: 210 20% 93%;
+    --card: 225 24% 10%;
+    --card-foreground: 210 20% 93%;
+    --popover: 225 24% 10%;
+    --popover-foreground: 210 20% 93%;
     --primary: 160 84% 39%;
-    --primary-foreground: 225 25% 8%;
-    --secondary: 225 18% 16%;
-    --secondary-foreground: 210 20% 92%;
-    --muted: 225 18% 14%;
-    --muted-foreground: 215 15% 55%;
+    --primary-foreground: 225 28% 7%;
+    --secondary: 225 20% 15%;
+    --secondary-foreground: 210 20% 93%;
+    --muted: 225 20% 13%;
+    --muted-foreground: 215 15% 52%;
     --accent: 270 60% 60%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 225 15% 18%;
-    --input: 225 15% 18%;
+    --border: 225 15% 16%;
+    --input: 225 15% 16%;
     --ring: 160 84% 39%;
-    --sidebar-background: 225 25% 6%;
-    --sidebar-foreground: 215 15% 65%;
+    --sidebar-background: 225 30% 5%;
+    --sidebar-foreground: 215 15% 62%;
     --sidebar-primary: 160 84% 39%;
-    --sidebar-primary-foreground: 225 25% 8%;
-    --sidebar-accent: 225 18% 14%;
-    --sidebar-accent-foreground: 210 20% 92%;
-    --sidebar-border: 225 15% 15%;
+    --sidebar-primary-foreground: 225 28% 7%;
+    --sidebar-accent: 225 20% 12%;
+    --sidebar-accent-foreground: 210 20% 93%;
+    --sidebar-border: 225 18% 13%;
     --sidebar-ring: 160 84% 39%;
 
     --success: 160 84% 39%;
@@ -81,7 +81,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border transition-colors duration-150;
   }
 
   body {
