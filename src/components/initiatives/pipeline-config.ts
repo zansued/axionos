@@ -30,6 +30,7 @@ export const PIPELINE_STEPS = [
 export const MACRO_STAGES = [
   { key: "discovery", label: "Compreensão", icon: Brain },
   { key: "architecture", label: "Arquitetura", icon: Layers },
+  { key: "simulation", label: "Simulação", icon: Layers },
   { key: "preventive_validation", label: "Validação Preventiva", icon: ShieldCheck },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
