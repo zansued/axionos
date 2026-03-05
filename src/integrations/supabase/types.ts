@@ -2068,6 +2068,8 @@ export type Database = {
         | "db_provisioned"
         | "analyzing_domain"
         | "domain_analyzed"
+        | "synthesizing_logic"
+        | "logic_synthesized"
       initiative_status:
         | "idea"
         | "discovery"
@@ -2290,6 +2292,8 @@ export const Constants = {
         "db_provisioned",
         "analyzing_domain",
         "domain_analyzed",
+        "synthesizing_logic",
+        "logic_synthesized",
       ],
       initiative_status: [
         "idea",
