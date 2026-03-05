@@ -28,6 +28,31 @@ interface ScaffoldValidation {
   repairs: string[];
 }
 
+const REQUIRED_REACT_VITE_FILES = [
+  "index.html",
+  "src/main.tsx",
+  "src/App.tsx",
+  "vite.config.ts",
+  "tsconfig.json",
+  "package.json",
+] as const;
+
+const REQUIRED_PACKAGE_SCRIPTS = {
+  dev: "vite",
+  build: "vite build",
+  preview: "vite preview",
+} as const;
+
+function normalizeScriptPath(path: string): string {
+  return path.replace(/^\.?\//, "");
+}
+
+function extractIndexEntrypoint(indexHtml: string): string | null {
+  const scriptMatch = indexHtml.match(/<script[^>]+type=["']module["'][^>]+src=["']([^"']+)["']/i)
+    || indexHtml.match(/<script[^>]+src=["']([^"']+)["'][^>]*><\/script>/i);
+  return scriptMatch?.[1] ? normalizeScriptPath(scriptMatch[1]) : null;
+}
+
 // Default React + Vite scaffold
 function getReactViteScaffold(projectName: string): ScaffoldFile[] {
   return [
@@ -93,7 +118,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       content: `export default function App() {
   return (
     <div>
-      <h1>App initialized</h1>
+      AxionOS App Bootstrapped
     </div>
   )
 }`,
@@ -168,14 +193,18 @@ function validateScaffold(scaffold: ScaffoldFile[]): { passed: boolean; issues: 
     }
   }
 
-  // Check package.json has scripts
-  const pkg = scaffold.find(f => f.path === "package.json");
+  // Check package.json has required scripts
+  const pkg = scaffold.find((f) => f.path === "package.json");
   if (pkg) {
     try {
       const parsed = JSON.parse(pkg.content);
-      if (!parsed.scripts?.build) issues.push("package.json missing 'build' script");
-      if (!parsed.scripts?.dev) issues.push("package.json missing 'dev' script");
+      for (const [scriptName, scriptValue] of Object.entries(REQUIRED_PACKAGE_SCRIPTS)) {
+        if (parsed.scripts?.[scriptName] !== scriptValue) {
+          issues.push(`package.json missing or invalid '${scriptName}' script`);
+        }
+      }
       if (!parsed.dependencies?.react) issues.push("package.json missing 'react' dependency");
+      if (!parsed.dependencies?.["react-dom"]) issues.push("package.json missing 'react-dom' dependency");
     } catch {
       issues.push("package.json has invalid JSON");
     }
@@ -184,9 +213,10 @@ function validateScaffold(scaffold: ScaffoldFile[]): { passed: boolean; issues: 
   }
 
   // Check index.html references main.tsx
-  const indexHtml = scaffold.find(f => f.path === "index.html");
+  const indexHtml = scaffold.find((f) => f.path === "index.html");
   if (indexHtml) {
-    if (!indexHtml.content.includes("src/main.tsx")) {
+    const entry = extractIndexEntrypoint(indexHtml.content);
+    if (!entry || entry !== "src/main.tsx") {
       issues.push("index.html does not reference src/main.tsx");
     }
     if (!indexHtml.content.includes('id="root"')) {
@@ -197,10 +227,10 @@ function validateScaffold(scaffold: ScaffoldFile[]): { passed: boolean; issues: 
   }
 
   // Check main.tsx imports App
-  const mainTsx = scaffold.find(f => f.path === "src/main.tsx");
+  const mainTsx = scaffold.find((f) => f.path === "src/main.tsx");
   if (mainTsx) {
-    if (!mainTsx.content.includes("App")) {
-      issues.push("src/main.tsx does not import App component");
+    if (!/import\s+App\s+from\s+["']\.\/App["']/.test(mainTsx.content)) {
+      issues.push("src/main.tsx missing import App from './App'");
     }
     if (!mainTsx.content.includes("createRoot")) {
       issues.push("src/main.tsx does not call createRoot");
@@ -210,13 +240,15 @@ function validateScaffold(scaffold: ScaffoldFile[]): { passed: boolean; issues: 
   }
 
   // Check App.tsx exists and exports
-  const appTsx = scaffold.find(f => f.path === "src/App.tsx");
+  const appTsx = scaffold.find((f) => f.path === "src/App.tsx");
   if (!appTsx) {
     issues.push("src/App.tsx not found in scaffold");
+  } else if (!/export\s+default\s+function\s+App|function\s+App\s*\(/.test(appTsx.content)) {
+    issues.push("src/App.tsx missing App export");
   }
 
   // Check vite config
-  const viteConfig = scaffold.find(f => f.path === "vite.config.ts");
+  const viteConfig = scaffold.find((f) => f.path === "vite.config.ts");
   if (!viteConfig) {
     issues.push("vite.config.ts not found in scaffold");
   } else if (!viteConfig.content.includes("react")) {
@@ -224,9 +256,42 @@ function validateScaffold(scaffold: ScaffoldFile[]): { passed: boolean; issues: 
   }
 
   // Check tsconfig
-  const tsconfig = scaffold.find(f => f.path === "tsconfig.json");
+  const tsconfig = scaffold.find((f) => f.path === "tsconfig.json");
   if (!tsconfig) {
     issues.push("tsconfig.json not found in scaffold");
+  }
+
+  return { passed: issues.length === 0, issues };
+}
+
+function validateEntrypoints(scaffold: ScaffoldFile[], projectBrainPaths: Set<string>): { passed: boolean; issues: string[] } {
+  const issues: string[] = [];
+  const scaffoldPaths = new Set(scaffold.map((f) => f.path));
+  const hasPath = (path: string) => scaffoldPaths.has(path) || projectBrainPaths.has(path);
+
+  const indexHtml = scaffold.find((f) => f.path === "index.html");
+  if (!indexHtml && !projectBrainPaths.has("index.html")) {
+    issues.push("index.html not found in scaffold or project brain");
+  }
+
+  if (indexHtml) {
+    const entry = extractIndexEntrypoint(indexHtml.content);
+    if (!entry) {
+      issues.push("index.html missing module script entrypoint");
+    } else if (entry === "src/main.tsx" && !hasPath("src/main.tsx")) {
+      issues.push("index.html references src/main.tsx but src/main.tsx is missing in scaffold and project brain");
+    }
+  }
+
+  for (const requiredPath of REQUIRED_REACT_VITE_FILES) {
+    if (!hasPath(requiredPath)) {
+      issues.push(`${requiredPath} not found in scaffold or project brain`);
+    }
+  }
+
+  const mainTsx = scaffold.find((f) => f.path === "src/main.tsx");
+  if (mainTsx && !/import\s+App\s+from\s+["']\.\/App["']/.test(mainTsx.content)) {
+    issues.push("src/main.tsx import integrity failed: expected import App from './App'");
   }
 
   return { passed: issues.length === 0, issues };
@@ -238,41 +303,90 @@ function repairScaffold(scaffold: ScaffoldFile[], issues: string[], projectName:
   const defaults = getReactViteScaffold(projectName);
   const result = [...scaffold];
 
+  const upsertDefaultFile = (filePath: string, reason: string) => {
+    const defaultFile = defaults.find((f) => f.path === filePath);
+    if (!defaultFile) return;
+
+    const existingIdx = result.findIndex((f) => f.path === filePath);
+    if (existingIdx >= 0) {
+      result[existingIdx] = defaultFile;
+      repairs.push(reason);
+      return;
+    }
+
+    result.push(defaultFile);
+    repairs.push(reason);
+  };
+
   for (const issue of issues) {
-    // Missing file? inject default
-    const missingMatch = issue.match(/^(.+?) not found in scaffold$/);
+    // Missing file in scaffold or project brain? inject default into scaffold
+    const missingMatch = issue.match(/^(.+?) not found in scaffold(?: or project brain)?$/);
     if (missingMatch) {
       const filePath = missingMatch[1];
-      const defaultFile = defaults.find(f => f.path === filePath);
-      if (defaultFile && !result.find(f => f.path === filePath)) {
-        result.push(defaultFile);
-        repairs.push(`Injected missing ${filePath} from default template`);
+      upsertDefaultFile(filePath, `Injected missing ${filePath} from default template`);
+    }
+
+    if (issue.includes("references src/main.tsx but src/main.tsx is missing")) {
+      upsertDefaultFile("src/main.tsx", "Injected src/main.tsx to satisfy index.html entrypoint reference");
+    }
+
+    if (issue.includes("index.html missing module script entrypoint") || issue.includes("index.html does not reference src/main.tsx")) {
+      upsertDefaultFile("index.html", "Replaced index.html with correct module entrypoint");
+    }
+
+    if (issue.includes("index.html missing root div")) {
+      upsertDefaultFile("index.html", "Repaired index.html root mount container");
+    }
+
+    if (
+      issue.includes("missing or invalid 'build' script") ||
+      issue.includes("missing or invalid 'dev' script") ||
+      issue.includes("missing or invalid 'preview' script")
+    ) {
+      const idx = result.findIndex((f) => f.path === "package.json");
+      if (idx >= 0) {
+        try {
+          const parsed = JSON.parse(result[idx].content);
+          parsed.scripts = {
+            ...parsed.scripts,
+            dev: REQUIRED_PACKAGE_SCRIPTS.dev,
+            build: REQUIRED_PACKAGE_SCRIPTS.build,
+            preview: REQUIRED_PACKAGE_SCRIPTS.preview,
+          };
+          result[idx] = { ...result[idx], content: JSON.stringify(parsed, null, 2) };
+          repairs.push("Added missing Vite scripts to package.json");
+        } catch {
+          upsertDefaultFile("package.json", "Replaced invalid package.json with default scaffold template");
+        }
+      } else {
+        upsertDefaultFile("package.json", "Injected missing package.json from default scaffold template");
       }
     }
 
-    // index.html missing main.tsx reference
-    if (issue.includes("does not reference src/main.tsx")) {
-      const idx = result.findIndex(f => f.path === "index.html");
+    if (issue.includes("package.json missing 'react' dependency") || issue.includes("package.json missing 'react-dom' dependency")) {
+      const idx = result.findIndex((f) => f.path === "package.json");
       if (idx >= 0) {
-        const defaultHtml = defaults.find(f => f.path === "index.html");
-        if (defaultHtml) {
-          result[idx] = defaultHtml;
-          repairs.push("Replaced index.html with correct entrypoint reference");
+        try {
+          const parsed = JSON.parse(result[idx].content);
+          parsed.dependencies = {
+            ...parsed.dependencies,
+            react: parsed.dependencies?.react || "^18.3.1",
+            "react-dom": parsed.dependencies?.["react-dom"] || "^18.3.1",
+          };
+          result[idx] = { ...result[idx], content: JSON.stringify(parsed, null, 2) };
+          repairs.push("Added missing React dependencies to package.json");
+        } catch {
+          upsertDefaultFile("package.json", "Replaced invalid package.json with default scaffold template");
         }
       }
     }
 
-    // package.json missing scripts
-    if (issue.includes("missing 'build' script") || issue.includes("missing 'dev' script")) {
-      const idx = result.findIndex(f => f.path === "package.json");
-      if (idx >= 0) {
-        try {
-          const parsed = JSON.parse(result[idx].content);
-          parsed.scripts = { ...parsed.scripts, dev: "vite", build: "vite build", preview: "vite preview" };
-          result[idx] = { ...result[idx], content: JSON.stringify(parsed, null, 2) };
-          repairs.push("Added missing build scripts to package.json");
-        } catch { /* skip */ }
-      }
+    if (issue.includes("src/main.tsx import integrity failed") || issue.includes("src/main.tsx missing import App from './App'")) {
+      upsertDefaultFile("src/main.tsx", "Repaired src/main.tsx import integrity");
+    }
+
+    if (issue.includes("src/App.tsx missing App export")) {
+      upsertDefaultFile("src/App.tsx", "Repaired src/App.tsx default export");
     }
   }
 
@@ -334,8 +448,28 @@ ${brainContext ? `\nProject context:\n${brainContext}` : ""}`;
       files: scaffold.map(f => f.path),
     });
 
-    // ── Step 2: Validate scaffold ──
+    // ── Step 2: Validate scaffold + entrypoints ──
+    const { data: existingBrainNodes } = await serviceClient
+      .from("project_brain_nodes")
+      .select("file_path")
+      .eq("initiative_id", ctx.initiativeId)
+      .in("file_path", [...REQUIRED_REACT_VITE_FILES]);
+
+    const projectBrainPaths = new Set(
+      (existingBrainNodes || [])
+        .map((node: any) => node.file_path)
+        .filter((path: string | null): path is string => Boolean(path)),
+    );
+
     let validation = validateScaffold(scaffold);
+    const initialEntrypointValidation = validateEntrypoints(scaffold, projectBrainPaths);
+    if (!initialEntrypointValidation.passed) {
+      validation = {
+        passed: false,
+        issues: [...validation.issues, ...initialEntrypointValidation.issues],
+      };
+    }
+
     let repairs: string[] = [];
 
     if (!validation.passed) {
@@ -348,8 +482,13 @@ ${brainContext ? `\nProject context:\n${brainContext}` : ""}`;
       scaffold = repairResult.repaired;
       repairs = repairResult.repairs;
 
-      // Re-validate after repair
-      validation = validateScaffold(scaffold);
+      // Re-validate after repair (includes validateEntrypoints)
+      const postRepairValidation = validateScaffold(scaffold);
+      const postRepairEntrypointValidation = validateEntrypoints(scaffold, projectBrainPaths);
+      validation = {
+        passed: postRepairValidation.passed && postRepairEntrypointValidation.passed,
+        issues: [...postRepairValidation.issues, ...postRepairEntrypointValidation.issues],
+      };
 
       if (repairs.length > 0) {
         await pipelineLog(ctx, "scaffold_auto_repair", `Auto-repaired ${repairs.length} issues`, { repairs });
@@ -414,22 +553,24 @@ Return JSON: { "would_build": boolean, "issues": string[], "confidence": number 
         name: file.path.split("/").pop() || file.path,
         file_path: file.path,
         node_type: file.path.endsWith(".json") ? "config" : file.path.endsWith(".tsx") ? "component" : "file",
-        status: "scaffold",
+        status: "generated",
         metadata: {
           scaffold: true,
           required: file.required,
+          content: file.content,
           content_preview: file.content.slice(0, 200),
         },
       });
     }
 
     // Record scaffold decision
-    await recordDecision(ctx, {
-      decision: `Foundation scaffold generated for ${stack} stack with ${scaffold.length} files`,
-      reason: `Ensure minimal buildable structure before feature code generation`,
-      category: "architecture",
-      impact: `Scaffold validation: ${validation.passed ? "passed" : "issues found"}. Build confidence: ${(buildSimulation.confidence * 100).toFixed(0)}%`,
-    });
+    await recordDecision(
+      ctx,
+      `Foundation scaffold generated for ${stack} stack with ${scaffold.length} files`,
+      "Ensure minimal buildable structure before feature code generation",
+      `Scaffold validation: ${validation.passed ? "passed" : "issues found"}. Build confidence: ${(buildSimulation.confidence * 100).toFixed(0)}%`,
+      "architecture",
+    );
 
     await updateInitiative(ctx, {
       stage_status: "scaffolded",
