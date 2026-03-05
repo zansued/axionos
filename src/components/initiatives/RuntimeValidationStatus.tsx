@@ -198,11 +198,25 @@ export function RuntimeValidationStatus({ executionProgress, initiativeId, onSta
             </div>
 
             {isLong && (
-              <div className="flex items-start gap-2 rounded px-2 py-1.5 bg-destructive/10 text-destructive text-[11px]">
-                <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                <span>
-                  CI demorando mais que o esperado. Verifique se o secret <code className="font-mono bg-muted px-1 rounded">SYNKRAIOS_WEBHOOK_SECRET</code> está configurado no repositório GitHub (Settings → Secrets → Actions).
-                </span>
+              <div className="space-y-2">
+                <div className="flex items-start gap-2 rounded px-2 py-1.5 bg-destructive/10 text-destructive text-[11px]">
+                  <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                  <span>
+                    CI demorando mais que o esperado. Verifique se o webhook está configurado corretamente ou marque manualmente como aprovado se o CI já passou no GitHub.
+                  </span>
+                </div>
+                {initiativeId && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-[11px] h-7 gap-1.5"
+                    onClick={handleMarkAsPassed}
+                    disabled={marking}
+                  >
+                    {marking ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCheck className="h-3 w-3" />}
+                    Marcar CI como aprovado
+                  </Button>
+                )}
               </div>
             )}
 
