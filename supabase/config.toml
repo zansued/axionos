@@ -20,3 +20,33 @@ verify_jwt = false
 
 [functions.run-initiative-pipeline]
 verify_jwt = false
+
+[functions.pipeline-discovery]
+verify_jwt = false
+
+[functions.pipeline-squad]
+verify_jwt = false
+
+[functions.pipeline-planning]
+verify_jwt = false
+
+[functions.pipeline-approve]
+verify_jwt = false
+
+[functions.pipeline-reject]
+verify_jwt = false
+
+[functions.pipeline-execution]
+verify_jwt = false
+
+[functions.pipeline-validation]
+verify_jwt = false
+
+[functions.pipeline-publish]
+verify_jwt = false
+
+[functions.pipeline-fast-modify]
+verify_jwt = false
+
+[functions.pipeline-full-review]
+verify_jwt = false

@@ -55,6 +55,23 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
 
   const unreadCount = events.filter((e) => !e.read).length;
 
+  // Map stage names to dedicated edge function names
+  const getStageFunctionName = (stage: string): string => {
+    const functionMap: Record<string, string> = {
+      discovery: "pipeline-discovery",
+      squad_formation: "pipeline-squad",
+      planning: "pipeline-planning",
+      approve: "pipeline-approve",
+      reject: "pipeline-reject",
+      execution: "pipeline-execution",
+      validation: "pipeline-validation",
+      publish: "pipeline-publish",
+      fast_modify: "pipeline-fast-modify",
+      full_review: "pipeline-full-review",
+    };
+    return functionMap[stage] || "run-initiative-pipeline";
+  };
+
   const runStage = useCallback(
     async (
       initiativeId: string,
@@ -73,7 +90,8 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           ...(publishParams || {}),
         };
 
-        const { data: result, error } = await supabase.functions.invoke("run-initiative-pipeline", {
+        const functionName = getStageFunctionName(stage);
+        const { data: result, error } = await supabase.functions.invoke(functionName, {
           body: payload,
         });
 
