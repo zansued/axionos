@@ -1,0 +1,36 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
+import { jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { pipelineLog, updateInitiative } from "../_shared/pipeline-helpers.ts";
+
+serve(async (req) => {
+  const result = await bootstrapPipeline(req, "pipeline-approve");
+  if (result instanceof Response) return result;
+  const { initiative, ctx } = result;
+
+  const currentStatus = initiative.stage_status;
+
+  const approvalMap: Record<string, { field: string; nextStatus: string }> = {
+    discovered: { field: "approved_at_discovery", nextStatus: "squad_ready" },
+    squad_formed: { field: "approved_at_squad", nextStatus: "planning_ready" },
+    planned: { field: "approved_at_planning", nextStatus: "in_progress" },
+    ready_to_publish: { field: "approved_at_planning", nextStatus: "published" },
+  };
+
+  const approval = approvalMap[currentStatus];
+  if (!approval) {
+    const terminalStates = ["published", "completed", "archived", "in_progress"];
+    if (terminalStates.includes(currentStatus)) {
+      return jsonResponse({ success: true, new_status: currentStatus, message: "Already approved/advanced" });
+    }
+    return errorResponse(`Cannot approve at status: ${currentStatus}`, 400);
+  }
+
+  await updateInitiative(ctx, {
+    stage_status: approval.nextStatus,
+    [approval.field]: new Date().toISOString(),
+  });
+  await pipelineLog(ctx, "pipeline_stage_approved", `Stage aprovado: ${currentStatus} → ${approval.nextStatus}`);
+
+  return jsonResponse({ success: true, previous_status: currentStatus, new_status: approval.nextStatus });
+});
