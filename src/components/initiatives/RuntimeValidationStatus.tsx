@@ -160,9 +160,35 @@ export function RuntimeValidationStatus({ executionProgress }: RuntimeValidation
 
         {/* Running state */}
         {isRunning && (
-          <div className="flex items-center gap-2 rounded px-2 py-1.5 bg-yellow-500/10 text-yellow-600">
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            <span>GitHub Actions executando: npm install → tsc --noEmit → vite build...</span>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 rounded px-2 py-1.5 bg-accent/50 text-accent-foreground">
+              <Loader2 className="h-3.5 w-3.5 animate-spin shrink-0" />
+              <span className="flex-1">GitHub Actions executando: npm install → tsc --noEmit → vite build...</span>
+              {elapsed && (
+                <span className="text-muted-foreground font-mono text-[10px] shrink-0">{elapsed}</span>
+              )}
+            </div>
+
+            {isLong && (
+              <div className="flex items-start gap-2 rounded px-2 py-1.5 bg-destructive/10 text-destructive text-[11px]">
+                <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                <span>
+                  CI demorando mais que o esperado. Verifique se o secret <code className="font-mono bg-muted px-1 rounded">SYNKRAIOS_WEBHOOK_SECRET</code> está configurado no repositório GitHub (Settings → Secrets → Actions).
+                </span>
+              </div>
+            )}
+
+            {ghActionsUrl && (
+              <a
+                href={ghActionsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] text-primary hover:underline"
+              >
+                <ExternalLink className="h-3 w-3" />
+                Ver no GitHub Actions
+              </a>
+            )}
           </div>
         )}
       </CardContent>
