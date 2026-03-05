@@ -211,6 +211,21 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "approve", label: "✅ Aprovar Validação → Publicar", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
+    case "repairing_build":
+      return [
+        { stage: "build_repair", label: "Re-executar Build Repair", type: "run" },
+      ];
+    case "build_repaired":
+      return [
+        { stage: "approve", label: "✅ Aprovar Repair → Publicar", type: "approve" },
+        { stage: "build_repair", label: "Re-executar Build Repair", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "repair_failed":
+      return [
+        { stage: "build_repair", label: "🔧 Retry Build Repair", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
     case "ready_to_publish":
       return [
         { stage: "runtime_validation", label: "Runtime Validation (tsc + vite build)", type: "run" },
