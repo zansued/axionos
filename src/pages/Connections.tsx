@@ -47,6 +47,7 @@ export default function Connections() {
   const [addGitOpen, setAddGitOpen] = useState(false);
   const [addSupabaseOpen, setAddSupabaseOpen] = useState(false);
   const [testingConnectionId, setTestingConnectionId] = useState<string | null>(null);
+  const [testResults, setTestResults] = useState<Record<string, "ok" | "fail">>({});
   const [gitForm, setGitForm] = useState({
     repo_owner: "",
     repo_name: "",
@@ -77,16 +78,20 @@ export default function Connections() {
       });
       if (resp.ok || resp.status === 200) {
         toast.success("✅ Conexão válida! Supabase respondeu com sucesso.");
+        if (connId) setTestResults(prev => ({ ...prev, [connId]: "ok" }));
         return true;
       } else if (resp.status === 401) {
         toast.error("❌ Anon Key inválida ou expirada.");
+        if (connId) setTestResults(prev => ({ ...prev, [connId]: "fail" }));
         return false;
       } else {
         toast.error(`❌ Supabase retornou status ${resp.status}`);
+        if (connId) setTestResults(prev => ({ ...prev, [connId]: "fail" }));
         return false;
       }
     } catch (e: any) {
       toast.error(`❌ Não foi possível conectar: ${e.message || "Erro de rede"}`);
+      if (connId) setTestResults(prev => ({ ...prev, [connId]: "fail" }));
       return false;
     } finally {
       setTestingConnectionId(null);
@@ -378,7 +383,7 @@ export default function Connections() {
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <span>Anon Key: ••••••••</span>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <Button
                           variant="outline"
                           size="sm"
@@ -393,6 +398,16 @@ export default function Connections() {
                           )}
                           Testar
                         </Button>
+                        {testResults[conn.id] === "ok" && (
+                          <Badge className="bg-green-500/15 text-green-400 border-green-500/30 gap-1 text-[10px]">
+                            <CheckCircle2 className="h-3 w-3" /> OK
+                          </Badge>
+                        )}
+                        {testResults[conn.id] === "fail" && (
+                          <Badge variant="destructive" className="gap-1 text-[10px]">
+                            <WifiOff className="h-3 w-3" /> Fail
+                          </Badge>
+                        )}
                         {canManage && (
                           <Button
                             variant="ghost"
