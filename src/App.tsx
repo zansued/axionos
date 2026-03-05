@@ -57,9 +57,11 @@ const App = () => (
             <AuthProvider>
               <OrgProvider>
                 <PipelineProvider>
-                  <OnboardingProvider>
-                    <KeyboardShortcutsManager />
-                    <Routes>
+                  <WorkspaceProvider>
+                    <OnboardingProvider>
+                      <CommandPalette />
+                      <KeyboardShortcutsManager />
+                      <Routes>
                       <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
                       <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                       <Route path="/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
