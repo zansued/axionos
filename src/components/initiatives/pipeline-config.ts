@@ -114,8 +114,18 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "architecture_validated":
       return [
-        { stage: "foundation_scaffold", label: "🏗️ Gerar Foundation Scaffold", type: "run" },
+        { stage: "bootstrap_intelligence", label: "🧠 Bootstrap Intelligence", type: "run" },
         { stage: "preventive_validation", label: "Re-executar Validação", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "bootstrapping":
+      return [
+        { stage: "bootstrap_intelligence", label: "Re-executar Bootstrap", type: "run" },
+      ];
+    case "bootstrapped":
+      return [
+        { stage: "foundation_scaffold", label: "🏗️ Gerar Foundation Scaffold", type: "run" },
+        { stage: "bootstrap_intelligence", label: "Re-executar Bootstrap", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "scaffolding":

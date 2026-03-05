@@ -323,7 +323,8 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
     const rollbackMap: Record<string, string> = {
       discovery: "draft",
       architecture: "architecture_ready",
-      scaffold: "architecture_validated",
+      bootstrap: "architecture_validated",
+      scaffold: "bootstrapped",
       squad: "squad_ready",
       planning: "planning_ready",
       execution: "planned",
