@@ -1,6 +1,6 @@
 {
   "framework": "vite",
-  "installCommand": "rm -f package-lock.json && npm install --include=dev",
+  "installCommand": "rm -f package-lock.json && npm install --include=dev && npm install @vitejs/plugin-react-swc@latest --save-dev",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
