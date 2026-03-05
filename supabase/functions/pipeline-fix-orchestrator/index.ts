@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { getNodeByPath, getNodeDependencies, getNodeDependents, generateBrainContext, recordError } from "../_shared/brain-helpers.ts";
+import { getNodeByPath, getNodeDependencies, getNodeDependents, generateBrainContext, recordError, upsertPreventionRule } from "../_shared/brain-helpers.ts";
 import type { PipelineContext } from "../_shared/pipeline-helpers.ts";
 
 /**
@@ -281,7 +281,52 @@ ${brainContext.slice(0, 2000)}`,
     await pipelineLog(ctx, "fix_swarm_complete",
       `Fix Swarm: ${fixedFiles.length}/${sortedTasks.length} arquivos corrigidos`);
 
-    // ── 7. Create PR with fixes ──
+    // ── 7. Self-Healing: Learn from fixes → generate prevention rules ──
+    await pipelineLog(ctx, "self_healing_learning", "Generating prevention rules from fixes...");
+
+    const learnResult = await callAI(apiKey,
+      `You are a Self-Healing Learning Agent. Analyze CI errors that were successfully fixed.
+For each error, create a prevention rule that future code generation agents MUST follow to avoid this error.
+
+Rules should be:
+- Actionable and specific (not vague)
+- Describe the error pattern AND the prevention strategy
+- Scoped appropriately (file-level, component-level, or project-level)
+
+Return ONLY JSON:
+{
+  "rules": [
+    {
+      "error_pattern": "short pattern description",
+      "prevention_rule": "specific rule to follow",
+      "scope": "initiative|organization",
+      "confidence": 0.5
+    }
+  ]
+}`,
+      `## Fixed errors:\n${fixedFiles.map(f => {
+        const task = sortedTasks.find(t => t.file_path === f.path);
+        return `### ${f.path}\nErrors: ${task?.errors.map(e => e.message).join("; ") || "unknown"}\nFix: ${f.commit_msg}`;
+      }).join("\n\n")}`,
+      true
+    );
+    totalTokens += learnResult.tokens;
+    totalCost += learnResult.costUsd;
+
+    let learnedRules = 0;
+    try {
+      const parsed = JSON.parse(learnResult.content);
+      for (const rule of (parsed.rules || [])) {
+        await upsertPreventionRule(ctx, rule.error_pattern, rule.prevention_rule, rule.scope || "initiative");
+        learnedRules++;
+      }
+      await pipelineLog(ctx, "self_healing_rules_created",
+        `Self-Healing: ${learnedRules} prevention rules learned from ${fixedFiles.length} fixes`);
+    } catch (e) {
+      console.error("Learning failed:", e);
+    }
+
+    // ── 8. Create PR with fixes ──
     const fixBranch = `auto-fix/${ci_run_id || Date.now()}`;
 
     // Get base branch SHA
