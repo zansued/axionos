@@ -2004,6 +2004,8 @@ export type Database = {
         | "architected"
         | "simulating_architecture"
         | "architecture_simulated"
+        | "scaffolding"
+        | "scaffolded"
       initiative_status:
         | "idea"
         | "discovery"
@@ -2209,6 +2211,8 @@ export const Constants = {
         "architected",
         "simulating_architecture",
         "architecture_simulated",
+        "scaffolding",
+        "scaffolded",
       ],
       initiative_status: [
         "idea",
