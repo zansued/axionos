@@ -189,49 +189,36 @@ serve(async (req) => {
       throw new Error(`Branch '${baseBranch}' não encontrada: ${baseResult.errText}`);
     }
 
-    // ── Build tree entries ──
-    const treeItems: Array<any> = [];
+    // ── Create blobs (parallel batches of 5) ──
+    const BLOB_BATCH = 5;
+    const treeItems: Array<{ path: string; mode: string; type: string; sha: string }> = [];
 
-    if (!baseSha) {
-      // Empty repository: create tree directly with inline content (blob API returns 409 for empty repos)
-      for (const file of fileEntries) {
-        treeItems.push({
-          path: file.path,
-          mode: "100644",
-          type: "blob",
-          content: file.content,
-        });
-      }
-    } else {
-      // Existing repository: faster/leaner blob flow
-      const BLOB_BATCH = 5;
-      for (let i = 0; i < fileEntries.length; i += BLOB_BATCH) {
-        const batch = fileEntries.slice(i, i + BLOB_BATCH);
-        const results = await Promise.allSettled(
-          batch.map(async (file) => {
-            const resp = await fetch(
-              `${GITHUB_API}/repos/${owner}/${repo}/git/blobs`,
-              {
-                method: "POST",
-                headers: ghHeaders,
-                body: JSON.stringify({ content: file.content, encoding: "utf-8" }),
-              }
-            );
-            if (!resp.ok) {
-              const errText = await resp.text();
-              throw new Error(`Blob failed for ${file.path}: ${errText}`);
+    for (let i = 0; i < fileEntries.length; i += BLOB_BATCH) {
+      const batch = fileEntries.slice(i, i + BLOB_BATCH);
+      const results = await Promise.allSettled(
+        batch.map(async (file) => {
+          const resp = await fetch(
+            `${GITHUB_API}/repos/${owner}/${repo}/git/blobs`,
+            {
+              method: "POST",
+              headers: ghHeaders,
+              body: JSON.stringify({ content: file.content, encoding: "utf-8" }),
             }
-            const data = await resp.json();
-            return { path: file.path, sha: data.sha };
-          })
-        );
-
-        for (const r of results) {
-          if (r.status === "fulfilled") {
-            treeItems.push({ path: r.value.path, mode: "100644", type: "blob", sha: r.value.sha });
-          } else {
-            console.error("Blob rejected:", r.reason?.message || r.reason);
+          );
+          if (!resp.ok) {
+            const errText = await resp.text();
+            throw new Error(`Blob failed for ${file.path}: ${errText}`);
           }
+          const data = await resp.json();
+          return { path: file.path, sha: data.sha };
+        })
+      );
+
+      for (const r of results) {
+        if (r.status === "fulfilled") {
+          treeItems.push({ path: r.value.path, mode: "100644", type: "blob", sha: r.value.sha });
+        } else {
+          console.error("Blob rejected:", r.reason?.message || r.reason);
         }
       }
     }
