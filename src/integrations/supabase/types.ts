@@ -2066,6 +2066,8 @@ export type Database = {
         | "schema_bootstrapped"
         | "provisioning_db"
         | "db_provisioned"
+        | "analyzing_domain"
+        | "domain_analyzed"
       initiative_status:
         | "idea"
         | "discovery"
@@ -2286,6 +2288,8 @@ export const Constants = {
         "schema_bootstrapped",
         "provisioning_db",
         "db_provisioned",
+        "analyzing_domain",
+        "domain_analyzed",
       ],
       initiative_status: [
         "idea",
