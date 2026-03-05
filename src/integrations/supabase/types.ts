@@ -1632,6 +1632,9 @@ export type Database = {
         | "completed"
         | "rejected"
         | "archived"
+        | "architecture_ready"
+        | "architecting"
+        | "architected"
       initiative_status:
         | "idea"
         | "discovery"
@@ -1832,6 +1835,9 @@ export const Constants = {
         "completed",
         "rejected",
         "archived",
+        "architecture_ready",
+        "architecting",
+        "architected",
       ],
       initiative_status: [
         "idea",
