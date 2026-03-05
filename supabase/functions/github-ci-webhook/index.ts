@@ -858,22 +858,43 @@ async function handleDeploymentStatusEvent(
       },
     }).eq("id", initiativeId);
 
-    // Auto-republish on deploy failure
+    // Trigger Build Self-Healing on deploy failure
     try {
       const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
       const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-      await fetch(`${supabaseUrl}/functions/v1/pipeline-publish`, {
+      const currentAttempt = (existing?.self_healing_attempt as number) || 0;
+      await fetch(`${supabaseUrl}/functions/v1/build-self-healing`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${serviceRoleKey}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ initiativeId, stage: "publish" }),
+        body: JSON.stringify({
+          initiative_id: initiativeId,
+          organization_id: found.orgId,
+          build_log: desc,
+          attempt: currentAttempt + 1,
+          owner: repoOwner,
+          repo: repoName,
+        }),
       });
-      await pipelineLog(ctx, "auto_republish_triggered",
-        `Auto re-publicação acionada após falha de deploy em ${fullName}`);
+      await pipelineLog(ctx, "self_healing_deploy_triggered",
+        `Build Self-Healing triggered after deploy failure on ${fullName}`);
     } catch (e) {
-      console.error("Auto-republish after deploy failure:", e);
+      console.error("Self-Healing after deploy failure failed:", e);
+      // Fallback to republish
+      try {
+        const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+        const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+        await fetch(`${supabaseUrl}/functions/v1/pipeline-publish`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${serviceRoleKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ initiativeId, stage: "publish" }),
+        });
+      } catch { /* ignore */ }
     }
   }
 
