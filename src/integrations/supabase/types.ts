@@ -2072,6 +2072,12 @@ export type Database = {
         | "logic_synthesized"
         | "generating_api"
         | "api_generated"
+        | "generating_data_model"
+        | "data_model_generated"
+        | "generating_ui"
+        | "ui_generated"
+        | "learning_system"
+        | "system_learned"
       initiative_status:
         | "idea"
         | "discovery"
@@ -2298,6 +2304,12 @@ export const Constants = {
         "logic_synthesized",
         "generating_api",
         "api_generated",
+        "generating_data_model",
+        "data_model_generated",
+        "generating_ui",
+        "ui_generated",
+        "learning_system",
+        "system_learned",
       ],
       initiative_status: [
         "idea",
