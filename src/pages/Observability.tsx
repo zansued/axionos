@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
+import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
@@ -384,77 +385,13 @@ export default function Observability() {
           </TabsContent>
 
           {/* ===== CUSTOS ===== */}
-          <TabsContent value="costs" className="mt-4 space-y-4">
-            {/* Daily cost timeline */}
-            <Card className="border-border/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-display flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-primary" /> Custo Diário (7 dias)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={250}>
-                  <LineChart data={dailyCost} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="date" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
-                    <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} tickFormatter={(v) => `$${v}`} />
-                    <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} formatter={(v: number) => [`$${v.toFixed(4)}`, "Custo"]} />
-                    <Line type="monotone" dataKey="cost" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 4, fill: "hsl(var(--primary))" }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            <div className="grid gap-4 lg:grid-cols-2">
-              {/* Cost by agent */}
-              <Card className="border-border/50">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-display">Custo por Agente</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {costByAgent.length === 0 ? (
-                    <p className="text-xs text-muted-foreground text-center py-8">Sem dados</p>
-                  ) : (
-                    <ResponsiveContainer width="100%" height={250}>
-                      <BarChart data={costByAgent.slice(0, 8)} layout="vertical" margin={{ top: 5, right: 5, bottom: 5, left: 60 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis type="number" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} tickFormatter={(v) => `$${v.toFixed(3)}`} />
-                        <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} width={55} />
-                        <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} formatter={(v: number) => [`$${v.toFixed(4)}`, "Custo"]} />
-                        <Bar dataKey="cost" fill="hsl(var(--accent))" radius={[0, 4, 4, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Cost by model */}
-              <Card className="border-border/50">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-display">Custo por Modelo</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {costByModel.length === 0 ? (
-                    <p className="text-xs text-muted-foreground text-center py-8">Sem dados</p>
-                  ) : (
-                    <div className="space-y-2">
-                      {costByModel.map((m, i) => (
-                        <div key={m.name} className="flex items-center justify-between rounded-md border border-border/30 bg-muted/10 p-3">
-                          <div className="flex items-center gap-2">
-                            <div className="h-3 w-3 rounded-full" style={{ background: CHART_COLORS[i % CHART_COLORS.length] }} />
-                            <span className="text-xs font-mono truncate max-w-[180px]">{m.name}</span>
-                          </div>
-                          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                            <span>{m.count} calls</span>
-                            <span className="font-medium text-foreground">${m.cost.toFixed(4)}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+          <TabsContent value="costs" className="mt-4">
+            <CostsDashboard
+              outputs={outputs}
+              costByAgent={costByAgent}
+              costByModel={costByModel}
+              dailyCost={dailyCost}
+            />
           </TabsContent>
 
           {/* ===== QUALIDADE ===== */}
