@@ -130,6 +130,18 @@ Arquitetura distribuída:
 - Scaffold armazenado no Project Brain como nós com status "scaffold"
 - Novo fluxo: Validação Preventiva → **Scaffold** → Squad → Execução
 
+### 22. Project Bootstrap Intelligence
+- **`project-bootstrap-intelligence`** — valida buildabilidade estrutural ANTES do Foundation Scaffold
+- Multi-stack: `react-vite`, `nextjs`, `node-api`, `python-fastapi`
+- Templates de bootstrap por stack (arquivos mínimos necessários)
+- **Validação de entrypoints**: parse index.html → verifica script referenciado existe
+- **Validação de scripts**: dev/build/preview com valores corretos por stack
+- **Validação de dependências**: react, react-dom, vite, typescript
+- **Predição de build via IA**: simula `npm install && tsc --noEmit && vite build`
+- Auto-injeção de arquivos faltantes no Project Brain como nós `bootstrap`
+- Reparo emergencial se predição falhar
+- Novo fluxo: Validação Preventiva → **Bootstrap Intelligence** → Scaffold → Squad → Execução
+
 ---
 
 ## 🔜 Próximos Passos
