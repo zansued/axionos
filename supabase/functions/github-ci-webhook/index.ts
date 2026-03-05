@@ -122,7 +122,19 @@ serve(async (req) => {
       serviceRoleKey
     );
 
-    const payload = JSON.parse(rawBody);
+    // GitHub may send as application/x-www-form-urlencoded with payload=...
+    let payload: any;
+    const contentType = req.headers.get("content-type") || "";
+    if (contentType.includes("application/x-www-form-urlencoded")) {
+      const params = new URLSearchParams(rawBody);
+      const payloadStr = params.get("payload");
+      if (!payloadStr) {
+        return errorResponse("Missing 'payload' in form-encoded body", 400);
+      }
+      payload = JSON.parse(payloadStr);
+    } else {
+      payload = JSON.parse(rawBody);
+    }
 
     // ── Handle GitHub native events ──
     if (isGitHubNative && githubEvent) {
