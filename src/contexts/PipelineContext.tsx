@@ -184,6 +184,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       supabase_provisioning: "supabase-provisioning-engine",
       domain_model_analysis: "ai-domain-model-analyzer",
       business_logic_synthesis: "ai-business-logic-synthesizer",
+      api_generation: "autonomous-api-generator",
       error_intelligence: "error-intelligence",
       build_repair: "autonomous-build-repair",
     };
