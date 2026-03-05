@@ -264,14 +264,26 @@ async function handleGitHubEvent(
       `CI passed: ${workflowName} (${repoFullName}@${commitSha.slice(0, 7)})`,
       { run_id: runId, workflow: workflowName });
 
+    // Preserve existing execution_progress fields and merge CI success data
+    const { data: currentInit } = await serviceClient
+      .from("initiatives")
+      .select("execution_progress")
+      .eq("id", initiativeId)
+      .single();
+
+    const existingProgress = (currentInit?.execution_progress as Record<string, unknown>) || {};
+
     await serviceClient.from("initiatives").update({
       execution_progress: {
+        ...existingProgress,
         ci_status: "success",
         ci_run_id: runId,
         ci_passed_at: new Date().toISOString(),
         ci_workflow: workflowName,
         ci_commit_sha: commitSha,
+        runtime_validation_status: "passed",
       },
+      stage_status: "ready_to_publish",
     }).eq("id", initiativeId);
 
     if (jobId) await completeJob(ctx, jobId, {
@@ -331,9 +343,18 @@ async function handleGitHubEvent(
         `Fix: ${err.message}`);
     }
 
-    // Update initiative with CI failure data
+    // Update initiative with CI failure data (preserve existing progress)
+    const { data: currentInitFail } = await serviceClient
+      .from("initiatives")
+      .select("execution_progress")
+      .eq("id", initiativeId)
+      .single();
+
+    const existingProgressFail = (currentInitFail?.execution_progress as Record<string, unknown>) || {};
+
     await serviceClient.from("initiatives").update({
       execution_progress: {
+        ...existingProgressFail,
         ci_status: "failed",
         ci_run_id: runId,
         ci_failed_at: new Date().toISOString(),
@@ -342,6 +363,7 @@ async function handleGitHubEvent(
         ci_logs_url: logsUrl,
         ci_errors: extractedErrors.slice(0, 50),
         ci_build_log: buildLog.slice(0, 5000),
+        runtime_validation_status: "failed",
       },
       stage_status: "validating",
     }).eq("id", initiativeId);
