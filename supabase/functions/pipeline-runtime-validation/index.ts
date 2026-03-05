@@ -117,30 +117,52 @@ serve(async (req) => {
     const repoData = await repoCheck.json();
     const isRepoEmpty = Number(repoData?.size ?? 0) === 0;
 
-    // ── Get base branch SHA (handle empty repos) ──
+    // ── Get base branch SHA (handle empty repos + stale default branch) ──
     let baseSha: string | null = null;
     let baseTreeSha: string | null = null;
 
-    const refResp = await fetch(
-      `${GITHUB_API}/repos/${owner}/${repo}/git/ref/heads/${baseBranch}`,
-      { headers: ghHeaders }
-    );
-    if (refResp.ok) {
-      const refData = await refResp.json();
-      baseSha = refData.object.sha;
-
-      const baseCommitResp = await fetch(
-        `${GITHUB_API}/repos/${owner}/${repo}/git/commits/${baseSha}`,
+    const loadBaseCommit = async (branch: string) => {
+      const refResp = await fetch(
+        `${GITHUB_API}/repos/${owner}/${repo}/git/ref/heads/${branch}`,
         { headers: ghHeaders }
       );
-      if (baseCommitResp.ok) {
-        const baseCommit = await baseCommitResp.json();
-        baseTreeSha = baseCommit.tree.sha;
+
+      if (!refResp.ok) {
+        const errText = await refResp.text();
+        return { ok: false as const, status: refResp.status, errText };
       }
-    } else {
-      await refResp.text(); // consume body
+
+      const refData = await refResp.json();
+      const sha = refData.object.sha as string;
+      const baseCommitResp = await fetch(
+        `${GITHUB_API}/repos/${owner}/${repo}/git/commits/${sha}`,
+        { headers: ghHeaders }
+      );
+      if (!baseCommitResp.ok) {
+        throw new Error(`Falha ao obter commit base da branch '${branch}'`);
+      }
+      const baseCommit = await baseCommitResp.json();
+      return { ok: true as const, sha, treeSha: baseCommit.tree.sha as string };
+    };
+
+    const baseResult = await loadBaseCommit(baseBranch);
+    if (baseResult.ok) {
+      baseSha = baseResult.sha;
+      baseTreeSha = baseResult.treeSha;
+    } else if (!isRepoEmpty && repoData?.default_branch && repoData.default_branch !== baseBranch) {
+      // stale branch in connection config, fallback to repo default branch
+      baseBranch = repoData.default_branch;
+      const fallbackResult = await loadBaseCommit(baseBranch);
+      if (!fallbackResult.ok) {
+        throw new Error(`Branch '${baseBranch}' não encontrada: ${fallbackResult.errText}`);
+      }
+      baseSha = fallbackResult.sha;
+      baseTreeSha = fallbackResult.treeSha;
+    } else if (isRepoEmpty) {
       await pipelineLog(ctx, "runtime_validation_empty_repo",
-        `Repo vazio detectado — criando branch '${baseBranch}' com commit inicial`);
+        `Repo vazio detectado — gerando commit inicial direto via tree API`);
+    } else {
+      throw new Error(`Branch '${baseBranch}' não encontrada: ${baseResult.errText}`);
     }
 
     // ── Create blobs (parallel batches of 5) ──
