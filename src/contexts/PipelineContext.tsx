@@ -222,6 +222,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           comprehension: `Compreensão concluída: 4 agentes (Vision, Market, Requirements, Product Architect) ✅`,
           architecture: `Arquitetura técnica concluída: 4 agentes (System, Data, API Architect, Dependency Planner) ✅`,
           architecture_simulation: `Simulação de arquitetura concluída: score ${result.score || 0}/100, ${result.repairs?.length || 0} reparos ${result.passed ? "✅" : "⚠️"}`,
+          bootstrap_intelligence: `Bootstrap Intelligence: ${result.stack || "react-vite"} stack, ${result.files_injected || 0} arquivos injetados, build confidence ${((result.build_confidence || 0) * 100).toFixed(0)}% ${result.build_prediction ? "✅" : "⚠️"}`,
           foundation_scaffold: `Foundation Scaffold: ${result.files_generated || 0} arquivos (${result.stack || "react-vite"}). Build confidence: ${((result.build_confidence || 0) * 100).toFixed(0)}% ${result.validation_passed ? "✅" : "⚠️"}`,
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
