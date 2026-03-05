@@ -63,13 +63,21 @@ Arquitetura distribuída:
 
 ---
 
+### 10. Runtime Validation (tsc + vite build)
+- `pipeline-runtime-validation` — push para branch temporária `validate/{id}`
+- GitHub Actions executa: `npm install → tsc --noEmit → vite build`
+- Resultados voltam via `pipeline-ci-webhook` existente
+- Erros reais do compilador alimentam Fix Swarm
+- `RuntimeValidationStatus` — UI com status do CI, erros e build log
+- Disponível nos stages `validating` e `ready_to_publish`
+
+---
+
 ## 🔜 Próximos Passos (em ordem de prioridade)
 
 | # | Fase | Impacto | Complexidade | Descrição |
 |---|------|---------|-------------|-----------|
-| 1 | Runtime Validation (tsc + vite) | 🔴 Alto | Alto | Validação real com compilador TypeScript (hoje é AI-simulated) |
-| 2 | Smart Context Window | 🟡 Médio | Alto | Reduzir tokens via AST parsing — enviar apenas interfaces/exports relevantes |
-| 3 | Incremental Re-execution | 🟡 Médio | Médio | Re-executar apenas arquivos cujo content_hash mudou |
-| 4 | Vector Embeddings (pgvector) | 🟠 Baixo | Alto | Busca semântica no Brain para contexto mais relevante |
-| 5 | Templates de Iniciativas | 🟠 Baixo | Baixo | Modelos pré-prontos (SaaS, API, Landing Page) |
-| 6 | Templates de Iniciativas | 🟠 Baixo | Baixo | Modelos pré-prontos (SaaS, API, Landing Page) |
+| 1 | Smart Context Window | 🟡 Médio | Alto | Reduzir tokens via AST parsing — enviar apenas interfaces/exports relevantes |
+| 2 | Incremental Re-execution | 🟡 Médio | Médio | Re-executar apenas arquivos cujo content_hash mudou |
+| 3 | Vector Embeddings (pgvector) | 🟠 Baixo | Alto | Busca semântica no Brain para contexto mais relevante |
+| 4 | Templates de Iniciativas | 🟠 Baixo | Baixo | Modelos pré-prontos (SaaS, API, Landing Page) |
