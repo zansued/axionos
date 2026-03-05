@@ -193,14 +193,18 @@ function validateScaffold(scaffold: ScaffoldFile[]): { passed: boolean; issues: 
     }
   }
 
-  // Check package.json has scripts
-  const pkg = scaffold.find(f => f.path === "package.json");
+  // Check package.json has required scripts
+  const pkg = scaffold.find((f) => f.path === "package.json");
   if (pkg) {
     try {
       const parsed = JSON.parse(pkg.content);
-      if (!parsed.scripts?.build) issues.push("package.json missing 'build' script");
-      if (!parsed.scripts?.dev) issues.push("package.json missing 'dev' script");
+      for (const [scriptName, scriptValue] of Object.entries(REQUIRED_PACKAGE_SCRIPTS)) {
+        if (parsed.scripts?.[scriptName] !== scriptValue) {
+          issues.push(`package.json missing or invalid '${scriptName}' script`);
+        }
+      }
       if (!parsed.dependencies?.react) issues.push("package.json missing 'react' dependency");
+      if (!parsed.dependencies?.["react-dom"]) issues.push("package.json missing 'react-dom' dependency");
     } catch {
       issues.push("package.json has invalid JSON");
     }
@@ -209,9 +213,10 @@ function validateScaffold(scaffold: ScaffoldFile[]): { passed: boolean; issues: 
   }
 
   // Check index.html references main.tsx
-  const indexHtml = scaffold.find(f => f.path === "index.html");
+  const indexHtml = scaffold.find((f) => f.path === "index.html");
   if (indexHtml) {
-    if (!indexHtml.content.includes("src/main.tsx")) {
+    const entry = extractIndexEntrypoint(indexHtml.content);
+    if (!entry || entry !== "src/main.tsx") {
       issues.push("index.html does not reference src/main.tsx");
     }
     if (!indexHtml.content.includes('id="root"')) {
@@ -222,10 +227,10 @@ function validateScaffold(scaffold: ScaffoldFile[]): { passed: boolean; issues: 
   }
 
   // Check main.tsx imports App
-  const mainTsx = scaffold.find(f => f.path === "src/main.tsx");
+  const mainTsx = scaffold.find((f) => f.path === "src/main.tsx");
   if (mainTsx) {
-    if (!mainTsx.content.includes("App")) {
-      issues.push("src/main.tsx does not import App component");
+    if (!/import\s+App\s+from\s+["']\.\/App["']/.test(mainTsx.content)) {
+      issues.push("src/main.tsx missing import App from './App'");
     }
     if (!mainTsx.content.includes("createRoot")) {
       issues.push("src/main.tsx does not call createRoot");
@@ -235,13 +240,15 @@ function validateScaffold(scaffold: ScaffoldFile[]): { passed: boolean; issues: 
   }
 
   // Check App.tsx exists and exports
-  const appTsx = scaffold.find(f => f.path === "src/App.tsx");
+  const appTsx = scaffold.find((f) => f.path === "src/App.tsx");
   if (!appTsx) {
     issues.push("src/App.tsx not found in scaffold");
+  } else if (!/export\s+default\s+function\s+App|function\s+App\s*\(/.test(appTsx.content)) {
+    issues.push("src/App.tsx missing App export");
   }
 
   // Check vite config
-  const viteConfig = scaffold.find(f => f.path === "vite.config.ts");
+  const viteConfig = scaffold.find((f) => f.path === "vite.config.ts");
   if (!viteConfig) {
     issues.push("vite.config.ts not found in scaffold");
   } else if (!viteConfig.content.includes("react")) {
@@ -249,9 +256,42 @@ function validateScaffold(scaffold: ScaffoldFile[]): { passed: boolean; issues: 
   }
 
   // Check tsconfig
-  const tsconfig = scaffold.find(f => f.path === "tsconfig.json");
+  const tsconfig = scaffold.find((f) => f.path === "tsconfig.json");
   if (!tsconfig) {
     issues.push("tsconfig.json not found in scaffold");
+  }
+
+  return { passed: issues.length === 0, issues };
+}
+
+function validateEntrypoints(scaffold: ScaffoldFile[], projectBrainPaths: Set<string>): { passed: boolean; issues: string[] } {
+  const issues: string[] = [];
+  const scaffoldPaths = new Set(scaffold.map((f) => f.path));
+  const hasPath = (path: string) => scaffoldPaths.has(path) || projectBrainPaths.has(path);
+
+  const indexHtml = scaffold.find((f) => f.path === "index.html");
+  if (!indexHtml && !projectBrainPaths.has("index.html")) {
+    issues.push("index.html not found in scaffold or project brain");
+  }
+
+  if (indexHtml) {
+    const entry = extractIndexEntrypoint(indexHtml.content);
+    if (!entry) {
+      issues.push("index.html missing module script entrypoint");
+    } else if (entry === "src/main.tsx" && !hasPath("src/main.tsx")) {
+      issues.push("index.html references src/main.tsx but src/main.tsx is missing in scaffold and project brain");
+    }
+  }
+
+  for (const requiredPath of REQUIRED_REACT_VITE_FILES) {
+    if (!hasPath(requiredPath)) {
+      issues.push(`${requiredPath} not found in scaffold or project brain`);
+    }
+  }
+
+  const mainTsx = scaffold.find((f) => f.path === "src/main.tsx");
+  if (mainTsx && !/import\s+App\s+from\s+["']\.\/App["']/.test(mainTsx.content)) {
+    issues.push("src/main.tsx import integrity failed: expected import App from './App'");
   }
 
   return { passed: issues.length === 0, issues };
