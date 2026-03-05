@@ -1,6 +1,6 @@
 import {
   Lightbulb, Brain, Users, FileText, Cpu, BookOpen, Hammer, CheckCircle2,
-  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap, Package
+  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap, Package, Wrench
 } from "lucide-react";
 
 export const PIPELINE_STEPS = [
@@ -30,6 +30,9 @@ export const PIPELINE_STEPS = [
   { key: "planned", label: "Planejado", icon: FileText, color: "text-accent", bg: "bg-accent/10" },
   { key: "in_progress", label: "Execução", icon: Hammer, color: "text-primary", bg: "bg-primary/10" },
   { key: "validating", label: "Validação", icon: Shield, color: "text-warning", bg: "bg-warning/10" },
+  { key: "repairing_build", label: "Build Repair ▶", icon: Wrench, color: "text-warning", bg: "bg-warning/10" },
+  { key: "build_repaired", label: "Build Repair ✓", icon: Wrench, color: "text-accent", bg: "bg-accent/10" },
+  { key: "repair_failed", label: "Repair Failed", icon: Wrench, color: "text-destructive", bg: "bg-destructive/10" },
   { key: "ready_to_publish", label: "Pronto", icon: Rocket, color: "text-accent", bg: "bg-accent/10" },
   { key: "published", label: "Publicado", icon: GitBranch, color: "text-primary", bg: "bg-primary/10" },
   { key: "completed", label: "Concluído", icon: CheckCircle2, color: "text-success", bg: "bg-success/10" },
@@ -48,6 +51,7 @@ export const MACRO_STAGES = [
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
   { key: "validation", label: "Validação", icon: Shield },
+  { key: "build_repair", label: "Build Repair", icon: Wrench },
   { key: "publish", label: "Publicação", icon: GitBranch },
   { key: "done", label: "Concluído", icon: CheckCircle2 },
 ];
@@ -70,9 +74,11 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 8;
   if (["planning_ready", "planning", "planned"].includes(s)) return 9;
   if (["in_progress"].includes(s)) return 10;
-  if (["validating", "ready_to_publish"].includes(s)) return 11;
-  if (["published"].includes(s)) return 12;
-  if (["completed"].includes(s)) return 13;
+  if (["validating"].includes(s)) return 11;
+  if (["repairing_build", "build_repaired", "repair_failed"].includes(s)) return 12;
+  if (["ready_to_publish"].includes(s)) return 13;
+  if (["published"].includes(s)) return 14;
+  if (["completed"].includes(s)) return 15;
   return 0;
 }
 
@@ -203,6 +209,21 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "deep_validation", label: "Deep Static Analysis", type: "run" },
         { stage: "runtime_validation", label: "Runtime Validation (tsc + vite)", type: "run" },
         { stage: "approve", label: "✅ Aprovar Validação → Publicar", type: "approve" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "repairing_build":
+      return [
+        { stage: "build_repair", label: "Re-executar Build Repair", type: "run" },
+      ];
+    case "build_repaired":
+      return [
+        { stage: "approve", label: "✅ Aprovar Repair → Publicar", type: "approve" },
+        { stage: "build_repair", label: "Re-executar Build Repair", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "repair_failed":
+      return [
+        { stage: "build_repair", label: "🔧 Retry Build Repair", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "ready_to_publish":
