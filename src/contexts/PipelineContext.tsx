@@ -120,10 +120,10 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           reject: "Ajustes solicitados — pipeline retornou ao estágio anterior ⟲",
           execution: `Implementação concluída: ${result.code_files || 0} arquivos (Code Architect → Developer → Integration) ✅`,
           validation: result.batch_incomplete
-            ? `Validação em lote: ${result.processed_in_batch || 0} processados, ${result.remaining_to_validate || 0} restantes ⏳`
+            ? `Verificação: ${result.processed_in_batch || 0} processados (Static Analysis → Runtime QA → Fix Agent), ${result.remaining_to_validate || 0} restantes ⏳`
             : result.overall_pass
-              ? `Validação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos ✅`
-              : `Validação: ${result.failed || 0} falhas de ${result.artifacts_validated || 0} artefatos ⚠️`,
+              ? `Verificação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos${result.fixed ? `, ${result.fixed} corrigidos pelo Fix Agent` : ""} ✅`
+              : `Verificação: ${result.failed || 0} falhas, ${result.fixed || 0} corrigidos de ${result.artifacts_validated || 0} artefatos ⚠️`,
           publish: `Publicação concluída: ${result.files_committed || 0} arquivos commitados no main ✅`,
         };
         const label = stageLabels[stage] || "Concluído!";
