@@ -53,7 +53,7 @@ serve(async (req) => {
 
     const owner = conn.repo_owner;
     const repo = conn.repo_name;
-    const baseBranch = conn.default_branch || "main";
+    let baseBranch = conn.default_branch || "main";
     const validateBranch = `validate/${ctx.initiativeId.slice(0, 8)}`;
 
     // ── Collect artifacts ──
@@ -114,32 +114,79 @@ serve(async (req) => {
     if (!repoCheck.ok) {
       throw new Error(`Repositório ${owner}/${repo} não encontrado. Publique primeiro antes de rodar Runtime Validation.`);
     }
-    await repoCheck.text(); // consume body
+    const repoData = await repoCheck.json();
+    const isRepoEmpty = Number(repoData?.size ?? 0) === 0;
 
-    // ── Get base branch SHA (handle empty repos) ──
+    // ── Get base branch SHA (handle empty repos + stale default branch) ──
     let baseSha: string | null = null;
     let baseTreeSha: string | null = null;
 
-    const refResp = await fetch(
-      `${GITHUB_API}/repos/${owner}/${repo}/git/ref/heads/${baseBranch}`,
-      { headers: ghHeaders }
-    );
-    if (refResp.ok) {
-      const refData = await refResp.json();
-      baseSha = refData.object.sha;
-
-      const baseCommitResp = await fetch(
-        `${GITHUB_API}/repos/${owner}/${repo}/git/commits/${baseSha}`,
+    const loadBaseCommit = async (branch: string) => {
+      const refResp = await fetch(
+        `${GITHUB_API}/repos/${owner}/${repo}/git/ref/heads/${branch}`,
         { headers: ghHeaders }
       );
-      if (baseCommitResp.ok) {
-        const baseCommit = await baseCommitResp.json();
-        baseTreeSha = baseCommit.tree.sha;
+
+      if (!refResp.ok) {
+        const errText = await refResp.text();
+        return { ok: false as const, status: refResp.status, errText };
       }
-    } else {
-      await refResp.text(); // consume body
+
+      const refData = await refResp.json();
+      const sha = refData.object.sha as string;
+      const baseCommitResp = await fetch(
+        `${GITHUB_API}/repos/${owner}/${repo}/git/commits/${sha}`,
+        { headers: ghHeaders }
+      );
+      if (!baseCommitResp.ok) {
+        throw new Error(`Falha ao obter commit base da branch '${branch}'`);
+      }
+      const baseCommit = await baseCommitResp.json();
+      return { ok: true as const, sha, treeSha: baseCommit.tree.sha as string };
+    };
+
+    const baseResult = await loadBaseCommit(baseBranch);
+    if (baseResult.ok) {
+      baseSha = baseResult.sha;
+      baseTreeSha = baseResult.treeSha;
+    } else if (!isRepoEmpty && repoData?.default_branch && repoData.default_branch !== baseBranch) {
+      // stale branch in connection config, fallback to repo default branch
+      baseBranch = repoData.default_branch;
+      const fallbackResult = await loadBaseCommit(baseBranch);
+      if (!fallbackResult.ok) {
+        throw new Error(`Branch '${baseBranch}' não encontrada: ${fallbackResult.errText}`);
+      }
+      baseSha = fallbackResult.sha;
+      baseTreeSha = fallbackResult.treeSha;
+    } else if (isRepoEmpty) {
       await pipelineLog(ctx, "runtime_validation_empty_repo",
-        `Repo vazio detectado — criando branch '${baseBranch}' com commit inicial`);
+        `Repo vazio detectado — inicializando branch '${baseBranch}' com commit seed`);
+
+      const seedResp = await fetch(
+        `${GITHUB_API}/repos/${owner}/${repo}/contents/README.md`,
+        {
+          method: "PUT",
+          headers: ghHeaders,
+          body: JSON.stringify({
+            message: "chore: initialize repository for runtime validation",
+            content: btoa("# Runtime Validation\n\nRepository initialized automatically by SynkrAIOS pipeline.\n"),
+            branch: baseBranch,
+          }),
+        }
+      );
+      if (!seedResp.ok) {
+        throw new Error(`Falha ao inicializar repositório vazio: ${await seedResp.text()}`);
+      }
+      await seedResp.text();
+
+      const seededResult = await loadBaseCommit(baseBranch);
+      if (!seededResult.ok) {
+        throw new Error(`Branch '${baseBranch}' não encontrada após inicialização: ${seededResult.errText}`);
+      }
+      baseSha = seededResult.sha;
+      baseTreeSha = seededResult.treeSha;
+    } else {
+      throw new Error(`Branch '${baseBranch}' não encontrada: ${baseResult.errText}`);
     }
 
     // ── Create blobs (parallel batches of 5) ──
@@ -215,20 +262,6 @@ serve(async (req) => {
     );
     if (!commitResp.ok) throw new Error(`Commit failed: ${await commitResp.text()}`);
     const newCommit = await commitResp.json();
-
-    // ── Create main branch if repo was empty ──
-    if (!baseSha) {
-      const createMainResp = await fetch(
-        `${GITHUB_API}/repos/${owner}/${repo}/git/refs`,
-        {
-          method: "POST",
-          headers: ghHeaders,
-          body: JSON.stringify({ ref: `refs/heads/${baseBranch}`, sha: newCommit.sha }),
-        }
-      );
-      if (!createMainResp.ok) throw new Error(`Main branch creation failed: ${await createMainResp.text()}`);
-      await createMainResp.text();
-    }
 
     // ── Create or update validate branch ──
     const branchRefResp = await fetch(
