@@ -119,3 +119,6 @@ verify_jwt = false
 
 [functions.supabase-provisioning-engine]
 verify_jwt = false
+
+[functions.ai-domain-model-analyzer]
+verify_jwt = false

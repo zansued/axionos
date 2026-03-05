@@ -82,7 +82,8 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["analyzing_dependencies", "dependencies_analyzed"].includes(s)) return 7;
   if (["bootstrapping_schema", "schema_bootstrapped"].includes(s)) return 8;
   if (["provisioning_db", "db_provisioned"].includes(s)) return 9;
-  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 10;
+  if (["analyzing_domain", "domain_analyzed"].includes(s)) return 10;
+  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 11;
   if (["planning_ready", "planning", "planned"].includes(s)) return 11;
   if (["in_progress"].includes(s)) return 12;
   if (["validating"].includes(s)) return 13;
