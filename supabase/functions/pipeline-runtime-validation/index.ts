@@ -170,11 +170,18 @@ serve(async (req) => {
       for (const r of results) {
         if (r.status === "fulfilled") {
           treeItems.push({ path: r.value.path, mode: "100644", type: "blob", sha: r.value.sha });
+        } else {
+          console.error("Blob rejected:", r.reason?.message || r.reason);
         }
       }
     }
 
-    if (treeItems.length === 0) throw new Error("Nenhum blob criado");
+    if (treeItems.length === 0) {
+      // Log what we tried to push for debugging
+      console.error("All blobs failed. Files attempted:", fileEntries.map(f => f.path));
+      console.error("Repo:", `${owner}/${repo}`, "Token length:", conn.github_token?.length);
+      throw new Error(`Nenhum blob criado — ${fileEntries.length} arquivos falharam. Verifique permissões do token GitHub.`);
+    }
 
     // ── Create tree ──
     const treeBody: any = { tree: treeItems };
