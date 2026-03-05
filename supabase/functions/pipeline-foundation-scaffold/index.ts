@@ -303,41 +303,90 @@ function repairScaffold(scaffold: ScaffoldFile[], issues: string[], projectName:
   const defaults = getReactViteScaffold(projectName);
   const result = [...scaffold];
 
+  const upsertDefaultFile = (filePath: string, reason: string) => {
+    const defaultFile = defaults.find((f) => f.path === filePath);
+    if (!defaultFile) return;
+
+    const existingIdx = result.findIndex((f) => f.path === filePath);
+    if (existingIdx >= 0) {
+      result[existingIdx] = defaultFile;
+      repairs.push(reason);
+      return;
+    }
+
+    result.push(defaultFile);
+    repairs.push(reason);
+  };
+
   for (const issue of issues) {
-    // Missing file? inject default
-    const missingMatch = issue.match(/^(.+?) not found in scaffold$/);
+    // Missing file in scaffold or project brain? inject default into scaffold
+    const missingMatch = issue.match(/^(.+?) not found in scaffold(?: or project brain)?$/);
     if (missingMatch) {
       const filePath = missingMatch[1];
-      const defaultFile = defaults.find(f => f.path === filePath);
-      if (defaultFile && !result.find(f => f.path === filePath)) {
-        result.push(defaultFile);
-        repairs.push(`Injected missing ${filePath} from default template`);
+      upsertDefaultFile(filePath, `Injected missing ${filePath} from default template`);
+    }
+
+    if (issue.includes("references src/main.tsx but src/main.tsx is missing")) {
+      upsertDefaultFile("src/main.tsx", "Injected src/main.tsx to satisfy index.html entrypoint reference");
+    }
+
+    if (issue.includes("index.html missing module script entrypoint") || issue.includes("index.html does not reference src/main.tsx")) {
+      upsertDefaultFile("index.html", "Replaced index.html with correct module entrypoint");
+    }
+
+    if (issue.includes("index.html missing root div")) {
+      upsertDefaultFile("index.html", "Repaired index.html root mount container");
+    }
+
+    if (
+      issue.includes("missing or invalid 'build' script") ||
+      issue.includes("missing or invalid 'dev' script") ||
+      issue.includes("missing or invalid 'preview' script")
+    ) {
+      const idx = result.findIndex((f) => f.path === "package.json");
+      if (idx >= 0) {
+        try {
+          const parsed = JSON.parse(result[idx].content);
+          parsed.scripts = {
+            ...parsed.scripts,
+            dev: REQUIRED_PACKAGE_SCRIPTS.dev,
+            build: REQUIRED_PACKAGE_SCRIPTS.build,
+            preview: REQUIRED_PACKAGE_SCRIPTS.preview,
+          };
+          result[idx] = { ...result[idx], content: JSON.stringify(parsed, null, 2) };
+          repairs.push("Added missing Vite scripts to package.json");
+        } catch {
+          upsertDefaultFile("package.json", "Replaced invalid package.json with default scaffold template");
+        }
+      } else {
+        upsertDefaultFile("package.json", "Injected missing package.json from default scaffold template");
       }
     }
 
-    // index.html missing main.tsx reference
-    if (issue.includes("does not reference src/main.tsx")) {
-      const idx = result.findIndex(f => f.path === "index.html");
+    if (issue.includes("package.json missing 'react' dependency") || issue.includes("package.json missing 'react-dom' dependency")) {
+      const idx = result.findIndex((f) => f.path === "package.json");
       if (idx >= 0) {
-        const defaultHtml = defaults.find(f => f.path === "index.html");
-        if (defaultHtml) {
-          result[idx] = defaultHtml;
-          repairs.push("Replaced index.html with correct entrypoint reference");
+        try {
+          const parsed = JSON.parse(result[idx].content);
+          parsed.dependencies = {
+            ...parsed.dependencies,
+            react: parsed.dependencies?.react || "^18.3.1",
+            "react-dom": parsed.dependencies?.["react-dom"] || "^18.3.1",
+          };
+          result[idx] = { ...result[idx], content: JSON.stringify(parsed, null, 2) };
+          repairs.push("Added missing React dependencies to package.json");
+        } catch {
+          upsertDefaultFile("package.json", "Replaced invalid package.json with default scaffold template");
         }
       }
     }
 
-    // package.json missing scripts
-    if (issue.includes("missing 'build' script") || issue.includes("missing 'dev' script")) {
-      const idx = result.findIndex(f => f.path === "package.json");
-      if (idx >= 0) {
-        try {
-          const parsed = JSON.parse(result[idx].content);
-          parsed.scripts = { ...parsed.scripts, dev: "vite", build: "vite build", preview: "vite preview" };
-          result[idx] = { ...result[idx], content: JSON.stringify(parsed, null, 2) };
-          repairs.push("Added missing build scripts to package.json");
-        } catch { /* skip */ }
-      }
+    if (issue.includes("src/main.tsx import integrity failed") || issue.includes("src/main.tsx missing import App from './App'")) {
+      upsertDefaultFile("src/main.tsx", "Repaired src/main.tsx import integrity");
+    }
+
+    if (issue.includes("src/App.tsx missing App export")) {
+      upsertDefaultFile("src/App.tsx", "Repaired src/App.tsx default export");
     }
   }
 
