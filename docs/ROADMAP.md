@@ -101,10 +101,10 @@
 
 ## Fase 9 — UX & Polish
 
-- [ ] Onboarding guiado para novos usuários
+- [x] Onboarding guiado para novos usuários
 - [ ] Templates de iniciativas pré-configurados
-- [ ] Dark/Light mode toggle
-- [ ] Responsividade mobile completa
+- [x] Dark/Light mode toggle
+- [x] Responsividade mobile completa
 - [ ] Atalhos de teclado (K para Kanban, I para Initiatives, etc.)
 - [ ] Internacionalização (pt-BR / en-US)
 
