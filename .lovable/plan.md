@@ -71,13 +71,23 @@ Arquitetura distribuída:
 - `RuntimeValidationStatus` — UI com status do CI, erros e build log
 - Disponível nos stages `validating` e `ready_to_publish`
 
+### 11. Smart Context Window (AST-based)
+- `_shared/smart-context.ts` — parser regex-based que extrai apenas a API pública de cada arquivo
+- Extrai: imports, exports, interfaces, types, function signatures, component props
+- `buildSmartContextWindow()` — constrói contexto compacto com priorização:
+  - Dependências diretas: contexto completo (60% do budget)
+  - Outros arquivos: apenas export signatures
+  - Prioridade: types > hooks > services > components > pages
+- Compressão de ~60-80% no volume de tokens enviados à IA
+- Integrado ao `pipeline-execution-orchestrator` e `pipeline-execution-worker`
+- Stats de compressão logados a cada 5 arquivos via `pipelineLog`
+
 ---
 
 ## 🔜 Próximos Passos (em ordem de prioridade)
 
 | # | Fase | Impacto | Complexidade | Descrição |
 |---|------|---------|-------------|-----------|
-| 1 | Smart Context Window | 🟡 Médio | Alto | Reduzir tokens via AST parsing — enviar apenas interfaces/exports relevantes |
-| 2 | Incremental Re-execution | 🟡 Médio | Médio | Re-executar apenas arquivos cujo content_hash mudou |
-| 3 | Vector Embeddings (pgvector) | 🟠 Baixo | Alto | Busca semântica no Brain para contexto mais relevante |
-| 4 | Templates de Iniciativas | 🟠 Baixo | Baixo | Modelos pré-prontos (SaaS, API, Landing Page) |
+| 1 | Incremental Re-execution | 🟡 Médio | Médio | Re-executar apenas arquivos cujo content_hash mudou |
+| 2 | Vector Embeddings (pgvector) | 🟠 Baixo | Alto | Busca semântica no Brain para contexto mais relevante |
+| 3 | Templates de Iniciativas | 🟠 Baixo | Baixo | Modelos pré-prontos (SaaS, API, Landing Page) |
