@@ -56,3 +56,6 @@ verify_jwt = false
 
 [functions.pipeline-architecture]
 verify_jwt = false
+
+[functions.brain-sync]
+verify_jwt = false

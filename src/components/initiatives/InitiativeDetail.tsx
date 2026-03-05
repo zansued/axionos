@@ -23,6 +23,7 @@ import { InitiativeCodePreview } from "./InitiativeCodePreview";
 import { AgentMessagesTimeline } from "./AgentMessagesTimeline";
 import { ExecutionProgress } from "./ExecutionProgress";
 import { BuildHealthReport } from "./BuildHealthReport";
+import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 
 import {
@@ -634,6 +635,18 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
           </CardContent>
         </Card>
       )}
+
+      {/* Project Brain */}
+      <Card className="border-border/50">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-display flex items-center gap-2">
+            <Brain className="h-4 w-4 text-muted-foreground" /> Project Brain
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProjectBrainPanel initiativeId={initiative.id} />
+        </CardContent>
+      </Card>
 
       {/* Chain-of-Agents Timeline */}
       <AgentMessagesTimeline initiativeId={initiative.id} />
