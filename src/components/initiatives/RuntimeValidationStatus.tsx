@@ -3,13 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import {
   CheckCircle2, XCircle, AlertTriangle, Loader2, Terminal,
-  GitBranch, Clock, ExternalLink, RefreshCw,
+  GitBranch, Clock, ExternalLink, RefreshCw, CheckCheck,
 } from "lucide-react";
 
 interface RuntimeValidationStatusProps {
   executionProgress: any;
+  initiativeId?: string;
+  onStatusUpdated?: () => void;
 }
 
 function useElapsedTime(startedAt: string | undefined, isActive: boolean) {
@@ -32,7 +36,9 @@ function useElapsedTime(startedAt: string | undefined, isActive: boolean) {
   return elapsed;
 }
 
-export function RuntimeValidationStatus({ executionProgress }: RuntimeValidationStatusProps) {
+export function RuntimeValidationStatus({ executionProgress, initiativeId, onStatusUpdated }: RuntimeValidationStatusProps) {
+  const { toast } = useToast();
+  const [marking, setMarking] = useState(false);
   const ep = executionProgress || {};
   const rtStatus = ep.runtime_validation_status;
   const ciStatus = ep.ci_status;
@@ -58,6 +64,29 @@ export function RuntimeValidationStatus({ executionProgress }: RuntimeValidation
   const ghActionsUrl = repoOwner && repoName
     ? `https://github.com/${repoOwner}/${repoName}/actions`
     : null;
+
+  const handleMarkAsPassed = async () => {
+    if (!initiativeId) return;
+    setMarking(true);
+    try {
+      const { error } = await supabase.from("initiatives").update({
+        execution_progress: {
+          ...ep,
+          ci_status: "success",
+          ci_passed_at: new Date().toISOString(),
+          ci_manual_override: true,
+        },
+      }).eq("id", initiativeId);
+
+      if (error) throw error;
+      toast({ title: "CI marcado como aprovado", description: "Status atualizado manualmente." });
+      onStatusUpdated?.();
+    } catch (e: any) {
+      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    } finally {
+      setMarking(false);
+    }
+  };
 
   const statusColor = passed ? "text-primary" : failed ? "text-destructive" : "text-accent-foreground";
   const StatusIcon = passed ? CheckCircle2 : failed ? XCircle : isRunning ? Loader2 : AlertTriangle;
@@ -169,11 +198,25 @@ export function RuntimeValidationStatus({ executionProgress }: RuntimeValidation
             </div>
 
             {isLong && (
-              <div className="flex items-start gap-2 rounded px-2 py-1.5 bg-destructive/10 text-destructive text-[11px]">
-                <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                <span>
-                  CI demorando mais que o esperado. Verifique se o secret <code className="font-mono bg-muted px-1 rounded">SYNKRAIOS_WEBHOOK_SECRET</code> está configurado no repositório GitHub (Settings → Secrets → Actions).
-                </span>
+              <div className="space-y-2">
+                <div className="flex items-start gap-2 rounded px-2 py-1.5 bg-destructive/10 text-destructive text-[11px]">
+                  <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                  <span>
+                    CI demorando mais que o esperado. Verifique se o webhook está configurado corretamente ou marque manualmente como aprovado se o CI já passou no GitHub.
+                  </span>
+                </div>
+                {initiativeId && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-[11px] h-7 gap-1.5"
+                    onClick={handleMarkAsPassed}
+                    disabled={marking}
+                  >
+                    {marking ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCheck className="h-3 w-3" />}
+                    Marcar CI como aprovado
+                  </Button>
+                )}
               </div>
             )}
 
