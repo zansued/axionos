@@ -1,32 +1,36 @@
 
 
-## Botão de Deploy Automático no Agente Revisor
+## Diagnóstico
 
-### Objetivo
-Adicionar um botão "Deploy Automático" no dialog do Agente Revisor que aparece **após a revisão ser concluída com sucesso** (quando `reviewResult` existe com correções). Esse botão vai disparar o estágio `publish` do pipeline, re-publicando os arquivos corrigidos no GitHub (o que automaticamente aciona o deploy no Vercel).
+O erro no Vercel indica que o `vite.config.ts` **no repositório GitHub** importa `@vitejs/plugin-react` (sem `-swc`), mas o `package.json` lista `@vitejs/plugin-react-swc`. Ou seja, o arquivo no GitHub está desatualizado em relação ao que temos aqui no Lovable.
 
-### Alterações
+Este é o mesmo problema de sincronização dos commits anteriores: as alterações feitas no Lovable não estão chegando ao GitHub.
 
-**Arquivo: `src/components/initiatives/InitiativeCodePreview.tsx`**
+## Plano
 
-1. Adicionar estado `isDeploying` para controlar o loading do botão de deploy.
-2. Adicionar ícones `Rocket` e `GitBranch` aos imports do lucide-react.
-3. Criar função `handleDeployAfterReview` que:
-   - Busca as `git_connections` da organização para obter o token GitHub, owner, repo e branch.
-   - Chama o pipeline com `stage: "publish"` e os parâmetros de GitHub.
-   - Mostra toast de sucesso/erro.
-4. Renderizar o botão "Fazer Deploy" no dialog, ao lado do botão "Fechar", **apenas quando `reviewResult` existe e tem correções** (`reviewResult.files_modified > 0`).
-   - Se não houver conexão Git configurada, mostrar mensagem informando que é necessário publicar primeiro pela tela de iniciativas.
+1. **Verificar sincronização Git** — Confirmar que o repositório GitHub está recebendo os commits do Lovable. Se não estiver, o usuário precisa fazer push manual ou reconectar o repositório.
 
-### Fluxo do Usuário
-1. Usuário descreve o problema → clica "Revisar e Corrigir"
-2. Agente analisa e corrige os arquivos
-3. Resultado aparece com diagnóstico e lista de arquivos corrigidos
-4. Novo botão **"Fazer Deploy"** (com ícone Rocket) aparece no footer
-5. Ao clicar, re-publica no GitHub automaticamente → Vercel detecta e faz deploy
+2. **Correção manual no GitHub (se necessário)** — O usuário deve garantir que o `vite.config.ts` no GitHub contenha:
+   ```ts
+   import react from "@vitejs/plugin-react-swc";
+   ```
+   E **não**:
+   ```ts
+   import react from "@vitejs/plugin-react";
+   ```
 
-### Detalhes Técnicos
-- Reutiliza a mesma chamada ao `run-initiative-pipeline` com `stage: "publish"` que já existe no `InitiativeDetail.tsx`.
-- Precisa buscar as credenciais Git da organização (`git_connections` table) para montar os `publishParams`.
-- Componente precisa receber ou buscar as conexões Git disponíveis (a prop `organizationId` já existe).
+3. **Alternativa: forçar instalação no Vercel** — Atualizar o `installCommand` no `vercel.json` para instalar explicitamente o plugin correto:
+   ```json
+   "installCommand": "rm -f package-lock.json && npm install --include=dev"
+   ```
+   Isso já está feito, mas só funciona se o `vite.config.ts` no repo importar o pacote correto.
+
+## Ação recomendada
+
+O problema raiz é que o **repositório GitHub não está sincronizado** com o Lovable. As opções são:
+
+- **Opção A**: No GitHub, edite manualmente o `vite.config.ts` e substitua `@vitejs/plugin-react` por `@vitejs/plugin-react-swc`.
+- **Opção B**: Verifique a conexão Git do projeto Lovable (Settings → GitHub) e force um push/sync para que todos os arquivos atualizados cheguem ao repositório.
+
+Sem resolver a sincronização, toda correção feita aqui não terá efeito no deploy do Vercel.
 
