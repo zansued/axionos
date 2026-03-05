@@ -175,6 +175,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       runtime_validation: "pipeline-runtime-validation",
       preventive_validation: "pipeline-preventive-validation",
       architecture_simulation: "pipeline-architecture-simulation",
+      foundation_scaffold: "pipeline-foundation-scaffold",
       error_intelligence: "error-intelligence",
     };
     return functionMap[stage] || "run-initiative-pipeline";
@@ -220,6 +221,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           comprehension: `Compreensão concluída: 4 agentes (Vision, Market, Requirements, Product Architect) ✅`,
           architecture: `Arquitetura técnica concluída: 4 agentes (System, Data, API Architect, Dependency Planner) ✅`,
           architecture_simulation: `Simulação de arquitetura concluída: score ${result.score || 0}/100, ${result.repairs?.length || 0} reparos ${result.passed ? "✅" : "⚠️"}`,
+          foundation_scaffold: `Foundation Scaffold: ${result.files_generated || 0} arquivos (${result.stack || "react-vite"}). Build confidence: ${((result.build_confidence || 0) * 100).toFixed(0)}% ${result.validation_passed ? "✅" : "⚠️"}`,
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
           planning: `Planejamento concluído: 3 agentes, ${result.stories?.length || result.stories_created || 0} stories, ${result.total_subtasks || 0} subtasks ✅`,
@@ -319,6 +321,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
     const rollbackMap: Record<string, string> = {
       discovery: "draft",
       architecture: "architecture_ready",
+      scaffold: "architecture_validated",
       squad: "squad_ready",
       planning: "planning_ready",
       execution: "planned",
