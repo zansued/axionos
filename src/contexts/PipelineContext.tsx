@@ -73,6 +73,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       full_review: "pipeline-full-review",
       brain_sync: "brain-sync",
       drift_detection: "pipeline-drift-detection",
+      runtime_validation: "pipeline-runtime-validation",
     };
     return functionMap[stage] || "run-initiative-pipeline";
   };
@@ -133,6 +134,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           drift_detection: result.passed
             ? `Drift Detection: ${result.files_analyzed || 0} arquivos, drift score ${result.drift_score || 0}% ✅`
             : `Drift Detection: ${result.errors_count || 0} violações, drift score ${result.drift_score || 0}% ⚠️`,
+          runtime_validation: `Runtime Validation: ${result.files_pushed || 0} arquivos enviados para CI (tsc + vite build). Resultados via webhook ⏳`,
           publish: `Release Agent: ${result.files_committed || 0} arquivos publicados v${result.version || "1.0.0"} (Pre-flight → Changelog → Push → Verificação) ✅`,
         };
         const label = stageLabels[stage] || "Concluído!";

@@ -25,6 +25,7 @@ import { ExecutionProgress } from "./ExecutionProgress";
 import { BuildHealthReport } from "./BuildHealthReport";
 import { CIFixSwarmStatus } from "./CIFixSwarmStatus";
 import { ArchitecturalDriftStatus } from "./ArchitecturalDriftStatus";
+import { RuntimeValidationStatus } from "./RuntimeValidationStatus";
 import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 
@@ -430,6 +431,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
 
       {/* Architectural Drift Detection */}
       <ArchitecturalDriftStatus initiativeId={initiative.id} />
+
+      {/* Runtime Validation (tsc + vite build) */}
+      <RuntimeValidationStatus executionProgress={initiative.execution_progress} />
 
       {/* Repo Result Card */}
       {repoUrl && (
