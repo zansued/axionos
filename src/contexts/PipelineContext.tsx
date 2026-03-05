@@ -65,7 +65,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       planning: "pipeline-planning",
       approve: "pipeline-approve",
       reject: "pipeline-reject",
-      execution: "pipeline-execution",
+      execution: "pipeline-execution-orchestrator",
       validation: "pipeline-validation",
       publish: "pipeline-publish",
       fast_modify: "pipeline-fast-modify",
