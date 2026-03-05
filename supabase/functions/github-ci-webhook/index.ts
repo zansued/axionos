@@ -164,14 +164,16 @@ async function handleGitHubEvent(
     return jsonResponse({ success: true, message: "pong", hook_id: payload.hook_id });
   }
 
-  if (event !== "workflow_run" && event !== "check_run") {
+  if (!["workflow_run", "check_run", "status"].includes(event)) {
     return jsonResponse({ success: true, message: `Event '${event}' ignored` });
   }
 
-  // Only process completed events
-  const action = payload.action;
-  if (action !== "completed") {
-    return jsonResponse({ success: true, message: `Action '${action}' ignored, waiting for 'completed'` });
+  // For workflow/check events, only process completed actions
+  if (event === "workflow_run" || event === "check_run") {
+    const action = payload.action;
+    if (action !== "completed") {
+      return jsonResponse({ success: true, message: `Action '${action}' ignored, waiting for 'completed'` });
+    }
   }
 
   const repo = payload.repository;
@@ -192,14 +194,27 @@ async function handleGitHubEvent(
     runId = String(wr.id);
     logsUrl = wr.logs_url || wr.html_url || "";
     workflowName = wr.name || payload.workflow?.name || "unknown";
-  } else {
-    // check_run
+  } else if (event === "check_run") {
     const cr = payload.check_run;
     conclusion = cr.conclusion; // success, failure, etc.
     commitSha = cr.head_sha;
     runId = String(cr.id);
     logsUrl = cr.html_url || "";
     workflowName = cr.name || "check_run";
+  } else {
+    // status (commit status fallback when workflow_run/check_run isn't delivered)
+    const state = payload.state as string | undefined;
+    if (!state || state === "pending") {
+      return jsonResponse({ success: true, message: `Status state '${state || "unknown"}' ignored` });
+    }
+
+    conclusion = state === "success" ? "success" : (state === "failure" || state === "error") ? "failure" : state;
+    commitSha = payload.sha || "";
+    runId = String(payload.id || payload.context || Date.now());
+    logsUrl = payload.target_url || "";
+    workflowName = payload.context || "commit_status";
+
+    console.log(`Status event fallback: ${workflowName} → ${state}`);
   }
 
   console.log(`CI result: ${workflowName} → ${conclusion} (${repoFullName}@${commitSha.slice(0, 7)})`);
