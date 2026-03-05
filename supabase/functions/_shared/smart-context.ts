@@ -327,4 +327,23 @@ export interface ContextStats {
   originalChars: number;
   compactChars: number;
   compressionRatio: number;
+  semanticMatches?: number;
+}
+
+/**
+ * Build smart context augmented with semantic search results.
+ * Semantic matches are injected as priority between direct deps and remaining files.
+ */
+export function buildSmartContextWithSemantic(
+  files: Record<string, string>,
+  targetFile: string,
+  directDeps: string[],
+  semanticFiles: string[],
+  maxTokenBudget = 12000,
+): { context: string; stats: ContextStats } {
+  // Merge semantic files into directDeps (deduped), giving them second priority
+  const allPriority = [...new Set([...directDeps, ...semanticFiles])];
+  const result = buildSmartContextWindow(files, targetFile, allPriority, maxTokenBudget);
+  result.stats.semanticMatches = semanticFiles.length;
+  return result;
 }
