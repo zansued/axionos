@@ -1,6 +1,6 @@
 import {
   Lightbulb, Brain, Users, FileText, Cpu, BookOpen, Hammer, CheckCircle2,
-  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap, Package, Wrench
+  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap, Package, Wrench, Database
 } from "lucide-react";
 
 export const PIPELINE_STEPS = [
