@@ -13,8 +13,18 @@ import { CreateInitiativeDialog } from "@/components/initiatives/CreateInitiativ
 import type { InitiativeTemplate } from "@/components/initiatives/initiative-templates";
 import { SLABreachAlerts } from "@/components/governance/SLABreachAlerts";
 import { useSLABreaches } from "@/hooks/useStageSLA";
+import { useI18n } from "@/contexts/I18nContext";
 import { Card, CardContent } from "@/components/ui/card";
-import { Lightbulb } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Lightbulb, Download } from "lucide-react";
+import { exportToCSV } from "@/lib/export-utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { exportToPDF } from "@/lib/export-utils";
 
 export default function Initiatives() {
   const { user } = useAuth();
@@ -23,6 +33,7 @@ export default function Initiatives() {
   const queryClient = useQueryClient();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { runStage, rollbackToStage, getRunningStage } = usePipeline();
+  const { t } = useI18n();
 
   const { data: initiatives = [], isLoading } = useQuery({
     queryKey: ["initiatives", currentOrg?.id],
@@ -100,9 +111,9 @@ export default function Initiatives() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["initiatives"] });
       setSelectedId(data.id);
-      toast({ title: "Iniciativa criada!" });
+      toast({ title: t("initiatives.created") });
     },
-    onError: (e: any) => toast({ variant: "destructive", title: "Erro", description: getUserFriendlyError(e) }),
+    onError: (e: any) => toast({ variant: "destructive", title: t("common.error"), description: getUserFriendlyError(e) }),
   });
 
   const { data: gitConnections = [] } = useQuery({
@@ -129,12 +140,36 @@ export default function Initiatives() {
     try {
       const { error } = await supabase.rpc("delete_initiative_cascade", { p_initiative_id: id });
       if (error) throw error;
-      toast({ title: "Iniciativa excluída", description: "Todos os dados associados foram removidos." });
+      toast({ title: t("initiatives.deleted"), description: t("initiatives.deletedDesc") });
       setSelectedId(null);
       queryClient.invalidateQueries({ queryKey: ["initiatives"] });
     } catch (e: any) {
-      toast({ variant: "destructive", title: "Erro ao excluir", description: getUserFriendlyError(e) });
+      toast({ variant: "destructive", title: t("initiatives.deleteError"), description: getUserFriendlyError(e) });
     }
+  };
+
+  const handleExportCSV = () => {
+    const rows = initiatives.map((i: any) => ({
+      title: i.title,
+      status: i.status,
+      stage: i.stage_status,
+      complexity: i.complexity || "",
+      risk: i.risk_level || "",
+      created: i.created_at,
+    }));
+    exportToCSV(rows, "initiatives");
+  };
+
+  const handleExportPDF = () => {
+    const rows = initiatives.map((i: any) => ({
+      title: i.title,
+      status: i.status,
+      stage: i.stage_status,
+      complexity: i.complexity || "",
+      risk: i.risk_level || "",
+      created: new Date(i.created_at).toLocaleDateString(),
+    }));
+    exportToPDF(t("initiatives.title"), rows, "initiatives");
   };
 
   return (
@@ -142,13 +177,29 @@ export default function Initiatives() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-display text-3xl font-bold tracking-tight">Iniciativas</h1>
-            <p className="text-muted-foreground mt-1">Da ideia ao software — pipeline governado com aprovação humana</p>
+            <h1 className="font-display text-3xl font-bold tracking-tight">{t("initiatives.title")}</h1>
+            <p className="text-muted-foreground mt-1">{t("initiatives.subtitle")}</p>
           </div>
-          <CreateInitiativeDialog
-            onSubmit={(title, desc, referenceUrl, template) => createMutation.mutate({ title, description: desc, referenceUrl, template })}
-            isPending={createMutation.isPending}
-          />
+          <div className="flex items-center gap-2">
+            {initiatives.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-1.5">
+                    <Download className="h-3.5 w-3.5" />
+                    {t("common.export")}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={handleExportCSV}>{t("common.exportCSV")}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleExportPDF}>{t("common.exportPDF")}</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            <CreateInitiativeDialog
+              onSubmit={(title, desc, referenceUrl, template) => createMutation.mutate({ title, description: desc, referenceUrl, template })}
+              isPending={createMutation.isPending}
+            />
+          </div>
         </div>
 
         {breaches.length > 0 && (
@@ -179,7 +230,7 @@ export default function Initiatives() {
             <Card className="border-dashed border-2 flex items-center justify-center min-h-[400px]">
               <CardContent className="text-center">
                 <Lightbulb className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-                <p className="text-sm text-muted-foreground">Selecione uma iniciativa para ver o pipeline</p>
+                <p className="text-sm text-muted-foreground">{t("initiatives.selectPrompt")}</p>
               </CardContent>
             </Card>
           )}

@@ -1,10 +1,12 @@
-import { Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Hammer, Building2, Package, GitBranch, Rocket, CheckSquare, CreditCard, Code2, Bell, HelpCircle } from "lucide-react";
+import { Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Hammer, Building2, Package, GitBranch, Rocket, CheckSquare, CreditCard, Code2, Bell, HelpCircle, Keyboard } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { useOnboarding } from "@/components/OnboardingGuide";
 import { useOrg } from "@/contexts/OrgContext";
 import { usePipeline } from "@/contexts/PipelineContext";
+import { useI18n } from "@/contexts/I18nContext";
 import {
   Sidebar,
   SidebarContent,
@@ -26,24 +28,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const pipelineItems = [
-  { title: "Iniciativas", url: "/initiatives", icon: Lightbulb },
-  { title: "Squads", url: "/squads", icon: Users },
-  { title: "Execução", url: "/stories", icon: Hammer },
-  { title: "Validação", url: "/artifacts", icon: CheckSquare },
-  { title: "Código", url: "/code", icon: Code2 },
-  { title: "Workspace", url: "/workspace", icon: GitBranch },
-  { title: "Kanban", url: "/kanban", icon: Columns3 },
-];
-
-const governanceItems = [
-  { title: "Auditoria", url: "/audit", icon: Shield },
-  { title: "Observabilidade", url: "/observability", icon: Radio },
-  { title: "Conexões", url: "/connections", icon: Package },
-  { title: "Organização", url: "/org", icon: Building2 },
-  { title: "Billing & Usage", url: "/billing", icon: CreditCard },
-];
-
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
@@ -51,7 +35,26 @@ export function AppSidebar() {
   const { currentOrg } = useOrg();
   const { events, unreadCount, markAllRead, running } = usePipeline();
   const { showOnboarding } = useOnboarding();
+  const { t } = useI18n();
   const runningCount = Object.keys(running).length;
+
+  const pipelineItems = [
+    { title: t("nav.initiatives"), url: "/initiatives", icon: Lightbulb },
+    { title: t("nav.squads"), url: "/squads", icon: Users },
+    { title: t("nav.execution"), url: "/stories", icon: Hammer },
+    { title: t("nav.validation"), url: "/artifacts", icon: CheckSquare },
+    { title: t("nav.code"), url: "/code", icon: Code2 },
+    { title: t("nav.workspace"), url: "/workspace", icon: GitBranch },
+    { title: t("nav.kanban"), url: "/kanban", icon: Columns3 },
+  ];
+
+  const governanceItems = [
+    { title: t("nav.audit"), url: "/audit", icon: Shield },
+    { title: t("nav.observability"), url: "/observability", icon: Radio },
+    { title: t("nav.connections"), url: "/connections", icon: Package },
+    { title: t("nav.org"), url: "/org", icon: Building2 },
+    { title: t("nav.billing"), url: "/billing", icon: CreditCard },
+  ];
 
   const renderGroup = (label: string, items: typeof pipelineItems) => (
     <SidebarGroup>
@@ -99,7 +102,7 @@ export function AppSidebar() {
                 <SidebarMenuButton asChild>
                   <NavLink to="/" end className="hover:bg-sidebar-accent/50 transition-colors" activeClassName="bg-sidebar-accent text-primary font-medium">
                     <LayoutDashboard className="mr-2 h-4 w-4 shrink-0" />
-                    {!collapsed && <span>Dashboard</span>}
+                    {!collapsed && <span>{t("nav.dashboard")}</span>}
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -109,11 +112,11 @@ export function AppSidebar() {
 
         {!collapsed && <Separator className="mx-3 w-auto" />}
 
-        {renderGroup("Pipeline", pipelineItems)}
+        {renderGroup(t("nav.pipeline"), pipelineItems)}
 
         {!collapsed && <Separator className="mx-3 w-auto" />}
 
-        {renderGroup("Governança", governanceItems)}
+        {renderGroup(t("nav.governance"), governanceItems)}
       </SidebarContent>
       <SidebarFooter className="p-2 space-y-1">
         {/* Pipeline notifications */}
@@ -126,7 +129,7 @@ export function AppSidebar() {
               onClick={markAllRead}
             >
               <Bell className="mr-2 h-4 w-4 shrink-0" />
-              {!collapsed && "Notificações"}
+              {!collapsed && t("nav.notifications")}
               {(unreadCount > 0 || runningCount > 0) && (
                 <Badge
                   variant="default"
@@ -139,16 +142,16 @@ export function AppSidebar() {
           </PopoverTrigger>
           <PopoverContent side="right" align="end" className="w-80 p-0">
             <div className="p-3 border-b">
-              <h4 className="font-semibold text-sm">Pipeline</h4>
+              <h4 className="font-semibold text-sm">{t("notifications.title")}</h4>
               {runningCount > 0 && (
                 <p className="text-xs text-muted-foreground mt-1">
-                  ⚡ {runningCount} estágio(s) em execução
+                  ⚡ {runningCount} {t("notifications.running")}
                 </p>
               )}
             </div>
             <div className="max-h-64 overflow-y-auto">
               {events.length === 0 ? (
-                <p className="text-xs text-muted-foreground p-4 text-center">Nenhuma notificação ainda</p>
+                <p className="text-xs text-muted-foreground p-4 text-center">{t("notifications.empty")}</p>
               ) : (
                 events.slice(0, 15).map((ev) => (
                   <div
@@ -167,6 +170,7 @@ export function AppSidebar() {
         </Popover>
 
         <ThemeToggle collapsed={collapsed} />
+        <LanguageToggle collapsed={collapsed} />
 
         <Button
           variant="ghost"
@@ -175,8 +179,15 @@ export function AppSidebar() {
           onClick={showOnboarding}
         >
           <HelpCircle className="mr-2 h-4 w-4 shrink-0" />
-          {!collapsed && "Guia"}
+          {!collapsed && t("nav.guide")}
         </Button>
+
+        {!collapsed && (
+          <div className="flex items-center gap-1 px-3">
+            <Keyboard className="h-3 w-3 text-muted-foreground/50" />
+            <span className="text-[10px] text-muted-foreground/50">? = atalhos</span>
+          </div>
+        )}
 
         {!collapsed && user && (
           <p className="px-3 text-xs text-muted-foreground truncate">{user.email}</p>
@@ -188,7 +199,7 @@ export function AppSidebar() {
           onClick={signOut}
         >
           <LogOut className="mr-2 h-4 w-4 shrink-0" />
-          {!collapsed && "Sair"}
+          {!collapsed && t("nav.logout")}
         </Button>
       </SidebarFooter>
     </Sidebar>

@@ -200,11 +200,12 @@
 - [x] Pre-popula discovery_payload + campos de discovery (target_user, stack, complexity, risk, mvp)
 - [x] Acelera as 2 primeiras camadas do pipeline
 
-### Fase 18 — UX & Polish
-- [ ] Atalhos de teclado
-- [ ] Internacionalização (pt-BR / en-US)
-- [ ] Exportação de relatórios (CSV/PDF)
-- [ ] Dark/Light theme refinements
+### Fase 18 — UX & Polish ✅
+
+- [x] Atalhos de teclado (g+d, g+i, g+k, g+c, t, ?) com dialog de ajuda
+- [x] Internacionalização pt-BR / en-US com toggle de idioma
+- [x] Exportação de relatórios CSV e PDF (iniciativas)
+- [x] Dark/Light theme refinements (melhor contraste, transições suaves)
 
 ### Fase 19 — Governança Avançada
 - [ ] Roles granulares por gate do pipeline

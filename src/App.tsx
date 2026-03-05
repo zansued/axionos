@@ -8,6 +8,8 @@ import { OrgProvider } from "@/contexts/OrgContext";
 import { PipelineProvider } from "@/contexts/PipelineContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { OnboardingProvider } from "@/components/OnboardingGuide";
+import { I18nProvider } from "@/contexts/I18nContext";
+import { KeyboardShortcutsManager } from "@/components/KeyboardShortcutsManager";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Initiatives from "./pages/Initiatives";
@@ -44,41 +46,44 @@ function AuthRoute({ children }: { children: React.ReactNode }) {
 
 const App = () => (
   <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AuthProvider>
-            <OrgProvider>
-              <PipelineProvider>
-                <OnboardingProvider>
-                  <Routes>
-                    <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-                    <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                    <Route path="/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
-                    <Route path="/code" element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
-                    <Route path="/squads" element={<ProtectedRoute><Squads /></ProtectedRoute>} />
-                    <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
-                    <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
-                    <Route path="/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
-                    <Route path="/audit" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
-                    <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
-                    <Route path="/planning" element={<Navigate to="/initiatives" replace />} />
-                    <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
-                    <Route path="/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
-                    <Route path="/org" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
-                    <Route path="/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
-                    <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </OnboardingProvider>
-              </PipelineProvider>
-            </OrgProvider>
-          </AuthProvider>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <I18nProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AuthProvider>
+              <OrgProvider>
+                <PipelineProvider>
+                  <OnboardingProvider>
+                    <KeyboardShortcutsManager />
+                    <Routes>
+                      <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+                      <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                      <Route path="/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
+                      <Route path="/code" element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
+                      <Route path="/squads" element={<ProtectedRoute><Squads /></ProtectedRoute>} />
+                      <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
+                      <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
+                      <Route path="/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
+                      <Route path="/audit" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
+                      <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
+                      <Route path="/planning" element={<Navigate to="/initiatives" replace />} />
+                      <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
+                      <Route path="/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
+                      <Route path="/org" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
+                      <Route path="/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
+                      <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </OnboardingProvider>
+                </PipelineProvider>
+              </OrgProvider>
+            </AuthProvider>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </I18nProvider>
   </ThemeProvider>
 );
 
