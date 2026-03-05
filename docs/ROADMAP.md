@@ -1,144 +1,189 @@
-# AxionOS — Roadmap de Implementação
+# SynkrAIOS — Roadmap de Implementação
 
 > Checklist ordenado do que falta para completar o AIOS.  
-> Marque com `[x]` conforme for concluído.
+> Marque com `[x]` conforme for concluído.  
+> Última atualização: 2026-03-05
 
 ---
 
-## Fase 1 — Migrar para Lovable AI Gateway (eliminar DeepSeek)
+## Fase 1 — Migrar para Lovable AI Gateway ✅
 
-- [x] Migrar `execute-subtask` para usar Lovable AI Gateway (`google/gemini-2.5-flash`)
-- [x] Migrar `run-initiative-pipeline` (stages discovery, planning, execution, validation)
-- [x] Migrar `generate-agents`, `generate-stories`, `organize-stories`
-- [x] Migrar `generate-planning-content`
-- [x] Migrar `analyze-artifact` e `rework-artifact`
-- [x] Remover dependência da secret `DEEPSEEK_API_KEY`
+- [x] Migrar todas as Edge Functions para Lovable AI Gateway (`google/gemini-2.5-flash`)
+- [x] Unificar client AI em `_shared/ai-client.ts` com retry + cost tracking
+- [x] Suporte a OpenAI como fallback quando `OPENAI_API_KEY` configurada
 
 ---
 
-## Fase 2 — Chain-of-Agents (Colaboração entre Agentes)
+## Fase 2 — Pipeline Decomposition ✅
 
-- [x] Criar tabela `agent_messages` (from_agent, to_agent, initiative_id, stage, content, created_at)
-- [x] Implementar padrão sequencial no estágio **Execution**:
-  1. Architect analisa story e define estrutura técnica
-  2. Dev recebe output do Architect e gera código
-  3. QA recebe código do Dev e faz review
-  4. Dev recebe feedback do QA e corrige (loop até aprovação)
-- [x] Registrar cada troca como `agent_message` para rastreabilidade
-- [x] Exibir timeline de conversação entre agentes na UI (InitiativeDetail)
-
----
-
-## Fase 3 — Execução Autônoma Real
-
-- [x] Subtasks executadas automaticamente em sequência (sem clique manual por subtask)
-- [x] Retry automático com backoff exponencial em caso de falha (até 3 tentativas)
-- [x] Barra de progresso em tempo real (Realtime via Supabase)
-- [x] Progresso salvo incrementalmente (resume em caso de timeout)
-- [x] Pipeline roda em background (PipelineContext global — não para ao navegar)
-- [x] Paralelização: subtasks independentes executam em paralelo
-- [x] Notificação quando execução completa (toast + badge no menu)
+- [x] Decompor pipeline monolítico em Edge Functions independentes por estágio
+- [x] `pipeline-comprehension` (Layer 1 — 4 agentes de compreensão)
+- [x] `pipeline-architecture` (Layer 2 — 4 agentes de arquitetura)
+- [x] `pipeline-squad` (Formação de squad)
+- [x] `pipeline-planning` (Layer 3 — Planejamento)
+- [x] `pipeline-execution` (Layer 4 — Execução sequencial)
+- [x] `pipeline-validation` (Layer 5 — Validação)
+- [x] `pipeline-publish` (Layer 6 — Publicação GitHub)
+- [x] `pipeline-approve` / `pipeline-reject` (Gates)
+- [x] `pipeline-fast-modify` / `pipeline-full-review` (Modificações)
+- [x] Shared bootstrap (`pipeline-bootstrap.ts`) para auth, CORS, rate limiting
 
 ---
 
-## Fase 4 — Validação Inteligente
+## Fase 3 — Chain-of-Agents ✅
 
-- [x] QA Agent analisa cada artefato de código automaticamente
-- [x] Score de qualidade por artefato (0-100) com 5 critérios
-- [x] Gate automático: só avança para Publish se todos artefatos score >= 70
-- [x] Auto-aprovação: artefatos com score >= 70 aprovados automaticamente
-- [x] Auto-retrabalho: artefatos com score 50-69 retrabalhados e re-validados (até 2x)
-- [x] Auto-rejeição: artefatos com score < 50 rejeitados automaticamente
-- [x] Escalação para revisão humana quando retrabalho excede limite
-- [x] Cross-review: Architect valida decisões arquiteturais do código gerado
+- [x] Tabela `agent_messages` para rastreabilidade de conversas entre agentes
+- [x] Cadeia de 3 agentes no Layer 4: Code Architect → Developer → Integration Agent
+- [x] Registrar cada handoff como `agent_message`
+- [x] Timeline de mensagens na UI (`AgentMessagesTimeline`)
 
 ---
 
-## Fase 5 — Publish & Git Avançado
+## Fase 4 — Project Brain ✅
 
-- [x] Geração automática de branch name baseada na initiative
-- [x] Commit messages semânticos gerados pelo agente
-- [x] PR description gerada automaticamente com resumo do que foi feito
+- [x] Tabela `project_brain_nodes` com tipos: file, component, hook, service, api, table, type, schema, edge_function, page, context, util
+- [x] Tabela `project_brain_edges` com relações: imports, depends_on, calls_api, uses_component, implements_interface, exports, renders, stores_in_table
+- [x] Tabela `project_decisions` com categorias, supersedes chain, status
+- [x] Tabela `project_errors` com root cause, prevention rules, fix tracking
+- [x] Full-text search via `tsvector` + `search_vector`
+- [x] CRUD helpers em `_shared/brain-helpers.ts`
+- [x] Context generation para prompts AI (`generateBrainContext()`)
+- [x] RLS policies para isolamento multi-tenant
+- [x] Integração com Layer 2 (Architecture popula o Brain)
+- [x] UI do Project Brain (`ProjectBrainPanel`)
+
+---
+
+## Fase 5 — Dependency Scheduler ✅
+
+- [x] `buildExecutionDAG()` — constrói DAG a partir dos nós/edges do Brain
+- [x] `computeWaves()` — topological sort (Kahn's algorithm) agrupando nós em waves
+- [x] `getReadyNodes()` — nós com todas dependências satisfeitas
+- [x] `applyLayerPriorities()` — prioridades implícitas por tipo de arquivo
+- [x] `breakCycles()` — detecção e remoção de ciclos via DFS
+- [x] `updateBrainEdgesFromImports()` — extração de imports do código gerado
+- [x] `formatExecutionPlan()` — plano de execução legível para logs
+- [x] Módulo compartilhado: `_shared/dependency-scheduler.ts`
+
+---
+
+## Fase 6 — Agent Swarm (Orchestrator + Workers) ✅
+
+- [x] `pipeline-execution-orchestrator` — orquestra waves, despacha workers
+- [x] `pipeline-execution-worker` — gera um único arquivo via cadeia de 3 agentes
+- [x] Execução paralela via `Promise.all` com limite de `MAX_WORKERS = 6`
+- [x] Workers invocados via `fetch()` ao endpoint da Edge Function
+- [x] Comunicação via Project Brain (sem comunicação direta entre workers)
+- [x] Retry automático (até 2x) com fallback para `project_errors`
+- [x] Context injection com código das dependências diretas
+- [x] Progress tracking em tempo real via `execution_progress` JSON
+- [x] Memory extraction pós-execução
+- [x] Registro no `config.toml` com `verify_jwt = false`
+
+---
+
+## Fase 7 — Execução Autônoma ✅
+
+- [x] Subtasks executadas automaticamente (sem clique manual)
+- [x] Retry automático com backoff exponencial
+- [x] Barra de progresso em tempo real (Supabase Realtime)
+- [x] Pipeline roda em background (`PipelineContext` global)
+- [x] Paralelização de subtasks independentes
+- [x] Notificação quando execução completa
+
+---
+
+## Fase 8 — Validação Inteligente ✅
+
+- [x] QA Agent analisa cada artefato com 5 critérios (0-100)
+- [x] Auto-aprovação (≥70), auto-retrabalho (50-69), auto-rejeição (<50)
+- [x] Cross-review arquitetural
+- [x] Escalação para revisão humana
+
+---
+
+## Fase 9 — Publish & Git ✅ (parcial)
+
+- [x] Branch name automática
+- [x] Commit messages semânticos
+- [x] PR description automática
+- [x] Build Health Report
+- [ ] **Atomic Git commits via Tree API** (ainda usa file-by-file)
 - [ ] Suporte a múltiplos repositórios por organização
-- [ ] Webhook para notificar quando PR é mergeado → atualizar status
+- [ ] Webhook para PR merge → atualizar status
 
 ---
 
-## Fase 6 — Geração Full-Stack (Frontend + Backend)
+## Fase 10 — Geração Full-Stack ✅
 
-- [x] Planning detecta necessidade de backend automaticamente
-- [x] Novos `file_type` para backend: `schema`, `migration`, `edge_function`, `seed`, `supabase_client`, `auth_config`
-- [x] Prompts especializados para gerar SQL, Edge Functions, Auth, RLS
-- [x] Geração de `.env.example` e `src/lib/supabase.ts` determinísticos
-- [x] Story automática "Backend Setup" quando projeto precisa de persistência
-- [x] UI de Code Explorer mostra ícones e badges para arquivos de backend
-- [x] Conexão com Supabase externo (tabela `supabase_connections`, UI em Conexões)
-- [x] Prefixo obrigatório em tabelas geradas (`CREATE TABLE IF NOT EXISTS prefixo_tabela`)
-- [x] Integrar `supabase_connections` no pipeline: sistemas gerados usam conexão cadastrada
-- [x] Botão "Testar Conexão" que valida URL e Anon Key antes de salvar
-- [x] Gerar README.md automático com instruções de setup do Supabase
+- [x] Detecção automática de necessidade de backend
+- [x] File types: schema, migration, edge_function, seed, supabase_client, auth_config
+- [x] Prompts especializados para SQL, Edge Functions, Auth, RLS
+- [x] Conexão com Supabase externo
 
 ---
 
-## Fase 7 — Memória e Contexto Compartilhado
+## Fase 11 — Memória e Contexto ✅
 
-- [x] Criar tabela `agent_memory` (agent_id, key, value, scope, ttl)
-- [x] Agentes herdam contexto de iniciativas anteriores da mesma org
-- [x] Knowledge base organizacional: decisões arquiteturais (ADRs) alimentam futuros agents
-- [x] Padrões de código da org influenciam output do Dev agent
+- [x] Tabela `agent_memory`
+- [x] Herança de contexto entre iniciativas
+- [x] Knowledge base organizacional
+- [x] Extração de memórias pós-execução
 
 ---
 
-## Fase 8 — Observabilidade & Custos
+## Fase 12 — Observabilidade & Custos ✅
 
-- [x] Dashboard de custo por iniciativa (tokens + USD)
-- [x] Dashboard de custo por agente
-- [x] Tempo médio por estágio do pipeline
-- [x] Alertas quando budget mensal atinge threshold
+- [x] Dashboard de custo por iniciativa e agente
+- [x] Tempo médio por estágio
+- [x] Alertas de budget
 - [ ] Exportação de relatórios (CSV/PDF)
 
 ---
 
-## Fase 9 — UX & Polish
+## 🔜 Próximos Passos (Fases Pendentes)
 
-- [x] Onboarding guiado para novos usuários
+### Fase 13 — Fix Loop Automático
+- [ ] Quando validação falha, re-executar subtasks com contexto do erro
+- [ ] Ciclo: Validation → Fix Agent → Re-validation (max 3 iterações)
+- [ ] Escalação automática para humano após limite
+
+### Fase 14 — Runtime Validation (Sandbox)
+- [ ] Montar filesystem virtual com todos os arquivos gerados
+- [ ] Executar `tsc --noEmit` para verificação de tipos
+- [ ] Executar `vite build` para verificação de build
+- [ ] Alimentar erros reais ao Fix Agent
+
+### Fase 15 — Atomic Git Operations
+- [ ] Migrar de GitHub Contents API para Git Tree API
+- [ ] Um único commit atômico para todo o projeto
+- [ ] Suporte a `.gitignore` e arquivos binários
+
+### Fase 16 — Visualização do DAG
+- [ ] Mostrar grafo de execução no `ProjectBrainPanel` (waves, dependências, status)
+- [ ] Visualização interativa com nós clicáveis
+- [ ] Status em tempo real durante execução
+
+### Fase 17 — Smart Context Window (AST-based)
+- [ ] Extrair type signatures via AST (não apenas truncar strings)
+- [ ] 40% direct deps (full) + 20% indirect (types only) + 15% architecture + 15% memory + 10% file tree
+
+### Fase 18 — Vector Embeddings (pgvector)
+- [ ] Adicionar coluna de embedding aos `project_brain_nodes`
+- [ ] Gerar embeddings durante criação de nós
+- [ ] Similarity search para context injection inteligente
+
+### Fase 19 — Incremental Re-execution
+- [ ] Reject re-gera apenas arquivos afetados (não reset total)
+- [ ] Diff-based rework mostrando o que mudou
+- [ ] Versionamento de arquivos gerados
+
+### Fase 20 — UX & Polish
 - [ ] Templates de iniciativas pré-configurados
-- [x] Dark/Light mode toggle
-- [x] Responsividade mobile completa
-- [ ] Atalhos de teclado (K para Kanban, I para Initiatives, etc.)
+- [ ] Atalhos de teclado
 - [ ] Internacionalização (pt-BR / en-US)
 
----
-
-## Fase 10 — Governança Avançada
-
-- [ ] Roles granulares: quem pode aprovar cada gate do pipeline
-- [ ] Approval chain: múltiplos aprovadores por estágio
-- [x] SLA por estágio: alertas se ficou parado mais de X horas
-- [ ] Audit trail completo com diff de cada mudança
-- [ ] Compliance: exportação de evidências de governança
-
----
-
-## Status Atual (o que já temos ✅)
-
-- [x] Autenticação e multi-org
-- [x] CRUD de Agentes com roles tipados
-- [x] Formação de Squads (manual + automática via AI)
-- [x] Pipeline de 6 estágios com gates humanos
-- [x] Discovery inteligente (análise de mercado, viabilidade, MVP)
-- [x] Planning com geração de PRD e arquitetura
-- [x] Geração de Stories e Subtasks via AI
-- [x] Execução de subtasks via AI (Lovable AI Gateway)
-- [x] Artefatos versionados com review humano
-- [x] ADRs automáticos para decisões arquiteturais
-- [x] Validação de artefatos com auto-aprovação/retrabalho/rejeição
-- [x] Publish com criação de PR no GitHub
-- [x] Kanban board com drag-and-drop
-- [x] Audit logs
-- [x] Observabilidade básica
-- [x] Billing e controle de uso
-- [x] Geração Full-Stack (Frontend + Backend com Supabase)
-- [x] Conexões com Supabase externo
-- [x] Pipeline global em background (PipelineContext)
-- [x] Deploy automático via Agente Revisor
+### Fase 21 — Governança Avançada
+- [ ] Roles granulares por gate do pipeline
+- [ ] Approval chains com múltiplos aprovadores
+- [ ] Compliance e exportação de evidências

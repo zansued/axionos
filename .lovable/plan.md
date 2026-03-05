@@ -1,36 +1,63 @@
+## SynkrAIOS — Plano de Evolução
 
+> Última atualização: 2026-03-05
 
-## Diagnóstico
+---
 
-O erro no Vercel indica que o `vite.config.ts` **no repositório GitHub** importa `@vitejs/plugin-react` (sem `-swc`), mas o `package.json` lista `@vitejs/plugin-react-swc`. Ou seja, o arquivo no GitHub está desatualizado em relação ao que temos aqui no Lovable.
+## ✅ Implementações Concluídas
 
-Este é o mesmo problema de sincronização dos commits anteriores: as alterações feitas no Lovable não estão chegando ao GitHub.
+### 1. Pipeline Decomposition
+Pipeline monolítico decomposto em 15+ Edge Functions independentes, cada uma com responsabilidade única, compartilhando helpers via `_shared/`.
 
-## Plano
+### 2. Project Brain
+Sistema de conhecimento estruturado com 4 tabelas:
+- `project_brain_nodes` — grafo de entidades do projeto
+- `project_brain_edges` — relacionamentos entre entidades
+- `project_decisions` — decisões arquiteturais versionadas
+- `project_errors` — erros históricos com regras de prevenção
+- Full-text search via `tsvector`, RLS multi-tenant, context generation
 
-1. **Verificar sincronização Git** — Confirmar que o repositório GitHub está recebendo os commits do Lovable. Se não estiver, o usuário precisa fazer push manual ou reconectar o repositório.
+### 3. Dependency Scheduler
+DAG-based execution ordering:
+- Topological sort via Kahn's algorithm
+- Execução em waves (nós sem dependências pendentes executam juntos)
+- Prioridades por camada (config → types → services → hooks → components → pages)
+- Detecção e remoção de ciclos
+- Extração automática de imports do código gerado
 
-2. **Correção manual no GitHub (se necessário)** — O usuário deve garantir que o `vite.config.ts` no GitHub contenha:
-   ```ts
-   import react from "@vitejs/plugin-react-swc";
-   ```
-   E **não**:
-   ```ts
-   import react from "@vitejs/plugin-react";
-   ```
+### 4. Agent Swarm (Orchestrator + Workers)
+Arquitetura distribuída:
+- **Orchestrator**: constrói DAG, despacha workers em paralelo (max 6), monitora conclusão
+- **Worker**: gera um arquivo via cadeia de 3 agentes (Code Architect → Developer → Integration Agent)
+- Comunicação via Project Brain (sem comunicação direta entre workers)
+- Retry até 2x, fallback para `project_errors`
 
-3. **Alternativa: forçar instalação no Vercel** — Atualizar o `installCommand` no `vercel.json` para instalar explicitamente o plugin correto:
-   ```json
-   "installCommand": "rm -f package-lock.json && npm install --include=dev"
-   ```
-   Isso já está feito, mas só funciona se o `vite.config.ts` no repo importar o pacote correto.
+---
 
-## Ação recomendada
+## 🔜 Próximo Passo Recomendado
 
-O problema raiz é que o **repositório GitHub não está sincronizado** com o Lovable. As opções são:
+### Fix Loop Automático (Fase 13)
 
-- **Opção A**: No GitHub, edite manualmente o `vite.config.ts` e substitua `@vitejs/plugin-react` por `@vitejs/plugin-react-swc`.
-- **Opção B**: Verifique a conexão Git do projeto Lovable (Settings → GitHub) e force um push/sync para que todos os arquivos atualizados cheguem ao repositório.
+**Por quê:** Hoje, quando a validação falha, o processo para. O Fix Loop permitirá correção automática, fechando o ciclo Execution → Validation → Fix → Re-validation.
 
-Sem resolver a sincronização, toda correção feita aqui não terá efeito no deploy do Vercel.
+**Escopo:**
+1. Criar `pipeline-fix-loop` Edge Function
+2. Fix Agent recebe erros exatos + código que falhou + contexto do Brain
+3. Re-gera apenas os arquivos que falharam
+4. Re-valida (max 3 iterações)
+5. Escala para humano se ainda falhar
 
+---
+
+## Passos Seguintes (em ordem de prioridade)
+
+| # | Fase | Impacto | Complexidade |
+|---|------|---------|-------------|
+| 1 | Fix Loop Automático | 🔴 Alto | Médio |
+| 2 | Visualização do DAG na UI | 🟡 Médio | Baixo |
+| 3 | Runtime Validation (tsc + vite build) | 🔴 Alto | Alto |
+| 4 | Atomic Git Commits (Tree API) | 🟡 Médio | Médio |
+| 5 | Smart Context Window (AST-based) | 🟡 Médio | Alto |
+| 6 | Vector Embeddings (pgvector) | 🟠 Baixo | Alto |
+| 7 | Incremental Re-execution | 🟡 Médio | Médio |
+| 8 | Templates de Iniciativas | 🟠 Baixo | Baixo |
