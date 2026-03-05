@@ -564,12 +564,13 @@ Return JSON: { "would_build": boolean, "issues": string[], "confidence": number 
     }
 
     // Record scaffold decision
-    await recordDecision(ctx, {
-      decision: `Foundation scaffold generated for ${stack} stack with ${scaffold.length} files`,
-      reason: `Ensure minimal buildable structure before feature code generation`,
-      category: "architecture",
-      impact: `Scaffold validation: ${validation.passed ? "passed" : "issues found"}. Build confidence: ${(buildSimulation.confidence * 100).toFixed(0)}%`,
-    });
+    await recordDecision(
+      ctx,
+      `Foundation scaffold generated for ${stack} stack with ${scaffold.length} files`,
+      "Ensure minimal buildable structure before feature code generation",
+      `Scaffold validation: ${validation.passed ? "passed" : "issues found"}. Build confidence: ${(buildSimulation.confidence * 100).toFixed(0)}%`,
+      "architecture",
+    );
 
     await updateInitiative(ctx, {
       stage_status: "scaffolded",
