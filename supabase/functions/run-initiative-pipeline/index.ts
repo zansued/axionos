@@ -910,6 +910,21 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         const defaultAgent = devAgent || architectAgent || squadMembers[0]?.agents;
         const hasChain = !!architectAgent && !!devAgent && !!qaAgent;
 
+        // Fetch Supabase connection for this org (if any)
+        let supabaseConnInfo = "";
+        const { data: sbConns } = await serviceClient
+          .from("supabase_connections")
+          .select("supabase_url, supabase_anon_key, label")
+          .eq("organization_id", initiative.organization_id)
+          .eq("status", "active")
+          .order("updated_at", { ascending: false })
+          .limit(1);
+        const sbConn = sbConns?.[0];
+        if (sbConn) {
+          supabaseConnInfo = `\n\n## Conexão Supabase Configurada:\n- URL: ${sbConn.supabase_url}\n- Anon Key: ${sbConn.supabase_anon_key}\nUse estes valores REAIS nos arquivos .env.example e src/lib/supabase.ts (como defaults ou valores comentados).`;
+          console.log(`[SUPABASE_CONN] Using connection "${sbConn.label}" for execution context`);
+        }
+
         // Collect ALL subtasks with file_path
         const allProjectFiles: { file_path: string; description: string }[] = [];
         for (const story of stories) {
@@ -1042,7 +1057,9 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
             include: ["src"],
           }, null, 2),
           "vite.config.ts": `import { defineConfig } from "vite";\nimport react from "@vitejs/plugin-react";\nimport path from "path";\n\nexport default defineConfig({\n  plugins: [react()],\n  resolve: {\n    alias: {\n      "@": path.resolve(__dirname, "./src"),\n    },\n  },\n});`,
-          ".env.example": `VITE_SUPABASE_URL=https://your-project.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key`,
+          ".env.example": sbConn
+            ? `VITE_SUPABASE_URL=${sbConn.supabase_url}\nVITE_SUPABASE_ANON_KEY=${sbConn.supabase_anon_key}`
+            : `VITE_SUPABASE_URL=https://your-project.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key`,
           "src/lib/supabase.ts": `import { createClient } from '@supabase/supabase-js';\n\nconst supabaseUrl = import.meta.env.VITE_SUPABASE_URL;\nconst supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;\n\nif (!supabaseUrl || !supabaseAnonKey) {\n  throw new Error('Missing Supabase environment variables. Check .env file.');\n}\n\nexport const supabase = createClient(supabaseUrl, supabaseAnonKey);`,
         };
 
@@ -1131,7 +1148,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
                     contextStr += entry;
                   }
 
-                  const baseContext = `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum ainda)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Linguagem: ${language}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1200)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1200)}` : ""}`;
+                  const baseContext = `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum ainda)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Linguagem: ${language}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1200)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1200)}` : ""}${supabaseConnInfo}`;
 
                   // --- Step 1: ARCHITECT defines technical structure ---
                   const archResult = await callAI(
@@ -1264,7 +1281,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
                   const result = await callAI(
                     LOVABLE_API_KEY,
                     `Você é um desenvolvedor expert em Full-Stack com Vite + React + TypeScript + Tailwind CSS + Supabase.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use componentes shadcn/ui e Tailwind CSS (para frontend).\n- Siga as melhores práticas de ${language}.\n${singleBackendRules}\n\nREGRAS PARA package.json:\n- NÃO inclua "shadcn/ui", "shadcn-ui", "@shadcn/ui" ou "shadcn" como dependência. Componentes shadcn/ui são copiados localmente, não são pacotes npm.\n- NÃO inclua "@radix/ui" ou "radix-ui". Use pacotes individuais como "@radix-ui/react-dialog".\n- Use "lucide-react" (não "lucide").\n- SEMPRE inclua "type": "module" no package.json.\n- SEMPRE inclua @vitejs/plugin-react, typescript, tailwindcss, autoprefixer, postcss em devDependencies.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical.`,
-                    `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1500)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1500)}` : ""}\n\nGere o conteúdo COMPLETO do arquivo. Retorne APENAS o código.`
+                    `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1500)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1500)}` : ""}${supabaseConnInfo}\n\nGere o conteúdo COMPLETO do arquivo. Retorne APENAS o código.`
                   );
 
                   let codeContent = result.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
@@ -2100,6 +2117,64 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
             skippedFiles.push(commitPath);
           }
         }
+
+        // Generate README.md automatically
+        const hasBackend = committedFiles.some(f => f.includes("supabase") || f.endsWith(".sql") || f.includes("edge_function"));
+        const { data: sbConnsForReadme } = await serviceClient
+          .from("supabase_connections")
+          .select("supabase_url, label")
+          .eq("organization_id", initiative.organization_id)
+          .eq("status", "active")
+          .limit(1);
+        const sbConnReadme = sbConnsForReadme?.[0];
+
+        const readmeResult = await callAI(
+          LOVABLE_API_KEY,
+          `Você gera README.md profissionais para projetos open-source. Retorne APENAS o conteúdo markdown, sem code fences.`,
+          `Gere um README.md para o projeto "${initiative.title}".
+Descrição: ${initiative.description || initiative.refined_idea || ""}
+Stack: Vite + React + TypeScript + Tailwind CSS${hasBackend ? " + Supabase" : ""}
+Arquivos: ${committedFiles.slice(0, 30).join(", ")}
+${sbConnReadme ? `Supabase URL: ${sbConnReadme.supabase_url}` : ""}
+
+Inclua:
+1. Título e descrição
+2. Stack tecnológica (badges)
+3. Pré-requisitos (Node.js, npm)
+4. Instruções de instalação (git clone, npm install, npm run dev)
+${hasBackend ? `5. Setup do Supabase:
+   - Copiar .env.example para .env
+   - Preencher VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY
+   - Executar migrations SQL no dashboard do Supabase` : ""}
+6. Scripts disponíveis (dev, build, preview)
+7. Deploy (Vercel com um clique)
+8. Licença MIT
+9. Rodapé "Gerado pelo AxionOS"
+
+Seja conciso e profissional.`
+        );
+
+        let readmeContent = readmeResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+
+        // Commit README.md (update if exists from auto_init)
+        try {
+          let readmeSha: string | undefined;
+          const readmeCheck = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/README.md?ref=${baseBranch}`, { headers: ghHeaders });
+          if (readmeCheck.ok) {
+            const readmeData = await readmeCheck.json();
+            readmeSha = readmeData?.sha;
+          }
+          const readmeResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/README.md`, {
+            method: "PUT", headers: ghHeaders,
+            body: JSON.stringify({
+              message: "docs: add project README",
+              content: btoa(unescape(encodeURIComponent(readmeContent))),
+              branch: baseBranch,
+              ...(readmeSha ? { sha: readmeSha } : {}),
+            }),
+          });
+          if (readmeResp.ok) committedFiles.push("README.md");
+        } catch (e) { console.error("Failed to commit README.md:", e); }
 
         // Ensure deploy-critical root files always exist in published repos
         const requiredPublishFiles: Record<string, string> = {
