@@ -1,6 +1,8 @@
-import { Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Hammer, Building2, Package, GitBranch, Rocket, CheckSquare, CreditCard, Code2, Bell } from "lucide-react";
+import { Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Hammer, Building2, Package, GitBranch, Rocket, CheckSquare, CreditCard, Code2, Bell, HelpCircle } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { useOnboarding } from "@/components/OnboardingGuide";
 import { useOrg } from "@/contexts/OrgContext";
 import { usePipeline } from "@/contexts/PipelineContext";
 import {
@@ -48,7 +50,7 @@ export function AppSidebar() {
   const { signOut, user } = useAuth();
   const { currentOrg } = useOrg();
   const { events, unreadCount, markAllRead, running } = usePipeline();
-
+  const { showOnboarding } = useOnboarding();
   const runningCount = Object.keys(running).length;
 
   const renderGroup = (label: string, items: typeof pipelineItems) => (
@@ -163,6 +165,18 @@ export function AppSidebar() {
             </div>
           </PopoverContent>
         </Popover>
+
+        <ThemeToggle collapsed={collapsed} />
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full justify-start text-muted-foreground"
+          onClick={showOnboarding}
+        >
+          <HelpCircle className="mr-2 h-4 w-4 shrink-0" />
+          {!collapsed && "Guia"}
+        </Button>
 
         {!collapsed && user && (
           <p className="px-3 text-xs text-muted-foreground truncate">{user.email}</p>
