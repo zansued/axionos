@@ -61,6 +61,7 @@ export const MACRO_STAGES = [
   { key: "db_provisioning", label: "DB Provisioning", icon: Database },
   { key: "domain_analysis", label: "Domain Analysis", icon: Brain },
   { key: "business_logic", label: "Business Logic", icon: Cpu },
+  { key: "api_generation", label: "API Generator", icon: Layers },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
