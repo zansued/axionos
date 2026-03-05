@@ -10,6 +10,8 @@ export const PIPELINE_STEPS = [
   { key: "architecture_ready", label: "Arquitetura ▶", icon: Layers, color: "text-info", bg: "bg-info/10" },
   { key: "architecting", label: "Arquitetando", icon: Layers, color: "text-warning", bg: "bg-warning/10" },
   { key: "architected", label: "Arquitetado", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
+  { key: "simulating_architecture", label: "Simulação", icon: Layers, color: "text-warning", bg: "bg-warning/10" },
+  { key: "architecture_simulated", label: "Simulado", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
   { key: "validating_architecture", label: "Validação Preventiva", icon: ShieldCheck, color: "text-warning", bg: "bg-warning/10" },
   { key: "architecture_validated", label: "Arquitetura Validada", icon: ShieldCheck, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
