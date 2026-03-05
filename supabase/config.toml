@@ -128,3 +128,12 @@ verify_jwt = false
 
 [functions.autonomous-api-generator]
 verify_jwt = false
+
+[functions.supabase-data-model-generator]
+verify_jwt = false
+
+[functions.autonomous-ui-generator]
+verify_jwt = false
+
+[functions.adaptive-learning-engine]
+verify_jwt = false
