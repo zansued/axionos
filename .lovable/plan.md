@@ -4,143 +4,96 @@
 
 ---
 
-## ✅ Implementações Concluídas
+## ✅ Implementações Concluídas (32 Fases)
 
-### 1. Pipeline Decomposition
-Pipeline monolítico decomposto em 15+ Edge Functions independentes, cada uma com responsabilidade única, compartilhando helpers via `_shared/`.
+### Pipeline Completo — 20 Estágios Determinísticos
 
-### 2. Project Brain
-Sistema de conhecimento estruturado com 5 tabelas:
-- `project_brain_nodes` — grafo de entidades do projeto
-- `project_brain_edges` — relacionamentos entre entidades
-- `project_decisions` — decisões arquiteturais versionadas
-- `project_errors` — erros históricos com regras de prevenção
-- `project_prevention_rules` — regras de self-healing com confidence scoring
-- Full-text search via `tsvector`, RLS multi-tenant, context generation
+O pipeline do AxionOS executa 20 estágios sequenciais para transformar uma ideia em software funcional:
 
-### 3. Dependency Scheduler
-DAG-based execution ordering:
-- Topological sort via Kahn's algorithm
-- Execução em waves (nós sem dependências pendentes executam juntos)
-- Prioridades por camada (config → types → services → hooks → components → pages)
-- Detecção e remoção de ciclos
+```
+1.  Compreensão (4 agentes)          → Análise de mercado, requisitos, viabilidade
+2.  Arquitetura (4 agentes)          → Stack, schema, API contracts, dependency graph
+3.  Simulação de Arquitetura         → Túnel de vento estrutural
+4.  Validação Preventiva             → Auditoria de regras históricas
+5.  Bootstrap Intelligence           → Validação de entrypoints e stack
+6.  Foundation Scaffold              → Base mínima buildável
+7.  Module Graph Simulation          → Análise de imports e circularidade
+8.  Dependency Intelligence          → Saúde do ecossistema NPM
+9.  Schema Bootstrap                 → Schema PostgreSQL isolado (app_{id})
+10. DB Provisioning                  → Tabelas base + RLS + Storage bucket
+11. Domain Model Analysis            → Extração de entidades/relacionamentos via LLM
+12. Business Logic Synthesis         → Services, validações, workflows, access control
+13. API Generation                   → REST endpoints, RPCs, triggers, webhooks
+14. Formação de Squad                → Agentes especializados
+15. Planejamento                     → PRD + Stories com subtasks por arquivo
+16. Execução (Agent Swarm)           → Geração de código paralela (6 workers)
+17. Validação (4 sub-estágios)       → AI + Deep + Drift + Runtime (CI)
+18. Build Repair                     → Auto-reparo de falhas
+19. Publicação                       → Atomic Git Tree API
+20. Concluído
+```
 
-### 4. Agent Swarm (Orchestrator + Workers)
-Arquitetura distribuída:
-- **Orchestrator**: constrói DAG, despacha workers em paralelo (max 6)
-- **Worker**: gera um arquivo via cadeia de 3 agentes (Code Architect → Developer → Integration Agent)
-- Comunicação via Project Brain
-- Retry até 2x, fallback para `project_errors`
+### Infraestrutura Core
 
-### 5. Visualização do DAG
-- `BrainDAGGraph` — grafo interativo de nós/edges com status visual
-- Integrado ao `ProjectBrainPanel` com abas: Graph, Decisions, Errors, Self-Healing
+| Sistema | Status | Detalhes |
+|---------|--------|---------|
+| Project Brain | ✅ | Grafo de conhecimento com tsvector + pgvector (768-dim) |
+| Dependency Scheduler | ✅ | DAG + Kahn's algorithm + cycle breaking |
+| Agent Swarm | ✅ | Orchestrator + 6 Workers paralelos |
+| Smart Context Window | ✅ | AST-like parser, ~60-80% token reduction |
+| Self-Healing | ✅ | Prevention rules com confidence scoring |
+| Incremental Re-execution | ✅ | Hash DJB2, dirty propagation, reuso de subtasks |
+| Vector Embeddings | ✅ | pgvector, cosine similarity, semantic search |
+| Atomic Git Commits | ✅ | Tree API para publish + fix PRs |
 
-### 6. CI-Triggered Fix Swarm
-- `pipeline-ci-webhook` — recebe webhook do GitHub CI
-- `pipeline-fix-orchestrator` — agrupa erros por arquivo, despacha fix workers em paralelo, cria PR automático
-- `CIFixSwarmStatus` — componente de monitoramento em tempo real
+### Novos Módulos de Engenharia (Fases 27-32)
 
-### 7. Self-Healing Codebase
-- Learning Agent pós-fix gera prevention rules
-- `upsertPreventionRule` — confidence score incremental
-- Regras injetadas em todos os prompts via `generateBrainContext`
-- Aba Self-Healing no ProjectBrainPanel
+| Módulo | Edge Function | Estágios | Descrição |
+|--------|---------------|----------|-----------|
+| Schema Bootstrap | `supabase-schema-bootstrap` | `bootstrapping_schema` → `schema_bootstrapped` | Cria schema PostgreSQL isolado `app_{id}` |
+| DB Provisioning | `supabase-provisioning-engine` | `provisioning_db` → `db_provisioned` | Tabelas base (users, settings, audit_logs) + RLS + bucket |
+| Domain Model | `ai-domain-model-analyzer` | `analyzing_domain` → `domain_analyzed` | Extrai entidades, atributos, relacionamentos, regras via LLM |
+| Business Logic | `ai-business-logic-synthesizer` | `synthesizing_logic` → `logic_synthesized` | Services, validações, workflows, access control |
+| API Generator | `autonomous-api-generator` | `generating_api` → `api_generated` | REST endpoints, RPCs, event triggers, webhooks |
+| Build Repair | `autonomous-build-repair` | `repairing_build` → `build_repaired` | Auto-reparo de falhas de build |
 
-### 8. Architectural Drift Detection
-- `pipeline-drift-detection` — detecção híbrida (rule-based + AI)
-- Classifica arquivos por camada (pages → components → hooks → services → data)
-- Detecta dependências invertidas, camadas ausentes, violações de fronteira
-- Auto-trigger após Deep Validation
-- `ArchitecturalDriftStatus` — UI com drift score e lista de violações
-- Violations registradas em `project_errors` + prevention rules geradas
+### Edge Functions — 35+ Funções
 
-### 9. Atomic Git Commits (Tree API)
-- `pipeline-publish` e `pipeline-fix-orchestrator` refatorados para usar Git Tree API
-- Fluxo: Create Blobs (paralelo) → Build Tree → Single Commit → Update Ref
-- Elimina N requests sequenciais por 1 commit atômico
-- Blobs criados em batches paralelos de 5
-
----
-
-### 10. Runtime Validation (tsc + vite build)
-- `pipeline-runtime-validation` — push para branch temporária `validate/{id}`
-- GitHub Actions executa: `npm install → tsc --noEmit → vite build`
-- Resultados voltam via `pipeline-ci-webhook` existente
-- Erros reais do compilador alimentam Fix Swarm
-- `RuntimeValidationStatus` — UI com status do CI, erros e build log
-- Disponível nos stages `validating` e `ready_to_publish`
-
-### 11. Smart Context Window (AST-based)
-- `_shared/smart-context.ts` — parser regex-based que extrai apenas a API pública de cada arquivo
-- Extrai: imports, exports, interfaces, types, function signatures, component props
-- `buildSmartContextWindow()` — constrói contexto compacto com priorização:
-  - Dependências diretas: contexto completo (60% do budget)
-  - Outros arquivos: apenas export signatures
-  - Prioridade: types > hooks > services > components > pages
-- Compressão de ~60-80% no volume de tokens enviados à IA
-- Integrado ao `pipeline-execution-orchestrator` e `pipeline-execution-worker`
-- Stats de compressão logados a cada 5 arquivos via `pipelineLog`
-
----
-
-### 12. Observabilidade & Custos
-- Dashboard de custo por iniciativa e agente, alertas de budget, SLA configs
-
-### 13. Memória e Contexto
-- `agent_memory` com herança de contexto, knowledge base organizacional
-
-### 14. Incremental Re-execution
-- Engine com hash DJB2, propagação dirty em cascata, reuso de subtasks limpas
-
-### 15. Vector Embeddings (pgvector)
-- `embedding vector(768)`, `match_brain_nodes`, semantic search no Smart Context
-
-### 16. Templates de Iniciativas
-- 6 templates pré-prontos, pre-popula discovery_payload
-
-### 17. UX & Polish
-- Atalhos de teclado, i18n pt-BR/en-US, exportação CSV/PDF, dark/light refinements
-
-### 18. Governança — Compliance & Evidências
-- Auditoria com abas (Audit Trail, Governança, Reviews), exportação CSV/PDF
-
-### 19. Adaptive Engineering System
-- **Error Intelligence Engine** (`error-intelligence`): Análise de padrões de erro cross-project, geração automática de prevention rules, métricas de taxa de sucesso de build
-- **Preventive Architecture Validator** (`pipeline-preventive-validation`): Validação pré-geração com checagem estrutural, compatibilidade de dependências e aplicação de regras aprendidas
-- Integração com Build Self-Healing para aprendizado contínuo
-
-### 20. Architecture Simulation Engine
-- **`pipeline-architecture-simulation`** — simula a arquitetura antes da geração de código
-- Converte o plano de arquitetura em grafo dirigido (módulos, serviços, dependências)
-- **Validação estrutural**: entrypoints, módulos desconectados, dependências circulares
-- **Validação de dependências**: conflitos npm, peer dependencies, compatibilidade de framework
-- **Predição de falhas**: IA analisa o modelo e prediz problemas de build
-- **Auto-reparo**: corrige automaticamente o plano de arquitetura antes da execução
-- Resultado armazenado no Project Brain para contexto futuro
-- Novo fluxo: Arquitetura → **Simulação** → Validação Preventiva → Squad → Execução
-
-### 21. Foundation Scaffold Engine
-- **`pipeline-foundation-scaffold`** — gera scaffold mínimo buildável antes da geração de features
-- Template React+Vite: package.json, index.html, src/main.tsx, src/App.tsx, vite.config.ts, tsconfig.json
-- Detecção automática de stack via discovery_payload
-- **Validação de scaffold**: verifica scripts, imports, entrypoints e dependências
-- **Auto-reparo**: injeta arquivos faltantes a partir de templates padrão
-- **Simulação de build via IA**: prevê se `npm install && vite build` passaria
-- Scaffold armazenado no Project Brain como nós com status "scaffold"
-- Novo fluxo: Validação Preventiva → **Scaffold** → Squad → Execução
-
-### 22. Project Bootstrap Intelligence
-- **`project-bootstrap-intelligence`** — valida buildabilidade estrutural ANTES do Foundation Scaffold
-- Multi-stack: `react-vite`, `nextjs`, `node-api`, `python-fastapi`
-- Templates de bootstrap por stack (arquivos mínimos necessários)
-- **Validação de entrypoints**: parse index.html → verifica script referenciado existe
-- **Validação de scripts**: dev/build/preview com valores corretos por stack
-- **Validação de dependências**: react, react-dom, vite, typescript
-- **Predição de build via IA**: simula `npm install && tsc --noEmit && vite build`
-- Auto-injeção de arquivos faltantes no Project Brain como nós `bootstrap`
-- Reparo emergencial se predição falhar
-- Novo fluxo: Validação Preventiva → **Bootstrap Intelligence** → Scaffold → Squad → Execução
+```
+supabase/functions/
+├── pipeline-comprehension/              Stage 1
+├── pipeline-architecture/               Stage 2
+├── pipeline-architecture-simulation/    Stage 3
+├── pipeline-preventive-validation/      Stage 4
+├── project-bootstrap-intelligence/      Stage 5
+├── pipeline-foundation-scaffold/        Stage 6
+├── pipeline-module-graph-simulation/    Stage 7
+├── pipeline-dependency-intelligence/    Stage 8
+├── supabase-schema-bootstrap/           Stage 9
+├── supabase-provisioning-engine/        Stage 10
+├── ai-domain-model-analyzer/            Stage 11
+├── ai-business-logic-synthesizer/       Stage 12
+├── autonomous-api-generator/            Stage 13
+├── pipeline-squad/                      Stage 14
+├── pipeline-planning/                   Stage 15
+├── pipeline-execution-orchestrator/     Stage 16
+├── pipeline-execution-worker/           Stage 16 (worker)
+├── pipeline-validation/                 Stage 17a
+├── pipeline-deep-validation/            Stage 17b
+├── pipeline-drift-detection/            Stage 17c
+├── pipeline-runtime-validation/         Stage 17d
+├── autonomous-build-repair/             Stage 18
+├── pipeline-publish/                    Stage 19
+├── pipeline-approve/reject              Gates
+├── pipeline-ci-webhook                  CI webhook
+├── pipeline-fix-orchestrator            Fix swarm
+├── error-intelligence                   Error patterns
+├── ecosystem-drift-intelligence         Ecosystem drift
+├── generate-embeddings                  Vector embeddings
+├── analyze-artifact / rework-artifact   Artifact review
+├── brain-sync                           Brain sync
+└── _shared/ (12 helpers)                Shared utilities
+```
 
 ---
 
@@ -148,5 +101,18 @@ Arquitetura distribuída:
 
 | # | Fase | Impacto | Complexidade | Descrição |
 |---|------|---------|-------------|-----------|
-| 1 | Approval chains | 🟡 Médio | Alto | Múltiplos aprovadores com quórum |
-| 2 | Webhook notifications | 🟠 Baixo | Baixo | Slack/Discord em gates e SLA |
+| 1 | Supabase Data Model Generator | 🔴 Alto | Médio | Gera tabelas SQL automaticamente no schema do projeto a partir do `domain_model` |
+| 2 | UI para novos estágios | 🟡 Médio | Médio | Visualizações de Domain Model, Business Logic e API Spec na tela de detalhe |
+| 3 | Approval chains | 🟡 Médio | Alto | Múltiplos aprovadores com quórum por gate |
+| 4 | Webhook notifications | 🟠 Baixo | Baixo | Slack/Discord em gates e SLA breaches |
+
+---
+
+## Métricas do Projeto
+
+- **35+ Edge Functions** independentes
+- **20 estágios** de pipeline determinístico
+- **18+ agentes** especializados por role
+- **12 shared helpers** reutilizáveis
+- **28+ tabelas** no banco de dados
+- **5 tipos de nó** no Project Brain adicionados (domain_model, business_logic, api_spec, data_model, reports)
