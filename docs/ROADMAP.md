@@ -74,9 +74,9 @@
 - [x] UI de Code Explorer mostra ícones e badges para arquivos de backend
 - [x] Conexão com Supabase externo (tabela `supabase_connections`, UI em Conexões)
 - [x] Prefixo obrigatório em tabelas geradas (`CREATE TABLE IF NOT EXISTS prefixo_tabela`)
-- [ ] Integrar `supabase_connections` no pipeline: sistemas gerados usam conexão cadastrada
-- [ ] Botão "Testar Conexão" que valida URL e Anon Key antes de salvar
-- [ ] Gerar README.md automático com instruções de setup do Supabase
+- [x] Integrar `supabase_connections` no pipeline: sistemas gerados usam conexão cadastrada
+- [x] Botão "Testar Conexão" que valida URL e Anon Key antes de salvar
+- [x] Gerar README.md automático com instruções de setup do Supabase
 
 ---
 

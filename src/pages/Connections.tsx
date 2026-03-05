@@ -14,7 +14,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { GitBranch, Plus, Trash2, Loader2, CheckCircle2, ExternalLink, Plug, Database } from "lucide-react";
+import { GitBranch, Plus, Trash2, Loader2, CheckCircle2, ExternalLink, Plug, Database, Wifi, WifiOff } from "lucide-react";
 import { toast } from "sonner";
 
 interface GitConnection {
@@ -46,6 +46,7 @@ export default function Connections() {
 
   const [addGitOpen, setAddGitOpen] = useState(false);
   const [addSupabaseOpen, setAddSupabaseOpen] = useState(false);
+  const [testingConnectionId, setTestingConnectionId] = useState<string | null>(null);
   const [gitForm, setGitForm] = useState({
     repo_owner: "",
     repo_name: "",
@@ -57,6 +58,40 @@ export default function Connections() {
     supabase_url: "",
     supabase_anon_key: "",
   });
+
+  const testSupabaseConnection = async (url: string, anonKey: string, connId?: string) => {
+    if (connId) setTestingConnectionId(connId);
+    try {
+      // Validate URL format
+      if (!url.match(/^https:\/\/.+\.supabase\.co$/)) {
+        toast.error("URL inválida. Formato esperado: https://xxxxx.supabase.co");
+        return false;
+      }
+      // Try to reach the Supabase REST endpoint
+      const resp = await fetch(`${url}/rest/v1/`, {
+        method: "GET",
+        headers: {
+          apikey: anonKey,
+          Authorization: `Bearer ${anonKey}`,
+        },
+      });
+      if (resp.ok || resp.status === 200) {
+        toast.success("✅ Conexão válida! Supabase respondeu com sucesso.");
+        return true;
+      } else if (resp.status === 401) {
+        toast.error("❌ Anon Key inválida ou expirada.");
+        return false;
+      } else {
+        toast.error(`❌ Supabase retornou status ${resp.status}`);
+        return false;
+      }
+    } catch (e: any) {
+      toast.error(`❌ Não foi possível conectar: ${e.message || "Erro de rede"}`);
+      return false;
+    } finally {
+      setTestingConnectionId(null);
+    }
+  };
 
   const { data: gitConnections = [], isLoading: gitLoading } = useQuery({
     queryKey: ["git-connections-page", currentOrg?.id],
@@ -344,6 +379,20 @@ export default function Connections() {
                         <span>Anon Key: ••••••••</span>
                       </div>
                       <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-7 px-2 text-xs gap-1"
+                          onClick={() => testSupabaseConnection(conn.supabase_url, conn.supabase_anon_key, conn.id)}
+                          disabled={testingConnectionId === conn.id}
+                        >
+                          {testingConnectionId === conn.id ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : (
+                            <Wifi className="h-3 w-3" />
+                          )}
+                          Testar
+                        </Button>
                         {canManage && (
                           <Button
                             variant="ghost"
@@ -475,15 +524,26 @@ export default function Connections() {
               </p>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setAddSupabaseOpen(false)}>Cancelar</Button>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
             <Button
-              onClick={() => addSbMutation.mutate()}
-              disabled={!sbForm.supabase_url.trim() || !sbForm.supabase_anon_key.trim() || addSbMutation.isPending}
+              variant="secondary"
+              onClick={() => testSupabaseConnection(sbForm.supabase_url.trim(), sbForm.supabase_anon_key.trim())}
+              disabled={!sbForm.supabase_url.trim() || !sbForm.supabase_anon_key.trim() || testingConnectionId !== null}
+              className="gap-1.5"
             >
-              {addSbMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
-              Salvar
+              {testingConnectionId !== null ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wifi className="h-4 w-4" />}
+              Testar Conexão
             </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setAddSupabaseOpen(false)}>Cancelar</Button>
+              <Button
+                onClick={() => addSbMutation.mutate()}
+                disabled={!sbForm.supabase_url.trim() || !sbForm.supabase_anon_key.trim() || addSbMutation.isPending}
+              >
+                {addSbMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
+                Salvar
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
