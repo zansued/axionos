@@ -36,7 +36,9 @@ function useElapsedTime(startedAt: string | undefined, isActive: boolean) {
   return elapsed;
 }
 
-export function RuntimeValidationStatus({ executionProgress }: RuntimeValidationStatusProps) {
+export function RuntimeValidationStatus({ executionProgress, initiativeId, onStatusUpdated }: RuntimeValidationStatusProps) {
+  const { toast } = useToast();
+  const [marking, setMarking] = useState(false);
   const ep = executionProgress || {};
   const rtStatus = ep.runtime_validation_status;
   const ciStatus = ep.ci_status;
