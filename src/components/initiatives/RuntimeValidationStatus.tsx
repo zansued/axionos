@@ -1,13 +1,35 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import {
   CheckCircle2, XCircle, AlertTriangle, Loader2, Terminal,
-  GitBranch, Clock, ExternalLink,
+  GitBranch, Clock, ExternalLink, RefreshCw,
 } from "lucide-react";
 
 interface RuntimeValidationStatusProps {
   executionProgress: any;
+}
+
+function useElapsedTime(startedAt: string | undefined, isActive: boolean) {
+  const [elapsed, setElapsed] = useState("");
+
+  useEffect(() => {
+    if (!startedAt || !isActive) { setElapsed(""); return; }
+
+    const update = () => {
+      const diff = Date.now() - new Date(startedAt).getTime();
+      const mins = Math.floor(diff / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      setElapsed(`${mins}m ${secs}s`);
+    };
+    update();
+    const id = setInterval(update, 1000);
+    return () => clearInterval(id);
+  }, [startedAt, isActive]);
+
+  return elapsed;
 }
 
 export function RuntimeValidationStatus({ executionProgress }: RuntimeValidationStatusProps) {
@@ -20,12 +42,23 @@ export function RuntimeValidationStatus({ executionProgress }: RuntimeValidation
   const startedAt = ep.runtime_validation_started_at;
   const ciErrors = ep.ci_errors || [];
   const ciBuildLog = ep.ci_build_log;
+  const repoOwner = ep.runtime_validation_repo_owner;
+  const repoName = ep.runtime_validation_repo_name;
 
   if (!rtStatus && !ciStatus) return null;
 
   const isRunning = rtStatus === "running" && ciStatus !== "success" && ciStatus !== "failed";
   const passed = ciStatus === "success";
   const failed = ciStatus === "failed";
+
+  const elapsed = useElapsedTime(startedAt, isRunning);
+
+  // Timeout warning after 5 minutes
+  const isLong = startedAt && isRunning && (Date.now() - new Date(startedAt).getTime()) > 5 * 60 * 1000;
+
+  const ghActionsUrl = repoOwner && repoName
+    ? `https://github.com/${repoOwner}/${repoName}/actions`
+    : null;
 
   const statusColor = passed ? "text-green-500" : failed ? "text-destructive" : "text-yellow-500";
   const StatusIcon = passed ? CheckCircle2 : failed ? XCircle : isRunning ? Loader2 : AlertTriangle;
