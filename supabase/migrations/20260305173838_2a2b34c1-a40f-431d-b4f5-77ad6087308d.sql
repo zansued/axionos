@@ -1,0 +1,2 @@
+ALTER TYPE public.initiative_stage_status ADD VALUE IF NOT EXISTS 'bootstrapping' BEFORE 'scaffolding';
+ALTER TYPE public.initiative_stage_status ADD VALUE IF NOT EXISTS 'bootstrapped' BEFORE 'scaffolding';
