@@ -3,6 +3,7 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
+import { generateBrainContext, recordError, updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 
 /**
  * Camada 5 — Verificação
@@ -61,11 +62,14 @@ serve(async (req) => {
       return jsonResponse({ success: true, artifacts_validated: artifacts.length, passed: artifacts.length, failed: 0, fixed: 0, remaining_to_validate: 0, batch_incomplete: false, overall_pass: true, job_id: jobId });
     }
 
-    // ── Fetch architecture context for Static Analysis ──
+    // ── Fetch architecture + brain context for validation ──
     let archContext = "";
     if (initiative.architecture_content) {
       archContext = String(initiative.architecture_content).slice(0, 2000);
     }
+    let brainContext = "";
+    try { brainContext = await generateBrainContext(ctx); } catch {}
+    const brainBlock = brainContext ? `\n\n${brainContext}` : "";
 
     let totalTokens = 0, totalCost = 0;
     let passCount = 0, failCount = 0, fixedCount = 0;
@@ -90,7 +94,7 @@ serve(async (req) => {
 - Imports: dependências circulares, imports faltando ou não utilizados
 - Complexidade: funções longas (>50 linhas), nesting profundo (>3), alta complexidade ciclomática
 - Padrões: violações de Clean Architecture, naming conventions, SOLID
-${archContext ? `\n## Contexto Arquitetural\n${archContext}` : ""}
+${archContext ? `\n## Contexto Arquitetural\n${archContext}` : ""}${brainBlock}
 
 Retorne APENAS JSON válido:
 {"static_score": 0-100, "issues": [{"severity": "error|warning|info", "category": "lint|types|imports|complexity|patterns", "message": "...", "suggestion": "..."}], "summary": "...", "imports_valid": true/false, "type_safety_score": 0-100, "complexity_score": 0-100}`,
@@ -227,7 +231,26 @@ Regras:
         await pipelineLog(ctx, "artifact_auto_approved",
           `Artefato ${artifact.summary?.slice(0, 50)} aprovado (${combinedScore}/100)`,
           { artifact_id: artifact.id, static: staticAnalysis.static_score, runtime: runtimeQA.runtime_score });
+
+        // Update brain node to validated
+        try {
+          const raw = artifact.raw_output as any;
+          const filePath = raw?.file_path;
+          if (filePath) {
+            const node = await getNodeByPath(ctx, filePath);
+            if (node) await updateNodeStatus(ctx, node.id, "validated");
+          }
+        } catch {}
       }
+
+      // Record errors to brain for learning
+      try {
+        const errors = (staticAnalysis.issues || []).filter((i: any) => i.severity === "error");
+        for (const err of errors.slice(0, 5)) {
+          const raw = artifact.raw_output as any;
+          await recordError(ctx, err.message, err.category || "typescript", raw?.file_path, err.message, err.suggestion);
+        }
+      } catch {}
 
       validationResults.push({
         artifact_id: artifact.id, type: artifact.type,

@@ -4,6 +4,7 @@ import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
+import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 
 /**
  * Camada 6 — Release
@@ -275,6 +276,14 @@ Retorne APENAS JSON:
       source_initiative_id: ctx.initiativeId,
       tags: ["release", "changelog", actualRepo],
     });
+
+    // Update brain nodes to published
+    try {
+      for (const filePath of committedFiles.slice(0, 50)) {
+        const node = await getNodeByPath(ctx, filePath);
+        if (node) await updateNodeStatus(ctx, node.id, "published");
+      }
+    } catch (e) { console.error("Brain publish update error:", e); }
 
     await updateInitiative(ctx, { stage_status: "published" });
 

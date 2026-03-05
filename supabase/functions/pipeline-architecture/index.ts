@@ -5,6 +5,7 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
+import { generateBrainContext, upsertNode, addEdge, recordDecision } from "../_shared/brain-helpers.ts";
 
 interface AgentOutput {
   role: string;
@@ -42,12 +43,16 @@ serve(async (req) => {
   await pipelineLog(ctx, "pipeline_architecture_start", "Camada 2 — Arquitetura Técnica iniciada (4 agentes)");
 
   try {
+    // Brain context from previous layers
+    const brainContext = await generateBrainContext(ctx);
+    const brainBlock = brainContext ? `\n\n${brainContext}` : "";
+
     const projectContext = `Projeto: ${initiative.title}
 Ideia refinada: ${initiative.refined_idea || initiative.description || ""}
 Complexidade: ${initiative.complexity || "medium"}
 Stack sugerida: ${initiative.suggested_stack || "React + Supabase"}
 MVP: ${initiative.mvp_scope || "A definir"}
-Público-alvo: ${initiative.target_user || "A definir"}`;
+Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
 
     const requirementsData = dp.requirements ? JSON.stringify(dp.requirements, null, 2) : "Não disponível";
     const productArchData = dp.product_architecture ? JSON.stringify(dp.product_architecture, null, 2) : "Não disponível";
@@ -256,6 +261,41 @@ Crie o grafo de dependências para geração de código:
       raw_output: { agent: "dependency_planner", layer: 2, ...depPlanner.result },
       model_used: depPlanner.model, tokens_used: depPlanner.tokens, cost_estimate: depPlanner.costUsd,
     });
+
+    // ──── Write to Project Brain ────
+    try {
+      // Record tables as nodes
+      const tables = (dataArch.result.tables as any[]) || [];
+      const tableNodeIds: Record<string, string> = {};
+      for (const t of tables.slice(0, 30)) {
+        const nodeId = await upsertNode(ctx, { node_type: "table", name: t.name, metadata: { columns: t.columns?.length, description: t.description, source: "architecture" }, status: "planned" });
+        tableNodeIds[t.name] = nodeId;
+      }
+      // Record relationships as edges
+      const rels = (dataArch.result.relationships as any[]) || [];
+      for (const rel of rels.slice(0, 50)) {
+        const fromId = tableNodeIds[rel.from_table];
+        const toId = tableNodeIds[rel.to_table];
+        if (fromId && toId) await addEdge(ctx, { source_node_id: fromId, target_node_id: toId, relation_type: "stores_in_table", metadata: { type: rel.type, on_delete: rel.on_delete } });
+      }
+      // Record API endpoints as nodes
+      const endpoints = (apiArch.result.endpoints as any[]) || [];
+      for (const ep of endpoints.slice(0, 30)) {
+        await upsertNode(ctx, { node_type: "api", name: `${ep.method} ${ep.path}`, metadata: { description: ep.description, auth_required: ep.auth_required, source: "architecture" }, status: "planned" });
+      }
+      // Record edge functions as nodes
+      const edgeFns = (apiArch.result.edge_functions as any[]) || [];
+      for (const fn of edgeFns.slice(0, 20)) {
+        await upsertNode(ctx, { node_type: "edge_function", name: fn.name, metadata: { description: fn.description, trigger: fn.trigger, source: "architecture" }, status: "planned" });
+      }
+      // Record architecture decisions
+      for (const pattern of ((systemArch.result.architecture_patterns as string[]) || []).slice(0, 5)) {
+        await recordDecision(ctx, `Padrão: ${pattern}`, "Definido pelo System Architect", "medium", "architecture");
+      }
+      if (systemArch.result.justification) {
+        await recordDecision(ctx, `Stack justification: ${(systemArch.result.justification as string).slice(0, 200)}`, "System Architect", "high", "architecture");
+      }
+    } catch (e) { console.error("Brain write error (architecture):", e); }
 
     // ──── Consolidate ────
     const totalTokens = systemArch.tokens + dataArch.tokens + apiArch.tokens + depPlanner.tokens;
