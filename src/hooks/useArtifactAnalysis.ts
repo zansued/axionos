@@ -49,7 +49,14 @@ export function useArtifactAnalysis() {
       const { data, error } = await supabase.functions.invoke("analyze-artifact", {
         body: { artifactId, autoDecide },
       });
-      if (error) throw error;
+      if (error) {
+        const ctx = (error as any)?.context;
+        if (ctx && typeof ctx.json === "function") {
+          const errJson = await ctx.json().catch(() => null);
+          if (errJson?.error) throw new Error(errJson.error);
+        }
+        throw error;
+      }
       if (data?.error) throw new Error(data.error);
 
       const result: AnalysisResult = {
