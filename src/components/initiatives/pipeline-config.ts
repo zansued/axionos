@@ -1,6 +1,6 @@
 import {
   Lightbulb, Brain, Users, FileText, Cpu, BookOpen, Hammer, CheckCircle2,
-  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap, Package, Wrench, Database
+  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap, Package, Wrench, Database, Monitor, GraduationCap
 } from "lucide-react";
 
 export const PIPELINE_STEPS = [
@@ -28,10 +28,14 @@ export const PIPELINE_STEPS = [
   { key: "db_provisioned", label: "DB Provisioned ✓", icon: Database, color: "text-accent", bg: "bg-accent/10" },
   { key: "analyzing_domain", label: "Domain Analysis ▶", icon: Brain, color: "text-warning", bg: "bg-warning/10" },
   { key: "domain_analyzed", label: "Domain Analyzed ✓", icon: Brain, color: "text-accent", bg: "bg-accent/10" },
+  { key: "generating_data_model", label: "Data Model ▶", icon: Database, color: "text-warning", bg: "bg-warning/10" },
+  { key: "data_model_generated", label: "Data Model ✓", icon: Database, color: "text-accent", bg: "bg-accent/10" },
   { key: "synthesizing_logic", label: "Business Logic ▶", icon: Cpu, color: "text-warning", bg: "bg-warning/10" },
   { key: "logic_synthesized", label: "Business Logic ✓", icon: Cpu, color: "text-accent", bg: "bg-accent/10" },
   { key: "generating_api", label: "API Generator ▶", icon: Layers, color: "text-warning", bg: "bg-warning/10" },
   { key: "api_generated", label: "API Generated ✓", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
+  { key: "generating_ui", label: "UI Generator ▶", icon: Monitor, color: "text-warning", bg: "bg-warning/10" },
+  { key: "ui_generated", label: "UI Generated ✓", icon: Monitor, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
   { key: "forming_squad", label: "Formando", icon: Users, color: "text-warning", bg: "bg-warning/10" },
   { key: "squad_formed", label: "Squad ✓", icon: Users, color: "text-accent", bg: "bg-accent/10" },
@@ -43,6 +47,8 @@ export const PIPELINE_STEPS = [
   { key: "repairing_build", label: "Build Repair ▶", icon: Wrench, color: "text-warning", bg: "bg-warning/10" },
   { key: "build_repaired", label: "Build Repair ✓", icon: Wrench, color: "text-accent", bg: "bg-accent/10" },
   { key: "repair_failed", label: "Repair Failed", icon: Wrench, color: "text-destructive", bg: "bg-destructive/10" },
+  { key: "learning_system", label: "Learning ▶", icon: GraduationCap, color: "text-warning", bg: "bg-warning/10" },
+  { key: "system_learned", label: "Learning ✓", icon: GraduationCap, color: "text-accent", bg: "bg-accent/10" },
   { key: "ready_to_publish", label: "Pronto", icon: Rocket, color: "text-accent", bg: "bg-accent/10" },
   { key: "published", label: "Publicado", icon: GitBranch, color: "text-primary", bg: "bg-primary/10" },
   { key: "completed", label: "Concluído", icon: CheckCircle2, color: "text-success", bg: "bg-success/10" },
@@ -60,13 +66,16 @@ export const MACRO_STAGES = [
   { key: "schema_bootstrap", label: "Schema Bootstrap", icon: Database },
   { key: "db_provisioning", label: "DB Provisioning", icon: Database },
   { key: "domain_analysis", label: "Domain Analysis", icon: Brain },
+  { key: "data_model_generation", label: "Data Model", icon: Database },
   { key: "business_logic", label: "Business Logic", icon: Cpu },
   { key: "api_generation", label: "API Generator", icon: Layers },
+  { key: "ui_generation", label: "UI Generator", icon: Monitor },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
   { key: "validation", label: "Validação", icon: Shield },
   { key: "build_repair", label: "Build Repair", icon: Wrench },
+  { key: "adaptive_learning", label: "Learning", icon: GraduationCap },
   { key: "publish", label: "Publicação", icon: GitBranch },
   { key: "done", label: "Concluído", icon: CheckCircle2 },
 ];
@@ -89,16 +98,19 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["bootstrapping_schema", "schema_bootstrapped"].includes(s)) return 8;
   if (["provisioning_db", "db_provisioned"].includes(s)) return 9;
   if (["analyzing_domain", "domain_analyzed"].includes(s)) return 10;
-  if (["synthesizing_logic", "logic_synthesized"].includes(s)) return 11;
-  if (["generating_api", "api_generated"].includes(s)) return 12;
-  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 13;
-  if (["planning_ready", "planning", "planned"].includes(s)) return 14;
-  if (["in_progress"].includes(s)) return 15;
-  if (["validating"].includes(s)) return 16;
-  if (["repairing_build", "build_repaired", "repair_failed"].includes(s)) return 17;
-  if (["ready_to_publish"].includes(s)) return 18;
-  if (["published"].includes(s)) return 19;
-  if (["completed"].includes(s)) return 20;
+  if (["generating_data_model", "data_model_generated"].includes(s)) return 11;
+  if (["synthesizing_logic", "logic_synthesized"].includes(s)) return 12;
+  if (["generating_api", "api_generated"].includes(s)) return 13;
+  if (["generating_ui", "ui_generated"].includes(s)) return 14;
+  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 15;
+  if (["planning_ready", "planning", "planned"].includes(s)) return 16;
+  if (["in_progress"].includes(s)) return 17;
+  if (["validating"].includes(s)) return 18;
+  if (["repairing_build", "build_repaired", "repair_failed"].includes(s)) return 19;
+  if (["learning_system", "system_learned"].includes(s)) return 20;
+  if (["ready_to_publish"].includes(s)) return 21;
+  if (["published"].includes(s)) return 22;
+  if (["completed"].includes(s)) return 23;
   return 0;
 }
 
@@ -113,9 +125,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
     case "draft":
       return [{ stage: "comprehension", label: "Iniciar Compreensão (4 agentes)", type: "run" }];
     case "discovering":
-      return [
-        { stage: "comprehension", label: "Re-executar Compreensão", type: "run" },
-      ];
+      return [{ stage: "comprehension", label: "Re-executar Compreensão", type: "run" }];
     case "discovered":
       return [
         { stage: "approve", label: "Aprovar Compreensão", type: "approve" },
@@ -124,18 +134,14 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
     case "architecture_ready":
       return [{ stage: "architecture", label: "Iniciar Arquitetura (4 agentes)", type: "run" }];
     case "architecting":
-      return [
-        { stage: "architecture", label: "Re-executar Arquitetura", type: "run" },
-      ];
+      return [{ stage: "architecture", label: "Re-executar Arquitetura", type: "run" }];
     case "architected":
       return [
         { stage: "architecture_simulation", label: "🌀 Simulação de Arquitetura", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "simulating_architecture":
-      return [
-        { stage: "architecture_simulation", label: "Re-executar Simulação", type: "run" },
-      ];
+      return [{ stage: "architecture_simulation", label: "Re-executar Simulação", type: "run" }];
     case "architecture_simulated":
       return [
         { stage: "preventive_validation", label: "🛡️ Validação Preventiva", type: "run" },
@@ -143,9 +149,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "validating_architecture":
-      return [
-        { stage: "preventive_validation", label: "Re-executar Validação Preventiva", type: "run" },
-      ];
+      return [{ stage: "preventive_validation", label: "Re-executar Validação Preventiva", type: "run" }];
     case "architecture_validated":
       return [
         { stage: "bootstrap_intelligence", label: "🧠 Bootstrap Intelligence", type: "run" },
@@ -153,9 +157,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "bootstrapping":
-      return [
-        { stage: "bootstrap_intelligence", label: "Re-executar Bootstrap", type: "run" },
-      ];
+      return [{ stage: "bootstrap_intelligence", label: "Re-executar Bootstrap", type: "run" }];
     case "bootstrapped":
       return [
         { stage: "foundation_scaffold", label: "🏗️ Gerar Foundation Scaffold", type: "run" },
@@ -163,9 +165,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "scaffolding":
-      return [
-        { stage: "foundation_scaffold", label: "Re-executar Scaffold", type: "run" },
-      ];
+      return [{ stage: "foundation_scaffold", label: "Re-executar Scaffold", type: "run" }];
     case "scaffolded":
       return [
         { stage: "module_graph_simulation", label: "🔗 Module Graph Simulation", type: "run" },
@@ -173,9 +173,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "simulating_modules":
-      return [
-        { stage: "module_graph_simulation", label: "Re-executar Module Graph", type: "run" },
-      ];
+      return [{ stage: "module_graph_simulation", label: "Re-executar Module Graph", type: "run" }];
     case "modules_simulated":
       return [
         { stage: "dependency_intelligence", label: "📦 Dependency Intelligence", type: "run" },
@@ -183,9 +181,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "analyzing_dependencies":
-      return [
-        { stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" },
-      ];
+      return [{ stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" }];
     case "dependencies_analyzed":
       return [
         { stage: "supabase_schema_bootstrap", label: "🗄️ Schema Bootstrap", type: "run" },
@@ -195,65 +191,65 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "bootstrapping_schema":
-      return [
-        { stage: "supabase_schema_bootstrap", label: "Re-executar Schema Bootstrap", type: "run" },
-      ];
+      return [{ stage: "supabase_schema_bootstrap", label: "Re-executar Schema Bootstrap", type: "run" }];
     case "schema_bootstrapped":
       return [
         { stage: "supabase_provisioning", label: "🗄️ DB Provisioning", type: "run" },
-        { stage: "approve", label: "Aprovar Schema → Squad", type: "approve" },
         { stage: "supabase_schema_bootstrap", label: "Re-executar Schema Bootstrap", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "provisioning_db":
-      return [
-        { stage: "supabase_provisioning", label: "Re-executar Provisioning", type: "run" },
-      ];
+      return [{ stage: "supabase_provisioning", label: "Re-executar Provisioning", type: "run" }];
     case "db_provisioned":
       return [
         { stage: "domain_model_analysis", label: "🧠 Domain Model Analysis", type: "run" },
-        { stage: "approve", label: "Aprovar DB → Squad", type: "approve" },
         { stage: "supabase_provisioning", label: "Re-executar Provisioning", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "analyzing_domain":
-      return [
-        { stage: "domain_model_analysis", label: "Re-executar Domain Analysis", type: "run" },
-      ];
+      return [{ stage: "domain_model_analysis", label: "Re-executar Domain Analysis", type: "run" }];
     case "domain_analyzed":
       return [
-        { stage: "business_logic_synthesis", label: "⚙️ Business Logic Synthesis", type: "run" },
-        { stage: "approve", label: "Aprovar Domain → Squad", type: "approve" },
+        { stage: "data_model_generation", label: "🗄️ Data Model Generation", type: "run" },
         { stage: "domain_model_analysis", label: "Re-executar Domain Analysis", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
-    case "synthesizing_logic":
+    case "generating_data_model":
+      return [{ stage: "data_model_generation", label: "Re-executar Data Model", type: "run" }];
+    case "data_model_generated":
       return [
-        { stage: "business_logic_synthesis", label: "Re-executar Business Logic", type: "run" },
+        { stage: "business_logic_synthesis", label: "⚙️ Business Logic Synthesis", type: "run" },
+        { stage: "data_model_generation", label: "Re-executar Data Model", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
+    case "synthesizing_logic":
+      return [{ stage: "business_logic_synthesis", label: "Re-executar Business Logic", type: "run" }];
     case "logic_synthesized":
       return [
         { stage: "api_generation", label: "🔌 API Generation", type: "run" },
-        { stage: "approve", label: "Aprovar Logic → Squad", type: "approve" },
         { stage: "business_logic_synthesis", label: "Re-executar Business Logic", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "generating_api":
-      return [
-        { stage: "api_generation", label: "Re-executar API Generation", type: "run" },
-      ];
+      return [{ stage: "api_generation", label: "Re-executar API Generation", type: "run" }];
     case "api_generated":
       return [
-        { stage: "approve", label: "Aprovar API → Squad", type: "approve" },
+        { stage: "ui_generation", label: "🖥️ UI Generation", type: "run" },
         { stage: "api_generation", label: "Re-executar API Generation", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "generating_ui":
+      return [{ stage: "ui_generation", label: "Re-executar UI Generation", type: "run" }];
+    case "ui_generated":
+      return [
+        { stage: "approve", label: "Aprovar UI → Squad", type: "approve" },
+        { stage: "ui_generation", label: "Re-executar UI Generation", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
       return [{ stage: "squad_formation", label: "Gerar Squad", type: "run" }];
     case "forming_squad":
-      return [
-        { stage: "squad_formation", label: "Re-executar Squad", type: "run" },
-      ];
+      return [{ stage: "squad_formation", label: "Re-executar Squad", type: "run" }];
     case "squad_formed":
       return [
         { stage: "approve", label: "Aprovar Squad", type: "approve" },
@@ -287,11 +283,10 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "repairing_build":
-      return [
-        { stage: "build_repair", label: "Re-executar Build Repair", type: "run" },
-      ];
+      return [{ stage: "build_repair", label: "Re-executar Build Repair", type: "run" }];
     case "build_repaired":
       return [
+        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
         { stage: "approve", label: "✅ Aprovar Repair → Publicar", type: "approve" },
         { stage: "build_repair", label: "Re-executar Build Repair", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
@@ -301,8 +296,17 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "build_repair", label: "🔧 Retry Build Repair", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
+    case "learning_system":
+      return [{ stage: "adaptive_learning", label: "Re-executar Learning", type: "run" }];
+    case "system_learned":
+      return [
+        { stage: "approve", label: "✅ Aprovar → Publicar", type: "approve" },
+        { stage: "adaptive_learning", label: "Re-executar Learning", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
     case "ready_to_publish":
       return [
+        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
         { stage: "runtime_validation", label: "Runtime Validation (tsc + vite build)", type: "run" },
         { stage: "deep_validation", label: "Re-executar Deep Analysis", type: "run" },
         { stage: "publish", label: "Publicar no GitHub", type: "publish" },
@@ -310,6 +314,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "published":
       return [
+        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
         { stage: "publish", label: "Re-publicar no GitHub", type: "publish" },
         { stage: "approve", label: "Marcar como Concluído", type: "approve" },
       ];
