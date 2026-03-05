@@ -103,7 +103,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "planned":
       return [
-        { stage: "execution", label: "Iniciar Execução", type: "run" },
+        { stage: "execution", label: "Iniciar Execução (Agent Swarm)", type: "run" },
         { stage: "approve", label: "Aprovar Planning", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];

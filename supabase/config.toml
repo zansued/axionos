@@ -39,6 +39,12 @@ verify_jwt = false
 [functions.pipeline-execution]
 verify_jwt = false
 
+[functions.pipeline-execution-orchestrator]
+verify_jwt = false
+
+[functions.pipeline-execution-worker]
+verify_jwt = false
+
 [functions.pipeline-validation]
 verify_jwt = false
 
