@@ -61,6 +61,73 @@ export type Database = {
           },
         ]
       }
+      agent_memory: {
+        Row: {
+          agent_id: string
+          created_at: string
+          id: string
+          initiative_id: string | null
+          key: string
+          memory_type: string
+          organization_id: string
+          relevance_score: number | null
+          scope: string
+          times_used: number | null
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          key: string
+          memory_type?: string
+          organization_id: string
+          relevance_score?: number | null
+          scope?: string
+          times_used?: number | null
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          key?: string
+          memory_type?: string
+          organization_id?: string
+          relevance_score?: number | null
+          scope?: string
+          times_used?: number | null
+          updated_at?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_memory_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_memory_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_memory_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_messages: {
         Row: {
           content: string
@@ -752,6 +819,67 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      org_knowledge_base: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          id: string
+          organization_id: string
+          source_initiative_id: string | null
+          source_output_id: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          content: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          source_initiative_id?: string | null
+          source_output_id?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          source_initiative_id?: string | null
+          source_output_id?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_knowledge_base_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "org_knowledge_base_source_initiative_id_fkey"
+            columns: ["source_initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "org_knowledge_base_source_output_id_fkey"
+            columns: ["source_output_id"]
+            isOneToOne: false
+            referencedRelation: "agent_outputs"
             referencedColumns: ["id"]
           },
         ]
