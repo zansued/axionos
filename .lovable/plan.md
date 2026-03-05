@@ -105,6 +105,21 @@ Arquitetura distribuída:
 ### 18. Governança — Compliance & Evidências
 - Auditoria com abas (Audit Trail, Governança, Reviews), exportação CSV/PDF
 
+### 19. Adaptive Engineering System
+- **Error Intelligence Engine** (`error-intelligence`): Análise de padrões de erro cross-project, geração automática de prevention rules, métricas de taxa de sucesso de build
+- **Preventive Architecture Validator** (`pipeline-preventive-validation`): Validação pré-geração com checagem estrutural, compatibilidade de dependências e aplicação de regras aprendidas
+- Integração com Build Self-Healing para aprendizado contínuo
+
+### 20. Architecture Simulation Engine
+- **`pipeline-architecture-simulation`** — simula a arquitetura antes da geração de código
+- Converte o plano de arquitetura em grafo dirigido (módulos, serviços, dependências)
+- **Validação estrutural**: entrypoints, módulos desconectados, dependências circulares
+- **Validação de dependências**: conflitos npm, peer dependencies, compatibilidade de framework
+- **Predição de falhas**: IA analisa o modelo e prediz problemas de build
+- **Auto-reparo**: corrige automaticamente o plano de arquitetura antes da execução
+- Resultado armazenado no Project Brain para contexto futuro
+- Novo fluxo: Arquitetura → **Simulação** → Validação Preventiva → Squad → Execução
+
 ---
 
 ## 🔜 Próximos Passos
