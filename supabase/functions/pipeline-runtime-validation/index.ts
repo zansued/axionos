@@ -177,32 +177,51 @@ serve(async (req) => {
     if (treeItems.length === 0) throw new Error("Nenhum blob criado");
 
     // ── Create tree ──
+    const treeBody: any = { tree: treeItems };
+    if (baseTreeSha) treeBody.base_tree = baseTreeSha;
+
     const treeResp = await fetch(
       `${GITHUB_API}/repos/${owner}/${repo}/git/trees`,
       {
         method: "POST",
         headers: ghHeaders,
-        body: JSON.stringify({ base_tree: baseTreeSha, tree: treeItems }),
+        body: JSON.stringify(treeBody),
       }
     );
     if (!treeResp.ok) throw new Error(`Tree creation failed: ${await treeResp.text()}`);
     const newTree = await treeResp.json();
 
     // ── Create commit ──
+    const commitBody: any = {
+      message: `chore: runtime validation for ${initiative.title}\n\nTriggered by SynkrAIOS pipeline`,
+      tree: newTree.sha,
+    };
+    if (baseSha) commitBody.parents = [baseSha];
+
     const commitResp = await fetch(
       `${GITHUB_API}/repos/${owner}/${repo}/git/commits`,
       {
         method: "POST",
         headers: ghHeaders,
-        body: JSON.stringify({
-          message: `chore: runtime validation for ${initiative.title}\n\nTriggered by SynkrAIOS pipeline`,
-          tree: newTree.sha,
-          parents: [baseSha],
-        }),
+        body: JSON.stringify(commitBody),
       }
     );
     if (!commitResp.ok) throw new Error(`Commit failed: ${await commitResp.text()}`);
     const newCommit = await commitResp.json();
+
+    // ── Create main branch if repo was empty ──
+    if (!baseSha) {
+      const createMainResp = await fetch(
+        `${GITHUB_API}/repos/${owner}/${repo}/git/refs`,
+        {
+          method: "POST",
+          headers: ghHeaders,
+          body: JSON.stringify({ ref: `refs/heads/${baseBranch}`, sha: newCommit.sha }),
+        }
+      );
+      if (!createMainResp.ok) throw new Error(`Main branch creation failed: ${await createMainResp.text()}`);
+      await createMainResp.text();
+    }
 
     // ── Create or update validate branch ──
     const branchRefResp = await fetch(
