@@ -182,6 +182,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       ecosystem_drift: "ecosystem-drift-intelligence",
       supabase_schema_bootstrap: "supabase-schema-bootstrap",
       supabase_provisioning: "supabase-provisioning-engine",
+      domain_model_analysis: "ai-domain-model-analyzer",
       error_intelligence: "error-intelligence",
       build_repair: "autonomous-build-repair",
     };
@@ -239,6 +240,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           supabase_provisioning: result.skipped
             ? `DB Provisioning: pulado (sem schema)`
             : `DB Provisioning: ${result.tables_created?.length || 0} tabelas, RLS ${result.rls_enabled ? "✅" : "⚠️"}, bucket ${result.bucket_created ? "✅" : "⚠️"}`,
+          domain_model_analysis: `Domain Analysis: ${result.entities_detected || 0} entidades, ${result.relationships_detected || 0} relacionamentos, ${result.attributes_detected || 0} atributos ✅`,
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
           planning: `Planejamento concluído: 3 agentes, ${result.stories?.length || result.stories_created || 0} stories, ${result.total_subtasks || 0} subtasks ✅`,
@@ -347,7 +349,8 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       dependency_intelligence: "modules_simulated",
       schema_bootstrap: "dependencies_analyzed",
       db_provisioning: "schema_bootstrapped",
-      squad: "db_provisioned",
+      domain_analysis: "db_provisioned",
+      squad: "domain_analyzed",
       planning: "planning_ready",
       execution: "planned",
       validation: "in_progress",
