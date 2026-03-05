@@ -2070,6 +2070,8 @@ export type Database = {
         | "domain_analyzed"
         | "synthesizing_logic"
         | "logic_synthesized"
+        | "generating_api"
+        | "api_generated"
       initiative_status:
         | "idea"
         | "discovery"
@@ -2294,6 +2296,8 @@ export const Constants = {
         "domain_analyzed",
         "synthesizing_logic",
         "logic_synthesized",
+        "generating_api",
+        "api_generated",
       ],
       initiative_status: [
         "idea",
