@@ -218,8 +218,19 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "domain_analyzed":
       return [
+        { stage: "business_logic_synthesis", label: "⚙️ Business Logic Synthesis", type: "run" },
         { stage: "approve", label: "Aprovar Domain → Squad", type: "approve" },
         { stage: "domain_model_analysis", label: "Re-executar Domain Analysis", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "synthesizing_logic":
+      return [
+        { stage: "business_logic_synthesis", label: "Re-executar Business Logic", type: "run" },
+      ];
+    case "logic_synthesized":
+      return [
+        { stage: "approve", label: "Aprovar Logic → Squad", type: "approve" },
+        { stage: "business_logic_synthesis", label: "Re-executar Business Logic", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":

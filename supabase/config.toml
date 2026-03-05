@@ -122,3 +122,6 @@ verify_jwt = false
 
 [functions.ai-domain-model-analyzer]
 verify_jwt = false
+
+[functions.ai-business-logic-synthesizer]
+verify_jwt = false
