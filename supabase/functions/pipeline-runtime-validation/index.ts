@@ -263,20 +263,6 @@ serve(async (req) => {
     if (!commitResp.ok) throw new Error(`Commit failed: ${await commitResp.text()}`);
     const newCommit = await commitResp.json();
 
-    // ── Create main branch if repo was empty ──
-    if (!baseSha) {
-      const createMainResp = await fetch(
-        `${GITHUB_API}/repos/${owner}/${repo}/git/refs`,
-        {
-          method: "POST",
-          headers: ghHeaders,
-          body: JSON.stringify({ ref: `refs/heads/${baseBranch}`, sha: newCommit.sha }),
-        }
-      );
-      if (!createMainResp.ok) throw new Error(`Main branch creation failed: ${await createMainResp.text()}`);
-      await createMainResp.text();
-    }
-
     // ── Create or update validate branch ──
     const branchRefResp = await fetch(
       `${GITHUB_API}/repos/${owner}/${repo}/git/ref/heads/${validateBranch}`,
