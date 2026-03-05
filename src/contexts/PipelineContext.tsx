@@ -229,6 +229,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           foundation_scaffold: `Foundation Scaffold: ${result.files_generated || 0} arquivos (${result.stack || "react-vite"}). Build confidence: ${((result.build_confidence || 0) * 100).toFixed(0)}% ${result.validation_passed ? "✅" : "⚠️"}`,
           module_graph_simulation: `Module Graph: ${result.total_files || 0} arquivos, ${result.total_imports || 0} imports, ${result.broken_imports || 0} broken, score ${result.graph_health_score || 0} ${result.passed ? "✅" : "⚠️"}`,
           dependency_intelligence: `Dep Intelligence: ${result.total_dependencies || 0} deps, ${result.missing_dependencies || 0} missing, ${result.deprecated_libraries || 0} deprecated, score ${result.dependency_health_score || 0} ${result.passed ? "✅" : "⚠️"}`,
+          ecosystem_drift: `Ecosystem Drift: ${result.packages_checked || 0} deps, ${result.drift_events || 0} events, score ${result.ecosystem_health_score || 0} ${result.ecosystem_health_score >= 0.75 ? "✅" : "⚠️"}`,
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
           planning: `Planejamento concluído: 3 agentes, ${result.stories?.length || result.stories_created || 0} stories, ${result.total_subtasks || 0} subtasks ✅`,
