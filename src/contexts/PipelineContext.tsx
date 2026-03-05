@@ -115,7 +115,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           architecture: `Arquitetura técnica concluída: 4 agentes (System, Data, API Architect, Dependency Planner) ✅`,
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
-          planning: `Planning completo: ${result.stories?.length || 0} stories criadas ✅`,
+          planning: `Planejamento concluído: 3 agentes, ${result.stories?.length || result.stories_created || 0} stories, ${result.total_subtasks || 0} subtasks ✅`,
           approve: "Stage aprovado ✅",
           reject: "Ajustes solicitados — pipeline retornou ao estágio anterior ⟲",
           execution: `Execução concluída: ${result.code_files || 0} arquivos de código, ${result.executed || 0} subtasks ✅`,
