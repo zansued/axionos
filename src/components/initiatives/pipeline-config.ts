@@ -43,6 +43,7 @@ export const MACRO_STAGES = [
   { key: "bootstrap", label: "Bootstrap", icon: Zap },
   { key: "scaffold", label: "Scaffold", icon: Hammer },
   { key: "module_graph", label: "Module Graph", icon: Layers },
+  { key: "dependency_intelligence", label: "Dep Intelligence", icon: Package },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
