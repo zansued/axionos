@@ -65,3 +65,9 @@ verify_jwt = false
 
 [functions.brain-sync]
 verify_jwt = false
+
+[functions.pipeline-deep-validation]
+verify_jwt = false
+
+[functions.pipeline-ci-webhook]
+verify_jwt = false

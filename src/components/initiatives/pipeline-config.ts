@@ -114,11 +114,13 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "validating":
       return [
-        { stage: "validation", label: "Rodar Validação", type: "run" },
+        { stage: "validation", label: "Rodar Fix Loop (AI)", type: "run" },
+        { stage: "deep_validation", label: "Deep Static Analysis", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "ready_to_publish":
       return [
+        { stage: "deep_validation", label: "Re-executar Deep Analysis", type: "run" },
         { stage: "publish", label: "Publicar no GitHub", type: "publish" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];

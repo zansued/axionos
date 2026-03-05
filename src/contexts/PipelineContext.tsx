@@ -67,6 +67,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       reject: "pipeline-reject",
       execution: "pipeline-execution-orchestrator",
       validation: "pipeline-validation",
+      deep_validation: "pipeline-deep-validation",
       publish: "pipeline-publish",
       fast_modify: "pipeline-fast-modify",
       full_review: "pipeline-full-review",
@@ -125,6 +126,9 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
             : result.overall_pass
               ? `Verificação aprovada: ${result.passed || 0}/${result.artifacts_validated || 0} artefatos${result.fixed ? `, ${result.fixed} corrigidos pelo Fix Agent (max 3x)` : ""} ✅`
               : `Fix Loop: ${result.failed || 0} falhas, ${result.fixed || 0} corrigidos, ${result.pending_review || 0} escalados para humano de ${result.artifacts_validated || 0} artefatos ⚠️`,
+          deep_validation: result.passed
+            ? `Deep Static Analysis: ${result.total_files || 0} arquivos verificados, ${result.warnings_count || 0} warnings ✅`
+            : `Deep Static Analysis: ${result.errors_count || 0} erros, ${result.warnings_count || 0} warnings em ${result.total_files || 0} arquivos ❌`,
           publish: `Release Agent: ${result.files_committed || 0} arquivos publicados v${result.version || "1.0.0"} (Pre-flight → Changelog → Push → Verificação) ✅`,
         };
         const label = stageLabels[stage] || "Concluído!";
@@ -155,6 +159,15 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           setTimeout(() => {
             runStage(initiativeId, "validation");
           }, 1200);
+          return;
+        }
+
+        // Auto-trigger deep validation after AI validation passes
+        if (stage === "validation" && result.success && result.overall_pass) {
+          toast({ title: "🔬 Iniciando Deep Static Analysis (imports, tipos, build)..." });
+          setTimeout(() => {
+            runStage(initiativeId, "deep_validation");
+          }, 1500);
           return;
         }
       } catch (e: any) {

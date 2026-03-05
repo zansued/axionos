@@ -154,6 +154,11 @@ Retorne APENAS JSON:
     // Add CHANGELOG.md to file entries
     fileEntries.push({ path: "CHANGELOG.md", content: changelog.changelog_md || "", type: "content", summary: "Changelog gerado pelo Release Agent" });
 
+    // Add GitHub Actions CI workflow for runtime validation
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+    const ciWorkflow = generateCIWorkflow(supabaseUrl, ctx.initiativeId, ctx.organizationId);
+    fileEntries.push({ path: ".github/workflows/validate.yml", content: ciWorkflow, type: "config", summary: "CI: npm install + tsc + vite build" });
+
     const commitMessages = changelog.commit_messages || [];
 
     // ═══ PHASE 3: GitHub Push ═══
@@ -326,4 +331,80 @@ async function persistReview(client: any, outputId: string, userId: string, acti
     new_status: prevStatus,
     comment,
   });
+}
+
+function generateCIWorkflow(supabaseUrl: string, initiativeId: string, organizationId: string): string {
+  const webhookUrl = `${supabaseUrl}/functions/v1/pipeline-ci-webhook`;
+  return `name: SynkrAIOS Validate
+
+on:
+  push:
+    branches: [main, master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        id: install
+        run: npm install --legacy-peer-deps 2>&1 | tee /tmp/install.log
+        continue-on-error: true
+
+      - name: TypeScript check
+        id: typecheck
+        if: steps.install.outcome == 'success'
+        run: npx tsc --noEmit 2>&1 | tee /tmp/tsc.log
+        continue-on-error: true
+
+      - name: Build
+        id: build
+        if: steps.typecheck.outcome == 'success'
+        run: npx vite build 2>&1 | tee /tmp/build.log
+        continue-on-error: true
+
+      - name: Parse errors and notify
+        if: always()
+        env:
+          WEBHOOK_SECRET: \${{ secrets.SYNKRAIOS_WEBHOOK_SECRET }}
+        run: |
+          STATUS="success"
+          ERRORS="[]"
+          BUILD_LOG=""
+
+          if [ "\${{ steps.install.outcome }}" != "success" ]; then
+            STATUS="failure"
+            BUILD_LOG=$(cat /tmp/install.log 2>/dev/null | tail -50)
+            ERRORS=$(echo "$BUILD_LOG" | grep -i "ERR\\!" | head -10 | jq -R -s 'split("\\n") | map(select(length > 0)) | map({file: "package.json", line: null, column: null, message: ., category: "dependency"})' 2>/dev/null || echo "[]")
+          elif [ "\${{ steps.typecheck.outcome }}" != "success" ]; then
+            STATUS="failure"
+            BUILD_LOG=$(cat /tmp/tsc.log 2>/dev/null | tail -100)
+            ERRORS=$(echo "$BUILD_LOG" | grep -E "^src/" | head -20 | sed 's/\\(\\([0-9]*\\),[0-9]*\\)/|\\1|/' | awk -F'|' '{print "{\\"file\\": \\""$1"\\", \\"line\\": "$2", \\"column\\": null, \\"message\\": \\""$3"\\", \\"category\\": \\"typescript\\"}"}' | jq -s '.' 2>/dev/null || echo "[]")
+          elif [ "\${{ steps.build.outcome }}" != "success" ]; then
+            STATUS="failure"
+            BUILD_LOG=$(cat /tmp/build.log 2>/dev/null | tail -50)
+            ERRORS=$(echo "$BUILD_LOG" | grep -i "error" | head -10 | jq -R -s 'split("\\n") | map(select(length > 0)) | map({file: "vite.config.ts", line: null, column: null, message: ., category: "build"})' 2>/dev/null || echo "[]")
+          fi
+
+          curl -s -X POST "${webhookUrl}" \\
+            -H "Authorization: Bearer $WEBHOOK_SECRET" \\
+            -H "Content-Type: application/json" \\
+            -d "{
+              \\"initiative_id\\": \\"${initiativeId}\\",
+              \\"organization_id\\": \\"${organizationId}\\",
+              \\"status\\": \\"$STATUS\\",
+              \\"errors\\": $ERRORS,
+              \\"build_log\\": $(echo "$BUILD_LOG" | jq -R -s '.'),
+              \\"duration_ms\\": 0,
+              \\"repo_owner\\": \\"\${{ github.repository_owner }}\\",
+              \\"repo_name\\": \\"\${{ github.event.repository.name }}\\",
+              \\"run_id\\": \\"\${{ github.run_id }}\\",
+              \\"commit_sha\\": \\"\${{ github.sha }}\\"
+            }"
+`;
 }
