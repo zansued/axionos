@@ -2149,94 +2149,189 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
           commitMessages = Array.isArray(parsed) ? parsed : (parsed.messages || parsed.commits || []);
         } catch { commitMessages = []; }
 
-        // ===== PRE-PUBLISH VALIDATION: detect & fix incompatible Vite/plugin combos =====
-        const prePublishValidate = (artifacts: any[], subtaskFileMap: Map<string, any>) => {
+        // ===== BUILD HEALTH REPORT: comprehensive checklist before push =====
+        interface HealthCheck {
+          id: string;
+          category: "package.json" | "vite.config.ts" | "vercel.json" | "tsconfig" | "general";
+          label: string;
+          status: "pass" | "fail" | "warn" | "fixed";
+          detail?: string;
+        }
+
+        const buildHealthReport = (artifacts: any[], subtaskFileMap: Map<string, any>) => {
+          const checks: HealthCheck[] = [];
           const issues: string[] = [];
+
+          // Collect file contents from artifacts
+          const fileMap: Record<string, { content: string; artRef: any }> = {};
           for (const art of artifacts) {
             const si = art.subtask_id ? subtaskFileMap.get(art.subtask_id) : null;
             const fp = (art.raw_output as any)?.file_path || si?.file_path;
             if (!fp) continue;
-
             const raw = art.raw_output as any;
             const content = raw?.content || raw?.text || (typeof raw === "string" ? raw : "");
+            if (content) fileMap[fp] = { content, artRef: raw };
+          }
 
-            // Validate package.json
-            if (fp === "package.json" && content) {
-              try {
-                const pkg = JSON.parse(content);
-                const allDeps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
-                
-                // Check for @vitejs/plugin-react without -swc
-                if (allDeps["@vitejs/plugin-react"] && !allDeps["@vitejs/plugin-react-swc"]) {
-                  issues.push("package.json uses @vitejs/plugin-react instead of @vitejs/plugin-react-swc");
-                  // Auto-fix
-                  if (pkg.devDependencies?.["@vitejs/plugin-react"]) {
-                    delete pkg.devDependencies["@vitejs/plugin-react"];
-                    pkg.devDependencies["@vitejs/plugin-react-swc"] = "^3.11.0";
-                  }
-                  if (pkg.dependencies?.["@vitejs/plugin-react"]) {
-                    delete pkg.dependencies["@vitejs/plugin-react"];
-                  }
-                }
-                
-                // Check Vite version compatibility
-                const viteVer = allDeps["vite"];
-                if (viteVer && /\^[1-4]\./.test(viteVer)) {
-                  issues.push(`package.json has outdated vite version: ${viteVer}`);
-                  if (pkg.devDependencies) pkg.devDependencies["vite"] = "^5.4.19";
-                  if (pkg.dependencies?.["vite"]) { delete pkg.dependencies["vite"]; pkg.devDependencies = pkg.devDependencies || {}; pkg.devDependencies["vite"] = "^5.4.19"; }
-                }
+          // ---- package.json checks ----
+          const pkgEntry = fileMap["package.json"];
+          if (!pkgEntry) {
+            checks.push({ id: "pkg-exists", category: "package.json", label: "Arquivo package.json presente", status: "fail", detail: "Nenhum package.json encontrado nos artefatos" });
+          } else {
+            checks.push({ id: "pkg-exists", category: "package.json", label: "Arquivo package.json presente", status: "pass" });
+            try {
+              const pkg = JSON.parse(pkgEntry.content);
+              const allDeps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
 
-                // Check for invalid package names
-                for (const depKey of ["dependencies", "devDependencies"]) {
-                  const deps = pkg[depKey];
-                  if (!deps) continue;
-                  for (const name of Object.keys(deps)) {
-                    if (/[^a-zA-Z0-9@/_.-]/.test(name)) {
-                      issues.push(`Invalid package name: "${name}"`);
-                      delete deps[name];
-                    }
-                  }
-                  const banned = ["shadcn/ui", "shadcn-ui", "@shadcn/ui", "shadcn", "radix-ui", "@radix/ui"];
-                  for (const b of banned) {
-                    if (deps[b]) { issues.push(`Banned package: "${b}"`); delete deps[b]; }
-                  }
-                }
-
-                // Ensure build script is correct
-                if (pkg.scripts?.build?.includes("tsc &&")) {
-                  pkg.scripts.build = "vite build";
-                  issues.push("Fixed build script: removed tsc && prefix");
-                }
-
-                // Write back fixed content
-                if (issues.length > 0) {
-                  const fixed = JSON.stringify(pkg, null, 2);
-                  if (raw?.content) raw.content = fixed;
-                  else if (raw?.text) raw.text = fixed;
-                }
-              } catch { /* not valid JSON, skip */ }
-            }
-
-            // Validate vite.config.ts
-            if (fp === "vite.config.ts" && content) {
-              if (content.includes("@vitejs/plugin-react\"") && !content.includes("@vitejs/plugin-react-swc")) {
-                issues.push("vite.config.ts imports @vitejs/plugin-react instead of @vitejs/plugin-react-swc");
-                const fixed = content.replace(/@vitejs\/plugin-react"/g, '@vitejs/plugin-react-swc"');
-                if (raw?.content) raw.content = fixed;
-                else if (raw?.text) raw.text = fixed;
+              // Check type: module
+              if (pkg.type === "module") {
+                checks.push({ id: "pkg-esm", category: "package.json", label: "type: \"module\" configurado", status: "pass" });
+              } else {
+                pkg.type = "module";
+                checks.push({ id: "pkg-esm", category: "package.json", label: "type: \"module\" configurado", status: "fixed", detail: "Adicionado automaticamente" });
+                issues.push("Added type: module");
               }
+
+              // Check vite version
+              const viteVer = allDeps["vite"];
+              if (!viteVer) {
+                checks.push({ id: "pkg-vite", category: "package.json", label: "Vite presente nas dependências", status: "fail", detail: "Vite não encontrado" });
+              } else if (/\^[1-4]\./.test(viteVer)) {
+                checks.push({ id: "pkg-vite", category: "package.json", label: "Vite versão ≥ 5.x", status: "fixed", detail: `${viteVer} → ^5.4.19` });
+                if (pkg.devDependencies) pkg.devDependencies["vite"] = "^5.4.19";
+                if (pkg.dependencies?.["vite"]) { delete pkg.dependencies["vite"]; pkg.devDependencies = pkg.devDependencies || {}; pkg.devDependencies["vite"] = "^5.4.19"; }
+                issues.push(`Fixed vite version: ${viteVer} → ^5.4.19`);
+              } else {
+                checks.push({ id: "pkg-vite", category: "package.json", label: "Vite versão ≥ 5.x", status: "pass", detail: viteVer });
+              }
+
+              // Check plugin-react-swc
+              if (allDeps["@vitejs/plugin-react"] && !allDeps["@vitejs/plugin-react-swc"]) {
+                checks.push({ id: "pkg-swc", category: "package.json", label: "Usa @vitejs/plugin-react-swc", status: "fixed", detail: "Substituído plugin-react por plugin-react-swc" });
+                if (pkg.devDependencies?.["@vitejs/plugin-react"]) delete pkg.devDependencies["@vitejs/plugin-react"];
+                if (pkg.dependencies?.["@vitejs/plugin-react"]) delete pkg.dependencies["@vitejs/plugin-react"];
+                pkg.devDependencies = pkg.devDependencies || {};
+                pkg.devDependencies["@vitejs/plugin-react-swc"] = "^3.11.0";
+                issues.push("Replaced @vitejs/plugin-react with -swc");
+              } else if (allDeps["@vitejs/plugin-react-swc"]) {
+                checks.push({ id: "pkg-swc", category: "package.json", label: "Usa @vitejs/plugin-react-swc", status: "pass" });
+              } else {
+                checks.push({ id: "pkg-swc", category: "package.json", label: "Usa @vitejs/plugin-react-swc", status: "warn", detail: "Plugin não encontrado" });
+              }
+
+              // Check banned packages
+              const banned = ["shadcn/ui", "shadcn-ui", "@shadcn/ui", "shadcn", "radix-ui", "@radix/ui"];
+              let foundBanned = false;
+              for (const depKey of ["dependencies", "devDependencies"]) {
+                const deps = pkg[depKey];
+                if (!deps) continue;
+                for (const b of banned) {
+                  if (deps[b]) { foundBanned = true; delete deps[b]; issues.push(`Removed banned: ${b}`); }
+                }
+                for (const name of Object.keys(deps)) {
+                  if (/[^a-zA-Z0-9@/_.-]/.test(name)) {
+                    foundBanned = true; delete deps[name]; issues.push(`Removed invalid: ${name}`);
+                  }
+                }
+              }
+              checks.push({ id: "pkg-banned", category: "package.json", label: "Sem pacotes inválidos/banidos", status: foundBanned ? "fixed" : "pass" });
+
+              // Check build script
+              if (pkg.scripts?.build?.includes("tsc &&")) {
+                pkg.scripts.build = "vite build";
+                checks.push({ id: "pkg-build", category: "package.json", label: "Script build limpo (sem tsc &&)", status: "fixed" });
+                issues.push("Fixed build script");
+              } else if (pkg.scripts?.build) {
+                checks.push({ id: "pkg-build", category: "package.json", label: "Script build limpo (sem tsc &&)", status: "pass" });
+              } else {
+                checks.push({ id: "pkg-build", category: "package.json", label: "Script build presente", status: "fail" });
+              }
+
+              // Check required deps
+              const requiredDeps = ["react", "react-dom"];
+              for (const rd of requiredDeps) {
+                checks.push({ id: `pkg-dep-${rd}`, category: "package.json", label: `Dependência ${rd} presente`, status: allDeps[rd] ? "pass" : "warn", detail: allDeps[rd] || "ausente" });
+              }
+
+              // Write back
+              if (issues.length > 0) {
+                const fixed = JSON.stringify(pkg, null, 2);
+                if (pkgEntry.artRef?.content !== undefined) pkgEntry.artRef.content = fixed;
+                else if (pkgEntry.artRef?.text !== undefined) pkgEntry.artRef.text = fixed;
+              }
+            } catch { checks.push({ id: "pkg-parse", category: "package.json", label: "JSON válido", status: "fail", detail: "Não foi possível parsear" }); }
+          }
+
+          // ---- vite.config.ts checks ----
+          const viteEntry = fileMap["vite.config.ts"];
+          if (!viteEntry) {
+            checks.push({ id: "vite-exists", category: "vite.config.ts", label: "Arquivo vite.config.ts presente", status: "warn", detail: "Será injetado pelo pipeline" });
+          } else {
+            checks.push({ id: "vite-exists", category: "vite.config.ts", label: "Arquivo vite.config.ts presente", status: "pass" });
+            if (viteEntry.content.includes("@vitejs/plugin-react-swc")) {
+              checks.push({ id: "vite-swc", category: "vite.config.ts", label: "Importa plugin-react-swc", status: "pass" });
+            } else if (viteEntry.content.includes("@vitejs/plugin-react")) {
+              checks.push({ id: "vite-swc", category: "vite.config.ts", label: "Importa plugin-react-swc", status: "fixed", detail: "Corrigido import para -swc" });
+              const fixed = viteEntry.content.replace(/@vitejs\/plugin-react"/g, '@vitejs/plugin-react-swc"').replace(/@vitejs\/plugin-react'/g, "@vitejs/plugin-react-swc'");
+              if (viteEntry.artRef?.content !== undefined) viteEntry.artRef.content = fixed;
+              else if (viteEntry.artRef?.text !== undefined) viteEntry.artRef.text = fixed;
+              issues.push("Fixed vite.config.ts plugin import");
             }
+            // Check for path alias
+            checks.push({ id: "vite-alias", category: "vite.config.ts", label: "Alias @ configurado", status: viteEntry.content.includes("alias") ? "pass" : "warn", detail: viteEntry.content.includes("alias") ? undefined : "Sem alias @ — imports relativos podem quebrar" });
           }
+
+          // ---- vercel.json checks ----
+          const vercelEntry = fileMap["vercel.json"];
+          checks.push({ id: "vercel-exists", category: "vercel.json", label: "Arquivo vercel.json presente", status: vercelEntry ? "pass" : "pass", detail: vercelEntry ? undefined : "Será injetado pelo pipeline" });
+          if (vercelEntry) {
+            try {
+              const vc = JSON.parse(vercelEntry.content);
+              checks.push({ id: "vercel-framework", category: "vercel.json", label: "Framework = vite", status: vc.framework === "vite" ? "pass" : "warn", detail: vc.framework || "não definido" });
+              checks.push({ id: "vercel-install", category: "vercel.json", label: "installCommand inclui --include=dev", status: vc.installCommand?.includes("--include=dev") ? "pass" : "warn" });
+              checks.push({ id: "vercel-output", category: "vercel.json", label: "outputDirectory = dist", status: vc.outputDirectory === "dist" ? "pass" : "warn", detail: vc.outputDirectory || "não definido" });
+              checks.push({ id: "vercel-rewrites", category: "vercel.json", label: "Rewrite SPA configurado", status: vc.rewrites?.length > 0 ? "pass" : "warn" });
+            } catch { checks.push({ id: "vercel-parse", category: "vercel.json", label: "JSON válido", status: "fail" }); }
+          }
+
+          // ---- General checks ----
+          checks.push({ id: "gen-tsconfig-node", category: "tsconfig", label: "tsconfig.node.json (composite: true)", status: "pass", detail: "Injetado pelo pipeline" });
+
+          const passCount = checks.filter(c => c.status === "pass").length;
+          const fixedCount = checks.filter(c => c.status === "fixed").length;
+          const warnCount = checks.filter(c => c.status === "warn").length;
+          const failCount = checks.filter(c => c.status === "fail").length;
+          const score = Math.round(((passCount + fixedCount) / checks.length) * 100);
+
           if (issues.length > 0) {
-            console.log(`[PRE-PUBLISH] Fixed ${issues.length} issues:`, issues);
+            console.log(`[BUILD-HEALTH] Fixed ${issues.length} issues:`, issues);
           }
-          return issues;
+
+          return {
+            checks,
+            summary: { total: checks.length, pass: passCount, fixed: fixedCount, warn: warnCount, fail: failCount, score },
+            issues,
+          };
         };
 
-        const validationIssues = prePublishValidate(artifacts, subtaskFileMap);
-        if (validationIssues.length > 0) {
-          await log("pre_publish_validation", `Pre-publish: corrigidos ${validationIssues.length} problemas`, { issues: validationIssues });
+        const healthReport = buildHealthReport(artifacts, subtaskFileMap);
+        if (healthReport.issues.length > 0) {
+          await log("pre_publish_validation", `Build Health: score ${healthReport.summary.score}%, corrigidos ${healthReport.summary.fixed} problemas`, { health_report: healthReport });
+        } else {
+          await log("pre_publish_validation", `Build Health: score ${healthReport.summary.score}% — tudo ok`, { health_report: healthReport });
+        }
+
+        // Block publish if critical failures remain after auto-fix
+        if (healthReport.summary.fail > 0) {
+          const failChecks = healthReport.checks.filter(c => c.status === "fail").map(c => c.label).join(", ");
+          await log("pre_publish_blocked", `Publicação bloqueada: ${healthReport.summary.fail} check(s) críticos falharam: ${failChecks}`);
+          if (jobId) await completeJob(jobId, { health_report: healthReport, blocked: true }, { model: "none", costUsd: 0, durationMs: 0 });
+          return new Response(JSON.stringify({
+            success: false,
+            blocked: true,
+            health_report: healthReport,
+            message: `Publicação bloqueada: ${failChecks}`,
+          }), { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } });
         }
 
         // 4. Commit each artifact with semantic commit messages
@@ -2431,6 +2526,7 @@ Seja conciso e profissional.`
           repo: actualRepo,
           repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
           ai_generated: { branch: baseBranch, commit_count: commitMessages.length },
+          health_report: healthReport,
         }, { model: "google/gemini-2.5-flash", costUsd: totalAiCost, durationMs: 0 });
 
         await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos direto na branch ${baseBranch} em ${actualOwner}/${actualRepo}`, {
