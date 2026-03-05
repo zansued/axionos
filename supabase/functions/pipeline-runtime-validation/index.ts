@@ -53,7 +53,7 @@ serve(async (req) => {
 
     const owner = conn.repo_owner;
     const repo = conn.repo_name;
-    const baseBranch = conn.default_branch || "main";
+    let baseBranch = conn.default_branch || "main";
     const validateBranch = `validate/${ctx.initiativeId.slice(0, 8)}`;
 
     // ── Collect artifacts ──
