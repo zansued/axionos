@@ -22,6 +22,7 @@ import {
 import { InitiativeCodePreview } from "./InitiativeCodePreview";
 import { AgentMessagesTimeline } from "./AgentMessagesTimeline";
 import { ExecutionProgress } from "./ExecutionProgress";
+import { BuildHealthReport } from "./BuildHealthReport";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 
 import {
@@ -432,6 +433,11 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* Build Health Report */}
+      {publishJob?.outputs?.health_report && (
+        <BuildHealthReport report={publishJob.outputs.health_report} />
       )}
 
       {/* Discovery Results */}
