@@ -604,7 +604,7 @@ Return JSON: { "would_build": boolean, "issues": string[], "confidence": number 
 
   } catch (e) {
     if (jobId) await failJob(ctx, jobId, e instanceof Error ? e.message : "Unknown error");
-    await updateInitiative(ctx, { stage_status: "architecture_validated" });
+    await updateInitiative(ctx, { stage_status: "bootstrapped" });
     await pipelineLog(ctx, "foundation_scaffold_error", `❌ Foundation Scaffold failed: ${e}`);
     return errorResponse(e instanceof Error ? e.message : "Unknown error", 500);
   }
