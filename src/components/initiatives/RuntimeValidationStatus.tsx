@@ -1,13 +1,35 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import {
   CheckCircle2, XCircle, AlertTriangle, Loader2, Terminal,
-  GitBranch, Clock, ExternalLink,
+  GitBranch, Clock, ExternalLink, RefreshCw,
 } from "lucide-react";
 
 interface RuntimeValidationStatusProps {
   executionProgress: any;
+}
+
+function useElapsedTime(startedAt: string | undefined, isActive: boolean) {
+  const [elapsed, setElapsed] = useState("");
+
+  useEffect(() => {
+    if (!startedAt || !isActive) { setElapsed(""); return; }
+
+    const update = () => {
+      const diff = Date.now() - new Date(startedAt).getTime();
+      const mins = Math.floor(diff / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      setElapsed(`${mins}m ${secs}s`);
+    };
+    update();
+    const id = setInterval(update, 1000);
+    return () => clearInterval(id);
+  }, [startedAt, isActive]);
+
+  return elapsed;
 }
 
 export function RuntimeValidationStatus({ executionProgress }: RuntimeValidationStatusProps) {
@@ -20,14 +42,24 @@ export function RuntimeValidationStatus({ executionProgress }: RuntimeValidation
   const startedAt = ep.runtime_validation_started_at;
   const ciErrors = ep.ci_errors || [];
   const ciBuildLog = ep.ci_build_log;
-
-  if (!rtStatus && !ciStatus) return null;
+  const repoOwner = ep.runtime_validation_repo_owner;
+  const repoName = ep.runtime_validation_repo_name;
 
   const isRunning = rtStatus === "running" && ciStatus !== "success" && ciStatus !== "failed";
   const passed = ciStatus === "success";
   const failed = ciStatus === "failed";
 
-  const statusColor = passed ? "text-green-500" : failed ? "text-destructive" : "text-yellow-500";
+  const elapsed = useElapsedTime(startedAt, isRunning);
+
+  if (!rtStatus && !ciStatus) return null;
+
+  const isLong = startedAt && isRunning && (Date.now() - new Date(startedAt).getTime()) > 5 * 60 * 1000;
+
+  const ghActionsUrl = repoOwner && repoName
+    ? `https://github.com/${repoOwner}/${repoName}/actions`
+    : null;
+
+  const statusColor = passed ? "text-primary" : failed ? "text-destructive" : "text-accent-foreground";
   const StatusIcon = passed ? CheckCircle2 : failed ? XCircle : isRunning ? Loader2 : AlertTriangle;
 
   return (
@@ -80,9 +112,9 @@ export function RuntimeValidationStatus({ executionProgress }: RuntimeValidation
 
         {/* CI passed */}
         {passed && (
-          <div className="flex items-center gap-2 rounded px-2 py-1.5 bg-green-500/10">
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
-            <span className="text-green-500 font-medium">
+          <div className="flex items-center gap-2 rounded px-2 py-1.5 bg-primary/10">
+            <CheckCircle2 className="h-4 w-4 text-primary" />
+            <span className="text-primary font-medium">
               npm install ✓ → tsc --noEmit ✓ → vite build ✓
             </span>
           </div>
@@ -127,9 +159,35 @@ export function RuntimeValidationStatus({ executionProgress }: RuntimeValidation
 
         {/* Running state */}
         {isRunning && (
-          <div className="flex items-center gap-2 rounded px-2 py-1.5 bg-yellow-500/10 text-yellow-600">
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            <span>GitHub Actions executando: npm install → tsc --noEmit → vite build...</span>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 rounded px-2 py-1.5 bg-accent/50 text-accent-foreground">
+              <Loader2 className="h-3.5 w-3.5 animate-spin shrink-0" />
+              <span className="flex-1">GitHub Actions executando: npm install → tsc --noEmit → vite build...</span>
+              {elapsed && (
+                <span className="text-muted-foreground font-mono text-[10px] shrink-0">{elapsed}</span>
+              )}
+            </div>
+
+            {isLong && (
+              <div className="flex items-start gap-2 rounded px-2 py-1.5 bg-destructive/10 text-destructive text-[11px]">
+                <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                <span>
+                  CI demorando mais que o esperado. Verifique se o secret <code className="font-mono bg-muted px-1 rounded">SYNKRAIOS_WEBHOOK_SECRET</code> está configurado no repositório GitHub (Settings → Secrets → Actions).
+                </span>
+              </div>
+            )}
+
+            {ghActionsUrl && (
+              <a
+                href={ghActionsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] text-primary hover:underline"
+              >
+                <ExternalLink className="h-3 w-3" />
+                Ver no GitHub Actions
+              </a>
+            )}
           </div>
         )}
       </CardContent>
