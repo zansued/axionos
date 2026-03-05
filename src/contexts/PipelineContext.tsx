@@ -381,7 +381,13 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
   const rollbackToStage = useCallback(
     async (initiativeId: string, macroKey: string) => {
     const rollbackMap: Record<string, string> = {
-      discovery: "draft",
+      // v3 Venture Intelligence
+      opportunity_discovery: "draft",
+      market_signals: "opportunity_discovered",
+      product_validation: "market_signals_analyzed",
+      revenue_strategy: "product_validated",
+      // v2 Core Pipeline
+      discovery: "revenue_strategized",
       architecture: "architecture_ready",
       bootstrap: "architecture_validated",
       scaffold: "bootstrapped",
@@ -400,6 +406,16 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       validation: "in_progress",
       build_repair: "validating",
       publish: "ready_to_publish",
+      // v3 Growth & Evolution
+      observability: "published",
+      product_analytics: "product_observed",
+      user_behavior: "product_metrics_analyzed",
+      growth_optimization: "user_behavior_analyzed",
+      adaptive_learning: "growth_optimized",
+      product_evolution: "system_learned",
+      architecture_evolution: "product_evolved",
+      portfolio_management: "architecture_evolved",
+      system_evolution: "portfolio_managed",
     };
       const targetStatus = rollbackMap[macroKey];
       if (!targetStatus) return;
