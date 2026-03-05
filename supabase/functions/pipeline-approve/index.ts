@@ -11,7 +11,8 @@ serve(async (req) => {
   const currentStatus = initiative.stage_status;
 
   const approvalMap: Record<string, { field: string; nextStatus: string }> = {
-    discovered: { field: "approved_at_discovery", nextStatus: "squad_ready" },
+    discovered: { field: "approved_at_discovery", nextStatus: "architecture_ready" },
+    architected: { field: "approved_at_discovery", nextStatus: "squad_ready" },
     squad_formed: { field: "approved_at_squad", nextStatus: "planning_ready" },
     planned: { field: "approved_at_planning", nextStatus: "in_progress" },
     ready_to_publish: { field: "approved_at_planning", nextStatus: "published" },

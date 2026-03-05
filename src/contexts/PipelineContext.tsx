@@ -59,6 +59,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
   const getStageFunctionName = (stage: string): string => {
     const functionMap: Record<string, string> = {
       comprehension: "pipeline-comprehension",
+      architecture: "pipeline-architecture",
       discovery: "pipeline-discovery",
       squad_formation: "pipeline-squad",
       planning: "pipeline-planning",
@@ -111,6 +112,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
         }
         const stageLabels: Record<string, string> = {
           comprehension: `Compreensão concluída: 4 agentes (Vision, Market, Requirements, Product Architect) ✅`,
+          architecture: `Arquitetura técnica concluída: 4 agentes (System, Data, API Architect, Dependency Planner) ✅`,
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
           planning: `Planning completo: ${result.stories?.length || 0} stories criadas ✅`,
@@ -173,14 +175,15 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
 
   const rollbackToStage = useCallback(
     async (initiativeId: string, macroKey: string) => {
-      const rollbackMap: Record<string, string> = {
-        discovery: "draft",
-        squad: "squad_ready",
-        planning: "planning_ready",
-        execution: "planned",
-        validation: "in_progress",
-        publish: "ready_to_publish",
-      };
+    const rollbackMap: Record<string, string> = {
+      discovery: "draft",
+      architecture: "architecture_ready",
+      squad: "squad_ready",
+      planning: "planning_ready",
+      execution: "planned",
+      validation: "in_progress",
+      publish: "ready_to_publish",
+    };
       const targetStatus = rollbackMap[macroKey];
       if (!targetStatus) return;
       try {

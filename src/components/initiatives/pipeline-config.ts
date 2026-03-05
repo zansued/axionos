@@ -1,12 +1,15 @@
 import {
   Lightbulb, Brain, Users, FileText, Cpu, BookOpen, Hammer, CheckCircle2,
-  Shield, Clock, Rocket, XCircle, Archive, GitBranch
+  Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers
 } from "lucide-react";
 
 export const PIPELINE_STEPS = [
   { key: "draft", label: "Rascunho", icon: Lightbulb, color: "text-muted-foreground", bg: "bg-muted/20" },
   { key: "discovering", label: "Compreensão", icon: Brain, color: "text-warning", bg: "bg-warning/10" },
   { key: "discovered", label: "Compreendido", icon: Brain, color: "text-accent", bg: "bg-accent/10" },
+  { key: "architecture_ready", label: "Arquitetura ▶", icon: Layers, color: "text-info", bg: "bg-info/10" },
+  { key: "architecting", label: "Arquitetando", icon: Layers, color: "text-warning", bg: "bg-warning/10" },
+  { key: "architected", label: "Arquitetado", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
   { key: "squad_ready", label: "Squad ▶", icon: Users, color: "text-info", bg: "bg-info/10" },
   { key: "forming_squad", label: "Formando", icon: Users, color: "text-warning", bg: "bg-warning/10" },
   { key: "squad_formed", label: "Squad ✓", icon: Users, color: "text-accent", bg: "bg-accent/10" },
@@ -22,6 +25,7 @@ export const PIPELINE_STEPS = [
 
 export const MACRO_STAGES = [
   { key: "discovery", label: "Compreensão", icon: Brain },
+  { key: "architecture", label: "Arquitetura", icon: Layers },
   { key: "squad", label: "Squad", icon: Users },
   { key: "planning", label: "Planning", icon: FileText },
   { key: "execution", label: "Execução", icon: Hammer },
@@ -38,12 +42,13 @@ export function getStepIndex(stageStatus: string): number {
 export function getMacroStageIndex(stageStatus: string): number {
   const s = stageStatus;
   if (["draft", "discovering", "discovered"].includes(s)) return 0;
-  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 1;
-  if (["planning_ready", "planning", "planned"].includes(s)) return 2;
-  if (["in_progress"].includes(s)) return 3;
-  if (["validating", "ready_to_publish"].includes(s)) return 4;
-  if (["published"].includes(s)) return 5;
-  if (["completed"].includes(s)) return 6;
+  if (["architecture_ready", "architecting", "architected"].includes(s)) return 1;
+  if (["squad_ready", "forming_squad", "squad_formed"].includes(s)) return 2;
+  if (["planning_ready", "planning", "planned"].includes(s)) return 3;
+  if (["in_progress"].includes(s)) return 4;
+  if (["validating", "ready_to_publish"].includes(s)) return 5;
+  if (["published"].includes(s)) return 6;
+  if (["completed"].includes(s)) return 7;
   return 0;
 }
 
@@ -64,6 +69,17 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
     case "discovered":
       return [
         { stage: "approve", label: "Aprovar Compreensão", type: "approve" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "architecture_ready":
+      return [{ stage: "architecture", label: "Iniciar Arquitetura (4 agentes)", type: "run" }];
+    case "architecting":
+      return [
+        { stage: "architecture", label: "Re-executar Arquitetura", type: "run" },
+      ];
+    case "architected":
+      return [
+        { stage: "approve", label: "Aprovar Arquitetura", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
