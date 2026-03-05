@@ -116,23 +116,31 @@ serve(async (req) => {
     }
     await repoCheck.text(); // consume body
 
-    // ── Get base branch SHA ──
+    // ── Get base branch SHA (handle empty repos) ──
+    let baseSha: string | null = null;
+    let baseTreeSha: string | null = null;
+
     const refResp = await fetch(
       `${GITHUB_API}/repos/${owner}/${repo}/git/ref/heads/${baseBranch}`,
       { headers: ghHeaders }
     );
-    if (!refResp.ok) throw new Error(`Branch '${baseBranch}' não encontrada`);
-    const refData = await refResp.json();
-    const baseSha = refData.object.sha;
+    if (refResp.ok) {
+      const refData = await refResp.json();
+      baseSha = refData.object.sha;
 
-    // Get base tree
-    const baseCommitResp = await fetch(
-      `${GITHUB_API}/repos/${owner}/${repo}/git/commits/${baseSha}`,
-      { headers: ghHeaders }
-    );
-    if (!baseCommitResp.ok) throw new Error("Falha ao obter commit base");
-    const baseCommit = await baseCommitResp.json();
-    const baseTreeSha = baseCommit.tree.sha;
+      const baseCommitResp = await fetch(
+        `${GITHUB_API}/repos/${owner}/${repo}/git/commits/${baseSha}`,
+        { headers: ghHeaders }
+      );
+      if (baseCommitResp.ok) {
+        const baseCommit = await baseCommitResp.json();
+        baseTreeSha = baseCommit.tree.sha;
+      }
+    } else {
+      await refResp.text(); // consume body
+      await pipelineLog(ctx, "runtime_validation_empty_repo",
+        `Repo vazio detectado — criando branch '${baseBranch}' com commit inicial`);
+    }
 
     // ── Create blobs (parallel batches of 5) ──
     const BLOB_BATCH = 5;
@@ -169,32 +177,51 @@ serve(async (req) => {
     if (treeItems.length === 0) throw new Error("Nenhum blob criado");
 
     // ── Create tree ──
+    const treeBody: any = { tree: treeItems };
+    if (baseTreeSha) treeBody.base_tree = baseTreeSha;
+
     const treeResp = await fetch(
       `${GITHUB_API}/repos/${owner}/${repo}/git/trees`,
       {
         method: "POST",
         headers: ghHeaders,
-        body: JSON.stringify({ base_tree: baseTreeSha, tree: treeItems }),
+        body: JSON.stringify(treeBody),
       }
     );
     if (!treeResp.ok) throw new Error(`Tree creation failed: ${await treeResp.text()}`);
     const newTree = await treeResp.json();
 
     // ── Create commit ──
+    const commitBody: any = {
+      message: `chore: runtime validation for ${initiative.title}\n\nTriggered by SynkrAIOS pipeline`,
+      tree: newTree.sha,
+    };
+    if (baseSha) commitBody.parents = [baseSha];
+
     const commitResp = await fetch(
       `${GITHUB_API}/repos/${owner}/${repo}/git/commits`,
       {
         method: "POST",
         headers: ghHeaders,
-        body: JSON.stringify({
-          message: `chore: runtime validation for ${initiative.title}\n\nTriggered by SynkrAIOS pipeline`,
-          tree: newTree.sha,
-          parents: [baseSha],
-        }),
+        body: JSON.stringify(commitBody),
       }
     );
     if (!commitResp.ok) throw new Error(`Commit failed: ${await commitResp.text()}`);
     const newCommit = await commitResp.json();
+
+    // ── Create main branch if repo was empty ──
+    if (!baseSha) {
+      const createMainResp = await fetch(
+        `${GITHUB_API}/repos/${owner}/${repo}/git/refs`,
+        {
+          method: "POST",
+          headers: ghHeaders,
+          body: JSON.stringify({ ref: `refs/heads/${baseBranch}`, sha: newCommit.sha }),
+        }
+      );
+      if (!createMainResp.ok) throw new Error(`Main branch creation failed: ${await createMainResp.text()}`);
+      await createMainResp.text();
+    }
 
     // ── Create or update validate branch ──
     const branchRefResp = await fetch(
