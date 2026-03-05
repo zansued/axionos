@@ -207,11 +207,34 @@ Retorne APENAS JSON:
     const committedFiles: string[] = [];
     const skippedFiles: string[] = [];
 
-    // Combine all file entries + required files
-    const requiredFiles: Record<string, string> = {
-      "vercel.json": DETERMINISTIC_FILES["vercel.json"],
-      "public/_redirects": DETERMINISTIC_FILES["public/_redirects"],
-    };
+    // Combine all file entries + required files (ensure critical deploy files exist)
+    const criticalFiles = [
+      "vercel.json", "public/_redirects", "index.html", "vite.config.ts",
+      "tsconfig.json", "tsconfig.node.json", "tsconfig.app.json", "postcss.config.js",
+      "tailwind.config.js",
+    ];
+    const requiredFiles: Record<string, string> = {};
+    for (const f of criticalFiles) {
+      if (DETERMINISTIC_FILES[f]) requiredFiles[f] = DETERMINISTIC_FILES[f];
+    }
+    // Generate package.json if not in artifacts
+    if (!fileEntries.some(f => f.path === "package.json")) {
+      const defaultPkg = {
+        name: repoSlug, version: changelog?.version || "1.0.0", type: "module",
+        scripts: { dev: "vite", build: "vite build", preview: "vite preview" },
+        dependencies: {
+          "react": "^18.3.1", "react-dom": "^18.3.1", "react-router-dom": "^6.30.0",
+          "lucide-react": "^0.462.0", "tailwind-merge": "^2.6.0", "clsx": "^2.1.1",
+          "class-variance-authority": "^0.7.1",
+        },
+        devDependencies: {
+          "vite": "^5.4.19", "@vitejs/plugin-react-swc": "^3.11.0", "typescript": "^5.8.3",
+          "tailwindcss": "^3.4.17", "autoprefixer": "^10.4.21", "postcss": "^8.5.6",
+          "@types/react": "^18.3.23", "@types/react-dom": "^18.3.7",
+        },
+      };
+      requiredFiles["package.json"] = sanitizePackageJson(JSON.stringify(defaultPkg, null, 2));
+    }
     for (const [reqPath, reqContent] of Object.entries(requiredFiles)) {
       if (!fileEntries.some(f => f.path === reqPath)) {
         fileEntries.push({ path: reqPath, content: reqContent, type: "config", summary: `Ensure ${reqPath}` });
