@@ -188,8 +188,19 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "schema_bootstrapped":
       return [
+        { stage: "supabase_provisioning", label: "🗄️ DB Provisioning", type: "run" },
         { stage: "approve", label: "Aprovar Schema → Squad", type: "approve" },
         { stage: "supabase_schema_bootstrap", label: "Re-executar Schema Bootstrap", type: "run" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
+      ];
+    case "provisioning_db":
+      return [
+        { stage: "supabase_provisioning", label: "Re-executar Provisioning", type: "run" },
+      ];
+    case "db_provisioned":
+      return [
+        { stage: "approve", label: "Aprovar DB → Squad", type: "approve" },
+        { stage: "supabase_provisioning", label: "Re-executar Provisioning", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "squad_ready":
