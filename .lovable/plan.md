@@ -21,7 +21,7 @@ AxionOS follows architecture-priority sequencing. Each implementation horizon mu
 
 **Stabilizing the Core System Kernel.**
 
-The engineering infrastructure is implemented. The priority is hardening it — reducing entropy, standardizing contracts, improving reliability, and lowering cost.
+The engineering infrastructure is implemented. Agent OS v1.0 architecture is fully designed with 14 modules across 5 planes. The priority is hardening the kernel — reducing entropy, standardizing contracts, improving reliability, and lowering cost.
 
 ### Active Work
 
@@ -38,6 +38,7 @@ The engineering infrastructure is implemented. The priority is hardening it — 
 |------|--------|
 | Stage Contract System — formal input/output/retry schemas per stage | ✅ Implemented |
 | Agent IO Contracts — standardized agent output structure | ✅ Implemented |
+| Agent OS v1.0 — 14-module architecture across 5 planes | ✅ Designed |
 | Observability Improvements — granular cost tracking | 🔧 In Progress |
 | Pipeline Visualization Refactor — simplified control UI | 🔧 In Progress |
 | AI Cost Tracking — per-stage, per-model attribution | ✅ Implemented |
@@ -59,11 +60,28 @@ These tasks reduce architectural entropy and prepare the system for the Agent In
 | Adaptive Learning Engine | ✅ |
 | Governance (gates, SLAs, audit logs) | ✅ |
 | Observability + Cost Tracking | ✅ |
-| Agent Operating System (5 fundamental types) | 📋 Planned |
 
-### Agent Operating System
+### Agent Operating System (v1.0 GA)
 
-A key architectural simplification planned for the kernel: replace 18+ specific agent identities with five fundamental agent types (Perception, Design, Build, Validation, Evolution). Each type operates in different **modes** per stage. Specialization = mode + tools + memory + contracts. This reduces complexity, lowers prompt cost, and directly enables the NEXT horizon by providing cleaner agent memory structure and consistent IO for learning.
+The Agent OS is fully designed with 14 modules organized into 5 architectural planes:
+
+| Plane | Modules |
+|-------|---------|
+| **Core** | Runtime Protocol, Capability Model, Core Types |
+| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing |
+| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter |
+| **Data** | Artifact Store, Memory System, Observability |
+| **Ecosystem** | Marketplace & Global Capability Registry |
+
+Key architectural capabilities:
+- 6-tier agent trust model (blocked → trusted)
+- Multi-agent coordination (debate, consensus, iterative refinement)
+- Adaptive routing with exploration strategies (epsilon-greedy, UCB1, Thompson)
+- Distributed task scheduling with worker health monitoring
+- Global capability registry with package management and trust scoring
+- Approval workflows with compliance and audit ledger
+
+Full specification: [docs/AGENT_OS_ARCHITECTURE_MAP.md](docs/AGENT_OS_ARCHITECTURE_MAP.md)
 
 ---
 
@@ -76,13 +94,17 @@ After the kernel is stable, agents evolve from static prompt executors into lear
 | Module | Description |
 |--------|-------------|
 | Learning Agents | Self-improving prompt strategies |
-| Agent Memory Layer | Persistent per-agent memory (foundation: `agent_memory` table) |
+| Agent Memory Layer | Persistent per-agent memory (foundation: `agent_memory` table + Memory System) |
 | Prompt Optimization Engine | A/B testing of prompt variations |
 | Error Pattern Recognition | Predictive error detection |
 | Self-Improving Fix Agents | Evolving repair strategies |
 | Architecture Pattern Library | Reusable patterns by domain |
 
-Agent memory structure: `{ agent_id, task_type, strategy_used, outcome, confidence, scope, times_used }` — enabling cross-project learning at the organization level.
+Agent OS modules that directly enable this horizon:
+- **Adaptive Routing** — performance feedback loop for routing optimization
+- **Memory System** — persistent memory with retention policies and embedding search
+- **Observability** — telemetry and cost metrics for learning
+- **Governance** — trust levels to gate learned behaviors
 
 **Dependency:** Requires stable kernel.
 
@@ -107,7 +129,7 @@ Autonomous venture creation: opportunity discovery, market validation, revenue s
 ## Why the Order Matters
 
 ```
-Kernel → Learning Agents → Product Intelligence → Market Intelligence
+Kernel -> Learning Agents -> Product Intelligence -> Market Intelligence
 ```
 
 Each layer depends on the previous one:
@@ -123,34 +145,36 @@ Skipping ahead creates compounding technical debt. The order is not arbitrary �
 ## System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                   AI EFFICIENCY LAYER                    │
-│  Prompt Compressor │ Semantic Cache │ Model Router       │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │
-│  │   VENTURE     │  │  SOFTWARE    │  │   GROWTH &   │   │
-│  │ INTELLIGENCE  │  │ ENGINEERING  │  │  EVOLUTION   │   │
-│  │  (FUTURE)     │  │  (NOW)       │  │  (LATER)     │   │
-│  └──────────────┘  └──────────────┘  └──────────────┘   │
-│                                                          │
-│  ┌──────────────────────────────────────────────────┐    │
-│  │              PROJECT BRAIN                        │    │
-│  │  DAG Engine │ Smart Context │ Embeddings │ Rules  │    │
-│  └──────────────────────────────────────────────────┘    │
-│                                                          │
-│  ┌──────────────────────────────────────────────────┐    │
-│  │            ADAPTIVE LEARNING                      │    │
-│  │  Error Intelligence │ Prevention Rules │ Patterns │    │
-│  └──────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------+
+|                       ECOSYSTEM PLANE                              |
+|   Marketplace - Capability Registry - Package Manager              |
++-------------------------------+-----------------------------------+
+                                |
++-------------------------------+-----------------------------------+
+|                       EXECUTION PLANE                              |
+|   Orchestrator - Coordination - Distributed Runtime                |
+|   LLM Adapter - Tool Adapter - Event Bus                           |
++-----------+-----------------------+-------------------+-----------+
+            |                       |                    |
++-----------+----------+  +---------+---------+  +------+----------+
+|    CONTROL PLANE     |  |    DATA PLANE     |  |   DATA PLANE    |
+|   Selection Engine   |  |   Artifact Store  |  |  Observability  |
+|   Policy Engine      |  |   Memory System   |  |  Audit Ledger   |
+|   Governance Layer   |  |                   |  |                 |
+|   Adaptive Routing   |  |                   |  |                 |
++-----------+----------+  +---------+---------+  +------+----------+
+            |                       |                    |
++-----------+-----------------------+--------------------+----------+
+|                         CORE PLANE                                 |
+|   Runtime Protocol - Capability Model - Core Types                 |
++-------------------------------------------------------------------+
 ```
 
 ---
 
 ## Pipeline — 32 Stages
 
-### Discovery & Architecture (S06-10) — ✅ NOW
+### Discovery & Architecture (S06-10) — NOW
 | # | Stage | Engine |
 |---|-------|--------|
 | 06 | Discovery Intelligence | 4-agent comprehension team |
@@ -159,7 +183,7 @@ Skipping ahead creates compounding technical debt. The order is not arbitrary �
 | 09 | Project Structuring | Preventive validation |
 | 10 | Squad Formation | Specialized agent allocation |
 
-### Infrastructure & Modeling (S11-16) — ✅ NOW
+### Infrastructure & Modeling (S11-16) — NOW
 | # | Stage | Engine |
 |---|-------|--------|
 | 11 | Architecture Planning | Bootstrap + foundation scaffold |
@@ -169,14 +193,14 @@ Skipping ahead creates compounding technical debt. The order is not arbitrary �
 | 15 | DB Provisioning | Tables + RLS + storage |
 | 16 | Data Model Generation | SQL tables, FK, indexes, RLS |
 
-### Code Generation (S17-19) — ✅ NOW
+### Code Generation (S17-19) — NOW
 | # | Stage | Engine |
 |---|-------|--------|
 | 17 | Business Logic Synthesis | Services, validations, workflows |
 | 18 | API Generation | REST, RPCs, triggers, webhooks |
 | 19 | UI Generation | Pages, components, hooks, navigation |
 
-### Validation & Publish (S20-23) — ✅ NOW
+### Validation & Publish (S20-23) — NOW
 | # | Stage | Engine |
 |---|-------|--------|
 | 20 | Validation | AI + deep analysis + drift detection |
@@ -187,11 +211,11 @@ Skipping ahead creates compounding technical debt. The order is not arbitrary �
 ### Growth & Evolution (S24-32) — Mixed
 | # | Stage | Horizon |
 |---|-------|---------|
-| 24 | Observability | ✅ NOW |
-| 25-27 | Analytics + Growth | 📋 LATER |
-| 28 | Adaptive Learning | ✅ NOW |
-| 29-30 | Product/Architecture Evolution | 📋 LATER |
-| 31-32 | Portfolio + System Evolution | 📋 FUTURE |
+| 24 | Observability | NOW |
+| 25-27 | Analytics + Growth | LATER |
+| 28 | Adaptive Learning | NOW |
+| 29-30 | Product/Architecture Evolution | LATER |
+| 31-32 | Portfolio + System Evolution | FUTURE |
 
 ---
 
@@ -199,15 +223,16 @@ Skipping ahead creates compounding technical debt. The order is not arbitrary �
 
 ```
 supabase/functions/
-├── Discovery & Architecture      (5 functions)
-├── Infrastructure & Modeling      (8 functions)
-├── Code Generation                (3 functions)
-├── Validation & Publish           (6 functions)
-├── Growth & Evolution             (9 functions)
-├── Venture Intelligence           (4 functions — FUTURE)
-├── Pipeline Control               (7 functions)
-├── Support                        (11 functions)
-└── _shared/                       (15 helper modules)
++-- Discovery & Architecture      (5 functions)
++-- Infrastructure & Modeling      (8 functions)
++-- Code Generation                (3 functions)
++-- Validation & Publish           (6 functions)
++-- Growth & Evolution             (9 functions)
++-- Venture Intelligence           (4 functions -- FUTURE)
++-- Pipeline Control               (7 functions)
++-- Support                        (11 functions)
++-- _shared/                       (15+ helper modules)
+    +-- agent-os/                  (14 Agent OS modules)
 ```
 
 ---
@@ -235,4 +260,4 @@ supabase/functions/
 | Level 4 | Self-Learning Software Factory | 🔄 Transitioning |
 | Level 5 | Autonomous Startup Factory | 🔮 Planned |
 
-> Current position: Level 3 → Level 4 transition. Kernel stabilization is the prerequisite.
+> Current position: Level 3 → Level 4 transition. Kernel stabilization + Agent OS v1.0 architecture are the prerequisites.
