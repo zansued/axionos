@@ -80,7 +80,7 @@ Organized into four sequential sprints.
 - [x] AI generates blueprint
 - [x] User can edit and approve blueprint
 - [x] `initiative_brief` is validated and stored
-- [ ] Pipeline starts using `initiative_brief` as canonical input
+- [x] Pipeline starts using `initiative_brief` as canonical input
 
 **Status:** ✅ Implemented
 
