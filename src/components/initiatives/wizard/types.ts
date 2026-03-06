@@ -35,11 +35,11 @@ export interface AIBlueprint {
   reasoning: string;
 }
 
-export const GENERATION_DEPTHS = [
-  { value: "discovery" as const, label: "Product Discovery Only", stages: "5 stages", badge: "Fast" },
-  { value: "prd_architecture" as const, label: "PRD + Architecture", stages: "12 stages", badge: "Recommended" },
-  { value: "prd_arch_stories" as const, label: "PRD + Architecture + Stories", stages: "16 stages", badge: null },
-  { value: "full_pipeline" as const, label: "Full Pipeline", stages: "32 stages", badge: "Complete" },
+export const GENERATION_INTENTS = [
+  { value: "discovery" as const, label: "Just validate the idea", description: "Quick market & feasibility check", icon: "🔍" },
+  { value: "prd_architecture" as const, label: "Plan & architect it", description: "Full PRD + technical architecture", icon: "📐" },
+  { value: "prd_arch_stories" as const, label: "Plan with task breakdown", description: "PRD + architecture + dev stories", icon: "📋" },
+  { value: "full_pipeline" as const, label: "Build it for me", description: "End-to-end: plan, code, validate & deploy", icon: "🚀", badge: "Recommended" },
 ] as const;
 
 export const INTEGRATION_OPTIONS = [
