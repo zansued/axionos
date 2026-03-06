@@ -28,6 +28,7 @@ import { CIFixSwarmStatus } from "./CIFixSwarmStatus";
 import { ArchitecturalDriftStatus } from "./ArchitecturalDriftStatus";
 import { RuntimeValidationStatus } from "./RuntimeValidationStatus";
 import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
+import { InitiativeObservabilityCard } from "./InitiativeObservabilityCard";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 import PipelineGraphView from "./PipelineGraphView";
 
@@ -745,6 +746,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
           </CardContent>
         </Card>
       )}
+
+      {/* Product Metrics */}
+      <InitiativeObservabilityCard initiativeId={initiative.id} />
 
       {/* Project Brain */}
       <Card className="border-border/50">
