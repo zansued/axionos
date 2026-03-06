@@ -369,7 +369,113 @@ Agent IO contracts are enforced through `pipeline-helpers.ts`:
 
 ---
 
-## 7. Project Brain
+## 7. Agent Operating System
+
+### Problem: Agent Proliferation
+
+The current architecture uses many highly specific agent identities (comprehension-analyst, architecture-strategist, fix-developer, etc.). As the system grows, this creates:
+
+- **Redundant prompt scaffolding** across agents that differ only in domain context
+- **High maintenance cost** — each new capability requires a new agent definition
+- **Fragmented learning** — memories are scattered across many agent identities
+- **Inconsistent IO contracts** — each agent implements its own output structure
+
+### Solution: Five Fundamental Agent Types
+
+Instead of treating agents as many separate characters, AxionOS treats them as **system processes** — a small set of fundamental agent types that operate in different **modes** depending on the pipeline stage.
+
+| Agent Type | Responsibility | Example Modes |
+|-----------|---------------|---------------|
+| **Perception Agent** | Interprets ideas, requirements, market signals, context | `idea_intake`, `requirement_analysis`, `market_signal`, `reference_scraping` |
+| **Design Agent** | Creates architecture, domain models, data models, API designs, planning | `architecture`, `domain_modeling`, `data_modeling`, `api_design`, `squad_planning` |
+| **Build Agent** | Generates code, UI, configs, migrations, artifacts | `business_logic`, `api_generation`, `ui_generation`, `schema_bootstrap`, `migration` |
+| **Validation Agent** | Performs static analysis, runtime validation, QA, architectural checks | `static_analysis`, `runtime_build`, `drift_detection`, `deep_validation`, `qa` |
+| **Evolution Agent** | Performs repair, learning, pattern extraction, prompt optimization | `build_repair`, `error_learning`, `pattern_extraction`, `prompt_optimization`, `prevention_rules` |
+
+### How Specialization Is Preserved
+
+Each agent type achieves specialization through four dimensions, not through identity proliferation:
+
+```
+Agent Specialization = Mode + Tools + Memory + Contract
+```
+
+- **Mode** — determines the domain context and prompt strategy (e.g., Design Agent in `data_modeling` mode uses different prompts than in `api_design` mode)
+- **Tools** — each mode has access to specific tools (brain queries, schema generators, code sanitizers)
+- **Memory** — agents query `agent_memory` filtered by their type and mode, enabling focused learning
+- **Contract** — each mode declares its own IO contract within the agent type's standard output schema
+
+### Agent Process Model
+
+```
+┌────────────────────────────────────────────────┐
+│              AGENT OPERATING SYSTEM             │
+├────────────────────────────────────────────────┤
+│                                                 │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐   │
+│  │ Perception│  │  Design   │  │   Build   │   │
+│  │  Agent    │  │  Agent    │  │   Agent   │   │
+│  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘   │
+│        │              │              │          │
+│  ┌─────┴─────┐  ┌─────┴─────┐                   │
+│  │Validation │  │ Evolution │                   │
+│  │  Agent    │  │  Agent    │                   │
+│  └───────────┘  └───────────┘                   │
+│                                                 │
+│  ┌──────────────────────────────────────────┐   │
+│  │  Shared: Memory │ Contracts │ Tools       │   │
+│  └──────────────────────────────────────────┘   │
+└────────────────────────────────────────────────┘
+```
+
+### Migration Map: Current Agents → Agent OS
+
+| Current Agent Identity | Agent OS Type | Mode |
+|----------------------|--------------|------|
+| comprehension-analyst | Perception | `requirement_analysis` |
+| comprehension-ux-researcher | Perception | `ux_research` |
+| comprehension-market-analyst | Perception | `market_signal` |
+| comprehension-tech-scout | Perception | `tech_discovery` |
+| architecture-strategist | Design | `architecture` |
+| architecture-systems-designer | Design | `system_design` |
+| architecture-risk-analyst | Design | `risk_analysis` |
+| architecture-integration-planner | Design | `integration_planning` |
+| domain-model-analyzer | Design | `domain_modeling` |
+| data-model-generator | Design | `data_modeling` |
+| api-generator | Design | `api_design` |
+| business-logic-synthesizer | Build | `business_logic` |
+| ui-generator | Build | `ui_generation` |
+| schema-bootstrapper | Build | `schema_bootstrap` |
+| foundation-scaffolder | Build | `scaffold` |
+| code-architect (fix) | Validation | `fix_analysis` |
+| static-validator | Validation | `static_analysis` |
+| drift-detector | Validation | `drift_detection` |
+| runtime-validator | Validation | `runtime_build` |
+| fix-developer | Evolution | `build_repair` |
+| fix-integration-validator | Evolution | `repair_validation` |
+| adaptive-learning-engine | Evolution | `pattern_extraction` |
+
+### Benefits
+
+- **Reduced complexity** — 5 agent types instead of 18+ identities
+- **Consistent contracts** — all agents share the same IO structure (§6)
+- **Unified memory** — learning is organized by type + mode, not by identity
+- **Lower cost** — shared prompt scaffolding reduces token overhead
+- **Easier evolution** — adding a new capability = adding a mode, not a new agent
+
+### Relationship to Learning Agents (NEXT)
+
+Agent OS directly enables the NEXT horizon:
+- Fewer agent types mean fewer learning models to train
+- Mode-based organization provides cleaner data for prompt optimization
+- Unified memory structure makes cross-mode learning natural
+- Consistent output schemas make A/B testing straightforward
+
+**Status:** 📋 Planned — conceptual architecture defined, migration from current agents pending
+
+---
+
+## 8. Project Brain
 
 ### Node Types
 | Type | Source | Description |

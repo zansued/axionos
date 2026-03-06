@@ -106,6 +106,15 @@ AxionOS becomes a stable autonomous engineering kernel — reliable enough that 
 
 Upgrade agents from static prompt executors into adaptive learning systems. Each execution should improve future executions. This is the transition from Level 3 (Autonomous Engineering System) to Level 4 (Self-Learning Software Factory).
 
+### Relationship to Agent OS
+
+The Agent Operating System (defined in NOW) provides the structural foundation for this horizon. With agents organized into five fundamental types operating in modes, the learning infrastructure becomes tractable:
+
+- **Fewer learning models** — 5 agent types instead of 18+ identities
+- **Cleaner training data** — mode-based organization provides structured execution history
+- **Cross-mode learning** — a Design Agent learning in `data_modeling` mode can apply patterns to `api_design` mode
+- **Unified memory queries** — `agent_memory` indexed by type + mode enables efficient retrieval
+
 ### Agent Intelligence Layer
 
 | Module | Description | Status |
