@@ -244,12 +244,77 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Objetivo** | Validar o código gerado, reparar erros e publicar no repositório Git |
+| **Objetivo** | Validar o código gerado, reparar erros, publicar no repositório Git e fazer deploy |
 | **Input esperado** | Código gerado (story_subtasks com outputs) |
-| **Output gerado** | Repositório Git com código validado e compilável |
-| **Critérios de sucesso** | Build passa (tsc + vite), código publicado no GitHub |
-| **Possíveis falhas** | Erros de TypeScript, imports quebrados, build failure, token Git inválido |
+| **Output gerado** | Repositório Git validado + deploy em produção |
+| **Critérios de sucesso** | Build passa (tsc + vite), código publicado, deploy acessível |
+| **Possíveis falhas** | Erros de TypeScript, build failure, token Git inválido, deploy failure |
 | **Ação do usuário** | Um clique: "Iniciar Validação Completa" → tudo roda automaticamente |
+
+### Deploy State Machine
+
+```
+  validating
+      │
+      ▼
+  ready_to_publish
+      │
+      ▼
+  published ──────► deploying
+                        │
+                   ┌────┴────┐
+                   ▼         ▼
+              deployed   deploy_failed
+```
+
+#### Estado: Transições
+
+| De | Para | Condição |
+|----|------|----------|
+| `validating` | `ready_to_publish` | Build passa (CI green) |
+| `validating` | `repairing_build` | Build falha → auto-repair |
+| `ready_to_publish` | `published` | Push para GitHub com sucesso |
+| `published` | `deploying` | Deploy iniciado (Vercel ou outro) |
+| `deploying` | `deployed` | Deploy bem-sucedido + URL acessível |
+| `deploying` | `deploy_failed` | Deploy falhou + erro rastreável |
+| `deploy_failed` | `deploying` | Retry do deploy |
+
+### Deploy Metadata
+
+Campos persistidos por iniciativa:
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `repo_url` | TEXT | URL do repositório GitHub |
+| `commit_hash` | TEXT | Hash do último commit publicado |
+| `build_status` | TEXT | Resultado do build (pass/fail) |
+| `deploy_status` | TEXT | Estado atual do deploy |
+| `deploy_target` | TEXT | Alvo do deploy (vercel, netlify, etc.) |
+| `deploy_url` | TEXT | URL final do deploy em produção |
+| `health_status` | TEXT | Resultado do health check pós-deploy |
+| `deployed_at` | TIMESTAMP | Data/hora do deploy bem-sucedido |
+
+### Contrato Vercel-first
+
+O alvo padrão de deploy é **Vercel**. Outros targets (Netlify, AWS, Cloudflare) serão suportados depois.
+
+| Configuração | Valor |
+|-------------|-------|
+| Framework | Vite |
+| Install Command | `rm -f package-lock.json && npm install --include=dev` |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
+| Rewrites | `/(.*) → /index.html` |
+
+### Regras de Transição
+
+| Cenário | Comportamento |
+|---------|-------------|
+| `published` + pré-condições OK | Pode iniciar deploy |
+| Deploy falha | `deploy_failed` + erro rastreável no `initiative_jobs` |
+| Deploy passa | `deployed` + URL final + health check |
+| Health check falha | `health_status = 'unhealthy'` + alerta |
+| Retry após falha | `deploy_failed` → `deploying` → resultado |
 
 ### Sub-etapas (sequenciais, totalmente automáticas)
 
@@ -261,6 +326,7 @@
 | 4 | **Runtime Validation** | `pipeline-runtime-validation` | Push do código para branch `validate/*` no GitHub. GitHub Actions executa: `npm install → tsc --noEmit → vite build`. Resultados reais de compilador. | `ci_running` → resultado via webhook |
 | 5 | **Build Repair** (se falhar) | `autonomous-build-repair` | Se o CI falhou, analisa logs de erro, gera patches, submete correções automaticamente. Pode rodar múltiplas iterações. | Código reparado + novo push |
 | 6 | **Publicação** | `pipeline-publish` | Gera changelog, cria release, push final para branch principal com atomic commits via Tree API. | `repo_url`, versão, arquivos commitados |
+| 7 | **Deploy** | `pipeline-deploy` (planned) | Deploy automático para Vercel via API. Health check pós-deploy. | `deploy_url`, `health_status` |
 
 ### Artefatos
 
@@ -272,6 +338,7 @@
 | `ci_result` | Runtime Validation | `initiatives.execution_progress` |
 | `build_repair_patches` | Build Repair | `initiative_jobs.outputs` |
 | `release_manifest` | Publicação | `initiative_jobs.outputs` com `repo_url` |
+| `deploy_manifest` | Deploy | `initiatives.deploy_url` + `initiatives.deploy_status` |
 
 ### Regras de Controle
 
@@ -287,7 +354,24 @@
 | Build Repair falhou | "Retry Build Repair" ou "Solicitar Ajustes" |
 | `ready_to_publish` | **Um botão**: "Publicar no GitHub" |
 | Publicação OK | Status → `published` |
+| `published` | **Um botão**: "Deploy no Vercel" |
+| Deploy OK | Status → `deployed` + URL visível |
+| Deploy falhou | Status → `deploy_failed` + erro + "Retry" |
 | Qualquer sub-etapa falha | Mostrar qual falhou + erro + "Re-executar" |
+
+### Visibilidade na UI
+
+O usuário deve ver:
+
+| Elemento | Quando visível |
+|----------|---------------|
+| Repo URL + link | Após `published` |
+| Botão "Deploy no Vercel" | Após `published` |
+| Status do deploy (badge) | Durante e após deploy |
+| URL do deploy + link | Após `deployed` |
+| Health status | Após `deployed` |
+| Erro de deploy | Em `deploy_failed` |
+| Botão "Retry Deploy" | Em `deploy_failed` |
 
 ### O que o usuário NÃO precisa fazer
 
@@ -295,12 +379,15 @@
 - ❌ Entender a diferença entre Fix Loop, Deep Static e Runtime (o sistema cuida)
 - ❌ Decidir a ordem das validações
 - ❌ Re-executar manualmente após timeout (auto-retry)
+- ❌ Configurar deploy manualmente (Vercel-first, 1 clique)
 
 ### Definition of Done da Iniciativa
 
 ✅ Build passa no CI (tsc + vite)  
 ✅ Código publicado no repositório Git  
 ✅ `repo_url` disponível na interface  
+✅ Deploy executado com sucesso  
+✅ `deploy_url` acessível e verificado  
 ✅ Todos os artefatos rastreáveis no pipeline  
 ✅ Custos registrados por estágio
 
