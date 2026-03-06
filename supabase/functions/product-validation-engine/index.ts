@@ -61,7 +61,8 @@ Run simulated validation across these dimensions and return a JSON object:
 
 Return ONLY valid JSON, no markdown fences.`;
 
-    const aiResponse = await callAI(apiKey, prompt, "product-validation-engine");
+    const aiResult = await callAI(apiKey, prompt, "product-validation-engine");
+    const aiResponse = aiResult.content;
     let analysis: any;
     try {
       const cleaned = aiResponse.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
