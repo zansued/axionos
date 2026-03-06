@@ -769,6 +769,87 @@ export type Database = {
           },
         ]
       }
+      initiative_observability: {
+        Row: {
+          automatic_repair_success_rate: number
+          average_retries: number
+          build_success_rate: number
+          cost_per_initiative_usd: number
+          created_at: string
+          deploy_success_rate: number
+          id: string
+          initiative_id: string
+          initiative_outcome_status: string
+          models_used: string[] | null
+          organization_id: string
+          pipeline_success_rate: number
+          stage_costs: Json | null
+          stage_durations: Json | null
+          stage_failure_distribution: Json | null
+          time_idea_to_deploy_seconds: number | null
+          time_idea_to_repo_seconds: number | null
+          tokens_total: number
+          updated_at: string
+        }
+        Insert: {
+          automatic_repair_success_rate?: number
+          average_retries?: number
+          build_success_rate?: number
+          cost_per_initiative_usd?: number
+          created_at?: string
+          deploy_success_rate?: number
+          id?: string
+          initiative_id: string
+          initiative_outcome_status?: string
+          models_used?: string[] | null
+          organization_id: string
+          pipeline_success_rate?: number
+          stage_costs?: Json | null
+          stage_durations?: Json | null
+          stage_failure_distribution?: Json | null
+          time_idea_to_deploy_seconds?: number | null
+          time_idea_to_repo_seconds?: number | null
+          tokens_total?: number
+          updated_at?: string
+        }
+        Update: {
+          automatic_repair_success_rate?: number
+          average_retries?: number
+          build_success_rate?: number
+          cost_per_initiative_usd?: number
+          created_at?: string
+          deploy_success_rate?: number
+          id?: string
+          initiative_id?: string
+          initiative_outcome_status?: string
+          models_used?: string[] | null
+          organization_id?: string
+          pipeline_success_rate?: number
+          stage_costs?: Json | null
+          stage_durations?: Json | null
+          stage_failure_distribution?: Json | null
+          time_idea_to_deploy_seconds?: number | null
+          time_idea_to_repo_seconds?: number | null
+          tokens_total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "initiative_observability_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: true
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "initiative_observability_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       initiatives: {
         Row: {
           approved_at_discovery: string | null
