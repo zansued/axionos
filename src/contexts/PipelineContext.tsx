@@ -318,8 +318,17 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
         queryClient.invalidateQueries({ queryKey: ["initiative-jobs"] });
         queryClient.invalidateQueries({ queryKey: ["squads"] });
 
-        // Auto-trigger validation after execution
-        if (stage === "execution" && result.success) {
+        // Auto-continue execution when batch is incomplete (time budget pause)
+        if (stage === "execution" && result.success && result.batch_incomplete) {
+          toast({ title: `⏳ Execução em lotes: ${result.executed || 0} prontos, ${result.remaining_to_execute || 0} restantes. Continuando automaticamente...` });
+          setTimeout(() => {
+            runStage(initiativeId, "execution");
+          }, 2000);
+          return;
+        }
+
+        // Auto-trigger validation after execution completes fully
+        if (stage === "execution" && result.success && !result.batch_incomplete) {
           toast({ title: "🔍 Iniciando validação automática dos artefatos..." });
           setTimeout(() => {
             runStage(initiativeId, "validation");
