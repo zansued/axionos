@@ -252,3 +252,42 @@ export {
   CONTENT_HASH_SPEC,
   DEFAULT_ARTIFACT_STORE_CONFIG,
 } from "./artifact-store.ts";
+
+// Observability & Telemetry Layer (v0.3)
+export type {
+  TelemetryEvent,
+  TelemetryCategory,
+  ExecutionTrace,
+  TraceStatus,
+  TraceEntry,
+  TraceEntryKind,
+  TraceSummary,
+  MetricSample,
+  MetricUnit,
+  MetricDimension,
+  MetricAggregate,
+  MetricWindow,
+  RunMetrics,
+  StageMetrics,
+  AgentMetrics,
+  CapabilityMetrics,
+  ToolMetrics,
+  CostRecord,
+  CostCategory,
+  TokenUsage,
+  CostMetrics,
+  ExecutionError,
+  ErrorType,
+  FailureMetrics,
+  RetryMetrics,
+  FallbackMetrics,
+  TelemetryExportResult,
+  ITelemetrySink,
+  ObservabilityConfig,
+  IObservabilityLayer,
+  ObservabilityEventType,
+} from "./observability.ts";
+
+export {
+  DEFAULT_OBSERVABILITY_CONFIG,
+} from "./observability.ts";
