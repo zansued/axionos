@@ -495,6 +495,65 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
         </Card>
       )}
 
+      {/* Deploy Status Card */}
+      {(deployStatus || stageStatus === "deploying" || stageStatus === "deployed" || stageStatus === "deploy_failed") && (
+        <Card className={`border-border/50 ${
+          stageStatus === "deployed" ? "border-success/30 bg-success/5" :
+          stageStatus === "deploy_failed" ? "border-destructive/30 bg-destructive/5" :
+          stageStatus === "deploying" ? "border-warning/30 bg-warning/5" :
+          ""
+        }`}>
+          <CardContent className="p-4 space-y-2">
+            <div className="flex items-center gap-3">
+              <Globe className={`h-5 w-5 ${
+                stageStatus === "deployed" ? "text-success" :
+                stageStatus === "deploy_failed" ? "text-destructive" :
+                "text-warning"
+              }`} />
+              <div className="flex-1">
+                <p className="text-sm font-medium">
+                  {stageStatus === "deployed" && "Deploy concluído ✅"}
+                  {stageStatus === "deploy_failed" && "Deploy falhou ❌"}
+                  {stageStatus === "deploying" && "Deploy em andamento..."}
+                  {!["deployed", "deploy_failed", "deploying"].includes(stageStatus) && `Deploy: ${deployStatus || "pendente"}`}
+                </p>
+                {initiative.deploy_target && (
+                  <p className="text-xs text-muted-foreground">Target: {initiative.deploy_target}</p>
+                )}
+              </div>
+              <Badge variant={
+                stageStatus === "deployed" ? "default" :
+                stageStatus === "deploy_failed" ? "destructive" :
+                "secondary"
+              }>
+                {deployStatus || stageStatus}
+              </Badge>
+            </div>
+            {deployUrl && (
+              <div className="flex items-center gap-2 mt-2">
+                <a href={deployUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                  <Globe className="h-3.5 w-3.5" />
+                  {deployUrl}
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            )}
+            {healthStatus && (
+              <div className="flex items-center gap-2">
+                <Badge variant={healthStatus === "healthy" ? "default" : "destructive"} className="text-[10px]">
+                  Health: {healthStatus}
+                </Badge>
+                {initiative.deployed_at && (
+                  <span className="text-[10px] text-muted-foreground">
+                    Deployed: {new Date(initiative.deployed_at).toLocaleString()}
+                  </span>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Build Health Report */}
       {publishJob?.outputs?.health_report && (
         <BuildHealthReport report={publishJob.outputs.health_report} />
