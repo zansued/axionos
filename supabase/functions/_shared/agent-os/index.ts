@@ -34,7 +34,7 @@ export { createDefaultPolicies } from "./policies.ts";
 export { scoreArtifacts, averageScore, meetsThreshold } from "./scoring.ts";
 export { cryptoRandomId, nowIso, createArtifact } from "./utils.ts";
 
-// Protocol Contracts (v0.1)
+// Protocol Contracts (v0.1.1)
 export type {
   // Run
   Run,
@@ -69,6 +69,8 @@ export type {
   // Trace
   TraceMetadata,
   // Failure
+  FailureAction,
   RetryPolicy,
+  RetryOtherDispatch,
   RollbackPolicy,
 } from "./protocol.ts";
