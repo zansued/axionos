@@ -91,6 +91,7 @@ export default function Initiatives() {
         brief.integrations.length > 0 && `Integrations: ${brief.integrations.join(", ")}`,
       ].filter(Boolean).join("\n");
 
+      const simReport = brief._simulation_report as Record<string, unknown> | undefined;
       const insertData: Record<string, unknown> = {
         title: brief.name,
         description: enrichedDesc,
@@ -104,6 +105,14 @@ export default function Initiatives() {
         initiative_brief: brief._initiative_brief || null,
         blueprint: brief._blueprint || null,
         generation_depth: brief._initiative_brief?.generation_depth || null,
+        simulation_report: simReport || null,
+        pipeline_recommendation: (simReport?.pipeline_recommendation as string) || null,
+        risk_flags: (simReport?.risk_flags as unknown) || null,
+        estimated_cost_min: (simReport?.estimated_cost_range as any)?.min_usd || null,
+        estimated_cost_max: (simReport?.estimated_cost_range as any)?.max_usd || null,
+        estimated_time_min: (simReport?.estimated_time_minutes as any)?.min || null,
+        estimated_time_max: (simReport?.estimated_time_minutes as any)?.max || null,
+        recommended_generation_depth: (simReport?.recommended_generation_depth as string) || null,
         discovery_payload: {
           product_type: brief.product_type,
           core_features: brief.core_features,

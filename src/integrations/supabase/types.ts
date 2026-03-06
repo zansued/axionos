@@ -781,6 +781,10 @@ export type Database = {
           created_at: string
           description: string | null
           discovery_payload: Json | null
+          estimated_cost_max: number | null
+          estimated_cost_min: number | null
+          estimated_time_max: number | null
+          estimated_time_min: number | null
           execution_progress: Json | null
           feasibility_analysis: string | null
           generation_depth: string | null
@@ -793,10 +797,14 @@ export type Database = {
           mvp_scope: string | null
           notes: string | null
           organization_id: string
+          pipeline_recommendation: string | null
           prd_content: string | null
+          recommended_generation_depth: string | null
           reference_url: string | null
           refined_idea: string | null
+          risk_flags: Json | null
           risk_level: string | null
+          simulation_report: Json | null
           stage_status: Database["public"]["Enums"]["initiative_stage_status"]
           status: Database["public"]["Enums"]["initiative_status"]
           strategic_vision: string | null
@@ -818,6 +826,10 @@ export type Database = {
           created_at?: string
           description?: string | null
           discovery_payload?: Json | null
+          estimated_cost_max?: number | null
+          estimated_cost_min?: number | null
+          estimated_time_max?: number | null
+          estimated_time_min?: number | null
           execution_progress?: Json | null
           feasibility_analysis?: string | null
           generation_depth?: string | null
@@ -830,10 +842,14 @@ export type Database = {
           mvp_scope?: string | null
           notes?: string | null
           organization_id: string
+          pipeline_recommendation?: string | null
           prd_content?: string | null
+          recommended_generation_depth?: string | null
           reference_url?: string | null
           refined_idea?: string | null
+          risk_flags?: Json | null
           risk_level?: string | null
+          simulation_report?: Json | null
           stage_status?: Database["public"]["Enums"]["initiative_stage_status"]
           status?: Database["public"]["Enums"]["initiative_status"]
           strategic_vision?: string | null
@@ -855,6 +871,10 @@ export type Database = {
           created_at?: string
           description?: string | null
           discovery_payload?: Json | null
+          estimated_cost_max?: number | null
+          estimated_cost_min?: number | null
+          estimated_time_max?: number | null
+          estimated_time_min?: number | null
           execution_progress?: Json | null
           feasibility_analysis?: string | null
           generation_depth?: string | null
@@ -867,10 +887,14 @@ export type Database = {
           mvp_scope?: string | null
           notes?: string | null
           organization_id?: string
+          pipeline_recommendation?: string | null
           prd_content?: string | null
+          recommended_generation_depth?: string | null
           reference_url?: string | null
           refined_idea?: string | null
+          risk_flags?: Json | null
           risk_level?: string | null
+          simulation_report?: Json | null
           stage_status?: Database["public"]["Enums"]["initiative_stage_status"]
           status?: Database["public"]["Enums"]["initiative_status"]
           strategic_vision?: string | null

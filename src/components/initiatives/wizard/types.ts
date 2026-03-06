@@ -34,6 +34,7 @@ export interface InitiativeBrief {
     expected_outputs: string[];
   };
   _blueprint?: unknown;
+  _simulation_report?: unknown;
 }
 
 export interface AIBlueprint {
