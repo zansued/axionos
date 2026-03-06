@@ -44,11 +44,22 @@ The kernel is the set of systems that every pipeline execution depends on:
 | Runtime Validation | `pipeline-runtime-validation` + CI | ✅ Implemented |
 | Autonomous Build Repair | `autonomous-build-repair` + `pipeline-fix-orchestrator` | ✅ Implemented |
 | Observability & Cost Tracking | `observability-engine` + `org_usage_limits` | ✅ Implemented |
-| Stage Contracts | 32-stage deterministic pipeline | ✅ Implemented |
-| Agent IO Contracts | `pipeline-helpers.ts`, agent message schema | ✅ Implemented |
+| Stage Contracts | Formal input/output schemas per stage via `initiative_jobs` | ✅ Implemented |
+| Agent IO Contracts | Standardized agent output structure via `pipeline-helpers.ts` | ✅ Implemented |
 | Governance | `pipeline_gate_permissions`, `stage_sla_configs`, `audit_logs` | ✅ Implemented |
 | Pipeline Visualization | UI components for pipeline state | 🔧 Stabilizing |
 | UI Restructuring | Control-center layout simplification | 🔧 Stabilizing |
+
+### Kernel Hardening Tasks
+
+| Task | Purpose | Status |
+|------|---------|--------|
+| Stage Contract Formalization | Every stage declares `required_inputs`, `produced_outputs`, `failure_modes`, `retry_policy` | ✅ Implemented |
+| Agent IO Contract Standardization | Every agent produces `summary`, `decisions[]`, `artifacts[]`, `confidence_score` | ✅ Implemented |
+| Observability Improvements | Granular per-stage cost tracking, latency histograms | 🔧 In Progress |
+| Pipeline Visualization Refactor | Simplified control-center UI for pipeline state | 🔧 In Progress |
+| AI Cost Tracking | Per-stage, per-model cost attribution via `initiative_jobs` | ✅ Implemented |
+| Error Taxonomy Standardization | Typed failure modes across all 32 stages | 🔧 In Progress |
 
 ### Goals
 
