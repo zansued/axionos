@@ -206,17 +206,17 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["ready_to_publish", "published"].includes(s)) return 25;
   if (["deploying", "deployed", "deploy_failed"].includes(s)) return 26;
 
-  // Growth & Evolution Layer
-  if (["observing_product", "product_observed"].includes(s)) return 26;
-  if (["analyzing_product_metrics", "product_metrics_analyzed"].includes(s)) return 27;
-  if (["analyzing_user_behavior", "user_behavior_analyzed"].includes(s)) return 28;
-  if (["optimizing_growth", "growth_optimized"].includes(s)) return 29;
-  if (["learning_system", "system_learned"].includes(s)) return 30;
-  if (["evolving_product", "product_evolved"].includes(s)) return 31;
-  if (["evolving_architecture", "architecture_evolved"].includes(s)) return 32;
-  if (["managing_portfolio", "portfolio_managed"].includes(s)) return 33;
-  if (["evolving_system", "system_evolved"].includes(s)) return 34;
-  if (["completed"].includes(s)) return 35;
+  // Growth & Evolution Layer (shifted +1 for deploy)
+  if (["observing_product", "product_observed"].includes(s)) return 27;
+  if (["analyzing_product_metrics", "product_metrics_analyzed"].includes(s)) return 28;
+  if (["analyzing_user_behavior", "user_behavior_analyzed"].includes(s)) return 29;
+  if (["optimizing_growth", "growth_optimized"].includes(s)) return 30;
+  if (["learning_system", "system_learned"].includes(s)) return 31;
+  if (["evolving_product", "product_evolved"].includes(s)) return 32;
+  if (["evolving_architecture", "architecture_evolved"].includes(s)) return 33;
+  if (["managing_portfolio", "portfolio_managed"].includes(s)) return 34;
+  if (["evolving_system", "system_evolved"].includes(s)) return 35;
+  if (["completed"].includes(s)) return 36;
   return 0;
 }
 
