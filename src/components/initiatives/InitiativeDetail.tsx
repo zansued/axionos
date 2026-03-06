@@ -404,6 +404,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
         </DialogContent>
       </Dialog>
 
+      {/* Outcome Card — product-level status */}
+      <InitiativeOutcomeCard initiative={initiative} />
+
       {/* Running indicator */}
       {runningStage && runningStage !== "approve" && runningStage !== "reject" && (
         <Card className="border-primary/30 bg-primary/5">
