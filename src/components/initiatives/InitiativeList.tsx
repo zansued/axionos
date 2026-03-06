@@ -1,10 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Lightbulb, AlertTriangle, Users, Clock } from "lucide-react";
+import { Lightbulb, AlertTriangle, Users, Clock, Rocket, Globe, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PIPELINE_STEPS, getStepIndex } from "./pipeline-config";
 import { useSLABreaches } from "@/hooks/useStageSLA";
+import { useI18n } from "@/contexts/I18nContext";
 
 interface InitiativeListProps {
   initiatives: any[];
@@ -15,17 +17,43 @@ interface InitiativeListProps {
 
 export function InitiativeList({ initiatives, isLoading, selectedId, onSelect }: InitiativeListProps) {
   const { breaches } = useSLABreaches(initiatives);
+  const { locale } = useI18n();
+  const en = locale === "en-US";
   const breachMap = new Map(breaches.map((b) => [b.initiativeId, b]));
+
   return (
     <div className="space-y-3">
-      <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Iniciativas</h2>
+      <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+        {en ? "Initiatives" : "Iniciativas"}
+      </h2>
       {isLoading ? (
         <div className="space-y-2">{[1, 2, 3].map((i) => <Card key={i} className="animate-pulse"><CardContent className="p-4 h-16" /></Card>)}</div>
       ) : initiatives.length === 0 ? (
-        <Card className="border-dashed border-2"><CardContent className="flex flex-col items-center py-8 text-center">
-          <Lightbulb className="h-8 w-8 text-muted-foreground/40 mb-2" />
-          <p className="text-sm text-muted-foreground">Descreva sua ideia e a IA faz o resto</p>
-        </CardContent></Card>
+        <Card className="border-dashed border-2">
+          <CardContent className="flex flex-col items-center py-10 text-center space-y-4">
+            <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center">
+              <Rocket className="h-6 w-6 text-muted-foreground/50" />
+            </div>
+            <div className="space-y-1.5">
+              <p className="text-sm font-medium">
+                {en ? "No initiatives yet" : "Nenhuma iniciativa ainda"}
+              </p>
+              <p className="text-xs text-muted-foreground max-w-[240px]">
+                {en
+                  ? "Create your first initiative to start building. Describe an idea and the AI handles the rest."
+                  : "Crie sua primeira iniciativa para começar. Descreva uma ideia e a IA cuida do resto."}
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground/60">
+              <Lightbulb className="h-3 w-3" />
+              <ArrowRight className="h-2.5 w-2.5" />
+              <span>{en ? "Pipeline" : "Pipeline"}</span>
+              <ArrowRight className="h-2.5 w-2.5" />
+              <Globe className="h-3 w-3" />
+              <span>{en ? "Deploy" : "Deploy"}</span>
+            </div>
+          </CardContent>
+        </Card>
       ) : (
         <ScrollArea className="max-h-[calc(100vh-260px)]">
           <div className="space-y-2 pr-2">
@@ -35,13 +63,21 @@ export function InitiativeList({ initiatives, isLoading, selectedId, onSelect }:
                 const step = PIPELINE_STEPS[stepIdx];
                 const isSelected = selectedId === init.id;
                 const breach = breachMap.get(init.id);
+                const hasDeployUrl = !!init.deploy_url;
                 return (
                   <motion.div key={init.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
                     <Card className={`cursor-pointer transition-all ${isSelected ? "border-primary/50 bg-primary/5" : breach ? "border-warning/40 hover:border-warning/60" : "border-border/50 hover:border-primary/20"}`} onClick={() => onSelect(init.id)}>
                       <CardContent className="p-3 space-y-2">
                         <div className="flex items-start justify-between gap-2">
                           <p className="font-display text-sm font-medium leading-tight">{init.title}</p>
-                          <Badge className={`text-[10px] px-1.5 py-0 shrink-0 ${step.bg} ${step.color}`}>{step.label}</Badge>
+                          <div className="flex items-center gap-1 shrink-0">
+                            {hasDeployUrl && (
+                              <Badge variant="outline" className="text-[9px] px-1 py-0 gap-0.5">
+                                <Globe className="h-2.5 w-2.5" /> Live
+                              </Badge>
+                            )}
+                            <Badge className={`text-[10px] px-1.5 py-0 ${step.bg} ${step.color}`}>{step.label}</Badge>
+                          </div>
                         </div>
                         <div className="flex gap-0.5">
                           {PIPELINE_STEPS.map((_, i) => (
@@ -56,7 +92,7 @@ export function InitiativeList({ initiatives, isLoading, selectedId, onSelect }:
                           )}
                           {init.risk_level && init.risk_level !== "medium" && (
                             <span className="flex items-center gap-0.5">
-                              <AlertTriangle className="h-3 w-3" />Risco {init.risk_level}
+                              <AlertTriangle className="h-3 w-3" />{en ? `Risk ${init.risk_level}` : `Risco ${init.risk_level}`}
                             </span>
                           )}
                           {init.squads?.length > 0 && (
