@@ -112,11 +112,15 @@ Return ONLY valid JSON.`;
       journeys_count: analysis.user_journeys?.length || 0,
     };
 
-    await completeJob(ctx, jobId, outputs, {
-      model: typeof aiResult === "string" ? "unknown" : aiResult.model,
-      costUsd: typeof aiResult === "string" ? 0 : aiResult.costUsd,
-      durationMs: typeof aiResult === "string" ? 0 : aiResult.durationMs,
-    });
+    const aiMeta = typeof aiResult === "object" && aiResult
+      ? {
+          model: aiResult.model ?? "unknown",
+          costUsd: aiResult.costUsd ?? 0,
+          durationMs: aiResult.durationMs ?? 0,
+        }
+      : { model: "unknown", costUsd: 0, durationMs: 0 };
+
+    await completeJob(ctx, jobId, outputs, aiMeta);
     return jsonResponse(outputs);
   } catch (e: any) {
     console.error("User Behavior Analyzer error:", e);
