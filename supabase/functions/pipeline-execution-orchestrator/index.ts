@@ -387,105 +387,139 @@ serve(async (req) => {
       );
     }
 
-    // ── Non-file subtasks (sequential) ──
-    for (const st of nonFileSubtasks) {
-      try {
-        const aiResult = await callAI(apiKey,
-          `Você é o Developer "${effectiveDev?.name || "Agent"}". Execute a subtask.`,
-          `## Subtask: ${st.description}\n\nProduza o output completo.`
-        );
-        await serviceClient.from("story_subtasks").update({
-          output: aiResult.content, status: "completed", executed_at: new Date().toISOString(),
-        }).eq("id", st.id);
-        await serviceClient.from("agent_outputs").insert({
-          organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
-          agent_id: effectiveDev?.id || null, subtask_id: st.id,
-          type: "analysis", status: "draft",
-          summary: st.description?.slice(0, 200), raw_output: { text: aiResult.content },
-          model_used: aiResult.model, tokens_used: aiResult.tokens, cost_estimate: aiResult.costUsd,
-        });
-        totalTokens += aiResult.tokens;
-        totalCost += aiResult.costUsd;
-        executedCount++;
-      } catch (err) {
-        await serviceClient.from("story_subtasks").update({ status: "failed" }).eq("id", st.id);
-        failedCount++;
-      }
-    }
-
-    // ── Finalize stories/phases ──
-    for (const story of stories) {
-      const { data: phases } = await serviceClient.from("story_phases")
-        .select("id").eq("story_id", story.id);
-      for (const phase of (phases || [])) {
-        const { count: pending } = await serviceClient.from("story_subtasks")
-          .select("*", { count: "exact", head: true })
-          .eq("phase_id", phase.id).neq("status", "completed");
-        if (pending === 0) await serviceClient.from("story_phases").update({ status: "completed" }).eq("id", phase.id);
-      }
-      const { count: pendingPhases } = await serviceClient.from("story_phases")
-        .select("*", { count: "exact", head: true })
-        .eq("story_id", story.id).neq("status", "completed");
-      if (pendingPhases === 0) await serviceClient.from("stories").update({ status: "done" }).eq("id", story.id);
-    }
-
-    // ── Final progress ──
-    await serviceClient.from("initiatives").update({
-      stage_status: "validating",
-      execution_progress: {
-        current: totalNodes, total: totalNodes, percent: 100,
-        executed: executedCount, failed: failedCount,
-        code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
-        chain_of_agents: true, status: "completed", completed_at: new Date().toISOString(),
-        scheduler: "swarm", waves_executed: waveNum, max_workers: MAX_WORKERS,
-        incremental: true, skipped: skippedCount,
-        savings_percent: incremental.stats.savingsPercent,
-      },
-    }).eq("id", ctx.initiativeId);
-
-    if (masterJobId) await completeJob(ctx, masterJobId, {
-      executed: executedCount, failed: failedCount, code_files: codeFilesGenerated,
-      total_tokens: totalTokens, waves_executed: waveNum,
-      chain: ["code_architect", "developer", "integration_agent"],
-      scheduler: "swarm", max_workers: MAX_WORKERS,
-      skipped: skippedCount, savings_percent: incremental.stats.savingsPercent,
-    }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
-
-    await pipelineLog(ctx, "orchestrator_complete",
-      `Orchestrator concluído: ${executedCount} gerados, ${skippedCount} reutilizados (${incremental.stats.savingsPercent}% economia), ${failedCount} falhas, ${waveNum} waves`,
-      { total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated, waves: waveNum, skipped: skippedCount }
-    );
-
-    // ── Memory extraction ──
-    try {
-      const memResult = await callAI(apiKey,
-        `Extraia lições aprendidas desta execução. Retorne APENAS JSON: {"memories": [{"key": "string", "value": "string (max 200 chars)", "type": "lesson_learned|pattern|architectural_decision|best_practice"}]}`,
-        `Projeto: "${initiative.title}", ${executedCount} arquivos gerados em ${waveNum} waves, ${failedCount} falhas. Scheduler: Swarm com ${MAX_WORKERS} workers.`,
-        true
-      );
-      const parsed = JSON.parse(memResult.content);
-      const agentIds = squadMembers.map((sm: any) => sm.agents?.id).filter(Boolean);
-      for (const mem of (parsed.memories || []).slice(0, 5)) {
-        for (const aid of agentIds) {
-          await serviceClient.from("agent_memory").insert({
-            agent_id: aid, organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
-            memory_type: mem.type || "lesson_learned", key: (mem.key || "").slice(0, 200),
-            value: (mem.value || "").slice(0, 500), scope: "organization",
+    // ── Non-file subtasks (sequential, only if time allows) ──
+    if (!timeBudgetExceeded) {
+      for (const st of nonFileSubtasks) {
+        if (Date.now() - startTime > TIME_BUDGET_MS) { timeBudgetExceeded = true; break; }
+        try {
+          const aiResult = await callAI(apiKey,
+            `Você é o Developer "${effectiveDev?.name || "Agent"}". Execute a subtask.`,
+            `## Subtask: ${st.description}\n\nProduza o output completo.`
+          );
+          await serviceClient.from("story_subtasks").update({
+            output: aiResult.content, status: "completed", executed_at: new Date().toISOString(),
+          }).eq("id", st.id);
+          await serviceClient.from("agent_outputs").insert({
+            organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
+            agent_id: effectiveDev?.id || null, subtask_id: st.id,
+            type: "analysis", status: "draft",
+            summary: st.description?.slice(0, 200), raw_output: { text: aiResult.content },
+            model_used: aiResult.model, tokens_used: aiResult.tokens, cost_estimate: aiResult.costUsd,
           });
+          totalTokens += aiResult.tokens;
+          totalCost += aiResult.costUsd;
+          executedCount++;
+        } catch (err) {
+          await serviceClient.from("story_subtasks").update({ status: "failed" }).eq("id", st.id);
+          failedCount++;
         }
       }
-    } catch {}
+    }
 
-    // ── Batch embed any remaining unembedded nodes ──
-    try {
-      const embedResult = await batchEmbedNodes(ctx, apiKey, 30);
-      if (embedResult.embedded > 0) {
-        await pipelineLog(ctx, "embeddings_batch",
-          `Embeddings gerados: ${embedResult.embedded} nós`,
-          embedResult
-        );
+    // ── Check if there are remaining pending subtasks ──
+    const { count: remainingPending } = await serviceClient.from("story_subtasks")
+      .select("*", { count: "exact", head: true })
+      .in("story_id", stories.map(s => s.id))
+      .eq("status", "pending");
+
+    const batchIncomplete = timeBudgetExceeded && (remainingPending || 0) > 0;
+
+    if (!batchIncomplete) {
+      // ── Finalize stories/phases (only when all done) ──
+      for (const story of stories) {
+        const { data: phases } = await serviceClient.from("story_phases")
+          .select("id").eq("story_id", story.id);
+        for (const phase of (phases || [])) {
+          const { count: pending } = await serviceClient.from("story_subtasks")
+            .select("*", { count: "exact", head: true })
+            .eq("phase_id", phase.id).neq("status", "completed");
+          if (pending === 0) await serviceClient.from("story_phases").update({ status: "completed" }).eq("id", phase.id);
+        }
+        const { count: pendingPhases } = await serviceClient.from("story_phases")
+          .select("*", { count: "exact", head: true })
+          .eq("story_id", story.id).neq("status", "completed");
+        if (pendingPhases === 0) await serviceClient.from("stories").update({ status: "done" }).eq("id", story.id);
       }
-    } catch {}
+
+      // ── Final progress ──
+      await serviceClient.from("initiatives").update({
+        stage_status: "validating",
+        execution_progress: {
+          current: totalNodes, total: totalNodes, percent: 100,
+          executed: executedCount, failed: failedCount,
+          code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
+          chain_of_agents: true, status: "completed", completed_at: new Date().toISOString(),
+          scheduler: "swarm", waves_executed: waveNum, max_workers: MAX_WORKERS,
+          incremental: true, skipped: skippedCount,
+          savings_percent: incremental.stats.savingsPercent,
+        },
+      }).eq("id", ctx.initiativeId);
+
+      if (masterJobId) await completeJob(ctx, masterJobId, {
+        executed: executedCount, failed: failedCount, code_files: codeFilesGenerated,
+        total_tokens: totalTokens, waves_executed: waveNum,
+        chain: ["code_architect", "developer", "integration_agent"],
+        scheduler: "swarm", max_workers: MAX_WORKERS,
+        skipped: skippedCount, savings_percent: incremental.stats.savingsPercent,
+      }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+
+      await pipelineLog(ctx, "orchestrator_complete",
+        `Orchestrator concluído: ${executedCount} gerados, ${skippedCount} reutilizados (${incremental.stats.savingsPercent}% economia), ${failedCount} falhas, ${waveNum} waves`,
+        { total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated, waves: waveNum, skipped: skippedCount }
+      );
+
+      // ── Memory extraction ──
+      try {
+        const memResult = await callAI(apiKey,
+          `Extraia lições aprendidas desta execução. Retorne APENAS JSON: {"memories": [{"key": "string", "value": "string (max 200 chars)", "type": "lesson_learned|pattern|architectural_decision|best_practice"}]}`,
+          `Projeto: "${initiative.title}", ${executedCount} arquivos gerados em ${waveNum} waves, ${failedCount} falhas. Scheduler: Swarm com ${MAX_WORKERS} workers.`,
+          true
+        );
+        const parsed = JSON.parse(memResult.content);
+        const agentIds = squadMembers.map((sm: any) => sm.agents?.id).filter(Boolean);
+        for (const mem of (parsed.memories || []).slice(0, 5)) {
+          for (const aid of agentIds) {
+            await serviceClient.from("agent_memory").insert({
+              agent_id: aid, organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
+              memory_type: mem.type || "lesson_learned", key: (mem.key || "").slice(0, 200),
+              value: (mem.value || "").slice(0, 500), scope: "organization",
+            });
+          }
+        }
+      } catch {}
+
+      // ── Batch embed any remaining unembedded nodes ──
+      try {
+        const embedResult = await batchEmbedNodes(ctx, apiKey, 30);
+        if (embedResult.embedded > 0) {
+          await pipelineLog(ctx, "embeddings_batch",
+            `Embeddings gerados: ${embedResult.embedded} nós`,
+            embedResult
+          );
+        }
+      } catch {}
+    } else {
+      // ── Batch incomplete: update progress but keep stage_status as in_progress ──
+      await serviceClient.from("initiatives").update({
+        execution_progress: {
+          current: executedCount + failedCount, total: totalNodes,
+          percent: totalNodes > 0 ? Math.round(((executedCount + failedCount) / totalNodes) * 100) : 0,
+          executed: executedCount, failed: failedCount,
+          code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
+          chain_of_agents: true, status: "running",
+          scheduler: "swarm", waves_executed: waveNum, max_workers: MAX_WORKERS,
+          incremental: true, skipped: skippedCount,
+          savings_percent: incremental.stats.savingsPercent,
+          batch_incomplete: true, remaining: remainingPending,
+          started_at: new Date().toISOString(),
+        },
+      }).eq("id", ctx.initiativeId);
+
+      await pipelineLog(ctx, "batch_pause",
+        `Batch pausado: ${executedCount} executados, ${remainingPending} restantes. Auto-continuando...`,
+        { executed: executedCount, remaining: remainingPending }
+      );
+    }
 
     return jsonResponse({
       success: true, executed: executedCount, failed: failedCount,
@@ -493,6 +527,8 @@ serve(async (req) => {
       job_id: masterJobId, waves_executed: waveNum, skipped: skippedCount,
       scheduler: "swarm", max_workers: MAX_WORKERS,
       savings_percent: incremental.stats.savingsPercent,
+      batch_incomplete: batchIncomplete,
+      remaining_to_execute: remainingPending || 0,
     });
 
   } catch (e) {
