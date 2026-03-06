@@ -243,6 +243,7 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 
 ## Governing Principle
 
-> The architecture is sufficient. The product is not yet proven.
-> Every implementation decision must serve product proof closure: structured inputs, reliable execution, and successful deployment.
-> No expansion until the four product-proof sprints are complete and stable.
+> The architecture is sufficient. The product proof is closing.
+> Seven implementation sprints are complete: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, and Error Patterns.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, and reusable pattern intelligence.
+> Next: Learning Agents built on top of this evidence substrate.
