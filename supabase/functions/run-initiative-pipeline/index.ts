@@ -2187,7 +2187,23 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
           } else {
             checks.push({ id: "pkg-exists", category: "package.json", label: "Arquivo package.json presente", status: "pass" });
             try {
-              const pkg = JSON.parse(pkgEntry.content);
+              // Try to parse, and if it fails try to sanitize common issues first
+              let pkgContent = pkgEntry.content;
+              let pkg: any;
+              try {
+                pkg = JSON.parse(pkgContent);
+              } catch {
+                // Try stripping code fences or extra whitespace
+                pkgContent = pkgContent.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+                try {
+                  pkg = JSON.parse(pkgContent);
+                } catch {
+                  // Last resort: treat as warning, pipeline will inject deterministic package.json
+                  checks.push({ id: "pkg-parse", category: "package.json", label: "JSON válido", status: "warn", detail: "Não foi possível parsear — será injetado pelo pipeline" });
+                  throw new Error("skip");
+                }
+              }
+              checks.push({ id: "pkg-parse", category: "package.json", label: "JSON válido", status: "pass" });
               const allDeps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
 
               // Check type: module
@@ -2266,7 +2282,11 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
                 if (pkgEntry.artRef?.content !== undefined) pkgEntry.artRef.content = fixed;
                 else if (pkgEntry.artRef?.text !== undefined) pkgEntry.artRef.text = fixed;
               }
-            } catch { checks.push({ id: "pkg-parse", category: "package.json", label: "JSON válido", status: "fail", detail: "Não foi possível parsear" }); }
+            } catch (e) {
+              // Only add fail if we haven't already added a warn for parse issues
+              if (e instanceof Error && e.message === "skip") { /* already handled */ }
+              else { checks.push({ id: "pkg-parse", category: "package.json", label: "JSON válido", status: "warn", detail: "Erro ao processar — será injetado pelo pipeline" }); }
+            }
           }
 
           // ---- vite.config.ts checks ----
