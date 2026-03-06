@@ -155,7 +155,7 @@ Return ONLY valid JSON.`;
           content: `${i.insight}\n\nCategory: ${i.category}\nImpact: ${i.impact}`,
           tags: ["meta_learning", "system_evolution", i.category],
         }));
-        if (entries.length) await ctx.supabase.from("org_knowledge_base").insert(entries);
+        if (entries.length) await ctx.serviceClient.from("org_knowledge_base").insert(entries);
       } catch (e) { console.warn("Knowledge base insert failed:", e.message); }
     }
 
