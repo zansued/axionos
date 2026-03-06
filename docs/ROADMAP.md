@@ -46,53 +46,72 @@ AxionOS already has the technical architecture required for an Autonomous Engine
 
 ---
 
-### 1. Initiative Creation AI-First
+## Product Proof Implementation Sprints
 
-**Goal:** Transform idea intake into an AI-assisted flow that produces a structured initiative brief before entering the pipeline.
+The next phase is execution-focused and organized into short implementation sprints. The goal is to close the product loop:
 
-**Purpose:** Improve pipeline success rate by providing structured inputs instead of raw text.
+```
+idea → structured brief → simulation → pipeline → validated repository → deploy → product metrics
+```
 
-**Capabilities:**
-
-- AI analyzes raw idea text
-- Generates structured initiative blueprint (market opportunity, feasibility, features, architecture hints)
-- Allows user review and correction
-- Produces canonical `initiative_brief` object
-- Starts pipeline using the structured brief
-
-**Expected Output: `initiative_brief`**
-
-| Field | Description |
-|-------|-------------|
-| `name` | Initiative name |
-| `description` | Short description |
-| `problem` | Problem statement |
-| `target_users` | Target audience |
-| `product_type` | SaaS, Marketplace, API, etc. |
-| `core_features` | List of key features |
-| `integrations` | Required integrations (auth, payments, etc.) |
-| `tech_preferences` | Optional technical preferences |
-| `deployment_target` | Vercel, Netlify, etc. |
-| `complexity_estimate` | AI-estimated complexity |
-| `generation_depth` | discovery / prd_architecture / prd_arch_stories / full_pipeline |
-| `expected_outputs` | What the pipeline should produce |
-
-> **This becomes the official input contract for the pipeline.**
-
-**Status:** 🔧 In Progress (wizard implemented, blueprint generation operational)
+No new architecture expansion until these four sprints are complete and stable.
 
 ---
 
-### 2. Deploy Contract Completion
+### Sprint 1 — Initiative Brief Formalization
 
-**Goal:** Close the loop from Idea → Deploy with clear states and metadata.
+**Goal:** Turn idea intake into a structured contract for the pipeline.
 
-**Enhancements:**
+**Deliverables:**
+- `initiative_brief` schema (Zod-validated)
+- AI-first initiative intake flow
+- Initiative blueprint generation via AI prompt
+- Blueprint approval/edit step
+- `initiative_brief` stored in initiative record
+- Stage 01 updated to consume `initiative_brief`
 
-- Define deploy states across the full lifecycle
-- Persist deploy metadata for traceability
-- Track deploy success rate
-- Integrate with Vercel or equivalent deployment targets
+**Expected Impact:**
+- Better pipeline inputs
+- Fewer downstream failures
+- Clearer product entry point
+
+**Status:** ✅ Implemented (schema, intake engine, wizard, blueprint generation)
+
+---
+
+### Sprint 2 — Initiative Simulation Engine
+
+**Goal:** Introduce a lightweight simulation gate before expensive pipeline execution.
+
+**Deliverables:**
+- Initiative simulation schema (Zod-validated)
+- Simulation engine service
+- Technical feasibility estimate
+- Cost/time estimate
+- Risk flags
+- Go / Refine / Block recommendation
+- Simulation report stored in initiative record
+
+**Expected Impact:**
+- Reduced wasted runs
+- Better user guidance
+- Improved cost control
+- Stronger decision support
+
+**Status:** ✅ Implemented (schema, engine, wizard integration, simulation view)
+
+---
+
+### Sprint 3 — Deploy Contract Completion
+
+**Goal:** Close the loop from repository generation to actual deployment.
+
+**Deliverables:**
+- Formal deploy states (`draft` → `deployed` / `deploy_failed`)
+- Deploy metadata persistence (`repo_url`, `commit_hash`, `deploy_url`, `health_status`)
+- Deploy target definition (Vercel first)
+- Deploy success / failure tracking
+- Initiative state updated through publish/deploy lifecycle
 
 **Deploy States:**
 
@@ -109,38 +128,38 @@ AxionOS already has the technical architecture required for an Autonomous Engine
 | `deployed` | Successfully deployed and accessible |
 | `deploy_failed` | Deployment failed |
 
-**Deploy Metadata:**
-
-| Field | Description |
-|-------|-------------|
-| `repo_url` | GitHub repository URL |
-| `commit_hash` | Latest commit hash |
-| `build_status` | tsc + vite build result |
-| `deploy_url` | Live deployment URL |
-| `health_status` | Post-deploy health check |
+**Expected Impact:**
+- Complete product lifecycle
+- Visible end result for user
+- Operational proof of value
 
 **Status:** 📋 Planned
 
 ---
 
-### 3. Product-Level Observability
+### Sprint 4 — Product-Level Observability
 
-**Goal:** Expose product success metrics, not only agent telemetry.
+**Goal:** Upgrade observability from runtime telemetry to product metrics.
 
-**New Metrics:**
+**Deliverables:**
+- Initiative Lifecycle Dashboard
+- Metrics: `pipeline_success_rate`, `build_success_rate`, `deploy_success_rate`, `average_retries_per_initiative`, `automatic_repair_success_rate`, `cost_per_initiative`, `time_idea_to_repo`, `time_idea_to_deploy`
 
-| Metric | Description | Target |
-|--------|-------------|--------|
-| `pipeline_success_rate` | Initiatives completing without manual intervention | > 80% |
-| `build_success_rate` | First-attempt build success | > 90% |
-| `deploy_success_rate` | Successful deployments | > 85% |
-| `average_retries_per_initiative` | Retry count per initiative | < 2 |
-| `automatic_repair_success_rate` | Self-healing success | > 70% |
-| `cost_per_initiative` | Total AI cost per initiative | Tracked & declining |
-| `time_idea_to_repo` | Time from idea to repository | < 15 min |
-| `time_idea_to_deploy` | Time from idea to live deployment | < 20 min |
+| Metric | Target |
+|--------|--------|
+| `pipeline_success_rate` | > 80% |
+| `build_success_rate` | > 90% |
+| `deploy_success_rate` | > 85% |
+| `average_retries_per_initiative` | < 2 |
+| `automatic_repair_success_rate` | > 70% |
+| `cost_per_initiative` | Tracked & declining |
+| `time_idea_to_repo` | < 15 min |
+| `time_idea_to_deploy` | < 20 min |
 
-**Dashboard Requirement:** Initiative Lifecycle Dashboard — a single view showing the full journey of each initiative from idea to deployment, with cost, duration, and success metrics.
+**Expected Impact:**
+- Product visibility
+- Business-grade metrics
+- Confidence for users and future customers
 
 **Status:** 📋 Planned
 
@@ -196,14 +215,6 @@ Upgrade agents from static prompt executors into adaptive learning systems. Each
 | Error Pattern Recognition | Predictive error detection from historical data |
 | Self-Improving Fix Agents | Repair strategies that evolve based on success rates |
 
-### Agent OS Foundation (Already Designed)
-
-The Agent OS v1.0 architecture provides the structural foundation:
-- **Adaptive Routing** — performance feedback loop
-- **Memory System** — persistent memory with retention policies
-- **Observability** — telemetry for learning
-- **Governance** — trust levels to gate learned behaviors
-
 ### Expected Outcome
 
 Each execution improves future executions. The system transitions from deterministic execution to adaptive intelligence.
@@ -219,8 +230,6 @@ Product Intelligence and Market Intelligence become relevant only after:
 1. The kernel is stable
 2. The product is validated with real users
 3. Learning agents are operational
-
-These layers remain part of the long-term vision but do not drive implementation decisions now.
 
 ---
 
@@ -252,21 +261,7 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 
 > **Current position:** Level 3 — Autonomous Engineering System.
 > **Current focus:** Product Proof Closure.
-> **Next capability:** AI-First Initiative Creation.
-
----
-
-## Product Positioning
-
-**Present AxionOS as:**
-- An autonomous software engineering platform
-- A governed SaaS / MVP generator
-- A system that transforms ideas into validated repositories
-
-**Do NOT present as:**
-- A startup factory
-- A global marketplace of agents
-- An abstract agent operating system
+> **Execution mode:** Sprint-based implementation.
 
 ---
 
@@ -274,4 +269,4 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 
 > The architecture is sufficient. The product is not yet proven.
 > Every implementation decision must serve product proof closure: structured inputs, reliable execution, and successful deployment.
-> No expansion until the first product is validated with real users.
+> No expansion until the four product-proof sprints are complete and stable.
