@@ -150,8 +150,10 @@ No new architecture expansion until these sprints are complete and stable.
 | DAG Execution Engine (6 workers) | ✅ Operational |
 | Runtime Validation (tsc + vite via CI) | ✅ Operational |
 | Autonomous Build Repair + Fix Orchestrator | ✅ Operational |
+| Evidence-Oriented Repair Loop | ✅ Operational |
+| Error Pattern Library | ✅ Operational |
 | Governance (gates, SLAs, audit logs) | ✅ Operational |
-| Observability + Cost Tracking | ✅ Operational |
+| Product-Level Observability | ✅ Operational |
 | Stage & Agent IO Contracts | ✅ Implemented |
 
 ### What to Freeze
