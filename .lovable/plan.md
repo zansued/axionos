@@ -59,6 +59,11 @@ These tasks reduce architectural entropy and prepare the system for the Agent In
 | Adaptive Learning Engine | ✅ |
 | Governance (gates, SLAs, audit logs) | ✅ |
 | Observability + Cost Tracking | ✅ |
+| Agent Operating System (5 fundamental types) | 📋 Planned |
+
+### Agent Operating System
+
+A key architectural simplification planned for the kernel: replace 18+ specific agent identities with five fundamental agent types (Perception, Design, Build, Validation, Evolution). Each type operates in different **modes** per stage. Specialization = mode + tools + memory + contracts. This reduces complexity, lowers prompt cost, and directly enables the NEXT horizon by providing cleaner agent memory structure and consistent IO for learning.
 
 ---
 

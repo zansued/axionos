@@ -50,12 +50,31 @@ The kernel is the set of systems that every pipeline execution depends on:
 | Pipeline Visualization | UI components for pipeline state | 🔧 Stabilizing |
 | UI Restructuring | Control-center layout simplification | 🔧 Stabilizing |
 
+### Agent Operating System
+
+The kernel introduces the **Agent Operating System (Agent OS)** — a conceptual reorganization that replaces 18+ specific agent identities with five fundamental agent types:
+
+| Agent Type | Responsibility |
+|-----------|---------------|
+| **Perception Agent** | Interprets ideas, requirements, market signals, context |
+| **Design Agent** | Creates architecture, domain models, data models, API designs |
+| **Build Agent** | Generates code, UI, configs, migrations, artifacts |
+| **Validation Agent** | Static analysis, runtime validation, QA, architectural checks |
+| **Evolution Agent** | Repair, learning, pattern extraction, prompt optimization |
+
+Each agent type operates in different **modes** depending on the stage (e.g., Design Agent in `data_modeling` mode vs. `api_design` mode). Specialization is preserved through the combination of **mode + tools + memory + contracts**, not through identity proliferation.
+
+This reduces architectural complexity, lowers prompt overhead, and directly enables the NEXT horizon (Learning Agents) by providing a cleaner structure for agent memory and prompt optimization.
+
+**Status:** 📋 Planned — conceptual architecture defined
+
 ### Kernel Hardening Tasks
 
 | Task | Purpose | Status |
 |------|---------|--------|
 | Stage Contract Formalization | Every stage declares `required_inputs`, `produced_outputs`, `failure_modes`, `retry_policy` | ✅ Implemented |
 | Agent IO Contract Standardization | Every agent produces `summary`, `decisions[]`, `artifacts[]`, `confidence_score` | ✅ Implemented |
+| Agent OS Design | Consolidate 18+ agents into 5 fundamental types with mode-based specialization | 📋 Planned |
 | Observability Improvements | Granular per-stage cost tracking, latency histograms | 🔧 In Progress |
 | Pipeline Visualization Refactor | Simplified control-center UI for pipeline state | 🔧 In Progress |
 | AI Cost Tracking | Per-stage, per-model cost attribution via `initiative_jobs` | ✅ Implemented |
@@ -69,6 +88,7 @@ The kernel is the set of systems that every pipeline execution depends on:
 - Reduce LLM cost via efficiency layer optimization
 - Improve maintainability of 50+ edge functions
 - Simplify visual complexity in the control UI
+- Consolidate agent architecture via Agent OS
 - Make future intelligence layers safe to build on
 
 ### Expected Outcome
@@ -86,6 +106,15 @@ AxionOS becomes a stable autonomous engineering kernel — reliable enough that 
 ### Purpose
 
 Upgrade agents from static prompt executors into adaptive learning systems. Each execution should improve future executions. This is the transition from Level 3 (Autonomous Engineering System) to Level 4 (Self-Learning Software Factory).
+
+### Relationship to Agent OS
+
+The Agent Operating System (defined in NOW) provides the structural foundation for this horizon. With agents organized into five fundamental types operating in modes, the learning infrastructure becomes tractable:
+
+- **Fewer learning models** — 5 agent types instead of 18+ identities
+- **Cleaner training data** — mode-based organization provides structured execution history
+- **Cross-mode learning** — a Design Agent learning in `data_modeling` mode can apply patterns to `api_design` mode
+- **Unified memory queries** — `agent_memory` indexed by type + mode enables efficient retrieval
 
 ### Agent Intelligence Layer
 
