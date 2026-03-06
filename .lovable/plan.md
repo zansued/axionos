@@ -231,6 +231,36 @@ Organized into four sequential sprints.
 
 ---
 
+## Sprint 6 — Evidence-Oriented Repair Loop
+
+**Objective:** Make the repair loop evidence-based, traceable, and measurable.
+
+**Key Deliverables:**
+- Repair Evidence schema, Error Taxonomy, Repair Strategy Map
+- Revalidation Result schema, Repair Evidence Recorder
+- `repair_evidence` table with RLS
+- RepairEvidenceCard UI component
+
+**Status:** ✅ Complete
+
+---
+
+## Sprint 7 — Error Pattern Library & Learning Foundation
+
+**Objective:** Convert repair evidence into reusable error pattern intelligence.
+
+**Key Deliverables:**
+- Error Pattern schema, Strategy Effectiveness schema, Prevention Rule Candidate schema
+- Error Signature Normalizer
+- `error_patterns`, `strategy_effectiveness`, `prevention_rule_candidates` tables
+- Error Pattern Library Engine
+- ErrorPatternRadar UI component (Observability → Patterns tab)
+- `useErrorPatterns` hook
+
+**Status:** ✅ Complete
+
+---
+
 ## Success Metrics
 
 | Metric | Target |

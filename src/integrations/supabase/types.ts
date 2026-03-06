@@ -650,6 +650,89 @@ export type Database = {
           },
         ]
       }
+      error_patterns: {
+        Row: {
+          affected_file_types: string[] | null
+          affected_stages: string[] | null
+          common_causes: string[] | null
+          confidence_score: number
+          created_at: string
+          description: string
+          error_category: string
+          error_signature: string
+          failed_strategies: string[] | null
+          first_seen_at: string
+          frequency: number
+          id: string
+          last_seen_at: string
+          normalized_signature: string
+          organization_id: string
+          recommended_prevention: string | null
+          repairability: string
+          severity: string
+          success_rate: number
+          successful_strategies: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          affected_file_types?: string[] | null
+          affected_stages?: string[] | null
+          common_causes?: string[] | null
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          error_category?: string
+          error_signature?: string
+          failed_strategies?: string[] | null
+          first_seen_at?: string
+          frequency?: number
+          id?: string
+          last_seen_at?: string
+          normalized_signature?: string
+          organization_id: string
+          recommended_prevention?: string | null
+          repairability?: string
+          severity?: string
+          success_rate?: number
+          successful_strategies?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          affected_file_types?: string[] | null
+          affected_stages?: string[] | null
+          common_causes?: string[] | null
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          error_category?: string
+          error_signature?: string
+          failed_strategies?: string[] | null
+          first_seen_at?: string
+          frequency?: number
+          id?: string
+          last_seen_at?: string
+          normalized_signature?: string
+          organization_id?: string
+          recommended_prevention?: string | null
+          repairability?: string
+          severity?: string
+          success_rate?: number
+          successful_strategies?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "error_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       git_connections: {
         Row: {
           connected_by: string
@@ -1321,6 +1404,57 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prevention_rule_candidates: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          description: string
+          expected_impact: string
+          id: string
+          organization_id: string
+          pattern_id: string | null
+          proposed_action: string
+          rule_type: string
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          expected_impact?: string
+          id?: string
+          organization_id: string
+          pattern_id?: string | null
+          proposed_action?: string
+          rule_type?: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          expected_impact?: string
+          id?: string
+          organization_id?: string
+          pattern_id?: string | null
+          proposed_action?: string
+          rule_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prevention_rule_candidates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prevention_rule_candidates_pattern_id_fkey"
+            columns: ["pattern_id"]
+            isOneToOne: false
+            referencedRelation: "error_patterns"
             referencedColumns: ["id"]
           },
         ]
@@ -2066,6 +2200,62 @@ export type Database = {
             columns: ["phase_id"]
             isOneToOne: false
             referencedRelation: "story_phases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strategy_effectiveness: {
+        Row: {
+          attempts_total: number
+          average_duration_ms: number
+          confidence_score: number
+          created_at: string
+          error_category: string
+          failures_total: number
+          id: string
+          last_used_at: string
+          organization_id: string
+          repair_strategy: string
+          success_rate: number
+          successes_total: number
+          updated_at: string
+        }
+        Insert: {
+          attempts_total?: number
+          average_duration_ms?: number
+          confidence_score?: number
+          created_at?: string
+          error_category: string
+          failures_total?: number
+          id?: string
+          last_used_at?: string
+          organization_id: string
+          repair_strategy: string
+          success_rate?: number
+          successes_total?: number
+          updated_at?: string
+        }
+        Update: {
+          attempts_total?: number
+          average_duration_ms?: number
+          confidence_score?: number
+          created_at?: string
+          error_category?: string
+          failures_total?: number
+          id?: string
+          last_used_at?: string
+          organization_id?: string
+          repair_strategy?: string
+          success_rate?: number
+          successes_total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_effectiveness_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
