@@ -405,6 +405,14 @@ Retorne APENAS JSON:
       skipped_files: skippedFiles,
     }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
 
+    // Persist deploy metadata on initiative
+    await updateInitiative(ctx, {
+      repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
+      commit_hash: changelog.version || "1.0.0",
+      build_status: preflight.preflight_pass ? "pass" : "fail",
+      deploy_status: "published",
+    });
+
     await pipelineLog(ctx, "pipeline_publish_complete",
       `Release Agent: ${committedFiles.length} arquivos publicados em ${actualOwner}/${actualRepo} v${changelog.version || "1.0.0"} ✅`,
       { branch: resolvedBaseBranch, repo: `${actualOwner}/${actualRepo}`, version: changelog.version });

@@ -776,9 +776,15 @@ export type Database = {
           approved_at_squad: string | null
           architecture_content: string | null
           blueprint: Json | null
+          build_status: string | null
           business_model: string | null
+          commit_hash: string | null
           complexity: string | null
           created_at: string
+          deploy_status: string | null
+          deploy_target: string | null
+          deploy_url: string | null
+          deployed_at: string | null
           description: string | null
           discovery_payload: Json | null
           estimated_cost_max: number | null
@@ -788,6 +794,7 @@ export type Database = {
           execution_progress: Json | null
           feasibility_analysis: string | null
           generation_depth: string | null
+          health_status: string | null
           id: string
           idea_analysis: Json | null
           idea_raw: string | null
@@ -802,6 +809,7 @@ export type Database = {
           recommended_generation_depth: string | null
           reference_url: string | null
           refined_idea: string | null
+          repo_url: string | null
           risk_flags: Json | null
           risk_level: string | null
           simulation_report: Json | null
@@ -821,9 +829,15 @@ export type Database = {
           approved_at_squad?: string | null
           architecture_content?: string | null
           blueprint?: Json | null
+          build_status?: string | null
           business_model?: string | null
+          commit_hash?: string | null
           complexity?: string | null
           created_at?: string
+          deploy_status?: string | null
+          deploy_target?: string | null
+          deploy_url?: string | null
+          deployed_at?: string | null
           description?: string | null
           discovery_payload?: Json | null
           estimated_cost_max?: number | null
@@ -833,6 +847,7 @@ export type Database = {
           execution_progress?: Json | null
           feasibility_analysis?: string | null
           generation_depth?: string | null
+          health_status?: string | null
           id?: string
           idea_analysis?: Json | null
           idea_raw?: string | null
@@ -847,6 +862,7 @@ export type Database = {
           recommended_generation_depth?: string | null
           reference_url?: string | null
           refined_idea?: string | null
+          repo_url?: string | null
           risk_flags?: Json | null
           risk_level?: string | null
           simulation_report?: Json | null
@@ -866,9 +882,15 @@ export type Database = {
           approved_at_squad?: string | null
           architecture_content?: string | null
           blueprint?: Json | null
+          build_status?: string | null
           business_model?: string | null
+          commit_hash?: string | null
           complexity?: string | null
           created_at?: string
+          deploy_status?: string | null
+          deploy_target?: string | null
+          deploy_url?: string | null
+          deployed_at?: string | null
           description?: string | null
           discovery_payload?: Json | null
           estimated_cost_max?: number | null
@@ -878,6 +900,7 @@ export type Database = {
           execution_progress?: Json | null
           feasibility_analysis?: string | null
           generation_depth?: string | null
+          health_status?: string | null
           id?: string
           idea_analysis?: Json | null
           idea_raw?: string | null
@@ -892,6 +915,7 @@ export type Database = {
           recommended_generation_depth?: string | null
           reference_url?: string | null
           refined_idea?: string | null
+          repo_url?: string | null
           risk_flags?: Json | null
           risk_level?: string | null
           simulation_report?: Json | null
@@ -2217,6 +2241,9 @@ export type Database = {
         | "portfolio_managed"
         | "evolving_system"
         | "system_evolved"
+        | "deploying"
+        | "deployed"
+        | "deploy_failed"
       initiative_status:
         | "idea"
         | "discovery"
@@ -2473,6 +2500,9 @@ export const Constants = {
         "portfolio_managed",
         "evolving_system",
         "system_evolved",
+        "deploying",
+        "deployed",
+        "deploy_failed",
       ],
       initiative_status: [
         "idea",

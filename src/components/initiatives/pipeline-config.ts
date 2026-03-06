@@ -1,7 +1,7 @@
 import {
   Lightbulb, Brain, Users, FileText, Cpu, BookOpen, Hammer, CheckCircle2,
   Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap, Package, Wrench, Database, Monitor, GraduationCap,
-  Search, BarChart3, Target, TrendingUp, DollarSign, Eye, Activity, Repeat, FolderKanban, Settings2
+  Search, BarChart3, Target, TrendingUp, DollarSign, Eye, Activity, Repeat, FolderKanban, Settings2, Globe
 } from "lucide-react";
 
 // ══════════════════════════════════════════════════
@@ -75,6 +75,9 @@ export const PIPELINE_STEPS = [
   { key: "repair_failed", label: "Repair Failed", icon: Wrench, color: "text-destructive", bg: "bg-destructive/10" },
   { key: "ready_to_publish", label: "Pronto para Publicar", icon: Rocket, color: "text-accent", bg: "bg-accent/10" },
   { key: "published", label: "Publicado", icon: GitBranch, color: "text-primary", bg: "bg-primary/10" },
+  { key: "deploying", label: "Deploying ▶", icon: Globe, color: "text-warning", bg: "bg-warning/10" },
+  { key: "deployed", label: "Deployed ✓", icon: Globe, color: "text-success", bg: "bg-success/10" },
+  { key: "deploy_failed", label: "Deploy Failed", icon: Globe, color: "text-destructive", bg: "bg-destructive/10" },
 
   // ── Growth & Evolution Layer (Stages 24-32) ──
   { key: "observing_product", label: "Observability ▶", icon: Eye, color: "text-warning", bg: "bg-warning/10" },
@@ -142,6 +145,7 @@ export const MACRO_STAGES = [
   { key: "validation", label: "Fix Loop (AI corrige erros)", icon: Shield },
   { key: "build_repair", label: "Build Repair (auto-fix)", icon: Wrench },
   { key: "publish", label: "Publicação (GitHub)", icon: GitBranch },
+  { key: "deploy", label: "Deploy", icon: Globe },
 
   // Growth & Evolution Layer
   { key: "observability", label: "Observability", icon: Eye },
@@ -200,18 +204,19 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["validating"].includes(s)) return 23;
   if (["repairing_build", "build_repaired", "repair_failed"].includes(s)) return 24;
   if (["ready_to_publish", "published"].includes(s)) return 25;
+  if (["deploying", "deployed", "deploy_failed"].includes(s)) return 26;
 
-  // Growth & Evolution Layer
-  if (["observing_product", "product_observed"].includes(s)) return 26;
-  if (["analyzing_product_metrics", "product_metrics_analyzed"].includes(s)) return 27;
-  if (["analyzing_user_behavior", "user_behavior_analyzed"].includes(s)) return 28;
-  if (["optimizing_growth", "growth_optimized"].includes(s)) return 29;
-  if (["learning_system", "system_learned"].includes(s)) return 30;
-  if (["evolving_product", "product_evolved"].includes(s)) return 31;
-  if (["evolving_architecture", "architecture_evolved"].includes(s)) return 32;
-  if (["managing_portfolio", "portfolio_managed"].includes(s)) return 33;
-  if (["evolving_system", "system_evolved"].includes(s)) return 34;
-  if (["completed"].includes(s)) return 35;
+  // Growth & Evolution Layer (shifted +1 for deploy)
+  if (["observing_product", "product_observed"].includes(s)) return 27;
+  if (["analyzing_product_metrics", "product_metrics_analyzed"].includes(s)) return 28;
+  if (["analyzing_user_behavior", "user_behavior_analyzed"].includes(s)) return 29;
+  if (["optimizing_growth", "growth_optimized"].includes(s)) return 30;
+  if (["learning_system", "system_learned"].includes(s)) return 31;
+  if (["evolving_product", "product_evolved"].includes(s)) return 32;
+  if (["evolving_architecture", "architecture_evolved"].includes(s)) return 33;
+  if (["managing_portfolio", "portfolio_managed"].includes(s)) return 34;
+  if (["evolving_system", "system_evolved"].includes(s)) return 35;
+  if (["completed"].includes(s)) return 36;
   return 0;
 }
 
@@ -451,10 +456,28 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "published":
       return [
+        { stage: "deploy_vercel", label: "🚀 Deploy no Vercel", description: "Inicia o deploy automático para Vercel.", type: "run", variant: "primary" },
         { stage: "observability", label: "👁️ Iniciar Observability", type: "run" },
         { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
         { stage: "publish", label: "Re-publicar no GitHub", type: "publish" },
         { stage: "approve", label: "Marcar como Concluído", type: "approve" },
+      ];
+    case "deploying":
+      return [
+        { stage: "deploy_vercel", label: "Deploy em andamento...", type: "run" },
+      ];
+    case "deployed":
+      return [
+        { stage: "observability", label: "👁️ Iniciar Observability", type: "run" },
+        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
+        { stage: "deploy_vercel", label: "🔄 Re-deploy", type: "run" },
+        { stage: "approve", label: "✅ Marcar como Concluído", type: "approve" },
+      ];
+    case "deploy_failed":
+      return [
+        { stage: "deploy_vercel", label: "🔧 Retry Deploy", description: "Tenta o deploy novamente.", type: "run", variant: "primary" },
+        { stage: "publish", label: "Re-publicar no GitHub", type: "publish" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
 
     // ── Growth & Evolution Layer ──

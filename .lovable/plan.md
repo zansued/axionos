@@ -123,29 +123,33 @@ Organized into four sequential sprints.
 **Objective:** Standardize publish-to-deploy flow and make deployment a first-class product output.
 
 **Key Deliverables:**
-- Deploy state machine with deterministic transitions
-- Deploy contract documentation
-- Initiative deploy metadata fields (`repo_url`, `commit_hash`, `deploy_url`, `health_status`)
+- Deploy state machine with deterministic transitions (`validating` → `ready_to_publish` → `published` → `deploying` → `deployed` / `deploy_failed`)
+- Deploy contract in PIPELINE_CONTRACTS.md
+- Initiative deploy metadata fields (`repo_url`, `commit_hash`, `deploy_url`, `deploy_status`, `deploy_target`, `health_status`, `deployed_at`, `build_status`)
 - Vercel-first deployment integration contract
 - Deploy status persistence
-- Explicit states: `ready_to_publish` → `deploying` → `deployed` / `deploy_failed`
+- Pipeline config with deploy states and actions
+- UI deploy status card with URL, health, and error visibility
 
 **Affected Layers:**
-- Publish pipeline
-- Deploy integration
-- Initiative lifecycle state
-- UI status rendering
+- Publish pipeline (persists repo_url, commit_hash, build_status)
+- Deploy integration (planned edge function)
+- Initiative lifecycle state (new enum values: deploying, deployed, deploy_failed)
+- UI status rendering (DeployStatusCard in InitiativeDetail)
 
 **Dependencies:**
 - Validated repository output from pipeline
 
 **Acceptance Criteria:**
-- [ ] Initiative can move from `published` to `deployed`
-- [ ] Deploy URL is stored and shown
-- [ ] Failed deploys are visible and traceable
-- [ ] State transitions are deterministic
+- [x] Deploy states defined in state machine
+- [x] Deploy metadata columns in database
+- [x] Pipeline config updated with deploy states and actions
+- [x] UI shows deploy status, URL, and health
+- [x] Published stage persists repo_url
+- [ ] Automated Vercel deploy via API
+- [ ] Post-deploy health check
 
-**Status:** 📋 Planned
+**Status:** 🔧 In Progress (contract + schema + UI done, deploy automation planned)
 
 ---
 
