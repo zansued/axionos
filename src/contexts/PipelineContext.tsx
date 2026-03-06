@@ -196,6 +196,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       adaptive_learning: "adaptive-learning-engine",
       error_intelligence: "error-intelligence",
       build_repair: "autonomous-build-repair",
+      deploy_vercel: "initiative-deploy-engine",
       // v3 Growth & Evolution Layer
       observability: "observability-engine",
       product_analytics: "product-analytics-engine",
