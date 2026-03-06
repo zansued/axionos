@@ -421,6 +421,7 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                  runningStage === "execution" ? "Isso pode levar vários minutos dependendo do número de subtasks." :
                  runningStage === "validation" ? "Cada artefato será analisado individualmente. ~1 min." :
                  runningStage === "publish" ? "Commitando arquivos no GitHub..." :
+                 runningStage === "deploy_vercel" ? "Conectando ao Vercel e iniciando deploy..." :
                  "Isso pode levar ~30 segundos."}
               </p>
             </div>
