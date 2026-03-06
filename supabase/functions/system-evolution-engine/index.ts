@@ -140,7 +140,7 @@ Return ONLY valid JSON.`;
           confidence_score: r.confidence || 0.5,
           scope: r.scope || "global",
         }));
-        await ctx.supabase.from("project_prevention_rules").insert(newRules);
+        await ctx.serviceClient.from("project_prevention_rules").insert(newRules);
       } catch (e) { console.warn("Prevention rules insert failed:", e.message); }
     }
 
