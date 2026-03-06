@@ -38,8 +38,8 @@ serve(async (req) => {
     growth_optimized: { field: "approved_at_planning", nextStatus: "product_evolved" },
     product_evolved: { field: "approved_at_planning", nextStatus: "architecture_evolved" },
     architecture_evolved: { field: "approved_at_planning", nextStatus: "system_evolved" },
-    system_evolved: { field: "approved_at_planning", nextStatus: "portfolio_managed" },
-    portfolio_managed: { field: "approved_at_planning", nextStatus: "completed" },
+    portfolio_managed: { field: "approved_at_planning", nextStatus: "system_evolved" },
+    system_evolved: { field: "approved_at_planning", nextStatus: "completed" },
   };
 
   const approval = approvalMap[currentStatus];
