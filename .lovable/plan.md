@@ -1,52 +1,128 @@
 # AxionOS — Execution Plan
 
 > Last updated: 2026-03-06
+> Mode: **Kernel Hardening & Product Proof**
 
 ---
 
-## Current Focus
+## Strategic Directive
 
-AxionOS follows architecture-priority sequencing. Each implementation horizon must be stable before the next begins.
+**AxionOS is no longer in architecture expansion mode.**
+**AxionOS is now in kernel hardening and product proof mode.**
 
-| Horizon | Focus | Status |
-|---------|-------|--------|
-| **NOW** | Stabilize the Kernel | 🔧 In Progress |
-| **NEXT** | Build Learning Agents | 📋 Planned |
-| **LATER** | Build Product Intelligence | 📋 Planned |
-| **FUTURE** | Build Market Intelligence | 📋 Planned |
+The architecture is sufficient. The focus is now:
+1. Stabilize the kernel
+2. Improve reliability and cost visibility
+3. Define one clear product proof
+4. Package that product for real users
+5. Postpone broader platform ambitions until after validation
 
 ---
 
-## What We Are Doing Now
+## First Product Proof
 
-**Stabilizing the Core System Kernel.**
+### Governed SaaS / MVP Generator
 
-The engineering infrastructure is implemented. Agent OS v1.0 architecture is fully designed with 14 modules across 5 planes. The priority is hardening the kernel — reducing entropy, standardizing contracts, improving reliability, and lowering cost.
+A user submits an idea → AxionOS produces:
 
-### Active Work
+| Output | Description |
+|--------|-------------|
+| Structured Discovery | Market analysis, feasibility, refined idea |
+| Architecture | System design, component structure, tech stack |
+| PRD | Product requirements document |
+| Stories & Subtasks | Backlog with acceptance criteria |
+| Scaffold / Initial Code | Business logic, API, UI generation |
+| Runtime Validation | tsc + vite build verification |
+| Repository Output | Git repository with atomic commits |
+| Pipeline Traceability | Full audit trail of every decision |
 
-- Pipeline execution reliability across all 32 stages
-- AI Efficiency Layer optimization (prompt compression, semantic cache, model routing)
-- Stage and agent IO contract standardization
-- UI restructuring toward a control-center layout
-- Pipeline visualization refactor
-- Observability and cost tracking improvements
+**This is the only product to validate right now.**
 
-### Kernel Hardening Tasks
+---
+
+## Execution Priorities
+
+### P1 — Harden the Kernel
 
 | Task | Status |
 |------|--------|
-| Stage Contract System — formal input/output/retry schemas per stage | ✅ Implemented |
-| Agent IO Contracts — standardized agent output structure | ✅ Implemented |
-| Agent OS v1.0 — 14-module architecture across 5 planes | ✅ Designed |
-| Observability Improvements — granular cost tracking | 🔧 In Progress |
-| Pipeline Visualization Refactor — simplified control UI | 🔧 In Progress |
-| AI Cost Tracking — per-stage, per-model attribution | ✅ Implemented |
-| Error Taxonomy Standardization — typed failure modes | 🔧 In Progress |
+| Pipeline completion reliability | 🔧 In Progress |
+| Build success rate improvement | 🔧 In Progress |
+| Typed error taxonomy across all stages | 🔧 In Progress |
+| Per-stage observability | ✅ Implemented |
+| Per-model cost attribution | ✅ Implemented |
+| Output contract enforcement | ✅ Implemented |
+| Initiative traceability | ✅ Implemented |
+| Stage contract system | ✅ Implemented |
+| Agent IO contracts | ✅ Implemented |
+| AI Efficiency Layer (compressor + cache + router) | ✅ Implemented |
 
-These tasks reduce architectural entropy and prepare the system for the Agent Intelligence Layer (NEXT).
+### P2 — Clarify the Product Proof
 
-### Kernel Components (Implemented)
+| Task | Status |
+|------|--------|
+| Position AxionOS as "idea → governed MVP" | 🔧 In Progress |
+| Simplify UX messaging around core use case | 🔧 In Progress |
+| Landing / onboarding focused on single flow | 📋 Planned |
+
+### P3 — Package for Real Usage
+
+| Task | Status |
+|------|--------|
+| Onboarding flow improvement | 📋 Planned |
+| Initiative creation UX simplification | 📋 Planned |
+| Execution transparency (live pipeline view) | 🔧 In Progress |
+| Export / deploy actions | 📋 Planned |
+| Billing readiness | 📋 Planned |
+| Workspace consistency | 📋 Planned |
+
+### P4 — Delay Broader Platform Ambition
+
+These remain valid but are **frozen** until product validation:
+
+| Area | Status |
+|------|--------|
+| Marketplace ecosystem | ❄️ Frozen |
+| Global capability registry expansion | ❄️ Frozen |
+| Advanced distributed runtime | ❄️ Frozen |
+| Advanced multi-agent coordination | ❄️ Frozen |
+| Product intelligence layer | ❄️ Frozen |
+| Market intelligence layer | ❄️ Frozen |
+| Startup factory ambitions | ❄️ Frozen |
+| Cognitive systems layer | ❄️ Frozen |
+
+**Rule:** No new architecture unless it directly improves reliability, cost, execution speed, product clarity, or sellability.
+
+---
+
+## Success Metrics
+
+| Metric | Target |
+|--------|--------|
+| Pipeline success rate (no manual intervention) | > 80% |
+| Build OK rate | > 90% |
+| Average retries per initiative | < 2 |
+| Automatic repair success rate | > 70% |
+| Cost per initiative | Tracked & declining |
+| Cost per useful output | Tracked & declining |
+| Time from idea to validated repository | < 15 min |
+| Pipeline progress clarity for user | Clear visual feedback |
+
+---
+
+## What the UI Should Emphasize
+
+1. **Initiative creation** — simple, guided, one flow
+2. **Pipeline progress** — real-time stage visualization
+3. **Cost visibility** — per-initiative, per-stage costs
+4. **Output access** — clear path to generated repository
+5. **Error transparency** — what failed, why, what was repaired
+
+**De-emphasize:** Agent OS internals, marketplace, portfolio management, venture intelligence.
+
+---
+
+## Active Kernel Components
 
 | Component | Status |
 |-----------|--------|
@@ -61,179 +137,21 @@ These tasks reduce architectural entropy and prepare the system for the Agent In
 | Governance (gates, SLAs, audit logs) | ✅ |
 | Observability + Cost Tracking | ✅ |
 
-### Agent Operating System (v1.0 GA)
-
-The Agent OS is fully designed with 14 modules organized into 5 architectural planes:
-
-| Plane | Modules |
-|-------|---------|
-| **Core** | Runtime Protocol, Capability Model, Core Types |
-| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing |
-| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter |
-| **Data** | Artifact Store, Memory System, Observability |
-| **Ecosystem** | Marketplace & Global Capability Registry |
-
-Key architectural capabilities:
-- 6-tier agent trust model (blocked → trusted)
-- Multi-agent coordination (debate, consensus, iterative refinement)
-- Adaptive routing with exploration strategies (epsilon-greedy, UCB1, Thompson)
-- Distributed task scheduling with worker health monitoring
-- Global capability registry with package management and trust scoring
-- Approval workflows with compliance and audit ledger
-
-Full specification: [docs/AGENT_OS_ARCHITECTURE_MAP.md](docs/AGENT_OS_ARCHITECTURE_MAP.md)
-
 ---
 
-## What Comes Next
+## Agent OS v1.0 — Reference Architecture (Frozen)
 
-**Agent Intelligence Layer.**
+The Agent OS is fully designed. No expansion needed.
 
-After the kernel is stable, agents evolve from static prompt executors into learning systems that improve from previous executions.
+| Plane | Modules | Status |
+|-------|---------|--------|
+| **Core** | Runtime Protocol, Capability Model, Core Types | ✅ Designed |
+| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing | ✅ Designed |
+| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Designed |
+| **Data** | Artifact Store, Memory System, Observability | ✅ Designed |
+| **Ecosystem** | Marketplace & Global Capability Registry | ✅ Designed |
 
-| Module | Description |
-|--------|-------------|
-| Learning Agents | Self-improving prompt strategies |
-| Agent Memory Layer | Persistent per-agent memory (foundation: `agent_memory` table + Memory System) |
-| Prompt Optimization Engine | A/B testing of prompt variations |
-| Error Pattern Recognition | Predictive error detection |
-| Self-Improving Fix Agents | Evolving repair strategies |
-| Architecture Pattern Library | Reusable patterns by domain |
-
-Agent OS modules that directly enable this horizon:
-- **Adaptive Routing** — performance feedback loop for routing optimization
-- **Memory System** — persistent memory with retention policies and embedding search
-- **Observability** — telemetry and cost metrics for learning
-- **Governance** — trust levels to gate learned behaviors
-
-**Dependency:** Requires stable kernel.
-
----
-
-## What Must Wait
-
-### Product Intelligence (LATER)
-
-Post-deployment product evolution: analytics, behavior analysis, automatic UI optimization, feature suggestion.
-
-**Dependency:** Requires stable kernel + learning agents.
-
-### Market Intelligence (FUTURE)
-
-Autonomous venture creation: opportunity discovery, market validation, revenue strategy, portfolio management.
-
-**Dependency:** Requires all previous layers stable.
-
----
-
-## Why the Order Matters
-
-```
-Kernel -> Learning Agents -> Product Intelligence -> Market Intelligence
-```
-
-Each layer depends on the previous one:
-
-1. **Without a stable kernel**, learning agents have no reliable data to learn from
-2. **Without learning agents**, product intelligence cannot improve its analysis over time
-3. **Without product intelligence**, market decisions are based on assumptions, not data
-
-Skipping ahead creates compounding technical debt. The order is not arbitrary — it reflects architectural dependency.
-
----
-
-## System Architecture
-
-```
-+-------------------------------------------------------------------+
-|                       ECOSYSTEM PLANE                              |
-|   Marketplace - Capability Registry - Package Manager              |
-+-------------------------------+-----------------------------------+
-                                |
-+-------------------------------+-----------------------------------+
-|                       EXECUTION PLANE                              |
-|   Orchestrator - Coordination - Distributed Runtime                |
-|   LLM Adapter - Tool Adapter - Event Bus                           |
-+-----------+-----------------------+-------------------+-----------+
-            |                       |                    |
-+-----------+----------+  +---------+---------+  +------+----------+
-|    CONTROL PLANE     |  |    DATA PLANE     |  |   DATA PLANE    |
-|   Selection Engine   |  |   Artifact Store  |  |  Observability  |
-|   Policy Engine      |  |   Memory System   |  |  Audit Ledger   |
-|   Governance Layer   |  |                   |  |                 |
-|   Adaptive Routing   |  |                   |  |                 |
-+-----------+----------+  +---------+---------+  +------+----------+
-            |                       |                    |
-+-----------+-----------------------+--------------------+----------+
-|                         CORE PLANE                                 |
-|   Runtime Protocol - Capability Model - Core Types                 |
-+-------------------------------------------------------------------+
-```
-
----
-
-## Pipeline — 32 Stages
-
-### Discovery & Architecture (S06-10) — NOW
-| # | Stage | Engine |
-|---|-------|--------|
-| 06 | Discovery Intelligence | 4-agent comprehension team |
-| 07 | Market Intelligence | 4-agent architecture team |
-| 08 | Technical Feasibility | Architecture simulation |
-| 09 | Project Structuring | Preventive validation |
-| 10 | Squad Formation | Specialized agent allocation |
-
-### Infrastructure & Modeling (S11-16) — NOW
-| # | Stage | Engine |
-|---|-------|--------|
-| 11 | Architecture Planning | Bootstrap + foundation scaffold |
-| 12 | Domain Model Generation | Module graph + dependency intelligence |
-| 13 | AI Domain Analysis | Entity/relationship extraction via LLM |
-| 14 | Schema Bootstrap | Isolated PostgreSQL schema |
-| 15 | DB Provisioning | Tables + RLS + storage |
-| 16 | Data Model Generation | SQL tables, FK, indexes, RLS |
-
-### Code Generation (S17-19) — NOW
-| # | Stage | Engine |
-|---|-------|--------|
-| 17 | Business Logic Synthesis | Services, validations, workflows |
-| 18 | API Generation | REST, RPCs, triggers, webhooks |
-| 19 | UI Generation | Pages, components, hooks, navigation |
-
-### Validation & Publish (S20-23) — NOW
-| # | Stage | Engine |
-|---|-------|--------|
-| 20 | Validation | AI + deep analysis + drift detection |
-| 21 | Build | Runtime validation via CI |
-| 22 | Test | Self-healing build repair |
-| 23 | Publish | Atomic Git Tree API |
-
-### Growth & Evolution (S24-32) — Mixed
-| # | Stage | Horizon |
-|---|-------|---------|
-| 24 | Observability | NOW |
-| 25-27 | Analytics + Growth | LATER |
-| 28 | Adaptive Learning | NOW |
-| 29-30 | Product/Architecture Evolution | LATER |
-| 31-32 | Portfolio + System Evolution | FUTURE |
-
----
-
-## Edge Functions (50+)
-
-```
-supabase/functions/
-+-- Discovery & Architecture      (5 functions)
-+-- Infrastructure & Modeling      (8 functions)
-+-- Code Generation                (3 functions)
-+-- Validation & Publish           (6 functions)
-+-- Growth & Evolution             (9 functions)
-+-- Venture Intelligence           (4 functions -- FUTURE)
-+-- Pipeline Control               (7 functions)
-+-- Support                        (11 functions)
-+-- _shared/                       (15+ helper modules)
-    +-- agent-os/                  (14 Agent OS modules)
-```
+14 modules | 5 planes | Full TypeScript contracts | **Architecture complete — implementation follows product validation.**
 
 ---
 
@@ -250,14 +168,28 @@ supabase/functions/
 
 ---
 
-## System Maturity
+## Product Positioning
 
-| Level | Name | Status |
-|-------|------|--------|
-| Level 1 | Code Generator | ✅ |
-| Level 2 | Software Builder | ✅ |
-| Level 3 | Autonomous Engineering System | ✅ |
-| Level 4 | Self-Learning Software Factory | 🔄 Transitioning |
-| Level 5 | Autonomous Startup Factory | 🔮 Planned |
+**Present AxionOS as:**
+- An autonomous software engineering platform
+- A governed SaaS / MVP generator
+- A system that transforms ideas into validated repositories
 
-> Current position: Level 3 → Level 4 transition. Kernel stabilization + Agent OS v1.0 architecture are the prerequisites.
+**Do NOT present as:**
+- A startup factory
+- A global marketplace of agents
+- An abstract agent operating system
+
+---
+
+## Short-Term Roadmap
+
+```
+  NOW                         NEXT (after validation)
+  ────────────────────►       ────────────────────►
+  Harden Kernel               Build Learning Agents
+  Prove Product                Improve Agent Intelligence
+  Package for Users            Expand to Product Intelligence
+```
+
+Everything else waits.
