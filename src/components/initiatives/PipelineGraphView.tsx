@@ -80,7 +80,9 @@ export default function PipelineGraphView({
                 className={`
                   relative flex flex-col items-center gap-1 px-3 py-2 rounded-lg border cursor-pointer
                   transition-colors duration-200 min-w-[72px]
-                  ${status === "completed"
+                  ${status === "completed" && group.id === "growth"
+                    ? "border-primary/60 bg-primary/20 text-primary ring-1 ring-primary/40"
+                    : status === "completed"
                     ? "border-success/40 bg-success/10 text-success"
                     : status === "in-progress"
                     ? "border-primary/50 bg-primary/10 text-primary ring-1 ring-primary/30"
