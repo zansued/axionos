@@ -456,10 +456,28 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "published":
       return [
+        { stage: "deploy_vercel", label: "🚀 Deploy no Vercel", description: "Inicia o deploy automático para Vercel.", type: "run", variant: "primary" },
         { stage: "observability", label: "👁️ Iniciar Observability", type: "run" },
         { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
         { stage: "publish", label: "Re-publicar no GitHub", type: "publish" },
         { stage: "approve", label: "Marcar como Concluído", type: "approve" },
+      ];
+    case "deploying":
+      return [
+        { stage: "deploy_vercel", label: "Deploy em andamento...", type: "run" },
+      ];
+    case "deployed":
+      return [
+        { stage: "observability", label: "👁️ Iniciar Observability", type: "run" },
+        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
+        { stage: "deploy_vercel", label: "🔄 Re-deploy", type: "run" },
+        { stage: "approve", label: "✅ Marcar como Concluído", type: "approve" },
+      ];
+    case "deploy_failed":
+      return [
+        { stage: "deploy_vercel", label: "🔧 Retry Deploy", description: "Tenta o deploy novamente.", type: "run", variant: "primary" },
+        { stage: "publish", label: "Re-publicar no GitHub", type: "publish" },
+        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
 
     // ── Growth & Evolution Layer ──
