@@ -108,6 +108,27 @@ Requires stable kernel. Transforms agents from static prompt executors into lear
 | **Self-Improving Fix Agents** | Repair strategies that evolve based on fix success rates |
 | **Architecture Pattern Library** | Successful patterns indexed by domain and complexity |
 
+#### Agent Memory Foundation
+
+The `agent_memory` table provides the storage layer for agent learning. Each memory record captures:
+
+```
+agent_memory {
+  agent_id        — which agent produced this memory
+  task_type       — memory_type classification (strategy, pattern, error, decision)
+  strategy_used   — key describing the approach taken
+  outcome         — value storing the result and quality assessment
+  confidence      — relevance_score (0.0-1.0)
+  scope           — "initiative" or "organization" (cross-project learning)
+  timestamp       — created_at / updated_at
+  times_used      — how often this memory has been retrieved
+}
+```
+
+This structure allows agents to query past strategies by task type, filter by confidence, and prioritize frequently-successful approaches. The `scope` field enables cross-project learning at the organization level.
+
+**Status:** 🔧 Foundation exists (`agent_memory` table deployed, not yet consumed by agents)
+
 ### Product Intelligence Layer (LATER) — 📋 Planned
 
 Requires stable kernel + learning agents. Enables post-deployment product evolution.
