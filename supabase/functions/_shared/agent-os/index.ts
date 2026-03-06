@@ -324,3 +324,32 @@ export type {
 export {
   DEFAULT_LLM_ADAPTER_CONFIG,
 } from "./llm-adapter.ts";
+
+// Tool Adapter Layer (v0.5)
+export type {
+  ToolCapability as ToolAdapterCapability,
+  ToolDescriptor,
+  ToolExecutionMode,
+  ToolInvocationRequest,
+  ToolTraceMetadata,
+  ToolExecutionContext,
+  ToolEnvironment,
+  ToolResourceLimits,
+  ToolExecutionResult,
+  ToolExecutionStatus,
+  ToolExecutionError,
+  ToolErrorType,
+  ToolPermissionKind,
+  ToolPermissionResult,
+  IToolPermissionEvaluator,
+  IToolAdapter,
+  IToolAdapterRegistry,
+  ToolExecutionMetrics,
+  ToolAggregateMetrics,
+  ToolAdapterConfig,
+  ToolAdapterEventType,
+} from "./tool-adapter.ts";
+
+export {
+  DEFAULT_TOOL_ADAPTER_CONFIG,
+} from "./tool-adapter.ts";
