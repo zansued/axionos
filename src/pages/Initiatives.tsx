@@ -33,7 +33,7 @@ export default function Initiatives() {
   const queryClient = useQueryClient();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { runStage, rollbackToStage, getRunningStage } = usePipeline();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const { data: initiatives = [], isLoading } = useQuery({
     queryKey: ["initiatives", currentOrg?.id],
