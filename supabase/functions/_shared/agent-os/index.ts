@@ -109,3 +109,48 @@ export {
   DEFAULT_PERFORMANCE_WEIGHTS,
   CONFIDENCE_DRIFT_THRESHOLDS,
 } from "./capabilities.ts";
+
+// Selection Engine (v0.1)
+export type {
+  // Request
+  SelectionRequest,
+  RetrySelectionContext,
+  // Eligibility
+  EligibilityResult,
+  EligibleAgent,
+  IneligibleAgent,
+  EligibilityRule,
+  // Ranking
+  RankingResult,
+  RankedAgent,
+  ScoreBreakdown,
+  RankingWeights,
+  PenaltyRecord,
+  PenaltyType,
+  // Decision
+  SelectionDecision,
+  SelectionOutcome,
+  SelectedAgent,
+  ShortlistedAgent,
+  FallbackEntry,
+  // Rationale
+  SelectionRationale,
+  DecisionTraceEntry,
+  DecisiveFactor,
+  RejectedAlternative,
+  SelectionFlag,
+  // Summary
+  EligibilitySummary,
+  // Config
+  SelectionEngineConfig,
+  // Events
+  SelectionEventType,
+  // Interface
+  ISelectionEngine,
+} from "./selection.ts";
+
+export {
+  DEFAULT_RANKING_WEIGHTS,
+  STANDARD_PENALTIES,
+  DEFAULT_SELECTION_ENGINE_CONFIG,
+} from "./selection.ts";
