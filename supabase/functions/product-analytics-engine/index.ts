@@ -19,15 +19,13 @@ serve(async (req) => {
     const revenueStrategy = dp.revenue_strategy || {};
     const observabilityReport = ep.observability_report || {};
 
-    // Fetch brain nodes to understand product structure
-    const { data: brainNodes } = await ctx.supabase
+    const { data: brainNodes } = await ctx.serviceClient
       .from("project_brain_nodes")
       .select("name, node_type, metadata")
       .eq("initiative_id", initiative.id)
       .limit(50);
 
-    // Fetch stories for feature mapping
-    const { data: stories } = await ctx.supabase
+    const { data: stories } = await ctx.serviceClient
       .from("stories")
       .select("title, status, priority")
       .eq("initiative_id", initiative.id)
@@ -107,7 +105,7 @@ Return ONLY valid JSON.`;
     });
 
     try {
-      await ctx.supabase.from("project_brain_nodes").insert({
+      await ctx.serviceClient.from("project_brain_nodes").insert({
         initiative_id: initiative.id,
         organization_id: ctx.organizationId,
         name: "product_analytics_plan",

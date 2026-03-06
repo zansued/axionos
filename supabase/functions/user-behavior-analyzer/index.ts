@@ -19,7 +19,7 @@ serve(async (req) => {
     const productValidation = dp.product_validation || {};
     const productAnalytics = ep.product_analytics || {};
 
-    const { data: brainNodes } = await ctx.supabase
+    const { data: brainNodes } = await ctx.serviceClient
       .from("project_brain_nodes")
       .select("name, node_type, metadata")
       .eq("initiative_id", initiative.id)
@@ -84,7 +84,7 @@ Return ONLY valid JSON.`;
     });
 
     try {
-      await ctx.supabase.from("project_brain_nodes").insert({
+      await ctx.serviceClient.from("project_brain_nodes").insert({
         initiative_id: initiative.id,
         organization_id: ctx.organizationId,
         name: "user_behavior_report",

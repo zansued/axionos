@@ -19,15 +19,13 @@ serve(async (req) => {
     const revenueStrategy = dp.revenue_strategy || {};
     const archEvolution = ep.architecture_evolution || {};
 
-    // Fetch all initiatives in the org for cross-product analysis
-    const { data: orgInitiatives } = await ctx.supabase
+    const { data: orgInitiatives } = await ctx.serviceClient
       .from("initiatives")
       .select("id, title, stage_status, status, complexity, risk_level, created_at, execution_progress")
       .eq("organization_id", ctx.organizationId)
       .limit(50);
 
-    // Fetch org usage/costs
-    const { data: jobs } = await ctx.supabase
+    const { data: jobs } = await ctx.serviceClient
       .from("initiative_jobs")
       .select("initiative_id, stage, cost_usd, duration_ms, status")
       .eq("status", "completed")
@@ -118,7 +116,7 @@ Return ONLY valid JSON.`;
     });
 
     try {
-      await ctx.supabase.from("project_brain_nodes").insert({
+      await ctx.serviceClient.from("project_brain_nodes").insert({
         initiative_id: initiative.id,
         organization_id: ctx.organizationId,
         name: "portfolio_management_report",

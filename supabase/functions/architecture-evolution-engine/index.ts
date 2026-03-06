@@ -17,30 +17,26 @@ serve(async (req) => {
     const ep = initiative.execution_progress || {};
     const productEvolution = ep.product_evolution || {};
 
-    // Fetch brain nodes for full architecture picture
-    const { data: brainNodes } = await ctx.supabase
+    const { data: brainNodes } = await ctx.serviceClient
       .from("project_brain_nodes")
       .select("name, node_type, status, metadata")
       .eq("initiative_id", initiative.id)
       .limit(80);
 
-    // Fetch edges for dependency analysis
-    const { data: brainEdges } = await ctx.supabase
+    const { data: brainEdges } = await ctx.serviceClient
       .from("project_brain_edges")
       .select("source_node_id, target_node_id, relation_type")
       .eq("initiative_id", initiative.id)
       .limit(100);
 
-    // Fetch prevention rules for learned patterns
-    const { data: rules } = await ctx.supabase
+    const { data: rules } = await ctx.serviceClient
       .from("project_prevention_rules")
       .select("error_pattern, prevention_rule, confidence_score, times_triggered")
       .eq("initiative_id", initiative.id)
       .order("times_triggered", { ascending: false })
       .limit(20);
 
-    // Fetch errors for anti-pattern detection
-    const { data: errors } = await ctx.supabase
+    const { data: errors } = await ctx.serviceClient
       .from("project_errors")
       .select("error_type, error_message, fixed, root_cause")
       .eq("initiative_id", initiative.id)
@@ -102,7 +98,6 @@ Return ONLY valid JSON.`;
       };
     }
 
-    // Persist knowledge base entries
     if (evolution.knowledge_base_entries?.length) {
       try {
         const entries = evolution.knowledge_base_entries.slice(0, 5).map((e: any) => ({
@@ -113,7 +108,7 @@ Return ONLY valid JSON.`;
           content: e.content,
           tags: [e.category, "architecture_evolution"],
         }));
-        await ctx.supabase.from("org_knowledge_base").insert(entries);
+        await ctx.serviceClient.from("org_knowledge_base").insert(entries);
       } catch (e) { console.warn("Knowledge base insert failed:", e.message); }
     }
 
@@ -125,7 +120,7 @@ Return ONLY valid JSON.`;
     });
 
     try {
-      await ctx.supabase.from("project_brain_nodes").insert({
+      await ctx.serviceClient.from("project_brain_nodes").insert({
         initiative_id: initiative.id,
         organization_id: ctx.organizationId,
         name: "architecture_evolution_report",

@@ -17,13 +17,11 @@ serve(async (req) => {
   await pipelineLog(ctx, "market_signal_analysis_start", "Starting Market Signal Analyzer...");
 
   try {
-    // Gather existing opportunity data
     const dp = initiative.discovery_payload || {};
     const opportunityReport = dp.opportunity_report || {};
     const productType = dp.product_type || "";
     const targetMarket = dp.target_market || "";
 
-    // Scrape competitor/market URLs if available
     let marketContent = "";
     const referenceUrl = initiative.reference_url;
     if (referenceUrl) {
@@ -136,7 +134,7 @@ Return ONLY valid JSON, no markdown fences.`;
 
     // Store brain node
     try {
-      await ctx.supabase.from("project_brain_nodes").insert({
+      await ctx.serviceClient.from("project_brain_nodes").insert({
         initiative_id: initiative.id,
         organization_id: ctx.organizationId,
         name: "market_signal_report",
