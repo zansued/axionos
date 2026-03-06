@@ -1,4 +1,4 @@
-# Agent Selection Engine — Specification v0.1
+# Agent Selection Engine — Specification v0.2
 
 **Status:** Normative  
 **Depends on:** Agent Runtime Protocol v0.1.1, Agent Capability Model v0.2  
@@ -6,323 +6,667 @@
 
 ---
 
-## 1. Design Rationale
+## 1. Purpose
 
-The Selection Engine is the decision-making core between task requirements and agent assignment. It answers the question: **"Given this task, which agent should execute it?"**
+The Agent Selection Engine is the component responsible for determining which agent should execute a specific task within the Agent OS.
 
-### Principles
+It transforms:
 
-1. **Separation of eligibility and ranking** — Eligibility is a hard filter (yes/no). Ranking is a soft score (how well). Mixing them leads to non-deterministic behavior.
+```
+AgentTask + CapabilityProfiles + Policies → SelectionDecision
+```
 
-2. **Deterministic decisions** — Given identical inputs (candidates, scorecards, policy, config), the engine MUST produce identical output. No randomness, no side effects.
+The engine guarantees that:
 
-3. **Explainable decisions** — Every decision carries a `SelectionRationale` with step-by-step trace, decisive factors, and rejected alternatives. This supports auditing, observability, and Evolution agent learning.
-
-4. **Infrastructure-agnostic** — The engine operates as a pure function pipeline. It does not fetch data, call agents, or access infrastructure. All inputs are pre-fetched and passed in the `SelectionRequest`.
-
-5. **Fallback as first-class** — Fallback and `retry_other` are not error paths — they are designed selection flows with their own semantics.
+- Only eligible agents are considered
+- The choice is deterministic and explainable
+- Multiple candidates can be ranked
+- Fallback and retry_other are safe
+- Decisions are auditable
+- The system is extensible
 
 ---
 
-## 2. Pipeline Architecture
+## 2. Design Principles
+
+### 2.1 Eligibility Before Ranking
+
+No agent participates in ranking if it is not eligible.
+
+Mandatory flow:
 
 ```
-SelectionRequest
-      │
-      ▼
-┌──────────────┐
-│  ELIGIBILITY │  Hard filter: type, status, capabilities, exclusions
-│    FILTER    │  Output: EligibilityResult (eligible + ineligible)
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│  CAPABILITY  │  Match task requirements to agent capabilities
-│   MATCHING   │  Output: CapabilityMatchResult per agent
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│   RANKING    │  Score and sort by composite formula
-│    ENGINE    │  Output: RankingResult (ranked candidates)
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│  SELECTION   │  Pick winner, build shortlist and fallback chain
-│   DECISION   │  Output: SelectionDecision
-└──────────────┘
+Eligibility → Ranking → Selection
+```
+
+### 2.2 Explainable Decisions
+
+Every decision produces a `SelectionDecision` containing:
+
+- Reason for the choice
+- Candidates considered
+- Candidates rejected
+- Policies applied
+
+### 2.3 Deterministic Routing
+
+Given the same inputs, the system must produce the same decision.
+
+This guarantees reproducibility and auditability.
+
+### 2.4 Capability-Oriented Selection
+
+Selection occurs by capability, not merely by agent_id.
+
+An agent may possess multiple capabilities.
+
+### 2.5 Policy-Aware Dispatch
+
+Policies can influence:
+
+- Eligibility
+- Ranking
+- Fallback
+- Substitution
+
+### 2.6 Safe Substitution
+
+Fallback must preserve task semantics.
+
+Substitutions must be recorded and limited.
+
+---
+
+## 3. System Context
+
+The Selection Engine operates between:
+
+```
+Orchestrator
+      ↓
+Selection Engine
+      ↓
+Agent Execution
+```
+
+It consumes data from:
+
+- `AgentTask`
+- `AgentProfile` (capability profiles)
+- `CapabilityScorecard`
+- `RoutingPreferences`
+- `FailurePolicy` / `RetryPolicy`
+- `StagePolicy`
+- Runtime context
+
+---
+
+## 4. Core Entities
+
+| Entity | Purpose |
+|--------|---------|
+| `SelectionInput` | Everything the engine needs to decide |
+| `EligibilityResult` | Hard-filter output (eligible vs ineligible) |
+| `RankedCandidate` | Scored and sorted eligible agent |
+| `SelectionDecision` | Final actionable output |
+| `FallbackCandidate` | Next-best agent for substitution |
+| `SelectionTrace` | Lightweight audit record |
+| `SelectionPolicyModifier` | Runtime overrides |
+
+---
+
+## 5. Selection Input Contract
+
+```typescript
+SelectionInput {
+  request_id: string
+  task: AgentTask
+
+  candidate_profiles: AgentProfile[]
+  scorecards: CapabilityScorecard[]
+
+  stage_policy?: string[]
+  routing_preferences?: RoutingPreferences[]
+  runtime_constraints?: RuntimeConstraint[]
+  previous_attempts?: string[]
+  fallback_chains?: FallbackChain[]
+  policy: SelectionPolicy
+
+  selection_context?: {
+    stage: StageName
+    mode?: AgentMode
+    domain?: string
+    complexity?: "low" | "medium" | "high" | "critical"
+  }
+
+  retry_context?: RetrySelectionContext
+  requested_at: string
+}
 ```
 
 ---
 
-## 3. Eligibility Rules
+## 6. Eligibility Phase
 
-Eligibility is evaluated in order. First failure short-circuits (remaining rules are not checked).
+The eligibility phase eliminates unviable candidates.
 
-| # | Rule | Condition | Short-circuits |
-|---|------|-----------|----------------|
-| 1 | `type_match` | `agent.agent_type == request.required_agent_type` | Yes |
-| 2 | `status_active` | `agent.status == "active"` | Yes |
-| 3 | `not_excluded` | `agent.agent_id ∉ request.excluded_agent_ids` | Yes |
-| 4 | `mode_support` | `request.required_mode ∈ agent.supported_modes` (if specified) | Yes |
-| 5 | `required_capabilities` | Agent has active binding for every "required" capability | Yes |
-| 6 | `no_suspended_bindings` | No required binding is "suspended" | Yes |
-| 7 | `not_on_probation` | Agent has no binding on "probation" (if policy.exclude_probation) | Yes |
-| 8 | `stage_not_excluded` | `request.stage ∉ agent.routing_preferences.excluded_stages` | Yes |
-| 9 | `within_cost_tier` | Agent's cost_tier is affordable given budget constraints | Yes |
+A candidate is considered ineligible if:
 
-### Rule 2 Exception
+- The agent is `inactive`
+- The capability does not support the stage
+- The mode is not compatible
+- Mandatory requirements are not met
+- A `hard` constraint is violated
+- Policy blocks execution
+- The agent is in `previous_attempts`
+
+### 6.1 Eligibility Checks (ordered)
+
+| # | Check | Condition |
+|---|-------|-----------|
+| 1 | `agent_status_check` | `agent.status == "active"` |
+| 2 | `stage_support_check` | Capability's `valid_stages` includes request stage |
+| 3 | `mode_support_check` | Agent supports required mode |
+| 4 | `requirement_check` | All mandatory requirements satisfied |
+| 5 | `constraint_check` | No hard constraint violated |
+| 6 | `policy_check` | No policy blocks execution |
+| 7 | `exclusion_check` | `agent_id ∉ previous_attempts` |
+| 8 | `probation_check` | Not on probation (if policy excludes) |
+| 9 | `routing_exclusion_check` | Stage not in agent's `excluded_stages` |
+
+First failure short-circuits (remaining checks are skipped).
+
+### 6.2 Degraded Agent Exception
 
 Agents with status `"degraded"` MAY pass eligibility if:
-- The `SelectionEngineConfig.allow_degraded_fallback` is `true`, AND
+- `SelectionEngineConfig.allow_degraded_fallback == true`, AND
 - No `"active"` agents passed eligibility, AND
 - A `FallbackChain` with `exhaustion_action: "degrade"` exists
 
 ---
 
-## 4. Ranking Formula
+## 7. Ranking Phase
 
-### Components (all normalized to 0.0–1.0)
+After eligibility, candidates are ranked. Each candidate receives multiple dimension scores.
 
-| Component | Source | Default Weight |
-|-----------|--------|---------------|
-| `match_component` | `CapabilityMatchResult.match_score` | 0.30 |
-| `performance_component` | `CapabilityScorecard.performance_score` | 0.25 |
-| `cost_component` | `1 - normalize(avg_cost_usd)` | 0.15 |
-| `latency_component` | `1 - normalize(avg_latency_ms)` | 0.15 |
-| `preference_component` | Routing preference alignment | 0.10 |
-| `priority_component` | Normalized agent priority | 0.05 |
+### 7.1 Ranked Candidate
 
-### Normalization
+```typescript
+RankedCandidate {
+  agent_id: string
+  capability_id: string
 
-Within each candidate pool, values are normalized using min-max scaling:
+  requirement_score: number   // 0.0 – 1.0
+  context_score: number       // 0.0 – 1.0
+  performance_score: number   // 0.0 – 1.0
+  policy_score: number        // 0.0 – 1.0
+  efficiency_score: number    // 0.0 – 1.0
 
-```
-normalized(x) = (x - min) / (max - min)
-```
+  penalties: {
+    confidence_drift_penalty: number
+    instability_penalty: number
+    fallback_overuse_penalty: number
+    total: number
+  }
 
-If `max == min` (all candidates identical), the component defaults to `0.5`.
-
-### Composite Score
-
-```
-raw_score = Σ(component_i × weight_i)
-total_penalty = Σ(applicable_penalties)
-final_score = clamp(raw_score - total_penalty, 0.0, 1.0)
+  final_match_score: number      // weighted composite
+  final_adjusted_score: number   // after penalties
+}
 ```
 
-### Penalties
+---
 
-| Penalty Type | Value | Condition |
-|-------------|-------|-----------|
-| `confidence_drift_severe` | -0.15 | Drift severity "severe" AND status "over_confident" |
-| `confidence_drift_significant` | -0.08 | Drift severity "significant" AND status "over_confident" |
+## 8. Scoring Model
+
+All scores range from `0.0` to `1.0`.
+
+### 8.1 Requirement Score
+
+Evaluates how well requirements are satisfied.
+
+- All mandatory satisfied → `1.0`
+- Optional satisfied → incremental bonus
+
+### 8.2 Context Score
+
+Evaluates alignment between capability and context.
+
+Considers:
+- Domain hints
+- Complexity hints
+- Artifact shape
+- Language/tooling
+
+### 8.3 Performance Score
+
+Based on historical data:
+
+- Success rate
+- Average validation score
+- Rollback rate
+- Fallback rate
+
+If no scorecard exists: `0.5` (neutral default) with `no_scorecard` penalty.
+
+### 8.4 Policy Score
+
+Considers system preferences:
+
+- Stability
+- Cost limits
+- Latency targets
+- Compliance requirements
+
+### 8.5 Efficiency Score
+
+Evaluates the ratio:
+
+```
+quality / (cost × latency)
+```
+
+---
+
+## 9. Score Formula
+
+### 9.1 Weighted Composite
+
+```
+final_match_score =
+  (requirement_score  × 0.35) +
+  (context_score      × 0.20) +
+  (performance_score  × 0.20) +
+  (policy_score       × 0.15) +
+  (efficiency_score   × 0.10)
+```
+
+### 9.2 Penalties
+
+Penalties are applied AFTER the weighted composite:
+
+```
+final_adjusted_score =
+  final_match_score
+  - confidence_drift_penalty
+  - instability_penalty
+  - fallback_overuse_penalty
+
+final_adjusted_score = clamp(result, 0.0, 1.0)
+```
+
+### 9.3 Standard Penalty Values
+
+| Penalty | Value | Condition |
+|---------|-------|-----------|
+| `confidence_drift_severe` | -0.15 | Drift severity "severe" + "over_confident" |
+| `confidence_drift_significant` | -0.08 | Drift severity "significant" + "over_confident" |
+| `confidence_drift_mild` | -0.03 | Drift severity "mild" |
 | `trend_degrading` | -0.10 | Scorecard trend is "degrading" |
-| `binding_probation` | -0.12 | Any active binding is on "probation" |
-| `retry_same_provider` | -0.05 | In retry_other context AND same provider as failed agent |
-| `over_budget` | -0.20 | Estimated cost exceeds request.max_cost_usd |
-
-### Tie-Breaking
-
-When `final_score` is identical (floating-point equality):
-1. Higher `agent.priority` wins
-2. If still tied, lexicographically lower `agent_id` wins (determinism guarantee)
+| `binding_probation` | -0.12 | Binding is on "probation" |
+| `retry_same_provider` | -0.05 | In retry context, same provider as failed agent |
+| `fallback_overuse` | -0.07 | Agent frequently used as fallback |
+| `instability` | -0.09 | High variance in performance scores |
+| `over_budget` | -0.20 | Estimated cost exceeds budget |
+| `no_scorecard` | -0.04 | No performance data available |
 
 ---
 
-## 5. Selection Flow
+## 10. Confidence Drift Handling
 
-### 5.1 Normal Selection
+Confidence drift occurs when:
 
-1. Run eligibility filter → `EligibilityResult`
-2. If `eligible.length == 0` → outcome `"no_candidates"`, emit `selection.no_candidates`
-3. Run capability matching on eligible agents → `CapabilityMatchResult[]`
-4. Filter by `policy.min_match_score` → if none qualify → outcome `"no_qualified"`
-5. If `policy.require_full_qualification` → exclude agents where `fully_qualified == false`
-6. Run ranking → `RankingResult`
-7. Select top-ranked → `SelectedAgent`
-8. Build shortlist (ranks 2 through `max_shortlist_size + 1`)
-9. Build fallback sequence from shortlist + configured fallback chains
-10. Emit `selection.decided`
+```
+declared_confidence >> observed_validation_score
+```
 
-### 5.2 retry_other Selection
+Penalty is applied if drift exceeds threshold.
 
-Triggered when the orchestrator invokes selection with `retry_context`:
-
-1. All `retry_context.failed_agent_ids` are added to `excluded_agent_ids`
-2. If `retry_context.allow_mode_change == false` → filter to same mode
-3. If `retry_context.allow_provider_change == false` → filter to same provider
-4. Apply `retry_same_provider` penalty if candidate shares provider with failed agent
-5. Proceed with normal flow (steps 1-10 above)
-6. Set flag `"retry_selection"`
-7. Emit `selection.retry_other_triggered`
-
-### 5.3 Fallback Activation
-
-When a selected agent fails during execution:
-
-1. Orchestrator calls selection engine with next fallback from `fallback_sequence`
-2. If the fallback entry has a `fallback_mode`, use that mode
-3. If the fallback has `expected_degradation`, outcome becomes `"degraded_selected"`
-4. Apply `confidence_penalty` from `FallbackEntry`
-5. Emit `selection.fallback_activated`
-
-### 5.4 Degraded Selection
-
-When no fully-capable agent exists but a partial match is available:
-
-1. Reduce capability requirements to "required" only (drop "preferred" and "optional")
-2. Re-run matching and ranking
-3. Record lost guarantees in `DegradedCapability[]`
-4. Outcome: `"degraded_selected"`
-5. Set flag `"degraded_mode"`
-6. Emit `selection.degraded_mode`
+Detection uses the thresholds from the Capability Model:
+- `calibrated`: magnitude < 0.10
+- `mild`: 0.10 ≤ magnitude < 0.20
+- `significant`: 0.20 ≤ magnitude < 0.35
+- `severe`: magnitude ≥ 0.35
 
 ---
 
-## 6. Scorecard Integration
+## 11. Candidate Sorting
 
-The selection engine consumes `CapabilityScorecard` data but never writes to it. The scorecard lifecycle is:
+Candidates are ordered by:
 
 ```
-Agent executes task
-      │
-      ▼
-ValidationReport generated
-      │
-      ▼
-Scorecard updated (by scorecard adapter, NOT by selection engine)
-      │
-      ▼
-Next selection request includes updated scorecards
+final_adjusted_score DESC
 ```
 
-### Performance Component Calculation
+### Tie-Breaking (ordered)
 
-If a scorecard exists for `(agent_id, capability_id)`:
-```
-performance_component = scorecard.performance_score
-```
+When `final_adjusted_score` is identical:
 
-If no scorecard exists (new agent or new capability):
-```
-performance_component = 0.5 (neutral default)
-```
-
-Flag `"no_performance_data"` is set if NO candidate has scorecard data.
+1. Lower `avg_cost_usd` wins
+2. If still tied, lower `avg_latency_ms` wins
+3. If still tied, higher historical stability (`success_rate`) wins
+4. If still tied, lexicographically lower `agent_id` wins (determinism guarantee)
 
 ---
 
-## 7. Edge Cases
+## 12. Selection Phase
 
-### 7.1 Single Candidate
-- Selection proceeds normally
-- Flag `"single_candidate"` is set
-- Shortlist and fallback sequence are empty
-- `selection_confidence` is reduced by 0.15 (no comparison possible)
+After ranking, the system selects:
 
-### 7.2 Narrow Margin
-- When `ranked[0].final_score - ranked[1].final_score < narrow_margin_threshold` (default 0.05)
-- Flag `"narrow_margin"` is set
-- Both agents appear in decision trace as near-equivalent
-- Orchestrator may use this flag to apply additional tiebreakers
+- **Primary candidate** (rank #1)
+- **Shortlist** (ranks 2 through `max_shortlist_size + 1`)
+- **Fallback candidates** (from shortlist + configured fallback chains)
 
-### 7.3 All Candidates Degrading
-- All candidates have `trend: "degrading"`
-- Flag `"all_degrading"` is set
-- Selection still proceeds (degrading ≠ ineligible)
-- Evolution agent should be notified for systemic investigation
+### 12.1 Selection Decision
 
-### 7.4 No Scorecards Available
-- All `performance_component` values default to 0.5
-- Ranking is dominated by `match_component` and `priority_component`
-- Flag `"no_performance_data"` is set
-- Common during cold-start
+```typescript
+SelectionDecision {
+  decision_id: string
+  task_id: string
 
-### 7.5 Budget Exhaustion
-- All candidates exceed `max_cost_usd`
-- `over_budget` penalty applied to all
-- Cheapest agent still wins unless penalty pushes score to zero
-- Flag `"budget_constrained"` is set
+  outcome: SelectionOutcome
+  selected_agent_id?: string
+  selected_capability_id?: string
 
-### 7.6 retry_other With Exhausted Pool
-- All eligible agents are in `failed_agent_ids`
-- Outcome: `"exhausted"`
-- Fallback chain `exhaustion_action` determines next step:
-  - `"abort"` → terminate run
-  - `"block"` → pause and wait
-  - `"skip"` → skip task
-  - `"degrade"` → try degraded mode
+  shortlisted_candidates: RankedCandidate[]
+  rejected_candidates?: IneligibleAgent[]
+  fallback_candidates: FallbackCandidate[]
+
+  decision_reason: string
+  applied_rules: string[]
+  flags: SelectionFlag[]
+
+  eligibility_summary: EligibilitySummary
+  created_at: string
+}
+```
 
 ---
 
-## 8. Extension Points
+## 13. Fallback Candidates
 
-### 8.1 Custom Eligibility Rules
-Adapters may add custom eligibility rules by extending the `EligibilityRule` type and providing a custom `ISelectionEngine` implementation.
+Fallback candidates are selected from the next-best eligible candidates.
 
-### 8.2 Custom Ranking Weights
-`RankingWeights` can be configured per-stage or per-run via `SelectionEngineConfig`.
-
-### 8.3 Custom Penalties
-`STANDARD_PENALTIES` can be overridden in `SelectionEngineConfig.penalties`.
-
-### 8.4 External Signals
-Future adapters may inject external signals (load balancing, quota, SLA pressure) as additional ranking components or penalties.
-
-### 8.5 Learning Integration
-The Evolution agent can consume `SelectionDecision` history to:
-- Tune ranking weights per stage
-- Adjust penalty values based on actual outcomes
-- Recommend capability binding changes
-- Detect systemic routing problems
-
-### 8.6 Multi-Agent Selection
-Current design selects a single agent per task. Future extension: `selectMultiple()` for multi-agent stages where several agents work in parallel on the same task.
+```typescript
+FallbackCandidate {
+  agent_id: string
+  capability_id: string
+  fallback_rank: number
+  fallback_mode?: AgentMode
+  expected_degradation?: string[]
+  confidence_penalty: number
+}
+```
 
 ---
 
-## 9. Event Taxonomy
+## 14. Retry Semantics
+
+Retry occurs in three forms:
+
+### 14.1 Retry Same Agent (`same_agent`)
+
+The same agent is invoked again.
+
+Used when:
+- Transient failure
+- Tool error
+- Mild timeout
+
+### 14.2 Retry Other Agent (`other_agent`)
+
+A different compatible agent is selected.
+
+Used when:
+- Persistent error
+- Low confidence
+- Historical instability
+
+Rules:
+- Do not reuse the failed `agent_id`
+- Prioritize same capability
+- If none available, use same category
+- Maintain same stage
+- Respect constraints and policies
+- Record substitution event
+
+### 14.3 Retry Other Capability (`other_capability`)
+
+A different capability is used entirely.
+
+Used when:
+- Capability underperforms in this context
+- Policy requires diversification
+
+---
+
+## 15. retry_other Rules
+
+When `retry_other` is triggered:
+
+1. Do not reuse previous `agent_id`
+2. Prioritize same `capability_id`
+3. If unavailable, use same capability category
+4. Maintain same stage
+5. Respect constraints
+6. Respect policies
+7. Record substitution event
+8. Apply `retry_same_provider` penalty if candidate shares provider
+
+---
+
+## 16. Event Integration
+
+The Selection Engine emits events:
 
 | Event | When Emitted | Key Payload |
 |-------|-------------|-------------|
-| `selection.requested` | Engine receives SelectionRequest | `request_id`, `task_id`, `candidate_count` |
-| `selection.eligibility_completed` | Eligibility phase done | `eligible_count`, `ineligible_count`, `rate` |
+| `selection.started` | Engine receives input | `request_id`, `task_id`, `candidate_count` |
+| `selection.eligibility_checked` | Eligibility phase done | `eligible_count`, `ineligible_count`, `rate` |
 | `selection.ranking_completed` | Ranking phase done | `ranked_count`, `top_score`, `margin` |
-| `selection.decided` | Decision finalized | `decision_id`, `outcome`, `selected_agent_id` |
-| `selection.no_candidates` | Zero eligible agents | `request_id`, `ineligibility_reasons` |
-| `selection.fallback_activated` | Primary failed, using fallback | `fallback_position`, `fallback_agent_id` |
-| `selection.degraded_mode` | Operating with reduced guarantees | `lost_guarantees`, `confidence_penalty` |
-| `selection.retry_other_triggered` | retry_other selection initiated | `original_task_id`, `failed_agent_ids` |
+| `selection.decision_made` | Decision finalized | `decision_id`, `outcome`, `selected_agent_id` |
+| `selection.fallback_defined` | Fallback chain built | `fallback_count`, `agent_ids` |
+| `selection.retry_other_dispatched` | retry_other initiated | `original_task_id`, `failed_agent_ids` |
+| `selection.no_eligible_agents` | Zero eligible agents | `request_id`, `ineligibility_reasons` |
+| `selection.degraded_mode` | Reduced guarantees | `lost_guarantees`, `confidence_penalty` |
 | `selection.narrow_margin_warning` | Top-2 gap < threshold | `agent_1`, `agent_2`, `score_gap` |
 | `selection.low_eligibility_warning` | Eligibility rate below threshold | `rate`, `threshold` |
 
 ---
 
-## 10. Relationship to Other Modules
+## 17. Selection Trace
+
+For audit, decisions generate a lightweight trace.
+
+```typescript
+SelectionTrace {
+  task_id: string
+  decision_id: string
+  evaluated_candidates: number
+  eligible_candidates: number
+  ranking_algorithm_version: string
+  applied_penalties?: string[]
+  decision_latency_ms?: number
+  outcome: SelectionOutcome
+  selected_agent_id?: string
+  created_at: string
+}
+```
+
+---
+
+## 18. Edge Cases
+
+### 18.1 No Eligible Agents
+
+System returns `outcome: "no_eligible_agents"`.
+Orchestrator decides global fallback or abort.
+
+### 18.2 Capability Without Scorecard
+
+Permitted, but receives `no_scorecard` penalty (-0.04).
+`performance_score` defaults to `0.5`.
+
+### 18.3 Multiple Equal Scores
+
+Resolved by tie-breaking order: cost → latency → stability → agent_id.
+
+### 18.4 Experimental Capability
+
+May receive penalty by policy. Flag `"experimental_capability"` is set.
+
+### 18.5 High Confidence but Poor Validation
+
+Apply confidence drift penalty based on severity.
+
+### 18.6 Frequent Fallback
+
+Agent with high fallback rate receives `fallback_overuse` penalty (-0.07).
+
+### 18.7 Budget Constraints
+
+Policies can limit agents above a certain cost. `over_budget` penalty (-0.20).
+
+### 18.8 Single Candidate
+
+Selection proceeds normally. Flag `"single_candidate"` is set.
+`selection_confidence` is reduced by 0.15 (no comparison possible).
+
+### 18.9 All Candidates Degrading
+
+All candidates have `trend: "degrading"`. Flag `"all_degrading"` is set.
+Selection still proceeds. Evolution agent should be notified.
+
+---
+
+## 19. Extension Points
+
+### 19.1 Adaptive Routing
+
+Learning-based routing using historical decision outcomes.
+
+### 19.2 Bandit Algorithms
+
+Controlled exploration of new agents (epsilon-greedy, UCB).
+
+### 19.3 Domain-Aware Router
+
+Specialized routing by domain (fintech, healthtech, etc.).
+
+### 19.4 Cost-Aware Routing
+
+Budget-oriented selection (maximize quality within cost envelope).
+
+### 19.5 Quality-First Routing
+
+Prioritize quality above cost and latency.
+
+### 19.6 Multi-Agent Dispatch
+
+Execute multiple agents in parallel on the same task. Future `selectMultiple()`.
+
+### 19.7 Federated Agent Registries
+
+Selection across local and external agent registries.
+
+### 19.8 Custom Eligibility Rules
+
+Adapters may extend `EligibilityCheck` with custom rules.
+
+### 19.9 Custom Ranking Weights
+
+`RankingWeights` can be configured per-stage or per-run.
+
+### 19.10 External Signals
+
+Future adapters may inject load balancing, quota, SLA pressure as additional signals.
+
+### 19.11 Learning Integration
+
+Evolution agent consumes `SelectionDecision` history to tune weights, penalties, and bindings.
+
+---
+
+## 20. Observability Goals
+
+The system must allow answering questions like:
+
+- Which capability is most used per stage?
+- Which agent generates the highest average score?
+- Which agent has the greatest drift?
+- Which fallback occurs most frequently?
+- Which agent has the best cost/quality ratio?
+- What is the average decision latency?
+- How often does retry_other get triggered?
+
+---
+
+## 21. Compatibility
+
+### Forward Compatibility
+
+New optional fields may be added without version bump.
+
+### Backward Compatibility
+
+Breaking changes require a new MAJOR version.
+
+---
+
+## 22. Versioning
+
+This document follows semantic versioning: `MAJOR.MINOR.PATCH`
+
+Current version: `0.2.0`
+
+---
+
+## 23. Relationship with Other Specs
+
+This document depends on:
+
+- **Agent Runtime Protocol** (protocol.ts) — defines execution contracts
+- **Agent Capability Model** (capabilities.ts) — defines capability semantics
+
+Together they form:
 
 ```
-┌────────────────────┐
-│  Runtime Protocol  │  Defines AgentTask, AgentResponse, RetryPolicy
-│    (protocol.ts)   │  Selection engine reads retry context
-└────────┬───────────┘
+Execution Grammar     (Runtime Protocol)
+        +
+Capability Semantics  (Capability Model)
+        +
+Selection Logic       (Selection Engine)
+        =
+Agent OS Decision Core
+```
+
+---
+
+## 24. Pipeline Architecture
+
+```
+SelectionInput
+      │
+      ▼
+┌──────────────────┐
+│    ELIGIBILITY    │  Hard filter: status, stage, mode, requirements,
+│      FILTER       │  constraints, policies, exclusions
+└────────┬─────────┘
          │
          ▼
-┌────────────────────┐
-│  Capability Model  │  Defines profiles, scorecards, match results
-│ (capabilities.ts)  │  Selection engine consumes these as inputs
-└────────┬───────────┘
+┌──────────────────┐
+│    CAPABILITY     │  Match task requirements to agent capabilities
+│     MATCHING      │  Produces CapabilityMatchResult per agent
+└────────┬─────────┘
          │
          ▼
-┌────────────────────┐
-│  Selection Engine  │  Pure decision function
-│  (selection.ts)    │  Produces SelectionDecision
-└────────┬───────────┘
+┌──────────────────┐
+│     RANKING       │  5-component scoring + penalties
+│     ENGINE        │  Produces RankedCandidate[] (sorted)
+└────────┬─────────┘
          │
          ▼
-┌────────────────────┐
-│   Orchestrator     │  Consumes SelectionDecision
-│ (orchestrator.ts)  │  Dispatches AgentTask to selected agent
-└────────────────────┘
+┌──────────────────┐
+│    SELECTION      │  Pick winner, build shortlist, define fallbacks
+│    DECISION       │  Produces SelectionDecision
+└──────────────────┘
 ```

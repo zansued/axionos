@@ -1,21 +1,25 @@
-// Agent Selection Engine v0.1 — Contract Layer
+// Agent Selection Engine v0.2 — Contract Layer
 // Pure type-level contracts. Zero runtime dependencies.
 // Spec: docs/AGENT_SELECTION_ENGINE.md
 //
 // DESIGN RATIONALE:
 //
 // The Selection Engine is the decision-making core between
-// task requirements and agent assignment. It operates as a
-// pure function pipeline:
+// task requirements and agent assignment. It transforms:
 //
-//   Request → Eligibility → Matching → Ranking → Selection → Decision
+//   AgentTask + CapabilityProfiles + Policies → SelectionDecision
+//
+// The pipeline enforces strict phase separation:
+//
+//   SelectionInput → Eligibility → Ranking → Selection → Decision
 //
 // Key principles:
-//   1. Eligibility and ranking are separate phases
-//   2. Every decision is explainable (audit trail)
-//   3. Selection is deterministic given the same inputs
-//   4. Fallback and retry_other are first-class paths
-//   5. The engine emits structured decisions, not side effects
+//   1. Eligibility before ranking (no ineligible agent is scored)
+//   2. Every decision is explainable (full audit trail)
+//   3. Deterministic routing (same inputs → same output)
+//   4. Capability-oriented selection (not agent_id-oriented)
+//   5. Policy-aware dispatch (policies influence all phases)
+//   6. Safe substitution (fallback preserves task semantics)
 //
 // The engine does NOT:
 //   - Mutate state
@@ -38,42 +42,50 @@ import type {
   CapabilityScorecard,
   ScorecardSummary,
   SelectionPolicy,
-  SelectionSortKey,
   FallbackChain,
   DegradedCapability,
   ConfidenceDriftStatus,
+  RoutingPreferences,
 } from "./capabilities.ts";
 
+import type {
+  AgentTask,
+} from "./protocol.ts";
+
 // ════════════════════════════════════════════════════════════════
-// 1. SELECTION REQUEST
+// 1. SELECTION INPUT
 // ════════════════════════════════════════════════════════════════
 
 /**
- * SelectionRequest — input to the selection engine.
+ * SelectionInput — everything the engine needs to produce a decision.
  *
- * Contains everything the engine needs to produce a decision:
- * the task context, capability requirements, candidate pool,
- * performance data, and policy configuration.
+ * The orchestrator pre-fetches all data and passes it in.
+ * The engine is a pure function: no I/O, no side effects.
  */
-export interface SelectionRequest {
+export interface SelectionInput {
   /** Unique request ID for tracing */
   request_id: string;
 
-  /** Run context */
-  run_id: string;
-  task_id: string;
-  stage: StageName;
-
-  /** What the task needs */
-  required_agent_type: AgentType;
-  required_mode?: AgentMode;
-  capability_requirements: CapabilityRequirement[];
+  /** The task being assigned */
+  task: AgentTask;
 
   /** Available agent profiles (pre-fetched by orchestrator) */
-  candidate_pool: AgentProfile[];
+  candidate_profiles: AgentProfile[];
 
   /** Historical performance data (pre-fetched) */
   scorecards: CapabilityScorecard[];
+
+  /** Stage-level policies */
+  stage_policy?: string[];
+
+  /** Routing preferences (system-level or task-level) */
+  routing_preferences?: RoutingPreferences[];
+
+  /** Runtime constraints (budget, latency, compliance) */
+  runtime_constraints?: RuntimeConstraint[];
+
+  /** Agent IDs that already failed for this task */
+  previous_attempts?: string[];
 
   /** Configured fallback chains */
   fallback_chains?: FallbackChain[];
@@ -81,18 +93,28 @@ export interface SelectionRequest {
   /** Selection policy to apply */
   policy: SelectionPolicy;
 
-  /** Agents to exclude (e.g., already failed for this task) */
-  excluded_agent_ids?: string[];
-
-  /** Budget constraints */
-  max_cost_usd?: number;
-  max_latency_ms?: number;
+  /** Contextual hints for matching */
+  selection_context?: SelectionContext;
 
   /** Context for retry_other scenarios */
   retry_context?: RetrySelectionContext;
 
   /** Timestamp of the request */
   requested_at: string;
+}
+
+export interface SelectionContext {
+  stage: StageName;
+  mode?: AgentMode;
+  domain?: string;
+  complexity?: "low" | "medium" | "high" | "critical";
+}
+
+export interface RuntimeConstraint {
+  type: "max_cost_usd" | "max_latency_ms" | "require_provider" | "exclude_provider" | "compliance" | "custom";
+  value: unknown;
+  hard: boolean; // hard = eliminates candidate; soft = penalty
+  description?: string;
 }
 
 /**
@@ -113,32 +135,51 @@ export interface RetrySelectionContext {
 
   /** Whether provider change is allowed */
   allow_provider_change: boolean;
+
+  /** Retry type */
+  retry_type: RetryType;
 }
 
+/**
+ * Three forms of retry:
+ *
+ * "same_agent"       — Re-invoke same agent. Used for transient failures,
+ *                      tool errors, mild timeouts.
+ * "other_agent"      — Select different agent, same capability.
+ *                      Used for persistent errors, low confidence, instability.
+ * "other_capability" — Select different capability entirely.
+ *                      Used when capability underperforms in context,
+ *                      or policy requires diversification.
+ */
+export type RetryType =
+  | "same_agent"
+  | "other_agent"
+  | "other_capability";
+
 // ════════════════════════════════════════════════════════════════
-// 2. ELIGIBILITY
+// 2. ELIGIBILITY PHASE
 // ════════════════════════════════════════════════════════════════
 
 /**
- * EligibilityResult — output of the eligibility filter phase.
- *
  * Eligibility is a hard filter. An agent is either eligible or not.
  * No scoring happens here. This phase reduces the candidate pool
  * to agents that CAN handle the task.
  *
- * Eligibility rules (applied in order):
- *   1. agent_type matches required_agent_type
- *   2. agent status is "active" (not "inactive" or "degraded")
- *   3. agent_id not in excluded_agent_ids
- *   4. agent supports required_mode (if specified)
- *   5. agent has at least one binding for each "required" capability
- *   6. no binding is "suspended"
- *   7. agent is not on probation (if policy.exclude_probation)
- *   8. agent's routing_preferences don't exclude this stage
- *   9. cost_tier is within budget (if max_cost_usd specified)
+ * Rules are applied in order. First failure short-circuits.
  *
- * Rule 2 exception: "degraded" agents MAY pass if the
- * fallback chain explicitly allows degraded mode.
+ * Checks (ordered):
+ *   1. agent_status_check    — agent.status == "active"
+ *   2. stage_support_check   — capability supports this stage
+ *   3. mode_support_check    — agent supports required mode
+ *   4. requirement_check     — mandatory requirements satisfied
+ *   5. constraint_check      — no hard constraint violated
+ *   6. policy_check          — no policy blocks execution
+ *   7. exclusion_check       — agent not in previous_attempts
+ *   8. probation_check       — not on probation (if policy excludes)
+ *   9. routing_exclusion_check — stage not in excluded_stages
+ *
+ * Exception: "degraded" agents MAY pass if the fallback chain
+ * explicitly allows degraded mode and no active agents passed.
  */
 export interface EligibilityResult {
   /** Agents that passed all eligibility checks */
@@ -157,154 +198,168 @@ export interface EligibilityResult {
 export interface EligibleAgent {
   agent_id: string;
   agent_type: AgentType;
+  capability_id: string;
   profile: AgentProfile;
 
-  /** Which eligibility rules were checked and passed */
-  passed_rules: EligibilityRule[];
+  /** Which eligibility checks were passed */
+  passed_checks: EligibilityCheck[];
 }
 
 export interface IneligibleAgent {
   agent_id: string;
   agent_type: AgentType;
+  capability_id?: string;
 
-  /** First rule that failed (short-circuit) */
-  failed_rule: EligibilityRule;
+  /** All checks evaluated */
+  passed_checks: EligibilityCheck[];
 
-  /** Human-readable reason */
-  reason: string;
+  /** First check that failed (short-circuit) */
+  failed_check: EligibilityCheck;
+
+  /** Blocking reasons (human-readable) */
+  blocking_reasons: string[];
 }
 
-export type EligibilityRule =
-  | "type_match"
-  | "status_active"
-  | "not_excluded"
-  | "mode_support"
-  | "required_capabilities"
-  | "no_suspended_bindings"
-  | "not_on_probation"
-  | "stage_not_excluded"
-  | "within_cost_tier";
+export type EligibilityCheck =
+  | "agent_status_check"
+  | "stage_support_check"
+  | "mode_support_check"
+  | "requirement_check"
+  | "constraint_check"
+  | "policy_check"
+  | "exclusion_check"
+  | "probation_check"
+  | "routing_exclusion_check";
 
 // ════════════════════════════════════════════════════════════════
-// 3. RANKING
+// 3. RANKING PHASE
 // ════════════════════════════════════════════════════════════════
 
 /**
- * RankingResult — output of the ranking phase.
+ * RankedCandidate — an eligible agent with multi-dimensional scores.
  *
- * Takes eligible agents and scores them. Ranking is deterministic:
- * given the same inputs, the same ranking is produced.
+ * Scoring model (all 0.0 – 1.0):
  *
- * Ranking formula:
+ *   requirement_score  — how well mandatory/optional requirements match
+ *   context_score      — alignment with domain, complexity, artifact shape
+ *   performance_score  — historical success rate, validation scores
+ *   policy_score       — alignment with system preferences (stability, compliance)
+ *   efficiency_score   — quality/cost/latency ratio
  *
- *   final_score = (
- *     match_component     * W_match     +
- *     performance_component * W_perf     +
- *     cost_component       * W_cost     +
- *     latency_component    * W_latency  +
- *     preference_component * W_pref     +
- *     priority_component   * W_priority
- *   )
- *
- * Where:
- *   match_component     = CapabilityMatchResult.match_score (0-1)
- *   performance_component = scorecard.performance_score (0-1)
- *   cost_component       = 1 - normalized_cost (0-1, lower is better)
- *   latency_component    = 1 - normalized_latency (0-1, lower is better)
- *   preference_component = routing preference alignment (0-1)
- *   priority_component   = normalized agent priority (0-1)
- *
- * Normalization:
- *   - cost: normalized to [0,1] within the candidate pool
- *   - latency: normalized to [0,1] within the candidate pool
- *   - priority: normalized to [0,1] within the candidate pool
- *
- * Penalties:
- *   - confidence_drift "over_confident" + severity "severe": -0.15
- *   - confidence_drift "over_confident" + severity "significant": -0.08
- *   - trend "degrading": -0.10
- *   - binding_status "probation": -0.12
- *
- * Tie-breaking:
- *   When two agents have identical final_score:
- *   1. Higher agent priority wins
- *   2. If still tied, lower agent_id (lexicographic) wins (determinism)
+ * Penalties are applied AFTER the weighted composite.
  */
-export interface RankingResult {
-  /** Ranked candidates, best first */
-  ranked: RankedAgent[];
-
-  /** Ranking weights used */
-  weights: RankingWeights;
-
-  /** Applied penalties */
-  penalties_applied: PenaltyRecord[];
-}
-
-export interface RankedAgent {
+export interface RankedCandidate {
   agent_id: string;
+  capability_id: string;
   agent_type: AgentType;
   rank: number;
 
-  /** Final composite score (0.0 - 1.0) */
-  final_score: number;
+  /** Individual dimension scores */
+  requirement_score: number;
+  context_score: number;
+  performance_score: number;
+  policy_score: number;
+  efficiency_score: number;
 
-  /** Score breakdown for explainability */
-  score_breakdown: ScoreBreakdown;
+  /** Penalties applied */
+  penalties: CandidatePenalties;
+
+  /** Weighted composite BEFORE penalties */
+  final_match_score: number;
+
+  /** Final score AFTER penalties */
+  final_adjusted_score: number;
 
   /** Capability match result */
-  match_result: CapabilityMatchResult;
+  match_result?: CapabilityMatchResult;
 
   /** Performance summary (if available) */
   scorecard_summary?: ScorecardSummary;
 
-  /** Penalties applied to this agent */
-  penalties: PenaltyRecord[];
+  /** Warnings for observability */
+  warnings?: string[];
 }
 
-export interface ScoreBreakdown {
-  match_component: number;
-  performance_component: number;
-  cost_component: number;
-  latency_component: number;
-  preference_component: number;
-  priority_component: number;
+export interface CandidatePenalties {
+  confidence_drift_penalty: number;
+  instability_penalty: number;
+  fallback_overuse_penalty: number;
 
-  /** Raw weighted sum before penalties */
-  raw_score: number;
-
-  /** Total penalty deducted */
-  total_penalty: number;
-
-  /** Final score = raw_score - total_penalty, clamped to [0, 1] */
-  final_score: number;
+  /** Total penalty (sum of all) */
+  total: number;
 }
 
-export interface RankingWeights {
-  match: number;
-  performance: number;
-  cost: number;
-  latency: number;
-  preference: number;
-  priority: number;
+export interface RankingResult {
+  /** Ranked candidates, best first */
+  ranked: RankedCandidate[];
+
+  /** Ranking weights used */
+  weights: RankingWeights;
+
+  /** Algorithm version for reproducibility */
+  algorithm_version: string;
 }
+
+// ════════════════════════════════════════════════════════════════
+// 4. RANKING WEIGHTS & FORMULA
+// ════════════════════════════════════════════════════════════════
 
 /**
- * Default ranking weights.
+ * Ranking weights for the 5-component scoring model.
  *
- * Match quality is king (0.30).
- * Performance history is critical (0.25).
- * Cost and latency matter equally (0.15 each).
- * Preferences and priority are tiebreakers (0.10 + 0.05).
+ * Formula:
+ *   final_match_score =
+ *     (requirement_score  × W_req)  +
+ *     (context_score      × W_ctx)  +
+ *     (performance_score  × W_perf) +
+ *     (policy_score       × W_pol)  +
+ *     (efficiency_score   × W_eff)
+ *
+ *   final_adjusted_score =
+ *     final_match_score
+ *     - confidence_drift_penalty
+ *     - instability_penalty
+ *     - fallback_overuse_penalty
+ *
+ *   final_adjusted_score = clamp(final_adjusted_score, 0.0, 1.0)
  */
+export interface RankingWeights {
+  requirement: number;
+  context: number;
+  performance: number;
+  policy: number;
+  efficiency: number;
+}
+
 export const DEFAULT_RANKING_WEIGHTS: RankingWeights = {
-  match: 0.30,
-  performance: 0.25,
-  cost: 0.15,
-  latency: 0.15,
-  preference: 0.10,
-  priority: 0.05,
+  requirement: 0.35,
+  context: 0.20,
+  performance: 0.20,
+  policy: 0.15,
+  efficiency: 0.10,
 };
+
+// ════════════════════════════════════════════════════════════════
+// 5. PENALTIES
+// ════════════════════════════════════════════════════════════════
+
+/**
+ * Penalty types and standard values.
+ *
+ * Penalties are subtracted from final_match_score.
+ * All values are positive (deductions).
+ */
+export type PenaltyType =
+  | "confidence_drift_severe"
+  | "confidence_drift_significant"
+  | "confidence_drift_mild"
+  | "trend_degrading"
+  | "binding_probation"
+  | "retry_same_provider"
+  | "fallback_overuse"
+  | "instability"
+  | "over_budget"
+  | "no_scorecard";
 
 export interface PenaltyRecord {
   agent_id: string;
@@ -313,135 +368,97 @@ export interface PenaltyRecord {
   reason: string;
 }
 
-export type PenaltyType =
-  | "confidence_drift_severe"
-  | "confidence_drift_significant"
-  | "trend_degrading"
-  | "binding_probation"
-  | "retry_same_provider"
-  | "over_budget";
-
-/**
- * Standard penalty values.
- *
- * These are subtracted from the raw_score.
- * All penalties are positive numbers (deductions).
- */
 export const STANDARD_PENALTIES: Record<PenaltyType, number> = {
   confidence_drift_severe: 0.15,
   confidence_drift_significant: 0.08,
+  confidence_drift_mild: 0.03,
   trend_degrading: 0.10,
   binding_probation: 0.12,
   retry_same_provider: 0.05,
+  fallback_overuse: 0.07,
+  instability: 0.09,
   over_budget: 0.20,
+  no_scorecard: 0.04,
 };
 
 // ════════════════════════════════════════════════════════════════
-// 4. SELECTION DECISION
+// 6. SELECTION DECISION
 // ════════════════════════════════════════════════════════════════
 
 /**
  * SelectionDecision — the final output of the selection engine.
  *
  * This is the primary artifact consumed by the orchestrator.
- * It is designed to be:
- *   - Self-contained (all info needed to dispatch)
- *   - Auditable (full decision trail)
- *   - Actionable (clear outcome)
+ * Self-contained, auditable, and actionable.
  */
 export interface SelectionDecision {
   /** Decision ID for tracing */
   decision_id: string;
 
-  /** Back-reference to the request */
+  /** Back-reference to the input */
   request_id: string;
-  run_id: string;
   task_id: string;
-  stage: StageName;
 
   /** Decision outcome */
   outcome: SelectionOutcome;
 
-  /** Selected agent (if outcome is "selected") */
-  selected?: SelectedAgent;
+  /** Selected agent (if outcome involves selection) */
+  selected_agent_id?: string;
+  selected_capability_id?: string;
 
   /** Shortlisted candidates (next-best after selected) */
-  shortlist: ShortlistedAgent[];
+  shortlisted_candidates: RankedCandidate[];
+
+  /** Rejected candidates with reasons */
+  rejected_candidates?: IneligibleAgent[];
 
   /** Fallback sequence if selected agent fails */
-  fallback_sequence: FallbackEntry[];
+  fallback_candidates: FallbackCandidate[];
 
   /** Why this decision was made */
-  rationale: SelectionRationale;
+  decision_reason: string;
+
+  /** Rules/policies that influenced the decision */
+  applied_rules: string[];
 
   /** Degradation info if selection required compromise */
   degradation?: DegradedCapability[];
 
+  /** Flags for the orchestrator */
+  flags: SelectionFlag[];
+
+  /** Full rationale for audit */
+  rationale?: SelectionRationale;
+
   /** Timing */
-  decided_at: string;
-  selection_duration_ms: number;
+  created_at: string;
+  selection_duration_ms?: number;
 
   /** Eligibility summary */
   eligibility_summary: EligibilitySummary;
-
-  /** Full ranking (for audit/observability) */
-  ranking_snapshot?: RankingResult;
 }
 
 export type SelectionOutcome =
-  | "selected"           // agent found and assigned
-  | "fallback_selected"  // primary failed, using fallback
-  | "degraded_selected"  // selected with reduced guarantees
-  | "no_candidates"      // no eligible agents found
-  | "no_qualified"       // eligible but none meet min_match_score
-  | "exhausted";         // all fallbacks exhausted
+  | "selected"               // agent found and assigned
+  | "fallback_selected"      // primary failed, using fallback
+  | "degraded_selected"      // selected with reduced guarantees
+  | "no_eligible_agents"     // no agents passed eligibility
+  | "no_qualified_agents"    // eligible but none meet min_match_score
+  | "exhausted";             // all candidates (incl. fallbacks) exhausted
 
-export interface SelectedAgent {
+// ════════════════════════════════════════════════════════════════
+// 7. FALLBACK CANDIDATES
+// ════════════════════════════════════════════════════════════════
+
+export interface FallbackCandidate {
   agent_id: string;
-  agent_type: AgentType;
-  agent_name: string;
-  mode: AgentMode;
-
-  /** Why this specific agent was chosen */
-  selection_reason: string;
-
-  /** Score that earned selection */
-  final_score: number;
-  score_breakdown: ScoreBreakdown;
-
-  /** Match details */
-  match_result: CapabilityMatchResult;
-
-  /** Performance summary */
-  scorecard_summary?: ScorecardSummary;
-
-  /** Estimated cost and latency */
-  estimated_cost_usd?: number;
-  estimated_latency_ms?: number;
-}
-
-export interface ShortlistedAgent {
-  agent_id: string;
-  agent_type: AgentType;
-  rank: number;
-  final_score: number;
-
-  /** Score gap relative to selected agent */
-  score_gap: number;
-
-  /** Can be used as fallback? */
-  fallback_eligible: boolean;
-}
-
-export interface FallbackEntry {
-  position: number;
-  agent_id: string;
-  agent_type: AgentType;
+  capability_id: string;
+  fallback_rank: number;
 
   /** Mode to use if this fallback is activated */
   fallback_mode?: AgentMode;
 
-  /** Estimated degradation if this agent is used */
+  /** Expected degradation if this agent is used */
   expected_degradation?: string[];
 
   /** Confidence penalty if this fallback is used */
@@ -449,7 +466,7 @@ export interface FallbackEntry {
 }
 
 // ════════════════════════════════════════════════════════════════
-// 5. SELECTION RATIONALE (Explainability)
+// 8. SELECTION RATIONALE (Explainability)
 // ════════════════════════════════════════════════════════════════
 
 /**
@@ -472,10 +489,10 @@ export interface SelectionRationale {
   /** Key factors that influenced the decision */
   decisive_factors: DecisiveFactor[];
 
-  /** Alternatives that were considered and why they lost */
+  /** Alternatives considered and why they lost */
   rejected_alternatives: RejectedAlternative[];
 
-  /** Confidence in this selection (engine self-assessment) */
+  /** Engine self-assessment of selection quality */
   selection_confidence: number;
 
   /** Flags for the orchestrator */
@@ -499,24 +516,54 @@ export interface DecisiveFactor {
 
 export interface RejectedAlternative {
   agent_id: string;
+  capability_id?: string;
   rank: number;
-  final_score: number;
+  final_adjusted_score: number;
   rejection_reason: string;
 }
 
 export type SelectionFlag =
-  | "single_candidate"         // only one agent was eligible
-  | "narrow_margin"            // top-2 score gap < 0.05
-  | "all_degrading"            // all candidates have degrading trend
-  | "confidence_drift_winner"  // winner has drift issues
-  | "fallback_activated"       // using fallback, not primary
-  | "degraded_mode"            // operating with reduced guarantees
-  | "no_performance_data"      // no scorecard for any candidate
-  | "retry_selection"          // this is a retry_other selection
-  | "budget_constrained";      // budget limits excluded candidates
+  | "single_candidate"             // only one agent was eligible
+  | "narrow_margin"                // top-2 score gap < threshold
+  | "all_degrading"                // all candidates have degrading trend
+  | "confidence_drift_winner"      // winner has drift issues
+  | "fallback_activated"           // using fallback, not primary
+  | "degraded_mode"                // operating with reduced guarantees
+  | "no_performance_data"          // no scorecard for any candidate
+  | "retry_selection"              // this is a retry_other selection
+  | "budget_constrained"           // budget limits excluded candidates
+  | "experimental_capability";     // selected capability is in draft/deprecated
 
 // ════════════════════════════════════════════════════════════════
-// 6. ELIGIBILITY SUMMARY
+// 9. SELECTION TRACE (Audit)
+// ════════════════════════════════════════════════════════════════
+
+/**
+ * SelectionTrace — lightweight audit record.
+ *
+ * Designed for storage and querying without the full decision payload.
+ */
+export interface SelectionTrace {
+  task_id: string;
+  decision_id: string;
+
+  evaluated_candidates: number;
+  eligible_candidates: number;
+
+  ranking_algorithm_version: string;
+
+  applied_penalties?: string[];
+
+  decision_latency_ms?: number;
+
+  outcome: SelectionOutcome;
+  selected_agent_id?: string;
+
+  created_at: string;
+}
+
+// ════════════════════════════════════════════════════════════════
+// 10. ELIGIBILITY SUMMARY
 // ════════════════════════════════════════════════════════════════
 
 export interface EligibilitySummary {
@@ -526,11 +573,11 @@ export interface EligibilitySummary {
   eligibility_rate: number;
 
   /** Breakdown of ineligibility reasons */
-  ineligibility_breakdown: Record<EligibilityRule, number>;
+  ineligibility_breakdown: Record<EligibilityCheck, number>;
 }
 
 // ════════════════════════════════════════════════════════════════
-// 7. SELECTION ENGINE CONFIGURATION
+// 11. SELECTION ENGINE CONFIGURATION
 // ════════════════════════════════════════════════════════════════
 
 /**
@@ -566,6 +613,9 @@ export interface SelectionEngineConfig {
 
   /** Minimum eligibility rate before emitting a warning event */
   min_eligibility_rate_warning: number;
+
+  /** Algorithm version string for reproducibility */
+  algorithm_version: string;
 }
 
 export const DEFAULT_SELECTION_ENGINE_CONFIG: SelectionEngineConfig = {
@@ -578,10 +628,36 @@ export const DEFAULT_SELECTION_ENGINE_CONFIG: SelectionEngineConfig = {
   include_ranking_snapshot: false,
   allow_degraded_fallback: true,
   min_eligibility_rate_warning: 0.20,
+  algorithm_version: "0.2.0",
 };
 
 // ════════════════════════════════════════════════════════════════
-// 8. SELECTION EVENTS
+// 12. TIE-BREAKING RULES
+// ════════════════════════════════════════════════════════════════
+
+/**
+ * When two candidates have identical final_adjusted_score:
+ *
+ *   1. Lower avg_cost_usd wins
+ *   2. If still tied, lower avg_latency_ms wins
+ *   3. If still tied, higher historical stability (success_rate) wins
+ *   4. If still tied, lexicographically lower agent_id wins (determinism)
+ */
+export type TieBreakKey =
+  | "cost"
+  | "latency"
+  | "stability"
+  | "agent_id";
+
+export const DEFAULT_TIE_BREAK_ORDER: TieBreakKey[] = [
+  "cost",
+  "latency",
+  "stability",
+  "agent_id",
+];
+
+// ════════════════════════════════════════════════════════════════
+// 13. SELECTION EVENTS
 // ════════════════════════════════════════════════════════════════
 
 /**
@@ -590,19 +666,50 @@ export const DEFAULT_SELECTION_ENGINE_CONFIG: SelectionEngineConfig = {
  * taxonomies.
  */
 export type SelectionEventType =
-  | "selection.requested"
-  | "selection.eligibility_completed"
+  | "selection.started"
+  | "selection.eligibility_checked"
   | "selection.ranking_completed"
-  | "selection.decided"
-  | "selection.no_candidates"
-  | "selection.fallback_activated"
+  | "selection.decision_made"
+  | "selection.fallback_defined"
+  | "selection.retry_other_dispatched"
+  | "selection.no_eligible_agents"
   | "selection.degraded_mode"
-  | "selection.retry_other_triggered"
   | "selection.narrow_margin_warning"
   | "selection.low_eligibility_warning";
 
 // ════════════════════════════════════════════════════════════════
-// 9. SELECTION ENGINE INTERFACE
+// 14. SELECTION POLICY MODIFIER
+// ════════════════════════════════════════════════════════════════
+
+/**
+ * SelectionPolicyModifier — runtime overrides that influence
+ * selection behavior for a specific request.
+ *
+ * These are applied ON TOP of the base SelectionPolicy and
+ * SelectionEngineConfig.
+ */
+export interface SelectionPolicyModifier {
+  /** Override ranking weights for this request */
+  weight_overrides?: Partial<RankingWeights>;
+
+  /** Additional penalties for this request */
+  extra_penalties?: PenaltyRecord[];
+
+  /** Force a specific agent (bypass selection) */
+  force_agent_id?: string;
+
+  /** Force a specific capability */
+  force_capability_id?: string;
+
+  /** Reason for the modification */
+  reason: string;
+
+  /** Who applied this modifier */
+  applied_by: "system" | "policy" | "human" | "evolution_agent";
+}
+
+// ════════════════════════════════════════════════════════════════
+// 15. SELECTION ENGINE INTERFACE
 // ════════════════════════════════════════════════════════════════
 
 /**
@@ -622,13 +729,13 @@ export interface ISelectionEngine {
    * Full selection pipeline.
    * Produces a deterministic, explainable SelectionDecision.
    */
-  select(request: SelectionRequest): SelectionDecision;
+  select(input: SelectionInput): SelectionDecision;
 
   /**
    * Eligibility check only.
    * Useful for dry-runs and capacity planning.
    */
-  checkEligibility(request: SelectionRequest): EligibilityResult;
+  checkEligibility(input: SelectionInput): EligibilityResult;
 
   /**
    * Ranking only (assumes all candidates are eligible).
