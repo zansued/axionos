@@ -65,7 +65,7 @@ export async function completeJob(
   ctx: PipelineContext,
   jobId: string,
   outputs: Record<string, unknown>,
-  result: { model?: string; costUsd?: number; durationMs?: number }
+  result: { model?: string; costUsd?: number; durationMs?: number } = {}
 ): Promise<void> {
   await ctx.serviceClient
     .from("initiative_jobs")
