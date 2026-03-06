@@ -145,6 +145,7 @@ export const MACRO_STAGES = [
   { key: "validation", label: "Fix Loop (AI corrige erros)", icon: Shield },
   { key: "build_repair", label: "Build Repair (auto-fix)", icon: Wrench },
   { key: "publish", label: "Publicação (GitHub)", icon: GitBranch },
+  { key: "deploy", label: "Deploy", icon: Globe },
 
   // Growth & Evolution Layer
   { key: "observability", label: "Observability", icon: Eye },
