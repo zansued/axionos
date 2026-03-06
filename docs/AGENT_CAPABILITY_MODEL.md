@@ -1,8 +1,8 @@
 # Agent Capability Model
 
-> **Version:** 0.1  
+> **Version:** 0.2  
 > **Status:** Specification  
-> **Scope:** Agent Operating System — Capability Declaration, Matching and Evolution  
+> **Scope:** Agent Operating System — Capability Declaration, Matching, Scoring and Evolution  
 > **Depends on:** Agent Runtime Protocol v0.1.1
 
 ---
@@ -28,8 +28,6 @@ The Capability Model replaces these with a structured, observable, and evolvable
 
 An agent's **identity** (id, name, type) is separate from its **capabilities** (what it can do).
 
-This separation enables:
-
 | Benefit | How |
 |---------|-----|
 | Hot-swapping | Replace an agent without changing task definitions |
@@ -38,7 +36,7 @@ This separation enables:
 | Performance tracking | Track performance per capability, not per identity |
 | Evolution | Capabilities evolve independently of agent code |
 
-### 2.2 Three-Layer Architecture
+### 2.2 Four-Layer Architecture
 
 ```
 ┌─────────────────────────────────────────┐
@@ -50,22 +48,24 @@ This separation enables:
 │  What tasks NEED vs what agents OFFER    │
 │  (CapabilityRequirement, MatchResult)    │
 ├─────────────────────────────────────────┤
-│  Layer 3: TRACKING                       │
+│  Layer 3: SCORECARD                      │
 │  How well agents PERFORM each capability │
-│  (PerformanceRecord, EvolutionEvent)     │
+│  (Scorecard, ConfidenceDrift, Trend)     │
+├─────────────────────────────────────────┤
+│  Layer 4: LIFECYCLE                      │
+│  How capabilities evolve, drift, retire  │
+│  (EvolutionEvent, LifecycleTransition)   │
 └─────────────────────────────────────────┘
 ```
 
 ### 2.3 Alignment with Runtime Protocol
 
-The Capability Model integrates with the Runtime Protocol at these points:
-
 | Protocol Entity | Capability Model Integration |
 |----------------|------------------------------|
 | `AgentTask` | Carries `CapabilityRequirement[]` defining what the task needs |
-| `AgentResponse` | `confidence` is tracked per capability |
-| `ValidationReport` | `validation_score` feeds capability performance |
-| `RetryPolicy` | `retry_other` uses capability matching to find substitutes |
+| `AgentResponse` | `confidence` is tracked per capability into the scorecard |
+| `ValidationReport` | `validation_score` feeds scorecard and drift detection |
+| `RetryPolicy` / `retry_other` | Uses capability matching to find substitutes |
 | `ProtocolRuntimeEvent` | Capability events extend the event taxonomy |
 
 ---
@@ -74,63 +74,48 @@ The Capability Model integrates with the Runtime Protocol at these points:
 
 ### 3.1 Capability Declaration
 
-A capability is a discrete, named skill that an agent can perform.
-
 ```
 CapabilityDeclaration {
-  capability_id: string         // e.g. "code_generation"
-  name: string                  // e.g. "Code Generation"
+  capability_id: string
+  name: string
   description: string
-  version: string               // semver
+  version: string                       // semver
+  lifecycle: "draft" | "active" | "deprecated" | "retired"
 
-  valid_for_types: AgentType[]  // which agent types may declare this
-  valid_modes: AgentMode[]      // which modes activate this
-  valid_stages: StageName[]     // which stages it's relevant in
+  valid_for_types: AgentType[]
+  valid_modes: AgentMode[]
+  valid_stages: StageName[]
 
-  input_requirements: [{
-    name: string
-    description: string
-    required: boolean
-    artifact_kind?: string
-  }]
-
-  output_guarantees: [{
-    name: string
-    description: string
-    artifact_kind?: string
-    guaranteed: boolean
-  }]
-
-  constraints?: [{
-    key: string
-    description: string
-    type: "max_tokens" | "max_cost_usd" | "max_latency_ms" | "requires_tool" | "custom"
-    value: unknown
-  }]
-
+  input_requirements: CapabilityInputSpec[]
+  output_guarantees: CapabilityOutputSpec[]
+  constraints?: CapabilityConstraint[]
   tags?: string[]
+
+  supersedes?: string                   // capability_id this replaces
+  declared_at: timestamp
+  updated_at: timestamp
 }
 ```
 
-### 3.2 Agent Profile
-
-An AgentProfile binds an agent identity to its capabilities.
+### 3.2 Agent Identity vs Agent Profile
 
 ```
-AgentProfile {
+AgentIdentity {                        // WHO — stable, rarely changes
+  agent_id: string
+  agent_name: string
+  agent_type: AgentType
+  provider?: string
+  model?: string
+  created_at: timestamp
+}
+
+AgentProfile {                         // WHAT — changes over time
   agent_id: string
   agent_name: string
   agent_type: AgentType
 
   supported_modes: AgentMode[]
-
-  capabilities: [{
-    capability_id: string
-    priority: number
-    confidence_floor?: number
-    constraint_overrides?: CapabilityConstraint[]
-    enabled: boolean
-  }]
+  capabilities: AgentCapabilityBinding[]
 
   priority: number
   status: "active" | "inactive" | "degraded"
@@ -140,12 +125,40 @@ AgentProfile {
   model?: string
   max_concurrency?: number
   cost_tier?: "low" | "medium" | "high"
+
+  routing_preferences?: RoutingPreferences
 }
 ```
 
-### 3.3 Capability Requirement
+### 3.3 Capability Binding
 
-What a task needs. Defined by the orchestrator when creating an `AgentTask`.
+```
+AgentCapabilityBinding {
+  capability_id: string
+  priority: number
+  confidence_floor?: number            // minimum confidence (guards under-reporting)
+  confidence_ceiling?: number          // maximum confidence (guards over-reporting)
+  constraint_overrides?: CapabilityConstraint[]
+  enabled: boolean
+  binding_status?: "active" | "suspended" | "probation"
+}
+```
+
+### 3.4 Routing Preferences
+
+Agent-declared preferences that influence (but don't override) routing:
+
+```
+RoutingPreferences {
+  preferred_stages?: StageName[]
+  preferred_modes?: AgentMode[]
+  preferred_collaborators?: string[]   // agent_ids
+  excluded_stages?: StageName[]
+  max_load?: number
+}
+```
+
+### 3.5 Capability Requirements
 
 ```
 CapabilityRequirement {
@@ -155,44 +168,63 @@ CapabilityRequirement {
   max_cost_usd?: number
   max_latency_ms?: number
   required_mode?: AgentMode
+  min_confidence_floor?: number
+  exclude_degrading?: boolean          // exclude agents with degrading trend
 }
 ```
 
 ---
 
-## 4. Matching Logic
+## 4. Matching Rules
 
 ### 4.1 Match Algorithm
 
-Given a list of `CapabilityRequirement[]` and a set of `AgentProfile[]`:
-
 ```
-FOR each agent_profile:
+FOR each agent_profile WHERE status == "active":
   match_score = 0
   unmatched = []
+  fully_qualified = true
 
   FOR each requirement:
-    binding = agent_profile.capabilities.find(c =>
-      c.capability_id == requirement.capability_id
-      && c.enabled == true
-    )
+    binding = find capability binding WHERE:
+      - capability_id matches
+      - enabled == true
+      - binding_status != "suspended"
+      - capability lifecycle == "active" (or "deprecated" with grace period)
 
     IF binding exists:
-      check constraint satisfaction
-      check performance history (if min_performance_score set)
-      check cost/latency bounds
-      IF all checks pass:
+      IF requirement has min_performance_score:
+        scorecard = lookup(agent_id, capability_id)
+        IF scorecard.performance_score < min_performance_score:
+          IF requirement.priority == "required": fully_qualified = false
+          CONTINUE
+
+      IF requirement has exclude_degrading:
+        IF scorecard.trend == "degrading":
+          IF requirement.priority == "required": fully_qualified = false
+          CONTINUE
+
+      IF requirement has min_confidence_floor:
+        IF binding.confidence_floor < min_confidence_floor:
+          IF requirement.priority == "required": fully_qualified = false
+          CONTINUE
+
+      // Constraint checks (cost, latency bounds)
+      IF constraints satisfied:
         match_score += weight(requirement.priority)
       ELSE:
-        IF requirement.priority == "required":
-          fully_qualified = false
+        IF requirement.priority == "required": fully_qualified = false
+
     ELSE:
-      IF requirement.priority == "required":
-        fully_qualified = false
       unmatched.push(requirement.capability_id)
+      IF requirement.priority == "required": fully_qualified = false
+
+  // Factor routing preference alignment
+  preference_alignment = compute_alignment(agent.routing_preferences, task.stage, task.mode)
 
   RETURN CapabilityMatchResult {
-    agent_id, match_score, matches, unmatched, fully_qualified
+    agent_id, match_score, matches, unmatched,
+    fully_qualified, preference_alignment, scorecard_summary
   }
 ```
 
@@ -204,18 +236,18 @@ FOR each agent_profile:
 | `preferred` | 0.6 |
 | `optional` | 0.2 |
 
-### 4.3 Tie-Breaking
-
-When multiple agents have the same `match_score`, the `SelectionPolicy` determines the tiebreaker:
+### 4.3 Selection Policy
 
 ```
 SelectionPolicy {
-  primary_sort: "match_score" | "performance" | "cost" | "priority" | "latency"
+  primary_sort: "match_score" | "performance" | "cost" | "priority" | "latency" | "preference_alignment"
   secondary_sort?: (same options)
   require_full_qualification: boolean
   min_match_score: number
   max_agents: number
-  prefer_proven: boolean     // prefer agents with recent successful history
+  prefer_proven: boolean
+  exclude_probation?: boolean
+  weight_routing_preferences?: number
 }
 ```
 
@@ -225,94 +257,95 @@ SelectionPolicy {
 
 ```
 1. Orchestrator creates AgentTask with CapabilityRequirement[]
+   → emit "task.created"
 
-2. Router queries AgentRegistry for all profiles where:
+2. Router queries AgentRegistry for profiles WHERE:
    - agent_type matches stage policy
    - status == "active"
+   - binding_status != "suspended"
 
 3. Router runs match algorithm against each profile
    → produces CapabilityMatchResult[]
+   → emit "capability.matched" or "capability.no_match"
 
 4. Router filters by SelectionPolicy:
    - remove agents below min_match_score
    - if require_full_qualification: remove non-qualified
+   - if exclude_probation: remove probation agents
    - sort by primary_sort, then secondary_sort
+   - factor preference_alignment if weighted
 
 5. Router selects top N agents (max_agents)
+   → ties broken by agent.priority
 
 6. Orchestrator dispatches AgentTask to selected agent(s)
 
-7. On completion: performance tracker updates CapabilityPerformanceRecord
+7. On completion:
+   - Scorecard updates (invocation counts, metrics)
+   - Confidence drift detection runs
+   - Trend recalculation
+   → emit "capability.scorecard_updated"
 
-8. On failure: fallback chain activates
-   → next agent in FallbackChain.agent_sequence
-   → if exhausted: execute exhaustion_action
+8. On failure:
+   - Fallback chain activates
+   - Next agent in FallbackChain.agent_sequence
+   → emit "capability.fallback_triggered"
+   - If exhausted: execute exhaustion_action
 ```
 
 ---
 
-## 6. Fallback & Substitution
+## 6. Scorecard Semantics
 
-### 6.1 Fallback Chain
+### 6.1 Capability Scorecard
 
-```
-FallbackChain {
-  capability_id: string
-  agent_sequence: string[]          // ordered agent IDs
-  exhaustion_action: "abort" | "skip" | "block" | "degrade"
-  allow_mode_change: boolean
-  allow_provider_change: boolean
-  max_total_cost_usd?: number
-}
-```
-
-### 6.2 Degraded Capability
-
-When no agent fully matches, the system may proceed with partial capability:
+One scorecard exists per `(agent_id, capability_id)` pair.
 
 ```
-DegradedCapability {
-  capability_id: string
-  original_requirement: CapabilityRequirement
-  actual_agent_id: string
-  degradation_reason: string
-  lost_guarantees: string[]
-  confidence_penalty: number        // subtracted from agent's confidence
-}
-```
-
-**Rule:** Degraded execution must emit a `capability.degraded` event and apply a confidence penalty. The validation stage must be informed of degradation.
-
----
-
-## 7. Performance Tracking
-
-### 7.1 Performance Record
-
-```
-CapabilityPerformanceRecord {
+CapabilityScorecard {
   agent_id: string
   capability_id: string
 
+  // Volume
   total_invocations: number
   successful_invocations: number
   failed_invocations: number
+  blocked_invocations: number
 
-  success_rate: number              // 0.0 - 1.0
-  avg_confidence: number            // agent-reported
-  avg_validation_score: number      // external validation
+  // Rates
+  success_rate: number                  // 0.0 - 1.0
+  failure_rate: number
+
+  // Quality
+  avg_confidence: number                // agent-reported
+  avg_validation_score: number          // external validation
+
+  // Efficiency
   avg_latency_ms: number
+  p95_latency_ms: number
   avg_cost_usd: number
+  total_cost_usd: number
+  avg_tokens: number
 
-  performance_score: number         // composite (0.0 - 1.0)
+  // Composite
+  performance_score: number             // weighted composite (0.0 - 1.0)
+
+  // Trend
   trend: "improving" | "stable" | "degrading"
+  trend_delta: number                   // % change over window
 
+  // Confidence drift
+  confidence_drift: ConfidenceDriftStatus
+
+  // Temporal
+  window_size: number
+  first_invocation_at: timestamp
+  last_invocation_at: timestamp
   last_updated_at: timestamp
-  window_size: number               // rolling window
 }
 ```
 
-### 7.2 Composite Score Formula
+### 6.2 Composite Score Formula
 
 ```
 performance_score =
@@ -324,24 +357,142 @@ performance_score =
 ```
 
 Where:
-- `latency_factor = 1.0 - normalize(avg_latency_ms, max_acceptable_latency)`
-- `cost_factor = 1.0 - normalize(avg_cost_usd, max_acceptable_cost)`
+- `latency_factor = 1.0 - clamp(avg_latency_ms / max_acceptable_latency, 0, 1)`
+- `cost_factor = 1.0 - clamp(avg_cost_usd / max_acceptable_cost, 0, 1)`
 
-### 7.3 Trend Detection
+### 6.3 Trend Detection
 
-| Condition | Trend |
-|-----------|-------|
-| Last 5 scores trending up > 5% | `improving` |
-| Last 5 scores within ±5% | `stable` |
-| Last 5 scores trending down > 5% | `degrading` |
-
-**Action on `degrading`:** Evolution stage should flag the agent for review and potentially adjust its priority or confidence_floor.
+| Condition | Trend | Delta |
+|-----------|-------|-------|
+| Last 5 scores trending up > 5% | `improving` | `+N%` |
+| Last 5 scores within ±5% | `stable` | `~0%` |
+| Last 5 scores trending down > 5% | `degrading` | `-N%` |
 
 ---
 
-## 8. Capability Evolution
+## 7. Confidence Drift Detection
 
-### 8.1 Evolution Events
+### 7.1 Definition
+
+Confidence drift occurs when an agent's self-reported `confidence` diverges from its actual `validation_score`.
+
+```
+drift_magnitude = |avg_confidence - avg_validation_score|
+drift_direction = sign(avg_confidence - avg_validation_score)
+```
+
+### 7.2 Classification
+
+| Severity | Drift Magnitude | Status |
+|----------|----------------|--------|
+| `none` | < 0.10 | `calibrated` |
+| `mild` | 0.10 – 0.19 | direction-dependent |
+| `significant` | 0.20 – 0.34 | direction-dependent |
+| `severe` | ≥ 0.35 | direction-dependent |
+
+### 7.3 Drift Types
+
+| Status | Meaning | Risk |
+|--------|---------|------|
+| `calibrated` | confidence ≈ validation | None |
+| `over_confident` | confidence >> validation | Dangerous: system trusts agent more than warranted |
+| `under_confident` | confidence << validation | Wasteful: unnecessary retries and fallbacks |
+
+### 7.4 Recommended Actions
+
+| Severity | Over-confident | Under-confident |
+|----------|---------------|-----------------|
+| `mild` | `monitor` | `monitor` |
+| `significant` | `adjust_confidence_floor` | `increase_priority` |
+| `severe` | `reduce_priority` | `increase_priority` |
+| Persistent (>10 runs) | `flag_for_evolution` | `flag_for_evolution` |
+
+---
+
+## 8. Edge Cases
+
+### 8.1 No Agents Match Required Capability
+
+```
+Scenario: Task requires "schema_generation" but no active agent declares it.
+Match result: fully_qualified = false for all agents.
+Action: If require_full_qualification = true → capability.no_match event → abort or block.
+If false → best partial match proceeds with DegradedCapability.
+```
+
+### 8.2 Agent on Probation
+
+```
+Scenario: Agent's scorecard shows degrading trend for 5+ consecutive runs.
+Action: binding_status → "probation".
+Effect: Excluded from routing if exclude_probation = true.
+         Included but deprioritized otherwise.
+Recovery: 3 consecutive successful runs → probation lifted.
+```
+
+### 8.3 Capability Deprecated Mid-Run
+
+```
+Scenario: A capability transitions to "deprecated" while a run is in progress.
+Rule: Active runs continue using the capability until completion.
+      New runs use the superseding capability if available.
+      Grace period prevents immediate breakage.
+```
+
+### 8.4 Confidence Drift + retry_other
+
+```
+Scenario: Agent A fails with over_confident drift (confidence: 0.9, validation: 0.5).
+Action: retry_other selects Agent B.
+        Agent A's scorecard records the failure.
+        Drift severity escalates.
+        If severe: agent's priority is reduced for future routing.
+```
+
+### 8.5 All Agents in Fallback Chain Fail
+
+```
+Scenario: FallbackChain.agent_sequence exhausted.
+Action: Execute exhaustion_action:
+  - "abort" → run terminates
+  - "skip" → stage proceeds without this capability
+  - "block" → run pauses for external intervention
+  - "degrade" → proceed with DegradedCapability (reduced guarantees)
+```
+
+### 8.6 Budget Exhaustion During Selection
+
+```
+Scenario: Task has max_cost_usd but only expensive agents remain.
+Rule: Agents exceeding budget are filtered out during matching.
+      If no agents remain: treat as "no agents match" (§8.1).
+```
+
+---
+
+## 9. Capability Lifecycle
+
+### 9.1 States
+
+```
+draft → active → deprecated → retired
+  │                  ↑
+  └──────────────────┘ (deprecation reversed)
+  │
+  └──→ retired (discarded without activation)
+```
+
+### 9.2 Transition Rules
+
+| Transition | Trigger | Condition |
+|-----------|---------|-----------|
+| draft → active | Capability validated | At least one agent binds it |
+| active → deprecated | Superseded or scheduled for removal | `supersedes` field set on replacement |
+| deprecated → retired | Grace period expired | No active bindings remain |
+| deprecated → active | Deprecation reversed | Explicit re-activation |
+| draft → retired | Never activated | Discarded by design |
+
+### 9.3 Evolution Events
 
 ```
 CapabilityEvolutionEvent {
@@ -349,125 +500,13 @@ CapabilityEvolutionEvent {
   capability_id: string
   agent_id?: string
 
-  change_type:
-    "capability_added" | "capability_removed"
-    | "capability_version_bumped"
-    | "binding_enabled" | "binding_disabled"
-    | "constraint_added" | "constraint_removed"
-    | "performance_threshold_changed"
-    | "profile_upgraded"
-
+  change_type: CapabilityChangeType    // 18 change types
   previous_value?: unknown
   new_value?: unknown
   reason: string
   occurred_at: timestamp
+  triggered_by: "system" | "evolution_agent" | "human" | "drift_detector"
 }
-```
-
-### 8.2 Versioning Rules
-
-| What changes | Version impact |
-|-------------|---------------|
-| New optional output | `MINOR` bump |
-| New required input | `MAJOR` bump |
-| Constraint tightened | `MINOR` bump |
-| Constraint loosened | `PATCH` bump |
-| Output removed | `MAJOR` bump |
-
-### 8.3 Capability Catalog
-
-```
-CapabilityCatalog {
-  capabilities: CapabilityDeclaration[]
-  version: string
-  last_updated_at: timestamp
-}
-```
-
-The catalog is the global registry of all declared capabilities. It is infrastructure-agnostic — could be in-memory, database, or file-based.
-
----
-
-## 9. Examples
-
-### 9.1 Capability Declaration
-
-```typescript
-const codeGeneration: CapabilityDeclaration = {
-  capability_id: "code_generation",
-  name: "Code Generation",
-  description: "Generates source code files from specifications",
-  version: "1.0.0",
-  valid_for_types: ["build"],
-  valid_modes: ["implement", "refactor"],
-  valid_stages: ["build"],
-  input_requirements: [
-    { name: "architecture", description: "Architecture artifact", required: true, artifact_kind: "architecture" },
-    { name: "plan", description: "Implementation plan", required: true, artifact_kind: "plan" },
-  ],
-  output_guarantees: [
-    { name: "source_code", description: "Generated source files", artifact_kind: "code", guaranteed: true },
-  ],
-  constraints: [
-    { key: "max_tokens", description: "Max tokens per file", type: "max_tokens", value: 8000 },
-  ],
-  tags: ["core", "build-phase"],
-};
-```
-
-### 9.2 Agent Profile
-
-```typescript
-const kernelBuilder: AgentProfile = {
-  agent_id: "agent-build-01",
-  agent_name: "Kernel Builder",
-  agent_type: "build",
-  supported_modes: ["implement", "refactor"],
-  capabilities: [
-    { capability_id: "code_generation", priority: 90, confidence_floor: 0.7, enabled: true },
-    { capability_id: "test_generation", priority: 60, enabled: true },
-  ],
-  priority: 80,
-  status: "active",
-  profile_version: 1,
-  model: "google/gemini-2.5-flash",
-  cost_tier: "medium",
-};
-```
-
-### 9.3 Task Requirement → Match → Selection
-
-```
-Task requires:
-  - code_generation (required, min_performance: 0.7)
-  - test_generation (preferred)
-  - documentation (optional)
-
-Available agents:
-  Agent A: code_generation ✓, test_generation ✓, documentation ✗
-  Agent B: code_generation ✓, documentation ✓
-
-Match results:
-  Agent A: match_score = 1.0 + 0.6 = 1.6, fully_qualified = true
-  Agent B: match_score = 1.0 + 0.2 = 1.2, fully_qualified = true
-
-Selection (primary_sort: match_score):
-  → Agent A selected
-```
-
-### 9.4 Fallback Scenario
-
-```
-Agent A fails on code_generation.
-
-FallbackChain:
-  agent_sequence: ["agent-build-01", "agent-build-02", "agent-build-03"]
-  allow_mode_change: true
-  exhaustion_action: "block"
-
-→ Dispatch to agent-build-02
-→ If agent-build-02 fails → dispatch to agent-build-03
-→ If agent-build-03 fails → block execution, emit agent.blocked
 ```
 
 ---
@@ -477,11 +516,13 @@ FallbackChain:
 | Extension | Description |
 |-----------|-------------|
 | Capability discovery | Agents self-declare capabilities at registration |
-| Dynamic routing | Router adapts selection based on real-time performance |
+| Dynamic routing | Router adapts selection based on real-time scorecard |
 | Cost-aware routing | Factor cost_tier into selection when budget is constrained |
 | Capability marketplace | Shared capability catalog across organizations |
 | Capability inheritance | Composite capabilities built from primitives |
 | ML-based scoring | Replace heuristic performance_score with learned model |
+| Drift auto-correction | Evolution agent adjusts confidence floors automatically |
+| Cross-run learning | Scorecards persist across runs for long-term optimization |
 
 ---
 

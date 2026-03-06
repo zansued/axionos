@@ -36,63 +36,76 @@ export { cryptoRandomId, nowIso, createArtifact } from "./utils.ts";
 
 // Protocol Contracts (v0.1.1)
 export type {
-  // Run
   Run,
-  // Stage
   StageExecution,
-  // Agent IO
   AgentTask,
   AgentTaskContext,
   ExpectedOutputSpec,
   AgentResponse,
   AgentResponseMetrics,
   AgentNextSuggestions,
-  // Artifacts
   ArtifactEnvelope,
   ArtifactKind,
   ArtifactCreator,
   ArtifactLineage,
   ArtifactQuality,
-  // Tools
   ToolCapability,
   ToolInvocation,
   ToolExecutionResult,
-  // Validation
   ValidationReport,
   ValidationDimensions,
   ValidationIssue,
-  // Memory
   MemoryEntry,
-  // Events
   RuntimeEventType as ProtocolEventType,
   ProtocolRuntimeEvent,
-  // Trace
   TraceMetadata,
-  // Failure
   FailureAction,
   RetryPolicy,
   RetryOtherDispatch,
   RollbackPolicy,
 } from "./protocol.ts";
 
-// Capability Model (v0.1)
+// Capability Model (v0.2)
 export type {
+  // Declaration
   CapabilityDeclaration,
+  CapabilityLifecycleState,
   CapabilityInputSpec,
   CapabilityOutputSpec,
   CapabilityConstraint,
+  // Identity & Profile
+  AgentIdentity,
   AgentProfile,
   AgentCapabilityBinding,
+  RoutingPreferences,
+  // Requirements
   CapabilityRequirement,
+  // Matching
   CapabilityMatchResult,
   CapabilityMatchDetail,
   SelectionPolicy,
+  SelectionSortKey,
+  // Fallback
   FallbackChain,
   DegradedCapability,
-  CapabilityPerformanceRecord,
+  // Scorecard
+  CapabilityScorecard,
+  ScorecardSummary,
+  // Confidence Drift
+  ConfidenceDriftStatus,
+  ConfidenceDriftAction,
+  // Performance
   PerformanceWeights,
+  // Lifecycle
   CapabilityEvolutionEvent,
+  CapabilityChangeType,
+  CapabilityLifecycleTransition,
   CapabilityCatalog,
+  // Events
+  CapabilityEventType,
 } from "./capabilities.ts";
 
-export { DEFAULT_PERFORMANCE_WEIGHTS } from "./capabilities.ts";
+export {
+  DEFAULT_PERFORMANCE_WEIGHTS,
+  CONFIDENCE_DRIFT_THRESHOLDS,
+} from "./capabilities.ts";
