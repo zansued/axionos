@@ -632,7 +632,7 @@ supabase/functions/
 
 ---
 
-## 10. Database Schema (30+ tables)
+## 11. Database Schema (30+ tables)
 
 ### Core Tables
 - `organizations`, `organization_members`, `profiles`
