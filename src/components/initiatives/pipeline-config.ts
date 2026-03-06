@@ -433,14 +433,13 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       return [{ stage: "build_repair", label: "Re-executar Build Repair", type: "run" }];
     case "build_repaired":
       return [
-        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
-        { stage: "approve", label: "✅ Aprovar Repair → Publicar", type: "approve" },
-        { stage: "build_repair", label: "Re-executar Build Repair", type: "run" },
+        { stage: "validation", label: "🔍 Re-validar Completo", description: "Roda Fix Loop → Deep Static → Drift → Runtime novamente após o repair.", type: "run", variant: "primary" },
+        { stage: "approve", label: "✅ Aprovar → Publicar", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "repair_failed":
       return [
-        { stage: "build_repair", label: "🔧 Retry Build Repair", type: "run" },
+        { stage: "build_repair", label: "🔧 Retry Build Repair", description: "Tenta reparar o build novamente com AI.", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "ready_to_publish":
