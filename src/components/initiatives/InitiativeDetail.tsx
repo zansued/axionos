@@ -415,12 +415,14 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                 {runningStage === "execution" && "Agentes executando subtasks automaticamente..."}
                 {runningStage === "validation" && "Validando qualidade dos artefatos com IA..."}
                 {runningStage === "publish" && "Criando branch, commitando artefatos e abrindo PR..."}
+                {runningStage === "deploy_vercel" && "Iniciando deploy no Vercel..."}
               </p>
               <p className="text-xs text-muted-foreground">
                 {runningStage === "planning" ? "Isso pode levar ~2 minutos." :
                  runningStage === "execution" ? "Isso pode levar vários minutos dependendo do número de subtasks." :
                  runningStage === "validation" ? "Cada artefato será analisado individualmente. ~1 min." :
                  runningStage === "publish" ? "Commitando arquivos no GitHub..." :
+                 runningStage === "deploy_vercel" ? "Conectando ao Vercel e iniciando deploy..." :
                  "Isso pode levar ~30 segundos."}
               </p>
             </div>
@@ -503,12 +505,13 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
           stageStatus === "deploying" ? "border-warning/30 bg-warning/5" :
           ""
         }`}>
-          <CardContent className="p-4 space-y-2">
+          <CardContent className="p-4 space-y-3">
             <div className="flex items-center gap-3">
               <Globe className={`h-5 w-5 ${
                 stageStatus === "deployed" ? "text-success" :
                 stageStatus === "deploy_failed" ? "text-destructive" :
-                "text-warning"
+                stageStatus === "deploying" ? "text-warning animate-pulse" :
+                "text-muted-foreground"
               }`} />
               <div className="flex-1">
                 <p className="text-sm font-medium">
@@ -530,7 +533,7 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
               </Badge>
             </div>
             {deployUrl && (
-              <div className="flex items-center gap-2 mt-2">
+              <div className="flex items-center gap-2">
                 <a href={deployUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
                   <Globe className="h-3.5 w-3.5" />
                   {deployUrl}
@@ -538,18 +541,40 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                 </a>
               </div>
             )}
-            {healthStatus && (
-              <div className="flex items-center gap-2">
-                <Badge variant={healthStatus === "healthy" ? "default" : "destructive"} className="text-[10px]">
-                  Health: {healthStatus}
-                </Badge>
-                {initiative.deployed_at && (
-                  <span className="text-[10px] text-muted-foreground">
-                    Deployed: {new Date(initiative.deployed_at).toLocaleString()}
-                  </span>
+            {/* Error details */}
+            {(initiative.deploy_error_code || initiative.deploy_error_message) && stageStatus === "deploy_failed" && (
+              <div className="rounded-md border border-destructive/30 bg-destructive/5 p-2.5 space-y-1">
+                {initiative.deploy_error_code && (
+                  <p className="text-xs font-mono text-destructive font-semibold">{initiative.deploy_error_code}</p>
+                )}
+                {initiative.deploy_error_message && (
+                  <p className="text-xs text-destructive/80">{initiative.deploy_error_message}</p>
                 )}
               </div>
             )}
+            {/* Health + timestamps */}
+            <div className="flex items-center gap-3 flex-wrap">
+              {healthStatus && (
+                <Badge variant={healthStatus === "healthy" ? "default" : healthStatus === "unhealthy" ? "destructive" : "secondary"} className="text-[10px]">
+                  Health: {healthStatus}
+                </Badge>
+              )}
+              {initiative.deployed_at && (
+                <span className="text-[10px] text-muted-foreground">
+                  Deployed: {new Date(initiative.deployed_at).toLocaleString()}
+                </span>
+              )}
+              {initiative.last_deploy_check_at && (
+                <span className="text-[10px] text-muted-foreground">
+                  Last check: {new Date(initiative.last_deploy_check_at).toLocaleString()}
+                </span>
+              )}
+              {initiative.commit_hash && (
+                <span className="text-[10px] text-muted-foreground font-mono">
+                  {initiative.commit_hash.slice(0, 7)}
+                </span>
+              )}
+            </div>
           </CardContent>
         </Card>
       )}

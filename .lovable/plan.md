@@ -142,14 +142,18 @@ Organized into four sequential sprints.
 
 **Acceptance Criteria:**
 - [x] Deploy states defined in state machine
-- [x] Deploy metadata columns in database
+- [x] Deploy metadata columns in database (including error_code, error_message, last_deploy_check_at)
 - [x] Pipeline config updated with deploy states and actions
-- [x] UI shows deploy status, URL, and health
+- [x] UI shows deploy status, URL, health, errors, timestamps
 - [x] Published stage persists repo_url
-- [ ] Automated Vercel deploy via API
-- [ ] Post-deploy health check
+- [x] Deploy contract schema created (`_shared/contracts/deploy-contract.schema.ts`)
+- [x] Deploy engine edge function created (`initiative-deploy-engine`)
+- [x] Vercel-first integration (API + fallback deploy link)
+- [x] Post-deploy health check
+- [x] Deploy state machine with validated transitions
+- [x] Error details visible and traceable in UI
 
-**Status:** 🔧 In Progress (contract + schema + UI done, deploy automation planned)
+**Status:** ✅ Complete
 
 ---
 

@@ -781,6 +781,8 @@ export type Database = {
           commit_hash: string | null
           complexity: string | null
           created_at: string
+          deploy_error_code: string | null
+          deploy_error_message: string | null
           deploy_status: string | null
           deploy_target: string | null
           deploy_url: string | null
@@ -800,6 +802,7 @@ export type Database = {
           idea_raw: string | null
           initial_estimate: Json | null
           initiative_brief: Json | null
+          last_deploy_check_at: string | null
           market_analysis: string | null
           mvp_scope: string | null
           notes: string | null
@@ -834,6 +837,8 @@ export type Database = {
           commit_hash?: string | null
           complexity?: string | null
           created_at?: string
+          deploy_error_code?: string | null
+          deploy_error_message?: string | null
           deploy_status?: string | null
           deploy_target?: string | null
           deploy_url?: string | null
@@ -853,6 +858,7 @@ export type Database = {
           idea_raw?: string | null
           initial_estimate?: Json | null
           initiative_brief?: Json | null
+          last_deploy_check_at?: string | null
           market_analysis?: string | null
           mvp_scope?: string | null
           notes?: string | null
@@ -887,6 +893,8 @@ export type Database = {
           commit_hash?: string | null
           complexity?: string | null
           created_at?: string
+          deploy_error_code?: string | null
+          deploy_error_message?: string | null
           deploy_status?: string | null
           deploy_target?: string | null
           deploy_url?: string | null
@@ -906,6 +914,7 @@ export type Database = {
           idea_raw?: string | null
           initial_estimate?: Json | null
           initiative_brief?: Json | null
+          last_deploy_check_at?: string | null
           market_analysis?: string | null
           mvp_scope?: string | null
           notes?: string | null
