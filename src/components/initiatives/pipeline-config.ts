@@ -69,11 +69,11 @@ export const PIPELINE_STEPS = [
   { key: "in_progress", label: "Execução", icon: Hammer, color: "text-primary", bg: "bg-primary/10" },
 
   // ── Validation & Publish (Stages 20-23) ──
-  { key: "validating", label: "Validação", icon: Shield, color: "text-warning", bg: "bg-warning/10" },
-  { key: "repairing_build", label: "Build Repair ▶", icon: Wrench, color: "text-warning", bg: "bg-warning/10" },
+  { key: "validating", label: "Validação (Fix Loop → Deep → Drift → Runtime)", icon: Shield, color: "text-warning", bg: "bg-warning/10" },
+  { key: "repairing_build", label: "Build Repair (auto-fix) ▶", icon: Wrench, color: "text-warning", bg: "bg-warning/10" },
   { key: "build_repaired", label: "Build Repair ✓", icon: Wrench, color: "text-accent", bg: "bg-accent/10" },
   { key: "repair_failed", label: "Repair Failed", icon: Wrench, color: "text-destructive", bg: "bg-destructive/10" },
-  { key: "ready_to_publish", label: "Pronto", icon: Rocket, color: "text-accent", bg: "bg-accent/10" },
+  { key: "ready_to_publish", label: "Pronto para Publicar", icon: Rocket, color: "text-accent", bg: "bg-accent/10" },
   { key: "published", label: "Publicado", icon: GitBranch, color: "text-primary", bg: "bg-primary/10" },
 
   // ── Growth & Evolution Layer (Stages 24-32) ──
@@ -139,9 +139,9 @@ export const MACRO_STAGES = [
   { key: "execution", label: "Execução", icon: Hammer },
 
   // Validation & Publish
-  { key: "validation", label: "Validação", icon: Shield },
-  { key: "build_repair", label: "Build Repair", icon: Wrench },
-  { key: "publish", label: "Publicação", icon: GitBranch },
+  { key: "validation", label: "Fix Loop (AI corrige erros)", icon: Shield },
+  { key: "build_repair", label: "Build Repair (auto-fix)", icon: Wrench },
+  { key: "publish", label: "Publicação (GitHub)", icon: GitBranch },
 
   // Growth & Evolution Layer
   { key: "observability", label: "Observability", icon: Eye },
@@ -218,7 +218,9 @@ export function getMacroStageIndex(stageStatus: string): number {
 export type StageAction = {
   stage: string;
   label: string;
+  description?: string;
   type: "run" | "approve" | "reject" | "publish";
+  variant?: "primary" | "secondary" | "outline";
 };
 
 export function getAvailableActions(stageStatus: string): StageAction[] {
@@ -423,32 +425,28 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "validating":
       return [
-        { stage: "validation", label: "Rodar Fix Loop (AI)", type: "run" },
-        { stage: "deep_validation", label: "Deep Static Analysis", type: "run" },
-        { stage: "runtime_validation", label: "Runtime Validation (tsc + vite)", type: "run" },
-        { stage: "approve", label: "✅ Aprovar Validação → Publicar", type: "approve" },
+        { stage: "validation", label: "🔍 Iniciar Validação Completa", description: "Executa automaticamente: Fix Loop (AI) → Deep Static Analysis → Drift Detection → Runtime Validation (tsc + vite build). Todo o fluxo é sequencial e automático.", type: "run", variant: "primary" },
+        { stage: "approve", label: "✅ Aprovar Validação → Publicar", description: "Pular validação e ir direto para publicação (não recomendado).", type: "approve", variant: "outline" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "repairing_build":
       return [{ stage: "build_repair", label: "Re-executar Build Repair", type: "run" }];
     case "build_repaired":
       return [
-        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
-        { stage: "approve", label: "✅ Aprovar Repair → Publicar", type: "approve" },
-        { stage: "build_repair", label: "Re-executar Build Repair", type: "run" },
+        { stage: "validation", label: "🔍 Re-validar Completo", description: "Roda Fix Loop → Deep Static → Drift → Runtime novamente após o repair.", type: "run", variant: "primary" },
+        { stage: "approve", label: "✅ Aprovar → Publicar", type: "approve" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "repair_failed":
       return [
-        { stage: "build_repair", label: "🔧 Retry Build Repair", type: "run" },
+        { stage: "build_repair", label: "🔧 Retry Build Repair", description: "Tenta reparar o build novamente com AI.", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "ready_to_publish":
       return [
+        { stage: "publish", label: "🚀 Publicar no GitHub", description: "Gera release, changelog e push para o repositório.", type: "publish", variant: "primary" },
+        { stage: "validation", label: "🔍 Re-executar Validação Completa", description: "Roda novamente: Fix Loop → Deep Static → Drift → Runtime.", type: "run" },
         { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
-        { stage: "runtime_validation", label: "Runtime Validation (tsc + vite build)", type: "run" },
-        { stage: "deep_validation", label: "Re-executar Deep Analysis", type: "run" },
-        { stage: "publish", label: "Publicar no GitHub", type: "publish" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "published":
