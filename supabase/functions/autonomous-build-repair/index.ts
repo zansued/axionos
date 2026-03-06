@@ -9,6 +9,7 @@ import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { upsertNode, recordError, generateBrainContext, upsertPreventionRule } from "../_shared/brain-helpers.ts";
 import { callAI } from "../_shared/ai-client.ts";
+import { recordRepairEvidence } from "../_shared/repair/repair-evidence-recorder.ts";
 
 // ═══════════════════════════════════════════════
 // TYPES
