@@ -194,7 +194,7 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
             </div>
             {initiative.description && <p className="text-sm text-muted-foreground line-clamp-2 break-words">{initiative.description}</p>}
           </div>
-          <RadialOrbitalTimeline
+          <PipelineTimeline
             currentMacroIndex={macroIdx}
             runningStage={runningStage}
             onRollbackToStage={onRollbackToStage}
