@@ -204,8 +204,8 @@ export default function Initiatives() {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
-            <CreateInitiativeDialog
-              onSubmit={(title, desc, referenceUrl, template) => createMutation.mutate({ title, description: desc, referenceUrl, template })}
+            <InitiativeWizard
+              onSubmit={(brief) => createMutation.mutate(brief)}
               isPending={createMutation.isPending}
             />
           </div>
