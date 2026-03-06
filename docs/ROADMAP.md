@@ -1,157 +1,206 @@
 # AxionOS — System Evolution Roadmap
 
-> **Vision**: AxionOS is evolving into a fully autonomous system capable of building, operating, and improving software products continuously — without human engineering intervention.
+> **Vision**: AxionOS is an autonomous software engineering system evolving into a self-learning software factory. Development follows architecture-priority sequencing — each horizon strengthens the next.
 >
 > Last updated: 2026-03-06
 
 ---
 
-## System Evolution Phases
+## Implementation Horizons
 
-### PHASE 1 — Core Engineering Factory ✅ Completed
+AxionOS development is organized into four implementation horizons based on architectural dependency, not calendar time. Each horizon must be stable before the next one begins.
 
-**Description:**
-Initial implementation of the autonomous software engineering pipeline. From idea to deployable application — fully automated.
-
-**Modules:**
-- Initiative Pipeline (32-stage deterministic flow)
-- Architecture Generator (4-agent architecture team)
-- Architecture Simulation Engine (structural wind tunnel)
-- Preventive Validation (historical rule auditing)
-- Project Bootstrap Intelligence (multi-stack detection + build prediction)
-- Dependency Intelligence Engine (NPM health audit + Firecrawl research)
-- Supabase Schema Bootstrap (isolated `app_{id}` schemas)
-- Supabase Provisioning Engine (tables + RLS + storage)
-- Autonomous API Generator (REST, RPCs, triggers, webhooks)
-- Autonomous UI Generator (pages, components, hooks, navigation)
-- Self-Healing Build Pipeline (auto-repair + prevention rules)
-- CI/CD Integration (GitHub Actions runtime validation)
-- GitHub Webhook System (atomic Tree API commits + auto-PRs)
-
-**Impact:**
-AxionOS can transform a project idea into a deployable full-stack application with architecture, database, API, UI, build validation, and continuous deployment — autonomously.
-
----
-
-### PHASE 2 — Adaptive Engineering System ✅ Completed
-
-**Description:**
-Introduce system learning and architecture evolution. The system remembers failures, extracts patterns, and prevents repeated mistakes across projects.
-
-**Modules:**
-- Error Intelligence Engine (pattern analysis + root cause extraction)
-- Prevention Rules (confidence scoring + incremental learning)
-- Architecture Evolution Memory (cross-project pattern library)
-- Cross-project Pattern Learning (org-wide knowledge base)
-- Adaptive Learning Engine (automatic rule generation from failures)
-
-**Impact:**
-The system learns from previous failures and prevents repeated engineering mistakes. Each project benefits from the accumulated knowledge of all prior executions.
-
----
-
-### PHASE 3 — AI Efficiency Layer 🔄 In Progress
-
-**Description:**
-Core infrastructure layer that optimizes every LLM interaction across the entire system. Every agent call passes through compression, caching, and intelligent routing — making the system economically viable at scale without sacrificing engineering intelligence.
-
-**Modules:**
-- Prompt Compression Engine (`_shared/prompt-compressor.ts`) — rule-based pre-compression + AI summarization via lightweight model. Preserves architecture decisions, dependency constraints, unresolved errors, and build configuration while removing verbose logs and explanations.
-- Semantic Cache Engine (`_shared/semantic-cache.ts`) — vector similarity cache using pgvector (768-dim embeddings, cosine similarity threshold 0.92). Exact hash match as fast path, semantic search as fallback. Zero LLM cost on cache hits.
-- Model Router (`_shared/model-router.ts`) — complexity-based routing: `flash-lite` (low) → `flash` (medium) → `pro` (high). Stage-aware routing with heuristic fallback. Cache hits bypass model calls entirely.
-- Smart Context Window (`_shared/smart-context.ts`) — AST-like regex parser that extracts API surface (imports, types, signatures). Priority budget: types > hooks > services > components. ~60-80% token reduction.
-- Token Budget Optimizer — integrated in `ai-client.ts`. Dynamic token allocation per stage based on historical usage patterns.
-- Stage Context Memory (`ai_prompt_cache` table) — pgvector-indexed prompt/response storage with TTL expiration, hit counting, and per-stage analytics.
-
-**Expected Outcomes:**
-- 80–90% reduction in token usage and API costs
-- Scalable agent execution across large pipelines
-- Ability to run full 32-stage pipelines at a fraction of the cost
-- Economic viability for multi-product parallel execution
-
-**Integration Point:**
-All modules integrate transparently in `callAI()`:
 ```
-callAI() → compress → cache lookup → route model → LLM call → cache store → return
+  NOW           NEXT            LATER             FUTURE
+  ────────►     ────────►       ────────►         ────────►
+  Stabilize     Build Learning  Build Product     Build Market
+  the Kernel    Agents          Intelligence      Intelligence
 ```
 
 ---
 
-### PHASE 4 — Agent Intelligence Layer 🔮 Planned
+## NOW — Stabilize the Kernel
 
-**Description:**
-Transform agents from static prompt executors into learning systems capable of improving engineering decisions autonomously. Agents evolve their own prompts, repair strategies, and architectural decisions based on accumulated execution history.
+**Priority:** Highest
+**Status:** 🔧 In Progress
 
-**Modules:**
-- Learning Agents — self-improving prompt strategies that adapt based on output quality metrics and downstream success rates
-- Prompt Optimization Engine — A/B testing of prompt variations per stage, with automatic selection of highest-performing variants
-- Architecture Pattern Library — catalog of successful architectural patterns extracted from completed projects, indexed by domain and complexity
-- Error Pattern Recognition — predictive error detection using historical failure data, triggering preventive measures before errors occur
-- Self-Improving Fix Agents — repair strategies that evolve over time, learning which fixes work for which error classes
-- Agent Memory Layer — persistent per-agent memory across executions, enabling contextual decision-making based on prior experience
+### Purpose
 
-**Impact:**
-Agents improve reasoning and repair capabilities with each execution cycle. The quality of generated code increases continuously. The system transitions from deterministic execution to adaptive intelligence.
+Consolidate the core infrastructure of AxionOS into a hardened engineering kernel. Future intelligence layers depend on this foundation being stable, reliable, and cost-efficient. Without a stable kernel, every new capability becomes a source of entropy.
+
+### Core System Kernel
+
+The kernel is the set of systems that every pipeline execution depends on:
+
+| Module | File / System | Status |
+|--------|---------------|--------|
+| Project Brain | `brain-helpers.ts`, `project_brain_nodes/edges` | ✅ Implemented |
+| AI Efficiency Layer | `ai-client.ts`, `prompt-compressor.ts`, `semantic-cache.ts`, `model-router.ts` | ✅ Implemented |
+| Smart Context Window | `smart-context.ts` | ✅ Implemented |
+| Semantic Cache | `semantic-cache.ts`, `ai_prompt_cache` table | ✅ Implemented |
+| Prompt Compression | `prompt-compressor.ts` | ✅ Implemented |
+| Model Router | `model-router.ts` | ✅ Implemented |
+| DAG Execution Engine | `dependency-scheduler.ts` | ✅ Implemented |
+| Runtime Validation | `pipeline-runtime-validation` + CI | ✅ Implemented |
+| Autonomous Build Repair | `autonomous-build-repair` + `pipeline-fix-orchestrator` | ✅ Implemented |
+| Observability & Cost Tracking | `observability-engine` + `org_usage_limits` | ✅ Implemented |
+| Stage Contracts | 32-stage deterministic pipeline | ✅ Implemented |
+| Agent IO Contracts | `pipeline-helpers.ts`, agent message schema | ✅ Implemented |
+| Governance | `pipeline_gate_permissions`, `stage_sla_configs`, `audit_logs` | ✅ Implemented |
+| Pipeline Visualization | UI components for pipeline state | 🔧 Stabilizing |
+| UI Restructuring | Control-center layout simplification | 🔧 Stabilizing |
+
+### Goals
+
+- Reduce architectural entropy across pipeline stages
+- Improve reliability of end-to-end pipeline execution
+- Standardize contracts between stages and agents
+- Reduce LLM cost via efficiency layer optimization
+- Improve maintainability of 50+ edge functions
+- Simplify visual complexity in the control UI
+- Make future intelligence layers safe to build on
+
+### Expected Outcome
+
+AxionOS becomes a stable autonomous engineering kernel — reliable enough that adding learning agents, product intelligence, or market intelligence does not introduce instability.
 
 ---
 
-### PHASE 5 — Autonomous Product Evolution 🔮 Planned
+## NEXT — Build Learning Agents
 
-**Description:**
-Enable applications generated by AxionOS to evolve automatically after deployment. Products observe real user behavior, identify improvement opportunities, and implement changes — extending the software lifecycle beyond deployment into continuous autonomous evolution.
+**Priority:** High
+**Status:** 📋 Planned
+**Dependency:** Requires stable kernel (NOW)
 
-**Modules:**
-- Product Analytics Engine — AARRR metrics: acquisition, activation, retention, revenue, referral. Real-time monitoring of product health.
-- User Behavior Analyzer — feature usage heatmaps, drop-off points, session patterns, friction detection
-- Growth Optimization Engine — landing page optimization, onboarding flow improvement, feature prioritization based on usage data
-- Feature Suggestion Engine — AI-driven feature recommendations based on user behavior gaps and market signals
-- Automatic UI Optimization — layout, copy, and conversion optimization driven by behavioral data
-- Autonomous A/B Testing — automatic generation, deployment, and evaluation of product variants
+### Purpose
 
-**Impact:**
-Generated applications continuously improve without manual engineering. The software lifecycle extends beyond deployment into autonomous evolution — creating a feedback loop between user behavior and product improvement.
+Upgrade agents from static prompt executors into adaptive learning systems. Each execution should improve future executions. This is the transition from Level 3 (Autonomous Engineering System) to Level 4 (Self-Learning Software Factory).
+
+### Agent Intelligence Layer
+
+| Module | Description | Status |
+|--------|-------------|--------|
+| Learning Agents | Self-improving prompt strategies based on output quality and downstream success | 📋 Planned |
+| Agent Memory Layer | Persistent per-agent memory across executions (`agent_memory` table) | 🔧 Foundation exists |
+| Prompt Optimization Engine | A/B testing of prompt variations per stage, automatic selection of best performers | 📋 Planned |
+| Error Pattern Recognition | Predictive error detection from historical failure data | 📋 Planned |
+| Self-Improving Fix Agents | Repair strategies that evolve based on fix success rates | 📋 Planned |
+| Architecture Pattern Library | Catalog of successful patterns indexed by domain and complexity | 📋 Planned |
+
+### What Agents Should Learn From
+
+- Past build failures and their root causes
+- Successful builds and what made them succeed
+- Applied fixes and their effectiveness
+- Architectural choices and their downstream impact
+- Cost/performance tradeoffs across model tiers
+
+### Expected Outputs
+
+- Better prompt strategies with measurable quality improvement
+- Improved repair quality and lower retry counts
+- Reusable architectural decisions across projects
+- More accurate code generation on first attempt
+- Reduced cost per pipeline execution
+
+### Expected Outcome
+
+Each execution improves future executions. The system transitions from deterministic execution to adaptive intelligence.
 
 ---
 
-### PHASE 6 — Autonomous Startup Factory 🔮 Planned
+## LATER — Build Product Intelligence
 
-**Description:**
-Transform AxionOS from a software factory into an autonomous venture creation platform. The system discovers market opportunities, validates ideas, builds products, launches them, measures results, and manages a portfolio of autonomous ventures — functioning as a self-operating venture studio.
+**Priority:** Medium
+**Status:** 📋 Planned
+**Dependency:** Requires stable kernel (NOW) + learning agents (NEXT)
 
-**Modules:**
-- Opportunity Discovery Engine — market gap identification from search trends, developer communities, startup datasets, and demand signals
-- Market Signal Analyzer — demand, competition, and trend analysis via Firecrawl. Viability scoring gates entry into the build pipeline.
-- Product Validation Engine — synthetic user testing, landing page simulation, AI demand estimation. Products are validated before engineering begins.
-- Revenue Strategy Engine — pricing models, subscription tiers, freemium options, market positioning. Every product ships with a monetization strategy.
-- Startup Portfolio Manager — multi-product resource allocation, growth stage tracking, risk assessment, portfolio-level optimization
-- Venture Intelligence Layer — end-to-end venture orchestration: discover → validate → build → launch → measure → evolve → scale
+### Purpose
 
-**Impact:**
-AxionOS becomes capable of discovering, building, launching, and evolving multiple software products autonomously — functioning as a self-operating venture studio that manages its own portfolio of digital ventures.
+Extend AxionOS beyond software generation into product intelligence. Generated applications should not stop evolving after deployment. This layer observes real user behavior and implements improvements automatically.
+
+### Product Intelligence Layer
+
+| Module | Description | Status |
+|--------|-------------|--------|
+| Product Analytics Engine | AARRR metrics: acquisition, activation, retention, revenue, referral | 📋 Planned |
+| User Behavior Analyzer | Feature usage heatmaps, drop-off points, session patterns, friction detection | 📋 Planned |
+| Feature Suggestion Engine | AI-driven feature recommendations based on usage gaps and behavior data | 📋 Planned |
+| Growth Optimization Engine | Landing page optimization, onboarding improvement, conversion optimization | 📋 Planned |
+| Automatic UI Optimization | Layout, copy, and conversion optimization driven by behavioral data | 📋 Planned |
+| Product Evolution Engine | Autonomous feature addition/removal based on usage metrics | 📋 Planned |
+
+### Focus Areas
+
+- Observing real user behavior post-deployment
+- Identifying friction points and drop-off patterns
+- Prioritizing improvements based on data, not assumptions
+- Evolving generated products automatically
+
+### Expected Outcome
+
+AxionOS-generated products become self-improving after launch. The software lifecycle extends beyond deployment into continuous autonomous evolution.
+
+---
+
+## FUTURE — Build Market Intelligence
+
+**Priority:** Long-term
+**Status:** 📋 Planned
+**Dependency:** Requires stable kernel (NOW) + learning agents (NEXT) + product intelligence (LATER)
+
+### Purpose
+
+Transform AxionOS from a software factory into an autonomous venture creation platform. The system discovers market opportunities, validates ideas, builds products, launches them, and manages a portfolio of autonomous ventures.
+
+This is the final major expansion layer. It should only be built after the kernel, learning agents, and product intelligence are proven stable.
+
+### Market Intelligence Layer
+
+| Module | Description | Status |
+|--------|-------------|--------|
+| Opportunity Discovery Engine | Market gap identification from trends, communities, and demand signals | 📋 Planned |
+| Market Signal Analyzer | Demand, competition, and trend analysis with viability scoring | 📋 Planned |
+| Product Validation Engine | Synthetic user testing, landing page simulation, demand estimation | 📋 Planned |
+| Revenue Strategy Engine | Pricing models, subscription tiers, freemium options, market positioning | 📋 Planned |
+| Venture Intelligence Layer | End-to-end orchestration: discover → validate → build → launch → measure → evolve | 📋 Planned |
+| Startup Portfolio Manager | Multi-product resource allocation, growth tracking, risk assessment | 📋 Planned |
+
+### Capabilities
+
+- Discover opportunities from real-world market signals
+- Validate product ideas before engineering begins
+- Choose what to build based on viability analysis
+- Allocate resources across multiple simultaneous products
+- Manage a portfolio of autonomous digital ventures
+
+### Expected Outcome
+
+AxionOS evolves toward an autonomous startup factory — a self-operating venture studio capable of discovering, building, launching, and managing multiple software products.
 
 ---
 
 ## System Maturity Levels
 
-| Level | Name | Description |
-|-------|------|-------------|
-| **Level 1** | Code Generator | Generates code snippets from prompts. No architecture awareness. No build validation. |
-| **Level 2** | Software Builder | Produces full applications with structure, database, and deployment. Single-project scope. |
-| **Level 3** | Autonomous Engineering System | Self-healing builds, architecture simulation, preventive validation, CI/CD integration. Multi-stage deterministic pipeline. |
-| **Level 4** | Self-Learning Software Factory | Agents learn from failures, optimize their own prompts, and improve code quality autonomously. Per-execution learning cycles. |
-| **Level 5** | Autonomous Startup Factory | Discovers opportunities, builds products, deploys, measures, evolves, and manages a portfolio — fully autonomous. Self-operating venture studio. |
+| Level | Name | Description | Status |
+|-------|------|-------------|--------|
+| **Level 1** | Code Generator | Generates code snippets from prompts. No architecture awareness. No build validation. | ✅ |
+| **Level 2** | Software Builder | Produces full applications with structure, database, and deployment. Single-project scope. | ✅ |
+| **Level 3** | Autonomous Engineering System | Self-healing builds, architecture simulation, preventive validation, CI/CD integration. Multi-stage deterministic pipeline. | ✅ |
+| **Level 4** | Self-Learning Software Factory | Agents learn from failures, optimize prompts, improve code quality autonomously. Per-execution learning cycles. | 🔄 Transitioning |
+| **Level 5** | Autonomous Startup Factory | Discovers opportunities, builds products, deploys, measures, evolves, and manages a portfolio — fully autonomous. | 🔮 Planned |
 
 ### Current Status
 
-> **AxionOS is currently transitioning from Level 3 to Level 4.**
+> **AxionOS is currently at Level 3, transitioning to Level 4.**
 >
-> The Core Engineering Factory (Phase 1) and Adaptive Engineering System (Phase 2) are fully operational. The AI Efficiency Layer (Phase 3) is being implemented to enable cost-effective scaling — with Prompt Compression, Semantic Cache, Model Router, and Smart Context Window already deployed. The next frontier is Agent Intelligence (Phase 4) — where agents become self-improving systems rather than static prompt executors.
+> The Core Engineering Kernel is implemented and being stabilized (NOW). The next milestone is Agent Intelligence (NEXT) — where agents become self-improving systems rather than static prompt executors.
 
 ---
 
 ## System Metrics
 
-### Current (Phases 1-3)
+### Current (Kernel — NOW)
 | Metric | Value |
 |--------|-------|
 | Pipeline stages | 32 |
@@ -162,28 +211,37 @@ AxionOS becomes capable of discovering, building, launching, and evolving multip
 | Brain node types | 11+ |
 | Token reduction | ~60-90% via efficiency layer |
 
-### Target (Phases 4-6)
+### Target (Learning Agents — NEXT)
+| Metric | Target |
+|--------|--------|
+| Prompt quality improvement | Measurable per-stage |
+| Fix success rate | >80% first attempt |
+| Retry count reduction | <2 per pipeline |
+| Per-execution learning | Automatic rule generation |
+
+### Target (Product + Market — LATER/FUTURE)
 | Metric | Target |
 |--------|--------|
 | Full SaaS generation | < 5 minutes |
-| Autonomous evolution | Continuous post-deploy |
+| Autonomous product evolution | Continuous post-deploy |
 | Portfolio management | Multi-product simultaneous |
-| Agent self-improvement | Per-execution learning cycle |
+| Market validation | Pre-build viability scoring |
 
 ---
 
 ## Long-Term Vision
 
-AxionOS is not a code generation tool. It is an **autonomous software engineering system** designed to reach full operational independence.
+AxionOS is not a code generation tool. It is an **autonomous software engineering system** designed to reach full operational independence through disciplined, sequential evolution.
 
-The end state: a self-operating venture studio capable of:
+The implementation order matters:
 
-- **Discovering** market opportunities from real-world signals
-- **Designing** product architectures with simulation and validation
-- **Building** complete full-stack applications autonomously
-- **Deploying** to production with CI/CD and runtime validation
-- **Analyzing** user behavior and product performance
-- **Evolving** products automatically based on usage data
-- **Managing** a portfolio of autonomous ventures at scale
+1. **Stable Kernel** — without reliability, nothing else works
+2. **Learning Agents** — without learning, the system cannot improve
+3. **Product Intelligence** — without product data, evolution is guesswork
+4. **Market Intelligence** — without product success, venture management is premature
 
-Each phase brings AxionOS closer to this vision. Each module is a building block toward a self-operating software factory.
+Each horizon depends on the previous one. Skipping ahead creates technical debt that undermines the entire system.
+
+The end state: a self-operating venture studio capable of discovering opportunities, designing architectures, building applications, deploying to production, analyzing user behavior, evolving products automatically, and managing a portfolio of digital ventures at scale.
+
+But that end state is reached through disciplined engineering, not through premature ambition.

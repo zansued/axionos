@@ -1,16 +1,36 @@
-# AxionOS — Autonomous Software Engineering System Architecture
+# AxionOS — System Architecture
 
-> Deep technical analysis of the AI-orchestrated autonomous software engineering system.
+> Technical architecture of the autonomous software engineering system.
 > Last updated: 2026-03-06
 
 ---
 
 ## 1. Project Overview
 
-**AxionOS** is a multi-tenant SaaS platform that operates as an autonomous software engineering system. It orchestrates multiple AI agents to autonomously discover product opportunities, validate market demand, generate complete production-ready applications, launch digital products, analyze market feedback, and evolve products automatically.
+**AxionOS** is a multi-tenant SaaS platform that operates as an autonomous software engineering system. It orchestrates multiple AI agents to generate complete production-ready applications through a deterministic 32-stage pipeline with self-healing builds, architecture simulation, and preventive validation.
 
-### Core Value Proposition
-The system operates as an **AI-powered venture studio** — continuously generating and testing digital products, learning from real user behavior and improving future projects.
+### What AxionOS Is Today
+
+An autonomous engineering system with:
+- A 32-stage deterministic pipeline from idea to deployable application
+- A Project Brain (knowledge graph with semantic search)
+- An AI Efficiency Layer (prompt compression, semantic cache, model routing)
+- Self-healing build repair with CI integration
+- DAG-based parallel execution with 6 concurrent workers
+- Adaptive learning from build failures
+
+### Where AxionOS Is Going
+
+The system is evolving through four implementation horizons:
+
+| Horizon | Focus | Status |
+|---------|-------|--------|
+| **NOW** | Stabilize the Kernel | 🔧 Stabilizing |
+| **NEXT** | Agent Intelligence Layer | 📋 Planned |
+| **LATER** | Product Intelligence Layer | 📋 Planned |
+| **FUTURE** | Market Intelligence Layer | 📋 Planned |
+
+Each horizon depends on the previous one being stable.
 
 ### System Maturity
 | Level | Name | Status |
@@ -20,8 +40,6 @@ The system operates as an **AI-powered venture studio** — continuously generat
 | Level 3 | Autonomous Engineering System | ✅ |
 | Level 4 | Self-Learning Software Factory | 🔄 Transitioning |
 | Level 5 | Autonomous Startup Factory | 🔮 Planned |
-
-> AxionOS is currently transitioning from Level 3 to Level 4.
 
 ### Technology Stack
 | Layer | Technology |
@@ -42,52 +60,65 @@ The system operates as an **AI-powered venture studio** — continuously generat
 
 ---
 
-## 2. System Architecture Layers
+## 2. Architecture by Implementation Horizon
 
-### Layer 0 — AI Efficiency Layer (NEW)
-Optimizes all LLM interactions across the entire system.
+### Core System Kernel (NOW) — ✅ Implemented / 🔧 Stabilizing
+
+The kernel is the foundation all other layers depend on.
+
+| Component | Module | Status |
+|-----------|--------|--------|
+| **Project Brain** | `brain-helpers.ts`, `project_brain_nodes/edges`, `project_decisions`, `project_errors` | ✅ |
+| **AI Efficiency Layer** | `ai-client.ts` + `prompt-compressor.ts` + `semantic-cache.ts` + `model-router.ts` | ✅ |
+| **Smart Context Window** | `smart-context.ts` — AST-like parser, ~60-80% token reduction | ✅ |
+| **DAG Execution Engine** | `dependency-scheduler.ts` — Kahn's algorithm, wave computation, 6 workers | ✅ |
+| **Pipeline Orchestration** | 32-stage deterministic pipeline, 50+ Edge Functions | ✅ |
+| **Runtime Validation** | `pipeline-runtime-validation` — real tsc + vite build via CI | ✅ |
+| **Autonomous Build Repair** | `autonomous-build-repair` + `pipeline-fix-orchestrator` + auto-PR | ✅ |
+| **Observability** | `observability-engine` + `org_usage_limits` + cost tracking | ✅ |
+| **Stage Contracts** | Deterministic stage inputs/outputs via `initiative_jobs` | ✅ |
+| **Agent IO Contracts** | `pipeline-helpers.ts` — standardized logging, jobs, messages | ✅ |
+| **Governance** | `pipeline_gate_permissions`, `stage_sla_configs`, `audit_logs` | ✅ |
+| **Adaptive Learning** | `adaptive-learning-engine` — prevention rules, error patterns | ✅ |
+| **UI Control Center** | Pipeline visualization, initiative management | 🔧 Stabilizing |
+
+### Agent Intelligence Layer (NEXT) — 📋 Planned
+
+Requires stable kernel. Transforms agents from static prompt executors into learning systems.
 
 | Module | Purpose |
 |--------|---------|
-| **Prompt Compressor** | Rule-based + AI summarization to reduce context tokens by 60-90% |
-| **Semantic Cache** | Vector similarity cache (pgvector, threshold 0.92) avoids redundant calls |
-| **Model Router** | Complexity-based routing: `flash-lite` → `flash` → `pro` |
+| **Learning Agents** | Self-improving prompt strategies based on output quality metrics |
+| **Agent Memory Layer** | Persistent per-agent memory across executions (foundation: `agent_memory` table) |
+| **Prompt Optimization Engine** | A/B testing of prompt variations, automatic best-performer selection |
+| **Error Pattern Recognition** | Predictive error detection from historical failure data |
+| **Self-Improving Fix Agents** | Repair strategies that evolve based on fix success rates |
+| **Architecture Pattern Library** | Successful patterns indexed by domain and complexity |
 
-### Layer 1 — Venture Intelligence Layer
-Responsible for product discovery and market validation **before** the build pipeline begins.
+### Product Intelligence Layer (LATER) — 📋 Planned
 
-| Engine | Purpose |
+Requires stable kernel + learning agents. Enables post-deployment product evolution.
+
+| Module | Purpose |
 |--------|---------|
-| **Opportunity Discovery Engine** | Identify potential product ideas from market data, trends, communities |
-| **Market Signal Analyzer** | Analyze search volume, competitor products, pricing, trend acceleration |
-| **Product Validation Engine** | Simulate landing pages, synthetic user testing, demand estimation |
-| **Revenue Strategy Engine** | Define pricing models, subscription tiers, market positioning |
-
-### Layer 2 — Software Generation Pipeline
-The 32-stage deterministic pipeline for autonomous software engineering.
-
-### Layer 3 — Growth & Evolution Layer
-Post-launch intelligence for continuous product improvement.
-
-| Engine | Purpose |
-|--------|---------|
-| **Product Analytics Engine** | Monitor user acquisition, activation, retention, conversion, revenue |
-| **User Behavior Analyzer** | Analyze feature usage, drop-off points, session patterns |
+| **Product Analytics Engine** | AARRR metrics: acquisition, activation, retention, revenue, referral |
+| **User Behavior Analyzer** | Feature usage, drop-off points, session patterns, friction detection |
 | **Growth Optimization Engine** | Landing page optimization, feature prioritization, onboarding |
-| **Product Evolution Engine** | Automatically add features, remove unused modules, optimize UI |
-| **Startup Portfolio Manager** | Track and manage multiple products, allocate resources |
-| **Architecture Evolution Engine** | Learn architectural patterns that lead to successful products |
-| **System Evolution Engine** | Meta-learning for continuous platform improvement |
+| **Product Evolution Engine** | Autonomous feature addition/removal based on usage data |
+| **Automatic UI Optimization** | Layout and conversion optimization driven by behavioral data |
 
-### Layer 4 — Adaptive Learning Layer
-Cross-cutting layer that enables self-improvement across all other layers.
+### Market Intelligence Layer (FUTURE) — 📋 Planned
+
+Requires all previous layers stable. Enables autonomous venture creation.
 
 | Module | Purpose |
 |--------|---------|
-| **Error Intelligence Engine** | Extract patterns from build failures and runtime errors |
-| **Prevention Rules** | Confidence-scored rules that prevent known failure patterns |
-| **Adaptive Learning Engine** | Automatically generate new rules from error analysis |
-| **Project Brain** | Centralized knowledge graph with semantic search |
+| **Opportunity Discovery Engine** | Market gap identification from trends and demand signals |
+| **Market Signal Analyzer** | Demand, competition, trend analysis with viability scoring |
+| **Product Validation Engine** | Synthetic testing, landing page simulation, demand estimation |
+| **Revenue Strategy Engine** | Pricing models, subscription tiers, market positioning |
+| **Venture Intelligence Layer** | End-to-end: discover → validate → build → launch → measure → evolve |
+| **Startup Portfolio Manager** | Multi-product resource allocation, growth tracking |
 
 ---
 
@@ -95,7 +126,7 @@ Cross-cutting layer that enables self-improvement across all other layers.
 
 ```
 ═══════════════════════════════════════════════════════
-  VENTURE INTELLIGENCE LAYER (Stages 1-5)
+  VENTURE INTELLIGENCE LAYER (Stages 1-5)        📋 FUTURE
 ═══════════════════════════════════════════════════════
 
   → Stage 01: Idea Intake
@@ -105,7 +136,7 @@ Cross-cutting layer that enables self-improvement across all other layers.
   → Stage 05: Revenue Strategy Engine
 
 ═══════════════════════════════════════════════════════
-  DISCOVERY & ARCHITECTURE (Stages 6-10)
+  DISCOVERY & ARCHITECTURE (Stages 6-10)          ✅ NOW
 ═══════════════════════════════════════════════════════
 
   → Stage 06: Discovery Intelligence (pipeline-comprehension) — 4 agents
@@ -115,7 +146,7 @@ Cross-cutting layer that enables self-improvement across all other layers.
   → Stage 10: Squad Formation (pipeline-squad)
 
 ═══════════════════════════════════════════════════════
-  INFRASTRUCTURE & MODELING (Stages 11-16)
+  INFRASTRUCTURE & MODELING (Stages 11-16)        ✅ NOW
 ═══════════════════════════════════════════════════════
 
   → Stage 11: Architecture Planning (project-bootstrap-intelligence + pipeline-foundation-scaffold)
@@ -126,7 +157,7 @@ Cross-cutting layer that enables self-improvement across all other layers.
   → Stage 16: Supabase Data Model Generator (supabase-data-model-generator)
 
 ═══════════════════════════════════════════════════════
-  CODE GENERATION (Stages 17-19)
+  CODE GENERATION (Stages 17-19)                  ✅ NOW
 ═══════════════════════════════════════════════════════
 
   → Stage 17: AI Business Logic Synthesizer (ai-business-logic-synthesizer)
@@ -134,7 +165,7 @@ Cross-cutting layer that enables self-improvement across all other layers.
   → Stage 19: Autonomous UI Generator (autonomous-ui-generator)
 
 ═══════════════════════════════════════════════════════
-  VALIDATION & PUBLISH (Stages 20-23)
+  VALIDATION & PUBLISH (Stages 20-23)             ✅ NOW
 ═══════════════════════════════════════════════════════
 
   → Stage 20: Validation Engine
@@ -146,23 +177,23 @@ Cross-cutting layer that enables self-improvement across all other layers.
   → Stage 23: Publish Engine (pipeline-publish) — Atomic Git Tree API
 
 ═══════════════════════════════════════════════════════
-  GROWTH & EVOLUTION LAYER (Stages 24-32)
+  GROWTH & EVOLUTION LAYER (Stages 24-32)         📋 LATER/FUTURE
 ═══════════════════════════════════════════════════════
 
-  → Stage 24: Observability Engine
-  → Stage 25: Product Analytics Engine
-  → Stage 26: User Behavior Analyzer
-  → Stage 27: Growth Optimization Engine
-  → Stage 28: Adaptive Learning Engine
-  → Stage 29: Product Evolution Engine
-  → Stage 30: Architecture Evolution Engine
-  → Stage 31: Startup Portfolio Manager
-  → Stage 32: System Evolution Engine
+  → Stage 24: Observability Engine                ✅ NOW
+  → Stage 25: Product Analytics Engine            📋 LATER
+  → Stage 26: User Behavior Analyzer              📋 LATER
+  → Stage 27: Growth Optimization Engine          📋 LATER
+  → Stage 28: Adaptive Learning Engine            ✅ NOW
+  → Stage 29: Product Evolution Engine            📋 LATER
+  → Stage 30: Architecture Evolution Engine       📋 LATER
+  → Stage 31: Startup Portfolio Manager           📋 FUTURE
+  → Stage 32: System Evolution Engine             📋 FUTURE
 ```
 
 ---
 
-## 4. AI Efficiency Layer (NEW)
+## 4. AI Efficiency Layer
 
 ### 4.1 Prompt Compression Engine
 **File:** `_shared/prompt-compressor.ts`
@@ -199,7 +230,7 @@ Cross-cutting layer that enables self-improvement across all other layers.
 - Cache hits bypass model calls entirely
 
 ### 4.4 Integration Point
-All three modules integrate transparently in `callAI()` (`_shared/ai-client.ts`):
+All modules integrate transparently in `callAI()` (`_shared/ai-client.ts`):
 ```
 callAI() → compress → cache lookup → route model → LLM call → cache store → return
 ```
@@ -207,62 +238,7 @@ Backward compatible: all new parameters are optional.
 
 ---
 
-## 5. Module Specifications
-
-### 5.1 Opportunity Discovery Engine (Stage 02)
-**Purpose:** Identify potential product ideas automatically
-**Inputs:** Market data, search trends, developer communities, startup datasets
-**Outputs:** `opportunity_report`, `problem_statement`, `target_audience`, `product_type`
-
-### 5.2 Market Signal Analyzer (Stage 03)
-**Purpose:** Analyze signals indicating market demand
-**Signals:** Search volume, community discussions, competitor products, pricing models
-**Outputs:** `market_score`, `demand_level`, `competition_level`, `viability_index`
-**Gate:** Only opportunities above viability threshold enter the build pipeline
-
-### 5.3 Product Validation Engine (Stage 04)
-**Purpose:** Validate before building
-**Methods:** Landing page simulation, synthetic user testing, AI demand estimation
-**Outputs:** `validation_score`, `estimated_adoption`, `risk_level`
-
-### 5.4 Revenue Strategy Engine (Stage 05)
-**Purpose:** Define monetization strategy for every generated product
-**Outputs:** Pricing model, subscription tiers, freemium options, market positioning
-
-### 5.5 Supabase Data Model Generator (Stage 16)
-**Edge Function:** `supabase-data-model-generator`
-**Input:** `domain_model` from Project Brain
-**Output:** `data_model` — normalized relational schema
-
-### 5.6 Autonomous UI Generator (Stage 19)
-**Edge Function:** `autonomous-ui-generator`
-**Input:** `domain_model` + `data_model` + `business_logic` + `api_spec`
-**Output:** `ui_structure` — complete frontend specification
-
-### 5.7 Adaptive Learning Engine (Stage 28)
-**Edge Function:** `adaptive-learning-engine`
-**Input:** `project_errors`, `initiative_jobs`, `prevention_rules`, brain nodes
-**Output:** New prevention rules + dependency constraints + architectural patterns
-
-### 5.8 Product Analytics Engine (Stage 25)
-**Purpose:** Monitor real usage after deployment
-**Metrics:** User acquisition, activation rate, retention, conversion, revenue
-
-### 5.9 Growth Optimization Engine (Stage 27)
-**Purpose:** Improve product adoption
-**Capabilities:** Landing page optimization, feature prioritization, onboarding improvements
-
-### 5.10 Startup Portfolio Manager (Stage 31)
-**Purpose:** Manage multiple products simultaneously
-**Tracks:** Active products, growth stage, revenue, user base, risk level
-
-### 5.11 System Evolution Engine (Stage 32)
-**Purpose:** Meta-learning for continuous platform improvement
-**Scope:** Improve the AxionOS system itself based on aggregate results
-
----
-
-## 6. Project Brain
+## 5. Project Brain
 
 ### Node Types
 | Type | Source | Description |
@@ -274,10 +250,6 @@ Backward compatible: all new parameters are optional.
 | `api_spec` | API Generator | Endpoints, RPCs, webhooks |
 | `ui_structure` | UI Generator | Pages, components, hooks, navigation |
 | `engineering_patterns` | Adaptive Learning | Patterns, constraints, learned rules |
-| `opportunity_report` | Opportunity Discovery | Market opportunities |
-| `market_signal` | Market Signal Analyzer | Demand/viability signals |
-| `product_analytics` | Product Analytics | Usage metrics, growth data |
-| `evolution_plan` | Product Evolution | Auto-evolution roadmap |
 
 ### Edge Types
 | Type | Description |
@@ -287,20 +259,13 @@ Backward compatible: all new parameters are optional.
 | `renders_component` | Page → Component |
 | `calls_service` | Component → Service/Hook |
 | `stores_entity` | Service → Database Table |
-| `validates_opportunity` | Signal → Opportunity |
-| `evolves_from` | Product version chain |
 
 ---
 
-## 7. Edge Function Architecture
+## 6. Edge Function Architecture
 
 ```
 supabase/functions/
-├── Venture Intelligence
-│   ├── opportunity-discovery-engine/
-│   ├── market-signal-analyzer/
-│   ├── product-validation-engine/
-│   └── revenue-strategy-engine/
 ├── Discovery & Architecture
 │   ├── pipeline-comprehension/         (4 agents)
 │   ├── pipeline-architecture/          (4 agents)
@@ -337,6 +302,11 @@ supabase/functions/
 │   ├── architecture-evolution-engine/
 │   ├── startup-portfolio-manager/
 │   └── system-evolution-engine/
+├── Venture Intelligence (FUTURE)
+│   ├── opportunity-discovery-engine/
+│   ├── market-signal-analyzer/
+│   ├── product-validation-engine/
+│   └── revenue-strategy-engine/
 ├── Pipeline Control
 │   ├── pipeline-approve/
 │   ├── pipeline-reject/
@@ -359,9 +329,9 @@ supabase/functions/
 │   └── github-ci-webhook/
 └── _shared/
     ├── ai-client.ts              Unified AI client + Efficiency Layer
-    ├── prompt-compressor.ts      Prompt compression engine (NEW)
-    ├── semantic-cache.ts         Vector-based semantic cache (NEW)
-    ├── model-router.ts           Intelligent model routing (NEW)
+    ├── prompt-compressor.ts      Prompt compression engine
+    ├── semantic-cache.ts         Vector-based semantic cache
+    ├── model-router.ts           Intelligent model routing
     ├── pipeline-helpers.ts       Logging, jobs, agent messages
     ├── pipeline-bootstrap.ts     Auth, CORS, rate limiting
     ├── dependency-scheduler.ts   DAG builder + wave computation
@@ -377,38 +347,43 @@ supabase/functions/
 
 ---
 
-## 8. Implementation Status
+## 7. Implementation Status
 
-### ✅ Completed (Phases 1-3)
+### ✅ Implemented (Kernel — NOW)
 
-| # | System | Status | Details |
-|---|--------|--------|---------|
-| 1 | Pipeline (32 stages) | ✅ | 50+ independent Edge Functions |
-| 2 | Project Brain | ✅ | Nodes, edges, decisions, errors, prevention rules, tsvector, pgvector |
-| 3 | Dependency Scheduler | ✅ | DAG builder, topological sort, wave computation |
-| 4 | Agent Swarm | ✅ | Orchestrator + Worker, parallel execution (6 workers) |
-| 5 | Data Model Generator | ✅ | Domain model → SQL tables, FK, indexes, RLS |
-| 6 | Autonomous UI Generator | ✅ | Pages, components, hooks, navigation |
-| 7 | Adaptive Learning Engine | ✅ | Prevention rules, patterns, cross-project |
-| 8 | CI-Triggered Fix Swarm | ✅ | Webhook + Fix Orchestrator + auto-PR |
-| 9 | Self-Healing Codebase | ✅ | Prevention rules with confidence scoring |
-| 10 | Architectural Drift Detection | ✅ | Rule-based + AI hybrid |
-| 11 | Atomic Git Commits | ✅ | Tree API for publish + fix PRs |
-| 12 | Runtime Validation | ✅ | Real tsc + vite build via GitHub Actions CI |
-| 13 | Smart Context Window | ✅ | ~60-80% token reduction |
-| 14 | Vector Embeddings | ✅ | pgvector 768-dim, cosine similarity |
-| 15 | Incremental Re-execution | ✅ | Hash-based dirty detection |
-| 16 | AI Efficiency Layer | ✅ | Prompt compression + semantic cache + model router |
+| # | System | Details |
+|---|--------|---------|
+| 1 | Pipeline (32 stages) | 50+ independent Edge Functions |
+| 2 | Project Brain | Nodes, edges, decisions, errors, prevention rules, tsvector, pgvector |
+| 3 | Dependency Scheduler | DAG builder, topological sort, wave computation |
+| 4 | Agent Swarm | Orchestrator + Worker, parallel execution (6 workers) |
+| 5 | Data Model Generator | Domain model → SQL tables, FK, indexes, RLS |
+| 6 | Autonomous UI Generator | Pages, components, hooks, navigation |
+| 7 | Adaptive Learning Engine | Prevention rules, patterns, cross-project |
+| 8 | CI-Triggered Fix Swarm | Webhook + Fix Orchestrator + auto-PR |
+| 9 | Self-Healing Codebase | Prevention rules with confidence scoring |
+| 10 | Architectural Drift Detection | Rule-based + AI hybrid |
+| 11 | Atomic Git Commits | Tree API for publish + fix PRs |
+| 12 | Runtime Validation | Real tsc + vite build via GitHub Actions CI |
+| 13 | Smart Context Window | ~60-80% token reduction |
+| 14 | Vector Embeddings | pgvector 768-dim, cosine similarity |
+| 15 | Incremental Re-execution | Hash-based dirty detection |
+| 16 | AI Efficiency Layer | Prompt compression + semantic cache + model router |
 
-### 🔮 Next (Phase 4: Agent Intelligence)
+### 📋 Planned (NEXT → LATER → FUTURE)
 
-| # | Module | Priority | Status |
-|---|--------|----------|--------|
-| 1 | Learning Agents | P0 | 📋 Planned |
-| 2 | Prompt Optimization Engine | P0 | 📋 Planned |
-| 3 | Architecture Pattern Library | P1 | 📋 Planned |
-| 4 | Error Pattern Recognition | P1 | 📋 Planned |
-| 5 | Self-Improving Fix Agents | P2 | 📋 Planned |
+| Horizon | Module | Priority |
+|---------|--------|----------|
+| NEXT | Learning Agents | P0 |
+| NEXT | Prompt Optimization Engine | P0 |
+| NEXT | Error Pattern Recognition | P1 |
+| NEXT | Architecture Pattern Library | P1 |
+| NEXT | Self-Improving Fix Agents | P2 |
+| LATER | Product Analytics Engine | P1 |
+| LATER | User Behavior Analyzer | P1 |
+| LATER | Product Evolution Engine | P2 |
+| FUTURE | Opportunity Discovery Engine | P2 |
+| FUTURE | Startup Portfolio Manager | P3 |
 
 ### 🟡 Remaining Gaps
 
@@ -420,7 +395,7 @@ supabase/functions/
 
 ---
 
-## 9. Database Schema (30+ tables)
+## 8. Database Schema (30+ tables)
 
 ### Core Tables
 - `organizations`, `organization_members`, `profiles`
@@ -447,11 +422,10 @@ supabase/functions/
 - `audit_logs`
 - `artifact_reviews`
 
-### Efficiency Tables (NEW)
+### Efficiency Tables
 - `ai_prompt_cache` (with `vector(768)` embedding, TTL, hit tracking)
 - `ai_rate_limits`
 
 ### Knowledge Tables
 - `org_knowledge_base`
 - `git_connections`
-- `supabase_connections`

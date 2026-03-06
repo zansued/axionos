@@ -1,59 +1,218 @@
+# AxionOS — Execution Plan
 
+> Last updated: 2026-03-06
 
-## Plan: Reorganize AxionOS Documentation Around Implementation Horizons
+---
 
-### Overview
+## Current Focus
 
-Rewrite four documentation files to replace the current "Phase 1-6" structure with a **NOW / NEXT / LATER / FUTURE** architecture-priority model. Preserve all implemented module references. Remove the "wishlist" tone and establish disciplined sequencing.
+AxionOS follows architecture-priority sequencing. Each implementation horizon must be stable before the next begins.
 
-### Files to Update
+| Horizon | Focus | Status |
+|---------|-------|--------|
+| **NOW** | Stabilize the Kernel | 🔧 In Progress |
+| **NEXT** | Build Learning Agents | 📋 Planned |
+| **LATER** | Build Product Intelligence | 📋 Planned |
+| **FUTURE** | Build Market Intelligence | 📋 Planned |
 
-#### 1. `docs/ROADMAP.md`
-- Replace Phase 1-6 structure with four implementation horizons
-- **NOW — Stabilize the Kernel**: Group all completed + in-progress infrastructure (Pipeline, Brain, Efficiency Layer, Runtime Validation, Build Repair, Observability, Stage/Agent Contracts, UI Restructuring). Emphasize goals: reduce entropy, improve reliability, standardize contracts, reduce cost
-- **NEXT — Agent Intelligence Layer**: Learning Agents, Agent Memory, Prompt Optimization (A/B), Error Pattern Recognition, Self-Improving Fix Agents, Architecture Pattern Library
-- **LATER — Product Intelligence Layer**: Product Analytics, User Behavior Analyzer, Feature Suggestion, Growth Optimization, Automatic UI Optimization, Product Evolution Engine
-- **FUTURE — Market Intelligence Layer**: Opportunity Discovery, Market Signal Analyzer, Product Validation, Revenue Strategy, Venture Intelligence, Startup Portfolio Manager
-- Keep System Maturity Levels section (Levels 1-5) with updated descriptions
-- Keep System Metrics section
-- Rewrite Long-Term Vision to emphasize sequential dependency between horizons
+---
 
-#### 2. `docs/ARCHITECTURE.md`
-- Update Section 1 overview: describe AxionOS as what it is *today* (autonomous engineering system), not as a venture studio
-- Reorganize Layer structure around horizons:
-  - **Core System Kernel (NOW)**: Project Brain, AI Efficiency Layer, DAG Engine, Smart Context, Runtime Validation, Build Repair, Observability. Mark as "implemented / stabilizing"
-  - **Agent Intelligence (NEXT)**: New section for learning agents. Mark as "planned"
-  - **Product Intelligence (LATER)**: Reframe current Growth & Evolution layer. Mark as "planned — requires stable kernel + learning agents"
-  - **Market Intelligence (FUTURE)**: Reframe current Venture Intelligence layer. Mark as "planned — requires product intelligence"
-- Keep Pipeline 32-stage model, Edge Function tree, Database Schema sections unchanged
-- Update Implementation Status section to reflect NOW/NEXT/LATER/FUTURE instead of Phase numbers
+## What We Are Doing Now
 
-#### 3. `.lovable/plan.md`
-- Rewrite as an execution-oriented plan document
-- Structure: "What we are doing now" → "What comes next" → "What must wait" → "Why the order matters"
-- Keep the architecture diagram, pipeline table, edge function tree, and tech stack sections
-- Replace "Implementation Status" with horizon-based status
-- Remove any language that presents future plans as current capabilities
+**Stabilizing the Core System Kernel.**
 
-#### 4. `README.md`
-- Simplify to describe what AxionOS **is today**: autonomous software engineering system with memory, validation, and self-healing
-- Show current real capabilities (pipeline, brain, efficiency layer, build repair)
-- Brief "What's Next" section mentioning learning agents and product intelligence without over-promising
-- Remove or condense the Phase 4-6 details that sound like vaporware
-- Keep the workflow example and "For Whom" sections
-- Remove the detailed roadmap table (point to ROADMAP.md instead)
+The engineering infrastructure is implemented. The priority is hardening it — reducing entropy, standardizing contracts, improving reliability, and lowering cost.
 
-### Technical Details
+### Active Work
 
-- No code changes — documentation only (4 markdown files)
-- All existing module names, file paths, and table references preserved exactly
-- Implementation status markers: ✅ Implemented, 🔧 Stabilizing, 📋 Planned
-- Each horizon explicitly states its dependency on the previous one
-- NOW horizon lists concrete goals: reduce architectural entropy, standardize contracts, simplify UI, reduce LLM cost
+- Pipeline execution reliability across all 32 stages
+- AI Efficiency Layer optimization (prompt compression, semantic cache, model routing)
+- Stage and agent IO contract standardization
+- UI restructuring toward a control-center layout
+- Pipeline visualization refactor
+- Observability and cost tracking improvements
 
-### Tone Guidelines
-- Technical, strategic, disciplined
-- Ambitious but credible
-- No buzzword overload
-- Implemented features described as facts, not aspirations
+### Kernel Components (Implemented)
 
+| Component | Status |
+|-----------|--------|
+| 32-stage deterministic pipeline | ✅ |
+| Project Brain (knowledge graph + semantic search) | ✅ |
+| DAG Execution Engine (Kahn's algorithm, 6 workers) | ✅ |
+| AI Efficiency Layer (compressor + cache + router) | ✅ |
+| Smart Context Window (~60-80% token reduction) | ✅ |
+| Runtime Validation (tsc + vite via CI) | ✅ |
+| Autonomous Build Repair + Fix Orchestrator | ✅ |
+| Adaptive Learning Engine | ✅ |
+| Governance (gates, SLAs, audit logs) | ✅ |
+| Observability + Cost Tracking | ✅ |
+
+---
+
+## What Comes Next
+
+**Agent Intelligence Layer.**
+
+After the kernel is stable, agents evolve from static prompt executors into learning systems that improve from previous executions.
+
+| Module | Description |
+|--------|-------------|
+| Learning Agents | Self-improving prompt strategies |
+| Agent Memory Layer | Persistent per-agent memory (foundation: `agent_memory` table) |
+| Prompt Optimization Engine | A/B testing of prompt variations |
+| Error Pattern Recognition | Predictive error detection |
+| Self-Improving Fix Agents | Evolving repair strategies |
+| Architecture Pattern Library | Reusable patterns by domain |
+
+**Dependency:** Requires stable kernel.
+
+---
+
+## What Must Wait
+
+### Product Intelligence (LATER)
+
+Post-deployment product evolution: analytics, behavior analysis, automatic UI optimization, feature suggestion.
+
+**Dependency:** Requires stable kernel + learning agents.
+
+### Market Intelligence (FUTURE)
+
+Autonomous venture creation: opportunity discovery, market validation, revenue strategy, portfolio management.
+
+**Dependency:** Requires all previous layers stable.
+
+---
+
+## Why the Order Matters
+
+```
+Kernel → Learning Agents → Product Intelligence → Market Intelligence
+```
+
+Each layer depends on the previous one:
+
+1. **Without a stable kernel**, learning agents have no reliable data to learn from
+2. **Without learning agents**, product intelligence cannot improve its analysis over time
+3. **Without product intelligence**, market decisions are based on assumptions, not data
+
+Skipping ahead creates compounding technical debt. The order is not arbitrary — it reflects architectural dependency.
+
+---
+
+## System Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                   AI EFFICIENCY LAYER                    │
+│  Prompt Compressor │ Semantic Cache │ Model Router       │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │
+│  │   VENTURE     │  │  SOFTWARE    │  │   GROWTH &   │   │
+│  │ INTELLIGENCE  │  │ ENGINEERING  │  │  EVOLUTION   │   │
+│  │  (FUTURE)     │  │  (NOW)       │  │  (LATER)     │   │
+│  └──────────────┘  └──────────────┘  └──────────────┘   │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐    │
+│  │              PROJECT BRAIN                        │    │
+│  │  DAG Engine │ Smart Context │ Embeddings │ Rules  │    │
+│  └──────────────────────────────────────────────────┘    │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐    │
+│  │            ADAPTIVE LEARNING                      │    │
+│  │  Error Intelligence │ Prevention Rules │ Patterns │    │
+│  └──────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Pipeline — 32 Stages
+
+### Discovery & Architecture (S06-10) — ✅ NOW
+| # | Stage | Engine |
+|---|-------|--------|
+| 06 | Discovery Intelligence | 4-agent comprehension team |
+| 07 | Market Intelligence | 4-agent architecture team |
+| 08 | Technical Feasibility | Architecture simulation |
+| 09 | Project Structuring | Preventive validation |
+| 10 | Squad Formation | Specialized agent allocation |
+
+### Infrastructure & Modeling (S11-16) — ✅ NOW
+| # | Stage | Engine |
+|---|-------|--------|
+| 11 | Architecture Planning | Bootstrap + foundation scaffold |
+| 12 | Domain Model Generation | Module graph + dependency intelligence |
+| 13 | AI Domain Analysis | Entity/relationship extraction via LLM |
+| 14 | Schema Bootstrap | Isolated PostgreSQL schema |
+| 15 | DB Provisioning | Tables + RLS + storage |
+| 16 | Data Model Generation | SQL tables, FK, indexes, RLS |
+
+### Code Generation (S17-19) — ✅ NOW
+| # | Stage | Engine |
+|---|-------|--------|
+| 17 | Business Logic Synthesis | Services, validations, workflows |
+| 18 | API Generation | REST, RPCs, triggers, webhooks |
+| 19 | UI Generation | Pages, components, hooks, navigation |
+
+### Validation & Publish (S20-23) — ✅ NOW
+| # | Stage | Engine |
+|---|-------|--------|
+| 20 | Validation | AI + deep analysis + drift detection |
+| 21 | Build | Runtime validation via CI |
+| 22 | Test | Self-healing build repair |
+| 23 | Publish | Atomic Git Tree API |
+
+### Growth & Evolution (S24-32) — Mixed
+| # | Stage | Horizon |
+|---|-------|---------|
+| 24 | Observability | ✅ NOW |
+| 25-27 | Analytics + Growth | 📋 LATER |
+| 28 | Adaptive Learning | ✅ NOW |
+| 29-30 | Product/Architecture Evolution | 📋 LATER |
+| 31-32 | Portfolio + System Evolution | 📋 FUTURE |
+
+---
+
+## Edge Functions (50+)
+
+```
+supabase/functions/
+├── Discovery & Architecture      (5 functions)
+├── Infrastructure & Modeling      (8 functions)
+├── Code Generation                (3 functions)
+├── Validation & Publish           (6 functions)
+├── Growth & Evolution             (9 functions)
+├── Venture Intelligence           (4 functions — FUTURE)
+├── Pipeline Control               (7 functions)
+├── Support                        (11 functions)
+└── _shared/                       (15 helper modules)
+```
+
+---
+
+## Technology Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
+| State | TanStack React Query + React Context |
+| Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
+| AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
+| Git | GitHub API v3 (Tree API for atomic commits) |
+| Deploy | Vercel/Netlify auto-generated configs |
+
+---
+
+## System Maturity
+
+| Level | Name | Status |
+|-------|------|--------|
+| Level 1 | Code Generator | ✅ |
+| Level 2 | Software Builder | ✅ |
+| Level 3 | Autonomous Engineering System | ✅ |
+| Level 4 | Self-Learning Software Factory | 🔄 Transitioning |
+| Level 5 | Autonomous Startup Factory | 🔮 Planned |
+
+> Current position: Level 3 → Level 4 transition. Kernel stabilization is the prerequisite.
