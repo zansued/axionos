@@ -108,6 +108,8 @@ These remain valid but are **frozen** until product validation:
 | Time from idea to validated repository | < 15 min |
 | Pipeline progress clarity for user | Clear visual feedback |
 
+> Pipeline contracts: [docs/PIPELINE_CONTRACTS.md](../docs/PIPELINE_CONTRACTS.md) | Agents: [docs/AGENTS.md](../docs/AGENTS.md) | Roadmap: [docs/ROADMAP.md](../docs/ROADMAP.md)
+
 ---
 
 ## What the UI Should Emphasize
