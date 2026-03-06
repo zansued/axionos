@@ -76,11 +76,24 @@ The kernel is the foundation all other layers depend on.
 | **Runtime Validation** | `pipeline-runtime-validation` — real tsc + vite build via CI | ✅ |
 | **Autonomous Build Repair** | `autonomous-build-repair` + `pipeline-fix-orchestrator` + auto-PR | ✅ |
 | **Observability** | `observability-engine` + `org_usage_limits` + cost tracking | ✅ |
-| **Stage Contracts** | Deterministic stage inputs/outputs via `initiative_jobs` | ✅ |
-| **Agent IO Contracts** | `pipeline-helpers.ts` — standardized logging, jobs, messages | ✅ |
+| **Stage Contracts** | Deterministic stage inputs/outputs via `initiative_jobs` (see §5) | ✅ |
+| **Agent IO Contracts** | `pipeline-helpers.ts` — standardized logging, jobs, messages (see §6) | ✅ |
 | **Governance** | `pipeline_gate_permissions`, `stage_sla_configs`, `audit_logs` | ✅ |
 | **Adaptive Learning** | `adaptive-learning-engine` — prevention rules, error patterns | ✅ |
 | **UI Control Center** | Pipeline visualization, initiative management | 🔧 Stabilizing |
+
+#### Kernel Hardening Tasks
+
+The following work items reduce architectural entropy and prepare the system for the Agent Intelligence Layer:
+
+| Task | Purpose | Status |
+|------|---------|--------|
+| Stage Contract Formalization | Enforce input/output schemas per stage (§5) | ✅ Implemented |
+| Agent IO Contract Standardization | Uniform agent output structure (§6) | ✅ Implemented |
+| Observability Improvements | Granular cost tracking, latency histograms | 🔧 In Progress |
+| Pipeline Visualization Refactor | Simplified control-center UI | 🔧 In Progress |
+| AI Cost Tracking | Per-stage, per-model cost attribution | ✅ Implemented |
+| Error Taxonomy Standardization | Typed failure modes across all stages | 🔧 In Progress |
 
 ### Agent Intelligence Layer (NEXT) — 📋 Planned
 
@@ -94,6 +107,27 @@ Requires stable kernel. Transforms agents from static prompt executors into lear
 | **Error Pattern Recognition** | Predictive error detection from historical failure data |
 | **Self-Improving Fix Agents** | Repair strategies that evolve based on fix success rates |
 | **Architecture Pattern Library** | Successful patterns indexed by domain and complexity |
+
+#### Agent Memory Foundation
+
+The `agent_memory` table provides the storage layer for agent learning. Each memory record captures:
+
+```
+agent_memory {
+  agent_id        — which agent produced this memory
+  task_type       — memory_type classification (strategy, pattern, error, decision)
+  strategy_used   — key describing the approach taken
+  outcome         — value storing the result and quality assessment
+  confidence      — relevance_score (0.0-1.0)
+  scope           — "initiative" or "organization" (cross-project learning)
+  timestamp       — created_at / updated_at
+  times_used      — how often this memory has been retrieved
+}
+```
+
+This structure allows agents to query past strategies by task type, filter by confidence, and prioritize frequently-successful approaches. The `scope` field enables cross-project learning at the organization level.
+
+**Status:** 🔧 Foundation exists (`agent_memory` table deployed, not yet consumed by agents)
 
 ### Product Intelligence Layer (LATER) — 📋 Planned
 
@@ -238,7 +272,104 @@ Backward compatible: all new parameters are optional.
 
 ---
 
-## 5. Project Brain
+## 5. Stage Contracts
+
+Every pipeline stage defines a formal contract that specifies its interface with the orchestrator. Stage contracts ensure deterministic execution, reliable re-execution, and safe parallelization.
+
+### Contract Structure
+
+```
+stage_contract {
+  stage_name         — unique identifier (e.g. "pipeline-comprehension")
+  required_inputs    — JSON schema of expected inputs from previous stages
+  produced_outputs   — JSON schema of outputs stored in initiative_jobs.outputs
+  external_deps      — external services required (GitHub API, CI, Firecrawl)
+  side_effects       — mutations outside initiative_jobs (brain nodes, agent messages, code artifacts)
+  failure_modes      — enumerated failure types (timeout, validation_error, llm_error, dependency_missing)
+  retry_policy       — { max_retries, backoff_strategy, idempotent: boolean }
+}
+```
+
+### Enforcement
+
+Stage contracts are enforced by the pipeline orchestrator (`run-initiative-pipeline`, `pipeline-execution-orchestrator`):
+
+- **Pre-execution:** Validates that all `required_inputs` are present before invoking a stage
+- **Post-execution:** Validates that `produced_outputs` match the declared schema
+- **Failure handling:** Applies the declared `retry_policy` per failure mode
+- **Parallelization:** The DAG scheduler uses contract metadata to determine which stages can run concurrently
+
+### Storage
+
+Contracts are materialized through `initiative_jobs`:
+- `inputs` column stores the validated stage inputs
+- `outputs` column stores the validated stage outputs
+- `status` tracks execution state (`pending`, `running`, `completed`, `failed`)
+- `error` captures failure details matching declared `failure_modes`
+
+### Benefits
+
+- **Deterministic execution:** Same inputs always produce same outputs
+- **Safe re-execution:** Failed stages can be retried without corrupting pipeline state
+- **Debugging:** Each stage's inputs/outputs are inspectable in `initiative_jobs`
+- **Future agent learning:** Contracts provide structured data for agents to learn from
+
+**Status:** ✅ Implemented — enforced via `initiative_jobs` and `pipeline-helpers.ts`
+
+---
+
+## 6. Agent IO Contracts
+
+Every agent in the pipeline must produce structured, inspectable output. Agent IO contracts standardize the interface between agents and the rest of the system.
+
+### Contract Structure
+
+```
+agent_contract {
+  agent_name       — identifier (e.g. "comprehension-analyst")
+  task_scope       — what the agent is responsible for
+  input_schema     — structured input from the orchestrator
+  output_schema    — structured output format
+  decision_rules   — constraints on what the agent can decide
+}
+```
+
+### Standard Agent Output
+
+All agents produce outputs conforming to this structure:
+
+```
+agent_output {
+  summary           — human-readable summary of what was produced
+  decisions[]       — list of decisions made (stored in project_decisions)
+  artifacts[]       — generated files, schemas, or specifications
+  confidence_score  — 0.0-1.0 self-assessed confidence
+  model_used        — which LLM model was used
+  tokens_used       — token count for cost tracking
+  duration_ms       — execution time
+}
+```
+
+### Implementation
+
+Agent IO contracts are enforced through `pipeline-helpers.ts`:
+- `createJob()` — initializes a job with validated inputs
+- `completeJob()` — finalizes with structured outputs and cost metadata
+- `logAgentMessage()` — records inter-agent communication with typed schemas
+- `AIResult` — standardized return type from `callAI()` with `.content`, `.model`, `.costUsd`, `.durationMs`
+
+### Benefits
+
+- **Agent learning:** Structured outputs enable the future Agent Memory Layer to index and learn from past executions
+- **Prompt optimization:** Consistent output schemas allow A/B comparison of prompt strategies
+- **Performance tracking:** Every agent execution is measurable (cost, duration, quality)
+- **Auditability:** All agent decisions are stored in `project_decisions` with provenance
+
+**Status:** ✅ Implemented — enforced via `pipeline-helpers.ts` and `agent_messages`/`agent_outputs` tables
+
+---
+
+## 7. Project Brain
 
 ### Node Types
 | Type | Source | Description |
@@ -262,7 +393,7 @@ Backward compatible: all new parameters are optional.
 
 ---
 
-## 6. Edge Function Architecture
+## 8. Edge Function Architecture
 
 ```
 supabase/functions/
@@ -347,7 +478,7 @@ supabase/functions/
 
 ---
 
-## 7. Implementation Status
+## 9. Implementation Status
 
 ### ✅ Implemented (Kernel — NOW)
 
@@ -395,7 +526,7 @@ supabase/functions/
 
 ---
 
-## 8. Database Schema (30+ tables)
+## 10. Database Schema (30+ tables)
 
 ### Core Tables
 - `organizations`, `organization_members`, `profiles`
