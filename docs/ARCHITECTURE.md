@@ -478,7 +478,7 @@ supabase/functions/
 
 ---
 
-## 7. Implementation Status
+## 9. Implementation Status
 
 ### ✅ Implemented (Kernel — NOW)
 
