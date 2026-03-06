@@ -19,8 +19,10 @@ import { semanticSearch, batchEmbedNodes } from "../_shared/embedding-helpers.ts
 
 const MAX_WORKERS = 6;
 const MAX_RETRIES = 2;
+const TIME_BUDGET_MS = 110_000; // 110s — leave 40s buffer before Deno's ~150s timeout
 
 serve(async (req) => {
+  const startTime = Date.now();
   const result = await bootstrapPipeline(req, "pipeline-execution-orchestrator");
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey } = result;
