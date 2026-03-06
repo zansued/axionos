@@ -517,14 +517,23 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {(initiative.squads[0].squad_members || []).map((sm: any) => (
-                <Badge key={sm.id} variant="secondary" className="text-xs gap-1.5 py-1">
-                  <span className="font-semibold">{sm.agents?.name || "?"}</span>
-                  <span className="text-muted-foreground">· {sm.role_in_squad}</span>
-                </Badge>
-              ))}
-            </div>
+            {(() => {
+              const members: TooltipItem[] = (initiative.squads[0].squad_members || []).map(
+                (sm: any, i: number) => ({
+                  id: i,
+                  name: sm.agents?.name || "Agent",
+                  designation: sm.role_in_squad || sm.agents?.role || "member",
+                  image: `https://image.pollinations.ai/prompt/${encodeURIComponent(
+                    `${sm.agents?.role || "ai"} AI robot avatar, ${sm.agents?.name || "agent"}, futuristic, minimal`
+                  )}?width=128&height=128&nologo=true&seed=${(sm.agents?.name || "x").length}`,
+                })
+              );
+              return members.length > 0 ? (
+                <AnimatedTooltip items={members} className="pl-3" />
+              ) : (
+                <p className="text-xs text-muted-foreground italic">Sem membros</p>
+              );
+            })()}
           </CardContent>
         </Card>
       )}
