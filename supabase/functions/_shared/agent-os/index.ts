@@ -387,3 +387,31 @@ export {
   DEFAULT_RETENTION_POLICIES,
   DEFAULT_MEMORY_SYSTEM_CONFIG,
 } from "./memory-system.ts";
+
+// Adaptive Routing System (v0.7)
+export type {
+  RoutingStrategyMode,
+  RoutingStrategy,
+  RoutingWeights,
+  AgentPerformanceProfile,
+  CapabilityPerformanceProfile,
+  PerformanceSnapshot,
+  RoutingSignal,
+  RoutingSignalType,
+  SignalTrend,
+  RoutingAdjustment,
+  RoutingAdjustmentAction,
+  RoutingAdjustmentResult,
+  RoutingDecisionFeedback,
+  ExplorationConfig,
+  ExplorationMethod,
+  IAdaptiveRouter,
+  AdaptiveRoutingConfig,
+  AdaptiveRoutingEventType,
+} from "./adaptive-routing.ts";
+
+export {
+  DEFAULT_ROUTING_WEIGHTS,
+  DEFAULT_EXPLORATION_CONFIG,
+  DEFAULT_ADAPTIVE_ROUTING_CONFIG,
+} from "./adaptive-routing.ts";
