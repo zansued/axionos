@@ -429,15 +429,15 @@ Return a JSON array of objects with { path, content, required } for each file.
 Only include the absolute minimum files needed for the project to build successfully (npm install && npm run build).
 ${brainContext ? `\nProject context:\n${brainContext}` : ""}`;
 
-      const aiResult = await callAI({
-        prompt: aiPrompt,
-        systemPrompt: "You are a build engineer. Generate only the minimal scaffold files needed for a successful build. Return valid JSON array.",
-        model: "google/gemini-2.5-flash",
+      const aiResult = await callAI(
         apiKey,
-      });
+        "You are a build engineer. Generate only the minimal scaffold files needed for a successful build. Return valid JSON array.",
+        aiPrompt,
+        true,
+      );
 
       try {
-        const jsonMatch = aiResult.text.match(/\[[\s\S]*\]/);
+        const jsonMatch = aiResult.content.match(/\[[\s\S]*\]/);
         scaffold = jsonMatch ? JSON.parse(jsonMatch[0]) : getReactViteScaffold(projectName);
       } catch {
         scaffold = getReactViteScaffold(projectName);
@@ -497,8 +497,10 @@ ${brainContext ? `\nProject context:\n${brainContext}` : ""}`;
 
     // ── Step 3: AI pre-build simulation ──
     const fileList = scaffold.map(f => `${f.path}:\n\`\`\`\n${f.content.slice(0, 500)}\n\`\`\``).join("\n\n");
-    const simResult = await callAI({
-      prompt: `Analyze this project scaffold for build readiness. Would "npm install && vite build" succeed?
+    const simResult = await callAI(
+      apiKey,
+      "You are a build verification expert. Analyze scaffolds for build readiness. Return only valid JSON.",
+      `Analyze this project scaffold for build readiness. Would "npm install && vite build" succeed?
 
 Files:
 ${fileList}
@@ -510,14 +512,12 @@ Check:
 4. Are there any missing files that would cause build failure?
 
 Return JSON: { "would_build": boolean, "issues": string[], "confidence": number }`,
-      systemPrompt: "You are a build verification expert. Analyze scaffolds for build readiness. Return only valid JSON.",
-      model: "google/gemini-2.5-flash",
-      apiKey,
-    });
+      true,
+    );
 
     let buildSimulation = { would_build: true, issues: [] as string[], confidence: 0.8 };
     try {
-      const jsonMatch = simResult.text.match(/\{[\s\S]*\}/);
+      const jsonMatch = simResult.content.match(/\{[\s\S]*\}/);
       if (jsonMatch) buildSimulation = JSON.parse(jsonMatch[0]);
     } catch { /* use default */ }
 
@@ -589,7 +589,7 @@ Return JSON: { "would_build": boolean, "issues": string[], "confidence": number 
       validation_passed: validation.passed,
       repairs,
       build_simulation: buildSimulation,
-    }, { costUsd: simResult.cost || 0, durationMs: 0 });
+    }, { costUsd: simResult.costUsd || 0, durationMs: simResult.durationMs || 0 });
 
     return jsonResponse({
       success: true,
