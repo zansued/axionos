@@ -9,8 +9,8 @@ import { useToast } from "@/hooks/use-toast";
 import { getUserFriendlyError } from "@/lib/error-utils";
 import { InitiativeList } from "@/components/initiatives/InitiativeList";
 import { InitiativeDetail } from "@/components/initiatives/InitiativeDetail";
-import { CreateInitiativeDialog } from "@/components/initiatives/CreateInitiativeDialog";
-import type { InitiativeTemplate } from "@/components/initiatives/initiative-templates";
+import { InitiativeWizard } from "@/components/initiatives/wizard/InitiativeWizard";
+import type { InitiativeBrief } from "@/components/initiatives/wizard/types";
 import { SLABreachAlerts } from "@/components/governance/SLABreachAlerts";
 import { useSLABreaches } from "@/hooks/useStageSLA";
 import { useI18n } from "@/contexts/I18nContext";
@@ -81,26 +81,35 @@ export default function Initiatives() {
   });
 
   const createMutation = useMutation({
-    mutationFn: async ({ title, description, referenceUrl, template }: { title: string; description: string; referenceUrl?: string; template?: InitiativeTemplate }) => {
+    mutationFn: async (brief: InitiativeBrief) => {
       if (!currentOrg || !user) throw new Error("Sem organização");
+      const enrichedDesc = [
+        brief.description,
+        brief.problem_statement && `Problem: ${brief.problem_statement}`,
+        brief.target_audience && `Audience: ${brief.target_audience}`,
+        brief.core_features.length > 0 && `Features: ${brief.core_features.join(", ")}`,
+        brief.integrations.length > 0 && `Integrations: ${brief.integrations.join(", ")}`,
+      ].filter(Boolean).join("\n");
+
       const insertData: any = {
-        title,
-        description: description || null,
-        idea_raw: description || title,
+        title: brief.name,
+        description: enrichedDesc,
+        idea_raw: brief.description,
         organization_id: currentOrg.id,
         user_id: user.id,
         stage_status: "draft",
         status: "idea",
-        reference_url: referenceUrl || null,
+        complexity: brief.core_features.length + brief.integrations.length <= 3 ? "low" : brief.core_features.length + brief.integrations.length <= 6 ? "medium" : "high",
+        target_user: brief.target_audience || null,
+        discovery_payload: {
+          product_type: brief.product_type,
+          core_features: brief.core_features,
+          integrations: brief.integrations,
+          generation_depth: brief.generation_depth,
+          technical_preferences: brief.technical_preferences,
+          deployment_target: brief.deployment_target,
+        },
       };
-      if (template) {
-        insertData.target_user = template.discoveryHints.targetUser;
-        insertData.suggested_stack = template.discoveryHints.suggestedStack;
-        insertData.complexity = template.discoveryHints.complexity;
-        insertData.risk_level = template.discoveryHints.riskLevel;
-        insertData.mvp_scope = template.discoveryHints.mvpScope;
-        insertData.discovery_payload = { template_id: template.id, template_name: template.name, category: template.category };
-      }
       const { data, error } = await supabase
         .from("initiatives")
         .insert(insertData)
@@ -195,8 +204,8 @@ export default function Initiatives() {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
-            <CreateInitiativeDialog
-              onSubmit={(title, desc, referenceUrl, template) => createMutation.mutate({ title, description: desc, referenceUrl, template })}
+            <InitiativeWizard
+              onSubmit={(brief) => createMutation.mutate(brief)}
               isPending={createMutation.isPending}
             />
           </div>
