@@ -76,11 +76,24 @@ The kernel is the foundation all other layers depend on.
 | **Runtime Validation** | `pipeline-runtime-validation` — real tsc + vite build via CI | ✅ |
 | **Autonomous Build Repair** | `autonomous-build-repair` + `pipeline-fix-orchestrator` + auto-PR | ✅ |
 | **Observability** | `observability-engine` + `org_usage_limits` + cost tracking | ✅ |
-| **Stage Contracts** | Deterministic stage inputs/outputs via `initiative_jobs` | ✅ |
-| **Agent IO Contracts** | `pipeline-helpers.ts` — standardized logging, jobs, messages | ✅ |
+| **Stage Contracts** | Deterministic stage inputs/outputs via `initiative_jobs` (see §5) | ✅ |
+| **Agent IO Contracts** | `pipeline-helpers.ts` — standardized logging, jobs, messages (see §6) | ✅ |
 | **Governance** | `pipeline_gate_permissions`, `stage_sla_configs`, `audit_logs` | ✅ |
 | **Adaptive Learning** | `adaptive-learning-engine` — prevention rules, error patterns | ✅ |
 | **UI Control Center** | Pipeline visualization, initiative management | 🔧 Stabilizing |
+
+#### Kernel Hardening Tasks
+
+The following work items reduce architectural entropy and prepare the system for the Agent Intelligence Layer:
+
+| Task | Purpose | Status |
+|------|---------|--------|
+| Stage Contract Formalization | Enforce input/output schemas per stage (§5) | ✅ Implemented |
+| Agent IO Contract Standardization | Uniform agent output structure (§6) | ✅ Implemented |
+| Observability Improvements | Granular cost tracking, latency histograms | 🔧 In Progress |
+| Pipeline Visualization Refactor | Simplified control-center UI | 🔧 In Progress |
+| AI Cost Tracking | Per-stage, per-model cost attribution | ✅ Implemented |
+| Error Taxonomy Standardization | Typed failure modes across all stages | 🔧 In Progress |
 
 ### Agent Intelligence Layer (NEXT) — 📋 Planned
 
