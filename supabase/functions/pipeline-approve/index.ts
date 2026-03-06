@@ -31,7 +31,15 @@ serve(async (req) => {
     planned: { field: "approved_at_planning", nextStatus: "in_progress" },
     validating: { field: "approved_at_planning", nextStatus: "ready_to_publish" },
     ready_to_publish: { field: "approved_at_planning", nextStatus: "published" },
-    published: { field: "approved_at_planning", nextStatus: "completed" },
+    published: { field: "approved_at_planning", nextStatus: "observability_ready" },
+    observability_ready: { field: "approved_at_planning", nextStatus: "analytics_ready" },
+    analytics_ready: { field: "approved_at_planning", nextStatus: "behavior_analyzed" },
+    behavior_analyzed: { field: "approved_at_planning", nextStatus: "growth_optimized" },
+    growth_optimized: { field: "approved_at_planning", nextStatus: "product_evolved" },
+    product_evolved: { field: "approved_at_planning", nextStatus: "architecture_evolved" },
+    architecture_evolved: { field: "approved_at_planning", nextStatus: "system_evolved" },
+    system_evolved: { field: "approved_at_planning", nextStatus: "portfolio_managed" },
+    portfolio_managed: { field: "approved_at_planning", nextStatus: "completed" },
   };
 
   const approval = approvalMap[currentStatus];
