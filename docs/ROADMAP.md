@@ -50,12 +50,31 @@ The kernel is the set of systems that every pipeline execution depends on:
 | Pipeline Visualization | UI components for pipeline state | 🔧 Stabilizing |
 | UI Restructuring | Control-center layout simplification | 🔧 Stabilizing |
 
+### Agent Operating System
+
+The kernel introduces the **Agent Operating System (Agent OS)** — a conceptual reorganization that replaces 18+ specific agent identities with five fundamental agent types:
+
+| Agent Type | Responsibility |
+|-----------|---------------|
+| **Perception Agent** | Interprets ideas, requirements, market signals, context |
+| **Design Agent** | Creates architecture, domain models, data models, API designs |
+| **Build Agent** | Generates code, UI, configs, migrations, artifacts |
+| **Validation Agent** | Static analysis, runtime validation, QA, architectural checks |
+| **Evolution Agent** | Repair, learning, pattern extraction, prompt optimization |
+
+Each agent type operates in different **modes** depending on the stage (e.g., Design Agent in `data_modeling` mode vs. `api_design` mode). Specialization is preserved through the combination of **mode + tools + memory + contracts**, not through identity proliferation.
+
+This reduces architectural complexity, lowers prompt overhead, and directly enables the NEXT horizon (Learning Agents) by providing a cleaner structure for agent memory and prompt optimization.
+
+**Status:** 📋 Planned — conceptual architecture defined
+
 ### Kernel Hardening Tasks
 
 | Task | Purpose | Status |
 |------|---------|--------|
 | Stage Contract Formalization | Every stage declares `required_inputs`, `produced_outputs`, `failure_modes`, `retry_policy` | ✅ Implemented |
 | Agent IO Contract Standardization | Every agent produces `summary`, `decisions[]`, `artifacts[]`, `confidence_score` | ✅ Implemented |
+| Agent OS Design | Consolidate 18+ agents into 5 fundamental types with mode-based specialization | 📋 Planned |
 | Observability Improvements | Granular per-stage cost tracking, latency histograms | 🔧 In Progress |
 | Pipeline Visualization Refactor | Simplified control-center UI for pipeline state | 🔧 In Progress |
 | AI Cost Tracking | Per-stage, per-model cost attribution via `initiative_jobs` | ✅ Implemented |
