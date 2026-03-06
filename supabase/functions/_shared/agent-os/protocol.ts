@@ -1,12 +1,17 @@
-// Agent Runtime Protocol v0.1 — Contract Layer
+// Agent Runtime Protocol v0.1.1 — Contract Layer
 // Pure type-level contracts. Zero runtime dependencies.
 // Spec: docs/AGENT_RUNTIME_PROTOCOL.md
+//
+// BOUNDARY RULE (§A):
+//   protocol.ts = contracts that cross boundaries (orchestrator ↔ agent ↔ tool ↔ storage)
+//   types.ts    = internal domain abstractions and kernel semantics
+//   If a type is exchanged between two runtime participants → protocol.ts
+//   If a type is used only inside a single module → types.ts
 
 import type {
   AgentType,
   AgentMode,
   StageName,
-  ValidationScore,
 } from "./types.ts";
 
 // ════════════════════════════════════════════════════════════════
@@ -58,6 +63,7 @@ export interface AgentTask {
   tool_access?: ToolCapability[];
   expected_outputs: ExpectedOutputSpec[];
   trace: TraceMetadata;
+  timeout_ms?: number;
 }
 
 export interface AgentTaskContext {
@@ -85,6 +91,31 @@ export interface AgentResponse {
   status: "completed" | "failed" | "blocked";
   summary: string;
   reasoning_digest?: string;
+
+  /**
+   * Confidence score (§C).
+   *
+   * Definition: degree of confidence the agent has in the sufficiency
+   * of the response it produced.
+   *
+   * Scale: 0.0 to 1.0 (standardized).
+   *   0.0 = no confidence, output is speculative
+   *   0.5 = partial confidence, key assumptions unverified
+   *   0.8 = high confidence, minor uncertainties remain
+   *   1.0 = full confidence, all constraints satisfied
+   *
+   * Rules:
+   *   - Does NOT substitute external validation.
+   *   - Must never be used as sole approval criterion.
+   *   - May be used as auxiliary signal for:
+   *     - retry decisions
+   *     - escalation triggers
+   *     - learning/prompt optimization
+   *   - Agents that consistently over-report confidence
+   *     should be flagged by the Evolution stage.
+   */
+  confidence: number;
+
   produced_artifacts?: ArtifactEnvelope[];
   tool_calls?: ToolExecutionResult[];
   recommendations?: string[];
@@ -124,6 +155,28 @@ export interface ArtifactEnvelope {
   lineage?: ArtifactLineage;
   quality?: ArtifactQuality;
   tags?: string[];
+
+  /**
+   * Content hash (§D).
+   *
+   * Algorithm: SHA-256.
+   * Input: canonicalized `content` field ONLY (not the envelope).
+   *
+   * Canonicalization rules:
+   *   1. JSON.stringify with keys sorted alphabetically (stable serialization).
+   *   2. No whitespace (compact form).
+   *   3. Metadata, timestamps, version, tags are EXCLUDED from hash.
+   *   4. Result: lowercase hex string.
+   *
+   * Purpose:
+   *   - Deduplication across runs.
+   *   - Incremental execution (skip unchanged artifacts).
+   *   - Cache invalidation.
+   *
+   * Two artifacts with identical content_hash have semantically
+   * identical content, regardless of envelope differences.
+   */
+  content_hash?: string;
 }
 
 export type ArtifactKind =
@@ -162,6 +215,8 @@ export interface ToolCapability {
   input_schema?: Record<string, unknown>;
   output_schema?: Record<string, unknown>;
   permissions?: string[];
+  /** Default timeout for this tool in milliseconds */
+  default_timeout_ms?: number;
 }
 
 export interface ToolInvocation {
@@ -170,16 +225,27 @@ export interface ToolInvocation {
   tool_name: string;
   arguments: Record<string, unknown>;
   requested_at: string;
+  /**
+   * Timeout semantics (§E).
+   *
+   * timeout_requested_ms: what the agent asked for.
+   * The runtime may adjust this based on policy, queue depth,
+   * or tool type. The effective timeout is recorded in
+   * ToolExecutionResult.timeout_effective_ms.
+   */
+  timeout_requested_ms?: number;
 }
 
 export interface ToolExecutionResult {
   invocation_id: string;
   tool_name: string;
-  status: "completed" | "failed";
+  status: "completed" | "failed" | "timeout";
   output?: unknown;
   error?: string;
   started_at: string;
   completed_at?: string;
+  /** Timeout actually enforced by the runtime (§E) */
+  timeout_effective_ms?: number;
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -241,11 +307,17 @@ export type RuntimeEventType =
   | "agent.started"
   | "agent.completed"
   | "agent.failed"
+  | "agent.retried"
+  | "agent.blocked"
   | "tool.requested"
   | "tool.completed"
+  | "tool.failed"
+  | "tool.timeout"
   | "artifact.created"
+  | "validation.started"
   | "validation.completed"
   | "rollback.triggered"
+  | "memory.written"
   | "run.completed"
   | "run.failed";
 
@@ -254,6 +326,7 @@ export interface ProtocolRuntimeEvent {
   run_id: string;
   stage?: StageName;
   agent_id?: string;
+  task_id?: string;
   event_type: RuntimeEventType;
   timestamp: string;
   payload: Record<string, unknown>;
@@ -274,11 +347,56 @@ export interface TraceMetadata {
 // 15–16. FAILURE & RETRY SEMANTICS
 // ════════════════════════════════════════════════════════════════
 
+/**
+ * Failure actions (§G — retry_other rules).
+ *
+ * "retry"       — Re-execute same agent, same input, incremented attempt.
+ * "retry_other" — Dispatch to a DIFFERENT agent. Rules:
+ *                 - Must be same agent_type.
+ *                 - Mode MAY change (runtime decides based on failure context).
+ *                 - Model/provider MAY change.
+ *                 - Creates a NEW task (new task_id) with lineage to original.
+ *                 - Original task is marked as "failed" (not overwritten).
+ *                 - Does NOT increment attempt on original task.
+ * "block"       — Pause execution, emit "agent.blocked", wait for resolution.
+ * "rollback"    — Return to a previous stage.
+ * "skip"        — Skip this agent, continue with remaining agents in stage.
+ * "abort"       — Terminate the entire run.
+ */
+export type FailureAction =
+  | "retry"
+  | "retry_other"
+  | "block"
+  | "rollback"
+  | "skip"
+  | "abort";
+
 export interface RetryPolicy {
   max_retries_per_task: number;
   retry_on_status: ("failed" | "blocked")[];
   backoff_strategy: "none" | "linear" | "exponential";
+  backoff_base_ms?: number;
   escalation_after_retries?: boolean;
+  /** Action when max retries exceeded */
+  escalation_action?: FailureAction;
+}
+
+/**
+ * retry_other dispatch contract (§G).
+ *
+ * When the runtime uses "retry_other":
+ */
+export interface RetryOtherDispatch {
+  original_task_id: string;
+  new_task_id: string;
+  original_agent_id: string;
+  new_agent_id: string;
+  /** Must match original agent_type */
+  agent_type: AgentType;
+  /** May differ from original */
+  new_mode?: AgentMode;
+  reason: string;
+  dispatched_at: string;
 }
 
 // ════════════════════════════════════════════════════════════════
