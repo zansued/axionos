@@ -143,43 +143,63 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                 <CardTitle className="font-display text-xl truncate">{initiative.title}</CardTitle>
               </div>
               <div className="flex gap-2 shrink-0 flex-wrap justify-end">
-              {actions.map((action) => (
-                action.type === "reject" ? (
-                  <Button
-                    key={action.stage}
-                    onClick={() => setRejectOpen(true)}
-                    disabled={!!runningStage}
-                    variant="outline"
-                    size="sm"
-                    className="gap-1.5 text-destructive border-destructive/30 hover:bg-destructive/10"
-                  >
-                    <RotateCcw className="h-3.5 w-3.5" />
-                    {action.label}
-                  </Button>
-                ) : action.type === "publish" ? (
-                  <Button
-                    key={action.stage}
-                    onClick={() => setPublishOpen(true)}
-                    disabled={!!runningStage}
-                    className="gap-2 bg-foreground text-background hover:bg-foreground/90"
-                  >
-                    {runningStage === "publish" ? <Loader2 className="h-4 w-4 animate-spin" /> : <GitBranch className="h-4 w-4" />}
-                    {runningStage === "publish" ? "Publicando..." : action.label}
-                  </Button>
-                ) : (
-                  <Button
-                    key={action.stage}
-                    onClick={() => action.type === "approve" ? onApprove() : onRunStage(action.stage)}
-                    disabled={!!runningStage}
-                    variant={action.type === "approve" ? "default" : "secondary"}
-                    className="gap-2"
-                  >
-                    {runningStage === action.stage ? <Loader2 className="h-4 w-4 animate-spin" /> :
-                      action.type === "approve" ? <CheckCircle2 className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
-                    {runningStage === action.stage ? "Processando..." : action.label}
-                  </Button>
-                )
-              ))}
+              {actions.map((action) => {
+                const hasDescription = !!action.description;
+                
+                if (action.type === "reject") {
+                  return (
+                    <Button
+                      key={action.stage}
+                      onClick={() => setRejectOpen(true)}
+                      disabled={!!runningStage}
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 text-destructive border-destructive/30 hover:bg-destructive/10"
+                      title={action.description}
+                    >
+                      <RotateCcw className="h-3.5 w-3.5" />
+                      {action.label}
+                    </Button>
+                  );
+                }
+                
+                if (action.type === "publish") {
+                  return (
+                    <Button
+                      key={action.stage}
+                      onClick={() => setPublishOpen(true)}
+                      disabled={!!runningStage}
+                      className="gap-2 bg-foreground text-background hover:bg-foreground/90"
+                      title={action.description}
+                    >
+                      {runningStage === "publish" ? <Loader2 className="h-4 w-4 animate-spin" /> : <GitBranch className="h-4 w-4" />}
+                      {runningStage === "publish" ? "Publicando..." : action.label}
+                    </Button>
+                  );
+                }
+
+                return (
+                  <div key={action.stage} className="relative group">
+                    <Button
+                      onClick={() => action.type === "approve" ? onApprove() : onRunStage(action.stage)}
+                      disabled={!!runningStage}
+                      variant={action.variant === "primary" ? "default" : action.variant === "outline" ? "outline" : action.type === "approve" ? "default" : "secondary"}
+                      className="gap-2"
+                      title={action.description}
+                    >
+                      {runningStage === action.stage ? <Loader2 className="h-4 w-4 animate-spin" /> :
+                        action.type === "approve" ? <CheckCircle2 className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
+                      {runningStage === action.stage ? "Processando..." : action.label}
+                    </Button>
+                    {hasDescription && (
+                      <div className="absolute z-50 hidden group-hover:block bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 p-2.5 rounded-lg border border-border bg-popover text-popover-foreground text-[11px] leading-relaxed shadow-lg pointer-events-none">
+                        {action.description}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-popover border-r border-b border-border rotate-45 -mt-1" />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
               {onDelete && (
                 <Button
                   variant="ghost"
