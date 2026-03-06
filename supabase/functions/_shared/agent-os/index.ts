@@ -415,3 +415,33 @@ export {
   DEFAULT_EXPLORATION_CONFIG,
   DEFAULT_ADAPTIVE_ROUTING_CONFIG,
 } from "./adaptive-routing.ts";
+
+// Multi-Agent Coordination System (v0.8)
+export type {
+  CoordinationStrategyType,
+  CoordinationStrategy,
+  AgentRole,
+  AgentRoleType,
+  RoleAssignment,
+  CoordinationStepTemplate,
+  CoordinationStepType,
+  CoordinationCondition,
+  CoordinationPlan,
+  CoordinationState,
+  CoordinationStatus,
+  CoordinationIteration,
+  CoordinationStepExecution,
+  InteractionOutcome,
+  CoordinationVote,
+  IterationRules,
+  CoordinationTerminationReason,
+  CoordinationResult,
+  ICoordinationManager,
+  CoordinationConfig,
+  CoordinationEventType,
+} from "./coordination.ts";
+
+export {
+  DEFAULT_ITERATION_RULES,
+  DEFAULT_COORDINATION_CONFIG,
+} from "./coordination.ts";
