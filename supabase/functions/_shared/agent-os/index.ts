@@ -1,7 +1,7 @@
 // Agent OS — Public API
 // Single entry point for all Agent OS modules.
 
-// Types
+// Core Types
 export type {
   AgentType,
   AgentMode,
@@ -34,36 +34,41 @@ export { createDefaultPolicies } from "./policies.ts";
 export { scoreArtifacts, averageScore, meetsThreshold } from "./scoring.ts";
 export { cryptoRandomId, nowIso, createArtifact } from "./utils.ts";
 
-// Protocol Contracts
+// Protocol Contracts (v0.1)
 export type {
-  RunContract,
-  RunConfig,
-  StagePolicyRef,
-  RunResult,
-  RunTrace,
-  StageContract,
-  AgentAssignment,
-  StageResult,
-  StageTrace,
-  TaskEnvelope,
-  ToolDeclaration,
+  // Run
+  Run,
+  // Stage
+  StageExecution,
+  // Agent IO
+  AgentTask,
+  AgentTaskContext,
+  ExpectedOutputSpec,
   AgentResponse,
-  AgentDecision,
-  AgentMetrics,
+  AgentResponseMetrics,
+  AgentNextSuggestions,
+  // Artifacts
   ArtifactEnvelope,
   ArtifactKind,
+  ArtifactCreator,
   ArtifactLineage,
+  ArtifactQuality,
+  // Tools
+  ToolCapability,
   ToolInvocation,
-  ToolResult,
+  ToolExecutionResult,
+  // Validation
   ValidationReport,
-  ValidationFinding,
-  ValidationSuggestion,
-  ProtocolEventType,
-  ProtocolEvent,
-  TraceContext,
+  ValidationDimensions,
+  ValidationIssue,
+  // Memory
+  MemoryEntry,
+  // Events
+  RuntimeEventType as ProtocolEventType,
+  ProtocolRuntimeEvent,
+  // Trace
   TraceMetadata,
-  FailureAction,
-  FailurePolicy,
-  FailureReport,
-  FailureErrorType,
+  // Failure
+  RetryPolicy,
+  RollbackPolicy,
 } from "./protocol.ts";
