@@ -80,16 +80,16 @@ Generate a product analytics plan as JSON:
 
 Return ONLY valid JSON.`;
 
-    const aiResponse = await callAI(apiKey, prompt, "product-analytics-engine");
+    const aiResult = await callAI(apiKey, prompt, "product-analytics-engine", true);
     let analytics: any;
     try {
-      const cleaned = aiResponse.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
+      const cleaned = aiResult.content.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
       analytics = JSON.parse(cleaned);
     } catch {
       analytics = {
         users_tracked: 0, events_analyzed: 0,
         acquisition_metrics: { channels: [], funnel_stages: [] },
-        retention_metrics: { cohort_analysis_plan: aiResponse.slice(0, 300), churn_indicators: [], engagement_signals: [], target_retention_d7: "N/A", target_retention_d30: "N/A" },
+        retention_metrics: { cohort_analysis_plan: (aiResult.content || "").slice(0, 300), churn_indicators: [], engagement_signals: [], target_retention_d7: "N/A", target_retention_d30: "N/A" },
         conversion_metrics: { free_to_paid_funnel: [], revenue_events: [], ltv_model: "N/A" },
         feature_analytics: [], dashboards: [],
         instrumentation_plan: { sdk: "unknown", events_to_track: [], custom_dimensions: [] },
@@ -132,7 +132,7 @@ Return ONLY valid JSON.`;
       ab_tests_count: analytics.ab_testing_opportunities?.length || 0,
     };
 
-    await completeJob(ctx, jobId, outputs);
+    await completeJob(ctx, jobId, outputs, { model: aiResult.model, costUsd: aiResult.costUsd, durationMs: aiResult.durationMs });
     return jsonResponse(outputs);
   } catch (e: any) {
     console.error("Product Analytics Engine error:", e);
