@@ -1,102 +1,278 @@
-## AxionOS v3 — Autonomous Startup Factory
+## AxionOS — Autonomous Software Engineering System
 
-> Última atualização: 2026-03-05
-
----
-
-## Visão
-
-AxionOS v3 evolui de um sistema de geração autônoma de software (v2) para uma **fábrica de startups autônoma** capaz de descobrir oportunidades, validar mercado, gerar aplicações, lançar produtos digitais, analisar feedback e evoluir produtos automaticamente.
-
-O sistema opera como um **AI-powered venture studio**.
+> Last updated: 2026-03-06
 
 ---
 
-## ✅ v2 Implementado (22 Estágios)
+## Vision
 
-### Pipeline Completo
+AxionOS is an **autonomous software engineering system** evolving toward a self-operating venture studio. It orchestrates AI agents to discover opportunities, design architectures, generate full-stack applications, deploy to production, and evolve products automatically.
+
+The system is currently at **Maturity Level 3→4** (Autonomous Engineering System → Self-Learning Factory).
+
+---
+
+## System Architecture
+
 ```
-01. Compreensão (4 agentes)          → Análise de mercado, requisitos, viabilidade
-02. Arquitetura (4 agentes)          → Stack, schema, API contracts
-03. Simulação de Arquitetura         → Túnel de vento estrutural
-04. Validação Preventiva             → Auditoria de regras históricas
-05. Bootstrap Intelligence           → Validação de entrypoints e stack
-06. Foundation Scaffold              → Base mínima buildável
-07. Module Graph Simulation          → Análise de imports e circularidade
-08. Dependency Intelligence          → Saúde do ecossistema NPM
-09. Schema Bootstrap                 → Schema PostgreSQL isolado (app_{id})
-10. DB Provisioning                  → Tabelas base + RLS + Storage bucket
-11. Domain Model Analysis            → Extração de entidades/relacionamentos via LLM
-12. Data Model Generation            → Tabelas SQL, FK, indexes, RLS policies
-13. Business Logic Synthesis         → Services, validações, workflows
-14. API Generation                   → REST endpoints, RPCs, triggers, webhooks
-15. Autonomous UI Generation         → Páginas, componentes, hooks, navegação
-16. Formação de Squad                → Agentes especializados
-17. Planejamento                     → PRD + Stories com subtasks
-18. Execução (Agent Swarm)           → Geração de código paralela (6 workers)
-19. Validação (4 sub-estágios)       → AI + Deep + Drift + Runtime (CI)
-20. Build Repair                     → Auto-reparo de falhas
-21. Adaptive Learning                → Análise de padrões e geração de regras
-22. Publicação                       → Atomic Git Tree API
+┌─────────────────────────────────────────────────────────┐
+│                   AI EFFICIENCY LAYER                    │
+│  Prompt Compressor │ Semantic Cache │ Model Router       │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │
+│  │   VENTURE     │  │  SOFTWARE    │  │   GROWTH &   │   │
+│  │ INTELLIGENCE  │  │ ENGINEERING  │  │  EVOLUTION   │   │
+│  │  (S01-05)     │  │  (S06-23)    │  │  (S24-32)    │   │
+│  └──────────────┘  └──────────────┘  └──────────────┘   │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐    │
+│  │              PROJECT BRAIN                        │    │
+│  │  DAG Engine │ Smart Context │ Embeddings │ Rules  │    │
+│  └──────────────────────────────────────────────────┘    │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐    │
+│  │            ADAPTIVE LEARNING                      │    │
+│  │  Error Intelligence │ Prevention Rules │ Patterns │    │
+│  └──────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────┘
 ```
 
-### Infraestrutura Core
-- Project Brain (tsvector + pgvector 768-dim)
-- DAG Execution Engine (Kahn's algorithm)
-- Agent Swarm (6 Workers paralelos)
-- Smart Context Window (~60-80% token reduction)
-- Self-Healing (Prevention rules + confidence scoring)
-- 38+ Edge Functions independentes
-- 28+ tabelas com RLS
+---
+
+## Pipeline — 32 Stages
+
+### Venture Intelligence Layer (S01-05)
+| # | Stage | Engine |
+|---|-------|--------|
+| 01 | Idea Intake | Raw idea entry |
+| 02 | Opportunity Discovery | Market gap identification |
+| 03 | Market Signal Analysis | Demand + viability scoring |
+| 04 | Product Validation | Synthetic testing + estimation |
+| 05 | Revenue Strategy | Pricing + monetization |
+
+### Discovery & Architecture (S06-10)
+| # | Stage | Engine |
+|---|-------|--------|
+| 06 | Discovery Intelligence | 4-agent comprehension team |
+| 07 | Market Intelligence | 4-agent architecture team |
+| 08 | Technical Feasibility | Architecture simulation |
+| 09 | Project Structuring | Preventive validation |
+| 10 | Squad Formation | Specialized agent allocation |
+
+### Infrastructure & Modeling (S11-16)
+| # | Stage | Engine |
+|---|-------|--------|
+| 11 | Architecture Planning | Bootstrap + foundation scaffold |
+| 12 | Domain Model Generation | Module graph + dependency intelligence |
+| 13 | AI Domain Analysis | Entity/relationship extraction via LLM |
+| 14 | Schema Bootstrap | Isolated PostgreSQL schema |
+| 15 | DB Provisioning | Tables + RLS + storage |
+| 16 | Data Model Generation | SQL tables, FK, indexes, RLS |
+
+### Code Generation (S17-19)
+| # | Stage | Engine |
+|---|-------|--------|
+| 17 | Business Logic Synthesis | Services, validations, workflows |
+| 18 | API Generation | REST, RPCs, triggers, webhooks |
+| 19 | UI Generation | Pages, components, hooks, navigation |
+
+### Validation & Publish (S20-23)
+| # | Stage | Engine |
+|---|-------|--------|
+| 20 | Validation | AI + deep analysis + drift detection |
+| 21 | Build | Runtime validation via CI |
+| 22 | Test | Self-healing build repair |
+| 23 | Publish | Atomic Git Tree API |
+
+### Growth & Evolution (S24-32)
+| # | Stage | Engine |
+|---|-------|--------|
+| 24 | Observability | Real-time product monitoring |
+| 25 | Product Analytics | AARRR metrics |
+| 26 | User Behavior | Interaction patterns + friction points |
+| 27 | Growth Optimization | Conversion + onboarding optimization |
+| 28 | Adaptive Learning | Pattern extraction + prevention rules |
+| 29 | Product Evolution | Autonomous feature addition/removal |
+| 30 | Architecture Evolution | Cross-project pattern learning |
+| 31 | Portfolio Management | Multi-product resource allocation |
+| 32 | System Evolution | Meta-learning for platform improvement |
 
 ---
 
-## 📋 v3 Planejado (32 Estágios)
+## Core Infrastructure
 
-### Venture Intelligence Layer (Estágios 1-5) — NOVO
-| Estágio | Motor | Descrição |
-|---------|-------|-----------|
-| 01 | Idea Intake | Entrada de ideia bruta |
-| 02 | Opportunity Discovery Engine | Descoberta automática de oportunidades |
-| 03 | Market Signal Analyzer | Análise de demanda e viabilidade |
-| 04 | Product Validation Engine | Validação pré-build com simulações |
-| 05 | Revenue Strategy Engine | Estratégia de monetização automática |
+### Project Brain
+- Directed graph: `project_brain_nodes` + `project_brain_edges`
+- Decision memory: `project_decisions` (category, supersedes chain)
+- Error tracking: `project_errors` + `project_prevention_rules`
+- Full-text search: `tsvector` on nodes
+- Semantic search: `pgvector` (768-dim) + cosine similarity
+- Context injection: `generateBrainContext()` for all agent prompts
 
-### Growth & Evolution Layer (Estágios 24-32) — NOVO
-| Estágio | Motor | Descrição |
-|---------|-------|-----------|
-| 24 | Observability Engine | Monitoramento real-time de produtos |
-| 25 | Product Analytics Engine | Métricas de uso: aquisição, retenção, conversão |
-| 26 | User Behavior Analyzer | Padrões de interação e pontos de fricção |
-| 27 | Growth Optimization Engine | Otimização de landing pages e onboarding |
-| 28 | Adaptive Learning Engine | Aprendizado de padrões (já implementado v2) |
-| 29 | Product Evolution Engine | Evolução automática de produtos |
-| 30 | Architecture Evolution Engine | Padrões arquiteturais de sucesso |
-| 31 | Startup Portfolio Manager | Gestão multi-produto com alocação de recursos |
-| 32 | System Evolution Engine | Meta-learning da plataforma |
+### AI Efficiency Layer (NEW)
+- **Prompt Compressor** — Rule-based pre-compression + AI summarization via `gemini-2.5-flash-lite`
+- **Semantic Cache** — Vector similarity cache (`ai_prompt_cache` table, threshold 0.92)
+- **Model Router** — Complexity-based routing: `flash-lite` → `flash` → `pro`
+- Integration point: `callAI()` in `_shared/ai-client.ts`
 
-### Novas Tabelas Planejadas
-- `product_opportunities` — oportunidades descobertas
-- `market_signals` — sinais de demanda
-- `product_portfolios` — portfólio multi-produto
-- `product_analytics` — métricas de uso
-- `evolution_plans` — planos de evolução automática
+### DAG Execution Engine
+- `buildExecutionDAG()` — constructs DAG from brain nodes/edges
+- `computeWaves()` — topological sort (Kahn's algorithm) grouped by wave level
+- `getReadyNodes()` — returns nodes with satisfied dependencies
+- Orchestrator + 6 parallel workers
 
-### Prioridade de Implementação
-1. **P0** — Opportunity Discovery + Market Signal Analyzer
-2. **P1** — Product Validation + Revenue Strategy + Product Analytics
-3. **P2** — User Behavior + Growth Optimization + Product Evolution
-4. **P3** — Architecture Evolution + Portfolio Manager + System Evolution
+### Smart Context Window
+- AST-like regex parser: extracts API surface (imports, types, signatures)
+- ~60-80% token reduction while preserving integration context
+- Priority budget: types > hooks > services > components
 
 ---
 
-## Métricas Alvo v3
+## Technology Stack
 
-| Métrica | Alvo |
-|---------|------|
-| Estágios de pipeline | 32 (v2: 22) |
-| Edge Functions | 50+ (v2: 38+) |
-| Motores de inteligência | 12 novos |
-| Geração de SaaS completo | < 5 minutos |
-| Evolução autônoma | Contínua pós-deploy |
-| Gestão de portfólio | Multi-produto simultâneo |
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
+| State | TanStack React Query + React Context |
+| Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
+| AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
+| Git | GitHub API v3 (Tree API for atomic commits) |
+| Scraping | Firecrawl (ecosystem research agent) |
+| Deploy | Vercel/Netlify auto-generated configs |
+
+### Multi-Tenancy
+- Organizations → Workspaces → Initiatives
+- RLS policies per `organization_id`
+- Roles: `owner`, `admin`, `editor`, `reviewer`, `viewer`
+- Auto-provisioning via `create_organization_with_owner` RPC
+
+---
+
+## Edge Functions (50+)
+
+```
+supabase/functions/
+├── Venture Intelligence
+│   ├── opportunity-discovery-engine/
+│   ├── market-signal-analyzer/
+│   ├── product-validation-engine/
+│   └── revenue-strategy-engine/
+├── Discovery & Architecture
+│   ├── pipeline-comprehension/         (4 agents)
+│   ├── pipeline-architecture/          (4 agents)
+│   ├── pipeline-architecture-simulation/
+│   ├── pipeline-preventive-validation/
+│   └── pipeline-squad/
+├── Infrastructure & Modeling
+│   ├── project-bootstrap-intelligence/
+│   ├── pipeline-foundation-scaffold/
+│   ├── pipeline-module-graph-simulation/
+│   ├── pipeline-dependency-intelligence/
+│   ├── ai-domain-model-analyzer/
+│   ├── supabase-schema-bootstrap/
+│   ├── supabase-provisioning-engine/
+│   └── supabase-data-model-generator/
+├── Code Generation
+│   ├── ai-business-logic-synthesizer/
+│   ├── autonomous-api-generator/
+│   └── autonomous-ui-generator/
+├── Validation & Publish
+│   ├── pipeline-validation/
+│   ├── pipeline-deep-validation/
+│   ├── pipeline-drift-detection/
+│   ├── pipeline-runtime-validation/
+│   ├── autonomous-build-repair/
+│   └── pipeline-publish/
+├── Growth & Evolution
+│   ├── observability-engine/
+│   ├── product-analytics-engine/
+│   ├── user-behavior-analyzer/
+│   ├── growth-optimization-engine/
+│   ├── adaptive-learning-engine/
+│   ├── product-evolution-engine/
+│   ├── architecture-evolution-engine/
+│   ├── startup-portfolio-manager/
+│   └── system-evolution-engine/
+├── Pipeline Control
+│   ├── pipeline-approve/
+│   ├── pipeline-reject/
+│   ├── pipeline-ci-webhook/
+│   ├── pipeline-fix-orchestrator/
+│   ├── pipeline-fast-modify/
+│   ├── pipeline-full-review/
+│   └── run-initiative-pipeline/
+├── Support
+│   ├── brain-sync/
+│   ├── error-intelligence/
+│   ├── generate-embeddings/
+│   ├── analyze-artifact/
+│   ├── rework-artifact/
+│   ├── generate-agents/
+│   ├── generate-stories/
+│   ├── organize-stories/
+│   ├── generate-planning-content/
+│   ├── github-proxy/
+│   └── github-ci-webhook/
+└── _shared/
+    ├── ai-client.ts              Unified AI client + Efficiency Layer
+    ├── prompt-compressor.ts      Prompt compression engine
+    ├── semantic-cache.ts         Vector-based semantic cache
+    ├── model-router.ts           Intelligent model routing
+    ├── pipeline-helpers.ts       Logging, jobs, agent messages
+    ├── pipeline-bootstrap.ts     Auth, CORS, rate limiting
+    ├── dependency-scheduler.ts   DAG builder + wave computation
+    ├── brain-helpers.ts          Project Brain CRUD + context
+    ├── smart-context.ts          Smart Context Window
+    ├── incremental-engine.ts     Incremental re-execution
+    ├── embedding-helpers.ts      Vector embeddings
+    ├── code-sanitizers.ts        Deterministic files
+    ├── auth.ts                   Authentication
+    ├── cors.ts                   CORS headers
+    └── rate-limit.ts             Rate limiting
+```
+
+---
+
+## Implementation Status
+
+### ✅ Completed
+| # | System | Details |
+|---|--------|---------|
+| 1 | Pipeline (32 stages) | 50+ independent Edge Functions |
+| 2 | Project Brain | Nodes, edges, decisions, errors, prevention rules, tsvector, pgvector |
+| 3 | DAG Execution Engine | Kahn's topological sort, wave computation, 6 parallel workers |
+| 4 | Agent Swarm | Orchestrator + Worker, Code Architect → Developer → Integration Agent |
+| 5 | Data Model Generator | Domain model → SQL tables, FK, indexes, RLS |
+| 6 | Autonomous UI Generator | Pages, components, hooks, navigation |
+| 7 | Adaptive Learning Engine | Prevention rules, patterns, cross-project learning |
+| 8 | CI-Triggered Fix Swarm | Webhook + Fix Orchestrator + auto-PR |
+| 9 | Self-Healing Codebase | Prevention rules with confidence scoring |
+| 10 | Architectural Drift Detection | Rule-based + AI hybrid |
+| 11 | Atomic Git Commits | Tree API for publish + fix PRs |
+| 12 | Runtime Validation | Real tsc + vite build via GitHub Actions CI |
+| 13 | Smart Context Window | ~60-80% token reduction |
+| 14 | Vector Embeddings | pgvector 768-dim, cosine similarity |
+| 15 | Incremental Re-execution | Hash-based dirty detection |
+| 16 | AI Efficiency Layer | Prompt compression + semantic cache + model router |
+
+### 🔮 Next (Phase 4: Agent Intelligence)
+| # | Module | Priority |
+|---|--------|----------|
+| 1 | Learning Agents | P0 |
+| 2 | Prompt Optimization Engine | P0 |
+| 3 | Architecture Pattern Library | P1 |
+| 4 | Error Pattern Recognition | P1 |
+| 5 | Self-Improving Fix Agents | P2 |
+
+---
+
+## System Maturity
+
+| Level | Name | Status |
+|-------|------|--------|
+| Level 1 | Code Generator | ✅ |
+| Level 2 | Software Builder | ✅ |
+| Level 3 | Autonomous Engineering System | ✅ |
+| Level 4 | Self-Learning Software Factory | 🔄 Transitioning |
+| Level 5 | Autonomous Startup Factory | 🔮 Planned |
