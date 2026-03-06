@@ -1,165 +1,142 @@
 # AxionOS — System Evolution Roadmap
 
-> **Vision**: AxionOS is an autonomous software engineering system evolving into a self-learning software factory. Development follows architecture-priority sequencing — each horizon strengthens the next.
+> **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
+>
+> **Current Mode**: Kernel Hardening & Product Proof
 >
 > Last updated: 2026-03-06
 
 ---
 
+## Strategic Directive
+
+AxionOS has a strong architectural foundation. The architecture is sufficient.
+
+**The focus is now:**
+1. Stabilize the kernel
+2. Prove the product (Governed SaaS / MVP Generator)
+3. Package for real users
+4. Postpone broader platform ambitions until after validation
+
+**Rule:** No new architecture unless it directly improves reliability, cost, execution speed, product clarity, or sellability.
+
+---
+
 ## Implementation Horizons
 
-AxionOS development is organized into four implementation horizons based on architectural dependency, not calendar time. Each horizon must be stable before the next one begins.
-
 ```
-  NOW           NEXT            LATER             FUTURE
-  ────────►     ────────►       ────────►         ────────►
-  Stabilize     Build Learning  Build Product     Build Market
-  the Kernel    Agents          Intelligence      Intelligence
+  NOW                    NEXT                   LATER
+  ──────────►            ──────────►            ──────────►
+  Harden Kernel          Build Learning         Expand Platform
+  Prove Product          Agents                 Intelligence
+  Package for Users
 ```
 
 ---
 
-## NOW — Stabilize the Kernel
+## NOW — Harden the Kernel & Prove the Product
 
 **Priority:** Highest
 **Status:** 🔧 In Progress
 
-### Purpose
+### First Product Proof: Governed SaaS / MVP Generator
 
-Consolidate the core infrastructure of AxionOS into a hardened engineering kernel. Future intelligence layers depend on this foundation being stable, reliable, and cost-efficient. Without a stable kernel, every new capability becomes a source of entropy.
+A user submits an idea → AxionOS produces:
+- Structured discovery (market analysis, feasibility)
+- Architecture (system design, tech stack)
+- PRD (product requirements)
+- Stories & subtasks (backlog with acceptance criteria)
+- Scaffold / initial code (business logic, API, UI)
+- Runtime validation (tsc + vite)
+- Repository output (Git with atomic commits)
+- Pipeline traceability (full audit trail)
 
-### Core System Kernel
+### What to Keep Active
 
-The kernel is the set of systems that every pipeline execution depends on:
+| Module | Status |
+|--------|--------|
+| 32-stage deterministic pipeline | ✅ Operational |
+| Project Brain (knowledge graph) | ✅ Operational |
+| AI Efficiency Layer (compressor + cache + router) | ✅ Operational |
+| Smart Context Window (~60-80% token reduction) | ✅ Operational |
+| DAG Execution Engine (6 workers) | ✅ Operational |
+| Runtime Validation (tsc + vite via CI) | ✅ Operational |
+| Autonomous Build Repair + Fix Orchestrator | ✅ Operational |
+| Governance (gates, SLAs, audit logs) | ✅ Operational |
+| Observability + Cost Tracking | ✅ Operational |
+| Stage & Agent IO Contracts | ✅ Implemented |
 
-| Module | File / System | Status |
-|--------|---------------|--------|
-| Project Brain | `brain-helpers.ts`, `project_brain_nodes/edges` | ✅ Implemented |
-| AI Efficiency Layer | `ai-client.ts`, `prompt-compressor.ts`, `semantic-cache.ts`, `model-router.ts` | ✅ Implemented |
-| Smart Context Window | `smart-context.ts` | ✅ Implemented |
-| Semantic Cache | `semantic-cache.ts`, `ai_prompt_cache` table | ✅ Implemented |
-| Prompt Compression | `prompt-compressor.ts` | ✅ Implemented |
-| Model Router | `model-router.ts` | ✅ Implemented |
-| DAG Execution Engine | `dependency-scheduler.ts` | ✅ Implemented |
-| Runtime Validation | `pipeline-runtime-validation` + CI | ✅ Implemented |
-| Autonomous Build Repair | `autonomous-build-repair` + `pipeline-fix-orchestrator` | ✅ Implemented |
-| Observability & Cost Tracking | `observability-engine` + `org_usage_limits` | ✅ Implemented |
-| Stage Contracts | Formal input/output schemas per stage via `initiative_jobs` | ✅ Implemented |
-| Agent IO Contracts | Standardized agent output structure via `pipeline-helpers.ts` | ✅ Implemented |
-| Governance | `pipeline_gate_permissions`, `stage_sla_configs`, `audit_logs` | ✅ Implemented |
-| Pipeline Visualization | UI components for pipeline state | 🔧 Stabilizing |
-| UI Restructuring | Control-center layout simplification | 🔧 Stabilizing |
-
-### Agent Operating System (Agent OS)
-
-The kernel introduces the **Agent Operating System (Agent OS)** — a comprehensive runtime architecture for agent execution, selection, governance, and coordination. Agent OS v1.0 has been fully designed across 14 architectural modules organized into five planes:
-
-| Plane | Modules | Status |
-|-------|---------|--------|
-| **Core** | Runtime Protocol, Capability Model, Core Types | ✅ Designed |
-| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing | ✅ Designed |
-| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Designed |
-| **Data** | Artifact Store, Memory System, Observability | ✅ Designed |
-| **Ecosystem** | Marketplace & Global Capability Registry | ✅ Designed |
-
-The 14 modules of Agent OS v1.0:
-
-| # | Module | File | Version |
-|---|--------|------|---------|
-| 1 | Runtime Protocol | `protocol.ts` | v0.1 |
-| 2 | Capability Model | `capabilities.ts` | v0.2 |
-| 3 | Selection Engine | `selection.ts` | v0.2 |
-| 4 | Policy Engine | `policy-engine.ts` | v0.2 |
-| 5 | Artifact Store | `artifact-store.ts` | v0.1 |
-| 6 | Observability & Telemetry | `observability.ts` | v0.3 |
-| 7 | LLM Adapter Layer | `llm-adapter.ts` | v0.4 |
-| 8 | Tool Adapter Layer | `tool-adapter.ts` | v0.5 |
-| 9 | Memory System | `memory-system.ts` | v0.6 |
-| 10 | Adaptive Routing | `adaptive-routing.ts` | v0.7 |
-| 11 | Multi-Agent Coordination | `coordination.ts` | v0.8 |
-| 12 | Distributed Agent Runtime | `distributed-runtime.ts` | v0.9 |
-| 13 | Marketplace & Registry | `marketplace.ts` | v1.0 |
-| 14 | Governance Layer | `governance.ts` | v1.1 |
-
-Full architecture map: [docs/AGENT_OS_ARCHITECTURE_MAP.md](AGENT_OS_ARCHITECTURE_MAP.md)
-
-### Kernel Hardening Tasks
+### What to Improve Now
 
 | Task | Purpose | Status |
 |------|---------|--------|
-| Stage Contract Formalization | Every stage declares `required_inputs`, `produced_outputs`, `failure_modes`, `retry_policy` | ✅ Implemented |
-| Agent IO Contract Standardization | Every agent produces `summary`, `decisions[]`, `artifacts[]`, `confidence_score` | ✅ Implemented |
-| Agent OS v1.0 Architecture | 14-module architecture across 5 planes with full TypeScript contracts | ✅ Designed |
-| Observability Improvements | Granular per-stage cost tracking, latency histograms | 🔧 In Progress |
-| Pipeline Visualization Refactor | Simplified control-center UI for pipeline state | 🔧 In Progress |
-| AI Cost Tracking | Per-stage, per-model cost attribution via `initiative_jobs` | ✅ Implemented |
-| Error Taxonomy Standardization | Typed failure modes across all 32 stages | 🔧 In Progress |
+| Pipeline completion reliability | Reduce failures across stages | 🔧 In Progress |
+| Build success rate | Improve first-attempt success | 🔧 In Progress |
+| Typed error taxonomy | Standardize failure modes across 32 stages | 🔧 In Progress |
+| Pipeline visualization | Simplify control-center UI | 🔧 In Progress |
+| Onboarding flow | Guide users to first initiative | 📋 Planned |
+| Initiative creation UX | Simplify idea-to-pipeline flow | 📋 Planned |
+| Export / deploy actions | Clear path to generated repository | 📋 Planned |
+| Billing readiness | Usage tracking + payment | 📋 Planned |
 
-### Goals
+### What to Freeze
 
-- Reduce architectural entropy across pipeline stages
-- Improve reliability of end-to-end pipeline execution
-- Standardize contracts between stages and agents
-- Reduce LLM cost via efficiency layer optimization
-- Improve maintainability of 50+ edge functions
-- Simplify visual complexity in the control UI
-- Consolidate agent architecture via Agent OS
-- Make future intelligence layers safe to build on
+| Area | Reason |
+|------|--------|
+| Marketplace ecosystem | Not needed for product proof |
+| Global capability registry expansion | Architecture sufficient |
+| Advanced distributed runtime | Current runtime is adequate |
+| Advanced multi-agent coordination | Existing coordination works |
+| Product intelligence layer | Requires validated product first |
+| Market intelligence layer | Requires product intelligence first |
+| Startup factory ambitions | Premature before validation |
+| Cognitive systems layer | Theoretical, not practical now |
+
+### Success Metrics
+
+| Metric | Target |
+|--------|--------|
+| Pipeline success rate (no manual intervention) | > 80% |
+| Build OK rate | > 90% |
+| Average retries per initiative | < 2 |
+| Automatic repair success rate | > 70% |
+| Cost per initiative | Tracked & declining |
+| Time from idea to validated repository | < 15 min |
+| Pipeline progress clarity for user | Clear visual feedback |
 
 ### Expected Outcome
 
-AxionOS becomes a stable autonomous engineering kernel — reliable enough that adding learning agents, product intelligence, or market intelligence does not introduce instability.
+AxionOS becomes a focused, reliable, sellable product: the Governed SaaS / MVP Generator.
 
 ---
 
 ## NEXT — Build Learning Agents
 
 **Priority:** High
-**Status:** 📋 Planned
-**Dependency:** Requires stable kernel (NOW)
+**Status:** 📋 Planned (after product validation)
+**Dependency:** Requires validated product proof
 
 ### Purpose
 
-Upgrade agents from static prompt executors into adaptive learning systems. Each execution should improve future executions. This is the transition from Level 3 (Autonomous Engineering System) to Level 4 (Self-Learning Software Factory).
+Upgrade agents from static prompt executors into adaptive learning systems. Each execution improves future executions.
 
-### Relationship to Agent OS
+### Modules
 
-The Agent OS v1.0 architecture provides the structural foundation for this horizon:
+| Module | Description |
+|--------|-------------|
+| Learning Agents | Self-improving prompt strategies based on output quality |
+| Agent Memory Layer | Persistent per-agent memory (foundation: `agent_memory` table) |
+| Prompt Optimization Engine | A/B testing of prompt variations per stage |
+| Error Pattern Recognition | Predictive error detection from historical data |
+| Self-Improving Fix Agents | Repair strategies that evolve based on success rates |
 
-- **Adaptive Routing** — performance feedback loop already designed (signals, adjustments, exploration strategies)
-- **Memory System** — persistent memory with retention policies and embedding search
-- **Observability** — telemetry and cost metrics available for learning
-- **Governance** — trust levels and autonomy limits ready to gate learned behaviors
-- **Coordination** — multi-agent patterns (debate, consensus, iterative refinement) enable quality improvement
+### Agent OS Foundation (Already Designed)
 
-### Agent Intelligence Layer
-
-| Module | Description | Status |
-|--------|-------------|--------|
-| Learning Agents | Self-improving prompt strategies based on output quality and downstream success | 📋 Planned |
-| Agent Memory Layer | Persistent per-agent memory across executions (`agent_memory` table + Memory System) | 🔧 Foundation exists |
-| Prompt Optimization Engine | A/B testing of prompt variations per stage, automatic selection of best performers | 📋 Planned |
-| Error Pattern Recognition | Predictive error detection from historical failure data | 📋 Planned |
-| Self-Improving Fix Agents | Repair strategies that evolve based on fix success rates | 📋 Planned |
-| Architecture Pattern Library | Catalog of successful patterns indexed by domain and complexity | 📋 Planned |
-
-### Agent Memory Foundation
-
-The `agent_memory` table provides the storage substrate for agent learning:
-
-```
-agent_memory {
-  agent_id        — which agent produced this memory
-  task_type       — classification (strategy, pattern, error, decision)
-  strategy_used   — the approach taken
-  outcome         — result and quality assessment
-  confidence      — relevance score (0.0-1.0)
-  scope           — "initiative" (local) or "organization" (cross-project)
-  times_used      — retrieval frequency for prioritization
-}
-```
-
-Agents learn from this memory by querying past strategies, filtering by confidence, and prioritizing approaches that succeeded in similar contexts.
+The Agent OS v1.0 architecture provides the structural foundation:
+- **Adaptive Routing** — performance feedback loop
+- **Memory System** — persistent memory with retention policies
+- **Observability** — telemetry for learning
+- **Governance** — trust levels to gate learned behaviors
 
 ### Expected Outcome
 
@@ -167,123 +144,67 @@ Each execution improves future executions. The system transitions from determini
 
 ---
 
-## LATER — Build Product Intelligence
-
-**Priority:** Medium
-**Status:** 📋 Planned
-**Dependency:** Requires stable kernel (NOW) + learning agents (NEXT)
-
-### Purpose
-
-Extend AxionOS beyond software generation into product intelligence. Generated applications should not stop evolving after deployment. This layer observes real user behavior and implements improvements automatically.
-
-### Product Intelligence Layer
-
-| Module | Description | Status |
-|--------|-------------|--------|
-| Product Analytics Engine | AARRR metrics: acquisition, activation, retention, revenue, referral | 📋 Planned |
-| User Behavior Analyzer | Feature usage heatmaps, drop-off points, session patterns, friction detection | 📋 Planned |
-| Feature Suggestion Engine | AI-driven feature recommendations based on usage gaps and behavior data | 📋 Planned |
-| Growth Optimization Engine | Landing page optimization, onboarding improvement, conversion optimization | 📋 Planned |
-| Automatic UI Optimization | Layout, copy, and conversion optimization driven by behavioral data | 📋 Planned |
-| Product Evolution Engine | Autonomous feature addition/removal based on usage metrics | 📋 Planned |
-
-### Expected Outcome
-
-AxionOS-generated products become self-improving after launch. The software lifecycle extends beyond deployment into continuous autonomous evolution.
-
----
-
-## FUTURE — Build Market Intelligence
+## LATER — Expand Platform Intelligence
 
 **Priority:** Long-term
-**Status:** 📋 Planned
-**Dependency:** Requires stable kernel (NOW) + learning agents (NEXT) + product intelligence (LATER)
+**Status:** 📋 Planned (after learning agents)
 
-### Purpose
+Product Intelligence and Market Intelligence become relevant only after:
+1. The kernel is stable
+2. The product is validated with real users
+3. Learning agents are operational
 
-Transform AxionOS from a software factory into an autonomous venture creation platform. The system discovers market opportunities, validates ideas, builds products, launches them, and manages a portfolio of autonomous ventures.
-
-### Market Intelligence Layer
-
-| Module | Description | Status |
-|--------|-------------|--------|
-| Opportunity Discovery Engine | Market gap identification from trends, communities, and demand signals | 📋 Planned |
-| Market Signal Analyzer | Demand, competition, and trend analysis with viability scoring | 📋 Planned |
-| Product Validation Engine | Synthetic user testing, landing page simulation, demand estimation | 📋 Planned |
-| Revenue Strategy Engine | Pricing models, subscription tiers, freemium options, market positioning | 📋 Planned |
-| Venture Intelligence Layer | End-to-end orchestration: discover, validate, build, launch, measure, evolve | 📋 Planned |
-| Startup Portfolio Manager | Multi-product resource allocation, growth tracking, risk assessment | 📋 Planned |
-
-### Expected Outcome
-
-AxionOS evolves toward an autonomous startup factory — a self-operating venture studio capable of discovering, building, launching, and managing multiple software products.
+These layers remain part of the long-term vision but do not drive implementation decisions now.
 
 ---
 
-## System Maturity Levels
+## Agent OS v1.0 — Reference Architecture (Complete)
 
-| Level | Name | Description | Status |
-|-------|------|-------------|--------|
-| **Level 1** | Code Generator | Generates code snippets from prompts. No architecture awareness. No build validation. | ✅ |
-| **Level 2** | Software Builder | Produces full applications with structure, database, and deployment. Single-project scope. | ✅ |
-| **Level 3** | Autonomous Engineering System | Self-healing builds, architecture simulation, preventive validation, CI/CD integration. Multi-stage deterministic pipeline. | ✅ |
-| **Level 4** | Self-Learning Software Factory | Agents learn from failures, optimize prompts, improve code quality autonomously. Per-execution learning cycles. | 🔄 Transitioning |
-| **Level 5** | Autonomous Startup Factory | Discovers opportunities, builds products, deploys, measures, evolves, and manages a portfolio — fully autonomous. | 🔮 Planned |
+The Agent OS is fully designed with 14 modules across 5 planes. No expansion needed.
 
-### Current Status
+| Plane | Modules | Status |
+|-------|---------|--------|
+| **Core** | Runtime Protocol, Capability Model, Core Types | ✅ Complete |
+| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing | ✅ Complete |
+| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Complete |
+| **Data** | Artifact Store, Memory System, Observability | ✅ Complete |
+| **Ecosystem** | Marketplace & Global Capability Registry | ✅ Complete |
 
-> **AxionOS is currently at Level 3, transitioning to Level 4.**
->
-> The Core Engineering Kernel is implemented and being stabilized (NOW). Agent OS v1.0 architecture is fully designed with 14 modules across 5 architectural planes. The next milestone is Agent Intelligence (NEXT) — where agents become self-improving systems rather than static prompt executors.
+Full specification: [AGENT_OS_ARCHITECTURE_MAP.md](AGENT_OS_ARCHITECTURE_MAP.md)
 
 ---
 
-## System Metrics
+## System Maturity
 
-### Current (Kernel — NOW)
-| Metric | Value |
-|--------|-------|
-| Pipeline stages | 32 |
-| Edge Functions | 50+ |
-| Agent OS modules | 14 (fully designed) |
-| Agent OS architectural planes | 5 |
-| Shared helpers | 15+ reusable modules |
-| Database tables | 30+ with RLS |
-| Brain node types | 11+ |
-| Token reduction | ~60-90% via efficiency layer |
+| Level | Name | Status |
+|-------|------|--------|
+| Level 1 | Code Generator | ✅ |
+| Level 2 | Software Builder | ✅ |
+| Level 3 | Autonomous Engineering System | ✅ Current |
+| Level 4 | Self-Learning Software Factory | 📋 After product validation |
+| Level 5 | Autonomous Startup Factory | 🔮 Long-term |
 
-### Target (Learning Agents — NEXT)
-| Metric | Target |
-|--------|--------|
-| Prompt quality improvement | Measurable per-stage |
-| Fix success rate | >80% first attempt |
-| Retry count reduction | <2 per pipeline |
-| Per-execution learning | Automatic rule generation |
-
-### Target (Product + Market — LATER/FUTURE)
-| Metric | Target |
-|--------|--------|
-| Full SaaS generation | < 5 minutes |
-| Autonomous product evolution | Continuous post-deploy |
-| Portfolio management | Multi-product simultaneous |
-| Market validation | Pre-build viability scoring |
+> **Current position:** Level 3 — Autonomous Engineering System.
+> The immediate goal is not Level 4. The immediate goal is **product validation at Level 3**.
 
 ---
 
-## Long-Term Vision
+## Product Positioning
 
-AxionOS is not a code generation tool. It is an **autonomous software engineering system** designed to reach full operational independence through disciplined, sequential evolution.
+**Present AxionOS as:**
+- An autonomous software engineering platform
+- A governed SaaS / MVP generator
+- A system that transforms ideas into validated repositories
 
-The implementation order matters:
+**Do NOT present as:**
+- A startup factory
+- A global marketplace of agents
+- An abstract agent operating system
 
-1. **Stable Kernel** — without reliability, nothing else works
-2. **Learning Agents** — without learning, the system cannot improve
-3. **Product Intelligence** — without product data, evolution is guesswork
-4. **Market Intelligence** — without product success, venture management is premature
+---
 
-Each horizon depends on the previous one. Skipping ahead creates technical debt that undermines the entire system.
+## Governing Principle
 
-The end state: a self-operating venture studio capable of discovering opportunities, designing architectures, building applications, deploying to production, analyzing user behavior, evolving products automatically, and managing a portfolio of digital ventures at scale.
-
-But that end state is reached through disciplined engineering, not through premature ambition.
+> The architecture is sufficient. The product is not yet proven.
+> Every implementation decision must serve kernel reliability, cost visibility, or product proof.
+> No expansion until the first product is validated with real users.
