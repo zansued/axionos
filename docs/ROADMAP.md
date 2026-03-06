@@ -2,7 +2,9 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **Current Mode**: Kernel Hardening & Product Proof
+> **Current Mode**: Product Proof Closure
+>
+> **Current Maturity**: Level 3 — Autonomous Engineering System
 >
 > Last updated: 2026-03-06
 
@@ -10,12 +12,12 @@
 
 ## Strategic Directive
 
-AxionOS has a strong architectural foundation. The architecture is sufficient.
+AxionOS has the technical architecture required for an Autonomous Engineering System. The architecture is sufficient.
 
 **The focus is now:**
-1. Stabilize the kernel
-2. Prove the product (Governed SaaS / MVP Generator)
-3. Package for real users
+1. Close the product cycle from Idea → Deploy
+2. Simplify the experience for real users
+3. Prove the product works end-to-end
 4. Postpone broader platform ambitions until after validation
 
 **Rule:** No new architecture unless it directly improves reliability, cost, execution speed, product clarity, or sellability.
@@ -27,31 +29,124 @@ AxionOS has a strong architectural foundation. The architecture is sufficient.
 ```
   NOW                    NEXT                   LATER
   ──────────►            ──────────►            ──────────►
-  Harden Kernel          Build Learning         Expand Platform
-  Prove Product          Agents                 Intelligence
-  Package for Users
+  Product Proof          Build Learning         Expand Platform
+  Closure                Agents                 Intelligence
 ```
 
 ---
 
-## NOW — Harden the Kernel & Prove the Product
+## NOW — Product Proof Closure
 
 **Priority:** Highest
 **Status:** 🔧 In Progress
 
-### First Product Proof: Governed SaaS / MVP Generator
+AxionOS already has the technical architecture required for an Autonomous Engineering System (Level 3). The kernel is operational: 32-stage pipeline, Project Brain, AI Efficiency Layer, DAG Execution, Build Repair, Governance, and Observability are all in place.
 
-A user submits an idea → AxionOS produces:
-- Structured discovery (market analysis, feasibility)
-- Architecture (system design, tech stack)
-- PRD (product requirements)
-- Stories & subtasks (backlog with acceptance criteria)
-- Scaffold / initial code (business logic, API, UI)
-- Runtime validation (tsc + vite)
-- Repository output (Git with atomic commits)
-- Pipeline traceability (full audit trail)
+**The product cycle must now be completed and simplified for real users.** This means closing the loop from Idea → Deploy with clear contracts, structured inputs, and measurable outcomes.
 
-### What to Keep Active
+---
+
+### 1. Initiative Creation AI-First
+
+**Goal:** Transform idea intake into an AI-assisted flow that produces a structured initiative brief before entering the pipeline.
+
+**Purpose:** Improve pipeline success rate by providing structured inputs instead of raw text.
+
+**Capabilities:**
+
+- AI analyzes raw idea text
+- Generates structured initiative blueprint (market opportunity, feasibility, features, architecture hints)
+- Allows user review and correction
+- Produces canonical `initiative_brief` object
+- Starts pipeline using the structured brief
+
+**Expected Output: `initiative_brief`**
+
+| Field | Description |
+|-------|-------------|
+| `name` | Initiative name |
+| `description` | Short description |
+| `problem` | Problem statement |
+| `target_users` | Target audience |
+| `product_type` | SaaS, Marketplace, API, etc. |
+| `core_features` | List of key features |
+| `integrations` | Required integrations (auth, payments, etc.) |
+| `tech_preferences` | Optional technical preferences |
+| `deployment_target` | Vercel, Netlify, etc. |
+| `complexity_estimate` | AI-estimated complexity |
+| `generation_depth` | discovery / prd_architecture / prd_arch_stories / full_pipeline |
+| `expected_outputs` | What the pipeline should produce |
+
+> **This becomes the official input contract for the pipeline.**
+
+**Status:** 🔧 In Progress (wizard implemented, blueprint generation operational)
+
+---
+
+### 2. Deploy Contract Completion
+
+**Goal:** Close the loop from Idea → Deploy with clear states and metadata.
+
+**Enhancements:**
+
+- Define deploy states across the full lifecycle
+- Persist deploy metadata for traceability
+- Track deploy success rate
+- Integrate with Vercel or equivalent deployment targets
+
+**Deploy States:**
+
+| State | Description |
+|-------|-------------|
+| `draft` | Initiative created, not yet started |
+| `discovering` | Discovery phase active |
+| `architecting` | Architecture generation in progress |
+| `engineering` | Code generation and squad execution |
+| `validating` | Build validation (tsc + vite) |
+| `ready_to_publish` | Validation passed, awaiting publish |
+| `published` | Repository created on GitHub |
+| `deploying` | Deployment to target in progress |
+| `deployed` | Successfully deployed and accessible |
+| `deploy_failed` | Deployment failed |
+
+**Deploy Metadata:**
+
+| Field | Description |
+|-------|-------------|
+| `repo_url` | GitHub repository URL |
+| `commit_hash` | Latest commit hash |
+| `build_status` | tsc + vite build result |
+| `deploy_url` | Live deployment URL |
+| `health_status` | Post-deploy health check |
+
+**Status:** 📋 Planned
+
+---
+
+### 3. Product-Level Observability
+
+**Goal:** Expose product success metrics, not only agent telemetry.
+
+**New Metrics:**
+
+| Metric | Description | Target |
+|--------|-------------|--------|
+| `pipeline_success_rate` | Initiatives completing without manual intervention | > 80% |
+| `build_success_rate` | First-attempt build success | > 90% |
+| `deploy_success_rate` | Successful deployments | > 85% |
+| `average_retries_per_initiative` | Retry count per initiative | < 2 |
+| `automatic_repair_success_rate` | Self-healing success | > 70% |
+| `cost_per_initiative` | Total AI cost per initiative | Tracked & declining |
+| `time_idea_to_repo` | Time from idea to repository | < 15 min |
+| `time_idea_to_deploy` | Time from idea to live deployment | < 20 min |
+
+**Dashboard Requirement:** Initiative Lifecycle Dashboard — a single view showing the full journey of each initiative from idea to deployment, with cost, duration, and success metrics.
+
+**Status:** 📋 Planned
+
+---
+
+### Kernel — What Remains Active
 
 | Module | Status |
 |--------|--------|
@@ -66,19 +161,6 @@ A user submits an idea → AxionOS produces:
 | Observability + Cost Tracking | ✅ Operational |
 | Stage & Agent IO Contracts | ✅ Implemented |
 
-### What to Improve Now
-
-| Task | Purpose | Status |
-|------|---------|--------|
-| Pipeline completion reliability | Reduce failures across stages | 🔧 In Progress |
-| Build success rate | Improve first-attempt success | 🔧 In Progress |
-| Typed error taxonomy | Standardize failure modes across 32 stages | 🔧 In Progress |
-| Pipeline visualization | Simplify control-center UI | 🔧 In Progress |
-| Onboarding flow | Guide users to first initiative | 📋 Planned |
-| Initiative creation UX | Simplify idea-to-pipeline flow | 📋 Planned |
-| Export / deploy actions | Clear path to generated repository | 📋 Planned |
-| Billing readiness | Usage tracking + payment | 📋 Planned |
-
 ### What to Freeze
 
 | Area | Reason |
@@ -91,22 +173,6 @@ A user submits an idea → AxionOS produces:
 | Market intelligence layer | Requires product intelligence first |
 | Startup factory ambitions | Premature before validation |
 | Cognitive systems layer | Theoretical, not practical now |
-
-### Success Metrics
-
-| Metric | Target |
-|--------|--------|
-| Pipeline success rate (no manual intervention) | > 80% |
-| Build OK rate | > 90% |
-| Average retries per initiative | < 2 |
-| Automatic repair success rate | > 70% |
-| Cost per initiative | Tracked & declining |
-| Time from idea to validated repository | < 15 min |
-| Pipeline progress clarity for user | Clear visual feedback |
-
-### Expected Outcome
-
-AxionOS becomes a focused, reliable, sellable product: the Governed SaaS / MVP Generator.
 
 ---
 
@@ -185,7 +251,8 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 | Level 5 | Autonomous Startup Factory | 🔮 Long-term |
 
 > **Current position:** Level 3 — Autonomous Engineering System.
-> The immediate goal is not Level 4. The immediate goal is **product validation at Level 3**.
+> **Current focus:** Product Proof Closure.
+> **Next capability:** AI-First Initiative Creation.
 
 ---
 
@@ -206,5 +273,5 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 ## Governing Principle
 
 > The architecture is sufficient. The product is not yet proven.
-> Every implementation decision must serve kernel reliability, cost visibility, or product proof.
+> Every implementation decision must serve product proof closure: structured inputs, reliable execution, and successful deployment.
 > No expansion until the first product is validated with real users.
