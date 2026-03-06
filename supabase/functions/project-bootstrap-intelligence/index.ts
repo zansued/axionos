@@ -506,8 +506,10 @@ serve(async (req) => {
       })
       .join("\n");
 
-    const simResult = await callAI({
-      prompt: `Analyze this ${stack} project bootstrap for build viability.
+    const simResult = await callAI(
+      apiKey,
+      "You are a build verification expert. Analyze project bootstraps for build readiness. Return only valid JSON.",
+      `Analyze this ${stack} project bootstrap for build viability.
 
 ## Required Files
 ${fileList}
@@ -532,10 +534,8 @@ Predict if the build commands would succeed. Return JSON:
   ],
   "remaining_risks": ["string"]
 }`,
-      systemPrompt: "You are a build verification expert. Analyze project bootstraps for build readiness. Return only valid JSON.",
-      model: "google/gemini-2.5-flash",
-      apiKey,
-    });
+      true,
+    );
 
     let buildPrediction = {
       would_build: true,
@@ -544,7 +544,7 @@ Predict if the build commands would succeed. Return JSON:
       remaining_risks: [] as string[],
     };
     try {
-      const jsonMatch = simResult.text.match(/\{[\s\S]*\}/);
+      const jsonMatch = simResult.content.match(/\{[\s\S]*\}/);
       if (jsonMatch) buildPrediction = JSON.parse(jsonMatch[0]);
     } catch { /* use default */ }
 
@@ -624,7 +624,7 @@ Predict if the build commands would succeed. Return JSON:
       issues,
       files_injected: injectedFiles,
       build_prediction: buildPrediction,
-    }, { costUsd: simResult.cost || 0, durationMs: 0 });
+    }, { costUsd: simResult.costUsd || 0, durationMs: simResult.durationMs || 0 });
 
     return jsonResponse({
       success: true,
