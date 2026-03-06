@@ -2,20 +2,19 @@
 
 > Last updated: 2026-03-06
 > Mode: **Product Proof Closure**
+> Execution: **Sprint-based**
 
 ---
 
 ## Strategic Directive
 
-**AxionOS is no longer in architecture expansion mode.**
-**AxionOS is now in product proof closure mode.**
+**AxionOS is not expanding architecture. AxionOS is closing the product-proof loop.**
 
 The architecture is sufficient. The focus is now:
 1. Close the product cycle from Idea → Deploy
 2. Simplify the experience for real users
 3. Prove the product works end-to-end
 4. Package that product for real users
-5. Postpone broader platform ambitions until after validation
 
 ---
 
@@ -27,185 +26,163 @@ A user submits an idea → AxionOS produces:
 
 | Output | Description |
 |--------|-------------|
-| Structured Discovery | Market analysis, feasibility, refined idea |
+| Structured Brief | AI-analyzed initiative with structured contract |
+| Simulation Report | Feasibility, cost, risk analysis before execution |
+| Discovery | Market analysis, feasibility, refined idea |
 | Architecture | System design, component structure, tech stack |
 | PRD | Product requirements document |
 | Stories & Subtasks | Backlog with acceptance criteria |
-| Scaffold / Initial Code | Business logic, API, UI generation |
-| Runtime Validation | tsc + vite build verification |
-| Repository Output | Git repository with atomic commits |
-| Pipeline Traceability | Full audit trail of every decision |
-
-**This is the only product to validate right now.**
-
----
-
-## Execution Priorities
-
-### P0 — Initiative Creation AI-First
-
-**Goal:** Transform idea intake into an AI-assisted flow that produces a structured initiative brief before entering the pipeline.
-
-**Current stage flow:**
-
-```
-Idea (raw text) → Discovery → Architecture → ...
-```
-
-**New flow:**
-
-```
-User Idea (natural language)
-       ↓
-AI Idea Analysis
-       ↓
-AI Blueprint Generation
-       ↓
-User Review & Edit
-       ↓
-initiative_brief created
-       ↓
-Discovery Pipeline starts (with structured input)
-```
-
-**Status:** 🔧 In Progress (wizard implemented, blueprint generation operational)
+| Code | Business logic, API, UI generation |
+| Validation | tsc + vite build verification |
+| Repository | Git repository with atomic commits |
+| Deploy | Live deployment with health check |
+| Metrics | Pipeline success, cost, time tracking |
 
 ---
 
-### P1 — Harden the Kernel
+## Current Execution Block
 
-| Task | Status |
-|------|--------|
-| Pipeline completion reliability | 🔧 In Progress |
-| Build success rate improvement | 🔧 In Progress |
-| Typed error taxonomy across all stages | 🔧 In Progress |
-| Per-stage observability | ✅ Implemented |
-| Per-model cost attribution | ✅ Implemented |
-| Output contract enforcement | ✅ Implemented |
-| Initiative traceability | ✅ Implemented |
-| Stage contract system | ✅ Implemented |
-| Agent IO contracts | ✅ Implemented |
-| AI Efficiency Layer (compressor + cache + router) | ✅ Implemented |
+### Initiative-to-Deploy Product Proof
 
-### P2 — Deploy Contract Completion
+The immediate goal:
 
-| Task | Status |
-|------|--------|
-| Define deploy lifecycle states | 📋 Planned |
-| Persist deploy metadata (repo_url, commit_hash, deploy_url) | 📋 Planned |
-| Track deploy success rate | 📋 Planned |
-| Vercel deployment integration | 📋 Planned |
-| Post-deploy health check | 📋 Planned |
+```
+idea → structured brief → simulation → pipeline → validated repo → deploy → metrics
+```
 
-### P3 — Product-Level Observability
-
-| Task | Status |
-|------|--------|
-| Initiative Lifecycle Dashboard | 📋 Planned |
-| pipeline_success_rate metric | 📋 Planned |
-| deploy_success_rate metric | 📋 Planned |
-| time_idea_to_deploy metric | 📋 Planned |
-| cost_per_initiative tracking | ✅ Implemented |
-
-### P4 — Package for Real Usage
-
-| Task | Status |
-|------|--------|
-| Onboarding flow improvement | 📋 Planned |
-| Execution transparency (live pipeline view) | 🔧 In Progress |
-| Export / deploy actions | 📋 Planned |
-| Billing readiness | 📋 Planned |
-| Workspace consistency | 📋 Planned |
-
-### P5 — Delay Broader Platform Ambition
-
-These remain valid but are **frozen** until product validation:
-
-| Area | Status |
-|------|--------|
-| Marketplace ecosystem | ❄️ Frozen |
-| Global capability registry expansion | ❄️ Frozen |
-| Advanced distributed runtime | ❄️ Frozen |
-| Advanced multi-agent coordination | ❄️ Frozen |
-| Product intelligence layer | ❄️ Frozen |
-| Market intelligence layer | ❄️ Frozen |
-| Startup factory ambitions | ❄️ Frozen |
-| Cognitive systems layer | ❄️ Frozen |
-
-**Rule:** No new architecture unless it directly improves reliability, cost, execution speed, product clarity, or sellability.
+Organized into four sequential sprints.
 
 ---
 
-## Initiative Creation AI-First — Implementation Plan
+## Sprint 1 — Initiative Brief Formalization
 
-This module improves the **Idea stage of the pipeline**, transforming raw idea text into a structured `initiative_brief` that serves as the official input contract for all downstream stages.
+**Objective:** Transform raw user idea into the canonical structured input of the pipeline.
 
-### Component Architecture
+**Key Deliverables:**
+- `initiative_brief` Zod schema (`_shared/contracts/initiative-brief.schema.ts`)
+- Initiative intake engine (`initiative-intake-engine/`)
+- Initiative blueprint prompt (`_shared/prompts/initiative-blueprint.prompt.ts`)
+- Database fields: `idea_raw`, `blueprint`, `initiative_brief`, `idea_analysis`
+- Frontend flow: idea input → AI blueprint preview → user approval → initiative creation
 
-#### Frontend
+**Affected Layers:**
+- Frontend (wizard components)
+- Intake service (edge function)
+- Pipeline Stage 01
+- Database (initiatives table)
 
-**New UI Flow:** Quick Start → Describe your idea → Review Blueprint → Confirm & Launch
+**Dependencies:**
+- Existing initiative creation flow
+- Current Stage 01 contract
 
-| Component | Purpose |
-|-----------|---------|
-| `QuickStartView` | Idea input with optional reference URL and context |
-| `BlueprintReview` | AI-generated blueprint review and editing |
-| `RefinementView` | Final adjustments before pipeline launch |
-| `InitiativeWizard` | Orchestrator dialog managing the full flow |
+**Acceptance Criteria:**
+- [x] User can enter a raw idea
+- [x] AI generates blueprint
+- [x] User can edit and approve blueprint
+- [x] `initiative_brief` is validated and stored
+- [ ] Pipeline starts using `initiative_brief` as canonical input
 
 **Status:** ✅ Implemented
 
-#### Backend
+---
 
-**Service:** `generate-initiative-blueprint` (Edge Function)
+## Sprint 2 — Initiative Simulation Engine
 
-**Responsibilities:**
+**Objective:** Simulate execution feasibility before entering the full pipeline.
 
-- Parse raw idea input
-- Run AI analysis (market opportunity, feasibility, complexity)
-- Generate structured blueprint
-- Build `initiative_brief` object
-- Return canonical brief for user review
+**Key Deliverables:**
+- Simulation report schema (`_shared/contracts/initiative-simulation.schema.ts`)
+- Simulation prompt (`_shared/prompts/initiative-simulation.prompt.ts`)
+- Simulation engine service (`initiative-simulation-engine/`)
+- Recommendation states: `go`, `refine`, `block`
+- Risk flags with severity levels
+- Cost/time/token estimates
+- Recommended generation depth
+
+**Affected Layers:**
+- Simulation service (edge function)
+- Frontend (SimulationView in wizard)
+- Initiative persistence (simulation_report, risk_flags, estimates)
+- Pipeline gate before Discovery
+
+**Dependencies:**
+- `initiative_brief` must exist (Sprint 1)
+
+**Acceptance Criteria:**
+- [x] Every `initiative_brief` can generate a simulation report
+- [x] Simulation report is validated
+- [x] User sees recommendation and risks
+- [x] Pipeline can pause for refinement when needed
 
 **Status:** ✅ Implemented
 
-#### Database
+---
 
-Fields on `initiatives` table supporting the flow:
+## Sprint 3 — Deploy Contract Completion
 
-| Field | Type | Purpose |
-|-------|------|---------|
-| `idea_raw` | TEXT | Original idea text |
-| `discovery_payload` | JSONB | AI analysis results |
-| `initial_estimate` | JSONB | Complexity and scope estimate |
-| `complexity` | TEXT | AI-estimated complexity |
+**Objective:** Standardize publish-to-deploy flow and make deployment a first-class product output.
 
-> Note: The `initiative_brief` is constructed client-side from these fields and the wizard state, then passed as the pipeline input.
+**Key Deliverables:**
+- Deploy state machine with deterministic transitions
+- Deploy contract documentation
+- Initiative deploy metadata fields (`repo_url`, `commit_hash`, `deploy_url`, `health_status`)
+- Vercel-first deployment integration contract
+- Deploy status persistence
+- Explicit states: `ready_to_publish` → `deploying` → `deployed` / `deploy_failed`
 
-**Status:** ✅ Schema exists
+**Affected Layers:**
+- Publish pipeline
+- Deploy integration
+- Initiative lifecycle state
+- UI status rendering
 
-#### Pipeline Integration
+**Dependencies:**
+- Validated repository output from pipeline
 
-**Stage 01 Contract Change:**
+**Acceptance Criteria:**
+- [ ] Initiative can move from `published` to `deployed`
+- [ ] Deploy URL is stored and shown
+- [ ] Failed deploys are visible and traceable
+- [ ] State transitions are deterministic
 
-| Before | After |
-|--------|-------|
-| Idea → raw text | Idea → `initiative_brief` (structured object) |
+**Status:** 📋 Planned
 
-The pipeline now receives structured input with problem statement, target audience, features, integrations, and generation depth — instead of raw idea text.
+---
 
-**Status:** 🔧 In Progress
+## Sprint 4 — Product-Level Observability
 
-### Acceptance Criteria
+**Objective:** Measure product success, not only agent/runtime activity.
 
-The feature is complete when:
+**Key Deliverables:**
+- Initiative lifecycle dashboard spec
+- Metrics aggregation:
+  - `pipeline_success_rate`
+  - `build_success_rate`
+  - `deploy_success_rate`
+  - `average_retries_per_initiative`
+  - `automatic_repair_success_rate`
+  - `cost_per_initiative`
+  - `time_idea_to_repo`
+  - `time_idea_to_deploy`
+- Dashboard cards and initiative-level metrics
 
-- [x] A user can describe an idea in natural language
-- [x] The system generates a structured initiative blueprint
-- [x] The user can edit and approve it
-- [x] The system generates `initiative_brief`
-- [ ] The pipeline starts using the structured brief as its canonical input
-- [ ] Pipeline success rate improves with structured inputs vs raw text
+**Affected Layers:**
+- Observability
+- Initiative dashboard
+- Cost tracking
+- Reporting layer
+
+**Dependencies:**
+- Deploy contract states (Sprint 3)
+- Initiative lifecycle data
+- Build/repair events
+
+**Acceptance Criteria:**
+- [ ] Metrics exist at initiative level
+- [ ] Dashboard reflects product outcomes
+- [ ] Users can understand whether an initiative succeeded, how long it took, and how much it cost
+
+**Status:** 📋 Planned
 
 ---
 
@@ -219,25 +196,8 @@ The feature is complete when:
 | Average retries per initiative | < 2 |
 | Automatic repair success rate | > 70% |
 | Cost per initiative | Tracked & declining |
-| Cost per useful output | Tracked & declining |
 | Time from idea to validated repository | < 15 min |
 | Time from idea to deployment | < 20 min |
-| Pipeline progress clarity for user | Clear visual feedback |
-
-> Pipeline contracts: [docs/PIPELINE_CONTRACTS.md](../docs/PIPELINE_CONTRACTS.md) | Agents: [docs/AGENTS.md](../docs/AGENTS.md) | Roadmap: [docs/ROADMAP.md](../docs/ROADMAP.md)
-
----
-
-## What the UI Should Emphasize
-
-1. **Initiative creation** — AI-first, guided, structured flow
-2. **Pipeline progress** — real-time stage visualization
-3. **Cost visibility** — per-initiative, per-stage costs
-4. **Output access** — clear path to generated repository
-5. **Error transparency** — what failed, why, what was repaired
-6. **Deploy status** — from validation to live deployment
-
-**De-emphasize:** Agent OS internals, marketplace, portfolio management, venture intelligence.
 
 ---
 
@@ -270,8 +230,6 @@ The Agent OS is fully designed. No expansion needed.
 | **Data** | Artifact Store, Memory System, Observability | ✅ Designed |
 | **Ecosystem** | Marketplace & Global Capability Registry | ✅ Designed |
 
-14 modules | 5 planes | Full TypeScript contracts | **Architecture complete — implementation follows product validation.**
-
 ---
 
 ## Technology Stack
@@ -301,14 +259,16 @@ The Agent OS is fully designed. No expansion needed.
 
 ---
 
-## Short-Term Roadmap
+## What the UI Should Emphasize
 
-```
-  NOW                         NEXT (after validation)
-  ────────────────────►       ────────────────────►
-  Product Proof Closure       Build Learning Agents
-  AI-First Initiative         Improve Agent Intelligence
-  Deploy Contract             Expand to Product Intelligence
-```
+1. **Initiative creation** — AI-first, guided, structured flow
+2. **Simulation results** — feasibility, cost, risk before execution
+3. **Pipeline progress** — real-time stage visualization
+4. **Cost visibility** — per-initiative, per-stage costs
+5. **Output access** — clear path to generated repository
+6. **Error transparency** — what failed, why, what was repaired
+7. **Deploy status** — from validation to live deployment
 
-Everything else waits.
+**De-emphasize:** Agent OS internals, marketplace, portfolio management, venture intelligence.
+
+> Pipeline contracts: [docs/PIPELINE_CONTRACTS.md](../docs/PIPELINE_CONTRACTS.md) | Agents: [docs/AGENTS.md](../docs/AGENTS.md) | Roadmap: [docs/ROADMAP.md](../docs/ROADMAP.md)
