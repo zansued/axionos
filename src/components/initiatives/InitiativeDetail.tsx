@@ -130,7 +130,10 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
 
   // Find publish job with repo URL
   const publishJob = jobs.find((j: any) => j.stage === "publish" && j.status === "success");
-  const repoUrl = publishJob?.outputs?.repo_url;
+  const repoUrl = initiative.repo_url || publishJob?.outputs?.repo_url;
+  const deployUrl = initiative.deploy_url;
+  const deployStatus = initiative.deploy_status;
+  const healthStatus = initiative.health_status;
 
   return (
     <div className="space-y-4">
