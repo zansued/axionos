@@ -16,30 +16,26 @@ serve(async (req) => {
   try {
     const ep = initiative.execution_progress || {};
 
-    // Fetch all knowledge base entries for org-wide learning
-    const { data: knowledge } = await ctx.supabase
+    const { data: knowledge } = await ctx.serviceClient
       .from("org_knowledge_base")
       .select("title, category, tags, content")
       .eq("organization_id", ctx.organizationId)
       .order("created_at", { ascending: false })
       .limit(30);
 
-    // Fetch all prevention rules across org
-    const { data: rules } = await ctx.supabase
+    const { data: rules } = await ctx.serviceClient
       .from("project_prevention_rules")
       .select("error_pattern, prevention_rule, confidence_score, times_triggered, scope")
       .eq("organization_id", ctx.organizationId)
       .order("times_triggered", { ascending: false })
       .limit(30);
 
-    // Fetch completed jobs across org for performance meta-analysis
-    const { data: jobs } = await ctx.supabase
+    const { data: jobs } = await ctx.serviceClient
       .from("initiative_jobs")
       .select("stage, status, duration_ms, cost_usd, model")
       .eq("status", "completed")
       .limit(300);
 
-    // Aggregate stage performance
     const stageStats: Record<string, { count: number; totalMs: number; totalCost: number }> = {};
     (jobs || []).forEach((j: any) => {
       if (!stageStats[j.stage]) stageStats[j.stage] = { count: 0, totalMs: 0, totalCost: 0 };
@@ -48,8 +44,7 @@ serve(async (req) => {
       stageStats[j.stage].totalCost += j.cost_usd || 0;
     });
 
-    // Fetch errors across org
-    const { data: errors } = await ctx.supabase
+    const { data: errors } = await ctx.serviceClient
       .from("project_errors")
       .select("error_type, fixed")
       .eq("organization_id", ctx.organizationId)
@@ -129,7 +124,6 @@ Return ONLY valid JSON.`;
       };
     }
 
-    // Persist new prevention rules if generated
     if (evolution.new_prevention_rules?.length) {
       try {
         const newRules = evolution.new_prevention_rules.slice(0, 5).map((r: any) => ({
@@ -140,11 +134,10 @@ Return ONLY valid JSON.`;
           confidence_score: r.confidence || 0.5,
           scope: r.scope || "global",
         }));
-        await ctx.supabase.from("project_prevention_rules").insert(newRules);
+        await ctx.serviceClient.from("project_prevention_rules").insert(newRules);
       } catch (e) { console.warn("Prevention rules insert failed:", e.message); }
     }
 
-    // Persist meta insights to knowledge base
     if (evolution.meta_insights?.length) {
       try {
         const entries = evolution.meta_insights.filter((i: any) => i.impact === "high").slice(0, 3).map((i: any) => ({
@@ -155,7 +148,7 @@ Return ONLY valid JSON.`;
           content: `${i.insight}\n\nCategory: ${i.category}\nImpact: ${i.impact}`,
           tags: ["meta_learning", "system_evolution", i.category],
         }));
-        if (entries.length) await ctx.supabase.from("org_knowledge_base").insert(entries);
+        if (entries.length) await ctx.serviceClient.from("org_knowledge_base").insert(entries);
       } catch (e) { console.warn("Knowledge base insert failed:", e.message); }
     }
 
@@ -167,7 +160,7 @@ Return ONLY valid JSON.`;
     });
 
     try {
-      await ctx.supabase.from("project_brain_nodes").insert({
+      await ctx.serviceClient.from("project_brain_nodes").insert({
         initiative_id: initiative.id,
         organization_id: ctx.organizationId,
         name: "system_evolution_report",

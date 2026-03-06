@@ -95,7 +95,7 @@ Return ONLY valid JSON, no markdown fences.`;
     });
 
     try {
-      await ctx.supabase.from("project_brain_nodes").insert({
+      await ctx.serviceClient.from("project_brain_nodes").insert({
         initiative_id: initiative.id,
         organization_id: ctx.organizationId,
         name: "product_validation_report",

@@ -16,25 +16,21 @@ serve(async (req) => {
   await pipelineLog(ctx, "observability_start", "Starting Observability Engine...");
 
   try {
-    // Gather all existing pipeline data for analysis
     const dp = initiative.discovery_payload || {};
     const ep = initiative.execution_progress || {};
 
-    // Fetch jobs for this initiative to compute metrics
-    const { data: jobs } = await ctx.supabase
+    const { data: jobs } = await ctx.serviceClient
       .from("initiative_jobs")
       .select("stage, status, duration_ms, cost_usd, created_at, completed_at")
       .eq("initiative_id", initiative.id)
       .order("created_at", { ascending: true });
 
-    // Fetch agent outputs for quality metrics
-    const { data: outputs } = await ctx.supabase
+    const { data: outputs } = await ctx.serviceClient
       .from("agent_outputs")
       .select("type, status, tokens_used, cost_estimate, created_at")
       .eq("initiative_id", initiative.id);
 
-    // Fetch errors for reliability metrics
-    const { data: errors } = await ctx.supabase
+    const { data: errors } = await ctx.serviceClient
       .from("project_errors")
       .select("error_type, fixed, detected_at, fixed_at")
       .eq("initiative_id", initiative.id);
@@ -121,7 +117,7 @@ Return ONLY valid JSON.`;
     });
 
     try {
-      await ctx.supabase.from("project_brain_nodes").insert({
+      await ctx.serviceClient.from("project_brain_nodes").insert({
         initiative_id: initiative.id,
         organization_id: ctx.organizationId,
         name: "observability_report",
