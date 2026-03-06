@@ -63,10 +63,11 @@ Analyze simulated user behavior and return JSON:
 
 Return ONLY valid JSON.`;
 
-    const aiResponse = await callAI(apiKey, prompt, "user-behavior-analyzer");
+    const aiResult = await callAI(apiKey, prompt, "user-behavior-analyzer");
+    const rawText = typeof aiResult === "string" ? aiResult : aiResult.content || "";
     let analysis: any;
     try {
-      const cleaned = aiResponse.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
+      const cleaned = rawText.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
       analysis = JSON.parse(cleaned);
     } catch {
       analysis = {
