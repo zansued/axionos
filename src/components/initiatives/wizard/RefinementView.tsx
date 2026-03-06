@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { INTEGRATION_OPTIONS, GENERATION_DEPTHS } from "./types";
+import { INTEGRATION_OPTIONS, GENERATION_INTENTS } from "./types";
 import type { InitiativeBrief } from "./types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
