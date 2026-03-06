@@ -28,7 +28,7 @@ import { ArchitecturalDriftStatus } from "./ArchitecturalDriftStatus";
 import { RuntimeValidationStatus } from "./RuntimeValidationStatus";
 import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
-import PipelineTimeline from "./PipelineTimeline";
+import PipelineGraphView from "./PipelineGraphView";
 
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
