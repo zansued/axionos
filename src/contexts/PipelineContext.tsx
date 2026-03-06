@@ -361,6 +361,24 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           }, 1500);
           return;
         }
+
+        // Auto-trigger preventive validation after architecture simulation
+        if (stage === "architecture_simulation" && result.success) {
+          toast({ title: "🛡️ Iniciando Validação Preventiva da Arquitetura..." });
+          setTimeout(() => {
+            runStage(initiativeId, "preventive_validation");
+          }, 1500);
+          return;
+        }
+
+        // Auto-trigger bootstrap intelligence after preventive validation
+        if (stage === "preventive_validation" && result.success) {
+          toast({ title: "🧠 Iniciando Bootstrap Intelligence..." });
+          setTimeout(() => {
+            runStage(initiativeId, "bootstrap_intelligence");
+          }, 1500);
+          return;
+        }
       } catch (e: any) {
         toast({ variant: "destructive", title: "Erro", description: e.message });
         addEvent(initiativeId, stage, `❌ Erro em ${stage}: ${e.message?.slice(0, 80)}`);
