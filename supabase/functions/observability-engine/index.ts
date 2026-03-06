@@ -146,7 +146,11 @@ Return ONLY valid JSON.`;
       success_rate: report.pipeline_performance?.success_rate || 0,
     };
 
-    await completeJob(ctx, jobId, outputs_result);
+    await completeJob(ctx, jobId, outputs_result, {
+      model: aiResult.model,
+      costUsd: aiResult.costUsd,
+      durationMs: aiResult.durationMs,
+    });
     return jsonResponse(outputs_result);
   } catch (e: any) {
     console.error("Observability Engine error:", e);
