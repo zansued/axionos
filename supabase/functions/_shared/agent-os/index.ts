@@ -206,3 +206,49 @@ export {
   DEFAULT_POLICY_ENGINE_CONFIG,
   DEFAULT_POLICY_RULES,
 } from "./policy-engine.ts";
+
+// Artifact Store (v0.1)
+export type {
+  // Record
+  ArtifactRecord,
+  ArtifactStorageMeta,
+  // Versioning
+  ArtifactVersionInfo,
+  VersionCreator,
+  ArtifactVersion,
+  // Lineage
+  ArtifactLineageRecord,
+  ArtifactRelationType,
+  ArtifactLineageGraph,
+  // Reference
+  ArtifactReference,
+  // Hashing
+  ContentHashSpec,
+  ArtifactHashEntry,
+  DuplicateCheckResult,
+  // Write
+  ArtifactWriteRequest,
+  ArtifactWriteResult,
+  // Retrieval
+  ArtifactRetrievalRequest,
+  ArtifactRetrievalResult,
+  // Query
+  ArtifactQuery,
+  ArtifactSortKey,
+  ArtifactQueryResult,
+  // History
+  ArtifactHistory,
+  // Run Reconstruction
+  RunArtifactManifest,
+  // Config
+  ArtifactStoreConfig,
+  // Events
+  ArtifactStoreEventType,
+  // Interface
+  IArtifactStore,
+} from "./artifact-store.ts";
+
+export {
+  CONTENT_HASH_SPEC,
+  DEFAULT_ARTIFACT_STORE_CONFIG,
+} from "./artifact-store.ts";
