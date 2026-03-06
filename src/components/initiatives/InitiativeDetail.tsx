@@ -747,6 +747,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
         </Card>
       )}
 
+      {/* Product Metrics */}
+      <InitiativeObservabilityCard initiativeId={initiative.id} />
+
       {/* Project Brain */}
       <Card className="border-border/50">
         <CardHeader className="pb-2">
