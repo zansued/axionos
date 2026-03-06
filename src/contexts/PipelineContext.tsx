@@ -318,8 +318,17 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
         queryClient.invalidateQueries({ queryKey: ["initiative-jobs"] });
         queryClient.invalidateQueries({ queryKey: ["squads"] });
 
-        // Auto-trigger validation after execution
-        if (stage === "execution" && result.success) {
+        // Auto-continue execution when batch is incomplete (time budget pause)
+        if (stage === "execution" && result.success && result.batch_incomplete) {
+          toast({ title: `⏳ Execução em lotes: ${result.executed || 0} prontos, ${result.remaining_to_execute || 0} restantes. Continuando automaticamente...` });
+          setTimeout(() => {
+            runStage(initiativeId, "execution");
+          }, 2000);
+          return;
+        }
+
+        // Auto-trigger validation after execution completes fully
+        if (stage === "execution" && result.success && !result.batch_incomplete) {
           toast({ title: "🔍 Iniciando validação automática dos artefatos..." });
           setTimeout(() => {
             runStage(initiativeId, "validation");
@@ -381,6 +390,18 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           return;
         }
       } catch (e: any) {
+        const isTimeout = e.message?.includes("tempo limite") || e.message?.includes("Failed to send") || e.message?.includes("FunctionsFetchError") || e.message?.includes("AbortError");
+        
+        // Auto-retry execution on timeout — the orchestrator saves progress so retrying continues from where it stopped
+        if (stage === "execution" && isTimeout) {
+          toast({ title: "⏳ Tempo limite atingido. Continuando execução automaticamente em lotes menores..." });
+          addEvent(initiativeId, stage, `⏳ Timeout — auto-retrying execução em lotes`);
+          setTimeout(() => {
+            runStage(initiativeId, "execution");
+          }, 3000);
+          return; // Don't clear running state
+        }
+
         toast({ variant: "destructive", title: "Erro", description: e.message });
         addEvent(initiativeId, stage, `❌ Erro em ${stage}: ${e.message?.slice(0, 80)}`);
       } finally {
