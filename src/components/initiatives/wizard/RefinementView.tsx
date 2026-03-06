@@ -6,7 +6,7 @@ import { ArrowLeft, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { INTEGRATION_OPTIONS, GENERATION_INTENTS } from "./types";
 import type { InitiativeBrief } from "./types";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 
 const DEPLOY_TARGETS = [
   { value: "vercel", label: "Vercel", icon: "▲", available: true },
