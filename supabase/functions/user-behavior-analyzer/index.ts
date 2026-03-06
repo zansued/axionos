@@ -63,10 +63,11 @@ Analyze simulated user behavior and return JSON:
 
 Return ONLY valid JSON.`;
 
-    const aiResponse = await callAI(apiKey, prompt, "user-behavior-analyzer");
+    const aiResult = await callAI(apiKey, prompt, "user-behavior-analyzer");
+    const rawText = typeof aiResult === "string" ? aiResult : aiResult.content || "";
     let analysis: any;
     try {
-      const cleaned = aiResponse.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
+      const cleaned = rawText.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
       analysis = JSON.parse(cleaned);
     } catch {
       analysis = {
@@ -111,7 +112,11 @@ Return ONLY valid JSON.`;
       journeys_count: analysis.user_journeys?.length || 0,
     };
 
-    await completeJob(ctx, jobId, outputs);
+    await completeJob(ctx, jobId, outputs, {
+      model: typeof aiResult === "string" ? "unknown" : aiResult.model,
+      costUsd: typeof aiResult === "string" ? 0 : aiResult.costUsd,
+      durationMs: typeof aiResult === "string" ? 0 : aiResult.durationMs,
+    });
     return jsonResponse(outputs);
   } catch (e: any) {
     console.error("User Behavior Analyzer error:", e);
