@@ -28,6 +28,7 @@ import { ArchitecturalDriftStatus } from "./ArchitecturalDriftStatus";
 import { RuntimeValidationStatus } from "./RuntimeValidationStatus";
 import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
+import RadialOrbitalTimeline from "./RadialOrbitalTimeline";
 
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -193,33 +194,11 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
             </div>
             {initiative.description && <p className="text-sm text-muted-foreground line-clamp-2 break-words">{initiative.description}</p>}
           </div>
-          {/* Macro pipeline steps — click completed stages to rollback */}
-          <div className="flex items-center gap-1 mt-4 overflow-x-auto">
-            {MACRO_STAGES.map((stage, i) => {
-              const Icon = stage.icon;
-              const isDone = i < macroIdx;
-              const isActive = i === macroIdx;
-              const canClick = isDone && !runningStage && onRollbackToStage && stage.key !== "done";
-              return (
-                <div key={stage.key} className="flex items-center shrink-0">
-                  <button
-                    type="button"
-                    disabled={!canClick}
-                    onClick={() => canClick && setRollbackConfirm({ key: stage.key, label: stage.label })}
-                    className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium whitespace-nowrap transition-colors ${
-                      isActive ? "bg-primary/15 text-primary border border-primary/30" :
-                      isDone ? "bg-success/10 text-success" : "bg-muted/30 text-muted-foreground"
-                    } ${canClick ? "cursor-pointer hover:bg-warning/15 hover:text-warning hover:border hover:border-warning/30" : ""}`}
-                    title={canClick ? `Clique para voltar e refazer "${stage.label}"` : undefined}
-                  >
-                    {isDone ? <CheckCircle2 className="h-3 w-3" /> : <Icon className="h-3 w-3" />}
-                    <span className="hidden sm:inline">{stage.label}</span>
-                  </button>
-                  {i < MACRO_STAGES.length - 1 && <ArrowRight className={`h-3 w-3 mx-0.5 shrink-0 ${isDone ? "text-success" : "text-muted-foreground/20"}`} />}
-                </div>
-              );
-            })}
-          </div>
+          <RadialOrbitalTimeline
+            currentMacroIndex={macroIdx}
+            runningStage={runningStage}
+            onRollbackToStage={onRollbackToStage}
+          />
           {/* Approval timestamps + PR link */}
           <div className="flex gap-3 mt-2 text-[10px] text-muted-foreground flex-wrap">
             {initiative.approved_at_discovery && (
