@@ -1,4 +1,9 @@
-// Unified AI client: handles OpenAI and Lovable AI Gateway with retries and cost tracking
+// Unified AI client: handles OpenAI and Lovable AI Gateway with retries, cost tracking,
+// and AI Efficiency Layer (prompt compression, semantic cache, model routing)
+
+import { compressPrompt } from "./prompt-compressor.ts";
+import { lookupCache, storeInCache } from "./semantic-cache.ts";
+import { routeModel, getModelTier } from "./model-router.ts";
 
 export interface AIResult {
   content: string;
@@ -6,6 +11,14 @@ export interface AIResult {
   durationMs: number;
   costUsd: number;
   model: string;
+  /** Efficiency layer metadata */
+  efficiency?: {
+    cacheHit: boolean;
+    compressionRatio: number;
+    routedModel: string;
+    complexity: string;
+    tokensSaved: number;
+  };
 }
 
 export interface AIConfig {
@@ -31,14 +44,18 @@ export function getAIConfig(): AIConfig {
 }
 
 /**
- * Call AI with automatic retry, backoff, and cost tracking.
- * 
- * @param apiKey - Fallback API key (used for Lovable Gateway when no OPENAI_API_KEY)
+ * Call AI with Efficiency Layer: compression → cache → routing → retry.
+ *
+ * @param apiKey - Fallback API key
  * @param systemPrompt - System message
  * @param userPrompt - User message
  * @param jsonMode - Request JSON response format
  * @param maxRetries - Max retry attempts (default 3)
  * @param usePro - Use pro model for higher quality (default false)
+ * @param stage - Pipeline stage for routing/caching
+ * @param orgId - Organization ID for cache scoping
+ * @param initiativeId - Initiative ID for cache scoping
+ * @param skipEfficiency - Skip efficiency layer entirely
  */
 export async function callAI(
   apiKey: string,
@@ -46,14 +63,87 @@ export async function callAI(
   userPrompt: string,
   jsonMode = false,
   maxRetries = 3,
-  usePro = false
+  usePro = false,
+  stage?: string,
+  orgId?: string,
+  initiativeId?: string,
+  skipEfficiency = false,
 ): Promise<AIResult> {
   const config = getAIConfig();
-  // If apiKey is provided and config.key is empty (no env), use apiKey
   const effectiveKey = config.key || apiKey;
-  const effectiveModel = usePro ? config.proModel : config.model;
   const useOpenAI = config.url.includes("openai.com");
 
+  let compressedSystem = systemPrompt;
+  let compressedUser = userPrompt;
+  let compressionRatio = 1;
+  let tokensSaved = 0;
+
+  // ── Efficiency Layer ──
+  if (!skipEfficiency && !useOpenAI) {
+    // 1. Prompt Compression
+    try {
+      const combined = systemPrompt + "\n" + userPrompt;
+      if (combined.length > 8000) {
+        const result = await compressPrompt(userPrompt, effectiveKey, 3000);
+        compressedUser = result.compressed;
+        compressionRatio = result.ratio;
+        tokensSaved = result.originalTokens - result.compressedTokens;
+        console.log(`[efficiency] Compression: ${result.originalTokens} → ${result.compressedTokens} tokens (${Math.round((1 - result.ratio) * 100)}% saved, AI=${result.usedAI})`);
+      }
+    } catch (e) {
+      console.warn("[efficiency] Compression failed, using original:", e);
+    }
+
+    // 2. Semantic Cache
+    if (stage) {
+      try {
+        const cacheResult = await lookupCache(
+          compressedSystem + "\n" + compressedUser,
+          stage,
+          effectiveKey,
+          orgId,
+        );
+
+        if (cacheResult.hit) {
+          console.log(`[efficiency] Cache HIT (similarity=${cacheResult.similarity.toFixed(3)}, saved=${cacheResult.tokensSaved} tokens)`);
+          return {
+            content: cacheResult.response,
+            tokens: 0,
+            durationMs: 0,
+            costUsd: 0,
+            model: "cache",
+            efficiency: {
+              cacheHit: true,
+              compressionRatio,
+              routedModel: "cache",
+              complexity: "cached",
+              tokensSaved: cacheResult.tokensSaved + tokensSaved,
+            },
+          };
+        }
+      } catch (e) {
+        console.warn("[efficiency] Cache lookup failed:", e);
+      }
+    }
+  }
+
+  // 3. Model Routing
+  let effectiveModel: string;
+  let routingDecision;
+
+  if (usePro) {
+    effectiveModel = config.proModel;
+    routingDecision = { model: config.proModel, complexity: "high" as const, reason: "Forced pro", estimatedCostMultiplier: 1 };
+  } else if (!skipEfficiency && !useOpenAI) {
+    routingDecision = routeModel(compressedSystem, compressedUser, stage);
+    effectiveModel = routingDecision.model;
+    console.log(`[efficiency] Routed to ${effectiveModel} (${routingDecision.complexity}: ${routingDecision.reason})`);
+  } else {
+    effectiveModel = config.model;
+    routingDecision = { model: config.model, complexity: "medium" as const, reason: "Default", estimatedCostMultiplier: 0.5 };
+  }
+
+  // ── Standard AI Call with Retries ──
   let lastError: Error | null = null;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
@@ -61,8 +151,8 @@ export async function callAI(
       const body: Record<string, unknown> = {
         model: effectiveModel,
         messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
+          { role: "system", content: compressedSystem },
+          { role: "user", content: compressedUser },
         ],
       };
       if (jsonMode) body.response_format = { type: "json_object" };
@@ -92,15 +182,48 @@ export async function callAI(
       const data = await resp.json();
       const durationMs = Date.now() - start;
       const tokens = data.usage?.total_tokens || 0;
-      // Cost estimation: OpenAI ~$0.40/1M tokens avg, Lovable Gateway ~$1/1M tokens
       const costUsd = useOpenAI ? tokens * 0.0000004 : tokens * 0.000001;
+      const content = data.choices?.[0]?.message?.content || "";
+
+      // Store in semantic cache (async, non-blocking)
+      if (!skipEfficiency && stage && !useOpenAI) {
+        try {
+          const cacheResult = await lookupCache(
+            compressedSystem + "\n" + compressedUser,
+            stage,
+            effectiveKey,
+            orgId,
+          );
+          if (!cacheResult.hit) {
+            storeInCache(
+              cacheResult.promptHash,
+              cacheResult.embedding,
+              content,
+              stage,
+              effectiveModel,
+              tokens,
+              orgId,
+              initiativeId,
+            ).catch(e => console.warn("[efficiency] Cache store failed:", e));
+          }
+        } catch (e) {
+          console.warn("[efficiency] Cache store failed:", e);
+        }
+      }
 
       return {
-        content: data.choices?.[0]?.message?.content || "",
+        content,
         tokens,
         durationMs,
         costUsd,
         model: effectiveModel,
+        efficiency: skipEfficiency ? undefined : {
+          cacheHit: false,
+          compressionRatio,
+          routedModel: effectiveModel,
+          complexity: routingDecision.complexity,
+          tokensSaved,
+        },
       };
     } catch (e) {
       lastError = e instanceof Error ? e : new Error(String(e));
