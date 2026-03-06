@@ -72,7 +72,7 @@ export function QuickStartView({ onAnalyze, isAnalyzing }: Props) {
 
       {/* Intent selector */}
       <div className="space-y-2">
-        <Label className="text-xs text-muted-foreground">What should AxionOS do?</Label>
+        <Label className="text-xs text-muted-foreground">How should AxionOS help you?</Label>
         <div className="grid gap-2 grid-cols-2">
           {GENERATION_INTENTS.map((intent) => (
             <button
