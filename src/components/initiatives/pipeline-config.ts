@@ -445,10 +445,9 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "ready_to_publish":
       return [
+        { stage: "publish", label: "🚀 Publicar no GitHub", description: "Gera release, changelog e push para o repositório.", type: "publish", variant: "primary" },
+        { stage: "validation", label: "🔍 Re-executar Validação Completa", description: "Roda novamente: Fix Loop → Deep Static → Drift → Runtime.", type: "run" },
         { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
-        { stage: "runtime_validation", label: "Runtime Validation (tsc + vite build)", type: "run" },
-        { stage: "deep_validation", label: "Re-executar Deep Analysis", type: "run" },
-        { stage: "publish", label: "Publicar no GitHub", type: "publish" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "published":
