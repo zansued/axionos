@@ -390,6 +390,18 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           return;
         }
       } catch (e: any) {
+        const isTimeout = e.message?.includes("tempo limite") || e.message?.includes("Failed to send") || e.message?.includes("FunctionsFetchError") || e.message?.includes("AbortError");
+        
+        // Auto-retry execution on timeout — the orchestrator saves progress so retrying continues from where it stopped
+        if (stage === "execution" && isTimeout) {
+          toast({ title: "⏳ Tempo limite atingido. Continuando execução automaticamente em lotes menores..." });
+          addEvent(initiativeId, stage, `⏳ Timeout — auto-retrying execução em lotes`);
+          setTimeout(() => {
+            runStage(initiativeId, "execution");
+          }, 3000);
+          return; // Don't clear running state
+        }
+
         toast({ variant: "destructive", title: "Erro", description: e.message });
         addEvent(initiativeId, stage, `❌ Erro em ${stage}: ${e.message?.slice(0, 80)}`);
       } finally {
