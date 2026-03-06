@@ -170,7 +170,7 @@ The Agent OS is fully designed with 14 modules across 5 planes. No expansion nee
 | **Data** | Artifact Store, Memory System, Observability | ✅ Complete |
 | **Ecosystem** | Marketplace & Global Capability Registry | ✅ Complete |
 
-Full specification: [AGENT_OS_ARCHITECTURE_MAP.md](AGENT_OS_ARCHITECTURE_MAP.md)
+Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md)
 
 ---
 
