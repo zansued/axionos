@@ -429,15 +429,15 @@ Return a JSON array of objects with { path, content, required } for each file.
 Only include the absolute minimum files needed for the project to build successfully (npm install && npm run build).
 ${brainContext ? `\nProject context:\n${brainContext}` : ""}`;
 
-      const aiResult = await callAI({
-        prompt: aiPrompt,
-        systemPrompt: "You are a build engineer. Generate only the minimal scaffold files needed for a successful build. Return valid JSON array.",
-        model: "google/gemini-2.5-flash",
+      const aiResult = await callAI(
         apiKey,
-      });
+        "You are a build engineer. Generate only the minimal scaffold files needed for a successful build. Return valid JSON array.",
+        aiPrompt,
+        true,
+      );
 
       try {
-        const jsonMatch = aiResult.text.match(/\[[\s\S]*\]/);
+        const jsonMatch = aiResult.content.match(/\[[\s\S]*\]/);
         scaffold = jsonMatch ? JSON.parse(jsonMatch[0]) : getReactViteScaffold(projectName);
       } catch {
         scaffold = getReactViteScaffold(projectName);
