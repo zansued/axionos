@@ -112,7 +112,11 @@ Return ONLY valid JSON.`;
       journeys_count: analysis.user_journeys?.length || 0,
     };
 
-    await completeJob(ctx, jobId, outputs);
+    await completeJob(ctx, jobId, outputs, {
+      model: typeof aiResult === "string" ? "unknown" : aiResult.model,
+      costUsd: typeof aiResult === "string" ? 0 : aiResult.costUsd,
+      durationMs: typeof aiResult === "string" ? 0 : aiResult.durationMs,
+    });
     return jsonResponse(outputs);
   } catch (e: any) {
     console.error("User Behavior Analyzer error:", e);
