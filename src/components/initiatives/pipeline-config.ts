@@ -1,7 +1,7 @@
 import {
   Lightbulb, Brain, Users, FileText, Cpu, BookOpen, Hammer, CheckCircle2,
   Shield, Clock, Rocket, XCircle, Archive, GitBranch, Layers, ShieldCheck, Zap, Package, Wrench, Database, Monitor, GraduationCap,
-  Search, BarChart3, Target, TrendingUp, DollarSign, Eye, Activity, Repeat, FolderKanban, Settings2
+  Search, BarChart3, Target, TrendingUp, DollarSign, Eye, Activity, Repeat, FolderKanban, Settings2, Globe
 } from "lucide-react";
 
 // ══════════════════════════════════════════════════
