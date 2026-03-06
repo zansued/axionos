@@ -499,7 +499,7 @@ Agent OS directly enables the NEXT horizon:
 
 ---
 
-## 8. Edge Function Architecture
+## 9. Edge Function Architecture
 
 ```
 supabase/functions/
