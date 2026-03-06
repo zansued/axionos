@@ -98,6 +98,24 @@ Upgrade agents from static prompt executors into adaptive learning systems. Each
 | Self-Improving Fix Agents | Repair strategies that evolve based on fix success rates | 📋 Planned |
 | Architecture Pattern Library | Catalog of successful patterns indexed by domain and complexity | 📋 Planned |
 
+### Agent Memory Foundation
+
+The `agent_memory` table provides the storage substrate for agent learning:
+
+```
+agent_memory {
+  agent_id        — which agent produced this memory
+  task_type       — classification (strategy, pattern, error, decision)
+  strategy_used   — the approach taken
+  outcome         — result and quality assessment
+  confidence      — relevance score (0.0-1.0)
+  scope           — "initiative" (local) or "organization" (cross-project)
+  times_used      — retrieval frequency for prioritization
+}
+```
+
+Agents learn from this memory by querying past strategies, filtering by confidence, and prioritizing approaches that succeeded in similar contexts.
+
 ### What Agents Should Learn From
 
 - Past build failures and their root causes

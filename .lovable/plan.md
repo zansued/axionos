@@ -77,6 +77,8 @@ After the kernel is stable, agents evolve from static prompt executors into lear
 | Self-Improving Fix Agents | Evolving repair strategies |
 | Architecture Pattern Library | Reusable patterns by domain |
 
+Agent memory structure: `{ agent_id, task_type, strategy_used, outcome, confidence, scope, times_used }` — enabling cross-project learning at the organization level.
+
 **Dependency:** Requires stable kernel.
 
 ---
