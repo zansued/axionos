@@ -53,71 +53,81 @@ The system learns from previous failures and prevents repeated engineering mista
 ### PHASE 3 — AI Efficiency Layer 🔄 In Progress
 
 **Description:**
-Reduce token consumption and operational cost while increasing scalability. Every LLM call is optimized through compression, caching, and intelligent routing.
+Core infrastructure layer that optimizes every LLM interaction across the entire system. Every agent call passes through compression, caching, and intelligent routing — making the system economically viable at scale without sacrificing engineering intelligence.
 
 **Modules:**
-- Prompt Compression Engine (`_shared/prompt-compressor.ts`) — rule-based + AI summarization
-- Semantic Cache Engine (`_shared/semantic-cache.ts`) — vector similarity cache with 0.92 threshold
-- Model Router Engine (`_shared/model-router.ts`) — complexity-based model selection
-- Context Summarization (Smart Context Window — ~60-80% token reduction)
-- Token Usage Optimizer (integrated in `ai-client.ts`)
-- Stage Context Memory (`ai_prompt_cache` table with pgvector embeddings)
-- Agent Prompt Templates (stage-aware prompt compression)
+- Prompt Compression Engine (`_shared/prompt-compressor.ts`) — rule-based pre-compression + AI summarization via lightweight model. Preserves architecture decisions, dependency constraints, unresolved errors, and build configuration while removing verbose logs and explanations.
+- Semantic Cache Engine (`_shared/semantic-cache.ts`) — vector similarity cache using pgvector (768-dim embeddings, cosine similarity threshold 0.92). Exact hash match as fast path, semantic search as fallback. Zero LLM cost on cache hits.
+- Model Router (`_shared/model-router.ts`) — complexity-based routing: `flash-lite` (low) → `flash` (medium) → `pro` (high). Stage-aware routing with heuristic fallback. Cache hits bypass model calls entirely.
+- Smart Context Window (`_shared/smart-context.ts`) — AST-like regex parser that extracts API surface (imports, types, signatures). Priority budget: types > hooks > services > components. ~60-80% token reduction.
+- Token Budget Optimizer — integrated in `ai-client.ts`. Dynamic token allocation per stage based on historical usage patterns.
+- Stage Context Memory (`ai_prompt_cache` table) — pgvector-indexed prompt/response storage with TTL expiration, hit counting, and per-stage analytics.
 
-**Impact:**
-Up to 80–90% reduction in token usage and API costs. The system becomes economically viable at scale without sacrificing engineering intelligence.
+**Expected Outcomes:**
+- 80–90% reduction in token usage and API costs
+- Scalable agent execution across large pipelines
+- Ability to run full 32-stage pipelines at a fraction of the cost
+- Economic viability for multi-product parallel execution
+
+**Integration Point:**
+All modules integrate transparently in `callAI()`:
+```
+callAI() → compress → cache lookup → route model → LLM call → cache store → return
+```
 
 ---
 
 ### PHASE 4 — Agent Intelligence Layer 🔮 Planned
 
 **Description:**
-Transform agents into learning systems capable of improving engineering decisions autonomously. Agents evolve their own prompts, patterns, and repair strategies.
+Transform agents from static prompt executors into learning systems capable of improving engineering decisions autonomously. Agents evolve their own prompts, repair strategies, and architectural decisions based on accumulated execution history.
 
 **Modules:**
-- Learning Agents (self-improving prompt strategies)
-- Prompt Optimization Engine (A/B testing of prompt variations)
-- Architecture Pattern Library (successful pattern catalog)
-- Error Pattern Recognition (predictive error detection)
-- Self-Improving Fix Agents (repair strategies that improve over time)
+- Learning Agents — self-improving prompt strategies that adapt based on output quality metrics and downstream success rates
+- Prompt Optimization Engine — A/B testing of prompt variations per stage, with automatic selection of highest-performing variants
+- Architecture Pattern Library — catalog of successful architectural patterns extracted from completed projects, indexed by domain and complexity
+- Error Pattern Recognition — predictive error detection using historical failure data, triggering preventive measures before errors occur
+- Self-Improving Fix Agents — repair strategies that evolve over time, learning which fixes work for which error classes
+- Agent Memory Layer — persistent per-agent memory across executions, enabling contextual decision-making based on prior experience
 
 **Impact:**
-Agents improve reasoning and repair capabilities over time. The quality of generated code increases with each execution cycle.
+Agents improve reasoning and repair capabilities with each execution cycle. The quality of generated code increases continuously. The system transitions from deterministic execution to adaptive intelligence.
 
 ---
 
 ### PHASE 5 — Autonomous Product Evolution 🔮 Planned
 
 **Description:**
-Enable applications generated by AxionOS to evolve automatically after deployment. Products observe user behavior, identify improvement opportunities, and implement changes.
+Enable applications generated by AxionOS to evolve automatically after deployment. Products observe real user behavior, identify improvement opportunities, and implement changes — extending the software lifecycle beyond deployment into continuous autonomous evolution.
 
 **Modules:**
-- Product Analytics Engine (AARRR metrics: acquisition, activation, retention, revenue, referral)
-- User Behavior Analyzer (feature usage, drop-off points, session patterns)
-- Growth Optimization Engine (landing page, onboarding, feature prioritization)
-- Feature Suggestion Engine (AI-driven feature recommendations)
-- Automatic UI Optimization (layout, copy, conversion optimization)
+- Product Analytics Engine — AARRR metrics: acquisition, activation, retention, revenue, referral. Real-time monitoring of product health.
+- User Behavior Analyzer — feature usage heatmaps, drop-off points, session patterns, friction detection
+- Growth Optimization Engine — landing page optimization, onboarding flow improvement, feature prioritization based on usage data
+- Feature Suggestion Engine — AI-driven feature recommendations based on user behavior gaps and market signals
+- Automatic UI Optimization — layout, copy, and conversion optimization driven by behavioral data
+- Autonomous A/B Testing — automatic generation, deployment, and evaluation of product variants
 
 **Impact:**
-Generated applications continuously improve without manual engineering. The software lifecycle extends beyond deployment into autonomous evolution.
+Generated applications continuously improve without manual engineering. The software lifecycle extends beyond deployment into autonomous evolution — creating a feedback loop between user behavior and product improvement.
 
 ---
 
-### PHASE 6 — Startup Factory System 🔮 Planned
+### PHASE 6 — Autonomous Startup Factory 🔮 Planned
 
 **Description:**
-Transform AxionOS from a software factory into an autonomous startup creation platform. The system discovers market opportunities, validates ideas, builds products, and manages a portfolio of autonomous ventures.
+Transform AxionOS from a software factory into an autonomous venture creation platform. The system discovers market opportunities, validates ideas, builds products, launches them, measures results, and manages a portfolio of autonomous ventures — functioning as a self-operating venture studio.
 
 **Modules:**
-- Opportunity Discovery Engine (market gap identification)
-- Market Signal Analyzer (demand, competition, trend analysis via Firecrawl)
-- Product Validation Engine (synthetic testing + demand estimation)
-- Revenue Strategy Engine (pricing models, subscription tiers, monetization)
-- Startup Portfolio Manager (multi-product resource allocation)
-- Venture Intelligence Layer (end-to-end venture orchestration)
+- Opportunity Discovery Engine — market gap identification from search trends, developer communities, startup datasets, and demand signals
+- Market Signal Analyzer — demand, competition, and trend analysis via Firecrawl. Viability scoring gates entry into the build pipeline.
+- Product Validation Engine — synthetic user testing, landing page simulation, AI demand estimation. Products are validated before engineering begins.
+- Revenue Strategy Engine — pricing models, subscription tiers, freemium options, market positioning. Every product ships with a monetization strategy.
+- Startup Portfolio Manager — multi-product resource allocation, growth stage tracking, risk assessment, portfolio-level optimization
+- Venture Intelligence Layer — end-to-end venture orchestration: discover → validate → build → launch → measure → evolve → scale
 
 **Impact:**
-AxionOS becomes capable of discovering, building, launching, and evolving multiple software products autonomously — functioning as a self-operating venture studio.
+AxionOS becomes capable of discovering, building, launching, and evolving multiple software products autonomously — functioning as a self-operating venture studio that manages its own portfolio of digital ventures.
 
 ---
 
@@ -125,17 +135,17 @@ AxionOS becomes capable of discovering, building, launching, and evolving multip
 
 | Level | Name | Description |
 |-------|------|-------------|
-| **Level 1** | Code Generator | Generates code snippets from prompts. No architecture awareness. |
-| **Level 2** | Software Builder | Produces full applications with structure, database, and deployment. |
-| **Level 3** | Autonomous Engineering System | Self-healing builds, architecture simulation, preventive validation, CI/CD integration. |
-| **Level 4** | Self-Learning Software Factory | Agents learn from failures, optimize their own prompts, and improve code quality autonomously. |
-| **Level 5** | Autonomous Startup Factory | Discovers opportunities, builds products, deploys, measures, evolves, and manages a portfolio — fully autonomous. |
+| **Level 1** | Code Generator | Generates code snippets from prompts. No architecture awareness. No build validation. |
+| **Level 2** | Software Builder | Produces full applications with structure, database, and deployment. Single-project scope. |
+| **Level 3** | Autonomous Engineering System | Self-healing builds, architecture simulation, preventive validation, CI/CD integration. Multi-stage deterministic pipeline. |
+| **Level 4** | Self-Learning Software Factory | Agents learn from failures, optimize their own prompts, and improve code quality autonomously. Per-execution learning cycles. |
+| **Level 5** | Autonomous Startup Factory | Discovers opportunities, builds products, deploys, measures, evolves, and manages a portfolio — fully autonomous. Self-operating venture studio. |
 
 ### Current Status
 
 > **AxionOS is currently transitioning from Level 3 to Level 4.**
 >
-> The Core Engineering Factory (Phase 1) and Adaptive Engineering System (Phase 2) are fully operational. The AI Efficiency Layer (Phase 3) is being implemented to enable cost-effective scaling — with Prompt Compression, Semantic Cache, and Model Router already deployed. The next frontier is Agent Intelligence (Phase 4) — where agents become self-improving systems rather than static prompt executors.
+> The Core Engineering Factory (Phase 1) and Adaptive Engineering System (Phase 2) are fully operational. The AI Efficiency Layer (Phase 3) is being implemented to enable cost-effective scaling — with Prompt Compression, Semantic Cache, Model Router, and Smart Context Window already deployed. The next frontier is Agent Intelligence (Phase 4) — where agents become self-improving systems rather than static prompt executors.
 
 ---
 
@@ -166,6 +176,14 @@ AxionOS becomes capable of discovering, building, launching, and evolving multip
 
 AxionOS is not a code generation tool. It is an **autonomous software engineering system** designed to reach full operational independence.
 
-The end state: a system that can **discover** market opportunities, **design** product architectures, **build** complete applications, **deploy** to production, **observe** user behavior, **evolve** the product, and **manage** a portfolio of autonomous ventures — continuously, without human engineering intervention.
+The end state: a self-operating venture studio capable of:
+
+- **Discovering** market opportunities from real-world signals
+- **Designing** product architectures with simulation and validation
+- **Building** complete full-stack applications autonomously
+- **Deploying** to production with CI/CD and runtime validation
+- **Analyzing** user behavior and product performance
+- **Evolving** products automatically based on usage data
+- **Managing** a portfolio of autonomous ventures at scale
 
 Each phase brings AxionOS closer to this vision. Each module is a building block toward a self-operating software factory.
