@@ -167,7 +167,7 @@ Return ONLY valid JSON.`;
     });
 
     try {
-      await ctx.supabase.from("project_brain_nodes").insert({
+      await ctx.serviceClient.from("project_brain_nodes").insert({
         initiative_id: initiative.id,
         organization_id: ctx.organizationId,
         name: "system_evolution_report",
