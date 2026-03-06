@@ -544,7 +544,7 @@ Predict if the build commands would succeed. Return JSON:
       remaining_risks: [] as string[],
     };
     try {
-      const jsonMatch = simResult.text.match(/\{[\s\S]*\}/);
+      const jsonMatch = simResult.content.match(/\{[\s\S]*\}/);
       if (jsonMatch) buildPrediction = JSON.parse(jsonMatch[0]);
     } catch { /* use default */ }
 
