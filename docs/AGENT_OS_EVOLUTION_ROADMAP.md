@@ -1,20 +1,20 @@
 # Agent OS Evolution Roadmap
 
-**Version:** 0.1 → 1.0  
-**Module:** `supabase/functions/_shared/agent-os/`  
+**Version:** 0.1 → 1.0 GA
+**Module:** `supabase/functions/_shared/agent-os/`
 **Last Updated:** 2026-03-06
 
 ---
 
 ## Vision
 
-The Agent OS evolves through 5 structural phases:
+The Agent OS evolved through 5 structural phases, now complete at v1.0 GA:
 
 ```
 Foundation → Controlled Execution → Intelligent Routing → Adaptive System → Autonomous Platform
 ```
 
-Each phase adds **structural capability**, not merely features.
+Each phase added **structural capability**, not merely features.
 
 ### Strategic Implementation Rule
 
@@ -30,7 +30,7 @@ Inverting this order produces rapid growth on an unstable foundation.
 
 ## Phase 0.1 — Foundation Layer
 
-**Status:** ✅ Implemented  
+**Status:** ✅ Implemented
 **Goal:** Build the semantic and contractual foundations.
 
 ### Modules
@@ -50,22 +50,6 @@ Inverting this order produces rapid growth on an unstable foundation.
 | Utilities | `utils.ts` | ✅ |
 | Barrel Exports | `index.ts` | ✅ |
 
-### Architecture
-
-```
-Orchestrator
-│
-├─ Runtime Protocol      (execution contracts)
-├─ Capability Registry   (agent skills)
-├─ Selection Engine      (agent assignment)
-├─ Policy Engine         (rule evaluation)
-│
-├─ Memory                (in-process state)
-├─ Event Bus             (internal events)
-├─ Scoring               (validation heuristics)
-└─ Utilities             (ID generation, timestamps)
-```
-
 ### Capabilities
 
 - ✅ Execute cognitive pipeline (perception → design → build → validation → evolution)
@@ -76,456 +60,281 @@ Orchestrator
 - ✅ Support retry, retry_other, rollback semantics
 - ✅ Deterministic, explainable decisions
 
-### Not Yet
-
-- ❌ Persistent artifact storage
-- ❌ External adapters (LLM, tools)
-- ❌ Production observability
-- ❌ Adaptive learning
-
 ---
 
 ## Phase 0.2 — Artifact System
 
-**Status:** 📋 Planned  
+**Status:** ✅ Designed
 **Goal:** Transform outputs into persistent, versioned, queryable objects.
 
 ### Module: `artifact-store.ts`
 
-```
-Artifact Store
-│
-├─ ArtifactRepository       (CRUD operations)
-├─ ArtifactVersioning       (version chains)
-├─ ArtifactLineage          (parent/child tracking)
-├─ ArtifactHashIndex        (SHA-256 deduplication)
-└─ ArtifactQuery            (search by kind, stage, run, hash)
-```
-
-### Contracts to Define
-
-| Contract | Purpose |
-|----------|---------|
-| `IArtifactStore` | Repository interface |
-| `ArtifactVersion` | Version chain entry |
-| `ArtifactLineageGraph` | Full lineage DAG |
-| `ArtifactQuery` | Typed query parameters |
-| `ArtifactQueryResult` | Paginated results |
-| `ArtifactStoreConfig` | Retention, dedup settings |
-| `ArtifactStoreEventType` | Store-specific events |
-
-### Benefits
-
-- Complete audit trail of all pipeline outputs
-- Artifact reuse across runs (deduplication by `content_hash`)
-- Execution reconstruction from artifact lineage
-- Foundation for learning (training data from versioned artifacts)
-
-### Dependencies
-
-- `ArtifactEnvelope` from `protocol.ts`
-- `ArtifactKind`, `ArtifactLineage`, `ArtifactQuality` from `protocol.ts`
+| Contract | Status |
+|----------|--------|
+| `IArtifactStore` | ✅ |
+| `ArtifactVersion` / `ArtifactVersionInfo` | ✅ |
+| `ArtifactLineageGraph` / `ArtifactLineageRecord` | ✅ |
+| `ArtifactQuery` / `ArtifactQueryResult` | ✅ |
+| `ArtifactStoreConfig` | ✅ |
+| `ArtifactStoreEventType` | ✅ |
+| `ContentHashSpec` / `DuplicateCheckResult` | ✅ |
 
 ---
 
 ## Phase 0.3 — Observability & Telemetry
 
-**Status:** 📋 Planned  
+**Status:** ✅ Designed
 **Goal:** Make the system observable in production.
 
 ### Module: `observability.ts`
 
-```
-Telemetry
-│
-├─ Event Pipeline          (structured event streaming)
-├─ Metrics Aggregator      (rollup computation)
-├─ Run Analytics           (per-run summary)
-├─ Cost Tracking           (per-stage, per-model attribution)
-└─ Performance Dashboard   (query interface)
-```
-
-### Contracts to Define
-
-| Contract | Purpose |
-|----------|---------|
-| `TelemetryEvent` | Structured telemetry record |
-| `MetricDefinition` | Named metric with type and unit |
-| `MetricAggregation` | Rollup (sum, avg, p95, count) |
-| `RunSummary` | Per-run cost, latency, success metrics |
-| `StageSummary` | Per-stage metrics |
-| `AgentSummary` | Per-agent performance over window |
-| `ObservabilityQuery` | Query interface for dashboards |
-| `IObservabilityEngine` | Engine interface |
-
-### Key Metrics
-
-| Metric | Dimension |
-|--------|-----------|
-| Latency | per stage, per agent, per capability |
-| Cost | per run, per stage, per model |
-| Success rate | per capability, per agent |
-| Confidence drift | per agent, per capability |
-| Fallback frequency | per capability |
-| Retry frequency | per stage, per run |
-
-### Questions the System Answers
-
-- Which agent costs the most?
-- Which capability fails most often?
-- Which stage is the bottleneck?
-- Which agent should be retired?
-- What is the cost trend over time?
+| Contract | Status |
+|----------|--------|
+| `IObservabilityLayer` | ✅ |
+| `TelemetryEvent` / `TelemetryCategory` | ✅ |
+| `ExecutionTrace` / `TraceEntry` | ✅ |
+| `MetricSample` / `MetricAggregate` | ✅ |
+| `RunMetrics` / `StageMetrics` / `AgentMetrics` | ✅ |
+| `CostRecord` / `CostMetrics` / `TokenUsage` | ✅ |
+| `ObservabilityConfig` | ✅ |
 
 ---
 
 ## Phase 0.4 — LLM Adapter Layer
 
-**Status:** 📋 Planned  
+**Status:** ✅ Designed
 **Goal:** Decouple the runtime from any specific AI provider.
 
 ### Module: `llm-adapter.ts`
 
-```
-LLM Adapter
-│
-├─ ILLMAdapter             (provider interface)
-├─ OpenAIAdapter           (GPT-5, GPT-5-mini, etc.)
-├─ GeminiAdapter           (Gemini 2.5/3 family)
-├─ LocalModelAdapter       (self-hosted models)
-└─ LLMRouter               (cost/quality-based routing)
-```
-
-### Contracts to Define
-
-| Contract | Purpose |
-|----------|---------|
-| `ILLMAdapter` | Provider interface |
-| `LLMInvocation` | Request to LLM |
-| `LLMResponse` | Response from LLM |
-| `LLMUsageMetrics` | Tokens, cost, latency |
-| `LLMError` | Typed error with retry hint |
-| `LLMRoutingPolicy` | Cost/quality/latency preferences |
-| `LLMAdapterConfig` | Provider-specific config |
-
-### Benefits
-
-- Swap models without changing agent logic
-- Route by cost tier (cheap for drafts, premium for production)
-- Fallback between providers (OpenAI → Gemini → local)
-- Token budget enforcement
-- Per-model cost tracking
+| Contract | Status |
+|----------|--------|
+| `ILLMAdapter` / `ILLMAdapterRegistry` | ✅ |
+| `LLMInvocation` / `LLMResponse` | ✅ |
+| `LLMModelDescriptor` / `LLMPricing` | ✅ |
+| `LLMError` / `LLMErrorType` | ✅ |
+| `LLMRoutingHints` | ✅ |
+| `LLMAdapterConfig` | ✅ |
 
 ---
 
 ## Phase 0.5 — Tool Adapter Layer
 
-**Status:** 📋 Planned  
+**Status:** ✅ Designed
 **Goal:** Standardize external tool access with safety controls.
 
 ### Module: `tool-adapter.ts`
 
-```
-Tool Adapter
-│
-├─ IToolAdapter            (tool interface)
-├─ WebSearchTool
-├─ CodeExecutionTool
-├─ DatabaseQueryTool
-├─ APIConnectorTool
-└─ FileSystemTool
-```
-
-### Contracts to Define
-
-| Contract | Purpose |
-|----------|---------|
-| `IToolAdapter` | Tool interface |
-| `ToolRegistration` | Register tool with capabilities |
-| `ToolPermission` | Permission model |
-| `ToolSandboxConfig` | Sandbox and isolation settings |
-| `ToolRateLimit` | Rate limiting per tool |
-
-### Runtime Controls
-
-- Sandbox isolation per tool
-- Timeout enforcement
-- Rate limiting
-- Permission checks (via Policy Engine)
-- Cost attribution per tool call
-
-### Dependencies
-
-- `ToolCapability`, `ToolInvocation`, `ToolExecutionResult` from `protocol.ts`
-- `PolicyEngine` for `deny_tool` enforcement
+| Contract | Status |
+|----------|--------|
+| `IToolAdapter` / `IToolAdapterRegistry` | ✅ |
+| `ToolDescriptor` / `ToolExecutionMode` | ✅ |
+| `ToolInvocationRequest` / `ToolExecutionResult` | ✅ |
+| `IToolPermissionEvaluator` | ✅ |
+| `ToolAdapterConfig` | ✅ |
 
 ---
 
 ## Phase 0.6 — Persistent Memory
 
-**Status:** 📋 Planned  
+**Status:** ✅ Designed
 **Goal:** Transform in-process memory into accumulated knowledge.
 
-### Module: `persistent-memory.ts`
+### Module: `memory-system.ts`
 
-```
-Memory System
-│
-├─ RunMemory               (per-run state)
-├─ StageMemory             (per-stage context)
-├─ AgentMemory             (per-agent learning history)
-├─ GlobalKnowledge         (cross-run patterns)
-└─ VectorMemory            (semantic retrieval via embeddings)
-```
-
-### Contracts to Define
-
-| Contract | Purpose |
-|----------|---------|
-| `IPersistentMemory` | Persistent memory interface (extends `IMemory`) |
-| `MemoryScope` | run, stage, agent, global |
-| `MemoryQuery` | Semantic + structured query |
-| `MemoryRetentionPolicy` | TTL, relevance decay |
-| `VectorSearchResult` | Embedding-based retrieval result |
-
-### Capabilities
-
-- Task history across runs
-- Semantic retrieval of past decisions
-- Project-level memory (patterns, errors, fixes)
-- Learning from execution outcomes
-
-### Dependencies
-
-- `IMemory` from `types.ts`
-- `MemoryEntry` from `protocol.ts`
-- Artifact Store for linking memory to artifacts
+| Contract | Status |
+|----------|--------|
+| `IMemoryStore` | ✅ |
+| `MemoryRecord` / `MemoryContent` | ✅ |
+| `MemoryQuery` / `MemoryQueryResult` | ✅ |
+| `IMemoryEmbeddingProvider` | ✅ |
+| `MemoryRetentionPolicy` | ✅ |
+| `MemorySystemConfig` | ✅ |
 
 ---
 
 ## Phase 0.7 — Adaptive Routing
 
-**Status:** 📋 Planned  
+**Status:** ✅ Designed
 **Goal:** The system starts learning from its own decisions.
 
-### Module: `adaptive-router.ts`
+### Module: `adaptive-routing.ts`
 
-```
-Adaptive Router
-│
-├─ Performance Learning    (outcome-based weight tuning)
-├─ Cost Optimization       (budget-aware selection)
-├─ Capability Reinforcement (reward successful capabilities)
-└─ Dynamic Ranking         (context-aware weight adjustment)
-```
-
-### Algorithms
-
-| Algorithm | Use Case |
-|-----------|----------|
-| Multi-Armed Bandit | Exploration vs exploitation for new agents |
-| Epsilon-Greedy | Controlled exploration with decay |
-| UCB (Upper Confidence Bound) | Optimistic exploration |
-| Cost-Aware Routing | Maximize quality within budget envelope |
-| Domain-Aware Routing | Specialize routing by problem domain |
-
-### Contracts to Define
-
-| Contract | Purpose |
-|----------|---------|
-| `IAdaptiveRouter` | Router interface (extends `ISelectionEngine`) |
-| `RoutingExperiment` | A/B test definition |
-| `RoutingOutcome` | Decision + observed result |
-| `WeightTuningResult` | Recommended weight changes |
-| `ExplorationPolicy` | Exploration vs exploitation config |
-
-### Example Logic
-
-```
-if task.domain == "code_generation":
-  prefer agent with highest validation_score for code artifacts
-  
-if task.complexity == "critical":
-  prefer agent with highest success_rate regardless of cost
-```
-
-### Dependencies
-
-- `SelectionDecision` from `selection.ts`
-- `CapabilityScorecard` from `capabilities.ts`
-- Observability data for outcome tracking
+| Contract | Status |
+|----------|--------|
+| `IAdaptiveRouter` | ✅ |
+| `RoutingStrategy` / `RoutingStrategyMode` | ✅ |
+| `RoutingSignal` / `RoutingAdjustment` | ✅ |
+| `PerformanceSnapshot` / `RoutingDecisionFeedback` | ✅ |
+| `ExplorationConfig` (epsilon-greedy, UCB1, Thompson) | ✅ |
+| `AdaptiveRoutingConfig` | ✅ |
 
 ---
 
 ## Phase 0.8 — Multi-Agent Coordination
 
-**Status:** 📋 Planned  
+**Status:** ✅ Designed
 **Goal:** Enable collaboration between agents within a stage.
 
-### Module: `multi-agent.ts`
+### Module: `coordination.ts`
 
-### Coordination Patterns
+| Contract | Status |
+|----------|--------|
+| `ICoordinationManager` | ✅ |
+| `CoordinationStrategy` / `CoordinationStrategyType` | ✅ |
+| `AgentRole` / `RoleAssignment` | ✅ |
+| `CoordinationPlan` / `CoordinationState` | ✅ |
+| `IterationRules` / `CoordinationResult` | ✅ |
+| `CoordinationConfig` | ✅ |
 
-| Pattern | Description |
-|---------|-------------|
-| Debate | Two agents argue opposing positions |
-| Consensus | Multiple agents vote on a decision |
-| Self-Critique | Agent reviews its own output |
-| Iterative Refinement | Agent improves output in cycles |
-| Planner-Executor | One agent plans, another executes |
-| Critic-Builder | Builder produces, critic evaluates |
-
-### Example Flow
-
-```
-Planner Agent (Design mode)
-      ↓
-Builder Agent (Implement mode)
-      ↓
-Critic Agent (Review mode)
-      ↓
-Refinement (Builder re-executes with feedback)
-```
-
-### Contracts to Define
-
-| Contract | Purpose |
-|----------|---------|
-| `CoordinationStrategy` | Pattern definition |
-| `CoordinationSession` | Active multi-agent session |
-| `AgentMessage` | Inter-agent communication |
-| `ConsensusResult` | Voting outcome |
-| `RefinementCycle` | Iteration tracking |
-
-### Dependencies
-
-- Selection Engine for selecting multiple agents
-- `ISelectionEngine.selectMultiple()` (new method)
+Coordination patterns: planner_executor, builder_reviewer, debate, consensus, ensemble, iterative_refinement.
 
 ---
 
 ## Phase 0.9 — Distributed Agent Runtime
 
-**Status:** 📋 Planned  
+**Status:** ✅ Designed
 **Goal:** Scale execution across multiple workers.
 
 ### Module: `distributed-runtime.ts`
 
-```
-Distributed Runtime
-│
-├─ Task Queue              (persistent job queue)
-├─ Worker Nodes            (execution workers)
-├─ Agent Sandboxes         (isolated execution environments)
-├─ Execution Scheduler     (assignment + load balancing)
-└─ Load Balancer           (distribute across workers)
-```
-
-### Contracts to Define
-
-| Contract | Purpose |
-|----------|---------|
-| `ITaskQueue` | Queue interface |
-| `WorkerRegistration` | Worker capabilities and capacity |
-| `ExecutionSlot` | Reserved execution slot |
-| `DistributedRunState` | Run state across workers |
-| `ILoadBalancer` | Load balancing strategy |
-
-### Capabilities
-
-- Parallel stage execution
-- Remote agent invocation
-- Horizontal scaling
-- Worker health monitoring
+| Contract | Status |
+|----------|--------|
+| `IDistributedRuntime` | ✅ |
+| `ITaskQueue` / `ITaskScheduler` | ✅ |
+| `IWorkerRegistry` | ✅ |
+| `DistributedTask` / `TaskAssignment` | ✅ |
+| `WorkerDescriptor` / `WorkerHeartbeat` | ✅ |
+| `DistributedRuntimeConfig` | ✅ |
 
 ---
 
-## Phase 1.0 — Autonomous Agent Platform
+## Phase 1.0 — Marketplace & Global Registry
 
-**Status:** 🔮 Vision  
-**Goal:** Agent OS becomes a platform for pluggable agents.
+**Status:** ✅ Designed
+**Goal:** Enable a shared ecosystem of agents and capabilities.
 
-### Architecture
+### Module: `marketplace.ts`
+
+| Contract | Status |
+|----------|--------|
+| `IMarketplaceClient` / `ICapabilityRegistryClient` | ✅ |
+| `IPackageManager` | ✅ |
+| `IRegistrySyncService` | ✅ |
+| `ITrustScoreEvaluator` | ✅ |
+| `CapabilityDescriptor` / `AgentPackageManifest` | ✅ |
+| `SemanticVersion` / `PackageDependency` | ✅ |
+| `MarketplaceConfig` | ✅ |
+
+---
+
+## Phase 1.1 — Governance Layer
+
+**Status:** ✅ Designed
+**Goal:** Control, trust, approval and compliance for all agent operations.
+
+### Module: `governance.ts`
+
+| Contract | Status |
+|----------|--------|
+| `IGovernanceLayer` | ✅ |
+| `IGovernanceRegistry` / `ITrustEvaluator` | ✅ |
+| `IAutonomyController` / `IApprovalEngine` | ✅ |
+| `IAccessControlManager` / `IComplianceEvaluator` | ✅ |
+| `IAuditLedger` / `IOverrideManager` | ✅ |
+| `AgentTrustLevel` (6 tiers) / `RiskClassification` | ✅ |
+| `GovernanceConfig` | ✅ |
+
+---
+
+## Architecture Map (v1.0 GA)
 
 ```
-Agent OS Platform
-│
-├─ Kernel
-│   ├─ Runtime Protocol
-│   ├─ Capability Model
-│   ├─ Selection Engine
-│   └─ Policy Engine
-│
-├─ Infrastructure
-│   ├─ Artifact Store
-│   ├─ Memory System
-│   └─ Observability
-│
-├─ Adapters
-│   ├─ LLM Adapters
-│   └─ Tool Adapters
-│
-├─ Intelligence
-│   ├─ Adaptive Router
-│   └─ Multi-Agent Coordination
-│
-└─ Scale
-    └─ Distributed Runtime
++-------------------------------------------------------------------+
+|                       ECOSYSTEM PLANE                              |
+|   Marketplace - Capability Registry - Package Manager - Trust      |
++-------------------------------+-----------------------------------+
+                                | discovery
++-------------------------------+-----------------------------------+
+|                       EXECUTION PLANE                              |
+|   Orchestrator - Coordination - Distributed Runtime                |
+|   LLM Adapter - Tool Adapter - Event Bus - Agent Registry          |
++-----------+-----------------------+-------------------+-----------+
+            | decisions             | persistence       | telemetry
++-----------+----------+  +---------+---------+  +------+----------+
+|    CONTROL PLANE     |  |    DATA PLANE     |  |   DATA PLANE    |
+|   Selection Engine   |  |   Artifact Store  |  |  Observability  |
+|   Policy Engine      |  |   Memory System   |  |  Audit Ledger   |
+|   Governance Layer   |  |                   |  |                 |
+|   Adaptive Routing   |  |                   |  |                 |
++-----------+----------+  +---------+---------+  +------+----------+
+            |                       |                    |
++-----------+-----------------------+--------------------+----------+
+|                         CORE PLANE                                 |
+|   Runtime Protocol - Capability Model - Core Types                 |
+|   (Contracts, Schemas, Identity -- no state, no side effects)      |
++-------------------------------------------------------------------+
 ```
 
-### New Concepts
-
-| Concept | Description |
-|---------|-------------|
-| Agent Marketplace | Third-party agents register and participate |
-| Capability Marketplace | Reusable capability declarations |
-| Policy Marketplace | Shared policy rule sets |
-| Tool Marketplace | Community-contributed tool adapters |
-| Federated Runtime | Execute across organizational boundaries |
-| Certified Capabilities | Quality-verified capability packages |
+Full architecture map: [docs/AGENT_OS_ARCHITECTURE_MAP.md](AGENT_OS_ARCHITECTURE_MAP.md)
 
 ---
 
 ## Intelligence Evolution
 
-| Phase | System Capability |
-|-------|-------------------|
-| v0.1 | Cognitive pipeline with deterministic routing |
-| v0.3 | Observable pipeline with cost and performance tracking |
-| v0.5 | Integrated pipeline with external tools and models |
-| v0.7 | Adaptive pipeline that learns from outcomes |
-| v0.9 | Distributed pipeline with horizontal scaling |
-| v1.0 | Autonomous platform with pluggable agents |
+| Phase | System Capability | Status |
+|-------|-------------------|--------|
+| v0.1 | Cognitive pipeline with deterministic routing | ✅ |
+| v0.2 | Persistent artifact system with versioning and lineage | ✅ |
+| v0.3 | Observable pipeline with cost and performance tracking | ✅ |
+| v0.4 | Provider-agnostic LLM integration | ✅ |
+| v0.5 | Standardized tool access with safety controls | ✅ |
+| v0.6 | Persistent memory with semantic retrieval | ✅ |
+| v0.7 | Adaptive routing that learns from outcomes | ✅ |
+| v0.8 | Multi-agent coordination with iteration control | ✅ |
+| v0.9 | Distributed execution with horizontal scaling | ✅ |
+| v1.0 | Global marketplace with package ecosystem | ✅ |
+| v1.1 | Governance with trust, approval and compliance | ✅ |
+| **v1.0 GA** | **Complete architecture — 14 modules, 5 planes** | **✅** |
 
 ---
 
 ## Module Implementation Sequence
 
 ```
- 1. Runtime Protocol       ✅
- 2. Capability Model       ✅
- 3. Selection Engine       ✅
- 4. Policy Engine          ✅
+ 1. Runtime Protocol       ✅ v0.1
+ 2. Capability Model       ✅ v0.2
+ 3. Selection Engine       ✅ v0.2
+ 4. Policy Engine          ✅ v0.2
  ─────────────────────────────
- 5. Artifact Store         📋
- 6. Observability          📋
- 7. LLM Adapter            📋
- 8. Tool Adapter           📋
- 9. Persistent Memory      📋
-10. Adaptive Router        📋
-11. Multi-Agent Coord.     📋
-12. Distributed Runtime    📋
+ 5. Artifact Store         ✅ v0.1
+ 6. Observability          ✅ v0.3
+ 7. LLM Adapter            ✅ v0.4
+ 8. Tool Adapter           ✅ v0.5
+ 9. Memory System          ✅ v0.6
+10. Adaptive Routing       ✅ v0.7
+11. Multi-Agent Coord.     ✅ v0.8
+12. Distributed Runtime    ✅ v0.9
+13. Marketplace            ✅ v1.0
+14. Governance Layer       ✅ v1.1
 ```
 
 ---
 
 ## Relationship to AxionOS Horizons
 
-The Agent OS roadmap maps to the broader AxionOS evolution:
+The Agent OS provides the architectural foundation for all AxionOS horizons:
 
 | Agent OS Phase | AxionOS Horizon | Maturity Level |
 |----------------|-----------------|----------------|
-| v0.1–0.3 | NOW (Stabilize Kernel) | Level 3 → 4 |
-| v0.4–0.6 | NEXT (Learning Agents) | Level 4 |
-| v0.7–0.8 | LATER (Product Intelligence) | Level 4 → 5 |
-| v0.9–1.0 | FUTURE (Market Intelligence) | Level 5 |
+| v0.1-0.2 (Foundation) | NOW (Stabilize Kernel) | Level 3 |
+| v0.3-0.6 (Infrastructure) | NOW (Stabilize Kernel) | Level 3 → 4 |
+| v0.7-0.8 (Intelligence) | NEXT (Learning Agents) | Level 4 |
+| v0.9-1.0 (Scale + Ecosystem) | LATER/FUTURE | Level 4 → 5 |
+| v1.1 (Governance) | Cross-cutting | All levels |
+
+---
+
+## Governing Principle
+
+> **The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another.**

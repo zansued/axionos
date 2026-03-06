@@ -50,23 +50,38 @@ The kernel is the set of systems that every pipeline execution depends on:
 | Pipeline Visualization | UI components for pipeline state | 🔧 Stabilizing |
 | UI Restructuring | Control-center layout simplification | 🔧 Stabilizing |
 
-### Agent Operating System
+### Agent Operating System (Agent OS)
 
-The kernel introduces the **Agent Operating System (Agent OS)** — a conceptual reorganization that replaces 18+ specific agent identities with five fundamental agent types:
+The kernel introduces the **Agent Operating System (Agent OS)** — a comprehensive runtime architecture for agent execution, selection, governance, and coordination. Agent OS v1.0 has been fully designed across 14 architectural modules organized into five planes:
 
-| Agent Type | Responsibility |
-|-----------|---------------|
-| **Perception Agent** | Interprets ideas, requirements, market signals, context |
-| **Design Agent** | Creates architecture, domain models, data models, API designs |
-| **Build Agent** | Generates code, UI, configs, migrations, artifacts |
-| **Validation Agent** | Static analysis, runtime validation, QA, architectural checks |
-| **Evolution Agent** | Repair, learning, pattern extraction, prompt optimization |
+| Plane | Modules | Status |
+|-------|---------|--------|
+| **Core** | Runtime Protocol, Capability Model, Core Types | ✅ Designed |
+| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing | ✅ Designed |
+| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Designed |
+| **Data** | Artifact Store, Memory System, Observability | ✅ Designed |
+| **Ecosystem** | Marketplace & Global Capability Registry | ✅ Designed |
 
-Each agent type operates in different **modes** depending on the stage (e.g., Design Agent in `data_modeling` mode vs. `api_design` mode). Specialization is preserved through the combination of **mode + tools + memory + contracts**, not through identity proliferation.
+The 14 modules of Agent OS v1.0:
 
-This reduces architectural complexity, lowers prompt overhead, and directly enables the NEXT horizon (Learning Agents) by providing a cleaner structure for agent memory and prompt optimization.
+| # | Module | File | Version |
+|---|--------|------|---------|
+| 1 | Runtime Protocol | `protocol.ts` | v0.1 |
+| 2 | Capability Model | `capabilities.ts` | v0.2 |
+| 3 | Selection Engine | `selection.ts` | v0.2 |
+| 4 | Policy Engine | `policy-engine.ts` | v0.2 |
+| 5 | Artifact Store | `artifact-store.ts` | v0.1 |
+| 6 | Observability & Telemetry | `observability.ts` | v0.3 |
+| 7 | LLM Adapter Layer | `llm-adapter.ts` | v0.4 |
+| 8 | Tool Adapter Layer | `tool-adapter.ts` | v0.5 |
+| 9 | Memory System | `memory-system.ts` | v0.6 |
+| 10 | Adaptive Routing | `adaptive-routing.ts` | v0.7 |
+| 11 | Multi-Agent Coordination | `coordination.ts` | v0.8 |
+| 12 | Distributed Agent Runtime | `distributed-runtime.ts` | v0.9 |
+| 13 | Marketplace & Registry | `marketplace.ts` | v1.0 |
+| 14 | Governance Layer | `governance.ts` | v1.1 |
 
-**Status:** 📋 Planned — conceptual architecture defined
+Full architecture map: [docs/AGENT_OS_ARCHITECTURE_MAP.md](AGENT_OS_ARCHITECTURE_MAP.md)
 
 ### Kernel Hardening Tasks
 
@@ -74,7 +89,7 @@ This reduces architectural complexity, lowers prompt overhead, and directly enab
 |------|---------|--------|
 | Stage Contract Formalization | Every stage declares `required_inputs`, `produced_outputs`, `failure_modes`, `retry_policy` | ✅ Implemented |
 | Agent IO Contract Standardization | Every agent produces `summary`, `decisions[]`, `artifacts[]`, `confidence_score` | ✅ Implemented |
-| Agent OS Design | Consolidate 18+ agents into 5 fundamental types with mode-based specialization | 📋 Planned |
+| Agent OS v1.0 Architecture | 14-module architecture across 5 planes with full TypeScript contracts | ✅ Designed |
 | Observability Improvements | Granular per-stage cost tracking, latency histograms | 🔧 In Progress |
 | Pipeline Visualization Refactor | Simplified control-center UI for pipeline state | 🔧 In Progress |
 | AI Cost Tracking | Per-stage, per-model cost attribution via `initiative_jobs` | ✅ Implemented |
@@ -109,19 +124,20 @@ Upgrade agents from static prompt executors into adaptive learning systems. Each
 
 ### Relationship to Agent OS
 
-The Agent Operating System (defined in NOW) provides the structural foundation for this horizon. With agents organized into five fundamental types operating in modes, the learning infrastructure becomes tractable:
+The Agent OS v1.0 architecture provides the structural foundation for this horizon:
 
-- **Fewer learning models** — 5 agent types instead of 18+ identities
-- **Cleaner training data** — mode-based organization provides structured execution history
-- **Cross-mode learning** — a Design Agent learning in `data_modeling` mode can apply patterns to `api_design` mode
-- **Unified memory queries** — `agent_memory` indexed by type + mode enables efficient retrieval
+- **Adaptive Routing** — performance feedback loop already designed (signals, adjustments, exploration strategies)
+- **Memory System** — persistent memory with retention policies and embedding search
+- **Observability** — telemetry and cost metrics available for learning
+- **Governance** — trust levels and autonomy limits ready to gate learned behaviors
+- **Coordination** — multi-agent patterns (debate, consensus, iterative refinement) enable quality improvement
 
 ### Agent Intelligence Layer
 
 | Module | Description | Status |
 |--------|-------------|--------|
 | Learning Agents | Self-improving prompt strategies based on output quality and downstream success | 📋 Planned |
-| Agent Memory Layer | Persistent per-agent memory across executions (`agent_memory` table) | 🔧 Foundation exists |
+| Agent Memory Layer | Persistent per-agent memory across executions (`agent_memory` table + Memory System) | 🔧 Foundation exists |
 | Prompt Optimization Engine | A/B testing of prompt variations per stage, automatic selection of best performers | 📋 Planned |
 | Error Pattern Recognition | Predictive error detection from historical failure data | 📋 Planned |
 | Self-Improving Fix Agents | Repair strategies that evolve based on fix success rates | 📋 Planned |
@@ -144,22 +160,6 @@ agent_memory {
 ```
 
 Agents learn from this memory by querying past strategies, filtering by confidence, and prioritizing approaches that succeeded in similar contexts.
-
-### What Agents Should Learn From
-
-- Past build failures and their root causes
-- Successful builds and what made them succeed
-- Applied fixes and their effectiveness
-- Architectural choices and their downstream impact
-- Cost/performance tradeoffs across model tiers
-
-### Expected Outputs
-
-- Better prompt strategies with measurable quality improvement
-- Improved repair quality and lower retry counts
-- Reusable architectural decisions across projects
-- More accurate code generation on first attempt
-- Reduced cost per pipeline execution
 
 ### Expected Outcome
 
@@ -188,13 +188,6 @@ Extend AxionOS beyond software generation into product intelligence. Generated a
 | Automatic UI Optimization | Layout, copy, and conversion optimization driven by behavioral data | 📋 Planned |
 | Product Evolution Engine | Autonomous feature addition/removal based on usage metrics | 📋 Planned |
 
-### Focus Areas
-
-- Observing real user behavior post-deployment
-- Identifying friction points and drop-off patterns
-- Prioritizing improvements based on data, not assumptions
-- Evolving generated products automatically
-
 ### Expected Outcome
 
 AxionOS-generated products become self-improving after launch. The software lifecycle extends beyond deployment into continuous autonomous evolution.
@@ -211,8 +204,6 @@ AxionOS-generated products become self-improving after launch. The software life
 
 Transform AxionOS from a software factory into an autonomous venture creation platform. The system discovers market opportunities, validates ideas, builds products, launches them, and manages a portfolio of autonomous ventures.
 
-This is the final major expansion layer. It should only be built after the kernel, learning agents, and product intelligence are proven stable.
-
 ### Market Intelligence Layer
 
 | Module | Description | Status |
@@ -221,16 +212,8 @@ This is the final major expansion layer. It should only be built after the kerne
 | Market Signal Analyzer | Demand, competition, and trend analysis with viability scoring | 📋 Planned |
 | Product Validation Engine | Synthetic user testing, landing page simulation, demand estimation | 📋 Planned |
 | Revenue Strategy Engine | Pricing models, subscription tiers, freemium options, market positioning | 📋 Planned |
-| Venture Intelligence Layer | End-to-end orchestration: discover → validate → build → launch → measure → evolve | 📋 Planned |
+| Venture Intelligence Layer | End-to-end orchestration: discover, validate, build, launch, measure, evolve | 📋 Planned |
 | Startup Portfolio Manager | Multi-product resource allocation, growth tracking, risk assessment | 📋 Planned |
-
-### Capabilities
-
-- Discover opportunities from real-world market signals
-- Validate product ideas before engineering begins
-- Choose what to build based on viability analysis
-- Allocate resources across multiple simultaneous products
-- Manage a portfolio of autonomous digital ventures
 
 ### Expected Outcome
 
@@ -252,7 +235,7 @@ AxionOS evolves toward an autonomous startup factory — a self-operating ventur
 
 > **AxionOS is currently at Level 3, transitioning to Level 4.**
 >
-> The Core Engineering Kernel is implemented and being stabilized (NOW). The next milestone is Agent Intelligence (NEXT) — where agents become self-improving systems rather than static prompt executors.
+> The Core Engineering Kernel is implemented and being stabilized (NOW). Agent OS v1.0 architecture is fully designed with 14 modules across 5 architectural planes. The next milestone is Agent Intelligence (NEXT) — where agents become self-improving systems rather than static prompt executors.
 
 ---
 
@@ -263,7 +246,8 @@ AxionOS evolves toward an autonomous startup factory — a self-operating ventur
 |--------|-------|
 | Pipeline stages | 32 |
 | Edge Functions | 50+ |
-| Specialized agents | 18+ per role |
+| Agent OS modules | 14 (fully designed) |
+| Agent OS architectural planes | 5 |
 | Shared helpers | 15+ reusable modules |
 | Database tables | 30+ with RLS |
 | Brain node types | 11+ |
