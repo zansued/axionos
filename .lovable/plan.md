@@ -186,11 +186,48 @@ Organized into four sequential sprints.
 - Build/repair events
 
 **Acceptance Criteria:**
-- [ ] Metrics exist at initiative level
-- [ ] Dashboard reflects product outcomes
-- [ ] Users can understand whether an initiative succeeded, how long it took, and how much it cost
+- [x] Metrics exist at initiative level
+- [x] Dashboard reflects product outcomes
+- [x] Users can understand whether an initiative succeeded, how long it took, and how much it cost
+- [x] Observability contract schema created
+- [x] Observability engine edge function created
+- [x] InitiativeObservabilityCard with success rates, durations, costs
+- [x] Outcome status computed and displayed
 
-**Status:** 📋 Planned
+**Status:** ✅ Complete
+
+---
+
+## Sprint 5 — Onboarding & Product Packaging
+
+**Objective:** Make AxionOS understandable and activatable for real users.
+
+**Key Deliverables:**
+- Product-oriented onboarding flow (5 steps, bilingual)
+- First-run Dashboard hero with product journey visualization
+- Improved empty states across Dashboard, Initiative List, Initiative Detail
+- InitiativeOutcomeCard for clear product-level result communication
+- Product framing: "idea → pipeline → repository → deploy"
+- Outcome clarity: deployed, repository_ready, in_progress, failed, needs_attention
+- Contextual next-action guidance in every state
+
+**Affected Layers:**
+- OnboardingGuide
+- Dashboard
+- InitiativeList
+- InitiativeDetail
+- InitiativeObservabilityCard
+
+**Acceptance Criteria:**
+- [x] First-time user sees product-oriented onboarding
+- [x] Dashboard shows first-run hero with CTA and journey visualization
+- [x] Empty states explain what to do next in product terms
+- [x] InitiativeOutcomeCard shows clear outcome with next actions
+- [x] Initiative list shows "Live" badge for deployed initiatives
+- [x] Bilingual support (pt-BR / en-US) across all new copy
+- [x] No architectural changes, no new modules
+
+**Status:** ✅ Complete
 
 ---
 
