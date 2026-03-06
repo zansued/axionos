@@ -510,6 +510,11 @@ export default function Observability() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* ===== PATTERNS ===== */}
+          <TabsContent value="patterns" className="mt-4">
+            <ErrorPatternRadar />
+          </TabsContent>
         </Tabs>
       </div>
     </AppLayout>
