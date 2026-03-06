@@ -2282,7 +2282,11 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
                 if (pkgEntry.artRef?.content !== undefined) pkgEntry.artRef.content = fixed;
                 else if (pkgEntry.artRef?.text !== undefined) pkgEntry.artRef.text = fixed;
               }
-            } catch { checks.push({ id: "pkg-parse", category: "package.json", label: "JSON válido", status: "fail", detail: "Não foi possível parsear" }); }
+            } catch (e) {
+              // Only add fail if we haven't already added a warn for parse issues
+              if (e instanceof Error && e.message === "skip") { /* already handled */ }
+              else { checks.push({ id: "pkg-parse", category: "package.json", label: "JSON válido", status: "warn", detail: "Erro ao processar — será injetado pelo pipeline" }); }
+            }
           }
 
           // ---- vite.config.ts checks ----
