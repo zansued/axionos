@@ -9,6 +9,7 @@ import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { upsertNode, recordError, generateBrainContext, upsertPreventionRule } from "../_shared/brain-helpers.ts";
 import { callAI } from "../_shared/ai-client.ts";
+import { recordRepairEvidence } from "../_shared/repair/repair-evidence-recorder.ts";
 
 // ═══════════════════════════════════════════════
 // TYPES
@@ -543,7 +544,7 @@ ${brainContext.slice(0, 2000)}`,
       `✅ ${commit.files.length} files committed (${commit.sha.slice(0, 7)})`,
       { commit_sha: commit.sha, files: commit.files });
 
-    // ── 7. Record repair attempts ──
+    // ── 7. Record repair attempts + evidence ──
     const repairAttempts: RepairAttempt[] = allPatches.map(p => ({
       attempt,
       error_type: errors.find(e => e.file === p.path)?.errorType || "structural",
@@ -551,6 +552,30 @@ ${brainContext.slice(0, 2000)}`,
       fix_applied: p.reason,
       build_status: "pending" as const,
     }));
+
+    // Persist structured repair evidence for each error class
+    const errorCategories = [...new Set(errors.map(e => e.category))];
+    for (const cat of errorCategories) {
+      const catErrors = errors.filter(e => e.category === cat);
+      const catPatches = allPatches.filter(p =>
+        catErrors.some(e => e.file === p.path) || cat === "entrypoint"
+      );
+      await recordRepairEvidence({
+        serviceClient,
+        initiativeId: ctx.initiativeId,
+        organizationId: ctx.organizationId,
+        stageName: "autonomous_build_repair",
+        jobId: jobId || null,
+        rawCategory: cat,
+        errorMessage: catErrors.map(e => e.message).join("; ").slice(0, 500),
+        attemptNumber: attempt,
+        patchSummary: catPatches.map(p => p.reason).join("; ").slice(0, 1000),
+        filesTouched: catPatches.map(p => p.path),
+        repairResult: "attempted",
+        revalidationStatus: "not_run",
+        durationMs: Date.now() - startTime,
+      });
+    }
 
     // ── 8. Store repair report in Project Brain ──
     await upsertNode(ctx, {

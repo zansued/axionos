@@ -30,6 +30,7 @@ import { RuntimeValidationStatus } from "./RuntimeValidationStatus";
 import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
 import { InitiativeObservabilityCard } from "./InitiativeObservabilityCard";
 import { InitiativeOutcomeCard } from "./InitiativeOutcomeCard";
+import { RepairEvidenceCard } from "./RepairEvidenceCard";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 import PipelineGraphView from "./PipelineGraphView";
 
@@ -572,6 +573,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
           </CardContent>
         </Card>
       )}
+
+      {/* Repair Evidence */}
+      <RepairEvidenceCard initiativeId={initiative.id} />
 
       {/* Build Health Report */}
       {publishJob?.outputs?.health_report && (
