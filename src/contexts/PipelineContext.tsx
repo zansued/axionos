@@ -255,6 +255,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           comprehension: `Compreensão concluída: 4 agentes (Vision, Market, Requirements, Product Architect) ✅`,
           architecture: `Arquitetura técnica concluída: 4 agentes (System, Data, API Architect, Dependency Planner) ✅`,
           architecture_simulation: `Simulação de arquitetura concluída: score ${result.score || 0}/100, ${result.repairs?.length || 0} reparos ${result.passed ? "✅" : "⚠️"}`,
+          preventive_validation: `Validação Preventiva: ${result.issues?.length || 0} issues, ${result.fixes_applied || 0} corrigidos, ${result.prevention_rules_active || 0} regras ativas ✅`,
           bootstrap_intelligence: `Bootstrap Intelligence: ${result.stack || "react-vite"} stack, ${result.files_injected || 0} arquivos injetados, build confidence ${((result.build_confidence || 0) * 100).toFixed(0)}% ${result.build_prediction ? "✅" : "⚠️"}`,
           foundation_scaffold: `Foundation Scaffold: ${result.files_generated || 0} arquivos (${result.stack || "react-vite"}). Build confidence: ${((result.build_confidence || 0) * 100).toFixed(0)}% ${result.validation_passed ? "✅" : "⚠️"}`,
           module_graph_simulation: `Module Graph: ${result.total_files || 0} arquivos, ${result.total_imports || 0} imports, ${result.broken_imports || 0} broken, score ${result.graph_health_score || 0} ${result.passed ? "✅" : "⚠️"}`,
@@ -361,6 +362,24 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           }, 1500);
           return;
         }
+
+        // Auto-trigger preventive validation after architecture simulation
+        if (stage === "architecture_simulation" && result.success) {
+          toast({ title: "🛡️ Iniciando Validação Preventiva da Arquitetura..." });
+          setTimeout(() => {
+            runStage(initiativeId, "preventive_validation");
+          }, 1500);
+          return;
+        }
+
+        // Auto-trigger bootstrap intelligence after preventive validation
+        if (stage === "preventive_validation" && result.success) {
+          toast({ title: "🧠 Iniciando Bootstrap Intelligence..." });
+          setTimeout(() => {
+            runStage(initiativeId, "bootstrap_intelligence");
+          }, 1500);
+          return;
+        }
       } catch (e: any) {
         toast({ variant: "destructive", title: "Erro", description: e.message });
         addEvent(initiativeId, stage, `❌ Erro em ${stage}: ${e.message?.slice(0, 80)}`);
@@ -388,7 +407,9 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       revenue_strategy: "product_validated",
       // v2 Core Pipeline
       discovery: "revenue_strategized",
-      architecture: "architecture_ready",
+      architecture: "discovered",
+      simulation: "architected",
+      preventive_validation: "architecture_simulated",
       bootstrap: "architecture_validated",
       scaffold: "bootstrapped",
       module_graph: "scaffolded",
