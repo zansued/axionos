@@ -368,6 +368,69 @@ export type Database = {
           },
         ]
       }
+      ai_prompt_cache: {
+        Row: {
+          created_at: string
+          embedding: string | null
+          expires_at: string
+          hit_count: number | null
+          id: string
+          initiative_id: string | null
+          model_used: string | null
+          organization_id: string | null
+          prompt_hash: string
+          prompt_summary: string | null
+          response: string
+          stage: string
+          tokens_saved: number | null
+        }
+        Insert: {
+          created_at?: string
+          embedding?: string | null
+          expires_at?: string
+          hit_count?: number | null
+          id?: string
+          initiative_id?: string | null
+          model_used?: string | null
+          organization_id?: string | null
+          prompt_hash: string
+          prompt_summary?: string | null
+          response: string
+          stage: string
+          tokens_saved?: number | null
+        }
+        Update: {
+          created_at?: string
+          embedding?: string | null
+          expires_at?: string
+          hit_count?: number | null
+          id?: string
+          initiative_id?: string | null
+          model_used?: string | null
+          organization_id?: string | null
+          prompt_hash?: string
+          prompt_summary?: string | null
+          response?: string
+          stage?: string
+          tokens_saved?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_prompt_cache_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_prompt_cache_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_rate_limits: {
         Row: {
           function_name: string
@@ -1993,6 +2056,22 @@ export type Database = {
           node_type: string
           similarity: number
           status: string
+        }[]
+      }
+      match_prompt_cache: {
+        Args: {
+          match_org_id?: string
+          match_stage?: string
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          id: string
+          model_used: string
+          prompt_hash: string
+          response: string
+          similarity: number
+          stage: string
         }[]
       }
     }
