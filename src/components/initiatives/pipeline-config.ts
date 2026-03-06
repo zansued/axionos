@@ -69,11 +69,11 @@ export const PIPELINE_STEPS = [
   { key: "in_progress", label: "Execução", icon: Hammer, color: "text-primary", bg: "bg-primary/10" },
 
   // ── Validation & Publish (Stages 20-23) ──
-  { key: "validating", label: "Validação", icon: Shield, color: "text-warning", bg: "bg-warning/10" },
-  { key: "repairing_build", label: "Build Repair ▶", icon: Wrench, color: "text-warning", bg: "bg-warning/10" },
+  { key: "validating", label: "Validação (Fix Loop → Deep → Drift → Runtime)", icon: Shield, color: "text-warning", bg: "bg-warning/10" },
+  { key: "repairing_build", label: "Build Repair (auto-fix) ▶", icon: Wrench, color: "text-warning", bg: "bg-warning/10" },
   { key: "build_repaired", label: "Build Repair ✓", icon: Wrench, color: "text-accent", bg: "bg-accent/10" },
   { key: "repair_failed", label: "Repair Failed", icon: Wrench, color: "text-destructive", bg: "bg-destructive/10" },
-  { key: "ready_to_publish", label: "Pronto", icon: Rocket, color: "text-accent", bg: "bg-accent/10" },
+  { key: "ready_to_publish", label: "Pronto para Publicar", icon: Rocket, color: "text-accent", bg: "bg-accent/10" },
   { key: "published", label: "Publicado", icon: GitBranch, color: "text-primary", bg: "bg-primary/10" },
 
   // ── Growth & Evolution Layer (Stages 24-32) ──
