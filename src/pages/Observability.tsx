@@ -12,8 +12,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Activity, Radio, Users, Zap, Clock, CircleDot, Pause, Play,
-  DollarSign, AlertTriangle, TrendingUp, BarChart3, Timer, Trophy, Brain,
+  DollarSign, AlertTriangle, TrendingUp, BarChart3, Timer, Trophy, Brain, Bug,
 } from "lucide-react";
+import { ErrorPatternRadar } from "@/components/observability/ErrorPatternRadar";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
