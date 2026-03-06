@@ -291,3 +291,36 @@ export type {
 export {
   DEFAULT_OBSERVABILITY_CONFIG,
 } from "./observability.ts";
+
+// LLM Adapter Layer (v0.4)
+export type {
+  LLMMessageRole,
+  LLMMessage,
+  LLMToolDefinition,
+  LLMToolChoice,
+  LLMInvocation,
+  LLMResponseFormat,
+  LLMTraceMetadata,
+  LLMResponse,
+  LLMToolCall,
+  LLMFinishReason,
+  LLMUsage,
+  LLMPricing,
+  LLMProviderMetadata,
+  LLMModelDescriptor,
+  LLMModality,
+  LLMQualityTier,
+  LLMLatencyClass,
+  LLMError,
+  LLMErrorType,
+  LLMRoutingHints,
+  ILLMAdapter,
+  LLMStreamChunk,
+  ILLMAdapterRegistry,
+  LLMAdapterConfig,
+  LLMAdapterEventType,
+} from "./llm-adapter.ts";
+
+export {
+  DEFAULT_LLM_ADAPTER_CONFIG,
+} from "./llm-adapter.ts";
