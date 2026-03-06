@@ -23,6 +23,12 @@ serve(async (req) => {
   }
 
   const approvalMap: Record<string, { field: string; nextStatus: string }> = {
+    // Venture Intelligence stages (S01-S05)
+    opportunity_discovered: { field: "approved_at_discovery", nextStatus: "market_signals_analyzing" },
+    market_signals_analyzed: { field: "approved_at_discovery", nextStatus: "product_validating" },
+    product_validated: { field: "approved_at_discovery", nextStatus: "revenue_strategizing" },
+    revenue_strategized: { field: "approved_at_discovery", nextStatus: "discovered" },
+    // Project Foundation & Architecture stages
     discovered: { field: "approved_at_discovery", nextStatus: "architecture_ready" },
     scaffolded: { field: "approved_at_discovery", nextStatus: "simulating_modules" },
     modules_simulated: { field: "approved_at_discovery", nextStatus: "analyzing_dependencies" },
