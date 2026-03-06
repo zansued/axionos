@@ -132,7 +132,7 @@ Return ONLY valid JSON.`;
       ab_tests_count: analytics.ab_testing_opportunities?.length || 0,
     };
 
-    await completeJob(ctx, jobId, outputs);
+    await completeJob(ctx, jobId, outputs, { model: aiResult.model, costUsd: aiResult.costUsd, durationMs: aiResult.durationMs });
     return jsonResponse(outputs);
   } catch (e: any) {
     console.error("Product Analytics Engine error:", e);
