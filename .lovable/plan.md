@@ -32,6 +32,19 @@ The engineering infrastructure is implemented. The priority is hardening it — 
 - Pipeline visualization refactor
 - Observability and cost tracking improvements
 
+### Kernel Hardening Tasks
+
+| Task | Status |
+|------|--------|
+| Stage Contract System — formal input/output/retry schemas per stage | ✅ Implemented |
+| Agent IO Contracts — standardized agent output structure | ✅ Implemented |
+| Observability Improvements — granular cost tracking | 🔧 In Progress |
+| Pipeline Visualization Refactor — simplified control UI | 🔧 In Progress |
+| AI Cost Tracking — per-stage, per-model attribution | ✅ Implemented |
+| Error Taxonomy Standardization — typed failure modes | 🔧 In Progress |
+
+These tasks reduce architectural entropy and prepare the system for the Agent Intelligence Layer (NEXT).
+
 ### Kernel Components (Implemented)
 
 | Component | Status |
