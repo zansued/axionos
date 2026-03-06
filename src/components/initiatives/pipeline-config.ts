@@ -425,10 +425,8 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "validating":
       return [
-        { stage: "validation", label: "Rodar Fix Loop (AI)", type: "run" },
-        { stage: "deep_validation", label: "Deep Static Analysis", type: "run" },
-        { stage: "runtime_validation", label: "Runtime Validation (tsc + vite)", type: "run" },
-        { stage: "approve", label: "✅ Aprovar Validação → Publicar", type: "approve" },
+        { stage: "validation", label: "🔍 Iniciar Validação Completa", description: "Executa automaticamente: Fix Loop (AI) → Deep Static Analysis → Drift Detection → Runtime Validation (tsc + vite build). Todo o fluxo é sequencial e automático.", type: "run", variant: "primary" },
+        { stage: "approve", label: "✅ Aprovar Validação → Publicar", description: "Pular validação e ir direto para publicação (não recomendado).", type: "approve", variant: "outline" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "repairing_build":
