@@ -36,10 +36,16 @@ Persistent knowledge graph that stores architecture decisions, errors, patterns,
 Prompt compression (60-90% token reduction), semantic cache, and intelligent model routing. Makes pipeline execution economically viable.
 
 ### Self-Healing Pipeline
-Runtime validation via real tsc + vite builds. When errors are detected, a fix swarm analyzes logs, generates patches, and submits corrections automatically.
+Runtime validation via real tsc + vite builds. When errors are detected, a fix swarm analyzes logs, generates patches, and submits corrections automatically. Every repair attempt is recorded as structured evidence.
+
+### Error Pattern Intelligence
+Repair evidence is aggregated into recurring patterns with strategy effectiveness tracking. The system identifies which repair strategies work best per error category and generates prevention rule candidates.
 
 ### Agent Swarm
 Specialized agents execute tasks in parallel waves using DAG-based topological scheduling (6 concurrent workers).
+
+### Product-Level Observability
+Full initiative lifecycle metrics: pipeline/build/deploy success rates, time from idea to repo/deploy, cost per initiative, repair success rates, and outcome tracking.
 
 ### Governed Execution
 Stage gates, SLA enforcement, approval workflows, and complete audit logging. Every action is traceable and bounded.

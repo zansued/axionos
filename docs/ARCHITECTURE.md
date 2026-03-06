@@ -26,8 +26,8 @@ The system is evolving through four implementation horizons:
 
 | Horizon | Focus | Status |
 |---------|-------|--------|
-| **NOW** | Stabilize the Kernel | 🔧 Stabilizing |
-| **NEXT** | Agent Intelligence Layer | 📋 Planned |
+| **NOW** | Product Proof Closure | ✅ 7 Sprints Complete |
+| **NEXT** | Learning Agents | 📋 Planned |
 | **LATER** | Product Intelligence Layer | 📋 Planned |
 | **FUTURE** | Market Intelligence Layer | 📋 Planned |
 
@@ -39,7 +39,7 @@ Each horizon depends on the previous one being stable.
 | Level 1 | Code Generator | ✅ |
 | Level 2 | Software Builder | ✅ |
 | Level 3 | Autonomous Engineering System | ✅ |
-| Level 4 | Self-Learning Software Factory | 🔄 Transitioning |
+| Level 4 | Self-Learning Software Factory | 📋 Next (Learning Agents) |
 | Level 5 | Autonomous Startup Factory | 🔮 Planned |
 
 ### Technology Stack
