@@ -104,7 +104,7 @@ Produza uma análise completa no seguinte formato JSON:
       complexity: discovery.complexity,
       risk_level: discovery.risk_level,
       target_user: discovery.target_user,
-      discovery_payload: { ...discovery, reference_url: initiative.reference_url, reference_scraped: !!referenceContent },
+      discovery_payload: { ...discovery, reference_url: initiative.reference_url, reference_scraped: !!referenceContent, has_initiative_brief: !!brief },
     });
 
     if (jobId) await completeJob(ctx, jobId, discovery, { model: aiResult.model, costUsd: aiResult.costUsd, durationMs: aiResult.durationMs });
