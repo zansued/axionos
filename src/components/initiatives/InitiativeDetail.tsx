@@ -29,6 +29,7 @@ import { ArchitecturalDriftStatus } from "./ArchitecturalDriftStatus";
 import { RuntimeValidationStatus } from "./RuntimeValidationStatus";
 import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
 import { InitiativeObservabilityCard } from "./InitiativeObservabilityCard";
+import { InitiativeOutcomeCard } from "./InitiativeOutcomeCard";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 import PipelineGraphView from "./PipelineGraphView";
 
