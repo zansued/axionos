@@ -393,7 +393,7 @@ Agent IO contracts are enforced through `pipeline-helpers.ts`:
 
 ---
 
-## 6. Edge Function Architecture
+## 8. Edge Function Architecture
 
 ```
 supabase/functions/
