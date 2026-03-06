@@ -15,16 +15,13 @@ AxionOS is an **autonomous software engineering platform** that transforms ideas
 
 You describe what you want to build. AxionOS executes the full engineering pipeline:
 
-| Step | What Happens |
-|------|-------------|
-| **Discovery** | Market analysis, feasibility, refined idea |
-| **Architecture** | System design, component structure, tech stack |
-| **Planning** | PRD, stories, subtasks with acceptance criteria |
-| **Construction** | Agent swarm generates all code in parallel |
-| **Validation** | Static analysis + real build (tsc + vite) |
-| **Self-Healing** | Autonomous error detection and repair |
-| **Delivery** | Git repository with atomic commits |
-| **Traceability** | Full audit trail of every decision |
+| Phase | What Happens |
+|-------|-------------|
+| **Idea** | Capture and structure the idea with AI-generated blueprint |
+| **Discovery** | Market analysis, opportunity validation, revenue strategy, PRD |
+| **Architecture** | System design, simulation, preventive validation, scaffold |
+| **Engineering** | Domain modeling, code generation (DB, API, UI), agent swarm execution |
+| **Deploy** | Fix Loop → Deep Static → Runtime Validation → Build Repair → Publish |
 
 Everything runs inside a **32-stage deterministic pipeline** with full cost tracking and observability.
 
@@ -47,20 +44,23 @@ Specialized agents execute tasks in parallel waves using DAG-based topological s
 ### Governed Execution
 Stage gates, SLA enforcement, approval workflows, and complete audit logging. Every action is traceable and bounded.
 
-### Cost Visibility
-Per-initiative, per-stage, per-model cost attribution. Real-time cost tracking across the entire pipeline.
-
 ---
 
 ## How It Works
 
+```
+  Idea → Discovery → Architecture → Engineering → Deploy
+    │         │            │              │           │
+    │         │            │              │           └─ Validated, published repository
+    │         │            │              └─ All code generated and tested
+    │         │            └─ Complete technical plan with simulation
+    │         └─ Validated opportunity with market strategy
+    └─ User's raw idea captured
+```
+
 1. **Describe your idea** — what you want to build
-2. **AxionOS executes the full pipeline:**
-   - Discovery → Architecture → Planning → Squad Formation
-   - Domain Modeling → Schema → Data Model
-   - Business Logic → API → UI Generation
-   - Validation → Build → Repair → Publish
-3. **Result:** A governed, validated, deployable repository
+2. **AxionOS runs the full pipeline automatically** — each phase chains into the next
+3. **Result:** A governed, validated, deployable Git repository
 
 ---
 
@@ -69,7 +69,6 @@ Per-initiative, per-stage, per-model cost attribution. Real-time cost tracking a
 - **Indie Hackers** — launch MVPs in hours
 - **Technical Founders** — validate ideas rapidly
 - **Micro SaaS Creators** — build and iterate fast
-- **Rapid Prototyping** — explore concepts without setup
 - **Early-Stage Teams** — multiply engineering capacity
 
 ---
@@ -78,15 +77,24 @@ Per-initiative, per-stage, per-model cost attribution. Real-time cost tracking a
 
 | Document | Description |
 |----------|-------------|
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture and technical details |
-| [ROADMAP.md](docs/ROADMAP.md) | Implementation priorities and evolution plan |
-| [AGENT_OS_ARCHITECTURE_MAP.md](docs/AGENT_OS_ARCHITECTURE_MAP.md) | Agent OS v1.0 architecture reference |
+| [Pipeline Contracts](docs/PIPELINE_CONTRACTS.md) | Product contracts per phase: inputs, outputs, success criteria, user actions |
+| [Architecture](docs/ARCHITECTURE.md) | System architecture, 32-stage pipeline, tech stack |
+| [Agent OS](docs/AGENTS.md) | Agent Operating System: 14 modules, 5 planes, contracts |
+| [Roadmap](docs/ROADMAP.md) | Implementation priorities and evolution plan |
+| [Execution Plan](.lovable/plan.md) | Current sprint priorities and success metrics |
 
 ---
 
-## Architecture
+## Technology Stack
 
-For detailed system architecture, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
+| State | TanStack React Query + React Context |
+| Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
+| AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
+| Git | GitHub API v3 (Tree API for atomic commits) |
+| Deploy | Vercel/Netlify auto-generated configs |
 
 ---
 
