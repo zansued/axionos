@@ -238,7 +238,104 @@ Backward compatible: all new parameters are optional.
 
 ---
 
-## 5. Project Brain
+## 5. Stage Contracts
+
+Every pipeline stage defines a formal contract that specifies its interface with the orchestrator. Stage contracts ensure deterministic execution, reliable re-execution, and safe parallelization.
+
+### Contract Structure
+
+```
+stage_contract {
+  stage_name         — unique identifier (e.g. "pipeline-comprehension")
+  required_inputs    — JSON schema of expected inputs from previous stages
+  produced_outputs   — JSON schema of outputs stored in initiative_jobs.outputs
+  external_deps      — external services required (GitHub API, CI, Firecrawl)
+  side_effects       — mutations outside initiative_jobs (brain nodes, agent messages, code artifacts)
+  failure_modes      — enumerated failure types (timeout, validation_error, llm_error, dependency_missing)
+  retry_policy       — { max_retries, backoff_strategy, idempotent: boolean }
+}
+```
+
+### Enforcement
+
+Stage contracts are enforced by the pipeline orchestrator (`run-initiative-pipeline`, `pipeline-execution-orchestrator`):
+
+- **Pre-execution:** Validates that all `required_inputs` are present before invoking a stage
+- **Post-execution:** Validates that `produced_outputs` match the declared schema
+- **Failure handling:** Applies the declared `retry_policy` per failure mode
+- **Parallelization:** The DAG scheduler uses contract metadata to determine which stages can run concurrently
+
+### Storage
+
+Contracts are materialized through `initiative_jobs`:
+- `inputs` column stores the validated stage inputs
+- `outputs` column stores the validated stage outputs
+- `status` tracks execution state (`pending`, `running`, `completed`, `failed`)
+- `error` captures failure details matching declared `failure_modes`
+
+### Benefits
+
+- **Deterministic execution:** Same inputs always produce same outputs
+- **Safe re-execution:** Failed stages can be retried without corrupting pipeline state
+- **Debugging:** Each stage's inputs/outputs are inspectable in `initiative_jobs`
+- **Future agent learning:** Contracts provide structured data for agents to learn from
+
+**Status:** ✅ Implemented — enforced via `initiative_jobs` and `pipeline-helpers.ts`
+
+---
+
+## 6. Agent IO Contracts
+
+Every agent in the pipeline must produce structured, inspectable output. Agent IO contracts standardize the interface between agents and the rest of the system.
+
+### Contract Structure
+
+```
+agent_contract {
+  agent_name       — identifier (e.g. "comprehension-analyst")
+  task_scope       — what the agent is responsible for
+  input_schema     — structured input from the orchestrator
+  output_schema    — structured output format
+  decision_rules   — constraints on what the agent can decide
+}
+```
+
+### Standard Agent Output
+
+All agents produce outputs conforming to this structure:
+
+```
+agent_output {
+  summary           — human-readable summary of what was produced
+  decisions[]       — list of decisions made (stored in project_decisions)
+  artifacts[]       — generated files, schemas, or specifications
+  confidence_score  — 0.0-1.0 self-assessed confidence
+  model_used        — which LLM model was used
+  tokens_used       — token count for cost tracking
+  duration_ms       — execution time
+}
+```
+
+### Implementation
+
+Agent IO contracts are enforced through `pipeline-helpers.ts`:
+- `createJob()` — initializes a job with validated inputs
+- `completeJob()` — finalizes with structured outputs and cost metadata
+- `logAgentMessage()` — records inter-agent communication with typed schemas
+- `AIResult` — standardized return type from `callAI()` with `.content`, `.model`, `.costUsd`, `.durationMs`
+
+### Benefits
+
+- **Agent learning:** Structured outputs enable the future Agent Memory Layer to index and learn from past executions
+- **Prompt optimization:** Consistent output schemas allow A/B comparison of prompt strategies
+- **Performance tracking:** Every agent execution is measurable (cost, duration, quality)
+- **Auditability:** All agent decisions are stored in `project_decisions` with provenance
+
+**Status:** ✅ Implemented — enforced via `pipeline-helpers.ts` and `agent_messages`/`agent_outputs` tables
+
+---
+
+## 7. Project Brain
 
 ### Node Types
 | Type | Source | Description |
