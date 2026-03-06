@@ -68,7 +68,8 @@ Return a JSON object with this exact structure:
 
 Return ONLY valid JSON, no markdown fences.`;
 
-    const aiResponse = await callAI(apiKey, prompt, "revenue-strategy-engine");
+    const aiResult = await callAI(apiKey, prompt, "revenue-strategy-engine");
+    const aiResponse = aiResult.content;
     let strategy: any;
     try {
       const cleaned = aiResponse.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
