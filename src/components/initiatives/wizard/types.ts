@@ -18,6 +18,22 @@ export interface InitiativeBrief {
   market_opportunity?: string;
   competitor_insights?: string;
   reasoning?: string;
+  // Initiative Brief contract (pipeline input)
+  _initiative_brief?: {
+    name: string;
+    description: string;
+    problem: string;
+    target_users: string[];
+    product_type: string;
+    core_features: string[];
+    integrations?: string[];
+    tech_preferences?: Record<string, string | undefined>;
+    deployment_target: string;
+    complexity_estimate: string;
+    generation_depth: string;
+    expected_outputs: string[];
+  };
+  _blueprint?: unknown;
 }
 
 export interface AIBlueprint {
