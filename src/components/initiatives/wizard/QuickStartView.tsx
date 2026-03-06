@@ -5,8 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sparkles, ChevronDown, ChevronUp, Loader2, Globe, Users, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { GENERATION_DEPTHS } from "./types";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { GENERATION_INTENTS } from "./types";
 import { Badge } from "@/components/ui/badge";
 
 interface Props {
