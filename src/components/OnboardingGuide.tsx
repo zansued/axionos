@@ -6,43 +6,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, Lightbulb, Users, Hammer, BarChart3, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Rocket, Lightbulb, Layers, Globe, BarChart3, ArrowRight, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/contexts/I18nContext";
 
 const ONBOARDING_KEY = "axionos-onboarding-complete";
-
-const steps = [
-  {
-    icon: Rocket,
-    title: "Bem-vindo ao AxionOS",
-    description: "Uma plataforma de governança de pipelines de IA. Agentes autônomos planejam, executam, validam e publicam projetos com supervisão humana.",
-    color: "text-primary",
-  },
-  {
-    icon: Lightbulb,
-    title: "1. Crie uma Iniciativa",
-    description: "Descreva sua ideia de projeto. O pipeline de Discovery analisa viabilidade, mercado e escopo MVP automaticamente.",
-    color: "text-accent",
-  },
-  {
-    icon: Users,
-    title: "2. Forme um Squad",
-    description: "Agentes especializados (Architect, Dev, QA, PM) são atribuídos automaticamente com base no tipo de projeto.",
-    color: "text-primary",
-  },
-  {
-    icon: Hammer,
-    title: "3. Execute & Valide",
-    description: "Os agentes geram código, documentação e decisões arquiteturais. O QA valida cada artefato com scoring automático.",
-    color: "text-accent",
-  },
-  {
-    icon: BarChart3,
-    title: "4. Monitore & Publique",
-    description: "Acompanhe custos, performance e qualidade em tempo real. Quando pronto, publique com PR automática no GitHub.",
-    color: "text-primary",
-  },
-];
 
 interface OnboardingContextType {
   showOnboarding: () => void;
@@ -57,8 +25,73 @@ export function useOnboarding() {
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const { currentOrg } = useOrg();
+  const { locale } = useI18n();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
+
+  const steps = locale === "en-US" ? [
+    {
+      icon: Rocket,
+      title: "Welcome to AxionOS",
+      description: "Transform your product idea into a validated, deployed application — automatically. AxionOS handles architecture, code generation, testing, and deployment.",
+      color: "text-primary",
+    },
+    {
+      icon: Lightbulb,
+      title: "1. Describe your idea",
+      description: "Tell us what you want to build. Our AI analyzes your idea, evaluates feasibility, and creates a structured project plan — in seconds.",
+      color: "text-accent",
+    },
+    {
+      icon: Layers,
+      title: "2. Watch it get built",
+      description: "The pipeline automatically generates architecture, code, tests, and documentation. You approve each major step before moving forward.",
+      color: "text-primary",
+    },
+    {
+      icon: Globe,
+      title: "3. Get a live product",
+      description: "Your validated code is published to GitHub and deployed. You get a working URL, a real repository, and full traceability of every decision.",
+      color: "text-accent",
+    },
+    {
+      icon: BarChart3,
+      title: "4. Track everything",
+      description: "See exactly how long it took, how much it cost, and where things succeeded or failed. Full transparency, always.",
+      color: "text-primary",
+    },
+  ] : [
+    {
+      icon: Rocket,
+      title: "Bem-vindo ao AxionOS",
+      description: "Transforme sua ideia de produto em uma aplicação validada e publicada — automaticamente. O AxionOS cuida da arquitetura, geração de código, testes e deploy.",
+      color: "text-primary",
+    },
+    {
+      icon: Lightbulb,
+      title: "1. Descreva sua ideia",
+      description: "Diga o que você quer construir. Nossa IA analisa sua ideia, avalia viabilidade e cria um plano estruturado — em segundos.",
+      color: "text-accent",
+    },
+    {
+      icon: Layers,
+      title: "2. Acompanhe a construção",
+      description: "O pipeline gera automaticamente arquitetura, código, testes e documentação. Você aprova cada etapa importante antes de avançar.",
+      color: "text-primary",
+    },
+    {
+      icon: Globe,
+      title: "3. Receba um produto real",
+      description: "Seu código validado é publicado no GitHub e deployado. Você recebe uma URL funcional, um repositório real e rastreabilidade completa.",
+      color: "text-accent",
+    },
+    {
+      icon: BarChart3,
+      title: "4. Acompanhe tudo",
+      description: "Veja exatamente quanto tempo levou, quanto custou e onde teve sucesso ou falha. Transparência total, sempre.",
+      color: "text-primary",
+    },
+  ];
 
   useEffect(() => {
     if (user && currentOrg) {
@@ -133,12 +166,12 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
           <DialogFooter className="flex-row gap-2">
             <Button variant="ghost" size="sm" onClick={complete} className="text-muted-foreground">
-              Pular
+              {locale === "en-US" ? "Skip" : "Pular"}
             </Button>
             <div className="flex-1" />
             {step > 0 && (
               <Button variant="outline" size="sm" onClick={() => setStep(s => s - 1)}>
-                Voltar
+                {locale === "en-US" ? "Back" : "Voltar"}
               </Button>
             )}
             <Button
@@ -147,9 +180,9 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
               className="gap-1.5"
             >
               {isLast ? (
-                <><CheckCircle2 className="h-4 w-4" /> Começar</>
+                <><CheckCircle2 className="h-4 w-4" /> {locale === "en-US" ? "Get Started" : "Começar"}</>
               ) : (
-                <>Próximo <ArrowRight className="h-4 w-4" /></>
+                <>{locale === "en-US" ? "Next" : "Próximo"} <ArrowRight className="h-4 w-4" /></>
               )}
             </Button>
           </DialogFooter>

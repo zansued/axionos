@@ -29,6 +29,7 @@ import { ArchitecturalDriftStatus } from "./ArchitecturalDriftStatus";
 import { RuntimeValidationStatus } from "./RuntimeValidationStatus";
 import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
 import { InitiativeObservabilityCard } from "./InitiativeObservabilityCard";
+import { InitiativeOutcomeCard } from "./InitiativeOutcomeCard";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 import PipelineGraphView from "./PipelineGraphView";
 
@@ -403,6 +404,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
         </DialogContent>
       </Dialog>
 
+      {/* Outcome Card — product-level status */}
+      <InitiativeOutcomeCard initiative={initiative} />
+
       {/* Running indicator */}
       {runningStage && runningStage !== "approve" && runningStage !== "reject" && (
         <Card className="border-primary/30 bg-primary/5">
@@ -443,56 +447,45 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
       {/* Runtime Validation (tsc + vite build) */}
       <RuntimeValidationStatus executionProgress={initiative.execution_progress} initiativeId={initiative.id} />
 
-      {/* Repo Result Card */}
+      {/* Repo & Deploy Actions */}
       {repoUrl && (
-        <Card className="border-primary/30 bg-primary/5">
-          <CardContent className="p-4 space-y-3">
-            <div className="flex items-center justify-between">
+        <Card className="border-border/50">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between flex-wrap gap-3">
               <div className="flex items-center gap-3">
                 <GitBranch className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-sm font-medium">Código publicado direto no main ✅</p>
-                  <p className="text-xs text-muted-foreground font-mono">
-                    {publishJob?.outputs?.owner}/{publishJob?.outputs?.repo} → main
+                  <p className="text-sm font-medium">
+                    {publishJob?.outputs?.owner}/{publishJob?.outputs?.repo}
                   </p>
+                  <p className="text-[10px] text-muted-foreground">main branch</p>
                 </div>
               </div>
-              <div className="flex gap-1.5">
+              <div className="flex gap-1.5 flex-wrap">
                 <a href={repoUrl} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="sm" className="gap-1.5">
-                    Repositório <ExternalLink className="h-3.5 w-3.5" />
+                  <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                    <GitBranch className="h-3.5 w-3.5" /> Repository <ExternalLink className="h-3 w-3" />
                   </Button>
                 </a>
+                {publishJob?.outputs?.owner && publishJob?.outputs?.repo && (
+                  <a
+                    href={`https://github.com/${publishJob.outputs.owner}/${publishJob.outputs.repo}/archive/refs/heads/${publishJob.outputs.branch || "main"}.zip`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                      <Download className="h-3.5 w-3.5" /> ZIP
+                    </Button>
+                  </a>
+                )}
+                {deployUrl && (
+                  <a href={deployUrl} target="_blank" rel="noopener noreferrer">
+                    <Button size="sm" className="gap-1.5 text-xs">
+                      <Globe className="h-3.5 w-3.5" /> Open Deploy <ExternalLink className="h-3 w-3" />
+                    </Button>
+                  </a>
+                )}
               </div>
-            </div>
-            <Separator />
-            <div className="flex gap-2 flex-wrap">
-              {/* Download ZIP */}
-              {publishJob?.outputs?.owner && publishJob?.outputs?.repo && (
-                <a
-                  href={`https://github.com/${publishJob.outputs.owner}/${publishJob.outputs.repo}/archive/refs/heads/${publishJob.outputs.branch || "main"}.zip`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button variant="outline" size="sm" className="gap-1.5">
-                    <Download className="h-3.5 w-3.5" />
-                    Download ZIP
-                  </Button>
-                </a>
-              )}
-              {/* Deploy to Vercel — uses the repo directly (main branch) */}
-              {publishJob?.outputs?.owner && publishJob?.outputs?.repo && (
-                <a
-                  href={`https://vercel.com/new/clone?repository-url=${encodeURIComponent(`https://github.com/${publishJob.outputs.owner}/${publishJob.outputs.repo}`)}&project-name=${encodeURIComponent(publishJob.outputs.repo)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button variant="outline" size="sm" className="gap-1.5">
-                    <Globe className="h-3.5 w-3.5" />
-                    Deploy no Vercel
-                  </Button>
-                </a>
-              )}
             </div>
           </CardContent>
         </Card>

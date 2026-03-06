@@ -58,9 +58,12 @@ export function InitiativeObservabilityCard({ initiativeId }: { initiativeId: st
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-4">
-            <p className="text-xs text-muted-foreground mb-2">No metrics computed yet</p>
-            <Button size="sm" variant="outline" onClick={() => refetch()}>
+          <div className="text-center py-6 space-y-2">
+            <BarChart3 className="h-8 w-8 text-muted-foreground/30 mx-auto" />
+            <p className="text-xs text-muted-foreground">
+              Metrics are computed as the pipeline progresses. Run more stages to see cost, speed, and success data here.
+            </p>
+            <Button size="sm" variant="outline" onClick={() => refetch()} className="mt-2">
               <BarChart3 className="h-3 w-3 mr-1" /> Compute Metrics
             </Button>
           </div>

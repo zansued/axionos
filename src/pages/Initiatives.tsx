@@ -33,7 +33,7 @@ export default function Initiatives() {
   const queryClient = useQueryClient();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { runStage, rollbackToStage, getRunningStage } = usePipeline();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const { data: initiatives = [], isLoading } = useQuery({
     queryKey: ["initiatives", currentOrg?.id],
@@ -249,9 +249,18 @@ export default function Initiatives() {
             />
           ) : (
             <Card className="border-dashed border-2 flex items-center justify-center min-h-[400px]">
-              <CardContent className="text-center">
-                <Lightbulb className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-                <p className="text-sm text-muted-foreground">{t("initiatives.selectPrompt")}</p>
+              <CardContent className="text-center space-y-4 py-12">
+                <div className="h-14 w-14 rounded-xl bg-muted flex items-center justify-center mx-auto">
+                  <Lightbulb className="h-7 w-7 text-muted-foreground/40" />
+                </div>
+                <div className="space-y-1.5">
+                  <p className="text-sm font-medium">{t("initiatives.selectPrompt")}</p>
+                  <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+                    {locale === "en-US"
+                      ? "Select an initiative from the list to see its pipeline progress, deployed artifacts, and product metrics."
+                      : "Selecione uma iniciativa da lista para ver o progresso do pipeline, artefatos publicados e métricas de produto."}
+                  </p>
+                </div>
               </CardContent>
             </Card>
           )}
