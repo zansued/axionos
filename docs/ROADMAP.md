@@ -1,261 +1,171 @@
-# AxionOS v3 — Roadmap de Implementação
+# AxionOS — System Evolution Roadmap
 
-> Checklist ordenado do que foi feito e do que falta.  
-> Marque com `[x]` conforme for concluído.  
-> Última atualização: 2026-03-05
-
----
-
-## Fase 1 — Migrar para Lovable AI Gateway ✅
-
-- [x] Migrar todas as Edge Functions para Lovable AI Gateway (`google/gemini-2.5-flash`)
-- [x] Unificar client AI em `_shared/ai-client.ts` com retry + cost tracking
-- [x] Suporte a OpenAI como fallback quando `OPENAI_API_KEY` configurada
+> **Vision**: AxionOS is evolving into a fully autonomous system capable of building, operating, and improving software products continuously — without human engineering intervention.
+>
+> Last updated: 2026-03-06
 
 ---
 
-## Fase 2 — Pipeline Decomposition ✅
+## System Evolution Phases
 
-- [x] Decompor pipeline monolítico em 38+ Edge Functions independentes
-- [x] `pipeline-comprehension` (4 agentes de compreensão)
-- [x] `pipeline-architecture` (4 agentes de arquitetura)
-- [x] `pipeline-squad` (Formação de squad)
-- [x] `pipeline-planning` (Planejamento)
-- [x] `pipeline-execution-orchestrator` + `pipeline-execution-worker` (Swarm)
-- [x] `pipeline-validation` (AI Validation + Fix Loop)
-- [x] `pipeline-deep-validation` (Deep Static Analysis)
-- [x] `pipeline-drift-detection` (Architectural Drift Detection)
-- [x] `pipeline-runtime-validation` (Runtime Validation via CI)
-- [x] `pipeline-publish` (Atomic Tree API Publish)
-- [x] `pipeline-ci-webhook` + `pipeline-fix-orchestrator` (CI Fix Swarm)
-- [x] `pipeline-approve` / `pipeline-reject` (Gates)
-- [x] `pipeline-fast-modify` / `pipeline-full-review` (Modificações)
-- [x] Shared bootstrap (`pipeline-bootstrap.ts`) para auth, CORS, rate limiting
+### PHASE 1 — Core Engineering Factory ✅ Completed
 
----
+**Description:**
+Initial implementation of the autonomous software engineering pipeline. From idea to deployable application — fully automated.
 
-## Fase 3 — Chain-of-Agents ✅
+**Modules:**
+- Initiative Pipeline (32-stage deterministic flow)
+- Architecture Generator (4-agent architecture team)
+- Architecture Simulation Engine (structural wind tunnel)
+- Preventive Validation (historical rule auditing)
+- Project Bootstrap Intelligence (multi-stack detection + build prediction)
+- Dependency Intelligence Engine (NPM health audit + Firecrawl research)
+- Supabase Schema Bootstrap (isolated `app_{id}` schemas)
+- Supabase Provisioning Engine (tables + RLS + storage)
+- Autonomous API Generator (REST, RPCs, triggers, webhooks)
+- Autonomous UI Generator (pages, components, hooks, navigation)
+- Self-Healing Build Pipeline (auto-repair + prevention rules)
+- CI/CD Integration (GitHub Actions runtime validation)
+- GitHub Webhook System (atomic Tree API commits + auto-PRs)
 
-- [x] Tabela `agent_messages` para rastreabilidade de conversas entre agentes
-- [x] Cadeia de 3 agentes no Layer 4: Code Architect → Developer → Integration Agent
-- [x] Registrar cada handoff como `agent_message`
-- [x] Timeline de mensagens na UI (`AgentMessagesTimeline`)
+**Impact:**
+AxionOS can transform a project idea into a deployable full-stack application with architecture, database, API, UI, build validation, and continuous deployment — autonomously.
 
 ---
 
-## Fase 4 — Project Brain ✅
+### PHASE 2 — Adaptive Engineering System ✅ Completed
 
-- [x] Tabela `project_brain_nodes` com todos os tipos de nó
-- [x] Tabela `project_brain_edges` com relações de dependência
-- [x] Tabela `project_decisions` com categorias, supersedes chain, status
-- [x] Tabela `project_errors` com rastreamento de erros e root causes
-- [x] Tabela `project_prevention_rules` com confidence scoring
-- [x] Full-text search via `tsvector` em nodes
-- [x] Vector embeddings via `pgvector` (768-dim) com cosine similarity
-- [x] Painel interativo `ProjectBrainPanel` com DAG, Self-Healing, Decisions
-- [x] `generateBrainContext()` para injeção automática em prompts de IA
+**Description:**
+Introduce system learning and architecture evolution. The system remembers failures, extracts patterns, and prevents repeated mistakes across projects.
 
----
+**Modules:**
+- Error Intelligence Engine (pattern analysis + root cause extraction)
+- Prevention Rules (confidence scoring + incremental learning)
+- Architecture Evolution Memory (cross-project pattern library)
+- Cross-project Pattern Learning (org-wide knowledge base)
+- Adaptive Learning Engine (automatic rule generation from failures)
 
-## Fase 5 — DAG Execution Engine ✅
-
-- [x] `buildExecutionDAG()` — constrói DAG a partir de brain nodes/edges
-- [x] `computeWaves()` — topological sort (Kahn's) agrupando por wave level
-- [x] `getReadyNodes()` — retorna nós com dependências satisfeitas
-- [x] Orchestrator + Worker com 6 workers paralelos
+**Impact:**
+The system learns from previous failures and prevents repeated engineering mistakes. Each project benefits from the accumulated knowledge of all prior executions.
 
 ---
 
-## Fase 6 — Smart Context Window ✅
+### PHASE 3 — AI Efficiency Layer 🔄 In Progress
 
-- [x] AST-like parser em `_shared/smart-context.ts`
-- [x] ~60-80% redução de tokens enviados à IA
+**Description:**
+Reduce token consumption and operational cost while increasing scalability. Every LLM call is optimized through compression, caching, and intelligent routing.
 
----
+**Modules:**
+- Prompt Compression Engine (`_shared/prompt-compressor.ts`) — rule-based + AI summarization
+- Semantic Cache Engine (`_shared/semantic-cache.ts`) — vector similarity cache with 0.92 threshold
+- Model Router Engine (`_shared/model-router.ts`) — complexity-based model selection
+- Context Summarization (Smart Context Window — ~60-80% token reduction)
+- Token Usage Optimizer (integrated in `ai-client.ts`)
+- Stage Context Memory (`ai_prompt_cache` table with pgvector embeddings)
+- Agent Prompt Templates (stage-aware prompt compression)
 
-## Fase 7 — Self-Healing ✅
-
-- [x] Learning Agent gera prevention rules após cada fix
-- [x] Prevention rules com confidence scoring incremental
-- [x] Self-Healing tab no `ProjectBrainPanel`
-
----
-
-## Fase 8 — Observability & Governance ✅
-
-- [x] Custos per-initiative com tracking em `initiative_jobs`
-- [x] SLA configs per-stage (`stage_sla_configs`)
-- [x] Gate permissions per-org (`pipeline_gate_permissions`)
-- [x] Usage limits, Audit logs, Dashboard estratégico
+**Impact:**
+Up to 80–90% reduction in token usage and API costs. The system becomes economically viable at scale without sacrificing engineering intelligence.
 
 ---
 
-## Fase 9 — Architecture Simulation ✅
+### PHASE 4 — Agent Intelligence Layer 🔮 Planned
 
-- [x] `pipeline-architecture-simulation` — túnel de vento técnico
-- [x] Grafo dirigido de componentes
-- [x] AI prediction de falhas de build + auto-reparo
+**Description:**
+Transform agents into learning systems capable of improving engineering decisions autonomously. Agents evolve their own prompts, patterns, and repair strategies.
 
----
+**Modules:**
+- Learning Agents (self-improving prompt strategies)
+- Prompt Optimization Engine (A/B testing of prompt variations)
+- Architecture Pattern Library (successful pattern catalog)
+- Error Pattern Recognition (predictive error detection)
+- Self-Improving Fix Agents (repair strategies that improve over time)
 
-## Fase 10 — Pre-Generation Intelligence ✅
-
-- [x] `pipeline-preventive-validation` — auditoria de regras históricas
-- [x] `project-bootstrap-intelligence` — multi-stack detection + build prediction
-- [x] `pipeline-foundation-scaffold` — scaffold mínimo buildável
-- [x] `pipeline-module-graph-simulation` — bundler import analysis + DFS
-- [x] `pipeline-dependency-intelligence` — NPM health audit
-
----
-
-## Fase 11 — Supabase Infrastructure ✅
-
-- [x] `supabase-schema-bootstrap` — schema isolado `app_{project_id}`
-- [x] `supabase-provisioning-engine` — tabelas base + RLS + storage bucket
+**Impact:**
+Agents improve reasoning and repair capabilities over time. The quality of generated code increases with each execution cycle.
 
 ---
 
-## Fase 12 — AI Analysis Chain ✅
+### PHASE 5 — Autonomous Product Evolution 🔮 Planned
 
-- [x] `ai-domain-model-analyzer` — entidades, atributos, relacionamentos via LLM
-- [x] `ai-business-logic-synthesizer` — services, validações, workflows
-- [x] `autonomous-api-generator` — REST endpoints, RPCs, triggers, webhooks
+**Description:**
+Enable applications generated by AxionOS to evolve automatically after deployment. Products observe user behavior, identify improvement opportunities, and implement changes.
 
----
+**Modules:**
+- Product Analytics Engine (AARRR metrics: acquisition, activation, retention, revenue, referral)
+- User Behavior Analyzer (feature usage, drop-off points, session patterns)
+- Growth Optimization Engine (landing page, onboarding, feature prioritization)
+- Feature Suggestion Engine (AI-driven feature recommendations)
+- Automatic UI Optimization (layout, copy, conversion optimization)
 
-## Fase 13 — AxionOS v2 Modules ✅
-
-- [x] `supabase-data-model-generator` — domain_model → SQL tables, FK, indexes, RLS
-- [x] `autonomous-ui-generator` — páginas, componentes, hooks, navegação
-- [x] `adaptive-learning-engine` — prevention rules, patterns, cross-project learning
-
----
-
-## Fase 14 — AxionOS v3: Venture Intelligence Layer 📋
-
-### 14.1 — Opportunity Discovery Engine
-- [ ] Edge Function `opportunity-discovery-engine`
-- [ ] Inputs: market data, search trends, developer communities, startup datasets
-- [ ] Outputs: `opportunity_report`, `problem_statement`, `target_audience`, `product_type`
-- [ ] Pipeline stages: `discovering_opportunity` → `opportunity_discovered`
-- [ ] Store `opportunity_report` in Project Brain
-
-### 14.2 — Market Signal Analyzer
-- [ ] Edge Function `market-signal-analyzer`
-- [ ] Analyze: search volume, community discussions, competitor products, pricing
-- [ ] Outputs: `market_score`, `demand_level`, `competition_level`, `viability_index`
-- [ ] Pipeline stages: `analyzing_market` → `market_analyzed`
-- [ ] Viability gate: block low-score opportunities
-
-### 14.3 — Product Validation Engine
-- [ ] Edge Function `product-validation-engine`
-- [ ] Methods: landing page simulation, synthetic user testing, AI demand estimation
-- [ ] Outputs: `validation_score`, `estimated_adoption`, `risk_level`
-- [ ] Pipeline stages: `validating_product` → `product_validated`
-
-### 14.4 — Revenue Strategy Engine
-- [ ] Edge Function `revenue-strategy-engine`
-- [ ] Define: pricing model, subscription tiers, freemium options, upsells
-- [ ] Outputs: `revenue_strategy`, `pricing_tiers`, `market_positioning`
-- [ ] Pipeline stages: `strategizing_revenue` → `revenue_strategized`
+**Impact:**
+Generated applications continuously improve without manual engineering. The software lifecycle extends beyond deployment into autonomous evolution.
 
 ---
 
-## Fase 15 — AxionOS v3: Growth & Evolution Layer 📋
+### PHASE 6 — Startup Factory System 🔮 Planned
 
-### 15.1 — Observability Engine
-- [ ] Edge Function `observability-engine`
-- [ ] Real-time monitoring of deployed products
-- [ ] Pipeline stages: `observing` → `observed`
+**Description:**
+Transform AxionOS from a software factory into an autonomous startup creation platform. The system discovers market opportunities, validates ideas, builds products, and manages a portfolio of autonomous ventures.
 
-### 15.2 — Product Analytics Engine
-- [ ] Edge Function `product-analytics-engine`
-- [ ] Track: user acquisition, activation, retention, conversion, revenue
-- [ ] Feed metrics to evolution engines
-- [ ] Pipeline stages: `analyzing_product` → `product_analytics_ready`
+**Modules:**
+- Opportunity Discovery Engine (market gap identification)
+- Market Signal Analyzer (demand, competition, trend analysis via Firecrawl)
+- Product Validation Engine (synthetic testing + demand estimation)
+- Revenue Strategy Engine (pricing models, subscription tiers, monetization)
+- Startup Portfolio Manager (multi-product resource allocation)
+- Venture Intelligence Layer (end-to-end venture orchestration)
 
-### 15.3 — User Behavior Analyzer
-- [ ] Edge Function `user-behavior-analyzer`
-- [ ] Analyze: feature usage, drop-off points, session duration, interaction patterns
-- [ ] Identify: friction points, unused features, engagement drivers
-- [ ] Pipeline stages: `analyzing_behavior` → `behavior_analyzed`
-
-### 15.4 — Growth Optimization Engine
-- [ ] Edge Function `growth-optimization-engine`
-- [ ] Capabilities: landing page optimization, feature prioritization, onboarding improvements
-- [ ] Pipeline stages: `optimizing_growth` → `growth_optimized`
-
-### 15.5 — Product Evolution Engine
-- [ ] Edge Function `product-evolution-engine`
-- [ ] Auto-evolve: add features, remove unused modules, improve UI, optimize DB
-- [ ] Pipeline stages: `evolving_product` → `product_evolved`
-
-### 15.6 — Architecture Evolution Engine
-- [ ] Edge Function `architecture-evolution-engine`
-- [ ] Learn: better schema structures, onboarding patterns, feature sets
-- [ ] Build internal architecture library
-- [ ] Pipeline stages: `evolving_architecture` → `architecture_evolved`
-
-### 15.7 — Startup Portfolio Manager
-- [ ] Edge Function `startup-portfolio-manager`
-- [ ] Track: active products, growth stage, revenue, user base, risk level
-- [ ] Resource allocation based on traction
-- [ ] Pipeline stages: `managing_portfolio` → `portfolio_managed`
-
-### 15.8 — System Evolution Engine
-- [ ] Edge Function `system-evolution-engine`
-- [ ] Meta-learning for continuous platform improvement
-- [ ] Pipeline stages: `evolving_system` → `system_evolved`
+**Impact:**
+AxionOS becomes capable of discovering, building, launching, and evolving multiple software products autonomously — functioning as a self-operating venture studio.
 
 ---
 
-## Fase 16 — v3 Database Schema 📋
+## System Maturity Levels
 
-- [ ] Table `product_opportunities` — discovered opportunities with scores
-- [ ] Table `market_signals` — demand signals with viability index
-- [ ] Table `product_portfolios` — multi-product portfolio tracking
-- [ ] Table `product_analytics` — usage metrics per deployed product
-- [ ] Table `evolution_plans` — auto-generated evolution roadmaps
-- [ ] New enum values for v3 pipeline stages
-- [ ] RLS policies for all new tables
+| Level | Name | Description |
+|-------|------|-------------|
+| **Level 1** | Code Generator | Generates code snippets from prompts. No architecture awareness. |
+| **Level 2** | Software Builder | Produces full applications with structure, database, and deployment. |
+| **Level 3** | Autonomous Engineering System | Self-healing builds, architecture simulation, preventive validation, CI/CD integration. |
+| **Level 4** | Self-Learning Software Factory | Agents learn from failures, optimize their own prompts, and improve code quality autonomously. |
+| **Level 5** | Autonomous Startup Factory | Discovers opportunities, builds products, deploys, measures, evolves, and manages a portfolio — fully autonomous. |
 
----
+### Current Status
 
-## Fase 17 — v3 UI 📋
-
-- [ ] Venture Dashboard — opportunity funnel visualization
-- [ ] Portfolio Manager — multi-product grid view
-- [ ] Analytics Dashboard — per-product metrics
-- [ ] Evolution Timeline — auto-evolution history
-- [ ] Market Signal Map — viability heatmap
+> **AxionOS is currently transitioning from Level 3 to Level 4.**
+>
+> The Core Engineering Factory (Phase 1) and Adaptive Engineering System (Phase 2) are fully operational. The AI Efficiency Layer (Phase 3) is being implemented to enable cost-effective scaling — with Prompt Compression, Semantic Cache, and Model Router already deployed. The next frontier is Agent Intelligence (Phase 4) — where agents become self-improving systems rather than static prompt executors.
 
 ---
 
-## 🟡 Pending Improvements (All versions)
+## System Metrics
 
-| # | Item | Impact | Complexity |
-|---|------|--------|-----------|
-| 1 | UI for v2 stages (ER diagram, component tree) | 🟡 Medium | Medium |
-| 2 | Approval chains with quorum | 🟡 Medium | High |
-| 3 | Webhook notifications (Slack/Discord) | 🟠 Low | Low |
-| 4 | Export enhancements | 🟠 Low | Low |
+### Current (Phases 1-3)
+| Metric | Value |
+|--------|-------|
+| Pipeline stages | 32 |
+| Edge Functions | 50+ |
+| Specialized agents | 18+ per role |
+| Shared helpers | 15+ reusable modules |
+| Database tables | 30+ with RLS |
+| Brain node types | 11+ |
+| Token reduction | ~60-90% via efficiency layer |
+
+### Target (Phases 4-6)
+| Metric | Target |
+|--------|--------|
+| Full SaaS generation | < 5 minutes |
+| Autonomous evolution | Continuous post-deploy |
+| Portfolio management | Multi-product simultaneous |
+| Agent self-improvement | Per-execution learning cycle |
 
 ---
 
-## Métricas do Projeto
+## Long-Term Vision
 
-### v2 (Implementado)
-- **38+ Edge Functions** independentes
-- **22 estágios** de pipeline determinístico
-- **18+ agentes** especializados por role
-- **12 shared helpers** reutilizáveis
-- **28+ tabelas** no banco de dados
-- **8+ tipos de nó** no Project Brain
+AxionOS is not a code generation tool. It is an **autonomous software engineering system** designed to reach full operational independence.
 
-### v3 (Planejado)
-- **32 estágios** de pipeline (10 novos)
-- **50+ Edge Functions** (12 novas)
-- **8 novos motores** de inteligência
-- **5+ novas tabelas** de banco de dados
-- **Multi-product portfolio** management
-- **Autonomous product evolution** loop
+The end state: a system that can **discover** market opportunities, **design** product architectures, **build** complete applications, **deploy** to production, **observe** user behavior, **evolve** the product, and **manage** a portfolio of autonomous ventures — continuously, without human engineering intervention.
+
+Each phase brings AxionOS closer to this vision. Each module is a building block toward a self-operating software factory.
