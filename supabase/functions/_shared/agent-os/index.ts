@@ -33,3 +33,37 @@ export { RuntimeMemory } from "./memory.ts";
 export { createDefaultPolicies } from "./policies.ts";
 export { scoreArtifacts, averageScore, meetsThreshold } from "./scoring.ts";
 export { cryptoRandomId, nowIso, createArtifact } from "./utils.ts";
+
+// Protocol Contracts
+export type {
+  RunContract,
+  RunConfig,
+  StagePolicyRef,
+  RunResult,
+  RunTrace,
+  StageContract,
+  AgentAssignment,
+  StageResult,
+  StageTrace,
+  TaskEnvelope,
+  ToolDeclaration,
+  AgentResponse,
+  AgentDecision,
+  AgentMetrics,
+  ArtifactEnvelope,
+  ArtifactKind,
+  ArtifactLineage,
+  ToolInvocation,
+  ToolResult,
+  ValidationReport,
+  ValidationFinding,
+  ValidationSuggestion,
+  ProtocolEventType,
+  ProtocolEvent,
+  TraceContext,
+  TraceMetadata,
+  FailureAction,
+  FailurePolicy,
+  FailureReport,
+  FailureErrorType,
+} from "./protocol.ts";
