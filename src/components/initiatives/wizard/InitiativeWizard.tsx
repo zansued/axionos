@@ -93,10 +93,63 @@ export function InitiativeWizard({ onSubmit, isPending }: Props) {
   };
 
   const handleSubmit = () => {
-    onSubmit(brief);
+    // Enrich brief with initiative_brief contract fields for pipeline consumption
+    const enrichedBrief: InitiativeBrief = {
+      ...brief,
+      // Map wizard fields to initiative_brief contract
+      _initiative_brief: {
+        name: brief.name,
+        description: brief.description,
+        problem: brief.problem_statement || "To be defined",
+        target_users: brief.target_audience ? [brief.target_audience] : ["General users"],
+        product_type: mapProductType(brief.product_type),
+        core_features: brief.core_features,
+        integrations: brief.integrations,
+        tech_preferences: brief.technical_preferences,
+        deployment_target: brief.deployment_target || "vercel",
+        complexity_estimate: mapComplexity(brief.core_features.length + brief.integrations.length),
+        generation_depth: mapDepth(brief.generation_depth),
+        expected_outputs: ["repository", "prd"],
+      },
+      _blueprint: blueprint,
+    };
+    onSubmit(enrichedBrief);
     reset();
     setOpen(false);
   };
+
+  // Map frontend product_type to initiative_brief contract
+  function mapProductType(type: string): string {
+    const map: Record<string, string> = {
+      saas: "saas",
+      mvp: "saas",
+      dashboard: "internal_tool",
+      crud: "internal_tool",
+      landing: "saas",
+      custom: "saas",
+      marketplace: "marketplace",
+      mobile_app: "mobile_app",
+      ai_product: "ai_product",
+      api_product: "api_product",
+    };
+    return map[type] || "saas";
+  }
+
+  function mapComplexity(featureCount: number): string {
+    if (featureCount <= 3) return "simple";
+    if (featureCount <= 6) return "moderate";
+    return "complex";
+  }
+
+  function mapDepth(depth: string): string {
+    const map: Record<string, string> = {
+      discovery: "mvp",
+      prd_architecture: "mvp",
+      prd_arch_stories: "production",
+      full_pipeline: "production",
+    };
+    return map[depth] || "mvp";
+  }
 
   const handleOpenChange = (v: boolean) => {
     setOpen(v);
