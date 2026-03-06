@@ -204,6 +204,7 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["validating"].includes(s)) return 23;
   if (["repairing_build", "build_repaired", "repair_failed"].includes(s)) return 24;
   if (["ready_to_publish", "published"].includes(s)) return 25;
+  if (["deploying", "deployed", "deploy_failed"].includes(s)) return 26;
 
   // Growth & Evolution Layer
   if (["observing_product", "product_observed"].includes(s)) return 26;
