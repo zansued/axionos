@@ -162,3 +162,47 @@ export {
   DEFAULT_SELECTION_ENGINE_CONFIG,
   DEFAULT_TIE_BREAK_ORDER,
 } from "./selection.ts";
+
+// Policy Engine (v0.1)
+export type {
+  // Scope
+  PolicyScope,
+  PolicyEnvironment,
+  // Context
+  PolicyContext,
+  RunMetricsSnapshot,
+  // Rules
+  PolicyRule,
+  PolicySeverity,
+  PolicyCondition,
+  PolicyContextField,
+  PolicyOperator,
+  PolicyAction,
+  PolicyActionType,
+  // Evaluation
+  PolicyEvaluation,
+  PolicyViolation,
+  // Decision
+  PolicyDecision,
+  PolicyVerdict,
+  PolicyModifier,
+  PolicyModifierTarget,
+  PolicyRecommendation,
+  // Overrides
+  PolicyOverride,
+  PolicyOverrideScope,
+  // Sets
+  PolicySet,
+  // Config
+  PolicyEngineConfig,
+  // Events
+  PolicyEventType,
+  // Interface
+  IPolicyEngine,
+} from "./policy-engine.ts";
+
+export {
+  POLICY_SCOPE_PRECEDENCE,
+  DEFAULT_POLICY_ENGINE_CONFIG,
+  DEFAULT_POLICY_RULES,
+} from "./policy-engine.ts";
