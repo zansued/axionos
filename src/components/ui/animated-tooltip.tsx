@@ -15,6 +15,63 @@ export interface TooltipItem {
   image: string;
 }
 
+const ROLE_COLORS: Record<string, string> = {
+  pm: "from-blue-500 to-cyan-500",
+  po: "from-violet-500 to-purple-500",
+  architect: "from-amber-500 to-orange-500",
+  dev: "from-emerald-500 to-green-500",
+  developer: "from-emerald-500 to-green-500",
+  qa: "from-rose-500 to-pink-500",
+  devops: "from-sky-500 to-indigo-500",
+  analyst: "from-teal-500 to-cyan-500",
+  sm: "from-fuchsia-500 to-pink-500",
+  ux_expert: "from-yellow-500 to-amber-500",
+};
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function AvatarImage({ item }: { item: TooltipItem }) {
+  const [failed, setFailed] = useState(false);
+  const gradient = ROLE_COLORS[item.designation] || "from-primary to-primary/70";
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
+    // handled by parent
+  };
+
+  if (failed || !item.image) {
+    return (
+      <div
+        className={cn(
+          "flex items-center justify-center rounded-full h-12 w-12 border-2 border-background",
+          "bg-gradient-to-br text-white font-bold text-sm",
+          "group-hover:scale-105 group-hover:z-30 relative transition duration-500",
+          gradient
+        )}
+      >
+        {getInitials(item.name)}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      height={100}
+      width={100}
+      src={item.image}
+      alt={item.name}
+      onError={() => setFailed(true)}
+      className="object-cover !m-0 !p-0 object-top rounded-full h-12 w-12 border-2 group-hover:scale-105 group-hover:z-30 border-background relative transition duration-500"
+    />
+  );
+}
+
 export function AnimatedTooltip({
   items,
   className,
@@ -34,8 +91,8 @@ export function AnimatedTooltip({
     springConfig
   );
 
-  const handleMouseMove = (event: React.MouseEvent<HTMLImageElement>) => {
-    const target = event.target as HTMLElement;
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.currentTarget;
     const halfWidth = target.offsetWidth / 2;
     x.set(event.nativeEvent.offsetX - halfWidth);
   };
@@ -48,6 +105,7 @@ export function AnimatedTooltip({
           key={item.id}
           onMouseEnter={() => setHoveredIndex(item.id)}
           onMouseLeave={() => setHoveredIndex(null)}
+          onMouseMove={handleMouseMove}
         >
           <AnimatePresence mode="popLayout">
             {hoveredIndex === item.id && (
@@ -76,14 +134,7 @@ export function AnimatedTooltip({
               </motion.div>
             )}
           </AnimatePresence>
-          <img
-            onMouseMove={handleMouseMove}
-            height={100}
-            width={100}
-            src={item.image}
-            alt={item.name}
-            className="object-cover !m-0 !p-0 object-top rounded-full h-12 w-12 border-2 group-hover:scale-105 group-hover:z-30 border-background relative transition duration-500"
-          />
+          <AvatarImage item={item} />
         </div>
       ))}
     </div>
