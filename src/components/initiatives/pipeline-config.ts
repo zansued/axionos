@@ -218,7 +218,9 @@ export function getMacroStageIndex(stageStatus: string): number {
 export type StageAction = {
   stage: string;
   label: string;
+  description?: string;
   type: "run" | "approve" | "reject" | "publish";
+  variant?: "primary" | "secondary" | "outline";
 };
 
 export function getAvailableActions(stageStatus: string): StageAction[] {
