@@ -137,3 +137,6 @@ verify_jwt = false
 
 [functions.adaptive-learning-engine]
 verify_jwt = false
+
+[functions.generate-initiative-blueprint]
+verify_jwt = false
