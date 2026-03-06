@@ -74,3 +74,25 @@ export type {
   RetryOtherDispatch,
   RollbackPolicy,
 } from "./protocol.ts";
+
+// Capability Model (v0.1)
+export type {
+  CapabilityDeclaration,
+  CapabilityInputSpec,
+  CapabilityOutputSpec,
+  CapabilityConstraint,
+  AgentProfile,
+  AgentCapabilityBinding,
+  CapabilityRequirement,
+  CapabilityMatchResult,
+  CapabilityMatchDetail,
+  SelectionPolicy,
+  FallbackChain,
+  DegradedCapability,
+  CapabilityPerformanceRecord,
+  PerformanceWeights,
+  CapabilityEvolutionEvent,
+  CapabilityCatalog,
+} from "./capabilities.ts";
+
+export { DEFAULT_PERFORMANCE_WEIGHTS } from "./capabilities.ts";
