@@ -54,86 +54,28 @@ The next phase is execution-focused and organized into short implementation spri
 idea → structured brief → simulation → pipeline → validated repository → deploy → product metrics
 ```
 
-No new architecture expansion until these four sprints are complete and stable.
+No new architecture expansion until these sprints are complete and stable.
 
 ---
 
 ### Sprint 1 — Initiative Brief Formalization
 
 **Goal:** Turn idea intake into a structured contract for the pipeline.
-
-**Deliverables:**
-- `initiative_brief` schema (Zod-validated)
-- AI-first initiative intake flow
-- Initiative blueprint generation via AI prompt
-- Blueprint approval/edit step
-- `initiative_brief` stored in initiative record
-- Stage 01 updated to consume `initiative_brief`
-
-**Expected Impact:**
-- Better pipeline inputs
-- Fewer downstream failures
-- Clearer product entry point
-
-**Status:** ✅ Implemented (schema, intake engine, wizard, blueprint generation)
+**Status:** ✅ Implemented
 
 ---
 
 ### Sprint 2 — Initiative Simulation Engine
 
 **Goal:** Introduce a lightweight simulation gate before expensive pipeline execution.
-
-**Deliverables:**
-- Initiative simulation schema (Zod-validated)
-- Simulation engine service
-- Technical feasibility estimate
-- Cost/time estimate
-- Risk flags
-- Go / Refine / Block recommendation
-- Simulation report stored in initiative record
-
-**Expected Impact:**
-- Reduced wasted runs
-- Better user guidance
-- Improved cost control
-- Stronger decision support
-
-**Status:** ✅ Implemented (schema, engine, wizard integration, simulation view)
+**Status:** ✅ Implemented
 
 ---
 
 ### Sprint 3 — Deploy Contract Completion
 
 **Goal:** Close the loop from repository generation to actual deployment.
-
-**Deliverables:**
-- Formal deploy states (`draft` → `deployed` / `deploy_failed`)
-- Deploy metadata persistence (`repo_url`, `commit_hash`, `deploy_url`, `health_status`)
-- Deploy target definition (Vercel first)
-- Deploy success / failure tracking
-- Initiative state updated through publish/deploy lifecycle
-
-**Deploy States:**
-
-| State | Description |
-|-------|-------------|
-| `draft` | Initiative created, not yet started |
-| `discovering` | Discovery phase active |
-| `architecting` | Architecture generation in progress |
-| `engineering` | Code generation and squad execution |
-| `validating` | Build validation (tsc + vite) |
-| `ready_to_publish` | Validation passed, awaiting publish |
-| `published` | Repository created on GitHub |
-| `deploying` | Deployment to target in progress |
-| `deployed` | Successfully deployed and accessible |
-| `deploy_failed` | Deployment failed |
-
-**Expected Impact:**
-- Complete product lifecycle
-- Visible end result for user
-- Operational proof of value
-
-**Status:** 📋 Planned
+**Status:** ✅ Implemented
 
 ---
 
@@ -142,26 +84,58 @@ No new architecture expansion until these four sprints are complete and stable.
 **Goal:** Upgrade observability from runtime telemetry to product metrics.
 
 **Deliverables:**
-- Initiative Lifecycle Dashboard
-- Metrics: `pipeline_success_rate`, `build_success_rate`, `deploy_success_rate`, `average_retries_per_initiative`, `automatic_repair_success_rate`, `cost_per_initiative`, `time_idea_to_repo`, `time_idea_to_deploy`
+- Initiative observability contract schema
+- Initiative observability aggregation engine
+- `initiative_observability` table with RLS
+- Initiative lifecycle dashboard (pipeline/build/deploy success, cost, time-to-repo/deploy)
+- Product outcome states: `in_progress`, `repository_ready`, `deployed`, `failed`, `partially_completed`
 
-| Metric | Target |
-|--------|--------|
-| `pipeline_success_rate` | > 80% |
-| `build_success_rate` | > 90% |
-| `deploy_success_rate` | > 85% |
-| `average_retries_per_initiative` | < 2 |
-| `automatic_repair_success_rate` | > 70% |
-| `cost_per_initiative` | Tracked & declining |
-| `time_idea_to_repo` | < 15 min |
-| `time_idea_to_deploy` | < 20 min |
+**Status:** ✅ Implemented
 
-**Expected Impact:**
-- Product visibility
-- Business-grade metrics
-- Confidence for users and future customers
+---
 
-**Status:** 📋 Planned
+### Sprint 5 — Onboarding & Product Packaging
+
+**Goal:** Make AxionOS understandable and activatable for real users.
+
+**Deliverables:**
+- 5-step bilingual onboarding flow
+- First-run Dashboard hero with product journey visualization
+- Improved empty states with contextual guidance
+- InitiativeOutcomeCard for clear result communication
+- Product framing: "idea → pipeline → repository → deploy"
+
+**Status:** ✅ Implemented
+
+---
+
+### Sprint 6 — Evidence-Oriented Repair Loop
+
+**Goal:** Make the repair loop evidence-based, traceable, and measurable.
+
+**Deliverables:**
+- Repair Evidence schema + Error Taxonomy + Repair Strategy Map
+- Revalidation Result schema + Repair Evidence Recorder
+- `repair_evidence` table with RLS
+- RepairEvidenceCard UI component
+- Integration with autonomous-build-repair
+
+**Status:** ✅ Implemented
+
+---
+
+### Sprint 7 — Error Pattern Library & Learning Foundation
+
+**Goal:** Convert repair evidence into reusable error pattern intelligence.
+
+**Deliverables:**
+- Error Pattern schema + Strategy Effectiveness schema + Prevention Rule Candidate schema
+- Error Signature Normalizer (deterministic normalization)
+- `error_patterns`, `strategy_effectiveness`, `prevention_rule_candidates` tables
+- Error Pattern Library Engine (aggregation, effectiveness, candidates)
+- ErrorPatternRadar UI (Observability → Patterns tab)
+
+**Status:** ✅ Implemented
 
 ---
 
