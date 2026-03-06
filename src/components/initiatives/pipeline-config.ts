@@ -75,6 +75,9 @@ export const PIPELINE_STEPS = [
   { key: "repair_failed", label: "Repair Failed", icon: Wrench, color: "text-destructive", bg: "bg-destructive/10" },
   { key: "ready_to_publish", label: "Pronto para Publicar", icon: Rocket, color: "text-accent", bg: "bg-accent/10" },
   { key: "published", label: "Publicado", icon: GitBranch, color: "text-primary", bg: "bg-primary/10" },
+  { key: "deploying", label: "Deploying ▶", icon: Globe, color: "text-warning", bg: "bg-warning/10" },
+  { key: "deployed", label: "Deployed ✓", icon: Globe, color: "text-success", bg: "bg-success/10" },
+  { key: "deploy_failed", label: "Deploy Failed", icon: Globe, color: "text-destructive", bg: "bg-destructive/10" },
 
   // ── Growth & Evolution Layer (Stages 24-32) ──
   { key: "observing_product", label: "Observability ▶", icon: Eye, color: "text-warning", bg: "bg-warning/10" },
