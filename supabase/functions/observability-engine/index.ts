@@ -87,10 +87,10 @@ Generate an observability report as JSON:
 
 Return ONLY valid JSON.`;
 
-    const aiResponse = await callAI(apiKey, prompt, "observability-engine");
+    const aiResult = await callAI(apiKey, prompt, "observability-engine", true);
     let report: any;
     try {
-      const cleaned = aiResponse.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
+      const cleaned = aiResult.content.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
       report = JSON.parse(cleaned);
     } catch {
       report = {
