@@ -214,11 +214,17 @@ serve(async (req) => {
           ? `\n\nSITE DE REFERÊNCIA (${initiative.reference_url}):\n---\n${referenceContent}\n---\nUse este site como inspiração e referência para a análise. Identifique funcionalidades, estrutura, público-alvo e modelo de negócio com base no conteúdo do site.`
           : "";
 
+        // Build enriched context from initiative_brief if available
+        const brief = initiative.initiative_brief as Record<string, any> | null;
+        const briefBlock = brief
+          ? `\n\nINITIATIVE BRIEF (structured input):\n${JSON.stringify(brief, null, 2)}\n\nUse this structured brief as the PRIMARY source of truth. It contains validated product type, target users, core features, integrations, and complexity estimate.`
+          : "";
+
         const result = await callAI(
           LOVABLE_API_KEY,
-          `Você é um consultor de produto e estratégia sênior. Analise a ideia do usuário e produza uma descoberta inteligente completa. Retorne APENAS JSON válido.`,
+          `Você é um consultor de produto e estratégia sênior. Analise a ideia do usuário e produza uma descoberta inteligente completa. Retorne APENAS JSON válido.${brief ? " Uma initiative_brief estruturada foi fornecida — use-a como fonte primária e enriqueça a análise com base nela." : ""}`,
           `Ideia do usuário: "${initiative.title}"
-${initiative.description ? `Descrição: ${initiative.description}` : ""}${referenceBlock}
+${initiative.description ? `Descrição: ${initiative.description}` : ""}${briefBlock}${referenceBlock}
 
 Produza uma análise completa no seguinte formato JSON:
 {
