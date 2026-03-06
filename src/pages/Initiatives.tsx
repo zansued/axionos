@@ -91,7 +91,7 @@ export default function Initiatives() {
         brief.integrations.length > 0 && `Integrations: ${brief.integrations.join(", ")}`,
       ].filter(Boolean).join("\n");
 
-      const insertData: any = {
+      const insertData: Record<string, unknown> = {
         title: brief.name,
         description: enrichedDesc,
         idea_raw: brief.description,
@@ -101,6 +101,9 @@ export default function Initiatives() {
         status: "idea",
         complexity: brief.core_features.length + brief.integrations.length <= 3 ? "low" : brief.core_features.length + brief.integrations.length <= 6 ? "medium" : "high",
         target_user: brief.target_audience || null,
+        initiative_brief: brief._initiative_brief || null,
+        blueprint: brief._blueprint || null,
+        generation_depth: brief._initiative_brief?.generation_depth || null,
         discovery_payload: {
           product_type: brief.product_type,
           core_features: brief.core_features,
@@ -112,7 +115,7 @@ export default function Initiatives() {
       };
       const { data, error } = await supabase
         .from("initiatives")
-        .insert(insertData)
+        .insert(insertData as any)
         .select().single();
       if (error) throw error;
       return data;
