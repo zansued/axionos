@@ -353,3 +353,37 @@ export type {
 export {
   DEFAULT_TOOL_ADAPTER_CONFIG,
 } from "./tool-adapter.ts";
+
+// Memory System (v0.6)
+export type {
+  PersistentMemoryType,
+  MemoryRecord,
+  MemoryContent,
+  MemoryContentFormat,
+  MemoryReference,
+  MemoryRefType,
+  MemoryEmbeddingVector,
+  MemorySimilarityResult,
+  MemoryDistanceMetric,
+  MemoryVectorQuery,
+  MemoryQuery,
+  MemorySortKey,
+  MemoryQueryResult,
+  MemoryWriteRequest,
+  MemoryWriteResult,
+  MemoryRetrievalRequest,
+  MemoryRetrievalResult,
+  MemoryTraceMetadata,
+  MemoryRetentionInfo,
+  MemoryRetentionPolicy,
+  MemoryRetentionStrategy,
+  IMemoryEmbeddingProvider,
+  IMemoryStore,
+  MemorySystemConfig,
+  MemorySystemEventType,
+} from "./memory-system.ts";
+
+export {
+  DEFAULT_RETENTION_POLICIES,
+  DEFAULT_MEMORY_SYSTEM_CONFIG,
+} from "./memory-system.ts";
