@@ -330,8 +330,20 @@ serve(async (req) => {
     let waveNum = 0;
     let safetyCounter = 0;
     const maxIterations = dag.totalNodes + 10;
+    let timeBudgetExceeded = false;
 
     while (hasPendingNodes(dag) && safetyCounter < maxIterations) {
+      // ── Time budget check: stop before Deno timeout ──
+      const elapsed = Date.now() - startTime;
+      if (elapsed > TIME_BUDGET_MS) {
+        timeBudgetExceeded = true;
+        await pipelineLog(ctx, "time_budget_pause",
+          `Pausa por tempo: ${Math.round(elapsed / 1000)}s elapsed. ${executedCount} executados, continuando automaticamente...`,
+          { elapsed_ms: elapsed, executed: executedCount, pending: dag.totalNodes - executedCount - failedCount }
+        );
+        break;
+      }
+
       safetyCounter++;
       const readyNodes = getReadyNodes(dag);
 
@@ -355,7 +367,19 @@ serve(async (req) => {
       for (let i = 0; i < readyNodes.length; i += MAX_WORKERS) {
         const batch = readyNodes.slice(i, i + MAX_WORKERS);
         await Promise.all(batch.map(node => dispatchWorker(node, waveNum)));
+
+        // Check time budget between micro-batches too
+        if (Date.now() - startTime > TIME_BUDGET_MS) {
+          timeBudgetExceeded = true;
+          await pipelineLog(ctx, "time_budget_pause",
+            `Pausa mid-wave: tempo limite atingido. Continuando automaticamente...`,
+            { wave: waveNum, executed: executedCount }
+          );
+          break;
+        }
       }
+
+      if (timeBudgetExceeded) break;
 
       await pipelineLog(ctx, "swarm_wave_complete",
         `Wave ${waveNum} concluída: ${readyNodes.length} worker(s)`,
