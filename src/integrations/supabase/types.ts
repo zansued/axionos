@@ -775,6 +775,7 @@ export type Database = {
           approved_at_planning: string | null
           approved_at_squad: string | null
           architecture_content: string | null
+          blueprint: Json | null
           business_model: string | null
           complexity: string | null
           created_at: string
@@ -782,9 +783,12 @@ export type Database = {
           discovery_payload: Json | null
           execution_progress: Json | null
           feasibility_analysis: string | null
+          generation_depth: string | null
           id: string
+          idea_analysis: Json | null
           idea_raw: string | null
           initial_estimate: Json | null
+          initiative_brief: Json | null
           market_analysis: string | null
           mvp_scope: string | null
           notes: string | null
@@ -808,6 +812,7 @@ export type Database = {
           approved_at_planning?: string | null
           approved_at_squad?: string | null
           architecture_content?: string | null
+          blueprint?: Json | null
           business_model?: string | null
           complexity?: string | null
           created_at?: string
@@ -815,9 +820,12 @@ export type Database = {
           discovery_payload?: Json | null
           execution_progress?: Json | null
           feasibility_analysis?: string | null
+          generation_depth?: string | null
           id?: string
+          idea_analysis?: Json | null
           idea_raw?: string | null
           initial_estimate?: Json | null
+          initiative_brief?: Json | null
           market_analysis?: string | null
           mvp_scope?: string | null
           notes?: string | null
@@ -841,6 +849,7 @@ export type Database = {
           approved_at_planning?: string | null
           approved_at_squad?: string | null
           architecture_content?: string | null
+          blueprint?: Json | null
           business_model?: string | null
           complexity?: string | null
           created_at?: string
@@ -848,9 +857,12 @@ export type Database = {
           discovery_payload?: Json | null
           execution_progress?: Json | null
           feasibility_analysis?: string | null
+          generation_depth?: string | null
           id?: string
+          idea_analysis?: Json | null
           idea_raw?: string | null
           initial_estimate?: Json | null
+          initiative_brief?: Json | null
           market_analysis?: string | null
           mvp_scope?: string | null
           notes?: string | null
