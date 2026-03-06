@@ -407,7 +407,9 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       revenue_strategy: "product_validated",
       // v2 Core Pipeline
       discovery: "revenue_strategized",
-      architecture: "architecture_ready",
+      architecture: "discovered",
+      simulation: "architected",
+      preventive_validation: "architecture_simulated",
       bootstrap: "architecture_validated",
       scaffold: "bootstrapped",
       module_graph: "scaffolded",
