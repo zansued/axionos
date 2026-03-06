@@ -94,7 +94,8 @@ Analyze market signals and return a JSON object with this exact structure:
 
 Return ONLY valid JSON, no markdown fences.`;
 
-    const aiResponse = await callAI(apiKey, prompt, "market-signal-analyzer");
+    const aiResult = await callAI(apiKey, prompt, "market-signal-analyzer");
+    const aiResponse = aiResult.content;
     let analysis: any;
     try {
       const cleaned = aiResponse.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
