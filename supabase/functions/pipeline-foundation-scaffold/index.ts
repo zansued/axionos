@@ -589,7 +589,7 @@ Return JSON: { "would_build": boolean, "issues": string[], "confidence": number 
       validation_passed: validation.passed,
       repairs,
       build_simulation: buildSimulation,
-    }, { costUsd: simResult.cost || 0, durationMs: 0 });
+    }, { costUsd: simResult.costUsd || 0, durationMs: simResult.durationMs || 0 });
 
     return jsonResponse({
       success: true,
