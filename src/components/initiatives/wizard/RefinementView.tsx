@@ -4,9 +4,9 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { INTEGRATION_OPTIONS, GENERATION_DEPTHS } from "./types";
+import { INTEGRATION_OPTIONS, GENERATION_INTENTS } from "./types";
 import type { InitiativeBrief } from "./types";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 
 const DEPLOY_TARGETS = [
   { value: "vercel", label: "Vercel", icon: "▲", available: true },
@@ -58,24 +58,29 @@ export function RefinementView({ brief, onChange, onSubmit, onBack, isPending }:
         </div>
       </div>
 
-      {/* Pipeline depth */}
+      {/* Intent override */}
       <div className="space-y-2">
-        <Label className="text-xs text-muted-foreground">Pipeline Depth</Label>
-        <Select value={brief.generation_depth} onValueChange={(v: any) => onChange({ generation_depth: v })}>
-          <SelectTrigger className="h-9 text-sm">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {GENERATION_DEPTHS.map((d) => (
-              <SelectItem key={d.value} value={d.value} className="text-sm">
-                <div className="flex items-center gap-2">
-                  {d.label}
-                  {d.badge && <Badge variant="secondary" className="text-[9px] ml-1">{d.badge}</Badge>}
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Label className="text-xs text-muted-foreground">What should AxionOS do?</Label>
+        <div className="grid gap-2 grid-cols-2">
+          {GENERATION_INTENTS.map((intent) => (
+            <button
+              key={intent.value}
+              onClick={() => onChange({ generation_depth: intent.value })}
+              className={cn(
+                "flex flex-col items-start gap-1 rounded-lg border p-2.5 text-left transition-all text-xs",
+                brief.generation_depth === intent.value
+                  ? "border-foreground bg-accent"
+                  : "border-border hover:border-muted-foreground/40"
+              )}
+            >
+              <div className="flex items-center gap-1.5 font-medium">
+                <span>{intent.icon}</span>
+                {intent.label}
+              </div>
+              <span className="text-[10px] text-muted-foreground">{intent.description}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Tech prefs */}

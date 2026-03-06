@@ -5,8 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sparkles, ChevronDown, ChevronUp, Loader2, Globe, Users, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { GENERATION_DEPTHS } from "./types";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { GENERATION_INTENTS } from "./types";
 import { Badge } from "@/components/ui/badge";
 
 interface Props {
@@ -71,25 +70,32 @@ export function QuickStartView({ onAnalyze, isAnalyzing }: Props) {
         </p>
       </div>
 
-      {/* Generation depth selector - always visible */}
+      {/* Intent selector */}
       <div className="space-y-2">
-        <Label className="text-xs text-muted-foreground">Pipeline Depth</Label>
-        <Select value={depth} onValueChange={setDepth}>
-          <SelectTrigger className="h-9 text-sm">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {GENERATION_DEPTHS.map((d) => (
-              <SelectItem key={d.value} value={d.value} className="text-sm">
-                <div className="flex items-center gap-2">
-                  {d.label}
-                  {d.badge && <Badge variant="secondary" className="text-[9px] ml-1">{d.badge}</Badge>}
-                  <span className="text-muted-foreground text-[10px]">({d.stages})</span>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Label className="text-xs text-muted-foreground">What should AxionOS do?</Label>
+        <div className="grid gap-2 grid-cols-2">
+          {GENERATION_INTENTS.map((intent) => (
+            <button
+              key={intent.value}
+              onClick={() => setDepth(intent.value)}
+              className={cn(
+                "flex flex-col items-start gap-1 rounded-lg border p-3 text-left transition-all text-xs",
+                depth === intent.value
+                  ? "border-foreground bg-accent"
+                  : "border-border hover:border-muted-foreground/40"
+              )}
+            >
+              <div className="flex items-center gap-1.5 font-medium">
+                <span>{intent.icon}</span>
+                {intent.label}
+                {"badge" in intent && intent.badge && (
+                  <Badge variant="secondary" className="text-[9px] ml-auto">{intent.badge}</Badge>
+                )}
+              </div>
+              <span className="text-[10px] text-muted-foreground">{intent.description}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Advanced options toggle */}
