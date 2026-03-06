@@ -624,7 +624,7 @@ Predict if the build commands would succeed. Return JSON:
       issues,
       files_injected: injectedFiles,
       build_prediction: buildPrediction,
-    }, { costUsd: simResult.cost || 0, durationMs: 0 });
+    }, { costUsd: simResult.costUsd || 0, durationMs: simResult.durationMs || 0 });
 
     return jsonResponse({
       success: true,
