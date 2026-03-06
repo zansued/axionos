@@ -415,6 +415,7 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                 {runningStage === "execution" && "Agentes executando subtasks automaticamente..."}
                 {runningStage === "validation" && "Validando qualidade dos artefatos com IA..."}
                 {runningStage === "publish" && "Criando branch, commitando artefatos e abrindo PR..."}
+                {runningStage === "deploy_vercel" && "Iniciando deploy no Vercel..."}
               </p>
               <p className="text-xs text-muted-foreground">
                 {runningStage === "planning" ? "Isso pode levar ~2 minutos." :
