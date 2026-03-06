@@ -445,3 +445,39 @@ export {
   DEFAULT_ITERATION_RULES,
   DEFAULT_COORDINATION_CONFIG,
 } from "./coordination.ts";
+
+// Distributed Agent Runtime (v0.9)
+export type {
+  DistributedTask,
+  DistributedTaskType,
+  TaskPriority,
+  DistributedTaskStatus,
+  TaskResourceRequirements,
+  TaskRetryPolicy,
+  DistributedTraceMetadata,
+  TaskAssignment,
+  TaskExecutionResult as DistributedTaskExecutionResult,
+  TaskFailure,
+  TaskFailureType,
+  TaskExecutionMetrics as DistributedTaskExecutionMetrics,
+  WorkerDescriptor,
+  WorkerType,
+  WorkerStatus,
+  WorkerCapabilities,
+  WorkerResources,
+  WorkerHeartbeat,
+  WorkerHealthAssessment,
+  WorkerHealthAction,
+  ITaskQueue,
+  IWorkerRegistry,
+  ITaskScheduler,
+  SchedulerMetrics,
+  IDistributedRuntime,
+  DistributedRuntimeConfig,
+  DistributedRuntimeEventType,
+} from "./distributed-runtime.ts";
+
+export {
+  DEFAULT_TASK_RETRY_POLICY,
+  DEFAULT_DISTRIBUTED_RUNTIME_CONFIG,
+} from "./distributed-runtime.ts";
