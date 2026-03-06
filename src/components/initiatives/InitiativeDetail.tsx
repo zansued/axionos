@@ -28,7 +28,7 @@ import { ArchitecturalDriftStatus } from "./ArchitecturalDriftStatus";
 import { RuntimeValidationStatus } from "./RuntimeValidationStatus";
 import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
-import PipelineTimeline from "./PipelineTimeline";
+import PipelineGraphView from "./PipelineGraphView";
 
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -194,7 +194,7 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
             </div>
             {initiative.description && <p className="text-sm text-muted-foreground line-clamp-2 break-words">{initiative.description}</p>}
           </div>
-          <PipelineTimeline
+          <PipelineGraphView
             currentMacroIndex={macroIdx}
             runningStage={runningStage}
             onRollbackToStage={onRollbackToStage}
