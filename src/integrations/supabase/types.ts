@@ -1688,6 +1688,100 @@ export type Database = {
           },
         ]
       }
+      repair_evidence: {
+        Row: {
+          attempt_number: number
+          created_at: string
+          duration_ms: number | null
+          error_category: string
+          error_code: string
+          error_message: string
+          error_signature: string
+          failure_context: Json | null
+          files_touched: string[] | null
+          id: string
+          initiative_id: string
+          job_id: string | null
+          organization_id: string
+          patch_summary: string
+          repair_prompt_version: string | null
+          repair_result: string
+          repair_strategy: string
+          revalidation_status: string
+          stage_name: string
+          validation_after: Json | null
+          validation_before: Json | null
+        }
+        Insert: {
+          attempt_number?: number
+          created_at?: string
+          duration_ms?: number | null
+          error_category?: string
+          error_code?: string
+          error_message?: string
+          error_signature?: string
+          failure_context?: Json | null
+          files_touched?: string[] | null
+          id?: string
+          initiative_id: string
+          job_id?: string | null
+          organization_id: string
+          patch_summary?: string
+          repair_prompt_version?: string | null
+          repair_result?: string
+          repair_strategy?: string
+          revalidation_status?: string
+          stage_name: string
+          validation_after?: Json | null
+          validation_before?: Json | null
+        }
+        Update: {
+          attempt_number?: number
+          created_at?: string
+          duration_ms?: number | null
+          error_category?: string
+          error_code?: string
+          error_message?: string
+          error_signature?: string
+          failure_context?: Json | null
+          files_touched?: string[] | null
+          id?: string
+          initiative_id?: string
+          job_id?: string | null
+          organization_id?: string
+          patch_summary?: string
+          repair_prompt_version?: string | null
+          repair_result?: string
+          repair_strategy?: string
+          revalidation_status?: string
+          stage_name?: string
+          validation_after?: Json | null
+          validation_before?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_evidence_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repair_evidence_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "initiative_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repair_evidence_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       squad_members: {
         Row: {
           agent_id: string
