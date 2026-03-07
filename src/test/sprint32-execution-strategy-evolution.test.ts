@@ -81,7 +81,7 @@ describe("Execution Strategy Signal Interpreter", () => {
 
 // ═══ Variant Synthesizer ═══
 describe("Execution Strategy Variant Synthesizer", () => {
-  const { synthesizeVariant } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-variant-synthesizer");
+  // uses top-level import
 
   const family = {
     id: "fam-1", strategy_family_key: "repair_escalation", status: "active", rollout_mode: "bounded_experiment",
