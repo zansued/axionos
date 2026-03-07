@@ -489,10 +489,16 @@ describe("Sprint 30 — Platform Intelligence (Comprehensive)", () => {
       }
     });
 
-    it("no recommendations for healthy system", () => {
-      const s = aggregatePlatformBehavior(makeRecords(10, { status: "success" }));
+    it("no recommendations for healthy multi-stage system", () => {
+      const records = [
+        ...makeRecords(5, { stage: "a", status: "success", cost_usd: 0.01 }),
+        ...makeRecords(5, { stage: "b", status: "success", cost_usd: 0.01 }),
+        ...makeRecords(5, { stage: "c", status: "success", cost_usd: 0.01 }),
+        ...makeRecords(5, { stage: "d", status: "success", cost_usd: 0.01 }),
+      ];
+      const s = aggregatePlatformBehavior(records);
       const b = detectBottlenecks(s);
-      const p = analyzePlatformPatterns(makeRecords(10, { status: "success" }));
+      const p = analyzePlatformPatterns(records);
       const { recommendations } = generateInsightsAndRecs(s, b, p);
       expect(recommendations).toHaveLength(0);
     });
