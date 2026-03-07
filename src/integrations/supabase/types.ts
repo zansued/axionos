@@ -1198,6 +1198,84 @@ export type Database = {
           },
         ]
       }
+      learning_records: {
+        Row: {
+          confidence_score: number
+          cost_signal: number | null
+          created_at: string
+          decision_taken: string
+          failure_signal: number
+          id: string
+          initiative_id: string | null
+          input_signature: string | null
+          learning_type: string
+          organization_id: string
+          outcome_summary: string
+          recommended_adjustment: string | null
+          source_id: string | null
+          source_type: string
+          stage_name: string
+          success_signal: number
+          time_signal: number | null
+          updated_at: string
+        }
+        Insert: {
+          confidence_score?: number
+          cost_signal?: number | null
+          created_at?: string
+          decision_taken?: string
+          failure_signal?: number
+          id?: string
+          initiative_id?: string | null
+          input_signature?: string | null
+          learning_type?: string
+          organization_id: string
+          outcome_summary?: string
+          recommended_adjustment?: string | null
+          source_id?: string | null
+          source_type?: string
+          stage_name?: string
+          success_signal?: number
+          time_signal?: number | null
+          updated_at?: string
+        }
+        Update: {
+          confidence_score?: number
+          cost_signal?: number | null
+          created_at?: string
+          decision_taken?: string
+          failure_signal?: number
+          id?: string
+          initiative_id?: string | null
+          input_signature?: string | null
+          learning_type?: string
+          organization_id?: string
+          outcome_summary?: string
+          recommended_adjustment?: string | null
+          source_id?: string | null
+          source_type?: string
+          stage_name?: string
+          success_signal?: number
+          time_signal?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_records_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "learning_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_knowledge_base: {
         Row: {
           category: string
