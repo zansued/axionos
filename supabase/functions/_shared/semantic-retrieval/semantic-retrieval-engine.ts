@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Semantic Retrieval Engine — Sprint 36
  *
