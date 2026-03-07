@@ -3285,6 +3285,255 @@ export type Database = {
           },
         ]
       }
+      platform_safe_mode_profiles: {
+        Row: {
+          activation_mode: string
+          created_at: string
+          id: string
+          organization_id: string | null
+          profile_key: string
+          profile_name: string
+          profile_scope: string
+          stabilization_controls: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          activation_mode?: string
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          profile_key: string
+          profile_name: string
+          profile_scope?: string
+          stabilization_controls?: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          activation_mode?: string
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          profile_key?: string
+          profile_name?: string
+          profile_scope?: string
+          stabilization_controls?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_safe_mode_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_stability_signals: {
+        Row: {
+          baseline_value: Json | null
+          created_at: string
+          critical_threshold: Json
+          current_value: Json
+          id: string
+          organization_id: string | null
+          scope_type: string
+          signal_family: string
+          signal_key: string
+          status: string
+          updated_at: string
+          warning_threshold: Json
+        }
+        Insert: {
+          baseline_value?: Json | null
+          created_at?: string
+          critical_threshold?: Json
+          current_value?: Json
+          id?: string
+          organization_id?: string | null
+          scope_type?: string
+          signal_family?: string
+          signal_key: string
+          status?: string
+          updated_at?: string
+          warning_threshold?: Json
+        }
+        Update: {
+          baseline_value?: Json | null
+          created_at?: string
+          critical_threshold?: Json
+          current_value?: Json
+          id?: string
+          organization_id?: string | null
+          scope_type?: string
+          signal_family?: string
+          signal_key?: string
+          status?: string
+          updated_at?: string
+          warning_threshold?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_stability_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_stabilization_actions: {
+        Row: {
+          action_mode: string
+          action_type: string
+          bounded_delta: Json
+          created_at: string
+          expected_impact: Json | null
+          id: string
+          organization_id: string | null
+          rollback_guard: Json
+          scope_ref: Json | null
+          status: string
+          target_entities: Json
+          trigger_signals: Json
+        }
+        Insert: {
+          action_mode?: string
+          action_type: string
+          bounded_delta?: Json
+          created_at?: string
+          expected_impact?: Json | null
+          id?: string
+          organization_id?: string | null
+          rollback_guard?: Json
+          scope_ref?: Json | null
+          status?: string
+          target_entities?: Json
+          trigger_signals?: Json
+        }
+        Update: {
+          action_mode?: string
+          action_type?: string
+          bounded_delta?: Json
+          created_at?: string
+          expected_impact?: Json | null
+          id?: string
+          organization_id?: string | null
+          rollback_guard?: Json
+          scope_ref?: Json | null
+          status?: string
+          target_entities?: Json
+          trigger_signals?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_stabilization_actions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_stabilization_outcomes: {
+        Row: {
+          after_metrics: Json | null
+          before_metrics: Json | null
+          created_at: string
+          evidence_refs: Json | null
+          id: string
+          organization_id: string | null
+          outcome_status: string
+          scope_ref: Json | null
+          stabilization_action_id: string
+        }
+        Insert: {
+          after_metrics?: Json | null
+          before_metrics?: Json | null
+          created_at?: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id?: string | null
+          outcome_status?: string
+          scope_ref?: Json | null
+          stabilization_action_id: string
+        }
+        Update: {
+          after_metrics?: Json | null
+          before_metrics?: Json | null
+          created_at?: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id?: string | null
+          outcome_status?: string
+          scope_ref?: Json | null
+          stabilization_action_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_stabilization_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "platform_stabilization_outcomes_stabilization_action_id_fkey"
+            columns: ["stabilization_action_id"]
+            isOneToOne: false
+            referencedRelation: "platform_stabilization_actions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_stabilization_rollbacks: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string | null
+          restored_state: Json
+          rollback_mode: string
+          rollback_reason: Json
+          stabilization_action_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          restored_state?: Json
+          rollback_mode?: string
+          rollback_reason?: Json
+          stabilization_action_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          restored_state?: Json
+          rollback_mode?: string
+          rollback_reason?: Json
+          stabilization_action_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_stabilization_rollbacks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "platform_stabilization_rollbacks_stabilization_action_id_fkey"
+            columns: ["stabilization_action_id"]
+            isOneToOne: false
+            referencedRelation: "platform_stabilization_actions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       predictive_error_patterns: {
         Row: {
           contributing_factors: Json
