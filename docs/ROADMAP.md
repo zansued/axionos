@@ -165,6 +165,8 @@ Sprints 11 and 12 represent the **beginning** of Level 4.
 | Stage & Agent IO Contracts | ✅ Implemented |
 | Commercial Readiness (plans, billing, enforcement) | ✅ Operational |
 | Learning Agents v1 (5 engines + dashboard) | ✅ Operational |
+| Proposal Quality Feedback Loop | ✅ Operational |
+| Advisory Calibration Layer | ✅ Operational |
 
 ### What to Freeze
 
