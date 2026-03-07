@@ -118,17 +118,23 @@ Sprints 11 and 12 represent the **beginning** of Level 4, not its completion. Th
 
 **Status:** ✅ Implemented
 
-### Sprint 12 — Learning Agents v1 / Prompt Optimization Loop
+### Sprint 12 — Learning Agents v1 ✅
 
 **Purpose:** Introduce the first controlled, explainable, auditable learning behavior.
 
-**Scope:**
-- Prompt outcome tracking and A/B evaluation
-- Strategy effectiveness-driven prompt selection
-- Learning record consumption for prompt adjustment
-- Auditable learning decisions (no black-box behavior)
+**Delivered:**
+- Prompt Outcome Analyzer: aggregates success/cost/retry metrics per stage+model signature
+- Strategy Performance Engine: evaluates repair strategy effectiveness with recurrence tracking
+- Predictive Error Engine: detects recurring failure patterns, generates prevention rule candidates when probability > 70%
+- Repair Learning Engine: adjusts strategy routing weights based on evidence (bounded, reversible)
+- Learning Recommendation Engine: generates structured recommendations (PROMPT_OPTIMIZATION, STRATEGY_RANKING_ADJUSTMENT, NEW_PREVENTION_RULE, PIPELINE_CONFIGURATION_HINT)
+- Learning Dashboard API with overview/recommendations/strategies/errors views
+- Enhanced Learning UI with tabs for recommendations, strategies, predictions, weight adjustments
+- Full audit trail: all learning decisions logged with LEARNING_UPDATE events
+- Safety: learning agents cannot modify pipeline, governance, plans, or billing
+- 5 new tables with RLS: prompt_strategy_metrics, strategy_effectiveness_metrics, predictive_error_patterns, repair_strategy_weights, learning_recommendations
 
-**Status:** 📋 Planned
+**Status:** ✅ Implemented
 
 These sprints mark the start of the transition into **Level 4 — Self-Learning Software Factory**. Level 4 is not yet complete.
 
