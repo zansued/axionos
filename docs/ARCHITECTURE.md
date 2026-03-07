@@ -2,7 +2,7 @@
 
 > Technical architecture of the autonomous software engineering system.
 >
-> **What changed (2026-03-07):** Added Meta-Agent Coordination Layer (planned architecture), updated layer stack to 8 layers, added meta-agent types and safety constraints, added meta-agent output structure and interaction flow. Previous: Added Commercial Readiness Layer (Sprint 11), Learning Agents v1 (Sprint 12).
+> **What changed (2026-03-07):** Sprint 13 Meta-Agents v1 implemented — 4 meta-agent classes (Architecture, Role Designer, Workflow Optimizer, System Evolution Advisor), recommendation registry table, rule-based scoring model, review workflow, audit trail, and dashboard. Meta-Agents operate in recommendation-only mode with full governance safety. Previous: Meta-Agent Coordination Layer was planned; now active.
 >
 > Last updated: 2026-03-07
 

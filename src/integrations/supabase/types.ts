@@ -1380,6 +1380,90 @@ export type Database = {
           },
         ]
       }
+      meta_agent_recommendations: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          description: string
+          id: string
+          impact_score: number
+          meta_agent_type: string
+          organization_id: string
+          priority_score: number
+          recommendation_signature: string | null
+          recommendation_type: string
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          source_metrics: Json
+          source_record_ids: string[]
+          status: string
+          supporting_evidence: Json
+          target_component: string
+          title: string
+          workspace_id: string | null
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          id?: string
+          impact_score?: number
+          meta_agent_type?: string
+          organization_id: string
+          priority_score?: number
+          recommendation_signature?: string | null
+          recommendation_type?: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_metrics?: Json
+          source_record_ids?: string[]
+          status?: string
+          supporting_evidence?: Json
+          target_component?: string
+          title?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          id?: string
+          impact_score?: number
+          meta_agent_type?: string
+          organization_id?: string
+          priority_score?: number
+          recommendation_signature?: string | null
+          recommendation_type?: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_metrics?: Json
+          source_record_ids?: string[]
+          status?: string
+          supporting_evidence?: Json
+          target_component?: string
+          title?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meta_agent_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meta_agent_recommendations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_knowledge_base: {
         Row: {
           category: string
