@@ -15,6 +15,7 @@ export interface CalibrationParameter {
   calibration_mode: string;
   status: string;
   parameter_scope: string;
+  parameter_family: string;
 }
 
 export interface CalibrationProposal {

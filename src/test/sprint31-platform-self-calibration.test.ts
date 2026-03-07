@@ -36,6 +36,7 @@ function makeParam(key: string, overrides: Partial<CalibrationParameter> = {}): 
     calibration_mode: "bounded_auto",
     status: "active",
     parameter_scope: "global",
+    parameter_family: "detection_thresholds",
     ...overrides,
   };
 }

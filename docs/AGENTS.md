@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 30 — Platform Intelligence Entry. System-level behavior observation with bottleneck detection, pattern analysis, health model, and advisory recommendations now operational. Previous: Workspace / Tenant Adaptive Policy Tuning (Sprint 29).
+> **What changed (2026-03-07):** Sprint 31 — Platform Self-Calibration. Bounded operational threshold tuning with guardrails, rollback, and advisory-first governance. Previous: Platform Intelligence Entry (Sprint 30).
 >
 > Last updated: 2026-03-07
 
