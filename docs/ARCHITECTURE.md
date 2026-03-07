@@ -270,7 +270,7 @@ Engineering Memory is a **cross-layer infrastructure** that captures knowledge f
 
 **Purpose:** Introduce higher-order agents that reason about the system itself — analyzing execution patterns, designing new agent roles, optimizing workflows, and advising on architectural evolution.
 
-**Status:** ✅ Active (Sprint 13, hardened Sprint 13.5, memory-aware Sprint 18)
+**Status:** ✅ Active (Sprint 13, hardened Sprint 13.5, memory-aware Sprint 18, quality feedback Sprint 19, calibration Sprint 20)
 
 **Includes:**
 - 4 memory-aware meta-agents analyzing cross-layer signals with historical context
