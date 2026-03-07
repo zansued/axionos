@@ -1,6 +1,6 @@
 <p align="center">
   <h1 align="center">AxionOS</h1>
-  <p align="center"><strong>Governed SaaS / MVP Generator</strong></p>
+  <p align="center"><strong>Autonomous Software Engineering Platform</strong></p>
   <p align="center">
     Submit an idea → receive a validated, deployable repository.<br/>
     Architecture, code, validation, repair, and delivery — autonomously.
@@ -11,7 +11,7 @@
 
 ## What is AxionOS?
 
-AxionOS is an **autonomous software engineering platform** that transforms ideas into governed, validated repositories.
+AxionOS is an **autonomous software engineering platform** that transforms ideas into governed, validated repositories and live deployments.
 
 You describe what you want to build. AxionOS executes the full engineering pipeline:
 
@@ -24,6 +24,20 @@ You describe what you want to build. AxionOS executes the full engineering pipel
 | **Deploy** | Fix Loop → Deep Static → Runtime Validation → Build Repair → Publish |
 
 Everything runs inside a **32-stage deterministic pipeline** with full cost tracking and observability.
+
+---
+
+## System Maturity
+
+AxionOS has completed its Level 3 foundation as an **Autonomous Engineering System** and is now entering Level 4 with controlled learning and commercial packaging layers.
+
+| Level | Name | Status |
+|-------|------|--------|
+| Level 1 | Code Generator | ✅ |
+| Level 2 | Software Builder | ✅ |
+| Level 3 | Autonomous Engineering System | ✅ Complete |
+| Level 4 | Self-Learning Software Factory | 🔄 Entering |
+| Level 5 | Autonomous Startup Factory | 🔮 Long-term |
 
 ---
 
@@ -40,6 +54,15 @@ Runtime validation via real tsc + vite builds. When errors are detected, a fix s
 
 ### Error Pattern Intelligence
 Repair evidence is aggregated into recurring patterns with strategy effectiveness tracking. The system identifies which repair strategies work best per error category and generates prevention rule candidates.
+
+### Preventive Engineering
+Known failure patterns are converted into active prevention rules that block or warn before code generation, reducing pipeline failures proactively.
+
+### Adaptive Repair Routing
+Repair strategies are selected based on historical success rates, pattern similarity, and stage context — not just static mapping. Every routing decision is persisted for auditability.
+
+### Learning Foundation
+Structured learning records aggregate signals from repair evidence, prevention events, routing decisions, and stage executions. This substrate prepares future prompt optimization and self-improving agents.
 
 ### Agent Swarm
 Specialized agents execute tasks in parallel waves using DAG-based topological scheduling (6 concurrent workers).

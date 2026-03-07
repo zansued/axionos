@@ -1,298 +1,99 @@
 # AxionOS — Execution Plan
 
 > Last updated: 2026-03-07
-> Mode: **Product Proof Closure**
+> Mode: **Level 4 Entry — Commercial Readiness + Learning Agents v1**
 > Execution: **Sprint-based**
 
 ---
 
 ## Strategic Directive
 
-**AxionOS is not expanding architecture. AxionOS is closing the product-proof loop.**
+AxionOS has completed its Level 3 Product Proof Closure. The architecture is sufficient. The full idea-to-deploy cycle is operational.
 
-The architecture is sufficient. The focus is now:
-1. Close the product cycle from Idea → Deploy
-2. Simplify the experience for real users
-3. Prove the product works end-to-end
-4. Package that product for real users
-
----
-
-## First Product Proof
-
-### Governed SaaS / MVP Generator
-
-A user submits an idea → AxionOS produces:
-
-| Output | Description |
-|--------|-------------|
-| Structured Brief | AI-analyzed initiative with structured contract |
-| Simulation Report | Feasibility, cost, risk analysis before execution |
-| Discovery | Market analysis, feasibility, refined idea |
-| Architecture | System design, component structure, tech stack |
-| PRD | Product requirements document |
-| Stories & Subtasks | Backlog with acceptance criteria |
-| Code | Business logic, API, UI generation |
-| Validation | tsc + vite build verification |
-| Repository | Git repository with atomic commits |
-| Deploy | Live deployment with health check |
-| Metrics | Pipeline success, cost, time tracking |
+**The focus is now:**
+1. Package the product for commercial use (billing, workspaces)
+2. Activate controlled learning behavior (prompt optimization)
+3. Stabilize before expanding
 
 ---
 
-## Current Execution Block
+## Completed Product Proof Closure (Level 3)
 
-### Initiative-to-Deploy Product Proof
-
-The immediate goal:
-
-```
-idea → structured brief → simulation → pipeline → validated repo → deploy → metrics
-```
-
-Organized into four sequential sprints.
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 1 | Initiative Brief — structured idea intake contract | ✅ |
+| Sprint 2 | Simulation Engine — feasibility gate before execution | ✅ |
+| Sprint 3 | Deploy Contract — publish-to-deploy state machine | ✅ |
+| Sprint 4 | Product Observability — initiative lifecycle metrics | ✅ |
+| Sprint 5 | Onboarding & Packaging — user activation and product framing | ✅ |
+| Sprint 6 | Repair Evidence — traceable, evidence-based repair loop | ✅ |
+| Sprint 7 | Error Pattern Library — pattern intelligence and strategy effectiveness | ✅ |
+| Sprint 8 | Prevention Layer — active guardrails from known patterns | ✅ |
+| Sprint 9 | Adaptive Routing — evidence-informed repair strategy selection | ✅ |
+| Sprint 10 | Learning Foundation — learning records, prompt outcomes, aggregation | ✅ |
 
 ---
 
-## Sprint 1 — Initiative Brief Formalization
+## Level 4 Entry Sprints
 
-**Objective:** Transform raw user idea into the canonical structured input of the pipeline.
+### Sprint 11 — Commercial Readiness / Billing / Workspace Packaging
+
+**Objective:** Make AxionOS operationally packageable as a real product.
 
 **Key Deliverables:**
-- `initiative_brief` Zod schema (`_shared/contracts/initiative-brief.schema.ts`)
-- Initiative intake engine (`initiative-intake-engine/`)
-- Initiative blueprint prompt (`_shared/prompts/initiative-blueprint.prompt.ts`)
-- Database fields: `idea_raw`, `blueprint`, `initiative_brief`, `idea_analysis`
-- Frontend flow: idea input → AI blueprint preview → user approval → initiative creation
+- Billing integration with usage metering
+- Workspace packaging and multi-tenant enforcement
+- Pricing model implementation
+- Commercial onboarding refinement
 
-**Affected Layers:**
-- Frontend (wizard components)
-- Intake service (edge function)
-- Pipeline Stage 01
-- Database (initiatives table)
+**Expected Impact:**
+- AxionOS becomes billable and self-sustaining
+- Clear separation between free and paid tiers
+- Workspace-level isolation and resource tracking
 
-**Dependencies:**
-- Existing initiative creation flow
-- Current Stage 01 contract
+**Relationship to Level 4:**
+Commercial readiness is a prerequisite for Level 4 validation. Learning agents require a product with real users generating real usage data.
 
-**Acceptance Criteria:**
-- [x] User can enter a raw idea
-- [x] AI generates blueprint
-- [x] User can edit and approve blueprint
-- [x] `initiative_brief` is validated and stored
-- [x] Pipeline starts using `initiative_brief` as canonical input
-
-**Status:** ✅ Implemented
+**Status:** 📋 Planned
 
 ---
 
-## Sprint 2 — Initiative Simulation Engine
+### Sprint 12 — Learning Agents v1 / Prompt Optimization Loop
 
-**Objective:** Simulate execution feasibility before entering the full pipeline.
+**Objective:** Introduce the first controlled, explainable, auditable learning behavior.
 
 **Key Deliverables:**
-- Simulation report schema (`_shared/contracts/initiative-simulation.schema.ts`)
-- Simulation prompt (`_shared/prompts/initiative-simulation.prompt.ts`)
-- Simulation engine service (`initiative-simulation-engine/`)
-- Recommendation states: `go`, `refine`, `block`
-- Risk flags with severity levels
-- Cost/time/token estimates
-- Recommended generation depth
+- Prompt outcome tracking integrated across pipeline stages
+- Strategy effectiveness-driven prompt selection
+- Learning record consumption for prompt adjustment
+- A/B prompt evaluation with outcome-based ranking
+- Auditable learning decisions (no black-box behavior)
 
-**Affected Layers:**
-- Simulation service (edge function)
-- Frontend (SimulationView in wizard)
-- Initiative persistence (simulation_report, risk_flags, estimates)
-- Pipeline gate before Discovery
+**Expected Impact:**
+- Pipeline success rate improves automatically over time
+- Repair strategies become self-optimizing
+- Prompt costs decrease as effective prompts are identified
+- Every learning decision is traceable and explainable
 
-**Dependencies:**
-- `initiative_brief` must exist (Sprint 1)
+**Relationship to Level 4:**
+This is the first actual Learning Agent capability. It marks the functional entry into Level 4 — Self-Learning Software Factory.
 
-**Acceptance Criteria:**
-- [x] Every `initiative_brief` can generate a simulation report
-- [x] Simulation report is validated
-- [x] User sees recommendation and risks
-- [x] Pipeline can pause for refinement when needed
-
-**Status:** ✅ Implemented
+**Status:** 📋 Planned
 
 ---
 
-## Sprint 3 — Deploy Contract Completion
+## Next Execution Focus
 
-**Objective:** Standardize publish-to-deploy flow and make deployment a first-class product output.
+After Sprint 12, the next focus should be determined based on observed outcomes. Likely candidates:
 
-**Key Deliverables:**
-- Deploy state machine with deterministic transitions (`validating` → `ready_to_publish` → `published` → `deploying` → `deployed` / `deploy_failed`)
-- Deploy contract in PIPELINE_CONTRACTS.md
-- Initiative deploy metadata fields (`repo_url`, `commit_hash`, `deploy_url`, `deploy_status`, `deploy_target`, `health_status`, `deployed_at`, `build_status`)
-- Vercel-first deployment integration contract
-- Deploy status persistence
-- Pipeline config with deploy states and actions
-- UI deploy status card with URL, health, and error visibility
+| Focus Area | Description |
+|------------|-------------|
+| **Commercial stabilization** | Pricing refinement, usage analytics, churn reduction |
+| **Prompt optimization scaling** | Extend A/B evaluation to all 32 stages |
+| **Learning Agents expansion** | Per-agent memory, self-improving fix strategies |
+| **Stage-level adaptive improvement** | Stage-specific prompt evolution based on success data |
 
-**Affected Layers:**
-- Publish pipeline (persists repo_url, commit_hash, build_status)
-- Deploy integration (planned edge function)
-- Initiative lifecycle state (new enum values: deploying, deployed, deploy_failed)
-- UI status rendering (DeployStatusCard in InitiativeDetail)
-
-**Dependencies:**
-- Validated repository output from pipeline
-
-**Acceptance Criteria:**
-- [x] Deploy states defined in state machine
-- [x] Deploy metadata columns in database (including error_code, error_message, last_deploy_check_at)
-- [x] Pipeline config updated with deploy states and actions
-- [x] UI shows deploy status, URL, health, errors, timestamps
-- [x] Published stage persists repo_url
-- [x] Deploy contract schema created (`_shared/contracts/deploy-contract.schema.ts`)
-- [x] Deploy engine edge function created (`initiative-deploy-engine`)
-- [x] Vercel-first integration (API + fallback deploy link)
-- [x] Post-deploy health check
-- [x] Deploy state machine with validated transitions
-- [x] Error details visible and traceable in UI
-
-**Status:** ✅ Complete
-
----
-
-## Sprint 4 — Product-Level Observability
-
-**Objective:** Measure product success, not only agent/runtime activity.
-
-**Key Deliverables:**
-- Initiative lifecycle dashboard spec
-- Metrics aggregation:
-  - `pipeline_success_rate`
-  - `build_success_rate`
-  - `deploy_success_rate`
-  - `average_retries_per_initiative`
-  - `automatic_repair_success_rate`
-  - `cost_per_initiative`
-  - `time_idea_to_repo`
-  - `time_idea_to_deploy`
-- Dashboard cards and initiative-level metrics
-
-**Affected Layers:**
-- Observability
-- Initiative dashboard
-- Cost tracking
-- Reporting layer
-
-**Dependencies:**
-- Deploy contract states (Sprint 3)
-- Initiative lifecycle data
-- Build/repair events
-
-**Acceptance Criteria:**
-- [x] Metrics exist at initiative level
-- [x] Dashboard reflects product outcomes
-- [x] Users can understand whether an initiative succeeded, how long it took, and how much it cost
-- [x] Observability contract schema created
-- [x] Observability engine edge function created
-- [x] InitiativeObservabilityCard with success rates, durations, costs
-- [x] Outcome status computed and displayed
-
-**Status:** ✅ Complete
-
----
-
-## Sprint 5 — Onboarding & Product Packaging
-
-**Objective:** Make AxionOS understandable and activatable for real users.
-
-**Key Deliverables:**
-- Product-oriented onboarding flow (5 steps, bilingual)
-- First-run Dashboard hero with product journey visualization
-- Improved empty states across Dashboard, Initiative List, Initiative Detail
-- InitiativeOutcomeCard for clear product-level result communication
-- Product framing: "idea → pipeline → repository → deploy"
-- Outcome clarity: deployed, repository_ready, in_progress, failed, needs_attention
-- Contextual next-action guidance in every state
-
-**Affected Layers:**
-- OnboardingGuide
-- Dashboard
-- InitiativeList
-- InitiativeDetail
-- InitiativeObservabilityCard
-
-**Acceptance Criteria:**
-- [x] First-time user sees product-oriented onboarding
-- [x] Dashboard shows first-run hero with CTA and journey visualization
-- [x] Empty states explain what to do next in product terms
-- [x] InitiativeOutcomeCard shows clear outcome with next actions
-- [x] Initiative list shows "Live" badge for deployed initiatives
-- [x] Bilingual support (pt-BR / en-US) across all new copy
-- [x] No architectural changes, no new modules
-
-**Status:** ✅ Complete
-
----
-
-## Sprint 6 — Evidence-Oriented Repair Loop
-
-**Objective:** Make the repair loop evidence-based, traceable, and measurable.
-
-**Key Deliverables:**
-- Repair Evidence schema, Error Taxonomy, Repair Strategy Map
-- Revalidation Result schema, Repair Evidence Recorder
-- `repair_evidence` table with RLS
-- RepairEvidenceCard UI component
-
-**Status:** ✅ Complete
-
----
-
-## Sprint 7 — Error Pattern Library & Learning Foundation
-
-**Objective:** Convert repair evidence into reusable error pattern intelligence.
-
-**Key Deliverables:**
-- Error Pattern schema, Strategy Effectiveness schema, Prevention Rule Candidate schema
-- Error Signature Normalizer
-- `error_patterns`, `strategy_effectiveness`, `prevention_rule_candidates` tables
-- Error Pattern Library Engine
-- ErrorPatternRadar UI component (Observability → Patterns tab)
-- `useErrorPatterns` hook
-
-**Status:** ✅ Complete
-
----
-
-## Sprint 8 — Preventive Engineering Layer
-
-**Objective:** Convert pattern knowledge into active prevention guardrails that reduce pipeline failures proactively.
-
-**Key Deliverables:**
-- Prevention Rule schema (`_shared/contracts/prevention-rule.schema.ts`)
-- Prevention Evaluator (`_shared/prevention/prevention-evaluator.ts`)
-- Prevention Rule Engine (`prevention-rule-engine/`)
-- `active_prevention_rules` and `prevention_events` tables with RLS
-- Pipeline integration in `pipeline-preventive-validation` stage
-- Candidate → Rule promotion (manual + auto)
-- PreventionDashboard UI component (Observability → Prevenção tab)
-- Prevention metrics: rules triggered, failures prevented, blocks, warnings
-
-**Status:** ✅ Complete
-
----
-
-## Sprint 9 — Adaptive Repair Routing
-
-**Objective:** Select repair strategies based on historical success data instead of static mapping.
-
-**Key Deliverables:**
-- Repair Routing schema (`_shared/contracts/repair-routing.schema.ts`)
-- Repair Routing Engine (`repair-routing-engine/`)
-- `repair_routing_log` table with RLS
-- Adaptive routing integrated into `autonomous-build-repair`
-- 3-layer routing: strategy_effectiveness → pattern_library → static_map
-- RepairRoutingCard UI component in initiative details
-- Routing decisions persisted for auditability
-
-**Status:** ✅ Complete
+Sprint 13 is not yet defined. The decision should be data-driven based on Sprint 11–12 outcomes.
 
 ---
 
@@ -322,12 +123,13 @@ Organized into four sequential sprints.
 | Smart Context Window (~60-80% token reduction) | ✅ |
 | Runtime Validation (tsc + vite via CI) | ✅ |
 | Autonomous Build Repair + Fix Orchestrator | ✅ |
-| Adaptive Learning Engine | ✅ |
-| Governance (gates, SLAs, audit logs) | ✅ |
-| Observability + Cost Tracking | ✅ |
 | Evidence-Oriented Repair Loop | ✅ |
 | Error Pattern Library | ✅ |
 | Preventive Engineering Layer | ✅ |
+| Adaptive Repair Routing | ✅ |
+| Learning Foundation | ✅ |
+| Governance (gates, SLAs, audit logs) | ✅ |
+| Observability + Cost Tracking | ✅ |
 
 ---
 
@@ -364,24 +166,12 @@ The Agent OS is fully designed. No expansion needed.
 - An autonomous software engineering platform
 - A governed SaaS / MVP generator
 - A system that transforms ideas into validated repositories
+- Now entering controlled learning behavior
 
 **Do NOT present as:**
 - A startup factory
 - A global marketplace of agents
 - An abstract agent operating system
-
----
-
-## What the UI Should Emphasize
-
-1. **Initiative creation** — AI-first, guided, structured flow
-2. **Simulation results** — feasibility, cost, risk before execution
-3. **Pipeline progress** — real-time stage visualization
-4. **Cost visibility** — per-initiative, per-stage costs
-5. **Output access** — clear path to generated repository
-6. **Error transparency** — what failed, why, what was repaired
-7. **Deploy status** — from validation to live deployment
-
-**De-emphasize:** Agent OS internals, marketplace, portfolio management, venture intelligence.
+- An AGI system
 
 > Pipeline contracts: [docs/PIPELINE_CONTRACTS.md](../docs/PIPELINE_CONTRACTS.md) | Agents: [docs/AGENTS.md](../docs/AGENTS.md) | Roadmap: [docs/ROADMAP.md](../docs/ROADMAP.md)

@@ -2,9 +2,9 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **Current Mode**: Product Proof Closure
+> **Current Mode**: Level 4 Entry — Controlled Learning & Commercial Readiness
 >
-> **Current Maturity**: Level 3 — Autonomous Engineering System
+> **Current Maturity**: Level 3 ✅ Complete → Level 4 🔄 Entering
 >
 > Last updated: 2026-03-07
 
@@ -12,13 +12,12 @@
 
 ## Strategic Directive
 
-AxionOS has the technical architecture required for an Autonomous Engineering System. The architecture is sufficient.
+AxionOS has completed its Product Proof Closure. The architecture is sufficient. The full idea-to-deploy cycle is operational with structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, and a learning substrate.
 
 **The focus is now:**
-1. Close the product cycle from Idea → Deploy
-2. Simplify the experience for real users
-3. Prove the product works end-to-end
-4. Postpone broader platform ambitions until after validation
+1. Stabilize commercial readiness and workspace packaging
+2. Activate controlled, explainable learning behavior
+3. No major platform expansion until Learning Agents v1 and billing are stable
 
 **Rule:** No new architecture unless it directly improves reliability, cost, execution speed, product clarity, or sellability.
 
@@ -29,166 +28,108 @@ AxionOS has the technical architecture required for an Autonomous Engineering Sy
 ```
   NOW                    NEXT                   LATER
   ──────────►            ──────────►            ──────────►
-  Product Proof          Build Learning         Expand Platform
-  Closure                Agents                 Intelligence
+  Level 4 Entry          Learning Agents        Platform
+  (Commercial +          Expansion              Intelligence
+   Learning v1)
 ```
 
 ---
 
-## NOW — Product Proof Closure
+## Level 3 Closure — Completed Sprints
 
-**Priority:** Highest
-**Status:** 🔧 In Progress
-
-AxionOS already has the technical architecture required for an Autonomous Engineering System (Level 3). The kernel is operational: 32-stage pipeline, Project Brain, AI Efficiency Layer, DAG Execution, Build Repair, Governance, and Observability are all in place.
-
-**The product cycle must now be completed and simplified for real users.** This means closing the loop from Idea → Deploy with clear contracts, structured inputs, and measurable outcomes.
-
----
-
-## Product Proof Implementation Sprints
-
-The next phase is execution-focused and organized into short implementation sprints. The goal is to close the product loop:
-
-```
-idea → structured brief → simulation → pipeline → validated repository → deploy → product metrics
-```
-
-No new architecture expansion until these sprints are complete and stable.
-
----
+Level 3 (Autonomous Engineering System) is now **functionally complete**. Ten implementation sprints closed the product-proof loop:
 
 ### Sprint 1 — Initiative Brief Formalization
-
 **Goal:** Turn idea intake into a structured contract for the pipeline.
-**Status:** ✅ Implemented
-
----
+**Status:** ✅ Complete
 
 ### Sprint 2 — Initiative Simulation Engine
-
 **Goal:** Introduce a lightweight simulation gate before expensive pipeline execution.
-**Status:** ✅ Implemented
-
----
+**Status:** ✅ Complete
 
 ### Sprint 3 — Deploy Contract Completion
-
 **Goal:** Close the loop from repository generation to actual deployment.
-**Status:** ✅ Implemented
-
----
+**Status:** ✅ Complete
 
 ### Sprint 4 — Product-Level Observability
-
 **Goal:** Upgrade observability from runtime telemetry to product metrics.
-
-**Deliverables:**
-- Initiative observability contract schema
-- Initiative observability aggregation engine
-- `initiative_observability` table with RLS
-- Initiative lifecycle dashboard (pipeline/build/deploy success, cost, time-to-repo/deploy)
-- Product outcome states: `in_progress`, `repository_ready`, `deployed`, `failed`, `partially_completed`
-
-**Status:** ✅ Implemented
-
----
+**Status:** ✅ Complete
 
 ### Sprint 5 — Onboarding & Product Packaging
-
 **Goal:** Make AxionOS understandable and activatable for real users.
-
-**Deliverables:**
-- 5-step bilingual onboarding flow
-- First-run Dashboard hero with product journey visualization
-- Improved empty states with contextual guidance
-- InitiativeOutcomeCard for clear result communication
-- Product framing: "idea → pipeline → repository → deploy"
-
-**Status:** ✅ Implemented
-
----
+**Status:** ✅ Complete
 
 ### Sprint 6 — Evidence-Oriented Repair Loop
-
 **Goal:** Make the repair loop evidence-based, traceable, and measurable.
-
-**Deliverables:**
-- Repair Evidence schema + Error Taxonomy + Repair Strategy Map
-- Revalidation Result schema + Repair Evidence Recorder
-- `repair_evidence` table with RLS
-- RepairEvidenceCard UI component
-- Integration with autonomous-build-repair
-
-**Status:** ✅ Implemented
-
----
+**Status:** ✅ Complete
 
 ### Sprint 7 — Error Pattern Library & Learning Foundation
-
 **Goal:** Convert repair evidence into reusable error pattern intelligence.
-
-**Deliverables:**
-- Error Pattern schema + Strategy Effectiveness schema + Prevention Rule Candidate schema
-- Error Signature Normalizer (deterministic normalization)
-- `error_patterns`, `strategy_effectiveness`, `prevention_rule_candidates` tables
-- Error Pattern Library Engine (aggregation, effectiveness, candidates)
-- ErrorPatternRadar UI (Observability → Patterns tab)
-
-**Status:** ✅ Implemented
-
----
+**Status:** ✅ Complete
 
 ### Sprint 8 — Preventive Engineering Layer
-
-**Goal:** Convert pattern knowledge into active prevention guardrails that reduce pipeline failures proactively.
-
-**Deliverables:**
-- Prevention Rule schema contract
-- Prevention Evaluator (deterministic rule matching engine)
-- Prevention Rule Engine (candidate → rule promotion)
-- `active_prevention_rules` and `prevention_events` tables with RLS
-- Pipeline integration in preventive-validation stage
-- PreventionDashboard UI (Observability → Prevenção tab)
-- Prevention metrics: rules triggered, failures prevented, blocks, warnings
-
-**Status:** ✅ Implemented
-
----
+**Goal:** Convert pattern knowledge into active prevention guardrails.
+**Status:** ✅ Complete
 
 ### Sprint 9 — Adaptive Repair Routing
-
-**Goal:** Select repair strategies based on historical effectiveness instead of static mapping.
-
-**Deliverables:**
-- Repair Routing schema contract
-- Repair Routing Engine (3-layer: effectiveness → patterns → static)
-- `repair_routing_log` table with RLS
-- Integrated adaptive routing into autonomous-build-repair
-- RepairRoutingCard UI for initiative details
-- Routing decisions persisted for auditability
-
-**Status:** ✅ Implemented
-
----
+**Goal:** Select repair strategies based on historical effectiveness.
+**Status:** ✅ Complete
 
 ### Sprint 10 — Learning Agents Foundation
-
 **Goal:** Create the structured learning substrate for future self-improving agents.
-
-**Deliverables:**
-- Learning Record schema contract (`learning-record.schema.ts`)
-- Prompt Outcome schema contract (`prompt-outcome.schema.ts`)
-- `learning_records` table with RLS and indexes
-- Learning Foundation Engine (aggregation from repair, prevention, routing, jobs)
-- LearningFoundationDashboard UI (Observability → Learning tab)
-- Top success/failure patterns and adjustment candidates visibility
-
-**Status:** ✅ Implemented
+**Status:** ✅ Complete
 
 ---
 
-### Kernel — What Remains Active
+### Level 3 Summary
+
+Level 3 is functionally complete:
+- Idea intake is structured (initiative brief)
+- Simulation exists before execution
+- Pipeline is deterministic (32 stages)
+- Repository generation is validated (tsc + vite)
+- Deployment is formalized (Vercel-first)
+- Product-level observability exists
+- Repair is evidence-oriented
+- Prevention rules exist and are active
+- Adaptive repair routing exists
+- Learning foundations exist
+
+---
+
+## Transition Zone — Entry into Level 4
+
+Sprints 11 and 12 represent the **beginning** of Level 4, not its completion. They introduce the first commercial and learning capabilities on top of the proven Level 3 foundation.
+
+### Sprint 11 — Commercial Readiness / Billing / Workspace Packaging
+
+**Purpose:** Make AxionOS operationally packageable as a real product.
+
+**Scope:**
+- Billing integration and usage metering
+- Workspace packaging and multi-tenant readiness
+- Pricing model implementation
+- Commercial onboarding flow
+
+**Status:** 📋 Planned
+
+### Sprint 12 — Learning Agents v1 / Prompt Optimization Loop
+
+**Purpose:** Introduce the first controlled, explainable, auditable learning behavior.
+
+**Scope:**
+- Prompt outcome tracking and A/B evaluation
+- Strategy effectiveness-driven prompt selection
+- Learning record consumption for prompt adjustment
+- Auditable learning decisions (no black-box behavior)
+
+**Status:** 📋 Planned
+
+These sprints mark the start of the transition into **Level 4 — Self-Learning Software Factory**. Level 4 is not yet complete.
+
+---
+
+## Kernel — What Remains Active
 
 | Module | Status |
 |--------|--------|
@@ -212,35 +153,37 @@ No new architecture expansion until these sprints are complete and stable.
 
 | Area | Reason |
 |------|--------|
-| Marketplace ecosystem | Not needed for product proof |
+| Marketplace ecosystem | Not needed until Learning Agents are stable |
 | Global capability registry expansion | Architecture sufficient |
 | Advanced distributed runtime | Current runtime is adequate |
 | Advanced multi-agent coordination | Existing coordination works |
-| Product intelligence layer | Requires validated product first |
+| Product intelligence layer | Requires Learning Agents first |
 | Market intelligence layer | Requires product intelligence first |
-| Startup factory ambitions | Premature before validation |
+| Startup factory ambitions | Premature before Level 4 stability |
 | Cognitive systems layer | Theoretical, not practical now |
+
+No major platform expansion should happen until Learning Agents v1 and commercial readiness are stable.
 
 ---
 
-## NEXT — Build Learning Agents
+## NEXT — Learning Agents Expansion
 
 **Priority:** High
-**Status:** 📋 Planned (after product validation)
-**Dependency:** Requires validated product proof
+**Status:** 📋 Planned (after Sprint 12 stabilization)
+**Dependency:** Requires stable Learning Agents v1
 
 ### Purpose
 
-Upgrade agents from static prompt executors into adaptive learning systems. Each execution improves future executions.
+Scale learning behavior from prompt optimization to full agent self-improvement. Each execution improves future executions.
 
 ### Modules
 
 | Module | Description |
 |--------|-------------|
-| Learning Agents | Self-improving prompt strategies based on output quality |
-| Agent Memory Layer | Persistent per-agent memory (foundation: `agent_memory` table) |
+| Learning Agents v2 | Self-improving prompt strategies based on output quality |
+| Agent Memory Layer | Persistent per-agent memory (foundation: `agent_memory` + `learning_records` tables) |
 | Prompt Optimization Engine | A/B testing of prompt variations per stage |
-| Error Pattern Recognition | Predictive error detection from historical data |
+| Predictive Error Detection | Predictive error identification from historical patterns |
 | Self-Improving Fix Agents | Repair strategies that evolve based on success rates |
 
 ### Expected Outcome
@@ -252,12 +195,12 @@ Each execution improves future executions. The system transitions from determini
 ## LATER — Expand Platform Intelligence
 
 **Priority:** Long-term
-**Status:** 📋 Planned (after learning agents)
+**Status:** 📋 Planned (after learning agents are stable)
 
 Product Intelligence and Market Intelligence become relevant only after:
 1. The kernel is stable
 2. The product is validated with real users
-3. Learning agents are operational
+3. Learning agents are operational and measurably improving outcomes
 
 ---
 
@@ -284,18 +227,18 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 | Level 1 | Code Generator | ✅ |
 | Level 2 | Software Builder | ✅ |
 | Level 3 | Autonomous Engineering System | ✅ Complete |
-| Level 4 | Self-Learning Software Factory | 🔧 Foundation ready (Sprint 10) |
+| Level 4 | Self-Learning Software Factory | 🔄 Entering |
 | Level 5 | Autonomous Startup Factory | 🔮 Long-term |
 
-> **Current position:** Level 3 → Level 4 transition.
-> **Current focus:** Learning Agents Foundation.
+> **Current position:** Level 3 complete → Level 4 entering.
+> **Current focus:** Commercial readiness + controlled learning behavior.
 > **Execution mode:** Sprint-based implementation.
 
 ---
 
 ## Governing Principle
 
-> The architecture is sufficient. The product proof is closed.
-> Ten implementation sprints are complete: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, and Learning Foundation.
+> The architecture is sufficient. Level 3 is complete.
+> Ten product-proof sprints are done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, and Learning Foundation.
 > The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, and a learning substrate.
-> Next: Activate Learning Agents on top of this foundation.
+> Focus now: commercial readiness and controlled learning activation.
