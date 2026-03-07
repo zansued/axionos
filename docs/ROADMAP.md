@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 20 — Advisory Calibration Layer implemented. Structured, deterministic calibration signals diagnose meta-agent performance, proposal usefulness, historical context value, and redundancy guard effectiveness. Calibration is advisory-only — no automatic tuning. Previous: Proposal Quality Feedback Loop (Sprint 19).
+> **What changed (2026-03-07):** Sprint 21 — Prompt Optimization Engine implemented. Controlled A/B experimentation layer for prompt variants per stage, with deterministic selection, bounded exposure, aggregated metrics, and promotion rules. Advisory-first — no automatic kernel mutation. Previous: Advisory Calibration Layer (Sprint 20).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >

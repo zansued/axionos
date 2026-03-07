@@ -2798,6 +2798,291 @@ export type Database = {
           },
         ]
       }
+      prompt_variant_executions: {
+        Row: {
+          cost_usd: number
+          created_at: string
+          duration_ms: number
+          execution_signature: string
+          id: string
+          initiative_id: string | null
+          model_name: string | null
+          model_provider: string | null
+          organization_id: string
+          pipeline_job_id: string | null
+          prompt_variant_id: string
+          quality_score: number | null
+          repair_triggered: boolean
+          retry_count: number
+          stage_key: string
+          success: boolean | null
+        }
+        Insert: {
+          cost_usd?: number
+          created_at?: string
+          duration_ms?: number
+          execution_signature: string
+          id?: string
+          initiative_id?: string | null
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id: string
+          pipeline_job_id?: string | null
+          prompt_variant_id: string
+          quality_score?: number | null
+          repair_triggered?: boolean
+          retry_count?: number
+          stage_key: string
+          success?: boolean | null
+        }
+        Update: {
+          cost_usd?: number
+          created_at?: string
+          duration_ms?: number
+          execution_signature?: string
+          id?: string
+          initiative_id?: string | null
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id?: string
+          pipeline_job_id?: string | null
+          prompt_variant_id?: string
+          quality_score?: number | null
+          repair_triggered?: boolean
+          retry_count?: number
+          stage_key?: string
+          success?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_variant_executions_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_variant_executions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_variant_executions_pipeline_job_id_fkey"
+            columns: ["pipeline_job_id"]
+            isOneToOne: false
+            referencedRelation: "initiative_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_variant_executions_prompt_variant_id_fkey"
+            columns: ["prompt_variant_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prompt_variant_metrics: {
+        Row: {
+          avg_cost_usd: number | null
+          avg_duration_ms: number | null
+          avg_quality_score: number | null
+          confidence_level: number | null
+          created_at: string
+          executions: number
+          id: string
+          organization_id: string
+          period_end: string
+          period_start: string
+          promotion_score: number | null
+          prompt_variant_id: string
+          repair_rate: number | null
+          success_rate: number | null
+        }
+        Insert: {
+          avg_cost_usd?: number | null
+          avg_duration_ms?: number | null
+          avg_quality_score?: number | null
+          confidence_level?: number | null
+          created_at?: string
+          executions?: number
+          id?: string
+          organization_id: string
+          period_end: string
+          period_start: string
+          promotion_score?: number | null
+          prompt_variant_id: string
+          repair_rate?: number | null
+          success_rate?: number | null
+        }
+        Update: {
+          avg_cost_usd?: number | null
+          avg_duration_ms?: number | null
+          avg_quality_score?: number | null
+          confidence_level?: number | null
+          created_at?: string
+          executions?: number
+          id?: string
+          organization_id?: string
+          period_end?: string
+          period_start?: string
+          promotion_score?: number | null
+          prompt_variant_id?: string
+          repair_rate?: number | null
+          success_rate?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_variant_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_variant_metrics_prompt_variant_id_fkey"
+            columns: ["prompt_variant_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prompt_variant_promotions: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          previous_control_variant_id: string | null
+          promoted_variant_id: string
+          promotion_mode: string
+          promotion_reason: Json
+          rollback_guard: Json | null
+          stage_key: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          previous_control_variant_id?: string | null
+          promoted_variant_id: string
+          promotion_mode?: string
+          promotion_reason?: Json
+          rollback_guard?: Json | null
+          stage_key: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          previous_control_variant_id?: string | null
+          promoted_variant_id?: string
+          promotion_mode?: string
+          promotion_reason?: Json
+          rollback_guard?: Json | null
+          stage_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_variant_promotions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_variant_promotions_previous_control_variant_id_fkey"
+            columns: ["previous_control_variant_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_variant_promotions_promoted_variant_id_fkey"
+            columns: ["promoted_variant_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prompt_variants: {
+        Row: {
+          agent_type: string | null
+          base_prompt_signature: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_enabled: boolean
+          model_name: string | null
+          model_provider: string | null
+          organization_id: string
+          prompt_template: string
+          stage_key: string
+          status: string
+          updated_at: string
+          variables_schema: Json | null
+          variant_name: string
+          variant_version: number
+          workspace_id: string | null
+        }
+        Insert: {
+          agent_type?: string | null
+          base_prompt_signature: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_enabled?: boolean
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id: string
+          prompt_template: string
+          stage_key: string
+          status?: string
+          updated_at?: string
+          variables_schema?: Json | null
+          variant_name: string
+          variant_version?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          agent_type?: string | null
+          base_prompt_signature?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_enabled?: boolean
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id?: string
+          prompt_template?: string
+          stage_key?: string
+          status?: string
+          updated_at?: string
+          variables_schema?: Json | null
+          variant_name?: string
+          variant_version?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_variants_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_variants_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       proposal_quality_aggregates: {
         Row: {
           avg_acceptance_rate: number

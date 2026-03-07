@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 20 — Advisory Calibration Layer implemented. Structured, deterministic calibration signals analyze meta-agent performance, proposal usefulness, historical context value, and redundancy guard effectiveness. Calibration is advisory-only — no automatic tuning. Previous: Proposal Quality Feedback Loop (Sprint 19).
+> **What changed (2026-03-07):** Sprint 21 — Prompt Optimization Engine implemented. Controlled A/B prompt experimentation with deterministic selection, bounded exposure, metrics aggregation, and promotion rules. Advisory-first — no automatic kernel mutation. Previous: Advisory Calibration Layer (Sprint 20).
 >
 > Last updated: 2026-03-07
 
