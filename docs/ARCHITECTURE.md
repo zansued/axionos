@@ -302,7 +302,7 @@ Engineering Memory is a **cross-layer infrastructure** that captures knowledge f
 
 **Purpose:** Transform accepted meta-agent recommendations into structured engineering proposals (artifacts) that humans can review, approve, and implement.
 
-**Status:** ✅ Active (Sprint 14, hardened Sprint 14.5)
+**Status:** ✅ Active (Sprint 14, hardened Sprint 14.5, memory-aware Sprint 18)
 
 **Includes:**
 - Artifact generation from accepted recommendations
