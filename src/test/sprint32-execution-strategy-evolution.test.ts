@@ -245,7 +245,7 @@ describe("Execution Strategy Experiment Runner", () => {
 
 // ═══ Outcome Tracker ═══
 describe("Execution Strategy Outcome Tracker", () => {
-  const { compareOutcomes } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-outcome-tracker");
+  // uses top-level import
 
   it("detects improvement when variant is better", () => {
     const baseline = Array.from({ length: 15 }, () => ({ outcome_metrics: { retry_count: 4, success_rate: 0.7 } }));
