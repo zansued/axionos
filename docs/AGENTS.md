@@ -544,30 +544,31 @@ supabase/functions/_shared/agent-os/
 
 ---
 
-## 16. Engineering Memory Interaction (Designed)
+## 16. Engineering Memory Interaction (Active — Sprints 15–18)
 
-> **Status:** Designed — Not implemented
+> **Status:** ✅ Active — Full stack operational
 
 ### Overview
 
-Engineering Memory is a cross-layer knowledge infrastructure that agents will use to retrieve past engineering experience. Agents do **not** write directly to memory — capture is event-driven from layer outputs. Agents **read** memory to inform decisions.
+Engineering Memory is a cross-layer knowledge infrastructure that agents use to retrieve past engineering experience. Agents do **not** write directly to memory — capture is event-driven from layer outputs. Agents **read** memory to inform decisions.
 
 ### Agent Retrieval Use Cases
 
-| Agent Class | Retrieval Context | Memory Types Used |
-|-------------|-------------------|-------------------|
-| **Build Agents** | During repair attempts | Error Memory, Strategy Memory |
-| **Validation Agents** | During preventive checks | Error Memory, Execution Memory |
-| **Architecture Agents** | During planning | Design Memory, Outcome Memory |
-| **Meta-Agents** | During recommendation generation | All memory types |
-| **Proposal Generators** | During artifact generation | Design Memory, Decision Memory |
+| Agent Class | Retrieval Context | Memory Types Used | Status |
+|-------------|-------------------|-------------------|--------|
+| **Build Agents** | During repair attempts | Error Memory, Strategy Memory | ✅ Active |
+| **Validation Agents** | During preventive checks | Error Memory, Execution Memory | ✅ Active |
+| **Architecture Agents** | During planning | Design Memory, Outcome Memory | ✅ Active |
+| **Meta-Agents** | During recommendation generation | All memory types + summaries | ✅ Active (Sprint 18) |
+| **Proposal Generators** | During artifact generation | Design Memory, Decision Memory | ✅ Active (Sprint 18) |
 
-### Memory-Driven Decisions (Future)
+### Memory-Aware Reasoning (Active — Sprint 18)
 
-1. **Repair Selection:** Before attempting a repair strategy, query Strategy Memory for past effectiveness of similar strategies on similar errors.
-2. **Architecture Validation:** Before generating architecture proposals, query Design Memory for prior proposals addressing similar components.
-3. **Meta-Agent Analysis:** During recommendation generation, query Outcome Memory to assess the impact of previously implemented recommendations.
-4. **Human Review Support:** During artifact review, surface related Decision Memory entries showing past acceptance/rejection patterns.
+1. **Meta-Agent Analysis:** Each meta-agent queries relevant memory entries, summaries, prior decisions, and outcomes via `meta-agent-memory-context.ts`.
+2. **Historical Continuity:** `historical-continuity-scoring.ts` computes support/conflict/context scores to measure alignment with prior history.
+3. **Redundancy Guard:** `historical-redundancy-guard.ts` suppresses or downgrades recommendations that repeat previously rejected ideas without new evidence.
+4. **Proposal Context:** Artifact generation includes Related Historical Context sections with prior decisions, outcomes, and summary references.
+5. **Human Review Support:** Review UI surfaces related memory entries, summaries, and historical alignment indicators.
 
 ### Safety Boundaries
 
@@ -576,6 +577,7 @@ Engineering Memory is a cross-layer knowledge infrastructure that agents will us
 - Memory absence must not prevent agent operation (graceful degradation)
 - Memory queries must always be scoped by `organization_id` (tenant isolation)
 - Memory must not override governance rules or policy engine decisions
+- Memory informs but never dictates recommendations or proposals
 
 ---
 
