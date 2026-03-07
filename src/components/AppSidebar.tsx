@@ -36,6 +36,7 @@ const mainItems = [
 ];
 
 const bottomItems = [
+  { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Audit", url: "/audit", icon: Shield },
   { title: "Observability", url: "/observability", icon: Radio },
   { title: "Connections", url: "/connections", icon: Package },
