@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Engineering Memory Foundation (Sprint 15) implemented — agents can now emit structured memory entries via `engineering-memory-service`. Memory capture is active on recommendation acceptance and artifact lifecycle transitions. Previous: Added Engineering Memory interaction design.
+> **What changed (2026-03-07):** Sprint 18 — Memory-Aware Meta-Agents implemented. All 4 meta-agents now use engineering memory and summaries as advisory historical context. Historical continuity scoring, redundancy suppression, and decision/outcome-aware framing are active. Proposal Layer v2 includes Related Historical Context sections. Previous: Memory Summaries (Sprint 17).
 >
 > Last updated: 2026-03-07
 
