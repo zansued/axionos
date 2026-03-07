@@ -308,6 +308,9 @@ Organized into four sequential sprints.
 | Adaptive Learning Engine | ✅ |
 | Governance (gates, SLAs, audit logs) | ✅ |
 | Observability + Cost Tracking | ✅ |
+| Evidence-Oriented Repair Loop | ✅ |
+| Error Pattern Library | ✅ |
+| Preventive Engineering Layer | ✅ |
 
 ---
 
