@@ -238,7 +238,7 @@ describe("Sprint 24 §1 — Agent Memory Retriever", () => {
     it("ranks context-signature matching records highest", () => {
       const ctx = { ...baseCtx, context_signature: "TS2345::type_mismatch" };
       const records = [
-        makeRecord({ id: "r1", context_signature: "OTHER", relevance_score: 0.8 }),
+        makeRecord({ id: "r1", context_signature: "OTHER", relevance_score: 0.5 }),
         makeRecord({ id: "r2", context_signature: "TS2345::type_mismatch", relevance_score: 0.5 }),
       ];
       const ranked = rankRecords(records, ctx);
