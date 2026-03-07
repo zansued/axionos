@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   scoreQualityRecord,
   computeAggregateQuality,
+  computeFeedbackScores,
 } from "../../supabase/functions/_shared/meta-agents/proposal-quality-scoring";
 
 describe("Sprint 19 — Proposal Quality Scoring", () => {
@@ -150,5 +151,166 @@ describe("Sprint 19 — Proposal Quality Scoring", () => {
     for (const v of values) {
       expect(Number.isFinite(v)).toBe(true);
     }
+  });
+});
+
+describe("Sprint 19 — Feedback Scoring (computeFeedbackScores)", () => {
+  const baseFb = {
+    organization_id: "org-1",
+    entity_type: "recommendation" as const,
+    entity_id: "rec-1",
+    decision_signal: "accepted" as const,
+    confidence_score: 0.8,
+    impact_score: 0.7,
+    priority_score: 0.75,
+    historical_alignment: "reinforces_prior_direction",
+    was_memory_enriched: true,
+  };
+
+  it("produces deterministic feedback scores", () => {
+    const a = computeFeedbackScores(baseFb);
+    const b = computeFeedbackScores(baseFb);
+    expect(a).toEqual(b);
+  });
+
+  it("quality_score bounded 0-1", () => {
+    const s = computeFeedbackScores(baseFb);
+    expect(s.quality_score).toBeGreaterThanOrEqual(0);
+    expect(s.quality_score).toBeLessThanOrEqual(1);
+  });
+
+  it("usefulness_score defaults to moderate for unknown follow-through", () => {
+    const s = computeFeedbackScores(baseFb);
+    expect(s.usefulness_score).toBeGreaterThanOrEqual(0.3);
+    expect(s.usefulness_score).toBeLessThanOrEqual(0.5);
+  });
+
+  it("usefulness high when implemented + positive", () => {
+    const s = computeFeedbackScores({
+      ...baseFb,
+      decision_signal: "implemented",
+      follow_through_signal: "implemented",
+      outcome_signal: "positive",
+    });
+    expect(s.usefulness_score).toBeGreaterThan(0.9);
+  });
+
+  it("usefulness low when not_implemented", () => {
+    const s = computeFeedbackScores({
+      ...baseFb,
+      follow_through_signal: "not_implemented",
+    });
+    expect(s.usefulness_score).toBeLessThan(0.2);
+  });
+
+  it("historical support score high for reinforcing + accepted", () => {
+    const s = computeFeedbackScores(baseFb);
+    expect(s.historical_support_score).toBeGreaterThan(0.8);
+  });
+
+  it("historical conflict score high for reinforcing + rejected", () => {
+    const s = computeFeedbackScores({
+      ...baseFb,
+      decision_signal: "rejected",
+    });
+    expect(s.historical_conflict_score).toBeGreaterThan(0.6);
+  });
+
+  it("null historical scores when no alignment", () => {
+    const s = computeFeedbackScores({
+      ...baseFb,
+      historical_alignment: null,
+    });
+    expect(s.historical_support_score).toBeNull();
+    expect(s.historical_conflict_score).toBeNull();
+  });
+
+  it("confidence_in_feedback increases with more signals", () => {
+    const minimal = computeFeedbackScores({
+      ...baseFb,
+      historical_alignment: null,
+      was_memory_enriched: false,
+    });
+    const rich = computeFeedbackScores({
+      ...baseFb,
+      outcome_signal: "positive",
+      follow_through_signal: "implemented",
+      reviewer_feedback_score: 4,
+    });
+    expect(rich.confidence_in_feedback).toBeGreaterThan(minimal.confidence_in_feedback);
+  });
+
+  it("reviewer_feedback_score adjusts quality", () => {
+    const noReviewer = computeFeedbackScores(baseFb);
+    const withHighReviewer = computeFeedbackScores({
+      ...baseFb,
+      reviewer_feedback_score: 5,
+    });
+    const withLowReviewer = computeFeedbackScores({
+      ...baseFb,
+      reviewer_feedback_score: 1,
+    });
+    expect(withHighReviewer.quality_score).toBeGreaterThan(withLowReviewer.quality_score);
+  });
+
+  it("rejected decision produces low quality", () => {
+    const s = computeFeedbackScores({
+      ...baseFb,
+      decision_signal: "rejected",
+      confidence_score: 0.9,
+    });
+    expect(s.quality_score).toBeLessThan(0.3);
+  });
+
+  it("artifact feedback works correctly", () => {
+    const s = computeFeedbackScores({
+      ...baseFb,
+      entity_type: "artifact",
+      artifact_type: "ADR_DRAFT",
+      decision_signal: "approved",
+    });
+    expect(s.quality_score).toBeGreaterThan(0.5);
+  });
+
+  it("all feedback scores are finite", () => {
+    const edge = computeFeedbackScores({
+      organization_id: "org-1",
+      entity_type: "recommendation",
+      entity_id: "id-edge",
+      decision_signal: "deferred",
+      confidence_score: 0,
+      impact_score: 0,
+      priority_score: 0,
+      historical_alignment: null,
+      was_memory_enriched: false,
+    });
+    const values = [
+      edge.quality_score,
+      edge.usefulness_score,
+      edge.confidence_in_feedback,
+    ];
+    for (const v of values) {
+      expect(Number.isFinite(v)).toBe(true);
+    }
+  });
+
+  it("graceful degradation: missing optional fields don't crash", () => {
+    const s = computeFeedbackScores({
+      organization_id: "org-1",
+      entity_type: "recommendation",
+      entity_id: "id-min",
+      decision_signal: "accepted",
+    });
+    expect(s.quality_score).toBeGreaterThanOrEqual(0);
+    expect(s.usefulness_score).toBeGreaterThanOrEqual(0);
+  });
+
+  it("feedback tags do not affect scores (structural only)", () => {
+    const withTags = computeFeedbackScores({
+      ...baseFb,
+      feedback_tags: ["high_value", "well_supported"],
+    } as any);
+    const withoutTags = computeFeedbackScores(baseFb);
+    expect(withTags.quality_score).toBe(withoutTags.quality_score);
   });
 });

@@ -266,6 +266,93 @@ function computeFeedbackSignals(input: QualityRecordInput): FeedbackSignals {
   };
 }
 
+// ─── Sprint 19 Expansion: Full Feedback Scoring ───
+
+import type { ProposalQualityFeedbackInput, FeedbackScores } from "./proposal-quality-types.ts";
+
+/**
+ * Compute quality + usefulness scores for a feedback record.
+ * Deterministic, rule-based, bounded [0,1].
+ */
+export function computeFeedbackScores(input: ProposalQualityFeedbackInput): FeedbackScores {
+  const decision = input.decision_signal;
+  const outcome = input.outcome_signal || "unknown";
+  const followThrough = input.follow_through_signal || "unknown";
+  const confidence = input.confidence_score || 0;
+  const impact = input.impact_score || 0;
+  const reviewerScore = input.reviewer_feedback_score;
+
+  // Quality score: combines decision correctness + confidence calibration
+  let quality = 0.5;
+  if (["accepted", "approved", "implemented"].includes(decision)) {
+    quality = clamp(0.5 + confidence * 0.3 + impact * 0.2);
+  } else if (decision === "rejected") {
+    quality = clamp(0.3 - confidence * 0.15);
+  } else if (decision === "deferred") {
+    quality = 0.4;
+  }
+  // Reviewer score adjustment
+  if (reviewerScore != null) {
+    quality = clamp(quality * 0.7 + (reviewerScore / 5) * 0.3);
+  }
+
+  // Usefulness score: combines follow-through + outcome
+  let usefulness = 0.3;
+  if (followThrough === "implemented") {
+    usefulness = outcome === "positive" ? 0.95 : outcome === "neutral" ? 0.6 : outcome === "negative" ? 0.2 : 0.5;
+  } else if (followThrough === "partially_implemented") {
+    usefulness = outcome === "positive" ? 0.7 : 0.4;
+  } else if (followThrough === "not_implemented") {
+    usefulness = 0.1;
+  }
+  // Bump for accepted but not yet implemented
+  if (["accepted", "approved"].includes(decision) && followThrough === "unknown") {
+    usefulness = 0.4;
+  }
+
+  // Historical support/conflict scores
+  const alignment = input.historical_alignment;
+  let historicalSupport: number | null = null;
+  let historicalConflict: number | null = null;
+  if (alignment) {
+    const accepted = ["accepted", "approved", "implemented"].includes(decision);
+    switch (alignment) {
+      case "reinforces_prior_direction":
+      case "extends_prior_direction":
+        historicalSupport = accepted ? 0.9 : 0.3;
+        historicalConflict = accepted ? 0.1 : 0.7;
+        break;
+      case "diverges_from_prior_direction":
+        historicalSupport = 0.2;
+        historicalConflict = accepted ? 0.3 : 0.8;
+        break;
+      case "reopens_unresolved_issue":
+        historicalSupport = 0.4;
+        historicalConflict = 0.4;
+        break;
+      default:
+        historicalSupport = 0.5;
+        historicalConflict = 0.2;
+    }
+  }
+
+  // Confidence in feedback: higher when we have more signals
+  let feedbackConfidence = 0.5;
+  if (outcome !== "unknown") feedbackConfidence += 0.2;
+  if (followThrough !== "unknown") feedbackConfidence += 0.15;
+  if (reviewerScore != null) feedbackConfidence += 0.1;
+  if (alignment) feedbackConfidence += 0.05;
+  feedbackConfidence = clamp(feedbackConfidence);
+
+  return {
+    quality_score: round3(quality),
+    usefulness_score: round3(usefulness),
+    historical_support_score: historicalSupport !== null ? round3(historicalSupport) : null,
+    historical_conflict_score: historicalConflict !== null ? round3(historicalConflict) : null,
+    confidence_in_feedback: round3(feedbackConfidence),
+  };
+}
+
 // ─── Helpers ───
 
 function clamp(v: number, min = 0, max = 1): number {
