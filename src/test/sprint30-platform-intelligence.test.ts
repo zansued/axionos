@@ -387,7 +387,7 @@ describe("Sprint 30 — Platform Intelligence (Comprehensive)", () => {
       const records = [...makeRecords(4, { stage: "build", had_repair: true }), ...makeRecords(6, { stage: "build" })];
       const s = aggregatePlatformBehavior(records);
       expect(s.repair_concentration[0].rate).toBeCloseTo(0.4);
-      expect(s.repair_concentration[0].severity).toBe("high");
+      expect(s.repair_concentration[0].severity).toBe("medium"); // 0.4 is boundary, not > 0.4
     });
 
     it("builds cost concentration with severity", () => {
