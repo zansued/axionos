@@ -94,5 +94,31 @@ export async function bootstrapPipeline(
     organizationId: initiative.organization_id,
   };
 
+  // ── Usage limit enforcement ──
+  try {
+    const usageCheck = await enforceUsageLimits(serviceClient, initiative.organization_id);
+    if (!usageCheck.allowed) {
+      // Record blocked attempt in audit_logs
+      await serviceClient.from("audit_logs").insert({
+        user_id: user.id,
+        action: "usage_limit_blocked",
+        category: "billing",
+        entity_type: "initiatives",
+        entity_id: initiativeId,
+        message: usageCheck.reason || "Usage limit exceeded",
+        severity: "warning",
+        organization_id: initiative.organization_id,
+        metadata: { error_code: usageCheck.error_code, current: usageCheck.current, limits: usageCheck.limits },
+      });
+      return errorResponse(
+        JSON.stringify({ error: usageCheck.reason, error_code: usageCheck.error_code, current: usageCheck.current, limits: usageCheck.limits }),
+        402
+      );
+    }
+  } catch (e) {
+    // Non-blocking: if enforcer fails, log but allow execution to continue
+    console.warn("Usage limit check failed (non-blocking):", e);
+  }
+
   return { user, initiative, ctx, serviceClient, body, apiKey };
 }
