@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { retrieveForArtifactGeneration } from "../_shared/engineering-memory-retriever.ts";
 
 /**
  * meta-artifact-generator — Sprint 14
