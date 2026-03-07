@@ -341,6 +341,11 @@ export default function Observability() {
             <PlatformSelfCalibrationDashboard />
           </TabsContent>
 
+          {/* ===== EXECUTION STRATEGY EVOLUTION ===== */}
+          <TabsContent value="strategy-evo" className="mt-4">
+            <ExecutionStrategyEvolutionDashboard />
+          </TabsContent>
+
           {/* ===== CROSS-STAGE LEARNING ===== */}
           <TabsContent value="cross-stage" className="mt-4">
             <CrossStageLearningDashboard />
