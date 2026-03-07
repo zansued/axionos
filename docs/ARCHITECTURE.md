@@ -345,6 +345,11 @@ flowchart TB
 
 ```
   ═══════════════════════════════════════════════════════════════════
+  TIER 7: SEMANTIC RETRIEVAL LAYER
+  ═══════════════════════════════════════════════════════════════════
+  Layer 21: Semantic Retrieval & Embedding Memory   ← Active (Sprint 36)
+
+  ═══════════════════════════════════════════════════════════════════
   TIER 6: STRATEGY EVOLUTION LAYER
   ═══════════════════════════════════════════════════════════════════
   Layer 17: Execution Strategy Evolution          ← Active (Sprint 32)
