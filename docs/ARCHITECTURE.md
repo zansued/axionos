@@ -815,10 +815,13 @@ supabase/functions/
 +-- Learning Agents                 (6 functions -- Sprint 12)
 +-- Meta-Agents                     (3 functions -- Sprint 13-14, 18)
 +-- Engineering Memory              (2 functions -- Sprint 15, 17)
++-- Proposal Quality                (1 function -- Sprint 19)
++-- Advisory Calibration            (1 function -- Sprint 20)
 +-- Support                         (11 functions)
 +-- _shared/                        (15+ helper modules)
     +-- agent-os/                   (14 Agent OS modules)
-    +-- meta-agents/               (Meta-agent types, scoring, validation, memory context, continuity, redundancy)
+    +-- meta-agents/               (Meta-agent types, scoring, validation, memory context, continuity, redundancy, quality feedback)
+    +-- calibration/               (Calibration types, scoring, analysis service)
 ```
 
 ---
