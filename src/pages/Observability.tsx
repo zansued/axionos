@@ -29,6 +29,7 @@ import { ExecutionPolicyPortfolioDashboard } from "@/components/observability/Ex
 import { TenantAdaptivePolicyDashboard } from "@/components/observability/TenantAdaptivePolicyDashboard";
 import { PlatformIntelligenceDashboard } from "@/components/observability/PlatformIntelligenceDashboard";
 import { PlatformSelfCalibrationDashboard } from "@/components/observability/PlatformSelfCalibrationDashboard";
+import { ExecutionStrategyEvolutionDashboard } from "@/components/observability/ExecutionStrategyEvolutionDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
