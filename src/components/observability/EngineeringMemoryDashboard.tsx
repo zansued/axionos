@@ -93,10 +93,13 @@ export function EngineeringMemoryDashboard() {
     ([type, count]) => ({ type, count: count as number, label: MEMORY_TYPE_LABELS[type] || type })
   );
 
+  const byContext = retrievalMetrics?.by_context || {};
+  const contextEntries = Object.entries(byContext).map(([ctx, count]) => ({ context: ctx, count: count as number }));
+
   return (
     <div className="space-y-4">
       {/* KPI Cards */}
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-5">
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-6">
         <MetricCard
           icon={Database}
           label="Total Memórias"
@@ -118,11 +121,34 @@ export function EngineeringMemoryDashboard() {
           value={typeDistribution.length}
         />
         <MetricCard
+          icon={Search}
+          label="Retrievals (7d)"
+          value={retrievalMetrics?.total_retrievals_7d ?? 0}
+        />
+        <MetricCard
           icon={Clock}
-          label="Query"
-          value={searchResult?.query_duration ? `${searchResult.query_duration}ms` : "—"}
+          label="Decision-Assisted"
+          value={retrievalMetrics?.decision_assisted_count ?? 0}
         />
       </div>
+
+      {/* Retrieval by Context (Sprint 16) */}
+      {contextEntries.length > 0 && (
+        <Card className="border-border/50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-display">Retrieval by Surface</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {contextEntries.map(({ context, count }) => (
+                <Badge key={context} variant="outline" className="gap-1.5">
+                  {context.replace(/_/g, " ")}: {count}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Type Distribution */}
       {typeDistribution.length > 0 && (
