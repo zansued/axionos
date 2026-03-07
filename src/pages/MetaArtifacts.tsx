@@ -192,7 +192,7 @@ export default function MetaArtifacts() {
           <Card className="border-destructive/30 bg-destructive/5">
             <CardContent className="p-4 flex items-center gap-3">
               <AlertTriangle className="h-5 w-5 text-destructive" />
-              <p className="text-sm text-destructive">Failed to load artifacts: {(queryError as Error).message}</p>
+              <p className="text-sm text-destructive">Failed to load artifacts: {String((queryError as Error)?.message || queryError)}</p>
             </CardContent>
           </Card>
         )}
