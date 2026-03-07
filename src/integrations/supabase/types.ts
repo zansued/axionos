@@ -140,6 +140,129 @@ export type Database = {
           },
         ]
       }
+      advisory_calibration_signals: {
+        Row: {
+          calibration_domain: string
+          confidence_score: number
+          created_at: string
+          description: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          recommended_action: string
+          risk_of_overcorrection: number | null
+          signal_strength: number
+          signal_type: string
+          target_component: string
+          title: string
+          workspace_id: string | null
+        }
+        Insert: {
+          calibration_domain?: string
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          recommended_action?: string
+          risk_of_overcorrection?: number | null
+          signal_strength?: number
+          signal_type?: string
+          target_component?: string
+          title?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          calibration_domain?: string
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          recommended_action?: string
+          risk_of_overcorrection?: number | null
+          signal_strength?: number
+          signal_type?: string
+          target_component?: string
+          title?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisory_calibration_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisory_calibration_signals_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      advisory_calibration_summaries: {
+        Row: {
+          content: Json
+          created_at: string
+          id: string
+          organization_id: string
+          period_end: string
+          period_start: string
+          signal_count: number
+          strongest_signals: Json
+          summary_type: string
+          title: string
+          workspace_id: string | null
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          id?: string
+          organization_id: string
+          period_end: string
+          period_start: string
+          signal_count?: number
+          strongest_signals?: Json
+          summary_type?: string
+          title?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          id?: string
+          organization_id?: string
+          period_end?: string
+          period_start?: string
+          signal_count?: number
+          strongest_signals?: Json
+          summary_type?: string
+          title?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advisory_calibration_summaries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advisory_calibration_summaries_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_memory: {
         Row: {
           agent_id: string
