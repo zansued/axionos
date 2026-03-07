@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 23 — Self-Improving Fix Agents v2. Repair system now memory-aware and policy-driven with bounded adjustments, retry path intelligence, and full explainability. Previous: Bounded Promotion & Rollback Guard (Sprint 22).
+> **What changed (2026-03-07):** Sprint 24 — Agent Memory Layer Operationalization. Per-agent memory profiles, bounded retrieval/injection, write-back, and quality scoring now operational. Previous: Self-Improving Fix Agents v2 (Sprint 23).
 >
 > Last updated: 2026-03-07
 
