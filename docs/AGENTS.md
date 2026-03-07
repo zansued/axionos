@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Added comprehensive Meta-Agent architecture (5 types with responsibilities, inputs, outputs, safety rules, interaction flow, output structure). Previous: Added Learning Agents v1 section, categorized modules by status.
+> **What changed (2026-03-07):** Added Engineering Memory interaction design — how agents will retrieve and use structured engineering memory for repair, analysis, and proposal generation. Previous: Added Meta-Agent architecture.
 >
 > Last updated: 2026-03-07
 
