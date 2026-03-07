@@ -81,6 +81,7 @@ const App = () => (
                       <Route path="/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
                       <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
                       <Route path="/meta-agents" element={<ProtectedRoute><MetaAgents /></ProtectedRoute>} />
+                      <Route path="/meta-artifacts" element={<ProtectedRoute><MetaArtifacts /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
