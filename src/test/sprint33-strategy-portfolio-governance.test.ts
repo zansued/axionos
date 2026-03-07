@@ -64,9 +64,9 @@ describe("Strategy Portfolio Conflict Detector", () => {
 
   it("detects overlap when >2 active in same domain", () => {
     const members = [
-      { member_id: "m1", strategy_family_id: "f1", family_key: "repair_fast", lifecycle_status: "active", exposure_weight: 1, performance_score: 0.8 },
-      { member_id: "m2", strategy_family_id: "f2", family_key: "repair_safe", lifecycle_status: "active", exposure_weight: 1, performance_score: 0.6 },
-      { member_id: "m3", strategy_family_id: "f3", family_key: "repair_slow", lifecycle_status: "active", exposure_weight: 1, performance_score: 0.5 },
+      { member_id: "m1", strategy_family_id: "f1", family_key: "repair_escalation_fast", lifecycle_status: "active", exposure_weight: 1, performance_score: 0.8 },
+      { member_id: "m2", strategy_family_id: "f2", family_key: "repair_escalation_safe", lifecycle_status: "active", exposure_weight: 1, performance_score: 0.6 },
+      { member_id: "m3", strategy_family_id: "f3", family_key: "repair_escalation_slow", lifecycle_status: "active", exposure_weight: 1, performance_score: 0.5 },
     ];
     const conflicts = detectConflicts(members, []);
     const overlap = conflicts.find(c => c.conflict_type === "overlap");
