@@ -783,6 +783,81 @@ export type Database = {
           },
         ]
       }
+      engineering_memory_entries: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          id: string
+          last_accessed_at: string | null
+          memory_subtype: string
+          memory_type: string
+          organization_id: string
+          related_component: string | null
+          related_stage: string | null
+          relevance_score: number
+          source_id: string | null
+          source_type: string
+          summary: string
+          tags: Json
+          times_retrieved: number
+          title: string
+          workspace_id: string | null
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          last_accessed_at?: string | null
+          memory_subtype?: string
+          memory_type?: string
+          organization_id: string
+          related_component?: string | null
+          related_stage?: string | null
+          relevance_score?: number
+          source_id?: string | null
+          source_type?: string
+          summary?: string
+          tags?: Json
+          times_retrieved?: number
+          title?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          last_accessed_at?: string | null
+          memory_subtype?: string
+          memory_type?: string
+          organization_id?: string
+          related_component?: string | null
+          related_stage?: string | null
+          relevance_score?: number
+          source_id?: string | null
+          source_type?: string
+          summary?: string
+          tags?: Json
+          times_retrieved?: number
+          title?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engineering_memory_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engineering_memory_entries_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       error_patterns: {
         Row: {
           affected_file_types: string[] | null
@@ -1373,6 +1448,100 @@ export type Database = {
           },
           {
             foreignKeyName: "learning_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_links: {
+        Row: {
+          created_at: string
+          from_memory_id: string
+          id: string
+          link_type: string
+          organization_id: string
+          to_memory_id: string
+        }
+        Insert: {
+          created_at?: string
+          from_memory_id: string
+          id?: string
+          link_type?: string
+          organization_id: string
+          to_memory_id: string
+        }
+        Update: {
+          created_at?: string
+          from_memory_id?: string
+          id?: string
+          link_type?: string
+          organization_id?: string
+          to_memory_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_links_from_memory_id_fkey"
+            columns: ["from_memory_id"]
+            isOneToOne: false
+            referencedRelation: "engineering_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memory_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memory_links_to_memory_id_fkey"
+            columns: ["to_memory_id"]
+            isOneToOne: false
+            referencedRelation: "engineering_memory_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_retrieval_log: {
+        Row: {
+          created_at: string
+          id: string
+          memory_id: string
+          organization_id: string
+          retrieval_context: string | null
+          retrieved_by_component: string
+          used_in_decision: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          memory_id: string
+          organization_id: string
+          retrieval_context?: string | null
+          retrieved_by_component?: string
+          used_in_decision?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          memory_id?: string
+          organization_id?: string
+          retrieval_context?: string | null
+          retrieved_by_component?: string
+          used_in_decision?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_retrieval_log_memory_id_fkey"
+            columns: ["memory_id"]
+            isOneToOne: false
+            referencedRelation: "engineering_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memory_retrieval_log_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"

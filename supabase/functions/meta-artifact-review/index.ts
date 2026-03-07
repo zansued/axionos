@@ -112,6 +112,31 @@ serve(async (req) => {
       },
     });
 
+    // ── Engineering Memory Capture (Sprint 15) ──
+    const MEMORY_CAPTURE_MAP: Record<string, { memory_type: string; memory_subtype: string }> = {
+      approved: { memory_type: "DesignMemory", memory_subtype: "artifact_approved" },
+      implemented: { memory_type: "OutcomeMemory", memory_subtype: "change_implemented" },
+    };
+
+    const memoryConfig = MEMORY_CAPTURE_MAP[action];
+    if (memoryConfig) {
+      await sc.from("engineering_memory_entries").insert({
+        organization_id: artifact.organization_id,
+        memory_type: memoryConfig.memory_type,
+        memory_subtype: memoryConfig.memory_subtype,
+        title: `${action}: ${artifact.title}`,
+        summary: `Meta-artifact ${artifact_id} transitioned from ${previousStatus} to ${action}. Type: ${artifact.created_by_meta_agent}. Recommendation: ${artifact.recommendation_id}.`,
+        source_type: "meta_agent_artifact",
+        source_id: artifact_id,
+        related_component: artifact.created_by_meta_agent,
+        confidence_score: 0.8,
+        relevance_score: 0.9,
+        tags: [action, artifact.created_by_meta_agent, "meta_artifact"],
+      }).then(({ error: memErr }) => {
+        if (memErr) console.error("Memory capture error:", memErr);
+      });
+    }
+
     return jsonResponse({
       id: artifact_id,
       previous_status: previousStatus,

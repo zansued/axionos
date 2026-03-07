@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Engineering Memory Architecture designed — cross-layer knowledge infrastructure (Layer 9) with 6 memory types, data model, capture strategy, retrieval surfaces, and synthesis model. Design-only. Previous: Sprint 14 Controlled Meta-Agent Actions.
+> **What changed (2026-03-07):** Sprint 15 — Engineering Memory Foundation implemented. Core memory storage, linking, capture events, retrieval API, observability metrics, and read-only UI operational. Previous: Engineering Memory Architecture designed.
 >
 > **Current Mode**: Level 4.5 — Meta-Aware Engineering Platform
 >
@@ -310,23 +310,29 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 
 ---
 
-## Engineering Memory Architecture (Designed — Not Implemented)
+## Engineering Memory Architecture (Foundation Implemented — Sprint 15)
 
 **Purpose:** Enable AxionOS to accumulate institutional engineering memory across executions, failures, strategies, recommendations, decisions, and outcomes.
 
 **Memory Types:** Execution Memory, Error Memory, Strategy Memory, Design Memory, Decision Memory, Outcome Memory.
 
+**Sprint 15 — Foundation Implemented:**
+- ✅ Core tables: `engineering_memory_entries`, `memory_links`, `memory_retrieval_log`
+- ✅ Full RLS with tenant isolation
+- ✅ Memory capture on recommendation acceptance and artifact transitions
+- ✅ Retrieval API with filtering, pagination, and access tracking
+- ✅ Observability metrics (total entries, by type, retrieval frequency, most accessed)
+- ✅ Read-only UI in Observability → Memory tab
+- 📋 Semantic retrieval (future — requires embeddings)
+- 📋 Memory synthesis/summaries (future)
+- 📋 Memory-driven agent reasoning (future)
+
 **Key Design Decisions:**
 - Cross-layer infrastructure (not a new execution layer)
 - Event-driven capture from Execution, Learning, Meta-Agent, Proposal, and Human layers
 - Dual indexing: structural (field-based) + semantic (future vector-based)
-- Periodic synthesis into summaries (weekly/monthly trends)
 - Strict tenant isolation via organization_id + RLS
 - Non-invasive: memory never mutates system behavior
-
-**Data Model (Planned):** `engineering_memory_entries`, `memory_links`, `memory_retrieval_log`, `memory_summaries`
-
-**Retrieval Surfaces:** During repair (past strategies), during meta-agent analysis (related proposals), during artifact generation (prior ADRs), during human review (past decisions and outcomes).
 
 Full specification: [ARCHITECTURE.md — Layer 9](ARCHITECTURE.md)
 
@@ -335,7 +341,6 @@ Full specification: [ARCHITECTURE.md — Layer 9](ARCHITECTURE.md)
 ## Governing Principle
 
 > The architecture is sufficient. Level 3 is complete.
-> Fourteen sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, and Controlled Meta-Agent Actions.
-> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, meta-level recommendations, and controlled engineering proposal generation.
-> Engineering Memory Architecture is designed as the next knowledge infrastructure layer.
-> Focus now: commercial stability, controlled learning activation, and memory infrastructure preparation.
+> Fifteen sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, and Engineering Memory Foundation.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, meta-level recommendations, controlled engineering proposal generation, and foundational engineering memory.
+> Focus now: commercial stability, controlled learning activation, and memory infrastructure enrichment.

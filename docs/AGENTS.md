@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Added Engineering Memory interaction design — how agents will retrieve and use structured engineering memory for repair, analysis, and proposal generation. Previous: Added Meta-Agent architecture.
+> **What changed (2026-03-07):** Engineering Memory Foundation (Sprint 15) implemented — agents can now emit structured memory entries via `engineering-memory-service`. Memory capture is active on recommendation acceptance and artifact lifecycle transitions. Previous: Added Engineering Memory interaction design.
 >
 > Last updated: 2026-03-07
 

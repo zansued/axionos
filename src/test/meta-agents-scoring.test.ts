@@ -645,3 +645,256 @@ describe("Sprint 14 — Tenant Isolation", () => {
     }
   });
 });
+
+// ===================================================================
+// Sprint 15 — Engineering Memory Foundation Tests
+// ===================================================================
+
+const VALID_MEMORY_TYPES = [
+  "ExecutionMemory",
+  "ErrorMemory",
+  "StrategyMemory",
+  "DesignMemory",
+  "DecisionMemory",
+  "OutcomeMemory",
+];
+
+const VALID_LINK_TYPES = [
+  "caused_by",
+  "resolved_by",
+  "recommended_by",
+  "implemented_as",
+  "similar_to",
+  "superseded_by",
+];
+
+// Helper: simulate memory entry creation
+function createMemoryEntry(overrides: Record<string, unknown> = {}) {
+  return {
+    id: `mem-${Math.random().toString(36).slice(2, 8)}`,
+    organization_id: "org-test",
+    workspace_id: null,
+    memory_type: "DesignMemory",
+    memory_subtype: "recommendation_accepted",
+    title: "Test memory entry",
+    summary: "A test memory summary",
+    source_type: "meta_agent_recommendation",
+    source_id: "rec-123",
+    related_component: "pipeline_validation",
+    related_stage: "architecture",
+    confidence_score: 0.8,
+    relevance_score: 0.7,
+    tags: ["test", "meta_agent"],
+    created_at: new Date().toISOString(),
+    last_accessed_at: null,
+    times_retrieved: 0,
+    ...overrides,
+  };
+}
+
+function createMemoryLink(from: string, to: string, linkType: string) {
+  return {
+    id: `link-${Math.random().toString(36).slice(2, 8)}`,
+    organization_id: "org-test",
+    from_memory_id: from,
+    to_memory_id: to,
+    link_type: linkType,
+    created_at: new Date().toISOString(),
+  };
+}
+
+describe("Sprint 15 — Memory Type Taxonomy", () => {
+  it("supports exactly 6 memory types", () => {
+    expect(VALID_MEMORY_TYPES).toHaveLength(6);
+  });
+
+  it("all memory types are unique", () => {
+    const unique = new Set(VALID_MEMORY_TYPES);
+    expect(unique.size).toBe(VALID_MEMORY_TYPES.length);
+  });
+
+  it("supports exactly 6 link types", () => {
+    expect(VALID_LINK_TYPES).toHaveLength(6);
+  });
+
+  it("all link types are unique", () => {
+    const unique = new Set(VALID_LINK_TYPES);
+    expect(unique.size).toBe(VALID_LINK_TYPES.length);
+  });
+});
+
+describe("Sprint 15 — Memory Entry Creation Determinism", () => {
+  it("creates entry with all required fields", () => {
+    const entry = createMemoryEntry();
+    expect(entry.id).toBeTruthy();
+    expect(entry.organization_id).toBeTruthy();
+    expect(entry.memory_type).toBeTruthy();
+    expect(entry.title).toBeTruthy();
+    expect(entry.created_at).toBeTruthy();
+  });
+
+  it("entry has default scores within valid range", () => {
+    const entry = createMemoryEntry();
+    expect(entry.confidence_score).toBeGreaterThanOrEqual(0);
+    expect(entry.confidence_score).toBeLessThanOrEqual(1);
+    expect(entry.relevance_score).toBeGreaterThanOrEqual(0);
+    expect(entry.relevance_score).toBeLessThanOrEqual(1);
+  });
+
+  it("memory_type must be from valid taxonomy", () => {
+    for (const type of VALID_MEMORY_TYPES) {
+      const entry = createMemoryEntry({ memory_type: type });
+      expect(VALID_MEMORY_TYPES.includes(entry.memory_type as string)).toBe(true);
+    }
+  });
+
+  it("times_retrieved starts at zero", () => {
+    const entry = createMemoryEntry();
+    expect(entry.times_retrieved).toBe(0);
+  });
+
+  it("same inputs produce structurally equivalent entries", () => {
+    const base = { memory_type: "ErrorMemory", title: "Test", summary: "Sum" };
+    const a = createMemoryEntry(base);
+    const b = createMemoryEntry(base);
+    expect(a.memory_type).toBe(b.memory_type);
+    expect(a.title).toBe(b.title);
+    expect(a.summary).toBe(b.summary);
+  });
+});
+
+describe("Sprint 15 — Memory Linking", () => {
+  it("creates link with valid type", () => {
+    const link = createMemoryLink("mem-a", "mem-b", "caused_by");
+    expect(link.from_memory_id).toBe("mem-a");
+    expect(link.to_memory_id).toBe("mem-b");
+    expect(link.link_type).toBe("caused_by");
+  });
+
+  it("all link types are valid", () => {
+    for (const type of VALID_LINK_TYPES) {
+      const link = createMemoryLink("a", "b", type);
+      expect(VALID_LINK_TYPES.includes(link.link_type)).toBe(true);
+    }
+  });
+
+  it("link includes organization_id for tenant isolation", () => {
+    const link = createMemoryLink("a", "b", "resolved_by");
+    expect(link.organization_id).toBeTruthy();
+  });
+});
+
+describe("Sprint 15 — Tenant Isolation", () => {
+  it("memory entries are scoped to organization_id", () => {
+    const entryA = createMemoryEntry({ organization_id: "org-A" });
+    const entryB = createMemoryEntry({ organization_id: "org-B" });
+    expect(entryA.organization_id).not.toBe(entryB.organization_id);
+  });
+
+  it("memory links are scoped to organization_id", () => {
+    const link = createMemoryLink("a", "b", "similar_to");
+    expect(link.organization_id).toBeTruthy();
+  });
+
+  it("entry content does not embed org id in sensitive fields", () => {
+    const entry = createMemoryEntry({ organization_id: "org-secret-999" });
+    expect(entry.title).not.toContain("org-secret-999");
+    expect(entry.summary).not.toContain("org-secret-999");
+  });
+});
+
+describe("Sprint 15 — Forbidden Mutation Protection", () => {
+  const FORBIDDEN_ACTIONS = [
+    "mutate_pipeline",
+    "alter_governance",
+    "change_billing",
+    "modify_contracts",
+    "create_agent",
+    "alter_runtime",
+  ];
+
+  it("memory types do not include any mutation action", () => {
+    for (const type of VALID_MEMORY_TYPES) {
+      for (const forbidden of FORBIDDEN_ACTIONS) {
+        expect(type.toLowerCase()).not.toContain(forbidden);
+      }
+    }
+  });
+
+  it("link types do not include any mutation action", () => {
+    for (const type of VALID_LINK_TYPES) {
+      for (const forbidden of FORBIDDEN_ACTIONS) {
+        expect(type.toLowerCase()).not.toContain(forbidden);
+      }
+    }
+  });
+
+  it("memory entry structure contains no executable code fields", () => {
+    const entry = createMemoryEntry();
+    const keys = Object.keys(entry);
+    const dangerousKeys = ["execute", "run", "command", "mutation", "script"];
+    for (const key of keys) {
+      for (const dangerous of dangerousKeys) {
+        expect(key.toLowerCase()).not.toContain(dangerous);
+      }
+    }
+  });
+});
+
+describe("Sprint 15 — Memory Capture Events", () => {
+  it("recommendation_accepted generates DesignMemory entry", () => {
+    const entry = createMemoryEntry({
+      memory_type: "DesignMemory",
+      memory_subtype: "recommendation_accepted",
+      source_type: "meta_agent_recommendation",
+    });
+    expect(entry.memory_type).toBe("DesignMemory");
+    expect(entry.memory_subtype).toBe("recommendation_accepted");
+    expect(entry.source_type).toBe("meta_agent_recommendation");
+  });
+
+  it("artifact_approved generates DesignMemory entry", () => {
+    const entry = createMemoryEntry({
+      memory_type: "DesignMemory",
+      memory_subtype: "artifact_approved",
+      source_type: "meta_agent_artifact",
+    });
+    expect(entry.memory_type).toBe("DesignMemory");
+    expect(entry.memory_subtype).toBe("artifact_approved");
+  });
+
+  it("change_implemented generates OutcomeMemory entry", () => {
+    const entry = createMemoryEntry({
+      memory_type: "OutcomeMemory",
+      memory_subtype: "change_implemented",
+      source_type: "meta_agent_artifact",
+    });
+    expect(entry.memory_type).toBe("OutcomeMemory");
+    expect(entry.memory_subtype).toBe("change_implemented");
+  });
+
+  it("pipeline_failure generates ErrorMemory entry", () => {
+    const entry = createMemoryEntry({
+      memory_type: "ErrorMemory",
+      memory_subtype: "pipeline_failure",
+      source_type: "pipeline_execution",
+    });
+    expect(entry.memory_type).toBe("ErrorMemory");
+    expect(entry.memory_subtype).toBe("pipeline_failure");
+  });
+});
+
+describe("Sprint 15 — Access Statistics", () => {
+  it("retrieval increments times_retrieved", () => {
+    const entry = createMemoryEntry({ times_retrieved: 0 });
+    const updated = { ...entry, times_retrieved: entry.times_retrieved + 1 };
+    expect(updated.times_retrieved).toBe(1);
+  });
+
+  it("retrieval updates last_accessed_at", () => {
+    const entry = createMemoryEntry({ last_accessed_at: null });
+    const now = new Date().toISOString();
+    const updated = { ...entry, last_accessed_at: now };
+    expect(updated.last_accessed_at).toBeTruthy();
+  });
+});

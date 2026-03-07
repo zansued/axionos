@@ -17,6 +17,7 @@ import {
 import { ErrorPatternRadar } from "@/components/observability/ErrorPatternRadar";
 import { PreventionDashboard } from "@/components/observability/PreventionDashboard";
 import { LearningFoundationDashboard } from "@/components/observability/LearningFoundationDashboard";
+import { EngineeringMemoryDashboard } from "@/components/observability/EngineeringMemoryDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -528,6 +529,11 @@ export default function Observability() {
           {/* ===== LEARNING ===== */}
           <TabsContent value="learning" className="mt-4">
             <LearningFoundationDashboard />
+          </TabsContent>
+
+          {/* ===== ENGINEERING MEMORY ===== */}
+          <TabsContent value="memory" className="mt-4">
+            <EngineeringMemoryDashboard />
           </TabsContent>
         </Tabs>
       </div>
