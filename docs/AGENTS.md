@@ -804,6 +804,55 @@ Learning Agents v2 extends learning from local stage optimization to system-leve
 
 ---
 
-## 20. Governing Principle
+## 20. Execution Policy Intelligence (Active — Sprint 27)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability.
+> **Status:** ✅ Active — Bounded global execution policy selection
+
+### Overview
+
+Execution Policy Intelligence classifies execution context and selects bounded operating modes for the pipeline. The system coordinates quality, cost, speed, and risk sensitivity across the entire pipeline without mutating kernel structure.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Context Classifier | `execution-policy/execution-context-classifier.ts` | Classify execution context into policy modes |
+| Policy Selector | `execution-policy/execution-policy-selector.ts` | Select best policy by context, scope, priority |
+| Policy Adjuster | `execution-policy/execution-policy-adjuster.ts` | Compute bounded runtime adjustments |
+| Policy Runner | `execution-policy/execution-policy-runner.ts` | Apply policy at runtime checkpoints |
+| Policy Feedback | `execution-policy/execution-policy-feedback.ts` | Bounded feedback loops for policy improvement |
+
+### Policy Modes
+
+- `balanced_default` — Standard operating mode
+- `high_quality` — Increased validation and deploy hardening
+- `cost_optimized` — Reduced validation, minimal context
+- `rapid_iteration` — Speed-first with lower guardrails
+- `risk_sensitive` — Maximum safety parameters
+- `deploy_hardened` — Zero experimentation, maximum deploy safety
+- `repair_conservative` — Conservative repair with fewer retries
+- `validation_heavy` — Maximum validation sensitivity
+
+### Safety Boundaries
+
+- Cannot mutate pipeline topology, governance, billing, or enforcement
+- Cannot disable mandatory review or validation gates
+- Broad low-confidence policies remain advisory-only
+- All policy applications are auditable with lineage
+- Harmful or low-confidence policies are contained through watch/deprecate rules
+- No policy may auto-expand scope beyond declared bounds
+
+### Events
+
+- `execution_context_classified` — Context classified into policy mode
+- `execution_policy_selected` — Policy selected for execution
+- `execution_policy_applied` — Policy applied at checkpoint
+- `execution_policy_adjustment_applied` — Adjustments applied at runtime
+- `execution_policy_outcome_recorded` — Outcome tracked
+- `execution_policy_deprecated` — Policy deprecated
+
+---
+
+## 21. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure.

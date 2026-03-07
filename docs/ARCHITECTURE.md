@@ -973,3 +973,8 @@ supabase/functions/
 - `predictive_risk_assessments` — Runtime risk scoring with evidence refs and recommended actions
 - `predictive_runtime_checkpoints` — Bounded checkpoint evaluations at stage boundaries
 - `predictive_preventive_actions` — Recommended/applied preventive actions with outcome tracking
+
+### Execution Policy Intelligence Tables (Sprint 27)
+- `execution_policy_profiles` — Bounded execution policy modes with scope, adjustments, and status lifecycle
+- `execution_policy_outcomes` — Outcome tracking per policy with metrics and evidence
+- `execution_policy_decisions` — Audit trail of policy application decisions at runtime checkpoints
