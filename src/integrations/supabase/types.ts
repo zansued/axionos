@@ -3716,6 +3716,190 @@ export type Database = {
           },
         ]
       }
+      repair_policy_adjustments: {
+        Row: {
+          adjustment_reason: Json
+          adjustment_type: string
+          bounded_delta: Json | null
+          created_at: string
+          id: string
+          new_state: Json
+          organization_id: string
+          previous_state: Json
+          repair_policy_profile_id: string
+        }
+        Insert: {
+          adjustment_reason?: Json
+          adjustment_type: string
+          bounded_delta?: Json | null
+          created_at?: string
+          id?: string
+          new_state?: Json
+          organization_id: string
+          previous_state?: Json
+          repair_policy_profile_id: string
+        }
+        Update: {
+          adjustment_reason?: Json
+          adjustment_type?: string
+          bounded_delta?: Json | null
+          created_at?: string
+          id?: string
+          new_state?: Json
+          organization_id?: string
+          previous_state?: Json
+          repair_policy_profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_policy_adjustments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repair_policy_adjustments_repair_policy_profile_id_fkey"
+            columns: ["repair_policy_profile_id"]
+            isOneToOne: false
+            referencedRelation: "repair_policy_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      repair_policy_decisions: {
+        Row: {
+          confidence: number | null
+          cost_usd: number | null
+          created_at: string
+          duration_ms: number | null
+          error_signature: string
+          evidence_refs: Json | null
+          fallback_strategy: string | null
+          id: string
+          organization_id: string
+          outcome_status: string
+          pipeline_job_id: string | null
+          reason_codes: Json
+          retry_count: number | null
+          selected_strategy: string
+          stage_key: string
+        }
+        Insert: {
+          confidence?: number | null
+          cost_usd?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          error_signature: string
+          evidence_refs?: Json | null
+          fallback_strategy?: string | null
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          pipeline_job_id?: string | null
+          reason_codes?: Json
+          retry_count?: number | null
+          selected_strategy: string
+          stage_key: string
+        }
+        Update: {
+          confidence?: number | null
+          cost_usd?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          error_signature?: string
+          evidence_refs?: Json | null
+          fallback_strategy?: string | null
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          pipeline_job_id?: string | null
+          reason_codes?: Json
+          retry_count?: number | null
+          selected_strategy?: string
+          stage_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_policy_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      repair_policy_profiles: {
+        Row: {
+          agent_type: string | null
+          avg_repair_cost_usd: number | null
+          avg_resolution_time_ms: number | null
+          avg_retry_count: number | null
+          confidence: number | null
+          created_at: string
+          error_signature: string
+          failure_count: number | null
+          fallback_strategy: string | null
+          id: string
+          model_name: string | null
+          model_provider: string | null
+          organization_id: string
+          preferred_strategy: string
+          stage_key: string
+          status: string
+          support_count: number | null
+          updated_at: string
+        }
+        Insert: {
+          agent_type?: string | null
+          avg_repair_cost_usd?: number | null
+          avg_resolution_time_ms?: number | null
+          avg_retry_count?: number | null
+          confidence?: number | null
+          created_at?: string
+          error_signature: string
+          failure_count?: number | null
+          fallback_strategy?: string | null
+          id?: string
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id: string
+          preferred_strategy: string
+          stage_key: string
+          status?: string
+          support_count?: number | null
+          updated_at?: string
+        }
+        Update: {
+          agent_type?: string | null
+          avg_repair_cost_usd?: number | null
+          avg_resolution_time_ms?: number | null
+          avg_retry_count?: number | null
+          confidence?: number | null
+          created_at?: string
+          error_signature?: string
+          failure_count?: number | null
+          fallback_strategy?: string | null
+          id?: string
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id?: string
+          preferred_strategy?: string
+          stage_key?: string
+          status?: string
+          support_count?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_policy_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       repair_routing_log: {
         Row: {
           confidence_score: number
