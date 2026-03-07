@@ -1,6 +1,6 @@
 import {
   Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio,
-  Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain,
+  Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
