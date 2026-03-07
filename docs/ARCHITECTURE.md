@@ -387,10 +387,7 @@ rejected  rejected
 
 | Component | Status |
 |-----------|--------|
-| Memory retrieval surfaces in repair, meta-agents, artifact generation | 📋 Planned |
-| Memory summaries (weekly/monthly synthesis) | 📋 Planned |
 | Semantic indexing via embeddings | 📋 Planned |
-| Memory-driven decision support during human review | 📋 Planned |
 
 **Data Model:**
 
