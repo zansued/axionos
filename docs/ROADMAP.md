@@ -21,7 +21,7 @@
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable |
-| **Meta-Agents Status** | v1.2 active — memory-aware recommendations + artifact generation, human-reviewed |
+| **Meta-Agents Status** | v1.3 active — memory-aware + quality feedback loop, human-reviewed |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
