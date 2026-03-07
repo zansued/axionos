@@ -96,7 +96,7 @@ export async function enforceUsageLimits(
           .select("id", { count: "exact", head: true })
           .in("initiative_id", chunk)
           .in("stage", ["publish", "deploy"])
-          .eq("status", "completed")
+          .eq("status", "success")
           .gte("created_at", monthStart.toISOString()),
         serviceClient
           .from("initiative_jobs")
