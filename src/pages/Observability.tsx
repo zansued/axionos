@@ -317,6 +317,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
+          {/* ===== PREDICTIVE ERROR DETECTION ===== */}
+          <TabsContent value="predictive" className="mt-4">
+            <PredictiveErrorDashboard />
+          </TabsContent>
+
           {/* ===== AGENT MEMORY ===== */}
           <TabsContent value="agent-memory" className="mt-4">
             <AgentMemoryDashboard />

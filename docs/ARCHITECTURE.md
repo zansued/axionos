@@ -968,3 +968,8 @@ supabase/functions/
 ### Agent Memory Tables (Sprint 24)
 - `agent_memory_profiles` — Per-agent persistent memory profiles with confidence and scope
 - `agent_memory_records` — Reusable memory units with type taxonomy, payload, and relevance scoring
+
+### Predictive Error Detection Tables (Sprint 25)
+- `predictive_risk_assessments` — Runtime risk scoring with evidence refs and recommended actions
+- `predictive_runtime_checkpoints` — Bounded checkpoint evaluations at stage boundaries
+- `predictive_preventive_actions` — Recommended/applied preventive actions with outcome tracking
