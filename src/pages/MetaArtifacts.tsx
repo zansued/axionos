@@ -16,6 +16,7 @@ import {
   FileText, Shield, CheckCircle, XCircle, Eye, Rocket,
   Layers, Users, Workflow, TrendingUp, Brain, AlertTriangle, Clock,
 } from "lucide-react";
+import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
 
 type ArtifactStatus = "draft" | "reviewed" | "approved" | "rejected" | "implemented";
 
