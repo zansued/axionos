@@ -302,18 +302,19 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full grid-cols-11 h-9">
-            <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Performance</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-12 h-9">
+            <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Perf</TabsTrigger>
             <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>
-            <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Qualidade</TabsTrigger>
+            <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Quality</TabsTrigger>
             <TabsTrigger value="patterns" className="text-xs gap-1"><Bug className="h-3 w-3" /> Patterns</TabsTrigger>
-            <TabsTrigger value="prevention" className="text-xs gap-1"><Shield className="h-3 w-3" /> Prevenção</TabsTrigger>
+            <TabsTrigger value="prevention" className="text-xs gap-1"><Shield className="h-3 w-3" /> Prev</TabsTrigger>
+            <TabsTrigger value="predictive" className="text-xs gap-1"><ShieldAlert className="h-3 w-3" /> Predict</TabsTrigger>
             <TabsTrigger value="repair" className="text-xs gap-1"><Wrench className="h-3 w-3" /> Repair</TabsTrigger>
-            <TabsTrigger value="learning" className="text-xs gap-1"><GraduationCap className="h-3 w-3" /> Learning</TabsTrigger>
-            <TabsTrigger value="agent-memory" className="text-xs gap-1"><Cpu className="h-3 w-3" /> Agent Mem</TabsTrigger>
-            <TabsTrigger value="memory" className="text-xs gap-1"><Brain className="h-3 w-3" /> Memória</TabsTrigger>
-            <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Summaries</TabsTrigger>
-            <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live Feed</TabsTrigger>
+            <TabsTrigger value="learning" className="text-xs gap-1"><GraduationCap className="h-3 w-3" /> Learn</TabsTrigger>
+            <TabsTrigger value="agent-memory" className="text-xs gap-1"><Cpu className="h-3 w-3" /> AgMem</TabsTrigger>
+            <TabsTrigger value="memory" className="text-xs gap-1"><Brain className="h-3 w-3" /> Mem</TabsTrigger>
+            <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
+            <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
           {/* ===== AGENT MEMORY ===== */}
