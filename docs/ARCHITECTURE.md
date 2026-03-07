@@ -997,3 +997,9 @@ supabase/functions/
 - `platform_calibration_proposals` — Structured calibration proposals with rationale, evidence, and rollback guards
 - `platform_calibration_applications` — Applied calibrations with before/after values and outcome tracking
 - `platform_calibration_rollbacks` — Rollback records with restored values and reason lineage
+
+### Execution Strategy Evolution Tables (Sprint 32)
+- `execution_strategy_families` — Registry of evolvable strategy families with mutation envelopes and rollout modes
+- `execution_strategy_variants` — Bounded variant proposals with hypothesis, delta, and confidence scoring
+- `execution_strategy_experiments` — Controlled experiments comparing variant vs baseline
+- `execution_strategy_outcomes` — Outcome tracking per experiment with metrics and evidence
