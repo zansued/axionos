@@ -1549,6 +1549,66 @@ export type Database = {
           },
         ]
       }
+      memory_summaries: {
+        Row: {
+          content: Json
+          created_at: string
+          entry_count: number
+          id: string
+          organization_id: string
+          period_end: string
+          period_start: string
+          signal_strength: number
+          source_memory_ids: Json
+          summary_type: string
+          title: string
+          workspace_id: string | null
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          entry_count?: number
+          id?: string
+          organization_id: string
+          period_end: string
+          period_start: string
+          signal_strength?: number
+          source_memory_ids?: Json
+          summary_type?: string
+          title?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          entry_count?: number
+          id?: string
+          organization_id?: string
+          period_end?: string
+          period_start?: string
+          signal_strength?: number
+          source_memory_ids?: Json
+          summary_type?: string
+          title?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_summaries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memory_summaries_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       meta_agent_artifacts: {
         Row: {
           artifact_type: string

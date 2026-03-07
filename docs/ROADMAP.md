@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 16 — Memory Retrieval Surfaces implemented. Four retrieval surfaces (repair, meta-agent analysis, artifact generation, human review) with deterministic ranking, retrieval logging, observability metrics, and Related Memory UI panels. Previous: Engineering Memory Foundation (Sprint 15).
+> **What changed (2026-03-07):** Sprint 17 — Memory Summaries implemented. Six deterministic summary types, signal strength scoring, summary generation/observability, summary UI tab, related summary panels in Meta-Agents and Meta-Artifacts. Previous: Memory Retrieval Surfaces (Sprint 16).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
@@ -310,7 +310,7 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 
 ---
 
-## Engineering Memory Architecture (Foundation Implemented — Sprint 15)
+## Engineering Memory Architecture (Foundation + Retrieval + Summaries — Sprints 15–17)
 
 **Purpose:** Enable AxionOS to accumulate institutional engineering memory across executions, failures, strategies, recommendations, decisions, and outcomes.
 
@@ -323,8 +323,22 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 - ✅ Retrieval API with filtering, pagination, and access tracking
 - ✅ Observability metrics (total entries, by type, retrieval frequency, most accessed)
 - ✅ Read-only UI in Observability → Memory tab
+
+**Sprint 16 — Retrieval Surfaces Implemented:**
+- ✅ Structured retrieval for repair, meta-agent, artifact generation, and human review
+- ✅ Deterministic ranking (confidence + relevance + recency + tag overlap + reuse)
+- ✅ Retrieval logging and decision-assisted tracking
+- ✅ Related Memory panel in Meta-Agents and Meta-Artifacts pages
+
+**Sprint 17 — Memory Summaries Implemented:**
+- ✅ `memory_summaries` table with RLS and duplicate prevention
+- ✅ 6 summary types: failure patterns, strategy effectiveness, recommendation decisions, artifact outcomes, architecture evolution, memory retrieval
+- ✅ Deterministic signal strength scoring (rule-based, bounded 0-1)
+- ✅ Summary generation, list, detail, and metrics endpoints
+- ✅ Summaries tab in Observability
+- ✅ Related Summary panels in Meta-Agents and Meta-Artifacts
+- ✅ Audit trail for summary generation
 - 📋 Semantic retrieval (future — requires embeddings)
-- 📋 Memory synthesis/summaries (future)
 - 📋 Memory-driven agent reasoning (future)
 
 **Key Design Decisions:**
@@ -341,6 +355,6 @@ Full specification: [ARCHITECTURE.md — Layer 9](ARCHITECTURE.md)
 ## Governing Principle
 
 > The architecture is sufficient. Level 3 is complete.
-> Fifteen sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, and Engineering Memory Foundation.
-> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, meta-level recommendations, controlled engineering proposal generation, and foundational engineering memory.
-> Focus now: commercial stability, controlled learning activation, and memory infrastructure enrichment.
+> Sixteen sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, and Memory Summaries.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, meta-level recommendations, controlled engineering proposal generation, foundational engineering memory, contextual memory retrieval, and periodic historical synthesis.
+> Focus now: commercial stability, controlled learning activation, and memory-aware meta-agents.

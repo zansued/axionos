@@ -17,6 +17,7 @@ import {
   ArrowDown, ArrowUp,
 } from "lucide-react";
 import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
+import { RelatedSummaryPanel } from "@/components/memory/RelatedSummaryPanel";
 
 type RecStatus = "pending" | "reviewed" | "accepted" | "rejected" | "deferred";
 
@@ -368,11 +369,22 @@ export default function MetaAgents() {
                           )}
 
                           {/* Sprint 16: Related Memory Panel */}
-                          <div className="mt-2">
+                          <div className="mt-2 space-y-2">
                             <RelatedMemoryPanel
                               reviewType="recommendation_review"
                               targetComponent={rec.target_component}
                               tags={[rec.meta_agent_type, rec.recommendation_type]}
+                            />
+                            {/* Sprint 17: Related Summary Panel */}
+                            <RelatedSummaryPanel
+                              relevantTypes={
+                                rec.meta_agent_type === "ARCHITECTURE_META_AGENT"
+                                  ? ["ARCHITECTURE_EVOLUTION_SUMMARY", "FAILURE_PATTERN_SUMMARY"]
+                                  : rec.meta_agent_type === "WORKFLOW_OPTIMIZER"
+                                  ? ["FAILURE_PATTERN_SUMMARY", "MEMORY_RETRIEVAL_SUMMARY"]
+                                  : ["RECOMMENDATION_DECISION_SUMMARY", "ARTIFACT_OUTCOME_SUMMARY"]
+                              }
+                              label="Related Summaries"
                             />
                           </div>
 

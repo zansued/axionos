@@ -17,6 +17,7 @@ import {
   Layers, Users, Workflow, TrendingUp, Brain, AlertTriangle, Clock,
 } from "lucide-react";
 import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
+import { RelatedSummaryPanel } from "@/components/memory/RelatedSummaryPanel";
 
 type ArtifactStatus = "draft" | "reviewed" | "approved" | "rejected" | "implemented";
 
@@ -262,11 +263,16 @@ export default function MetaArtifacts() {
                           )}
 
                           {/* Sprint 16: Related Memory Panel */}
-                          <div className="mt-2">
+                          <div className="mt-2 space-y-2">
                             <RelatedMemoryPanel
                               reviewType="artifact_review"
                               targetComponent={art.created_by_meta_agent as string}
                               tags={[art.artifact_type as string, art.created_by_meta_agent as string]}
+                            />
+                            {/* Sprint 17: Related Summary Panel */}
+                            <RelatedSummaryPanel
+                              relevantTypes={["ARTIFACT_OUTCOME_SUMMARY", "ARCHITECTURE_EVOLUTION_SUMMARY"]}
+                              label="Related Summaries"
                             />
                           </div>
                         </div>

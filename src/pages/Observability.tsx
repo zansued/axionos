@@ -12,12 +12,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Activity, Radio, Users, Zap, Clock, CircleDot, Pause, Play,
-  DollarSign, AlertTriangle, TrendingUp, BarChart3, Timer, Trophy, Brain, Bug, Shield, GraduationCap,
+  DollarSign, AlertTriangle, TrendingUp, BarChart3, Timer, Trophy, Brain, Bug, Shield, GraduationCap, FileText,
 } from "lucide-react";
 import { ErrorPatternRadar } from "@/components/observability/ErrorPatternRadar";
 import { PreventionDashboard } from "@/components/observability/PreventionDashboard";
 import { LearningFoundationDashboard } from "@/components/observability/LearningFoundationDashboard";
 import { EngineeringMemoryDashboard } from "@/components/observability/EngineeringMemoryDashboard";
+import { MemorySummariesPanel } from "@/components/observability/MemorySummariesPanel";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -297,7 +298,7 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full grid-cols-8 h-9">
+          <TabsList className="grid w-full grid-cols-9 h-9">
             <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Performance</TabsTrigger>
             <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>
             <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Qualidade</TabsTrigger>
@@ -305,6 +306,7 @@ export default function Observability() {
             <TabsTrigger value="prevention" className="text-xs gap-1"><Shield className="h-3 w-3" /> Prevenção</TabsTrigger>
             <TabsTrigger value="learning" className="text-xs gap-1"><GraduationCap className="h-3 w-3" /> Learning</TabsTrigger>
             <TabsTrigger value="memory" className="text-xs gap-1"><Brain className="h-3 w-3" /> Memória</TabsTrigger>
+            <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Summaries</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live Feed</TabsTrigger>
           </TabsList>
 
@@ -534,6 +536,11 @@ export default function Observability() {
           {/* ===== ENGINEERING MEMORY ===== */}
           <TabsContent value="memory" className="mt-4">
             <EngineeringMemoryDashboard />
+          </TabsContent>
+
+          {/* ===== MEMORY SUMMARIES (Sprint 17) ===== */}
+          <TabsContent value="summaries" className="mt-4">
+            <MemorySummariesPanel />
           </TabsContent>
         </Tabs>
       </div>
