@@ -346,7 +346,7 @@ rejected  rejected
 
 **Purpose:** Cross-layer knowledge infrastructure that captures, structures, indexes, and retrieves engineering experience over time.
 
-**Status:** Foundation implemented (Sprint 15). Retrieval surfaces, summaries, and semantic indexing are designed but not yet implemented.
+**Status:** Full stack operational (Sprints 15–18). Foundation, retrieval surfaces, summaries, and memory-aware reasoning all active.
 
 **Design Principles:**
 
