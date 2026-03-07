@@ -343,7 +343,7 @@ export default function MetaArtifacts() {
       </div>
 
       {/* Review Dialog */}
-      <Dialog open={!!reviewDialog} onOpenChange={() => { setReviewDialog(null); setReviewNotes(""); }}>
+      <Dialog open={!!reviewDialog} onOpenChange={() => { setReviewDialog(null); setReviewNotes(""); setSelectedTags([]); }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="capitalize">{reviewDialog?.action} Artifact</DialogTitle>
@@ -360,8 +360,31 @@ export default function MetaArtifacts() {
             onChange={(e) => setReviewNotes(e.target.value)}
             className="min-h-[80px]"
           />
+          {/* Sprint 19: Feedback tags */}
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground font-medium">Feedback tags (optional)</p>
+            <div className="flex flex-wrap gap-2">
+              {FEEDBACK_TAGS_ART.map(({ value, label }) => (
+                <label key={value} className="flex items-center gap-1.5 text-xs cursor-pointer">
+                  <Checkbox
+                    checked={selectedTags.includes(value)}
+                    onCheckedChange={(checked) => {
+                      setSelectedTags(prev =>
+                        checked ? [...prev, value] : prev.filter(t => t !== value)
+                      );
+                    }}
+                    className="h-3.5 w-3.5"
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+            <p className="text-[10px] text-muted-foreground italic">
+              Proposal quality feedback is advisory learning data only. It does not automatically change system behavior.
+            </p>
+          </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => { setReviewDialog(null); setReviewNotes(""); }}>
+            <Button variant="outline" onClick={() => { setReviewDialog(null); setReviewNotes(""); setSelectedTags([]); }}>
               Cancel
             </Button>
             <Button
