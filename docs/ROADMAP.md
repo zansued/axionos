@@ -209,60 +209,19 @@ Each execution improves future executions. The system transitions from determini
 
 ---
 
-## NEXT — Meta-Agents (Level 4.5 — Self-Designing Engineering System)
+## DONE — Meta-Agents (Level 4.5 — Self-Designing Engineering System) ✅
 
-**Priority:** Medium
-**Status:** 📋 Architecture designed — Not implemented
-**Dependency:** Requires stable Learning Agents v2
-**Target maturity:** Level 4.5
+**Status:** ✅ Implemented (Sprints 13–14, memory-aware Sprint 18)
 
-### Purpose
+4 memory-aware meta-agents active with historical context enrichment, continuity scoring, redundancy suppression, and proposal layer v2. All recommendations require human review.
 
-Introduce higher-order agents that reason about the orchestration system itself, enabling self-designing workflows, agent role synthesis, and architectural evolution — without sacrificing governance, auditability, or safety.
+---
 
-Meta-Agents transform AxionOS from a **Self-Improving Engineering Platform** into a **Self-Designing Engineering System**.
+## DONE — Engineering Memory Full Stack (Level 5 — Institutional Memory) ✅
 
-### Five Meta-Agent Types
+**Status:** ✅ Implemented (Sprints 15–18)
 
-| Meta-Agent | Purpose | Key Outputs |
-|-----------|---------|-------------|
-| **Architecture Meta-Agent** | Analyze execution outcomes, suggest pipeline improvements | `PIPELINE_OPTIMIZATION`, `STAGE_REORDERING_SUGGESTION`, `STAGE_SPLIT_OR_MERGE` |
-| **Agent Role Designer** | Analyze task distribution, propose new agent roles | `NEW_AGENT_ROLE`, `AGENT_SPECIALIZATION`, `AGENT_DEPRECATION` |
-| **Workflow Optimizer** | Improve pipeline efficiency from duration/retry/repair data | `WORKFLOW_PARALLELIZATION`, `STEP_ELIMINATION`, `STEP_REORDERING` |
-| **Strategy Synthesizer** | Combine successful strategies into improved approaches | `NEW_EXECUTION_STRATEGY`, `PROMPT_STRATEGY_COMPOSITION` |
-| **System Evolution Advisor** | Produce high-level system evolution guidance | `SYSTEM_EVOLUTION_REPORT`, `TECHNICAL_DEBT_ALERT`, `ARCHITECTURE_CHANGE_PROPOSAL` |
-
-### Architecture Position
-
-```
-  Meta-Agent Coordination Layer    ← Planned
-          ↑
-  Learning Agents Layer            ← Active
-          ↑
-  Observability Layer              ← Active
-          ↑
-  Governance and Audit Layer       ← Active
-          ↑
-  Execution Kernel                 ← Active
-```
-
-### Safety Constraints
-
-- Meta-Agents **never** modify pipeline stages, governance rules, billing, or contracts directly
-- All outputs are **recommendations** requiring human review
-- All actions are **auditable**, **explainable**, and **reversible**
-- Meta-Agents operate in **read-only** mode against all lower layers
-- Output structure: `meta_agent_recommendations` table with status workflow (`pending → reviewed → accepted | rejected`)
-
-### Interaction Flow
-
-```
-Observability → Learning Agents → Meta-Agents → Recommendations → Human Review → Controlled Implementation
-```
-
-### Expected Outcome
-
-The system evolves from reactive learning (Sprint 12) to proactive architectural self-improvement, while maintaining full human oversight and governance control.
+Full engineering memory stack: foundation, retrieval surfaces, memory summaries, memory-aware meta-agents and proposals. Historical continuity scoring and redundancy guard operational.
 
 ---
 
