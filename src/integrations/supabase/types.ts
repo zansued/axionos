@@ -2758,6 +2758,90 @@ export type Database = {
           },
         ]
       }
+      proposal_quality_feedback: {
+        Row: {
+          artifact_type: string | null
+          created_at: string
+          decision_signal: string
+          entity_id: string
+          entity_type: string
+          evidence_refs: Json
+          feedback_tags: Json
+          follow_through_signal: string
+          historical_conflict_score: number | null
+          historical_support_score: number | null
+          id: string
+          notes: string | null
+          organization_id: string
+          outcome_signal: string
+          quality_score: number
+          reviewer_feedback_score: number | null
+          source_meta_agent_type: string | null
+          updated_at: string
+          usefulness_score: number
+          workspace_id: string | null
+        }
+        Insert: {
+          artifact_type?: string | null
+          created_at?: string
+          decision_signal?: string
+          entity_id: string
+          entity_type?: string
+          evidence_refs?: Json
+          feedback_tags?: Json
+          follow_through_signal?: string
+          historical_conflict_score?: number | null
+          historical_support_score?: number | null
+          id?: string
+          notes?: string | null
+          organization_id: string
+          outcome_signal?: string
+          quality_score?: number
+          reviewer_feedback_score?: number | null
+          source_meta_agent_type?: string | null
+          updated_at?: string
+          usefulness_score?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          artifact_type?: string | null
+          created_at?: string
+          decision_signal?: string
+          entity_id?: string
+          entity_type?: string
+          evidence_refs?: Json
+          feedback_tags?: Json
+          follow_through_signal?: string
+          historical_conflict_score?: number | null
+          historical_support_score?: number | null
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          outcome_signal?: string
+          quality_score?: number
+          reviewer_feedback_score?: number | null
+          source_meta_agent_type?: string | null
+          updated_at?: string
+          usefulness_score?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposal_quality_feedback_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proposal_quality_feedback_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       proposal_quality_records: {
         Row: {
           acceptance_quality_score: number
@@ -2837,6 +2921,93 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      proposal_quality_summaries: {
+        Row: {
+          acceptance_rate: number
+          advisory_signals: Json
+          artifact_type: string | null
+          avg_quality_score: number
+          avg_usefulness_score: number
+          content: Json
+          created_at: string
+          historically_novel_performance: number | null
+          historically_supported_performance: number | null
+          id: string
+          implementation_rate: number
+          meta_agent_type: string | null
+          organization_id: string
+          period_end: string
+          period_start: string
+          positive_outcome_rate: number
+          rejection_patterns: Json
+          summary_type: string
+          top_feedback_tags: Json
+          total_feedback_count: number
+          workspace_id: string | null
+        }
+        Insert: {
+          acceptance_rate?: number
+          advisory_signals?: Json
+          artifact_type?: string | null
+          avg_quality_score?: number
+          avg_usefulness_score?: number
+          content?: Json
+          created_at?: string
+          historically_novel_performance?: number | null
+          historically_supported_performance?: number | null
+          id?: string
+          implementation_rate?: number
+          meta_agent_type?: string | null
+          organization_id: string
+          period_end: string
+          period_start: string
+          positive_outcome_rate?: number
+          rejection_patterns?: Json
+          summary_type?: string
+          top_feedback_tags?: Json
+          total_feedback_count?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          acceptance_rate?: number
+          advisory_signals?: Json
+          artifact_type?: string | null
+          avg_quality_score?: number
+          avg_usefulness_score?: number
+          content?: Json
+          created_at?: string
+          historically_novel_performance?: number | null
+          historically_supported_performance?: number | null
+          id?: string
+          implementation_rate?: number
+          meta_agent_type?: string | null
+          organization_id?: string
+          period_end?: string
+          period_start?: string
+          positive_outcome_rate?: number
+          rejection_patterns?: Json
+          summary_type?: string
+          top_feedback_tags?: Json
+          total_feedback_count?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposal_quality_summaries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proposal_quality_summaries_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
