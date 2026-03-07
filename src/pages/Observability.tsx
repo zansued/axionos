@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { RepairIntelligenceDashboard } from "@/components/observability/RepairIntelligenceDashboard";
 import { AgentMemoryDashboard } from "@/components/observability/AgentMemoryDashboard";
+import { PredictiveErrorDashboard } from "@/components/observability/PredictiveErrorDashboard";
 import { ErrorPatternRadar } from "@/components/observability/ErrorPatternRadar";
 import { PreventionDashboard } from "@/components/observability/PreventionDashboard";
 import { LearningFoundationDashboard } from "@/components/observability/LearningFoundationDashboard";
