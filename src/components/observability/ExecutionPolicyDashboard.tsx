@@ -214,19 +214,10 @@ export function ExecutionPolicyDashboard() {
 }
 
 function PolicyExplainPanel({ policyId }: { policyId: string }) {
-  const { currentOrg } = (await import("@/contexts/OrgContext")).useOrg();
-  const { useQuery: useQ } = await import("@tanstack/react-query");
-  const { supabase: sb } = await import("@/integrations/supabase/client");
-
-  // We'll use a simpler inline approach
-  return <PolicyExplainInner policyId={policyId} />;
-}
-
-function PolicyExplainInner({ policyId }: { policyId: string }) {
   return (
     <div className="text-xs text-muted-foreground text-center py-8">
       <p>Policy ID: <code className="text-[10px]">{policyId}</code></p>
-      <p className="mt-2">Acesse a API <code>execution_policy_explain</code> para detalhes completos.</p>
+      <p className="mt-2">Acesse a API <code>execution_policy_explain</code> para detalhes completos sobre evidências, outcomes e racional da política.</p>
     </div>
   );
 }
