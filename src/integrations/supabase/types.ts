@@ -2733,6 +2733,103 @@ export type Database = {
           },
         ]
       }
+      platform_insights: {
+        Row: {
+          affected_scope: string
+          confidence_score: number
+          created_at: string
+          evidence_refs: Json
+          id: string
+          insight_type: string
+          organization_id: string
+          recommendation: Json | null
+          severity: string
+          status: string
+          supporting_metrics: Json
+        }
+        Insert: {
+          affected_scope?: string
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          insight_type?: string
+          organization_id: string
+          recommendation?: Json | null
+          severity?: string
+          status?: string
+          supporting_metrics?: Json
+        }
+        Update: {
+          affected_scope?: string
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          insight_type?: string
+          organization_id?: string
+          recommendation?: Json | null
+          severity?: string
+          status?: string
+          supporting_metrics?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_insights_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_recommendations: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          id: string
+          organization_id: string
+          priority_score: number
+          recommendation_reason: Json
+          recommendation_type: string
+          status: string
+          target_entity: Json
+          target_scope: string
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          organization_id: string
+          priority_score?: number
+          recommendation_reason?: Json
+          recommendation_type?: string
+          status?: string
+          target_entity?: Json
+          target_scope?: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          organization_id?: string
+          priority_score?: number
+          recommendation_reason?: Json
+          recommendation_type?: string
+          status?: string
+          target_entity?: Json
+          target_scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       predictive_error_patterns: {
         Row: {
           contributing_factors: Json
