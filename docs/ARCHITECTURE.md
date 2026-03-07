@@ -60,7 +60,7 @@ A governed engineering platform with active learning, meta-analysis, and control
 
 | Horizon | Focus | Status |
 |---------|-------|--------|
-| **DONE** | Kernel + Commercial + Learning + Meta-Agents + Proposals + Memory Full Stack | ✅ 18 Sprints Complete |
+| **DONE** | Kernel + Commercial + Learning + Meta-Agents + Proposals + Memory + Quality Feedback + Calibration | ✅ 20 Sprints Complete |
 | **NEXT** | Contextual Self-Improvement + Semantic Retrieval | 📋 Planned |
 | **LATER** | Discovery-Driven Architecture Experimentation | 📋 Planned |
 | **FUTURE** | Discovery-Driven Architecture Experimentation | 🔮 Vision |
