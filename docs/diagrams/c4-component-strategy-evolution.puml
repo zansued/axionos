@@ -1,0 +1,27 @@
+@startuml
+title AxionOS - Execution Strategy Evolution Engine
+
+component "Strategy Family Registry" as Family
+component "Strategy Signal Interpreter" as Signal
+component "Strategy Variant Synthesizer" as Synth
+component "Strategy Guardrails" as Guard
+component "Strategy Experiment Runner" as Experiment
+component "Strategy Outcome Tracker" as Outcome
+component "Strategy Promotion Rules" as Promote
+component "Strategy Rollback Engine" as Rollback
+component "Strategy Lineage" as Lineage
+component "Platform Signals" as PlatformSignals
+
+PlatformSignals --> Signal
+Family --> Synth
+Signal --> Synth
+Synth --> Guard
+Guard --> Experiment
+Experiment --> Outcome
+Outcome --> Promote
+Outcome --> Rollback
+Synth --> Lineage
+Experiment --> Lineage
+Outcome --> Lineage
+Rollback --> Lineage
+@enduml

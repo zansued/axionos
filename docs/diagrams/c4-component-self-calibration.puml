@@ -1,0 +1,20 @@
+@startuml
+title AxionOS - Platform Self-Calibration Engine
+
+component "Calibration Parameter Registry" as Registry
+component "Calibration Signal Interpreter" as Interpreter
+component "Calibration Proposal Engine" as Proposal
+component "Calibration Guardrails" as Guard
+component "Calibration Runner" as Runner
+component "Calibration Outcome Tracker" as Outcome
+component "Calibration Rollback Engine" as Rollback
+component "Platform Intelligence Signals" as Signals
+
+Signals --> Interpreter
+Registry --> Proposal
+Interpreter --> Proposal
+Proposal --> Guard
+Guard --> Runner
+Runner --> Outcome
+Outcome --> Rollback
+@enduml

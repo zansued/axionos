@@ -1,0 +1,52 @@
+@startuml
+!define RECTANGLE class
+
+title AxionOS - C4 Container Diagram
+
+rectangle "Web App / Dashboard" as UI
+rectangle "API / Edge Functions Layer" as API
+
+rectangle "Execution Pipeline Core" as Core
+rectangle "Operational Intelligence Engine" as OI
+rectangle "Learning Engine" as Learn
+rectangle "Execution Governance Engine" as Gov
+rectangle "Platform Intelligence Engine" as PI
+rectangle "Platform Self-Calibration Engine" as Calib
+rectangle "Execution Strategy Evolution Engine" as Strat
+
+database "Persistence Layer\nSupabase / PostgreSQL" as Data
+rectangle "External Integration Layer\nGitHub / LLM / Telemetry" as Ext
+
+UI --> API
+
+API --> Core
+API --> OI
+API --> Learn
+API --> Gov
+API --> PI
+API --> Calib
+API --> Strat
+API --> Data
+
+Core --> OI
+Core --> Learn
+Core --> Data
+Core --> Ext
+
+OI --> Learn
+OI --> Data
+
+Learn --> Gov
+Learn --> PI
+Learn --> Data
+
+Gov --> PI
+Gov --> Data
+
+PI --> Calib
+PI --> Strat
+PI --> Data
+
+Calib --> Data
+Strat --> Data
+@enduml

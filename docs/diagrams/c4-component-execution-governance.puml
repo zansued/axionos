@@ -1,0 +1,18 @@
+@startuml
+title AxionOS - Execution Governance Engine
+
+component "Execution Policy Selector" as Selector
+component "Policy Portfolio Optimizer" as Portfolio
+component "Tenant Adaptive Tuning Engine" as Tenant
+component "Policy Routing Layer" as Routing
+component "Learning Signals" as Signals
+component "Policy Portfolio" as Policies
+component "Tenant / Workspace Context" as TenantCtx
+
+Signals --> Selector
+Policies --> Selector
+TenantCtx --> Tenant
+Selector --> Tenant
+Tenant --> Routing
+Portfolio --> Routing
+@enduml

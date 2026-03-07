@@ -1,0 +1,18 @@
+@startuml
+title AxionOS - Learning Engine
+
+component "Prompt Optimization Engine" as PromptOpt
+component "Prompt Promotion / Rollback" as PromptPR
+component "Fix Agents Intelligence" as FixInt
+component "Agent Memory Layer" as Memory
+component "Predictive Error Detector" as Predict
+component "Cross-Stage Policy Synthesizer" as CrossStage
+component "Execution History" as History
+
+History --> PromptOpt
+PromptOpt --> PromptPR
+History --> FixInt
+History --> Memory
+History --> Predict
+History --> CrossStage
+@enduml
