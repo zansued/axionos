@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { retrieveForArtifactGeneration } from "../_shared/engineering-memory-retriever.ts";
 
 /**
  * meta-artifact-generator — Sprint 14
@@ -223,9 +224,34 @@ serve(async (req) => {
       return jsonResponse({ id: existing.id, artifact_type: artifactType, status: "already_exists" });
     }
 
+    // ── Sprint 16: Retrieve related historical memory (advisory, non-blocking) ──
+    let relatedMemory: unknown[] = [];
+    try {
+      const memResult = await retrieveForArtifactGeneration(sc, rec.organization_id, {
+        artifact_type: artifactType,
+        target_component: rec.target_component,
+        recommendation_type: rec.recommendation_type,
+        meta_agent_type: rec.meta_agent_type,
+      });
+      relatedMemory = memResult.entries || [];
+    } catch (e) {
+      console.warn("Memory retrieval for artifact generation failed (non-blocking):", e);
+    }
+
     // Generate artifact content
     const generator = GENERATORS[artifactType] || generateADR;
     const content = generator(rec);
+
+    // Enrich content with related memory context if available
+    if (relatedMemory.length > 0) {
+      (content as any).related_historical_context = relatedMemory.slice(0, 5).map((m: any) => ({
+        title: m.title,
+        memory_type: m.memory_type,
+        summary: m.summary,
+        created_at: m.created_at,
+        relevance_rank: m._rank_score,
+      }));
+    }
 
     // Persist artifact
     const { data: artifact, error: insertErr } = await sc

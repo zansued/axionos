@@ -16,6 +16,7 @@ import {
   Layers, Users, Workflow, TrendingUp, Shield, AlertTriangle,
   ArrowDown, ArrowUp,
 } from "lucide-react";
+import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
 
 type RecStatus = "pending" | "reviewed" | "accepted" | "rejected" | "deferred";
 
@@ -360,11 +361,20 @@ export default function MetaAgents() {
                                   </span>
                                 </div>
                               ))}
-                              {evidence.length > 2 && (
+                          {evidence.length > 2 && (
                                 <span className="text-[10px]">+{evidence.length - 2} more</span>
                               )}
                             </div>
                           )}
+
+                          {/* Sprint 16: Related Memory Panel */}
+                          <div className="mt-2">
+                            <RelatedMemoryPanel
+                              reviewType="recommendation_review"
+                              targetComponent={rec.target_component}
+                              tags={[rec.meta_agent_type, rec.recommendation_type]}
+                            />
+                          </div>
 
                           {rec.review_notes && (
                             <p className="text-xs text-muted-foreground mt-2 italic border-l-2 border-border pl-2">

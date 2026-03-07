@@ -16,6 +16,7 @@ import {
   FileText, Shield, CheckCircle, XCircle, Eye, Rocket,
   Layers, Users, Workflow, TrendingUp, Brain, AlertTriangle, Clock,
 } from "lucide-react";
+import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
 
 type ArtifactStatus = "draft" | "reviewed" | "approved" | "rejected" | "implemented";
 
@@ -259,6 +260,15 @@ export default function MetaArtifacts() {
                               Review: {art.review_notes as string}
                             </p>
                           )}
+
+                          {/* Sprint 16: Related Memory Panel */}
+                          <div className="mt-2">
+                            <RelatedMemoryPanel
+                              reviewType="artifact_review"
+                              targetComponent={art.created_by_meta_agent as string}
+                              tags={[art.artifact_type as string, art.created_by_meta_agent as string]}
+                            />
+                          </div>
                         </div>
                       </div>
 

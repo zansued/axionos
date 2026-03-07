@@ -2,11 +2,11 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 15 — Engineering Memory Foundation implemented. Core memory storage, linking, capture events, retrieval API, observability metrics, and read-only UI operational. Previous: Engineering Memory Architecture designed.
+> **What changed (2026-03-07):** Sprint 16 — Memory Retrieval Surfaces implemented. Four retrieval surfaces (repair, meta-agent analysis, artifact generation, human review) with deterministic ranking, retrieval logging, observability metrics, and Related Memory UI panels. Previous: Engineering Memory Foundation (Sprint 15).
 >
-> **Current Mode**: Level 4.5 — Meta-Aware Engineering Platform
+> **Current Mode**: Level 5 — Institutional Engineering Memory
 >
-> **Current Maturity**: Level 4 ✅ Active → Level 4.5 🔄 Entering
+> **Current Maturity**: Level 4.5 ✅ Complete → Level 5 🔄 Entering
 >
 > Last updated: 2026-03-07
 
