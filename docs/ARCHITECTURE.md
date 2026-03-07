@@ -436,7 +436,7 @@ rejected  rejected
 | used_in_decision | boolean | Whether it influenced a decision |
 | created_at | timestamptz | Retrieval time |
 
-**memory_summaries (Designed — Not Implemented)**
+**memory_summaries**
 
 | Field | Type | Description |
 |-------|------|-------------|
