@@ -148,7 +148,7 @@ Meta-agents and proposals reason with historical engineering context:
 | Adaptive Repair Routing | ✅ |
 | Learning Foundation | ✅ |
 | Learning Agents v1 | ✅ |
-| Meta-Agents v1 (4 active agents) | ✅ |
+| Meta-Agents v1.2 (4 memory-aware agents) | ✅ |
 | Controlled Proposal Generation | ✅ |
 | Engineering Memory Foundation | ✅ |
 | Governance (gates, SLAs, audit logs) | ✅ |

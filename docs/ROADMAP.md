@@ -355,6 +355,6 @@ Full specification: [ARCHITECTURE.md — Layer 9](ARCHITECTURE.md)
 ## Governing Principle
 
 > The architecture is sufficient. Level 3 is complete.
-> Sixteen sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, and Memory Summaries.
-> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, meta-level recommendations, controlled engineering proposal generation, foundational engineering memory, contextual memory retrieval, and periodic historical synthesis.
-> Focus now: commercial stability, controlled learning activation, and memory-aware meta-agents.
+> Eighteen sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, Memory Summaries, and Memory-Aware Meta-Agents.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, memory-aware meta-level recommendations, historically-informed engineering proposals, foundational engineering memory, contextual memory retrieval, periodic historical synthesis, and experience-aware reasoning.
+> Focus now: commercial stability, memory-aware intelligence validation, and contextual self-improvement.

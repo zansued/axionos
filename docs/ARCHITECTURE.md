@@ -772,7 +772,7 @@ supabase/functions/
 +-- Support                         (11 functions)
 +-- _shared/                        (15+ helper modules)
     +-- agent-os/                   (14 Agent OS modules)
-    +-- meta-agents/               (Meta-agent types, scoring, validation)
+    +-- meta-agents/               (Meta-agent types, scoring, validation, memory context, continuity, redundancy)
 ```
 
 ---
