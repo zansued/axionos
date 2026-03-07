@@ -108,6 +108,75 @@ serve(async (req) => {
       },
     });
 
+    // ── Sprint 19: Record quality feedback (fire-and-forget) ──
+    const recFull = await sc
+      .from("meta_agent_recommendations")
+      .select("confidence_score, impact_score, priority_score, supporting_evidence, source_metrics, created_at")
+      .eq("id", recommendation_id)
+      .single()
+      .then(({ data }) => data)
+      .catch(() => null);
+
+    if (recFull) {
+      const evidence = Array.isArray(recFull.supporting_evidence) ? recFull.supporting_evidence : [];
+      const histEvidence = evidence.find((e: any) => e.type?.includes("history_context")) as any;
+      const srcMetrics = recFull.source_metrics as any;
+
+      scoreQualityRecord({
+        entity_type: "recommendation",
+        entity_id: recommendation_id,
+        meta_agent_type: rec.meta_agent_type,
+        recommendation_type: "",
+        review_outcome: action,
+        created_at: recFull.created_at,
+        reviewed_at: new Date().toISOString(),
+        confidence_score: Number(recFull.confidence_score || 0),
+        impact_score: Number(recFull.impact_score || 0),
+        priority_score: Number(recFull.priority_score || 0),
+        historical_alignment: histEvidence?.historical_alignment || srcMetrics?.historical_alignment || null,
+        was_memory_enriched: evidence.some((e: any) => e.type?.includes("history_context")),
+        reviewer_notes: review_notes,
+      });
+
+      // Persist quality record
+      const qualityInput = {
+        entity_type: "recommendation",
+        entity_id: recommendation_id,
+        meta_agent_type: rec.meta_agent_type,
+        recommendation_type: "",
+        review_outcome: action,
+        created_at: recFull.created_at,
+        reviewed_at: new Date().toISOString(),
+        confidence_score: Number(recFull.confidence_score || 0),
+        impact_score: Number(recFull.impact_score || 0),
+        priority_score: Number(recFull.priority_score || 0),
+        historical_alignment: histEvidence?.historical_alignment || srcMetrics?.historical_alignment || null,
+        was_memory_enriched: evidence.some((e: any) => e.type?.includes("history_context")),
+        reviewer_notes: review_notes,
+      };
+      const scores = scoreQualityRecord(qualityInput);
+
+      await sc.from("proposal_quality_records").insert({
+        organization_id: rec.organization_id,
+        entity_type: "recommendation",
+        entity_id: recommendation_id,
+        meta_agent_type: rec.meta_agent_type,
+        review_outcome: action,
+        review_latency_hours: scores.review_latency_hours,
+        reviewer_notes_length: (review_notes || "").length,
+        acceptance_quality_score: scores.acceptance_quality_score,
+        implementation_quality_score: scores.implementation_quality_score,
+        historical_alignment_accuracy: scores.historical_alignment_accuracy,
+        overall_quality_score: scores.overall_quality_score,
+        confidence_at_creation: qualityInput.confidence_score,
+        impact_at_creation: qualityInput.impact_score,
+        priority_at_creation: qualityInput.priority_score,
+        historical_alignment: qualityInput.historical_alignment,
+        was_memory_enriched: qualityInput.was_memory_enriched,
+        feedback_signals: scores.feedback_signals,
+      }).catch((e: any) => console.error("Quality record error:", e));
+    }
+
     return jsonResponse({
       id: recommendation_id,
       previous_status: previousStatus,
