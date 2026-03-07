@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 35 — Autonomous Engineering Advisor. Cross-layer advisory synthesis, prioritized recommendations, clustering, review workflow. Previous: Platform Self-Stabilization (Sprint 34).
+> **What changed (2026-03-07):** Sprint 36 — Semantic Retrieval & Embedding Memory Expansion. Unified embedding-backed retrieval across all intelligence layers with bounded ranking, domain registry, index management, and structured fallback. Previous: Autonomous Engineering Advisor (Sprint 35).
 >
 > Last updated: 2026-03-07
 
@@ -1126,6 +1126,64 @@ Execution Strategy Evolution enables AxionOS to propose, test, and evaluate impr
 
 ---
 
-## 26. Governing Principle
+## 27. Semantic Retrieval & Embedding Memory Expansion (Active — Sprint 36)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture. Platform Self-Calibration tunes operational thresholds within safe envelopes based on platform intelligence signals, with guardrails, rollback, and advisory-first governance preserving kernel integrity. Execution Strategy Evolution enables bounded experimentation with strategy variants, comparing them against baselines under governed conditions, and supporting safe promotion or rollback based on real outcome evidence.
+> **Status:** ✅ Active — Unified semantic retrieval across all intelligence layers
+
+### Overview
+
+Semantic Retrieval provides a unified engine for embedding-backed contextual evidence retrieval across engineering memory, agent memory, platform intelligence, strategies, policies, and advisory signals. The system selects relevant domains, performs bounded ranking with deduplication, and returns structured evidence packs with full explainability.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Retrieval Engine | `semantic-retrieval/semantic-retrieval-engine.ts` | Core retrieval with domain selection and evidence packing |
+| Ranker | `semantic-retrieval/semantic-retrieval-ranker.ts` | Deterministic composite ranking |
+| Guardrails | `semantic-retrieval/semantic-retrieval-guardrails.ts` | Tenant isolation, forbidden domain blocking |
+| Quality Evaluator | `semantic-retrieval/semantic-retrieval-quality-evaluator.ts` | Retrieval effectiveness metrics |
+| Index Manager | `semantic-retrieval/semantic-retrieval-index-manager.ts` | Rebuild, freeze, stale detection |
+| Runtime Context Builder | `semantic-retrieval/runtime-retrieval-context-builder.ts` | Agent/repair/predictive contexts |
+| Advisory Context Builder | `semantic-retrieval/advisory-retrieval-context-builder.ts` | Advisory/cross-stage contexts |
+| Strategy Context Builder | `semantic-retrieval/strategy-retrieval-context-builder.ts` | Strategy/portfolio/policy contexts |
+| Platform Context Builder | `semantic-retrieval/platform-retrieval-context-builder.ts` | Platform intelligence/calibration/stabilization contexts |
+
+### Retrieval Domains
+
+- `engineering_memory` — Engineering memory entries
+- `agent_memory` — Agent memory records
+- `repair_history` — Error patterns and repair evidence
+- `platform_insights` — Platform intelligence signals
+- `strategy_variants` — Strategy evolution evidence
+- `execution_policies` — Execution policy profiles
+- `engineering_advisory` — Advisory recommendations
+- `platform_calibration` — Calibration parameters
+- `stabilization_actions` — Stabilization history
+- `cross_stage_policies` — Cross-stage policy profiles
+- `predictive_signals` — Predictive error signals
+- `strategy_portfolio` — Strategy portfolio evidence
+
+### Safety Boundaries
+
+- Cannot mutate pipeline topology, governance, billing, or enforcement
+- Cannot retrieve from forbidden domains (billing_data, auth_credentials)
+- Cannot bypass tenant isolation (organization_id required)
+- Falls back to structured retrieval when embeddings unavailable
+- All sessions persisted with full audit lineage
+- Advisory-first — retrieval informs but never commands
+
+### Events
+
+- `semantic_retrieval_requested` — Retrieval session initiated
+- `semantic_retrieval_completed` — Evidence pack returned
+- `semantic_retrieval_feedback_recorded` — Usefulness feedback logged
+- `semantic_index_rebuild_started` — Index rebuild triggered
+- `semantic_index_rebuild_completed` — Index rebuild finished
+- `semantic_index_frozen` — Index frozen for protection
+- `semantic_retrieval_guardrail_blocked` — Guardrail prevented unsafe retrieval
+
+---
+
+## 28. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture. Platform Self-Calibration tunes operational thresholds within safe envelopes based on platform intelligence signals, with guardrails, rollback, and advisory-first governance preserving kernel integrity. Execution Strategy Evolution enables bounded experimentation with strategy variants, comparing them against baselines under governed conditions, and supporting safe promotion or rollback based on real outcome evidence. Semantic Retrieval provides unified embedding-backed contextual evidence access across all intelligence domains, with tenant isolation, domain guardrails, structured fallback, and full audit lineage — it strengthens contextual reasoning without introducing autonomous mutation.
