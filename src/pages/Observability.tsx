@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { ErrorPatternRadar } from "@/components/observability/ErrorPatternRadar";
 import { PreventionDashboard } from "@/components/observability/PreventionDashboard";
+import { LearningFoundationDashboard } from "@/components/observability/LearningFoundationDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
