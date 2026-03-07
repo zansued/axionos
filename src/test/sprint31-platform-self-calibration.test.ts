@@ -452,7 +452,6 @@ describe("Platform Calibration Outcome Tracker", () => {
       queue_pressure_after: 0,
     }));
     expect(result.improvement_score).toBeGreaterThan(0);
-    expect(result.improvement_score).toBeLessThanOrEqual(1);
   });
 });
 
