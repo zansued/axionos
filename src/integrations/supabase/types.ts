@@ -1181,6 +1181,163 @@ export type Database = {
           },
         ]
       }
+      engineering_advisory_recommendations: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          evidence_refs: Json | null
+          expected_impact: Json | null
+          id: string
+          organization_id: string | null
+          priority_score: number | null
+          rationale_codes: Json
+          recommendation_type: string
+          review_requirements: Json | null
+          safety_class: string
+          status: string
+          target_entities: Json
+          target_scope: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          evidence_refs?: Json | null
+          expected_impact?: Json | null
+          id?: string
+          organization_id?: string | null
+          priority_score?: number | null
+          rationale_codes?: Json
+          recommendation_type: string
+          review_requirements?: Json | null
+          safety_class?: string
+          status?: string
+          target_entities?: Json
+          target_scope: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          evidence_refs?: Json | null
+          expected_impact?: Json | null
+          id?: string
+          organization_id?: string | null
+          priority_score?: number | null
+          rationale_codes?: Json
+          recommendation_type?: string
+          review_requirements?: Json | null
+          safety_class?: string
+          status?: string
+          target_entities?: Json
+          target_scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engineering_advisory_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engineering_advisory_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          linked_changes: Json | null
+          organization_id: string | null
+          recommendation_id: string
+          review_notes: string | null
+          review_reason_codes: Json | null
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id?: string | null
+          recommendation_id: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id?: string | null
+          recommendation_id?: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engineering_advisory_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engineering_advisory_reviews_recommendation_id_fkey"
+            columns: ["recommendation_id"]
+            isOneToOne: false
+            referencedRelation: "engineering_advisory_recommendations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engineering_advisory_scope_profiles: {
+        Row: {
+          created_at: string
+          default_safety_class: string
+          id: string
+          organization_id: string | null
+          required_confidence: number | null
+          required_evidence_count: number | null
+          scope_key: string
+          scope_name: string
+          scope_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          default_safety_class?: string
+          id?: string
+          organization_id?: string | null
+          required_confidence?: number | null
+          required_evidence_count?: number | null
+          scope_key: string
+          scope_name: string
+          scope_type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          default_safety_class?: string
+          id?: string
+          organization_id?: string | null
+          required_confidence?: number | null
+          required_evidence_count?: number | null
+          scope_key?: string
+          scope_name?: string
+          scope_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engineering_advisory_scope_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       engineering_memory_entries: {
         Row: {
           confidence_score: number

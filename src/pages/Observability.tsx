@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -32,6 +32,7 @@ import { PlatformSelfCalibrationDashboard } from "@/components/observability/Pla
 import { ExecutionStrategyEvolutionDashboard } from "@/components/observability/ExecutionStrategyEvolutionDashboard";
 import { StrategyPortfolioDashboard } from "@/components/observability/StrategyPortfolioDashboard";
 import { PlatformStabilizationDashboard } from "@/components/observability/PlatformStabilizationDashboard";
+import { EngineeringAdvisorDashboard } from "@/components/observability/EngineeringAdvisorDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -311,7 +312,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(21, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(22, 1fr)" }}>
+            <TabsTrigger value="advisor" className="text-xs gap-1"><Lightbulb className="h-3 w-3" /> Advisor</TabsTrigger>
             <TabsTrigger value="platform" className="text-xs gap-1"><Orbit className="h-3 w-3" /> PlatInt</TabsTrigger>
             <TabsTrigger value="calibration" className="text-xs gap-1"><SlidersHorizontal className="h-3 w-3" /> Calib</TabsTrigger>
             <TabsTrigger value="stability" className="text-xs gap-1"><Anchor className="h-3 w-3" /> Stability</TabsTrigger>
@@ -334,6 +336,11 @@ export default function Observability() {
             <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
+
+          {/* ===== ENGINEERING ADVISOR ===== */}
+          <TabsContent value="advisor" className="mt-4">
+            <EngineeringAdvisorDashboard />
+          </TabsContent>
 
           {/* ===== PLATFORM INTELLIGENCE ===== */}
           <TabsContent value="platform" className="mt-4">

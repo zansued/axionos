@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 34 — Platform Self-Stabilization. Bounded drift detection, oscillation suppression, safe-mode profiles, stabilization rollback. Previous: Strategy Portfolio Governance (Sprint 33).
+> **What changed (2026-03-07):** Sprint 35 — Autonomous Engineering Advisor. Cross-layer advisory synthesis, prioritized recommendations, clustering, review workflow. Previous: Platform Self-Stabilization (Sprint 34).
 >
 > Last updated: 2026-03-07
 
