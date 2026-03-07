@@ -333,6 +333,11 @@ export default function Observability() {
             <ExecutionPolicyDashboard />
           </TabsContent>
 
+          {/* ===== EXECUTION POLICY PORTFOLIO ===== */}
+          <TabsContent value="portfolio" className="mt-4">
+            <ExecutionPolicyPortfolioDashboard />
+          </TabsContent>
+
           {/* ===== PREDICTIVE ERROR DETECTION ===== */}
           <TabsContent value="predictive" className="mt-4">
             <PredictiveErrorDashboard />
