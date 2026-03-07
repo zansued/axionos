@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 34 — Platform Self-Stabilization. Bounded drift detection, oscillation suppression, safe-mode profiles, stabilization rollback. Previous: Strategy Portfolio Governance (Sprint 33).
+> **What changed (2026-03-07):** Sprint 35 — Autonomous Engineering Advisor. Cross-layer advisory synthesis, prioritized recommendations, clustering, review workflow. Previous: Platform Self-Stabilization (Sprint 34).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
