@@ -103,7 +103,7 @@ export async function calculateBilling(
   const job_cost = allOrgJobs.reduce((s, j) => s + (Number(j.cost_usd) || 0), 0);
 
   const deployJobs = allOrgJobs.filter((j) =>
-    ["publish", "deploy"].includes(j.stage) && j.status === "completed"
+    ["publish", "deploy"].includes(j.stage) && j.status === "success"
   );
 
   return {
