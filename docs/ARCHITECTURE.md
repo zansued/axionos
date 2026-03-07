@@ -34,6 +34,7 @@ An autonomous engineering platform with commercial readiness and active learning
 | Level 2 | Software Builder | ✅ |
 | Level 3 | Autonomous Engineering System | ✅ Complete |
 | Level 4 | Self-Learning Software Factory | 🔄 Entering |
+| Level 4.5 | Self-Designing Engineering System | 📋 Planned (Meta-Agents) |
 | Level 5 | Autonomous Startup Factory | 🔮 Long-term |
 
 > **Current position:** Level 3 complete → Level 4 entering.
