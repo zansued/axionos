@@ -29,6 +29,7 @@ import OrgSettings from "./pages/OrgSettings";
 import Billing from "./pages/Billing";
 import Connections from "./pages/Connections";
 import MetaAgents from "./pages/MetaAgents";
+import MetaArtifacts from "./pages/MetaArtifacts";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
