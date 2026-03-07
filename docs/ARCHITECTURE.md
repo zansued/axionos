@@ -2,7 +2,7 @@
 
 > Technical architecture of the autonomous software engineering system.
 >
-> **What changed (2026-03-07):** Added Commercial Readiness Layer (Sprint 11), Learning Agents v1 (Sprint 12), updated system maturity to Level 4 Entry, added learning safety principles, updated database schema and implementation status tables.
+> **What changed (2026-03-07):** Added Meta-Agent Coordination Layer (planned architecture), updated layer stack to 8 layers, added meta-agent types and safety constraints, added meta-agent output structure and interaction flow. Previous: Added Commercial Readiness Layer (Sprint 11), Learning Agents v1 (Sprint 12).
 >
 > Last updated: 2026-03-07
 
