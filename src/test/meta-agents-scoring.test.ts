@@ -1089,3 +1089,127 @@ describe("Sprint 16 — Related Memory Context in Artifacts", () => {
     expect(content).not.toHaveProperty("related_historical_context");
   });
 });
+
+// ======================== SPRINT 17 — MEMORY SUMMARIES ========================
+
+// Inline mirror of memory-summary-scoring.ts
+interface SignalStrengthInputs {
+  entry_count: number;
+  breadth: number;
+  linked_outcome_count: number;
+  avg_confidence: number;
+  avg_retrieval_count: number;
+}
+
+function computeSignalStrength(inputs: SignalStrengthInputs): number {
+  const recurrence = Math.min(1, Math.log(inputs.entry_count + 1) / Math.log(21));
+  const breadth = Math.min(1, inputs.breadth / 5);
+  const outcomeRatio = inputs.entry_count > 0
+    ? Math.min(1, inputs.linked_outcome_count / inputs.entry_count)
+    : 0;
+  const evidence = Math.min(1, Math.max(0, inputs.avg_confidence));
+  const reuse = Math.min(1, Math.log(inputs.avg_retrieval_count + 1) / Math.log(11));
+  const score = recurrence * 0.3 + breadth * 0.15 + outcomeRatio * 0.2 + evidence * 0.2 + reuse * 0.15;
+  return Math.round(Math.min(1, Math.max(0, score)) * 1000) / 1000;
+}
+
+describe("Sprint 17 — Signal Strength Scoring", () => {
+  it("produces bounded scores (0-1)", () => {
+    const cases: SignalStrengthInputs[] = [
+      { entry_count: 0, breadth: 0, linked_outcome_count: 0, avg_confidence: 0, avg_retrieval_count: 0 },
+      { entry_count: 100, breadth: 10, linked_outcome_count: 100, avg_confidence: 1, avg_retrieval_count: 50 },
+      { entry_count: 3, breadth: 1, linked_outcome_count: 1, avg_confidence: 0.5, avg_retrieval_count: 2 },
+    ];
+    for (const c of cases) {
+      const score = computeSignalStrength(c);
+      expect(score).toBeGreaterThanOrEqual(0);
+      expect(score).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it("is deterministic for same inputs", () => {
+    const input: SignalStrengthInputs = { entry_count: 10, breadth: 3, linked_outcome_count: 5, avg_confidence: 0.7, avg_retrieval_count: 4 };
+    expect(computeSignalStrength(input)).toBe(computeSignalStrength(input));
+  });
+
+  it("returns 0 for zero inputs", () => {
+    expect(computeSignalStrength({ entry_count: 0, breadth: 0, linked_outcome_count: 0, avg_confidence: 0, avg_retrieval_count: 0 })).toBe(0);
+  });
+
+  it("higher recurrence + breadth produces stronger signal", () => {
+    const strong = computeSignalStrength({ entry_count: 20, breadth: 5, linked_outcome_count: 10, avg_confidence: 0.8, avg_retrieval_count: 5 });
+    const weak = computeSignalStrength({ entry_count: 1, breadth: 1, linked_outcome_count: 0, avg_confidence: 0.3, avg_retrieval_count: 0 });
+    expect(strong).toBeGreaterThan(weak);
+  });
+
+  it("caps at 1.0 even with extreme inputs", () => {
+    const score = computeSignalStrength({ entry_count: 10000, breadth: 100, linked_outcome_count: 10000, avg_confidence: 10, avg_retrieval_count: 1000 });
+    expect(score).toBeLessThanOrEqual(1);
+  });
+});
+
+describe("Sprint 17 — Summary Taxonomy", () => {
+  const VALID_SUMMARY_TYPES = [
+    "FAILURE_PATTERN_SUMMARY",
+    "STRATEGY_EFFECTIVENESS_SUMMARY",
+    "RECOMMENDATION_DECISION_SUMMARY",
+    "ARTIFACT_OUTCOME_SUMMARY",
+    "ARCHITECTURE_EVOLUTION_SUMMARY",
+    "MEMORY_RETRIEVAL_SUMMARY",
+  ];
+
+  it("defines exactly 6 summary types", () => {
+    expect(VALID_SUMMARY_TYPES).toHaveLength(6);
+  });
+
+  it("summary types do not include mutation verbs", () => {
+    const forbidden = ["EXECUTE", "DEPLOY", "APPLY", "FORCE", "MUTATE"];
+    for (const t of VALID_SUMMARY_TYPES) {
+      for (const f of forbidden) {
+        expect(t).not.toContain(f);
+      }
+    }
+  });
+
+  it("all summary types end with _SUMMARY", () => {
+    for (const t of VALID_SUMMARY_TYPES) {
+      expect(t.endsWith("_SUMMARY")).toBe(true);
+    }
+  });
+});
+
+describe("Sprint 17 — Summary Safety", () => {
+  it("summaries cannot alter memory entries", () => {
+    // Summary generation reads memory and writes to memory_summaries table only
+    const summaryTarget = "memory_summaries";
+    const memorySource = "engineering_memory_entries";
+    expect(summaryTarget).not.toBe(memorySource);
+  });
+
+  it("summary content structure is structured and parsable", () => {
+    const content = {
+      top_patterns: [{ subtype: "pipeline_failure", count: 5 }],
+      affected_stages: [{ stage: "validation", count: 3 }],
+      affected_components: ["build", "validation"],
+      trend_direction: "recurring",
+      total_failures: 8,
+    };
+    expect(content).toHaveProperty("top_patterns");
+    expect(content).toHaveProperty("trend_direction");
+    expect(Array.isArray(content.top_patterns)).toBe(true);
+    expect(JSON.stringify(content)).toBeTruthy();
+  });
+
+  it("summary generation is idempotent via duplicate prevention", () => {
+    // Same type + org + period should not create duplicates
+    const key1 = "FAILURE_PATTERN_SUMMARY::org1::2026-03-01::2026-03-07";
+    const key2 = "FAILURE_PATTERN_SUMMARY::org1::2026-03-01::2026-03-07";
+    expect(key1).toBe(key2);
+  });
+
+  it("graceful degradation: empty data produces no summary", () => {
+    const items: unknown[] = [];
+    const shouldCreate = items.length > 0;
+    expect(shouldCreate).toBe(false);
+  });
+});

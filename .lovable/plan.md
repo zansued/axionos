@@ -84,35 +84,13 @@ AxionOS is a **Meta-Aware Engineering Platform** (Level 4.5):
 
 ### Level 5 — Institutional Engineering Memory
 
-**Sprint 16 — Memory Retrieval Surfaces** (Next)
+**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2** (Next)
 
-Bring memory into active use across the system.
+Use historical memory and summaries to improve the quality of recommendations and artifacts.
 
-- Retrieve past strategies during repair operations
-- Retrieve previous proposals during meta-agent analysis
-- Retrieve related ADRs during artifact generation
-- Show related past decisions during human review
-- All retrieval logged and auditable
-
-**Sprint 17 — Memory Summaries**
-
-Periodic synthesis of accumulated engineering knowledge.
-
-- Weekly failure pattern summaries
-- Monthly architecture evolution summaries
-- Strategy effectiveness trends
-- Accepted vs rejected recommendation patterns
-- Summaries feed into meta-agent analysis
-
-### Level 5.25 — Contextual Engineering Intelligence
-
-**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2**
-
-Use historical memory to improve the quality of recommendations and artifacts.
-
-- Meta-agents query relevant memory before generating recommendations
-- Artifact generation retrieves similar past proposals
-- Recommendations include historical context
+- Meta-agents query relevant summaries before generating recommendations
+- Artifact generation retrieves similar past proposals and summary context
+- Recommendations include historical context from summaries
 - Memory influence is traced and auditable
 
 ### Level 5.5 — Self-Improving Engineering Platform
