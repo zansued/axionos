@@ -1,204 +1,57 @@
-# AxionOS — Execution Plan
 
-> Last updated: 2026-03-07
-> Mode: **Level 5 — Institutional Engineering Memory**
-> Execution: **Sprint-based**
 
----
+## Documentation Update Plan — Sprints 19 & 20
 
-## Strategic Directive
+All four docs need updating to reflect Sprint 19 (Proposal Quality Feedback Loop) and Sprint 20 (Advisory Calibration Layer).
 
-AxionOS has completed its Level 4.5 milestone. The execution kernel is stable. The learning layer is active. Meta-agents generate architectural recommendations. Accepted recommendations produce structured engineering proposals via controlled artifact generation. Engineering Memory Foundation is operational.
+### Files to Update
 
-**The focus is now:**
-1. Activate memory retrieval surfaces across repair, meta-agents, and proposals
-2. Introduce periodic memory synthesis for long-term pattern detection
-3. Enable memory-aware meta-agents for contextual recommendations
-4. Governance before autonomy. Memory before discovery. Contextual intelligence before automated experimentation.
+**1. `docs/AGENTS.md`** — Header + new sections
+- Update header: "Sprint 20 — Advisory Calibration Layer" as latest change
+- Add section 12.6: Proposal Quality Feedback Loop (Sprint 19) — tables, scoring, taxonomy, safety
+- Add section 12.7: Advisory Calibration Layer (Sprint 20) — calibration domains, signal types, scoring, analysis service
+- Update Meta-Agents maturity to v1.4 (quality feedback + calibration)
+- Update Implementation Status table (section 15) with Sprint 19 & 20
 
----
+**2. `docs/ARCHITECTURE.md`** — Header + layers + implementation status
+- Update header: "Sprint 20 — Advisory Calibration Layer operational"
+- Update Layer 7 (Meta-Agent) to mention quality feedback and calibration integration
+- Add Layer 10: Proposal Quality & Calibration Layer (or extend Layer 8) covering:
+  - `proposal_quality_feedback` table
+  - `advisory_calibration_signals` and `advisory_calibration_summaries` tables
+  - Quality scoring service, calibration analysis service
+  - Calibration domains and signal types
+- Update Implementation Status table (section 12) with rows for Sprint 19 & 20
+- Update Database Schema (section 13) with new tables
+- Update Planned section to show Sprint 19 & 20 as DONE
 
-## Strategic Principle
+**3. `docs/ROADMAP.md`** — Header + sprint entries + status
+- Update header: "Sprint 20 — Advisory Calibration Layer"
+- Update Current Status table: Meta-Agents v1.4 with quality feedback + calibration
+- Add Sprint 19 & Sprint 20 entries to completed sprints (Level 4.5 section)
+- Update "DONE — Meta-Agents" section to include Sprint 20
+- Update Governing Principle paragraph to mention calibration
+- Add Proposal Quality + Calibration to Kernel table
 
-> **Governance before autonomy.**
-> **Memory before discovery.**
-> **Contextual intelligence before automated experimentation.**
+**4. `.lovable/plan.md`** — Current state + completed sprints
+- Update header and strategic directive
+- Add Sprint 20 to completed sprints table
+- Update Current State section to mention calibration layer
+- Add calibration to Active Kernel Components table
 
-Every new capability must be governable, auditable, and non-destructive before it is expanded. AxionOS does not pursue autonomy for its own sake.
+### Key Content to Add
 
----
+Sprint 19 tables: `proposal_quality_feedback`, `proposal_quality_summaries`
+Sprint 20 tables: `advisory_calibration_signals`, `advisory_calibration_summaries`
 
-## Completed Sprints
+Calibration domains: META_AGENT_PERFORMANCE, PROPOSAL_USEFULNESS, HISTORICAL_CONTEXT_VALUE, REDUNDANCY_GUARD_EFFECTIVENESS, NOVELTY_BALANCE, DECISION_FOLLOW_THROUGH
 
-### Level 3 — Autonomous Engineering System (Sprints 1–10) ✅
+Signal types: UNDERPERFORMING_META_AGENT, HIGH_VALUE_META_AGENT, LOW_USEFULNESS_ARTIFACT_TYPE, REDUNDANCY_GUARD_TOO_STRICT, REDUNDANCY_GUARD_TOO_WEAK, etc.
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 1 | Initiative Brief — structured idea intake contract | ✅ |
-| Sprint 2 | Simulation Engine — feasibility gate before execution | ✅ |
-| Sprint 3 | Deploy Contract — publish-to-deploy state machine | ✅ |
-| Sprint 4 | Product Observability — initiative lifecycle metrics | ✅ |
-| Sprint 5 | Onboarding & Packaging — user activation and product framing | ✅ |
-| Sprint 6 | Repair Evidence — traceable, evidence-based repair loop | ✅ |
-| Sprint 7 | Error Pattern Library — pattern intelligence and strategy effectiveness | ✅ |
-| Sprint 8 | Prevention Layer — active guardrails from known patterns | ✅ |
-| Sprint 9 | Adaptive Routing — evidence-informed repair strategy selection | ✅ |
-| Sprint 10 | Learning Foundation — learning records, prompt outcomes, aggregation | ✅ |
+Safety note in all docs: "Calibration signals are advisory only and do not automatically tune the system."
 
-### Level 4 — Self-Learning Software Factory (Sprints 11–12) ✅
+### Approach
+- Preserve existing structure and formatting conventions
+- Keep concise — reference modules by file path, don't duplicate full code
+- Maintain the governance/non-mutation language consistently
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 11 | Commercial Readiness — plans, billing, workspace isolation, usage enforcement | ✅ |
-| Sprint 12 | Learning Agents v1 — prompt analysis, strategy tracking, prediction, weight adaptation | ✅ |
-
-### Level 4.5 — Meta-Aware Engineering Platform (Sprints 13–15) ✅
-
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 13 | Meta-Agents v1 — 4 active meta-agents, recommendation lifecycle, deduplication | ✅ |
-| Sprint 13.5 | Meta-Agent Hardening — safety validation, tenant isolation, mutation protection | ✅ |
-| Sprint 14 | Controlled Proposal Generation — 5 artifact types, review lifecycle, idempotency | ✅ |
-| Sprint 14.5 | Proposal Hardening — content quality, linkage validation, non-mutation proof | ✅ |
-| Sprint 15 | Engineering Memory Foundation — memory tables, capture events, retrieval API, observability | ✅ |
-| Sprint 16 | Memory Retrieval Surfaces — repair, meta-agent, artifact, review retrieval with ranking | ✅ |
-| Sprint 17 | Memory Summaries — 6 summary types, signal strength scoring, generation service, UI | ✅ |
-| Sprint 18 | Memory-Aware Meta-Agents — historical context enrichment, continuity scoring, redundancy guard, proposal layer v2 | ✅ |
-| Sprint 19 | Proposal Quality Feedback Loop — outcome tracking, quality scoring, confidence calibration, memory effectiveness | ✅ |
-
----
-
-## Current State
-
-AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
-
-- **Execution:** Stable 32-stage deterministic pipeline with DAG orchestration, runtime validation, autonomous repair, and preventive engineering.
-- **Learning:** Active rule-based learning with prompt outcome analysis, strategy effectiveness tracking, predictive error detection, and bounded weight adjustment.
-- **Meta-Analysis:** 4 memory-aware meta-agents with historical context enrichment, continuity scoring, redundancy suppression, alignment classification, and quality feedback loop. Recommendation-only — no system mutation.
-- **Proposal Generation:** Accepted recommendations produce structured engineering proposals with Related Historical Context sections, decision/outcome signals, and historical novelty indicators.
-- **Engineering Memory:** Full stack operational — foundation, retrieval surfaces, summaries, and memory-aware reasoning.
-- **Historical Intelligence:** Continuity scoring, redundancy guard, and historical alignment active across all meta-agents and proposals.
-- **Commercial:** Product plans, billing, workspace isolation, and usage enforcement active.
-- **Governance:** Full audit trail, stage permissions, SLA enforcement, and review workflows across recommendations and artifacts.
-
----
-
-## Next Phases
-
-### Level 5 — Institutional Engineering Memory ✅
-
-**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2** ✅
-
-Meta-agents and proposals reason with historical engineering context:
-
-- ✅ Memory context layer per meta-agent type
-- ✅ Historical continuity scoring (support/conflict/context)
-- ✅ Historical alignment classification (5 categories)
-- ✅ Redundancy guard with conservative suppression rules
-- ✅ Proposal Layer v2 with Related Historical Context
-- ✅ Decision/outcome-aware framing
-- ✅ Graceful degradation on memory unavailability
-
-### Level 5.5 — Self-Improving Engineering Platform
-
-- Memory summaries drive long-horizon evolution signals
-- Strategy reuse patterns inform repair routing improvements
-- Semantic indexing enables contextual similarity queries
-- Memory decay and relevance scoring refine knowledge quality
-
-### Level 6 — Discovery-Driven Engineering (Future Horizon)
-
-- Architecture experimentation informed by accumulated memory
-- Automated hypothesis generation from long-term patterns
-- Controlled experimentation with governance safeguards
-- This level is a vision, not a current priority
-
----
-
-## Success Metrics
-
-| Metric | Target |
-|--------|--------|
-| Pipeline success rate (no manual intervention) | > 80% |
-| Build OK rate | > 90% |
-| Deploy success rate | > 85% |
-| Average retries per initiative | < 2 |
-| Automatic repair success rate | > 70% |
-| Cost per initiative | Tracked & declining |
-| Time from idea to validated repository | < 15 min |
-| Time from idea to deployment | < 20 min |
-| Memory entries captured per initiative | Tracked |
-| Memory retrieval frequency | Tracked |
-
----
-
-## Active Kernel Components
-
-| Component | Status |
-|-----------|--------|
-| 32-stage deterministic pipeline | ✅ |
-| Project Brain (knowledge graph + semantic search) | ✅ |
-| DAG Execution Engine (Kahn's algorithm, 6 workers) | ✅ |
-| AI Efficiency Layer (compressor + cache + router) | ✅ |
-| Smart Context Window (~60-80% token reduction) | ✅ |
-| Runtime Validation (tsc + vite via CI) | ✅ |
-| Autonomous Build Repair + Fix Orchestrator | ✅ |
-| Evidence-Oriented Repair Loop | ✅ |
-| Error Pattern Library | ✅ |
-| Preventive Engineering Layer | ✅ |
-| Adaptive Repair Routing | ✅ |
-| Learning Foundation | ✅ |
-| Learning Agents v1 | ✅ |
-| Meta-Agents v1.2 (4 memory-aware agents) | ✅ |
-| Controlled Proposal Generation | ✅ |
-| Engineering Memory Foundation | ✅ |
-| Governance (gates, SLAs, audit logs) | ✅ |
-| Observability + Cost Tracking | ✅ |
-| Commercial Readiness (plans, billing, usage) | ✅ |
-
----
-
-## Agent OS v1.0 — Reference Architecture (Frozen)
-
-The Agent OS is fully designed. No expansion needed.
-
-| Plane | Modules | Status |
-|-------|---------|--------|
-| **Core** | Runtime Protocol, Capability Model, Core Types | ✅ Designed |
-| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing | ✅ Designed |
-| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Designed |
-| **Data** | Artifact Store, Memory System, Observability | ✅ Designed |
-| **Ecosystem** | Marketplace & Global Capability Registry | ✅ Designed |
-
----
-
-## Technology Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
-| State | TanStack React Query + React Context |
-| Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
-| AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
-| Git | GitHub API v3 (Tree API for atomic commits) |
-| Deploy | Vercel/Netlify auto-generated configs |
-
----
-
-## Product Positioning
-
-**Present AxionOS as:**
-- An autonomous software engineering platform
-- A governed SaaS / MVP generator
-- A system that transforms ideas into validated repositories
-- A meta-aware platform that analyzes its own performance and generates improvement proposals
-- A system accumulating institutional engineering experience
-
-**Do NOT present as:**
-- A startup factory
-- A global marketplace of agents
-- An abstract agent operating system
-- An AGI system
-- A fully autonomous self-modifying system
-
-> Pipeline contracts: [docs/PIPELINE_CONTRACTS.md](../docs/PIPELINE_CONTRACTS.md) | Agents: [docs/AGENTS.md](../docs/AGENTS.md) | Roadmap: [docs/ROADMAP.md](../docs/ROADMAP.md)
