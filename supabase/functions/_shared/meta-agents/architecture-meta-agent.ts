@@ -1,10 +1,12 @@
 /**
- * Architecture Meta-Agent — Sprint 13
+ * Architecture Meta-Agent — Sprint 18 (Memory-Aware)
  *
- * Analyzes system execution patterns and produces architecture-level recommendations:
- * - Pipeline bottleneck detection
- * - Stage reordering suggestions
- * - Stage split/merge proposals
+ * Analyzes system execution patterns and produces architecture-level recommendations.
+ * Now enriched with historical memory context:
+ *   - prior DesignMemory / OutcomeMemory
+ *   - ARCHITECTURE_EVOLUTION_SUMMARY
+ *   - prior accepted/rejected architecture-related decisions
+ *   - historical alignment classification
  *
  * SAFETY: Read-only against kernel. Only produces persisted recommendations.
  */
@@ -12,10 +14,14 @@
 import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { MetaRecommendation } from "./types.ts";
 import { scoreRecommendation, generateSignature } from "./scoring.ts";
+import { HistoricalContext } from "./meta-agent-memory-context.ts";
+import { computeContinuityScores, determineHistoricalAlignment, ContinuityScoreInputs } from "./historical-continuity-scoring.ts";
+import { checkRedundancy, hasNewEvidence } from "./historical-redundancy-guard.ts";
 
 export async function runArchitectureMetaAgent(
   sc: SupabaseClient,
-  organizationId: string
+  organizationId: string,
+  historyCtx?: HistoricalContext,
 ): Promise<MetaRecommendation[]> {
   const recommendations: MetaRecommendation[] = [];
 
@@ -29,7 +35,6 @@ export async function runArchitectureMetaAgent(
 
   if (!obsData || obsData.length === 0) return recommendations;
 
-  // Aggregate stage failures across all initiatives
   const stageFailures: Record<string, number> = {};
   const stageDurations: Record<string, number[]> = {};
   const totalInitiatives = obsData.length;
@@ -72,23 +77,32 @@ export async function runArchitectureMetaAgent(
         breadth: 1,
       });
 
-      recommendations.push({
+      // ── Sprint 18: Historical enrichment ──
+      const histEnrichment = enrichWithHistory(historyCtx, stage, "PIPELINE_OPTIMIZATION", scores);
+      if (histEnrichment.suppress) continue; // Skip historically redundant weak recs
+
+      const rec: MetaRecommendation = {
         meta_agent_type: "ARCHITECTURE_META_AGENT",
         recommendation_type: "PIPELINE_OPTIMIZATION",
         target_component: stage,
         title: `Pipeline bottleneck detected at stage "${stage}"`,
         description: `Stage "${stage}" accounts for ${(ratio * 100).toFixed(1)}% of all pipeline failures (${count}/${totalFailures}). Average duration: ${avgDuration.toFixed(0)}ms. Consider restructuring this stage or adding pre-validation.`,
-        ...scores,
+        confidence_score: histEnrichment.adjustedConfidence,
+        impact_score: scores.impact_score,
+        priority_score: scores.priority_score,
         supporting_evidence: [
           { type: "failure_distribution", stage, failure_count: count, total: totalFailures, ratio },
           { type: "duration_stats", avg_ms: avgDuration, sample_size: stageDurations[stage]?.length || 0 },
+          ...histEnrichment.evidenceItems,
         ],
-        source_metrics: { stage_failures: stageFailures },
+        source_metrics: { stage_failures: stageFailures, ...histEnrichment.sourceMetrics },
         source_record_ids: obsData.slice(0, 5).map((o) => o.initiative_id),
         recommendation_signature: generateSignature(
           "ARCHITECTURE_META_AGENT", "PIPELINE_OPTIMIZATION", stage, `failures_${count}`
         ),
-      });
+      };
+
+      recommendations.push(rec);
     }
   }
 
@@ -99,7 +113,6 @@ export async function runArchitectureMetaAgent(
     const failCount = stageFailures[stage] || 0;
     const failRatio = totalFailures > 0 ? failCount / totalFailures : 0;
 
-    // Candidate for split: avg duration > 30s AND failure ratio > 15%
     if (avg > 30000 && failRatio > 0.15) {
       const scores = scoreRecommendation({
         evidence_count: durations.length,
@@ -113,18 +126,24 @@ export async function runArchitectureMetaAgent(
         breadth: 1,
       });
 
+      const histEnrichment = enrichWithHistory(historyCtx, stage, "STAGE_SPLIT_OR_MERGE", scores);
+      if (histEnrichment.suppress) continue;
+
       recommendations.push({
         meta_agent_type: "ARCHITECTURE_META_AGENT",
         recommendation_type: "STAGE_SPLIT_OR_MERGE",
         target_component: stage,
         title: `Consider splitting stage "${stage}"`,
         description: `Stage "${stage}" has high avg duration (${(avg / 1000).toFixed(1)}s) and ${(failRatio * 100).toFixed(1)}% failure contribution. Splitting into focused sub-stages could improve isolation and reduce cascading failures.`,
-        ...scores,
+        confidence_score: histEnrichment.adjustedConfidence,
+        impact_score: scores.impact_score,
+        priority_score: scores.priority_score,
         supporting_evidence: [
           { type: "duration_analysis", avg_ms: avg, sample_size: durations.length },
           { type: "failure_contribution", count: failCount, ratio: failRatio },
+          ...histEnrichment.evidenceItems,
         ],
-        source_metrics: { avg_duration_ms: avg, fail_ratio: failRatio },
+        source_metrics: { avg_duration_ms: avg, fail_ratio: failRatio, ...histEnrichment.sourceMetrics },
         source_record_ids: [],
         recommendation_signature: generateSignature(
           "ARCHITECTURE_META_AGENT", "STAGE_SPLIT_OR_MERGE", stage, `dur_${Math.round(avg)}`
@@ -134,4 +153,104 @@ export async function runArchitectureMetaAgent(
   }
 
   return recommendations;
+}
+
+// ── Historical enrichment helper ──
+
+interface HistoryEnrichment {
+  suppress: boolean;
+  adjustedConfidence: number;
+  evidenceItems: Record<string, unknown>[];
+  sourceMetrics: Record<string, unknown>;
+}
+
+function enrichWithHistory(
+  ctx: HistoricalContext | undefined,
+  targetComponent: string,
+  recType: string,
+  currentScores: { confidence_score: number; impact_score: number },
+): HistoryEnrichment {
+  if (!ctx || ctx.historical_context_score === 0) {
+    return {
+      suppress: false,
+      adjustedConfidence: currentScores.confidence_score,
+      evidenceItems: [],
+      sourceMetrics: {},
+    };
+  }
+
+  // Build continuity inputs from historical context
+  const relevantDecisions = ctx.related_decisions.filter(
+    (d) => d.recommendation_type === recType
+  );
+  const accepted = relevantDecisions.filter((d) => d.status === "accepted").length;
+  const rejected = relevantDecisions.filter((d) => d.status === "rejected").length;
+  const deferred = relevantDecisions.filter((d) => d.status === "deferred").length;
+
+  const continuityInputs: ContinuityScoreInputs = {
+    related_memory_count: ctx.related_memory_entries.length,
+    related_summary_count: ctx.related_summaries.length,
+    accepted_decisions: accepted,
+    rejected_decisions: rejected,
+    deferred_decisions: deferred,
+    implemented_outcomes: ctx.related_outcomes.length,
+    outcome_success_rate: ctx.related_outcomes.length > 0 ? 0.7 : 0, // simplified
+    recurrence_across_windows: relevantDecisions.length > 0 ? 1 : 0,
+  };
+
+  const contScores = computeContinuityScores(continuityInputs);
+  const alignment = determineHistoricalAlignment(contScores, continuityInputs);
+
+  // Redundancy check
+  const redundancy = checkRedundancy({
+    current_confidence: currentScores.confidence_score,
+    current_impact: currentScores.impact_score,
+    prior_rejections: rejected,
+    prior_acceptances: accepted,
+    prior_deferrals: deferred,
+    days_since_last_similar: relevantDecisions.length > 0
+      ? Math.round((Date.now() - new Date(relevantDecisions[0].created_at).getTime()) / 86400000)
+      : null,
+    supporting_memory_count: ctx.related_memory_entries.length,
+    has_new_evidence: hasNewEvidence(
+      currentScores.confidence_score > 0.6 ? 3 : 1,
+      rejected > 0 ? 2 : 0,
+      currentScores.confidence_score,
+      rejected > 0 ? 0.4 : 0,
+    ),
+    historical_context_score: ctx.historical_context_score,
+  });
+
+  if (redundancy.suppress) {
+    return { suppress: true, adjustedConfidence: 0, evidenceItems: [], sourceMetrics: {} };
+  }
+
+  const adjustedConfidence = Math.round(
+    Math.max(0, Math.min(1, currentScores.confidence_score + redundancy.confidence_adjustment)) * 1000
+  ) / 1000;
+
+  const evidenceItems: Record<string, unknown>[] = [
+    {
+      type: "historical_context",
+      historical_alignment: alignment,
+      historical_support_score: contScores.historical_support_score,
+      historical_conflict_score: contScores.historical_conflict_score,
+      historical_context_score: contScores.historical_context_score,
+      prior_accepted: accepted,
+      prior_rejected: rejected,
+      related_memories: ctx.related_memory_entries.length,
+      related_summaries: ctx.related_summaries.length,
+      novelty_flag: redundancy.novelty_flag,
+    },
+  ];
+
+  return {
+    suppress: false,
+    adjustedConfidence,
+    evidenceItems,
+    sourceMetrics: {
+      historical_alignment: alignment,
+      historical_context_score: ctx.historical_context_score,
+    },
+  };
 }
