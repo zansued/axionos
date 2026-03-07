@@ -817,9 +817,10 @@ supabase/functions/
 
 | Horizon | Module | Priority |
 |---------|--------|----------|
-| NEXT | Memory Retrieval Surfaces (Sprint 16) | P0 |
-| NEXT | Memory Summaries (Sprint 17) | P1 |
-| LATER | Memory-Aware Meta-Agents (Sprint 18) | P1 |
+| DONE | Memory Retrieval Surfaces (Sprint 16) | ✅ |
+| DONE | Memory Summaries (Sprint 17) | ✅ |
+| DONE | Memory-Aware Meta-Agents (Sprint 18) | ✅ |
+| NEXT | Semantic Retrieval via Embeddings | P1 |
 | LATER | Product Analytics Engine | P2 |
 | FUTURE | Discovery-Driven Architecture | P3 |
 
