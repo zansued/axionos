@@ -5,7 +5,7 @@
 > - O sistema mostra valor visível?
 > - Essa etapa aproxima do resultado final?
 >
-> **What changed (2026-03-07):** Added Meta-Agent interaction contracts (planned), extended safety principles with meta-agent constraints. Previous: Added Commercial Layer contracts, Learning Layer contracts, contract safety principles.
+> **What changed (2026-03-07):** Added Engineering Memory interaction contract — memory is read-only from pipeline perspective; execution must not depend on memory availability. Previous: Added Meta-Agent interaction contracts.
 >
 > Last updated: 2026-03-07
 
