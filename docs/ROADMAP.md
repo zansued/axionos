@@ -167,6 +167,8 @@ Sprints 11 and 12 represent the **beginning** of Level 4.
 | Learning Agents v1 (5 engines + dashboard) | ✅ Operational |
 | Proposal Quality Feedback Loop | ✅ Operational |
 | Advisory Calibration Layer | ✅ Operational |
+| Prompt Optimization (A/B + Bounded Promotion) | ✅ Operational |
+| Self-Improving Fix Agents v2 (Repair Policies) | ✅ Operational |
 
 ### What to Freeze
 
