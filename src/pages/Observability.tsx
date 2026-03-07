@@ -27,6 +27,7 @@ import { CrossStageLearningDashboard } from "@/components/observability/CrossSta
 import { ExecutionPolicyDashboard } from "@/components/observability/ExecutionPolicyDashboard";
 import { ExecutionPolicyPortfolioDashboard } from "@/components/observability/ExecutionPolicyPortfolioDashboard";
 import { TenantAdaptivePolicyDashboard } from "@/components/observability/TenantAdaptivePolicyDashboard";
+import { PlatformIntelligenceDashboard } from "@/components/observability/PlatformIntelligenceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
