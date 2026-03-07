@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 31 — Platform Self-Calibration. Bounded self-calibration layer for operational threshold tuning with guardrails, rollback, and advisory-first governance. Previous: Platform Intelligence Entry (Sprint 30).
+> **What changed (2026-03-07):** Sprint 32 — Execution Strategy Evolution. Bounded strategy variant synthesis, controlled experimentation, and safe promotion/rollback. Previous: Platform Self-Calibration (Sprint 31).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
