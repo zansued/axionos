@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 26 — Learning Agents v2 (Cross-Stage Policy Synthesis). Cross-stage learning graph, bounded policy synthesis, runtime application, outcome tracking, and explainability now operational. Previous: Predictive Error Detection (Sprint 25).
+> **What changed (2026-03-07):** Sprint 27 — Execution Policy Intelligence. Bounded execution policy selection, context classification, runtime adjustments, outcome tracking, and explainability now operational. Previous: Learning Agents v2 (Sprint 26).
 >
 > Last updated: 2026-03-07
 
