@@ -7,6 +7,7 @@ import { runAgentRoleDesigner } from "../_shared/meta-agents/agent-role-designer
 import { runWorkflowOptimizer } from "../_shared/meta-agents/workflow-optimizer.ts";
 import { runSystemEvolutionAdvisor } from "../_shared/meta-agents/system-evolution-advisor.ts";
 import { applyQualityGate, normalizeSignature } from "../_shared/meta-agents/validation.ts";
+import { retrieveForMetaAgent } from "../_shared/engineering-memory-retriever.ts";
 
 /**
  * run-meta-agent-analysis — Sprint 13 (Hardened)
