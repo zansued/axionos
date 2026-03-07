@@ -447,8 +447,7 @@ describe("Strategy Evolution Safety Guards", () => {
 
 // ═══ Determinism ═══
 describe("Strategy Evolution Determinism", () => {
-  const { interpretStrategySignals } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-signal-interpreter");
-  const { compareOutcomes } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-outcome-tracker");
+  // uses top-level imports
 
   it("signal interpretation is deterministic", () => {
     const input = { retry_metrics: [{ stage: "x", retry_rate: 0.4, avg_retries: 3 }], repair_metrics: [], validation_metrics: [], predictive_metrics: [], review_metrics: [], deploy_metrics: [], cross_stage_spillover: [] };
