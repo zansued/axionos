@@ -344,6 +344,11 @@ export default function Observability() {
             <EngineeringAdvisorDashboard />
           </TabsContent>
 
+          {/* ===== SEMANTIC RETRIEVAL ===== */}
+          <TabsContent value="sem-retr" className="mt-4">
+            <SemanticRetrievalDashboard />
+          </TabsContent>
+
           {/* ===== PLATFORM INTELLIGENCE ===== */}
           <TabsContent value="platform" className="mt-4">
             <PlatformIntelligenceDashboard />
