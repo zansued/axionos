@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 32 — Execution Strategy Evolution. Bounded strategy variant synthesis, controlled experimentation, and safe promotion/rollback. Previous: Platform Self-Calibration (Sprint 31).
+> **What changed (2026-03-07):** Sprint 33 — Strategy Portfolio Governance. Portfolio-level lifecycle control, conflict detection, exposure balancing, and advisory-first optimization for strategy families. Previous: Execution Strategy Evolution (Sprint 32).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
@@ -17,7 +17,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 17 architectural layers active |
+| **System State** | 18 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -31,7 +31,7 @@
 
 ## Strategic Directive
 
-AxionOS has completed 32 implementation sprints spanning the full capability arc from deterministic execution to bounded strategy evolution. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, and strategy evolution — all under governed, advisory-first safety boundaries.
+AxionOS has completed 33 implementation sprints spanning the full capability arc from deterministic execution to strategy portfolio governance. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, and strategy portfolio governance — all under governed, advisory-first safety boundaries.
 
 **The focus is now:**
 1. Commercial stability with real billing flows
@@ -45,18 +45,19 @@ AxionOS has completed 32 implementation sprints spanning the full capability arc
 ## Implementation Horizons
 
 ```
-  DONE (32 sprints)                    NOW                           NEXT                           LATER
+  DONE (33 sprints)                    NOW                           NEXT                           LATER
   ──────────────────►                  ──────────────────►           ──────────────────►            ──────────────────►
-  Level 1-5                            Stabilization &               Strategy Portfolio             Autonomous
-  (Kernel → Learning →                  Commercial                   Governance +                  Engineering
-   Meta-Agents → Memory →              Validation +                  Semantic Retrieval +           Advisor +
-   Governance → Intelligence →          Intelligence                  Platform                      Discovery-Driven
-   Calibration → Strategy Evo)          Maturation                    Self-Stabilization            Architecture
+  Level 1-5                            Stabilization &               Semantic Retrieval +           Autonomous
+  (Kernel → Learning →                  Commercial                   Platform                      Engineering
+   Meta-Agents → Memory →              Validation +                  Self-Stabilization +           Advisor +
+   Governance → Intelligence →          Intelligence                  Cross-Family Strategy         Discovery-Driven
+   Calibration → Strategy Evo →        Maturation                    Coordination                  Architecture
+   Portfolio Governance)
 ```
 
 ---
 
-## DONE — Completed Sprints (1–32)
+## DONE — Completed Sprints (1–33)
 
 ### Foundation Layer (Sprints 1–10)
 
@@ -119,11 +120,12 @@ AxionOS has completed 32 implementation sprints spanning the full capability arc
 | 30 | Platform Intelligence Entry | ✅ Complete |
 | 31 | Platform Self-Calibration | ✅ Complete |
 
-### Strategy Evolution Layer (Sprint 32)
+### Strategy Evolution Layer (Sprints 32–33)
 
 | Sprint | Name | Status |
 |--------|------|--------|
 | 32 | Execution Strategy Evolution | ✅ Complete |
+| 33 | Strategy Portfolio Governance | ✅ Complete |
 
 ---
 
@@ -154,7 +156,6 @@ AxionOS has completed 32 implementation sprints spanning the full capability arc
 
 | Module | Description |
 |--------|-------------|
-| Strategy Portfolio Governance | Manage strategy families as a governed portfolio with lifecycle, conflict detection |
 | Semantic Retrieval via Embeddings | Vector-based contextual retrieval for engineering memory |
 | Platform Self-Stabilization | Auto-detect and correct platform-level drift |
 
@@ -210,6 +211,7 @@ AxionOS has completed 32 implementation sprints spanning the full capability arc
 | Platform Intelligence (health model) | ✅ Operational |
 | Platform Self-Calibration | ✅ Operational |
 | Execution Strategy Evolution | ✅ Operational |
+| Strategy Portfolio Governance | ✅ Operational |
 
 ### What to Freeze
 
@@ -257,7 +259,7 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 ## Governing Principle
 
 > The architecture is sufficient. Level 3 is complete.
-> Thirty-two sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, Memory Summaries, Memory-Aware Meta-Agents, Proposal Quality Feedback Loop, Advisory Calibration Layer, Prompt Optimization Engine, Bounded Promotion & Rollback Guard, Self-Improving Fix Agents v2, Agent Memory Layer Operationalization, Predictive Error Detection Operationalization, Learning Agents v2 (Cross-Stage Policy Synthesis), Execution Policy Intelligence, Execution Mode Portfolio Optimization, Workspace / Tenant Adaptive Policy Tuning, Platform Intelligence Entry, Platform Self-Calibration, and Execution Strategy Evolution.
-> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, memory-aware meta-level recommendations, historically-informed engineering proposals, foundational engineering memory, contextual memory retrieval, periodic historical synthesis, experience-aware reasoning, proposal quality feedback, advisory calibration diagnostics, prompt optimization with bounded promotion, memory-aware repair policies, per-agent operational memory, runtime predictive error detection with bounded preventive actions, cross-stage policy synthesis for coordinated learning across pipeline boundaries, execution policy intelligence for global pipeline operating modes, portfolio optimization for governed execution mode management, tenant-adaptive policy tuning for workspace-level behavior customization, platform intelligence for system-level observability, bounded self-calibration for operational threshold tuning, and execution strategy evolution for bounded variant experimentation and safe promotion.
-> The pipeline now supports bounded execution strategy evolution: strategy variants are proposed, tested against baselines, and promoted or rolled back under governed experimentation.
-> Focus now: commercial stability, platform intelligence maturation, and adaptive intelligence calibration.
+> Thirty-three sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, Memory Summaries, Memory-Aware Meta-Agents, Proposal Quality Feedback Loop, Advisory Calibration Layer, Prompt Optimization Engine, Bounded Promotion & Rollback Guard, Self-Improving Fix Agents v2, Agent Memory Layer Operationalization, Predictive Error Detection Operationalization, Learning Agents v2 (Cross-Stage Policy Synthesis), Execution Policy Intelligence, Execution Mode Portfolio Optimization, Workspace / Tenant Adaptive Policy Tuning, Platform Intelligence Entry, Platform Self-Calibration, Execution Strategy Evolution, and Strategy Portfolio Governance.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, memory-aware meta-level recommendations, historically-informed engineering proposals, foundational engineering memory, contextual memory retrieval, periodic historical synthesis, experience-aware reasoning, proposal quality feedback, advisory calibration diagnostics, prompt optimization with bounded promotion, memory-aware repair policies, per-agent operational memory, runtime predictive error detection with bounded preventive actions, cross-stage policy synthesis for coordinated learning across pipeline boundaries, execution policy intelligence for global pipeline operating modes, portfolio optimization for governed execution mode management, tenant-adaptive policy tuning for workspace-level behavior customization, platform intelligence for system-level observability, bounded self-calibration for operational threshold tuning, execution strategy evolution for bounded variant experimentation and safe promotion, and strategy portfolio governance for lifecycle control, conflict detection, and exposure balancing across strategy families.
+> The pipeline now supports strategy portfolio governance: strategy families are organized into portfolios with lifecycle states, conflict detection, exposure balancing, and advisory-first optimization recommendations.
+> Focus now: commercial stability, platform intelligence maturation, semantic retrieval, and adaptive intelligence calibration.
