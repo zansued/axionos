@@ -46,6 +46,16 @@ const AGENT_LABELS: Record<string, string> = {
 
 type SortField = "priority_score" | "confidence_score" | "impact_score" | "created_at";
 
+const FEEDBACK_TAGS = [
+  { value: "too_generic", label: "Too Generic" },
+  { value: "well_supported", label: "Well Supported" },
+  { value: "historically_redundant", label: "Historically Redundant" },
+  { value: "novel_but_useful", label: "Novel but Useful" },
+  { value: "unclear_impact", label: "Unclear Impact" },
+  { value: "high_value", label: "High Value" },
+  { value: "needs_more_evidence", label: "Needs More Evidence" },
+];
+
 export default function MetaAgents() {
   const { currentOrg } = useOrg();
   const queryClient = useQueryClient();
@@ -55,6 +65,7 @@ export default function MetaAgents() {
   const [sortAsc, setSortAsc] = useState(false);
   const [reviewDialog, setReviewDialog] = useState<{ id: string; title: string; action: string } | null>(null);
   const [reviewNotes, setReviewNotes] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   // Sprint 19: Quality aggregates
   const { data: qualityAggregates } = useQuery({
