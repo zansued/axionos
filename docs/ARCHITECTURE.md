@@ -202,6 +202,87 @@ Observation → Evidence → Analysis → Recommendation → Human-safe Adjustme
 4. Learning is **bounded** — weight adjustments have min/max constraints, are reversible
 5. Learning **cannot mutate**: pipeline stages, governance rules, product plans, billing
 
+### Layer 8: Meta-Agent Coordination Layer (Planned)
+
+> **Status:** 📋 Planned architecture — **Not implemented**
+> **Dependency:** Requires stable Learning Agents v2
+
+**Purpose:** Introduce higher-order agents that reason about the system itself — analyzing execution patterns, designing new agent roles, optimizing workflows, and advising on architectural evolution. Meta-Agents do not execute pipeline tasks directly.
+
+**Position in the layer stack:**
+
+```
+  Meta-Agent Coordination Layer    ← NEW (planned)
+          ↑
+  Learning Agents Layer            ← Active (Sprint 12)
+          ↑
+  Commercial Readiness Layer       ← Active (Sprint 11)
+          ↑
+  Observability Layer              ← Active
+          ↑
+  Governance and Audit Layer       ← Active
+          ↑
+  Prevention and Routing Layer     ← Active
+          ↑
+  Validation and Repair Layer      ← Active
+          ↑
+  Kernel Execution Layer           ← Active
+```
+
+Meta-Agents consume outputs from all lower layers but cannot modify any of them directly.
+
+**Five Meta-Agent Types:**
+
+| Meta-Agent | Purpose | Outputs |
+|-----------|---------|---------|
+| **Architecture Meta-Agent** | Analyze execution outcomes and suggest pipeline architecture improvements | `PIPELINE_OPTIMIZATION`, `STAGE_REORDERING_SUGGESTION`, `STAGE_SPLIT_OR_MERGE`, `RESOURCE_ALLOCATION_HINT` |
+| **Agent Role Designer** | Analyze task distribution and propose new agent roles or specializations | `NEW_AGENT_ROLE`, `AGENT_ROLE_REFACTOR`, `AGENT_SPECIALIZATION`, `AGENT_DEPRECATION` |
+| **Workflow Optimizer** | Improve pipeline efficiency by analyzing duration, retries, and repair patterns | `WORKFLOW_PARALLELIZATION`, `STEP_ELIMINATION`, `STEP_REORDERING` |
+| **Strategy Synthesizer** | Combine successful strategies into improved execution approaches | `NEW_EXECUTION_STRATEGY`, `PROMPT_STRATEGY_COMPOSITION`, `REPAIR_STRATEGY_REWEIGHTING` |
+| **System Evolution Advisor** | Produce high-level system evolution guidance from cross-cutting trends | `SYSTEM_EVOLUTION_REPORT`, `TECHNICAL_DEBT_ALERT`, `ARCHITECTURE_CHANGE_PROPOSAL` |
+
+**Data sources (read-only):**
+- `initiative_observability` — stage metrics, durations, failure distribution
+- `prompt_strategy_metrics` — prompt performance trends
+- `strategy_effectiveness_metrics` — repair strategy effectiveness
+- `predictive_error_patterns` — failure predictions
+- `learning_recommendations` — existing improvement suggestions
+- `repair_evidence` — repair outcome history
+- `audit_logs` — system event history
+
+**Planned output structure:**
+
+```
+meta_agent_recommendation {
+  id                    -- UUID
+  meta_agent_type       -- architecture | role_designer | workflow | strategy | evolution
+  recommendation_type   -- specific output type
+  target_component      -- what system component is affected
+  description           -- human-readable explanation
+  confidence_score      -- 0.0-1.0
+  supporting_evidence   -- array of source records
+  status                -- pending | reviewed | accepted | rejected
+  created_at            -- timestamp
+}
+```
+
+**Planned persistence:** `meta_agent_recommendations` table (not yet created)
+
+**Safety constraints:**
+1. Meta-Agents **never** modify pipeline stages, governance rules, billing, or contracts
+2. All outputs are **recommendations** requiring human review before implementation
+3. All Meta-Agent actions must be **auditable** and **explainable**
+4. Meta-Agent outputs must be **reversible** — no irreversible system changes
+5. Meta-Agents operate in **read-only** mode against all lower layers
+
+**Interaction flow:**
+
+```
+Observability → Learning Agents → Meta-Agents → Recommendations → Human Review → Controlled Implementation
+```
+
+Meta-Agents do not bypass human oversight.
+
 ---
 
 ## 3. Agent Operating System (Agent OS) — v1.0 GA

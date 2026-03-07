@@ -208,30 +208,60 @@ Each execution improves future executions. The system transitions from determini
 
 ---
 
-## NEXT — Meta-Agents (Future Horizon)
+## NEXT — Meta-Agents (Level 4.5 — Self-Designing Engineering System)
 
 **Priority:** Medium
-**Status:** 📋 Planned — Not implemented
+**Status:** 📋 Architecture designed — Not implemented
 **Dependency:** Requires stable Learning Agents v2
+**Target maturity:** Level 4.5
 
 ### Purpose
 
-Introduce higher-order agents that reason about the orchestration system itself, enabling self-designing workflows and agent role synthesis.
+Introduce higher-order agents that reason about the orchestration system itself, enabling self-designing workflows, agent role synthesis, and architectural evolution — without sacrificing governance, auditability, or safety.
 
-### Planned Capabilities
+Meta-Agents transform AxionOS from a **Self-Improving Engineering Platform** into a **Self-Designing Engineering System**.
 
-| Capability | Description |
-|-----------|-------------|
-| Self-designing orchestration logic | Meta-agents that propose pipeline stage modifications based on execution patterns |
-| Agent role synthesis | Automatic composition of new agent specializations from observed capability gaps |
-| Workflow architecture recommendations | Higher-order analysis of pipeline bottlenecks and efficiency opportunities |
-| Learning subsystem coordination | Meta-level coordination of the learning engines themselves |
+### Five Meta-Agent Types
 
-### Constraints
+| Meta-Agent | Purpose | Key Outputs |
+|-----------|---------|-------------|
+| **Architecture Meta-Agent** | Analyze execution outcomes, suggest pipeline improvements | `PIPELINE_OPTIMIZATION`, `STAGE_REORDERING_SUGGESTION`, `STAGE_SPLIT_OR_MERGE` |
+| **Agent Role Designer** | Analyze task distribution, propose new agent roles | `NEW_AGENT_ROLE`, `AGENT_SPECIALIZATION`, `AGENT_DEPRECATION` |
+| **Workflow Optimizer** | Improve pipeline efficiency from duration/retry/repair data | `WORKFLOW_PARALLELIZATION`, `STEP_ELIMINATION`, `STEP_REORDERING` |
+| **Strategy Synthesizer** | Combine successful strategies into improved approaches | `NEW_EXECUTION_STRATEGY`, `PROMPT_STRATEGY_COMPOSITION` |
+| **System Evolution Advisor** | Produce high-level system evolution guidance | `SYSTEM_EVOLUTION_REPORT`, `TECHNICAL_DEBT_ALERT`, `ARCHITECTURE_CHANGE_PROPOSAL` |
 
-- Meta-Agents **are not implemented** and remain a future planning item
-- When implemented, they must follow the same safety principles: auditable, bounded, reversible
-- Meta-Agents will not have direct kernel mutation authority
+### Architecture Position
+
+```
+  Meta-Agent Coordination Layer    ← Planned
+          ↑
+  Learning Agents Layer            ← Active
+          ↑
+  Observability Layer              ← Active
+          ↑
+  Governance and Audit Layer       ← Active
+          ↑
+  Execution Kernel                 ← Active
+```
+
+### Safety Constraints
+
+- Meta-Agents **never** modify pipeline stages, governance rules, billing, or contracts directly
+- All outputs are **recommendations** requiring human review
+- All actions are **auditable**, **explainable**, and **reversible**
+- Meta-Agents operate in **read-only** mode against all lower layers
+- Output structure: `meta_agent_recommendations` table with status workflow (`pending → reviewed → accepted | rejected`)
+
+### Interaction Flow
+
+```
+Observability → Learning Agents → Meta-Agents → Recommendations → Human Review → Controlled Implementation
+```
+
+### Expected Outcome
+
+The system evolves from reactive learning (Sprint 12) to proactive architectural self-improvement, while maintaining full human oversight and governance control.
 
 ---
 

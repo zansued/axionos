@@ -515,7 +515,7 @@ supabase/functions/_shared/agent-os/
 | Learning Agents v1 (5 engines) | ✅ Implemented (Sprint 12) |
 | Learning Dashboard | ✅ Implemented (Sprint 12) |
 | Prompt Optimization (A/B testing) | 📋 NEXT horizon |
-| Meta-Agents | 📋 Future horizon |
+| Meta-Agents (5 types) | 📋 Architecture designed, not implemented |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
 
