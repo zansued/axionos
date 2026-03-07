@@ -10,7 +10,7 @@ import { buildLineageRecord, buildExplainability } from "../../supabase/function
 
 // ═══ Signal Interpreter ═══
 describe("Execution Strategy Signal Interpreter", () => {
-  const { interpretStrategySignals } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-signal-interpreter");
+  // uses top-level import
 
   const emptyInput = {
     retry_metrics: [], repair_metrics: [], validation_metrics: [],
