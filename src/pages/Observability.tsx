@@ -24,6 +24,7 @@ import { LearningFoundationDashboard } from "@/components/observability/Learning
 import { EngineeringMemoryDashboard } from "@/components/observability/EngineeringMemoryDashboard";
 import { MemorySummariesPanel } from "@/components/observability/MemorySummariesPanel";
 import { CrossStageLearningDashboard } from "@/components/observability/CrossStageLearningDashboard";
+import { ExecutionPolicyDashboard } from "@/components/observability/ExecutionPolicyDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
