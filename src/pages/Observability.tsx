@@ -306,7 +306,7 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(15, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(16, 1fr)" }}>
             <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Perf</TabsTrigger>
             <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>
             <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Quality</TabsTrigger>
@@ -317,6 +317,7 @@ export default function Observability() {
             <TabsTrigger value="cross-stage" className="text-xs gap-1"><GitBranch className="h-3 w-3" /> X-Stage</TabsTrigger>
             <TabsTrigger value="exec-policy" className="text-xs gap-1"><Gauge className="h-3 w-3" /> ExPol</TabsTrigger>
             <TabsTrigger value="portfolio" className="text-xs gap-1"><Layers className="h-3 w-3" /> Portfolio</TabsTrigger>
+            <TabsTrigger value="tenant" className="text-xs gap-1"><Building2 className="h-3 w-3" /> Tenant</TabsTrigger>
             <TabsTrigger value="learning" className="text-xs gap-1"><GraduationCap className="h-3 w-3" /> Learn</TabsTrigger>
             <TabsTrigger value="agent-memory" className="text-xs gap-1"><Cpu className="h-3 w-3" /> AgMem</TabsTrigger>
             <TabsTrigger value="memory" className="text-xs gap-1"><Brain className="h-3 w-3" /> Mem</TabsTrigger>
