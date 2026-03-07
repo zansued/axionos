@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 28 — Execution Mode Portfolio Optimization. Bounded portfolio evaluation, ranking, lifecycle management, conflict detection, and recommendations now operational. Previous: Execution Policy Intelligence (Sprint 27).
+> **What changed (2026-03-07):** Sprint 29 — Workspace / Tenant Adaptive Policy Tuning. Bounded tenant-aware execution policy tuning with drift detection, override guards, and workspace-level adaptation now operational. Previous: Execution Mode Portfolio Optimization (Sprint 28).
 >
 > Last updated: 2026-03-07
 
