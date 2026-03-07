@@ -1,6 +1,12 @@
 import { describe, it, expect } from "vitest";
-
-// ── Sprint 32 — Execution Strategy Evolution Tests ──
+import { interpretStrategySignals } from "../../supabase/functions/_shared/execution-strategy/execution-strategy-signal-interpreter";
+import { synthesizeVariant } from "../../supabase/functions/_shared/execution-strategy/execution-strategy-variant-synthesizer";
+import { validateStrategyVariant } from "../../supabase/functions/_shared/execution-strategy/execution-strategy-guardrails";
+import { assignExecution, computeExperimentStatus } from "../../supabase/functions/_shared/execution-strategy/execution-strategy-experiment-runner";
+import { compareOutcomes } from "../../supabase/functions/_shared/execution-strategy/execution-strategy-outcome-tracker";
+import { evaluatePromotion } from "../../supabase/functions/_shared/execution-strategy/execution-strategy-promotion-rules";
+import { evaluateRollback } from "../../supabase/functions/_shared/execution-strategy/execution-strategy-rollback-engine";
+import { buildLineageRecord, buildExplainability } from "../../supabase/functions/_shared/execution-strategy/execution-strategy-lineage";
 
 // ═══ Signal Interpreter ═══
 describe("Execution Strategy Signal Interpreter", () => {
