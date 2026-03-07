@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 24 — Agent Memory Layer Operationalization. Per-agent memory profiles, bounded retrieval/injection, write-back, and quality scoring now operational. Previous: Self-Improving Fix Agents v2 (Sprint 23).
+> **What changed (2026-03-07):** Sprint 25 — Predictive Error Detection Operationalization. Runtime predictive risk scoring, bounded preventive actions, outcome tracking, and prediction quality metrics now operational. Previous: Agent Memory Layer (Sprint 24).
 >
 > Last updated: 2026-03-07
 
