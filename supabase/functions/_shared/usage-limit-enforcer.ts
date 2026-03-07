@@ -28,7 +28,8 @@ export interface UsageLimitCheck {
 
 export async function enforceUsageLimits(
   serviceClient: ReturnType<typeof createClient>,
-  organizationId: string
+  organizationId: string,
+  stageName?: string
 ): Promise<UsageLimitCheck> {
   // Get billing account with plan
   const { data: billing } = await serviceClient
