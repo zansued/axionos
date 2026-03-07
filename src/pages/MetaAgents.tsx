@@ -17,6 +17,7 @@ import {
   ArrowDown, ArrowUp,
 } from "lucide-react";
 import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
+import { RelatedSummaryPanel } from "@/components/memory/RelatedSummaryPanel";
 
 type RecStatus = "pending" | "reviewed" | "accepted" | "rejected" | "deferred";
 
