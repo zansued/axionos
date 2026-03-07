@@ -2,7 +2,9 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **Current Mode**: Level 4 Entry — Controlled Learning & Commercial Readiness
+> **What changed (2026-03-07):** Updated Sprint 11/12 status to reflect hardening corrections, added Meta-Agents future horizon section, clarified frozen items rationale, synchronized with actual implementation.
+>
+> **Current Mode**: Level 4 Entry — Commercial + Learning Platform
 >
 > **Current Maturity**: Level 3 ✅ Complete → Level 4 🔄 Entering
 >
@@ -10,14 +12,27 @@
 
 ---
 
+## Current Status
+
+| Dimension | State |
+|-----------|-------|
+| **Platform Stage** | Level 4 Entry |
+| **System State** | Commercial + Learning Platform |
+| **Kernel Status** | Stable and operational |
+| **Commercial Status** | Plans, billing, usage enforcement — hardened |
+| **Learning Status** | Active, rule-based, auditable |
+| **Execution Mode** | Sprint-based implementation |
+
+---
+
 ## Strategic Directive
 
-AxionOS has completed its Product Proof Closure. The architecture is sufficient. The full idea-to-deploy cycle is operational with structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, and a learning substrate.
+AxionOS has completed its Product Proof Closure and entered Commercial + Learning readiness. The architecture is sufficient. The full idea-to-deploy cycle is operational with structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, and billing infrastructure.
 
 **The focus is now:**
-1. Stabilize commercial readiness and workspace packaging
-2. Activate controlled, explainable learning behavior
-3. No major platform expansion until Learning Agents v1 and billing are stable
+1. Stabilize Learning Agents v1 with real execution data
+2. Validate commercial readiness with real billing flows
+3. No major platform expansion until learning and billing are proven stable
 
 **Rule:** No new architecture unless it directly improves reliability, cost, execution speed, product clarity, or sellability.
 
@@ -26,11 +41,11 @@ AxionOS has completed its Product Proof Closure. The architecture is sufficient.
 ## Implementation Horizons
 
 ```
-  NOW                    NEXT                   LATER
-  ──────────►            ──────────►            ──────────►
-  Level 4 Entry          Learning Agents        Platform
-  (Commercial +          Expansion              Intelligence
-   Learning v1)
+  DONE                     NOW                    NEXT                   LATER
+  ──────────►              ──────────►            ──────────►            ──────────►
+  Level 3                  Level 4 Entry          Learning Agents        Platform
+  (Kernel +                (Commercial +          Expansion +            Intelligence
+   Autonomous Eng)          Learning v1)          Meta-Agents
 ```
 
 ---
@@ -81,25 +96,9 @@ Level 3 (Autonomous Engineering System) is now **functionally complete**. Ten im
 
 ---
 
-### Level 3 Summary
-
-Level 3 is functionally complete:
-- Idea intake is structured (initiative brief)
-- Simulation exists before execution
-- Pipeline is deterministic (32 stages)
-- Repository generation is validated (tsc + vite)
-- Deployment is formalized (Vercel-first)
-- Product-level observability exists
-- Repair is evidence-oriented
-- Prevention rules exist and are active
-- Adaptive repair routing exists
-- Learning foundations exist
-
----
-
 ## Transition Zone — Entry into Level 4
 
-Sprints 11 and 12 represent the **beginning** of Level 4, not its completion. They introduce the first commercial and learning capabilities on top of the proven Level 3 foundation.
+Sprints 11 and 12 represent the **beginning** of Level 4.
 
 ### Sprint 11 — Commercial Readiness / Billing / Workspace Packaging ✅
 
@@ -116,7 +115,14 @@ Sprints 11 and 12 represent the **beginning** of Level 4, not its completion. Th
 - Workspace members table with granular roles
 - All new tables with RLS policies and org isolation
 
-**Status:** ✅ Implemented
+**Hardening (post-implementation):**
+- Usage enforcement connected to real pipeline entry points (`pipeline-bootstrap.ts`, `run-initiative-pipeline`)
+- Cross-org query leakage fixed in `usage-limit-enforcer.ts` and `billing-calculator.ts`
+- Cost double-counting fixed: `job_cost` is single source of truth
+- Deploy status queries corrected: `"success"` instead of `"completed"`
+- Blocked executions return HTTP 402 with `USAGE_LIMIT_EXCEEDED` code
+
+**Status:** ✅ Implemented + Hardened
 
 ### Sprint 12 — Learning Agents v1 ✅
 
@@ -129,14 +135,11 @@ Sprints 11 and 12 represent the **beginning** of Level 4, not its completion. Th
 - Repair Learning Engine: adjusts strategy routing weights based on evidence (bounded, reversible)
 - Learning Recommendation Engine: generates structured recommendations (PROMPT_OPTIMIZATION, STRATEGY_RANKING_ADJUSTMENT, NEW_PREVENTION_RULE, PIPELINE_CONFIGURATION_HINT)
 - Learning Dashboard API with overview/recommendations/strategies/errors views
-- Enhanced Learning UI with tabs for recommendations, strategies, predictions, weight adjustments
 - Full audit trail: all learning decisions logged with LEARNING_UPDATE events
 - Safety: learning agents cannot modify pipeline, governance, plans, or billing
 - 5 new tables with RLS: prompt_strategy_metrics, strategy_effectiveness_metrics, predictive_error_patterns, repair_strategy_weights, learning_recommendations
 
 **Status:** ✅ Implemented
-
-These sprints mark the start of the transition into **Level 4 — Self-Learning Software Factory**. Level 4 is not yet complete.
 
 ---
 
@@ -159,21 +162,23 @@ These sprints mark the start of the transition into **Level 4 — Self-Learning 
 | Governance (gates, SLAs, audit logs) | ✅ Operational |
 | Product-Level Observability | ✅ Operational |
 | Stage & Agent IO Contracts | ✅ Implemented |
+| Commercial Readiness (plans, billing, enforcement) | ✅ Operational |
+| Learning Agents v1 (5 engines + dashboard) | ✅ Operational |
 
 ### What to Freeze
 
 | Area | Reason |
 |------|--------|
-| Marketplace ecosystem | Not needed until Learning Agents are stable |
-| Global capability registry expansion | Architecture sufficient |
-| Advanced distributed runtime | Current runtime is adequate |
-| Advanced multi-agent coordination | Existing coordination works |
-| Product intelligence layer | Requires Learning Agents first |
+| Marketplace ecosystem | Not needed until Learning Agents are stable and real user load is validated |
+| Global capability registry expansion | Current architecture is sufficient for product operation |
+| Advanced distributed runtime | Current runtime handles workload adequately |
+| Advanced multi-agent coordination | Existing coordination patterns meet current needs |
+| Product intelligence layer | Requires Learning Agents to be proven stable first |
 | Market intelligence layer | Requires product intelligence first |
-| Startup factory ambitions | Premature before Level 4 stability |
-| Cognitive systems layer | Theoretical, not practical now |
+| Startup factory ambitions | Premature before Level 4 stability is confirmed |
+| Cognitive systems layer | Theoretical concepts, not practical for current focus |
 
-No major platform expansion should happen until Learning Agents v1 and commercial readiness are stable.
+These items remain frozen because they are not required for current product reliability, cost control, sellability, or learning safety.
 
 ---
 
@@ -203,6 +208,33 @@ Each execution improves future executions. The system transitions from determini
 
 ---
 
+## NEXT — Meta-Agents (Future Horizon)
+
+**Priority:** Medium
+**Status:** 📋 Planned — Not implemented
+**Dependency:** Requires stable Learning Agents v2
+
+### Purpose
+
+Introduce higher-order agents that reason about the orchestration system itself, enabling self-designing workflows and agent role synthesis.
+
+### Planned Capabilities
+
+| Capability | Description |
+|-----------|-------------|
+| Self-designing orchestration logic | Meta-agents that propose pipeline stage modifications based on execution patterns |
+| Agent role synthesis | Automatic composition of new agent specializations from observed capability gaps |
+| Workflow architecture recommendations | Higher-order analysis of pipeline bottlenecks and efficiency opportunities |
+| Learning subsystem coordination | Meta-level coordination of the learning engines themselves |
+
+### Constraints
+
+- Meta-Agents **are not implemented** and remain a future planning item
+- When implemented, they must follow the same safety principles: auditable, bounded, reversible
+- Meta-Agents will not have direct kernel mutation authority
+
+---
+
 ## LATER — Expand Platform Intelligence
 
 **Priority:** Long-term
@@ -223,9 +255,9 @@ The Agent OS is fully designed with 14 modules across 5 planes. No expansion nee
 |-------|---------|--------|
 | **Core** | Runtime Protocol, Capability Model, Core Types | ✅ Complete |
 | **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing | ✅ Complete |
-| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Complete |
+| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Partial (advanced features frozen) |
 | **Data** | Artifact Store, Memory System, Observability | ✅ Complete |
-| **Ecosystem** | Marketplace & Global Capability Registry | ✅ Complete |
+| **Ecosystem** | Marketplace & Global Capability Registry | ❄️ Frozen |
 
 Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md)
 
@@ -242,7 +274,7 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 | Level 5 | Autonomous Startup Factory | 🔮 Long-term |
 
 > **Current position:** Level 3 complete → Level 4 entering.
-> **Current focus:** Commercial readiness + controlled learning behavior.
+> **Current focus:** Commercial stability + controlled learning activation.
 > **Execution mode:** Sprint-based implementation.
 
 ---
@@ -250,6 +282,6 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 ## Governing Principle
 
 > The architecture is sufficient. Level 3 is complete.
-> Ten product-proof sprints are done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, and Learning Foundation.
-> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, and a learning substrate.
-> Focus now: commercial readiness and controlled learning activation.
+> Twelve sprints are done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, and Learning Agents v1.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, and active learning intelligence.
+> Focus now: commercial stability and controlled learning activation.

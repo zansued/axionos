@@ -5,7 +5,9 @@
 > - O sistema mostra valor visível?
 > - Essa etapa aproxima do resultado final?
 >
-> Last updated: 2026-03-06
+> **What changed (2026-03-07):** Added Commercial Layer contracts (usage enforcement, billing), Learning Layer contracts (prompt metrics, strategy metrics, predictions, recommendations, weight adjustments), contract safety principles, cross-tenant access prohibition.
+>
+> Last updated: 2026-03-07
 
 ---
 
@@ -53,8 +55,8 @@
 
 ### Definition of Done
 
-✅ Iniciativa existe no banco com título e descrição  
-✅ Usuário pode visualizar e editar antes de prosseguir  
+✅ Iniciativa existe no banco com título e descrição
+✅ Usuário pode visualizar e editar antes de prosseguir
 ✅ Pelo menos um caminho de avanço disponível
 
 ---
@@ -106,9 +108,9 @@
 
 ### Transição para Architecture
 
-✅ Todas as 5 sub-etapas com outputs válidos  
-✅ Usuário aprovou explicitamente  
-✅ `initiatives.approved_at_discovery` preenchido  
+✅ Todas as 5 sub-etapas com outputs válidos
+✅ Usuário aprovou explicitamente
+✅ `initiatives.approved_at_discovery` preenchido
 ✅ Status avança para `architecture_ready`
 
 ---
@@ -138,36 +140,10 @@
 | S12 | Module Graph Simulation | `pipeline-module-graph-simulation` | Grafo de módulos com resolução de dependências |
 | S13 | Dependency Intelligence | `pipeline-dependency-intelligence` | Análise de compatibilidade de packages |
 
-### Artefatos
-
-| Artefato | Origem | Persistência |
-|----------|--------|-------------|
-| `architecture_content` | S07 | `initiatives.architecture_content` |
-| `architecture.yaml` | S07 | `initiative_jobs.outputs` |
-| `simulation_report.json` | S08 | `initiative_jobs.outputs` |
-| `validation_report.json` | S09 | `initiative_jobs.outputs` |
-| `bootstrap_plan.json` | S10 | `initiative_jobs.outputs` |
-| `file_tree` | S11 | `story_subtasks` (scaffold files) |
-| `module_graph.json` | S12 | `initiative_jobs.outputs` |
-| `dependency_report.json` | S13 | `initiative_jobs.outputs` |
-
-### Regras de Controle
-
-| Condição | Ação |
-|----------|------|
-| Arquitetura gerada (S07) | "Simulação de Arquitetura" (automático) |
-| Simulação OK (S08) | Validação Preventiva inicia automaticamente |
-| Validação Preventiva OK (S09) | Bootstrap Intelligence inicia automaticamente |
-| Bootstrap OK (S10) | "Gerar Foundation Scaffold" |
-| Scaffold OK (S11) | "Module Graph Simulation" |
-| Module Graph OK (S12) | "Dependency Intelligence" |
-| Dependencies OK (S13) | "Schema Bootstrap" (transição para Engineering) |
-| Qualquer sub-etapa falhou | Mostrar erro + "Re-executar" |
-
 ### Transição para Engineering
 
-✅ Dependency Intelligence concluído com sucesso  
-✅ Nenhum conflito crítico de dependências  
+✅ Dependency Intelligence concluído com sucesso
+✅ Nenhum conflito crítico de dependências
 ✅ Status avança para `bootstrapping_schema`
 
 ---
@@ -196,44 +172,14 @@
 | S18 | Business Logic Synthesis | `ai-business-logic-synthesizer` | Serviços, workflows, validações |
 | S19 | API Generation | `autonomous-api-generator` | REST/RPC endpoints, webhooks |
 | S20 | UI Generation | `autonomous-ui-generator` | Páginas, componentes, hooks, navegação |
-
-### Sub-etapas pós-geração (Squad → Planning → Execution)
-
-| # | Sub-etapa | Edge Function | Output |
-|---|-----------|---------------|--------|
 | S21 | Squad Formation | `pipeline-squad` | Squad de agentes com roles |
 | S22 | Planning | `generate-planning-content` | Stories, phases, subtasks com DAG |
 | S23 | Execution (Agent Swarm) | `pipeline-execution-orchestrator` | Código gerado em paralelo (6 workers) |
 
-### Artefatos
-
-| Artefato | Origem | Persistência |
-|----------|--------|-------------|
-| `schema.sql` | S14 | `initiative_jobs.outputs` |
-| `domain_model.json` | S16 | `project_brain_nodes` (tipo `domain_model`) |
-| `data_model.json` | S17 | `project_brain_nodes` (tipo `data_model`) |
-| `business_logic.json` | S18 | `project_brain_nodes` (tipo `business_logic`) |
-| `api_spec.json` | S19 | `project_brain_nodes` (tipo `api_spec`) |
-| `ui_structure.json` | S20 | `project_brain_nodes` (tipo `ui_structure`) |
-| Código fonte (*.tsx, *.ts) | S23 | `story_subtasks.output` |
-
-### Regras de Controle
-
-| Condição | Ação |
-|----------|------|
-| Schema Bootstrap OK | DB Provisioning inicia |
-| Cada sub-etapa OK | Próxima inicia automaticamente |
-| UI Generated OK | "Aprovar UI → Squad" |
-| Squad Formed | "Aprovar Squad" |
-| Planning concluído | "Iniciar Execução (Agent Swarm)" |
-| Execução em lotes | Auto-continua sem intervenção (time-budget) |
-| Timeout na execução | Auto-retry automático |
-| Execução completa | Avança automaticamente para Deploy |
-
 ### Transição para Deploy
 
-✅ Todas as subtasks executadas  
-✅ Arquivos de código gerados e persistidos  
+✅ Todas as subtasks executadas
+✅ Arquivos de código gerados e persistidos
 ✅ Status avança para `validating`
 
 ---
@@ -267,128 +213,26 @@
               deployed   deploy_failed
 ```
 
-#### Estado: Transições
-
-| De | Para | Condição |
-|----|------|----------|
-| `validating` | `ready_to_publish` | Build passa (CI green) |
-| `validating` | `repairing_build` | Build falha → auto-repair |
-| `ready_to_publish` | `published` | Push para GitHub com sucesso |
-| `published` | `deploying` | Deploy iniciado (Vercel ou outro) |
-| `deploying` | `deployed` | Deploy bem-sucedido + URL acessível |
-| `deploying` | `deploy_failed` | Deploy falhou + erro rastreável |
-| `deploy_failed` | `deploying` | Retry do deploy |
-
-### Deploy Metadata
-
-Campos persistidos por iniciativa:
-
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| `repo_url` | TEXT | URL do repositório GitHub |
-| `commit_hash` | TEXT | Hash do último commit publicado |
-| `build_status` | TEXT | Resultado do build (pass/fail) |
-| `deploy_status` | TEXT | Estado atual do deploy |
-| `deploy_target` | TEXT | Alvo do deploy (vercel, netlify, etc.) |
-| `deploy_url` | TEXT | URL final do deploy em produção |
-| `health_status` | TEXT | Resultado do health check pós-deploy |
-| `deployed_at` | TIMESTAMP | Data/hora do deploy bem-sucedido |
-
-### Contrato Vercel-first
-
-O alvo padrão de deploy é **Vercel**. Outros targets (Netlify, AWS, Cloudflare) serão suportados depois.
-
-| Configuração | Valor |
-|-------------|-------|
-| Framework | Vite |
-| Install Command | `rm -f package-lock.json && npm install --include=dev` |
-| Build Command | `npm run build` |
-| Output Directory | `dist` |
-| Rewrites | `/(.*) → /index.html` |
-
-### Regras de Transição
-
-| Cenário | Comportamento |
-|---------|-------------|
-| `published` + pré-condições OK | Pode iniciar deploy |
-| Deploy falha | `deploy_failed` + erro rastreável no `initiative_jobs` |
-| Deploy passa | `deployed` + URL final + health check |
-| Health check falha | `health_status = 'unhealthy'` + alerta |
-| Retry após falha | `deploy_failed` → `deploying` → resultado |
-
 ### Sub-etapas (sequenciais, totalmente automáticas)
 
-| # | Sub-etapa | Edge Function | O que faz | Output |
-|---|-----------|---------------|-----------|--------|
-| 1 | **Fix Loop (AI)** | `pipeline-validation` | IA analisa cada arquivo, detecta erros de lógica, imports faltantes, tipos incorretos. Corrige automaticamente até 3 iterações. | Lista de erros corrigidos, `overall_pass` |
-| 2 | **Deep Static Analysis** | `pipeline-deep-validation` | Análise estática profunda: verifica imports reais, referências de tipos, consistência entre arquivos, presença de exports. | `passed` + relatório de inconsistências |
-| 3 | **Drift Detection** | `pipeline-drift-detection` | Compara código gerado contra a arquitetura planejada. Detecta desvios: arquivos não previstos, padrões violados, dependências não declaradas. | `drift_score`, lista de violações |
-| 4 | **Runtime Validation** | `pipeline-runtime-validation` | Push do código para branch `validate/*` no GitHub. GitHub Actions executa: `npm install → tsc --noEmit → vite build`. Resultados reais de compilador. | `ci_running` → resultado via webhook |
-| 5 | **Build Repair** (se falhar) | `autonomous-build-repair` | Se o CI falhou, analisa logs de erro, gera patches, submete correções automaticamente. Pode rodar múltiplas iterações. | Código reparado + novo push |
-| 6 | **Publicação** | `pipeline-publish` | Gera changelog, cria release, push final para branch principal com atomic commits via Tree API. | `repo_url`, versão, arquivos commitados |
-| 7 | **Deploy** | `pipeline-deploy` (planned) | Deploy automático para Vercel via API. Health check pós-deploy. | `deploy_url`, `health_status` |
-
-### Artefatos
-
-| Artefato | Origem | Persistência |
-|----------|--------|-------------|
-| `validation_report.json` | Fix Loop | `initiative_jobs.outputs` |
-| `deep_validation_report.json` | Deep Static | `initiative_jobs.outputs` |
-| `drift_report.json` | Drift Detection | `initiative_jobs.outputs` |
-| `ci_result` | Runtime Validation | `initiatives.execution_progress` |
-| `build_repair_patches` | Build Repair | `initiative_jobs.outputs` |
-| `release_manifest` | Publicação | `initiative_jobs.outputs` com `repo_url` |
-| `deploy_manifest` | Deploy | `initiatives.deploy_url` + `initiatives.deploy_status` |
-
-### Regras de Controle
-
-| Condição | Ação |
-|----------|------|
-| `stage_status = validating` | **Um botão**: "Iniciar Validação Completa" |
-| Fix Loop concluído com `overall_pass` | Deep Static inicia automaticamente |
-| Deep Static `passed` | Drift Detection inicia automaticamente |
-| Drift Detection `passed` | Runtime Validation inicia automaticamente |
-| CI passa (webhook) | Status → `ready_to_publish` |
-| CI falha (webhook) | Fix Swarm inicia automaticamente → Build Repair |
-| Build Repair OK | Re-validação completa ou "Aprovar → Publicar" |
-| Build Repair falhou | "Retry Build Repair" ou "Solicitar Ajustes" |
-| `ready_to_publish` | **Um botão**: "Publicar no GitHub" |
-| Publicação OK | Status → `published` |
-| `published` | **Um botão**: "Deploy no Vercel" |
-| Deploy OK | Status → `deployed` + URL visível |
-| Deploy falhou | Status → `deploy_failed` + erro + "Retry" |
-| Qualquer sub-etapa falha | Mostrar qual falhou + erro + "Re-executar" |
-
-### Visibilidade na UI
-
-O usuário deve ver:
-
-| Elemento | Quando visível |
-|----------|---------------|
-| Repo URL + link | Após `published` |
-| Botão "Deploy no Vercel" | Após `published` |
-| Status do deploy (badge) | Durante e após deploy |
-| URL do deploy + link | Após `deployed` |
-| Health status | Após `deployed` |
-| Erro de deploy | Em `deploy_failed` |
-| Botão "Retry Deploy" | Em `deploy_failed` |
-
-### O que o usuário NÃO precisa fazer
-
-- ❌ Escolher qual validação rodar (tudo é sequencial e automático)
-- ❌ Entender a diferença entre Fix Loop, Deep Static e Runtime (o sistema cuida)
-- ❌ Decidir a ordem das validações
-- ❌ Re-executar manualmente após timeout (auto-retry)
-- ❌ Configurar deploy manualmente (Vercel-first, 1 clique)
+| # | Sub-etapa | Edge Function | O que faz |
+|---|-----------|---------------|-----------|
+| 1 | Fix Loop (AI) | `pipeline-validation` | IA corrige erros até 3 iterações |
+| 2 | Deep Static Analysis | `pipeline-deep-validation` | Imports, referências, consistência |
+| 3 | Drift Detection | `pipeline-drift-detection` | Conformidade com arquitetura planejada |
+| 4 | Runtime Validation | `pipeline-runtime-validation` | tsc + vite build real via CI |
+| 5 | Build Repair (se falhar) | `autonomous-build-repair` | Auto-reparo com patches e retry |
+| 6 | Publicação | `pipeline-publish` | Atomic commits via Tree API |
+| 7 | Deploy | `pipeline-deploy` (planned) | Deploy automático para Vercel |
 
 ### Definition of Done da Iniciativa
 
-✅ Build passa no CI (tsc + vite)  
-✅ Código publicado no repositório Git  
-✅ `repo_url` disponível na interface  
-✅ Deploy executado com sucesso  
-✅ `deploy_url` acessível e verificado  
-✅ Todos os artefatos rastreáveis no pipeline  
+✅ Build passa no CI (tsc + vite)
+✅ Código publicado no repositório Git
+✅ `repo_url` disponível na interface
+✅ Deploy executado com sucesso
+✅ `deploy_url` acessível e verificado
+✅ Todos os artefatos rastreáveis no pipeline
 ✅ Custos registrados por estágio
 
 ---
@@ -409,6 +253,126 @@ O usuário deve ver:
 | Architecture Evolution | Evolução técnica do sistema |
 | Portfolio Manager | Gestão multi-produto |
 | System Evolution | Meta-learning da plataforma |
+
+---
+
+## Contratos da Camada Comercial (Sprint 11)
+
+### Contrato: Verificação de Limites de Uso
+
+**Ponto de aplicação:** Entrada do pipeline (`pipeline-bootstrap.ts`, `run-initiative-pipeline`)
+
+| Campo | Valor |
+|-------|-------|
+| **Input** | `organization_id`, tipo de limite a verificar |
+| **Output (sucesso)** | Pipeline prossegue normalmente |
+| **Output (bloqueio)** | HTTP 402, `{ error: "USAGE_LIMIT_EXCEEDED", limit_type, current_value, max_value }` |
+| **Persistência** | `audit_logs` com ação `usage_limit_blocked` |
+
+### Limites verificados
+
+| Limite | Fonte | Tipo |
+|--------|-------|------|
+| `max_initiatives_per_month` | `product_plans` | Contagem de iniciativas no período |
+| `max_tokens_per_month` | `product_plans` | Soma de tokens usados |
+| `max_deploys_per_month` | `product_plans` | Contagem de deploys com status `"success"` |
+| `max_parallel_runs` | `product_plans` | Jobs com status `running` no momento |
+
+### Contrato: Cálculo de Custo
+
+| Campo | Valor |
+|-------|-------|
+| **Input** | `organization_id` |
+| **Output** | `{ total_cost_usd, stage_breakdown[], model_breakdown[], estimated_monthly_cost }` |
+| **Fonte de verdade** | `initiative_jobs.cost_usd` (não duplica com tokens) |
+| **Isolamento** | Filtra jobs apenas de iniciativas da organização solicitante |
+
+### Contrato: Dados de Workspace
+
+| Campo | Valor |
+|-------|-------|
+| **Regra** | Todas as consultas agregadas devem filtrar por `organization_id` |
+| **Proibição** | Consultas sem filtro de organização são proibidas |
+| **Verificação** | Jobs são agregados via IDs de iniciativas da organização |
+
+---
+
+## Contratos da Camada de Learning (Sprint 12)
+
+### Contrato: Prompt Strategy Metrics
+
+| Campo | Valor |
+|-------|-------|
+| **Gerado por** | `prompt-outcome-analyzer` |
+| **Schema** | `{ stage_name, prompt_signature, runs_count, success_rate, average_quality_score, average_cost, retry_rate }` |
+| **Frequência** | Sob demanda (invocação explícita) |
+| **Isolamento** | Filtrado por `organization_id` |
+
+### Contrato: Strategy Effectiveness Metrics
+
+| Campo | Valor |
+|-------|-------|
+| **Gerado por** | `strategy-performance-engine` |
+| **Schema** | `{ strategy_name, error_type, runs_count, success_rate, avg_resolution_time, avg_cost, error_recurrence_rate }` |
+| **Isolamento** | Filtrado por `organization_id` |
+
+### Contrato: Predictive Error Patterns
+
+| Campo | Valor |
+|-------|-------|
+| **Gerado por** | `predictive-error-engine` |
+| **Schema** | `{ stage_name, error_signature, probability_score, observations_count, recommended_prevention_rule }` |
+| **Threshold** | Se `probability_score > 0.7`, gera `prevention_rule_candidate` |
+| **Isolamento** | Filtrado por `organization_id` |
+
+### Contrato: Learning Recommendations
+
+| Campo | Valor |
+|-------|-------|
+| **Gerado por** | `learning-recommendation-engine` |
+| **Schema** | `{ recommendation_type, target_component, description, confidence_score, supporting_evidence[], metrics_summary, expected_improvement }` |
+| **Tipos** | `PROMPT_OPTIMIZATION`, `STRATEGY_RANKING_ADJUSTMENT`, `NEW_PREVENTION_RULE`, `PIPELINE_CONFIGURATION_HINT` |
+| **Status** | Criadas como `pending`. Requerem revisão humana. |
+| **Isolamento** | Filtrado por `organization_id` |
+
+### Contrato: Repair Strategy Weights
+
+| Campo | Valor |
+|-------|-------|
+| **Gerado por** | `repair-learning-engine` |
+| **Schema** | `{ strategy_name, stage_name, current_weight, previous_weight, adjustment_reason, adjusted_at }` |
+| **Fórmula** | `new_weight = previous_weight + success_factor − failure_penalty` |
+| **Limites** | Pesos limitados a intervalo seguro, reversíveis |
+| **Auditoria** | Cada ajuste gera evento `LEARNING_UPDATE` em `audit_logs` |
+| **Isolamento** | Filtrado por `organization_id` |
+
+---
+
+## Princípios de Segurança de Contratos
+
+### Estabilidade
+
+- Contratos de stage IO devem permanecer estáveis
+- Mudanças em contratos requerem versionamento explícito
+- Learning não pode alterar a forma (shape) de contratos existentes
+
+### Isolamento
+
+- Camadas comerciais consomem dados de observabilidade, não duplicam o kernel
+- Acesso cross-tenant a contratos é **proibido**
+- Todas as consultas agregadas devem incluir filtro `organization_id`
+
+### Separação de Responsabilidades
+
+- Learning gera recomendações, não executa mudanças automaticamente
+- Commercial verifica limites, não modifica comportamento do pipeline
+- O kernel processa estágios, não conhece billing ou learning
+
+### Auditabilidade
+
+- Toda decisão de learning é registrada em `audit_logs`
+- Todo bloqueio de uso é registrado em `audit_logs`
+- Eventos rastreáveis: `LEARNING_UPDATE`, `USAGE_LIMIT_EXCEEDED`, `PIPELINE_EXECUTION`, `REPAIR_APPLIED`
 
 ---
 
@@ -445,6 +409,7 @@ O Project Brain serve como centro de evidência visual:
 ### Quando bloqueia avanço
 - Sub-etapa obrigatória não concluída
 - Erro crítico sem reparo automático
+- **Limite de uso excedido** (HTTP 402, `USAGE_LIMIT_EXCEEDED`)
 
 ### Quando permite avanço parcial
 - Sub-etapas opcionais (ex: Adaptive Learning pode ser pulado)

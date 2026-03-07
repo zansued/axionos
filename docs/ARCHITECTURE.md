@@ -1,7 +1,10 @@
 # AxionOS — System Architecture
 
 > Technical architecture of the autonomous software engineering system.
-> Last updated: 2026-03-06
+>
+> **What changed (2026-03-07):** Added Commercial Readiness Layer (Sprint 11), Learning Agents v1 (Sprint 12), updated system maturity to Level 4 Entry, added learning safety principles, updated database schema and implementation status tables.
+>
+> Last updated: 2026-03-07
 
 ---
 
@@ -11,38 +14,44 @@
 
 ### What AxionOS Is Today
 
-An autonomous engineering system with:
+An autonomous engineering platform with commercial readiness and active learning:
 - A 32-stage deterministic pipeline from idea to deployable application
 - A Project Brain (knowledge graph with semantic search)
 - An AI Efficiency Layer (prompt compression, semantic cache, model routing)
 - Self-healing build repair with CI integration
 - DAG-based parallel execution with 6 concurrent workers
-- Adaptive learning from build failures
+- Evidence-oriented repair with adaptive routing
+- Preventive engineering with active prevention rules
+- Commercial readiness: product plans, billing, usage enforcement
+- Learning Agents v1: rule-based, auditable prompt and strategy optimization
 - Agent OS v1.0 — a 14-module runtime architecture across 5 planes
 
-### Where AxionOS Is Going
-
-The system is evolving through four implementation horizons:
-
-| Horizon | Focus | Status |
-|---------|-------|--------|
-| **NOW** | Product Proof Closure | ✅ 7 Sprints Complete |
-| **NEXT** | Learning Agents | 📋 Planned |
-| **LATER** | Product Intelligence Layer | 📋 Planned |
-| **FUTURE** | Market Intelligence Layer | 📋 Planned |
-
-Each horizon depends on the previous one being stable.
-
 ### System Maturity
+
 | Level | Name | Status |
 |-------|------|--------|
 | Level 1 | Code Generator | ✅ |
 | Level 2 | Software Builder | ✅ |
-| Level 3 | Autonomous Engineering System | ✅ |
-| Level 4 | Self-Learning Software Factory | 📋 Next (Learning Agents) |
-| Level 5 | Autonomous Startup Factory | 🔮 Planned |
+| Level 3 | Autonomous Engineering System | ✅ Complete |
+| Level 4 | Self-Learning Software Factory | 🔄 Entering |
+| Level 5 | Autonomous Startup Factory | 🔮 Long-term |
+
+> **Current position:** Level 3 complete → Level 4 entering.
+> **System state:** Commercial + Learning Platform.
+> **Kernel status:** Stable and operational.
+> **Learning status:** Active, rule-based, auditable.
+
+### Implementation Horizons
+
+| Horizon | Focus | Status |
+|---------|-------|--------|
+| **NOW** | Kernel + Commercial + Learning v1 | ✅ 12 Sprints Complete |
+| **NEXT** | Learning Agents Expansion + Meta-Agents | 📋 Planned |
+| **LATER** | Product Intelligence Layer | 📋 Planned |
+| **FUTURE** | Market Intelligence Layer | 📋 Planned |
 
 ### Technology Stack
+
 | Layer | Technology |
 |-------|-----------|
 | Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
@@ -54,6 +63,7 @@ Each horizon depends on the previous one being stable.
 | Deployment | Vercel/Netlify configs auto-generated |
 
 ### Multi-Tenancy Model
+
 - **Organizations** → **Workspaces** → **Initiatives**
 - RLS policies enforce isolation per `organization_id`
 - Role-based access: `owner`, `admin`, `editor`, `reviewer`, `viewer`
@@ -61,7 +71,139 @@ Each horizon depends on the previous one being stable.
 
 ---
 
-## 2. Agent Operating System (Agent OS) — v1.0 GA
+## 2. Active Architecture Layers
+
+AxionOS consists of seven active layers, each with clearly defined responsibilities and interaction boundaries.
+
+### Layer 1: Kernel Execution Layer
+
+**Purpose:** Execute the 32-stage deterministic pipeline with DAG-based parallel orchestration.
+
+**Key modules:**
+- `pipeline-bootstrap.ts` — Pipeline lifecycle initialization with usage enforcement
+- `dependency-scheduler.ts` — Kahn's algorithm, wave computation, 6 workers
+- `pipeline-execution-orchestrator` / `pipeline-execution-worker` — DAG agent swarm
+- `pipeline-helpers.ts` — Standardized logging, jobs, messages
+- 50+ Edge Functions covering all 32 stages
+
+**Interactions:** Consumes governance decisions from Control layer. Produces execution data consumed by Observability and Learning layers.
+
+### Layer 2: Validation and Repair Layer
+
+**Purpose:** Validate generated code and autonomously repair build failures.
+
+**Key modules:**
+- `pipeline-validation` — AI-powered fix loop (3 iterations)
+- `pipeline-deep-validation` — Deep static analysis
+- `pipeline-drift-detection` — Architectural drift detection
+- `pipeline-runtime-validation` — Real tsc + vite build via CI
+- `autonomous-build-repair` — Self-healing builds from CI error logs
+- `pipeline-fix-orchestrator` — Multi-iteration fix coordination
+
+**Interactions:** Receives code from Kernel. Produces `repair_evidence` consumed by Learning layer.
+
+### Layer 3: Prevention and Routing Layer
+
+**Purpose:** Proactively prevent known failure patterns and route repair strategies based on evidence.
+
+**Key modules:**
+- `pipeline-preventive-validation` — Pre-generation guard
+- `prevention-rule-engine` — Active prevention rule management
+- `repair-routing-engine` — Adaptive strategy selection
+- `error-pattern-library-engine` — Pattern extraction and indexing
+
+**Persistence:** `active_prevention_rules`, `error_patterns`, `prevention_rule_candidates`, `repair_routing_log`
+
+**Interactions:** Consumes patterns from error history. Feeds routing decisions to Repair layer. Learning layer adjusts routing weights.
+
+### Layer 4: Governance and Audit Layer
+
+**Purpose:** Enforce trust boundaries, approval workflows, SLA compliance, and complete audit trails.
+
+**Key modules:**
+- `governance.ts` — Approval workflows, access control
+- `pipeline_gate_permissions` — Per-role stage access
+- `stage_sla_configs` — SLA enforcement per stage
+- `audit_logs` — Complete event ledger
+
+**Interactions:** Gates pipeline advancement. All layers emit audit events.
+
+### Layer 5: Observability Layer
+
+**Purpose:** Track execution telemetry, cost, performance, and system health.
+
+**Key modules:**
+- `observability-engine` — Telemetry aggregation
+- `initiative-observability-engine` — Per-initiative metrics
+- Cost tracking per model, per stage, per initiative
+
+**Persistence:** `initiative_observability`, `initiative_jobs` (cost_usd, tokens_used, duration_ms)
+
+**Interactions:** Provides data consumed by Commercial layer (billing) and Learning layer (analysis).
+
+### Layer 6: Commercial Readiness Layer (Sprint 11)
+
+**Purpose:** Make AxionOS operationally packageable as a commercial product.
+
+**Key modules:**
+- `usage-limit-enforcer.ts` — Enforces plan limits at pipeline entry points
+- `billing-calculator.ts` — Cost aggregation with org-safe job filtering
+- `product-dashboard` — Overview, usage metrics API
+
+**Persistence:**
+- `product_plans` — Starter / Pro / Enterprise with numeric limits
+- `billing_accounts` — Stripe-ready schema with billing period tracking
+- `workspace_members` — Granular roles per workspace
+
+**Hardening corrections applied:**
+- Usage enforcement integrated into `pipeline-bootstrap.ts` and `run-initiative-pipeline`
+- Cross-org query leakage fixed: all job aggregation scoped by organization initiatives
+- Cost double-counting fixed: `job_cost` is the single source of truth
+
+**Interactions:** Consumes observability data. Blocks pipeline execution when limits exceeded (HTTP 402, `USAGE_LIMIT_EXCEEDED`).
+
+### Layer 7: Learning Agents Layer (Sprint 12)
+
+**Purpose:** Transform passive learning data into active, auditable intelligence.
+
+**Key modules:**
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Prompt Outcome Analyzer | `prompt-outcome-analyzer/index.ts` | Aggregates success_rate, cost, retry_rate per stage+model signature |
+| Strategy Performance Engine | `strategy-performance-engine/index.ts` | Evaluates repair strategy effectiveness with MTTR and recurrence |
+| Predictive Error Engine | `predictive-error-engine/index.ts` | Detects recurring failure patterns, generates prevention candidates |
+| Repair Learning Engine | `repair-learning-engine/index.ts` | Adjusts routing weights: `new_weight = prev + success_factor − failure_penalty` |
+| Learning Recommendation Engine | `learning-recommendation-engine/index.ts` | Generates structured improvement recommendations |
+| Learning Dashboard | `learning-dashboard/index.ts` | API: overview, recommendations, strategies, errors |
+
+**Persistence:**
+- `prompt_strategy_metrics` — Aggregated prompt performance
+- `strategy_effectiveness_metrics` — Repair strategy effectiveness
+- `predictive_error_patterns` — Recurring failure predictions
+- `repair_strategy_weights` — Adjusted routing weights with audit trail
+- `learning_recommendations` — Structured improvement suggestions
+
+**Interactions:** Consumes data from Observability, Repair, and Prevention layers. Produces recommendations and weight adjustments. Cannot mutate Kernel, Governance, or Commercial layers.
+
+### Learning Safety Principles
+
+Learning in AxionOS follows this chain:
+
+```
+Observation → Evidence → Analysis → Recommendation → Human-safe Adjustment
+```
+
+**Rules:**
+1. Learning is **additive** — new modules consume existing data, never modify kernel
+2. Learning is **rule-based** — no black-box behavior, all logic explicit
+3. Learning is **auditable** — all decisions logged as `LEARNING_UPDATE` events in `audit_logs`
+4. Learning is **bounded** — weight adjustments have min/max constraints, are reversible
+5. Learning **cannot mutate**: pipeline stages, governance rules, product plans, billing
+
+---
+
+## 3. Agent Operating System (Agent OS) — v1.0 GA
 
 The Agent OS is the runtime architecture governing how agents are selected, executed, governed and coordinated. It consists of 14 modules organized into 5 architectural planes.
 
@@ -94,6 +236,16 @@ The Agent OS is the runtime architecture governing how agents are selected, exec
 +-------------------------------------------------------------------+
 ```
 
+### Plane Implementation Status
+
+| Plane | Status | Notes |
+|-------|--------|-------|
+| **Core** | ✅ Implemented | Identity, contracts, types fully specified |
+| **Control** | ✅ Implemented | Selection, policy, governance, adaptive routing operational |
+| **Execution** | ✅ Partial | Orchestrator + DAG operational. Coordination/Distributed Runtime designed but advanced features frozen |
+| **Data** | ✅ Implemented | Artifact store, memory, observability operational |
+| **Ecosystem** | ❄️ Frozen | Marketplace designed but not needed for current product |
+
 ### Module Inventory
 
 | # | Module | File | Plane | Version |
@@ -123,77 +275,6 @@ Data       --> Core
 Core       --> (nothing)
 ```
 
-### Key Capabilities
-
-- **Core Plane:** Agent identity, capability declarations, task/artifact contracts, validation schemas
-- **Control Plane:** Agent selection & ranking, policy evaluation, trust levels (6 tiers), autonomy limits, approval workflows, adaptive routing with exploration strategies
-- **Execution Plane:** Task orchestration, multi-agent coordination (debate, consensus, planner-executor), distributed task scheduling, LLM/tool invocation
-- **Data Plane:** Versioned artifact storage with lineage, persistent memory with embeddings, telemetry & cost tracking, audit ledger
-- **Ecosystem Plane:** Capability/agent package management, registry sync, trust scoring, dependency resolution
-
-Full specification: [docs/AGENT_OS_ARCHITECTURE_MAP.md](AGENT_OS_ARCHITECTURE_MAP.md)
-
----
-
-## 3. Architecture by Implementation Horizon
-
-### Core System Kernel (NOW) — ✅ Implemented / 🔧 Stabilizing
-
-The kernel is the foundation all other layers depend on.
-
-| Component | Module | Status |
-|-----------|--------|--------|
-| **Project Brain** | `brain-helpers.ts`, `project_brain_nodes/edges`, `project_decisions`, `project_errors` | ✅ |
-| **AI Efficiency Layer** | `ai-client.ts` + `prompt-compressor.ts` + `semantic-cache.ts` + `model-router.ts` | ✅ |
-| **Smart Context Window** | `smart-context.ts` — AST-like parser, ~60-80% token reduction | ✅ |
-| **DAG Execution Engine** | `dependency-scheduler.ts` — Kahn's algorithm, wave computation, 6 workers | ✅ |
-| **Pipeline Orchestration** | 32-stage deterministic pipeline, 50+ Edge Functions | ✅ |
-| **Runtime Validation** | `pipeline-runtime-validation` — real tsc + vite build via CI | ✅ |
-| **Autonomous Build Repair** | `autonomous-build-repair` + `pipeline-fix-orchestrator` + auto-PR | ✅ |
-| **Observability** | `observability-engine` + `org_usage_limits` + cost tracking | ✅ |
-| **Stage Contracts** | Deterministic stage inputs/outputs via `initiative_jobs` | ✅ |
-| **Agent IO Contracts** | `pipeline-helpers.ts` — standardized logging, jobs, messages | ✅ |
-| **Governance** | `pipeline_gate_permissions`, `stage_sla_configs`, `audit_logs` | ✅ |
-| **Adaptive Learning** | `adaptive-learning-engine` — prevention rules, error patterns | ✅ |
-| **Agent OS v1.0** | 14-module runtime architecture across 5 planes | ✅ Designed |
-| **UI Control Center** | Pipeline visualization, initiative management | 🔧 Stabilizing |
-
-### Agent Intelligence Layer (NEXT) — 📋 Planned
-
-Requires stable kernel. Transforms agents from static prompt executors into learning systems.
-
-| Module | Purpose |
-|--------|---------|
-| **Learning Agents** | Self-improving prompt strategies based on output quality metrics |
-| **Agent Memory Layer** | Persistent per-agent memory across executions (foundation: `agent_memory` table + Memory System) |
-| **Prompt Optimization Engine** | A/B testing of prompt variations, automatic best-performer selection |
-| **Error Pattern Recognition** | Predictive error detection from historical failure data |
-| **Self-Improving Fix Agents** | Repair strategies that evolve based on fix success rates |
-| **Architecture Pattern Library** | Successful patterns indexed by domain and complexity |
-
-### Product Intelligence Layer (LATER) — 📋 Planned
-
-Requires stable kernel + learning agents. Enables post-deployment product evolution.
-
-| Module | Purpose |
-|--------|---------|
-| **Product Analytics Engine** | AARRR metrics: acquisition, activation, retention, revenue, referral |
-| **User Behavior Analyzer** | Feature usage, drop-off points, session patterns, friction detection |
-| **Growth Optimization Engine** | Landing page optimization, feature prioritization, onboarding |
-| **Product Evolution Engine** | Autonomous feature addition/removal based on usage data |
-
-### Market Intelligence Layer (FUTURE) — 📋 Planned
-
-Requires all previous layers stable. Enables autonomous venture creation.
-
-| Module | Purpose |
-|--------|---------|
-| **Opportunity Discovery Engine** | Market gap identification from trends and demand signals |
-| **Market Signal Analyzer** | Demand, competition, trend analysis with viability scoring |
-| **Product Validation Engine** | Synthetic testing, landing page simulation, demand estimation |
-| **Revenue Strategy Engine** | Pricing models, subscription tiers, market positioning |
-| **Startup Portfolio Manager** | Multi-product resource allocation, growth tracking |
-
 ---
 
 ## 4. Pipeline — 32-Stage Model
@@ -210,7 +291,7 @@ Requires all previous layers stable. Enables autonomous venture creation.
   Stage 05: Revenue Strategy Engine
 
 ===============================================================
-  DISCOVERY & ARCHITECTURE (Stages 6-10)               NOW
+  DISCOVERY & ARCHITECTURE (Stages 6-10)               NOW ✅
 ===============================================================
 
   Stage 06: Discovery Intelligence (pipeline-comprehension) -- 4 agents
@@ -220,45 +301,42 @@ Requires all previous layers stable. Enables autonomous venture creation.
   Stage 10: Squad Formation (pipeline-squad)
 
 ===============================================================
-  INFRASTRUCTURE & MODELING (Stages 11-16)             NOW
+  INFRASTRUCTURE & MODELING (Stages 11-16)             NOW ✅
 ===============================================================
 
-  Stage 11: Architecture Planning (project-bootstrap-intelligence + pipeline-foundation-scaffold)
-  Stage 12: Domain Model Generation (pipeline-module-graph-simulation + pipeline-dependency-intelligence)
-  Stage 13: AI Domain Analysis (ai-domain-model-analyzer)
-  Stage 14: Schema Bootstrap (supabase-schema-bootstrap)
-  Stage 15: DB Provisioning (supabase-provisioning-engine)
-  Stage 16: Data Model Generation (supabase-data-model-generator)
+  Stage 11: Architecture Planning
+  Stage 12: Domain Model Generation
+  Stage 13: AI Domain Analysis
+  Stage 14: Schema Bootstrap
+  Stage 15: DB Provisioning
+  Stage 16: Data Model Generation
 
 ===============================================================
-  CODE GENERATION (Stages 17-19)                       NOW
+  CODE GENERATION (Stages 17-19)                       NOW ✅
 ===============================================================
 
-  Stage 17: Business Logic Synthesis (ai-business-logic-synthesizer)
-  Stage 18: API Generation (autonomous-api-generator)
-  Stage 19: UI Generation (autonomous-ui-generator)
+  Stage 17: Business Logic Synthesis
+  Stage 18: API Generation
+  Stage 19: UI Generation
 
 ===============================================================
-  VALIDATION & PUBLISH (Stages 20-23)                  NOW
+  VALIDATION & PUBLISH (Stages 20-23)                  NOW ✅
 ===============================================================
 
-  Stage 20: Validation Engine
-      AI Validation (pipeline-validation) -- Fix Loop (3x)
-      Deep Static Analysis (pipeline-deep-validation)
-      Architectural Drift Detection (pipeline-drift-detection)
-  Stage 21: Build Engine (pipeline-runtime-validation) -- Real tsc + vite build via CI
-  Stage 22: Test Engine (autonomous-build-repair) -- Self-healing builds
-  Stage 23: Publish Engine (pipeline-publish) -- Atomic Git Tree API
+  Stage 20: Validation Engine (Fix Loop + Deep Static + Drift Detection)
+  Stage 21: Build Engine (Runtime Validation via CI)
+  Stage 22: Test Engine (Autonomous Build Repair)
+  Stage 23: Publish Engine (Atomic Git Tree API)
 
 ===============================================================
-  GROWTH & EVOLUTION LAYER (Stages 24-32)              LATER/FUTURE
+  GROWTH & EVOLUTION LAYER (Stages 24-32)
 ===============================================================
 
-  Stage 24: Observability Engine                       NOW
+  Stage 24: Observability Engine                       NOW ✅
   Stage 25: Product Analytics Engine                   LATER
   Stage 26: User Behavior Analyzer                     LATER
   Stage 27: Growth Optimization Engine                 LATER
-  Stage 28: Adaptive Learning Engine                   NOW
+  Stage 28: Adaptive Learning Engine                   NOW ✅
   Stage 29: Product Evolution Engine                   LATER
   Stage 30: Architecture Evolution Engine              LATER
   Stage 31: Startup Portfolio Manager                  FUTURE
@@ -335,9 +413,7 @@ agent_output {
 
 ---
 
-## 8. Agent Operating System — Conceptual Model
-
-### Five Fundamental Agent Types
+## 8. Five Fundamental Agent Types
 
 | Agent Type | Responsibility | Example Modes |
 |-----------|---------------|---------------|
@@ -347,33 +423,8 @@ agent_output {
 | **Validation Agent** | Static analysis, runtime validation, QA, architectural checks | `static_analysis`, `runtime_build`, `drift_detection` |
 | **Evolution Agent** | Repair, learning, pattern extraction, prompt optimization | `build_repair`, `error_learning`, `pattern_extraction` |
 
-### Specialization Model
-
 ```
 Agent Specialization = Mode + Tools + Memory + Contract
-```
-
-### Agent Process Model
-
-```
-+------------------------------------------------+
-|              AGENT OPERATING SYSTEM             |
-+------------------------------------------------+
-|                                                 |
-|  +-----------+  +-----------+  +-----------+    |
-|  | Perception|  |  Design   |  |   Build   |    |
-|  |  Agent    |  |  Agent    |  |   Agent   |    |
-|  +-----+-----+  +-----+-----+  +-----+-----+    |
-|        |              |              |           |
-|  +-----+-----+  +-----+-----+                    |
-|  |Validation |  | Evolution |                    |
-|  |  Agent    |  |  Agent    |                    |
-|  +-----------+  +-----------+                    |
-|                                                 |
-|  +------------------------------------------+   |
-|  |  Shared: Memory | Contracts | Tools       |   |
-|  +------------------------------------------+   |
-+------------------------------------------------+
 ```
 
 ---
@@ -413,6 +464,8 @@ supabase/functions/
 +-- Growth & Evolution              (9 functions)
 +-- Venture Intelligence            (4 functions -- FUTURE)
 +-- Pipeline Control                (7 functions)
++-- Commercial Readiness            (2 functions -- Sprint 11)
++-- Learning Agents                 (6 functions -- Sprint 12)
 +-- Support                         (11 functions)
 +-- _shared/                        (15+ helper modules)
     +-- agent-os/                   (14 Agent OS modules)
@@ -422,7 +475,7 @@ supabase/functions/
 
 ## 11. Implementation Status
 
-### Implemented (Kernel)
+### Implemented (Kernel + Sprint 11 + Sprint 12)
 
 | # | System | Details |
 |---|--------|---------|
@@ -443,15 +496,24 @@ supabase/functions/
 | 15 | Incremental Re-execution | Hash-based dirty detection |
 | 16 | AI Efficiency Layer | Prompt compression + semantic cache + model router |
 | 17 | Agent OS v1.0 | 14 modules, 5 planes, full TypeScript contracts |
+| 18 | Commercial Readiness | Plans, billing, workspace roles, usage enforcement |
+| 19 | Learning Agents v1 | Prompt analysis, strategy tracking, prediction, weight adaptation, recommendations |
+
+### Frozen
+
+| Module | Reason |
+|--------|--------|
+| Marketplace ecosystem | Not needed until Learning Agents are stable |
+| Global capability registry expansion | Architecture sufficient |
+| Advanced distributed runtime | Current runtime is adequate |
+| Advanced multi-agent coordination | Existing coordination works |
 
 ### Planned (NEXT to FUTURE)
 
 | Horizon | Module | Priority |
 |---------|--------|----------|
-| NEXT | Learning Agents | P0 |
-| NEXT | Prompt Optimization Engine | P0 |
-| NEXT | Error Pattern Recognition | P1 |
-| NEXT | Architecture Pattern Library | P1 |
+| NEXT | Learning Agents v2 (Self-improving prompts) | P0 |
+| NEXT | Meta-Agents (Self-designing orchestration) | P1 |
 | LATER | Product Analytics Engine | P1 |
 | LATER | User Behavior Analyzer | P1 |
 | LATER | Product Evolution Engine | P2 |
@@ -460,7 +522,7 @@ supabase/functions/
 
 ---
 
-## 12. Database Schema (30+ tables)
+## 12. Database Schema (40+ tables)
 
 ### Core Tables
 - `organizations`, `organization_members`, `profiles`
@@ -497,3 +559,16 @@ supabase/functions/
 - `supabase_connections`
 - `validation_runs`
 - `usage_monthly_snapshots`
+
+### Commercial Tables (Sprint 11)
+- `product_plans` — Starter / Pro / Enterprise with limits
+- `billing_accounts` — Stripe-ready with period tracking
+- `workspace_members` — Granular roles per workspace
+
+### Learning Tables (Sprint 12)
+- `prompt_strategy_metrics` — Prompt performance aggregation
+- `strategy_effectiveness_metrics` — Repair strategy effectiveness
+- `predictive_error_patterns` — Recurring failure predictions
+- `repair_strategy_weights` — Adjusted routing weights
+- `learning_recommendations` — Structured improvement suggestions
+- `learning_records` — Learning foundation substrate

@@ -3,7 +3,9 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> Last updated: 2026-03-06
+> **What changed (2026-03-07):** Added Learning Agents v1 section (5 engines), added Meta-Agents future horizon, categorized modules by implementation status, updated implementation status table.
+>
+> Last updated: 2026-03-07
 
 ---
 
@@ -93,7 +95,143 @@ Agent Specialization = Mode + Tools + Memory + Contract
 
 ---
 
-## 4. Core Plane — Identity & Contracts
+## 4. Active Operational Agents & Modules
+
+These are the currently implemented and operational components of the AxionOS agent system.
+
+### Pipeline Orchestration
+- **DAG Execution Engine** — Kahn's algorithm, wave computation, 6 concurrent workers
+- **Pipeline Orchestrator** — 32-stage deterministic pipeline coordination
+- **Pipeline Bootstrap** — Lifecycle initialization with usage enforcement integration
+
+### Validation Agents
+- **Fix Loop Agent** — AI-powered code correction (3 iterations)
+- **Deep Static Analyzer** — Import/reference/type consistency validation
+- **Drift Detector** — Architecture-to-code conformance checking
+- **Runtime Validator** — Real tsc + vite build via GitHub Actions CI
+
+### Repair Agents
+- **Autonomous Build Repair** — Self-healing from CI error logs
+- **Fix Orchestrator** — Multi-iteration repair coordination with auto-PR
+- **Repair Router** — Evidence-based strategy selection
+
+### Prevention Agents
+- **Preventive Validator** — Pre-generation guard against known failure patterns
+- **Prevention Rule Engine** — Active rule management and enforcement
+- **Error Pattern Library** — Pattern extraction and indexing
+
+### Governance
+- **Gate Permissions** — Per-role stage access control
+- **SLA Enforcement** — Per-stage timing constraints
+- **Audit Logger** — Complete event ledger for all system actions
+
+### Observability
+- **Observability Engine** — Telemetry aggregation and reporting
+- **Initiative Observability** — Per-initiative metrics (success rate, cost, MTTR)
+- **Cost Tracker** — Per-model, per-stage, per-initiative cost tracking
+
+---
+
+## 5. Supporting Engines
+
+These modules provide infrastructure and efficiency services consumed by operational agents.
+
+| Engine | File | Purpose |
+|--------|------|---------|
+| AI Client | `ai-client.ts` | Unified LLM invocation with compression, caching, routing |
+| Prompt Compressor | `prompt-compressor.ts` | 60-90% token reduction |
+| Semantic Cache | `semantic-cache.ts` | Cosine similarity cache (threshold > 0.92) |
+| Model Router | `model-router.ts` | Complexity-based model selection |
+| Smart Context | `smart-context.ts` | AST-like context window management |
+| Pipeline Helpers | `pipeline-helpers.ts` | Standardized logging, jobs, messages |
+| Brain Helpers | `brain-helpers.ts` | Knowledge graph operations |
+| Embedding Helpers | `embedding-helpers.ts` | Vector embedding generation |
+| Incremental Engine | `incremental-engine.ts` | Hash-based dirty detection for re-execution |
+
+---
+
+## 6. Learning Agents v1 (Sprint 12) — Active
+
+Learning Agents v1 introduces five intelligence modules that observe execution data and generate auditable improvement recommendations. These agents follow the chain:
+
+```
+Observation → Evidence → Analysis → Recommendation → Human-safe Adjustment
+```
+
+### 6.1 Prompt Outcome Analyzer
+
+| Attribute | Value |
+|-----------|-------|
+| **File** | `supabase/functions/prompt-outcome-analyzer/index.ts` |
+| **Inputs** | `prompt_outcomes`, `initiative_jobs`, `learning_records` |
+| **Outputs** | `prompt_strategy_metrics` (success_rate, average_cost, retry_rate per stage+model) |
+| **Safety** | Read-only analysis. Does not modify prompts. |
+
+### 6.2 Strategy Performance Engine
+
+| Attribute | Value |
+|-----------|-------|
+| **File** | `supabase/functions/strategy-performance-engine/index.ts` |
+| **Inputs** | `repair_routing_log`, `repair_evidence`, `error_patterns` |
+| **Outputs** | `strategy_effectiveness_metrics` (success_rate, MTTR, recurrence_rate per strategy) |
+| **Safety** | Read-only analysis. Does not modify strategies. |
+
+### 6.3 Predictive Error Engine
+
+| Attribute | Value |
+|-----------|-------|
+| **File** | `supabase/functions/predictive-error-engine/index.ts` |
+| **Inputs** | `error_patterns`, `initiative_jobs`, `repair_evidence`, `learning_records` |
+| **Outputs** | `predictive_error_patterns` (probability_score, observations, recommended_prevention_rule) |
+| **Safety** | Generates `prevention_rule_candidates` when probability > 70%. Does not activate rules directly. |
+
+### 6.4 Repair Learning Engine
+
+| Attribute | Value |
+|-----------|-------|
+| **File** | `supabase/functions/repair-learning-engine/index.ts` |
+| **Inputs** | `repair_routing_log`, `repair_evidence`, `strategy_effectiveness_metrics` |
+| **Outputs** | `repair_strategy_weights` (current_weight, previous_weight, adjustment_reason) |
+| **Formula** | `new_weight = previous_weight + success_factor − failure_penalty` |
+| **Safety** | Weight changes are bounded (min/max), reversible, and logged. Cannot modify routing formula. |
+
+### 6.5 Learning Recommendation Engine
+
+| Attribute | Value |
+|-----------|-------|
+| **File** | `supabase/functions/learning-recommendation-engine/index.ts` |
+| **Inputs** | `prompt_strategy_metrics`, `strategy_effectiveness_metrics`, `predictive_error_patterns`, `learning_records` |
+| **Outputs** | `learning_recommendations` with types: PROMPT_OPTIMIZATION, STRATEGY_RANKING_ADJUSTMENT, NEW_PREVENTION_RULE, PIPELINE_CONFIGURATION_HINT |
+| **Safety** | Generates recommendations only. Human review required for activation. |
+
+### 6.6 Learning Dashboard
+
+| Attribute | Value |
+|-----------|-------|
+| **File** | `supabase/functions/learning-dashboard/index.ts` |
+| **Endpoints** | `overview`, `recommendations`, `strategies`, `errors` |
+| **Purpose** | Exposes learning metrics for frontend consumption |
+
+### Learning Safety Constraints
+
+Learning Agents **cannot** modify:
+- Pipeline stages or stage ordering
+- Governance rules or trust levels
+- Autonomy boundaries
+- Product plans or billing
+- Prevention rules directly (can only propose candidates)
+
+Learning Agents **can**:
+- Register evidence and observations
+- Generate structured recommendations
+- Adjust repair routing weights (bounded, logged, reversible)
+- Propose prevention rule candidates for review
+
+All learning actions generate `LEARNING_UPDATE` events in `audit_logs`.
+
+---
+
+## 7. Core Plane — Identity & Contracts
 
 **Purpose:** Define what agents are, what they can do and how they communicate.
 
@@ -118,7 +256,7 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 5. Control Plane — Decisions & Governance
+## 8. Control Plane — Decisions & Governance
 
 **Purpose:** Decide which agent runs, under what rules, with what trust level.
 
@@ -141,11 +279,11 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 ### Adaptive Routing
 - Performance feedback loop: success rate, latency, cost per task
 - Automatic rebalancing when agent performance degrades
-- A/B routing for prompt optimization (NEXT horizon)
+- Learning Agents v1 adjusts routing weights based on evidence (Sprint 12)
 
 ---
 
-## 6. Execution Plane — Orchestration & Work
+## 9. Execution Plane — Orchestration & Work
 
 **Purpose:** Execute agent tasks, coordinate multi-agent workflows, distribute work.
 
@@ -172,7 +310,7 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 7. Data Plane — State & Knowledge
+## 10. Data Plane — State & Knowledge
 
 **Purpose:** Persist artifacts, memory, telemetry and audit records.
 
@@ -197,7 +335,7 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 8. Ecosystem Plane — Discovery & Distribution
+## 11. Ecosystem Plane — Discovery & Distribution
 
 **Purpose:** Enable agent and capability sharing across environments.
 
@@ -210,31 +348,57 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 9. End-to-End Execution Flow
+## 12. Meta-Agents (Future Horizon)
+
+> **Status:** 📋 Planned — **Not implemented**
+
+Meta-Agents represent a future evolution where higher-order agents reason about the orchestration system itself.
+
+### Planned Capabilities
+
+| Capability | Description |
+|-----------|-------------|
+| Self-designing orchestration | Meta-agents propose pipeline modifications based on execution patterns |
+| Agent role synthesis | Automatic composition of new specializations from capability gaps |
+| Workflow architecture recommendations | Higher-order bottleneck and efficiency analysis |
+| Learning subsystem coordination | Meta-level coordination of learning engines |
+
+### Constraints
+
+- Meta-Agents are a planning item only
+- When implemented, they must be auditable, bounded, and reversible
+- They will not have direct kernel mutation authority
+- Requires stable Learning Agents v2 as prerequisite
+
+---
+
+## 13. End-to-End Execution Flow
 
 ```
  1. Task arrives at Orchestrator                        [Execution]
- 2. Orchestrator queries Selection Engine               [Control]
- 3. Selection Engine checks Policy Engine               [Control]
- 4. Governance Layer evaluates trust and autonomy       [Control]
- 5. Adaptive Router applies routing adjustments         [Control]
- 6. Agent selected, GovernanceDecision issued           [Control]
- 7. If approval required: ApprovalEngine pauses         [Control]
- 8. Orchestrator dispatches to Coordination Manager     [Execution]
- 9. Coordination assigns roles via Selection Engine     [Control]
-10. Agents execute via LLM/Tool Adapters                [Execution]
-11. Artifacts stored in Artifact Store                  [Data]
-12. Memory updated                                     [Data]
-13. Telemetry recorded                                 [Data]
-14. Audit record written                               [Data]
-15. Events emitted via EventBus                        [Execution]
-16. Adaptive Router consumes feedback                  [Control]
-17. Result returned to caller                          [Execution]
+ 2. Usage limits enforced                               [Commercial]
+ 3. Orchestrator queries Selection Engine               [Control]
+ 4. Selection Engine checks Policy Engine               [Control]
+ 5. Governance Layer evaluates trust and autonomy       [Control]
+ 6. Adaptive Router applies routing adjustments         [Control]
+ 7. Agent selected, GovernanceDecision issued           [Control]
+ 8. If approval required: ApprovalEngine pauses         [Control]
+ 9. Orchestrator dispatches to Coordination Manager     [Execution]
+10. Coordination assigns roles via Selection Engine     [Control]
+11. Agents execute via LLM/Tool Adapters                [Execution]
+12. Artifacts stored in Artifact Store                  [Data]
+13. Memory updated                                     [Data]
+14. Telemetry recorded                                 [Data]
+15. Audit record written                               [Data]
+16. Events emitted via EventBus                        [Execution]
+17. Adaptive Router consumes feedback                  [Control]
+18. Learning Agents consume execution data              [Learning]
+19. Result returned to caller                          [Execution]
 ```
 
 ---
 
-## 10. Code Organization
+## 14. Code Organization
 
 ```
 supabase/functions/_shared/agent-os/
@@ -265,7 +429,7 @@ supabase/functions/_shared/agent-os/
 
 ---
 
-## 11. Implementation Status
+## 15. Implementation Status
 
 | Module | Status |
 |--------|--------|
@@ -275,13 +439,15 @@ supabase/functions/_shared/agent-os/
 | Governance (gates, SLAs, audit) | ✅ Implemented |
 | Observability + Cost Tracking | ✅ Implemented |
 | Adaptive Learning | ✅ Implemented |
-| Learning Agents | 📋 NEXT horizon |
-| Prompt Optimization | 📋 NEXT horizon |
+| Learning Agents v1 (5 engines) | ✅ Implemented (Sprint 12) |
+| Learning Dashboard | ✅ Implemented (Sprint 12) |
+| Prompt Optimization (A/B testing) | 📋 NEXT horizon |
+| Meta-Agents | 📋 Future horizon |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
 
 ---
 
-## 12. Governing Principle
+## 16. Governing Principle
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another.
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly.
