@@ -964,3 +964,7 @@ supabase/functions/
 - `repair_policy_profiles` — Memory-aware repair strategy profiles per stage+error
 - `repair_policy_decisions` — Logged repair decisions with evidence refs and outcomes
 - `repair_policy_adjustments` — Bounded, reversible policy adjustments
+
+### Agent Memory Tables (Sprint 24)
+- `agent_memory_profiles` — Per-agent persistent memory profiles with confidence and scope
+- `agent_memory_records` — Reusable memory units with type taxonomy, payload, and relevance scoring
