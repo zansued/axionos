@@ -92,6 +92,8 @@ AxionOS consists of ten layers. All ten layers are active and operational.
 ### Layer Interaction Flow
 
 ```
+  Layer 10: Proposal Quality & Calibration Layer  ← Active (Sprints 19-20)
+  ─────────────────────────────────────────
   Layer 9: Engineering Memory Architecture     ← Cross-layer (Full stack active)
   ─────────────────────────────────────────
   Layer 8: Proposal Generation Layer           ← Active (Sprint 14)
