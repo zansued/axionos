@@ -529,6 +529,11 @@ export default function Observability() {
           <TabsContent value="learning" className="mt-4">
             <LearningFoundationDashboard />
           </TabsContent>
+
+          {/* ===== ENGINEERING MEMORY ===== */}
+          <TabsContent value="memory" className="mt-4">
+            <EngineeringMemoryDashboard />
+          </TabsContent>
         </Tabs>
       </div>
     </AppLayout>
