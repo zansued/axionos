@@ -31,7 +31,7 @@
 
 ## Strategic Directive
 
-AxionOS has completed 32 implementation sprints spanning the full capability arc from deterministic execution to bounded strategy evolution. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, and strategy evolution — all under governed, advisory-first safety boundaries.
+AxionOS has completed 33 implementation sprints spanning the full capability arc from deterministic execution to strategy portfolio governance. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, and strategy portfolio governance — all under governed, advisory-first safety boundaries.
 
 **The focus is now:**
 1. Commercial stability with real billing flows
