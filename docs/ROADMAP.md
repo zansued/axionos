@@ -26,6 +26,7 @@
 | **Platform Calibration** | Active — bounded threshold tuning + guardrails + rollback |
 | **Platform Stabilization** | Active — drift detection + oscillation suppression + safe modes |
 | **Engineering Advisor** | Active — cross-layer advisory synthesis + review workflow |
+| **Semantic Retrieval** | Active — unified embedding-backed retrieval across domains |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
