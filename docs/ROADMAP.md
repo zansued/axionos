@@ -2,11 +2,11 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 19 — Proposal Quality Feedback Loop implemented. Quality scoring, outcome tracking, confidence calibration, and memory effectiveness measurement are now active across recommendations and artifacts. Previous: Memory-Aware Meta-Agents (Sprint 18).
+> **What changed (2026-03-07):** Sprint 20 — Advisory Calibration Layer implemented. Structured, deterministic calibration signals diagnose meta-agent performance, proposal usefulness, historical context value, and redundancy guard effectiveness. Calibration is advisory-only — no automatic tuning. Previous: Proposal Quality Feedback Loop (Sprint 19).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
-> **Current Maturity**: Level 5 🔄 Active
+> **Current Maturity**: Level 5 ✅ Active
 >
 > Last updated: 2026-03-07
 
@@ -21,7 +21,7 @@
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable |
-| **Meta-Agents Status** | v1.3 active — memory-aware + quality feedback loop, human-reviewed |
+| **Meta-Agents Status** | v1.4 active — memory-aware + quality feedback + advisory calibration, human-reviewed |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
@@ -165,6 +165,8 @@ Sprints 11 and 12 represent the **beginning** of Level 4.
 | Stage & Agent IO Contracts | ✅ Implemented |
 | Commercial Readiness (plans, billing, enforcement) | ✅ Operational |
 | Learning Agents v1 (5 engines + dashboard) | ✅ Operational |
+| Proposal Quality Feedback Loop | ✅ Operational |
+| Advisory Calibration Layer | ✅ Operational |
 
 ### What to Freeze
 
@@ -209,11 +211,11 @@ Each execution improves future executions. The system transitions from determini
 
 ---
 
-## DONE — Meta-Agents (Level 4.5 — Self-Designing Engineering System) ✅
+## DONE — Meta-Agents + Quality Feedback + Calibration (Level 4.5–5) ✅
 
-**Status:** ✅ Implemented (Sprints 13–14, memory-aware Sprint 18, quality feedback Sprint 19)
+**Status:** ✅ Implemented (Sprints 13–14, memory-aware Sprint 18, quality feedback Sprint 19, calibration Sprint 20)
 
-4 memory-aware meta-agents active with historical context enrichment, continuity scoring, redundancy suppression, proposal layer v2, and quality feedback loop. All recommendations require human review. Quality scoring tracks acceptance rates, confidence calibration, and memory effectiveness.
+4 memory-aware meta-agents active with historical context enrichment, continuity scoring, redundancy suppression, proposal layer v2, quality feedback loop, and advisory calibration layer. All recommendations require human review. Quality scoring tracks acceptance rates, confidence calibration, and memory effectiveness. Advisory calibration signals diagnose meta-agent performance, proposal usefulness, historical context value, and redundancy guard effectiveness — without applying automatic tuning.
 
 ---
 
@@ -296,6 +298,7 @@ Full specification: [ARCHITECTURE.md — Layer 9](ARCHITECTURE.md)
 ## Governing Principle
 
 > The architecture is sufficient. Level 3 is complete.
-> Eighteen sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, Memory Summaries, and Memory-Aware Meta-Agents.
-> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, memory-aware meta-level recommendations, historically-informed engineering proposals, foundational engineering memory, contextual memory retrieval, periodic historical synthesis, and experience-aware reasoning.
+> Eighteen sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, Memory Summaries, Memory-Aware Meta-Agents, Proposal Quality Feedback Loop, and Advisory Calibration Layer.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, memory-aware meta-level recommendations, historically-informed engineering proposals, foundational engineering memory, contextual memory retrieval, periodic historical synthesis, experience-aware reasoning, proposal quality feedback, and advisory calibration diagnostics.
+> Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied.
 > Focus now: commercial stability, memory-aware intelligence validation, and contextual self-improvement.

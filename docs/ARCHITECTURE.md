@@ -5,7 +5,7 @@
 > **Last updated:** 2026-03-07
 >
 > **Current state:** Level 5 — Institutional Engineering Memory Platform.
-> Nine architectural layers active. Memory-aware meta-agents and proposal layer v2 operational (Sprint 18).
+> Ten architectural layers active. Advisory Calibration Layer operational (Sprint 20). Proposal Quality Feedback Loop active (Sprint 19).
 
 ---
 
@@ -26,9 +26,11 @@ A governed engineering platform with active learning, meta-analysis, and control
 - Preventive engineering with active prevention rules
 - Commercial readiness: product plans, billing, usage enforcement
 - Learning Agents v1: rule-based, auditable prompt and strategy optimization
-- Meta-Agents v1: 4 active meta-agents generating architectural recommendations
+- Meta-Agents v1.4: 4 memory-aware meta-agents with quality feedback loop and advisory calibration
 - Controlled proposal generation via engineering artifacts
 - Hardened review workflows for recommendations and artifacts
+- Proposal Quality Feedback Loop: quality scoring, outcome tracking, confidence calibration
+- Advisory Calibration Layer: structured diagnostic signals for future tuning
 - Engineering Memory Foundation: structured knowledge capture and retrieval
 - Agent OS v1.0 — a 14-module runtime architecture across 5 planes
 
@@ -46,18 +48,19 @@ A governed engineering platform with active learning, meta-analysis, and control
 | Level 6 | Discovery-Driven Engineering | 🔮 Long-term |
 
 > **Current position:** Level 5 — Institutional Engineering Memory.
-> **System state:** Execution + Learning + Meta-Analysis + Memory-Aware Proposals active.
+> **System state:** Execution + Learning + Meta-Analysis + Memory-Aware Proposals + Quality Feedback + Advisory Calibration active.
 > **Kernel status:** Stable and operational.
 > **Learning status:** Active, rule-based, auditable.
-> **Meta-Agent status:** Active, memory-aware, 4 agents with historical context enrichment.
+> **Meta-Agent status:** Active, memory-aware, v1.4 with quality feedback and calibration.
 > **Proposal status:** Active, artifact generation with Related Historical Context sections.
 > **Engineering Memory:** Full stack operational — foundation, retrieval, summaries, memory-aware reasoning.
+> **Calibration status:** Active, advisory-only diagnostic signals operational.
 
 ### Implementation Horizons
 
 | Horizon | Focus | Status |
 |---------|-------|--------|
-| **DONE** | Kernel + Commercial + Learning + Meta-Agents + Proposals + Memory Full Stack | ✅ 18 Sprints Complete |
+| **DONE** | Kernel + Commercial + Learning + Meta-Agents + Proposals + Memory + Quality Feedback + Calibration | ✅ 20 Sprints Complete |
 | **NEXT** | Contextual Self-Improvement + Semantic Retrieval | 📋 Planned |
 | **LATER** | Discovery-Driven Architecture Experimentation | 📋 Planned |
 | **FUTURE** | Discovery-Driven Architecture Experimentation | 🔮 Vision |
@@ -84,11 +87,13 @@ A governed engineering platform with active learning, meta-analysis, and control
 
 ## 2. Active Architecture Layers
 
-AxionOS consists of nine layers. All nine layers are active and operational.
+AxionOS consists of ten layers. All ten layers are active and operational.
 
 ### Layer Interaction Flow
 
 ```
+  Layer 10: Proposal Quality & Calibration Layer  ← Active (Sprints 19-20)
+  ─────────────────────────────────────────
   Layer 9: Engineering Memory Architecture     ← Cross-layer (Full stack active)
   ─────────────────────────────────────────
   Layer 8: Proposal Generation Layer           ← Active (Sprint 14)
@@ -265,7 +270,7 @@ Engineering Memory is a **cross-layer infrastructure** that captures knowledge f
 
 **Purpose:** Introduce higher-order agents that reason about the system itself — analyzing execution patterns, designing new agent roles, optimizing workflows, and advising on architectural evolution.
 
-**Status:** ✅ Active (Sprint 13, hardened Sprint 13.5, memory-aware Sprint 18)
+**Status:** ✅ Active (Sprint 13, hardened Sprint 13.5, memory-aware Sprint 18, quality feedback Sprint 19, calibration Sprint 20)
 
 **Includes:**
 - 4 memory-aware meta-agents analyzing cross-layer signals with historical context
@@ -292,9 +297,9 @@ Engineering Memory is a **cross-layer infrastructure** that captures knowledge f
 - Recommendations include: `historical_alignment`, `decision_history_signal`, `outcome_history_signal`, `historical_novelty_flag`
 - Redundancy guard modules: `historical-continuity-scoring.ts`, `historical-redundancy-guard.ts`, `meta-agent-memory-context.ts`
 
-**Critical constraint:** Meta-Agents are **recommendation-only**. They do not modify pipeline stages, governance rules, billing, contracts, or agent behavior. All recommendations require human review before any structural change is considered. Memory and summaries inform but do not dictate recommendations.
+**Critical constraint:** Meta-Agents are **recommendation-only**. They do not modify pipeline stages, governance rules, billing, contracts, or agent behavior. All recommendations require human review before any structural change is considered. Memory and summaries inform but do not dictate recommendations. Calibration signals diagnose performance but do not auto-tune behavior.
 
-**Interactions:** Consumes data from all lower layers including Layer 9 memory (read-only). Produces recommendations consumed by Layer 8 (Proposal Generation).
+**Interactions:** Consumes data from all lower layers including Layer 9 memory (read-only). Produces recommendations consumed by Layer 8 (Proposal Generation). Performance analyzed by Layer 10 (Calibration).
 
 ---
 
@@ -338,7 +343,7 @@ rejected  rejected
 
 **Critical constraint:** Artifacts are **engineering proposals only**. Approving or implementing an artifact does not automatically modify the system. Human implementation is required for any structural change. No artifact or review action mutates the pipeline, governance, billing, contracts, or agent behavior.
 
-**Interactions:** Consumes accepted recommendations from Layer 7. Produces engineering proposals for human review. Emits memory capture events to Layer 9.
+**Interactions:** Consumes accepted recommendations from Layer 7. Produces engineering proposals for human review. Emits memory capture events to Layer 9. Quality tracked by Layer 10.
 
 ---
 
@@ -485,6 +490,45 @@ Additional capture events (pipeline completion, error patterns, strategy updates
 
 ---
 
+### Layer 10: Proposal Quality & Calibration Layer
+
+**Purpose:** Measure the quality and usefulness of recommendations and artifacts over time, and produce structured calibration signals that diagnose where advisory intelligence should be tuned.
+
+**Status:** ✅ Active (Sprints 19–20)
+
+**Includes:**
+- Proposal Quality Feedback Loop (Sprint 19): quality scoring, outcome tracking, confidence calibration
+- Advisory Calibration Layer (Sprint 20): structured diagnostic signals across 6 calibration domains
+- Calibration summaries for periodic system-level guidance
+- Calibration observability endpoints
+
+**Calibration Domains:**
+
+| Domain | Purpose |
+|--------|---------|
+| `META_AGENT_PERFORMANCE` | Evaluate meta-agent recommendation value |
+| `PROPOSAL_USEFULNESS` | Analyze usefulness by artifact type |
+| `HISTORICAL_CONTEXT_VALUE` | Assess whether historical context helps or hurts |
+| `REDUNDANCY_GUARD_EFFECTIVENESS` | Detect suppression calibration issues |
+| `NOVELTY_BALANCE` | Evaluate novelty scoring balance |
+| `DECISION_FOLLOW_THROUGH` | Track implementation follow-through patterns |
+
+**Key modules:**
+- `proposal-quality-scoring.ts` — Quality scoring service
+- `proposal-quality-feedback-service.ts` — Feedback collection
+- `calibration/types.ts` — Calibration taxonomy
+- `calibration/scoring.ts` — Deterministic calibration scoring
+- `calibration/analysis-service.ts` — Domain-specific analysis
+- `advisory-calibration-engine/index.ts` — Calibration API
+
+**Persistence:** `proposal_quality_feedback`, `proposal_quality_summaries`, `advisory_calibration_signals`, `advisory_calibration_summaries`
+
+**Critical constraint:** Calibration signals are **advisory only**. They diagnose where tuning should happen but do not apply tuning automatically. No auto-adjustment of meta-agent scoring, redundancy guard thresholds, historical weighting, or proposal generation behavior. Humans decide when and how tuning is applied.
+
+**Interactions:** Consumes data from Layers 7 (recommendations), 8 (artifacts), and 9 (memory). Produces structured diagnostic signals for human review.
+
+---
+
 ## 3. Safety Architecture
 
 ### Structural Safety Rules
@@ -497,11 +541,13 @@ The following rules are enforced across all layers:
 
 3. **Memory is not a mutation engine.** Engineering Memory captures and retrieves knowledge. It does not alter pipeline behavior, governance rules, billing, or agent configuration.
 
-4. **Human review remains required for structural evolution.** Any change to pipeline stages, governance rules, agent roles, or system architecture requires explicit human action.
+4. **Calibration is advisory only.** Calibration signals diagnose where tuning should happen. They do not auto-adjust meta-agent scoring, redundancy thresholds, historical weighting, or proposal behavior. Humans decide when and how tuning is applied.
 
-5. **Tenant isolation is absolute.** All data access is scoped by `organization_id` with RLS enforcement. No cross-tenant data leakage is permitted.
+5. **Human review remains required for structural evolution.** Any change to pipeline stages, governance rules, agent roles, or system architecture requires explicit human action.
 
-6. **Learning is bounded and reversible.** Weight adjustments have min/max constraints. All learning decisions are logged and auditable.
+6. **Tenant isolation is absolute.** All data access is scoped by `organization_id` with RLS enforcement. No cross-tenant data leakage is permitted.
+
+7. **Learning is bounded and reversible.** Weight adjustments have min/max constraints. All learning decisions are logged and auditable.
 
 ---
 
@@ -769,10 +815,13 @@ supabase/functions/
 +-- Learning Agents                 (6 functions -- Sprint 12)
 +-- Meta-Agents                     (3 functions -- Sprint 13-14, 18)
 +-- Engineering Memory              (2 functions -- Sprint 15, 17)
++-- Proposal Quality                (1 function -- Sprint 19)
++-- Advisory Calibration            (1 function -- Sprint 20)
 +-- Support                         (11 functions)
 +-- _shared/                        (15+ helper modules)
     +-- agent-os/                   (14 Agent OS modules)
-    +-- meta-agents/               (Meta-agent types, scoring, validation, memory context, continuity, redundancy)
+    +-- meta-agents/               (Meta-agent types, scoring, validation, memory context, continuity, redundancy, quality feedback)
+    +-- calibration/               (Calibration types, scoring, analysis service)
 ```
 
 ---
@@ -800,12 +849,14 @@ supabase/functions/
 | 15 | Agent OS v1.0 | 1-10 | 14 modules, 5 planes, full TypeScript contracts |
 | 16 | Commercial Readiness | 11 | Plans, billing, workspace roles, usage enforcement |
 | 17 | Learning Agents v1 | 12 | Prompt analysis, strategy tracking, prediction, weight adaptation |
-| 18 | Meta-Agents v1.2 | 13+18 | 4 memory-aware meta-agents, recommendation lifecycle, historical context |
+| 18 | Meta-Agents v1.4 | 13+18+19+20 | 4 memory-aware meta-agents, quality feedback, advisory calibration |
 | 19 | Controlled Proposal Generation | 14 | 5 artifact types, review lifecycle, idempotency |
 | 20 | Engineering Memory Foundation | 15 | Memory tables, capture events, retrieval API, observability |
 | 21 | Memory Retrieval Surfaces | 16 | Structured retrieval for repair, meta-agents, artifacts, review |
 | 22 | Memory Summaries | 17 | 6 summary types, signal strength, generation service |
 | 23 | Memory-Aware Meta-Agents | 18 | Historical context, continuity scoring, redundancy guard, proposal v2 |
+| 24 | Proposal Quality Feedback Loop | 19 | Quality scoring, outcome tracking, confidence calibration |
+| 25 | Advisory Calibration Layer | 20 | 6 calibration domains, deterministic scoring, advisory-only signals |
 
 ### Frozen
 
@@ -823,6 +874,8 @@ supabase/functions/
 | DONE | Memory Retrieval Surfaces (Sprint 16) | ✅ |
 | DONE | Memory Summaries (Sprint 17) | ✅ |
 | DONE | Memory-Aware Meta-Agents (Sprint 18) | ✅ |
+| DONE | Proposal Quality Feedback Loop (Sprint 19) | ✅ |
+| DONE | Advisory Calibration Layer (Sprint 20) | ✅ |
 | NEXT | Semantic Retrieval via Embeddings | P1 |
 | LATER | Product Analytics Engine | P2 |
 | FUTURE | Discovery-Driven Architecture | P3 |
@@ -889,3 +942,11 @@ supabase/functions/
 - `memory_links` — Typed relationships between memory entries
 - `memory_retrieval_log` — Retrieval tracking and access statistics
 - `memory_summaries` — Periodic historical synthesis with signal strength scoring
+
+### Proposal Quality Tables (Sprint 19)
+- `proposal_quality_feedback` — Quality and outcome tracking per recommendation/artifact
+- `proposal_quality_summaries` — Periodic quality pattern summaries
+
+### Advisory Calibration Tables (Sprint 20)
+- `advisory_calibration_signals` — Structured diagnostic signals with evidence refs
+- `advisory_calibration_summaries` — Periodic calibration summary reports

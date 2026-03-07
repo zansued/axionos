@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 18 — Memory-Aware Meta-Agents implemented. All 4 meta-agents now use engineering memory and summaries as advisory historical context. Historical continuity scoring, redundancy suppression, and decision/outcome-aware framing are active. Proposal Layer v2 includes Related Historical Context sections. Previous: Memory Summaries (Sprint 17).
+> **What changed (2026-03-07):** Sprint 20 — Advisory Calibration Layer implemented. Structured, deterministic calibration signals analyze meta-agent performance, proposal usefulness, historical context value, and redundancy guard effectiveness. Calibration is advisory-only — no automatic tuning. Previous: Proposal Quality Feedback Loop (Sprint 19).
 >
 > Last updated: 2026-03-07
 
@@ -348,10 +348,10 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 12. Meta-Agents — Active (Sprints 13–18)
+## 12. Meta-Agents — Active (Sprints 13–20)
 
-> **Status:** ✅ Active — 4 memory-aware meta-agents operational
-> **Maturity:** v1.2 — Memory-aware with historical context enrichment
+> **Status:** ✅ Active — 4 memory-aware meta-agents with quality feedback and advisory calibration
+> **Maturity:** v1.4 — Quality feedback loop + advisory calibration layer
 > **Target:** Level 5 — Institutional Engineering Memory
 
 Meta-Agents are higher-order agents that operate above the normal execution and learning agents. They analyze system behavior with historical engineering context, design new agent roles, adjust orchestration strategies, recommend workflow changes, and optimize system architecture. They do **not** execute pipeline tasks directly.
@@ -465,6 +465,68 @@ Meta-Agents do not bypass human oversight at any point.
 
 ---
 
+### 12.6 Proposal Quality Feedback Loop (Sprint 19)
+
+**Purpose:** Track the quality and usefulness of recommendations and artifacts over time to enable evidence-based calibration.
+
+**Tables:**
+- `proposal_quality_feedback` — Tracks acceptance, implementation, and outcome signals per recommendation/artifact
+- `proposal_quality_summaries` — Periodic summaries of proposal quality patterns
+
+**Key modules:**
+- `proposal-quality-scoring.ts` — Deterministic quality scoring based on acceptance, implementation, and outcome signals
+- `proposal-quality-feedback-service.ts` — Feedback collection and aggregation
+- `proposal-quality-summary-service.ts` — Periodic quality summary generation
+
+**Metrics tracked:**
+- Recommendation acceptance rate per meta-agent type
+- Artifact implementation rate per artifact type
+- Downstream outcome quality (positive/negative/neutral)
+- Reviewer feedback scores
+- Confidence calibration accuracy
+
+**Safety:** Read-only analysis. Does not modify recommendations, artifacts, or meta-agent behavior.
+
+---
+
+### 12.7 Advisory Calibration Layer (Sprint 20)
+
+**Purpose:** Produce structured, explainable calibration signals that diagnose how AxionOS advisory intelligence should be tuned — without applying tuning automatically.
+
+**Calibration Domains:**
+
+| Domain | Purpose |
+|--------|---------|
+| `META_AGENT_PERFORMANCE` | Evaluate which meta-agents produce consistently useful output |
+| `PROPOSAL_USEFULNESS` | Analyze usefulness by artifact type |
+| `HISTORICAL_CONTEXT_VALUE` | Assess whether historical context is helping or hurting |
+| `REDUNDANCY_GUARD_EFFECTIVENESS` | Detect if suppression is too strict or too weak |
+| `NOVELTY_BALANCE` | Evaluate whether novel signals are under/over-scored |
+| `DECISION_FOLLOW_THROUGH` | Track implementation follow-through patterns |
+
+**Signal Types:** `UNDERPERFORMING_META_AGENT`, `HIGH_VALUE_META_AGENT`, `LOW_USEFULNESS_ARTIFACT_TYPE`, `HIGH_USEFULNESS_ARTIFACT_TYPE`, `HISTORICAL_CONTEXT_OVERWEIGHTED`, `HISTORICAL_CONTEXT_UNDERUSED`, `REDUNDANCY_GUARD_TOO_STRICT`, `REDUNDANCY_GUARD_TOO_WEAK`, `NOVEL_SIGNALS_UNDERSCORED`, `NOVEL_SIGNALS_OVERPROMOTED`, `LOW_FOLLOW_THROUGH_PATTERN`, `HIGH_FOLLOW_THROUGH_PATTERN`
+
+**Key modules:**
+- `calibration/types.ts` — Calibration taxonomy (domains, signal types)
+- `calibration/scoring.ts` — Deterministic scoring (signal_strength, confidence_score, risk_of_overcorrection)
+- `calibration/analysis-service.ts` — Analysis functions per domain
+- `advisory-calibration-engine/index.ts` — Edge function exposing calibration API
+
+**Tables:**
+- `advisory_calibration_signals` — Individual calibration signals with evidence refs
+- `advisory_calibration_summaries` — Periodic calibration summary reports
+
+**Each signal includes:**
+- `signal_strength` (0-1) — Magnitude of the calibration concern
+- `confidence_score` (0-1) — Reliability based on sample size and consistency
+- `risk_of_overcorrection` (0-1) — Risk that acting on this signal could overcorrect
+
+**Safety:** Calibration signals are **advisory only** and do not automatically tune the system. No auto-adjustment of meta-agent scoring, redundancy guard thresholds, historical weighting, or proposal generation behavior.
+
+**Audit events:** `ADVISORY_CALIBRATION_SIGNAL_CREATED`, `ADVISORY_CALIBRATION_SUMMARY_CREATED`, `ADVISORY_CALIBRATION_VIEWED`
+
+---
+
 ## 13. End-to-End Execution Flow
 
 ```
@@ -534,9 +596,11 @@ supabase/functions/_shared/agent-os/
 | Adaptive Learning | ✅ Implemented |
 | Learning Agents v1 (5 engines) | ✅ Implemented (Sprint 12) |
 | Learning Dashboard | ✅ Implemented (Sprint 12) |
-| Meta-Agents v1.2 (4 types) | ✅ Implemented (Sprints 13–18) |
+| Meta-Agents v1.4 (4 types) | ✅ Implemented (Sprints 13–20) |
 | Engineering Memory Full Stack | ✅ Implemented (Sprints 15–18) |
 | Memory-Aware Reasoning | ✅ Implemented (Sprint 18) |
+| Proposal Quality Feedback Loop | ✅ Implemented (Sprint 19) |
+| Advisory Calibration Layer | ✅ Implemented (Sprint 20) |
 | Prompt Optimization (A/B testing) | 📋 NEXT horizon |
 | Semantic Retrieval | 📋 Planned |
 | Marketplace | ❄️ Frozen |
@@ -583,4 +647,4 @@ Engineering Memory is a cross-layer knowledge infrastructure that agents use to 
 
 ## 17. Governing Principle
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions.
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied.
