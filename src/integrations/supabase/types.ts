@@ -2334,6 +2334,182 @@ export type Database = {
           },
         ]
       }
+      predictive_preventive_actions: {
+        Row: {
+          action_mode: string
+          action_payload: Json | null
+          action_type: string
+          applied: boolean
+          created_at: string
+          id: string
+          organization_id: string
+          outcome_status: string | null
+          risk_assessment_id: string
+          stage_key: string
+        }
+        Insert: {
+          action_mode?: string
+          action_payload?: Json | null
+          action_type?: string
+          applied?: boolean
+          created_at?: string
+          id?: string
+          organization_id: string
+          outcome_status?: string | null
+          risk_assessment_id: string
+          stage_key: string
+        }
+        Update: {
+          action_mode?: string
+          action_payload?: Json | null
+          action_type?: string
+          applied?: boolean
+          created_at?: string
+          id?: string
+          organization_id?: string
+          outcome_status?: string | null
+          risk_assessment_id?: string
+          stage_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "predictive_preventive_actions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "predictive_preventive_actions_risk_assessment_id_fkey"
+            columns: ["risk_assessment_id"]
+            isOneToOne: false
+            referencedRelation: "predictive_risk_assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      predictive_risk_assessments: {
+        Row: {
+          agent_type: string | null
+          applied_action_mode: string | null
+          confidence_score: number | null
+          context_signature: string
+          created_at: string
+          evidence_refs: Json | null
+          explanation_codes: Json
+          id: string
+          initiative_id: string | null
+          model_name: string | null
+          model_provider: string | null
+          organization_id: string
+          pipeline_job_id: string | null
+          predicted_failure_types: Json
+          prompt_variant_id: string | null
+          recommended_actions: Json | null
+          risk_band: string
+          risk_score: number
+          stage_key: string
+        }
+        Insert: {
+          agent_type?: string | null
+          applied_action_mode?: string | null
+          confidence_score?: number | null
+          context_signature?: string
+          created_at?: string
+          evidence_refs?: Json | null
+          explanation_codes?: Json
+          id?: string
+          initiative_id?: string | null
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id: string
+          pipeline_job_id?: string | null
+          predicted_failure_types?: Json
+          prompt_variant_id?: string | null
+          recommended_actions?: Json | null
+          risk_band?: string
+          risk_score?: number
+          stage_key: string
+        }
+        Update: {
+          agent_type?: string | null
+          applied_action_mode?: string | null
+          confidence_score?: number | null
+          context_signature?: string
+          created_at?: string
+          evidence_refs?: Json | null
+          explanation_codes?: Json
+          id?: string
+          initiative_id?: string | null
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id?: string
+          pipeline_job_id?: string | null
+          predicted_failure_types?: Json
+          prompt_variant_id?: string | null
+          recommended_actions?: Json | null
+          risk_band?: string
+          risk_score?: number
+          stage_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "predictive_risk_assessments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      predictive_runtime_checkpoints: {
+        Row: {
+          checkpoint_decision: string
+          checkpoint_type: string
+          created_at: string
+          id: string
+          organization_id: string
+          pipeline_job_id: string
+          risk_assessment_id: string
+          stage_key: string
+        }
+        Insert: {
+          checkpoint_decision?: string
+          checkpoint_type?: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          pipeline_job_id: string
+          risk_assessment_id: string
+          stage_key: string
+        }
+        Update: {
+          checkpoint_decision?: string
+          checkpoint_type?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          pipeline_job_id?: string
+          risk_assessment_id?: string
+          stage_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "predictive_runtime_checkpoints_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "predictive_runtime_checkpoints_risk_assessment_id_fkey"
+            columns: ["risk_assessment_id"]
+            isOneToOne: false
+            referencedRelation: "predictive_risk_assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prevention_events: {
         Row: {
           action_taken: string

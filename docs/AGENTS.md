@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 24 — Agent Memory Layer Operationalization. Per-agent memory profiles, bounded retrieval/injection, write-back, and quality scoring now operational. Previous: Self-Improving Fix Agents v2 (Sprint 23).
+> **What changed (2026-03-07):** Sprint 25 — Predictive Error Detection Operationalization. Runtime predictive risk scoring, bounded preventive actions, outcome tracking, and prediction quality metrics now operational. Previous: Agent Memory Layer (Sprint 24).
 >
 > Last updated: 2026-03-07
 
@@ -606,6 +606,7 @@ supabase/functions/_shared/agent-os/
 | Prompt Optimization (A/B + Bounded Promotion) | ✅ Implemented (Sprints 21–22) |
 | Self-Improving Fix Agents v2 (Repair Policies) | ✅ Implemented (Sprint 23) |
 | Agent Memory Layer Operationalization | ✅ Implemented (Sprint 24) |
+| Predictive Error Detection Operationalization | ✅ Implemented (Sprint 25) |
 | Semantic Retrieval | 📋 Planned |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
@@ -693,6 +694,61 @@ The Agent Memory Layer provides persistent, per-agent memory profiles and struct
 
 ---
 
-## 18. Governing Principle
+## 18. Predictive Error Detection (Active — Sprint 25)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution.
+> **Status:** ✅ Active — Runtime predictive prevention
+
+### Overview
+
+Predictive Error Detection operationalizes historical error patterns and learning signals as a runtime prevention layer. The system scores failure risk at bounded checkpoints before or during pipeline execution, recommends or applies safe preventive actions, and tracks prediction outcomes for calibration.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Predictive Risk Engine | `predictive/predictive-risk-engine.ts` | Score failure probability from patterns, retries, memory |
+| Checkpoint Runner | `predictive/predictive-checkpoint-runner.ts` | Invoke prediction at bounded stage checkpoints |
+| Preventive Action Engine | `predictive/preventive-action-engine.ts` | Classify and filter safe preventive actions |
+| Evidence Builder | `predictive/prediction-evidence-builder.ts` | Assemble reason codes and evidence references |
+| Outcome Tracker | `predictive/predictive-outcome-tracker.ts` | Compare predictions against actual outcomes |
+
+### Risk Bands
+
+- `low` (0–0.35) — Proceed normally
+- `moderate` (0.35–0.6) — Proceed with guard
+- `high` (0.6–0.8) — Recommend review or apply bounded actions
+- `critical` (0.8–1.0) — Pause for review (advisory)
+
+### Preventive Action Types
+
+- `strategy_fallback` — Switch to safer strategy
+- `prompt_fallback` — Fall back to known-good prompt variant
+- `extra_validation` — Add validation before proceeding
+- `extra_context` — Retrieve additional context
+- `human_review` — Recommend human review (advisory only)
+- `pause_execution` — Pause pipeline (advisory only)
+
+### Safety Boundaries
+
+- Cannot alter pipeline topology, governance, billing, or enforcement
+- Cannot auto-apply unsafe actions (human_review, pause_execution)
+- Low-confidence predictions remain advisory-only
+- All applied actions are auditable with outcome tracking
+- Cannot delete historical prediction evidence
+- Critical pause behavior is advisory, not forced
+
+### Events
+
+- `predictive_risk_assessed` — Risk scored for context
+- `predictive_checkpoint_evaluated` — Checkpoint decision made
+- `preventive_action_recommended` — Action recommended
+- `preventive_action_applied` — Action applied
+- `predictive_outcome_recorded` — Outcome tracked
+- `predictive_false_positive_flagged` — False positive detected
+- `predictive_false_negative_flagged` — False negative detected
+
+---
+
+## 19. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance.
