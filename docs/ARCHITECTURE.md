@@ -5,7 +5,7 @@
 > **Last updated:** 2026-03-07
 >
 > **Current state:** Level 5 — Institutional Engineering Memory Platform.
-> Thirteen architectural layers active. Learning Agents v2 with Cross-Stage Policy Synthesis (Sprint 26). Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
+> Fourteen architectural layers active. Execution Policy Intelligence (Sprint 27). Learning Agents v2 with Cross-Stage Policy Synthesis (Sprint 26). Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
 
 ---
 
@@ -973,3 +973,8 @@ supabase/functions/
 - `predictive_risk_assessments` — Runtime risk scoring with evidence refs and recommended actions
 - `predictive_runtime_checkpoints` — Bounded checkpoint evaluations at stage boundaries
 - `predictive_preventive_actions` — Recommended/applied preventive actions with outcome tracking
+
+### Execution Policy Intelligence Tables (Sprint 27)
+- `execution_policy_profiles` — Bounded execution policy modes with scope, adjustments, and status lifecycle
+- `execution_policy_outcomes` — Outcome tracking per policy with metrics and evidence
+- `execution_policy_decisions` — Audit trail of policy application decisions at runtime checkpoints

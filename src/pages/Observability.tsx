@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -24,6 +24,7 @@ import { LearningFoundationDashboard } from "@/components/observability/Learning
 import { EngineeringMemoryDashboard } from "@/components/observability/EngineeringMemoryDashboard";
 import { MemorySummariesPanel } from "@/components/observability/MemorySummariesPanel";
 import { CrossStageLearningDashboard } from "@/components/observability/CrossStageLearningDashboard";
+import { ExecutionPolicyDashboard } from "@/components/observability/ExecutionPolicyDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -303,7 +304,7 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(13, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(14, 1fr)" }}>
             <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Perf</TabsTrigger>
             <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>
             <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Quality</TabsTrigger>
@@ -312,6 +313,7 @@ export default function Observability() {
             <TabsTrigger value="predictive" className="text-xs gap-1"><ShieldAlert className="h-3 w-3" /> Predict</TabsTrigger>
             <TabsTrigger value="repair" className="text-xs gap-1"><Wrench className="h-3 w-3" /> Repair</TabsTrigger>
             <TabsTrigger value="cross-stage" className="text-xs gap-1"><GitBranch className="h-3 w-3" /> X-Stage</TabsTrigger>
+            <TabsTrigger value="exec-policy" className="text-xs gap-1"><Gauge className="h-3 w-3" /> ExPol</TabsTrigger>
             <TabsTrigger value="learning" className="text-xs gap-1"><GraduationCap className="h-3 w-3" /> Learn</TabsTrigger>
             <TabsTrigger value="agent-memory" className="text-xs gap-1"><Cpu className="h-3 w-3" /> AgMem</TabsTrigger>
             <TabsTrigger value="memory" className="text-xs gap-1"><Brain className="h-3 w-3" /> Mem</TabsTrigger>
@@ -322,6 +324,11 @@ export default function Observability() {
           {/* ===== CROSS-STAGE LEARNING ===== */}
           <TabsContent value="cross-stage" className="mt-4">
             <CrossStageLearningDashboard />
+          </TabsContent>
+
+          {/* ===== EXECUTION POLICY INTELLIGENCE ===== */}
+          <TabsContent value="exec-policy" className="mt-4">
+            <ExecutionPolicyDashboard />
           </TabsContent>
 
           {/* ===== PREDICTIVE ERROR DETECTION ===== */}

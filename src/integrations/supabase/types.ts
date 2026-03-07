@@ -1339,6 +1339,170 @@ export type Database = {
           },
         ]
       }
+      execution_policy_decisions: {
+        Row: {
+          adjustments_applied: Json
+          applied_mode: string
+          checkpoint: string | null
+          context_class: string
+          created_at: string
+          evidence_refs: Json | null
+          execution_policy_profile_id: string
+          id: string
+          organization_id: string
+          pipeline_job_id: string | null
+          reason_codes: string[]
+        }
+        Insert: {
+          adjustments_applied?: Json
+          applied_mode: string
+          checkpoint?: string | null
+          context_class: string
+          created_at?: string
+          evidence_refs?: Json | null
+          execution_policy_profile_id: string
+          id?: string
+          organization_id: string
+          pipeline_job_id?: string | null
+          reason_codes?: string[]
+        }
+        Update: {
+          adjustments_applied?: Json
+          applied_mode?: string
+          checkpoint?: string | null
+          context_class?: string
+          created_at?: string
+          evidence_refs?: Json | null
+          execution_policy_profile_id?: string
+          id?: string
+          organization_id?: string
+          pipeline_job_id?: string | null
+          reason_codes?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_policy_decisions_execution_policy_profile_id_fkey"
+            columns: ["execution_policy_profile_id"]
+            isOneToOne: false
+            referencedRelation: "execution_policy_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "execution_policy_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      execution_policy_outcomes: {
+        Row: {
+          applied_mode: string
+          context_class: string
+          created_at: string
+          evidence_refs: Json | null
+          execution_policy_profile_id: string
+          id: string
+          organization_id: string
+          outcome_metrics: Json | null
+          outcome_status: string
+          pipeline_job_id: string | null
+        }
+        Insert: {
+          applied_mode: string
+          context_class: string
+          created_at?: string
+          evidence_refs?: Json | null
+          execution_policy_profile_id: string
+          id?: string
+          organization_id: string
+          outcome_metrics?: Json | null
+          outcome_status?: string
+          pipeline_job_id?: string | null
+        }
+        Update: {
+          applied_mode?: string
+          context_class?: string
+          created_at?: string
+          evidence_refs?: Json | null
+          execution_policy_profile_id?: string
+          id?: string
+          organization_id?: string
+          outcome_metrics?: Json | null
+          outcome_status?: string
+          pipeline_job_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_policy_outcomes_execution_policy_profile_id_fkey"
+            columns: ["execution_policy_profile_id"]
+            isOneToOne: false
+            referencedRelation: "execution_policy_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "execution_policy_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      execution_policy_profiles: {
+        Row: {
+          allowed_adjustments: Json
+          confidence_score: number | null
+          created_at: string
+          default_priority: number | null
+          id: string
+          organization_id: string
+          policy_mode: string
+          policy_name: string
+          policy_scope: string
+          status: string
+          support_count: number
+          updated_at: string
+        }
+        Insert: {
+          allowed_adjustments?: Json
+          confidence_score?: number | null
+          created_at?: string
+          default_priority?: number | null
+          id?: string
+          organization_id: string
+          policy_mode: string
+          policy_name: string
+          policy_scope: string
+          status?: string
+          support_count?: number
+          updated_at?: string
+        }
+        Update: {
+          allowed_adjustments?: Json
+          confidence_score?: number | null
+          created_at?: string
+          default_priority?: number | null
+          id?: string
+          organization_id?: string
+          policy_mode?: string
+          policy_name?: string
+          policy_scope?: string
+          status?: string
+          support_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_policy_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       git_connections: {
         Row: {
           connected_by: string
