@@ -23,6 +23,7 @@ import { PreventionDashboard } from "@/components/observability/PreventionDashbo
 import { LearningFoundationDashboard } from "@/components/observability/LearningFoundationDashboard";
 import { EngineeringMemoryDashboard } from "@/components/observability/EngineeringMemoryDashboard";
 import { MemorySummariesPanel } from "@/components/observability/MemorySummariesPanel";
+import { CrossStageLearningDashboard } from "@/components/observability/CrossStageLearningDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
