@@ -2,11 +2,11 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 17 — Memory Summaries implemented. Six deterministic summary types, signal strength scoring, summary generation/observability, summary UI tab, related summary panels in Meta-Agents and Meta-Artifacts. Previous: Memory Retrieval Surfaces (Sprint 16).
+> **What changed (2026-03-07):** Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2 implemented. Meta-agents now use engineering memory and summaries as advisory historical context. Historical continuity scoring, redundancy suppression, and decision/outcome-aware framing are active. Artifacts include structured Related Historical Context sections. Previous: Memory Summaries (Sprint 17).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
-> **Current Maturity**: Level 4.5 ✅ Complete → Level 5 🔄 Entering
+> **Current Maturity**: Level 5 🔄 Active
 >
 > Last updated: 2026-03-07
 
@@ -21,7 +21,7 @@
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable |
-| **Meta-Agents Status** | v1.1 active — recommendation + artifact generation, human-reviewed |
+| **Meta-Agents Status** | v1.2 active — memory-aware recommendations + artifact generation, human-reviewed |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
@@ -209,60 +209,19 @@ Each execution improves future executions. The system transitions from determini
 
 ---
 
-## NEXT — Meta-Agents (Level 4.5 — Self-Designing Engineering System)
+## DONE — Meta-Agents (Level 4.5 — Self-Designing Engineering System) ✅
 
-**Priority:** Medium
-**Status:** 📋 Architecture designed — Not implemented
-**Dependency:** Requires stable Learning Agents v2
-**Target maturity:** Level 4.5
+**Status:** ✅ Implemented (Sprints 13–14, memory-aware Sprint 18)
 
-### Purpose
+4 memory-aware meta-agents active with historical context enrichment, continuity scoring, redundancy suppression, and proposal layer v2. All recommendations require human review.
 
-Introduce higher-order agents that reason about the orchestration system itself, enabling self-designing workflows, agent role synthesis, and architectural evolution — without sacrificing governance, auditability, or safety.
+---
 
-Meta-Agents transform AxionOS from a **Self-Improving Engineering Platform** into a **Self-Designing Engineering System**.
+## DONE — Engineering Memory Full Stack (Level 5 — Institutional Memory) ✅
 
-### Five Meta-Agent Types
+**Status:** ✅ Implemented (Sprints 15–18)
 
-| Meta-Agent | Purpose | Key Outputs |
-|-----------|---------|-------------|
-| **Architecture Meta-Agent** | Analyze execution outcomes, suggest pipeline improvements | `PIPELINE_OPTIMIZATION`, `STAGE_REORDERING_SUGGESTION`, `STAGE_SPLIT_OR_MERGE` |
-| **Agent Role Designer** | Analyze task distribution, propose new agent roles | `NEW_AGENT_ROLE`, `AGENT_SPECIALIZATION`, `AGENT_DEPRECATION` |
-| **Workflow Optimizer** | Improve pipeline efficiency from duration/retry/repair data | `WORKFLOW_PARALLELIZATION`, `STEP_ELIMINATION`, `STEP_REORDERING` |
-| **Strategy Synthesizer** | Combine successful strategies into improved approaches | `NEW_EXECUTION_STRATEGY`, `PROMPT_STRATEGY_COMPOSITION` |
-| **System Evolution Advisor** | Produce high-level system evolution guidance | `SYSTEM_EVOLUTION_REPORT`, `TECHNICAL_DEBT_ALERT`, `ARCHITECTURE_CHANGE_PROPOSAL` |
-
-### Architecture Position
-
-```
-  Meta-Agent Coordination Layer    ← Planned
-          ↑
-  Learning Agents Layer            ← Active
-          ↑
-  Observability Layer              ← Active
-          ↑
-  Governance and Audit Layer       ← Active
-          ↑
-  Execution Kernel                 ← Active
-```
-
-### Safety Constraints
-
-- Meta-Agents **never** modify pipeline stages, governance rules, billing, or contracts directly
-- All outputs are **recommendations** requiring human review
-- All actions are **auditable**, **explainable**, and **reversible**
-- Meta-Agents operate in **read-only** mode against all lower layers
-- Output structure: `meta_agent_recommendations` table with status workflow (`pending → reviewed → accepted | rejected`)
-
-### Interaction Flow
-
-```
-Observability → Learning Agents → Meta-Agents → Recommendations → Human Review → Controlled Implementation
-```
-
-### Expected Outcome
-
-The system evolves from reactive learning (Sprint 12) to proactive architectural self-improvement, while maintaining full human oversight and governance control.
+Full engineering memory stack: foundation, retrieval surfaces, memory summaries, memory-aware meta-agents and proposals. Historical continuity scoring and redundancy guard operational.
 
 ---
 
@@ -304,49 +263,31 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 | Level 4 | Self-Learning Software Factory | 🔄 Entering |
 | Level 5 | Autonomous Startup Factory | 🔮 Long-term |
 
-> **Current position:** Level 3 complete → Level 4 entering.
-> **Current focus:** Commercial stability + controlled learning activation.
+> **Current position:** Level 5 — Institutional Engineering Memory active.
+> **Current focus:** Memory-aware intelligence stabilization + commercial validation.
 > **Execution mode:** Sprint-based implementation.
 
 ---
 
 ## Engineering Memory Architecture (Foundation + Retrieval + Summaries — Sprints 15–17)
 
-**Purpose:** Enable AxionOS to accumulate institutional engineering memory across executions, failures, strategies, recommendations, decisions, and outcomes.
+### Engineering Memory Architecture (Full Stack — Sprints 15–18) ✅
+
+**Purpose:** Enable AxionOS to accumulate and reason with institutional engineering memory across executions, failures, strategies, recommendations, decisions, and outcomes.
 
 **Memory Types:** Execution Memory, Error Memory, Strategy Memory, Design Memory, Decision Memory, Outcome Memory.
 
-**Sprint 15 — Foundation Implemented:**
-- ✅ Core tables: `engineering_memory_entries`, `memory_links`, `memory_retrieval_log`
-- ✅ Full RLS with tenant isolation
-- ✅ Memory capture on recommendation acceptance and artifact transitions
-- ✅ Retrieval API with filtering, pagination, and access tracking
-- ✅ Observability metrics (total entries, by type, retrieval frequency, most accessed)
-- ✅ Read-only UI in Observability → Memory tab
-
-**Sprint 16 — Retrieval Surfaces Implemented:**
-- ✅ Structured retrieval for repair, meta-agent, artifact generation, and human review
-- ✅ Deterministic ranking (confidence + relevance + recency + tag overlap + reuse)
-- ✅ Retrieval logging and decision-assisted tracking
-- ✅ Related Memory panel in Meta-Agents and Meta-Artifacts pages
-
-**Sprint 17 — Memory Summaries Implemented:**
-- ✅ `memory_summaries` table with RLS and duplicate prevention
-- ✅ 6 summary types: failure patterns, strategy effectiveness, recommendation decisions, artifact outcomes, architecture evolution, memory retrieval
-- ✅ Deterministic signal strength scoring (rule-based, bounded 0-1)
-- ✅ Summary generation, list, detail, and metrics endpoints
-- ✅ Summaries tab in Observability
-- ✅ Related Summary panels in Meta-Agents and Meta-Artifacts
-- ✅ Audit trail for summary generation
-- 📋 Semantic retrieval (future — requires embeddings)
-- 📋 Memory-driven agent reasoning (future)
+**Sprint 15 — Foundation:** ✅ Core tables, RLS, capture events, retrieval API, observability.
+**Sprint 16 — Retrieval Surfaces:** ✅ Structured retrieval for repair, meta-agents, artifacts, review. Deterministic ranking.
+**Sprint 17 — Memory Summaries:** ✅ 6 summary types, signal strength scoring, generation service, UI.
+**Sprint 18 — Memory-Aware Reasoning:** ✅ Meta-agent context enrichment, continuity scoring, redundancy guard, proposal layer v2.
 
 **Key Design Decisions:**
 - Cross-layer infrastructure (not a new execution layer)
 - Event-driven capture from Execution, Learning, Meta-Agent, Proposal, and Human layers
 - Dual indexing: structural (field-based) + semantic (future vector-based)
 - Strict tenant isolation via organization_id + RLS
-- Non-invasive: memory never mutates system behavior
+- Non-invasive: memory informs reasoning but never mutates system behavior
 
 Full specification: [ARCHITECTURE.md — Layer 9](ARCHITECTURE.md)
 
@@ -355,6 +296,6 @@ Full specification: [ARCHITECTURE.md — Layer 9](ARCHITECTURE.md)
 ## Governing Principle
 
 > The architecture is sufficient. Level 3 is complete.
-> Sixteen sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, and Memory Summaries.
-> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, meta-level recommendations, controlled engineering proposal generation, foundational engineering memory, contextual memory retrieval, and periodic historical synthesis.
-> Focus now: commercial stability, controlled learning activation, and memory-aware meta-agents.
+> Eighteen sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, Memory Summaries, and Memory-Aware Meta-Agents.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, memory-aware meta-level recommendations, historically-informed engineering proposals, foundational engineering memory, contextual memory retrieval, periodic historical synthesis, and experience-aware reasoning.
+> Focus now: commercial stability, memory-aware intelligence validation, and contextual self-improvement.

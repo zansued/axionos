@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Engineering Memory Foundation (Sprint 15) implemented — agents can now emit structured memory entries via `engineering-memory-service`. Memory capture is active on recommendation acceptance and artifact lifecycle transitions. Previous: Added Engineering Memory interaction design.
+> **What changed (2026-03-07):** Sprint 18 — Memory-Aware Meta-Agents implemented. All 4 meta-agents now use engineering memory and summaries as advisory historical context. Historical continuity scoring, redundancy suppression, and decision/outcome-aware framing are active. Proposal Layer v2 includes Related Historical Context sections. Previous: Memory Summaries (Sprint 17).
 >
 > Last updated: 2026-03-07
 
@@ -348,13 +348,33 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 12. Meta-Agents (Planned — Architecture Designed, Not Implemented)
+## 12. Meta-Agents — Active (Sprints 13–18)
 
-> **Status:** 📋 Architecture designed — **Not implemented**
-> **Dependency:** Requires stable Learning Agents v2
-> **Target:** Level 4.5 — Self-Designing Engineering System
+> **Status:** ✅ Active — 4 memory-aware meta-agents operational
+> **Maturity:** v1.2 — Memory-aware with historical context enrichment
+> **Target:** Level 5 — Institutional Engineering Memory
 
-Meta-Agents are higher-order agents that operate above the normal execution and learning agents. They analyze system behavior, design new agent roles, adjust orchestration strategies, recommend workflow changes, and optimize system architecture. They do **not** execute pipeline tasks directly.
+Meta-Agents are higher-order agents that operate above the normal execution and learning agents. They analyze system behavior with historical engineering context, design new agent roles, adjust orchestration strategies, recommend workflow changes, and optimize system architecture. They do **not** execute pipeline tasks directly.
+
+### Memory-Aware Capabilities (Sprint 18)
+
+Each meta-agent receives historical context via `meta-agent-memory-context.ts`:
+- `related_memory_entries` — Ranked memory entries by type relevance
+- `related_summaries` — Relevant memory summaries
+- `related_decisions` — Prior accepted/rejected/deferred decisions
+- `related_outcomes` — Prior implementation outcomes
+- `historical_context_score` — Deterministic 0-1 score
+
+Recommendations include structured historical signals:
+- `historical_alignment` — reinforces_prior_direction | extends_prior_direction | reopens_unresolved_issue | diverges_from_prior_direction | historically_novel
+- `decision_history_signal` — Prior decision context
+- `outcome_history_signal` — Prior outcome context
+- `historical_novelty_flag` — Whether recommendation is historically novel
+
+Redundancy guard (`historical-redundancy-guard.ts`) suppresses or downgrades:
+- Repeatedly rejected recommendations without new evidence
+- Near-duplicate recommendations within 3 days
+- Low-confidence recommendations with prior rejections
 
 ### 12.1 Architecture Meta-Agent
 
@@ -402,9 +422,9 @@ Meta-Agents are higher-order agents that operate above the normal execution and 
 | **Outputs** | `SYSTEM_EVOLUTION_REPORT`, `TECHNICAL_DEBT_ALERT`, `ARCHITECTURE_CHANGE_PROPOSAL` |
 | **Safety** | Advisory only. No system-level changes. |
 
-### Meta-Agent Output Structure (Planned)
+### Meta-Agent Output Structure (Active)
 
-All Meta-Agent outputs will follow this structure, persisted in a `meta_agent_recommendations` table:
+All Meta-Agent outputs follow this structure, persisted in a `meta_agent_recommendations` table:
 
 ```
 meta_agent_recommendation {
@@ -514,38 +534,41 @@ supabase/functions/_shared/agent-os/
 | Adaptive Learning | ✅ Implemented |
 | Learning Agents v1 (5 engines) | ✅ Implemented (Sprint 12) |
 | Learning Dashboard | ✅ Implemented (Sprint 12) |
+| Meta-Agents v1.2 (4 types) | ✅ Implemented (Sprints 13–18) |
+| Engineering Memory Full Stack | ✅ Implemented (Sprints 15–18) |
+| Memory-Aware Reasoning | ✅ Implemented (Sprint 18) |
 | Prompt Optimization (A/B testing) | 📋 NEXT horizon |
-| Meta-Agents (5 types) | 📋 Architecture designed, not implemented |
-| Engineering Memory Integration | 📋 Designed — not implemented |
+| Semantic Retrieval | 📋 Planned |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
 
 ---
 
-## 16. Engineering Memory Interaction (Designed)
+## 16. Engineering Memory Interaction (Active — Sprints 15–18)
 
-> **Status:** Designed — Not implemented
+> **Status:** ✅ Active — Full stack operational
 
 ### Overview
 
-Engineering Memory is a cross-layer knowledge infrastructure that agents will use to retrieve past engineering experience. Agents do **not** write directly to memory — capture is event-driven from layer outputs. Agents **read** memory to inform decisions.
+Engineering Memory is a cross-layer knowledge infrastructure that agents use to retrieve past engineering experience. Agents do **not** write directly to memory — capture is event-driven from layer outputs. Agents **read** memory to inform decisions.
 
 ### Agent Retrieval Use Cases
 
-| Agent Class | Retrieval Context | Memory Types Used |
-|-------------|-------------------|-------------------|
-| **Build Agents** | During repair attempts | Error Memory, Strategy Memory |
-| **Validation Agents** | During preventive checks | Error Memory, Execution Memory |
-| **Architecture Agents** | During planning | Design Memory, Outcome Memory |
-| **Meta-Agents** | During recommendation generation | All memory types |
-| **Proposal Generators** | During artifact generation | Design Memory, Decision Memory |
+| Agent Class | Retrieval Context | Memory Types Used | Status |
+|-------------|-------------------|-------------------|--------|
+| **Build Agents** | During repair attempts | Error Memory, Strategy Memory | ✅ Active |
+| **Validation Agents** | During preventive checks | Error Memory, Execution Memory | ✅ Active |
+| **Architecture Agents** | During planning | Design Memory, Outcome Memory | ✅ Active |
+| **Meta-Agents** | During recommendation generation | All memory types + summaries | ✅ Active (Sprint 18) |
+| **Proposal Generators** | During artifact generation | Design Memory, Decision Memory | ✅ Active (Sprint 18) |
 
-### Memory-Driven Decisions (Future)
+### Memory-Aware Reasoning (Active — Sprint 18)
 
-1. **Repair Selection:** Before attempting a repair strategy, query Strategy Memory for past effectiveness of similar strategies on similar errors.
-2. **Architecture Validation:** Before generating architecture proposals, query Design Memory for prior proposals addressing similar components.
-3. **Meta-Agent Analysis:** During recommendation generation, query Outcome Memory to assess the impact of previously implemented recommendations.
-4. **Human Review Support:** During artifact review, surface related Decision Memory entries showing past acceptance/rejection patterns.
+1. **Meta-Agent Analysis:** Each meta-agent queries relevant memory entries, summaries, prior decisions, and outcomes via `meta-agent-memory-context.ts`.
+2. **Historical Continuity:** `historical-continuity-scoring.ts` computes support/conflict/context scores to measure alignment with prior history.
+3. **Redundancy Guard:** `historical-redundancy-guard.ts` suppresses or downgrades recommendations that repeat previously rejected ideas without new evidence.
+4. **Proposal Context:** Artifact generation includes Related Historical Context sections with prior decisions, outcomes, and summary references.
+5. **Human Review Support:** Review UI surfaces related memory entries, summaries, and historical alignment indicators.
 
 ### Safety Boundaries
 
@@ -554,9 +577,10 @@ Engineering Memory is a cross-layer knowledge infrastructure that agents will us
 - Memory absence must not prevent agent operation (graceful degradation)
 - Memory queries must always be scoped by `organization_id` (tenant isolation)
 - Memory must not override governance rules or policy engine decisions
+- Memory informs but never dictates recommendations or proposals
 
 ---
 
 ## 17. Governing Principle
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands.
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions.

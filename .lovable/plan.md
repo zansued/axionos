@@ -1,7 +1,7 @@
 # AxionOS — Execution Plan
 
 > Last updated: 2026-03-07
-> Mode: **Level 4.5 — Meta-Aware Engineering Platform**
+> Mode: **Level 5 — Institutional Engineering Memory**
 > Execution: **Sprint-based**
 
 ---
@@ -63,19 +63,20 @@ Every new capability must be governable, auditable, and non-destructive before i
 | Sprint 15 | Engineering Memory Foundation — memory tables, capture events, retrieval API, observability | ✅ |
 | Sprint 16 | Memory Retrieval Surfaces — repair, meta-agent, artifact, review retrieval with ranking | ✅ |
 | Sprint 17 | Memory Summaries — 6 summary types, signal strength scoring, generation service, UI | ✅ |
+| Sprint 18 | Memory-Aware Meta-Agents — historical context enrichment, continuity scoring, redundancy guard, proposal layer v2 | ✅ |
 
 ---
 
 ## Current State
 
-AxionOS is a **Meta-Aware Engineering Platform** (Level 4.5):
+AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
 
 - **Execution:** Stable 32-stage deterministic pipeline with DAG orchestration, runtime validation, autonomous repair, and preventive engineering.
 - **Learning:** Active rule-based learning with prompt outcome analysis, strategy effectiveness tracking, predictive error detection, and bounded weight adjustment.
-- **Meta-Analysis:** 4 active meta-agents analyzing cross-layer signals and generating architectural recommendations. Recommendation-only — no system mutation.
-- **Proposal Generation:** Accepted recommendations produce structured engineering proposals (ADRs, architecture proposals, agent role specs, workflow change proposals, implementation plans). Artifacts are engineering documents — approval does not trigger automatic implementation.
-- **Engineering Memory:** Foundation operational. Retrieval surfaces active. Memory summaries operational with 6 deterministic summary types and signal strength scoring.
-- **Memory Summaries:** Periodic historical synthesis available as contextual input for meta-agents and human review.
+- **Meta-Analysis:** 4 memory-aware meta-agents with historical context enrichment, continuity scoring, redundancy suppression, and alignment classification. Recommendation-only — no system mutation.
+- **Proposal Generation:** Accepted recommendations produce structured engineering proposals with Related Historical Context sections, decision/outcome signals, and historical novelty indicators.
+- **Engineering Memory:** Full stack operational — foundation, retrieval surfaces, summaries, and memory-aware reasoning.
+- **Historical Intelligence:** Continuity scoring, redundancy guard, and historical alignment active across all meta-agents and proposals.
 - **Commercial:** Product plans, billing, workspace isolation, and usage enforcement active.
 - **Governance:** Full audit trail, stage permissions, SLA enforcement, and review workflows across recommendations and artifacts.
 
@@ -83,16 +84,19 @@ AxionOS is a **Meta-Aware Engineering Platform** (Level 4.5):
 
 ## Next Phases
 
-### Level 5 — Institutional Engineering Memory
+### Level 5 — Institutional Engineering Memory ✅
 
-**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2** (Next)
+**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2** ✅
 
-Use historical memory and summaries to improve the quality of recommendations and artifacts.
+Meta-agents and proposals reason with historical engineering context:
 
-- Meta-agents query relevant summaries before generating recommendations
-- Artifact generation retrieves similar past proposals and summary context
-- Recommendations include historical context from summaries
-- Memory influence is traced and auditable
+- ✅ Memory context layer per meta-agent type
+- ✅ Historical continuity scoring (support/conflict/context)
+- ✅ Historical alignment classification (5 categories)
+- ✅ Redundancy guard with conservative suppression rules
+- ✅ Proposal Layer v2 with Related Historical Context
+- ✅ Decision/outcome-aware framing
+- ✅ Graceful degradation on memory unavailability
 
 ### Level 5.5 — Self-Improving Engineering Platform
 
@@ -144,7 +148,7 @@ Use historical memory and summaries to improve the quality of recommendations an
 | Adaptive Repair Routing | ✅ |
 | Learning Foundation | ✅ |
 | Learning Agents v1 | ✅ |
-| Meta-Agents v1 (4 active agents) | ✅ |
+| Meta-Agents v1.2 (4 memory-aware agents) | ✅ |
 | Controlled Proposal Generation | ✅ |
 | Engineering Memory Foundation | ✅ |
 | Governance (gates, SLAs, audit logs) | ✅ |

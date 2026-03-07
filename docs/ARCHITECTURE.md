@@ -4,8 +4,8 @@
 >
 > **Last updated:** 2026-03-07
 >
-> **Current state:** Level 4.5 — Meta-Aware Engineering Platform.
-> Nine architectural layers active or designed. Engineering Memory Foundation implemented (Sprint 15).
+> **Current state:** Level 5 — Institutional Engineering Memory Platform.
+> Nine architectural layers active. Memory-aware meta-agents and proposal layer v2 operational (Sprint 18).
 
 ---
 
@@ -40,26 +40,26 @@ A governed engineering platform with active learning, meta-analysis, and control
 | Level 2 | Software Builder | ✅ Complete |
 | Level 3 | Autonomous Engineering System | ✅ Complete |
 | Level 4 | Self-Learning Software Factory | ✅ Complete |
-| Level 4.5 | Meta-Aware Engineering Platform | ✅ Current |
-| Level 5 | Institutional Engineering Memory | 📋 Next (partially implemented) |
+| Level 4.5 | Meta-Aware Engineering Platform | ✅ Complete |
+| Level 5 | Institutional Engineering Memory | ✅ Current |
 | Level 5.5 | Contextual / Self-Improving Platform | 🔮 Future horizon |
 | Level 6 | Discovery-Driven Engineering | 🔮 Long-term |
 
-> **Current position:** Level 4.5 — Meta-Aware Engineering Platform.
-> **System state:** Execution + Learning + Meta-Analysis + Proposal Generation active.
+> **Current position:** Level 5 — Institutional Engineering Memory.
+> **System state:** Execution + Learning + Meta-Analysis + Memory-Aware Proposals active.
 > **Kernel status:** Stable and operational.
 > **Learning status:** Active, rule-based, auditable.
-> **Meta-Agent status:** Active, recommendation-only, 4 agents operational.
-> **Proposal status:** Active, artifact generation from accepted recommendations.
-> **Engineering Memory:** Foundation implemented (Sprint 15). Retrieval surfaces and summaries not yet active.
+> **Meta-Agent status:** Active, memory-aware, 4 agents with historical context enrichment.
+> **Proposal status:** Active, artifact generation with Related Historical Context sections.
+> **Engineering Memory:** Full stack operational — foundation, retrieval, summaries, memory-aware reasoning.
 
 ### Implementation Horizons
 
 | Horizon | Focus | Status |
 |---------|-------|--------|
-| **DONE** | Kernel + Commercial + Learning + Meta-Agents + Proposals + Memory Foundation | ✅ 15 Sprints Complete |
-| **NEXT** | Memory Retrieval Surfaces + Memory-Aware Meta-Agents | 📋 Planned |
-| **LATER** | Memory Summaries + Contextual Intelligence | 📋 Planned |
+| **DONE** | Kernel + Commercial + Learning + Meta-Agents + Proposals + Memory Full Stack | ✅ 18 Sprints Complete |
+| **NEXT** | Contextual Self-Improvement + Semantic Retrieval | 📋 Planned |
+| **LATER** | Discovery-Driven Architecture Experimentation | 📋 Planned |
 | **FUTURE** | Discovery-Driven Architecture Experimentation | 🔮 Vision |
 
 ### Technology Stack
@@ -84,12 +84,12 @@ A governed engineering platform with active learning, meta-analysis, and control
 
 ## 2. Active Architecture Layers
 
-AxionOS consists of nine layers. Layers 1–8 are active and operational. Layer 9 has its foundation implemented with retrieval surfaces and summaries planned.
+AxionOS consists of nine layers. All nine layers are active and operational.
 
 ### Layer Interaction Flow
 
 ```
-  Layer 9: Engineering Memory Architecture     ← Cross-layer (Foundation implemented)
+  Layer 9: Engineering Memory Architecture     ← Cross-layer (Full stack active)
   ─────────────────────────────────────────
   Layer 8: Proposal Generation Layer           ← Active (Sprint 14)
           ↑
@@ -265,10 +265,13 @@ Engineering Memory is a **cross-layer infrastructure** that captures knowledge f
 
 **Purpose:** Introduce higher-order agents that reason about the system itself — analyzing execution patterns, designing new agent roles, optimizing workflows, and advising on architectural evolution.
 
-**Status:** ✅ Active (Sprint 13, hardened Sprint 13.5)
+**Status:** ✅ Active (Sprint 13, hardened Sprint 13.5, memory-aware Sprint 18)
 
 **Includes:**
-- 4 active meta-agents analyzing cross-layer signals
+- 4 memory-aware meta-agents analyzing cross-layer signals with historical context
+- Historical continuity scoring (support, conflict, context scores)
+- Historical alignment classification (reinforces, extends, reopens, diverges, novel)
+- Redundancy guard suppressing/downgrading weak historically rejected recommendations
 - Recommendation deduplication via content signatures
 - Structured recommendation lifecycle (pending → reviewed → accepted → rejected → deferred)
 - Read-only analysis of all lower layers
@@ -284,9 +287,14 @@ Engineering Memory is a **cross-layer infrastructure** that captures knowledge f
 
 **Persistence:** `meta_agent_recommendations`
 
-**Critical constraint:** Meta-Agents are **recommendation-only**. They do not modify pipeline stages, governance rules, billing, contracts, or agent behavior. All recommendations require human review before any structural change is considered.
+**Memory-Aware Context (Sprint 18):**
+- Each meta-agent receives: `related_memory_entries`, `related_summaries`, `related_decisions`, `related_outcomes`, `historical_context_score`
+- Recommendations include: `historical_alignment`, `decision_history_signal`, `outcome_history_signal`, `historical_novelty_flag`
+- Redundancy guard modules: `historical-continuity-scoring.ts`, `historical-redundancy-guard.ts`, `meta-agent-memory-context.ts`
 
-**Interactions:** Consumes data from all lower layers (read-only). Produces recommendations consumed by Layer 8 (Proposal Generation).
+**Critical constraint:** Meta-Agents are **recommendation-only**. They do not modify pipeline stages, governance rules, billing, contracts, or agent behavior. All recommendations require human review before any structural change is considered. Memory and summaries inform but do not dictate recommendations.
+
+**Interactions:** Consumes data from all lower layers including Layer 9 memory (read-only). Produces recommendations consumed by Layer 8 (Proposal Generation).
 
 ---
 
@@ -294,7 +302,7 @@ Engineering Memory is a **cross-layer infrastructure** that captures knowledge f
 
 **Purpose:** Transform accepted meta-agent recommendations into structured engineering proposals (artifacts) that humans can review, approve, and implement.
 
-**Status:** ✅ Active (Sprint 14, hardened Sprint 14.5)
+**Status:** ✅ Active (Sprint 14, hardened Sprint 14.5, memory-aware Sprint 18)
 
 **Includes:**
 - Artifact generation from accepted recommendations
@@ -323,6 +331,11 @@ rejected  rejected
 
 **Persistence:** `meta_agent_artifacts`
 
+**Memory-Aware Artifacts (Sprint 18):**
+- Artifacts include a structured **Related Historical Context** section with up to 3–5 historical references
+- Prior decisions, outcomes, and summary context are embedded in proposals
+- Historical alignment and novelty indicators help reviewers assess context
+
 **Critical constraint:** Artifacts are **engineering proposals only**. Approving or implementing an artifact does not automatically modify the system. Human implementation is required for any structural change. No artifact or review action mutates the pipeline, governance, billing, contracts, or agent behavior.
 
 **Interactions:** Consumes accepted recommendations from Layer 7. Produces engineering proposals for human review. Emits memory capture events to Layer 9.
@@ -333,7 +346,7 @@ rejected  rejected
 
 **Purpose:** Cross-layer knowledge infrastructure that captures, structures, indexes, and retrieves engineering experience over time.
 
-**Status:** Foundation implemented (Sprint 15). Retrieval surfaces, summaries, and semantic indexing are designed but not yet implemented.
+**Status:** Full stack operational (Sprints 15–18). Foundation, retrieval surfaces, summaries, and memory-aware reasoning all active.
 
 **Design Principles:**
 
@@ -374,10 +387,7 @@ rejected  rejected
 
 | Component | Status |
 |-----------|--------|
-| Memory retrieval surfaces in repair, meta-agents, artifact generation | 📋 Planned |
-| Memory summaries (weekly/monthly synthesis) | 📋 Planned |
 | Semantic indexing via embeddings | 📋 Planned |
-| Memory-driven decision support during human review | 📋 Planned |
 
 **Data Model:**
 
@@ -426,7 +436,7 @@ rejected  rejected
 | used_in_decision | boolean | Whether it influenced a decision |
 | created_at | timestamptz | Retrieval time |
 
-**memory_summaries (Designed — Not Implemented)**
+**memory_summaries**
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -454,14 +464,22 @@ Additional capture events (pipeline completion, error patterns, strategy updates
 - **Structural Index (Active):** Query by explicit fields — memory_type, related_stage, related_component, tags, source_type.
 - **Semantic Index (Planned):** Vector-based contextual retrieval using embeddings.
 
-**Retrieval Surfaces (Planned):**
+**Retrieval Surfaces (Active — Sprint 16):**
 
-| Context | Use Case |
-|---------|----------|
-| During repair | Retrieve past strategies used for similar errors |
-| During meta-agent analysis | Retrieve previous proposals affecting similar stages |
-| During artifact generation | Retrieve previous ADR drafts addressing similar issues |
-| During human review | Show related past decisions and outcomes |
+| Context | Use Case | Status |
+|---------|----------|--------|
+| During repair | Retrieve past strategies used for similar errors | ✅ |
+| During meta-agent analysis | Retrieve memory, summaries, decisions, outcomes | ✅ |
+| During artifact generation | Retrieve historical context for proposals | ✅ |
+| During human review | Show related past decisions and outcomes | ✅ |
+
+**Memory-Aware Reasoning (Active — Sprint 18):**
+
+| Module | Purpose |
+|--------|---------|
+| `meta-agent-memory-context.ts` | Gather ranked historical context per meta-agent type |
+| `historical-continuity-scoring.ts` | Compute support/conflict/context scores (0-1, deterministic) |
+| `historical-redundancy-guard.ts` | Suppress/downgrade weak historically redundant recommendations |
 
 **Safety Constraints:** Engineering Memory must **not** change system configuration, alter execution pipeline, bypass governance, or expose tenant data across organizations. Memory remains **informational infrastructure only**. The pipeline executes identically whether memory is available or not.
 
@@ -749,12 +767,12 @@ supabase/functions/
 +-- Pipeline Control                (7 functions)
 +-- Commercial Readiness            (2 functions -- Sprint 11)
 +-- Learning Agents                 (6 functions -- Sprint 12)
-+-- Meta-Agents                     (3 functions -- Sprint 13-14)
-+-- Engineering Memory              (1 function -- Sprint 15)
++-- Meta-Agents                     (3 functions -- Sprint 13-14, 18)
++-- Engineering Memory              (2 functions -- Sprint 15, 17)
 +-- Support                         (11 functions)
 +-- _shared/                        (15+ helper modules)
     +-- agent-os/                   (14 Agent OS modules)
-    +-- meta-agents/               (Meta-agent types, scoring, validation)
+    +-- meta-agents/               (Meta-agent types, scoring, validation, memory context, continuity, redundancy)
 ```
 
 ---
@@ -782,9 +800,12 @@ supabase/functions/
 | 15 | Agent OS v1.0 | 1-10 | 14 modules, 5 planes, full TypeScript contracts |
 | 16 | Commercial Readiness | 11 | Plans, billing, workspace roles, usage enforcement |
 | 17 | Learning Agents v1 | 12 | Prompt analysis, strategy tracking, prediction, weight adaptation |
-| 18 | Meta-Agents v1 | 13 | 4 meta-agents, recommendation lifecycle, deduplication |
+| 18 | Meta-Agents v1.2 | 13+18 | 4 memory-aware meta-agents, recommendation lifecycle, historical context |
 | 19 | Controlled Proposal Generation | 14 | 5 artifact types, review lifecycle, idempotency |
 | 20 | Engineering Memory Foundation | 15 | Memory tables, capture events, retrieval API, observability |
+| 21 | Memory Retrieval Surfaces | 16 | Structured retrieval for repair, meta-agents, artifacts, review |
+| 22 | Memory Summaries | 17 | 6 summary types, signal strength, generation service |
+| 23 | Memory-Aware Meta-Agents | 18 | Historical context, continuity scoring, redundancy guard, proposal v2 |
 
 ### Frozen
 
@@ -799,9 +820,10 @@ supabase/functions/
 
 | Horizon | Module | Priority |
 |---------|--------|----------|
-| NEXT | Memory Retrieval Surfaces (Sprint 16) | P0 |
-| NEXT | Memory Summaries (Sprint 17) | P1 |
-| LATER | Memory-Aware Meta-Agents (Sprint 18) | P1 |
+| DONE | Memory Retrieval Surfaces (Sprint 16) | ✅ |
+| DONE | Memory Summaries (Sprint 17) | ✅ |
+| DONE | Memory-Aware Meta-Agents (Sprint 18) | ✅ |
+| NEXT | Semantic Retrieval via Embeddings | P1 |
 | LATER | Product Analytics Engine | P2 |
 | FUTURE | Discovery-Driven Architecture | P3 |
 
@@ -862,7 +884,8 @@ supabase/functions/
 - `meta_agent_recommendations` — Architectural recommendations with scoring and deduplication
 - `meta_agent_artifacts` — Engineering proposals generated from accepted recommendations
 
-### Engineering Memory Tables (Sprint 15)
+### Engineering Memory Tables (Sprints 15–17)
 - `engineering_memory_entries` — Core memory storage with type taxonomy
 - `memory_links` — Typed relationships between memory entries
 - `memory_retrieval_log` — Retrieval tracking and access statistics
+- `memory_summaries` — Periodic historical synthesis with signal strength scoring
