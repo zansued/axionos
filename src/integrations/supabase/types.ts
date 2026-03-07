@@ -2053,6 +2053,63 @@ export type Database = {
           },
         ]
       }
+      repair_routing_log: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          decision_source: string
+          error_category: string
+          error_signature: string
+          id: string
+          initiative_id: string | null
+          organization_id: string | null
+          pipeline_stage: string
+          selected_strategy: string
+          strategy_rankings: Json
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          decision_source?: string
+          error_category?: string
+          error_signature?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string | null
+          pipeline_stage?: string
+          selected_strategy?: string
+          strategy_rankings?: Json
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          decision_source?: string
+          error_category?: string
+          error_signature?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string | null
+          pipeline_stage?: string
+          selected_strategy?: string
+          strategy_rankings?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_routing_log_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repair_routing_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       squad_members: {
         Row: {
           agent_id: string
