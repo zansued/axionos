@@ -63,6 +63,7 @@ Every new capability must be governable, auditable, and non-destructive before i
 | Sprint 15 | Engineering Memory Foundation — memory tables, capture events, retrieval API, observability | ✅ |
 | Sprint 16 | Memory Retrieval Surfaces — repair, meta-agent, artifact, review retrieval with ranking | ✅ |
 | Sprint 17 | Memory Summaries — 6 summary types, signal strength scoring, generation service, UI | ✅ |
+| Sprint 18 | Memory-Aware Meta-Agents — historical context enrichment, continuity scoring, redundancy guard, proposal layer v2 | ✅ |
 
 ---
 
