@@ -34,6 +34,7 @@ import { StrategyPortfolioDashboard } from "@/components/observability/StrategyP
 import { PlatformStabilizationDashboard } from "@/components/observability/PlatformStabilizationDashboard";
 import { EngineeringAdvisorDashboard } from "@/components/observability/EngineeringAdvisorDashboard";
 import { SemanticRetrievalDashboard } from "@/components/observability/SemanticRetrievalDashboard";
+import { DiscoveryArchitectureDashboard } from "@/components/observability/DiscoveryArchitectureDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
