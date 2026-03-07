@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 29 — Workspace / Tenant Adaptive Policy Tuning. Bounded tenant-aware execution policy tuning with drift detection and override guards now operational. Previous: Execution Mode Portfolio Optimization (Sprint 28).
+> **What changed (2026-03-07):** Sprint 30 — Platform Intelligence Entry. System-level behavior observation, bottleneck detection, pattern analysis, and advisory recommendations now operational. Previous: Workspace / Tenant Adaptive Policy Tuning (Sprint 29).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >

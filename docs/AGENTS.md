@@ -964,6 +964,53 @@ Workspace / Tenant Adaptive Policy Tuning allows AxionOS to specialize global ex
 
 ---
 
-## 23. Governing Principle
+## 23. Platform Intelligence Entry (Active — Sprint 30)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults.
+> **Status:** ✅ Active — System-level advisory intelligence
+
+### Overview
+
+Platform Intelligence observes and reasons about system-level behavior across all tenants, workspaces, execution contexts, and policy layers. It detects structural performance patterns, systemic bottlenecks, and platform-level inefficiencies, generating prioritized insights and recommendations without mutating kernel architecture.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Behavior Aggregator | `platform-intelligence/platform-behavior-aggregator.ts` | Collect signals across contexts, tenants, policies |
+| Bottleneck Detector | `platform-intelligence/platform-bottleneck-detector.ts` | Identify systemic bottlenecks by stage |
+| Pattern Analyzer | `platform-intelligence/platform-pattern-analyzer.ts` | Detect cross-platform patterns |
+| Insight Generator | `platform-intelligence/platform-insight-generator.ts` | Generate structured, explainable insights |
+| Recommendation Engine | `platform-intelligence/platform-recommendation-engine.ts` | Prioritized advisory recommendations |
+| Health Model | `platform-intelligence/platform-health-model.ts` | Global health indices (reliability, stability, cost, deploy, policy) |
+
+### Health Indices
+
+- `reliability_index` — 1 - failure_rate
+- `execution_stability_index` — Penalized by retry rate and bottleneck count
+- `repair_burden_index` — Repair rate across executions
+- `cost_efficiency_index` — Normalized cost per execution
+- `deploy_success_index` — Deploy success rate
+- `policy_effectiveness_index` — Weighted policy success rate
+
+### Safety Boundaries
+
+- Cannot mutate pipeline topology, governance, billing, or enforcement
+- Cannot auto-create execution policies or change policy scopes
+- Cannot bypass validation or review gates
+- All recommendations remain advisory-first unless explicitly approved
+- All insights are auditable with evidence references
+
+### Events
+
+- `platform_intelligence_recomputed` — Full recomputation completed
+- `platform_bottleneck_detected` — Bottleneck identified
+- `platform_pattern_detected` — Cross-platform pattern detected
+- `platform_insight_generated` — Insight created
+- `platform_recommendation_created` — Recommendation generated
+- `platform_recommendation_reviewed` — Recommendation accepted/rejected
+
+---
+
+## 24. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture.
