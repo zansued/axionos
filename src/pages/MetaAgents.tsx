@@ -98,11 +98,20 @@ export default function MetaAgents() {
         body: { recommendation_id: id, action, review_notes: notes },
       });
       if (error) throw error;
+      // If accepted, trigger artifact generation
+      if (action === "accepted") {
+        const { error: artErr } = await supabase.functions.invoke("meta-artifact-generator", {
+          body: { recommendation_id: id },
+        });
+        if (artErr) console.error("Artifact generation failed:", artErr);
+        else toast.success("Engineering artifact generated");
+      }
       return data;
     },
     onSuccess: () => {
       toast.success("Recommendation updated");
       queryClient.invalidateQueries({ queryKey: ["meta-recommendations"] });
+      queryClient.invalidateQueries({ queryKey: ["meta-artifacts"] });
       setReviewDialog(null);
       setReviewNotes("");
     },
