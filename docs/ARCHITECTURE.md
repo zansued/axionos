@@ -721,7 +721,6 @@ supabase/functions/
 
 | Horizon | Module | Priority |
 |---------|--------|----------|
-| FUTURE | Discovery-Driven Architecture | P3 |
 | FUTURE | Autonomous Implementation | P3 |
 | FUTURE | Cross-Family Strategy Coordination | P2 |
 

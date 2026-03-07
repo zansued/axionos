@@ -608,6 +608,7 @@ supabase/functions/_shared/agent-os/
 | Agent Memory Layer Operationalization | ✅ Implemented (Sprint 24) |
 | Predictive Error Detection Operationalization | ✅ Implemented (Sprint 25) |
 | Semantic Retrieval | ✅ Implemented (Sprint 36) |
+| Discovery-Driven Architecture Signals | ✅ Implemented (Sprint 37) |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
 
