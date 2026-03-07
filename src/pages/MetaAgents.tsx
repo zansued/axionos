@@ -397,7 +397,7 @@ export default function MetaAgents() {
           <p className="text-sm text-muted-foreground">{reviewDialog?.title}</p>
           {reviewDialog?.action === "accepted" && (
             <p className="text-xs text-primary bg-primary/5 border border-primary/20 rounded p-2">
-              Accepting this recommendation signals agreement. It does not automatically change system behavior.
+              Accepting this recommendation will generate an engineering artifact (ADR, proposal, or spec) for human review. It does not automatically change system behavior.
             </p>
           )}
           <Textarea
