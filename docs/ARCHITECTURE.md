@@ -26,9 +26,11 @@ A governed engineering platform with active learning, meta-analysis, and control
 - Preventive engineering with active prevention rules
 - Commercial readiness: product plans, billing, usage enforcement
 - Learning Agents v1: rule-based, auditable prompt and strategy optimization
-- Meta-Agents v1: 4 active meta-agents generating architectural recommendations
+- Meta-Agents v1.4: 4 memory-aware meta-agents with quality feedback loop and advisory calibration
 - Controlled proposal generation via engineering artifacts
 - Hardened review workflows for recommendations and artifacts
+- Proposal Quality Feedback Loop: quality scoring, outcome tracking, confidence calibration
+- Advisory Calibration Layer: structured diagnostic signals for future tuning
 - Engineering Memory Foundation: structured knowledge capture and retrieval
 - Agent OS v1.0 — a 14-module runtime architecture across 5 planes
 
