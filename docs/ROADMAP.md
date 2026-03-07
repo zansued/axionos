@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 14 — Controlled Meta-Agent Actions. Accepted recommendations now generate engineering artifacts (ADRs, architecture proposals, agent role specs, workflow change proposals, implementation plans). Artifacts follow a draft→reviewed→approved→implemented lifecycle with full audit trail. No automatic system mutation. Previous: Sprint 13 Hardening.
+> **What changed (2026-03-07):** Engineering Memory Architecture designed — cross-layer knowledge infrastructure (Layer 9) with 6 memory types, data model, capture strategy, retrieval surfaces, and synthesis model. Design-only. Previous: Sprint 14 Controlled Meta-Agent Actions.
 >
 > **Current Mode**: Level 4.5 — Meta-Aware Engineering Platform
 >
