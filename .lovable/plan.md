@@ -158,6 +158,8 @@ Meta-agents and proposals reason with historical engineering context:
 | Governance (gates, SLAs, audit logs) | ✅ |
 | Observability + Cost Tracking | ✅ |
 | Commercial Readiness (plans, billing, usage) | ✅ |
+| Proposal Quality Feedback Loop | ✅ |
+| Advisory Calibration Layer | ✅ |
 
 ---
 

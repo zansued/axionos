@@ -942,3 +942,11 @@ supabase/functions/
 - `memory_links` — Typed relationships between memory entries
 - `memory_retrieval_log` — Retrieval tracking and access statistics
 - `memory_summaries` — Periodic historical synthesis with signal strength scoring
+
+### Proposal Quality Tables (Sprint 19)
+- `proposal_quality_feedback` — Quality and outcome tracking per recommendation/artifact
+- `proposal_quality_summaries` — Periodic quality pattern summaries
+
+### Advisory Calibration Tables (Sprint 20)
+- `advisory_calibration_signals` — Structured diagnostic signals with evidence refs
+- `advisory_calibration_summaries` — Periodic calibration summary reports
