@@ -62,7 +62,7 @@ AxionOS has completed 36 implementation sprints spanning the full capability arc
 
 ---
 
-## DONE — Completed Sprints (1–33)
+## DONE — Completed Sprints (1–36)
 
 ### Foundation Layer (Sprints 1–10)
 
