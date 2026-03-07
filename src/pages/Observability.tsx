@@ -319,6 +319,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
+          {/* ===== CROSS-STAGE LEARNING ===== */}
+          <TabsContent value="cross-stage" className="mt-4">
+            <CrossStageLearningDashboard />
+          </TabsContent>
+
           {/* ===== PREDICTIVE ERROR DETECTION ===== */}
           <TabsContent value="predictive" className="mt-4">
             <PredictiveErrorDashboard />
