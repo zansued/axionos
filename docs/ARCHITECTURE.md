@@ -987,3 +987,13 @@ supabase/functions/
 - `tenant_policy_preference_profiles` — Org/workspace preference profiles with preferred modes, priority weights, and override limits
 - `tenant_policy_outcomes` — Tenant-specific outcome tracking with applied mode (global_default, tenant_tuned, workspace_tuned)
 - `tenant_policy_recommendations` — Tenant-level recommendations for preference profile lifecycle management
+
+### Platform Intelligence Tables (Sprint 30)
+- `platform_insights` — Structured platform-level insights with evidence, severity, and confidence
+- `platform_recommendations` — Prioritized advisory recommendations with status lifecycle
+
+### Platform Self-Calibration Tables (Sprint 31)
+- `platform_calibration_parameters` — Registry of calibratable parameters with allowed ranges, modes, and status
+- `platform_calibration_proposals` — Structured calibration proposals with rationale, evidence, and rollback guards
+- `platform_calibration_applications` — Applied calibrations with before/after values and outcome tracking
+- `platform_calibration_rollbacks` — Rollback records with restored values and reason lineage
