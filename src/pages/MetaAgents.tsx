@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import {
   Brain, Eye, CheckCircle, XCircle, Clock, ArrowUpDown,
   Layers, Users, Workflow, TrendingUp, Shield, AlertTriangle,
-  ArrowDown, ArrowUp,
+  ArrowDown, ArrowUp, BarChart3,
 } from "lucide-react";
 import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
 import { RelatedSummaryPanel } from "@/components/memory/RelatedSummaryPanel";
