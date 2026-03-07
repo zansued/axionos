@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 23 — Self-Improving Fix Agents v2 (Memory-Aware Repair Policies). Repair system now uses historical evidence, error patterns, strategy effectiveness, and engineering memory to select optimal repair strategies. Policy-driven, bounded, auditable, reversible. Previous: Bounded Promotion & Rollback Guard (Sprint 22).
+> **What changed (2026-03-07):** Sprint 24 — Agent Memory Layer Operationalization. Per-agent memory profiles, bounded retrieval, scoped injection, write-back, and quality scoring now operational. Previous: Self-Improving Fix Agents v2 (Sprint 23).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
