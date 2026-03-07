@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 32 — Execution Strategy Evolution. Bounded strategy variant synthesis, controlled experimentation, and safe promotion/rollback. Previous: Platform Self-Calibration (Sprint 31).
+> **What changed (2026-03-07):** Sprint 33 — Strategy Portfolio Governance. Portfolio-level lifecycle control, conflict detection, exposure balancing, and advisory-first optimization for strategy families. Previous: Execution Strategy Evolution (Sprint 32).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
