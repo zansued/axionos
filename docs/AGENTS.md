@@ -348,10 +348,10 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 12. Meta-Agents — Active (Sprints 13–18)
+## 12. Meta-Agents — Active (Sprints 13–20)
 
-> **Status:** ✅ Active — 4 memory-aware meta-agents operational
-> **Maturity:** v1.2 — Memory-aware with historical context enrichment
+> **Status:** ✅ Active — 4 memory-aware meta-agents with quality feedback and advisory calibration
+> **Maturity:** v1.4 — Quality feedback loop + advisory calibration layer
 > **Target:** Level 5 — Institutional Engineering Memory
 
 Meta-Agents are higher-order agents that operate above the normal execution and learning agents. They analyze system behavior with historical engineering context, design new agent roles, adjust orchestration strategies, recommend workflow changes, and optimize system architecture. They do **not** execute pipeline tasks directly.
