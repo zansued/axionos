@@ -5,7 +5,7 @@
 > - O sistema mostra valor visível?
 > - Essa etapa aproxima do resultado final?
 >
-> **What changed (2026-03-07):** Added Commercial Layer contracts (usage enforcement, billing), Learning Layer contracts (prompt metrics, strategy metrics, predictions, recommendations, weight adjustments), contract safety principles, cross-tenant access prohibition.
+> **What changed (2026-03-07):** Added Meta-Agent interaction contracts (planned), extended safety principles with meta-agent constraints. Previous: Added Commercial Layer contracts, Learning Layer contracts, contract safety principles.
 >
 > Last updated: 2026-03-07
 
