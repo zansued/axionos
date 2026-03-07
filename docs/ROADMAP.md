@@ -2,11 +2,11 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 17 — Memory Summaries implemented. Six deterministic summary types, signal strength scoring, summary generation/observability, summary UI tab, related summary panels in Meta-Agents and Meta-Artifacts. Previous: Memory Retrieval Surfaces (Sprint 16).
+> **What changed (2026-03-07):** Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2 implemented. Meta-agents now use engineering memory and summaries as advisory historical context. Historical continuity scoring, redundancy suppression, and decision/outcome-aware framing are active. Artifacts include structured Related Historical Context sections. Previous: Memory Summaries (Sprint 17).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
-> **Current Maturity**: Level 4.5 ✅ Complete → Level 5 🔄 Entering
+> **Current Maturity**: Level 5 🔄 Active
 >
 > Last updated: 2026-03-07
 
