@@ -261,6 +261,24 @@ Organized into four sequential sprints.
 
 ---
 
+## Sprint 8 — Preventive Engineering Layer
+
+**Objective:** Convert pattern knowledge into active prevention guardrails that reduce pipeline failures proactively.
+
+**Key Deliverables:**
+- Prevention Rule schema (`_shared/contracts/prevention-rule.schema.ts`)
+- Prevention Evaluator (`_shared/prevention/prevention-evaluator.ts`)
+- Prevention Rule Engine (`prevention-rule-engine/`)
+- `active_prevention_rules` and `prevention_events` tables with RLS
+- Pipeline integration in `pipeline-preventive-validation` stage
+- Candidate → Rule promotion (manual + auto)
+- PreventionDashboard UI component (Observability → Prevenção tab)
+- Prevention metrics: rules triggered, failures prevented, blocks, warnings
+
+**Status:** ✅ Complete
+
+---
+
 ## Success Metrics
 
 | Metric | Target |
