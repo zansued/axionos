@@ -465,6 +465,68 @@ Meta-Agents do not bypass human oversight at any point.
 
 ---
 
+### 12.6 Proposal Quality Feedback Loop (Sprint 19)
+
+**Purpose:** Track the quality and usefulness of recommendations and artifacts over time to enable evidence-based calibration.
+
+**Tables:**
+- `proposal_quality_feedback` — Tracks acceptance, implementation, and outcome signals per recommendation/artifact
+- `proposal_quality_summaries` — Periodic summaries of proposal quality patterns
+
+**Key modules:**
+- `proposal-quality-scoring.ts` — Deterministic quality scoring based on acceptance, implementation, and outcome signals
+- `proposal-quality-feedback-service.ts` — Feedback collection and aggregation
+- `proposal-quality-summary-service.ts` — Periodic quality summary generation
+
+**Metrics tracked:**
+- Recommendation acceptance rate per meta-agent type
+- Artifact implementation rate per artifact type
+- Downstream outcome quality (positive/negative/neutral)
+- Reviewer feedback scores
+- Confidence calibration accuracy
+
+**Safety:** Read-only analysis. Does not modify recommendations, artifacts, or meta-agent behavior.
+
+---
+
+### 12.7 Advisory Calibration Layer (Sprint 20)
+
+**Purpose:** Produce structured, explainable calibration signals that diagnose how AxionOS advisory intelligence should be tuned — without applying tuning automatically.
+
+**Calibration Domains:**
+
+| Domain | Purpose |
+|--------|---------|
+| `META_AGENT_PERFORMANCE` | Evaluate which meta-agents produce consistently useful output |
+| `PROPOSAL_USEFULNESS` | Analyze usefulness by artifact type |
+| `HISTORICAL_CONTEXT_VALUE` | Assess whether historical context is helping or hurting |
+| `REDUNDANCY_GUARD_EFFECTIVENESS` | Detect if suppression is too strict or too weak |
+| `NOVELTY_BALANCE` | Evaluate whether novel signals are under/over-scored |
+| `DECISION_FOLLOW_THROUGH` | Track implementation follow-through patterns |
+
+**Signal Types:** `UNDERPERFORMING_META_AGENT`, `HIGH_VALUE_META_AGENT`, `LOW_USEFULNESS_ARTIFACT_TYPE`, `HIGH_USEFULNESS_ARTIFACT_TYPE`, `HISTORICAL_CONTEXT_OVERWEIGHTED`, `HISTORICAL_CONTEXT_UNDERUSED`, `REDUNDANCY_GUARD_TOO_STRICT`, `REDUNDANCY_GUARD_TOO_WEAK`, `NOVEL_SIGNALS_UNDERSCORED`, `NOVEL_SIGNALS_OVERPROMOTED`, `LOW_FOLLOW_THROUGH_PATTERN`, `HIGH_FOLLOW_THROUGH_PATTERN`
+
+**Key modules:**
+- `calibration/types.ts` — Calibration taxonomy (domains, signal types)
+- `calibration/scoring.ts` — Deterministic scoring (signal_strength, confidence_score, risk_of_overcorrection)
+- `calibration/analysis-service.ts` — Analysis functions per domain
+- `advisory-calibration-engine/index.ts` — Edge function exposing calibration API
+
+**Tables:**
+- `advisory_calibration_signals` — Individual calibration signals with evidence refs
+- `advisory_calibration_summaries` — Periodic calibration summary reports
+
+**Each signal includes:**
+- `signal_strength` (0-1) — Magnitude of the calibration concern
+- `confidence_score` (0-1) — Reliability based on sample size and consistency
+- `risk_of_overcorrection` (0-1) — Risk that acting on this signal could overcorrect
+
+**Safety:** Calibration signals are **advisory only** and do not automatically tune the system. No auto-adjustment of meta-agent scoring, redundancy guard thresholds, historical weighting, or proposal generation behavior.
+
+**Audit events:** `ADVISORY_CALIBRATION_SIGNAL_CREATED`, `ADVISORY_CALIBRATION_SUMMARY_CREATED`, `ADVISORY_CALIBRATION_VIEWED`
+
+---
+
 ## 13. End-to-End Execution Flow
 
 ```
