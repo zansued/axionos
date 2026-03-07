@@ -99,6 +99,91 @@ A governed engineering platform with active learning, meta-analysis, platform in
 
 AxionOS consists of 17 layers organized into 6 architectural tiers.
 
+### Architecture Mind Map
+
+```
+                         ┌─────────────────────────────────────┐
+                         │        STRATEGY EVOLUTION           │
+                         │-------------------------------------│
+                         │ Strategy Families Registry          │
+                         │ Strategy Signal Interpreter         │
+                         │ Variant Synthesizer                 │
+                         │ Experiment Runner                   │
+                         │ Outcome Tracker                     │
+                         │ Promotion Rules                     │
+                         │ Rollback Engine                     │
+                         │ Strategy Lineage                    │
+                         └─────────────────┬───────────────────┘
+                                           │
+                                           ▼
+                         ┌─────────────────────────────────────┐
+                         │      PLATFORM SELF-CALIBRATION      │
+                         │-------------------------------------│
+                         │ Calibration Parameter Registry      │
+                         │ Calibration Signal Interpreter      │
+                         │ Calibration Proposal Engine         │
+                         │ Calibration Guardrails              │
+                         │ Calibration Runner                  │
+                         │ Outcome Tracker                     │
+                         │ Rollback Engine                     │
+                         └─────────────────┬───────────────────┘
+                                           │
+                                           ▼
+                         ┌─────────────────────────────────────┐
+                         │      PLATFORM INTELLIGENCE          │
+                         │-------------------------------------│
+                         │ Platform Behavior Aggregator        │
+                         │ Bottleneck Detector                 │
+                         │ Pattern Analyzer                    │
+                         │ Insight Generator                   │
+                         │ Recommendation Engine               │
+                         │ Platform Health Model               │
+                         └─────────────────┬───────────────────┘
+                                           │
+                                           ▼
+                         ┌─────────────────────────────────────┐
+                         │      EXECUTION GOVERNANCE           │
+                         │-------------------------------------│
+                         │ Execution Policy Intelligence       │
+                         │ Policy Portfolio Optimization       │
+                         │ Tenant / Workspace Adaptive Tuning  │
+                         │ Policy Routing                      │
+                         └─────────────────┬───────────────────┘
+                                           │
+                                           ▼
+                         ┌─────────────────────────────────────┐
+                         │           LEARNING LAYER            │
+                         │-------------------------------------│
+                         │ Prompt Optimization Engine          │
+                         │ Bounded Promotion & Rollback        │
+                         │ Self-Improving Fix Agents           │
+                         │ Agent Memory                        │
+                         │ Predictive Error Detection          │
+                         │ Learning Agents v2                  │
+                         └─────────────────┬───────────────────┘
+                                           │
+                                           ▼
+                         ┌─────────────────────────────────────┐
+                         │      OPERATIONAL INTELLIGENCE       │
+                         │-------------------------------------│
+                         │ Error Pattern Library               │
+                         │ Repair Strategy Tracking            │
+                         │ Adaptive Repair Routing             │
+                         │ Prevention Rule Candidates          │
+                         └─────────────────┬───────────────────┘
+                                           │
+                                           ▼
+                         ┌─────────────────────────────────────┐
+                         │      DETERMINISTIC PIPELINE         │
+                         │-------------------------------------│
+                         │ Stage Execution Engine              │
+                         │ Artifact Governance                 │
+                         │ Validation Engine                   │
+                         │ Publish Pipeline                    │
+                         │ Observability Feed                  │
+                         └─────────────────────────────────────┘
+```
+
 ### Layer Architecture
 
 ```
