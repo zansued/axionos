@@ -803,6 +803,9 @@ supabase/functions/
 | 18 | Meta-Agents v1 | 13 | 4 meta-agents, recommendation lifecycle, deduplication |
 | 19 | Controlled Proposal Generation | 14 | 5 artifact types, review lifecycle, idempotency |
 | 20 | Engineering Memory Foundation | 15 | Memory tables, capture events, retrieval API, observability |
+| 21 | Memory Retrieval Surfaces | 16 | Structured retrieval for repair, meta-agents, artifacts, review |
+| 22 | Memory Summaries | 17 | 6 summary types, signal strength, generation service |
+| 23 | Memory-Aware Meta-Agents | 18 | Historical context, continuity scoring, redundancy guard, proposal v2 |
 
 ### Frozen
 
