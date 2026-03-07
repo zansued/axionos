@@ -16,6 +16,7 @@ import {
   Layers, Users, Workflow, TrendingUp, Shield, AlertTriangle,
   ArrowDown, ArrowUp,
 } from "lucide-react";
+import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
 
 type RecStatus = "pending" | "reviewed" | "accepted" | "rejected" | "deferred";
 
