@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 27 — Execution Policy Intelligence. Bounded execution policy selection, context classification, runtime adjustments, outcome tracking, and explainability now operational. Previous: Learning Agents v2 (Sprint 26).
+> **What changed (2026-03-07):** Sprint 28 — Execution Mode Portfolio Optimization. Bounded portfolio evaluation, ranking, lifecycle management, conflict detection, and recommendations now operational. Previous: Execution Policy Intelligence (Sprint 27).
 >
 > Last updated: 2026-03-07
 
