@@ -315,6 +315,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live Feed</TabsTrigger>
           </TabsList>
 
+          {/* ===== AGENT MEMORY ===== */}
+          <TabsContent value="agent-memory" className="mt-4">
+            <AgentMemoryDashboard />
+          </TabsContent>
+
           {/* ===== REPAIR INTELLIGENCE ===== */}
           <TabsContent value="repair" className="mt-4">
             <RepairIntelligenceDashboard />
