@@ -517,6 +517,11 @@ export default function Observability() {
           <TabsContent value="patterns" className="mt-4">
             <ErrorPatternRadar />
           </TabsContent>
+
+          {/* ===== PREVENTION ===== */}
+          <TabsContent value="prevention" className="mt-4">
+            <PreventionDashboard />
+          </TabsContent>
         </Tabs>
       </div>
     </AppLayout>
