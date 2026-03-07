@@ -54,6 +54,23 @@ serve(async (req) => {
       metadata: { meta_agents: ["ARCHITECTURE", "AGENT_ROLE", "WORKFLOW", "EVOLUTION"] },
     });
 
+    // ── Sprint 16: Retrieve memory context for each meta-agent (advisory, non-blocking) ──
+    const memoryContexts: Record<string, unknown[]> = {};
+    try {
+      const [archMem, roleMem, workflowMem, evolutionMem] = await Promise.all([
+        retrieveForMetaAgent(sc, organization_id, { meta_agent_type: "ARCHITECTURE_META_AGENT" }).catch(() => ({ entries: [] })),
+        retrieveForMetaAgent(sc, organization_id, { meta_agent_type: "AGENT_ROLE_DESIGNER" }).catch(() => ({ entries: [] })),
+        retrieveForMetaAgent(sc, organization_id, { meta_agent_type: "WORKFLOW_OPTIMIZER" }).catch(() => ({ entries: [] })),
+        retrieveForMetaAgent(sc, organization_id, { meta_agent_type: "SYSTEM_EVOLUTION_ADVISOR" }).catch(() => ({ entries: [] })),
+      ]);
+      memoryContexts.architecture = archMem.entries;
+      memoryContexts.agent_role = roleMem.entries;
+      memoryContexts.workflow = workflowMem.entries;
+      memoryContexts.evolution = evolutionMem.entries;
+    } catch (e) {
+      console.warn("Memory retrieval for meta-agents failed (non-blocking):", e);
+    }
+
     // Run all Meta-Agents in parallel
     const [archRecs, roleRecs, workflowRecs, evolutionRecs] = await Promise.all([
       runArchitectureMetaAgent(sc, organization_id).catch((e) => { console.error("Architecture MA error:", e); return []; }),
