@@ -139,6 +139,23 @@ No new architecture expansion until these sprints are complete and stable.
 
 ---
 
+### Sprint 8 — Preventive Engineering Layer
+
+**Goal:** Convert pattern knowledge into active prevention guardrails that reduce pipeline failures proactively.
+
+**Deliverables:**
+- Prevention Rule schema contract
+- Prevention Evaluator (deterministic rule matching engine)
+- Prevention Rule Engine (candidate → rule promotion)
+- `active_prevention_rules` and `prevention_events` tables with RLS
+- Pipeline integration in preventive-validation stage
+- PreventionDashboard UI (Observability → Prevenção tab)
+- Prevention metrics: rules triggered, failures prevented, blocks, warnings
+
+**Status:** ✅ Implemented
+
+---
+
 ### Kernel — What Remains Active
 
 | Module | Status |
@@ -152,6 +169,7 @@ No new architecture expansion until these sprints are complete and stable.
 | Autonomous Build Repair + Fix Orchestrator | ✅ Operational |
 | Evidence-Oriented Repair Loop | ✅ Operational |
 | Error Pattern Library | ✅ Operational |
+| Preventive Engineering Layer | ✅ Operational |
 | Governance (gates, SLAs, audit logs) | ✅ Operational |
 | Product-Level Observability | ✅ Operational |
 | Stage & Agent IO Contracts | ✅ Implemented |
