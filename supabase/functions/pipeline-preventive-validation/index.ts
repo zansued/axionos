@@ -159,6 +159,84 @@ serve(async (req) => {
       });
     }
 
+    // ── STEP 2b: Active Prevention Rules Evaluation (Sprint 8) ──
+    const { data: activeRules } = await serviceClient
+      .from("active_prevention_rules")
+      .select("*")
+      .eq("organization_id", ctx.organizationId)
+      .eq("enabled", true)
+      .order("confidence_score", { ascending: false })
+      .limit(50);
+
+    const triggeredRules: Array<{ rule_id: string; action_type: string; description: string }> = [];
+
+    if (activeRules && activeRules.length > 0) {
+      const pipelineContext = {
+        stage: "architecture",
+        error_categories: issues.map(i => i.category),
+        file_types: [...plannedFiles].map(f => f.split(".").pop() || ""),
+        dependencies: npmDeps.map((d: any) => d.package),
+      };
+
+      for (const rule of activeRules) {
+        const conditions = (rule.trigger_conditions as any[]) || [];
+        let matched = conditions.length > 0;
+        for (const cond of conditions) {
+          const ctxVal = pipelineContext[cond.field as keyof typeof pipelineContext];
+          if (!ctxVal) { matched = false; break; }
+          const valStr = String(cond.value);
+          if (cond.operator === "contains") {
+            const arr = Array.isArray(ctxVal) ? ctxVal : [ctxVal];
+            if (!arr.some((v: string) => String(v).includes(valStr))) { matched = false; break; }
+          } else if (cond.operator === "equals") {
+            if (String(ctxVal) !== valStr) { matched = false; break; }
+          }
+        }
+
+        if (matched) {
+          triggeredRules.push({
+            rule_id: rule.id,
+            action_type: rule.action_type,
+            description: rule.description,
+          });
+
+          // Record prevention event
+          await serviceClient.from("prevention_events").insert({
+            rule_id: rule.id,
+            initiative_id: ctx.initiativeId,
+            organization_id: ctx.organizationId,
+            pipeline_stage: "architecture",
+            action_taken: rule.action_type,
+            context: { matched_conditions: conditions },
+            prevented: rule.action_type === "block",
+          });
+
+          // Increment trigger count
+          await serviceClient.from("active_prevention_rules")
+            .update({
+              times_triggered: (rule.times_triggered || 0) + 1,
+              times_prevented: rule.action_type === "block" ? (rule.times_prevented || 0) + 1 : rule.times_prevented,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", rule.id);
+
+          const severity = rule.action_type === "block" ? "critical" : "warning";
+          issues.push({
+            severity,
+            category: `prevention_${rule.action_type}`,
+            message: `Prevention rule triggered: ${rule.description}`,
+            fix_applied: rule.action_type === "block" ? null : "Warning acknowledged",
+          });
+        }
+      }
+
+      if (triggeredRules.length > 0) {
+        await pipelineLog(ctx, "pv_active_rules", `🛡️ ${triggeredRules.length} active prevention rules triggered`, {
+          triggered: triggeredRules,
+        });
+      }
+    }
+
     // ── STEP 3: AI-powered architecture review ──
     const criticalIssues = issues.filter(i => i.severity === "critical");
 
