@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 35 — Autonomous Engineering Advisor. Cross-layer advisory synthesis, prioritized recommendations, clustering, review workflow. Previous: Platform Self-Stabilization (Sprint 34).
+> **What changed (2026-03-07):** Sprint 36 — Semantic Retrieval & Embedding Memory Expansion. Unified embedding-backed retrieval across all intelligence layers with bounded ranking, domain registry, index management, and structured fallback. Previous: Autonomous Engineering Advisor (Sprint 35).
 >
 > Last updated: 2026-03-07
 
