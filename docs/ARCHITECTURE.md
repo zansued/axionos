@@ -721,11 +721,9 @@ supabase/functions/
 
 | Horizon | Module | Priority |
 |---------|--------|----------|
-| NEXT | Semantic Retrieval via Embeddings | P1 |
-| NEXT | Strategy Portfolio Governance | P1 |
-| LATER | Autonomous Engineering Advisor | P2 |
-| LATER | Platform Self-Stabilization | P2 |
 | FUTURE | Discovery-Driven Architecture | P3 |
+| FUTURE | Autonomous Implementation | P3 |
+| FUTURE | Cross-Family Strategy Coordination | P2 |
 
 ---
 

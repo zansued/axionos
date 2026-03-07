@@ -3,7 +3,7 @@
 > Sprint-by-sprint implementation record mapping capabilities to architectural layers.
 >
 > **Last updated:** 2026-03-07
-> **Current Sprint:** 32 (Execution Strategy Evolution) — ✅ Complete
+> **Current Sprint:** 36 (Semantic Retrieval & Embedding Memory Expansion) — ✅ Complete
 
 ---
 
@@ -106,15 +106,30 @@
 
 ---
 
-### Phase 7: Strategy Evolution (Sprint 32)
+### Phase 7: Strategy Evolution & Governance (Sprints 32–33)
 
-**Goal:** Bounded strategy variant experimentation with controlled rollout and safe promotion/rollback.
+**Goal:** Bounded strategy variant experimentation with controlled rollout, safe promotion/rollback, and portfolio-level governance.
 
 | Sprint | Capability | Architectural Layer |
 |--------|-----------|-------------------|
 | 32 | Execution Strategy Evolution | Strategy Evolution Layer |
+| 33 | Strategy Portfolio Governance | Strategy Portfolio Governance Layer |
 
-**Delivered:** Strategy family registry, signal interpretation, variant synthesis, mutation guardrails, experiment runner, outcome tracking, promotion rules, rollback engine, lineage/explainability.
+**Delivered:** Strategy family registry, signal interpretation, variant synthesis, mutation guardrails, experiment runner, outcome tracking, promotion rules, rollback engine, lineage/explainability, portfolio evaluation, ranking, lifecycle management, conflict detection.
+
+---
+
+### Phase 8: Platform Stabilization & Advisory Intelligence (Sprints 34–36)
+
+**Goal:** Self-stabilization, autonomous engineering advisory, and unified semantic retrieval across all intelligence layers.
+
+| Sprint | Capability | Architectural Layer |
+|--------|-----------|-------------------|
+| 34 | Platform Self-Stabilization | Platform Stabilization Layer |
+| 35 | Autonomous Engineering Advisor | Engineering Advisory Layer |
+| 36 | Semantic Retrieval & Embedding Memory Expansion | Semantic Retrieval Layer |
+
+**Delivered:** Stability monitoring, stabilization actions, bounded interventions, rollback-safe stabilization, engineering signal aggregation, opportunity synthesis, prioritized recommendations, explainability, review workflows, advisory clustering, unified embedding-backed retrieval, domain registry, index management, ranking, guardrails, retrieval quality evaluation.
 
 ---
 
@@ -158,10 +173,10 @@
 | Strategy experiment runner | ✅ IMPLEMENTED | 32 | `execution-strategy/execution-strategy-experiment-runner.ts` |
 | Strategy outcome tracking | ✅ IMPLEMENTED | 32 | `execution-strategy/execution-strategy-outcome-tracker.ts` |
 | Strategy promotion / rollback rules | ✅ IMPLEMENTED | 32 | `execution-strategy/execution-strategy-promotion-rules.ts`, `execution-strategy-rollback-engine.ts` |
-| Semantic retrieval via embeddings | 📋 PLANNED | — | pgvector infrastructure exists, retrieval layer not built |
-| Strategy portfolio governance | 📋 PLANNED | — | Strategy families exist, portfolio-level governance not yet built |
-| Autonomous engineering advisor | 📋 PLANNED | — | All intelligence layers exist, unified advisor not built |
-| Platform self-stabilization | 📋 PLANNED | — | Calibration and intelligence exist, auto-stabilization not built |
+| Strategy portfolio governance | ✅ IMPLEMENTED | 33 | `strategy-portfolio/strategy-portfolio-*.ts`, `strategy-portfolio-engine` |
+| Platform self-stabilization | ✅ IMPLEMENTED | 34 | `platform-stabilization/platform-stabilization-*.ts`, `platform-stabilization-engine` |
+| Autonomous engineering advisor | ✅ IMPLEMENTED | 35 | `engineering-advisor/engineering-advisory-*.ts`, `engineering-advisor` |
+| Semantic retrieval via embeddings | ✅ IMPLEMENTED | 36 | `semantic-retrieval/semantic-retrieval-*.ts`, `semantic-retrieval` |
 
 ---
 
@@ -183,6 +198,10 @@
 | `_shared/platform-intelligence/` | 6 | Behavior aggregator, bottleneck detector, pattern analyzer, insight generator, recommendation engine, health model |
 | `_shared/platform-calibration/` | 6 | Signal interpreter, proposal engine, guardrails, runner, outcome tracker, rollback engine |
 | `_shared/execution-strategy/` | 8 | Signal interpreter, variant synthesizer, guardrails, experiment runner, outcome tracker, promotion rules, rollback engine, lineage |
+| `_shared/strategy-portfolio/` | 5 | Portfolio evaluator, ranking, lifecycle manager, conflict resolver, lineage |
+| `_shared/platform-stabilization/` | 6 | Stability monitor, stabilization engine, action engine, guardrails, outcome tracker, rollback engine |
+| `_shared/engineering-advisor/` | 8 | Signal aggregator, opportunity synthesizer, recommendation engine, prioritizer, explainer, review manager, lineage, clustering |
+| `_shared/semantic-retrieval/` | 8 | Retrieval engine, ranker, guardrails, quality evaluator, index manager, context builders (runtime, advisory, strategy, platform) |
 
 ---
 
@@ -213,5 +232,9 @@
 | Platform Intelligence | 1 | 30 |
 | Platform Self-Calibration | 1 | 31 |
 | Strategy Evolution | 1 | 32 |
+| Strategy Portfolio Governance | 1 | 33 |
+| Platform Self-Stabilization | 1 | 34 |
+| Autonomous Engineering Advisor | 1 | 35 |
+| Semantic Retrieval | 1 | 36 |
 | Support | 11 | Various |
-| **Total** | **~77** | |
+| **Total** | **~81** | |

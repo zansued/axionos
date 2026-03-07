@@ -455,17 +455,17 @@ O Project Brain serve como centro de evidência visual:
 
 ---
 
-## Engineering Memory — Pipeline Contract (Designed)
+## Engineering Memory — Pipeline Contract (Active)
 
-> **Status:** Designed — Not implemented
+> **Status:** ✅ Implemented — Sprints 15–18 (Foundation, Retrieval, Summaries, Memory-Aware Meta-Agents)
 
 ### Interaction Model
 
 Engineering Memory is **read-only** from the pipeline's perspective:
 
-- The pipeline **emits events** that may trigger memory capture (by the memory layer, not the pipeline itself)
-- Pipeline stages may **query** memory for contextual information (repair strategies, past failures)
-- Pipeline execution must **never depend** on memory availability — graceful degradation is mandatory
+- The pipeline **emits events** that trigger memory capture (by the memory layer, not the pipeline itself)
+- Pipeline stages **query** memory for contextual information (repair strategies, past failures)
+- Pipeline execution **never depends** on memory availability — graceful degradation is enforced
 
 ### Safety Rules
 
@@ -477,13 +477,15 @@ Engineering Memory is **read-only** from the pipeline's perspective:
 | **Tenant isolation** | All memory queries must include organization_id scope |
 | **Performance isolation** | Memory queries must not block stage execution (async, timeout-bounded) |
 
-### Memory as Context (Future)
+### Memory as Context (Active)
 
-When implemented, memory will provide **optional enrichment** to pipeline stages:
+Memory provides **optional enrichment** to pipeline stages:
 
-- **Preventive Validation:** Query Error Memory for known failure patterns on similar architectures
-- **Build Repair:** Query Strategy Memory for previously successful repair strategies
-- **Architecture Stage:** Query Design Memory for relevant prior architecture decisions
-- **Deploy Stage:** Query Outcome Memory for deployment risk signals from similar initiatives
+- **Preventive Validation:** Queries Error Memory for known failure patterns on similar architectures
+- **Build Repair:** Queries Strategy Memory for previously successful repair strategies
+- **Architecture Stage:** Queries Design Memory for relevant prior architecture decisions
+- **Deploy Stage:** Queries Outcome Memory for deployment risk signals from similar initiatives
+- **Meta-Agents:** Query all memory types + summaries for recommendation generation (Sprint 18)
+- **Semantic Retrieval:** Unified embedding-backed retrieval across all domains (Sprint 36)
 
 Memory enrichment is always **additive** — it enhances decisions but never gates them.
