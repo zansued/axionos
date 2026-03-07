@@ -14,7 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import {
   FileText, Shield, CheckCircle, XCircle, Eye, Rocket,
-  Layers, Users, Workflow, TrendingUp, Brain, AlertTriangle, Clock,
+  Layers, Users, Workflow, TrendingUp, Brain, AlertTriangle, Clock, BarChart3,
 } from "lucide-react";
 import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
 import { RelatedSummaryPanel } from "@/components/memory/RelatedSummaryPanel";
@@ -82,6 +82,20 @@ export default function MetaArtifacts() {
       if (typeFilter !== "all") query = query.eq("artifact_type", typeFilter);
 
       const { data, error } = await query;
+      if (error) throw error;
+      return (data as unknown) as Record<string, unknown>[];
+    },
+    enabled: !!currentOrg?.id,
+  });
+
+  // Sprint 19: Quality aggregates
+  const { data: qualityAggregates } = useQuery({
+    queryKey: ["quality-aggregates-artifacts", currentOrg?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("proposal_quality_aggregates" as any)
+        .select("*")
+        .eq("organization_id", currentOrg!.id);
       if (error) throw error;
       return (data as unknown) as Record<string, unknown>[];
     },
@@ -251,8 +265,22 @@ export default function MetaArtifacts() {
                             </Badge>
                           </div>
                           <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{art.summary as string}</p>
-                          <div className="flex gap-2 text-xs text-muted-foreground">
+                          <div className="flex gap-2 text-xs text-muted-foreground flex-wrap">
                             <span>By: {art.created_by_meta_agent as string}</span>
+                            {/* Sprint 19: Quality indicator */}
+                            {(() => {
+                              const agg = qualityAggregates?.find((a) => a.meta_agent_type === art.created_by_meta_agent);
+                              if (!agg) return null;
+                              const implRate = Number(agg.total_artifacts_approved || 0) > 0
+                                ? Number(agg.total_artifacts_implemented || 0) / Number(agg.total_artifacts_approved || 1) : 0;
+                              if (Number(agg.total_artifacts_generated || 0) < 2) return null;
+                              return (
+                                <span className="flex items-center gap-1">
+                                  <BarChart3 className="h-3 w-3" />
+                                  Impl: {(implRate * 100).toFixed(0)}%
+                                </span>
+                              );
+                            })()}
                             <span>•</span>
                             <span>{new Date(art.created_at as string).toLocaleDateString()}</span>
                           </div>

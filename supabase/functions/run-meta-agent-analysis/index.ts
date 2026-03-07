@@ -10,7 +10,7 @@ import { applyQualityGate, normalizeSignature } from "../_shared/meta-agents/val
 import { getMetaAgentHistoricalContext, HistoricalContext } from "../_shared/meta-agents/meta-agent-memory-context.ts";
 
 /**
- * run-meta-agent-analysis — Sprint 18 (Memory-Aware)
+ * run-meta-agent-analysis — Sprint 19 (Quality Feedback Loop)
  *
  * Orchestrator that runs all active Meta-Agents with historical context,
  * applies quality gates, deduplicates, persists results, and writes audit logs.
@@ -67,6 +67,21 @@ serve(async (req) => {
       if (evolutionCtx) historyContexts.evolution = evolutionCtx;
     } catch (e) {
       console.warn("Historical context retrieval failed (non-blocking):", e);
+    }
+
+    // ── Sprint 19: Retrieve quality feedback for confidence calibration (advisory) ──
+    let qualityFeedback: Record<string, any> = {};
+    try {
+      const { data: aggregates } = await sc
+        .from("proposal_quality_aggregates")
+        .select("meta_agent_type, avg_acceptance_rate, avg_overall_quality, quality_trend, memory_enriched_acceptance_rate")
+        .eq("organization_id", organization_id);
+      
+      for (const agg of (aggregates || [])) {
+        qualityFeedback[agg.meta_agent_type] = agg;
+      }
+    } catch (e) {
+      console.warn("Quality feedback retrieval failed (non-blocking):", e);
     }
 
     // Run all Meta-Agents in parallel with historical context

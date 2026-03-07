@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import {
   Brain, Eye, CheckCircle, XCircle, Clock, ArrowUpDown,
   Layers, Users, Workflow, TrendingUp, Shield, AlertTriangle,
-  ArrowDown, ArrowUp,
+  ArrowDown, ArrowUp, BarChart3,
 } from "lucide-react";
 import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
 import { RelatedSummaryPanel } from "@/components/memory/RelatedSummaryPanel";
@@ -54,6 +54,31 @@ export default function MetaAgents() {
   const [sortAsc, setSortAsc] = useState(false);
   const [reviewDialog, setReviewDialog] = useState<{ id: string; title: string; action: string } | null>(null);
   const [reviewNotes, setReviewNotes] = useState("");
+
+  // Sprint 19: Quality aggregates
+  const { data: qualityAggregates } = useQuery({
+    queryKey: ["quality-aggregates", currentOrg?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("proposal_quality_aggregates" as any)
+        .select("*")
+        .eq("organization_id", currentOrg!.id);
+      if (error) throw error;
+      return (data as unknown) as Record<string, unknown>[];
+    },
+    enabled: !!currentOrg?.id,
+  });
+
+  const getAgentQuality = (agentType: string) => {
+    const agg = qualityAggregates?.find((a) => a.meta_agent_type === agentType);
+    if (!agg) return null;
+    return {
+      acceptanceRate: Number(agg.avg_acceptance_rate || 0),
+      quality: Number(agg.avg_overall_quality || 0),
+      trend: agg.quality_trend as string,
+      total: Number(agg.total_recommendations || 0),
+    };
+  };
 
   const { data: recommendations, isLoading, error: queryError } = useQuery({
     queryKey: ["meta-recommendations", currentOrg?.id, statusFilter, agentFilter, sortField, sortAsc],
@@ -330,6 +355,20 @@ export default function MetaAgents() {
                           <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{rec.description}</p>
                           <div className="flex gap-3 text-xs text-muted-foreground flex-wrap">
                             <span>{AGENT_LABELS[rec.meta_agent_type] || rec.meta_agent_type}</span>
+                            {/* Sprint 19: Quality indicator */}
+                            {(() => {
+                              const q = getAgentQuality(rec.meta_agent_type);
+                              if (!q || q.total < 3) return null;
+                              const trendIcon = q.trend === "improving" ? "↑" : q.trend === "declining" ? "↓" : "→";
+                              const trendColor = q.trend === "improving" ? "text-green-600" : q.trend === "declining" ? "text-red-500" : "text-muted-foreground";
+                              return (
+                                <span className="flex items-center gap-1">
+                                  <BarChart3 className="h-3 w-3 text-muted-foreground" />
+                                  <span>Accept: {(q.acceptanceRate * 100).toFixed(0)}%</span>
+                                  <span className={trendColor}>{trendIcon}</span>
+                                </span>
+                              );
+                            })()}
                             <span>•</span>
                             <span>Target: {rec.target_component}</span>
                             <span>•</span>

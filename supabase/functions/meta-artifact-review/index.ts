@@ -1,9 +1,10 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { scoreQualityRecord } from "../_shared/meta-agents/proposal-quality-scoring.ts";
 
 /**
- * meta-artifact-review — Sprint 14
+ * meta-artifact-review — Sprint 19 (Quality Feedback)
  *
  * Review workflow for Meta-Agent artifacts.
  * Valid transitions:
@@ -135,6 +136,57 @@ serve(async (req) => {
       }).then(({ error: memErr }) => {
         if (memErr) console.error("Memory capture error:", memErr);
       });
+    }
+
+    // ── Sprint 19: Record quality feedback (fire-and-forget) ──
+    const artFull = await sc
+      .from("meta_agent_artifacts")
+      .select("created_at, artifact_type, content")
+      .eq("id", artifact_id)
+      .single()
+      .then(({ data }) => data)
+      .catch(() => null);
+
+    if (artFull) {
+      const content = artFull.content as any;
+      const histCtx = content?.sections?.historical_context || content?.related_historical_context;
+      const alignment = histCtx?.alignment || null;
+
+      const qualityInput = {
+        entity_type: "artifact" as const,
+        entity_id: artifact_id,
+        meta_agent_type: artifact.created_by_meta_agent || "",
+        recommendation_type: "",
+        artifact_type: artFull.artifact_type,
+        review_outcome: action,
+        created_at: artFull.created_at,
+        reviewed_at: new Date().toISOString(),
+        confidence_score: 0,
+        impact_score: 0,
+        priority_score: 0,
+        historical_alignment: alignment,
+        was_memory_enriched: !!content?.related_historical_context,
+        reviewer_notes: review_notes,
+      };
+      const scores = scoreQualityRecord(qualityInput);
+
+      await sc.from("proposal_quality_records").insert({
+        organization_id: artifact.organization_id,
+        entity_type: "artifact",
+        entity_id: artifact_id,
+        meta_agent_type: artifact.created_by_meta_agent || "",
+        artifact_type: artFull.artifact_type,
+        review_outcome: action,
+        review_latency_hours: scores.review_latency_hours,
+        reviewer_notes_length: (review_notes || "").length,
+        acceptance_quality_score: scores.acceptance_quality_score,
+        implementation_quality_score: scores.implementation_quality_score,
+        historical_alignment_accuracy: scores.historical_alignment_accuracy,
+        overall_quality_score: scores.overall_quality_score,
+        historical_alignment: alignment,
+        was_memory_enriched: !!content?.related_historical_context,
+        feedback_signals: scores.feedback_signals,
+      }).catch((e: any) => console.error("Quality record error:", e));
     }
 
     return jsonResponse({

@@ -2675,6 +2675,172 @@ export type Database = {
           },
         ]
       }
+      proposal_quality_aggregates: {
+        Row: {
+          avg_acceptance_rate: number
+          avg_confidence_accepted: number
+          avg_confidence_rejected: number
+          avg_implementation_rate: number
+          avg_overall_quality: number
+          avg_review_latency_hours: number
+          created_at: string
+          id: string
+          last_computed_at: string
+          memory_enriched_acceptance_rate: number
+          meta_agent_type: string
+          non_memory_acceptance_rate: number
+          organization_id: string
+          quality_trend: string
+          total_accepted: number
+          total_artifacts_approved: number
+          total_artifacts_generated: number
+          total_artifacts_implemented: number
+          total_deferred: number
+          total_recommendations: number
+          total_rejected: number
+          updated_at: string
+        }
+        Insert: {
+          avg_acceptance_rate?: number
+          avg_confidence_accepted?: number
+          avg_confidence_rejected?: number
+          avg_implementation_rate?: number
+          avg_overall_quality?: number
+          avg_review_latency_hours?: number
+          created_at?: string
+          id?: string
+          last_computed_at?: string
+          memory_enriched_acceptance_rate?: number
+          meta_agent_type?: string
+          non_memory_acceptance_rate?: number
+          organization_id: string
+          quality_trend?: string
+          total_accepted?: number
+          total_artifacts_approved?: number
+          total_artifacts_generated?: number
+          total_artifacts_implemented?: number
+          total_deferred?: number
+          total_recommendations?: number
+          total_rejected?: number
+          updated_at?: string
+        }
+        Update: {
+          avg_acceptance_rate?: number
+          avg_confidence_accepted?: number
+          avg_confidence_rejected?: number
+          avg_implementation_rate?: number
+          avg_overall_quality?: number
+          avg_review_latency_hours?: number
+          created_at?: string
+          id?: string
+          last_computed_at?: string
+          memory_enriched_acceptance_rate?: number
+          meta_agent_type?: string
+          non_memory_acceptance_rate?: number
+          organization_id?: string
+          quality_trend?: string
+          total_accepted?: number
+          total_artifacts_approved?: number
+          total_artifacts_generated?: number
+          total_artifacts_implemented?: number
+          total_deferred?: number
+          total_recommendations?: number
+          total_rejected?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposal_quality_aggregates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      proposal_quality_records: {
+        Row: {
+          acceptance_quality_score: number
+          artifact_type: string | null
+          confidence_at_creation: number | null
+          created_at: string
+          entity_id: string
+          entity_type: string
+          feedback_signals: Json
+          historical_alignment: string | null
+          historical_alignment_accuracy: number
+          id: string
+          impact_at_creation: number | null
+          implementation_quality_score: number
+          meta_agent_type: string
+          organization_id: string
+          overall_quality_score: number
+          priority_at_creation: number | null
+          recommendation_type: string
+          review_latency_hours: number | null
+          review_outcome: string
+          reviewer_notes_length: number | null
+          updated_at: string
+          was_memory_enriched: boolean | null
+        }
+        Insert: {
+          acceptance_quality_score?: number
+          artifact_type?: string | null
+          confidence_at_creation?: number | null
+          created_at?: string
+          entity_id: string
+          entity_type?: string
+          feedback_signals?: Json
+          historical_alignment?: string | null
+          historical_alignment_accuracy?: number
+          id?: string
+          impact_at_creation?: number | null
+          implementation_quality_score?: number
+          meta_agent_type?: string
+          organization_id: string
+          overall_quality_score?: number
+          priority_at_creation?: number | null
+          recommendation_type?: string
+          review_latency_hours?: number | null
+          review_outcome?: string
+          reviewer_notes_length?: number | null
+          updated_at?: string
+          was_memory_enriched?: boolean | null
+        }
+        Update: {
+          acceptance_quality_score?: number
+          artifact_type?: string | null
+          confidence_at_creation?: number | null
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          feedback_signals?: Json
+          historical_alignment?: string | null
+          historical_alignment_accuracy?: number
+          id?: string
+          impact_at_creation?: number | null
+          implementation_quality_score?: number
+          meta_agent_type?: string
+          organization_id?: string
+          overall_quality_score?: number
+          priority_at_creation?: number | null
+          recommendation_type?: string
+          review_latency_hours?: number | null
+          review_outcome?: string
+          reviewer_notes_length?: number | null
+          updated_at?: string
+          was_memory_enriched?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposal_quality_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       repair_evidence: {
         Row: {
           attempt_number: number

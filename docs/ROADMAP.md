@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2 implemented. Meta-agents now use engineering memory and summaries as advisory historical context. Historical continuity scoring, redundancy suppression, and decision/outcome-aware framing are active. Artifacts include structured Related Historical Context sections. Previous: Memory Summaries (Sprint 17).
+> **What changed (2026-03-07):** Sprint 19 — Proposal Quality Feedback Loop implemented. Quality scoring, outcome tracking, confidence calibration, and memory effectiveness measurement are now active across recommendations and artifacts. Previous: Memory-Aware Meta-Agents (Sprint 18).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
@@ -21,7 +21,7 @@
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable |
-| **Meta-Agents Status** | v1.2 active — memory-aware recommendations + artifact generation, human-reviewed |
+| **Meta-Agents Status** | v1.3 active — memory-aware + quality feedback loop, human-reviewed |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
@@ -211,9 +211,9 @@ Each execution improves future executions. The system transitions from determini
 
 ## DONE — Meta-Agents (Level 4.5 — Self-Designing Engineering System) ✅
 
-**Status:** ✅ Implemented (Sprints 13–14, memory-aware Sprint 18)
+**Status:** ✅ Implemented (Sprints 13–14, memory-aware Sprint 18, quality feedback Sprint 19)
 
-4 memory-aware meta-agents active with historical context enrichment, continuity scoring, redundancy suppression, and proposal layer v2. All recommendations require human review.
+4 memory-aware meta-agents active with historical context enrichment, continuity scoring, redundancy suppression, proposal layer v2, and quality feedback loop. All recommendations require human review. Quality scoring tracks acceptance rates, confidence calibration, and memory effectiveness.
 
 ---
 
