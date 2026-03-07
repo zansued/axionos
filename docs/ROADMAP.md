@@ -283,19 +283,19 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 |-------|------|--------|
 | Level 1 | Code Generator | ✅ |
 | Level 2 | Software Builder | ✅ |
-| Level 3 | Autonomous Engineering System | ✅ Current |
-| Level 4 | Self-Learning Software Factory | 📋 After product validation |
+| Level 3 | Autonomous Engineering System | ✅ Complete |
+| Level 4 | Self-Learning Software Factory | 🔧 Foundation ready (Sprint 10) |
 | Level 5 | Autonomous Startup Factory | 🔮 Long-term |
 
-> **Current position:** Level 3 — Autonomous Engineering System.
-> **Current focus:** Product Proof Closure.
+> **Current position:** Level 3 → Level 4 transition.
+> **Current focus:** Learning Agents Foundation.
 > **Execution mode:** Sprint-based implementation.
 
 ---
 
 ## Governing Principle
 
-> The architecture is sufficient. The product proof is closing.
-> Seven implementation sprints are complete: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, and Error Patterns.
-> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, and reusable pattern intelligence.
-> Next: Learning Agents built on top of this evidence substrate.
+> The architecture is sufficient. The product proof is closed.
+> Ten implementation sprints are complete: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, and Learning Foundation.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, and a learning substrate.
+> Next: Activate Learning Agents on top of this foundation.
