@@ -178,6 +178,10 @@
 | Platform self-stabilization | ✅ IMPLEMENTED | 34 | `platform-stabilization/platform-stabilization-*.ts`, `platform-stabilization-engine` |
 | Autonomous engineering advisor | ✅ IMPLEMENTED | 35 | `engineering-advisor/engineering-advisory-*.ts`, `engineering-advisor` |
 | Semantic retrieval via embeddings | ✅ IMPLEMENTED | 36 | `semantic-retrieval/semantic-retrieval-*.ts`, `semantic-retrieval` |
+| Discovery signal aggregation | ✅ IMPLEMENTED | 37 | `discovery-architecture/discovery-signal-aggregator.ts` |
+| Architecture opportunity synthesis | ✅ IMPLEMENTED | 37 | `discovery-architecture/discovery-architecture-opportunity-synthesizer.ts` |
+| Discovery architecture recommendations | ✅ IMPLEMENTED | 37 | `discovery-architecture/discovery-architecture-recommendation-engine.ts` |
+| Architecture stress map | ✅ IMPLEMENTED | 37 | `discovery-architecture/architecture-stress-map.ts` |
 
 ---
 
