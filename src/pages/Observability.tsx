@@ -334,6 +334,11 @@ export default function Observability() {
             <PlatformIntelligenceDashboard />
           </TabsContent>
 
+          {/* ===== PLATFORM SELF-CALIBRATION ===== */}
+          <TabsContent value="calibration" className="mt-4">
+            <PlatformSelfCalibrationDashboard />
+          </TabsContent>
+
           {/* ===== CROSS-STAGE LEARNING ===== */}
           <TabsContent value="cross-stage" className="mt-4">
             <CrossStageLearningDashboard />
