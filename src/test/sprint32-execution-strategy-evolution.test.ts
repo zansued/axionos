@@ -384,7 +384,7 @@ describe("Execution Strategy Rollback Engine", () => {
 
 // ═══ Lineage ═══
 describe("Execution Strategy Lineage", () => {
-  const { buildLineageRecord, buildExplainability } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-lineage");
+  // uses top-level import
 
   it("builds lineage record with timestamp", () => {
     const record = buildLineageRecord({
