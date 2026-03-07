@@ -10,6 +10,7 @@ import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "
 import { upsertNode, recordError, generateBrainContext, upsertPreventionRule } from "../_shared/brain-helpers.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { recordRepairEvidence } from "../_shared/repair/repair-evidence-recorder.ts";
+import { normalizeErrorSignature } from "../_shared/repair/error-signature-normalizer.ts";
 
 // ═══════════════════════════════════════════════
 // TYPES
