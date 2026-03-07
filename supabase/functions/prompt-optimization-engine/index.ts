@@ -3,23 +3,28 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { corsHeaders } from "../_shared/cors.ts";
 import { aggregateVariantMetrics, compareVariants } from "../_shared/learning/prompt-variant-metrics.ts";
 import { evaluatePromotionCandidate, evaluateRollback, DEFAULT_PROMOTION_CONFIG } from "../_shared/learning/prompt-promotion-rules.ts";
+import { evaluatePhaseAdvance, buildRolloutWindow } from "../_shared/learning/prompt-rollout-engine.ts";
+import { evaluatePromotionHealth, DEFAULT_HEALTH_CONFIG } from "../_shared/learning/prompt-health-guard.ts";
+import { evaluateRollbackDecision, buildRollbackAction, isRollbackBounded } from "../_shared/learning/prompt-rollback-engine.ts";
 
 /**
- * Prompt Optimization Engine — Sprint 21
+ * Prompt Optimization Engine — Sprint 21 + Sprint 22
  *
- * APIs:
+ * Sprint 21 APIs:
  *   action: "overview" | "variants_by_stage" | "experiment_performance"
  *         | "promotion_candidates" | "create_variant" | "toggle_variant"
  *         | "promote_variant" | "aggregate_metrics"
+ *
+ * Sprint 22 APIs (Bounded Promotion & Rollback Guard):
+ *   action: "activate_promotion" | "advance_rollout_phase" | "rollback_variant"
+ *         | "rollout_status" | "promotion_health" | "rollback_history"
  */
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
     const auth = req.headers.get("Authorization");
-    if (!auth) {
-      return json({ error: "No authorization" }, 401);
-    }
+    if (!auth) return json({ error: "No authorization" }, 401);
 
     const sc = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -32,6 +37,7 @@ serve(async (req) => {
     if (!organization_id) return json({ error: "organization_id required" }, 400);
 
     switch (action) {
+      // Sprint 21
       case "overview":
         return await handleOverview(sc, organization_id);
       case "variants_by_stage":
@@ -48,6 +54,19 @@ serve(async (req) => {
         return await handlePromoteVariant(sc, organization_id, body);
       case "aggregate_metrics":
         return await handleAggregateMetrics(sc, organization_id, body.time_window_days || 30);
+      // Sprint 22
+      case "activate_promotion":
+        return await handleActivatePromotion(sc, organization_id, body);
+      case "advance_rollout_phase":
+        return await handleAdvanceRolloutPhase(sc, organization_id, body);
+      case "rollback_variant":
+        return await handleRollbackVariant(sc, organization_id, body);
+      case "rollout_status":
+        return await handleRolloutStatus(sc, organization_id, body.stage_key);
+      case "promotion_health":
+        return await handlePromotionHealth(sc, organization_id, body);
+      case "rollback_history":
+        return await handleRollbackHistory(sc, organization_id);
       default:
         return json({ error: `Unknown action: ${action}` }, 400);
     }
@@ -64,12 +83,18 @@ function json(data: unknown, status = 200) {
   });
 }
 
+// ═══════════════════════════════════════════════════════
+// Sprint 21 handlers (unchanged)
+// ═══════════════════════════════════════════════════════
+
 async function handleOverview(sc: any, orgId: string) {
-  const [variantsRes, metricsRes, promotionsRes, execsRes] = await Promise.all([
+  const [variantsRes, metricsRes, promotionsRes, execsRes, rolloutsRes, rollbacksRes] = await Promise.all([
     sc.from("prompt_variants").select("id, stage_key, variant_name, status, is_enabled").eq("organization_id", orgId),
     sc.from("prompt_variant_metrics").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(100),
     sc.from("prompt_variant_promotions").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(20),
     sc.from("prompt_variant_executions").select("id, stage_key, success, created_at").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(100),
+    sc.from("prompt_rollout_windows").select("*").eq("organization_id", orgId).eq("rollout_status", "active").limit(20),
+    sc.from("prompt_rollback_events").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(10),
   ]);
 
   const variants = variantsRes.data || [];
@@ -87,6 +112,8 @@ async function handleOverview(sc: any, orgId: string) {
     recent_promotions: (promotionsRes.data || []).slice(0, 5),
     recent_executions_count: (execsRes.data || []).length,
     recent_metrics: (metricsRes.data || []).slice(0, 10),
+    active_rollouts: (rolloutsRes.data || []).length,
+    recent_rollbacks: (rollbacksRes.data || []).length,
   });
 }
 
@@ -101,7 +128,6 @@ async function handleVariantsByStage(sc: any, orgId: string, stageKey?: string) 
 async function handleExperimentPerformance(sc: any, orgId: string, windowDays: number) {
   const since = new Date(Date.now() - windowDays * 86400000).toISOString();
 
-  // Get active experiments
   const { data: experiments } = await sc
     .from("prompt_variants")
     .select("id, stage_key, variant_name, status, base_prompt_signature")
@@ -122,7 +148,6 @@ async function handleExperimentPerformance(sc: any, orgId: string, windowDays: n
     .gte("created_at", since)
     .limit(1000);
 
-  // Group executions by variant
   const byVariant = new Map<string, any[]>();
   for (const exec of executions || []) {
     const arr = byVariant.get(exec.prompt_variant_id) || [];
@@ -130,13 +155,11 @@ async function handleExperimentPerformance(sc: any, orgId: string, windowDays: n
     byVariant.set(exec.prompt_variant_id, arr);
   }
 
-  // Aggregate metrics per variant
   const metricsMap = new Map<string, any>();
   for (const [vid, execs] of byVariant) {
     metricsMap.set(vid, aggregateVariantMetrics(vid, execs));
   }
 
-  // Compare experiments vs controls by stage
   const comparisons: any[] = [];
   const stageGroups = new Map<string, any[]>();
   for (const exp of experiments) {
@@ -186,7 +209,6 @@ async function handlePromotionCandidates(sc: any, orgId: string, windowDays: num
     return json({ candidates: [], rollbacks: [] });
   }
 
-  // Get controls for same stages
   const stages = [...new Set(experiments.map((e: any) => e.stage_key))];
   const { data: controls } = await sc
     .from("prompt_variants")
@@ -262,7 +284,6 @@ async function handleCreateVariant(sc: any, orgId: string, body: any) {
 
   if (error) return json({ error: error.message }, 500);
 
-  // Audit
   await sc.from("audit_logs").insert({
     user_id: "00000000-0000-0000-0000-000000000000",
     action: "PROMPT_VARIANT_CREATED",
@@ -307,7 +328,6 @@ async function handlePromoteVariant(sc: any, orgId: string, body: any) {
   const { variant_id, stage_key, reason } = body;
   if (!variant_id || !stage_key) return json({ error: "variant_id and stage_key required" }, 400);
 
-  // Find current control for this stage
   const { data: currentControl } = await sc
     .from("prompt_variants")
     .select("id")
@@ -316,19 +336,16 @@ async function handlePromoteVariant(sc: any, orgId: string, body: any) {
     .eq("status", "active_control")
     .maybeSingle();
 
-  // Retire old control
   if (currentControl) {
     await sc.from("prompt_variants")
       .update({ status: "retired", updated_at: new Date().toISOString() })
       .eq("id", currentControl.id);
   }
 
-  // Promote new variant
   await sc.from("prompt_variants")
     .update({ status: "active_control", updated_at: new Date().toISOString() })
     .eq("id", variant_id);
 
-  // Record promotion
   const { data: promotion, error } = await sc.from("prompt_variant_promotions").insert({
     organization_id: orgId,
     stage_key,
@@ -387,7 +404,6 @@ async function handleAggregateMetrics(sc: any, orgId: string, windowDays: number
   for (const v of variants) {
     const metrics = aggregateVariantMetrics(v.id, byVariant.get(v.id) || []);
 
-    // Delete old metrics for this period
     await sc.from("prompt_variant_metrics")
       .delete()
       .eq("organization_id", orgId)
@@ -413,4 +429,371 @@ async function handleAggregateMetrics(sc: any, orgId: string, windowDays: number
   }
 
   return json({ metrics_created: created });
+}
+
+// ═══════════════════════════════════════════════════════
+// Sprint 22 handlers
+// ═══════════════════════════════════════════════════════
+
+async function handleActivatePromotion(sc: any, orgId: string, body: any) {
+  const { variant_id, stage_key, rollout_mode, rollout_strategy } = body;
+  if (!variant_id || !stage_key) return json({ error: "variant_id and stage_key required" }, 400);
+
+  const mode = rollout_mode || "manual_confirmed";
+  const strategy = rollout_strategy || "immediate";
+
+  // Verify variant exists and is an experiment
+  const { data: variant } = await sc
+    .from("prompt_variants")
+    .select("id, status, is_enabled")
+    .eq("id", variant_id)
+    .eq("organization_id", orgId)
+    .maybeSingle();
+
+  if (!variant) return json({ error: "Variant not found" }, 404);
+  if (!variant.is_enabled) return json({ error: "Cannot promote disabled variant" }, 400);
+
+  // Find current control
+  const { data: currentControl } = await sc
+    .from("prompt_variants")
+    .select("id, variant_name")
+    .eq("organization_id", orgId)
+    .eq("stage_key", stage_key)
+    .eq("status", "active_control")
+    .maybeSingle();
+
+  // Build rollout window
+  const windowData = buildRolloutWindow({
+    organizationId: orgId,
+    stageKey: stage_key,
+    promotedVariantId: variant_id,
+    previousControlVariantId: currentControl?.id || null,
+    rolloutMode: mode,
+    rolloutStrategy: strategy,
+  });
+
+  // For immediate strategy, promote right away
+  if (strategy === "immediate") {
+    // Retire old control
+    if (currentControl) {
+      await sc.from("prompt_variants")
+        .update({ status: "retired", updated_at: new Date().toISOString() })
+        .eq("id", currentControl.id);
+    }
+    // Promote new variant
+    await sc.from("prompt_variants")
+      .update({ status: "active_control", updated_at: new Date().toISOString() })
+      .eq("id", variant_id);
+
+    windowData.rollout_status = "completed";
+    windowData.current_exposure_percent = 100;
+  } else {
+    // Phased: promote to active_control but with limited exposure tracked via rollout window
+    if (currentControl) {
+      await sc.from("prompt_variants")
+        .update({ status: "retired", updated_at: new Date().toISOString() })
+        .eq("id", currentControl.id);
+    }
+    await sc.from("prompt_variants")
+      .update({ status: "active_control", updated_at: new Date().toISOString() })
+      .eq("id", variant_id);
+  }
+
+  // Insert rollout window
+  const { data: rollout, error } = await sc.from("prompt_rollout_windows").insert({
+    ...windowData,
+    completed_at: strategy === "immediate" ? new Date().toISOString() : null,
+  }).select().single();
+
+  if (error) return json({ error: error.message }, 500);
+
+  // Record promotion
+  await sc.from("prompt_variant_promotions").insert({
+    organization_id: orgId,
+    stage_key,
+    previous_control_variant_id: currentControl?.id || null,
+    promoted_variant_id: variant_id,
+    promotion_reason: { mode, strategy, rollout_window_id: rollout.id },
+    promotion_mode: mode === "bounded_auto" ? "bounded_auto" : "manual",
+  });
+
+  // Audit
+  await sc.from("audit_logs").insert({
+    user_id: "00000000-0000-0000-0000-000000000000",
+    action: "PROMPT_PROMOTION_ACTIVATED",
+    category: "learning",
+    entity_type: "prompt_rollout_windows",
+    entity_id: rollout.id,
+    message: `Promotion activated for stage ${stage_key} with ${strategy} strategy`,
+    severity: "warning",
+    organization_id: orgId,
+    metadata: { stage_key, variant_id, mode, strategy },
+  });
+
+  return json({ rollout });
+}
+
+async function handleAdvanceRolloutPhase(sc: any, orgId: string, body: any) {
+  const { rollout_window_id } = body;
+  if (!rollout_window_id) return json({ error: "rollout_window_id required" }, 400);
+
+  // Fetch rollout window
+  const { data: rollout } = await sc
+    .from("prompt_rollout_windows")
+    .select("*")
+    .eq("id", rollout_window_id)
+    .eq("organization_id", orgId)
+    .maybeSingle();
+
+  if (!rollout) return json({ error: "Rollout window not found" }, 404);
+
+  // Get latest health check
+  const { data: healthChecks } = await sc
+    .from("prompt_promotion_health_checks")
+    .select("health_status, executions")
+    .eq("rollout_window_id", rollout_window_id)
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  const latestHealth = healthChecks?.[0];
+  const healthStatus = latestHealth?.health_status || "watch";
+  const execsSincePhase = latestHealth?.executions || 0;
+
+  // Get confidence from latest metrics
+  const { data: latestMetrics } = await sc
+    .from("prompt_variant_metrics")
+    .select("confidence_level")
+    .eq("prompt_variant_id", rollout.promoted_variant_id)
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  const confidence = latestMetrics?.[0]?.confidence_level ?? 0;
+
+  const result = evaluatePhaseAdvance(rollout, healthStatus, execsSincePhase, confidence);
+
+  if (result.advanced) {
+    await sc.from("prompt_rollout_windows")
+      .update({
+        current_exposure_percent: result.new_exposure_percent,
+        rollout_status: result.rollout_completed ? "completed" : "active",
+        completed_at: result.rollout_completed ? new Date().toISOString() : null,
+      })
+      .eq("id", rollout_window_id);
+
+    await sc.from("audit_logs").insert({
+      user_id: "00000000-0000-0000-0000-000000000000",
+      action: "PROMPT_ROLLOUT_PHASE_ADVANCED",
+      category: "learning",
+      entity_type: "prompt_rollout_windows",
+      entity_id: rollout_window_id,
+      message: `Rollout advanced to ${result.new_exposure_percent}% for stage ${rollout.stage_key}`,
+      severity: "info",
+      organization_id: orgId,
+      metadata: { new_exposure: result.new_exposure_percent, completed: result.rollout_completed },
+    });
+  }
+
+  return json({ result });
+}
+
+async function handleRollbackVariant(sc: any, orgId: string, body: any) {
+  const { rollout_window_id, rollback_mode } = body;
+  if (!rollout_window_id) return json({ error: "rollout_window_id required" }, 400);
+
+  const mode = rollback_mode || "manual";
+
+  // Fetch rollout window
+  const { data: rollout } = await sc
+    .from("prompt_rollout_windows")
+    .select("*")
+    .eq("id", rollout_window_id)
+    .eq("organization_id", orgId)
+    .maybeSingle();
+
+  if (!rollout) return json({ error: "Rollout window not found" }, 404);
+  if (rollout.rollout_status === "rolled_back") return json({ error: "Already rolled back" }, 400);
+
+  const previousControlId = rollout.previous_control_variant_id;
+  if (!previousControlId) return json({ error: "No previous control to restore" }, 400);
+
+  // Build and validate rollback action
+  const action = buildRollbackAction(
+    rollout.promoted_variant_id,
+    previousControlId,
+    body.reasons || ["manual_rollback"],
+    mode,
+  );
+
+  if (!isRollbackBounded(action)) {
+    return json({ error: "Rollback action failed safety check" }, 400);
+  }
+
+  // Execute rollback: retire promoted, restore previous control
+  await sc.from("prompt_variants")
+    .update({ status: "retired", updated_at: new Date().toISOString() })
+    .eq("id", rollout.promoted_variant_id);
+
+  await sc.from("prompt_variants")
+    .update({ status: "active_control", updated_at: new Date().toISOString() })
+    .eq("id", previousControlId);
+
+  // Update rollout window
+  await sc.from("prompt_rollout_windows")
+    .update({ rollout_status: "rolled_back", completed_at: new Date().toISOString() })
+    .eq("id", rollout_window_id);
+
+  // Record rollback event
+  const { data: rollbackEvent, error } = await sc.from("prompt_rollback_events").insert({
+    organization_id: orgId,
+    rollout_window_id,
+    rolled_back_variant_id: rollout.promoted_variant_id,
+    restored_control_variant_id: previousControlId,
+    rollback_reason: action.rollbackReason,
+    rollback_mode: mode,
+  }).select().single();
+
+  if (error) return json({ error: error.message }, 500);
+
+  // Audit
+  await sc.from("audit_logs").insert({
+    user_id: "00000000-0000-0000-0000-000000000000",
+    action: "PROMPT_VARIANT_ROLLED_BACK",
+    category: "learning",
+    entity_type: "prompt_rollback_events",
+    entity_id: rollbackEvent.id,
+    message: `Prompt variant rolled back for stage ${rollout.stage_key}`,
+    severity: "critical",
+    organization_id: orgId,
+    metadata: { stage_key: rollout.stage_key, rolled_back: rollout.promoted_variant_id, restored: previousControlId },
+  });
+
+  return json({ rollback: rollbackEvent });
+}
+
+async function handleRolloutStatus(sc: any, orgId: string, stageKey?: string) {
+  let query = sc.from("prompt_rollout_windows").select("*").eq("organization_id", orgId);
+  if (stageKey) query = query.eq("stage_key", stageKey);
+  const { data, error } = await query.order("started_at", { ascending: false }).limit(50);
+  if (error) return json({ error: error.message }, 500);
+
+  // Attach health checks to active rollouts
+  const activeRollouts = (data || []).filter((r: any) => r.rollout_status === "active");
+  const healthByRollout: Record<string, any[]> = {};
+
+  if (activeRollouts.length > 0) {
+    const activeIds = activeRollouts.map((r: any) => r.id);
+    const { data: healthChecks } = await sc
+      .from("prompt_promotion_health_checks")
+      .select("*")
+      .in("rollout_window_id", activeIds)
+      .order("created_at", { ascending: false })
+      .limit(100);
+
+    for (const hc of healthChecks || []) {
+      if (!healthByRollout[hc.rollout_window_id]) healthByRollout[hc.rollout_window_id] = [];
+      healthByRollout[hc.rollout_window_id].push(hc);
+    }
+  }
+
+  return json({
+    rollouts: (data || []).map((r: any) => ({
+      ...r,
+      health_checks: healthByRollout[r.id] || [],
+    })),
+  });
+}
+
+async function handlePromotionHealth(sc: any, orgId: string, body: any) {
+  const { rollout_window_id, time_window_hours } = body;
+  if (!rollout_window_id) return json({ error: "rollout_window_id required" }, 400);
+
+  const windowHours = time_window_hours || 24;
+  const since = new Date(Date.now() - windowHours * 3600000).toISOString();
+  const now = new Date().toISOString();
+
+  // Fetch rollout window
+  const { data: rollout } = await sc
+    .from("prompt_rollout_windows")
+    .select("*")
+    .eq("id", rollout_window_id)
+    .eq("organization_id", orgId)
+    .maybeSingle();
+
+  if (!rollout) return json({ error: "Rollout window not found" }, 404);
+
+  // Get executions for promoted variant
+  const { data: executions } = await sc
+    .from("prompt_variant_executions")
+    .select("*")
+    .eq("organization_id", orgId)
+    .eq("prompt_variant_id", rollout.promoted_variant_id)
+    .gte("created_at", since)
+    .limit(1000);
+
+  const currentMetrics = aggregateVariantMetrics(
+    rollout.promoted_variant_id,
+    executions || [],
+  );
+
+  // Get baseline metrics (previous control)
+  let baselineMetrics = null;
+  if (rollout.previous_control_variant_id) {
+    const { data: baselineExecs } = await sc
+      .from("prompt_variant_executions")
+      .select("*")
+      .eq("organization_id", orgId)
+      .eq("prompt_variant_id", rollout.previous_control_variant_id)
+      .gte("created_at", since)
+      .limit(1000);
+
+    baselineMetrics = aggregateVariantMetrics(
+      rollout.previous_control_variant_id,
+      baselineExecs || [],
+    );
+  }
+
+  // Evaluate health
+  const healthResult = evaluatePromotionHealth(currentMetrics, baselineMetrics);
+
+  // Persist health check
+  await sc.from("prompt_promotion_health_checks").insert({
+    organization_id: orgId,
+    rollout_window_id,
+    prompt_variant_id: rollout.promoted_variant_id,
+    check_window_start: since,
+    check_window_end: now,
+    executions: healthResult.metrics_snapshot.executions,
+    success_rate: healthResult.metrics_snapshot.success_rate,
+    repair_rate: healthResult.metrics_snapshot.repair_rate,
+    avg_cost_usd: healthResult.metrics_snapshot.avg_cost_usd,
+    avg_quality_score: healthResult.metrics_snapshot.avg_quality_score,
+    regression_flags: healthResult.regression_flags,
+    health_status: healthResult.health_status,
+  });
+
+  // Evaluate rollback decision
+  const rollbackDecision = evaluateRollbackDecision(
+    healthResult.health_status,
+    healthResult.regression_flags,
+    false, // bounded_auto disabled by default
+  );
+
+  return json({
+    health: healthResult,
+    rollback_decision: rollbackDecision,
+    current_metrics: currentMetrics,
+    baseline_metrics: baselineMetrics,
+  });
+}
+
+async function handleRollbackHistory(sc: any, orgId: string) {
+  const { data, error } = await sc
+    .from("prompt_rollback_events")
+    .select("*, prompt_rollout_windows(stage_key, rollout_strategy, rollout_mode)")
+    .eq("organization_id", orgId)
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (error) return json({ error: error.message }, 500);
+  return json({ rollbacks: data || [] });
 }
