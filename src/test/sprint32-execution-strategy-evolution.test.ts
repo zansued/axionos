@@ -346,7 +346,7 @@ describe("Execution Strategy Promotion Rules", () => {
 
 // ═══ Rollback Engine ═══
 describe("Execution Strategy Rollback Engine", () => {
-  const { evaluateRollback } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-rollback-engine");
+  // uses top-level import
 
   it("triggers immediate rollback for harmful with auto-rollback", () => {
     const result = evaluateRollback({
