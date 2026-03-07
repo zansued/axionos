@@ -46,6 +46,20 @@ export function EngineeringMemoryDashboard() {
     refetchInterval: 30000,
   });
 
+  // Retrieval metrics (Sprint 16)
+  const { data: retrievalMetrics } = useQuery({
+    queryKey: ["memory-retrieval-metrics", currentOrg?.id],
+    enabled: !!currentOrg?.id,
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke("memory-retrieval-surface", {
+        body: { action: "retrieval_metrics", organization_id: currentOrg!.id },
+      });
+      if (error) throw error;
+      return data;
+    },
+    refetchInterval: 30000,
+  });
+
   // Entries
   const { data: searchResult } = useQuery({
     queryKey: ["memory-entries", currentOrg?.id, typeFilter],
