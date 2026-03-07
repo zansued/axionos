@@ -978,3 +978,12 @@ supabase/functions/
 - `execution_policy_profiles` — Bounded execution policy modes with scope, adjustments, and status lifecycle
 - `execution_policy_outcomes` — Outcome tracking per policy with metrics and evidence
 - `execution_policy_decisions` — Audit trail of policy application decisions at runtime checkpoints
+
+### Execution Mode Portfolio Tables (Sprint 28)
+- `execution_policy_portfolio_entries` — Portfolio entries with composite scores and lifecycle status
+- `execution_policy_portfolio_recommendations` — Portfolio-level recommendations with confidence and status
+
+### Tenant Adaptive Policy Tuning Tables (Sprint 29)
+- `tenant_policy_preference_profiles` — Org/workspace preference profiles with preferred modes, priority weights, and override limits
+- `tenant_policy_outcomes` — Tenant-specific outcome tracking with applied mode (global_default, tenant_tuned, workspace_tuned)
+- `tenant_policy_recommendations` — Tenant-level recommendations for preference profile lifecycle management
