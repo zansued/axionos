@@ -295,11 +295,12 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full grid-cols-6 h-9">
+          <TabsList className="grid w-full grid-cols-7 h-9">
             <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Performance</TabsTrigger>
             <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>
             <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Qualidade</TabsTrigger>
             <TabsTrigger value="patterns" className="text-xs gap-1"><Bug className="h-3 w-3" /> Patterns</TabsTrigger>
+            <TabsTrigger value="prevention" className="text-xs gap-1"><Shield className="h-3 w-3" /> Prevenção</TabsTrigger>
             <TabsTrigger value="memory" className="text-xs gap-1"><Brain className="h-3 w-3" /> Memória</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live Feed</TabsTrigger>
           </TabsList>
