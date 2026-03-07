@@ -77,88 +77,86 @@ Stage gates, SLA enforcement, approval workflows, and complete audit logging. Ev
 
 ## System Architecture
 
+### C4 Context
+
+```mermaid
+flowchart TB
+    Dev["Developer / Operator"]
+    Lead["Engineering / Product Lead"]
+
+    Axion["AxionOS\nAdaptive Engineering Platform"]
+
+    Git["GitHub / Code Hosting"]
+    LLM["LLM Providers / Model APIs"]
+    DB["Supabase / PostgreSQL"]
+    Obs["Observability / Telemetry Stack"]
+
+    Dev --> Axion
+    Lead --> Axion
+
+    Axion --> Git
+    Axion --> LLM
+    Axion --> DB
+    Axion --> Obs
 ```
-                         ┌─────────────────────────────────────┐
-                         │        STRATEGY EVOLUTION           │
-                         │-------------------------------------│
-                         │ Strategy Families Registry          │
-                         │ Strategy Signal Interpreter         │
-                         │ Variant Synthesizer                 │
-                         │ Experiment Runner                   │
-                         │ Outcome Tracker                     │
-                         │ Promotion Rules                     │
-                         │ Rollback Engine                     │
-                         │ Strategy Lineage                    │
-                         └─────────────────┬───────────────────┘
-                                           │
-                                           ▼
-                         ┌─────────────────────────────────────┐
-                         │      PLATFORM SELF-CALIBRATION      │
-                         │-------------------------------------│
-                         │ Calibration Parameter Registry      │
-                         │ Calibration Signal Interpreter      │
-                         │ Calibration Proposal Engine         │
-                         │ Calibration Guardrails              │
-                         │ Calibration Runner                  │
-                         │ Outcome Tracker                     │
-                         │ Rollback Engine                     │
-                         └─────────────────┬───────────────────┘
-                                           │
-                                           ▼
-                         ┌─────────────────────────────────────┐
-                         │      PLATFORM INTELLIGENCE          │
-                         │-------------------------------------│
-                         │ Platform Behavior Aggregator        │
-                         │ Bottleneck Detector                 │
-                         │ Pattern Analyzer                    │
-                         │ Insight Generator                   │
-                         │ Recommendation Engine               │
-                         │ Platform Health Model               │
-                         └─────────────────┬───────────────────┘
-                                           │
-                                           ▼
-                         ┌─────────────────────────────────────┐
-                         │      EXECUTION GOVERNANCE           │
-                         │-------------------------------------│
-                         │ Execution Policy Intelligence       │
-                         │ Policy Portfolio Optimization       │
-                         │ Tenant / Workspace Adaptive Tuning  │
-                         │ Policy Routing                      │
-                         └─────────────────┬───────────────────┘
-                                           │
-                                           ▼
-                         ┌─────────────────────────────────────┐
-                         │           LEARNING LAYER            │
-                         │-------------------------------------│
-                         │ Prompt Optimization Engine          │
-                         │ Bounded Promotion & Rollback        │
-                         │ Self-Improving Fix Agents           │
-                         │ Agent Memory                        │
-                         │ Predictive Error Detection          │
-                         │ Learning Agents v2                  │
-                         └─────────────────┬───────────────────┘
-                                           │
-                                           ▼
-                         ┌─────────────────────────────────────┐
-                         │      OPERATIONAL INTELLIGENCE       │
-                         │-------------------------------------│
-                         │ Error Pattern Library               │
-                         │ Repair Strategy Tracking            │
-                         │ Adaptive Repair Routing             │
-                         │ Prevention Rule Candidates          │
-                         └─────────────────┬───────────────────┘
-                                           │
-                                           ▼
-                         ┌─────────────────────────────────────┐
-                         │      DETERMINISTIC PIPELINE         │
-                         │-------------------------------------│
-                         │ Stage Execution Engine              │
-                         │ Artifact Governance                 │
-                         │ Validation Engine                   │
-                         │ Publish Pipeline                    │
-                         │ Observability Feed                  │
-                         └─────────────────────────────────────┘
+
+### C4 Containers
+
+```mermaid
+flowchart TB
+    UI["Web App / Dashboard"]
+    API["API / Edge Functions Layer"]
+
+    Core["Execution Pipeline Core"]
+    OI["Operational Intelligence Engine"]
+    Learn["Learning Engine"]
+    Gov["Execution Governance Engine"]
+    PI["Platform Intelligence Engine"]
+    Calib["Platform Self-Calibration Engine"]
+    Strat["Execution Strategy Evolution Engine"]
+
+    Data["Persistence Layer\nSupabase / PostgreSQL"]
+    Ext["External Integration Layer\nGitHub / LLM / Telemetry"]
+
+    UI --> API
+
+    API --> Core
+    API --> OI
+    API --> Learn
+    API --> Gov
+    API --> PI
+    API --> Calib
+    API --> Strat
+    API --> Data
+
+    Core --> OI
+    Core --> Learn
+    Core --> Data
+    Core --> Ext
+
+    OI --> Learn
+    OI --> Data
+
+    Learn --> Gov
+    Learn --> PI
+    Learn --> Data
+
+    Gov --> PI
+    Gov --> Data
+
+    PI --> Calib
+    PI --> Strat
+    PI --> Data
+
+    Calib --> Data
+    Strat --> Data
+
+    Ext --> GitHub["GitHub / Code Hosting"]
+    Ext --> Models["LLM Providers"]
+    Ext --> Telemetry["Telemetry / Notifications"]
 ```
+
+> Full C4 component diagrams available in [Architecture docs](docs/ARCHITECTURE.md) and [PlantUML sources](docs/diagrams/).
 
 ---
 

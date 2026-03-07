@@ -1,0 +1,17 @@
+@startuml
+title AxionOS - Platform Intelligence Engine
+
+component "Platform Behavior Aggregator" as Aggregator
+component "Bottleneck Detector" as Bottleneck
+component "Pattern Analyzer" as Pattern
+component "Insight Generator" as Insight
+component "Recommendation Engine" as Reco
+component "Platform Health Model" as Health
+
+Aggregator --> Bottleneck
+Aggregator --> Pattern
+Bottleneck --> Insight
+Pattern --> Insight
+Insight --> Reco
+Insight --> Health
+@enduml

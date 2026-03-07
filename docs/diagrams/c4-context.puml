@@ -1,0 +1,23 @@
+@startuml
+!define RECTANGLE class
+
+title AxionOS - C4 Context Diagram
+
+actor "Developer / Operator" as Dev
+actor "Engineering / Product Lead" as Lead
+
+rectangle "AxionOS\nAdaptive Engineering Platform" as Axion
+
+rectangle "GitHub / Code Hosting" as Git
+rectangle "LLM Providers / Model APIs" as LLM
+rectangle "Supabase / PostgreSQL" as DB
+rectangle "Observability / Telemetry Stack" as OBS
+
+Dev --> Axion : operates / monitors
+Lead --> Axion : governs / reviews
+
+Axion --> Git : publish artifacts / PRs
+Axion --> LLM : reasoning / generation
+Axion --> DB : persist execution + learning
+Axion --> OBS : metrics / logs / events
+@enduml

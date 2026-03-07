@@ -1,0 +1,16 @@
+@startuml
+title AxionOS - Execution Pipeline Core
+
+component "Stage Orchestrator" as Orchestrator
+component "Deterministic Pipeline Runner" as Runner
+component "Artifact Manager" as Artifact
+component "Validation Engine" as Validation
+component "Publish Engine" as Publish
+component "Execution Event Emitter" as Events
+
+Orchestrator --> Runner
+Runner --> Artifact
+Artifact --> Validation
+Validation --> Publish
+Publish --> Events
+@enduml

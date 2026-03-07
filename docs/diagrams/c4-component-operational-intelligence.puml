@@ -1,0 +1,14 @@
+@startuml
+title AxionOS - Operational Intelligence Engine
+
+component "Error Pattern Library" as ErrorLib
+component "Repair Strategy Tracker" as RepairTrack
+component "Adaptive Repair Router" as RepairRouter
+component "Prevention Candidate Generator" as Prevention
+component "Execution Events" as Events
+
+Events --> ErrorLib
+ErrorLib --> RepairTrack
+RepairTrack --> RepairRouter
+RepairRouter --> Prevention
+@enduml
