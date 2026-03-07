@@ -55,6 +55,31 @@ export default function MetaAgents() {
   const [reviewDialog, setReviewDialog] = useState<{ id: string; title: string; action: string } | null>(null);
   const [reviewNotes, setReviewNotes] = useState("");
 
+  // Sprint 19: Quality aggregates
+  const { data: qualityAggregates } = useQuery({
+    queryKey: ["quality-aggregates", currentOrg?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("proposal_quality_aggregates" as any)
+        .select("*")
+        .eq("organization_id", currentOrg!.id);
+      if (error) throw error;
+      return (data as unknown) as Record<string, unknown>[];
+    },
+    enabled: !!currentOrg?.id,
+  });
+
+  const getAgentQuality = (agentType: string) => {
+    const agg = qualityAggregates?.find((a) => a.meta_agent_type === agentType);
+    if (!agg) return null;
+    return {
+      acceptanceRate: Number(agg.avg_acceptance_rate || 0),
+      quality: Number(agg.avg_overall_quality || 0),
+      trend: agg.quality_trend as string,
+      total: Number(agg.total_recommendations || 0),
+    };
+  };
+
   const { data: recommendations, isLoading, error: queryError } = useQuery({
     queryKey: ["meta-recommendations", currentOrg?.id, statusFilter, agentFilter, sortField, sortAsc],
     queryFn: async () => {
