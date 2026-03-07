@@ -603,7 +603,8 @@ supabase/functions/_shared/agent-os/
 | Memory-Aware Reasoning | ✅ Implemented (Sprint 18) |
 | Proposal Quality Feedback Loop | ✅ Implemented (Sprint 19) |
 | Advisory Calibration Layer | ✅ Implemented (Sprint 20) |
-| Prompt Optimization (A/B testing) | 📋 NEXT horizon |
+| Prompt Optimization (A/B + Bounded Promotion) | ✅ Implemented (Sprints 21–22) |
+| Self-Improving Fix Agents v2 (Repair Policies) | ✅ Implemented (Sprint 23) |
 | Semantic Retrieval | 📋 Planned |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
