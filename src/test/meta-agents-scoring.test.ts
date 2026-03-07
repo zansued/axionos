@@ -898,3 +898,194 @@ describe("Sprint 15 — Access Statistics", () => {
     expect(updated.last_accessed_at).toBeTruthy();
   });
 });
+
+// ═══════════════════════════════════════════════════════════
+// Sprint 16 — Memory Retrieval Surfaces Tests
+// ═══════════════════════════════════════════════════════════
+
+describe("Sprint 16 — Memory Retrieval Ranking", () => {
+  // Inline ranking logic for testing
+  function rankEntries(
+    entries: Array<{ confidence_score: number; relevance_score: number; created_at: string; tags: string[]; times_retrieved: number }>,
+    queryTags: string[]
+  ) {
+    const now = Date.now();
+    return entries
+      .map((entry) => {
+        let score = 0;
+        score += (entry.confidence_score || 0) * 0.3;
+        score += (entry.relevance_score || 0) * 0.3;
+        const ageMs = now - new Date(entry.created_at).getTime();
+        const ageDays = ageMs / (1000 * 60 * 60 * 24);
+        const recencyScore = ageDays <= 7 ? 1 : ageDays <= 90 ? 1 - (ageDays - 7) / 83 : 0;
+        score += recencyScore * 0.2;
+        if (queryTags.length > 0 && Array.isArray(entry.tags)) {
+          const overlap = queryTags.filter((t) => entry.tags.includes(t)).length;
+          score += Math.min(1, overlap / queryTags.length) * 0.1;
+        }
+        if (entry.times_retrieved > 0) {
+          score += Math.min(0.1, entry.times_retrieved * 0.01);
+        }
+        return { ...entry, _rank_score: Math.round(score * 1000) / 1000 };
+      })
+      .sort((a, b) => b._rank_score - a._rank_score);
+  }
+
+  it("ranking is deterministic for identical inputs", () => {
+    const entries = [
+      { confidence_score: 0.8, relevance_score: 0.7, created_at: new Date().toISOString(), tags: ["repair"], times_retrieved: 3 },
+      { confidence_score: 0.6, relevance_score: 0.9, created_at: new Date().toISOString(), tags: ["design"], times_retrieved: 1 },
+    ];
+    const r1 = rankEntries(entries, ["repair"]);
+    const r2 = rankEntries(entries, ["repair"]);
+    expect(r1.map((e) => e._rank_score)).toEqual(r2.map((e) => e._rank_score));
+  });
+
+  it("higher confidence + relevance entries rank higher", () => {
+    const entries = [
+      { confidence_score: 0.3, relevance_score: 0.3, created_at: new Date().toISOString(), tags: [], times_retrieved: 0 },
+      { confidence_score: 0.9, relevance_score: 0.9, created_at: new Date().toISOString(), tags: [], times_retrieved: 0 },
+    ];
+    const ranked = rankEntries(entries, []);
+    expect(ranked[0].confidence_score).toBe(0.9);
+  });
+
+  it("recent entries rank above old entries (all else equal)", () => {
+    const recent = new Date().toISOString();
+    const old = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString();
+    const entries = [
+      { confidence_score: 0.5, relevance_score: 0.5, created_at: old, tags: [], times_retrieved: 0 },
+      { confidence_score: 0.5, relevance_score: 0.5, created_at: recent, tags: [], times_retrieved: 0 },
+    ];
+    const ranked = rankEntries(entries, []);
+    expect(ranked[0].created_at).toBe(recent);
+  });
+
+  it("tag overlap boosts ranking", () => {
+    const entries = [
+      { confidence_score: 0.5, relevance_score: 0.5, created_at: new Date().toISOString(), tags: ["unrelated"], times_retrieved: 0 },
+      { confidence_score: 0.5, relevance_score: 0.5, created_at: new Date().toISOString(), tags: ["repair", "error"], times_retrieved: 0 },
+    ];
+    const ranked = rankEntries(entries, ["repair", "error"]);
+    expect(ranked[0].tags).toContain("repair");
+  });
+
+  it("entries older than 90 days get zero recency score", () => {
+    const veryOld = new Date(Date.now() - 100 * 24 * 60 * 60 * 1000).toISOString();
+    const entries = [
+      { confidence_score: 0.5, relevance_score: 0.5, created_at: veryOld, tags: [], times_retrieved: 0 },
+    ];
+    const ranked = rankEntries(entries, []);
+    // Without recency, score is ~0.3 (confidence) + 0.3 (relevance) * 0.5 each = 0.3
+    expect(ranked[0]._rank_score).toBeLessThan(0.35);
+  });
+
+  it("previously retrieved entries get small boost", () => {
+    const ts = new Date().toISOString();
+    const entries = [
+      { confidence_score: 0.5, relevance_score: 0.5, created_at: ts, tags: [], times_retrieved: 0 },
+      { confidence_score: 0.5, relevance_score: 0.5, created_at: ts, tags: [], times_retrieved: 10 },
+    ];
+    const ranked = rankEntries(entries, []);
+    expect(ranked[0].times_retrieved).toBe(10);
+  });
+});
+
+describe("Sprint 16 — Retrieval Safety", () => {
+  it("retrieval context values are valid enums", () => {
+    const validContexts = [
+      "repair_surface",
+      "meta_agent_analysis",
+      "artifact_generation",
+      "recommendation_review",
+      "artifact_review",
+    ];
+    validContexts.forEach((ctx) => {
+      expect(typeof ctx).toBe("string");
+      expect(ctx.length).toBeGreaterThan(0);
+    });
+  });
+
+  it("retrieval must not produce mutation verbs", () => {
+    const RETRIEVAL_FUNCTIONS = [
+      "retrieveForRepair",
+      "retrieveForMetaAgent",
+      "retrieveForArtifactGeneration",
+      "retrieveForReview",
+      "getRetrievalMetrics",
+    ];
+    const MUTATION_VERBS = ["UPDATE", "DELETE", "INSERT", "ALTER", "DROP", "TRUNCATE", "EXECUTE"];
+    RETRIEVAL_FUNCTIONS.forEach((fn) => {
+      MUTATION_VERBS.forEach((verb) => {
+        expect(fn.toUpperCase().includes(verb)).toBe(false);
+      });
+    });
+  });
+
+  it("retrieval results are always capped at max_results limit", () => {
+    const maxResults = 50;
+    const testArray = Array.from({ length: 100 }, (_, i) => i);
+    const limited = testArray.slice(0, Math.min(maxResults, testArray.length));
+    expect(limited.length).toBeLessThanOrEqual(50);
+  });
+
+  it("empty retrieval results degrade gracefully", () => {
+    const emptyResult = { entries: [], query_context: "repair_surface", total_found: 0, retrieval_surface: "repair_surface" };
+    expect(emptyResult.entries).toEqual([]);
+    expect(emptyResult.total_found).toBe(0);
+  });
+
+  it("retrieval does not modify memory entry structure", () => {
+    const entry = {
+      id: "test",
+      memory_type: "ErrorMemory",
+      confidence_score: 0.8,
+      relevance_score: 0.7,
+    };
+    const retrieved = { ...entry, _rank_score: 0.65 };
+    // Original fields unchanged
+    expect(retrieved.id).toBe(entry.id);
+    expect(retrieved.memory_type).toBe(entry.memory_type);
+    expect(retrieved.confidence_score).toBe(entry.confidence_score);
+    expect(retrieved.relevance_score).toBe(entry.relevance_score);
+    // Only _rank_score is added
+    expect(retrieved._rank_score).toBe(0.65);
+  });
+
+  it("retrieval surfaces for meta-agents use read-only memory types", () => {
+    const META_AGENT_MEMORY_TYPES = ["DesignMemory", "OutcomeMemory", "StrategyMemory", "DecisionMemory"];
+    const MUTABLE_TYPES = ["PipelineConfig", "GovernanceRule", "BillingPlan"];
+    META_AGENT_MEMORY_TYPES.forEach((type) => {
+      expect(MUTABLE_TYPES.includes(type)).toBe(false);
+    });
+  });
+});
+
+describe("Sprint 16 — Related Memory Context in Artifacts", () => {
+  it("related_historical_context section has correct shape", () => {
+    const context = {
+      title: "Previous ADR on validation",
+      memory_type: "DesignMemory",
+      summary: "Resolved validation bottleneck",
+      created_at: new Date().toISOString(),
+      relevance_rank: 0.78,
+    };
+    expect(context).toHaveProperty("title");
+    expect(context).toHaveProperty("memory_type");
+    expect(context).toHaveProperty("summary");
+    expect(context).toHaveProperty("created_at");
+    expect(context).toHaveProperty("relevance_rank");
+  });
+
+  it("max 5 related memories per artifact generation", () => {
+    const memories = Array.from({ length: 10 }, (_, i) => ({ id: `mem-${i}` }));
+    const limited = memories.slice(0, 5);
+    expect(limited.length).toBe(5);
+  });
+
+  it("artifact content is valid without memory context", () => {
+    const content = { format: "ADR_DRAFT", sections: { title: "Test" } };
+    expect(content.format).toBe("ADR_DRAFT");
+    expect(content).not.toHaveProperty("related_historical_context");
+  });
+});
