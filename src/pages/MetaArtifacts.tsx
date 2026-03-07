@@ -88,6 +88,20 @@ export default function MetaArtifacts() {
     enabled: !!currentOrg?.id,
   });
 
+  // Sprint 19: Quality aggregates
+  const { data: qualityAggregates } = useQuery({
+    queryKey: ["quality-aggregates-artifacts", currentOrg?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("proposal_quality_aggregates" as any)
+        .select("*")
+        .eq("organization_id", currentOrg!.id);
+      if (error) throw error;
+      return (data as unknown) as Record<string, unknown>[];
+    },
+    enabled: !!currentOrg?.id,
+  });
+
   const reviewMutation = useMutation({
     mutationFn: async ({ id, action, notes }: { id: string; action: string; notes: string }) => {
       const { data, error } = await supabase.functions.invoke("meta-artifact-review", {
