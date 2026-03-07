@@ -271,41 +271,23 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 
 ## Engineering Memory Architecture (Foundation + Retrieval + Summaries — Sprints 15–17)
 
-**Purpose:** Enable AxionOS to accumulate institutional engineering memory across executions, failures, strategies, recommendations, decisions, and outcomes.
+### Engineering Memory Architecture (Full Stack — Sprints 15–18) ✅
+
+**Purpose:** Enable AxionOS to accumulate and reason with institutional engineering memory across executions, failures, strategies, recommendations, decisions, and outcomes.
 
 **Memory Types:** Execution Memory, Error Memory, Strategy Memory, Design Memory, Decision Memory, Outcome Memory.
 
-**Sprint 15 — Foundation Implemented:**
-- ✅ Core tables: `engineering_memory_entries`, `memory_links`, `memory_retrieval_log`
-- ✅ Full RLS with tenant isolation
-- ✅ Memory capture on recommendation acceptance and artifact transitions
-- ✅ Retrieval API with filtering, pagination, and access tracking
-- ✅ Observability metrics (total entries, by type, retrieval frequency, most accessed)
-- ✅ Read-only UI in Observability → Memory tab
-
-**Sprint 16 — Retrieval Surfaces Implemented:**
-- ✅ Structured retrieval for repair, meta-agent, artifact generation, and human review
-- ✅ Deterministic ranking (confidence + relevance + recency + tag overlap + reuse)
-- ✅ Retrieval logging and decision-assisted tracking
-- ✅ Related Memory panel in Meta-Agents and Meta-Artifacts pages
-
-**Sprint 17 — Memory Summaries Implemented:**
-- ✅ `memory_summaries` table with RLS and duplicate prevention
-- ✅ 6 summary types: failure patterns, strategy effectiveness, recommendation decisions, artifact outcomes, architecture evolution, memory retrieval
-- ✅ Deterministic signal strength scoring (rule-based, bounded 0-1)
-- ✅ Summary generation, list, detail, and metrics endpoints
-- ✅ Summaries tab in Observability
-- ✅ Related Summary panels in Meta-Agents and Meta-Artifacts
-- ✅ Audit trail for summary generation
-- 📋 Semantic retrieval (future — requires embeddings)
-- 📋 Memory-driven agent reasoning (future)
+**Sprint 15 — Foundation:** ✅ Core tables, RLS, capture events, retrieval API, observability.
+**Sprint 16 — Retrieval Surfaces:** ✅ Structured retrieval for repair, meta-agents, artifacts, review. Deterministic ranking.
+**Sprint 17 — Memory Summaries:** ✅ 6 summary types, signal strength scoring, generation service, UI.
+**Sprint 18 — Memory-Aware Reasoning:** ✅ Meta-agent context enrichment, continuity scoring, redundancy guard, proposal layer v2.
 
 **Key Design Decisions:**
 - Cross-layer infrastructure (not a new execution layer)
 - Event-driven capture from Execution, Learning, Meta-Agent, Proposal, and Human layers
 - Dual indexing: structural (field-based) + semantic (future vector-based)
 - Strict tenant isolation via organization_id + RLS
-- Non-invasive: memory never mutates system behavior
+- Non-invasive: memory informs reasoning but never mutates system behavior
 
 Full specification: [ARCHITECTURE.md — Layer 9](ARCHITECTURE.md)
 
