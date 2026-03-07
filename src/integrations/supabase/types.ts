@@ -2733,6 +2733,220 @@ export type Database = {
           },
         ]
       }
+      platform_calibration_applications: {
+        Row: {
+          applied_mode: string
+          applied_value: Json
+          created_at: string
+          id: string
+          organization_id: string | null
+          outcome_status: string
+          parameter_key: string
+          previous_value: Json
+          proposal_id: string
+          rollback_guard: Json
+          scope_ref: Json | null
+        }
+        Insert: {
+          applied_mode?: string
+          applied_value?: Json
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          outcome_status?: string
+          parameter_key: string
+          previous_value?: Json
+          proposal_id: string
+          rollback_guard?: Json
+          scope_ref?: Json | null
+        }
+        Update: {
+          applied_mode?: string
+          applied_value?: Json
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          outcome_status?: string
+          parameter_key?: string
+          previous_value?: Json
+          proposal_id?: string
+          rollback_guard?: Json
+          scope_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_calibration_applications_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "platform_calibration_applications_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "platform_calibration_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_calibration_parameters: {
+        Row: {
+          allowed_range: Json
+          calibration_mode: string
+          created_at: string
+          current_value: Json
+          default_value: Json
+          id: string
+          organization_id: string | null
+          parameter_family: string
+          parameter_key: string
+          parameter_scope: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          allowed_range?: Json
+          calibration_mode?: string
+          created_at?: string
+          current_value?: Json
+          default_value?: Json
+          id?: string
+          organization_id?: string | null
+          parameter_family: string
+          parameter_key: string
+          parameter_scope: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          allowed_range?: Json
+          calibration_mode?: string
+          created_at?: string
+          current_value?: Json
+          default_value?: Json
+          id?: string
+          organization_id?: string | null
+          parameter_family?: string
+          parameter_key?: string
+          parameter_scope?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_calibration_parameters_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_calibration_proposals: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          current_value: Json
+          evidence_refs: Json | null
+          expected_impact: Json | null
+          id: string
+          organization_id: string | null
+          parameter_key: string
+          proposal_mode: string
+          proposed_value: Json
+          rationale_codes: Json
+          scope_ref: Json | null
+          status: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          current_value?: Json
+          evidence_refs?: Json | null
+          expected_impact?: Json | null
+          id?: string
+          organization_id?: string | null
+          parameter_key: string
+          proposal_mode?: string
+          proposed_value?: Json
+          rationale_codes?: Json
+          scope_ref?: Json | null
+          status?: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          current_value?: Json
+          evidence_refs?: Json | null
+          expected_impact?: Json | null
+          id?: string
+          organization_id?: string | null
+          parameter_key?: string
+          proposal_mode?: string
+          proposed_value?: Json
+          rationale_codes?: Json
+          scope_ref?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_calibration_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_calibration_rollbacks: {
+        Row: {
+          application_id: string
+          created_at: string
+          id: string
+          organization_id: string | null
+          parameter_key: string
+          restored_value: Json
+          rollback_mode: string
+          rollback_reason: Json
+        }
+        Insert: {
+          application_id: string
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          parameter_key: string
+          restored_value?: Json
+          rollback_mode?: string
+          rollback_reason?: Json
+        }
+        Update: {
+          application_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          parameter_key?: string
+          restored_value?: Json
+          rollback_mode?: string
+          rollback_reason?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_calibration_rollbacks_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "platform_calibration_applications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "platform_calibration_rollbacks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_insights: {
         Row: {
           affected_scope: string
