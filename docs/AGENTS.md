@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 22 — Bounded Promotion & Rollback Guard. Prompt optimization now operationally closed-loop with safe promotion activation, phased rollouts, continuous health monitoring, and deterministic rollback. Previous: Prompt Optimization Engine (Sprint 21).
+> **What changed (2026-03-07):** Sprint 23 — Self-Improving Fix Agents v2. Repair system now memory-aware and policy-driven with bounded adjustments, retry path intelligence, and full explainability. Previous: Bounded Promotion & Rollback Guard (Sprint 22).
 >
 > Last updated: 2026-03-07
 
