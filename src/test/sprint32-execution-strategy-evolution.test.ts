@@ -198,7 +198,7 @@ describe("Execution Strategy Guardrails", () => {
 
 // ═══ Experiment Runner ═══
 describe("Execution Strategy Experiment Runner", () => {
-  const { assignExecution, computeExperimentStatus } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-experiment-runner");
+  // uses top-level import
 
   const config = {
     experiment_id: "exp-1", variant_id: "var-1", family_id: "fam-1",
