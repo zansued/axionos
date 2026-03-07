@@ -625,6 +625,60 @@ export type Database = {
           },
         ]
       }
+      billing_accounts: {
+        Row: {
+          billing_email: string | null
+          billing_status: string
+          created_at: string
+          current_period_end: string
+          current_period_start: string
+          id: string
+          organization_id: string
+          plan_id: string
+          stripe_customer_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          billing_email?: string | null
+          billing_status?: string
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          id?: string
+          organization_id: string
+          plan_id: string
+          stripe_customer_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          billing_email?: string | null
+          billing_status?: string
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          id?: string
+          organization_id?: string
+          plan_id?: string
+          stripe_customer_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "billing_accounts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "billing_accounts_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "product_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       code_artifacts: {
         Row: {
           branch_name: string | null
@@ -1674,6 +1728,51 @@ export type Database = {
           },
         ]
       }
+      product_plans: {
+        Row: {
+          created_at: string
+          features: Json
+          id: string
+          is_active: boolean
+          max_deployments_per_month: number
+          max_initiatives_per_month: number
+          max_parallel_runs: number
+          max_tokens_per_month: number
+          monthly_price_usd: number
+          plan_name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          features?: Json
+          id?: string
+          is_active?: boolean
+          max_deployments_per_month?: number
+          max_initiatives_per_month?: number
+          max_parallel_runs?: number
+          max_tokens_per_month?: number
+          monthly_price_usd?: number
+          plan_name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          features?: Json
+          id?: string
+          is_active?: boolean
+          max_deployments_per_month?: number
+          max_initiatives_per_month?: number
+          max_parallel_runs?: number
+          max_tokens_per_month?: number
+          monthly_price_usd?: number
+          plan_name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -2665,11 +2764,45 @@ export type Database = {
           },
         ]
       }
+      workspace_members: {
+        Row: {
+          id: string
+          joined_at: string
+          role: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workspace_members_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workspaces: {
         Row: {
           created_at: string
+          created_by: string | null
           description: string | null
           id: string
+          is_active: boolean
           name: string
           organization_id: string
           settings: Json | null
@@ -2678,8 +2811,10 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          created_by?: string | null
           description?: string | null
           id?: string
+          is_active?: boolean
           name: string
           organization_id: string
           settings?: Json | null
@@ -2688,8 +2823,10 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          created_by?: string | null
           description?: string | null
           id?: string
+          is_active?: boolean
           name?: string
           organization_id?: string
           settings?: Json | null
