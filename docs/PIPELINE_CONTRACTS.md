@@ -452,3 +452,38 @@ O Project Brain serve como centro de evidência visual:
 | Custo por iniciativa | Rastreado e declinante |
 | Tempo ideia → repositório validado | < 15 min |
 | Clareza do progresso para o usuário | Feedback visual claro |
+
+---
+
+## Engineering Memory — Pipeline Contract (Designed)
+
+> **Status:** Designed — Not implemented
+
+### Interaction Model
+
+Engineering Memory is **read-only** from the pipeline's perspective:
+
+- The pipeline **emits events** that may trigger memory capture (by the memory layer, not the pipeline itself)
+- Pipeline stages may **query** memory for contextual information (repair strategies, past failures)
+- Pipeline execution must **never depend** on memory availability — graceful degradation is mandatory
+
+### Safety Rules
+
+| Rule | Description |
+|------|-------------|
+| **No execution dependency** | Pipeline must complete successfully even with zero memory entries |
+| **No write coupling** | Pipeline stages do not write to memory tables directly |
+| **No governance bypass** | Memory retrieval cannot override gate permissions or SLA rules |
+| **Tenant isolation** | All memory queries must include organization_id scope |
+| **Performance isolation** | Memory queries must not block stage execution (async, timeout-bounded) |
+
+### Memory as Context (Future)
+
+When implemented, memory will provide **optional enrichment** to pipeline stages:
+
+- **Preventive Validation:** Query Error Memory for known failure patterns on similar architectures
+- **Build Repair:** Query Strategy Memory for previously successful repair strategies
+- **Architecture Stage:** Query Design Memory for relevant prior architecture decisions
+- **Deploy Stage:** Query Outcome Memory for deployment risk signals from similar initiatives
+
+Memory enrichment is always **additive** — it enhances decisions but never gates them.

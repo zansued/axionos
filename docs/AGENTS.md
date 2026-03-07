@@ -516,11 +516,47 @@ supabase/functions/_shared/agent-os/
 | Learning Dashboard | ✅ Implemented (Sprint 12) |
 | Prompt Optimization (A/B testing) | 📋 NEXT horizon |
 | Meta-Agents (5 types) | 📋 Architecture designed, not implemented |
+| Engineering Memory Integration | 📋 Designed — not implemented |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
 
 ---
 
-## 16. Governing Principle
+## 16. Engineering Memory Interaction (Designed)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly.
+> **Status:** Designed — Not implemented
+
+### Overview
+
+Engineering Memory is a cross-layer knowledge infrastructure that agents will use to retrieve past engineering experience. Agents do **not** write directly to memory — capture is event-driven from layer outputs. Agents **read** memory to inform decisions.
+
+### Agent Retrieval Use Cases
+
+| Agent Class | Retrieval Context | Memory Types Used |
+|-------------|-------------------|-------------------|
+| **Build Agents** | During repair attempts | Error Memory, Strategy Memory |
+| **Validation Agents** | During preventive checks | Error Memory, Execution Memory |
+| **Architecture Agents** | During planning | Design Memory, Outcome Memory |
+| **Meta-Agents** | During recommendation generation | All memory types |
+| **Proposal Generators** | During artifact generation | Design Memory, Decision Memory |
+
+### Memory-Driven Decisions (Future)
+
+1. **Repair Selection:** Before attempting a repair strategy, query Strategy Memory for past effectiveness of similar strategies on similar errors.
+2. **Architecture Validation:** Before generating architecture proposals, query Design Memory for prior proposals addressing similar components.
+3. **Meta-Agent Analysis:** During recommendation generation, query Outcome Memory to assess the impact of previously implemented recommendations.
+4. **Human Review Support:** During artifact review, surface related Decision Memory entries showing past acceptance/rejection patterns.
+
+### Safety Boundaries
+
+- Agents may **read** memory but never **write** directly
+- Memory retrieval must not block execution (async, best-effort)
+- Memory absence must not prevent agent operation (graceful degradation)
+- Memory queries must always be scoped by `organization_id` (tenant isolation)
+- Memory must not override governance rules or policy engine decisions
+
+---
+
+## 17. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands.

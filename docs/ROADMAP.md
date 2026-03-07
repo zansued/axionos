@@ -310,9 +310,32 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 
 ---
 
+## Engineering Memory Architecture (Designed — Not Implemented)
+
+**Purpose:** Enable AxionOS to accumulate institutional engineering memory across executions, failures, strategies, recommendations, decisions, and outcomes.
+
+**Memory Types:** Execution Memory, Error Memory, Strategy Memory, Design Memory, Decision Memory, Outcome Memory.
+
+**Key Design Decisions:**
+- Cross-layer infrastructure (not a new execution layer)
+- Event-driven capture from Execution, Learning, Meta-Agent, Proposal, and Human layers
+- Dual indexing: structural (field-based) + semantic (future vector-based)
+- Periodic synthesis into summaries (weekly/monthly trends)
+- Strict tenant isolation via organization_id + RLS
+- Non-invasive: memory never mutates system behavior
+
+**Data Model (Planned):** `engineering_memory_entries`, `memory_links`, `memory_retrieval_log`, `memory_summaries`
+
+**Retrieval Surfaces:** During repair (past strategies), during meta-agent analysis (related proposals), during artifact generation (prior ADRs), during human review (past decisions and outcomes).
+
+Full specification: [ARCHITECTURE.md — Layer 9](ARCHITECTURE.md)
+
+---
+
 ## Governing Principle
 
 > The architecture is sufficient. Level 3 is complete.
-> Twelve sprints are done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, and Learning Agents v1.
-> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, and active learning intelligence.
-> Focus now: commercial stability and controlled learning activation.
+> Fourteen sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, and Controlled Meta-Agent Actions.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, meta-level recommendations, and controlled engineering proposal generation.
+> Engineering Memory Architecture is designed as the next knowledge infrastructure layer.
+> Focus now: commercial stability, controlled learning activation, and memory infrastructure preparation.
