@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 29 — Workspace / Tenant Adaptive Policy Tuning. Bounded tenant-aware execution policy tuning with drift detection, override guards, and workspace-level adaptation now operational. Previous: Execution Mode Portfolio Optimization (Sprint 28).
+> **What changed (2026-03-07):** Sprint 30 — Platform Intelligence Entry. System-level behavior observation with bottleneck detection, pattern analysis, health model, and advisory recommendations now operational. Previous: Workspace / Tenant Adaptive Policy Tuning (Sprint 29).
 >
 > Last updated: 2026-03-07
 
