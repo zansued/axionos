@@ -355,6 +355,20 @@ export default function MetaAgents() {
                           <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{rec.description}</p>
                           <div className="flex gap-3 text-xs text-muted-foreground flex-wrap">
                             <span>{AGENT_LABELS[rec.meta_agent_type] || rec.meta_agent_type}</span>
+                            {/* Sprint 19: Quality indicator */}
+                            {(() => {
+                              const q = getAgentQuality(rec.meta_agent_type);
+                              if (!q || q.total < 3) return null;
+                              const trendIcon = q.trend === "improving" ? "↑" : q.trend === "declining" ? "↓" : "→";
+                              const trendColor = q.trend === "improving" ? "text-green-600" : q.trend === "declining" ? "text-red-500" : "text-muted-foreground";
+                              return (
+                                <span className="flex items-center gap-1">
+                                  <BarChart3 className="h-3 w-3 text-muted-foreground" />
+                                  <span>Accept: {(q.acceptanceRate * 100).toFixed(0)}%</span>
+                                  <span className={trendColor}>{trendIcon}</span>
+                                </span>
+                              );
+                            })()}
                             <span>•</span>
                             <span>Target: {rec.target_component}</span>
                             <span>•</span>
