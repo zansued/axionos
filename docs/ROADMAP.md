@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2 implemented. Meta-agents now use engineering memory and summaries as advisory historical context. Historical continuity scoring, redundancy suppression, and decision/outcome-aware framing are active. Artifacts include structured Related Historical Context sections. Previous: Memory Summaries (Sprint 17).
+> **What changed (2026-03-07):** Sprint 19 — Proposal Quality Feedback Loop implemented. Quality scoring, outcome tracking, confidence calibration, and memory effectiveness measurement are now active across recommendations and artifacts. Previous: Memory-Aware Meta-Agents (Sprint 18).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
