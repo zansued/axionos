@@ -348,13 +348,33 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 12. Meta-Agents (Planned — Architecture Designed, Not Implemented)
+## 12. Meta-Agents — Active (Sprints 13–18)
 
-> **Status:** 📋 Architecture designed — **Not implemented**
-> **Dependency:** Requires stable Learning Agents v2
-> **Target:** Level 4.5 — Self-Designing Engineering System
+> **Status:** ✅ Active — 4 memory-aware meta-agents operational
+> **Maturity:** v1.2 — Memory-aware with historical context enrichment
+> **Target:** Level 5 — Institutional Engineering Memory
 
-Meta-Agents are higher-order agents that operate above the normal execution and learning agents. They analyze system behavior, design new agent roles, adjust orchestration strategies, recommend workflow changes, and optimize system architecture. They do **not** execute pipeline tasks directly.
+Meta-Agents are higher-order agents that operate above the normal execution and learning agents. They analyze system behavior with historical engineering context, design new agent roles, adjust orchestration strategies, recommend workflow changes, and optimize system architecture. They do **not** execute pipeline tasks directly.
+
+### Memory-Aware Capabilities (Sprint 18)
+
+Each meta-agent receives historical context via `meta-agent-memory-context.ts`:
+- `related_memory_entries` — Ranked memory entries by type relevance
+- `related_summaries` — Relevant memory summaries
+- `related_decisions` — Prior accepted/rejected/deferred decisions
+- `related_outcomes` — Prior implementation outcomes
+- `historical_context_score` — Deterministic 0-1 score
+
+Recommendations include structured historical signals:
+- `historical_alignment` — reinforces_prior_direction | extends_prior_direction | reopens_unresolved_issue | diverges_from_prior_direction | historically_novel
+- `decision_history_signal` — Prior decision context
+- `outcome_history_signal` — Prior outcome context
+- `historical_novelty_flag` — Whether recommendation is historically novel
+
+Redundancy guard (`historical-redundancy-guard.ts`) suppresses or downgrades:
+- Repeatedly rejected recommendations without new evidence
+- Near-duplicate recommendations within 3 days
+- Low-confidence recommendations with prior rejections
 
 ### 12.1 Architecture Meta-Agent
 
