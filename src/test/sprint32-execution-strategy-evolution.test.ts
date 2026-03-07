@@ -280,7 +280,7 @@ describe("Execution Strategy Outcome Tracker", () => {
 
 // ═══ Promotion Rules ═══
 describe("Execution Strategy Promotion Rules", () => {
-  const { evaluatePromotion } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-promotion-rules");
+  // uses top-level import
 
   it("allows promotion for helpful verdict with sufficient evidence", () => {
     const result = evaluatePromotion({
