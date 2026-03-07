@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 25 — Predictive Error Detection Operationalization. Runtime predictive risk scoring, bounded preventive actions, outcome tracking, and prediction quality metrics now operational. Previous: Agent Memory Layer Operationalization (Sprint 24).
+> **What changed (2026-03-07):** Sprint 27 — Execution Policy Intelligence. Bounded execution policy selection, context classification, runtime adjustments, outcome tracking, and feedback loops now operational. Previous: Learning Agents v2 (Sprint 26).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
