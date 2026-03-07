@@ -174,7 +174,7 @@ AxionOS has completed 36 implementation sprints spanning the full capability arc
 
 ---
 
-## LATER — Autonomous Engineering Advisor
+## LATER — Discovery-Driven Architecture
 
 **Priority:** Long-term
 **Status:** 📋 Planned
@@ -183,9 +183,8 @@ AxionOS has completed 36 implementation sprints spanning the full capability arc
 
 | Module | Description |
 |--------|-------------|
-| Autonomous Engineering Advisor | System-level advisory combining all intelligence layers |
 | Discovery-Driven Architecture | Architecture experimentation based on market signals |
-| Strategy Portfolio Optimization | Cross-family strategy coordination |
+| Autonomous Implementation | End-to-end autonomous code generation |
 
 ---
 
