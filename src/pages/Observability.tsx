@@ -524,6 +524,11 @@ export default function Observability() {
           <TabsContent value="prevention" className="mt-4">
             <PreventionDashboard />
           </TabsContent>
+
+          {/* ===== LEARNING ===== */}
+          <TabsContent value="learning" className="mt-4">
+            <LearningFoundationDashboard />
+          </TabsContent>
         </Tabs>
       </div>
     </AppLayout>
