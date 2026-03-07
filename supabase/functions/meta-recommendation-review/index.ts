@@ -4,14 +4,16 @@ import { authenticate, AuthContext } from "../_shared/auth.ts";
 import { META_AUDIT_EVENTS, RECOMMENDATION_STATUSES } from "../_shared/meta-agents/types.ts";
 
 /**
- * meta-recommendation-review — Sprint 13
+ * meta-recommendation-review — Sprint 13 (Hardened)
  *
  * Review workflow for Meta-Agent recommendations.
- * Actions: review, accept, reject, defer
+ * Actions: accepted, rejected, deferred
  *
- * POST { recommendation_id, action, review_notes? }
- *
- * SAFETY: Status changes only. Acceptance does NOT implement any change.
+ * SAFETY:
+ * - Status changes only. Acceptance does NOT implement any change.
+ * - Validates state transitions (only pending → accepted|rejected|deferred).
+ * - Unauthorized org access blocked.
+ * - Full audit trail on every action.
  */
 serve(async (req) => {
   const cors = handleCors(req);
@@ -28,7 +30,7 @@ serve(async (req) => {
       return errorResponse("recommendation_id and action required", 400);
     }
 
-    const validActions = ["reviewed", "accepted", "rejected", "deferred"];
+    const validActions = ["accepted", "rejected", "deferred"];
     if (!validActions.includes(action)) {
       return errorResponse(`Invalid action. Must be one of: ${validActions.join(", ")}`, 400);
     }
@@ -42,7 +44,16 @@ serve(async (req) => {
 
     if (fetchErr || !rec) return errorResponse("Recommendation not found", 404);
 
-    // Verify membership with admin/owner role
+    // --- State transition validation ---
+    // Only allow transitions from 'pending'
+    if (rec.status !== "pending") {
+      return errorResponse(
+        `Cannot ${action} a recommendation with status "${rec.status}". Only pending recommendations can be reviewed.`,
+        409
+      );
+    }
+
+    // Verify membership with editor+ role
     const { data: member } = await sc
       .from("organization_members")
       .select("role")
@@ -56,7 +67,7 @@ serve(async (req) => {
 
     const previousStatus = rec.status;
 
-    // Update recommendation
+    // Update recommendation — status change ONLY, no side effects
     const { error: updateErr } = await sc
       .from("meta_agent_recommendations")
       .update({
@@ -71,7 +82,6 @@ serve(async (req) => {
 
     // Map action to audit event
     const auditEventMap: Record<string, string> = {
-      reviewed: META_AUDIT_EVENTS.META_RECOMMENDATION_REVIEWED,
       accepted: META_AUDIT_EVENTS.META_RECOMMENDATION_ACCEPTED,
       rejected: META_AUDIT_EVENTS.META_RECOMMENDATION_REJECTED,
       deferred: META_AUDIT_EVENTS.META_RECOMMENDATION_DEFERRED,
