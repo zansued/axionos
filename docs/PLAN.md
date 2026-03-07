@@ -119,17 +119,18 @@
 
 ---
 
-### Phase 8: Platform Stabilization & Advisory Intelligence (Sprints 34–36)
+### Phase 8: Platform Stabilization & Advisory Intelligence (Sprints 34–37)
 
-**Goal:** Self-stabilization, autonomous engineering advisory, and unified semantic retrieval across all intelligence layers.
+**Goal:** Self-stabilization, autonomous engineering advisory, unified semantic retrieval, and discovery-driven architecture signals across all intelligence layers.
 
 | Sprint | Capability | Architectural Layer |
 |--------|-----------|-------------------|
 | 34 | Platform Self-Stabilization | Platform Stabilization Layer |
 | 35 | Autonomous Engineering Advisor | Engineering Advisory Layer |
 | 36 | Semantic Retrieval & Embedding Memory Expansion | Semantic Retrieval Layer |
+| 37 | Discovery-Driven Architecture Signals | Discovery Architecture Layer |
 
-**Delivered:** Stability monitoring, stabilization actions, bounded interventions, rollback-safe stabilization, engineering signal aggregation, opportunity synthesis, prioritized recommendations, explainability, review workflows, advisory clustering, unified embedding-backed retrieval, domain registry, index management, ranking, guardrails, retrieval quality evaluation.
+**Delivered:** Stability monitoring, stabilization actions, bounded interventions, rollback-safe stabilization, engineering signal aggregation, opportunity synthesis, prioritized recommendations, explainability, review workflows, advisory clustering, unified embedding-backed retrieval, domain registry, index management, ranking, guardrails, retrieval quality evaluation, discovery signal aggregation, architecture stress mapping, architecture opportunity synthesis, discovery-driven recommendations.
 
 ---
 
