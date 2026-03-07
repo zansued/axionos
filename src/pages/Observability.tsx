@@ -340,6 +340,11 @@ export default function Observability() {
             <ExecutionPolicyPortfolioDashboard />
           </TabsContent>
 
+          {/* ===== TENANT ADAPTIVE POLICY TUNING ===== */}
+          <TabsContent value="tenant" className="mt-4">
+            <TenantAdaptivePolicyDashboard />
+          </TabsContent>
+
           {/* ===== PREDICTIVE ERROR DETECTION ===== */}
           <TabsContent value="predictive" className="mt-4">
             <PredictiveErrorDashboard />
