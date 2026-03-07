@@ -260,6 +260,15 @@ export default function MetaArtifacts() {
                               Review: {art.review_notes as string}
                             </p>
                           )}
+
+                          {/* Sprint 16: Related Memory Panel */}
+                          <div className="mt-2">
+                            <RelatedMemoryPanel
+                              reviewType="artifact_review"
+                              targetComponent={art.created_by_meta_agent as string}
+                              tags={[art.artifact_type as string, art.created_by_meta_agent as string]}
+                            />
+                          </div>
                         </div>
                       </div>
 
