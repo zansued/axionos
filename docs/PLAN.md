@@ -158,10 +158,10 @@
 | Strategy experiment runner | ✅ IMPLEMENTED | 32 | `execution-strategy/execution-strategy-experiment-runner.ts` |
 | Strategy outcome tracking | ✅ IMPLEMENTED | 32 | `execution-strategy/execution-strategy-outcome-tracker.ts` |
 | Strategy promotion / rollback rules | ✅ IMPLEMENTED | 32 | `execution-strategy/execution-strategy-promotion-rules.ts`, `execution-strategy-rollback-engine.ts` |
-| Semantic retrieval via embeddings | 📋 PLANNED | — | pgvector infrastructure exists, retrieval layer not built |
-| Strategy portfolio governance | 📋 PLANNED | — | Strategy families exist, portfolio-level governance not yet built |
-| Autonomous engineering advisor | 📋 PLANNED | — | All intelligence layers exist, unified advisor not built |
-| Platform self-stabilization | 📋 PLANNED | — | Calibration and intelligence exist, auto-stabilization not built |
+| Strategy portfolio governance | ✅ IMPLEMENTED | 33 | `strategy-portfolio/strategy-portfolio-*.ts`, `strategy-portfolio-engine` |
+| Platform self-stabilization | ✅ IMPLEMENTED | 34 | `platform-stabilization/platform-stabilization-*.ts`, `platform-stabilization-engine` |
+| Autonomous engineering advisor | ✅ IMPLEMENTED | 35 | `engineering-advisor/engineering-advisory-*.ts`, `engineering-advisor` |
+| Semantic retrieval via embeddings | ✅ IMPLEMENTED | 36 | `semantic-retrieval/semantic-retrieval-*.ts`, `semantic-retrieval` |
 
 ---
 
@@ -183,6 +183,10 @@
 | `_shared/platform-intelligence/` | 6 | Behavior aggregator, bottleneck detector, pattern analyzer, insight generator, recommendation engine, health model |
 | `_shared/platform-calibration/` | 6 | Signal interpreter, proposal engine, guardrails, runner, outcome tracker, rollback engine |
 | `_shared/execution-strategy/` | 8 | Signal interpreter, variant synthesizer, guardrails, experiment runner, outcome tracker, promotion rules, rollback engine, lineage |
+| `_shared/strategy-portfolio/` | 5 | Portfolio evaluator, ranking, lifecycle manager, conflict resolver, lineage |
+| `_shared/platform-stabilization/` | 6 | Stability monitor, stabilization engine, action engine, guardrails, outcome tracker, rollback engine |
+| `_shared/engineering-advisor/` | 8 | Signal aggregator, opportunity synthesizer, recommendation engine, prioritizer, explainer, review manager, lineage, clustering |
+| `_shared/semantic-retrieval/` | 8 | Retrieval engine, ranker, guardrails, quality evaluator, index manager, context builders (runtime, advisory, strategy, platform) |
 
 ---
 
@@ -213,5 +217,9 @@
 | Platform Intelligence | 1 | 30 |
 | Platform Self-Calibration | 1 | 31 |
 | Strategy Evolution | 1 | 32 |
+| Strategy Portfolio Governance | 1 | 33 |
+| Platform Self-Stabilization | 1 | 34 |
+| Autonomous Engineering Advisor | 1 | 35 |
+| Semantic Retrieval | 1 | 36 |
 | Support | 11 | Various |
-| **Total** | **~77** | |
+| **Total** | **~81** | |
