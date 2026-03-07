@@ -81,7 +81,7 @@ export default function MetaArtifacts() {
 
       const { data, error } = await query;
       if (error) throw error;
-      return data as Record<string, unknown>[];
+      return (data as unknown) as Record<string, unknown>[];
     },
     enabled: !!currentOrg?.id,
   });
