@@ -4,8 +4,8 @@
 >
 > **Last updated:** 2026-03-07
 >
-> **Current state:** Level 4.5 — Meta-Aware Engineering Platform.
-> Nine architectural layers active or designed. Engineering Memory Foundation implemented (Sprint 15).
+> **Current state:** Level 5 — Institutional Engineering Memory Platform.
+> Nine architectural layers active. Memory-aware meta-agents and proposal layer v2 operational (Sprint 18).
 
 ---
 
