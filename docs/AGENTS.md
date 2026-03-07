@@ -422,9 +422,9 @@ Redundancy guard (`historical-redundancy-guard.ts`) suppresses or downgrades:
 | **Outputs** | `SYSTEM_EVOLUTION_REPORT`, `TECHNICAL_DEBT_ALERT`, `ARCHITECTURE_CHANGE_PROPOSAL` |
 | **Safety** | Advisory only. No system-level changes. |
 
-### Meta-Agent Output Structure (Planned)
+### Meta-Agent Output Structure (Active)
 
-All Meta-Agent outputs will follow this structure, persisted in a `meta_agent_recommendations` table:
+All Meta-Agent outputs follow this structure, persisted in a `meta_agent_recommendations` table:
 
 ```
 meta_agent_recommendation {
