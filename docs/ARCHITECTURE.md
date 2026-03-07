@@ -331,6 +331,11 @@ rejected  rejected
 
 **Persistence:** `meta_agent_artifacts`
 
+**Memory-Aware Artifacts (Sprint 18):**
+- Artifacts include a structured **Related Historical Context** section with up to 3–5 historical references
+- Prior decisions, outcomes, and summary context are embedded in proposals
+- Historical alignment and novelty indicators help reviewers assess context
+
 **Critical constraint:** Artifacts are **engineering proposals only**. Approving or implementing an artifact does not automatically modify the system. Human implementation is required for any structural change. No artifact or review action mutates the pipeline, governance, billing, contracts, or agent behavior.
 
 **Interactions:** Consumes accepted recommendations from Layer 7. Produces engineering proposals for human review. Emits memory capture events to Layer 9.
