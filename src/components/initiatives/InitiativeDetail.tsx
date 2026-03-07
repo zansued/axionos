@@ -31,6 +31,7 @@ import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
 import { InitiativeObservabilityCard } from "./InitiativeObservabilityCard";
 import { InitiativeOutcomeCard } from "./InitiativeOutcomeCard";
 import { RepairEvidenceCard } from "./RepairEvidenceCard";
+import { RepairRoutingCard } from "./RepairRoutingCard";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 import PipelineGraphView from "./PipelineGraphView";
 
@@ -576,6 +577,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
 
       {/* Repair Evidence */}
       <RepairEvidenceCard initiativeId={initiative.id} />
+
+      {/* Repair Routing */}
+      <RepairRoutingCard initiativeId={initiative.id} />
 
       {/* Build Health Report */}
       {publishJob?.outputs?.health_report && (

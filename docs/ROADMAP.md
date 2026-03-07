@@ -156,6 +156,22 @@ No new architecture expansion until these sprints are complete and stable.
 
 ---
 
+### Sprint 9 — Adaptive Repair Routing
+
+**Goal:** Select repair strategies based on historical effectiveness instead of static mapping.
+
+**Deliverables:**
+- Repair Routing schema contract
+- Repair Routing Engine (3-layer: effectiveness → patterns → static)
+- `repair_routing_log` table with RLS
+- Integrated adaptive routing into autonomous-build-repair
+- RepairRoutingCard UI for initiative details
+- Routing decisions persisted for auditability
+
+**Status:** ✅ Implemented
+
+---
+
 ### Kernel — What Remains Active
 
 | Module | Status |
@@ -170,6 +186,7 @@ No new architecture expansion until these sprints are complete and stable.
 | Evidence-Oriented Repair Loop | ✅ Operational |
 | Error Pattern Library | ✅ Operational |
 | Preventive Engineering Layer | ✅ Operational |
+| Adaptive Repair Routing | ✅ Operational |
 | Governance (gates, SLAs, audit logs) | ✅ Operational |
 | Product-Level Observability | ✅ Operational |
 | Stage & Agent IO Contracts | ✅ Implemented |

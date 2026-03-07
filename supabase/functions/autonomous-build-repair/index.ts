@@ -10,6 +10,7 @@ import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "
 import { upsertNode, recordError, generateBrainContext, upsertPreventionRule } from "../_shared/brain-helpers.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { recordRepairEvidence } from "../_shared/repair/repair-evidence-recorder.ts";
+import { normalizeErrorSignature } from "../_shared/repair/error-signature-normalizer.ts";
 
 // ═══════════════════════════════════════════════
 // TYPES
@@ -450,11 +451,94 @@ serve(async (req) => {
     const repo = conn.repo_name;
     const branch = conn.default_branch || "main";
 
-    // ── 4. Generate structural patches ──
+    // ── 4. Adaptive Repair Routing (Sprint 9) ──
+    await pipelineLog(ctx, "build_repair_routing", "🧭 Adaptive routing: selecting best repair strategy...");
+
+    const primaryCategory = errors[0]?.category || "unknown";
+    const primarySignature = normalizeErrorSignature(errors[0]?.message || "unknown");
+    let routingDecision: { selected_strategy: string; confidence_score: number; decision_source: string; strategy_rankings: any[] } | null = null;
+
+    try {
+      // Query strategy effectiveness
+      const { data: effectiveness } = await serviceClient
+        .from("strategy_effectiveness")
+        .select("*")
+        .eq("organization_id", ctx.organizationId)
+        .eq("error_category", primaryCategory)
+        .gt("attempts_total", 0)
+        .order("success_rate", { ascending: false })
+        .limit(10);
+
+      // Query error patterns
+      const { data: patterns } = await serviceClient
+        .from("error_patterns")
+        .select("successful_strategies, failed_strategies, success_rate, confidence_score")
+        .eq("organization_id", ctx.organizationId)
+        .eq("error_category", primaryCategory)
+        .order("frequency", { ascending: false })
+        .limit(5);
+
+      type RoutingRanking = { strategy_id: string; score: number; success_rate: number; source: string };
+      const rankings: RoutingRanking[] = [];
+      let decisionSource = "static_map";
+
+      // Layer 1: Strategy effectiveness
+      if (effectiveness && effectiveness.length > 0) {
+        decisionSource = "strategy_effectiveness";
+        for (const eff of effectiveness) {
+          const daysSinceLast = eff.last_used_at
+            ? (Date.now() - new Date(eff.last_used_at).getTime()) / 86400000 : 30;
+          const recency = Math.max(0, 1 - daysSinceLast / 30);
+          const score = (Number(eff.success_rate) * 0.5) + (recency * 0.2) + 0.2 + (Number(eff.confidence_score || 0) * 0.1);
+          rankings.push({ strategy_id: eff.repair_strategy, score, success_rate: Number(eff.success_rate), source: "strategy_effectiveness" });
+        }
+      }
+
+      // Layer 2: Pattern library
+      if (patterns && patterns.length > 0) {
+        if (rankings.length === 0) decisionSource = "pattern_library";
+        for (const p of patterns) {
+          for (const s of ((p.successful_strategies || []) as string[])) {
+            if (!rankings.some(r => r.strategy_id === s)) {
+              rankings.push({ strategy_id: s, score: Number(p.success_rate) * 0.5 + 0.2, success_rate: Number(p.success_rate), source: "pattern_library" });
+            }
+          }
+        }
+      }
+
+      rankings.sort((a, b) => b.score - a.score);
+      const selected = rankings[0]?.strategy_id || "ai_contextual_patch";
+      const confidence = rankings[0]?.score || 0.3;
+
+      routingDecision = { selected_strategy: selected, confidence_score: confidence, decision_source: decisionSource, strategy_rankings: rankings.slice(0, 5) };
+
+      // Persist routing log
+      await serviceClient.from("repair_routing_log").insert({
+        initiative_id: ctx.initiativeId,
+        organization_id: ctx.organizationId,
+        error_category: primaryCategory,
+        error_signature: primarySignature,
+        pipeline_stage: "autonomous_build_repair",
+        selected_strategy: selected,
+        strategy_rankings: rankings.slice(0, 10),
+        confidence_score: confidence,
+        decision_source: decisionSource,
+      });
+
+      await pipelineLog(ctx, "build_repair_routed",
+        `🧭 Strategy: ${selected} (${(confidence * 100).toFixed(0)}% confidence, source: ${decisionSource})`,
+        { routing: routingDecision });
+
+    } catch (routingErr) {
+      console.error("Routing error (using fallback):", routingErr);
+      routingDecision = { selected_strategy: "ai_contextual_patch", confidence_score: 0.3, decision_source: "fallback", strategy_rankings: [] };
+    }
+
+    // ── 5. Generate structural patches ──
     await pipelineLog(ctx, "build_repair_patches", "🩹 Generating structural patches...");
     const structuralPatches = generateStructuralPatches(errors);
 
-    // ── 5. AI patches for code errors ──
+    // ── 6. AI patches for code errors ──
     const codeErrors = errors.filter(e =>
       ["typescript", "build", "import", "syntax_error"].includes(e.category)
     );
@@ -569,7 +653,7 @@ ${brainContext.slice(0, 2000)}`,
         rawCategory: cat,
         errorMessage: catErrors.map(e => e.message).join("; ").slice(0, 500),
         attemptNumber: attempt,
-        patchSummary: catPatches.map(p => p.reason).join("; ").slice(0, 1000),
+        patchSummary: `[${routingDecision?.decision_source || "static"}] ${catPatches.map(p => p.reason).join("; ")}`.slice(0, 1000),
         filesTouched: catPatches.map(p => p.path),
         repairResult: "attempted",
         revalidationStatus: "not_run",
