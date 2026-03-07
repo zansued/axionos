@@ -10,7 +10,7 @@ import { applyQualityGate, normalizeSignature } from "../_shared/meta-agents/val
 import { getMetaAgentHistoricalContext, HistoricalContext } from "../_shared/meta-agents/meta-agent-memory-context.ts";
 
 /**
- * run-meta-agent-analysis — Sprint 18 (Memory-Aware)
+ * run-meta-agent-analysis — Sprint 19 (Quality Feedback Loop)
  *
  * Orchestrator that runs all active Meta-Agents with historical context,
  * applies quality gates, deduplicates, persists results, and writes audit logs.
