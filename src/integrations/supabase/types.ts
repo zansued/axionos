@@ -1450,6 +1450,119 @@ export type Database = {
           },
         ]
       }
+      execution_policy_portfolio_entries: {
+        Row: {
+          context_classes: Json
+          cost_efficiency_score: number | null
+          created_at: string
+          execution_policy_profile_id: string
+          id: string
+          lifecycle_status: string
+          organization_id: string
+          portfolio_group: string
+          portfolio_rank: number | null
+          quality_gain_score: number | null
+          risk_score: number | null
+          speed_gain_score: number | null
+          stability_score: number | null
+          updated_at: string
+          usefulness_score: number | null
+        }
+        Insert: {
+          context_classes?: Json
+          cost_efficiency_score?: number | null
+          created_at?: string
+          execution_policy_profile_id: string
+          id?: string
+          lifecycle_status?: string
+          organization_id: string
+          portfolio_group?: string
+          portfolio_rank?: number | null
+          quality_gain_score?: number | null
+          risk_score?: number | null
+          speed_gain_score?: number | null
+          stability_score?: number | null
+          updated_at?: string
+          usefulness_score?: number | null
+        }
+        Update: {
+          context_classes?: Json
+          cost_efficiency_score?: number | null
+          created_at?: string
+          execution_policy_profile_id?: string
+          id?: string
+          lifecycle_status?: string
+          organization_id?: string
+          portfolio_group?: string
+          portfolio_rank?: number | null
+          quality_gain_score?: number | null
+          risk_score?: number | null
+          speed_gain_score?: number | null
+          stability_score?: number | null
+          updated_at?: string
+          usefulness_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_policy_portfolio_ent_execution_policy_profile_id_fkey"
+            columns: ["execution_policy_profile_id"]
+            isOneToOne: false
+            referencedRelation: "execution_policy_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "execution_policy_portfolio_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      execution_policy_portfolio_recommendations: {
+        Row: {
+          confidence_score: number | null
+          context_scope: Json | null
+          created_at: string
+          id: string
+          organization_id: string
+          recommendation_reason: Json
+          recommendation_type: string
+          status: string
+          target_policy_ids: Json
+        }
+        Insert: {
+          confidence_score?: number | null
+          context_scope?: Json | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          recommendation_reason?: Json
+          recommendation_type?: string
+          status?: string
+          target_policy_ids?: Json
+        }
+        Update: {
+          confidence_score?: number | null
+          context_scope?: Json | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          recommendation_reason?: Json
+          recommendation_type?: string
+          status?: string
+          target_policy_ids?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_policy_portfolio_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       execution_policy_profiles: {
         Row: {
           allowed_adjustments: Json
