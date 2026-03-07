@@ -132,6 +132,22 @@ serve(async (req) => {
       .from("initiatives").select("*").eq("id", initiativeId).single();
     if (initErr || !initiative) throw new Error("Initiative not found");
 
+    // ── Usage limit enforcement ──
+    const usageCheck = await enforceUsageLimits(serviceClient, initiative.organization_id);
+    if (!usageCheck.allowed) {
+      await serviceClient.from("audit_logs").insert({
+        user_id: user.id, action: "usage_limit_blocked", category: "billing",
+        entity_type: "initiatives", entity_id: initiativeId,
+        message: usageCheck.reason || "Usage limit exceeded", severity: "warning",
+        organization_id: initiative.organization_id,
+        metadata: { error_code: usageCheck.error_code, current: usageCheck.current, limits: usageCheck.limits },
+      });
+      return new Response(JSON.stringify({
+        error: usageCheck.reason, error_code: usageCheck.error_code,
+        current: usageCheck.current, limits: usageCheck.limits,
+      }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     const log = async (action: string, message: string, meta: any = {}) => {
       await serviceClient.from("audit_logs").insert({
         user_id: user.id, action, category: "pipeline", entity_type: "initiatives",
