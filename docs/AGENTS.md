@@ -605,6 +605,7 @@ supabase/functions/_shared/agent-os/
 | Advisory Calibration Layer | ✅ Implemented (Sprint 20) |
 | Prompt Optimization (A/B + Bounded Promotion) | ✅ Implemented (Sprints 21–22) |
 | Self-Improving Fix Agents v2 (Repair Policies) | ✅ Implemented (Sprint 23) |
+| Agent Memory Layer Operationalization | ✅ Implemented (Sprint 24) |
 | Semantic Retrieval | 📋 Planned |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
