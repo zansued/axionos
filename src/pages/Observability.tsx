@@ -12,8 +12,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Activity, Radio, Users, Zap, Clock, CircleDot, Pause, Play,
-  DollarSign, AlertTriangle, TrendingUp, BarChart3, Timer, Trophy, Brain, Bug, Shield, GraduationCap, FileText,
+  DollarSign, AlertTriangle, TrendingUp, BarChart3, Timer, Trophy, Brain, Bug, Shield, GraduationCap, FileText, Wrench,
 } from "lucide-react";
+import { RepairIntelligenceDashboard } from "@/components/observability/RepairIntelligenceDashboard";
 import { ErrorPatternRadar } from "@/components/observability/ErrorPatternRadar";
 import { PreventionDashboard } from "@/components/observability/PreventionDashboard";
 import { LearningFoundationDashboard } from "@/components/observability/LearningFoundationDashboard";
@@ -298,17 +299,23 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full grid-cols-9 h-9">
+          <TabsList className="grid w-full grid-cols-10 h-9">
             <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Performance</TabsTrigger>
             <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>
             <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Qualidade</TabsTrigger>
             <TabsTrigger value="patterns" className="text-xs gap-1"><Bug className="h-3 w-3" /> Patterns</TabsTrigger>
             <TabsTrigger value="prevention" className="text-xs gap-1"><Shield className="h-3 w-3" /> Prevenção</TabsTrigger>
+            <TabsTrigger value="repair" className="text-xs gap-1"><Wrench className="h-3 w-3" /> Repair</TabsTrigger>
             <TabsTrigger value="learning" className="text-xs gap-1"><GraduationCap className="h-3 w-3" /> Learning</TabsTrigger>
             <TabsTrigger value="memory" className="text-xs gap-1"><Brain className="h-3 w-3" /> Memória</TabsTrigger>
             <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Summaries</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live Feed</TabsTrigger>
           </TabsList>
+
+          {/* ===== REPAIR INTELLIGENCE ===== */}
+          <TabsContent value="repair" className="mt-4">
+            <RepairIntelligenceDashboard />
+          </TabsContent>
 
           {/* ===== PERFORMANCE ===== */}
           <TabsContent value="performance" className="mt-4 space-y-4">

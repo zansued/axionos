@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 22 — Bounded Promotion & Rollback Guard. Prompt optimization now operationally closed-loop with safe promotion activation, phased rollouts, continuous health monitoring, and deterministic rollback. Previous: Prompt Optimization Engine (Sprint 21).
+> **What changed (2026-03-07):** Sprint 23 — Self-Improving Fix Agents v2. Repair system now memory-aware and policy-driven with bounded adjustments, retry path intelligence, and full explainability. Previous: Bounded Promotion & Rollback Guard (Sprint 22).
 >
 > Last updated: 2026-03-07
 
@@ -114,6 +114,8 @@ These are the currently implemented and operational components of the AxionOS ag
 - **Autonomous Build Repair** — Self-healing from CI error logs
 - **Fix Orchestrator** — Multi-iteration repair coordination with auto-PR
 - **Repair Router** — Evidence-based strategy selection
+- **Repair Policy Engine** — Memory-aware, policy-driven repair strategy selection with bounded adjustments (Sprint 23)
+- **Retry Path Intelligence** — Contextual retry action computation to reduce unproductive loops (Sprint 23)
 
 ### Prevention Agents
 - **Preventive Validator** — Pre-generation guard against known failure patterns
@@ -601,7 +603,8 @@ supabase/functions/_shared/agent-os/
 | Memory-Aware Reasoning | ✅ Implemented (Sprint 18) |
 | Proposal Quality Feedback Loop | ✅ Implemented (Sprint 19) |
 | Advisory Calibration Layer | ✅ Implemented (Sprint 20) |
-| Prompt Optimization (A/B testing) | 📋 NEXT horizon |
+| Prompt Optimization (A/B + Bounded Promotion) | ✅ Implemented (Sprints 21–22) |
+| Self-Improving Fix Agents v2 (Repair Policies) | ✅ Implemented (Sprint 23) |
 | Semantic Retrieval | 📋 Planned |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
@@ -647,4 +650,4 @@ Engineering Memory is a cross-layer knowledge infrastructure that agents use to 
 
 ## 17. Governing Principle
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied.
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only — they cannot mutate pipeline structure, governance, billing, or agent topology.
