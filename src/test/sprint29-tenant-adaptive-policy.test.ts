@@ -382,12 +382,12 @@ describe("Sprint 29 — Tenant Adaptive Policy Tuning", () => {
       const result = guardOverrides(
         [
           { key: "validation_sensitivity_bias", requested_delta: 0.15 },
-          { key: "retry_escalation_bias", requested_delta: 1 },
+          { key: "retry_escalation_bias", requested_delta: 0.2 },
         ],
         { validation_sensitivity_bias: 0.3, retry_escalation_bias: 2 },
       );
       expect(result.allowed_overrides.validation_sensitivity_bias).toBe(0.15);
-      expect(result.allowed_overrides.retry_escalation_bias).toBe(1);
+      expect(result.allowed_overrides.retry_escalation_bias).toBe(0.2);
       expect(result.blocked_overrides.length).toBe(0);
     });
 
