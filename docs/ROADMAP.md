@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 22 — Bounded Promotion & Rollback Guard. Closes the prompt optimization loop with safe promotion activation, phased rollouts (10→25→50→100%), continuous post-promotion health monitoring, deterministic rollback guard, and full auditability. Previous: Prompt Optimization Engine (Sprint 21).
+> **What changed (2026-03-07):** Sprint 23 — Self-Improving Fix Agents v2 (Memory-Aware Repair Policies). Repair system now uses historical evidence, error patterns, strategy effectiveness, and engineering memory to select optimal repair strategies. Policy-driven, bounded, auditable, reversible. Previous: Bounded Promotion & Rollback Guard (Sprint 22).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
