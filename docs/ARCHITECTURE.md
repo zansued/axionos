@@ -287,9 +287,14 @@ Engineering Memory is a **cross-layer infrastructure** that captures knowledge f
 
 **Persistence:** `meta_agent_recommendations`
 
-**Critical constraint:** Meta-Agents are **recommendation-only**. They do not modify pipeline stages, governance rules, billing, contracts, or agent behavior. All recommendations require human review before any structural change is considered.
+**Memory-Aware Context (Sprint 18):**
+- Each meta-agent receives: `related_memory_entries`, `related_summaries`, `related_decisions`, `related_outcomes`, `historical_context_score`
+- Recommendations include: `historical_alignment`, `decision_history_signal`, `outcome_history_signal`, `historical_novelty_flag`
+- Redundancy guard modules: `historical-continuity-scoring.ts`, `historical-redundancy-guard.ts`, `meta-agent-memory-context.ts`
 
-**Interactions:** Consumes data from all lower layers (read-only). Produces recommendations consumed by Layer 8 (Proposal Generation).
+**Critical constraint:** Meta-Agents are **recommendation-only**. They do not modify pipeline stages, governance rules, billing, contracts, or agent behavior. All recommendations require human review before any structural change is considered. Memory and summaries inform but do not dictate recommendations.
+
+**Interactions:** Consumes data from all lower layers including Layer 9 memory (read-only). Produces recommendations consumed by Layer 8 (Proposal Generation).
 
 ---
 
