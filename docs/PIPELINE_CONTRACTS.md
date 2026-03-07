@@ -5,7 +5,7 @@
 > - O sistema mostra valor visível?
 > - Essa etapa aproxima do resultado final?
 >
-> **What changed (2026-03-07):** Added Commercial Layer contracts (usage enforcement, billing), Learning Layer contracts (prompt metrics, strategy metrics, predictions, recommendations, weight adjustments), contract safety principles, cross-tenant access prohibition.
+> **What changed (2026-03-07):** Added Meta-Agent interaction contracts (planned), extended safety principles with meta-agent constraints. Previous: Added Commercial Layer contracts, Learning Layer contracts, contract safety principles.
 >
 > Last updated: 2026-03-07
 
@@ -355,24 +355,48 @@
 - Contratos de stage IO devem permanecer estáveis
 - Mudanças em contratos requerem versionamento explícito
 - Learning não pode alterar a forma (shape) de contratos existentes
+- Meta-Agents não podem modificar contratos diretamente (quando implementados)
 
 ### Isolamento
 
 - Camadas comerciais consomem dados de observabilidade, não duplicam o kernel
 - Acesso cross-tenant a contratos é **proibido**
 - Todas as consultas agregadas devem incluir filtro `organization_id`
+- Meta-Agents terão acesso somente leitura a dados de observabilidade e learning
 
 ### Separação de Responsabilidades
 
 - Learning gera recomendações, não executa mudanças automaticamente
 - Commercial verifica limites, não modifica comportamento do pipeline
 - O kernel processa estágios, não conhece billing ou learning
+- Meta-Agents (quando implementados) geram recomendações de alto nível, não mutam o sistema
 
 ### Auditabilidade
 
 - Toda decisão de learning é registrada em `audit_logs`
 - Todo bloqueio de uso é registrado em `audit_logs`
 - Eventos rastreáveis: `LEARNING_UPDATE`, `USAGE_LIMIT_EXCEEDED`, `PIPELINE_EXECUTION`, `REPAIR_APPLIED`
+- Meta-Agent recommendations (planejado) serão rastreáveis via `meta_agent_recommendations` table
+
+---
+
+## Interação com Meta-Agents (Planejado — Não Implementado)
+
+> **Status:** 📋 Arquitetura planejada — Não implementado
+
+Quando implementados, Meta-Agents interagirão com o pipeline **apenas** através de:
+
+| Fonte | Tipo de Acesso | Propósito |
+|-------|---------------|-----------|
+| `initiative_observability` | Leitura | Métricas de estágio, durações, distribuição de falhas |
+| `prompt_strategy_metrics` | Leitura | Tendências de performance de prompts |
+| `strategy_effectiveness_metrics` | Leitura | Efetividade de estratégias de reparo |
+| `predictive_error_patterns` | Leitura | Previsões de falhas |
+| `learning_recommendations` | Leitura | Recomendações existentes |
+| `repair_evidence` | Leitura | Histórico de resultados de reparo |
+| `audit_logs` | Leitura | Histórico de eventos do sistema |
+
+**Meta-Agents não modificam contratos de pipeline diretamente.** Suas saídas são recomendações estruturadas que passam por revisão humana antes de qualquer implementação.
 
 ---
 
