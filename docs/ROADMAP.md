@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 36 — Semantic Retrieval & Embedding Memory Expansion. Unified semantic retrieval across all intelligence layers with bounded ranking, tenant isolation, and structured fallback. Previous: Autonomous Engineering Advisor (Sprint 35).
+> **What changed (2026-03-07):** Sprint 37 — Discovery-Driven Architecture Signals. External and product-facing discovery signals now inform advisory architectural recommendations. Previous: Semantic Retrieval & Embedding Memory Expansion (Sprint 36).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
@@ -132,13 +132,14 @@ AxionOS has completed 36 implementation sprints spanning the full capability arc
 | 32 | Execution Strategy Evolution | ✅ Complete |
 | 33 | Strategy Portfolio Governance | ✅ Complete |
 
-### Platform Stabilization & Advisory Layer (Sprints 34–36)
+### Platform Stabilization & Advisory Layer (Sprints 34–37)
 
 | Sprint | Name | Status |
 |--------|------|--------|
 | 34 | Platform Self-Stabilization | ✅ Complete |
 | 35 | Autonomous Engineering Advisor | ✅ Complete |
 | 36 | Semantic Retrieval & Embedding Memory Expansion | ✅ Complete |
+| 37 | Discovery-Driven Architecture Signals | ✅ Complete |
 
 ---
 

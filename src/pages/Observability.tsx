@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -34,6 +34,7 @@ import { StrategyPortfolioDashboard } from "@/components/observability/StrategyP
 import { PlatformStabilizationDashboard } from "@/components/observability/PlatformStabilizationDashboard";
 import { EngineeringAdvisorDashboard } from "@/components/observability/EngineeringAdvisorDashboard";
 import { SemanticRetrievalDashboard } from "@/components/observability/SemanticRetrievalDashboard";
+import { DiscoveryArchitectureDashboard } from "@/components/observability/DiscoveryArchitectureDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -313,8 +314,9 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(23, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(24, 1fr)" }}>
             <TabsTrigger value="advisor" className="text-xs gap-1"><Lightbulb className="h-3 w-3" /> Advisor</TabsTrigger>
+            <TabsTrigger value="arch-disc" className="text-xs gap-1"><Compass className="h-3 w-3" /> ArchDisc</TabsTrigger>
             <TabsTrigger value="sem-retr" className="text-xs gap-1"><SearchCode className="h-3 w-3" /> SemRetr</TabsTrigger>
             <TabsTrigger value="platform" className="text-xs gap-1"><Orbit className="h-3 w-3" /> PlatInt</TabsTrigger>
             <TabsTrigger value="calibration" className="text-xs gap-1"><SlidersHorizontal className="h-3 w-3" /> Calib</TabsTrigger>
@@ -347,6 +349,11 @@ export default function Observability() {
           {/* ===== SEMANTIC RETRIEVAL ===== */}
           <TabsContent value="sem-retr" className="mt-4">
             <SemanticRetrievalDashboard />
+          </TabsContent>
+
+          {/* ===== DISCOVERY ARCHITECTURE ===== */}
+          <TabsContent value="arch-disc" className="mt-4">
+            <DiscoveryArchitectureDashboard />
           </TabsContent>
 
           {/* ===== PLATFORM INTELLIGENCE ===== */}

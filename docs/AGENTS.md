@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 36 — Semantic Retrieval & Embedding Memory Expansion. Unified embedding-backed retrieval across all intelligence layers with bounded ranking, domain registry, index management, and structured fallback. Previous: Autonomous Engineering Advisor (Sprint 35).
+> **What changed (2026-03-07):** Sprint 37 — Discovery-Driven Architecture Signals. External/product discovery signals now inform advisory architectural recommendations with stress mapping and review workflows. Previous: Semantic Retrieval & Embedding Memory Expansion (Sprint 36).
 >
 > Last updated: 2026-03-07
 
@@ -608,6 +608,7 @@ supabase/functions/_shared/agent-os/
 | Agent Memory Layer Operationalization | ✅ Implemented (Sprint 24) |
 | Predictive Error Detection Operationalization | ✅ Implemented (Sprint 25) |
 | Semantic Retrieval | ✅ Implemented (Sprint 36) |
+| Discovery-Driven Architecture Signals | ✅ Implemented (Sprint 37) |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
 

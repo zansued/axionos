@@ -1181,6 +1181,160 @@ export type Database = {
           },
         ]
       }
+      discovery_architecture_recommendations: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          evidence_refs: Json | null
+          expected_impact: Json | null
+          id: string
+          organization_id: string
+          priority_score: number | null
+          rationale_codes: Json
+          recommendation_type: string
+          safety_class: string
+          status: string
+          target_entities: Json
+          target_scope: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          evidence_refs?: Json | null
+          expected_impact?: Json | null
+          id?: string
+          organization_id: string
+          priority_score?: number | null
+          rationale_codes?: Json
+          recommendation_type: string
+          safety_class?: string
+          status?: string
+          target_entities?: Json
+          target_scope: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          evidence_refs?: Json | null
+          expected_impact?: Json | null
+          id?: string
+          organization_id?: string
+          priority_score?: number | null
+          rationale_codes?: Json
+          recommendation_type?: string
+          safety_class?: string
+          status?: string
+          target_entities?: Json
+          target_scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discovery_architecture_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      discovery_architecture_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          linked_changes: Json | null
+          organization_id: string
+          recommendation_id: string
+          review_notes: string | null
+          review_reason_codes: Json | null
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id: string
+          recommendation_id: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id?: string
+          recommendation_id?: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discovery_architecture_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discovery_architecture_reviews_recommendation_id_fkey"
+            columns: ["recommendation_id"]
+            isOneToOne: false
+            referencedRelation: "discovery_architecture_recommendations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      discovery_architecture_signals: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          evidence_refs: Json | null
+          id: string
+          organization_id: string
+          scope_ref: Json | null
+          severity: string
+          signal_payload: Json
+          signal_type: string
+          source_type: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id: string
+          scope_ref?: Json | null
+          severity?: string
+          signal_payload?: Json
+          signal_type: string
+          source_type: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id?: string
+          scope_ref?: Json | null
+          severity?: string
+          signal_payload?: Json
+          signal_type?: string
+          source_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discovery_architecture_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       engineering_advisory_recommendations: {
         Row: {
           confidence_score: number | null
