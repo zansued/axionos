@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 31 — Platform Self-Calibration. Bounded operational threshold tuning with guardrails, rollback, and advisory-first governance. Previous: Platform Intelligence Entry (Sprint 30).
+> **What changed (2026-03-07):** Sprint 32 — Execution Strategy Evolution. Bounded strategy variant synthesis, experimentation, promotion/rollback with advisory-first governance. Previous: Platform Self-Calibration (Sprint 31).
 >
 > Last updated: 2026-03-07
 
