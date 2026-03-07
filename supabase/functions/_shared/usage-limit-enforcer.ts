@@ -86,10 +86,20 @@ export async function enforceUsageLimits(
   let parallelRunCount = 0;
 
   if (orgInitIds.length > 0) {
-    // Batch in chunks to avoid URL length limits
+    // Auto-cleanup stale running jobs (older than 2 hours)
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
     const chunkSize = 100;
+
     for (let i = 0; i < orgInitIds.length; i += chunkSize) {
       const chunk = orgInitIds.slice(i, i + chunkSize);
+
+      // Cleanup stale jobs first
+      await serviceClient
+        .from("initiative_jobs")
+        .update({ status: "failed", error: "Auto-cleanup: exceeded max runtime (2h)", completed_at: new Date().toISOString() })
+        .in("initiative_id", chunk)
+        .eq("status", "running")
+        .lt("created_at", twoHoursAgo);
 
       const [deployRes, activeRes] = await Promise.all([
         serviceClient
