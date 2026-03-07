@@ -351,6 +351,11 @@ export default function Observability() {
             <SemanticRetrievalDashboard />
           </TabsContent>
 
+          {/* ===== DISCOVERY ARCHITECTURE ===== */}
+          <TabsContent value="arch-disc" className="mt-4">
+            <DiscoveryArchitectureDashboard />
+          </TabsContent>
+
           {/* ===== PLATFORM INTELLIGENCE ===== */}
           <TabsContent value="platform" className="mt-4">
             <PlatformIntelligenceDashboard />
