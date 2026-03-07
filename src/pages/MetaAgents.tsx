@@ -3,17 +3,18 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { AppLayout } from "@/components/AppLayout";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import {
   Brain, Eye, CheckCircle, XCircle, Clock, ArrowUpDown,
-  Layers, Users, Workflow, TrendingUp, Shield,
+  Layers, Users, Workflow, TrendingUp, Shield, AlertTriangle,
+  ArrowDown, ArrowUp,
 } from "lucide-react";
 
 type RecStatus = "pending" | "reviewed" | "accepted" | "rejected" | "deferred";
@@ -40,23 +41,26 @@ const AGENT_LABELS: Record<string, string> = {
   SYSTEM_EVOLUTION_ADVISOR: "Evolution",
 };
 
+type SortField = "priority_score" | "confidence_score" | "impact_score" | "created_at";
+
 export default function MetaAgents() {
   const { currentOrg } = useOrg();
   const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [agentFilter, setAgentFilter] = useState<string>("all");
+  const [sortField, setSortField] = useState<SortField>("priority_score");
+  const [sortAsc, setSortAsc] = useState(false);
   const [reviewDialog, setReviewDialog] = useState<{ id: string; title: string; action: string } | null>(null);
   const [reviewNotes, setReviewNotes] = useState("");
 
-  const { data: recommendations, isLoading } = useQuery({
-    queryKey: ["meta-recommendations", currentOrg?.id, statusFilter, agentFilter],
+  const { data: recommendations, isLoading, error: queryError } = useQuery({
+    queryKey: ["meta-recommendations", currentOrg?.id, statusFilter, agentFilter, sortField, sortAsc],
     queryFn: async () => {
       let query = supabase
         .from("meta_agent_recommendations")
         .select("*")
         .eq("organization_id", currentOrg!.id)
-        .order("priority_score", { ascending: false })
-        .order("created_at", { ascending: false })
+        .order(sortField, { ascending: sortAsc })
         .limit(100);
 
       if (statusFilter !== "all") query = query.eq("status", statusFilter);
@@ -78,7 +82,11 @@ export default function MetaAgents() {
       return data;
     },
     onSuccess: (data) => {
-      toast.success(`Analysis complete: ${data.recommendations_created} new recommendations`);
+      const parts = [];
+      if (data.recommendations_created > 0) parts.push(`${data.recommendations_created} created`);
+      if (data.quality_suppressed > 0) parts.push(`${data.quality_suppressed} suppressed`);
+      if (data.duplicates_skipped > 0) parts.push(`${data.duplicates_skipped} deduplicated`);
+      toast.success(`Analysis complete: ${parts.join(", ") || "no new recommendations"}`);
       queryClient.invalidateQueries({ queryKey: ["meta-recommendations"] });
     },
     onError: (e) => toast.error(`Analysis failed: ${e.message}`),
@@ -110,12 +118,29 @@ export default function MetaAgents() {
   };
 
   const handleReviewAction = (id: string, title: string, action: string) => {
-    if (action === "accepted" || action === "rejected" || action === "deferred") {
-      setReviewDialog({ id, title, action });
+    setReviewDialog({ id, title, action });
+  };
+
+  const toggleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortAsc(!sortAsc);
     } else {
-      reviewMutation.mutate({ id, action, notes: "" });
+      setSortField(field);
+      setSortAsc(false);
     }
   };
+
+  const SortButton = ({ field, label }: { field: SortField; label: string }) => (
+    <Button
+      variant={sortField === field ? "secondary" : "ghost"}
+      size="sm"
+      className="h-7 text-xs"
+      onClick={() => toggleSort(field)}
+    >
+      {label}
+      {sortField === field && (sortAsc ? <ArrowUp className="h-3 w-3 ml-1" /> : <ArrowDown className="h-3 w-3 ml-1" />)}
+    </Button>
+  );
 
   return (
     <AppLayout>
@@ -139,6 +164,18 @@ export default function MetaAgents() {
           </Button>
         </div>
 
+        {/* Safety Notice */}
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="p-3 flex items-start gap-3">
+            <Shield className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">Safety Constraints Active.</span>{" "}
+              Meta-Agents operate in recommendation-only mode. Accepted recommendations do not
+              automatically change system behavior — they signal human agreement for future controlled implementation.
+            </p>
+          </CardContent>
+        </Card>
+
         {/* KPI Cards */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           {[
@@ -160,8 +197,8 @@ export default function MetaAgents() {
           ))}
         </div>
 
-        {/* Filters */}
-        <div className="flex gap-3">
+        {/* Filters & Sort */}
+        <div className="flex flex-wrap gap-3 items-center">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-[150px]">
               <SelectValue placeholder="Status" />
@@ -169,7 +206,6 @@ export default function MetaAgents() {
             <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="reviewed">Reviewed</SelectItem>
               <SelectItem value="accepted">Accepted</SelectItem>
               <SelectItem value="rejected">Rejected</SelectItem>
               <SelectItem value="deferred">Deferred</SelectItem>
@@ -188,24 +224,62 @@ export default function MetaAgents() {
               <SelectItem value="SYSTEM_EVOLUTION_ADVISOR">Evolution</SelectItem>
             </SelectContent>
           </Select>
+
+          <div className="flex gap-1 ml-auto">
+            <SortButton field="priority_score" label="Priority" />
+            <SortButton field="confidence_score" label="Confidence" />
+            <SortButton field="impact_score" label="Impact" />
+            <SortButton field="created_at" label="Date" />
+          </div>
         </div>
 
-        {/* Recommendations List */}
-        {isLoading ? (
-          <div className="text-center py-12 text-muted-foreground">Loading recommendations...</div>
-        ) : !recommendations?.length ? (
+        {/* Error State */}
+        {queryError && (
+          <Card className="border-destructive/30 bg-destructive/5">
+            <CardContent className="p-4 flex items-center gap-3">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <p className="text-sm text-destructive">Failed to load recommendations: {queryError.message}</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <Card key={i}>
+                <CardContent className="p-4 space-y-3">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-3 w-1/3" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !queryError && !recommendations?.length && (
           <Card>
             <CardContent className="py-12 text-center">
               <Brain className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-              <p className="text-muted-foreground">No recommendations yet.</p>
-              <p className="text-xs text-muted-foreground mt-1">Run an analysis to generate meta-level insights.</p>
+              <p className="text-muted-foreground font-medium">No recommendations found.</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {statusFilter !== "all" || agentFilter !== "all"
+                  ? "Try changing your filters, or run a new analysis."
+                  : "Run an analysis to generate meta-level insights from system data."}
+              </p>
             </CardContent>
           </Card>
-        ) : (
+        )}
+
+        {/* Recommendations List */}
+        {!isLoading && recommendations && recommendations.length > 0 && (
           <div className="space-y-3">
             {recommendations.map((rec) => {
               const AgentIcon = AGENT_ICONS[rec.meta_agent_type] || Brain;
               const evidence = Array.isArray(rec.supporting_evidence) ? rec.supporting_evidence : [];
+              const status = rec.status as RecStatus;
 
               return (
                 <Card key={rec.id} className="hover:border-primary/30 transition-colors">
@@ -218,13 +292,18 @@ export default function MetaAgents() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <h3 className="font-medium text-sm">{rec.title}</h3>
-                            <Badge variant="outline" className={STATUS_COLORS[rec.status as RecStatus] || ""}>
-                              {rec.status}
+                            <Badge variant="outline" className={STATUS_COLORS[status] || ""}>
+                              {status}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {rec.recommendation_type}
                             </Badge>
                           </div>
                           <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{rec.description}</p>
-                          <div className="flex gap-3 text-xs text-muted-foreground">
+                          <div className="flex gap-3 text-xs text-muted-foreground flex-wrap">
                             <span>{AGENT_LABELS[rec.meta_agent_type] || rec.meta_agent_type}</span>
+                            <span>•</span>
+                            <span>Target: {rec.target_component}</span>
                             <span>•</span>
                             <span>Confidence: {(Number(rec.confidence_score) * 100).toFixed(0)}%</span>
                             <span>•</span>
@@ -234,20 +313,48 @@ export default function MetaAgents() {
                             {evidence.length > 0 && (
                               <>
                                 <span>•</span>
-                                <span>{evidence.length} evidence items</span>
+                                <span>{evidence.length} evidence</span>
                               </>
                             )}
                           </div>
+
+                          {/* Evidence Preview */}
+                          {evidence.length > 0 && (
+                            <div className="mt-2 p-2 rounded bg-muted/50 text-xs text-muted-foreground space-y-1">
+                              {evidence.slice(0, 2).map((ev, idx) => (
+                                <div key={idx} className="flex gap-2">
+                                  <Badge variant="outline" className="text-[10px] h-4 shrink-0">
+                                    {(ev as Record<string, unknown>).type as string || "data"}
+                                  </Badge>
+                                  <span className="truncate">
+                                    {Object.entries(ev as Record<string, unknown>)
+                                      .filter(([k]) => k !== "type")
+                                      .map(([k, v]) => `${k}: ${typeof v === "number" ? (v as number).toFixed?.(2) ?? v : v}`)
+                                      .join(", ")}
+                                  </span>
+                                </div>
+                              ))}
+                              {evidence.length > 2 && (
+                                <span className="text-[10px]">+{evidence.length - 2} more</span>
+                              )}
+                            </div>
+                          )}
+
                           {rec.review_notes && (
                             <p className="text-xs text-muted-foreground mt-2 italic border-l-2 border-border pl-2">
-                              {rec.review_notes}
+                              Review: {rec.review_notes}
+                            </p>
+                          )}
+                          {rec.reviewed_at && (
+                            <p className="text-[10px] text-muted-foreground mt-1">
+                              Reviewed: {new Date(rec.reviewed_at).toLocaleDateString()}
                             </p>
                           )}
                         </div>
                       </div>
 
-                      {/* Actions */}
-                      {rec.status === "pending" && (
+                      {/* Actions — only for pending */}
+                      {status === "pending" && (
                         <div className="flex gap-1 shrink-0">
                           <Button size="sm" variant="outline"
                             onClick={() => handleReviewAction(rec.id, rec.title, "accepted")}>
@@ -270,20 +377,6 @@ export default function MetaAgents() {
             })}
           </div>
         )}
-
-        {/* Safety note */}
-        <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="p-4 flex items-start gap-3">
-            <Shield className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm font-medium">Safety Constraints Active</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Meta-Agents operate in recommendation-only mode. Accepting a recommendation does not
-                implement any change — it signals human agreement for future controlled implementation.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Review Dialog */}
@@ -293,8 +386,13 @@ export default function MetaAgents() {
             <DialogTitle className="capitalize">{reviewDialog?.action} Recommendation</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">{reviewDialog?.title}</p>
+          {reviewDialog?.action === "accepted" && (
+            <p className="text-xs text-primary bg-primary/5 border border-primary/20 rounded p-2">
+              Accepting this recommendation signals agreement. It does not automatically change system behavior.
+            </p>
+          )}
           <Textarea
-            placeholder="Review notes (optional)..."
+            placeholder="Review notes (optional for accept, recommended for reject/defer)..."
             value={reviewNotes}
             onChange={(e) => setReviewNotes(e.target.value)}
             className="mt-2"
@@ -311,7 +409,7 @@ export default function MetaAgents() {
               })}
               disabled={reviewMutation.isPending}
             >
-              Confirm
+              {reviewMutation.isPending ? "Saving..." : "Confirm"}
             </Button>
           </DialogFooter>
         </DialogContent>
