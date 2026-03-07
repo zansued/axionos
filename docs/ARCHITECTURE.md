@@ -884,7 +884,8 @@ supabase/functions/
 - `meta_agent_recommendations` — Architectural recommendations with scoring and deduplication
 - `meta_agent_artifacts` — Engineering proposals generated from accepted recommendations
 
-### Engineering Memory Tables (Sprint 15)
+### Engineering Memory Tables (Sprints 15–17)
 - `engineering_memory_entries` — Core memory storage with type taxonomy
 - `memory_links` — Typed relationships between memory entries
 - `memory_retrieval_log` — Retrieval tracking and access statistics
+- `memory_summaries` — Periodic historical synthesis with signal strength scoring
