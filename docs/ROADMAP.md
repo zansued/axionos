@@ -17,13 +17,14 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 18 architectural layers active |
+| **System State** | 19 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
 | **Meta-Agents Status** | v1.4 active — memory-aware + quality feedback + advisory calibration |
 | **Platform Intelligence** | Active — system-level observability + health model |
 | **Platform Calibration** | Active — bounded threshold tuning + guardrails + rollback |
+| **Platform Stabilization** | Active — drift detection + oscillation suppression + safe modes |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
