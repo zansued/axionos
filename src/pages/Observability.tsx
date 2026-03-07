@@ -337,6 +337,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
+          {/* ===== ENGINEERING ADVISOR ===== */}
+          <TabsContent value="advisor" className="mt-4">
+            <EngineeringAdvisorDashboard />
+          </TabsContent>
+
           {/* ===== PLATFORM INTELLIGENCE ===== */}
           <TabsContent value="platform" className="mt-4">
             <PlatformIntelligenceDashboard />
