@@ -172,6 +172,22 @@ No new architecture expansion until these sprints are complete and stable.
 
 ---
 
+### Sprint 10 — Learning Agents Foundation
+
+**Goal:** Create the structured learning substrate for future self-improving agents.
+
+**Deliverables:**
+- Learning Record schema contract (`learning-record.schema.ts`)
+- Prompt Outcome schema contract (`prompt-outcome.schema.ts`)
+- `learning_records` table with RLS and indexes
+- Learning Foundation Engine (aggregation from repair, prevention, routing, jobs)
+- LearningFoundationDashboard UI (Observability → Learning tab)
+- Top success/failure patterns and adjustment candidates visibility
+
+**Status:** ✅ Implemented
+
+---
+
 ### Kernel — What Remains Active
 
 | Module | Status |
@@ -187,6 +203,7 @@ No new architecture expansion until these sprints are complete and stable.
 | Error Pattern Library | ✅ Operational |
 | Preventive Engineering Layer | ✅ Operational |
 | Adaptive Repair Routing | ✅ Operational |
+| Learning Foundation | ✅ Operational |
 | Governance (gates, SLAs, audit logs) | ✅ Operational |
 | Product-Level Observability | ✅ Operational |
 | Stage & Agent IO Contracts | ✅ Implemented |
