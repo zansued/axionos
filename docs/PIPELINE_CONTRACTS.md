@@ -5,7 +5,7 @@
 > - O sistema mostra valor visível?
 > - Essa etapa aproxima do resultado final?
 >
-> **What changed (2026-03-07):** Added Engineering Memory interaction contract — memory is read-only from pipeline perspective; execution must not depend on memory availability. Previous: Added Meta-Agent interaction contracts.
+> **What changed (2026-03-07):** Engineering Memory Foundation (Sprint 15) confirms the pipeline interaction contract — memory enrichment is additive post-execution, pipeline never depends on memory availability. Memory capture events are now active. Previous: Added Engineering Memory interaction contract.
 >
 > Last updated: 2026-03-07
 

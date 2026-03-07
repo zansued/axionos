@@ -98,13 +98,30 @@ export default function MetaAgents() {
         body: { recommendation_id: id, action, review_notes: notes },
       });
       if (error) throw error;
-      // If accepted, trigger artifact generation
+      // If accepted, trigger artifact generation + memory capture
       if (action === "accepted") {
         const { error: artErr } = await supabase.functions.invoke("meta-artifact-generator", {
           body: { recommendation_id: id },
         });
         if (artErr) console.error("Artifact generation failed:", artErr);
         else toast.success("Engineering artifact generated");
+
+        // Capture memory entry for accepted recommendation
+        await supabase.functions.invoke("engineering-memory-service", {
+          body: {
+            action: "create_entry",
+            organization_id: currentOrg!.id,
+            memory_type: "DesignMemory",
+            memory_subtype: "recommendation_accepted",
+            title: `Recommendation accepted: ${data?.title || id}`,
+            summary: `Meta-agent recommendation ${id} was accepted by user.`,
+            source_type: "meta_agent_recommendation",
+            source_id: id,
+            confidence_score: 0.9,
+            relevance_score: 0.9,
+            tags: ["recommendation_accepted", "meta_agent"],
+          },
+        }).catch((e: any) => console.error("Memory capture error:", e));
       }
       return data;
     },
