@@ -1252,6 +1252,56 @@ export type Database = {
           },
         ]
       }
+      learning_recommendations: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          description: string
+          expected_improvement: string | null
+          id: string
+          metrics_summary: Json
+          organization_id: string
+          recommendation_type: string
+          status: string
+          supporting_evidence: Json
+          target_component: string
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          expected_improvement?: string | null
+          id?: string
+          metrics_summary?: Json
+          organization_id: string
+          recommendation_type?: string
+          status?: string
+          supporting_evidence?: Json
+          target_component?: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          expected_improvement?: string | null
+          id?: string
+          metrics_summary?: Json
+          organization_id?: string
+          recommendation_type?: string
+          status?: string
+          supporting_evidence?: Json
+          target_component?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       learning_records: {
         Row: {
           confidence_score: number
@@ -1612,6 +1662,53 @@ export type Database = {
           },
           {
             foreignKeyName: "planning_sessions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      predictive_error_patterns: {
+        Row: {
+          contributing_factors: Json
+          created_at: string
+          error_signature: string
+          id: string
+          last_updated: string
+          observations_count: number
+          organization_id: string
+          probability_score: number
+          recommended_prevention_rule: string | null
+          stage_name: string
+        }
+        Insert: {
+          contributing_factors?: Json
+          created_at?: string
+          error_signature?: string
+          id?: string
+          last_updated?: string
+          observations_count?: number
+          organization_id: string
+          probability_score?: number
+          recommended_prevention_rule?: string | null
+          stage_name?: string
+        }
+        Update: {
+          contributing_factors?: Json
+          created_at?: string
+          error_signature?: string
+          id?: string
+          last_updated?: string
+          observations_count?: number
+          organization_id?: string
+          probability_score?: number
+          recommended_prevention_rule?: string | null
+          stage_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "predictive_error_patterns_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -2136,6 +2233,59 @@ export type Database = {
           },
         ]
       }
+      prompt_strategy_metrics: {
+        Row: {
+          average_cost: number
+          average_quality_score: number
+          created_at: string
+          id: string
+          last_updated: string
+          organization_id: string
+          prompt_signature: string
+          retry_rate: number
+          runs_count: number
+          stage_name: string
+          success_rate: number
+          token_efficiency: number
+        }
+        Insert: {
+          average_cost?: number
+          average_quality_score?: number
+          created_at?: string
+          id?: string
+          last_updated?: string
+          organization_id: string
+          prompt_signature?: string
+          retry_rate?: number
+          runs_count?: number
+          stage_name?: string
+          success_rate?: number
+          token_efficiency?: number
+        }
+        Update: {
+          average_cost?: number
+          average_quality_score?: number
+          created_at?: string
+          id?: string
+          last_updated?: string
+          organization_id?: string
+          prompt_signature?: string
+          retry_rate?: number
+          runs_count?: number
+          stage_name?: string
+          success_rate?: number
+          token_efficiency?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_strategy_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       repair_evidence: {
         Row: {
           attempt_number: number
@@ -2280,6 +2430,53 @@ export type Database = {
           },
           {
             foreignKeyName: "repair_routing_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      repair_strategy_weights: {
+        Row: {
+          adjusted_at: string
+          adjustment_reason: string
+          created_at: string
+          current_weight: number
+          evidence_ids: string[]
+          id: string
+          organization_id: string
+          previous_weight: number
+          stage_name: string
+          strategy_name: string
+        }
+        Insert: {
+          adjusted_at?: string
+          adjustment_reason?: string
+          created_at?: string
+          current_weight?: number
+          evidence_ids?: string[]
+          id?: string
+          organization_id: string
+          previous_weight?: number
+          stage_name?: string
+          strategy_name?: string
+        }
+        Update: {
+          adjusted_at?: string
+          adjustment_reason?: string
+          created_at?: string
+          current_weight?: number
+          evidence_ids?: string[]
+          id?: string
+          organization_id?: string
+          previous_weight?: number
+          stage_name?: string
+          strategy_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_strategy_weights_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -2624,6 +2821,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "strategy_effectiveness_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strategy_effectiveness_metrics: {
+        Row: {
+          avg_cost: number
+          avg_resolution_time: number
+          created_at: string
+          error_recurrence_rate: number
+          error_type: string
+          id: string
+          last_updated: string
+          organization_id: string
+          runs_count: number
+          strategy_name: string
+          success_rate: number
+        }
+        Insert: {
+          avg_cost?: number
+          avg_resolution_time?: number
+          created_at?: string
+          error_recurrence_rate?: number
+          error_type?: string
+          id?: string
+          last_updated?: string
+          organization_id: string
+          runs_count?: number
+          strategy_name?: string
+          success_rate?: number
+        }
+        Update: {
+          avg_cost?: number
+          avg_resolution_time?: number
+          created_at?: string
+          error_recurrence_rate?: number
+          error_type?: string
+          id?: string
+          last_updated?: string
+          organization_id?: string
+          runs_count?: number
+          strategy_name?: string
+          success_rate?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_effectiveness_metrics_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
