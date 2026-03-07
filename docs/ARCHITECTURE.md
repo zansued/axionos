@@ -874,6 +874,8 @@ supabase/functions/
 | DONE | Memory Retrieval Surfaces (Sprint 16) | ✅ |
 | DONE | Memory Summaries (Sprint 17) | ✅ |
 | DONE | Memory-Aware Meta-Agents (Sprint 18) | ✅ |
+| DONE | Proposal Quality Feedback Loop (Sprint 19) | ✅ |
+| DONE | Advisory Calibration Layer (Sprint 20) | ✅ |
 | NEXT | Semantic Retrieval via Embeddings | P1 |
 | LATER | Product Analytics Engine | P2 |
 | FUTURE | Discovery-Driven Architecture | P3 |
