@@ -849,12 +849,14 @@ supabase/functions/
 | 15 | Agent OS v1.0 | 1-10 | 14 modules, 5 planes, full TypeScript contracts |
 | 16 | Commercial Readiness | 11 | Plans, billing, workspace roles, usage enforcement |
 | 17 | Learning Agents v1 | 12 | Prompt analysis, strategy tracking, prediction, weight adaptation |
-| 18 | Meta-Agents v1.2 | 13+18 | 4 memory-aware meta-agents, recommendation lifecycle, historical context |
+| 18 | Meta-Agents v1.4 | 13+18+19+20 | 4 memory-aware meta-agents, quality feedback, advisory calibration |
 | 19 | Controlled Proposal Generation | 14 | 5 artifact types, review lifecycle, idempotency |
 | 20 | Engineering Memory Foundation | 15 | Memory tables, capture events, retrieval API, observability |
 | 21 | Memory Retrieval Surfaces | 16 | Structured retrieval for repair, meta-agents, artifacts, review |
 | 22 | Memory Summaries | 17 | 6 summary types, signal strength, generation service |
 | 23 | Memory-Aware Meta-Agents | 18 | Historical context, continuity scoring, redundancy guard, proposal v2 |
+| 24 | Proposal Quality Feedback Loop | 19 | Quality scoring, outcome tracking, confidence calibration |
+| 25 | Advisory Calibration Layer | 20 | 6 calibration domains, deterministic scoring, advisory-only signals |
 
 ### Frozen
 
