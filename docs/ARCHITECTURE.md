@@ -545,9 +545,9 @@ The following rules are enforced across all layers:
 
 5. **Human review remains required for structural evolution.** Any change to pipeline stages, governance rules, agent roles, or system architecture requires explicit human action.
 
-5. **Tenant isolation is absolute.** All data access is scoped by `organization_id` with RLS enforcement. No cross-tenant data leakage is permitted.
+6. **Tenant isolation is absolute.** All data access is scoped by `organization_id` with RLS enforcement. No cross-tenant data leakage is permitted.
 
-6. **Learning is bounded and reversible.** Weight adjustments have min/max constraints. All learning decisions are logged and auditable.
+7. **Learning is bounded and reversible.** Weight adjustments have min/max constraints. All learning decisions are logged and auditable.
 
 ---
 
