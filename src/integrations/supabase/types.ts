@@ -14,6 +14,85 @@ export type Database = {
   }
   public: {
     Tables: {
+      active_prevention_rules: {
+        Row: {
+          action_config: Json
+          action_type: string
+          confidence_score: number
+          created_at: string
+          description: string
+          enabled: boolean
+          id: string
+          organization_id: string
+          pattern_id: string | null
+          pipeline_stage: string
+          rule_type: string
+          source_candidate_id: string | null
+          times_prevented: number
+          times_triggered: number
+          trigger_conditions: Json
+          updated_at: string
+        }
+        Insert: {
+          action_config?: Json
+          action_type?: string
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          enabled?: boolean
+          id?: string
+          organization_id: string
+          pattern_id?: string | null
+          pipeline_stage?: string
+          rule_type?: string
+          source_candidate_id?: string | null
+          times_prevented?: number
+          times_triggered?: number
+          trigger_conditions?: Json
+          updated_at?: string
+        }
+        Update: {
+          action_config?: Json
+          action_type?: string
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          enabled?: boolean
+          id?: string
+          organization_id?: string
+          pattern_id?: string | null
+          pipeline_stage?: string
+          rule_type?: string
+          source_candidate_id?: string | null
+          times_prevented?: number
+          times_triggered?: number
+          trigger_conditions?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "active_prevention_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "active_prevention_rules_pattern_id_fkey"
+            columns: ["pattern_id"]
+            isOneToOne: false
+            referencedRelation: "error_patterns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "active_prevention_rules_source_candidate_id_fkey"
+            columns: ["source_candidate_id"]
+            isOneToOne: false
+            referencedRelation: "prevention_rule_candidates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       adrs: {
         Row: {
           approved_by: string | null
@@ -1404,6 +1483,64 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prevention_events: {
+        Row: {
+          action_taken: string
+          context: Json | null
+          created_at: string
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          pipeline_stage: string
+          prevented: boolean
+          rule_id: string
+        }
+        Insert: {
+          action_taken: string
+          context?: Json | null
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          pipeline_stage: string
+          prevented?: boolean
+          rule_id: string
+        }
+        Update: {
+          action_taken?: string
+          context?: Json | null
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          pipeline_stage?: string
+          prevented?: boolean
+          rule_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prevention_events_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prevention_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prevention_events_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "active_prevention_rules"
             referencedColumns: ["id"]
           },
         ]
