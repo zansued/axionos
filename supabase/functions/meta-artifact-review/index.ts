@@ -187,6 +187,39 @@ serve(async (req) => {
         was_memory_enriched: !!content?.related_historical_context,
         feedback_signals: scores.feedback_signals,
       }).catch((e: any) => console.error("Quality record error:", e));
+
+      // Sprint 19 expanded: structured feedback record
+      const { computeFeedbackScores } = await import("../_shared/meta-agents/proposal-quality-scoring.ts");
+      const decisionMap: Record<string, string> = { reviewed: "approved", approved: "approved", rejected: "rejected", implemented: "implemented" };
+      const fbScores = computeFeedbackScores({
+        organization_id: artifact.organization_id,
+        entity_type: "artifact",
+        entity_id: artifact_id,
+        source_meta_agent_type: artifact.created_by_meta_agent || "",
+        artifact_type: artFull.artifact_type,
+        decision_signal: (decisionMap[action] || action) as any,
+        follow_through_signal: action === "implemented" ? "implemented" : "unknown",
+        historical_alignment: alignment,
+        was_memory_enriched: !!content?.related_historical_context,
+        created_at: artFull.created_at,
+        reviewed_at: new Date().toISOString(),
+        notes: review_notes,
+      });
+
+      await sc.from("proposal_quality_feedback").insert({
+        organization_id: artifact.organization_id,
+        entity_type: "artifact",
+        entity_id: artifact_id,
+        source_meta_agent_type: artifact.created_by_meta_agent || "",
+        artifact_type: artFull.artifact_type,
+        decision_signal: decisionMap[action] || action,
+        follow_through_signal: action === "implemented" ? "implemented" : "unknown",
+        quality_score: fbScores.quality_score,
+        usefulness_score: fbScores.usefulness_score,
+        historical_support_score: fbScores.historical_support_score,
+        historical_conflict_score: fbScores.historical_conflict_score,
+        notes: review_notes || null,
+      }).catch((e: any) => console.error("Feedback record error:", e));
     }
 
     return jsonResponse({

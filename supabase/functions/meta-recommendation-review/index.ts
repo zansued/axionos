@@ -121,26 +121,11 @@ serve(async (req) => {
       const evidence = Array.isArray(recFull.supporting_evidence) ? recFull.supporting_evidence : [];
       const histEvidence = evidence.find((e: any) => e.type?.includes("history_context")) as any;
       const srcMetrics = recFull.source_metrics as any;
+      const alignment = histEvidence?.historical_alignment || srcMetrics?.historical_alignment || null;
+      const wasMemoryEnriched = evidence.some((e: any) => e.type?.includes("history_context"));
 
-      scoreQualityRecord({
-        entity_type: "recommendation",
-        entity_id: recommendation_id,
-        meta_agent_type: rec.meta_agent_type,
-        recommendation_type: "",
-        review_outcome: action,
-        created_at: recFull.created_at,
-        reviewed_at: new Date().toISOString(),
-        confidence_score: Number(recFull.confidence_score || 0),
-        impact_score: Number(recFull.impact_score || 0),
-        priority_score: Number(recFull.priority_score || 0),
-        historical_alignment: histEvidence?.historical_alignment || srcMetrics?.historical_alignment || null,
-        was_memory_enriched: evidence.some((e: any) => e.type?.includes("history_context")),
-        reviewer_notes: review_notes,
-      });
-
-      // Persist quality record
       const qualityInput = {
-        entity_type: "recommendation",
+        entity_type: "recommendation" as const,
         entity_id: recommendation_id,
         meta_agent_type: rec.meta_agent_type,
         recommendation_type: "",
@@ -150,12 +135,13 @@ serve(async (req) => {
         confidence_score: Number(recFull.confidence_score || 0),
         impact_score: Number(recFull.impact_score || 0),
         priority_score: Number(recFull.priority_score || 0),
-        historical_alignment: histEvidence?.historical_alignment || srcMetrics?.historical_alignment || null,
-        was_memory_enriched: evidence.some((e: any) => e.type?.includes("history_context")),
+        historical_alignment: alignment,
+        was_memory_enriched: wasMemoryEnriched,
         reviewer_notes: review_notes,
       };
       const scores = scoreQualityRecord(qualityInput);
 
+      // Legacy quality record
       await sc.from("proposal_quality_records").insert({
         organization_id: rec.organization_id,
         entity_type: "recommendation",
@@ -171,10 +157,41 @@ serve(async (req) => {
         confidence_at_creation: qualityInput.confidence_score,
         impact_at_creation: qualityInput.impact_score,
         priority_at_creation: qualityInput.priority_score,
-        historical_alignment: qualityInput.historical_alignment,
-        was_memory_enriched: qualityInput.was_memory_enriched,
+        historical_alignment: alignment,
+        was_memory_enriched: wasMemoryEnriched,
         feedback_signals: scores.feedback_signals,
       }).catch((e: any) => console.error("Quality record error:", e));
+
+      // Sprint 19 expanded: structured feedback record
+      const { computeFeedbackScores } = await import("../_shared/meta-agents/proposal-quality-scoring.ts");
+      const fbScores = computeFeedbackScores({
+        organization_id: rec.organization_id,
+        entity_type: "recommendation",
+        entity_id: recommendation_id,
+        source_meta_agent_type: rec.meta_agent_type,
+        decision_signal: action as any,
+        confidence_score: qualityInput.confidence_score,
+        impact_score: qualityInput.impact_score,
+        priority_score: qualityInput.priority_score,
+        historical_alignment: alignment,
+        was_memory_enriched: wasMemoryEnriched,
+        created_at: recFull.created_at,
+        reviewed_at: new Date().toISOString(),
+        notes: review_notes,
+      });
+
+      await sc.from("proposal_quality_feedback").insert({
+        organization_id: rec.organization_id,
+        entity_type: "recommendation",
+        entity_id: recommendation_id,
+        source_meta_agent_type: rec.meta_agent_type,
+        decision_signal: action,
+        quality_score: fbScores.quality_score,
+        usefulness_score: fbScores.usefulness_score,
+        historical_support_score: fbScores.historical_support_score,
+        historical_conflict_score: fbScores.historical_conflict_score,
+        notes: review_notes || null,
+      }).catch((e: any) => console.error("Feedback record error:", e));
     }
 
     return jsonResponse({
