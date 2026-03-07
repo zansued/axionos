@@ -578,6 +578,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
       {/* Repair Evidence */}
       <RepairEvidenceCard initiativeId={initiative.id} />
 
+      {/* Repair Routing */}
+      <RepairRoutingCard initiativeId={initiative.id} />
+
       {/* Build Health Report */}
       {publishJob?.outputs?.health_report && (
         <BuildHealthReport report={publishJob.outputs.health_report} />
