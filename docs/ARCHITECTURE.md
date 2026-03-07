@@ -45,13 +45,13 @@ A governed engineering platform with active learning, meta-analysis, and control
 | Level 5.5 | Contextual / Self-Improving Platform | 🔮 Future horizon |
 | Level 6 | Discovery-Driven Engineering | 🔮 Long-term |
 
-> **Current position:** Level 4.5 — Meta-Aware Engineering Platform.
-> **System state:** Execution + Learning + Meta-Analysis + Proposal Generation active.
+> **Current position:** Level 5 — Institutional Engineering Memory.
+> **System state:** Execution + Learning + Meta-Analysis + Memory-Aware Proposals active.
 > **Kernel status:** Stable and operational.
 > **Learning status:** Active, rule-based, auditable.
-> **Meta-Agent status:** Active, recommendation-only, 4 agents operational.
-> **Proposal status:** Active, artifact generation from accepted recommendations.
-> **Engineering Memory:** Foundation implemented (Sprint 15). Retrieval surfaces and summaries not yet active.
+> **Meta-Agent status:** Active, memory-aware, 4 agents with historical context enrichment.
+> **Proposal status:** Active, artifact generation with Related Historical Context sections.
+> **Engineering Memory:** Full stack operational — foundation, retrieval, summaries, memory-aware reasoning.
 
 ### Implementation Horizons
 
