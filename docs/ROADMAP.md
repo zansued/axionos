@@ -304,8 +304,8 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 | Level 4 | Self-Learning Software Factory | 🔄 Entering |
 | Level 5 | Autonomous Startup Factory | 🔮 Long-term |
 
-> **Current position:** Level 3 complete → Level 4 entering.
-> **Current focus:** Commercial stability + controlled learning activation.
+> **Current position:** Level 5 — Institutional Engineering Memory active.
+> **Current focus:** Memory-aware intelligence stabilization + commercial validation.
 > **Execution mode:** Sprint-based implementation.
 
 ---
