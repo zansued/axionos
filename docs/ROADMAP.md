@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 35 — Autonomous Engineering Advisor. Cross-layer advisory synthesis, prioritized recommendations, clustering, review workflow. Previous: Platform Self-Stabilization (Sprint 34).
+> **What changed (2026-03-07):** Sprint 36 — Semantic Retrieval & Embedding Memory Expansion. Unified semantic retrieval across all intelligence layers with bounded ranking, tenant isolation, and structured fallback. Previous: Autonomous Engineering Advisor (Sprint 35).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
