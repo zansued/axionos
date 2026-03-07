@@ -156,7 +156,6 @@ AxionOS has completed 33 implementation sprints spanning the full capability arc
 
 | Module | Description |
 |--------|-------------|
-| Strategy Portfolio Governance | Manage strategy families as a governed portfolio with lifecycle, conflict detection |
 | Semantic Retrieval via Embeddings | Vector-based contextual retrieval for engineering memory |
 | Platform Self-Stabilization | Auto-detect and correct platform-level drift |
 
