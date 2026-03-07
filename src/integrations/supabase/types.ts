@@ -1616,6 +1616,247 @@ export type Database = {
           },
         ]
       }
+      execution_strategy_experiments: {
+        Row: {
+          assignment_mode: string
+          baseline_definition: Json
+          created_at: string
+          experiment_cap: Json
+          id: string
+          organization_id: string
+          scope_ref: Json | null
+          status: string
+          strategy_family_id: string
+          strategy_variant_id: string
+          variant_definition: Json
+        }
+        Insert: {
+          assignment_mode?: string
+          baseline_definition?: Json
+          created_at?: string
+          experiment_cap?: Json
+          id?: string
+          organization_id: string
+          scope_ref?: Json | null
+          status?: string
+          strategy_family_id: string
+          strategy_variant_id: string
+          variant_definition?: Json
+        }
+        Update: {
+          assignment_mode?: string
+          baseline_definition?: Json
+          created_at?: string
+          experiment_cap?: Json
+          id?: string
+          organization_id?: string
+          scope_ref?: Json | null
+          status?: string
+          strategy_family_id?: string
+          strategy_variant_id?: string
+          variant_definition?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_strategy_experiments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "execution_strategy_experiments_strategy_family_id_fkey"
+            columns: ["strategy_family_id"]
+            isOneToOne: false
+            referencedRelation: "execution_strategy_families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "execution_strategy_experiments_strategy_variant_id_fkey"
+            columns: ["strategy_variant_id"]
+            isOneToOne: false
+            referencedRelation: "execution_strategy_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      execution_strategy_families: {
+        Row: {
+          allowed_mutation_envelope: Json
+          allowed_variant_scope: string
+          baseline_strategy_definition: Json
+          created_at: string
+          evaluation_metrics: Json
+          id: string
+          organization_id: string
+          rollout_mode: string
+          status: string
+          strategy_family_key: string
+          strategy_family_name: string
+          updated_at: string
+        }
+        Insert: {
+          allowed_mutation_envelope?: Json
+          allowed_variant_scope?: string
+          baseline_strategy_definition?: Json
+          created_at?: string
+          evaluation_metrics?: Json
+          id?: string
+          organization_id: string
+          rollout_mode?: string
+          status?: string
+          strategy_family_key: string
+          strategy_family_name: string
+          updated_at?: string
+        }
+        Update: {
+          allowed_mutation_envelope?: Json
+          allowed_variant_scope?: string
+          baseline_strategy_definition?: Json
+          created_at?: string
+          evaluation_metrics?: Json
+          id?: string
+          organization_id?: string
+          rollout_mode?: string
+          status?: string
+          strategy_family_key?: string
+          strategy_family_name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_strategy_families_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      execution_strategy_outcomes: {
+        Row: {
+          applied_mode: string
+          created_at: string
+          evidence_refs: Json | null
+          experiment_id: string
+          id: string
+          organization_id: string
+          outcome_metrics: Json | null
+          outcome_status: string
+          pipeline_job_id: string | null
+          strategy_variant_id: string
+        }
+        Insert: {
+          applied_mode?: string
+          created_at?: string
+          evidence_refs?: Json | null
+          experiment_id: string
+          id?: string
+          organization_id: string
+          outcome_metrics?: Json | null
+          outcome_status?: string
+          pipeline_job_id?: string | null
+          strategy_variant_id: string
+        }
+        Update: {
+          applied_mode?: string
+          created_at?: string
+          evidence_refs?: Json | null
+          experiment_id?: string
+          id?: string
+          organization_id?: string
+          outcome_metrics?: Json | null
+          outcome_status?: string
+          pipeline_job_id?: string | null
+          strategy_variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_strategy_outcomes_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "execution_strategy_experiments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "execution_strategy_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "execution_strategy_outcomes_strategy_variant_id_fkey"
+            columns: ["strategy_variant_id"]
+            isOneToOne: false
+            referencedRelation: "execution_strategy_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      execution_strategy_variants: {
+        Row: {
+          baseline_definition: Json
+          confidence_score: number | null
+          created_at: string
+          expected_impact: Json | null
+          hypothesis: string
+          id: string
+          mutation_delta: Json
+          organization_id: string
+          scope_ref: Json | null
+          status: string
+          strategy_family_id: string
+          variant_definition: Json
+          variant_mode: string
+        }
+        Insert: {
+          baseline_definition?: Json
+          confidence_score?: number | null
+          created_at?: string
+          expected_impact?: Json | null
+          hypothesis?: string
+          id?: string
+          mutation_delta?: Json
+          organization_id: string
+          scope_ref?: Json | null
+          status?: string
+          strategy_family_id: string
+          variant_definition?: Json
+          variant_mode?: string
+        }
+        Update: {
+          baseline_definition?: Json
+          confidence_score?: number | null
+          created_at?: string
+          expected_impact?: Json | null
+          hypothesis?: string
+          id?: string
+          mutation_delta?: Json
+          organization_id?: string
+          scope_ref?: Json | null
+          status?: string
+          strategy_family_id?: string
+          variant_definition?: Json
+          variant_mode?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_strategy_variants_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "execution_strategy_variants_strategy_family_id_fkey"
+            columns: ["strategy_family_id"]
+            isOneToOne: false
+            referencedRelation: "execution_strategy_families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       git_connections: {
         Row: {
           connected_by: string
