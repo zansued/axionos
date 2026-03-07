@@ -16,24 +16,27 @@
 
 | Dimension | State |
 |-----------|-------|
-| **Platform Stage** | Level 4.5 Entry |
-| **System State** | Meta-Aware Engineering Platform |
+| **Platform Stage** | Level 5 — Institutional Engineering Memory |
+| **System State** | 17 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
-| **Learning Status** | Active, rule-based, auditable |
-| **Meta-Agents Status** | v1.4 active — memory-aware + quality feedback + advisory calibration, human-reviewed |
+| **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
+| **Meta-Agents Status** | v1.4 active — memory-aware + quality feedback + advisory calibration |
+| **Platform Intelligence** | Active — system-level observability + health model |
+| **Platform Calibration** | Active — bounded threshold tuning + guardrails + rollback |
+| **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
 
 ## Strategic Directive
 
-AxionOS has completed its Product Proof Closure and entered Commercial + Learning readiness. The architecture is sufficient. The full idea-to-deploy cycle is operational with structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, and billing infrastructure.
+AxionOS has completed 32 implementation sprints spanning the full capability arc from deterministic execution to bounded strategy evolution. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, and strategy evolution — all under governed, advisory-first safety boundaries.
 
 **The focus is now:**
-1. Stabilize Learning Agents v1 with real execution data
-2. Validate commercial readiness with real billing flows
-3. No major platform expansion until learning and billing are proven stable
+1. Commercial stability with real billing flows
+2. Platform intelligence maturation with real execution data
+3. Adaptive intelligence calibration and strategy evolution refinement
 
 **Rule:** No new architecture unless it directly improves reliability, cost, execution speed, product clarity, or sellability.
 
@@ -42,105 +45,133 @@ AxionOS has completed its Product Proof Closure and entered Commercial + Learnin
 ## Implementation Horizons
 
 ```
-  DONE                     NOW                    NEXT                   LATER
-  ──────────►              ──────────►            ──────────►            ──────────►
-  Level 3                  Level 4 Entry          Learning Agents        Platform
-  (Kernel +                (Commercial +          Expansion +            Intelligence
-   Autonomous Eng)          Learning v1)          Meta-Agents
+  DONE (32 sprints)                    NOW                           NEXT                           LATER
+  ──────────────────►                  ──────────────────►           ──────────────────►            ──────────────────►
+  Level 1-5                            Stabilization &               Strategy Portfolio             Autonomous
+  (Kernel → Learning →                  Commercial                   Governance +                  Engineering
+   Meta-Agents → Memory →              Validation +                  Semantic Retrieval +           Advisor +
+   Governance → Intelligence →          Intelligence                  Platform                      Discovery-Driven
+   Calibration → Strategy Evo)          Maturation                    Self-Stabilization            Architecture
 ```
 
 ---
 
-## Level 3 Closure — Completed Sprints
+## DONE — Completed Sprints (1–32)
 
-Level 3 (Autonomous Engineering System) is now **functionally complete**. Ten implementation sprints closed the product-proof loop:
+### Foundation Layer (Sprints 1–10)
 
-### Sprint 1 — Initiative Brief Formalization
-**Goal:** Turn idea intake into a structured contract for the pipeline.
-**Status:** ✅ Complete
+| Sprint | Name | Status |
+|--------|------|--------|
+| 1 | Initiative Brief Formalization | ✅ Complete |
+| 2 | Initiative Simulation Engine | ✅ Complete |
+| 3 | Deploy Contract Completion | ✅ Complete |
+| 4 | Product-Level Observability | ✅ Complete |
+| 5 | Onboarding & Product Packaging | ✅ Complete |
+| 6 | Evidence-Oriented Repair Loop | ✅ Complete |
+| 7 | Error Pattern Library & Learning Foundation | ✅ Complete |
+| 8 | Preventive Engineering Layer | ✅ Complete |
+| 9 | Adaptive Repair Routing | ✅ Complete |
+| 10 | Learning Agents Foundation | ✅ Complete |
 
-### Sprint 2 — Initiative Simulation Engine
-**Goal:** Introduce a lightweight simulation gate before expensive pipeline execution.
-**Status:** ✅ Complete
+### Operational Intelligence Layer (Sprints 11–12)
 
-### Sprint 3 — Deploy Contract Completion
-**Goal:** Close the loop from repository generation to actual deployment.
-**Status:** ✅ Complete
+| Sprint | Name | Status |
+|--------|------|--------|
+| 11 | Commercial Readiness / Billing / Workspace Packaging | ✅ Complete |
+| 12 | Learning Agents v1 (5 engines + dashboard) | ✅ Complete |
 
-### Sprint 4 — Product-Level Observability
-**Goal:** Upgrade observability from runtime telemetry to product metrics.
-**Status:** ✅ Complete
+### Meta-Intelligence & Memory Layer (Sprints 13–20)
 
-### Sprint 5 — Onboarding & Product Packaging
-**Goal:** Make AxionOS understandable and activatable for real users.
-**Status:** ✅ Complete
+| Sprint | Name | Status |
+|--------|------|--------|
+| 13 | Meta-Agents v1 (4 types + recommendation lifecycle) | ✅ Complete |
+| 14 | Controlled Meta-Agent Actions (proposal generation) | ✅ Complete |
+| 15 | Engineering Memory Foundation | ✅ Complete |
+| 16 | Memory Retrieval Surfaces | ✅ Complete |
+| 17 | Memory Summaries | ✅ Complete |
+| 18 | Memory-Aware Meta-Agents | ✅ Complete |
+| 19 | Proposal Quality Feedback Loop | ✅ Complete |
+| 20 | Advisory Calibration Layer | ✅ Complete |
 
-### Sprint 6 — Evidence-Oriented Repair Loop
-**Goal:** Make the repair loop evidence-based, traceable, and measurable.
-**Status:** ✅ Complete
+### Learning & Repair Layer (Sprints 21–26)
 
-### Sprint 7 — Error Pattern Library & Learning Foundation
-**Goal:** Convert repair evidence into reusable error pattern intelligence.
-**Status:** ✅ Complete
+| Sprint | Name | Status |
+|--------|------|--------|
+| 21 | Prompt Optimization Engine (A/B testing) | ✅ Complete |
+| 22 | Bounded Promotion & Rollback Guard | ✅ Complete |
+| 23 | Self-Improving Fix Agents v2 (Repair Policies) | ✅ Complete |
+| 24 | Agent Memory Layer Operationalization | ✅ Complete |
+| 25 | Predictive Error Detection Operationalization | ✅ Complete |
+| 26 | Learning Agents v2 (Cross-Stage Policy Synthesis) | ✅ Complete |
 
-### Sprint 8 — Preventive Engineering Layer
-**Goal:** Convert pattern knowledge into active prevention guardrails.
-**Status:** ✅ Complete
+### Execution Governance Layer (Sprints 27–29)
 
-### Sprint 9 — Adaptive Repair Routing
-**Goal:** Select repair strategies based on historical effectiveness.
-**Status:** ✅ Complete
+| Sprint | Name | Status |
+|--------|------|--------|
+| 27 | Execution Policy Intelligence | ✅ Complete |
+| 28 | Execution Mode Portfolio Optimization | ✅ Complete |
+| 29 | Workspace / Tenant Adaptive Policy Tuning | ✅ Complete |
 
-### Sprint 10 — Learning Agents Foundation
-**Goal:** Create the structured learning substrate for future self-improving agents.
-**Status:** ✅ Complete
+### Platform Intelligence & Calibration Layer (Sprints 30–31)
+
+| Sprint | Name | Status |
+|--------|------|--------|
+| 30 | Platform Intelligence Entry | ✅ Complete |
+| 31 | Platform Self-Calibration | ✅ Complete |
+
+### Strategy Evolution Layer (Sprint 32)
+
+| Sprint | Name | Status |
+|--------|------|--------|
+| 32 | Execution Strategy Evolution | ✅ Complete |
 
 ---
 
-## Transition Zone — Entry into Level 4
+## NOW — Commercial Stability & Intelligence Maturation
 
-Sprints 11 and 12 represent the **beginning** of Level 4.
+**Priority:** High
+**Status:** 🔄 In Progress
 
-### Sprint 11 — Commercial Readiness / Billing / Workspace Packaging ✅
+### Focus Areas
 
-**Purpose:** Make AxionOS operationally packageable as a real product.
+| Area | Description |
+|------|-------------|
+| Commercial Validation | Real billing flows, Stripe integration, customer onboarding |
+| Learning Stabilization | Validate learning agents improve outcomes with real execution data |
+| Platform Intelligence Maturation | Validate bottleneck detection, pattern analysis, health model accuracy |
+| Strategy Evolution Validation | Validate strategy variant experimentation produces measurable improvements |
+| Calibration Tuning | Confirm calibration proposals are safe and effective with real workloads |
 
-**Delivered:**
-- Product plans system (Starter / Pro / Enterprise) with limits enforcement
-- Billing accounts with Stripe-ready schema
-- Usage limit enforcer (initiatives, tokens, deployments, parallel runs)
-- Billing calculator with cost breakdowns by stage and model
-- Product dashboard API (overview, usage metrics)
-- Enhanced Dashboard with pipeline success rate, deploy rate, repair rate
-- Enhanced Billing page with plans selection, usage tabs, and limit configuration
-- Workspace members table with granular roles
-- All new tables with RLS policies and org isolation
+---
 
-**Hardening (post-implementation):**
-- Usage enforcement connected to real pipeline entry points (`pipeline-bootstrap.ts`, `run-initiative-pipeline`)
-- Cross-org query leakage fixed in `usage-limit-enforcer.ts` and `billing-calculator.ts`
-- Cost double-counting fixed: `job_cost` is single source of truth
-- Deploy status queries corrected: `"success"` instead of `"completed"`
-- Blocked executions return HTTP 402 with `USAGE_LIMIT_EXCEEDED` code
+## NEXT — Strategy Portfolio Governance + Semantic Retrieval
 
-**Status:** ✅ Implemented + Hardened
+**Priority:** High
+**Status:** 📋 Planned
+**Dependency:** Requires stable commercial and intelligence layers
 
-### Sprint 12 — Learning Agents v1 ✅
+### Modules
 
-**Purpose:** Introduce the first controlled, explainable, auditable learning behavior.
+| Module | Description |
+|--------|-------------|
+| Strategy Portfolio Governance | Manage strategy families as a governed portfolio with lifecycle, conflict detection |
+| Semantic Retrieval via Embeddings | Vector-based contextual retrieval for engineering memory |
+| Platform Self-Stabilization | Auto-detect and correct platform-level drift |
 
-**Delivered:**
-- Prompt Outcome Analyzer: aggregates success/cost/retry metrics per stage+model signature
-- Strategy Performance Engine: evaluates repair strategy effectiveness with recurrence tracking
-- Predictive Error Engine: detects recurring failure patterns, generates prevention rule candidates when probability > 70%
-- Repair Learning Engine: adjusts strategy routing weights based on evidence (bounded, reversible)
-- Learning Recommendation Engine: generates structured recommendations (PROMPT_OPTIMIZATION, STRATEGY_RANKING_ADJUSTMENT, NEW_PREVENTION_RULE, PIPELINE_CONFIGURATION_HINT)
-- Learning Dashboard API with overview/recommendations/strategies/errors views
-- Full audit trail: all learning decisions logged with LEARNING_UPDATE events
-- Safety: learning agents cannot modify pipeline, governance, plans, or billing
-- 5 new tables with RLS: prompt_strategy_metrics, strategy_effectiveness_metrics, predictive_error_patterns, repair_strategy_weights, learning_recommendations
+---
 
-**Status:** ✅ Implemented
+## LATER — Autonomous Engineering Advisor
+
+**Priority:** Long-term
+**Status:** 📋 Planned
+
+### Modules
+
+| Module | Description |
+|--------|-------------|
+| Autonomous Engineering Advisor | System-level advisory combining all intelligence layers |
+| Discovery-Driven Architecture | Architecture experimentation based on market signals |
+| Strategy Portfolio Optimization | Cross-family strategy coordination |
 
 ---
 
@@ -165,79 +196,29 @@ Sprints 11 and 12 represent the **beginning** of Level 4.
 | Stage & Agent IO Contracts | ✅ Implemented |
 | Commercial Readiness (plans, billing, enforcement) | ✅ Operational |
 | Learning Agents v1 (5 engines + dashboard) | ✅ Operational |
+| Meta-Agents v1.4 (4 types + quality + calibration) | ✅ Operational |
 | Proposal Quality Feedback Loop | ✅ Operational |
 | Advisory Calibration Layer | ✅ Operational |
 | Prompt Optimization (A/B + Bounded Promotion) | ✅ Operational |
 | Self-Improving Fix Agents v2 (Repair Policies) | ✅ Operational |
+| Agent Memory Layer | ✅ Operational |
+| Predictive Error Detection | ✅ Operational |
+| Cross-Stage Policy Synthesis (LA v2) | ✅ Operational |
+| Execution Policy Intelligence | ✅ Operational |
+| Execution Mode Portfolio Optimization | ✅ Operational |
+| Tenant/Workspace Adaptive Tuning | ✅ Operational |
+| Platform Intelligence (health model) | ✅ Operational |
+| Platform Self-Calibration | ✅ Operational |
+| Execution Strategy Evolution | ✅ Operational |
 
 ### What to Freeze
 
 | Area | Reason |
 |------|--------|
-| Marketplace ecosystem | Not needed until Learning Agents are stable and real user load is validated |
-| Global capability registry expansion | Current architecture is sufficient for product operation |
+| Marketplace ecosystem | Not needed until product intelligence layer |
+| Global capability registry expansion | Current architecture is sufficient |
 | Advanced distributed runtime | Current runtime handles workload adequately |
 | Advanced multi-agent coordination | Existing coordination patterns meet current needs |
-| Product intelligence layer | Requires Learning Agents to be proven stable first |
-| Market intelligence layer | Requires product intelligence first |
-| Startup factory ambitions | Premature before Level 4 stability is confirmed |
-| Cognitive systems layer | Theoretical concepts, not practical for current focus |
-
-These items remain frozen because they are not required for current product reliability, cost control, sellability, or learning safety.
-
----
-
-## NEXT — Learning Agents Expansion
-
-**Priority:** High
-**Status:** 📋 Planned (after Sprint 12 stabilization)
-**Dependency:** Requires stable Learning Agents v1
-
-### Purpose
-
-Scale learning behavior from prompt optimization to full agent self-improvement. Each execution improves future executions.
-
-### Modules
-
-| Module | Description |
-|--------|-------------|
-| Learning Agents v2 | Self-improving prompt strategies based on output quality |
-| Agent Memory Layer | Persistent per-agent memory (foundation: `agent_memory` + `learning_records` tables) |
-| Prompt Optimization Engine | A/B testing of prompt variations per stage |
-| Predictive Error Detection | Predictive error identification from historical patterns |
-| Self-Improving Fix Agents | Repair strategies that evolve based on success rates |
-
-### Expected Outcome
-
-Each execution improves future executions. The system transitions from deterministic execution to adaptive intelligence.
-
----
-
-## DONE — Meta-Agents + Quality Feedback + Calibration (Level 4.5–5) ✅
-
-**Status:** ✅ Implemented (Sprints 13–14, memory-aware Sprint 18, quality feedback Sprint 19, calibration Sprint 20)
-
-4 memory-aware meta-agents active with historical context enrichment, continuity scoring, redundancy suppression, proposal layer v2, quality feedback loop, and advisory calibration layer. All recommendations require human review. Quality scoring tracks acceptance rates, confidence calibration, and memory effectiveness. Advisory calibration signals diagnose meta-agent performance, proposal usefulness, historical context value, and redundancy guard effectiveness — without applying automatic tuning.
-
----
-
-## DONE — Engineering Memory Full Stack (Level 5 — Institutional Memory) ✅
-
-**Status:** ✅ Implemented (Sprints 15–18)
-
-Full engineering memory stack: foundation, retrieval surfaces, memory summaries, memory-aware meta-agents and proposals. Historical continuity scoring and redundancy guard operational.
-
----
-
-## LATER — Expand Platform Intelligence
-
-**Priority:** Long-term
-**Status:** 📋 Planned (after learning agents are stable)
-
-Product Intelligence and Market Intelligence become relevant only after:
-1. The kernel is stable
-2. The product is validated with real users
-3. Learning agents are operational and measurably improving outcomes
 
 ---
 
@@ -264,36 +245,12 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 | Level 1 | Code Generator | ✅ |
 | Level 2 | Software Builder | ✅ |
 | Level 3 | Autonomous Engineering System | ✅ Complete |
-| Level 4 | Self-Learning Software Factory | 🔄 Entering |
-| Level 5 | Autonomous Startup Factory | 🔮 Long-term |
+| Level 4 | Self-Learning Software Factory | ✅ Complete |
+| Level 4.5 | Meta-Aware Engineering Platform | ✅ Complete |
+| Level 5 | Institutional Engineering Memory | ✅ Current |
 
 > **Current position:** Level 5 — Institutional Engineering Memory active.
-> **Current focus:** Memory-aware intelligence stabilization + commercial validation.
 > **Execution mode:** Sprint-based implementation.
-
----
-
-## Engineering Memory Architecture (Foundation + Retrieval + Summaries — Sprints 15–17)
-
-### Engineering Memory Architecture (Full Stack — Sprints 15–18) ✅
-
-**Purpose:** Enable AxionOS to accumulate and reason with institutional engineering memory across executions, failures, strategies, recommendations, decisions, and outcomes.
-
-**Memory Types:** Execution Memory, Error Memory, Strategy Memory, Design Memory, Decision Memory, Outcome Memory.
-
-**Sprint 15 — Foundation:** ✅ Core tables, RLS, capture events, retrieval API, observability.
-**Sprint 16 — Retrieval Surfaces:** ✅ Structured retrieval for repair, meta-agents, artifacts, review. Deterministic ranking.
-**Sprint 17 — Memory Summaries:** ✅ 6 summary types, signal strength scoring, generation service, UI.
-**Sprint 18 — Memory-Aware Reasoning:** ✅ Meta-agent context enrichment, continuity scoring, redundancy guard, proposal layer v2.
-
-**Key Design Decisions:**
-- Cross-layer infrastructure (not a new execution layer)
-- Event-driven capture from Execution, Learning, Meta-Agent, Proposal, and Human layers
-- Dual indexing: structural (field-based) + semantic (future vector-based)
-- Strict tenant isolation via organization_id + RLS
-- Non-invasive: memory informs reasoning but never mutates system behavior
-
-Full specification: [ARCHITECTURE.md — Layer 9](ARCHITECTURE.md)
 
 ---
 
