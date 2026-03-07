@@ -1,6 +1,6 @@
 import {
   Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio,
-  Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain,
+  Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
@@ -37,6 +37,7 @@ const mainItems = [
 
 const bottomItems = [
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
+  { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
   { title: "Audit", url: "/audit", icon: Shield },
   { title: "Observability", url: "/observability", icon: Radio },
   { title: "Connections", url: "/connections", icon: Package },

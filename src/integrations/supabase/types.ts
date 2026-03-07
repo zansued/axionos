@@ -1380,6 +1380,82 @@ export type Database = {
           },
         ]
       }
+      meta_agent_artifacts: {
+        Row: {
+          artifact_type: string
+          content: Json
+          created_at: string
+          created_by_meta_agent: string
+          id: string
+          linked_resources: Json
+          organization_id: string
+          recommendation_id: string
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          summary: string
+          title: string
+          workspace_id: string | null
+        }
+        Insert: {
+          artifact_type?: string
+          content?: Json
+          created_at?: string
+          created_by_meta_agent?: string
+          id?: string
+          linked_resources?: Json
+          organization_id: string
+          recommendation_id: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          summary?: string
+          title?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          artifact_type?: string
+          content?: Json
+          created_at?: string
+          created_by_meta_agent?: string
+          id?: string
+          linked_resources?: Json
+          organization_id?: string
+          recommendation_id?: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          summary?: string
+          title?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meta_agent_artifacts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meta_agent_artifacts_recommendation_id_fkey"
+            columns: ["recommendation_id"]
+            isOneToOne: false
+            referencedRelation: "meta_agent_recommendations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meta_agent_artifacts_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       meta_agent_recommendations: {
         Row: {
           confidence_score: number

@@ -98,11 +98,20 @@ export default function MetaAgents() {
         body: { recommendation_id: id, action, review_notes: notes },
       });
       if (error) throw error;
+      // If accepted, trigger artifact generation
+      if (action === "accepted") {
+        const { error: artErr } = await supabase.functions.invoke("meta-artifact-generator", {
+          body: { recommendation_id: id },
+        });
+        if (artErr) console.error("Artifact generation failed:", artErr);
+        else toast.success("Engineering artifact generated");
+      }
       return data;
     },
     onSuccess: () => {
       toast.success("Recommendation updated");
       queryClient.invalidateQueries({ queryKey: ["meta-recommendations"] });
+      queryClient.invalidateQueries({ queryKey: ["meta-artifacts"] });
       setReviewDialog(null);
       setReviewNotes("");
     },
@@ -388,7 +397,7 @@ export default function MetaAgents() {
           <p className="text-sm text-muted-foreground">{reviewDialog?.title}</p>
           {reviewDialog?.action === "accepted" && (
             <p className="text-xs text-primary bg-primary/5 border border-primary/20 rounded p-2">
-              Accepting this recommendation signals agreement. It does not automatically change system behavior.
+              Accepting this recommendation will generate an engineering artifact (ADR, proposal, or spec) for human review. It does not automatically change system behavior.
             </p>
           )}
           <Textarea

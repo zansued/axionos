@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 13 Hardening — quality gates, signature normalization, review state validation, evidence integrity, scoring boundary tests, run observability metrics. Previous: Sprint 13 Meta-Agents v1 implementation.
+> **What changed (2026-03-07):** Sprint 14 — Controlled Meta-Agent Actions. Accepted recommendations now generate engineering artifacts (ADRs, architecture proposals, agent role specs, workflow change proposals, implementation plans). Artifacts follow a draft→reviewed→approved→implemented lifecycle with full audit trail. No automatic system mutation. Previous: Sprint 13 Hardening.
 >
 > **Current Mode**: Level 4.5 — Meta-Aware Engineering Platform
 >
@@ -21,7 +21,7 @@
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable |
-| **Meta-Agents Status** | v1 active — recommendation-only, human-reviewed |
+| **Meta-Agents Status** | v1.1 active — recommendation + artifact generation, human-reviewed |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
