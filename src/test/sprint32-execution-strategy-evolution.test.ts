@@ -140,7 +140,7 @@ describe("Execution Strategy Variant Synthesizer", () => {
 
 // ═══ Guardrails ═══
 describe("Execution Strategy Guardrails", () => {
-  const { validateStrategyVariant } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-guardrails");
+  // uses top-level import
 
   const family = { status: "active", allowed_mutation_envelope: { threshold: { min: 0, max: 1 } }, rollout_mode: "bounded_experiment", allowed_variant_scope: "global" };
   const validVariant = { mutation_delta: { threshold: 0.1 }, variant_mode: "bounded_experiment_candidate", rollback_guard: { max_degradation_pct: 10 } };
