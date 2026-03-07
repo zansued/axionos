@@ -61,7 +61,7 @@ export function evaluatePromotionHealth(
   config: HealthConfig = DEFAULT_HEALTH_CONFIG,
 ): HealthCheckResult {
   const flags: string[] = [];
-  let status: HealthStatus = "healthy";
+  let status: string = "healthy";
 
   const snapshot = {
     executions: current.executions,
