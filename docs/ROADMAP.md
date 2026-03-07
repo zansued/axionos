@@ -159,7 +159,7 @@ AxionOS has completed 36 implementation sprints spanning the full capability arc
 
 ---
 
-## NEXT — Strategy Portfolio Governance + Semantic Retrieval
+## NEXT — Cross-Family Strategy Coordination
 
 **Priority:** High
 **Status:** 📋 Planned
@@ -169,8 +169,8 @@ AxionOS has completed 36 implementation sprints spanning the full capability arc
 
 | Module | Description |
 |--------|-------------|
-| Semantic Retrieval via Embeddings | Vector-based contextual retrieval for engineering memory |
-| Platform Self-Stabilization | Auto-detect and correct platform-level drift |
+| Cross-Family Strategy Coordination | Multi-family strategy optimization |
+| Resilience Hardening | Platform resilience under failure conditions |
 
 ---
 
