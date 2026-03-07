@@ -283,8 +283,14 @@ describe("Sprint 30 — Platform Intelligence (Comprehensive)", () => {
   });
 
   describe("2. Bottleneck Detector", () => {
-    it("healthy when no bottlenecks", () => {
-      const s = aggregatePlatformBehavior(makeRecords(10, { status: "success" }));
+    it("healthy when no bottlenecks beyond single-stage cost", () => {
+      const records = [
+        ...makeRecords(5, { stage: "build", status: "success", cost_usd: 0.05 }),
+        ...makeRecords(5, { stage: "validate", status: "success", cost_usd: 0.05 }),
+        ...makeRecords(5, { stage: "deploy", status: "success", cost_usd: 0.05 }),
+        ...makeRecords(5, { stage: "test", status: "success", cost_usd: 0.05 }),
+      ];
+      const s = aggregatePlatformBehavior(records);
       const r = detectBottlenecks(s);
       expect(r.overall_health).toBe("healthy");
       expect(r.bottlenecks).toHaveLength(0);
