@@ -4,16 +4,13 @@ import { authenticate, AuthContext } from "../_shared/auth.ts";
 import { retrieveForArtifactGeneration } from "../_shared/engineering-memory-retriever.ts";
 
 /**
- * meta-artifact-generator — Sprint 14
+ * meta-artifact-generator — Sprint 18 (Proposal Layer v2)
  *
  * Generates engineering artifacts from accepted Meta-Agent recommendations.
- * Artifact types: ADR_DRAFT, ARCHITECTURE_PROPOSAL, AGENT_ROLE_SPEC,
- *                 WORKFLOW_CHANGE_PROPOSAL, IMPLEMENTATION_PLAN
+ * Now includes structured Related Historical Context sections and
+ * decision/outcome-aware framing.
  *
  * SAFETY: Artifacts are pure proposals — they NEVER mutate system state.
- * Idempotent: unique constraint on (recommendation_id, artifact_type) prevents duplicates.
- *
- * POST { recommendation_id }
  */
 
 const AGENT_TYPE_TO_ARTIFACT: Record<string, string> = {
@@ -29,7 +26,59 @@ const REC_TYPE_OVERRIDES: Record<string, string> = {
   SYSTEM_EVOLUTION_REPORT: "IMPLEMENTATION_PLAN",
 };
 
-function generateADR(rec: Record<string, unknown>): Record<string, unknown> {
+// ── Sprint 18: Extract historical signals from recommendation ──
+
+interface HistoricalSignals {
+  historical_alignment: string | null;
+  historical_context_score: number;
+  decision_history_signal: string;
+  outcome_history_signal: string;
+  historical_novelty_flag: boolean;
+  prior_accepted: number;
+  prior_rejected: number;
+}
+
+function extractHistoricalSignals(rec: Record<string, unknown>): HistoricalSignals {
+  const evidence = Array.isArray(rec.supporting_evidence) ? rec.supporting_evidence : [];
+  const histEvidence = evidence.find((e: any) =>
+    typeof e.type === "string" && e.type.includes("history_context")
+  ) as Record<string, unknown> | undefined;
+
+  const sourceMetrics = rec.source_metrics as Record<string, unknown> | undefined;
+
+  const alignment = histEvidence?.historical_alignment as string
+    || sourceMetrics?.historical_alignment as string
+    || null;
+
+  const priorAccepted = Number(histEvidence?.prior_accepted || 0);
+  const priorRejected = Number(histEvidence?.prior_rejected || 0);
+  const novelty = Boolean(histEvidence?.novelty_flag);
+
+  // Decision history signal
+  let decisionSignal = "no_prior_decisions";
+  if (priorAccepted > 0 && priorRejected === 0) decisionSignal = "historically_supported";
+  else if (priorRejected > 0 && priorAccepted === 0) decisionSignal = "historically_contested";
+  else if (priorAccepted > 0 && priorRejected > 0) decisionSignal = "historically_mixed";
+
+  // Outcome history signal
+  const outcomeScore = Number(histEvidence?.historical_support_score || 0);
+  let outcomeSignal = "no_prior_outcomes";
+  if (outcomeScore > 0.5) outcomeSignal = "positive_prior_outcomes";
+  else if (outcomeScore > 0.2) outcomeSignal = "mixed_prior_outcomes";
+  else if (outcomeScore > 0) outcomeSignal = "weak_prior_outcomes";
+
+  return {
+    historical_alignment: alignment,
+    historical_context_score: Number(sourceMetrics?.historical_context_score || 0),
+    decision_history_signal: decisionSignal,
+    outcome_history_signal: outcomeSignal,
+    historical_novelty_flag: novelty,
+    prior_accepted: priorAccepted,
+    prior_rejected: priorRejected,
+  };
+}
+
+function generateADR(rec: Record<string, unknown>, hist: HistoricalSignals): Record<string, unknown> {
   return {
     format: "ADR_DRAFT",
     sections: {
@@ -55,11 +104,19 @@ function generateADR(rec: Record<string, unknown>): Record<string, unknown> {
       ],
       decision: "Pending human review and approval",
       rollback_considerations: "All changes should be reversible through standard deployment rollback procedures.",
+      // Sprint 18: Historical framing
+      historical_context: hist.historical_alignment ? {
+        alignment: hist.historical_alignment,
+        decision_history: hist.decision_history_signal,
+        outcome_history: hist.outcome_history_signal,
+        is_novel: hist.historical_novelty_flag,
+        context_score: hist.historical_context_score,
+      } : null,
     },
   };
 }
 
-function generateArchitectureProposal(rec: Record<string, unknown>): Record<string, unknown> {
+function generateArchitectureProposal(rec: Record<string, unknown>, hist: HistoricalSignals): Record<string, unknown> {
   return {
     format: "ARCHITECTURE_PROPOSAL",
     sections: {
@@ -79,11 +136,17 @@ function generateArchitectureProposal(rec: Record<string, unknown>): Record<stri
         impact: rec.impact_score,
         rollback_strategy: "Revert to previous architecture configuration via version control",
       },
+      historical_context: hist.historical_alignment ? {
+        alignment: hist.historical_alignment,
+        decision_history: hist.decision_history_signal,
+        outcome_history: hist.outcome_history_signal,
+        is_novel: hist.historical_novelty_flag,
+      } : null,
     },
   };
 }
 
-function generateAgentRoleSpec(rec: Record<string, unknown>): Record<string, unknown> {
+function generateAgentRoleSpec(rec: Record<string, unknown>, hist: HistoricalSignals): Record<string, unknown> {
   return {
     format: "AGENT_ROLE_SPEC",
     sections: {
@@ -101,11 +164,16 @@ function generateAgentRoleSpec(rec: Record<string, unknown>): Record<string, unk
       interaction_with_existing_agents: "Coordinates through standard Agent OS event bus and handoff protocol.",
       estimated_complexity: rec.impact_score && Number(rec.impact_score) > 0.7 ? "high" : "medium",
       source_metrics: rec.source_metrics,
+      historical_context: hist.historical_alignment ? {
+        alignment: hist.historical_alignment,
+        prior_role_proposals: hist.prior_accepted + hist.prior_rejected,
+        decision_history: hist.decision_history_signal,
+      } : null,
     },
   };
 }
 
-function generateWorkflowChangeProposal(rec: Record<string, unknown>): Record<string, unknown> {
+function generateWorkflowChangeProposal(rec: Record<string, unknown>, hist: HistoricalSignals): Record<string, unknown> {
   return {
     format: "WORKFLOW_CHANGE_PROPOSAL",
     sections: {
@@ -124,11 +192,16 @@ function generateWorkflowChangeProposal(rec: Record<string, unknown>): Record<st
       ],
       testing_strategy: "Run shadow execution with proposed workflow alongside current workflow to compare outcomes.",
       rollback_strategy: "Revert to previous workflow configuration; all changes are configuration-only.",
+      historical_context: hist.historical_alignment ? {
+        alignment: hist.historical_alignment,
+        decision_history: hist.decision_history_signal,
+        outcome_history: hist.outcome_history_signal,
+      } : null,
     },
   };
 }
 
-function generateImplementationPlan(rec: Record<string, unknown>): Record<string, unknown> {
+function generateImplementationPlan(rec: Record<string, unknown>, hist: HistoricalSignals): Record<string, unknown> {
   return {
     format: "IMPLEMENTATION_PLAN",
     sections: {
@@ -160,11 +233,17 @@ function generateImplementationPlan(rec: Record<string, unknown>): Record<string
         impact: rec.impact_score,
         priority: rec.priority_score,
       },
+      historical_context: hist.historical_alignment ? {
+        alignment: hist.historical_alignment,
+        decision_history: hist.decision_history_signal,
+        outcome_history: hist.outcome_history_signal,
+        context_score: hist.historical_context_score,
+      } : null,
     },
   };
 }
 
-const GENERATORS: Record<string, (rec: Record<string, unknown>) => Record<string, unknown>> = {
+const GENERATORS: Record<string, (rec: Record<string, unknown>, hist: HistoricalSignals) => Record<string, unknown>> = {
   ADR_DRAFT: generateADR,
   ARCHITECTURE_PROPOSAL: generateArchitectureProposal,
   AGENT_ROLE_SPEC: generateAgentRoleSpec,
@@ -184,7 +263,6 @@ serve(async (req) => {
     const { recommendation_id } = await req.json();
     if (!recommendation_id) return errorResponse("recommendation_id required", 400);
 
-    // Fetch recommendation
     const { data: rec, error: fetchErr } = await sc
       .from("meta_agent_recommendations")
       .select("*")
@@ -193,12 +271,10 @@ serve(async (req) => {
 
     if (fetchErr || !rec) return errorResponse("Recommendation not found", 404);
 
-    // Only accepted recommendations can generate artifacts
     if (rec.status !== "accepted") {
       return errorResponse(`Cannot generate artifact for recommendation with status "${rec.status}". Only accepted recommendations produce artifacts.`, 409);
     }
 
-    // Verify membership
     const { data: member } = await sc
       .from("organization_members")
       .select("role")
@@ -207,12 +283,10 @@ serve(async (req) => {
       .single();
     if (!member) return errorResponse("Not a member of this organization", 403);
 
-    // Determine artifact type
     const artifactType = REC_TYPE_OVERRIDES[rec.recommendation_type]
       || AGENT_TYPE_TO_ARTIFACT[rec.meta_agent_type]
       || "ADR_DRAFT";
 
-    // Check for existing artifact (idempotency via unique constraint)
     const { data: existing } = await sc
       .from("meta_agent_artifacts")
       .select("id")
@@ -224,7 +298,7 @@ serve(async (req) => {
       return jsonResponse({ id: existing.id, artifact_type: artifactType, status: "already_exists" });
     }
 
-    // ── Sprint 16: Retrieve related historical memory (advisory, non-blocking) ──
+    // ── Sprint 18: Retrieve related historical memory (advisory, non-blocking) ──
     let relatedMemory: unknown[] = [];
     try {
       const memResult = await retrieveForArtifactGeneration(sc, rec.organization_id, {
@@ -238,11 +312,14 @@ serve(async (req) => {
       console.warn("Memory retrieval for artifact generation failed (non-blocking):", e);
     }
 
-    // Generate artifact content
-    const generator = GENERATORS[artifactType] || generateADR;
-    const content = generator(rec);
+    // Sprint 18: Extract historical signals from recommendation evidence
+    const histSignals = extractHistoricalSignals(rec);
 
-    // Enrich content with related memory context if available
+    // Generate artifact content with historical signals
+    const generator = GENERATORS[artifactType] || generateADR;
+    const content = generator(rec, histSignals);
+
+    // Enrich content with related memory context if available (max 5)
     if (relatedMemory.length > 0) {
       (content as any).related_historical_context = relatedMemory.slice(0, 5).map((m: any) => ({
         title: m.title,
@@ -290,6 +367,9 @@ serve(async (req) => {
         recommendation_id,
         meta_agent_type: rec.meta_agent_type,
         recommendation_type: rec.recommendation_type,
+        memory_enriched: relatedMemory.length > 0,
+        historical_alignment: histSignals.historical_alignment,
+        historical_novelty: histSignals.historical_novelty_flag,
       },
     });
 
@@ -298,6 +378,8 @@ serve(async (req) => {
       artifact_type: artifactType,
       status: "created",
       recommendation_id,
+      memory_enriched: relatedMemory.length > 0,
+      historical_alignment: histSignals.historical_alignment,
     });
   } catch (e) {
     console.error("meta-artifact-generator error:", e);

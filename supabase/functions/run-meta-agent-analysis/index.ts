@@ -7,19 +7,17 @@ import { runAgentRoleDesigner } from "../_shared/meta-agents/agent-role-designer
 import { runWorkflowOptimizer } from "../_shared/meta-agents/workflow-optimizer.ts";
 import { runSystemEvolutionAdvisor } from "../_shared/meta-agents/system-evolution-advisor.ts";
 import { applyQualityGate, normalizeSignature } from "../_shared/meta-agents/validation.ts";
-import { retrieveForMetaAgent } from "../_shared/engineering-memory-retriever.ts";
+import { getMetaAgentHistoricalContext, HistoricalContext } from "../_shared/meta-agents/meta-agent-memory-context.ts";
 
 /**
- * run-meta-agent-analysis — Sprint 13 (Hardened)
+ * run-meta-agent-analysis — Sprint 18 (Memory-Aware)
  *
- * Orchestrator that runs all active Meta-Agents, applies quality gates,
- * deduplicates recommendations with normalized signatures, persists results,
- * writes audit logs, and exposes run observability metrics.
+ * Orchestrator that runs all active Meta-Agents with historical context,
+ * applies quality gates, deduplicates, persists results, and writes audit logs.
  *
  * POST { organization_id }
  *
- * SAFETY: Idempotent within a time window via signature deduplication.
- * Quality gate suppresses noisy/low-value recommendations.
+ * SAFETY: Memory enrichment is advisory and non-blocking.
  */
 serve(async (req) => {
   const cors = handleCors(req);
@@ -49,39 +47,39 @@ serve(async (req) => {
       user_id: user.id,
       action: META_AUDIT_EVENTS.META_AGENT_RUN,
       category: "meta_agents",
-      message: "Meta-Agent analysis run started",
+      message: "Meta-Agent analysis run started (memory-aware)",
       organization_id,
-      metadata: { meta_agents: ["ARCHITECTURE", "AGENT_ROLE", "WORKFLOW", "EVOLUTION"] },
+      metadata: { meta_agents: ["ARCHITECTURE", "AGENT_ROLE", "WORKFLOW", "EVOLUTION"], memory_aware: true },
     });
 
-    // ── Sprint 16: Retrieve memory context for each meta-agent (advisory, non-blocking) ──
-    const memoryContexts: Record<string, unknown[]> = {};
+    // ── Sprint 18: Retrieve historical context for each meta-agent (advisory, non-blocking) ──
+    const historyContexts: Record<string, HistoricalContext> = {};
     try {
-      const [archMem, roleMem, workflowMem, evolutionMem] = await Promise.all([
-        retrieveForMetaAgent(sc, organization_id, { meta_agent_type: "ARCHITECTURE_META_AGENT" }).catch(() => ({ entries: [] })),
-        retrieveForMetaAgent(sc, organization_id, { meta_agent_type: "AGENT_ROLE_DESIGNER" }).catch(() => ({ entries: [] })),
-        retrieveForMetaAgent(sc, organization_id, { meta_agent_type: "WORKFLOW_OPTIMIZER" }).catch(() => ({ entries: [] })),
-        retrieveForMetaAgent(sc, organization_id, { meta_agent_type: "SYSTEM_EVOLUTION_ADVISOR" }).catch(() => ({ entries: [] })),
+      const [archCtx, roleCtx, workflowCtx, evolutionCtx] = await Promise.all([
+        getMetaAgentHistoricalContext(sc, organization_id, "ARCHITECTURE_META_AGENT").catch(() => null),
+        getMetaAgentHistoricalContext(sc, organization_id, "AGENT_ROLE_DESIGNER").catch(() => null),
+        getMetaAgentHistoricalContext(sc, organization_id, "WORKFLOW_OPTIMIZER").catch(() => null),
+        getMetaAgentHistoricalContext(sc, organization_id, "SYSTEM_EVOLUTION_ADVISOR").catch(() => null),
       ]);
-      memoryContexts.architecture = archMem.entries;
-      memoryContexts.agent_role = roleMem.entries;
-      memoryContexts.workflow = workflowMem.entries;
-      memoryContexts.evolution = evolutionMem.entries;
+      if (archCtx) historyContexts.architecture = archCtx;
+      if (roleCtx) historyContexts.agent_role = roleCtx;
+      if (workflowCtx) historyContexts.workflow = workflowCtx;
+      if (evolutionCtx) historyContexts.evolution = evolutionCtx;
     } catch (e) {
-      console.warn("Memory retrieval for meta-agents failed (non-blocking):", e);
+      console.warn("Historical context retrieval failed (non-blocking):", e);
     }
 
-    // Run all Meta-Agents in parallel
+    // Run all Meta-Agents in parallel with historical context
     const [archRecs, roleRecs, workflowRecs, evolutionRecs] = await Promise.all([
-      runArchitectureMetaAgent(sc, organization_id).catch((e) => { console.error("Architecture MA error:", e); return []; }),
-      runAgentRoleDesigner(sc, organization_id).catch((e) => { console.error("Role Designer MA error:", e); return []; }),
-      runWorkflowOptimizer(sc, organization_id).catch((e) => { console.error("Workflow Optimizer MA error:", e); return []; }),
-      runSystemEvolutionAdvisor(sc, organization_id).catch((e) => { console.error("Evolution Advisor MA error:", e); return []; }),
+      runArchitectureMetaAgent(sc, organization_id, historyContexts.architecture).catch((e) => { console.error("Architecture MA error:", e); return []; }),
+      runAgentRoleDesigner(sc, organization_id, historyContexts.agent_role).catch((e) => { console.error("Role Designer MA error:", e); return []; }),
+      runWorkflowOptimizer(sc, organization_id, historyContexts.workflow).catch((e) => { console.error("Workflow Optimizer MA error:", e); return []; }),
+      runSystemEvolutionAdvisor(sc, organization_id, historyContexts.evolution).catch((e) => { console.error("Evolution Advisor MA error:", e); return []; }),
     ]);
 
     const allRecs: MetaRecommendation[] = [...archRecs, ...roleRecs, ...workflowRecs, ...evolutionRecs];
 
-    // --- Quality Gate: suppress noisy/weak recommendations ---
+    // --- Quality Gate ---
     const { accepted: qualityPassed, suppressed } = applyQualityGate(allRecs);
 
     if (suppressed.length > 0) {
@@ -90,7 +88,7 @@ serve(async (req) => {
       );
     }
 
-    // --- Normalize signatures for deduplication ---
+    // --- Normalize signatures ---
     for (const rec of qualityPassed) {
       rec.recommendation_signature = normalizeSignature(rec.recommendation_signature);
     }
@@ -113,9 +111,14 @@ serve(async (req) => {
       );
     }
 
-    // Filter out duplicates
     const newRecs = qualityPassed.filter((r) => !existingSignatures.has(r.recommendation_signature));
     const duplicatesSkipped = qualityPassed.length - newRecs.length;
+
+    // Count memory-enriched recommendations
+    const memoryEnrichedCount = newRecs.filter((r) =>
+      Array.isArray(r.supporting_evidence) &&
+      r.supporting_evidence.some((e: any) => e.type?.includes("history_context"))
+    ).length;
 
     // Persist new recommendations
     let created = 0;
@@ -151,6 +154,9 @@ serve(async (req) => {
             confidence: rec.confidence_score,
             impact: rec.impact_score,
             priority: rec.priority_score,
+            memory_enriched: Array.isArray(rec.supporting_evidence) &&
+              rec.supporting_evidence.some((e: any) => e.type?.includes("history_context")),
+            historical_alignment: (rec.source_metrics as any)?.historical_alignment || null,
           },
         });
       }
@@ -158,7 +164,6 @@ serve(async (req) => {
 
     const runDurationMs = Date.now() - runStart;
 
-    // --- Observability Metrics ---
     const avgConfidence = newRecs.length > 0
       ? newRecs.reduce((a, r) => a + r.confidence_score, 0) / newRecs.length : 0;
     const avgImpact = newRecs.length > 0
@@ -169,6 +174,7 @@ serve(async (req) => {
       quality_suppressed: suppressed.length,
       duplicates_skipped: duplicatesSkipped,
       recommendations_created: created,
+      memory_enriched_count: memoryEnrichedCount,
       avg_confidence: Math.round(avgConfidence * 1000) / 1000,
       avg_impact: Math.round(avgImpact * 1000) / 1000,
       run_duration_ms: runDurationMs,
@@ -178,14 +184,20 @@ serve(async (req) => {
         workflow: workflowRecs.length,
         evolution: evolutionRecs.length,
       },
+      history_context_available: {
+        architecture: !!historyContexts.architecture,
+        agent_role: !!historyContexts.agent_role,
+        workflow: !!historyContexts.workflow,
+        evolution: !!historyContexts.evolution,
+      },
     };
 
-    // Audit: run complete with metrics
+    // Audit: run complete
     await sc.from("audit_logs").insert({
       user_id: user.id,
       action: META_AUDIT_EVENTS.META_AGENT_RUN,
       category: "meta_agents",
-      message: `Meta-Agent analysis complete: ${created} created, ${suppressed.length} suppressed, ${duplicatesSkipped} deduplicated`,
+      message: `Meta-Agent analysis complete: ${created} created, ${suppressed.length} suppressed, ${duplicatesSkipped} deduplicated, ${memoryEnrichedCount} memory-enriched`,
       organization_id,
       metadata: runMetrics,
     });
