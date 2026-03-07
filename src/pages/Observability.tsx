@@ -350,6 +350,11 @@ export default function Observability() {
             <ExecutionStrategyEvolutionDashboard />
           </TabsContent>
 
+          {/* ===== PLATFORM SELF-STABILIZATION ===== */}
+          <TabsContent value="stability" className="mt-4">
+            <PlatformStabilizationDashboard />
+          </TabsContent>
+
           {/* ===== STRATEGY PORTFOLIO GOVERNANCE ===== */}
           <TabsContent value="strat-portfolio" className="mt-4">
             <StrategyPortfolioDashboard />
