@@ -16,6 +16,7 @@ import {
   DollarSign, AlertTriangle, TrendingUp, BarChart3, Timer, Trophy, Brain, Bug, Shield, GraduationCap, FileText, Wrench,
 } from "lucide-react";
 import { RepairIntelligenceDashboard } from "@/components/observability/RepairIntelligenceDashboard";
+import { AgentMemoryDashboard } from "@/components/observability/AgentMemoryDashboard";
 import { ErrorPatternRadar } from "@/components/observability/ErrorPatternRadar";
 import { PreventionDashboard } from "@/components/observability/PreventionDashboard";
 import { LearningFoundationDashboard } from "@/components/observability/LearningFoundationDashboard";
