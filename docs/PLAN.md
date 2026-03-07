@@ -3,7 +3,7 @@
 > Sprint-by-sprint implementation record mapping capabilities to architectural layers.
 >
 > **Last updated:** 2026-03-07
-> **Current Sprint:** 36 (Semantic Retrieval & Embedding Memory Expansion) — ✅ Complete
+> **Current Sprint:** 37 (Discovery-Driven Architecture Signals) — ✅ Complete
 
 ---
 
