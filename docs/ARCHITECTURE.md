@@ -48,12 +48,13 @@ A governed engineering platform with active learning, meta-analysis, and control
 | Level 6 | Discovery-Driven Engineering | 🔮 Long-term |
 
 > **Current position:** Level 5 — Institutional Engineering Memory.
-> **System state:** Execution + Learning + Meta-Analysis + Memory-Aware Proposals active.
+> **System state:** Execution + Learning + Meta-Analysis + Memory-Aware Proposals + Quality Feedback + Advisory Calibration active.
 > **Kernel status:** Stable and operational.
 > **Learning status:** Active, rule-based, auditable.
-> **Meta-Agent status:** Active, memory-aware, 4 agents with historical context enrichment.
+> **Meta-Agent status:** Active, memory-aware, v1.4 with quality feedback and calibration.
 > **Proposal status:** Active, artifact generation with Related Historical Context sections.
 > **Engineering Memory:** Full stack operational — foundation, retrieval, summaries, memory-aware reasoning.
+> **Calibration status:** Active, advisory-only diagnostic signals operational.
 
 ### Implementation Horizons
 
