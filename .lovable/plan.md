@@ -69,14 +69,14 @@ Every new capability must be governable, auditable, and non-destructive before i
 
 ## Current State
 
-AxionOS is a **Meta-Aware Engineering Platform** (Level 4.5):
+AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
 
 - **Execution:** Stable 32-stage deterministic pipeline with DAG orchestration, runtime validation, autonomous repair, and preventive engineering.
 - **Learning:** Active rule-based learning with prompt outcome analysis, strategy effectiveness tracking, predictive error detection, and bounded weight adjustment.
-- **Meta-Analysis:** 4 active meta-agents analyzing cross-layer signals and generating architectural recommendations. Recommendation-only — no system mutation.
-- **Proposal Generation:** Accepted recommendations produce structured engineering proposals (ADRs, architecture proposals, agent role specs, workflow change proposals, implementation plans). Artifacts are engineering documents — approval does not trigger automatic implementation.
-- **Engineering Memory:** Foundation operational. Retrieval surfaces active. Memory summaries operational with 6 deterministic summary types and signal strength scoring.
-- **Memory Summaries:** Periodic historical synthesis available as contextual input for meta-agents and human review.
+- **Meta-Analysis:** 4 memory-aware meta-agents with historical context enrichment, continuity scoring, redundancy suppression, and alignment classification. Recommendation-only — no system mutation.
+- **Proposal Generation:** Accepted recommendations produce structured engineering proposals with Related Historical Context sections, decision/outcome signals, and historical novelty indicators.
+- **Engineering Memory:** Full stack operational — foundation, retrieval surfaces, summaries, and memory-aware reasoning.
+- **Historical Intelligence:** Continuity scoring, redundancy guard, and historical alignment active across all meta-agents and proposals.
 - **Commercial:** Product plans, billing, workspace isolation, and usage enforcement active.
 - **Governance:** Full audit trail, stage permissions, SLA enforcement, and review workflows across recommendations and artifacts.
 
