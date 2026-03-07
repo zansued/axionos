@@ -348,6 +348,11 @@ export default function Observability() {
             <ExecutionStrategyEvolutionDashboard />
           </TabsContent>
 
+          {/* ===== STRATEGY PORTFOLIO GOVERNANCE ===== */}
+          <TabsContent value="strat-portfolio" className="mt-4">
+            <StrategyPortfolioDashboard />
+          </TabsContent>
+
           {/* ===== CROSS-STAGE LEARNING ===== */}
           <TabsContent value="cross-stage" className="mt-4">
             <CrossStageLearningDashboard />
