@@ -950,3 +950,17 @@ supabase/functions/
 ### Advisory Calibration Tables (Sprint 20)
 - `advisory_calibration_signals` — Structured diagnostic signals with evidence refs
 - `advisory_calibration_summaries` — Periodic calibration summary reports
+
+### Prompt Optimization Tables (Sprints 21–22)
+- `prompt_variants` — Prompt variant registry with A/B testing
+- `prompt_variant_executions` — Execution telemetry per variant
+- `prompt_variant_metrics` — Aggregated variant performance metrics
+- `prompt_variant_promotions` — Promotion events with lineage
+- `prompt_rollout_windows` — Phased rollout tracking
+- `prompt_promotion_health_checks` — Post-promotion health monitoring
+- `prompt_rollback_events` — Rollback events with reason and mode
+
+### Repair Policy Tables (Sprint 23)
+- `repair_policy_profiles` — Memory-aware repair strategy profiles per stage+error
+- `repair_policy_decisions` — Logged repair decisions with evidence refs and outcomes
+- `repair_policy_adjustments` — Bounded, reversible policy adjustments
