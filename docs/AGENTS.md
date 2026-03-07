@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 30 — Platform Intelligence Entry. System-level behavior observation with bottleneck detection, pattern analysis, health model, and advisory recommendations now operational. Previous: Workspace / Tenant Adaptive Policy Tuning (Sprint 29).
+> **What changed (2026-03-07):** Sprint 31 — Platform Self-Calibration. Bounded operational threshold tuning with guardrails, rollback, and advisory-first governance. Previous: Platform Intelligence Entry (Sprint 30).
 >
 > Last updated: 2026-03-07
 
@@ -1011,6 +1011,67 @@ Platform Intelligence observes and reasons about system-level behavior across al
 
 ---
 
-## 24. Governing Principle
+## 24. Platform Self-Calibration (Active — Sprint 31)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture.
+> **Status:** ✅ Active — Bounded operational threshold calibration
+
+### Overview
+
+Platform Self-Calibration allows AxionOS to safely adjust operational thresholds and sensitivities based on real system behavior observed by Platform Intelligence. The system interprets calibration signals, generates bounded proposals, applies them within safe envelopes, tracks outcomes, and supports rollback.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Signal Interpreter | `platform-calibration/platform-calibration-signal-interpreter.ts` | Interpret platform signals into calibration opportunities |
+| Proposal Engine | `platform-calibration/platform-calibration-proposal-engine.ts` | Generate structured calibration proposals |
+| Guardrails | `platform-calibration/platform-calibration-guardrails.ts` | Validate proposal safety before application |
+| Runner | `platform-calibration/platform-calibration-runner.ts` | Apply calibration with lineage |
+| Outcome Tracker | `platform-calibration/platform-calibration-outcome-tracker.ts` | Compare before/after performance |
+| Rollback Engine | `platform-calibration/platform-calibration-rollback-engine.ts` | Restore previous values when harmful |
+
+### Calibration Modes
+
+- `manual_only` — Proposals are advisory, require explicit human approval
+- `bounded_auto` — Eligible for auto-application within safe envelopes (requires sufficient confidence)
+
+### Parameter Statuses
+
+- `active` — Available for calibration
+- `watch` — Under observation, calibration allowed with warnings
+- `frozen` — Cannot be changed
+- `deprecated` — Cannot be reactivated
+
+### Forbidden Parameter Families
+
+These families can never be calibrated:
+- `pipeline_topology`
+- `governance_rules`
+- `billing_logic`
+- `plan_enforcement`
+- `execution_contracts`
+- `hard_safety_constraints`
+
+### Safety Boundaries
+
+- Cannot mutate pipeline topology, governance, billing, or enforcement
+- Maximum absolute delta per calibration: 0.2
+- Frozen and deprecated parameters are immutable
+- All applications include rollback guards
+- Advisory-first by default; bounded_auto requires high confidence
+- Harmful outcomes trigger rollback recommendation
+
+### Events
+
+- `platform_calibration_signal_detected` — Calibration opportunity identified
+- `platform_calibration_proposal_created` — Proposal generated
+- `platform_calibration_reviewed` — Proposal reviewed
+- `platform_calibration_applied` — Calibration applied
+- `platform_calibration_outcome_recorded` — Outcome tracked
+- `platform_calibration_rolled_back` — Calibration rolled back
+
+---
+
+## 25. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture. Platform Self-Calibration tunes operational thresholds within safe envelopes based on platform intelligence signals, with guardrails, rollback, and advisory-first governance preserving kernel integrity.

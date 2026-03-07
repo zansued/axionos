@@ -5,7 +5,7 @@
 > **Last updated:** 2026-03-07
 >
 > **Current state:** Level 5 — Institutional Engineering Memory Platform.
-> Fifteen architectural layers active. Platform Intelligence Entry (Sprint 30). Workspace / Tenant Adaptive Policy Tuning (Sprint 29). Execution Mode Portfolio Optimization (Sprint 28). Execution Policy Intelligence (Sprint 27). Learning Agents v2 with Cross-Stage Policy Synthesis (Sprint 26). Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
+> Sixteen architectural layers active. Platform Self-Calibration (Sprint 31). Platform Intelligence Entry (Sprint 30). Workspace / Tenant Adaptive Policy Tuning (Sprint 29). Execution Mode Portfolio Optimization (Sprint 28). Execution Policy Intelligence (Sprint 27). Learning Agents v2 with Cross-Stage Policy Synthesis (Sprint 26). Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
 
 ---
 
@@ -987,3 +987,13 @@ supabase/functions/
 - `tenant_policy_preference_profiles` — Org/workspace preference profiles with preferred modes, priority weights, and override limits
 - `tenant_policy_outcomes` — Tenant-specific outcome tracking with applied mode (global_default, tenant_tuned, workspace_tuned)
 - `tenant_policy_recommendations` — Tenant-level recommendations for preference profile lifecycle management
+
+### Platform Intelligence Tables (Sprint 30)
+- `platform_insights` — Structured platform-level insights with evidence, severity, and confidence
+- `platform_recommendations` — Prioritized advisory recommendations with status lifecycle
+
+### Platform Self-Calibration Tables (Sprint 31)
+- `platform_calibration_parameters` — Registry of calibratable parameters with allowed ranges, modes, and status
+- `platform_calibration_proposals` — Structured calibration proposals with rationale, evidence, and rollback guards
+- `platform_calibration_applications` — Applied calibrations with before/after values and outcome tracking
+- `platform_calibration_rollbacks` — Rollback records with restored values and reason lineage
