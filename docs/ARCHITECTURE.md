@@ -2,7 +2,7 @@
 
 > Technical architecture of the autonomous software engineering system.
 >
-> **What changed (2026-03-07):** Engineering Memory Architecture designed (Layer 9) — cross-layer knowledge infrastructure with 6 memory types, data model, capture strategy, retrieval surfaces, and synthesis model. Design-only, no runtime changes. Previous: Sprint 14 Controlled Meta-Agent Actions.
+> **What changed (2026-03-07):** Engineering Memory Foundation implemented (Sprint 15) — core tables (engineering_memory_entries, memory_links, memory_retrieval_log) with RLS, capture events on recommendation/artifact transitions, retrieval API, observability metrics, and read-only UI. Previous: Engineering Memory Architecture designed (Layer 9).
 >
 > Last updated: 2026-03-07
 
