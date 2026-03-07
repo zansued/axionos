@@ -6,20 +6,25 @@ import { runArchitectureMetaAgent } from "../_shared/meta-agents/architecture-me
 import { runAgentRoleDesigner } from "../_shared/meta-agents/agent-role-designer.ts";
 import { runWorkflowOptimizer } from "../_shared/meta-agents/workflow-optimizer.ts";
 import { runSystemEvolutionAdvisor } from "../_shared/meta-agents/system-evolution-advisor.ts";
+import { applyQualityGate, normalizeSignature } from "../_shared/meta-agents/validation.ts";
 
 /**
- * run-meta-agent-analysis — Sprint 13
+ * run-meta-agent-analysis — Sprint 13 (Hardened)
  *
- * Orchestrator that runs all active Meta-Agents, deduplicates recommendations,
- * persists results, and writes audit logs.
+ * Orchestrator that runs all active Meta-Agents, applies quality gates,
+ * deduplicates recommendations with normalized signatures, persists results,
+ * writes audit logs, and exposes run observability metrics.
  *
  * POST { organization_id }
  *
  * SAFETY: Idempotent within a time window via signature deduplication.
+ * Quality gate suppresses noisy/low-value recommendations.
  */
 serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
+
+  const runStart = Date.now();
 
   try {
     const auth = await authenticate(req);
@@ -58,8 +63,22 @@ serve(async (req) => {
 
     const allRecs: MetaRecommendation[] = [...archRecs, ...roleRecs, ...workflowRecs, ...evolutionRecs];
 
+    // --- Quality Gate: suppress noisy/weak recommendations ---
+    const { accepted: qualityPassed, suppressed } = applyQualityGate(allRecs);
+
+    if (suppressed.length > 0) {
+      console.info(`Quality gate suppressed ${suppressed.length} recommendations:`,
+        suppressed.map((s) => `${s.rec.title}: ${s.reason}`)
+      );
+    }
+
+    // --- Normalize signatures for deduplication ---
+    for (const rec of qualityPassed) {
+      rec.recommendation_signature = normalizeSignature(rec.recommendation_signature);
+    }
+
     // Deduplicate: check existing signatures in last 7 days
-    const signatures = allRecs.map((r) => r.recommendation_signature).filter(Boolean);
+    const signatures = qualityPassed.map((r) => r.recommendation_signature).filter(Boolean);
     let existingSignatures: Set<string> = new Set();
 
     if (signatures.length > 0) {
@@ -71,11 +90,14 @@ serve(async (req) => {
         .gte("created_at", sevenDaysAgo)
         .in("recommendation_signature", signatures);
 
-      existingSignatures = new Set((existing || []).map((e) => e.recommendation_signature));
+      existingSignatures = new Set(
+        (existing || []).map((e) => e.recommendation_signature).filter(Boolean)
+      );
     }
 
     // Filter out duplicates
-    const newRecs = allRecs.filter((r) => !existingSignatures.has(r.recommendation_signature));
+    const newRecs = qualityPassed.filter((r) => !existingSignatures.has(r.recommendation_signature));
+    const duplicatesSkipped = qualityPassed.length - newRecs.length;
 
     // Persist new recommendations
     let created = 0;
@@ -99,7 +121,6 @@ serve(async (req) => {
 
       if (!error) {
         created++;
-        // Audit each creation
         await sc.from("audit_logs").insert({
           user_id: user.id,
           action: META_AUDIT_EVENTS.META_RECOMMENDATION_CREATED,
@@ -111,22 +132,47 @@ serve(async (req) => {
             recommendation_type: rec.recommendation_type,
             confidence: rec.confidence_score,
             impact: rec.impact_score,
+            priority: rec.priority_score,
           },
         });
       }
     }
 
-    return jsonResponse({
-      total_analyzed: allRecs.length,
-      duplicates_skipped: allRecs.length - newRecs.length,
+    const runDurationMs = Date.now() - runStart;
+
+    // --- Observability Metrics ---
+    const avgConfidence = newRecs.length > 0
+      ? newRecs.reduce((a, r) => a + r.confidence_score, 0) / newRecs.length : 0;
+    const avgImpact = newRecs.length > 0
+      ? newRecs.reduce((a, r) => a + r.impact_score, 0) / newRecs.length : 0;
+
+    const runMetrics = {
+      total_generated: allRecs.length,
+      quality_suppressed: suppressed.length,
+      duplicates_skipped: duplicatesSkipped,
       recommendations_created: created,
+      avg_confidence: Math.round(avgConfidence * 1000) / 1000,
+      avg_impact: Math.round(avgImpact * 1000) / 1000,
+      run_duration_ms: runDurationMs,
       by_agent: {
         architecture: archRecs.length,
         agent_role: roleRecs.length,
         workflow: workflowRecs.length,
         evolution: evolutionRecs.length,
       },
+    };
+
+    // Audit: run complete with metrics
+    await sc.from("audit_logs").insert({
+      user_id: user.id,
+      action: META_AUDIT_EVENTS.META_AGENT_RUN,
+      category: "meta_agents",
+      message: `Meta-Agent analysis complete: ${created} created, ${suppressed.length} suppressed, ${duplicatesSkipped} deduplicated`,
+      organization_id,
+      metadata: runMetrics,
     });
+
+    return jsonResponse(runMetrics);
   } catch (e) {
     console.error("run-meta-agent-analysis error:", e);
     return errorResponse(e.message || "Internal error", 500);

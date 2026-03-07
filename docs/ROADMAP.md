@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 13 (Meta-Agents v1) implemented — recommendation-only architectural layer with 4 meta-agent classes, scoring model, review workflow, and dashboard. Previous: Sprint 11/12 hardening.
+> **What changed (2026-03-07):** Sprint 13 Hardening — quality gates, signature normalization, review state validation, evidence integrity, scoring boundary tests, run observability metrics. Previous: Sprint 13 Meta-Agents v1 implementation.
 >
 > **Current Mode**: Level 4.5 — Meta-Aware Engineering Platform
 >
