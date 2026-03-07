@@ -310,7 +310,7 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 
 ---
 
-## Engineering Memory Architecture (Foundation Implemented — Sprint 15)
+## Engineering Memory Architecture (Foundation + Retrieval + Summaries — Sprints 15–17)
 
 **Purpose:** Enable AxionOS to accumulate institutional engineering memory across executions, failures, strategies, recommendations, decisions, and outcomes.
 
@@ -323,8 +323,22 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 - ✅ Retrieval API with filtering, pagination, and access tracking
 - ✅ Observability metrics (total entries, by type, retrieval frequency, most accessed)
 - ✅ Read-only UI in Observability → Memory tab
+
+**Sprint 16 — Retrieval Surfaces Implemented:**
+- ✅ Structured retrieval for repair, meta-agent, artifact generation, and human review
+- ✅ Deterministic ranking (confidence + relevance + recency + tag overlap + reuse)
+- ✅ Retrieval logging and decision-assisted tracking
+- ✅ Related Memory panel in Meta-Agents and Meta-Artifacts pages
+
+**Sprint 17 — Memory Summaries Implemented:**
+- ✅ `memory_summaries` table with RLS and duplicate prevention
+- ✅ 6 summary types: failure patterns, strategy effectiveness, recommendation decisions, artifact outcomes, architecture evolution, memory retrieval
+- ✅ Deterministic signal strength scoring (rule-based, bounded 0-1)
+- ✅ Summary generation, list, detail, and metrics endpoints
+- ✅ Summaries tab in Observability
+- ✅ Related Summary panels in Meta-Agents and Meta-Artifacts
+- ✅ Audit trail for summary generation
 - 📋 Semantic retrieval (future — requires embeddings)
-- 📋 Memory synthesis/summaries (future)
 - 📋 Memory-driven agent reasoning (future)
 
 **Key Design Decisions:**
