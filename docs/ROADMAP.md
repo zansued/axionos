@@ -132,6 +132,14 @@ AxionOS has completed 36 implementation sprints spanning the full capability arc
 | 32 | Execution Strategy Evolution | ✅ Complete |
 | 33 | Strategy Portfolio Governance | ✅ Complete |
 
+### Platform Stabilization & Advisory Layer (Sprints 34–36)
+
+| Sprint | Name | Status |
+|--------|------|--------|
+| 34 | Platform Self-Stabilization | ✅ Complete |
+| 35 | Autonomous Engineering Advisor | ✅ Complete |
+| 36 | Semantic Retrieval & Embedding Memory Expansion | ✅ Complete |
+
 ---
 
 ## NOW — Commercial Stability & Intelligence Maturation
