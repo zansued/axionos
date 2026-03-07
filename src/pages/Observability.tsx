@@ -30,6 +30,7 @@ import { TenantAdaptivePolicyDashboard } from "@/components/observability/Tenant
 import { PlatformIntelligenceDashboard } from "@/components/observability/PlatformIntelligenceDashboard";
 import { PlatformSelfCalibrationDashboard } from "@/components/observability/PlatformSelfCalibrationDashboard";
 import { ExecutionStrategyEvolutionDashboard } from "@/components/observability/ExecutionStrategyEvolutionDashboard";
+import { StrategyPortfolioDashboard } from "@/components/observability/StrategyPortfolioDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -309,10 +310,11 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(19, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(20, 1fr)" }}>
             <TabsTrigger value="platform" className="text-xs gap-1"><Orbit className="h-3 w-3" /> PlatInt</TabsTrigger>
             <TabsTrigger value="calibration" className="text-xs gap-1"><SlidersHorizontal className="h-3 w-3" /> Calib</TabsTrigger>
             <TabsTrigger value="strategy-evo" className="text-xs gap-1"><FlaskConical className="h-3 w-3" /> StratEvo</TabsTrigger>
+            <TabsTrigger value="strat-portfolio" className="text-xs gap-1"><Layers className="h-3 w-3" /> StratPort</TabsTrigger>
             <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Perf</TabsTrigger>
             <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>
             <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Quality</TabsTrigger>
@@ -344,6 +346,11 @@ export default function Observability() {
           {/* ===== EXECUTION STRATEGY EVOLUTION ===== */}
           <TabsContent value="strategy-evo" className="mt-4">
             <ExecutionStrategyEvolutionDashboard />
+          </TabsContent>
+
+          {/* ===== STRATEGY PORTFOLIO GOVERNANCE ===== */}
+          <TabsContent value="strat-portfolio" className="mt-4">
+            <StrategyPortfolioDashboard />
           </TabsContent>
 
           {/* ===== CROSS-STAGE LEARNING ===== */}
