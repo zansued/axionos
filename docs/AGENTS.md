@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 21 — Prompt Optimization Engine implemented. Controlled A/B prompt experimentation with deterministic selection, bounded exposure, metrics aggregation, and promotion rules. Advisory-first — no automatic kernel mutation. Previous: Advisory Calibration Layer (Sprint 20).
+> **What changed (2026-03-07):** Sprint 22 — Bounded Promotion & Rollback Guard. Prompt optimization now operationally closed-loop with safe promotion activation, phased rollouts, continuous health monitoring, and deterministic rollback. Previous: Prompt Optimization Engine (Sprint 21).
 >
 > Last updated: 2026-03-07
 

@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 21 — Prompt Optimization Engine implemented. Controlled A/B experimentation layer for prompt variants per stage, with deterministic selection, bounded exposure, aggregated metrics, and promotion rules. Advisory-first — no automatic kernel mutation. Previous: Advisory Calibration Layer (Sprint 20).
+> **What changed (2026-03-07):** Sprint 22 — Bounded Promotion & Rollback Guard. Closes the prompt optimization loop with safe promotion activation, phased rollouts (10→25→50→100%), continuous post-promotion health monitoring, deterministic rollback guard, and full auditability. Previous: Prompt Optimization Engine (Sprint 21).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
