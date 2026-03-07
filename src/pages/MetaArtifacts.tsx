@@ -17,6 +17,7 @@ import {
   Layers, Users, Workflow, TrendingUp, Brain, AlertTriangle, Clock,
 } from "lucide-react";
 import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
+import { RelatedSummaryPanel } from "@/components/memory/RelatedSummaryPanel";
 
 type ArtifactStatus = "draft" | "reviewed" | "approved" | "rejected" | "implemented";
 
