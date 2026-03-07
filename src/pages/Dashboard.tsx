@@ -2,14 +2,17 @@ import { AppLayout } from "@/components/AppLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import {
   Activity, ArrowRight, ArrowUpRight, Cpu, Globe, Layers, Lightbulb,
-  Rocket, Zap, CheckCircle2, Clock, DollarSign, GitBranch,
+  Rocket, Zap, CheckCircle2, Clock, DollarSign, GitBranch, Shield, Wrench,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { useDashboardKPIs } from "@/hooks/useDashboardKPIs";
+import { useProductDashboard } from "@/hooks/useProductDashboard";
+import { useProductPlans } from "@/hooks/useProductPlans";
 import { useI18n } from "@/contexts/I18nContext";
 import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "@/components/OnboardingGuide";
@@ -17,12 +20,12 @@ import { useOnboarding } from "@/components/OnboardingGuide";
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
 const item = { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0 } };
 
-function MetricCard({ label, value, subtext, icon: Icon }: { label: string; value: string | number; subtext?: string; icon: React.ElementType }) {
+function MetricCard({ label, value, subtext, icon: Icon, color }: { label: string; value: string | number; subtext?: string; icon: React.ElementType; color?: string }) {
   return (
     <motion.div variants={item} className="border border-border rounded-lg p-4 bg-card">
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{label}</span>
-        <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+        <Icon className={`h-3.5 w-3.5 ${color || "text-muted-foreground"}`} />
       </div>
       <p className="text-2xl font-semibold tracking-tight">{value}</p>
       {subtext && <p className="text-xs text-muted-foreground mt-1">{subtext}</p>}
@@ -49,6 +52,8 @@ const OUTCOME_COLORS: Record<string, string> = {
 
 export default function Dashboard() {
   const { data: kpis, isLoading } = useDashboardKPIs();
+  const { data: productKPIs } = useProductDashboard();
+  const { currentPlan } = useProductPlans();
   const { locale } = useI18n();
   const navigate = useNavigate();
   const { showOnboarding } = useOnboarding();
@@ -101,7 +106,6 @@ export default function Dashboard() {
                     </p>
                   </div>
 
-                  {/* Product journey mini */}
                   <div className="flex items-center gap-2 overflow-x-auto py-2">
                     {JOURNEY_STEPS.map((s, i) => (
                       <div key={i} className="flex items-center gap-2 shrink-0">
@@ -132,34 +136,82 @@ export default function Dashboard() {
             </motion.div>
           )}
 
-          {/* Metric cards */}
+          {/* Product KPI cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <MetricCard
               label={en ? "Initiatives" : "Iniciativas"}
-              value={recentInitiatives.length}
+              value={productKPIs?.totalInitiatives ?? recentInitiatives.length}
               subtext={(() => {
-                const deployed = recentInitiatives.filter((i: any) => i.stage_status === "deployed").length;
+                const deployed = productKPIs?.deployedCount ?? recentInitiatives.filter((i: any) => i.stage_status === "deployed").length;
                 return deployed > 0 ? `${deployed} ${en ? "deployed" : "deployadas"}` : undefined;
               })()}
               icon={Lightbulb}
             />
             <MetricCard
-              label={en ? "Stories" : "Stories"}
-              value={kpis?.storiesTotal ?? 0}
-              subtext={kpis ? `${kpis.storiesDone} ${en ? "completed" : "concluídas"}` : undefined}
-              icon={Zap}
+              label={en ? "Pipeline Success" : "Sucesso Pipeline"}
+              value={productKPIs ? `${productKPIs.pipelineSuccessRate}%` : "—"}
+              subtext={`${productKPIs?.totalRuns ?? 0} runs ${en ? "this month" : "este mês"}`}
+              icon={CheckCircle2}
+              color="text-success"
             />
             <MetricCard
-              label={en ? "Pending Review" : "Em Revisão"}
-              value={kpis?.pendingReview ?? 0}
-              icon={Cpu}
+              label={en ? "Deploy Success" : "Sucesso Deploy"}
+              value={productKPIs ? `${productKPIs.deploySuccessRate}%` : "—"}
+              subtext={`${productKPIs?.totalDeployments ?? 0} ${en ? "deployments" : "deploys"}`}
+              icon={Rocket}
+              color="text-primary"
             />
             <MetricCard
               label={en ? "Monthly Cost" : "Custo Mensal"}
-              value={kpis ? `$${kpis.monthlyCost.toFixed(2)}` : "$0.00"}
-              icon={Activity}
+              value={`$${(productKPIs?.monthlyCost ?? kpis?.monthlyCost ?? 0).toFixed(2)}`}
+              subtext={currentPlan ? `Plano ${currentPlan.plan_name}` : undefined}
+              icon={DollarSign}
             />
           </div>
+
+          {/* System health row */}
+          {productKPIs && (
+            <motion.div variants={item}>
+              <Card className="border-border/50">
+                <CardContent className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{en ? "Repair Rate" : "Taxa Repair"}</span>
+                      <div className="flex items-center gap-2">
+                        <Wrench className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-sm font-semibold">{productKPIs.repairSuccessRate}%</span>
+                      </div>
+                      <Progress value={productKPIs.repairSuccessRate} className="h-1" />
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Tokens</span>
+                      <div className="flex items-center gap-2">
+                        <Cpu className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-sm font-semibold">{productKPIs.tokensUsed.toLocaleString()}</span>
+                      </div>
+                      {currentPlan && (
+                        <Progress value={(productKPIs.tokensUsed / currentPlan.max_tokens_per_month) * 100} className="h-1" />
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{en ? "Pending Review" : "Em Revisão"}</span>
+                      <div className="flex items-center gap-2">
+                        <Shield className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-sm font-semibold">{kpis?.pendingReview ?? 0}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{en ? "Total Repairs" : "Repairs"}</span>
+                      <div className="flex items-center gap-2">
+                        <Wrench className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-sm font-semibold">{productKPIs.totalRepairs}</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
           {/* Recent initiatives */}
           <motion.div variants={item}>
