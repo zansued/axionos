@@ -5,7 +5,7 @@
 > **Last updated:** 2026-03-07
 >
 > **Current state:** Level 5 — Institutional Engineering Memory Platform.
-> Ten architectural layers active. Advisory Calibration Layer operational (Sprint 20). Proposal Quality Feedback Loop active (Sprint 19).
+> Eleven architectural layers active. Prompt Optimization Engine operational (Sprint 21). Advisory Calibration Layer operational (Sprint 20).
 
 ---
 
