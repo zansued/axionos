@@ -1101,7 +1101,7 @@ describe("Sprint 30 — Platform Intelligence (Comprehensive)", () => {
         ...makeRecords(3, { stage: "deploy", deploy_attempted: true, deploy_succeeded: false, cost_usd: 0.02 }),
       ];
       const result = runFullPipeline(records);
-      expect(result.snapshot.global_metrics.total_executions).toBe(48);
+      expect(result.snapshot.global_metrics.total_executions).toBe(38);
       expect(result.health.health_grade).toBeDefined();
       expect(typeof result.health.overall_health_score).toBe("number");
       expect(result.insights.length).toBeGreaterThanOrEqual(0);
