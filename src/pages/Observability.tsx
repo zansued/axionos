@@ -326,6 +326,11 @@ export default function Observability() {
             <CrossStageLearningDashboard />
           </TabsContent>
 
+          {/* ===== EXECUTION POLICY INTELLIGENCE ===== */}
+          <TabsContent value="exec-policy" className="mt-4">
+            <ExecutionPolicyDashboard />
+          </TabsContent>
+
           {/* ===== PREDICTIVE ERROR DETECTION ===== */}
           <TabsContent value="predictive" className="mt-4">
             <PredictiveErrorDashboard />
