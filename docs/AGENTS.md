@@ -114,6 +114,8 @@ These are the currently implemented and operational components of the AxionOS ag
 - **Autonomous Build Repair** — Self-healing from CI error logs
 - **Fix Orchestrator** — Multi-iteration repair coordination with auto-PR
 - **Repair Router** — Evidence-based strategy selection
+- **Repair Policy Engine** — Memory-aware, policy-driven repair strategy selection with bounded adjustments (Sprint 23)
+- **Retry Path Intelligence** — Contextual retry action computation to reduce unproductive loops (Sprint 23)
 
 ### Prevention Agents
 - **Preventive Validator** — Pre-generation guard against known failure patterns
