@@ -409,8 +409,7 @@ describe("Execution Strategy Lineage", () => {
 
 // ═══ Safety & Forbidden Mutation Guards ═══
 describe("Strategy Evolution Safety Guards", () => {
-  const { validateStrategyVariant } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-guardrails");
-  const { synthesizeVariant } = require("../../supabase/functions/_shared/execution-strategy/execution-strategy-variant-synthesizer");
+  // uses top-level imports
 
   const family = { status: "active", allowed_mutation_envelope: { x: { min: 0, max: 1 } }, rollout_mode: "bounded_experiment", allowed_variant_scope: "global" };
 
