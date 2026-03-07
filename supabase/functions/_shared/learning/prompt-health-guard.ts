@@ -156,7 +156,7 @@ export function evaluatePromotionHealth(
   }
 
   return {
-    health_status: status,
+    health_status: status as HealthStatus,
     regression_flags: flags,
     metrics_snapshot: snapshot,
   };
