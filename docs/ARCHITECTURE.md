@@ -5,7 +5,7 @@
 > **Last updated:** 2026-03-07
 >
 > **Current state:** Level 5 — Institutional Engineering Memory Platform.
-> Sixteen architectural layers active. Platform Self-Calibration (Sprint 31). Platform Intelligence Entry (Sprint 30). Workspace / Tenant Adaptive Policy Tuning (Sprint 29). Execution Mode Portfolio Optimization (Sprint 28). Execution Policy Intelligence (Sprint 27). Learning Agents v2 with Cross-Stage Policy Synthesis (Sprint 26). Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
+> Seventeen architectural layers active. Execution Strategy Evolution (Sprint 32). Platform Self-Calibration (Sprint 31). Platform Intelligence Entry (Sprint 30). Workspace / Tenant Adaptive Policy Tuning (Sprint 29). Execution Mode Portfolio Optimization (Sprint 28). Execution Policy Intelligence (Sprint 27). Learning Agents v2 with Cross-Stage Policy Synthesis (Sprint 26). Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
 
 ---
 
@@ -997,3 +997,9 @@ supabase/functions/
 - `platform_calibration_proposals` — Structured calibration proposals with rationale, evidence, and rollback guards
 - `platform_calibration_applications` — Applied calibrations with before/after values and outcome tracking
 - `platform_calibration_rollbacks` — Rollback records with restored values and reason lineage
+
+### Execution Strategy Evolution Tables (Sprint 32)
+- `execution_strategy_families` — Registry of evolvable strategy families with mutation envelopes and rollout modes
+- `execution_strategy_variants` — Bounded variant proposals with hypothesis, delta, and confidence scoring
+- `execution_strategy_experiments` — Controlled experiments comparing variant vs baseline
+- `execution_strategy_outcomes` — Outcome tracking per experiment with metrics and evidence

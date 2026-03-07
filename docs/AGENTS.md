@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 31 — Platform Self-Calibration. Bounded operational threshold tuning with guardrails, rollback, and advisory-first governance. Previous: Platform Intelligence Entry (Sprint 30).
+> **What changed (2026-03-07):** Sprint 32 — Execution Strategy Evolution. Bounded strategy variant synthesis, experimentation, promotion/rollback with advisory-first governance. Previous: Platform Self-Calibration (Sprint 31).
 >
 > Last updated: 2026-03-07
 
@@ -1072,6 +1072,60 @@ These families can never be calibrated:
 
 ---
 
-## 25. Governing Principle
+## 25. Execution Strategy Evolution (Active — Sprint 32)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture. Platform Self-Calibration tunes operational thresholds within safe envelopes based on platform intelligence signals, with guardrails, rollback, and advisory-first governance preserving kernel integrity.
+> **Status:** ✅ Active — Bounded strategy variant experimentation
+
+### Overview
+
+Execution Strategy Evolution enables AxionOS to propose, test, and evaluate improved variants of operational execution strategies. The system detects strategy-level inefficiencies, synthesizes bounded variants within declared mutation envelopes, runs controlled experiments comparing variant vs baseline, and supports safe promotion or rollback based on outcome evidence.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Signal Interpreter | `execution-strategy/execution-strategy-signal-interpreter.ts` | Detect strategy evolution opportunities |
+| Variant Synthesizer | `execution-strategy/execution-strategy-variant-synthesizer.ts` | Propose bounded strategy variants |
+| Guardrails | `execution-strategy/execution-strategy-guardrails.ts` | Validate variant safety before experimentation |
+| Experiment Runner | `execution-strategy/execution-strategy-experiment-runner.ts` | Manage controlled baseline vs variant experiments |
+| Outcome Tracker | `execution-strategy/execution-strategy-outcome-tracker.ts` | Compare outcomes across declared metrics |
+| Promotion Rules | `execution-strategy/execution-strategy-promotion-rules.ts` | Determine promotion eligibility |
+| Rollback Engine | `execution-strategy/execution-strategy-rollback-engine.ts` | Safe rollback of harmful variants |
+| Lineage | `execution-strategy/execution-strategy-lineage.ts` | Full provenance and explainability |
+
+### Strategy Families
+
+- `repair_escalation_sequencing` — Repair strategy ordering
+- `retry_switching_heuristics` — Retry switching logic
+- `validation_intensity_ladders` — Validation sensitivity levels
+- `predictive_checkpoint_ordering` — Predictive checkpoint sequencing
+- `review_escalation_timing` — Review escalation timing
+- `deploy_hardening_sequencing` — Deploy hardening steps
+- `context_enrichment_sequencing` — Context enrichment ordering
+- `strategy_fallback_ladders` — Strategy fallback chains
+
+### Safety Boundaries
+
+- Cannot mutate pipeline topology, governance, billing, or enforcement
+- Cannot create new strategy families automatically
+- Cannot mutate outside declared envelopes
+- Maximum absolute delta per mutation: 0.25
+- Every experiment preserves rollback capability
+- Advisory-first remains the default posture
+- Frozen/deprecated families cannot accept variants
+
+### Events
+
+- `execution_strategy_opportunity_detected` — Evolution opportunity identified
+- `execution_strategy_variant_created` — Variant proposed
+- `execution_strategy_variant_reviewed` — Variant approved/rejected
+- `execution_strategy_experiment_started` — Experiment launched
+- `execution_strategy_outcome_recorded` — Outcome tracked
+- `execution_strategy_variant_promoted` — Variant promoted to baseline
+- `execution_strategy_variant_rolled_back` — Variant rolled back
+
+---
+
+## 26. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture. Platform Self-Calibration tunes operational thresholds within safe envelopes based on platform intelligence signals, with guardrails, rollback, and advisory-first governance preserving kernel integrity. Execution Strategy Evolution enables bounded experimentation with strategy variants, comparing them against baselines under governed conditions, and supporting safe promotion or rollback based on real outcome evidence.
