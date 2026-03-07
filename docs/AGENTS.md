@@ -607,7 +607,7 @@ supabase/functions/_shared/agent-os/
 | Self-Improving Fix Agents v2 (Repair Policies) | ✅ Implemented (Sprint 23) |
 | Agent Memory Layer Operationalization | ✅ Implemented (Sprint 24) |
 | Predictive Error Detection Operationalization | ✅ Implemented (Sprint 25) |
-| Semantic Retrieval | 📋 Planned |
+| Semantic Retrieval | ✅ Implemented (Sprint 36) |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
 

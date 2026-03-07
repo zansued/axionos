@@ -106,15 +106,30 @@
 
 ---
 
-### Phase 7: Strategy Evolution (Sprint 32)
+### Phase 7: Strategy Evolution & Governance (Sprints 32–33)
 
-**Goal:** Bounded strategy variant experimentation with controlled rollout and safe promotion/rollback.
+**Goal:** Bounded strategy variant experimentation with controlled rollout, safe promotion/rollback, and portfolio-level governance.
 
 | Sprint | Capability | Architectural Layer |
 |--------|-----------|-------------------|
 | 32 | Execution Strategy Evolution | Strategy Evolution Layer |
+| 33 | Strategy Portfolio Governance | Strategy Portfolio Governance Layer |
 
-**Delivered:** Strategy family registry, signal interpretation, variant synthesis, mutation guardrails, experiment runner, outcome tracking, promotion rules, rollback engine, lineage/explainability.
+**Delivered:** Strategy family registry, signal interpretation, variant synthesis, mutation guardrails, experiment runner, outcome tracking, promotion rules, rollback engine, lineage/explainability, portfolio evaluation, ranking, lifecycle management, conflict detection.
+
+---
+
+### Phase 8: Platform Stabilization & Advisory Intelligence (Sprints 34–36)
+
+**Goal:** Self-stabilization, autonomous engineering advisory, and unified semantic retrieval across all intelligence layers.
+
+| Sprint | Capability | Architectural Layer |
+|--------|-----------|-------------------|
+| 34 | Platform Self-Stabilization | Platform Stabilization Layer |
+| 35 | Autonomous Engineering Advisor | Engineering Advisory Layer |
+| 36 | Semantic Retrieval & Embedding Memory Expansion | Semantic Retrieval Layer |
+
+**Delivered:** Stability monitoring, stabilization actions, bounded interventions, rollback-safe stabilization, engineering signal aggregation, opportunity synthesis, prioritized recommendations, explainability, review workflows, advisory clustering, unified embedding-backed retrieval, domain registry, index management, ranking, guardrails, retrieval quality evaluation.
 
 ---
 
