@@ -82,10 +82,8 @@ function normalizeSignature(signature: string): string {
   return signature
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, "_")
-    .replace(/_+/g, "_")
     .split("::")
-    .map((s) => s.trim().replace(/[^a-z0-9_]/g, ""))
+    .map((s) => s.trim().replace(/\s+/g, "_").replace(/_+/g, "_").replace(/[^a-z0-9_]/g, "").replace(/^_|_$/g, ""))
     .join("::");
 }
 
