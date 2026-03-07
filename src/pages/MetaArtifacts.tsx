@@ -245,7 +245,7 @@ export default function MetaArtifacts() {
                               {status}
                             </Badge>
                             <Badge variant="outline" className="text-xs">
-                              {ARTIFACT_TYPE_LABELS[art.artifact_type as string] || art.artifact_type}
+                              {ARTIFACT_TYPE_LABELS[art.artifact_type as string] || String(art.artifact_type)}
                             </Badge>
                           </div>
                           <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{art.summary as string}</p>
