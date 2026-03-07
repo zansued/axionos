@@ -346,6 +346,49 @@ export default function MetaAgents() {
                             )}
                           </div>
 
+                          {/* Sprint 18: Historical alignment & context indicators */}
+                          {(() => {
+                            const histEv = evidence.find((e: any) => typeof e.type === "string" && e.type.includes("history_context")) as Record<string, unknown> | undefined;
+                            const srcMetrics = rec.source_metrics as Record<string, unknown> | undefined;
+                            const alignment = histEv?.historical_alignment as string || srcMetrics?.historical_alignment as string || null;
+                            const ctxScore = Number(srcMetrics?.historical_context_score || 0);
+                            const novelty = Boolean(histEv?.novelty_flag);
+                            if (!alignment && ctxScore === 0) return null;
+                            const ALIGNMENT_COLORS: Record<string, string> = {
+                              reinforces_prior_direction: "bg-green-500/10 text-green-600 border-green-500/20",
+                              extends_prior_direction: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+                              reopens_unresolved_issue: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
+                              diverges_from_prior_direction: "bg-red-500/10 text-red-600 border-red-500/20",
+                              historically_novel: "bg-primary/10 text-primary border-primary/20",
+                            };
+                            const ALIGNMENT_LABELS: Record<string, string> = {
+                              reinforces_prior_direction: "Reinforces Prior",
+                              extends_prior_direction: "Extends Prior",
+                              reopens_unresolved_issue: "Reopens Issue",
+                              diverges_from_prior_direction: "Diverges",
+                              historically_novel: "Novel",
+                            };
+                            return (
+                              <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                {alignment && (
+                                  <Badge variant="outline" className={`text-[10px] ${ALIGNMENT_COLORS[alignment] || ""}`}>
+                                    {ALIGNMENT_LABELS[alignment] || alignment.replace(/_/g, " ")}
+                                  </Badge>
+                                )}
+                                {ctxScore > 0 && (
+                                  <span className="text-[10px] text-muted-foreground">
+                                    History: {(ctxScore * 100).toFixed(0)}%
+                                  </span>
+                                )}
+                                {novelty && (
+                                  <Badge variant="outline" className="text-[10px] bg-primary/5 text-primary border-primary/20">
+                                    New Signal
+                                  </Badge>
+                                )}
+                              </div>
+                            );
+                          })()}
+
                           {/* Evidence Preview */}
                           {evidence.length > 0 && (
                             <div className="mt-2 p-2 rounded bg-muted/50 text-xs text-muted-foreground space-y-1">
