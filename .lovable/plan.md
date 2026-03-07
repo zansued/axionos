@@ -65,6 +65,7 @@ Every new capability must be governable, auditable, and non-destructive before i
 | Sprint 17 | Memory Summaries — 6 summary types, signal strength scoring, generation service, UI | ✅ |
 | Sprint 18 | Memory-Aware Meta-Agents — historical context enrichment, continuity scoring, redundancy guard, proposal layer v2 | ✅ |
 | Sprint 19 | Proposal Quality Feedback Loop — outcome tracking, quality scoring, confidence calibration, memory effectiveness | ✅ |
+| Sprint 20 | Advisory Calibration Layer — 6 calibration domains, deterministic scoring, advisory-only diagnostic signals | ✅ |
 
 ---
 
