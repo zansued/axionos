@@ -5690,6 +5690,184 @@ export type Database = {
           },
         ]
       }
+      semantic_retrieval_domains: {
+        Row: {
+          created_at: string | null
+          domain_key: string
+          domain_name: string
+          embedding_enabled: boolean
+          id: string
+          scope_type: string
+          source_tables: Json
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          domain_key: string
+          domain_name: string
+          embedding_enabled?: boolean
+          id?: string
+          scope_type: string
+          source_tables?: Json
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          domain_key?: string
+          domain_name?: string
+          embedding_enabled?: boolean
+          id?: string
+          scope_type?: string
+          source_tables?: Json
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      semantic_retrieval_feedback: {
+        Row: {
+          created_at: string | null
+          feedback_reason: Json | null
+          id: string
+          linked_outcome: Json | null
+          organization_id: string
+          retrieval_session_id: string
+          usefulness_status: string
+        }
+        Insert: {
+          created_at?: string | null
+          feedback_reason?: Json | null
+          id?: string
+          linked_outcome?: Json | null
+          organization_id: string
+          retrieval_session_id: string
+          usefulness_status: string
+        }
+        Update: {
+          created_at?: string | null
+          feedback_reason?: Json | null
+          id?: string
+          linked_outcome?: Json | null
+          organization_id?: string
+          retrieval_session_id?: string
+          usefulness_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "semantic_retrieval_feedback_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "semantic_retrieval_feedback_retrieval_session_id_fkey"
+            columns: ["retrieval_session_id"]
+            isOneToOne: false
+            referencedRelation: "semantic_retrieval_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      semantic_retrieval_indices: {
+        Row: {
+          created_at: string | null
+          domain_id: string
+          embedding_model: string
+          freshness_policy: Json | null
+          id: string
+          index_key: string
+          ranking_policy: Json
+          source_scope: Json
+          status: string
+          updated_at: string | null
+          vector_dimensions: number
+        }
+        Insert: {
+          created_at?: string | null
+          domain_id: string
+          embedding_model: string
+          freshness_policy?: Json | null
+          id?: string
+          index_key: string
+          ranking_policy?: Json
+          source_scope?: Json
+          status?: string
+          updated_at?: string | null
+          vector_dimensions: number
+        }
+        Update: {
+          created_at?: string | null
+          domain_id?: string
+          embedding_model?: string
+          freshness_policy?: Json | null
+          id?: string
+          index_key?: string
+          ranking_policy?: Json
+          source_scope?: Json
+          status?: string
+          updated_at?: string | null
+          vector_dimensions?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "semantic_retrieval_indices_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "semantic_retrieval_domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      semantic_retrieval_sessions: {
+        Row: {
+          confidence_score: number | null
+          created_at: string | null
+          domains_used: Json
+          id: string
+          organization_id: string
+          query_payload: Json
+          ranked_results: Json
+          rationale_codes: Json | null
+          scope_ref: Json | null
+          session_type: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string | null
+          domains_used?: Json
+          id?: string
+          organization_id: string
+          query_payload?: Json
+          ranked_results?: Json
+          rationale_codes?: Json | null
+          scope_ref?: Json | null
+          session_type: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string | null
+          domains_used?: Json
+          id?: string
+          organization_id?: string
+          query_payload?: Json
+          ranked_results?: Json
+          rationale_codes?: Json | null
+          scope_ref?: Json | null
+          session_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "semantic_retrieval_sessions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       squad_members: {
         Row: {
           agent_id: string
