@@ -119,11 +119,12 @@ AxionOS has completed 32 implementation sprints spanning the full capability arc
 | 30 | Platform Intelligence Entry | ✅ Complete |
 | 31 | Platform Self-Calibration | ✅ Complete |
 
-### Strategy Evolution Layer (Sprint 32)
+### Strategy Evolution Layer (Sprints 32–33)
 
 | Sprint | Name | Status |
 |--------|------|--------|
 | 32 | Execution Strategy Evolution | ✅ Complete |
+| 33 | Strategy Portfolio Governance | ✅ Complete |
 
 ---
 
