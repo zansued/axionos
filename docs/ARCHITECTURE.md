@@ -541,6 +541,8 @@ The following rules are enforced across all layers:
 
 3. **Memory is not a mutation engine.** Engineering Memory captures and retrieves knowledge. It does not alter pipeline behavior, governance rules, billing, or agent configuration.
 
+4. **Calibration is advisory only.** Calibration signals diagnose where tuning should happen. They do not auto-adjust meta-agent scoring, redundancy thresholds, historical weighting, or proposal behavior. Humans decide when and how tuning is applied.
+
 4. **Human review remains required for structural evolution.** Any change to pipeline stages, governance rules, agent roles, or system architecture requires explicit human action.
 
 5. **Tenant isolation is absolute.** All data access is scoped by `organization_id` with RLS enforcement. No cross-tenant data leakage is permitted.
