@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 25 — Predictive Error Detection Operationalization. Runtime predictive risk scoring, bounded preventive actions, outcome tracking, and prediction quality metrics now operational. Previous: Agent Memory Layer (Sprint 24).
+> **What changed (2026-03-07):** Sprint 26 — Learning Agents v2 (Cross-Stage Policy Synthesis). Cross-stage learning graph, bounded policy synthesis, runtime application, outcome tracking, and explainability now operational. Previous: Predictive Error Detection (Sprint 25).
 >
 > Last updated: 2026-03-07
 
@@ -749,6 +749,61 @@ Predictive Error Detection operationalizes historical error patterns and learnin
 
 ---
 
-## 19. Governing Principle
+## 19. Learning Agents v2 — Cross-Stage Policy Synthesis (Active — Sprint 26)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance.
+> **Status:** ✅ Active — Cross-stage coordinated learning
+
+### Overview
+
+Learning Agents v2 extends learning from local stage optimization to system-level adaptive intelligence. The system detects cross-stage performance patterns, synthesizes bounded policies spanning multiple stages, and tracks downstream outcomes for continuous calibration.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Policy Synthesizer | `cross-stage/cross-stage-policy-synthesizer.ts` | Detect patterns and synthesize policy candidates |
+| Policy Evaluator | `cross-stage/cross-stage-policy-evaluator.ts` | Compare baseline vs policy outcomes, detect spillover |
+| Policy Runner | `cross-stage/cross-stage-policy-runner.ts` | Match and apply policies at runtime |
+| Policy Lineage | `cross-stage/cross-stage-policy-lineage.ts` | Preserve provenance and audit trail |
+
+### Relationship Types
+
+- `failure_propagation` — Failure in stage A causes downstream failure in stage B
+- `success_dependency` — Success in stage A improves outcomes in stage B
+- `retry_correlation` — Retries in stage A correlate with retries in stage B
+- `cost_amplification` — Cost in stage A amplifies cost in stage B
+- `validation_cascade` — Validation failure cascades across stages
+- `repair_influence` — Repair in stage A influences repair needs in stage B
+
+### Policy Types
+
+- `prompt_coordination` — Coordinate prompt variants across stages
+- `strategy_coordination` — Coordinate repair/execution strategies
+- `validation_guard` — Add validation guards between stages
+- `repair_preemption` — Preempt repair needs based on upstream signals
+- `context_enrichment` — Inject upstream context into downstream agents
+- `review_escalation` — Escalate review for risky stage chains
+
+### Safety Boundaries
+
+- Cannot mutate pipeline topology, governance, billing, or enforcement
+- Cannot auto-apply broad policies without feature flag
+- Low-confidence policies remain advisory-only
+- All synthesized policies are auditable and reversible
+- Harmful or spillover-affected policies are pushed to watch/deprecated
+- No policy may affect stages outside its declared scope
+
+### Events
+
+- `cross_stage_pattern_detected` — Pattern identified in learning graph
+- `cross_stage_policy_synthesized` — Policy candidate created
+- `cross_stage_policy_activated` — Policy promoted to active
+- `cross_stage_policy_applied` — Policy applied at runtime
+- `cross_stage_policy_outcome_recorded` — Outcome tracked
+- `cross_stage_policy_deprecated` — Policy deprecated
+
+---
+
+## 20. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability.
