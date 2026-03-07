@@ -16,11 +16,12 @@
 
 | Dimension | State |
 |-----------|-------|
-| **Platform Stage** | Level 4 Entry |
-| **System State** | Commercial + Learning Platform |
+| **Platform Stage** | Level 4.5 Entry |
+| **System State** | Meta-Aware Engineering Platform |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable |
+| **Meta-Agents Status** | v1 active — recommendation-only, human-reviewed |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
