@@ -2,11 +2,11 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 19 — Proposal Quality Feedback Loop implemented. Quality scoring, outcome tracking, confidence calibration, and memory effectiveness measurement are now active across recommendations and artifacts. Previous: Memory-Aware Meta-Agents (Sprint 18).
+> **What changed (2026-03-07):** Sprint 20 — Advisory Calibration Layer implemented. Structured, deterministic calibration signals diagnose meta-agent performance, proposal usefulness, historical context value, and redundancy guard effectiveness. Calibration is advisory-only — no automatic tuning. Previous: Proposal Quality Feedback Loop (Sprint 19).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
-> **Current Maturity**: Level 5 🔄 Active
+> **Current Maturity**: Level 5 ✅ Active
 >
 > Last updated: 2026-03-07
 
