@@ -95,7 +95,7 @@ export async function bootstrapPipeline(
 
   // ── Usage limit enforcement ──
   try {
-    const usageCheck = await enforceUsageLimits(serviceClient, initiative.organization_id);
+    const usageCheck = await enforceUsageLimits(serviceClient, initiative.organization_id, functionName);
     if (!usageCheck.allowed) {
       // Record blocked attempt in audit_logs
       await serviceClient.from("audit_logs").insert({

@@ -28,7 +28,8 @@ export interface UsageLimitCheck {
 
 export async function enforceUsageLimits(
   serviceClient: ReturnType<typeof createClient>,
-  organizationId: string
+  organizationId: string,
+  stageName?: string
 ): Promise<UsageLimitCheck> {
   // Get billing account with plan
   const { data: billing } = await serviceClient
@@ -138,7 +139,10 @@ export async function enforceUsageLimits(
     };
   }
 
-  if (current.deployments >= limits.max_deployments) {
+  // Deployment limit only blocks deploy/publish stages, not the entire pipeline
+  const deployStages = ["publish", "deploy", "deploy-checker"];
+  const isDeployStage = stageName ? deployStages.includes(stageName) : false;
+  if (isDeployStage && current.deployments >= limits.max_deployments) {
     return {
       allowed: false,
       reason: `Monthly deployment limit reached (${current.deployments}/${limits.max_deployments})`,
