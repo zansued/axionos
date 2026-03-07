@@ -348,27 +348,100 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 12. Meta-Agents (Future Horizon)
+## 12. Meta-Agents (Planned — Architecture Designed, Not Implemented)
 
-> **Status:** 📋 Planned — **Not implemented**
+> **Status:** 📋 Architecture designed — **Not implemented**
+> **Dependency:** Requires stable Learning Agents v2
+> **Target:** Level 4.5 — Self-Designing Engineering System
 
-Meta-Agents represent a future evolution where higher-order agents reason about the orchestration system itself.
+Meta-Agents are higher-order agents that operate above the normal execution and learning agents. They analyze system behavior, design new agent roles, adjust orchestration strategies, recommend workflow changes, and optimize system architecture. They do **not** execute pipeline tasks directly.
 
-### Planned Capabilities
+### 12.1 Architecture Meta-Agent
 
-| Capability | Description |
-|-----------|-------------|
-| Self-designing orchestration | Meta-agents propose pipeline modifications based on execution patterns |
-| Agent role synthesis | Automatic composition of new specializations from capability gaps |
-| Workflow architecture recommendations | Higher-order bottleneck and efficiency analysis |
-| Learning subsystem coordination | Meta-level coordination of learning engines |
+| Attribute | Value |
+|-----------|-------|
+| **Purpose** | Analyze execution outcomes and suggest pipeline architecture improvements |
+| **Inputs** | Stage metrics, stage failure distribution, execution durations, repair frequency |
+| **Outputs** | `PIPELINE_OPTIMIZATION`, `STAGE_REORDERING_SUGGESTION`, `STAGE_SPLIT_OR_MERGE`, `RESOURCE_ALLOCATION_HINT` |
+| **Safety** | Never modifies stages automatically. Recommendations only. |
 
-### Constraints
+### 12.2 Agent Role Designer
 
-- Meta-Agents are a planning item only
-- When implemented, they must be auditable, bounded, and reversible
-- They will not have direct kernel mutation authority
-- Requires stable Learning Agents v2 as prerequisite
+| Attribute | Value |
+|-----------|-------|
+| **Purpose** | Analyze task distribution and propose new agent roles or specializations |
+| **Inputs** | `agent_outputs`, task complexity metrics, failure distribution by agent type |
+| **Outputs** | `NEW_AGENT_ROLE`, `AGENT_ROLE_REFACTOR`, `AGENT_SPECIALIZATION`, `AGENT_DEPRECATION` |
+| **Safety** | Cannot create or deploy agents. Proposes roles for human review. |
+| **Example** | _"Create DependencyResolutionAgent because 28% of repair loops involve dependency conflicts."_ |
+
+### 12.3 Workflow Optimizer
+
+| Attribute | Value |
+|-----------|-------|
+| **Purpose** | Improve pipeline efficiency by analyzing duration, retry frequency, and repair success distribution |
+| **Inputs** | Stage duration metrics, retry frequency, repair success distribution |
+| **Outputs** | `WORKFLOW_PARALLELIZATION`, `STEP_ELIMINATION`, `STEP_REORDERING` |
+| **Safety** | Does not modify pipeline ordering. Generates suggestions only. |
+
+### 12.4 Strategy Synthesizer
+
+| Attribute | Value |
+|-----------|-------|
+| **Purpose** | Combine successful strategies to generate improved execution strategies |
+| **Inputs** | `strategy_effectiveness_metrics`, repair success patterns, prompt outcome trends |
+| **Outputs** | `NEW_EXECUTION_STRATEGY`, `PROMPT_STRATEGY_COMPOSITION`, `REPAIR_STRATEGY_REWEIGHTING` |
+| **Safety** | Does not modify weights or strategies directly. Proposes compositions for review. |
+
+### 12.5 System Evolution Advisor
+
+| Attribute | Value |
+|-----------|-------|
+| **Purpose** | Produce high-level system evolution guidance from cross-cutting data |
+| **Inputs** | Learning trends, failure recurrence patterns, cost evolution, deployment success rate |
+| **Outputs** | `SYSTEM_EVOLUTION_REPORT`, `TECHNICAL_DEBT_ALERT`, `ARCHITECTURE_CHANGE_PROPOSAL` |
+| **Safety** | Advisory only. No system-level changes. |
+
+### Meta-Agent Output Structure (Planned)
+
+All Meta-Agent outputs will follow this structure, persisted in a `meta_agent_recommendations` table:
+
+```
+meta_agent_recommendation {
+  id                    -- UUID
+  meta_agent_type       -- architecture | role_designer | workflow | strategy | evolution
+  recommendation_type   -- specific output type per meta-agent
+  target_component      -- affected system component
+  description           -- human-readable explanation
+  confidence_score      -- 0.0-1.0
+  supporting_evidence   -- array of source records with provenance
+  status                -- pending | reviewed | accepted | rejected
+  created_at            -- timestamp
+}
+```
+
+### Meta-Agent Safety Rules
+
+Meta-Agents **must never**:
+- Modify pipeline stages or stage ordering
+- Change governance rules or trust levels
+- Modify billing, product plans, or commercial configuration
+- Bypass RLS or cross-tenant boundaries
+- Alter existing contracts
+
+Meta-Agents **may only**:
+- Generate recommendations for human review
+- Suggest structural changes with supporting evidence
+- Propose agent roles with justification
+- Suggest strategy evolution with confidence scores
+
+### Meta-Agent Interaction Flow
+
+```
+Observability → Learning Agents → Meta-Agents → Recommendations → Human Review → Controlled Implementation
+```
+
+Meta-Agents do not bypass human oversight at any point.
 
 ---
 
