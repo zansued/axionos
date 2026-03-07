@@ -5,7 +5,7 @@
 > **Last updated:** 2026-03-07
 >
 > **Current state:** Level 5 — Institutional Engineering Memory Platform.
-> Thirteen architectural layers active. Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
+> Thirteen architectural layers active. Learning Agents v2 with Cross-Stage Policy Synthesis (Sprint 26). Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
 
 ---
 

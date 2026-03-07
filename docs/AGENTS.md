@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 25 — Predictive Error Detection Operationalization. Runtime predictive risk scoring, bounded preventive actions, outcome tracking, and prediction quality metrics now operational. Previous: Agent Memory Layer (Sprint 24).
+> **What changed (2026-03-07):** Sprint 26 — Learning Agents v2 (Cross-Stage Policy Synthesis). Cross-stage learning graph, bounded policy synthesis, runtime application, outcome tracking, and explainability now operational. Previous: Predictive Error Detection (Sprint 25).
 >
 > Last updated: 2026-03-07
 
