@@ -464,14 +464,22 @@ Additional capture events (pipeline completion, error patterns, strategy updates
 - **Structural Index (Active):** Query by explicit fields — memory_type, related_stage, related_component, tags, source_type.
 - **Semantic Index (Planned):** Vector-based contextual retrieval using embeddings.
 
-**Retrieval Surfaces (Planned):**
+**Retrieval Surfaces (Active — Sprint 16):**
 
-| Context | Use Case |
-|---------|----------|
-| During repair | Retrieve past strategies used for similar errors |
-| During meta-agent analysis | Retrieve previous proposals affecting similar stages |
-| During artifact generation | Retrieve previous ADR drafts addressing similar issues |
-| During human review | Show related past decisions and outcomes |
+| Context | Use Case | Status |
+|---------|----------|--------|
+| During repair | Retrieve past strategies used for similar errors | ✅ |
+| During meta-agent analysis | Retrieve memory, summaries, decisions, outcomes | ✅ |
+| During artifact generation | Retrieve historical context for proposals | ✅ |
+| During human review | Show related past decisions and outcomes | ✅ |
+
+**Memory-Aware Reasoning (Active — Sprint 18):**
+
+| Module | Purpose |
+|--------|---------|
+| `meta-agent-memory-context.ts` | Gather ranked historical context per meta-agent type |
+| `historical-continuity-scoring.ts` | Compute support/conflict/context scores (0-1, deterministic) |
+| `historical-redundancy-guard.ts` | Suppress/downgrade weak historically redundant recommendations |
 
 **Safety Constraints:** Engineering Memory must **not** change system configuration, alter execution pipeline, bypass governance, or expose tenant data across organizations. Memory remains **informational infrastructure only**. The pipeline executes identically whether memory is available or not.
 
