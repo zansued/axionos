@@ -606,6 +606,7 @@ supabase/functions/_shared/agent-os/
 | Prompt Optimization (A/B + Bounded Promotion) | ✅ Implemented (Sprints 21–22) |
 | Self-Improving Fix Agents v2 (Repair Policies) | ✅ Implemented (Sprint 23) |
 | Agent Memory Layer Operationalization | ✅ Implemented (Sprint 24) |
+| Predictive Error Detection Operationalization | ✅ Implemented (Sprint 25) |
 | Semantic Retrieval | 📋 Planned |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
