@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 27 — Execution Policy Intelligence. Bounded execution policy selection, context classification, runtime adjustments, outcome tracking, and explainability now operational. Previous: Learning Agents v2 (Sprint 26).
+> **What changed (2026-03-07):** Sprint 28 — Execution Mode Portfolio Optimization. Bounded portfolio evaluation, ranking, lifecycle management, conflict detection, and recommendations now operational. Previous: Execution Policy Intelligence (Sprint 27).
 >
 > Last updated: 2026-03-07
 
@@ -853,6 +853,59 @@ Execution Policy Intelligence classifies execution context and selects bounded o
 
 ---
 
-## 21. Governing Principle
+## 21. Execution Mode Portfolio Optimization (Active — Sprint 28)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure.
+> **Status:** ✅ Active — Bounded portfolio optimization for execution policies
+
+### Overview
+
+Execution Mode Portfolio Optimization manages the set of available execution policies as a governed portfolio. The system evaluates, ranks, and manages the lifecycle of execution modes based on real outcome performance across context classes, detecting conflicts and generating actionable recommendations.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Portfolio Evaluator | `execution-policy/execution-policy-portfolio-evaluator.ts` | Compute composite scores per policy per context |
+| Ranking Engine | `execution-policy/execution-policy-ranking-engine.ts` | Deterministic ranking with penalties and boosts |
+| Lifecycle Manager | `execution-policy/execution-policy-lifecycle-manager.ts` | Bounded lifecycle transitions with lineage |
+| Conflict Resolver | `execution-policy/execution-policy-conflict-resolver.ts` | Overlap, contradiction, and tradeoff detection |
+
+### Lifecycle Statuses
+
+- `candidate` — New entry, pending evaluation
+- `active` — Performing well, available for selection
+- `watch` — Under observation due to concerning signals
+- `limited` — Restricted to narrow contexts
+- `deprecated` — Excluded from selection
+
+### Recommendation Types
+
+- `promote` — Promote policy for a context class
+- `limit` — Limit policy to specific flows
+- `deprecate` — Deprecate due to harmful spillover
+- `split` — Split broad policy into narrower scoped policies
+- `merge` — Merge similar policies
+- `reprioritize` — Adjust portfolio rank
+
+### Safety Boundaries
+
+- Cannot mutate pipeline topology, governance, billing, or enforcement
+- Cannot auto-activate broad-scope policies without explicit allowance
+- Cannot delete historical policy evidence
+- All portfolio transitions are auditable with lineage
+- balanced_default is always protected from deprecation
+
+### Events
+
+- `execution_policy_portfolio_recomputed` — Portfolio evaluated and ranked
+- `execution_policy_rank_updated` — Policy rank changed
+- `execution_policy_lifecycle_changed` — Lifecycle status transitioned
+- `execution_policy_conflict_detected` — Conflict identified
+- `execution_policy_portfolio_recommendation_created` — Recommendation generated
+- `execution_policy_portfolio_recommendation_reviewed` — Recommendation accepted/rejected
+
+---
+
+## 22. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated.

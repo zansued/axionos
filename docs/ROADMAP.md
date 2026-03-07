@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 27 — Execution Policy Intelligence. Bounded execution policy selection, context classification, runtime adjustments, outcome tracking, and feedback loops now operational. Previous: Learning Agents v2 (Sprint 26).
+> **What changed (2026-03-07):** Sprint 28 — Execution Mode Portfolio Optimization. Bounded portfolio evaluation, ranking, lifecycle management, conflict detection, and recommendation generation for execution policies now operational. Previous: Execution Policy Intelligence (Sprint 27).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >

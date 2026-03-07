@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -25,6 +25,7 @@ import { EngineeringMemoryDashboard } from "@/components/observability/Engineeri
 import { MemorySummariesPanel } from "@/components/observability/MemorySummariesPanel";
 import { CrossStageLearningDashboard } from "@/components/observability/CrossStageLearningDashboard";
 import { ExecutionPolicyDashboard } from "@/components/observability/ExecutionPolicyDashboard";
+import { ExecutionPolicyPortfolioDashboard } from "@/components/observability/ExecutionPolicyPortfolioDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -304,7 +305,7 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(14, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(15, 1fr)" }}>
             <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Perf</TabsTrigger>
             <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>
             <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Quality</TabsTrigger>
@@ -314,6 +315,7 @@ export default function Observability() {
             <TabsTrigger value="repair" className="text-xs gap-1"><Wrench className="h-3 w-3" /> Repair</TabsTrigger>
             <TabsTrigger value="cross-stage" className="text-xs gap-1"><GitBranch className="h-3 w-3" /> X-Stage</TabsTrigger>
             <TabsTrigger value="exec-policy" className="text-xs gap-1"><Gauge className="h-3 w-3" /> ExPol</TabsTrigger>
+            <TabsTrigger value="portfolio" className="text-xs gap-1"><Layers className="h-3 w-3" /> Portfolio</TabsTrigger>
             <TabsTrigger value="learning" className="text-xs gap-1"><GraduationCap className="h-3 w-3" /> Learn</TabsTrigger>
             <TabsTrigger value="agent-memory" className="text-xs gap-1"><Cpu className="h-3 w-3" /> AgMem</TabsTrigger>
             <TabsTrigger value="memory" className="text-xs gap-1"><Brain className="h-3 w-3" /> Mem</TabsTrigger>
@@ -329,6 +331,11 @@ export default function Observability() {
           {/* ===== EXECUTION POLICY INTELLIGENCE ===== */}
           <TabsContent value="exec-policy" className="mt-4">
             <ExecutionPolicyDashboard />
+          </TabsContent>
+
+          {/* ===== EXECUTION POLICY PORTFOLIO ===== */}
+          <TabsContent value="portfolio" className="mt-4">
+            <ExecutionPolicyPortfolioDashboard />
           </TabsContent>
 
           {/* ===== PREDICTIVE ERROR DETECTION ===== */}
