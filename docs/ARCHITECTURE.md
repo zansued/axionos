@@ -5,7 +5,7 @@
 > **Last updated:** 2026-03-07
 >
 > **Current state:** Level 5 — Institutional Engineering Memory Platform.
-> Eleven architectural layers active. Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
+> Twelve architectural layers active. Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
 
 ---
 
@@ -964,3 +964,7 @@ supabase/functions/
 - `repair_policy_profiles` — Memory-aware repair strategy profiles per stage+error
 - `repair_policy_decisions` — Logged repair decisions with evidence refs and outcomes
 - `repair_policy_adjustments` — Bounded, reversible policy adjustments
+
+### Agent Memory Tables (Sprint 24)
+- `agent_memory_profiles` — Per-agent persistent memory profiles with confidence and scope
+- `agent_memory_records` — Reusable memory units with type taxonomy, payload, and relevance scoring

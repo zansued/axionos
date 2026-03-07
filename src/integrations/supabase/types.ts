@@ -330,6 +330,112 @@ export type Database = {
           },
         ]
       }
+      agent_memory_profiles: {
+        Row: {
+          agent_type: string
+          confidence: number | null
+          created_at: string
+          id: string
+          memory_scope: string
+          memory_summary: string
+          model_name: string | null
+          model_provider: string | null
+          organization_id: string
+          stage_key: string | null
+          status: string
+          support_count: number
+          updated_at: string
+        }
+        Insert: {
+          agent_type: string
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          memory_scope?: string
+          memory_summary?: string
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id: string
+          stage_key?: string | null
+          status?: string
+          support_count?: number
+          updated_at?: string
+        }
+        Update: {
+          agent_type?: string
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          memory_scope?: string
+          memory_summary?: string
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id?: string
+          stage_key?: string | null
+          status?: string
+          support_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_memory_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_memory_records: {
+        Row: {
+          agent_type: string
+          context_signature: string
+          created_at: string
+          created_from_event_id: string | null
+          id: string
+          memory_payload: Json
+          memory_type: string
+          organization_id: string
+          relevance_score: number | null
+          source_refs: Json | null
+          stage_key: string | null
+        }
+        Insert: {
+          agent_type: string
+          context_signature?: string
+          created_at?: string
+          created_from_event_id?: string | null
+          id?: string
+          memory_payload?: Json
+          memory_type?: string
+          organization_id: string
+          relevance_score?: number | null
+          source_refs?: Json | null
+          stage_key?: string | null
+        }
+        Update: {
+          agent_type?: string
+          context_signature?: string
+          created_at?: string
+          created_from_event_id?: string | null
+          id?: string
+          memory_payload?: Json
+          memory_type?: string
+          organization_id?: string
+          relevance_score?: number | null
+          source_refs?: Json | null
+          stage_key?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_memory_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_messages: {
         Row: {
           content: string

@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 23 — Self-Improving Fix Agents v2. Repair system now memory-aware and policy-driven with bounded adjustments, retry path intelligence, and full explainability. Previous: Bounded Promotion & Rollback Guard (Sprint 22).
+> **What changed (2026-03-07):** Sprint 24 — Agent Memory Layer Operationalization. Per-agent memory profiles, bounded retrieval/injection, write-back, and quality scoring now operational. Previous: Self-Improving Fix Agents v2 (Sprint 23).
 >
 > Last updated: 2026-03-07
 
@@ -605,6 +605,7 @@ supabase/functions/_shared/agent-os/
 | Advisory Calibration Layer | ✅ Implemented (Sprint 20) |
 | Prompt Optimization (A/B + Bounded Promotion) | ✅ Implemented (Sprints 21–22) |
 | Self-Improving Fix Agents v2 (Repair Policies) | ✅ Implemented (Sprint 23) |
+| Agent Memory Layer Operationalization | ✅ Implemented (Sprint 24) |
 | Semantic Retrieval | 📋 Planned |
 | Marketplace | ❄️ Frozen |
 | Distributed Runtime (advanced) | ❄️ Frozen |
@@ -648,6 +649,50 @@ Engineering Memory is a cross-layer knowledge infrastructure that agents use to 
 
 ---
 
-## 17. Governing Principle
+## 17. Agent Memory Layer (Active — Sprint 24)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only — they cannot mutate pipeline structure, governance, billing, or agent topology.
+> **Status:** ✅ Active — Per-agent operational memory
+
+### Overview
+
+The Agent Memory Layer provides persistent, per-agent memory profiles and structured memory records that agents retrieve and use during execution, repair, planning, validation, and review decisions. Memory is bounded, auditable, and non-invasive.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Agent Memory Retriever | `agent-memory/agent-memory-retriever.ts` | Fetch, rank, deduplicate relevant memory |
+| Agent Memory Injector | `agent-memory/agent-memory-injector.ts` | Assemble bounded memory blocks for prompt injection |
+| Agent Memory Writer | `agent-memory/agent-memory-writer.ts` | Write-back useful execution signals to memory |
+| Agent Memory Quality | `agent-memory/agent-memory-quality.ts` | Score relevance, detect stale/conflicting memory |
+
+### Memory Types
+
+- `execution_pattern` — Successful execution context patterns
+- `repair_pattern` — Effective repair paths
+- `validation_pattern` — Validation failure/success patterns
+- `review_pattern` — Human review corrections
+- `failure_pattern` — Recurring failure contexts
+- `success_pattern` — Repeated success patterns
+
+### Safety Boundaries
+
+- Memory cannot mutate pipeline stages, governance, billing, or execution contracts
+- Memory injection is bounded by strict relevance and size constraints (max 4000 chars)
+- Deprecated memory is never injected
+- All profile changes preserve previous state history
+- Memory informs but never overrides system prompt hierarchy
+
+### Events
+
+- `agent_memory_retrieved` — Memory fetched for agent context
+- `agent_memory_injected` — Memory block assembled and injected
+- `agent_memory_written` — New memory record written
+- `agent_memory_profile_updated` — Profile created or updated
+- `agent_memory_deprecated` — Stale memory deprecated
+
+---
+
+## 18. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution.

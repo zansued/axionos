@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 23 — Self-Improving Fix Agents v2 (Memory-Aware Repair Policies). Repair system now uses historical evidence, error patterns, strategy effectiveness, and engineering memory to select optimal repair strategies. Policy-driven, bounded, auditable, reversible. Previous: Bounded Promotion & Rollback Guard (Sprint 22).
+> **What changed (2026-03-07):** Sprint 24 — Agent Memory Layer Operationalization. Per-agent memory profiles, bounded retrieval, scoped injection, write-back, and quality scoring now operational. Previous: Self-Improving Fix Agents v2 (Sprint 23).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
@@ -300,7 +300,7 @@ Full specification: [ARCHITECTURE.md — Layer 9](ARCHITECTURE.md)
 ## Governing Principle
 
 > The architecture is sufficient. Level 3 is complete.
-> Twenty-three sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, Memory Summaries, Memory-Aware Meta-Agents, Proposal Quality Feedback Loop, Advisory Calibration Layer, Prompt Optimization Engine, Bounded Promotion & Rollback Guard, and Self-Improving Fix Agents v2.
-> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, memory-aware meta-level recommendations, historically-informed engineering proposals, foundational engineering memory, contextual memory retrieval, periodic historical synthesis, experience-aware reasoning, proposal quality feedback, advisory calibration diagnostics, prompt optimization with bounded promotion, and memory-aware repair policies.
-> Repair decisions are now policy-driven, bounded, auditable, and reversible.
-> Focus now: commercial stability, memory-aware intelligence validation, and contextual self-improvement.
+> Twenty-four sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, Memory Summaries, Memory-Aware Meta-Agents, Proposal Quality Feedback Loop, Advisory Calibration Layer, Prompt Optimization Engine, Bounded Promotion & Rollback Guard, Self-Improving Fix Agents v2, and Agent Memory Layer Operationalization.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, memory-aware meta-level recommendations, historically-informed engineering proposals, foundational engineering memory, contextual memory retrieval, periodic historical synthesis, experience-aware reasoning, proposal quality feedback, advisory calibration diagnostics, prompt optimization with bounded promotion, memory-aware repair policies, and per-agent operational memory.
+> Agents now retrieve and use bounded historical context during execution, with write-back closing the per-agent memory loop.
+> Focus now: commercial stability, agent memory validation, and contextual self-improvement.
