@@ -32,6 +32,7 @@ import { PlatformSelfCalibrationDashboard } from "@/components/observability/Pla
 import { ExecutionStrategyEvolutionDashboard } from "@/components/observability/ExecutionStrategyEvolutionDashboard";
 import { StrategyPortfolioDashboard } from "@/components/observability/StrategyPortfolioDashboard";
 import { PlatformStabilizationDashboard } from "@/components/observability/PlatformStabilizationDashboard";
+import { EngineeringAdvisorDashboard } from "@/components/observability/EngineeringAdvisorDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
