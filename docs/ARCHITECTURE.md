@@ -2,9 +2,10 @@
 
 > Technical architecture of the autonomous software engineering system.
 >
-> **What changed (2026-03-07):** Engineering Memory Foundation implemented (Sprint 15) — core tables (engineering_memory_entries, memory_links, memory_retrieval_log) with RLS, capture events on recommendation/artifact transitions, retrieval API, observability metrics, and read-only UI. Previous: Engineering Memory Architecture designed (Layer 9).
+> **Last updated:** 2026-03-07
 >
-> Last updated: 2026-03-07
+> **Current state:** Level 4.5 — Meta-Aware Engineering Platform.
+> Nine architectural layers active or designed. Engineering Memory Foundation implemented (Sprint 15).
 
 ---
 
@@ -14,7 +15,8 @@
 
 ### What AxionOS Is Today
 
-An autonomous engineering platform with commercial readiness and active learning:
+A governed engineering platform with active learning, meta-analysis, and controlled proposal generation:
+
 - A 32-stage deterministic pipeline from idea to deployable application
 - A Project Brain (knowledge graph with semantic search)
 - An AI Efficiency Layer (prompt compression, semantic cache, model routing)
@@ -24,32 +26,41 @@ An autonomous engineering platform with commercial readiness and active learning
 - Preventive engineering with active prevention rules
 - Commercial readiness: product plans, billing, usage enforcement
 - Learning Agents v1: rule-based, auditable prompt and strategy optimization
+- Meta-Agents v1: 4 active meta-agents generating architectural recommendations
+- Controlled proposal generation via engineering artifacts
+- Hardened review workflows for recommendations and artifacts
+- Engineering Memory Foundation: structured knowledge capture and retrieval
 - Agent OS v1.0 — a 14-module runtime architecture across 5 planes
 
 ### System Maturity
 
 | Level | Name | Status |
 |-------|------|--------|
-| Level 1 | Code Generator | ✅ |
-| Level 2 | Software Builder | ✅ |
+| Level 1 | Code Generator | ✅ Complete |
+| Level 2 | Software Builder | ✅ Complete |
 | Level 3 | Autonomous Engineering System | ✅ Complete |
-| Level 4 | Self-Learning Software Factory | 🔄 Entering |
-| Level 4.5 | Self-Designing Engineering System | 📋 Planned (Meta-Agents) |
-| Level 5 | Autonomous Startup Factory | 🔮 Long-term |
+| Level 4 | Self-Learning Software Factory | ✅ Complete |
+| Level 4.5 | Meta-Aware Engineering Platform | ✅ Current |
+| Level 5 | Institutional Engineering Memory | 📋 Next (partially implemented) |
+| Level 5.5 | Contextual / Self-Improving Platform | 🔮 Future horizon |
+| Level 6 | Discovery-Driven Engineering | 🔮 Long-term |
 
-> **Current position:** Level 3 complete → Level 4 entering.
-> **System state:** Commercial + Learning Platform.
+> **Current position:** Level 4.5 — Meta-Aware Engineering Platform.
+> **System state:** Execution + Learning + Meta-Analysis + Proposal Generation active.
 > **Kernel status:** Stable and operational.
 > **Learning status:** Active, rule-based, auditable.
+> **Meta-Agent status:** Active, recommendation-only, 4 agents operational.
+> **Proposal status:** Active, artifact generation from accepted recommendations.
+> **Engineering Memory:** Foundation implemented (Sprint 15). Retrieval surfaces and summaries not yet active.
 
 ### Implementation Horizons
 
 | Horizon | Focus | Status |
 |---------|-------|--------|
-| **NOW** | Kernel + Commercial + Learning v1 | ✅ 12 Sprints Complete |
-| **NEXT** | Learning Agents Expansion + Meta-Agents | 📋 Planned |
-| **LATER** | Product Intelligence Layer | 📋 Planned |
-| **FUTURE** | Market Intelligence Layer | 📋 Planned |
+| **DONE** | Kernel + Commercial + Learning + Meta-Agents + Proposals + Memory Foundation | ✅ 15 Sprints Complete |
+| **NEXT** | Memory Retrieval Surfaces + Memory-Aware Meta-Agents | 📋 Planned |
+| **LATER** | Memory Summaries + Contextual Intelligence | 📋 Planned |
+| **FUTURE** | Discovery-Driven Architecture Experimentation | 🔮 Vision |
 
 ### Technology Stack
 
@@ -60,7 +71,6 @@ An autonomous engineering platform with commercial readiness and active learning
 | Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
 | AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
 | Git Integration | GitHub API v3 (Tree API for atomic commits, PRs) |
-| URL Scraping | Firecrawl (self-hosted or cloud) |
 | Deployment | Vercel/Netlify configs auto-generated |
 
 ### Multi-Tenancy Model
@@ -74,38 +84,70 @@ An autonomous engineering platform with commercial readiness and active learning
 
 ## 2. Active Architecture Layers
 
-AxionOS consists of seven active layers, each with clearly defined responsibilities and interaction boundaries.
+AxionOS consists of nine layers. Layers 1–8 are active and operational. Layer 9 has its foundation implemented with retrieval surfaces and summaries planned.
 
-### Layer 1: Kernel Execution Layer
+### Layer Interaction Flow
+
+```
+  Layer 9: Engineering Memory Architecture     ← Cross-layer (Foundation implemented)
+  ─────────────────────────────────────────
+  Layer 8: Proposal Generation Layer           ← Active (Sprint 14)
+          ↑
+  Layer 7: Meta-Agent Coordination Layer       ← Active (Sprint 13)
+          ↑
+  Layer 6: Learning Agents Layer               ← Active (Sprint 12)
+          ↑
+  Layer 5: Commercial Readiness Layer          ← Active (Sprint 11)
+          ↑
+  Layer 4: Observability Layer                 ← Active
+          ↑
+  Layer 3: Governance and Audit Layer          ← Active
+          ↑
+  Layer 2: Prevention and Routing Layer        ← Active
+          ↑
+  Layer 1: Execution Kernel                    ← Active
+```
+
+Engineering Memory is a **cross-layer infrastructure** that captures knowledge from all layers but does not interfere with their operation. The pipeline executes identically whether memory is available or not.
+
+---
+
+### Layer 1: Execution Kernel
 
 **Purpose:** Execute the 32-stage deterministic pipeline with DAG-based parallel orchestration.
+
+**Includes:**
+- Deterministic 32-stage pipeline
+- DAG orchestration (Kahn's algorithm, wave computation, 6 concurrent workers)
+- Stage execution via independent Edge Functions
+- Runtime validation (real tsc + vite build via GitHub Actions CI)
+- Autonomous build repair with multi-iteration fix loop
+- Deploy flow (atomic Git Tree API, Vercel/Netlify config generation)
+- Project Brain (knowledge graph with semantic search and pgvector)
+- AI Efficiency Layer (prompt compression, semantic cache, model routing)
 
 **Key modules:**
 - `pipeline-bootstrap.ts` — Pipeline lifecycle initialization with usage enforcement
 - `dependency-scheduler.ts` — Kahn's algorithm, wave computation, 6 workers
 - `pipeline-execution-orchestrator` / `pipeline-execution-worker` — DAG agent swarm
 - `pipeline-helpers.ts` — Standardized logging, jobs, messages
-- 50+ Edge Functions covering all 32 stages
-
-**Interactions:** Consumes governance decisions from Control layer. Produces execution data consumed by Observability and Learning layers.
-
-### Layer 2: Validation and Repair Layer
-
-**Purpose:** Validate generated code and autonomously repair build failures.
-
-**Key modules:**
-- `pipeline-validation` — AI-powered fix loop (3 iterations)
-- `pipeline-deep-validation` — Deep static analysis
-- `pipeline-drift-detection` — Architectural drift detection
-- `pipeline-runtime-validation` — Real tsc + vite build via CI
 - `autonomous-build-repair` — Self-healing builds from CI error logs
 - `pipeline-fix-orchestrator` — Multi-iteration fix coordination
+- 50+ Edge Functions covering all 32 stages
 
-**Interactions:** Receives code from Kernel. Produces `repair_evidence` consumed by Learning layer.
+**Interactions:** Consumes governance decisions from Layer 3. Produces execution data consumed by Layers 4, 6, and 9.
 
-### Layer 3: Prevention and Routing Layer
+---
+
+### Layer 2: Prevention and Routing Layer
 
 **Purpose:** Proactively prevent known failure patterns and route repair strategies based on evidence.
+
+**Includes:**
+- Pre-generation guard (preventive validation before code generation)
+- Active prevention rule management with confidence scoring
+- Adaptive strategy selection based on historical effectiveness
+- Error pattern extraction, indexing, and signature normalization
 
 **Key modules:**
 - `pipeline-preventive-validation` — Pre-generation guard
@@ -115,11 +157,20 @@ AxionOS consists of seven active layers, each with clearly defined responsibilit
 
 **Persistence:** `active_prevention_rules`, `error_patterns`, `prevention_rule_candidates`, `repair_routing_log`
 
-**Interactions:** Consumes patterns from error history. Feeds routing decisions to Repair layer. Learning layer adjusts routing weights.
+**Interactions:** Consumes patterns from error history. Feeds routing decisions to Execution Kernel. Learning layer adjusts routing weights.
 
-### Layer 4: Governance and Audit Layer
+---
+
+### Layer 3: Governance and Audit Layer
 
 **Purpose:** Enforce trust boundaries, approval workflows, SLA compliance, and complete audit trails.
+
+**Includes:**
+- Trust boundaries and approval gates for pipeline stages
+- Per-role stage access permissions
+- SLA enforcement per stage with breach alerting
+- Complete audit log event ledger
+- Review workflows for artifacts, recommendations, and proposals
 
 **Key modules:**
 - `governance.ts` — Approval workflows, access control
@@ -127,11 +178,20 @@ AxionOS consists of seven active layers, each with clearly defined responsibilit
 - `stage_sla_configs` — SLA enforcement per stage
 - `audit_logs` — Complete event ledger
 
-**Interactions:** Gates pipeline advancement. All layers emit audit events.
+**Interactions:** Gates pipeline advancement. All layers emit audit events. Meta-Agent and Proposal layers operate under governance review workflows.
 
-### Layer 5: Observability Layer
+---
+
+### Layer 4: Observability Layer
 
 **Purpose:** Track execution telemetry, cost, performance, and system health.
+
+**Includes:**
+- Per-initiative metrics (success rate, cost, duration, retries)
+- Pipeline-level aggregated observability
+- Cost metrics per model, per stage, per initiative
+- Recommendation and artifact observability
+- Engineering Memory metrics (entry counts, retrieval frequency)
 
 **Key modules:**
 - `observability-engine` — Telemetry aggregation
@@ -140,152 +200,294 @@ AxionOS consists of seven active layers, each with clearly defined responsibilit
 
 **Persistence:** `initiative_observability`, `initiative_jobs` (cost_usd, tokens_used, duration_ms)
 
-**Interactions:** Provides data consumed by Commercial layer (billing) and Learning layer (analysis).
+**Interactions:** Provides data consumed by Commercial layer (billing), Learning layer (analysis), and Meta-Agent layer (system analysis).
 
-### Layer 6: Commercial Readiness Layer (Sprint 11)
+---
+
+### Layer 5: Commercial Readiness Layer
 
 **Purpose:** Make AxionOS operationally packageable as a commercial product.
+
+**Includes:**
+- Product plans (Starter $29, Pro $99, Enterprise custom) with numeric limits
+- Billing accounts with Stripe-ready schema and billing period tracking
+- Workspace-level isolation with granular roles
+- Usage enforcement at pipeline entry points (HTTP 402 when limits exceeded)
+- Product dashboard with overview and usage metrics
 
 **Key modules:**
 - `usage-limit-enforcer.ts` — Enforces plan limits at pipeline entry points
 - `billing-calculator.ts` — Cost aggregation with org-safe job filtering
 - `product-dashboard` — Overview, usage metrics API
 
-**Persistence:**
-- `product_plans` — Starter / Pro / Enterprise with numeric limits
-- `billing_accounts` — Stripe-ready schema with billing period tracking
-- `workspace_members` — Granular roles per workspace
+**Persistence:** `product_plans`, `billing_accounts`, `workspace_members`
 
-**Hardening corrections applied:**
-- Usage enforcement integrated into `pipeline-bootstrap.ts` and `run-initiative-pipeline`
-- Cross-org query leakage fixed: all job aggregation scoped by organization initiatives
-- Cost double-counting fixed: `job_cost` is the single source of truth
+**Interactions:** Consumes observability data. Blocks pipeline execution when limits exceeded.
 
-**Interactions:** Consumes observability data. Blocks pipeline execution when limits exceeded (HTTP 402, `USAGE_LIMIT_EXCEEDED`).
+---
 
-### Layer 7: Learning Agents Layer (Sprint 12)
+### Layer 6: Learning Agents Layer
 
 **Purpose:** Transform passive learning data into active, auditable intelligence.
+
+**Includes:**
+- Prompt outcome tracking and aggregation per stage+model signature
+- Strategy effectiveness evaluation with MTTR and recurrence metrics
+- Predictive error pattern detection and prevention candidate generation
+- Repair routing weight adjustment (bounded, reversible, auditable)
+- Structured learning recommendations
 
 **Key modules:**
 
 | Module | File | Purpose |
 |--------|------|---------|
-| Prompt Outcome Analyzer | `prompt-outcome-analyzer/index.ts` | Aggregates success_rate, cost, retry_rate per stage+model signature |
-| Strategy Performance Engine | `strategy-performance-engine/index.ts` | Evaluates repair strategy effectiveness with MTTR and recurrence |
-| Predictive Error Engine | `predictive-error-engine/index.ts` | Detects recurring failure patterns, generates prevention candidates |
-| Repair Learning Engine | `repair-learning-engine/index.ts` | Adjusts routing weights: `new_weight = prev + success_factor − failure_penalty` |
+| Prompt Outcome Analyzer | `prompt-outcome-analyzer/index.ts` | Aggregates success_rate, cost, retry_rate per stage+model |
+| Strategy Performance Engine | `strategy-performance-engine/index.ts` | Evaluates repair strategy effectiveness |
+| Predictive Error Engine | `predictive-error-engine/index.ts` | Detects recurring failure patterns |
+| Repair Learning Engine | `repair-learning-engine/index.ts` | Adjusts routing weights with bounded constraints |
 | Learning Recommendation Engine | `learning-recommendation-engine/index.ts` | Generates structured improvement recommendations |
 | Learning Dashboard | `learning-dashboard/index.ts` | API: overview, recommendations, strategies, errors |
 
-**Persistence:**
-- `prompt_strategy_metrics` — Aggregated prompt performance
-- `strategy_effectiveness_metrics` — Repair strategy effectiveness
-- `predictive_error_patterns` — Recurring failure predictions
-- `repair_strategy_weights` — Adjusted routing weights with audit trail
-- `learning_recommendations` — Structured improvement suggestions
+**Persistence:** `prompt_strategy_metrics`, `strategy_effectiveness_metrics`, `predictive_error_patterns`, `repair_strategy_weights`, `learning_recommendations`, `learning_records`
 
-**Interactions:** Consumes data from Observability, Repair, and Prevention layers. Produces recommendations and weight adjustments. Cannot mutate Kernel, Governance, or Commercial layers.
-
-### Learning Safety Principles
-
-Learning in AxionOS follows this chain:
-
-```
-Observation → Evidence → Analysis → Recommendation → Human-safe Adjustment
-```
-
-**Rules:**
+**Safety rules:**
 1. Learning is **additive** — new modules consume existing data, never modify kernel
 2. Learning is **rule-based** — no black-box behavior, all logic explicit
-3. Learning is **auditable** — all decisions logged as `LEARNING_UPDATE` events in `audit_logs`
+3. Learning is **auditable** — all decisions logged as `LEARNING_UPDATE` events
 4. Learning is **bounded** — weight adjustments have min/max constraints, are reversible
 5. Learning **cannot mutate**: pipeline stages, governance rules, product plans, billing
 
-### Layer 8: Meta-Agent Coordination Layer (Planned)
-
-> **Status:** 📋 Planned architecture — **Not implemented**
-> **Dependency:** Requires stable Learning Agents v2
-
-**Purpose:** Introduce higher-order agents that reason about the system itself — analyzing execution patterns, designing new agent roles, optimizing workflows, and advising on architectural evolution. Meta-Agents do not execute pipeline tasks directly.
-
-**Position in the layer stack:**
-
-```
-  Meta-Agent Coordination Layer    ← NEW (planned)
-          ↑
-  Learning Agents Layer            ← Active (Sprint 12)
-          ↑
-  Commercial Readiness Layer       ← Active (Sprint 11)
-          ↑
-  Observability Layer              ← Active
-          ↑
-  Governance and Audit Layer       ← Active
-          ↑
-  Prevention and Routing Layer     ← Active
-          ↑
-  Validation and Repair Layer      ← Active
-          ↑
-  Kernel Execution Layer           ← Active
-```
-
-Meta-Agents consume outputs from all lower layers but cannot modify any of them directly.
-
-**Five Meta-Agent Types:**
-
-| Meta-Agent | Purpose | Outputs |
-|-----------|---------|---------|
-| **Architecture Meta-Agent** | Analyze execution outcomes and suggest pipeline architecture improvements | `PIPELINE_OPTIMIZATION`, `STAGE_REORDERING_SUGGESTION`, `STAGE_SPLIT_OR_MERGE`, `RESOURCE_ALLOCATION_HINT` |
-| **Agent Role Designer** | Analyze task distribution and propose new agent roles or specializations | `NEW_AGENT_ROLE`, `AGENT_ROLE_REFACTOR`, `AGENT_SPECIALIZATION`, `AGENT_DEPRECATION` |
-| **Workflow Optimizer** | Improve pipeline efficiency by analyzing duration, retries, and repair patterns | `WORKFLOW_PARALLELIZATION`, `STEP_ELIMINATION`, `STEP_REORDERING` |
-| **Strategy Synthesizer** | Combine successful strategies into improved execution approaches | `NEW_EXECUTION_STRATEGY`, `PROMPT_STRATEGY_COMPOSITION`, `REPAIR_STRATEGY_REWEIGHTING` |
-| **System Evolution Advisor** | Produce high-level system evolution guidance from cross-cutting trends | `SYSTEM_EVOLUTION_REPORT`, `TECHNICAL_DEBT_ALERT`, `ARCHITECTURE_CHANGE_PROPOSAL` |
-
-**Data sources (read-only):**
-- `initiative_observability` — stage metrics, durations, failure distribution
-- `prompt_strategy_metrics` — prompt performance trends
-- `strategy_effectiveness_metrics` — repair strategy effectiveness
-- `predictive_error_patterns` — failure predictions
-- `learning_recommendations` — existing improvement suggestions
-- `repair_evidence` — repair outcome history
-- `audit_logs` — system event history
-
-**Planned output structure:**
-
-```
-meta_agent_recommendation {
-  id                    -- UUID
-  meta_agent_type       -- architecture | role_designer | workflow | strategy | evolution
-  recommendation_type   -- specific output type
-  target_component      -- what system component is affected
-  description           -- human-readable explanation
-  confidence_score      -- 0.0-1.0
-  supporting_evidence   -- array of source records
-  status                -- pending | reviewed | accepted | rejected
-  created_at            -- timestamp
-}
-```
-
-**Planned persistence:** `meta_agent_recommendations` table (not yet created)
-
-**Safety constraints:**
-1. Meta-Agents **never** modify pipeline stages, governance rules, billing, or contracts
-2. All outputs are **recommendations** requiring human review before implementation
-3. All Meta-Agent actions must be **auditable** and **explainable**
-4. Meta-Agent outputs must be **reversible** — no irreversible system changes
-5. Meta-Agents operate in **read-only** mode against all lower layers
-
-**Interaction flow:**
-
-```
-Observability → Learning Agents → Meta-Agents → Recommendations → Human Review → Controlled Implementation
-```
-
-Meta-Agents do not bypass human oversight.
+**Interactions:** Consumes data from Observability, Repair, and Prevention layers. Produces recommendations and weight adjustments. Feeds analysis data to Meta-Agent layer.
 
 ---
 
-## 3. Agent Operating System (Agent OS) — v1.0 GA
+### Layer 7: Meta-Agent Coordination Layer
+
+**Purpose:** Introduce higher-order agents that reason about the system itself — analyzing execution patterns, designing new agent roles, optimizing workflows, and advising on architectural evolution.
+
+**Status:** ✅ Active (Sprint 13, hardened Sprint 13.5)
+
+**Includes:**
+- 4 active meta-agents analyzing cross-layer signals
+- Recommendation deduplication via content signatures
+- Structured recommendation lifecycle (pending → reviewed → accepted → rejected → deferred)
+- Read-only analysis of all lower layers
+
+**Four Meta-Agent Types:**
+
+| Meta-Agent | Purpose | Output Types |
+|-----------|---------|--------------|
+| **Architecture Meta-Agent** | Analyze execution outcomes and suggest pipeline improvements | `PIPELINE_OPTIMIZATION`, `STAGE_REORDERING_SUGGESTION`, `STAGE_SPLIT_OR_MERGE` |
+| **Agent Role Designer** | Analyze task distribution and propose new agent roles | `NEW_AGENT_ROLE`, `AGENT_SPECIALIZATION`, `AGENT_DEPRECATION` |
+| **Workflow Optimizer** | Improve pipeline efficiency by analyzing duration and retries | `WORKFLOW_PARALLELIZATION`, `STEP_ELIMINATION`, `STEP_REORDERING` |
+| **System Evolution Advisor** | Produce high-level system evolution guidance | `TECHNICAL_DEBT_ALERT`, `ARCHITECTURE_CHANGE_PROPOSAL`, `SYSTEM_EVOLUTION_REPORT` |
+
+**Persistence:** `meta_agent_recommendations`
+
+**Critical constraint:** Meta-Agents are **recommendation-only**. They do not modify pipeline stages, governance rules, billing, contracts, or agent behavior. All recommendations require human review before any structural change is considered.
+
+**Interactions:** Consumes data from all lower layers (read-only). Produces recommendations consumed by Layer 8 (Proposal Generation).
+
+---
+
+### Layer 8: Proposal Generation Layer
+
+**Purpose:** Transform accepted meta-agent recommendations into structured engineering proposals (artifacts) that humans can review, approve, and implement.
+
+**Status:** ✅ Active (Sprint 14, hardened Sprint 14.5)
+
+**Includes:**
+- Artifact generation from accepted recommendations
+- 5 supported artifact types
+- Artifact review lifecycle with state machine
+- Idempotency guarantees (same recommendation cannot generate duplicate artifacts)
+- Content quality enforcement (context, problem, evidence, proposal, risk, rollback)
+
+**Supported Artifact Types:**
+
+| Artifact Type | Description |
+|---------------|-------------|
+| **ADR Draft** | Architecture Decision Record documenting a structural decision |
+| **Architecture Proposal** | Detailed technical proposal for architecture changes |
+| **Agent Role Spec** | Specification for new or modified agent roles |
+| **Workflow Change Proposal** | Proposal for workflow optimization or restructuring |
+| **Implementation Plan** | Step-by-step plan for implementing a recommended change |
+
+**Artifact Lifecycle:**
+
+```
+draft → reviewed → approved → implemented
+  ↓        ↓
+rejected  rejected
+```
+
+**Persistence:** `meta_agent_artifacts`
+
+**Critical constraint:** Artifacts are **engineering proposals only**. Approving or implementing an artifact does not automatically modify the system. Human implementation is required for any structural change. No artifact or review action mutates the pipeline, governance, billing, contracts, or agent behavior.
+
+**Interactions:** Consumes accepted recommendations from Layer 7. Produces engineering proposals for human review. Emits memory capture events to Layer 9.
+
+---
+
+### Layer 9: Engineering Memory Architecture
+
+**Purpose:** Cross-layer knowledge infrastructure that captures, structures, indexes, and retrieves engineering experience over time.
+
+**Status:** Foundation implemented (Sprint 15). Retrieval surfaces, summaries, and semantic indexing are designed but not yet implemented.
+
+**Design Principles:**
+
+| Principle | Description |
+|-----------|-------------|
+| **Explainable** | Every memory entry traces back to a real event or artifact |
+| **Curated** | Not every log becomes memory — capture is event-driven and filtered |
+| **Contextual** | Retrieval depends on query context (stage, component, error type) |
+| **Tenant-safe** | Organization boundaries preserved via RLS |
+| **Non-invasive** | Memory never mutates system configuration or runtime behavior |
+| **Composable** | Memory entries link to each other via typed relationships |
+
+**Memory Types:**
+
+| Type | Description | Examples |
+|------|-------------|----------|
+| **ExecutionMemory** | Structured summaries of engineering runs | Pipeline outcomes, stage performance, cost patterns |
+| **ErrorMemory** | Failure patterns and contexts | Recurring errors, dependency failures, build issues |
+| **StrategyMemory** | Strategies used to resolve problems | Prompt strategies, repair strategies, mitigation techniques |
+| **DesignMemory** | Structural insights about the system | Meta-agent recommendations, architecture proposals |
+| **DecisionMemory** | Human decisions and their context | Recommendation accepted/rejected, artifact reviewed |
+| **OutcomeMemory** | Results of implemented changes | Impact of architecture changes, repair improvements |
+
+**Foundation Implemented (Sprint 15):**
+
+| Component | Status |
+|-----------|--------|
+| `engineering_memory_entries` table with RLS | ✅ |
+| `memory_links` table with typed relationships | ✅ |
+| `memory_retrieval_log` table | ✅ |
+| Memory capture on artifact approval/implementation | ✅ |
+| Memory capture on recommendation acceptance | ✅ |
+| Retrieval API with filtering and pagination | ✅ |
+| Observability metrics (entry counts, retrieval frequency, link totals) | ✅ |
+| Read-only memory dashboard in Observability UI | ✅ |
+
+**Not Yet Implemented:**
+
+| Component | Status |
+|-----------|--------|
+| Memory retrieval surfaces in repair, meta-agents, artifact generation | 📋 Planned |
+| Memory summaries (weekly/monthly synthesis) | 📋 Planned |
+| Semantic indexing via embeddings | 📋 Planned |
+| Memory-driven decision support during human review | 📋 Planned |
+
+**Data Model:**
+
+**engineering_memory_entries**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | uuid | Primary key |
+| organization_id | uuid | Tenant isolation |
+| workspace_id | uuid | Optional workspace scope |
+| memory_type | text | ExecutionMemory, ErrorMemory, StrategyMemory, DesignMemory, DecisionMemory, OutcomeMemory |
+| memory_subtype | text | Finer classification within type |
+| title | text | Human-readable summary title |
+| summary | text | Structured summary of the memory |
+| source_type | text | Origin layer (execution, learning, meta_agent, proposal, human) |
+| source_id | uuid | Reference to originating record |
+| related_component | text | Affected component or stage |
+| related_stage | text | Pipeline stage context |
+| confidence_score | numeric | Reliability of the memory |
+| relevance_score | numeric | Current relevance |
+| tags | jsonb | Searchable tags |
+| created_at | timestamptz | Creation timestamp |
+| last_accessed_at | timestamptz | Last retrieval timestamp |
+| times_retrieved | integer | Retrieval count |
+
+**memory_links**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | uuid | Primary key |
+| organization_id | uuid | Tenant isolation |
+| from_memory_id | uuid | Source memory entry |
+| to_memory_id | uuid | Target memory entry |
+| link_type | text | caused_by, resolved_by, recommended_by, implemented_as, similar_to, superseded_by |
+| created_at | timestamptz | Link creation time |
+
+**memory_retrieval_log**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | uuid | Primary key |
+| organization_id | uuid | Tenant isolation |
+| memory_id | uuid | Retrieved memory entry |
+| retrieved_by_component | text | Component that requested retrieval |
+| retrieval_context | text | Query context |
+| used_in_decision | boolean | Whether it influenced a decision |
+| created_at | timestamptz | Retrieval time |
+
+**memory_summaries (Designed — Not Implemented)**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| summary_type | text | weekly_failures, monthly_evolution, strategy_trends |
+| organization_id | uuid | Tenant scope |
+| workspace_id | uuid | Optional workspace scope |
+| period_start | timestamptz | Summary period start |
+| period_end | timestamptz | Summary period end |
+| content | jsonb | Synthesized summary content |
+| source_memory_ids | uuid[] | Contributing memory entries |
+| created_at | timestamptz | Summary creation time |
+
+**Memory Capture Events:**
+
+| Layer | Capture Trigger | Memory Type |
+|-------|----------------|-------------|
+| Meta-Agent | Recommendation accepted | DesignMemory |
+| Proposal | Artifact approved | DesignMemory |
+| Proposal | Artifact implemented | OutcomeMemory |
+
+Additional capture events (pipeline completion, error patterns, strategy updates) are designed but not yet wired.
+
+**Indexing Strategy:**
+
+- **Structural Index (Active):** Query by explicit fields — memory_type, related_stage, related_component, tags, source_type.
+- **Semantic Index (Planned):** Vector-based contextual retrieval using embeddings.
+
+**Retrieval Surfaces (Planned):**
+
+| Context | Use Case |
+|---------|----------|
+| During repair | Retrieve past strategies used for similar errors |
+| During meta-agent analysis | Retrieve previous proposals affecting similar stages |
+| During artifact generation | Retrieve previous ADR drafts addressing similar issues |
+| During human review | Show related past decisions and outcomes |
+
+**Safety Constraints:** Engineering Memory must **not** change system configuration, alter execution pipeline, bypass governance, or expose tenant data across organizations. Memory remains **informational infrastructure only**. The pipeline executes identically whether memory is available or not.
+
+---
+
+## 3. Safety Architecture
+
+### Structural Safety Rules
+
+The following rules are enforced across all layers:
+
+1. **Recommendations do not execute changes.** Meta-Agent recommendations are proposals for human review. No recommendation triggers automatic system modification.
+
+2. **Artifacts do not execute changes.** Engineering artifacts (ADRs, proposals, specs) are documents. Approving or implementing an artifact does not automatically mutate the system.
+
+3. **Memory is not a mutation engine.** Engineering Memory captures and retrieves knowledge. It does not alter pipeline behavior, governance rules, billing, or agent configuration.
+
+4. **Human review remains required for structural evolution.** Any change to pipeline stages, governance rules, agent roles, or system architecture requires explicit human action.
+
+5. **Tenant isolation is absolute.** All data access is scoped by `organization_id` with RLS enforcement. No cross-tenant data leakage is permitted.
+
+6. **Learning is bounded and reversible.** Weight adjustments have min/max constraints. All learning decisions are logged and auditable.
+
+---
+
+## 4. Agent Operating System (Agent OS) — v1.0 GA
 
 The Agent OS is the runtime architecture governing how agents are selected, executed, governed and coordinated. It consists of 14 modules organized into 5 architectural planes.
 
@@ -359,7 +561,7 @@ Core       --> (nothing)
 
 ---
 
-## 4. Pipeline — 32-Stage Model
+## 5. Pipeline — 32-Stage Model
 
 ```
 ===============================================================
@@ -427,18 +629,18 @@ Core       --> (nothing)
 
 ---
 
-## 5. AI Efficiency Layer
+## 6. AI Efficiency Layer
 
-### 5.1 Prompt Compression Engine
+### 6.1 Prompt Compression Engine
 **File:** `_shared/prompt-compressor.ts`
 **Result:** 60-90% token reduction while preserving engineering-critical information
 
-### 5.2 Semantic Cache Engine
+### 6.2 Semantic Cache Engine
 **File:** `_shared/semantic-cache.ts`
 **Table:** `ai_prompt_cache` (with `vector(768)` column)
 **Threshold:** cosine similarity > 0.92 returns cached response
 
-### 5.3 Model Router Engine
+### 6.3 Model Router Engine
 **File:** `_shared/model-router.ts`
 
 | Complexity | Model | Cost Multiplier |
@@ -447,7 +649,7 @@ Core       --> (nothing)
 | Medium | `google/gemini-2.5-flash` | 0.5x |
 | High | `google/gemini-2.5-pro` | 1.0x |
 
-### 5.4 Integration Point
+### 6.4 Integration Point
 All modules integrate transparently in `callAI()` (`_shared/ai-client.ts`):
 ```
 callAI() -> compress -> cache lookup -> route model -> LLM call -> cache store -> return
@@ -455,7 +657,7 @@ callAI() -> compress -> cache lookup -> route model -> LLM call -> cache store -
 
 ---
 
-## 6. Stage Contracts
+## 7. Stage Contracts
 
 Every pipeline stage defines a formal contract specifying its interface with the orchestrator.
 
@@ -475,7 +677,7 @@ stage_contract {
 
 ---
 
-## 7. Agent IO Contracts
+## 8. Agent IO Contracts
 
 All agents produce outputs conforming to this structure:
 
@@ -495,7 +697,7 @@ agent_output {
 
 ---
 
-## 8. Five Fundamental Agent Types
+## 9. Five Fundamental Agent Types
 
 | Agent Type | Responsibility | Example Modes |
 |-----------|---------------|---------------|
@@ -511,7 +713,7 @@ Agent Specialization = Mode + Tools + Memory + Contract
 
 ---
 
-## 9. Project Brain
+## 10. Project Brain
 
 ### Node Types
 | Type | Source | Description |
@@ -535,7 +737,7 @@ Agent Specialization = Mode + Tools + Memory + Contract
 
 ---
 
-## 10. Edge Function Architecture
+## 11. Edge Function Architecture
 
 ```
 supabase/functions/
@@ -544,67 +746,68 @@ supabase/functions/
 +-- Code Generation                 (3 functions)
 +-- Validation & Publish            (6 functions)
 +-- Growth & Evolution              (9 functions)
-+-- Venture Intelligence            (4 functions -- FUTURE)
 +-- Pipeline Control                (7 functions)
 +-- Commercial Readiness            (2 functions -- Sprint 11)
 +-- Learning Agents                 (6 functions -- Sprint 12)
++-- Meta-Agents                     (3 functions -- Sprint 13-14)
++-- Engineering Memory              (1 function -- Sprint 15)
 +-- Support                         (11 functions)
 +-- _shared/                        (15+ helper modules)
     +-- agent-os/                   (14 Agent OS modules)
+    +-- meta-agents/               (Meta-agent types, scoring, validation)
 ```
 
 ---
 
-## 11. Implementation Status
+## 12. Implementation Status
 
-### Implemented (Kernel + Sprint 11 + Sprint 12)
+### Implemented
 
-| # | System | Details |
-|---|--------|---------|
-| 1 | Pipeline (32 stages) | 50+ independent Edge Functions |
-| 2 | Project Brain | Nodes, edges, decisions, errors, prevention rules, tsvector, pgvector |
-| 3 | Dependency Scheduler | DAG builder, topological sort, wave computation |
-| 4 | Agent Swarm | Orchestrator + Worker, parallel execution (6 workers) |
-| 5 | Data Model Generator | Domain model to SQL tables, FK, indexes, RLS |
-| 6 | Autonomous UI Generator | Pages, components, hooks, navigation |
-| 7 | Adaptive Learning Engine | Prevention rules, patterns, cross-project |
-| 8 | CI-Triggered Fix Swarm | Webhook + Fix Orchestrator + auto-PR |
-| 9 | Self-Healing Codebase | Prevention rules with confidence scoring |
-| 10 | Architectural Drift Detection | Rule-based + AI hybrid |
-| 11 | Atomic Git Commits | Tree API for publish + fix PRs |
-| 12 | Runtime Validation | Real tsc + vite build via GitHub Actions CI |
-| 13 | Smart Context Window | ~60-80% token reduction |
-| 14 | Vector Embeddings | pgvector 768-dim, cosine similarity |
-| 15 | Incremental Re-execution | Hash-based dirty detection |
-| 16 | AI Efficiency Layer | Prompt compression + semantic cache + model router |
-| 17 | Agent OS v1.0 | 14 modules, 5 planes, full TypeScript contracts |
-| 18 | Commercial Readiness | Plans, billing, workspace roles, usage enforcement |
-| 19 | Learning Agents v1 | Prompt analysis, strategy tracking, prediction, weight adaptation, recommendations |
+| # | System | Sprint | Details |
+|---|--------|--------|---------|
+| 1 | Pipeline (32 stages) | 1-10 | 50+ independent Edge Functions |
+| 2 | Project Brain | 1-10 | Nodes, edges, decisions, errors, prevention rules, tsvector, pgvector |
+| 3 | Dependency Scheduler | 1-10 | DAG builder, topological sort, wave computation |
+| 4 | Agent Swarm | 1-10 | Orchestrator + Worker, parallel execution (6 workers) |
+| 5 | Data Model Generator | 1-10 | Domain model to SQL tables, FK, indexes, RLS |
+| 6 | Autonomous UI Generator | 1-10 | Pages, components, hooks, navigation |
+| 7 | Adaptive Learning Engine | 1-10 | Prevention rules, patterns, cross-project |
+| 8 | CI-Triggered Fix Swarm | 1-10 | Webhook + Fix Orchestrator + auto-PR |
+| 9 | Self-Healing Codebase | 1-10 | Prevention rules with confidence scoring |
+| 10 | Architectural Drift Detection | 1-10 | Rule-based + AI hybrid |
+| 11 | Atomic Git Commits | 1-10 | Tree API for publish + fix PRs |
+| 12 | Runtime Validation | 1-10 | Real tsc + vite build via GitHub Actions CI |
+| 13 | Smart Context Window | 1-10 | ~60-80% token reduction |
+| 14 | AI Efficiency Layer | 1-10 | Prompt compression + semantic cache + model router |
+| 15 | Agent OS v1.0 | 1-10 | 14 modules, 5 planes, full TypeScript contracts |
+| 16 | Commercial Readiness | 11 | Plans, billing, workspace roles, usage enforcement |
+| 17 | Learning Agents v1 | 12 | Prompt analysis, strategy tracking, prediction, weight adaptation |
+| 18 | Meta-Agents v1 | 13 | 4 meta-agents, recommendation lifecycle, deduplication |
+| 19 | Controlled Proposal Generation | 14 | 5 artifact types, review lifecycle, idempotency |
+| 20 | Engineering Memory Foundation | 15 | Memory tables, capture events, retrieval API, observability |
 
 ### Frozen
 
 | Module | Reason |
 |--------|--------|
-| Marketplace ecosystem | Not needed until Learning Agents are stable |
+| Marketplace ecosystem | Not needed until product intelligence layer |
 | Global capability registry expansion | Architecture sufficient |
 | Advanced distributed runtime | Current runtime is adequate |
 | Advanced multi-agent coordination | Existing coordination works |
 
-### Planned (NEXT to FUTURE)
+### Planned
 
 | Horizon | Module | Priority |
 |---------|--------|----------|
-| NEXT | Learning Agents v2 (Self-improving prompts) | P0 |
-| NEXT | Meta-Agents (Self-designing orchestration) | P1 |
-| LATER | Product Analytics Engine | P1 |
-| LATER | User Behavior Analyzer | P1 |
-| LATER | Product Evolution Engine | P2 |
-| FUTURE | Opportunity Discovery Engine | P2 |
-| FUTURE | Startup Portfolio Manager | P3 |
+| NEXT | Memory Retrieval Surfaces (Sprint 16) | P0 |
+| NEXT | Memory Summaries (Sprint 17) | P1 |
+| LATER | Memory-Aware Meta-Agents (Sprint 18) | P1 |
+| LATER | Product Analytics Engine | P2 |
+| FUTURE | Discovery-Driven Architecture | P3 |
 
 ---
 
-## 12. Database Schema (40+ tables)
+## 13. Database Schema (50+ tables)
 
 ### Core Tables
 - `organizations`, `organization_members`, `profiles`
@@ -659,145 +862,7 @@ supabase/functions/
 - `meta_agent_recommendations` — Architectural recommendations with scoring and deduplication
 - `meta_agent_artifacts` — Engineering proposals generated from accepted recommendations
 
----
-
-## Layer 9 — Engineering Memory Architecture (Designed)
-
-> **Status:** Designed — Not implemented
-> **Purpose:** Cross-layer knowledge infrastructure that captures, structures, indexes, and retrieves engineering experience over time.
-
-### Architectural Position
-
-Engineering Memory is a **cross-layer infrastructure** that interacts with all active layers without interfering with runtime execution:
-
-```
-┌─────────────────────────────────────────────────┐
-│          Engineering Memory Architecture         │
-│  (cross-layer knowledge capture & retrieval)     │
-├─────────────────────────────────────────────────┤
-│  Layer 8: Meta-Agent Coordination (Proposals)    │
-│  Layer 7: Learning Agents                        │
-│  Layer 6: Observability                          │
-│  Layer 5: Governance & Compliance                │
-│  Layers 1-4: Execution Kernel                    │
-└─────────────────────────────────────────────────┘
-```
-
-Memory stores structured engineering knowledge generated by these layers. It does **not** mutate system behavior.
-
-### Design Principles
-
-| Principle | Description |
-|-----------|-------------|
-| **Explainable** | Every memory entry traces back to a real event or artifact |
-| **Curated** | Not every log becomes memory — capture is event-driven and filtered |
-| **Contextual** | Retrieval depends on query context (stage, component, error type) |
-| **Tenant-safe** | Organization boundaries preserved via RLS |
-| **Non-invasive** | Memory never mutates system configuration |
-| **Composable** | Memory entries link to each other via typed relationships |
-
-### Memory Types
-
-| Type | Description | Examples |
-|------|-------------|----------|
-| **Execution Memory** | Structured summaries of engineering runs | Pipeline outcomes, stage performance, cost patterns |
-| **Error Memory** | Failure patterns and contexts | Recurring errors, dependency failures, build issues |
-| **Strategy Memory** | Strategies used to resolve problems | Prompt strategies, repair strategies, mitigation techniques |
-| **Design Memory** | Structural insights about the system | Meta-agent recommendations, architecture proposals |
-| **Decision Memory** | Human decisions and their context | Recommendation accepted/rejected, artifact approved |
-| **Outcome Memory** | Results of implemented changes | Impact of architecture changes, repair improvements |
-
-### Data Model (Foundation Implemented — Sprint 15)
-
-**engineering_memory_entries** ✅ Implemented
-
-| Field | Type | Description |
-|-------|------|-------------|
-| id | uuid | Primary key |
-| organization_id | uuid | Tenant isolation |
-| workspace_id | uuid | Optional workspace scope |
-| memory_type | text | execution, error, strategy, design, decision, outcome |
-| memory_subtype | text | Finer classification within type |
-| title | text | Human-readable summary title |
-| summary | text | Structured summary of the memory |
-| source_type | text | Origin layer (execution, learning, meta_agent, proposal, human) |
-| source_id | uuid | Reference to originating record |
-| related_component | text | Affected component or stage |
-| related_stage | text | Pipeline stage context |
-| confidence_score | numeric | Reliability of the memory |
-| relevance_score | numeric | Current relevance (decays over time) |
-| tags | text[] | Searchable tags |
-| created_at | timestamptz | Creation timestamp |
-| last_accessed_at | timestamptz | Last retrieval timestamp |
-| times_retrieved | integer | Retrieval count |
-
-**memory_links**
-
-| Field | Type | Description |
-|-------|------|-------------|
-| id | uuid | Primary key |
-| from_memory_id | uuid | Source memory entry |
-| to_memory_id | uuid | Target memory entry |
-| link_type | text | caused_by, resolved_by, recommended_by, implemented_as, similar_to, superseded_by |
-| created_at | timestamptz | Link creation time |
-
-**memory_retrieval_log**
-
-| Field | Type | Description |
-|-------|------|-------------|
-| memory_id | uuid | Retrieved memory entry |
-| retrieved_by_component | text | Component that requested retrieval |
-| retrieval_context | jsonb | Query context snapshot |
-| used_in_decision | boolean | Whether it influenced a decision |
-| timestamp | timestamptz | Retrieval time |
-
-**memory_summaries**
-
-| Field | Type | Description |
-|-------|------|-------------|
-| summary_type | text | weekly_failures, monthly_evolution, strategy_trends |
-| organization_id | uuid | Tenant scope |
-| workspace_id | uuid | Optional workspace scope |
-| period_start | timestamptz | Summary period start |
-| period_end | timestamptz | Summary period end |
-| content | jsonb | Synthesized summary content |
-| source_memory_ids | uuid[] | Contributing memory entries |
-| created_at | timestamptz | Summary creation time |
-
-### Memory Capture Events
-
-| Layer | Capture Trigger |
-|-------|----------------|
-| Execution | Pipeline completed, pipeline failed, stage retry threshold exceeded |
-| Learning | New error pattern detected, repair strategy effectiveness updated |
-| Meta-Agent | Recommendation generated, recommendation accepted |
-| Proposal | Artifact created, artifact approved, artifact implemented |
-| Human | Recommendation accepted/rejected, artifact reviewed |
-
-### Indexing Strategy
-
-**Structural Index** — Query by explicit fields (memory_type, related_stage, related_component, tags, source_type). Supports queries like "failures in validation stage" or "strategies for dependency errors."
-
-**Semantic Index (Future)** — Vector-based contextual retrieval using embeddings. Supports queries like "similar engineering situations" or "past proposals related to current recommendation."
-
-### Retrieval Surfaces (Planned)
-
-| Context | Use Case |
-|---------|----------|
-| During repair | Retrieve past strategies used for similar errors |
-| During meta-agent analysis | Retrieve previous proposals affecting similar pipeline stages |
-| During artifact generation | Retrieve previous ADR drafts addressing similar structural issues |
-| During human review | Show related past decisions and outcomes |
-
-### Safety Constraints
-
-Engineering Memory must **not**: change system configuration, alter execution pipeline, bypass governance, expose tenant data across organizations. Memory remains **informational infrastructure only**.
-
-### Observability Metrics (Foundation Implemented)
-
-- ✅ Number of memory entries created (by type)
-- ✅ Memory retrieval frequency (7-day window)
-- ✅ Most referenced memory items
-- ✅ Total memory links
-- 📋 Most influential recommendations (future)
-- 📋 Strategy reuse rate (future)
+### Engineering Memory Tables (Sprint 15)
+- `engineering_memory_entries` — Core memory storage with type taxonomy
+- `memory_links` — Typed relationships between memory entries
+- `memory_retrieval_log` — Retrieval tracking and access statistics

@@ -1,23 +1,36 @@
 # AxionOS — Execution Plan
 
 > Last updated: 2026-03-07
-> Mode: **Level 4 Entry — Commercial Readiness + Learning Agents v1**
+> Mode: **Level 4.5 — Meta-Aware Engineering Platform**
 > Execution: **Sprint-based**
 
 ---
 
 ## Strategic Directive
 
-AxionOS has completed its Level 3 Product Proof Closure. The architecture is sufficient. The full idea-to-deploy cycle is operational.
+AxionOS has completed its Level 4.5 milestone. The execution kernel is stable. The learning layer is active. Meta-agents generate architectural recommendations. Accepted recommendations produce structured engineering proposals via controlled artifact generation. Engineering Memory Foundation is operational.
 
 **The focus is now:**
-1. Package the product for commercial use (billing, workspaces)
-2. Activate controlled learning behavior (prompt optimization)
-3. Stabilize before expanding
+1. Activate memory retrieval surfaces across repair, meta-agents, and proposals
+2. Introduce periodic memory synthesis for long-term pattern detection
+3. Enable memory-aware meta-agents for contextual recommendations
+4. Governance before autonomy. Memory before discovery. Contextual intelligence before automated experimentation.
 
 ---
 
-## Completed Product Proof Closure (Level 3)
+## Strategic Principle
+
+> **Governance before autonomy.**
+> **Memory before discovery.**
+> **Contextual intelligence before automated experimentation.**
+
+Every new capability must be governable, auditable, and non-destructive before it is expanded. AxionOS does not pursue autonomy for its own sake.
+
+---
+
+## Completed Sprints
+
+### Level 3 — Autonomous Engineering System (Sprints 1–10) ✅
 
 | Sprint | Deliverable | Status |
 |--------|-------------|--------|
@@ -32,74 +45,87 @@ AxionOS has completed its Level 3 Product Proof Closure. The architecture is suf
 | Sprint 9 | Adaptive Routing — evidence-informed repair strategy selection | ✅ |
 | Sprint 10 | Learning Foundation — learning records, prompt outcomes, aggregation | ✅ |
 
----
+### Level 4 — Self-Learning Software Factory (Sprints 11–12) ✅
 
-## Level 4 Entry Sprints
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 11 | Commercial Readiness — plans, billing, workspace isolation, usage enforcement | ✅ |
+| Sprint 12 | Learning Agents v1 — prompt analysis, strategy tracking, prediction, weight adaptation | ✅ |
 
-### Sprint 11 — Commercial Readiness / Billing / Workspace Packaging ✅
+### Level 4.5 — Meta-Aware Engineering Platform (Sprints 13–15) ✅
 
-**Objective:** Make AxionOS operationally packageable as a real product.
-
-**Delivered:**
-- Product plans system (Starter $29, Pro $99, Enterprise custom) with DB + RLS
-- Billing accounts table with Stripe-ready schema (customer ID, period tracking)
-- Usage limit enforcer module — checks initiative/token/deploy/parallel limits before execution
-- Billing calculator module — cost breakdowns by stage and model
-- Product dashboard edge function (overview + usage actions)
-- Enhanced Dashboard with pipeline success rate, deploy rate, repair rate, token usage
-- Enhanced Billing page with tabs (Usage, Plans, Settings) and plan selection UI
-- Workspace members table with granular workspace-level roles
-- All tables with RLS policies enforcing org isolation
-
-**Expected Impact:**
-- AxionOS becomes billable and self-sustaining
-- Clear separation between free and paid tiers
-- Workspace-level isolation and resource tracking
-- Usage enforcement blocks pipeline execution when limits exceeded
-
-**Relationship to Level 4:**
-Commercial readiness is a prerequisite for Level 4 validation. Learning agents require a product with real users generating real usage data.
-
-**Status:** ✅ Implemented
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 13 | Meta-Agents v1 — 4 active meta-agents, recommendation lifecycle, deduplication | ✅ |
+| Sprint 13.5 | Meta-Agent Hardening — safety validation, tenant isolation, mutation protection | ✅ |
+| Sprint 14 | Controlled Proposal Generation — 5 artifact types, review lifecycle, idempotency | ✅ |
+| Sprint 14.5 | Proposal Hardening — content quality, linkage validation, non-mutation proof | ✅ |
+| Sprint 15 | Engineering Memory Foundation — memory tables, capture events, retrieval API, observability | ✅ |
 
 ---
 
-### Sprint 12 — Learning Agents v1 / Prompt Optimization Loop
+## Current State
 
-**Objective:** Introduce the first controlled, explainable, auditable learning behavior.
+AxionOS is a **Meta-Aware Engineering Platform** (Level 4.5):
 
-**Key Deliverables:**
-- Prompt outcome tracking integrated across pipeline stages
-- Strategy effectiveness-driven prompt selection
-- Learning record consumption for prompt adjustment
-- A/B prompt evaluation with outcome-based ranking
-- Auditable learning decisions (no black-box behavior)
-
-**Expected Impact:**
-- Pipeline success rate improves automatically over time
-- Repair strategies become self-optimizing
-- Prompt costs decrease as effective prompts are identified
-- Every learning decision is traceable and explainable
-
-**Relationship to Level 4:**
-This is the first actual Learning Agent capability. It marks the functional entry into Level 4 — Self-Learning Software Factory.
-
-**Status:** 📋 Planned
+- **Execution:** Stable 32-stage deterministic pipeline with DAG orchestration, runtime validation, autonomous repair, and preventive engineering.
+- **Learning:** Active rule-based learning with prompt outcome analysis, strategy effectiveness tracking, predictive error detection, and bounded weight adjustment.
+- **Meta-Analysis:** 4 active meta-agents analyzing cross-layer signals and generating architectural recommendations. Recommendation-only — no system mutation.
+- **Proposal Generation:** Accepted recommendations produce structured engineering proposals (ADRs, architecture proposals, agent role specs, workflow change proposals, implementation plans). Artifacts are engineering documents — approval does not trigger automatic implementation.
+- **Engineering Memory:** Foundation operational. Core tables, capture events, retrieval API, and observability metrics active. Retrieval surfaces and summaries not yet wired.
+- **Commercial:** Product plans, billing, workspace isolation, and usage enforcement active.
+- **Governance:** Full audit trail, stage permissions, SLA enforcement, and review workflows across recommendations and artifacts.
 
 ---
 
-## Next Execution Focus
+## Next Phases
 
-After Sprint 12, the next focus should be determined based on observed outcomes. Likely candidates:
+### Level 5 — Institutional Engineering Memory
 
-| Focus Area | Description |
-|------------|-------------|
-| **Commercial stabilization** | Pricing refinement, usage analytics, churn reduction |
-| **Prompt optimization scaling** | Extend A/B evaluation to all 32 stages |
-| **Learning Agents expansion** | Per-agent memory, self-improving fix strategies |
-| **Stage-level adaptive improvement** | Stage-specific prompt evolution based on success data |
+**Sprint 16 — Memory Retrieval Surfaces** (Next)
 
-Sprint 13 is not yet defined. The decision should be data-driven based on Sprint 11–12 outcomes.
+Bring memory into active use across the system.
+
+- Retrieve past strategies during repair operations
+- Retrieve previous proposals during meta-agent analysis
+- Retrieve related ADRs during artifact generation
+- Show related past decisions during human review
+- All retrieval logged and auditable
+
+**Sprint 17 — Memory Summaries**
+
+Periodic synthesis of accumulated engineering knowledge.
+
+- Weekly failure pattern summaries
+- Monthly architecture evolution summaries
+- Strategy effectiveness trends
+- Accepted vs rejected recommendation patterns
+- Summaries feed into meta-agent analysis
+
+### Level 5.25 — Contextual Engineering Intelligence
+
+**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2**
+
+Use historical memory to improve the quality of recommendations and artifacts.
+
+- Meta-agents query relevant memory before generating recommendations
+- Artifact generation retrieves similar past proposals
+- Recommendations include historical context
+- Memory influence is traced and auditable
+
+### Level 5.5 — Self-Improving Engineering Platform
+
+- Memory summaries drive long-horizon evolution signals
+- Strategy reuse patterns inform repair routing improvements
+- Semantic indexing enables contextual similarity queries
+- Memory decay and relevance scoring refine knowledge quality
+
+### Level 6 — Discovery-Driven Engineering (Future Horizon)
+
+- Architecture experimentation informed by accumulated memory
+- Automated hypothesis generation from long-term patterns
+- Controlled experimentation with governance safeguards
+- This level is a vision, not a current priority
 
 ---
 
@@ -115,6 +141,8 @@ Sprint 13 is not yet defined. The decision should be data-driven based on Sprint
 | Cost per initiative | Tracked & declining |
 | Time from idea to validated repository | < 15 min |
 | Time from idea to deployment | < 20 min |
+| Memory entries captured per initiative | Tracked |
+| Memory retrieval frequency | Tracked |
 
 ---
 
@@ -134,8 +162,13 @@ Sprint 13 is not yet defined. The decision should be data-driven based on Sprint
 | Preventive Engineering Layer | ✅ |
 | Adaptive Repair Routing | ✅ |
 | Learning Foundation | ✅ |
+| Learning Agents v1 | ✅ |
+| Meta-Agents v1 (4 active agents) | ✅ |
+| Controlled Proposal Generation | ✅ |
+| Engineering Memory Foundation | ✅ |
 | Governance (gates, SLAs, audit logs) | ✅ |
 | Observability + Cost Tracking | ✅ |
+| Commercial Readiness (plans, billing, usage) | ✅ |
 
 ---
 
@@ -172,12 +205,14 @@ The Agent OS is fully designed. No expansion needed.
 - An autonomous software engineering platform
 - A governed SaaS / MVP generator
 - A system that transforms ideas into validated repositories
-- Now entering controlled learning behavior
+- A meta-aware platform that analyzes its own performance and generates improvement proposals
+- A system accumulating institutional engineering experience
 
 **Do NOT present as:**
 - A startup factory
 - A global marketplace of agents
 - An abstract agent operating system
 - An AGI system
+- A fully autonomous self-modifying system
 
 > Pipeline contracts: [docs/PIPELINE_CONTRACTS.md](../docs/PIPELINE_CONTRACTS.md) | Agents: [docs/AGENTS.md](../docs/AGENTS.md) | Roadmap: [docs/ROADMAP.md](../docs/ROADMAP.md)
