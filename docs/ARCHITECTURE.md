@@ -297,9 +297,9 @@ Engineering Memory is a **cross-layer infrastructure** that captures knowledge f
 - Recommendations include: `historical_alignment`, `decision_history_signal`, `outcome_history_signal`, `historical_novelty_flag`
 - Redundancy guard modules: `historical-continuity-scoring.ts`, `historical-redundancy-guard.ts`, `meta-agent-memory-context.ts`
 
-**Critical constraint:** Meta-Agents are **recommendation-only**. They do not modify pipeline stages, governance rules, billing, contracts, or agent behavior. All recommendations require human review before any structural change is considered. Memory and summaries inform but do not dictate recommendations.
+**Critical constraint:** Meta-Agents are **recommendation-only**. They do not modify pipeline stages, governance rules, billing, contracts, or agent behavior. All recommendations require human review before any structural change is considered. Memory and summaries inform but do not dictate recommendations. Calibration signals diagnose performance but do not auto-tune behavior.
 
-**Interactions:** Consumes data from all lower layers including Layer 9 memory (read-only). Produces recommendations consumed by Layer 8 (Proposal Generation).
+**Interactions:** Consumes data from all lower layers including Layer 9 memory (read-only). Produces recommendations consumed by Layer 8 (Proposal Generation). Performance analyzed by Layer 10 (Calibration).
 
 ---
 
