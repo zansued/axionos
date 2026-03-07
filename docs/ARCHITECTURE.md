@@ -87,7 +87,7 @@ A governed engineering platform with active learning, meta-analysis, and control
 
 ## 2. Active Architecture Layers
 
-AxionOS consists of nine layers. All nine layers are active and operational.
+AxionOS consists of ten layers. All ten layers are active and operational.
 
 ### Layer Interaction Flow
 
