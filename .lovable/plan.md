@@ -84,16 +84,19 @@ AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
 
 ## Next Phases
 
-### Level 5 — Institutional Engineering Memory
+### Level 5 — Institutional Engineering Memory ✅
 
-**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2** (Next)
+**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2** ✅
 
-Use historical memory and summaries to improve the quality of recommendations and artifacts.
+Meta-agents and proposals reason with historical engineering context:
 
-- Meta-agents query relevant summaries before generating recommendations
-- Artifact generation retrieves similar past proposals and summary context
-- Recommendations include historical context from summaries
-- Memory influence is traced and auditable
+- ✅ Memory context layer per meta-agent type
+- ✅ Historical continuity scoring (support/conflict/context)
+- ✅ Historical alignment classification (5 categories)
+- ✅ Redundancy guard with conservative suppression rules
+- ✅ Proposal Layer v2 with Related Historical Context
+- ✅ Decision/outcome-aware framing
+- ✅ Graceful degradation on memory unavailability
 
 ### Level 5.5 — Self-Improving Engineering Platform
 
