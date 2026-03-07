@@ -596,9 +596,11 @@ supabase/functions/_shared/agent-os/
 | Adaptive Learning | ✅ Implemented |
 | Learning Agents v1 (5 engines) | ✅ Implemented (Sprint 12) |
 | Learning Dashboard | ✅ Implemented (Sprint 12) |
-| Meta-Agents v1.2 (4 types) | ✅ Implemented (Sprints 13–18) |
+| Meta-Agents v1.4 (4 types) | ✅ Implemented (Sprints 13–20) |
 | Engineering Memory Full Stack | ✅ Implemented (Sprints 15–18) |
 | Memory-Aware Reasoning | ✅ Implemented (Sprint 18) |
+| Proposal Quality Feedback Loop | ✅ Implemented (Sprint 19) |
+| Advisory Calibration Layer | ✅ Implemented (Sprint 20) |
 | Prompt Optimization (A/B testing) | 📋 NEXT horizon |
 | Semantic Retrieval | 📋 Planned |
 | Marketplace | ❄️ Frozen |
