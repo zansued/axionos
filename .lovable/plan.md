@@ -279,6 +279,23 @@ Organized into four sequential sprints.
 
 ---
 
+## Sprint 9 — Adaptive Repair Routing
+
+**Objective:** Select repair strategies based on historical success data instead of static mapping.
+
+**Key Deliverables:**
+- Repair Routing schema (`_shared/contracts/repair-routing.schema.ts`)
+- Repair Routing Engine (`repair-routing-engine/`)
+- `repair_routing_log` table with RLS
+- Adaptive routing integrated into `autonomous-build-repair`
+- 3-layer routing: strategy_effectiveness → pattern_library → static_map
+- RepairRoutingCard UI component in initiative details
+- Routing decisions persisted for auditability
+
+**Status:** ✅ Complete
+
+---
+
 ## Success Metrics
 
 | Metric | Target |
