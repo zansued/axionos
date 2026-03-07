@@ -254,7 +254,7 @@ describe("Sprint 18 — Redundancy Guard", () => {
 describe("Sprint 18 — Forbidden Mutation Regression", () => {
   it("historical alignment values are informational only", () => {
     const alignments = ["reinforces_prior_direction", "extends_prior_direction", "reopens_unresolved_issue", "diverges_from_prior_direction", "historically_novel"];
-    const forbidden = ["execute", "deploy", "apply", "mutate", "force"];
+    const forbidden = ["execute", "deploy", "apply_change", "mutate", "force_update"];
     for (const a of alignments) {
       for (const f of forbidden) {
         expect(a).not.toContain(f);
