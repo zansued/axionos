@@ -211,9 +211,9 @@ Each execution improves future executions. The system transitions from determini
 
 ## DONE — Meta-Agents (Level 4.5 — Self-Designing Engineering System) ✅
 
-**Status:** ✅ Implemented (Sprints 13–14, memory-aware Sprint 18)
+**Status:** ✅ Implemented (Sprints 13–14, memory-aware Sprint 18, quality feedback Sprint 19)
 
-4 memory-aware meta-agents active with historical context enrichment, continuity scoring, redundancy suppression, and proposal layer v2. All recommendations require human review.
+4 memory-aware meta-agents active with historical context enrichment, continuity scoring, redundancy suppression, proposal layer v2, and quality feedback loop. All recommendations require human review. Quality scoring tracks acceptance rates, confidence calibration, and memory effectiveness.
 
 ---
 

@@ -74,7 +74,7 @@ AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
 
 - **Execution:** Stable 32-stage deterministic pipeline with DAG orchestration, runtime validation, autonomous repair, and preventive engineering.
 - **Learning:** Active rule-based learning with prompt outcome analysis, strategy effectiveness tracking, predictive error detection, and bounded weight adjustment.
-- **Meta-Analysis:** 4 memory-aware meta-agents with historical context enrichment, continuity scoring, redundancy suppression, and alignment classification. Recommendation-only — no system mutation.
+- **Meta-Analysis:** 4 memory-aware meta-agents with historical context enrichment, continuity scoring, redundancy suppression, alignment classification, and quality feedback loop. Recommendation-only — no system mutation.
 - **Proposal Generation:** Accepted recommendations produce structured engineering proposals with Related Historical Context sections, decision/outcome signals, and historical novelty indicators.
 - **Engineering Memory:** Full stack operational — foundation, retrieval surfaces, summaries, and memory-aware reasoning.
 - **Historical Intelligence:** Continuity scoring, redundancy guard, and historical alignment active across all meta-agents and proposals.
