@@ -538,7 +538,7 @@ serve(async (req) => {
     await pipelineLog(ctx, "build_repair_patches", "🩹 Generating structural patches...");
     const structuralPatches = generateStructuralPatches(errors);
 
-    // ── 5. AI patches for code errors ──
+    // ── 6. AI patches for code errors ──
     const codeErrors = errors.filter(e =>
       ["typescript", "build", "import", "syntax_error"].includes(e.category)
     );
