@@ -308,8 +308,9 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(17, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(18, 1fr)" }}>
             <TabsTrigger value="platform" className="text-xs gap-1"><Orbit className="h-3 w-3" /> PlatInt</TabsTrigger>
+            <TabsTrigger value="calibration" className="text-xs gap-1"><SlidersHorizontal className="h-3 w-3" /> Calib</TabsTrigger>
             <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Perf</TabsTrigger>
             <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>
             <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Quality</TabsTrigger>
