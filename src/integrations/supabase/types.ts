@@ -1012,6 +1012,175 @@ export type Database = {
           },
         ]
       }
+      cross_stage_learning_edges: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          evidence_refs: Json
+          from_stage_key: string
+          id: string
+          impact_score: number
+          organization_id: string
+          relationship_type: string
+          status: string
+          support_count: number
+          to_stage_key: string
+          updated_at: string
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          from_stage_key: string
+          id?: string
+          impact_score?: number
+          organization_id: string
+          relationship_type: string
+          status?: string
+          support_count?: number
+          to_stage_key: string
+          updated_at?: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          from_stage_key?: string
+          id?: string
+          impact_score?: number
+          organization_id?: string
+          relationship_type?: string
+          status?: string
+          support_count?: number
+          to_stage_key?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cross_stage_learning_edges_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cross_stage_policy_outcomes: {
+        Row: {
+          baseline_metrics: Json
+          created_at: string
+          downstream_impact: Json
+          id: string
+          notes: string | null
+          observed_outcome: string
+          organization_id: string
+          pipeline_job_id: string | null
+          policy_id: string
+          policy_metrics: Json
+          spillover_detected: boolean
+        }
+        Insert: {
+          baseline_metrics?: Json
+          created_at?: string
+          downstream_impact?: Json
+          id?: string
+          notes?: string | null
+          observed_outcome?: string
+          organization_id: string
+          pipeline_job_id?: string | null
+          policy_id: string
+          policy_metrics?: Json
+          spillover_detected?: boolean
+        }
+        Update: {
+          baseline_metrics?: Json
+          created_at?: string
+          downstream_impact?: Json
+          id?: string
+          notes?: string | null
+          observed_outcome?: string
+          organization_id?: string
+          pipeline_job_id?: string | null
+          policy_id?: string
+          policy_metrics?: Json
+          spillover_detected?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cross_stage_policy_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cross_stage_policy_outcomes_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "cross_stage_policy_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cross_stage_policy_profiles: {
+        Row: {
+          action_mode: string
+          affected_stages: string[]
+          confidence_score: number
+          created_at: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          policy_payload: Json
+          policy_scope: string
+          policy_type: string
+          status: string
+          support_count: number
+          trigger_signature: string
+          updated_at: string
+        }
+        Insert: {
+          action_mode?: string
+          affected_stages?: string[]
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          policy_payload?: Json
+          policy_scope?: string
+          policy_type: string
+          status?: string
+          support_count?: number
+          trigger_signature?: string
+          updated_at?: string
+        }
+        Update: {
+          action_mode?: string
+          affected_stages?: string[]
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          policy_payload?: Json
+          policy_scope?: string
+          policy_type?: string
+          status?: string
+          support_count?: number
+          trigger_signature?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cross_stage_policy_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       engineering_memory_entries: {
         Row: {
           confidence_score: number
