@@ -69,6 +69,21 @@ serve(async (req) => {
       console.warn("Historical context retrieval failed (non-blocking):", e);
     }
 
+    // ── Sprint 19: Retrieve quality feedback for confidence calibration (advisory) ──
+    let qualityFeedback: Record<string, any> = {};
+    try {
+      const { data: aggregates } = await sc
+        .from("proposal_quality_aggregates")
+        .select("meta_agent_type, avg_acceptance_rate, avg_overall_quality, quality_trend, memory_enriched_acceptance_rate")
+        .eq("organization_id", organization_id);
+      
+      for (const agg of (aggregates || [])) {
+        qualityFeedback[agg.meta_agent_type] = agg;
+      }
+    } catch (e) {
+      console.warn("Quality feedback retrieval failed (non-blocking):", e);
+    }
+
     // Run all Meta-Agents in parallel with historical context
     const [archRecs, roleRecs, workflowRecs, evolutionRecs] = await Promise.all([
       runArchitectureMetaAgent(sc, organization_id, historyContexts.architecture).catch((e) => { console.error("Architecture MA error:", e); return []; }),
