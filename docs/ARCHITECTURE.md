@@ -2,7 +2,7 @@
 
 > Technical architecture of the autonomous software engineering system.
 >
-> **What changed (2026-03-07):** Sprint 13 Meta-Agents v1 implemented — 4 meta-agent classes (Architecture, Role Designer, Workflow Optimizer, System Evolution Advisor), recommendation registry table, rule-based scoring model, review workflow, audit trail, and dashboard. Meta-Agents operate in recommendation-only mode with full governance safety. Previous: Meta-Agent Coordination Layer was planned; now active.
+> **What changed (2026-03-07):** Engineering Memory Architecture designed (Layer 9) — cross-layer knowledge infrastructure with 6 memory types, data model, capture strategy, retrieval surfaces, and synthesis model. Design-only, no runtime changes. Previous: Sprint 14 Controlled Meta-Agent Actions.
 >
 > Last updated: 2026-03-07
 
