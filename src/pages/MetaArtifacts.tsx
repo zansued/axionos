@@ -14,7 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import {
   FileText, Shield, CheckCircle, XCircle, Eye, Rocket,
-  Layers, Users, Workflow, TrendingUp, Brain, AlertTriangle, Clock,
+  Layers, Users, Workflow, TrendingUp, Brain, AlertTriangle, Clock, BarChart3,
 } from "lucide-react";
 import { RelatedMemoryPanel } from "@/components/memory/RelatedMemoryPanel";
 import { RelatedSummaryPanel } from "@/components/memory/RelatedSummaryPanel";
