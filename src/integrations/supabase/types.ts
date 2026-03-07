@@ -5678,6 +5678,240 @@ export type Database = {
           },
         ]
       }
+      strategy_portfolio_conflicts: {
+        Row: {
+          affected_strategy_ids: Json
+          confidence: number
+          conflict_type: string
+          created_at: string
+          description: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          portfolio_id: string
+          recommended_resolution: string
+          resolved_at: string | null
+          severity: string
+          status: string
+        }
+        Insert: {
+          affected_strategy_ids?: Json
+          confidence?: number
+          conflict_type?: string
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          portfolio_id: string
+          recommended_resolution?: string
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+        }
+        Update: {
+          affected_strategy_ids?: Json
+          confidence?: number
+          conflict_type?: string
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          portfolio_id?: string
+          recommended_resolution?: string
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_portfolio_conflicts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strategy_portfolio_conflicts_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "strategy_portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strategy_portfolio_members: {
+        Row: {
+          cost_efficiency_score: number | null
+          created_at: string
+          exposure_weight: number
+          id: string
+          last_evaluated_at: string | null
+          lifecycle_status: string
+          organization_id: string
+          performance_score: number | null
+          portfolio_id: string
+          stability_score: number | null
+          strategy_family_id: string
+          updated_at: string
+        }
+        Insert: {
+          cost_efficiency_score?: number | null
+          created_at?: string
+          exposure_weight?: number
+          id?: string
+          last_evaluated_at?: string | null
+          lifecycle_status?: string
+          organization_id: string
+          performance_score?: number | null
+          portfolio_id: string
+          stability_score?: number | null
+          strategy_family_id: string
+          updated_at?: string
+        }
+        Update: {
+          cost_efficiency_score?: number | null
+          created_at?: string
+          exposure_weight?: number
+          id?: string
+          last_evaluated_at?: string | null
+          lifecycle_status?: string
+          organization_id?: string
+          performance_score?: number | null
+          portfolio_id?: string
+          stability_score?: number | null
+          strategy_family_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_portfolio_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strategy_portfolio_members_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "strategy_portfolios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strategy_portfolio_members_strategy_family_id_fkey"
+            columns: ["strategy_family_id"]
+            isOneToOne: false
+            referencedRelation: "execution_strategy_families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strategy_portfolio_metrics: {
+        Row: {
+          active_count: number
+          created_at: string
+          degrading_count: number
+          id: string
+          member_count: number
+          organization_id: string
+          portfolio_cost_efficiency: number
+          portfolio_id: string
+          portfolio_regression_rate: number
+          portfolio_stability_index: number
+          portfolio_success_rate: number
+          snapshot_data: Json
+          strategy_concentration_index: number
+        }
+        Insert: {
+          active_count?: number
+          created_at?: string
+          degrading_count?: number
+          id?: string
+          member_count?: number
+          organization_id: string
+          portfolio_cost_efficiency?: number
+          portfolio_id: string
+          portfolio_regression_rate?: number
+          portfolio_stability_index?: number
+          portfolio_success_rate?: number
+          snapshot_data?: Json
+          strategy_concentration_index?: number
+        }
+        Update: {
+          active_count?: number
+          created_at?: string
+          degrading_count?: number
+          id?: string
+          member_count?: number
+          organization_id?: string
+          portfolio_cost_efficiency?: number
+          portfolio_id?: string
+          portfolio_regression_rate?: number
+          portfolio_stability_index?: number
+          portfolio_success_rate?: number
+          snapshot_data?: Json
+          strategy_concentration_index?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_portfolio_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "strategy_portfolio_metrics_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "strategy_portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strategy_portfolios: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          organization_id: string
+          portfolio_key: string
+          portfolio_name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          organization_id: string
+          portfolio_key: string
+          portfolio_name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          organization_id?: string
+          portfolio_key?: string
+          portfolio_name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_portfolios_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       supabase_connections: {
         Row: {
           connected_by: string
