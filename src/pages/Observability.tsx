@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -31,6 +31,7 @@ import { PlatformIntelligenceDashboard } from "@/components/observability/Platfo
 import { PlatformSelfCalibrationDashboard } from "@/components/observability/PlatformSelfCalibrationDashboard";
 import { ExecutionStrategyEvolutionDashboard } from "@/components/observability/ExecutionStrategyEvolutionDashboard";
 import { StrategyPortfolioDashboard } from "@/components/observability/StrategyPortfolioDashboard";
+import { PlatformStabilizationDashboard } from "@/components/observability/PlatformStabilizationDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -310,9 +311,10 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(20, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(21, 1fr)" }}>
             <TabsTrigger value="platform" className="text-xs gap-1"><Orbit className="h-3 w-3" /> PlatInt</TabsTrigger>
             <TabsTrigger value="calibration" className="text-xs gap-1"><SlidersHorizontal className="h-3 w-3" /> Calib</TabsTrigger>
+            <TabsTrigger value="stability" className="text-xs gap-1"><Anchor className="h-3 w-3" /> Stability</TabsTrigger>
             <TabsTrigger value="strategy-evo" className="text-xs gap-1"><FlaskConical className="h-3 w-3" /> StratEvo</TabsTrigger>
             <TabsTrigger value="strat-portfolio" className="text-xs gap-1"><Layers className="h-3 w-3" /> StratPort</TabsTrigger>
             <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Perf</TabsTrigger>
@@ -346,6 +348,11 @@ export default function Observability() {
           {/* ===== EXECUTION STRATEGY EVOLUTION ===== */}
           <TabsContent value="strategy-evo" className="mt-4">
             <ExecutionStrategyEvolutionDashboard />
+          </TabsContent>
+
+          {/* ===== PLATFORM SELF-STABILIZATION ===== */}
+          <TabsContent value="stability" className="mt-4">
+            <PlatformStabilizationDashboard />
           </TabsContent>
 
           {/* ===== STRATEGY PORTFOLIO GOVERNANCE ===== */}

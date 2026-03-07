@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 33 — Strategy Portfolio Governance. Portfolio-level lifecycle control, conflict detection, exposure balancing for strategy families. Previous: Execution Strategy Evolution (Sprint 32).
+> **What changed (2026-03-07):** Sprint 34 — Platform Self-Stabilization. Bounded drift detection, oscillation suppression, safe-mode profiles, stabilization rollback. Previous: Strategy Portfolio Governance (Sprint 33).
 >
 > Last updated: 2026-03-07
 

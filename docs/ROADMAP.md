@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 33 — Strategy Portfolio Governance. Portfolio-level lifecycle control, conflict detection, exposure balancing, and advisory-first optimization for strategy families. Previous: Execution Strategy Evolution (Sprint 32).
+> **What changed (2026-03-07):** Sprint 34 — Platform Self-Stabilization. Bounded drift detection, oscillation suppression, safe-mode profiles, stabilization rollback. Previous: Strategy Portfolio Governance (Sprint 33).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
@@ -17,13 +17,14 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 18 architectural layers active |
+| **System State** | 19 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
 | **Meta-Agents Status** | v1.4 active — memory-aware + quality feedback + advisory calibration |
 | **Platform Intelligence** | Active — system-level observability + health model |
 | **Platform Calibration** | Active — bounded threshold tuning + guardrails + rollback |
+| **Platform Stabilization** | Active — drift detection + oscillation suppression + safe modes |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
@@ -31,7 +32,7 @@
 
 ## Strategic Directive
 
-AxionOS has completed 33 implementation sprints spanning the full capability arc from deterministic execution to strategy portfolio governance. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, and strategy portfolio governance — all under governed, advisory-first safety boundaries.
+AxionOS has completed 34 implementation sprints spanning the full capability arc from deterministic execution to platform self-stabilization. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, and bounded self-stabilization — all under governed, advisory-first safety boundaries.
 
 **The focus is now:**
 1. Commercial stability with real billing flows
@@ -45,14 +46,14 @@ AxionOS has completed 33 implementation sprints spanning the full capability arc
 ## Implementation Horizons
 
 ```
-  DONE (33 sprints)                    NOW                           NEXT                           LATER
+  DONE (34 sprints)                    NOW                           NEXT                           LATER
   ──────────────────►                  ──────────────────►           ──────────────────►            ──────────────────►
-  Level 1-5                            Stabilization &               Semantic Retrieval +           Autonomous
-  (Kernel → Learning →                  Commercial                   Platform                      Engineering
-   Meta-Agents → Memory →              Validation +                  Self-Stabilization +           Advisor +
-   Governance → Intelligence →          Intelligence                  Cross-Family Strategy         Discovery-Driven
-   Calibration → Strategy Evo →        Maturation                    Coordination                  Architecture
-   Portfolio Governance)
+  Level 1-5                            Commercial                    Semantic Retrieval +           Autonomous
+  (Kernel → Learning →                  Validation +                  Cross-Family Strategy         Engineering
+   Meta-Agents → Memory →              Intelligence                  Coordination +                Advisor +
+   Governance → Intelligence →          Maturation                    Resilience Hardening          Discovery-Driven
+   Calibration → Strategy Evo →                                                                    Architecture
+   Portfolio Gov → Stabilization)
 ```
 
 ---
