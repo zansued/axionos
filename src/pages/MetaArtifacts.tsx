@@ -60,6 +60,16 @@ const VALID_ACTIONS: Record<string, { action: string; label: string; icon: typeo
   ],
 };
 
+const FEEDBACK_TAGS_ART = [
+  { value: "too_generic", label: "Too Generic" },
+  { value: "well_supported", label: "Well Supported" },
+  { value: "historically_redundant", label: "Historically Redundant" },
+  { value: "novel_but_useful", label: "Novel but Useful" },
+  { value: "unclear_impact", label: "Unclear Impact" },
+  { value: "high_value", label: "High Value" },
+  { value: "needs_more_evidence", label: "Needs More Evidence" },
+];
+
 export default function MetaArtifacts() {
   const { currentOrg } = useOrg();
   const queryClient = useQueryClient();
@@ -67,6 +77,7 @@ export default function MetaArtifacts() {
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [reviewDialog, setReviewDialog] = useState<{ id: string; title: string; action: string } | null>(null);
   const [reviewNotes, setReviewNotes] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [previewArtifact, setPreviewArtifact] = useState<Record<string, unknown> | null>(null);
 
   const { data: artifacts, isLoading, error: queryError } = useQuery({
