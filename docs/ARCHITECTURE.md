@@ -490,6 +490,45 @@ Additional capture events (pipeline completion, error patterns, strategy updates
 
 ---
 
+### Layer 10: Proposal Quality & Calibration Layer
+
+**Purpose:** Measure the quality and usefulness of recommendations and artifacts over time, and produce structured calibration signals that diagnose where advisory intelligence should be tuned.
+
+**Status:** ✅ Active (Sprints 19–20)
+
+**Includes:**
+- Proposal Quality Feedback Loop (Sprint 19): quality scoring, outcome tracking, confidence calibration
+- Advisory Calibration Layer (Sprint 20): structured diagnostic signals across 6 calibration domains
+- Calibration summaries for periodic system-level guidance
+- Calibration observability endpoints
+
+**Calibration Domains:**
+
+| Domain | Purpose |
+|--------|---------|
+| `META_AGENT_PERFORMANCE` | Evaluate meta-agent recommendation value |
+| `PROPOSAL_USEFULNESS` | Analyze usefulness by artifact type |
+| `HISTORICAL_CONTEXT_VALUE` | Assess whether historical context helps or hurts |
+| `REDUNDANCY_GUARD_EFFECTIVENESS` | Detect suppression calibration issues |
+| `NOVELTY_BALANCE` | Evaluate novelty scoring balance |
+| `DECISION_FOLLOW_THROUGH` | Track implementation follow-through patterns |
+
+**Key modules:**
+- `proposal-quality-scoring.ts` — Quality scoring service
+- `proposal-quality-feedback-service.ts` — Feedback collection
+- `calibration/types.ts` — Calibration taxonomy
+- `calibration/scoring.ts` — Deterministic calibration scoring
+- `calibration/analysis-service.ts` — Domain-specific analysis
+- `advisory-calibration-engine/index.ts` — Calibration API
+
+**Persistence:** `proposal_quality_feedback`, `proposal_quality_summaries`, `advisory_calibration_signals`, `advisory_calibration_summaries`
+
+**Critical constraint:** Calibration signals are **advisory only**. They diagnose where tuning should happen but do not apply tuning automatically. No auto-adjustment of meta-agent scoring, redundancy guard thresholds, historical weighting, or proposal generation behavior. Humans decide when and how tuning is applied.
+
+**Interactions:** Consumes data from Layers 7 (recommendations), 8 (artifacts), and 9 (memory). Produces structured diagnostic signals for human review.
+
+---
+
 ## 3. Safety Architecture
 
 ### Structural Safety Rules
