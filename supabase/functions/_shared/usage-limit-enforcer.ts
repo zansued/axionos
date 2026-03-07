@@ -2,6 +2,8 @@
  * Usage Limit Enforcer
  * Checks workspace/org usage against plan limits before pipeline execution.
  * Returns structured error if limits exceeded.
+ * 
+ * IMPORTANT: All queries are org-scoped to prevent cross-tenant data leakage.
  */
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -55,38 +57,64 @@ export async function enforceUsageLimits(
   monthStart.setDate(1);
   monthStart.setHours(0, 0, 0, 0);
 
-  const [initRes, jobsRes, outputsRes, activeRunsRes] = await Promise.all([
+  // First get org initiative IDs for scoping job queries
+  const { data: orgInits } = await serviceClient
+    .from("initiatives")
+    .select("id")
+    .eq("organization_id", organizationId);
+
+  const orgInitIds = (orgInits ?? []).map((i) => i.id);
+
+  const [initCountRes, outputsRes] = await Promise.all([
     // Initiatives created this month
     serviceClient
       .from("initiatives")
       .select("id", { count: "exact", head: true })
       .eq("organization_id", organizationId)
       .gte("created_at", monthStart.toISOString()),
-    // Jobs (for deployment count)
-    serviceClient
-      .from("initiative_jobs")
-      .select("id, stage, status")
-      .in("stage", ["publish", "deploy"])
-      .eq("status", "completed")
-      .gte("created_at", monthStart.toISOString()),
-    // Token usage
+    // Token usage (already org-scoped)
     serviceClient
       .from("agent_outputs")
       .select("tokens_used")
       .eq("organization_id", organizationId)
       .gte("created_at", monthStart.toISOString()),
-    // Active parallel runs
-    serviceClient
-      .from("initiative_jobs")
-      .select("id", { count: "exact", head: true })
-      .eq("status", "running"),
   ]);
 
+  // Query jobs scoped to this org's initiatives only
+  let deploymentCount = 0;
+  let parallelRunCount = 0;
+
+  if (orgInitIds.length > 0) {
+    // Batch in chunks to avoid URL length limits
+    const chunkSize = 100;
+    for (let i = 0; i < orgInitIds.length; i += chunkSize) {
+      const chunk = orgInitIds.slice(i, i + chunkSize);
+
+      const [deployRes, activeRes] = await Promise.all([
+        serviceClient
+          .from("initiative_jobs")
+          .select("id", { count: "exact", head: true })
+          .in("initiative_id", chunk)
+          .in("stage", ["publish", "deploy"])
+          .eq("status", "completed")
+          .gte("created_at", monthStart.toISOString()),
+        serviceClient
+          .from("initiative_jobs")
+          .select("id", { count: "exact", head: true })
+          .in("initiative_id", chunk)
+          .eq("status", "running"),
+      ]);
+
+      deploymentCount += deployRes.count ?? 0;
+      parallelRunCount += activeRes.count ?? 0;
+    }
+  }
+
   const current = {
-    initiatives: initRes.count ?? 0,
+    initiatives: initCountRes.count ?? 0,
     tokens: (outputsRes.data ?? []).reduce((s, o) => s + (o.tokens_used ?? 0), 0),
-    deployments: (jobsRes.data ?? []).length,
-    parallel_runs: activeRunsRes.count ?? 0,
+    deployments: deploymentCount,
+    parallel_runs: parallelRunCount,
   };
 
   // Check limits
@@ -137,13 +165,21 @@ export async function enforceUsageLimits(
     .eq("organization_id", organizationId)
     .maybeSingle();
 
-  if (orgLimits?.hard_limit) {
-    const { data: costData } = await serviceClient
-      .from("initiative_jobs")
-      .select("cost_usd")
-      .gte("created_at", monthStart.toISOString());
+  if (orgLimits?.hard_limit && orgInitIds.length > 0) {
+    // Sum costs only for this org's jobs
+    let totalCost = 0;
+    const chunkSize = 100;
+    for (let i = 0; i < orgInitIds.length; i += chunkSize) {
+      const chunk = orgInitIds.slice(i, i + chunkSize);
+      const { data: costData } = await serviceClient
+        .from("initiative_jobs")
+        .select("cost_usd")
+        .in("initiative_id", chunk)
+        .gte("created_at", monthStart.toISOString());
 
-    const totalCost = (costData ?? []).reduce((s, j) => s + (Number(j.cost_usd) || 0), 0);
+      totalCost += (costData ?? []).reduce((s, j) => s + (Number(j.cost_usd) || 0), 0);
+    }
+
     if (totalCost >= orgLimits.monthly_budget_usd) {
       return {
         allowed: false,
