@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 28 — Execution Mode Portfolio Optimization. Bounded portfolio evaluation, ranking, lifecycle management, conflict detection, and recommendations now operational. Previous: Execution Policy Intelligence (Sprint 27).
+> **What changed (2026-03-07):** Sprint 29 — Workspace / Tenant Adaptive Policy Tuning. Bounded tenant-aware execution policy tuning with drift detection, override guards, and workspace-level adaptation now operational. Previous: Execution Mode Portfolio Optimization (Sprint 28).
 >
 > Last updated: 2026-03-07
 
@@ -906,6 +906,64 @@ Execution Mode Portfolio Optimization manages the set of available execution pol
 
 ---
 
-## 22. Governing Principle
+## 22. Workspace / Tenant Adaptive Policy Tuning (Active — Sprint 29)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated.
+> **Status:** ✅ Active — Bounded tenant/workspace policy adaptation
+
+### Overview
+
+Workspace / Tenant Adaptive Policy Tuning allows AxionOS to specialize global execution policy behavior per organization and workspace without fragmenting governance or mutating kernel structure. The system tunes policy preferences based on tenant-specific outcomes, detects drift, and maintains override guards.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Tuning Engine | `tenant-policy/tenant-policy-tuning-engine.ts` | Combine global portfolio with tenant preferences |
+| Override Guard | `tenant-policy/tenant-policy-override-guard.ts` | Validate and clamp local overrides within bounds |
+| Tenant-Aware Selector | `tenant-policy/tenant-aware-policy-selector.ts` | Select policy considering tenant/workspace context |
+| Drift Detector | `tenant-policy/tenant-policy-drift-detector.ts` | Detect harmful drift, staleness, overfit |
+
+### Preference Scopes
+
+- `organization` — Organization-wide preference
+- `workspace` — Workspace-specific preference (takes precedence)
+
+### Applied Modes
+
+- `global_default` — No tenant tuning applied
+- `tenant_tuned` — Organization preference applied
+- `workspace_tuned` — Workspace preference applied
+
+### Drift Signal Types
+
+- `harmful_drift` — Local tuning producing harmful outcomes
+- `stale_profile` — Preference not updated in 30+ days
+- `overfit_local` — High confidence with insufficient sample
+- `divergence_from_global` — Local performance significantly below global
+- `low_sample_tuning` — Active tuning with too few outcomes
+
+### Safety Boundaries
+
+- Cannot mutate pipeline topology, governance, billing, or enforcement
+- Cannot exceed declared override limits (hard cap at 0.3 delta)
+- Cannot bypass mandatory review or validation gates
+- Cannot auto-create broad unsafe local policies
+- All local tuning decisions are auditable with lineage
+- All transitions preserve rollback capability
+- Falls back to global defaults when tenant confidence is low
+
+### Events
+
+- `tenant_policy_profile_activated` — Preference profile activated
+- `tenant_policy_tuning_computed` — Tuning recomputed for tenant
+- `tenant_policy_selected` — Policy selected with tenant context
+- `tenant_policy_locally_tuned` — Local tuning applied
+- `tenant_policy_drift_detected` — Drift signal detected
+- `tenant_policy_recommendation_created` — Recommendation generated
+- `tenant_policy_profile_deprecated` — Preference deprecated
+
+---
+
+## 23. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults.

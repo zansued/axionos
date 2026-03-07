@@ -5180,6 +5180,194 @@ export type Database = {
           },
         ]
       }
+      tenant_policy_outcomes: {
+        Row: {
+          applied_mode: string
+          context_class: string
+          created_at: string
+          evidence_refs: Json | null
+          execution_policy_profile_id: string
+          id: string
+          organization_id: string
+          outcome_metrics: Json | null
+          outcome_status: string
+          pipeline_job_id: string | null
+          tenant_preference_profile_id: string | null
+          workspace_id: string | null
+        }
+        Insert: {
+          applied_mode: string
+          context_class: string
+          created_at?: string
+          evidence_refs?: Json | null
+          execution_policy_profile_id: string
+          id?: string
+          organization_id: string
+          outcome_metrics?: Json | null
+          outcome_status: string
+          pipeline_job_id?: string | null
+          tenant_preference_profile_id?: string | null
+          workspace_id?: string | null
+        }
+        Update: {
+          applied_mode?: string
+          context_class?: string
+          created_at?: string
+          evidence_refs?: Json | null
+          execution_policy_profile_id?: string
+          id?: string
+          organization_id?: string
+          outcome_metrics?: Json | null
+          outcome_status?: string
+          pipeline_job_id?: string | null
+          tenant_preference_profile_id?: string | null
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_policy_outcomes_execution_policy_profile_id_fkey"
+            columns: ["execution_policy_profile_id"]
+            isOneToOne: false
+            referencedRelation: "execution_policy_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_policy_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_policy_outcomes_tenant_preference_profile_id_fkey"
+            columns: ["tenant_preference_profile_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_policy_preference_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_policy_outcomes_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_policy_preference_profiles: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          id: string
+          organization_id: string
+          override_limits: Json
+          preference_name: string
+          preference_scope: string
+          preferred_policy_modes: Json
+          priority_weights: Json
+          status: string
+          support_count: number
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          override_limits?: Json
+          preference_name: string
+          preference_scope: string
+          preferred_policy_modes?: Json
+          priority_weights?: Json
+          status?: string
+          support_count?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          override_limits?: Json
+          preference_name?: string
+          preference_scope?: string
+          preferred_policy_modes?: Json
+          priority_weights?: Json
+          status?: string
+          support_count?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_policy_preference_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_policy_preference_profiles_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_policy_recommendations: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          id: string
+          organization_id: string
+          recommendation_reason: Json
+          recommendation_type: string
+          status: string
+          target_profile_ids: Json
+          workspace_id: string | null
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          recommendation_reason?: Json
+          recommendation_type: string
+          status?: string
+          target_profile_ids?: Json
+          workspace_id?: string | null
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          recommendation_reason?: Json
+          recommendation_type?: string
+          status?: string
+          target_profile_ids?: Json
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_policy_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_policy_recommendations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       usage_monthly_snapshots: {
         Row: {
           created_at: string

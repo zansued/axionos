@@ -5,7 +5,7 @@
 > **Last updated:** 2026-03-07
 >
 > **Current state:** Level 5 — Institutional Engineering Memory Platform.
-> Fourteen architectural layers active. Execution Mode Portfolio Optimization (Sprint 28). Execution Policy Intelligence (Sprint 27). Learning Agents v2 with Cross-Stage Policy Synthesis (Sprint 26). Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
+> Fourteen architectural layers active. Workspace / Tenant Adaptive Policy Tuning (Sprint 29). Execution Mode Portfolio Optimization (Sprint 28). Execution Policy Intelligence (Sprint 27). Learning Agents v2 with Cross-Stage Policy Synthesis (Sprint 26). Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
 
 ---
 
@@ -978,3 +978,12 @@ supabase/functions/
 - `execution_policy_profiles` — Bounded execution policy modes with scope, adjustments, and status lifecycle
 - `execution_policy_outcomes` — Outcome tracking per policy with metrics and evidence
 - `execution_policy_decisions` — Audit trail of policy application decisions at runtime checkpoints
+
+### Execution Mode Portfolio Tables (Sprint 28)
+- `execution_policy_portfolio_entries` — Portfolio entries with composite scores and lifecycle status
+- `execution_policy_portfolio_recommendations` — Portfolio-level recommendations with confidence and status
+
+### Tenant Adaptive Policy Tuning Tables (Sprint 29)
+- `tenant_policy_preference_profiles` — Org/workspace preference profiles with preferred modes, priority weights, and override limits
+- `tenant_policy_outcomes` — Tenant-specific outcome tracking with applied mode (global_default, tenant_tuned, workspace_tuned)
+- `tenant_policy_recommendations` — Tenant-level recommendations for preference profile lifecycle management
