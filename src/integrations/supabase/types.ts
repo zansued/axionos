@@ -2745,6 +2745,208 @@ export type Database = {
           },
         ]
       }
+      prompt_promotion_health_checks: {
+        Row: {
+          avg_cost_usd: number | null
+          avg_duration_ms: number | null
+          avg_quality_score: number | null
+          check_window_end: string
+          check_window_start: string
+          created_at: string
+          executions: number
+          health_status: string
+          id: string
+          organization_id: string
+          prompt_variant_id: string
+          regression_flags: Json | null
+          repair_rate: number | null
+          rollout_window_id: string
+          success_rate: number | null
+        }
+        Insert: {
+          avg_cost_usd?: number | null
+          avg_duration_ms?: number | null
+          avg_quality_score?: number | null
+          check_window_end: string
+          check_window_start: string
+          created_at?: string
+          executions?: number
+          health_status?: string
+          id?: string
+          organization_id: string
+          prompt_variant_id: string
+          regression_flags?: Json | null
+          repair_rate?: number | null
+          rollout_window_id: string
+          success_rate?: number | null
+        }
+        Update: {
+          avg_cost_usd?: number | null
+          avg_duration_ms?: number | null
+          avg_quality_score?: number | null
+          check_window_end?: string
+          check_window_start?: string
+          created_at?: string
+          executions?: number
+          health_status?: string
+          id?: string
+          organization_id?: string
+          prompt_variant_id?: string
+          regression_flags?: Json | null
+          repair_rate?: number | null
+          rollout_window_id?: string
+          success_rate?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_promotion_health_checks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_promotion_health_checks_prompt_variant_id_fkey"
+            columns: ["prompt_variant_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_promotion_health_checks_rollout_window_id_fkey"
+            columns: ["rollout_window_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_rollout_windows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prompt_rollback_events: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          restored_control_variant_id: string
+          rollback_mode: string
+          rollback_reason: Json
+          rolled_back_variant_id: string
+          rollout_window_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          restored_control_variant_id: string
+          rollback_mode?: string
+          rollback_reason?: Json
+          rolled_back_variant_id: string
+          rollout_window_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          restored_control_variant_id?: string
+          rollback_mode?: string
+          rollback_reason?: Json
+          rolled_back_variant_id?: string
+          rollout_window_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_rollback_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_rollback_events_restored_control_variant_id_fkey"
+            columns: ["restored_control_variant_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_rollback_events_rolled_back_variant_id_fkey"
+            columns: ["rolled_back_variant_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_rollback_events_rollout_window_id_fkey"
+            columns: ["rollout_window_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_rollout_windows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prompt_rollout_windows: {
+        Row: {
+          completed_at: string | null
+          current_exposure_percent: number
+          id: string
+          organization_id: string
+          previous_control_variant_id: string | null
+          promoted_variant_id: string
+          rollout_mode: string
+          rollout_status: string
+          rollout_strategy: string
+          stage_key: string
+          started_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          current_exposure_percent?: number
+          id?: string
+          organization_id: string
+          previous_control_variant_id?: string | null
+          promoted_variant_id: string
+          rollout_mode?: string
+          rollout_status?: string
+          rollout_strategy?: string
+          stage_key: string
+          started_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          current_exposure_percent?: number
+          id?: string
+          organization_id?: string
+          previous_control_variant_id?: string | null
+          promoted_variant_id?: string
+          rollout_mode?: string
+          rollout_status?: string
+          rollout_strategy?: string
+          stage_key?: string
+          started_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_rollout_windows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_rollout_windows_previous_control_variant_id_fkey"
+            columns: ["previous_control_variant_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_rollout_windows_promoted_variant_id_fkey"
+            columns: ["promoted_variant_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prompt_strategy_metrics: {
         Row: {
           average_cost: number
