@@ -4,9 +4,9 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 86 (Outcome Assurance 2.0) — ✅ Complete
-> **Next Planned:** Sprint 87 (Advanced Distributed Runtime) — 📋 Planned
-> **Reserved Horizon:** Blocks R–S (Sprints 87–94) — Block Q complete
+> **Current Sprint:** 87 (Distributed Job Control Plane) — ✅ Complete
+> **Next Planned:** Sprint 88 (Cross-Region Resilience) — 📋 Planned
+> **Reserved Horizon:** Blocks R–S (Sprints 87–94) — Block R in progress
 
 ## Document Authority
 
@@ -800,5 +800,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Post-Deploy Feedback Assimilation | 1 | 84 |
 | Reliability-Aware Delivery Tuning | 1 | 85 |
 | Outcome Assurance 2.0 | 1 | 86 |
+| Distributed Job Control Plane | 1 | 87 |
 | Support | 11 | Various |
-| **Total** | **~137** | |
+| **Total** | **~138** | |

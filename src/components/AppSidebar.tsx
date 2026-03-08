@@ -1,7 +1,7 @@
 import {
   Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Map,
   Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
-  Plug, FileSearch, Sparkles, Scale, BrainCircuit, Zap, PackageCheck, ShieldCheck, Store, TrendingUp, GitPullRequestArrow, Rss, Sliders,
+  Plug, FileSearch, Sparkles, Scale, BrainCircuit, Zap, PackageCheck, ShieldCheck, Store, TrendingUp, GitPullRequestArrow, Rss, Sliders, Server,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
@@ -57,6 +57,7 @@ const bottomItems = [
   { title: "Post-Deploy", url: "/post-deploy-feedback", icon: Rss },
   { title: "Rel. Tuning", url: "/delivery-tuning", icon: Sliders },
   { title: "Assurance 2.0", url: "/outcome-assurance", icon: ShieldCheck },
+  { title: "Dist. Jobs", url: "/distributed-jobs", icon: Server },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
