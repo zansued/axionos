@@ -2864,6 +2864,147 @@ export type Database = {
           },
         ]
       }
+      architecture_pattern_contributors: {
+        Row: {
+          contribution_strength: number
+          contributor_ref: Json
+          contributor_type: string
+          created_at: string
+          id: string
+          organization_id: string
+          pattern_id: string
+        }
+        Insert: {
+          contribution_strength?: number
+          contributor_ref?: Json
+          contributor_type?: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          pattern_id: string
+        }
+        Update: {
+          contribution_strength?: number
+          contributor_ref?: Json
+          contributor_type?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          pattern_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_pattern_contributors_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_pattern_contributors_pattern_id_fkey"
+            columns: ["pattern_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_synthesized_patterns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_pattern_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          pattern_id: string
+          review_notes: string | null
+          review_reason_codes: Json | null
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          pattern_id: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          pattern_id?: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_pattern_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_pattern_reviews_pattern_id_fkey"
+            columns: ["pattern_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_synthesized_patterns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_pattern_risk_notes: {
+        Row: {
+          created_at: string
+          id: string
+          mitigation_notes: string | null
+          organization_id: string
+          pattern_id: string
+          risk_description: string
+          risk_severity: string
+          risk_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mitigation_notes?: string | null
+          organization_id: string
+          pattern_id: string
+          risk_description?: string
+          risk_severity?: string
+          risk_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mitigation_notes?: string | null
+          organization_id?: string
+          pattern_id?: string
+          risk_description?: string
+          risk_severity?: string
+          risk_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_pattern_risk_notes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_pattern_risk_notes_pattern_id_fkey"
+            columns: ["pattern_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_synthesized_patterns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_pilot_eligibility_rules: {
         Row: {
           created_at: string
@@ -3962,6 +4103,78 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_synthesized_patterns: {
+        Row: {
+          abstraction_level: string
+          audit_metadata: Json
+          confidence_posture: string
+          created_at: string
+          generalization_posture: string
+          id: string
+          opportunity_summary: string | null
+          organization_id: string
+          pattern_class: string
+          pattern_name: string
+          recurring_theme: string
+          risk_summary: string | null
+          sanitized_description: string
+          synthesis_scope: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          abstraction_level?: string
+          audit_metadata?: Json
+          confidence_posture?: string
+          created_at?: string
+          generalization_posture?: string
+          id?: string
+          opportunity_summary?: string | null
+          organization_id: string
+          pattern_class?: string
+          pattern_name?: string
+          recurring_theme?: string
+          risk_summary?: string | null
+          sanitized_description?: string
+          synthesis_scope?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          abstraction_level?: string
+          audit_metadata?: Json
+          confidence_posture?: string
+          created_at?: string
+          generalization_posture?: string
+          id?: string
+          opportunity_summary?: string | null
+          organization_id?: string
+          pattern_class?: string
+          pattern_name?: string
+          recurring_theme?: string
+          risk_summary?: string | null
+          sanitized_description?: string
+          synthesis_scope?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_synthesized_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_synthesized_patterns_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
