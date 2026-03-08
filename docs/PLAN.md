@@ -255,16 +255,28 @@
 
 ---
 
-## Proposed Next Strategic Arc (Sprints 52–53)
+### Phase 16: Operating Profiles & Policy Packs (Sprint 52) — ✅ COMPLETE
+
+**Goal:** Reusable, governed, versioned operating profiles and policy packs built from institutional convergence memory and governance outcomes.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 52 | Operating Profiles & Policy Packs | Operating Profiles Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 52: Profile builder from memory/governance, policy pack composer, profile fit analyzer, profile comparator, bounded override manager, adoption planner, outcome validator, governance calibrator, structured explainability
+
+---
+
+## Proposed Next Strategic Arc (Sprint 53)
 
 > **Status:** 📋 Proposed — not yet implemented. Subject to revision based on operational outcomes.
 
 | Sprint | Name | Objective | Phase |
 |--------|------|-----------|-------|
-| 52 | Operating Profiles & Policy Packs | Package memory and proven policies into composable, tenant-assignable profiles | Institutionalization |
 | 53 | Product Intelligence Entry | Bounded, advisory-first product-level intelligence | Product Intelligence |
 
-These sprints will be formalized when implementation begins.
+This sprint will be formalized when implementation begins.
 
 ---
 
