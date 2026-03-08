@@ -51,6 +51,7 @@ import { ConvergenceGovernanceDashboard } from "@/components/observability/Conve
 import { InstitutionalConvergenceMemoryDashboard } from "@/components/observability/InstitutionalConvergenceMemoryDashboard";
 import { OperatingProfilesDashboard } from "@/components/observability/OperatingProfilesDashboard";
 import { ProductIntelligenceDashboard } from "@/components/observability/ProductIntelligenceDashboard";
+import { ProductIntelligenceOperationsDashboard } from "@/components/observability/ProductIntelligenceOperationsDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
