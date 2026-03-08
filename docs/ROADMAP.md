@@ -75,12 +75,12 @@ The next strategic direction moves from capability exposure governance toward **
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–56)                 COMMITTED (57)                 RESERVED (58–65)
+  COMPLETE (1–57)                 COMMITTED (58)                 RESERVED (59–65)
   ───────────────►                ───────────────►               ───────────────►
   Foundation → Learning →          Trusted Ecosystem              Trusted Ecosystem
   Meta → Memory → Gov →            Foundation                    Foundation →
-  Intelligence → Calibration →     Capability Exposure            Controlled Ecosystem
-  Strategy → Stabilization →       Governance                    Activation →
+  Intelligence → Calibration →     External Trust &              Controlled Ecosystem
+  Strategy → Stabilization →       Admission                    Activation →
   Advisory → Semantic →                                          System Roundness &
   Discovery → Simulation →                                      Operating Completion
   Planning → Sandbox →
@@ -93,7 +93,8 @@ The next strategic direction moves from capability exposure governance toward **
   Product Intelligence Entry →
   Product Intelligence Ops →
   Product Opp Portfolio Gov →
-  Ecosystem Readiness ✅
+  Ecosystem Readiness →
+  Capability Exposure Gov ✅
 ```
 
 ---
