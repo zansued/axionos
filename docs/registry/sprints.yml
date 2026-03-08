@@ -81,8 +81,10 @@ sprints:
   - { sprint: 69, name: "Onboarding, Templates & Vertical Starters",        status: complete, block: "M", phase: "Product Experience & Delivery Maturity", layer: "Onboarding & Templates Layer" }
   - { sprint: 70, name: "Adoption Intelligence & Customer Success Loop",     status: complete, block: "M", phase: "Product Experience & Delivery Maturity", layer: "Adoption Intelligence Layer" }
 
-  # === BLOCK N — Evidence-Governed Improvement Loop (Planned) ===
-  - { sprint: 71, name: "TBD — Evidence Collection Foundation",              status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "TBD" }
+  # === SPRINT 71 — Governed Extensibility (Complete) ===
+  - { sprint: 71, name: "Governed Extensibility & Developer Experience Foundation", status: complete, block: "N", phase: "Governed Extensibility", layer: "Governed Extensibility Layer" }
+
+  # === SPRINTS 72–74 — Evidence-Governed Improvement Loop (Planned) ===
   - { sprint: 72, name: "TBD — Improvement Proposal Generation",            status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "TBD" }
   - { sprint: 73, name: "TBD — Governed Testing & Promotion",               status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "TBD" }
   - { sprint: 74, name: "TBD — Improvement Outcome Tracking",               status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "TBD" }
