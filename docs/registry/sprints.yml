@@ -4,7 +4,7 @@
 # Last updated: 2026-03-08
 
 sprints:
-  # === COMPLETE CANON (Sprints 1–65) ===
+  # === COMPLETE CANON (Sprints 1–70) ===
 
   - { sprint: 1,  name: "Initiative Brief Formalization",                    status: complete, block: "Foundation",   phase: "Foundation",                        layer: "Execution Kernel" }
   - { sprint: 2,  name: "Initiative Simulation Engine",                      status: complete, block: "Foundation",   phase: "Foundation",                        layer: "Execution Kernel" }

@@ -625,7 +625,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
-> **Summary:** 65 sprints complete. 49 architectural layers active. First mature operating baseline achieved.
+> **Summary:** 70 sprints complete. 54 architectural layers active. Block M (Product Experience & Delivery Maturity) complete.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
@@ -651,6 +651,7 @@ supabase/functions/
 | Trusted Ecosystem Foundation (J) | 57–59 | ✅ Complete |
 | Controlled Ecosystem Activation (K) | 60–62 | ✅ Complete |
 | System Roundness & Operating Completion (L) | 63–65 | ✅ Complete |
+| Product Experience & Delivery Maturity (M) | 66–70 | ✅ Complete |
 
 ### Frozen
 
@@ -883,7 +884,7 @@ AxionOS distinguishes three architectural surface layers. This distinction is cr
 
 | Surface Layer | Audience | Purpose | Examples |
 |---------------|----------|---------|----------|
-| **Internal System Architecture** | Platform engineers | Governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration | All 51 architectural layers, Agent OS modules, learning/repair/calibration engines |
+| **Internal System Architecture** | Platform engineers | Governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration | All 54 architectural layers, Agent OS modules, learning/repair/calibration engines |
 | **Advanced Operator Surface** | Operators / leads | Governance dashboards, risk posture, policy management, product ops, ecosystem readiness, audit | Operational observability tabs, governance reviews, policy frames, fitness dimensions |
 | **User-Facing Product Journey** | End users | Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software | Pipeline stages, progress indicators, approval gates, deploy status |
 

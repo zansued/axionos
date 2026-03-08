@@ -18,7 +18,7 @@
 
 ## 1. Architecture Overview
 
-The Agent OS is a **layered, contract-first** system with 14 modules across 5 architectural planes.
+The Agent OS is a **layered, contract-first** system with 18 modules across 5 architectural planes.
 
 ```
 +-------------------------------------------------------------------+

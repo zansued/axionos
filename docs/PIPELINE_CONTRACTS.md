@@ -17,7 +17,7 @@
 
 | Scope | Rule |
 |-------|------|
-| **Owns** | Phase-by-phase product contract (Idea → Deploy), user-visible stage behavior, inputs/outputs, control rules, state machines, definition of done, commercial/learning layer contracts, engineering memory pipeline contract |
+| **Owns** | Phase-by-phase product contract (Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software), user-visible stage behavior, inputs/outputs, control rules, state machines, definition of done, commercial/learning layer contracts, engineering memory pipeline contract |
 | **Must not define** | Broader roadmap strategy (→ ROADMAP.md), architecture layer narrative (→ ARCHITECTURE.md), sprint history unrelated to pipeline UX |
 | **Derived from** | AGENTS.md for agent references |
 | **Update rule** | Update when user-visible pipeline behavior changes |
@@ -27,10 +27,12 @@
 ## Visão Geral do Ciclo
 
 ```
-  Idea → Discovery → Architecture → Engineering → Deploy
-    │         │            │              │           │
-    │         │            │              │           └─ Repositório validado e publicado
-    │         │            │              └─ Código gerado, testado e reparado
+  Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software
+    │         │            │              │            │          │          │
+    │         │            │              │            │          │          └─ Software acessível, URL publicada, handoff completo
+    │         │            │              │            │          └─ Repositório publicado e deploy executado
+    │         │            │              │            └─ Código validado, reparado, build OK
+    │         │            │              └─ Código gerado: schema, lógica, API, UI
     │         │            └─ Plano técnico completo com simulação
     │         └─ Oportunidade validada com mercado e estratégia
     └─ Captura da ideia bruta do usuário
@@ -197,34 +199,18 @@
 
 ---
 
-## Fase 5: Deploy
+## Fase 5: Validation
 
 ### Contrato de Produto
 
 | Campo | Valor |
 |-------|-------|
-| **Objetivo** | Validar o código gerado, reparar erros, publicar no repositório Git e fazer deploy |
+| **Objetivo** | Validar o código gerado, reparar erros automaticamente, garantir conformidade com arquitetura |
 | **Input esperado** | Código gerado (story_subtasks com outputs) |
-| **Output gerado** | Repositório Git validado + deploy em produção |
-| **Critérios de sucesso** | Build passa (tsc + vite), código publicado, deploy acessível |
-| **Possíveis falhas** | Erros de TypeScript, build failure, token Git inválido, deploy failure |
+| **Output gerado** | Código validado, build OK, conformidade verificada |
+| **Critérios de sucesso** | Build passa (tsc + vite), análise estática OK, drift detection OK |
+| **Possíveis falhas** | Erros de TypeScript, build failure, drift arquitetural |
 | **Ação do usuário** | Um clique: "Iniciar Validação Completa" → tudo roda automaticamente |
-
-### Deploy State Machine
-
-```
-  validating
-      │
-      ▼
-  ready_to_publish
-      │
-      ▼
-  published ──────► deploying
-                        │
-                   ┌────┴────┐
-                   ▼         ▼
-              deployed   deploy_failed
-```
 
 ### Sub-etapas (sequenciais, totalmente automáticas)
 
@@ -235,8 +221,57 @@
 | 3 | Drift Detection | `pipeline-drift-detection` | Conformidade com arquitetura planejada |
 | 4 | Runtime Validation | `pipeline-runtime-validation` | tsc + vite build real via CI |
 | 5 | Build Repair (se falhar) | `autonomous-build-repair` | Auto-reparo com patches e retry |
-| 6 | Publicação | `pipeline-publish` | Atomic commits via Tree API |
-| 7 | Deploy | `pipeline-deploy` (planned) | Deploy automático para Vercel |
+
+### Transição para Deploy
+
+✅ Build passa no CI (tsc + vite)
+✅ Análise estática e drift detection OK
+✅ Status avança para `ready_to_publish`
+
+---
+
+## Fase 6: Deploy → Delivered Software
+
+### Contrato de Produto
+
+| Campo | Valor |
+|-------|-------|
+| **Objetivo** | Publicar no repositório Git, executar deploy, e entregar software acessível |
+| **Input esperado** | Código validado (build OK) |
+| **Output gerado** | Repositório Git publicado + deploy em produção + URLs acessíveis |
+| **Critérios de sucesso** | Código publicado, deploy acessível, handoff completo |
+| **Possíveis falhas** | Token Git inválido, deploy failure |
+| **Ação do usuário** | Um clique: "Deploy" (governado — respeita gates de validação e aprovação) |
+
+### Deploy State Machine
+
+```
+  ready_to_publish
+       │
+       ▼
+  published ──────► deploying
+                        │
+                   ┌────┴────┐
+                   ▼         ▼
+              deployed   deploy_failed
+```
+
+### Sub-etapas
+
+| # | Sub-etapa | Edge Function | O que faz |
+|---|-----------|---------------|-----------|
+| 1 | Publicação | `pipeline-publish` | Atomic commits via Tree API |
+| 2 | Deploy | `pipeline-deploy` | Deploy para Vercel/Netlify |
+
+### Outputs Visíveis ao Usuário
+
+| Output | Descrição |
+|--------|-----------|
+| `repo_url` | URL do repositório Git publicado |
+| `deploy_url` | URL do deploy acessível e verificado |
+| `preview_url` | URL de preview (quando disponível) |
+| Deploy timestamp | Data/hora do último deploy |
+| Rollback posture | Indicação se rollback está disponível |
 
 ### Definition of Done da Iniciativa
 
@@ -250,7 +285,7 @@
 
 ---
 
-## Fase 6: Growth (Secundária)
+## Fase 7: Growth (Secundária)
 
 > **Status:** Implementada mas secundária para o produto-prova atual.
 > O foco é fechar o ciclo Idea → Deploy primeiro.
@@ -368,28 +403,28 @@
 - Contratos de stage IO devem permanecer estáveis
 - Mudanças em contratos requerem versionamento explícito
 - Learning não pode alterar a forma (shape) de contratos existentes
-- Meta-Agents não podem modificar contratos diretamente (quando implementados)
+- Meta-Agents não podem modificar contratos diretamente
 
 ### Isolamento
 
 - Camadas comerciais consomem dados de observabilidade, não duplicam o kernel
 - Acesso cross-tenant a contratos é **proibido**
 - Todas as consultas agregadas devem incluir filtro `organization_id`
-- Meta-Agents terão acesso somente leitura a dados de observabilidade e learning
+- Meta-Agents têm acesso somente leitura a dados de observabilidade e learning
 
 ### Separação de Responsabilidades
 
 - Learning gera recomendações, não executa mudanças automaticamente
 - Commercial verifica limites, não modifica comportamento do pipeline
 - O kernel processa estágios, não conhece billing ou learning
-- Meta-Agents (quando implementados) geram recomendações de alto nível, não mutam o sistema
+- Meta-Agents geram recomendações de alto nível, não mutam o sistema
 
 ### Auditabilidade
 
 - Toda decisão de learning é registrada em `audit_logs`
 - Todo bloqueio de uso é registrado em `audit_logs`
 - Eventos rastreáveis: `LEARNING_UPDATE`, `USAGE_LIMIT_EXCEEDED`, `PIPELINE_EXECUTION`, `REPAIR_APPLIED`
-- Meta-Agent recommendations (planejado) serão rastreáveis via `meta_agent_recommendations` table
+- Meta-Agent recommendations são rastreáveis via `meta_agent_recommendations` table
 
 ---
 
@@ -463,7 +498,7 @@ O Project Brain serve como centro de evidência visual:
 | Retries médios por iniciativa | < 2 |
 | Taxa de reparo automático com sucesso | > 70% |
 | Custo por iniciativa | Rastreado e declinante |
-| Tempo ideia → repositório validado | < 15 min |
+| Tempo ideia → software entregue | < 15 min |
 | Clareza do progresso para o usuário | Feedback visual claro |
 
 ---

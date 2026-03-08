@@ -152,7 +152,7 @@ This means the focus shifts from building internal systems to making the user-vi
 | Block J — Trusted Ecosystem Foundation | 57–59 | Capability exposure governance, external trust & admission, ecosystem simulation & sandbox |
 | Block K — Controlled Ecosystem Activation | 60–62 | Limited marketplace pilot, capability registry governance, multi-party policy & revenue governance |
 | Block L — System Roundness & Operating Completion | 63–65 | Institutional outcome assurance, canon integrity & drift governance, operating completion |
-| Block M — Product Experience & Delivery Maturity (in progress) | 66–68 | User journey orchestration, role-based experience, one-click delivery & deploy assurance |
+| Block M — Product Experience & Delivery Maturity | 66–70 | User journey orchestration, role-based experience, one-click delivery & deploy assurance, onboarding/templates/starters, adoption intelligence & customer success |
 
 ---
 
@@ -198,12 +198,10 @@ Internal maturity is what makes the product trustworthy. The user doesn't need t
 | 66 | User Journey Orchestration Layer | Orchestrate the visible user journey with clear state, transitions, approvals, and progress across the full idea-to-deploy lifecycle | ✅ Complete |
 | 67 | Role-Based Experience Layer | Separate product surfaces by role — default user journey vs operator/governance views — so the right audience sees the right experience | ✅ Complete |
 | 68 | One-Click Delivery & Deploy Assurance Layer | Provide a seamless, governed one-click path from validated code to deployed, accessible software with deploy assurance and visibility | ✅ Complete |
-| 69 | Onboarding, Templates & Vertical Starters | Reduce time-to-value with guided onboarding, reusable templates, and vertical-specific starting points | 🔮 Reserved |
-| 70 | Adoption Intelligence & Customer Success Loop | Measure adoption health, detect friction, and close the loop between product usage and platform improvement | 🔮 Reserved |
+| 69 | Onboarding, Templates & Vertical Starters | Reduce time-to-value with guided onboarding, reusable templates, and vertical-specific starting points | ✅ Complete |
+| 70 | Adoption Intelligence & Customer Success Loop | Measure adoption health, detect friction, and close the loop between product usage and platform improvement | ✅ Complete |
 
-### Why future work should still proceed one sprint at a time
-
-Even as the focus shifts to product experience, the sprint-by-sprint execution model remains essential. Each sprint should be reviewed, scoped in detail, and approved before implementation begins. Distant reserved sprints should remain intentionally lightweight until promoted.
+Block M is complete. All five sprints delivered and verified.
 
 ---
 
@@ -242,7 +240,7 @@ After Sprint 65, AxionOS enters a **sustained operating mode** for internal arch
 | J | Trusted Ecosystem Foundation | 57–59 | ✅ Complete |
 | K | Controlled Ecosystem Activation | 60–62 | ✅ Complete |
 | L | System Roundness & Operating Completion | 63–65 | ✅ Complete |
-| M | Product Experience & Delivery Maturity | 66–70 | 📋 Next |
+| M | Product Experience & Delivery Maturity | 66–70 | ✅ Complete |
 
 ---
 
@@ -272,6 +270,10 @@ After Sprint 65, AxionOS enters a **sustained operating mode** for internal arch
 | Canon Integrity | 64 | ✅ Complete | Canon integrity & drift governance: cross-doc consistency, principle conformance |
 | Operating Completion | 65 | ✅ Complete | First complete, internally coherent operating canon |
 | User Journey Orchestration | 66 | ✅ Complete | Canonical visible journey, transitions, approvals, artifact visibility, delivery |
+| Role-Based Experience | 67 | ✅ Complete | Role-aware surfaces, navigation filtering, complexity leakage detection, approval visibility routing |
+| One-Click Delivery & Deploy Assurance | 68 | ✅ Complete | Governed one-click delivery, deploy confidence, blocker detection, rollback posture, output visibility |
+| Onboarding, Templates & Starters | 69 | ✅ Complete | Guided onboarding flows, reusable templates, domain-specific vertical starters, friction detection |
+| Adoption Intelligence & Customer Success | 70 | ✅ Complete | Adoption models, success signals, journey friction, template effectiveness, delivery correlation |
 
 ---
 
@@ -279,7 +281,7 @@ After Sprint 65, AxionOS enters a **sustained operating mode** for internal arch
 
 > **Full module inventory:** [AGENTS.md](AGENTS.md) · **Architecture details:** [ARCHITECTURE.md](ARCHITECTURE.md)
 
-All 50 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, the institutional convergence memory layer, the operating profiles layer, the product intelligence layers, the ecosystem readiness/exposure/trust/simulation/pilot/registry/multi-party layers, the institutional outcome assurance layer, the canon integrity & drift governance layer, and the user journey orchestration layer.
+All 54 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, the institutional convergence memory layer, the operating profiles layer, the product intelligence layers, the ecosystem readiness/exposure/trust/simulation/pilot/registry/multi-party layers, the institutional outcome assurance layer, the canon integrity & drift governance layer, the operating completion layer, the user journey orchestration layer, the role-based experience layer, the one-click delivery & deploy assurance layer, the onboarding/templates/starters layer, and the adoption intelligence & customer success layer.
 
 ### Frozen Areas
 
@@ -309,10 +311,11 @@ All 50 architectural layers are operational. The kernel includes the 32-stage de
 
 ## Governing Principle
 
-> Sixty-six sprints complete. The platform has reached its first internally coherent operating canon and the first user-facing journey orchestration layer.
+> Seventy sprints complete. Block M (Product Experience & Delivery Maturity) is complete.
+> The platform has reached its first internally coherent operating canon plus a full product experience and delivery maturity layer.
 > Internal architecture is mature: governance, intelligence, memory, calibration, ecosystem, assurance, and integrity layers are all active.
-> User journey orchestration now provides canonical visible journey from idea to deployed software.
-> Next strategic direction: Block M continues — Sprint 67 (Role-Based Experience Layer).
-> The focus shifts from building internal systems to making the user-visible journey clear, legible, and delightful.
+> Product experience is mature: user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, and adoption intelligence are all active.
+> Next strategic direction: post-Block M (Sprint 71+) — reserved for future expansion.
+> The platform now delivers on the promise: **from idea to delivered software**.
 > Internal sophistication serves the product experience — it does not replace it.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.
