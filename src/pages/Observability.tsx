@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
