@@ -46,6 +46,7 @@ import { ChangeAdvisoryOrchestratorDashboard } from "@/components/observability/
 import { PlatformStabilizationV2Dashboard } from "@/components/observability/PlatformStabilizationV2Dashboard";
 import { TenantArchitectureModesDashboard } from "@/components/observability/TenantArchitectureModesDashboard";
 import { EconomicOptimizationDashboard } from "@/components/observability/EconomicOptimizationDashboard";
+import { PlatformConvergenceDashboard } from "@/components/observability/PlatformConvergenceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
