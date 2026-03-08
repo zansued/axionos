@@ -53,6 +53,7 @@
 | **Institutional Convergence Memory** | Active — durable, queryable, reusable convergence knowledge with evidence lineage |
 | **Operating Profiles & Policy Packs** | Active — reusable, governed, versioned operating profiles with bounded overrides |
 | **Product Intelligence Entry** | Active — bounded, advisory-first product signal correlation + opportunity detection |
+| **Product Intelligence Operations** | Active — cross-tenant benchmarking, product-architecture/profile correlations, decision-grade signal quality |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
