@@ -129,8 +129,9 @@
 | 35 | Autonomous Engineering Advisor | Engineering Advisory Layer |
 | 36 | Semantic Retrieval & Embedding Memory Expansion | Semantic Retrieval Layer |
 | 37 | Discovery-Driven Architecture Signals | Discovery Architecture Layer |
+| 38 | Architecture Change Simulation & Governance | Architecture Simulation Layer |
 
-**Delivered:** Stability monitoring, stabilization actions, bounded interventions, rollback-safe stabilization, engineering signal aggregation, opportunity synthesis, prioritized recommendations, explainability, review workflows, advisory clustering, unified embedding-backed retrieval, domain registry, index management, ranking, guardrails, retrieval quality evaluation, discovery signal aggregation, architecture stress mapping, architecture opportunity synthesis, discovery-driven recommendations.
+**Delivered:** Stability monitoring, stabilization actions, bounded interventions, rollback-safe stabilization, engineering signal aggregation, opportunity synthesis, prioritized recommendations, explainability, review workflows, advisory clustering, unified embedding-backed retrieval, domain registry, index management, ranking, guardrails, retrieval quality evaluation, discovery signal aggregation, architecture stress mapping, architecture opportunity synthesis, discovery-driven recommendations, architecture change proposals, simulation scope profiles, impact simulation, boundary analysis, guardrails, simulation outcomes, review workflows.
 
 ---
 
