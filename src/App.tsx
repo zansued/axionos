@@ -37,6 +37,7 @@ import Journey from "./pages/Journey";
 import Onboarding from "./pages/Onboarding";
 import AdoptionIntelligence from "./pages/AdoptionIntelligence";
 import Extensions from "./pages/Extensions";
+import ImprovementLedger from "./pages/ImprovementLedger";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
