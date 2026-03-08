@@ -95,7 +95,7 @@ The next strategic direction moves from product opportunity governance toward **
 
 ---
 
-## Completed Canon (Sprints 1–54)
+## Completed Canon (Sprints 1–55)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
