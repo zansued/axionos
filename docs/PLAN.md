@@ -548,5 +548,6 @@ This document serves as the canonical sprint execution ledger. The following con
 | Product Opportunity Portfolio Governance | 1 | 55 |
 | Controlled Ecosystem Readiness | 1 | 56 |
 | Capability Exposure Governance | 1 | 57 |
+| External Trust & Admission | 1 | 58 |
 | Support | 11 | Various |
-| **Total** | **~102** | |
+| **Total** | **~103** | |
