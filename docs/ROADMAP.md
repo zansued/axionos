@@ -138,20 +138,18 @@ The next strategic direction moves from limited marketplace pilot toward **capab
 
 ---
 
-## Committed Future Arc (Sprint 59)
+## Committed Future Arc (Sprint 61)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
-> **Block:** Block J — Trusted Ecosystem Foundation
-
-This sprint completes the trusted ecosystem foundation arc. It should still be reviewed and approved before execution begins.
+> **Block:** Block K — Controlled Ecosystem Activation
 
 | Sprint | Name | Objective | Acceptance Direction |
 |--------|------|-----------|---------------------|
-| 59 | Ecosystem Simulation & Sandbox Layer | Simulate ecosystem interactions in bounded sandboxes before real exposure | Sandboxed interaction simulation defined; no live ecosystem enabled |
+| 61 | Capability Registry Governance Layer | Govern lifecycle of registered capabilities — versioning, deprecation, quality gates | Registry governance defined; capability lifecycle governed |
 
-### Why 59 is committed
+### Why 61 is committed
 
-With Sprint 58 complete (external trust & admission), the platform has established trust models and admission criteria. The next step is ecosystem simulation (59) — testing interactions before real exposure. It reuses existing AxionOS philosophy and Agent OS planes without expansion.
+With Sprint 60 complete (limited marketplace pilot), the platform has activated a bounded pilot marketplace. The next step is governing the lifecycle of registered capabilities (61) — versioning, deprecation, and quality gates. It reuses existing AxionOS philosophy and Agent OS planes without expansion.
 
 ---
 
