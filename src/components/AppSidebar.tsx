@@ -49,7 +49,7 @@ const bottomItems = [
   { title: "Prompt Opt.", url: "/prompt-optimization", icon: FlaskConical },
   { title: "Audit", url: "/audit", icon: Shield },
   { title: "Observability", url: "/observability", icon: Radio },
-  { title: "Connections", url: "/connections", icon: Settings },
+  { title: "Connections", url: "/connections", icon: Plug },
   { title: "Billing", url: "/billing", icon: CreditCard },
   { title: "Settings", url: "/org", icon: Settings },
 ];
