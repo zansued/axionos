@@ -74,12 +74,12 @@ The next strategic direction moves from controlled ecosystem readiness toward **
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–55)                 COMMITTED (56)                 RESERVED (57–65)
+  COMPLETE (1–56)                 COMMITTED (57)                 RESERVED (58–65)
   ───────────────►                ───────────────►               ───────────────►
-  Foundation → Learning →          Product-Intelligent            Trusted Ecosystem
-  Meta → Memory → Gov →            Expansion                     Foundation →
-  Intelligence → Calibration →     Controlled Ecosystem           Controlled Ecosystem
-  Strategy → Stabilization →       Readiness                     Activation →
+  Foundation → Learning →          Trusted Ecosystem              Trusted Ecosystem
+  Meta → Memory → Gov →            Foundation                    Foundation →
+  Intelligence → Calibration →     Capability Exposure            Controlled Ecosystem
+  Strategy → Stabilization →       Governance                    Activation →
   Advisory → Semantic →                                          System Roundness &
   Discovery → Simulation →                                      Operating Completion
   Planning → Sandbox →
@@ -91,7 +91,8 @@ The next strategic direction moves from controlled ecosystem readiness toward **
   Conv Memory → Op Profiles →
   Product Intelligence Entry →
   Product Intelligence Ops →
-  Product Opp Portfolio Gov ✅
+  Product Opp Portfolio Gov →
+  Ecosystem Readiness ✅
 ```
 
 ---
