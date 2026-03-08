@@ -193,8 +193,8 @@ Internal maturity is what makes the product trustworthy. The user doesn't need t
 | Sprint | Name | Objective | Status |
 |--------|------|-----------|--------|
 | 66 | User Journey Orchestration Layer | Orchestrate the visible user journey with clear state, transitions, approvals, and progress across the full idea-to-deploy lifecycle | ✅ Complete |
-| 67 | Role-Based Experience Layer | Separate product surfaces by role — default user journey vs operator/governance views — so the right audience sees the right experience | 📋 Planned |
-| 68 | One-Click Delivery & Deploy Assurance Layer | Provide a seamless, governed one-click path from validated code to deployed, accessible software with deploy assurance and visibility | 📋 Committed |
+| 67 | Role-Based Experience Layer | Separate product surfaces by role — default user journey vs operator/governance views — so the right audience sees the right experience | ✅ Complete |
+| 68 | One-Click Delivery & Deploy Assurance Layer | Provide a seamless, governed one-click path from validated code to deployed, accessible software with deploy assurance and visibility | 📋 Planned |
 | 69 | Onboarding, Templates & Vertical Starters | Reduce time-to-value with guided onboarding, reusable templates, and vertical-specific starting points | 🔮 Reserved |
 | 70 | Adoption Intelligence & Customer Success Loop | Measure adoption health, detect friction, and close the loop between product usage and platform improvement | 🔮 Reserved |
 

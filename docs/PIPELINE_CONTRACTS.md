@@ -11,7 +11,7 @@
 >
 > Last updated: 2026-03-08
 >
-> **Note:** This document is the canonical user-visible pipeline contract. Internal governance, policy, ecosystem, and intelligence layers operate behind the scenes to ensure quality, safety, and auditability — but they do not change the user-facing journey contract unless a direct UX impact is required. Post-65 work (Block M: Product Experience & Delivery Maturity) will increasingly optimize clarity, approvals, transitions, delivery visibility, and deployment legibility across the existing pipeline defined here.
+> **Note:** This document is the canonical user-visible pipeline contract. Internal governance, policy, ecosystem, and intelligence layers operate behind the scenes to ensure quality, safety, and auditability — but they do not change the user-facing journey contract unless a direct UX impact is required. Post-65 work (Block M: Product Experience & Delivery Maturity) increasingly optimizes clarity, approvals, transitions, delivery visibility, and deployment legibility. Sprint 67 introduced role-based surface separation: the pipeline contract defines the default user journey, while operator and admin surfaces expose additional governance context.
 
 ## Document Authority
 

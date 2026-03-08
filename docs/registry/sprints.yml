@@ -78,7 +78,7 @@ sprints:
 
   # === BLOCK M — Product Experience & Delivery Maturity ===
   - { sprint: 66, name: "User Journey Orchestration Layer",                  status: complete,   block: "M", phase: "Product Experience & Delivery Maturity", layer: "User Journey Orchestration Layer" }
-  - { sprint: 67, name: "Role-Based Experience Layer",                       status: committed,  block: "M", phase: "Product Experience & Delivery Maturity", layer: "Role-Based Experience Layer" }
-  - { sprint: 68, name: "One-Click Delivery & Deploy Assurance Layer",       status: committed,  block: "M", phase: "Product Experience & Delivery Maturity", layer: "One-Click Delivery & Deploy Assurance Layer" }
+  - { sprint: 67, name: "Role-Based Experience Layer",                       status: complete,   block: "M", phase: "Product Experience & Delivery Maturity", layer: "Role-Based Experience Layer" }
+  - { sprint: 68, name: "One-Click Delivery & Deploy Assurance Layer",       status: planned,    block: "M", phase: "Product Experience & Delivery Maturity", layer: "One-Click Delivery & Deploy Assurance Layer" }
   - { sprint: 69, name: "Onboarding, Templates & Vertical Starters",        status: reserved,   block: "M", phase: "Product Experience & Delivery Maturity", layer: "Onboarding & Templates Layer" }
   - { sprint: 70, name: "Adoption Intelligence & Customer Success Loop",     status: reserved,   block: "M", phase: "Product Experience & Delivery Maturity", layer: "Adoption Intelligence Layer" }
