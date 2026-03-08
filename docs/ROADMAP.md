@@ -64,6 +64,7 @@
 | **Multi-Party Policy & Revenue Governance** | Active — multi-party policy frames, entitlements, obligations, bounded value-flow governance |
 | **Institutional Outcome Assurance** | Active — expected vs realized outcome analysis, drift detection, cross-layer assurance, remediation |
 | **Canon Integrity & Drift Governance** | Active — cross-doc consistency, principle conformance, mutation boundary integrity, canon alignment |
+| **User Journey Orchestration** | Active — canonical visible journey, stage transitions, approval gates, artifact visibility, deployment readiness |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
