@@ -78,12 +78,12 @@ The next strategic direction moves from limited marketplace pilot toward **capab
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–58)                 COMMITTED (59)                 RESERVED (60–65)
+  COMPLETE (1–60)                 COMMITTED (61)                 RESERVED (62–65)
   ───────────────►                ───────────────►               ───────────────►
-  Foundation → Learning →          Trusted Ecosystem              Controlled Ecosystem
-  Meta → Memory → Gov →            Foundation                    Activation →
-  Intelligence → Calibration →     Ecosystem Simulation &        System Roundness &
-  Strategy → Stabilization →       Sandbox                      Operating Completion
+  Foundation → Learning →          Controlled Ecosystem           Controlled Ecosystem
+  Meta → Memory → Gov →            Activation                    Activation →
+  Intelligence → Calibration →     Capability Registry           System Roundness &
+  Strategy → Stabilization →       Governance                   Operating Completion
   Advisory → Semantic →
   Discovery → Simulation →
   Planning → Sandbox →
@@ -98,7 +98,9 @@ The next strategic direction moves from limited marketplace pilot toward **capab
   Product Opp Portfolio Gov →
   Ecosystem Readiness →
   Capability Exposure Gov →
-  External Trust & Admission ✅
+  External Trust & Admission →
+  Ecosystem Simulation →
+  Limited Marketplace Pilot ✅
 ```
 
 ---
