@@ -522,6 +522,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | `_shared/capability-registry-governance/` | 9 | Entry manager, version governor, visibility engine, policy binder, compatibility analyzer, lifecycle manager, review engine, outcome validator, explainer |
 | `_shared/multi-party-policy-revenue-governance/` | 9 | Party role manager, policy frame builder, entitlement engine, value flow governor, conflict resolution analyzer, settlement readiness evaluator, fairness scorer, recommendation engine, explainer |
 | `_shared/institutional-outcome-assurance/` | 9 | Outcome model manager, expected-vs-realized analyzer, drift detector, confidence calibrator, cross-layer aggregator, fragility analyzer, remediation recommender, review manager, explainer |
+| `_shared/canon-integrity-drift-governance/` | 9 | Integrity model manager, cross-doc consistency analyzer, principle conformance checker, mutation boundary analyzer, architecture alignment engine, governance alignment engine, drift detector, remediation recommender, explainer |
 
 ---
 
