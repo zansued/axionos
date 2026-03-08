@@ -467,13 +467,25 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Future Arc — Block M: Product Experience & Delivery Maturity (Sprints 66–70)
+### Phase 30: User Journey Orchestration (Sprint 66) — ✅ COMPLETE
+
+**Goal:** Transform the mature internal operating baseline into a clear, guided, user-facing journey from idea to deployed software.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 66 | User Journey Orchestration Layer | User Journey Orchestration Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 66: User journey model manager, instance orchestrator, transition engine, approval gate manager, artifact visibility engine, next-step recommender, deployment visibility orchestrator, friction analyzer, explainer. Primary /journey route added to sidebar.
+
+---
+
+## Future Arc — Block M: Product Experience & Delivery Maturity (Sprints 67–70)
 
 > **Strategic direction:** [ROADMAP.md](ROADMAP.md)
 
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 66 | User Journey Orchestration Layer | M | 📋 Planned | Orchestrate the visible user journey with clear state, transitions, approvals, and progress |
 | 67 | Role-Based Experience Layer | M | 📋 Committed | Separate product surfaces by role — default user journey vs operator/governance views |
 | 68 | One-Click Delivery & Deploy Assurance Layer | M | 📋 Committed | Seamless, governed one-click path from validated code to deployed software |
 | 69 | Onboarding, Templates & Vertical Starters | M | 🔮 Reserved | Guided onboarding, reusable templates, vertical-specific starting points |
