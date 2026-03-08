@@ -38,6 +38,7 @@ import { DiscoveryArchitectureDashboard } from "@/components/observability/Disco
 import { ArchitectureSimulationDashboard } from "@/components/observability/ArchitectureSimulationDashboard";
 import { ArchitectureChangePlanningDashboard } from "@/components/observability/ArchitectureChangePlanningDashboard";
 import { ArchitectureRolloutSandboxDashboard } from "@/components/observability/ArchitectureRolloutSandboxDashboard";
+import { ArchitectureRolloutPilotDashboard } from "@/components/observability/ArchitectureRolloutPilotDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
