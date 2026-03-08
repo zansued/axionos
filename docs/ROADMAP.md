@@ -101,7 +101,7 @@ The next strategic direction moves from external trust & admission toward **ecos
 
 ---
 
-## Completed Canon (Sprints 1–57)
+## Completed Canon (Sprints 1–58)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
