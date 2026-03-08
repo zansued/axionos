@@ -5,9 +5,16 @@
 > - O sistema mostra valor visível?
 > - Essa etapa aproxima do resultado final?
 >
-> **What changed (2026-03-07):** Engineering Memory Foundation (Sprint 15) confirms the pipeline interaction contract — memory enrichment is additive post-execution, pipeline never depends on memory availability. Memory capture events are now active. Previous: Added Engineering Memory interaction contract.
->
-> Last updated: 2026-03-07
+> Last updated: 2026-03-08
+
+## Document Authority
+
+| Scope | Rule |
+|-------|------|
+| **Owns** | Phase-by-phase product contract (Idea → Deploy), user-visible stage behavior, inputs/outputs, control rules, state machines, definition of done, commercial/learning layer contracts, engineering memory pipeline contract |
+| **Must not define** | Broader roadmap strategy (→ ROADMAP.md), architecture layer narrative (→ ARCHITECTURE.md), sprint history unrelated to pipeline UX |
+| **Derived from** | AGENTS.md for agent references |
+| **Update rule** | Update when user-visible pipeline behavior changes |
 
 ---
 
