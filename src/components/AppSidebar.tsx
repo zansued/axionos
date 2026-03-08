@@ -52,6 +52,7 @@ const bottomItems = [
   { title: "Capabilities", url: "/capability-registry", icon: PackageCheck },
   { title: "Cap. Gov.", url: "/capability-governance", icon: ShieldCheck },
   { title: "Pilot Mkt.", url: "/pilot-marketplace", icon: Store },
+  { title: "Mkt. Outcomes", url: "/marketplace-outcomes", icon: TrendingUp },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
