@@ -3096,6 +3096,372 @@ export type Database = {
           },
         ]
       }
+      capability_registry_compatibility_rules: {
+        Row: {
+          compatibility_score: number
+          compatibility_type: string
+          conflict_description: string
+          created_at: string
+          dependency_sensitivity_score: number
+          evidence_links: Json
+          id: string
+          organization_id: string
+          registry_entry_id: string | null
+          sequencing_constraint: string
+          target_capability_name: string
+        }
+        Insert: {
+          compatibility_score?: number
+          compatibility_type?: string
+          conflict_description?: string
+          created_at?: string
+          dependency_sensitivity_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          registry_entry_id?: string | null
+          sequencing_constraint?: string
+          target_capability_name?: string
+        }
+        Update: {
+          compatibility_score?: number
+          compatibility_type?: string
+          conflict_description?: string
+          created_at?: string
+          dependency_sensitivity_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          registry_entry_id?: string | null
+          sequencing_constraint?: string
+          target_capability_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_registry_compatibility_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_registry_compatibility_rules_registry_entry_id_fkey"
+            columns: ["registry_entry_id"]
+            isOneToOne: false
+            referencedRelation: "capability_registry_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_registry_entries: {
+        Row: {
+          assumptions: Json
+          capability_domain: string
+          capability_name: string
+          capability_slug: string
+          capability_type: string
+          created_at: string
+          evidence_links: Json
+          exposure_class: string
+          governance_score: number
+          id: string
+          lifecycle_state: string
+          organization_id: string
+          pilot_scope_type: string
+          registry_health_score: number
+          registry_status: string
+          restriction_level: string
+          trust_tier_requirement: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          capability_domain?: string
+          capability_name: string
+          capability_slug?: string
+          capability_type?: string
+          created_at?: string
+          evidence_links?: Json
+          exposure_class?: string
+          governance_score?: number
+          id?: string
+          lifecycle_state?: string
+          organization_id: string
+          pilot_scope_type?: string
+          registry_health_score?: number
+          registry_status?: string
+          restriction_level?: string
+          trust_tier_requirement?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          capability_domain?: string
+          capability_name?: string
+          capability_slug?: string
+          capability_type?: string
+          created_at?: string
+          evidence_links?: Json
+          exposure_class?: string
+          governance_score?: number
+          id?: string
+          lifecycle_state?: string
+          organization_id?: string
+          pilot_scope_type?: string
+          registry_health_score?: number
+          registry_status?: string
+          restriction_level?: string
+          trust_tier_requirement?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_registry_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_registry_entries_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_registry_governance_outcomes: {
+        Row: {
+          bounded_registry_integrity_score: number
+          created_at: string
+          evidence_refs: Json
+          expected_outcomes: Json
+          id: string
+          organization_id: string
+          outcome_status: string
+          outcome_type: string
+          realized_outcomes: Json
+          registry_entry_id: string | null
+          registry_outcome_accuracy_score: number
+          updated_at: string
+        }
+        Insert: {
+          bounded_registry_integrity_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          outcome_type?: string
+          realized_outcomes?: Json
+          registry_entry_id?: string | null
+          registry_outcome_accuracy_score?: number
+          updated_at?: string
+        }
+        Update: {
+          bounded_registry_integrity_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          outcome_type?: string
+          realized_outcomes?: Json
+          registry_entry_id?: string | null
+          registry_outcome_accuracy_score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_registry_governance_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_registry_governance_outcomes_registry_entry_id_fkey"
+            columns: ["registry_entry_id"]
+            isOneToOne: false
+            referencedRelation: "capability_registry_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_registry_policy_bindings: {
+        Row: {
+          binding_status: string
+          created_at: string
+          evidence_links: Json
+          id: string
+          organization_id: string
+          policy_binding_score: number
+          policy_set_name: string
+          registry_entry_id: string | null
+          restriction_inherited: string
+        }
+        Insert: {
+          binding_status?: string
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          policy_binding_score?: number
+          policy_set_name?: string
+          registry_entry_id?: string | null
+          restriction_inherited?: string
+        }
+        Update: {
+          binding_status?: string
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          policy_binding_score?: number
+          policy_set_name?: string
+          registry_entry_id?: string | null
+          restriction_inherited?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_registry_policy_bindings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_registry_policy_bindings_registry_entry_id_fkey"
+            columns: ["registry_entry_id"]
+            isOneToOne: false
+            referencedRelation: "capability_registry_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_registry_versions: {
+        Row: {
+          change_log: Json
+          compatibility_score: number
+          created_at: string
+          deprecation_pressure_score: number
+          evidence_links: Json
+          id: string
+          organization_id: string
+          registry_entry_id: string | null
+          updated_at: string
+          version_label: string
+          version_status: string
+          version_validity_score: number
+        }
+        Insert: {
+          change_log?: Json
+          compatibility_score?: number
+          created_at?: string
+          deprecation_pressure_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          registry_entry_id?: string | null
+          updated_at?: string
+          version_label?: string
+          version_status?: string
+          version_validity_score?: number
+        }
+        Update: {
+          change_log?: Json
+          compatibility_score?: number
+          created_at?: string
+          deprecation_pressure_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          registry_entry_id?: string | null
+          updated_at?: string
+          version_label?: string
+          version_status?: string
+          version_validity_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_registry_versions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_registry_versions_registry_entry_id_fkey"
+            columns: ["registry_entry_id"]
+            isOneToOne: false
+            referencedRelation: "capability_registry_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_registry_visibility_rules: {
+        Row: {
+          actor_class_filter: string
+          created_at: string
+          discoverability_score: number
+          evidence_links: Json
+          id: string
+          organization_id: string
+          rationale: string
+          registry_entry_id: string | null
+          scope_filter: string
+          trust_tier_filter: string
+          visibility_level: string
+        }
+        Insert: {
+          actor_class_filter?: string
+          created_at?: string
+          discoverability_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          rationale?: string
+          registry_entry_id?: string | null
+          scope_filter?: string
+          trust_tier_filter?: string
+          visibility_level?: string
+        }
+        Update: {
+          actor_class_filter?: string
+          created_at?: string
+          discoverability_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          rationale?: string
+          registry_entry_id?: string | null
+          scope_filter?: string
+          trust_tier_filter?: string
+          visibility_level?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_registry_visibility_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_registry_visibility_rules_registry_entry_id_fkey"
+            columns: ["registry_entry_id"]
+            isOneToOne: false
+            referencedRelation: "capability_registry_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       change_advisory_signals: {
         Row: {
           confidence_score: number | null
