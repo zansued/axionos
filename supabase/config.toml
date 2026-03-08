@@ -149,3 +149,6 @@ verify_jwt = false
 
 [functions.role-based-experience-engine]
 verify_jwt = false
+
+[functions.one-click-delivery-deploy-assurance-engine]
+verify_jwt = false
