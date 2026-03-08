@@ -48,6 +48,7 @@ import CapabilityRegistry from "./pages/CapabilityRegistry";
 import CapabilityGovernance from "./pages/CapabilityGovernance";
 import PilotMarketplace from "./pages/PilotMarketplace";
 import MarketplaceOutcomes from "./pages/MarketplaceOutcomes";
+import DeliveryOutcomes from "./pages/DeliveryOutcomes";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
