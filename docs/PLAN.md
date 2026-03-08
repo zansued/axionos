@@ -333,5 +333,12 @@
 | Architecture Change Simulation | 1 | 38 |
 | Architecture Change Planning | 1 | 39 |
 | Architecture Rollout Sandbox | 1 | 40 |
+| Architecture Rollout Pilot | 1 | 41 |
+| Architecture Migration | 1 | 42 |
+| Architecture Portfolio | 1 | 43 |
+| Architecture Fitness | 1 | 44 |
+| Change Advisory Orchestrator | 1 | 45 |
+| Platform Stabilization v2 | 1 | 46 |
+| Tenant Architecture Modes | 1 | 47 |
 | Support | 11 | Various |
-| **Total** | **~85** | |
+| **Total** | **~92** | |

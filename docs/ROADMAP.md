@@ -308,7 +308,7 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 
 ## Governing Principle
 
-> Forty sprints complete. The platform is architecture-aware with full advisory, simulation, planning, and sandbox capabilities.
-> Next phase: architecture-governed (Sprints 41–43) → architecture-operating (44–45) → architecture-scaled (46–48).
-> Focus now: pilot governance, controlled migration execution, and architecture portfolio governance.
+> Forty-seven sprints complete. The platform supports bounded tenant-aware architecture modes without fragmentation.
+> Next phase: architecture-operating (48–50) → platform convergence.
+> Focus now: tenant architecture specialization with anti-fragmentation controls.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.
