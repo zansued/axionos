@@ -125,6 +125,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Sprint 76 — Multi-Agent Debate & Resolution Layer | 76 | Structured bounded debate sessions, position/argument/resolution tracking, escalation, operator debate dashboard |
 | Sprint 77 — Shared Working Memory & Task-State Negotiation | 77 | Bounded shared working memory contexts, negotiated task-state transitions, coordination checkpoints, operator working memory dashboard |
 | Sprint 78 — Bounded Swarm Execution for Complex Initiatives | 78 | Bounded swarm campaigns, parallel branches, checkpoints, abort/rollback posture, escalation, operator swarm dashboard |
+| Sprint 79 — Capability Packaging & Registry UX | 79 | Capability packages with versioning, lifecycle governance, explainability, registry linkage, operator registry dashboard |
 
 ---
 
