@@ -5440,6 +5440,75 @@ export type Database = {
           },
         ]
       }
+      ecosystem_party_roles: {
+        Row: {
+          created_at: string
+          description: string
+          evidence_links: Json
+          id: string
+          obligations_summary: Json
+          organization_id: string
+          restriction_level: string
+          rights_summary: Json
+          role_name: string
+          role_slug: string
+          role_type: string
+          status: string
+          trust_tier_requirement: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          evidence_links?: Json
+          id?: string
+          obligations_summary?: Json
+          organization_id: string
+          restriction_level?: string
+          rights_summary?: Json
+          role_name: string
+          role_slug?: string
+          role_type?: string
+          status?: string
+          trust_tier_requirement?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          evidence_links?: Json
+          id?: string
+          obligations_summary?: Json
+          organization_id?: string
+          restriction_level?: string
+          rights_summary?: Json
+          role_name?: string
+          role_slug?: string
+          role_type?: string
+          status?: string
+          trust_tier_requirement?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_party_roles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_party_roles_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ecosystem_policy_conflict_events: {
         Row: {
           affected_entities: Json
@@ -5981,6 +6050,72 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ecosystem_value_flow_rules: {
+        Row: {
+          allocation_constraints: Json
+          created_at: string
+          evidence_links: Json
+          id: string
+          organization_id: string
+          policy_frame_id: string | null
+          revenue_bound_score: number
+          revenue_rule_type: string
+          risk_posture: Json
+          settlement_readiness_score: number
+          status: string
+          updated_at: string
+          value_flow_governance_score: number
+          value_flow_type: string
+        }
+        Insert: {
+          allocation_constraints?: Json
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          policy_frame_id?: string | null
+          revenue_bound_score?: number
+          revenue_rule_type?: string
+          risk_posture?: Json
+          settlement_readiness_score?: number
+          status?: string
+          updated_at?: string
+          value_flow_governance_score?: number
+          value_flow_type?: string
+        }
+        Update: {
+          allocation_constraints?: Json
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          policy_frame_id?: string | null
+          revenue_bound_score?: number
+          revenue_rule_type?: string
+          risk_posture?: Json
+          settlement_readiness_score?: number
+          status?: string
+          updated_at?: string
+          value_flow_governance_score?: number
+          value_flow_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_value_flow_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_value_flow_rules_policy_frame_id_fkey"
+            columns: ["policy_frame_id"]
+            isOneToOne: false
+            referencedRelation: "multi_party_policy_frames"
             referencedColumns: ["id"]
           },
         ]
@@ -8456,6 +8591,261 @@ export type Database = {
           },
           {
             foreignKeyName: "meta_agent_recommendations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      multi_party_entitlements: {
+        Row: {
+          access_limit_score: number
+          created_at: string
+          entitlement_integrity_score: number
+          entitlement_scope: string
+          evidence_links: Json
+          id: string
+          obligation_level: string
+          obligations_detail: Json
+          organization_id: string
+          policy_frame_id: string | null
+          restriction_level: string
+          rights_detail: Json
+          unsafe_combinations: Json
+        }
+        Insert: {
+          access_limit_score?: number
+          created_at?: string
+          entitlement_integrity_score?: number
+          entitlement_scope?: string
+          evidence_links?: Json
+          id?: string
+          obligation_level?: string
+          obligations_detail?: Json
+          organization_id: string
+          policy_frame_id?: string | null
+          restriction_level?: string
+          rights_detail?: Json
+          unsafe_combinations?: Json
+        }
+        Update: {
+          access_limit_score?: number
+          created_at?: string
+          entitlement_integrity_score?: number
+          entitlement_scope?: string
+          evidence_links?: Json
+          id?: string
+          obligation_level?: string
+          obligations_detail?: Json
+          organization_id?: string
+          policy_frame_id?: string | null
+          restriction_level?: string
+          rights_detail?: Json
+          unsafe_combinations?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "multi_party_entitlements_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "multi_party_entitlements_policy_frame_id_fkey"
+            columns: ["policy_frame_id"]
+            isOneToOne: false
+            referencedRelation: "multi_party_policy_frames"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      multi_party_governance_outcomes: {
+        Row: {
+          bounded_commercial_integrity_score: number
+          created_at: string
+          evidence_refs: Json
+          expected_outcomes: Json
+          governance_outcome_accuracy_score: number
+          id: string
+          organization_id: string
+          outcome_status: string
+          outcome_type: string
+          policy_frame_id: string | null
+          realized_outcomes: Json
+          updated_at: string
+        }
+        Insert: {
+          bounded_commercial_integrity_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          governance_outcome_accuracy_score?: number
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          outcome_type?: string
+          policy_frame_id?: string | null
+          realized_outcomes?: Json
+          updated_at?: string
+        }
+        Update: {
+          bounded_commercial_integrity_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          governance_outcome_accuracy_score?: number
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          outcome_type?: string
+          policy_frame_id?: string | null
+          realized_outcomes?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "multi_party_governance_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "multi_party_governance_outcomes_policy_frame_id_fkey"
+            columns: ["policy_frame_id"]
+            isOneToOne: false
+            referencedRelation: "multi_party_policy_frames"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      multi_party_policy_conflicts: {
+        Row: {
+          conflict_score: number
+          conflict_type: string
+          created_at: string
+          description: string
+          evidence_links: Json
+          fairness_impact: string
+          id: string
+          organization_id: string
+          policy_frame_id: string | null
+          resolution_recommendation: string
+          resolution_status: string
+        }
+        Insert: {
+          conflict_score?: number
+          conflict_type?: string
+          created_at?: string
+          description?: string
+          evidence_links?: Json
+          fairness_impact?: string
+          id?: string
+          organization_id: string
+          policy_frame_id?: string | null
+          resolution_recommendation?: string
+          resolution_status?: string
+        }
+        Update: {
+          conflict_score?: number
+          conflict_type?: string
+          created_at?: string
+          description?: string
+          evidence_links?: Json
+          fairness_impact?: string
+          id?: string
+          organization_id?: string
+          policy_frame_id?: string | null
+          resolution_recommendation?: string
+          resolution_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "multi_party_policy_conflicts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "multi_party_policy_conflicts_policy_frame_id_fkey"
+            columns: ["policy_frame_id"]
+            isOneToOne: false
+            referencedRelation: "multi_party_policy_frames"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      multi_party_policy_frames: {
+        Row: {
+          access_conditions: Json
+          created_at: string
+          enforceability_score: number
+          evidence_links: Json
+          fairness_score: number
+          id: string
+          interaction_type: string
+          organization_id: string
+          party_role_a: string
+          party_role_b: string
+          policy_alignment_score: number
+          policy_frame_name: string
+          rationale: string
+          restriction_level: string
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          access_conditions?: Json
+          created_at?: string
+          enforceability_score?: number
+          evidence_links?: Json
+          fairness_score?: number
+          id?: string
+          interaction_type?: string
+          organization_id: string
+          party_role_a?: string
+          party_role_b?: string
+          policy_alignment_score?: number
+          policy_frame_name: string
+          rationale?: string
+          restriction_level?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          access_conditions?: Json
+          created_at?: string
+          enforceability_score?: number
+          evidence_links?: Json
+          fairness_score?: number
+          id?: string
+          interaction_type?: string
+          organization_id?: string
+          party_role_a?: string
+          party_role_b?: string
+          policy_alignment_score?: number
+          policy_frame_name?: string
+          rationale?: string
+          restriction_level?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "multi_party_policy_frames_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "multi_party_policy_frames_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
