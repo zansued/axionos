@@ -8153,6 +8153,200 @@ export type Database = {
           },
         ]
       }
+      extension_activations: {
+        Row: {
+          activated_at: string | null
+          activated_by: string | null
+          activation_status: string
+          approval_status: string
+          approved_at: string | null
+          approved_by: string | null
+          configuration: Json
+          created_at: string
+          deactivated_at: string | null
+          extension_id: string
+          id: string
+          organization_id: string
+          rejection_reason: string | null
+          rollback_state: Json
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          activated_at?: string | null
+          activated_by?: string | null
+          activation_status?: string
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          configuration?: Json
+          created_at?: string
+          deactivated_at?: string | null
+          extension_id: string
+          id?: string
+          organization_id: string
+          rejection_reason?: string | null
+          rollback_state?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          activated_at?: string | null
+          activated_by?: string | null
+          activation_status?: string
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          configuration?: Json
+          created_at?: string
+          deactivated_at?: string | null
+          extension_id?: string
+          id?: string
+          organization_id?: string
+          rejection_reason?: string | null
+          rollback_state?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extension_activations_extension_id_fkey"
+            columns: ["extension_id"]
+            isOneToOne: false
+            referencedRelation: "platform_extensions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extension_activations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extension_activations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      extension_audit_events: {
+        Row: {
+          activation_id: string | null
+          actor_id: string | null
+          created_at: string
+          event_details: Json
+          event_type: string
+          extension_id: string
+          id: string
+          new_state: Json | null
+          organization_id: string
+          previous_state: Json | null
+        }
+        Insert: {
+          activation_id?: string | null
+          actor_id?: string | null
+          created_at?: string
+          event_details?: Json
+          event_type: string
+          extension_id: string
+          id?: string
+          new_state?: Json | null
+          organization_id: string
+          previous_state?: Json | null
+        }
+        Update: {
+          activation_id?: string | null
+          actor_id?: string | null
+          created_at?: string
+          event_details?: Json
+          event_type?: string
+          extension_id?: string
+          id?: string
+          new_state?: Json | null
+          organization_id?: string
+          previous_state?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extension_audit_events_activation_id_fkey"
+            columns: ["activation_id"]
+            isOneToOne: false
+            referencedRelation: "extension_activations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extension_audit_events_extension_id_fkey"
+            columns: ["extension_id"]
+            isOneToOne: false
+            referencedRelation: "platform_extensions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extension_audit_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      extension_compatibility_checks: {
+        Row: {
+          check_details: Json
+          check_type: string
+          compatibility_score: number
+          conflicts_detected: Json
+          created_at: string
+          extension_id: string
+          id: string
+          organization_id: string
+          requirements_met: boolean
+          risk_assessment: string
+        }
+        Insert: {
+          check_details?: Json
+          check_type?: string
+          compatibility_score?: number
+          conflicts_detected?: Json
+          created_at?: string
+          extension_id: string
+          id?: string
+          organization_id: string
+          requirements_met?: boolean
+          risk_assessment?: string
+        }
+        Update: {
+          check_details?: Json
+          check_type?: string
+          compatibility_score?: number
+          conflicts_detected?: Json
+          created_at?: string
+          extension_id?: string
+          id?: string
+          organization_id?: string
+          requirements_met?: boolean
+          risk_assessment?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extension_compatibility_checks_extension_id_fkey"
+            columns: ["extension_id"]
+            isOneToOne: false
+            referencedRelation: "platform_extensions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extension_compatibility_checks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       external_actor_registry: {
         Row: {
           assumptions: Json
@@ -12002,6 +12196,77 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_extensions: {
+        Row: {
+          affected_surfaces: Json
+          author: string
+          category: string
+          compatibility_constraints: Json
+          created_at: string
+          description: string
+          documentation_url: string | null
+          extension_key: string
+          extension_name: string
+          id: string
+          metadata: Json
+          organization_id: string
+          permissions_required: Json
+          risk_level: string
+          rollback_ready: boolean
+          status: string
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          affected_surfaces?: Json
+          author?: string
+          category?: string
+          compatibility_constraints?: Json
+          created_at?: string
+          description?: string
+          documentation_url?: string | null
+          extension_key: string
+          extension_name: string
+          id?: string
+          metadata?: Json
+          organization_id: string
+          permissions_required?: Json
+          risk_level?: string
+          rollback_ready?: boolean
+          status?: string
+          updated_at?: string
+          version?: string
+        }
+        Update: {
+          affected_surfaces?: Json
+          author?: string
+          category?: string
+          compatibility_constraints?: Json
+          created_at?: string
+          description?: string
+          documentation_url?: string | null
+          extension_key?: string
+          extension_name?: string
+          id?: string
+          metadata?: Json
+          organization_id?: string
+          permissions_required?: Json
+          risk_level?: string
+          rollback_ready?: boolean
+          status?: string
+          updated_at?: string
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_extensions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
