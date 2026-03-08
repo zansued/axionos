@@ -58,6 +58,8 @@
 | **Controlled Ecosystem Readiness** | Active — capability inventory, exposure classification, safety prerequisites, trust model foundation, readiness assessment |
 | **Capability Exposure Governance** | Active — exposure classes, governance cases, gate evaluation, restriction analysis, review workflow, outcome tracking |
 | **External Trust & Admission** | Active — actor registry, trust tiers, admission cases, requirement evaluation, risk posture, drift detection, advisory recommendations |
+| **Ecosystem Simulation & Sandbox** | Active — sandbox simulation, interaction modeling, blast radius estimation, rollback viability |
+| **Limited Marketplace Pilot** | Active — bounded pilot programs, capability/participant gating, interaction monitoring, policy enforcement, risk monitoring, learning signals |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
