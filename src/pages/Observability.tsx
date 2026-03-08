@@ -362,7 +362,6 @@ export default function Observability() {
           <TabsContent value="arch-sim" className="mt-4">
             <ArchitectureSimulationDashboard />
           </TabsContent>
-          </TabsContent>
 
           {/* ===== PLATFORM INTELLIGENCE ===== */}
           <TabsContent value="platform" className="mt-4">
