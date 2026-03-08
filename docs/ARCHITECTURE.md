@@ -867,12 +867,12 @@ supabase/functions/
 
 ## 16. Forthcoming Architectural Direction
 
-> **Status:** Partially implemented. Sprint 51 (Institutional Convergence Memory) is now complete.
+> **Status:** Partially implemented. Sprint 52 (Operating Profiles & Policy Packs) is now complete.
 
-After architecture-scaled hardening (Sprints 46–48), convergence governance (Sprints 49–50), and institutional convergence memory (Sprint 51), the platform is expected to evolve toward:
+After architecture-scaled hardening (Sprints 46–48), convergence governance (Sprints 49–50), institutional convergence memory (Sprint 51), and operating profiles (Sprint 52), the platform is expected to evolve toward:
 
-1. ~~**Institutional Convergence Memory**~~ ✅ Complete (Sprint 51) — Approved convergence decisions and their outcomes stored as persistent institutional memory with evidence lineage, pattern extraction, and quality feedback.
-2. **Operating Profile Packaging** — Composing proven policies, convergence outcomes, and tenant-specific tuning into versioned, assignable operating profiles and policy packs.
+1. ~~**Institutional Convergence Memory**~~ ✅ Complete (Sprint 51) — Approved convergence decisions stored as persistent institutional memory with evidence lineage, pattern extraction, and quality feedback.
+2. ~~**Operating Profile Packaging**~~ ✅ Complete (Sprint 52) — Proven policies, convergence outcomes, and tenant-specific tuning composed into versioned, assignable operating profiles and policy packs with bounded overrides.
 3. **Bounded Product Intelligence** — Connecting execution outcomes to product-level signals in an advisory-first, governance-preserving manner.
 
 These directions reuse existing architectural layers (governance, memory, observability, policy, adaptive routing) without expanding the Agent OS plane structure. The focus shifts from building new capability planes to institutionalizing and packaging the intelligence already present.

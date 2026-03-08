@@ -425,5 +425,6 @@ This sprint will be formalized when implementation begins.
 | Platform Convergence | 1 | 49 |
 | Convergence Governance | 1 | 50 |
 | Institutional Convergence Memory | 1 | 51 |
+| Operating Profiles & Policy Packs | 1 | 52 |
 | Support | 11 | Various |
-| **Total** | **~96** | |
+| **Total** | **~97** | |

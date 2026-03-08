@@ -371,6 +371,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
+          {/* ===== OPERATING PROFILES ===== */}
+          <TabsContent value="op-profiles" className="mt-4">
+            <OperatingProfilesDashboard />
+          </TabsContent>
+
           {/* ===== INSTITUTIONAL CONVERGENCE MEMORY ===== */}
           <TabsContent value="conv-memory" className="mt-4">
             <InstitutionalConvergenceMemoryDashboard />
