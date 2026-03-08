@@ -87,7 +87,7 @@ function OverviewSection({ ov }: { ov: any }) {
       <Card className="bg-card/50 border-border/50">
         <CardHeader className="pb-2"><CardTitle className="text-sm">Projected Savings</CardTitle></CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold text-green-400">${(ov.total_projected_savings || 0).toFixed(4)}</p>
+          <p className="text-2xl font-bold text-primary">${(ov.total_projected_savings || 0).toFixed(4)}</p>
           <p className="text-xs text-muted-foreground mt-1">{ov.total_assessments || 0} assessments</p>
         </CardContent>
       </Card>
