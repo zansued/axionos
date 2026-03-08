@@ -99,7 +99,7 @@ The next strategic direction moves from capability exposure governance toward **
 
 ---
 
-## Completed Canon (Sprints 1–56)
+## Completed Canon (Sprints 1–57)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
