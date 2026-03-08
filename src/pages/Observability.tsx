@@ -54,6 +54,7 @@ import { ProductIntelligenceDashboard } from "@/components/observability/Product
 import { ProductIntelligenceOperationsDashboard } from "@/components/observability/ProductIntelligenceOperationsDashboard";
 import { ProductOpportunityPortfolioDashboard } from "@/components/observability/ProductOpportunityPortfolioDashboard";
 import { ControlledEcosystemReadinessDashboard } from "@/components/observability/ControlledEcosystemReadinessDashboard";
+import { CapabilityExposureGovernanceDashboard } from "@/components/observability/CapabilityExposureGovernanceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
