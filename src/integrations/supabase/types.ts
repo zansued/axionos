@@ -2922,6 +2922,239 @@ export type Database = {
           },
         ]
       }
+      convergence_decisions: {
+        Row: {
+          approved_action: string | null
+          approved_scope: string | null
+          created_at: string
+          decision_rationale: Json
+          decision_status: string
+          governance_case_id: string
+          id: string
+          organization_id: string
+          reviewer_notes: string
+          reviewer_ref: Json | null
+          rollback_plan: Json
+        }
+        Insert: {
+          approved_action?: string | null
+          approved_scope?: string | null
+          created_at?: string
+          decision_rationale?: Json
+          decision_status?: string
+          governance_case_id: string
+          id?: string
+          organization_id: string
+          reviewer_notes?: string
+          reviewer_ref?: Json | null
+          rollback_plan?: Json
+        }
+        Update: {
+          approved_action?: string | null
+          approved_scope?: string | null
+          created_at?: string
+          decision_rationale?: Json
+          decision_status?: string
+          governance_case_id?: string
+          id?: string
+          organization_id?: string
+          reviewer_notes?: string
+          reviewer_ref?: Json | null
+          rollback_plan?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_decisions_governance_case_id_fkey"
+            columns: ["governance_case_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_governance_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      convergence_governance_cases: {
+        Row: {
+          assumptions: Json
+          beneficial_specialization_score: number
+          confidence_score: number
+          convergence_domain: string
+          created_at: string
+          economic_impact_score: number
+          evidence_links: Json
+          fragmentation_risk_score: number
+          governance_case_type: string
+          id: string
+          organization_id: string
+          promotion_readiness_score: number
+          proposed_action: string
+          proposed_scope: string
+          redundancy_score: number
+          retirement_readiness_score: number
+          review_status: string
+          rollback_complexity_score: number
+          source_candidate_id: string | null
+          stability_impact_score: number
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          beneficial_specialization_score?: number
+          confidence_score?: number
+          convergence_domain?: string
+          created_at?: string
+          economic_impact_score?: number
+          evidence_links?: Json
+          fragmentation_risk_score?: number
+          governance_case_type?: string
+          id?: string
+          organization_id: string
+          promotion_readiness_score?: number
+          proposed_action?: string
+          proposed_scope?: string
+          redundancy_score?: number
+          retirement_readiness_score?: number
+          review_status?: string
+          rollback_complexity_score?: number
+          source_candidate_id?: string | null
+          stability_impact_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          beneficial_specialization_score?: number
+          confidence_score?: number
+          convergence_domain?: string
+          created_at?: string
+          economic_impact_score?: number
+          evidence_links?: Json
+          fragmentation_risk_score?: number
+          governance_case_type?: string
+          id?: string
+          organization_id?: string
+          promotion_readiness_score?: number
+          proposed_action?: string
+          proposed_scope?: string
+          redundancy_score?: number
+          retirement_readiness_score?: number
+          review_status?: string
+          rollback_complexity_score?: number
+          source_candidate_id?: string | null
+          stability_impact_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_governance_cases_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_governance_cases_source_candidate_id_fkey"
+            columns: ["source_candidate_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_governance_cases_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      convergence_governance_outcomes: {
+        Row: {
+          created_at: string
+          decision_id: string | null
+          evidence_refs: Json
+          expected_economic_gain: number
+          expected_fragmentation_reduction: number
+          expected_simplification_gain: number
+          expected_stability_gain: number
+          governance_case_id: string | null
+          id: string
+          organization_id: string
+          outcome_accuracy_score: number
+          outcome_status: string
+          realized_economic_gain: number
+          realized_fragmentation_reduction: number
+          realized_simplification_gain: number
+          realized_stability_gain: number
+        }
+        Insert: {
+          created_at?: string
+          decision_id?: string | null
+          evidence_refs?: Json
+          expected_economic_gain?: number
+          expected_fragmentation_reduction?: number
+          expected_simplification_gain?: number
+          expected_stability_gain?: number
+          governance_case_id?: string | null
+          id?: string
+          organization_id: string
+          outcome_accuracy_score?: number
+          outcome_status?: string
+          realized_economic_gain?: number
+          realized_fragmentation_reduction?: number
+          realized_simplification_gain?: number
+          realized_stability_gain?: number
+        }
+        Update: {
+          created_at?: string
+          decision_id?: string | null
+          evidence_refs?: Json
+          expected_economic_gain?: number
+          expected_fragmentation_reduction?: number
+          expected_simplification_gain?: number
+          expected_stability_gain?: number
+          governance_case_id?: string | null
+          id?: string
+          organization_id?: string
+          outcome_accuracy_score?: number
+          outcome_status?: string
+          realized_economic_gain?: number
+          realized_fragmentation_reduction?: number
+          realized_simplification_gain?: number
+          realized_stability_gain?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_governance_outcomes_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_decisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_governance_outcomes_governance_case_id_fkey"
+            columns: ["governance_case_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_governance_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_governance_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       convergence_outcomes: {
         Row: {
           action_taken: string
@@ -2975,6 +3208,79 @@ export type Database = {
             columns: ["recommendation_id"]
             isOneToOne: false
             referencedRelation: "convergence_recommendations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      convergence_promotion_plans: {
+        Row: {
+          blast_radius: Json
+          created_at: string
+          decision_id: string | null
+          governance_case_id: string | null
+          id: string
+          organization_id: string
+          promotion_readiness_score: number
+          promotion_scope: string
+          rollback_plan: Json
+          rollout_plan: Json
+          source_pattern_ref: Json
+          status: string
+          target_default_ref: Json
+          updated_at: string
+        }
+        Insert: {
+          blast_radius?: Json
+          created_at?: string
+          decision_id?: string | null
+          governance_case_id?: string | null
+          id?: string
+          organization_id: string
+          promotion_readiness_score?: number
+          promotion_scope?: string
+          rollback_plan?: Json
+          rollout_plan?: Json
+          source_pattern_ref?: Json
+          status?: string
+          target_default_ref?: Json
+          updated_at?: string
+        }
+        Update: {
+          blast_radius?: Json
+          created_at?: string
+          decision_id?: string | null
+          governance_case_id?: string | null
+          id?: string
+          organization_id?: string
+          promotion_readiness_score?: number
+          promotion_scope?: string
+          rollback_plan?: Json
+          rollout_plan?: Json
+          source_pattern_ref?: Json
+          status?: string
+          target_default_ref?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_promotion_plans_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_decisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_promotion_plans_governance_case_id_fkey"
+            columns: ["governance_case_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_governance_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_promotion_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -3060,6 +3366,133 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      convergence_retirement_plans: {
+        Row: {
+          created_at: string
+          decision_id: string | null
+          dependency_impact: Json
+          governance_case_id: string | null
+          id: string
+          migration_path: Json
+          organization_id: string
+          retirement_readiness_score: number
+          retirement_type: string
+          rollback_plan: Json
+          status: string
+          target_pattern_ref: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          decision_id?: string | null
+          dependency_impact?: Json
+          governance_case_id?: string | null
+          id?: string
+          migration_path?: Json
+          organization_id: string
+          retirement_readiness_score?: number
+          retirement_type?: string
+          rollback_plan?: Json
+          status?: string
+          target_pattern_ref?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          decision_id?: string | null
+          dependency_impact?: Json
+          governance_case_id?: string | null
+          id?: string
+          migration_path?: Json
+          organization_id?: string
+          retirement_readiness_score?: number
+          retirement_type?: string
+          rollback_plan?: Json
+          status?: string
+          target_pattern_ref?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_retirement_plans_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_decisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_retirement_plans_governance_case_id_fkey"
+            columns: ["governance_case_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_governance_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_retirement_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      convergence_rollout_reviews: {
+        Row: {
+          blast_radius_score: number
+          created_at: string
+          dependency_coupling_score: number
+          governance_case_id: string | null
+          id: string
+          organization_id: string
+          review_status: string
+          reviewer_notes: string
+          rollback_viability_score: number
+          rollout_safety_score: number
+          staged_rollout_envelope: Json
+        }
+        Insert: {
+          blast_radius_score?: number
+          created_at?: string
+          dependency_coupling_score?: number
+          governance_case_id?: string | null
+          id?: string
+          organization_id: string
+          review_status?: string
+          reviewer_notes?: string
+          rollback_viability_score?: number
+          rollout_safety_score?: number
+          staged_rollout_envelope?: Json
+        }
+        Update: {
+          blast_radius_score?: number
+          created_at?: string
+          dependency_coupling_score?: number
+          governance_case_id?: string | null
+          id?: string
+          organization_id?: string
+          review_status?: string
+          reviewer_notes?: string
+          rollback_viability_score?: number
+          rollout_safety_score?: number
+          staged_rollout_envelope?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_rollout_reviews_governance_case_id_fkey"
+            columns: ["governance_case_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_governance_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_rollout_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
