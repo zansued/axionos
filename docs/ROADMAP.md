@@ -85,92 +85,24 @@ AxionOS has completed 48 implementation sprints spanning the full capability arc
 
 ---
 
-## DONE — Completed Sprints (1–40)
+## Completed Capability Arc
 
-### Foundation Layer (Sprints 1–10)
+> **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
-| Sprint | Name | Status |
-|--------|------|--------|
-| 1 | Initiative Brief Formalization | ✅ Complete |
-| 2 | Initiative Simulation Engine | ✅ Complete |
-| 3 | Deploy Contract Completion | ✅ Complete |
-| 4 | Product-Level Observability | ✅ Complete |
-| 5 | Onboarding & Product Packaging | ✅ Complete |
-| 6 | Evidence-Oriented Repair Loop | ✅ Complete |
-| 7 | Error Pattern Library & Learning Foundation | ✅ Complete |
-| 8 | Preventive Engineering Layer | ✅ Complete |
-| 9 | Adaptive Repair Routing | ✅ Complete |
-| 10 | Learning Agents Foundation | ✅ Complete |
-
-### Operational Intelligence Layer (Sprints 11–12)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 11 | Commercial Readiness / Billing / Workspace Packaging | ✅ Complete |
-| 12 | Learning Agents v1 (5 engines + dashboard) | ✅ Complete |
-
-### Meta-Intelligence & Memory Layer (Sprints 13–20)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 13 | Meta-Agents v1 (4 types + recommendation lifecycle) | ✅ Complete |
-| 14 | Controlled Meta-Agent Actions (proposal generation) | ✅ Complete |
-| 15 | Engineering Memory Foundation | ✅ Complete |
-| 16 | Memory Retrieval Surfaces | ✅ Complete |
-| 17 | Memory Summaries | ✅ Complete |
-| 18 | Memory-Aware Meta-Agents | ✅ Complete |
-| 19 | Proposal Quality Feedback Loop | ✅ Complete |
-| 20 | Advisory Calibration Layer | ✅ Complete |
-
-### Learning & Repair Layer (Sprints 21–26)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 21 | Prompt Optimization Engine (A/B testing) | ✅ Complete |
-| 22 | Bounded Promotion & Rollback Guard | ✅ Complete |
-| 23 | Self-Improving Fix Agents v2 (Repair Policies) | ✅ Complete |
-| 24 | Agent Memory Layer Operationalization | ✅ Complete |
-| 25 | Predictive Error Detection Operationalization | ✅ Complete |
-| 26 | Learning Agents v2 (Cross-Stage Policy Synthesis) | ✅ Complete |
-
-### Execution Governance Layer (Sprints 27–29)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 27 | Execution Policy Intelligence | ✅ Complete |
-| 28 | Execution Mode Portfolio Optimization | ✅ Complete |
-| 29 | Workspace / Tenant Adaptive Policy Tuning | ✅ Complete |
-
-### Platform Intelligence & Calibration Layer (Sprints 30–31)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 30 | Platform Intelligence Entry | ✅ Complete |
-| 31 | Platform Self-Calibration | ✅ Complete |
-
-### Strategy Evolution Layer (Sprints 32–33)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 32 | Execution Strategy Evolution | ✅ Complete |
-| 33 | Strategy Portfolio Governance | ✅ Complete |
-
-### Platform Stabilization & Advisory Layer (Sprints 34–37)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 34 | Platform Self-Stabilization | ✅ Complete |
-| 35 | Autonomous Engineering Advisor | ✅ Complete |
-| 36 | Semantic Retrieval & Embedding Memory Expansion | ✅ Complete |
-| 37 | Discovery-Driven Architecture Signals | ✅ Complete |
-
-### Architecture Intelligence Layer (Sprints 38–40)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 38 | Architecture Change Simulation & Governance | ✅ Complete |
-| 39 | Architecture Change Planning & Rollout Readiness | ✅ Complete |
-| 40 | Architecture Rollout Sandbox & Controlled Migration Readiness | ✅ Complete |
+| Block | Sprints | Capability Summary |
+|-------|---------|-------------------|
+| Foundation | 1–10 | 32-stage pipeline, DAG orchestration, CI validation, self-healing, prevention, routing, governance |
+| Operational Intelligence | 11–12 | Commercial readiness, billing, usage enforcement, learning agents v1 |
+| Meta-Intelligence & Memory | 13–20 | Memory-aware meta-agents, engineering memory, quality feedback, advisory calibration |
+| Learning & Repair | 21–26 | Prompt A/B testing, repair policies, agent memory, predictive detection, cross-stage synthesis |
+| Execution Governance | 27–29 | Policy intelligence, portfolio optimization, tenant adaptive tuning |
+| Platform Intelligence & Calibration | 30–31 | Health model, bounded threshold calibration |
+| Strategy Evolution & Governance | 32–33 | Strategy variant experimentation, portfolio governance |
+| Platform Stabilization & Advisory | 34–37 | Self-stabilization, engineering advisor, semantic retrieval, discovery architecture |
+| Architecture Intelligence | 38–40 | Change simulation, planning, rollout sandbox |
+| Architecture-Governed | 41–43 | Pilot governance, migration execution, portfolio governance |
+| Architecture-Operating | 44–45 | Fitness functions, change advisory orchestrator |
+| Architecture-Scaled | 46–48 | Stabilization v2, tenant architecture modes, economic optimization |
 
 ---
 
