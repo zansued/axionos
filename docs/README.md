@@ -52,10 +52,10 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 ### Current Canon Boundaries
 
-- **Sprints 1–58** = canonical complete (implemented and verified)
-- **Sprint 59** = planned (next to implement)
-- **Sprint 60** = committed (part of Block K, objectives defined)
-- **Sprints 61–65** = reserved (strategic direction, intentionally lightweight)
+- **Sprints 1–60** = canonical complete (implemented and verified)
+- **Sprint 61** = planned (next to implement)
+- **Sprint 62** = committed (part of Block K, objectives defined)
+- **Sprints 63–65** = reserved (strategic direction, intentionally lightweight)
 
 ---
 

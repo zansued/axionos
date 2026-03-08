@@ -153,17 +153,15 @@ With Sprint 60 complete (limited marketplace pilot), the platform has activated 
 
 ---
 
-## Reserved Horizon (Sprints 60–65)
+## Reserved Horizon (Sprints 62–65)
 
 > **Status:** 🔮 Reserved — strategic direction is defined but intentionally lightweight. Details will be formalized sprint-by-sprint as the committed arc completes.
 > **Implementation should not begin on reserved sprints without deliberate review and promotion to committed status.**
 
-### Block K — Controlled Ecosystem Activation (Sprints 60–62)
+### Block K — Controlled Ecosystem Activation (Sprint 62)
 
 | Sprint | Name | Purpose | Status |
 |--------|------|---------|--------|
-| 60 | Limited Marketplace Pilot Layer | First controlled marketplace activation with bounded scope and instant rollback | Reserved |
-| 61 | Capability Registry Governance Layer | Govern the lifecycle of registered capabilities — versioning, deprecation, quality gates | Reserved |
 | 62 | Multi-Party Policy & Revenue Governance Layer | Govern policy negotiation, revenue sharing, and compliance across multiple ecosystem participants | Reserved |
 
 ### Block L — System Roundness & Operating Completion (Sprints 63–65)

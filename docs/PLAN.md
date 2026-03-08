@@ -574,5 +574,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | Controlled Ecosystem Readiness | 1 | 56 |
 | Capability Exposure Governance | 1 | 57 |
 | External Trust & Admission | 1 | 58 |
+| Ecosystem Simulation & Sandbox | 1 | 59 |
+| Limited Marketplace Pilot | 1 | 60 |
 | Support | 11 | Various |
-| **Total** | **~103** | |
+| **Total** | **~105** | |
