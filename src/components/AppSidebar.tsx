@@ -1,5 +1,5 @@
 import {
-  Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio,
+  Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Map,
   Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
