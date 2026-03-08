@@ -52,6 +52,7 @@
 | **Convergence Governance** | Active — governed lifecycle for promotion, merge, retention, deprecation, retirement decisions |
 | **Institutional Convergence Memory** | Active — durable, queryable, reusable convergence knowledge with evidence lineage |
 | **Operating Profiles & Policy Packs** | Active — reusable, governed, versioned operating profiles with bounded overrides |
+| **Product Intelligence Entry** | Active — bounded, advisory-first product signal correlation + opportunity detection |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
