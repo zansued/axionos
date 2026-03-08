@@ -63,13 +63,13 @@ sprints:
   - { sprint: 55, name: "Product Opportunity Portfolio Governance",           status: complete, block: "I",            phase: "Product-Intelligent Expansion",       layer: "Product Opportunity Governance Layer" }
   - { sprint: 56, name: "Controlled Ecosystem Readiness Layer",              status: complete, block: "I",            phase: "Product-Intelligent Expansion",       layer: "Ecosystem Readiness Layer" }
 
-  # === COMMITTED FUTURE ARC (Sprint 57) — Block J ===
+  - { sprint: 57, name: "Capability Exposure Governance Layer",              status: complete, block: "J",            phase: "Trusted Ecosystem Foundation",       layer: "Capability Exposure Governance Layer" }
 
-  - { sprint: 57, name: "Capability Exposure Governance Layer",              status: planned,    block: "J", phase: "Trusted Ecosystem Foundation",          objective: "Govern which capabilities can be exposed externally" }
+  # === COMMITTED FUTURE ARC (Sprint 58) — Block J ===
 
-  # === RESERVED HORIZON (Sprints 58–65) — Blocks J, K, L ===
+  - { sprint: 58, name: "External Trust & Admission Layer",                  status: planned,    block: "J", phase: "Trusted Ecosystem Foundation",          objective: "Trust scoring and admission criteria for external participants" }
 
-  - { sprint: 58, name: "External Trust & Admission Layer",                  status: reserved, block: "J", phase: "Trusted Ecosystem Foundation",          objective: "Trust scoring and admission criteria for external participants" }
+  # === RESERVED HORIZON (Sprints 59–65) — Blocks J, K, L ===
   - { sprint: 59, name: "Ecosystem Simulation & Sandbox Layer",              status: reserved, block: "J", phase: "Trusted Ecosystem Foundation",          objective: "Simulate ecosystem interactions before real exposure" }
   - { sprint: 60, name: "Limited Marketplace Pilot Layer",                   status: reserved, block: "K", phase: "Controlled Ecosystem Activation",       objective: "First controlled marketplace activation with rollback" }
   - { sprint: 61, name: "Capability Registry Governance Layer",              status: reserved, block: "K", phase: "Controlled Ecosystem Activation",       objective: "Govern lifecycle of registered capabilities" }

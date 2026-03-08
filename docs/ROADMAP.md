@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform Convergence complete (Sprint 49). Convergence Governance complete (Sprint 50). Institutional Convergence Memory complete (Sprint 51). Operating Profiles & Policy Packs complete (Sprint 52). Product Intelligence Entry complete (Sprint 53). Product Intelligence Operations complete (Sprint 54). Product Opportunity Portfolio Governance complete (Sprint 55). Controlled Ecosystem Readiness complete (Sprint 56). Block I complete. Future canon formalized through Sprint 65.
+> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform Convergence complete (Sprint 49). Convergence Governance complete (Sprint 50). Institutional Convergence Memory complete (Sprint 51). Operating Profiles & Policy Packs complete (Sprint 52). Product Intelligence Entry complete (Sprint 53). Product Intelligence Operations complete (Sprint 54). Product Opportunity Portfolio Governance complete (Sprint 55). Controlled Ecosystem Readiness complete (Sprint 56). Capability Exposure Governance complete (Sprint 57). Block I complete. Block J started. Future canon formalized through Sprint 65.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -26,7 +26,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 41 architectural layers active |
+| **System State** | 42 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -56,6 +56,7 @@
 | **Product Intelligence Operations** | Active — cross-tenant benchmarking, product-architecture/profile correlations, decision-grade signal quality |
 | **Product Opportunity Portfolio Governance** | Active — portfolio ranking, conflict detection, capacity-aware prioritization, outcome tracking |
 | **Controlled Ecosystem Readiness** | Active — capability inventory, exposure classification, safety prerequisites, trust model foundation, readiness assessment |
+| **Capability Exposure Governance** | Active — exposure classes, governance cases, gate evaluation, restriction analysis, review workflow, outcome tracking |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
@@ -63,9 +64,9 @@
 
 ## Strategic Directive
 
-AxionOS has completed 56 implementation sprints spanning the full capability arc from deterministic execution to controlled ecosystem readiness. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, bounded self-stabilization, cross-layer engineering advisory, unified semantic retrieval, discovery-driven architecture signals, architecture change simulation/planning/sandbox/pilot/migration, portfolio governance, fitness functions, change advisory orchestration, tenant-aware architecture modes, economic optimization, platform convergence, convergence governance, institutional convergence memory, operating profiles, product intelligence entry, product intelligence operations, product opportunity portfolio governance, and controlled ecosystem readiness — all under governed, advisory-first safety boundaries.
+AxionOS has completed 57 implementation sprints spanning the full capability arc from deterministic execution to capability exposure governance. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, bounded self-stabilization, cross-layer engineering advisory, unified semantic retrieval, discovery-driven architecture signals, architecture change simulation/planning/sandbox/pilot/migration, portfolio governance, fitness functions, change advisory orchestration, tenant-aware architecture modes, economic optimization, platform convergence, convergence governance, institutional convergence memory, operating profiles, product intelligence entry, product intelligence operations, product opportunity portfolio governance, controlled ecosystem readiness, and capability exposure governance — all under governed, advisory-first safety boundaries.
 
-The next strategic direction moves from controlled ecosystem readiness toward **trusted ecosystem foundation**, and ultimately toward a **round-enough operating completion** target at Sprint 65.
+The next strategic direction moves from capability exposure governance toward **external trust & admission**, and ultimately toward a **round-enough operating completion** target at Sprint 65.
 
 **Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy.
 
@@ -74,12 +75,12 @@ The next strategic direction moves from controlled ecosystem readiness toward **
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–56)                 COMMITTED (57)                 RESERVED (58–65)
+  COMPLETE (1–57)                 COMMITTED (58)                 RESERVED (59–65)
   ───────────────►                ───────────────►               ───────────────►
   Foundation → Learning →          Trusted Ecosystem              Trusted Ecosystem
   Meta → Memory → Gov →            Foundation                    Foundation →
-  Intelligence → Calibration →     Capability Exposure            Controlled Ecosystem
-  Strategy → Stabilization →       Governance                    Activation →
+  Intelligence → Calibration →     External Trust &              Controlled Ecosystem
+  Strategy → Stabilization →       Admission                    Activation →
   Advisory → Semantic →                                          System Roundness &
   Discovery → Simulation →                                      Operating Completion
   Planning → Sandbox →
@@ -92,12 +93,13 @@ The next strategic direction moves from controlled ecosystem readiness toward **
   Product Intelligence Entry →
   Product Intelligence Ops →
   Product Opp Portfolio Gov →
-  Ecosystem Readiness ✅
+  Ecosystem Readiness →
+  Capability Exposure Gov ✅
 ```
 
 ---
 
-## Completed Canon (Sprints 1–56)
+## Completed Canon (Sprints 1–57)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -123,36 +125,36 @@ The next strategic direction moves from controlled ecosystem readiness toward **
 | Block I (partial) — Product Intelligence Operations | 54 | Cross-tenant benchmarking, signal quality calibration, product-architecture/profile operational correlations, advisory recommendations |
 | Block I (partial) — Product Opportunity Portfolio Governance | 55 | Portfolio ranking, conflict detection, capacity-aware prioritization, promotion/defer/reject/monitor decisions, outcome tracking |
 | Block I (complete) — Controlled Ecosystem Readiness | 56 | Capability inventory, exposure classification, safety prerequisites, trust model foundation, readiness assessment, ecosystem readiness outcomes |
+| Block J (partial) — Capability Exposure Governance | 57 | Exposure classes, governance cases, gate evaluation, restriction analysis, review workflow, governance outcomes |
 
 ---
 
-## Committed Future Arc (Sprint 57)
+## Committed Future Arc (Sprint 58)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
 > **Block:** Block J — Trusted Ecosystem Foundation
 
-This sprint begins the trusted ecosystem foundation arc. It should still be reviewed and approved before execution begins.
+This sprint continues the trusted ecosystem foundation arc. It should still be reviewed and approved before execution begins.
 
 | Sprint | Name | Objective | Acceptance Direction |
 |--------|------|-----------|---------------------|
-| 57 | Capability Exposure Governance Layer | Govern which internal capabilities can be exposed externally and under what constraints | Exposure governance rules defined and reviewable; no capabilities actually exposed |
+| 58 | External Trust & Admission Layer | Define trust scoring, admission criteria, and safety boundaries for external participants | Trust scoring and admission defined; no external participants admitted |
 
-### Why 57 is committed
+### Why 58 is committed
 
-With Block I complete (product intelligence + ecosystem readiness), the platform has assessed its capabilities for exposure potential. The next step is establishing governance rules for actual capability exposure (57). It reuses existing AxionOS philosophy and Agent OS planes without expansion.
+With Sprint 57 complete (capability exposure governance), the platform has established governance rules for exposure. The next step is defining trust and admission criteria for external participants (58). It reuses existing AxionOS philosophy and Agent OS planes without expansion.
 
 ---
 
-## Reserved Horizon (Sprints 58–65)
+## Reserved Horizon (Sprints 59–65)
 
 > **Status:** 🔮 Reserved — strategic direction is defined but intentionally lightweight. Details will be formalized sprint-by-sprint as the committed arc completes.
 > **Implementation should not begin on reserved sprints without deliberate review and promotion to committed status.**
 
-### Block J — Trusted Ecosystem Foundation (Sprints 58–59)
+### Block J — Trusted Ecosystem Foundation (Sprint 59)
 
 | Sprint | Name | Purpose | Status |
 |--------|------|---------|--------|
-| 58 | External Trust & Admission Layer | Define trust scoring, admission criteria, and safety boundaries for external participants | Reserved |
 | 59 | Ecosystem Simulation & Sandbox Layer | Simulate ecosystem interactions in bounded sandboxes before real exposure | Reserved |
 
 ### Block K — Controlled Ecosystem Activation (Sprints 60–62)
@@ -171,9 +173,9 @@ With Block I complete (product intelligence + ecosystem readiness), the platform
 | 64 | Canon Integrity & Drift Governance Layer | Detect and govern drift between implemented behavior and canonical documentation/policies | Reserved |
 | 65 | Operating Completion Layer | Achieve the first internally coherent, complete operating canon of AxionOS | Reserved |
 
-### Why 58–65 are reserved
+### Why 59–65 are reserved
 
-The reserved horizon is strategically coherent but intentionally lightweight. These sprints depend on outcomes from the committed arc (57) and may be revised based on what is learned during ecosystem foundation. Future implementation should proceed sprint-by-sprint with review, not in bulk.
+The reserved horizon is strategically coherent but intentionally lightweight. These sprints depend on outcomes from the committed arc (58) and may be revised based on what is learned during ecosystem foundation. Future implementation should proceed sprint-by-sprint with review, not in bulk.
 
 ---
 
@@ -209,7 +211,7 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 | G | Operating Profiles & Policy Packs | 52 | ✅ Complete |
 | H | Product Intelligence Entry | 53 | ✅ Complete |
 | I | Product-Intelligent Expansion | 54–56 | ✅ Complete |
-| J | Trusted Ecosystem Foundation | 57–59 | 📋 Committed (57 📋, 58–59 🔮) |
+| J | Trusted Ecosystem Foundation | 57–59 | 📋 In Progress (57 ✅, 58 📋, 59 🔮) |
 | K | Controlled Ecosystem Activation | 60–62 | 🔮 Reserved |
 | L | System Roundness & Operating Completion | 63–65 | 🔮 Reserved |
 
@@ -231,8 +233,9 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 | Product Ops | 54 | ✅ Complete | Product intelligence operations: benchmarking, quality calibration, correlations, recommendations |
 | Product Opp Portfolio | 55 | ✅ Complete | Product opportunity portfolio governance: ranking, conflicts, capacity, decisions, outcomes |
 | Ecosystem Readiness | 56 | ✅ Complete | Controlled ecosystem readiness: capability inventory, exposure classification, safety prerequisites, trust model, readiness assessment |
-| Trusted Ecosystem Foundation | 57 | 📋 Committed | Capability exposure governance |
-| Trusted Ecosystem Foundation | 58–59 | 🔮 Reserved | Trust/admission → ecosystem simulation |
+| Capability Exposure Gov | 57 | ✅ Complete | Capability exposure governance: exposure classes, governance cases, gate evaluation, restrictions, review workflow |
+| Trusted Ecosystem Foundation | 58 | 📋 Committed | External trust & admission |
+| Trusted Ecosystem Foundation | 59 | 🔮 Reserved | Ecosystem simulation & sandbox |
 | Controlled Ecosystem Activation | 60–62 | 🔮 Reserved | Marketplace pilot → capability registry → multi-party governance |
 | System Roundness | 63–65 | 🔮 Reserved | Outcome assurance → canon integrity → operating completion |
 
@@ -242,13 +245,13 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 
 > **Full module inventory:** [AGENTS.md](AGENTS.md) · **Architecture details:** [ARCHITECTURE.md](ARCHITECTURE.md)
 
-All 41 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, the institutional convergence memory layer, the operating profiles layer, the product intelligence entry layer, the product intelligence operations layer, the product opportunity portfolio governance layer, and the controlled ecosystem readiness layer.
+All 42 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, the institutional convergence memory layer, the operating profiles layer, the product intelligence entry layer, the product intelligence operations layer, the product opportunity portfolio governance layer, the controlled ecosystem readiness layer, and the capability exposure governance layer.
 
 ### Frozen Areas
 
 | Area | Reason |
 |------|--------|
-| Marketplace ecosystem | Frozen — remains deferred until ecosystem foundation (Sprint 57+) |
+| Marketplace ecosystem | Frozen — remains deferred until ecosystem activation (Sprint 60+) |
 | Advanced distributed runtime | Current runtime handles workload adequately |
 | Advanced multi-agent coordination | Existing patterns meet current needs |
 
@@ -272,8 +275,8 @@ All 41 architectural layers are operational. The kernel includes the 32-stage de
 
 ## Governing Principle
 
-> Fifty-six sprints complete. The platform supports controlled ecosystem readiness with capability inventory, exposure classification, safety prerequisites, and trust model foundation.
-> Next committed sprint: Sprint 57 — capability exposure governance.
-> Reserved horizon: Sprints 58–65 — trusted ecosystem foundation (continued), controlled activation, system roundness and operating completion.
+> Fifty-seven sprints complete. The platform supports capability exposure governance with exposure classes, governance cases, gate evaluation, restriction analysis, and review workflow.
+> Next committed sprint: Sprint 58 — external trust & admission.
+> Reserved horizon: Sprints 59–65 — ecosystem simulation, controlled activation, system roundness and operating completion.
 > Round-enough target: Sprint 65 — first complete, internally coherent operating canon.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.

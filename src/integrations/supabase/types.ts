@@ -2684,6 +2684,418 @@ export type Database = {
           },
         ]
       }
+      capability_exposure_classes: {
+        Row: {
+          audit_requirements: Json
+          class_description: string
+          class_key: string
+          class_name: string
+          created_at: string
+          evidence_links: Json
+          id: string
+          organization_id: string
+          policy_requirements: Json
+          restriction_level: string
+          status: string
+          trust_requirements: Json
+          updated_at: string
+        }
+        Insert: {
+          audit_requirements?: Json
+          class_description?: string
+          class_key?: string
+          class_name?: string
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          policy_requirements?: Json
+          restriction_level?: string
+          status?: string
+          trust_requirements?: Json
+          updated_at?: string
+        }
+        Update: {
+          audit_requirements?: Json
+          class_description?: string
+          class_key?: string
+          class_name?: string
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          policy_requirements?: Json
+          restriction_level?: string
+          status?: string
+          trust_requirements?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_exposure_classes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_exposure_governance_cases: {
+        Row: {
+          assumptions: Json
+          auditability_score: number
+          capability_domain: string
+          capability_name: string
+          capability_type: string
+          created_at: string
+          criticality_score: number
+          current_readiness_score: number
+          decision_status: string
+          dependency_sensitivity_score: number
+          evidence_links: Json
+          exposure_case_type: string
+          exposure_class_id: string | null
+          exposure_governance_score: number
+          exposure_recommendation_status: string
+          id: string
+          organization_id: string
+          policy_gate_score: number
+          restriction_level: string
+          review_status: string
+          safety_gate_score: number
+          trust_gate_score: number
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          auditability_score?: number
+          capability_domain?: string
+          capability_name?: string
+          capability_type?: string
+          created_at?: string
+          criticality_score?: number
+          current_readiness_score?: number
+          decision_status?: string
+          dependency_sensitivity_score?: number
+          evidence_links?: Json
+          exposure_case_type?: string
+          exposure_class_id?: string | null
+          exposure_governance_score?: number
+          exposure_recommendation_status?: string
+          id?: string
+          organization_id: string
+          policy_gate_score?: number
+          restriction_level?: string
+          review_status?: string
+          safety_gate_score?: number
+          trust_gate_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          auditability_score?: number
+          capability_domain?: string
+          capability_name?: string
+          capability_type?: string
+          created_at?: string
+          criticality_score?: number
+          current_readiness_score?: number
+          decision_status?: string
+          dependency_sensitivity_score?: number
+          evidence_links?: Json
+          exposure_case_type?: string
+          exposure_class_id?: string | null
+          exposure_governance_score?: number
+          exposure_recommendation_status?: string
+          id?: string
+          organization_id?: string
+          policy_gate_score?: number
+          restriction_level?: string
+          review_status?: string
+          safety_gate_score?: number
+          trust_gate_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_exposure_governance_cases_exposure_class_id_fkey"
+            columns: ["exposure_class_id"]
+            isOneToOne: false
+            referencedRelation: "capability_exposure_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_exposure_governance_cases_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_exposure_governance_cases_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_exposure_governance_outcomes: {
+        Row: {
+          created_at: string
+          evidence_links: Json
+          expected_outcomes: Json
+          exposure_recommendation_quality_score: number
+          governance_case_id: string | null
+          governance_outcome_accuracy_score: number
+          id: string
+          organization_id: string
+          outcome_status: string
+          realized_outcomes: Json
+          recommendation_status: string
+          recommendation_type: string
+          review_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          exposure_recommendation_quality_score?: number
+          governance_case_id?: string | null
+          governance_outcome_accuracy_score?: number
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          realized_outcomes?: Json
+          recommendation_status?: string
+          recommendation_type?: string
+          review_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          exposure_recommendation_quality_score?: number
+          governance_case_id?: string | null
+          governance_outcome_accuracy_score?: number
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          realized_outcomes?: Json
+          recommendation_status?: string
+          recommendation_type?: string
+          review_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_exposure_governance_outcomes_governance_case_id_fkey"
+            columns: ["governance_case_id"]
+            isOneToOne: false
+            referencedRelation: "capability_exposure_governance_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_exposure_governance_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_exposure_governance_outcomes_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "capability_exposure_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_exposure_governance_policies: {
+        Row: {
+          approval_requirements: Json
+          created_at: string
+          evidence_links: Json
+          exposure_class_id: string | null
+          gate_conditions: Json
+          id: string
+          organization_id: string
+          policy_domain: string
+          policy_name: string
+          policy_scope: string
+          restriction_conditions: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          approval_requirements?: Json
+          created_at?: string
+          evidence_links?: Json
+          exposure_class_id?: string | null
+          gate_conditions?: Json
+          id?: string
+          organization_id: string
+          policy_domain?: string
+          policy_name?: string
+          policy_scope?: string
+          restriction_conditions?: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          approval_requirements?: Json
+          created_at?: string
+          evidence_links?: Json
+          exposure_class_id?: string | null
+          gate_conditions?: Json
+          id?: string
+          organization_id?: string
+          policy_domain?: string
+          policy_name?: string
+          policy_scope?: string
+          restriction_conditions?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_exposure_governance_policies_exposure_class_id_fkey"
+            columns: ["exposure_class_id"]
+            isOneToOne: false
+            referencedRelation: "capability_exposure_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_exposure_governance_policies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_exposure_restrictions: {
+        Row: {
+          capability_name: string
+          created_at: string
+          dependency_constraints: Json
+          evidence_links: Json
+          governance_case_id: string | null
+          id: string
+          organization_id: string
+          policy_limitations: Json
+          rationale: string
+          restriction_severity: string
+          restriction_type: string
+          updated_at: string
+        }
+        Insert: {
+          capability_name?: string
+          created_at?: string
+          dependency_constraints?: Json
+          evidence_links?: Json
+          governance_case_id?: string | null
+          id?: string
+          organization_id: string
+          policy_limitations?: Json
+          rationale?: string
+          restriction_severity?: string
+          restriction_type?: string
+          updated_at?: string
+        }
+        Update: {
+          capability_name?: string
+          created_at?: string
+          dependency_constraints?: Json
+          evidence_links?: Json
+          governance_case_id?: string | null
+          id?: string
+          organization_id?: string
+          policy_limitations?: Json
+          rationale?: string
+          restriction_severity?: string
+          restriction_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_exposure_restrictions_governance_case_id_fkey"
+            columns: ["governance_case_id"]
+            isOneToOne: false
+            referencedRelation: "capability_exposure_governance_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_exposure_restrictions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_exposure_reviews: {
+        Row: {
+          created_at: string
+          evidence_links: Json
+          gate_evaluation_snapshot: Json
+          governance_case_id: string
+          id: string
+          organization_id: string
+          review_decision: string
+          review_notes: string
+          review_status: string
+          reviewer_ref: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_links?: Json
+          gate_evaluation_snapshot?: Json
+          governance_case_id: string
+          id?: string
+          organization_id: string
+          review_decision?: string
+          review_notes?: string
+          review_status?: string
+          reviewer_ref?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          evidence_links?: Json
+          gate_evaluation_snapshot?: Json
+          governance_case_id?: string
+          id?: string
+          organization_id?: string
+          review_decision?: string
+          review_notes?: string
+          review_status?: string
+          reviewer_ref?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_exposure_reviews_governance_case_id_fkey"
+            columns: ["governance_case_id"]
+            isOneToOne: false
+            referencedRelation: "capability_exposure_governance_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_exposure_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       change_advisory_signals: {
         Row: {
           confidence_score: number | null
