@@ -199,34 +199,18 @@
 
 ---
 
-## Fase 5: Deploy
+## Fase 5: Validation
 
 ### Contrato de Produto
 
 | Campo | Valor |
 |-------|-------|
-| **Objetivo** | Validar o código gerado, reparar erros, publicar no repositório Git e fazer deploy |
+| **Objetivo** | Validar o código gerado, reparar erros automaticamente, garantir conformidade com arquitetura |
 | **Input esperado** | Código gerado (story_subtasks com outputs) |
-| **Output gerado** | Repositório Git validado + deploy em produção |
-| **Critérios de sucesso** | Build passa (tsc + vite), código publicado, deploy acessível |
-| **Possíveis falhas** | Erros de TypeScript, build failure, token Git inválido, deploy failure |
+| **Output gerado** | Código validado, build OK, conformidade verificada |
+| **Critérios de sucesso** | Build passa (tsc + vite), análise estática OK, drift detection OK |
+| **Possíveis falhas** | Erros de TypeScript, build failure, drift arquitetural |
 | **Ação do usuário** | Um clique: "Iniciar Validação Completa" → tudo roda automaticamente |
-
-### Deploy State Machine
-
-```
-  validating
-      │
-      ▼
-  ready_to_publish
-      │
-      ▼
-  published ──────► deploying
-                        │
-                   ┌────┴────┐
-                   ▼         ▼
-              deployed   deploy_failed
-```
 
 ### Sub-etapas (sequenciais, totalmente automáticas)
 
@@ -237,8 +221,57 @@
 | 3 | Drift Detection | `pipeline-drift-detection` | Conformidade com arquitetura planejada |
 | 4 | Runtime Validation | `pipeline-runtime-validation` | tsc + vite build real via CI |
 | 5 | Build Repair (se falhar) | `autonomous-build-repair` | Auto-reparo com patches e retry |
-| 6 | Publicação | `pipeline-publish` | Atomic commits via Tree API |
-| 7 | Deploy | `pipeline-deploy` (planned) | Deploy automático para Vercel |
+
+### Transição para Deploy
+
+✅ Build passa no CI (tsc + vite)
+✅ Análise estática e drift detection OK
+✅ Status avança para `ready_to_publish`
+
+---
+
+## Fase 6: Deploy → Delivered Software
+
+### Contrato de Produto
+
+| Campo | Valor |
+|-------|-------|
+| **Objetivo** | Publicar no repositório Git, executar deploy, e entregar software acessível |
+| **Input esperado** | Código validado (build OK) |
+| **Output gerado** | Repositório Git publicado + deploy em produção + URLs acessíveis |
+| **Critérios de sucesso** | Código publicado, deploy acessível, handoff completo |
+| **Possíveis falhas** | Token Git inválido, deploy failure |
+| **Ação do usuário** | Um clique: "Deploy" (governado — respeita gates de validação e aprovação) |
+
+### Deploy State Machine
+
+```
+  ready_to_publish
+       │
+       ▼
+  published ──────► deploying
+                        │
+                   ┌────┴────┐
+                   ▼         ▼
+              deployed   deploy_failed
+```
+
+### Sub-etapas
+
+| # | Sub-etapa | Edge Function | O que faz |
+|---|-----------|---------------|-----------|
+| 1 | Publicação | `pipeline-publish` | Atomic commits via Tree API |
+| 2 | Deploy | `pipeline-deploy` | Deploy para Vercel/Netlify |
+
+### Outputs Visíveis ao Usuário
+
+| Output | Descrição |
+|--------|-----------|
+| `repo_url` | URL do repositório Git publicado |
+| `deploy_url` | URL do deploy acessível e verificado |
+| `preview_url` | URL de preview (quando disponível) |
+| Deploy timestamp | Data/hora do último deploy |
+| Rollback posture | Indicação se rollback está disponível |
 
 ### Definition of Done da Iniciativa
 
