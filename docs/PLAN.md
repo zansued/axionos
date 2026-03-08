@@ -788,5 +788,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Evidence Management | 1 | 72 |
 | Candidate Distillation | 1 | 73 |
 | Benchmark Governance | 1 | 74 |
+| Agent Routing | 1 | 75 |
 | Support | 11 | Various |
-| **Total** | **~120** | |
+| **Total** | **~121** | |
