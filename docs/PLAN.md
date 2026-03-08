@@ -582,5 +582,6 @@ This document serves as the canonical sprint execution ledger. The following con
 | Limited Marketplace Pilot | 1 | 60 |
 | Capability Registry Governance | 1 | 61 |
 | Multi-Party Policy & Revenue Governance | 1 | 62 |
+| Institutional Outcome Assurance | 1 | 63 |
 | Support | 11 | Various |
-| **Total** | **~107** | |
+| **Total** | **~108** | |
