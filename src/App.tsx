@@ -113,6 +113,7 @@ const App = () => (
                       <Route path="/working-memory" element={<ProtectedRoute><WorkingMemory /></ProtectedRoute>} />
                       <Route path="/swarm-execution" element={<ProtectedRoute><SwarmExecution /></ProtectedRoute>} />
                       <Route path="/capability-registry" element={<ProtectedRoute><CapabilityRegistry /></ProtectedRoute>} />
+                      <Route path="/capability-governance" element={<ProtectedRoute><CapabilityGovernance /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>

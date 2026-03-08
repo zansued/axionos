@@ -50,6 +50,7 @@ const bottomItems = [
   { title: "Working Mem.", url: "/working-memory", icon: BrainCircuit },
   { title: "Swarm", url: "/swarm-execution", icon: Zap },
   { title: "Capabilities", url: "/capability-registry", icon: PackageCheck },
+  { title: "Cap. Gov.", url: "/capability-governance", icon: ShieldCheck },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
