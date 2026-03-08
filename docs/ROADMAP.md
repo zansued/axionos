@@ -148,11 +148,10 @@ With Block I complete (product intelligence + ecosystem readiness), the platform
 > **Status:** 🔮 Reserved — strategic direction is defined but intentionally lightweight. Details will be formalized sprint-by-sprint as the committed arc completes.
 > **Implementation should not begin on reserved sprints without deliberate review and promotion to committed status.**
 
-### Block J — Trusted Ecosystem Foundation (Sprints 57–59)
+### Block J — Trusted Ecosystem Foundation (Sprints 58–59)
 
 | Sprint | Name | Purpose | Status |
 |--------|------|---------|--------|
-| 57 | Capability Exposure Governance Layer | Govern which internal capabilities can be exposed externally and under what constraints | Reserved |
 | 58 | External Trust & Admission Layer | Define trust scoring, admission criteria, and safety boundaries for external participants | Reserved |
 | 59 | Ecosystem Simulation & Sandbox Layer | Simulate ecosystem interactions in bounded sandboxes before real exposure | Reserved |
 
