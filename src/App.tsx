@@ -39,6 +39,7 @@ import AdoptionIntelligence from "./pages/AdoptionIntelligence";
 import Extensions from "./pages/Extensions";
 import ImprovementLedger from "./pages/ImprovementLedger";
 import ImprovementCandidates from "./pages/ImprovementCandidates";
+import ImprovementBenchmarks from "./pages/ImprovementBenchmarks";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
