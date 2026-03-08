@@ -76,14 +76,14 @@ The next strategic direction moves from external trust & admission toward **ecos
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–57)                 COMMITTED (58)                 RESERVED (59–65)
+  COMPLETE (1–58)                 COMMITTED (59)                 RESERVED (60–65)
   ───────────────►                ───────────────►               ───────────────►
-  Foundation → Learning →          Trusted Ecosystem              Trusted Ecosystem
-  Meta → Memory → Gov →            Foundation                    Foundation →
-  Intelligence → Calibration →     External Trust &              Controlled Ecosystem
-  Strategy → Stabilization →       Admission                    Activation →
-  Advisory → Semantic →                                          System Roundness &
-  Discovery → Simulation →                                      Operating Completion
+  Foundation → Learning →          Trusted Ecosystem              Controlled Ecosystem
+  Meta → Memory → Gov →            Foundation                    Activation →
+  Intelligence → Calibration →     Ecosystem Simulation &        System Roundness &
+  Strategy → Stabilization →       Sandbox                      Operating Completion
+  Advisory → Semantic →
+  Discovery → Simulation →
   Planning → Sandbox →
   Pilot → Migration →
   Portfolio → Fitness →
@@ -95,7 +95,8 @@ The next strategic direction moves from external trust & admission toward **ecos
   Product Intelligence Ops →
   Product Opp Portfolio Gov →
   Ecosystem Readiness →
-  Capability Exposure Gov ✅
+  Capability Exposure Gov →
+  External Trust & Admission ✅
 ```
 
 ---
