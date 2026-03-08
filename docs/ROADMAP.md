@@ -162,18 +162,11 @@ Sprint 73 introduced the canonical improvement candidate distillation layer. The
 
 ---
 
-## Planned Next — Sprint 74: Governed Benchmarking & Promotion — 📋 Planned
+## Sprint 74 — Sandbox Benchmarking & Promotion Governance ✅ Implemented
 
-> **Status:** Planned — next in the execution queue.
+Sprint 74 completed the Evidence-Governed Improvement Loop by introducing governed sandbox benchmarking and promotion governance. Improvement candidates can now be benchmarked against baselines in controlled sandbox conditions, with structured metric comparison, risk posture assessment, stability signals, and explainable recommendations. Promotion, rejection, deferral, and archival decisions are fully human-reviewed, auditable, and tenant-isolated. A dedicated operator surface (`/improvement-benchmarks`) provides benchmark queue, results, metric comparison, and governance controls.
 
-**Thesis:** Complete the Evidence-Governed Improvement Loop by enabling governed sandbox benchmarking of accepted candidates and human-approved promotion of validated improvements.
-
-**Canon constraints (enforced):**
-- No autonomous architecture mutation
-- Human approval for structural change
-- Rollback everywhere
-- Bounded learning and promotion
-- Tenant isolation preserved
+**Strategic role:** Sprint 74 closes Block N. AxionOS now has a complete evidence-governed improvement loop: evidence capture → candidate distillation → sandbox benchmarking → human-governed promotion. No autonomous mutation behavior was introduced.
 
 ---
 
