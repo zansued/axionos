@@ -135,6 +135,7 @@ const App = () => (
                       <Route path="/cross-region-recovery" element={<ProtectedRoute><CrossRegionRecovery /></ProtectedRoute>} />
                       <Route path="/tenant-runtime" element={<ProtectedRoute><TenantRuntime /></ProtectedRoute>} />
                       <Route path="/large-scale-orchestration" element={<ProtectedRoute><LargeScaleOrchestration /></ProtectedRoute>} />
+                      <Route path="/architecture-hypotheses" element={<ProtectedRoute><ArchitectureHypotheses /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
