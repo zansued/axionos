@@ -198,12 +198,10 @@ Internal maturity is what makes the product trustworthy. The user doesn't need t
 | 66 | User Journey Orchestration Layer | Orchestrate the visible user journey with clear state, transitions, approvals, and progress across the full idea-to-deploy lifecycle | ✅ Complete |
 | 67 | Role-Based Experience Layer | Separate product surfaces by role — default user journey vs operator/governance views — so the right audience sees the right experience | ✅ Complete |
 | 68 | One-Click Delivery & Deploy Assurance Layer | Provide a seamless, governed one-click path from validated code to deployed, accessible software with deploy assurance and visibility | ✅ Complete |
-| 69 | Onboarding, Templates & Vertical Starters | Reduce time-to-value with guided onboarding, reusable templates, and vertical-specific starting points | 🔮 Reserved |
-| 70 | Adoption Intelligence & Customer Success Loop | Measure adoption health, detect friction, and close the loop between product usage and platform improvement | 🔮 Reserved |
+| 69 | Onboarding, Templates & Vertical Starters | Reduce time-to-value with guided onboarding, reusable templates, and vertical-specific starting points | ✅ Complete |
+| 70 | Adoption Intelligence & Customer Success Loop | Measure adoption health, detect friction, and close the loop between product usage and platform improvement | ✅ Complete |
 
-### Why future work should still proceed one sprint at a time
-
-Even as the focus shifts to product experience, the sprint-by-sprint execution model remains essential. Each sprint should be reviewed, scoped in detail, and approved before implementation begins. Distant reserved sprints should remain intentionally lightweight until promoted.
+Block M is complete. All five sprints delivered and verified.
 
 ---
 
