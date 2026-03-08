@@ -2,13 +2,13 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 37 — Discovery-Driven Architecture Signals. External and product-facing discovery signals now inform advisory architectural recommendations. Previous: Semantic Retrieval & Embedding Memory Expansion (Sprint 36).
+> **What changed (2026-03-08):** Sprint 38 — Architecture Change Simulation & Governance. Advisory architectural recommendations can now be simulated before implementation. Previous: Discovery-Driven Architecture Signals (Sprint 37).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
 > **Current Maturity**: Level 5 ✅ Active
 >
-> Last updated: 2026-03-07
+> Last updated: 2026-03-08
 
 ---
 
@@ -17,7 +17,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 21 architectural layers active |
+| **System State** | 23 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -27,6 +27,8 @@
 | **Platform Stabilization** | Active — drift detection + oscillation suppression + safe modes |
 | **Engineering Advisor** | Active — cross-layer advisory synthesis + review workflow |
 | **Semantic Retrieval** | Active — unified embedding-backed retrieval across domains |
+| **Discovery Architecture** | Active — external/product signal correlation + architecture recommendations |
+| **Architecture Simulation** | Active — bounded simulation of architectural changes + governance |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
@@ -275,6 +277,6 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 ## Governing Principle
 
 > The architecture is sufficient. Level 3 is complete.
-> Thirty-six sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, Memory Summaries, Memory-Aware Meta-Agents, Proposal Quality Feedback Loop, Advisory Calibration Layer, Prompt Optimization Engine, Bounded Promotion & Rollback Guard, Self-Improving Fix Agents v2, Agent Memory Layer Operationalization, Predictive Error Detection Operationalization, Learning Agents v2 (Cross-Stage Policy Synthesis), Execution Policy Intelligence, Execution Mode Portfolio Optimization, Workspace / Tenant Adaptive Policy Tuning, Platform Intelligence Entry, Platform Self-Calibration, Execution Strategy Evolution, Strategy Portfolio Governance, Platform Self-Stabilization, Autonomous Engineering Advisor, and Semantic Retrieval & Embedding Memory Expansion.
-> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, memory-aware meta-level recommendations, historically-informed engineering proposals, foundational engineering memory, contextual memory retrieval, periodic historical synthesis, experience-aware reasoning, proposal quality feedback, advisory calibration diagnostics, prompt optimization with bounded promotion, memory-aware repair policies, per-agent operational memory, runtime predictive error detection with bounded preventive actions, cross-stage policy synthesis for coordinated learning across pipeline boundaries, execution policy intelligence for global pipeline operating modes, portfolio optimization for governed execution mode management, tenant-adaptive policy tuning for workspace-level behavior customization, platform intelligence for system-level observability, bounded self-calibration for operational threshold tuning, execution strategy evolution for bounded variant experimentation, strategy portfolio governance for lifecycle control, platform self-stabilization for drift and oscillation containment, autonomous engineering advisory for cross-layer recommendation synthesis, and unified semantic retrieval for embedding-backed contextual evidence access across all intelligence domains.
+> Thirty-eight sprints done: Brief, Simulation, Deploy, Observability, Onboarding, Repair Evidence, Error Patterns, Prevention, Adaptive Routing, Learning Foundation, Commercial Readiness, Learning Agents v1, Meta-Agents v1, Controlled Meta-Agent Actions, Engineering Memory Foundation, Memory Retrieval Surfaces, Memory Summaries, Memory-Aware Meta-Agents, Proposal Quality Feedback Loop, Advisory Calibration Layer, Prompt Optimization Engine, Bounded Promotion & Rollback Guard, Self-Improving Fix Agents v2, Agent Memory Layer Operationalization, Predictive Error Detection Operationalization, Learning Agents v2 (Cross-Stage Policy Synthesis), Execution Policy Intelligence, Execution Mode Portfolio Optimization, Workspace / Tenant Adaptive Policy Tuning, Platform Intelligence Entry, Platform Self-Calibration, Execution Strategy Evolution, Strategy Portfolio Governance, Platform Self-Stabilization, Autonomous Engineering Advisor, Semantic Retrieval & Embedding Memory Expansion, Discovery-Driven Architecture Signals, and Architecture Change Simulation & Governance.
+> The system now has structured inputs, reliable execution, product-level metrics, evidence-based repair, preventive guardrails, adaptive routing, a learning substrate, usage enforcement, billing infrastructure, active learning intelligence, memory-aware meta-level recommendations, historically-informed engineering proposals, foundational engineering memory, contextual memory retrieval, periodic historical synthesis, experience-aware reasoning, proposal quality feedback, advisory calibration diagnostics, prompt optimization with bounded promotion, memory-aware repair policies, per-agent operational memory, runtime predictive error detection with bounded preventive actions, cross-stage policy synthesis for coordinated learning across pipeline boundaries, execution policy intelligence for global pipeline operating modes, portfolio optimization for governed execution mode management, tenant-adaptive policy tuning for workspace-level behavior customization, platform intelligence for system-level observability, bounded self-calibration for operational threshold tuning, execution strategy evolution for bounded variant experimentation, strategy portfolio governance for lifecycle control, platform self-stabilization for drift and oscillation containment, autonomous engineering advisory for cross-layer recommendation synthesis, unified semantic retrieval for embedding-backed contextual evidence access across all intelligence domains, discovery-driven architecture signals for external/product-facing signal correlation with internal evidence, and architecture change simulation for bounded evaluation of advisory recommendations before implementation.
 > Focus now: commercial stability, platform intelligence maturation, and adaptive intelligence calibration.

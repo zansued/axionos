@@ -2,8 +2,8 @@
 
 > Sprint-by-sprint implementation record mapping capabilities to architectural layers.
 >
-> **Last updated:** 2026-03-07
-> **Current Sprint:** 37 (Discovery-Driven Architecture Signals) — ✅ Complete
+> **Last updated:** 2026-03-08
+> **Current Sprint:** 38 (Architecture Change Simulation & Governance) — ✅ Complete
 
 ---
 
@@ -129,8 +129,9 @@
 | 35 | Autonomous Engineering Advisor | Engineering Advisory Layer |
 | 36 | Semantic Retrieval & Embedding Memory Expansion | Semantic Retrieval Layer |
 | 37 | Discovery-Driven Architecture Signals | Discovery Architecture Layer |
+| 38 | Architecture Change Simulation & Governance | Architecture Simulation Layer |
 
-**Delivered:** Stability monitoring, stabilization actions, bounded interventions, rollback-safe stabilization, engineering signal aggregation, opportunity synthesis, prioritized recommendations, explainability, review workflows, advisory clustering, unified embedding-backed retrieval, domain registry, index management, ranking, guardrails, retrieval quality evaluation, discovery signal aggregation, architecture stress mapping, architecture opportunity synthesis, discovery-driven recommendations.
+**Delivered:** Stability monitoring, stabilization actions, bounded interventions, rollback-safe stabilization, engineering signal aggregation, opportunity synthesis, prioritized recommendations, explainability, review workflows, advisory clustering, unified embedding-backed retrieval, domain registry, index management, ranking, guardrails, retrieval quality evaluation, discovery signal aggregation, architecture stress mapping, architecture opportunity synthesis, discovery-driven recommendations, architecture change proposals, simulation scope profiles, impact simulation, boundary analysis, guardrails, simulation outcomes, review workflows.
 
 ---
 
@@ -182,6 +183,12 @@
 | Architecture opportunity synthesis | ✅ IMPLEMENTED | 37 | `discovery-architecture/discovery-architecture-opportunity-synthesizer.ts` |
 | Discovery architecture recommendations | ✅ IMPLEMENTED | 37 | `discovery-architecture/discovery-architecture-recommendation-engine.ts` |
 | Architecture stress map | ✅ IMPLEMENTED | 37 | `discovery-architecture/architecture-stress-map.ts` |
+| Architecture change proposals | ✅ IMPLEMENTED | 38 | `architecture_change_proposals` table |
+| Architecture impact simulator | ✅ IMPLEMENTED | 38 | `architecture-simulation/architecture-impact-simulator.ts` |
+| Architecture boundary analyzer | ✅ IMPLEMENTED | 38 | `architecture-simulation/architecture-boundary-analyzer.ts` |
+| Architecture simulation guardrails | ✅ IMPLEMENTED | 38 | `architecture-simulation/architecture-simulation-guardrails.ts` |
+| Architecture simulation outcomes | ✅ IMPLEMENTED | 38 | `architecture_simulation_outcomes` table |
+| Architecture simulation reviews | ✅ IMPLEMENTED | 38 | `architecture-simulation/architecture-simulation-review-manager.ts` |
 
 ---
 
@@ -207,6 +214,7 @@
 | `_shared/platform-stabilization/` | 6 | Stability monitor, stabilization engine, action engine, guardrails, outcome tracker, rollback engine |
 | `_shared/engineering-advisor/` | 8 | Signal aggregator, opportunity synthesizer, recommendation engine, prioritizer, explainer, review manager, lineage, clustering |
 | `_shared/semantic-retrieval/` | 8 | Retrieval engine, ranker, guardrails, quality evaluator, index manager, context builders (runtime, advisory, strategy, platform) |
+| `_shared/architecture-simulation/` | 6 | Impact simulator, boundary analyzer, guardrails, recommendation linker, review manager, explainer |
 
 ---
 
@@ -241,5 +249,7 @@
 | Platform Self-Stabilization | 1 | 34 |
 | Autonomous Engineering Advisor | 1 | 35 |
 | Semantic Retrieval | 1 | 36 |
+| Discovery-Driven Architecture | 1 | 37 |
+| Architecture Change Simulation | 1 | 38 |
 | Support | 11 | Various |
-| **Total** | **~81** | |
+| **Total** | **~83** | |

@@ -3,9 +3,9 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-07):** Sprint 37 — Discovery-Driven Architecture Signals. External/product discovery signals now inform advisory architectural recommendations with stress mapping and review workflows. Previous: Semantic Retrieval & Embedding Memory Expansion (Sprint 36).
+> **What changed (2026-03-08):** Sprint 38 — Architecture Change Simulation & Governance. Advisory architectural recommendations can now be simulated before implementation with bounded impact estimation, boundary analysis, and governance guardrails. Previous: Discovery-Driven Architecture Signals (Sprint 37).
 >
-> Last updated: 2026-03-07
+> Last updated: 2026-03-08
 
 ---
 
