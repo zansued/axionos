@@ -19635,6 +19635,222 @@ export type Database = {
           },
         ]
       }
+      region_execution_postures: {
+        Row: {
+          audit_metadata: Json
+          continuity_confidence: number
+          created_at: string
+          failover_posture: string
+          fallback_regions: Json
+          id: string
+          job_id: string | null
+          organization_id: string
+          primary_region: string
+          recovery_status: string
+          trade_off_notes: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          audit_metadata?: Json
+          continuity_confidence?: number
+          created_at?: string
+          failover_posture?: string
+          fallback_regions?: Json
+          id?: string
+          job_id?: string | null
+          organization_id: string
+          primary_region?: string
+          recovery_status?: string
+          trade_off_notes?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          audit_metadata?: Json
+          continuity_confidence?: number
+          created_at?: string
+          failover_posture?: string
+          fallback_regions?: Json
+          id?: string
+          job_id?: string | null
+          organization_id?: string
+          primary_region?: string
+          recovery_status?: string
+          trade_off_notes?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "region_execution_postures_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "distributed_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "region_execution_postures_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "region_execution_postures_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      region_failover_decisions: {
+        Row: {
+          created_at: string
+          decision_reason: string
+          decision_status: string
+          from_region: string
+          id: string
+          organization_id: string
+          posture_id: string
+          reviewer_ref: Json | null
+          to_region: string
+          trade_off_summary: string
+        }
+        Insert: {
+          created_at?: string
+          decision_reason?: string
+          decision_status?: string
+          from_region?: string
+          id?: string
+          organization_id: string
+          posture_id: string
+          reviewer_ref?: Json | null
+          to_region?: string
+          trade_off_summary?: string
+        }
+        Update: {
+          created_at?: string
+          decision_reason?: string
+          decision_status?: string
+          from_region?: string
+          id?: string
+          organization_id?: string
+          posture_id?: string
+          reviewer_ref?: Json | null
+          to_region?: string
+          trade_off_summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "region_failover_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "region_failover_decisions_posture_id_fkey"
+            columns: ["posture_id"]
+            isOneToOne: false
+            referencedRelation: "region_execution_postures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      region_health_signals: {
+        Row: {
+          created_at: string
+          description: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          region_name: string
+          severity: string
+          signal_type: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          region_name?: string
+          severity?: string
+          signal_type?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          region_name?: string
+          severity?: string
+          signal_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "region_health_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      region_recovery_events: {
+        Row: {
+          actor_ref: Json | null
+          created_at: string
+          event_type: string
+          from_status: string | null
+          id: string
+          organization_id: string
+          posture_id: string | null
+          reason: string
+          to_status: string | null
+        }
+        Insert: {
+          actor_ref?: Json | null
+          created_at?: string
+          event_type?: string
+          from_status?: string | null
+          id?: string
+          organization_id: string
+          posture_id?: string | null
+          reason?: string
+          to_status?: string | null
+        }
+        Update: {
+          actor_ref?: Json | null
+          created_at?: string
+          event_type?: string
+          from_status?: string | null
+          id?: string
+          organization_id?: string
+          posture_id?: string | null
+          reason?: string
+          to_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "region_recovery_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "region_recovery_events_posture_id_fkey"
+            columns: ["posture_id"]
+            isOneToOne: false
+            referencedRelation: "region_execution_postures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       repair_evidence: {
         Row: {
           attempt_number: number
