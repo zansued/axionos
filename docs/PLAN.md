@@ -167,7 +167,7 @@
 
 ---
 
-### Phase 10: Architecture-Governed (Sprints 41–43)
+### Phase 10: Architecture-Governed (Sprints 41–43) — ✅ COMPLETE
 
 **Goal:** Close the architecture change lifecycle from pilot to portfolio governance.
 
@@ -176,7 +176,6 @@
 | 41 | Architecture Rollout Pilot Governance | Architecture Pilot Layer | ✅ Complete |
 | 42 | Controlled Architecture Migration Execution | Architecture Migration Layer | ✅ Complete |
 | 43 | Architecture Portfolio Governance | Architecture Portfolio Layer | ✅ Complete |
-| 44 | Architecture Fitness Functions | Architecture Fitness Layer | ✅ Complete |
 
 **Key Milestones:**
 - Sprint 41: Real blast radius, activation/cancellation gates, pilot vs baseline comparison, instant rollback
