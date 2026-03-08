@@ -75,17 +75,17 @@
 
 ## Strategic Directive
 
-AxionOS has completed 65 implementation sprints spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, and operating completion. The internal architecture is mature, coherent, and self-governing.
+AxionOS has completed 70 implementation sprints spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, and product experience & delivery maturity. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete.
 
-**Post-65 Strategic Shift:**
+**Post-Block M Strategic Position:**
 
-The platform has reached its first **round-enough operating baseline**. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — is mature and complete.
+The platform has reached its first **product-ready operating baseline**. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — is mature and complete. The product experience layer — user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — is complete.
 
-The next strategic direction is not deeper internal layering. The next direction is **productization of the platform promise**:
+The strategic direction achieved through Block M was **productization of the platform promise**:
 
-> **"From idea to deployed software."**
+> **"From idea to delivered software."**
 
-This means the focus shifts from building internal systems to making the user-visible journey clear, legible, and delightful. Internal sophistication remains critical, but it increasingly serves the visible product experience rather than being the primary development target.
+Internal sophistication serves the visible product experience. The user-facing journey is clear, legible, and governed. Future work (Sprint 71+) builds on this product-ready foundation.
 
 **Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy.
 
