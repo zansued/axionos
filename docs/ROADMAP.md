@@ -308,7 +308,7 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 
 ## Governing Principle
 
-> Forty-seven sprints complete. The platform supports bounded tenant-aware architecture modes without fragmentation.
-> Next phase: architecture-operating (48–50) → platform convergence.
-> Focus now: tenant architecture specialization with anti-fragmentation controls.
+> Forty-eight sprints complete. The platform supports advisory-first economic optimization across architecture changes.
+> Next phase: platform convergence (49–50).
+> Focus now: cost-aware rollout planning, ROI estimation, and tradeoff scoring.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.

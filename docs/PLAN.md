@@ -340,5 +340,6 @@
 | Change Advisory Orchestrator | 1 | 45 |
 | Platform Stabilization v2 | 1 | 46 |
 | Tenant Architecture Modes | 1 | 47 |
+| Economic Optimization | 1 | 48 |
 | Support | 11 | Various |
-| **Total** | **~92** | |
+| **Total** | **~93** | |
