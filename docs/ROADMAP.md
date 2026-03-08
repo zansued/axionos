@@ -128,6 +128,10 @@ Platform hardening for scale, tenant diversity, and economic efficiency. Stabili
 
 Advisory-first convergence detection across architecture modes, strategy variants, calibrations, and local specializations. Distinguishes healthy specialization from harmful fragmentation.
 
+## Block E — Convergence Governance (Sprint 50) ✅ Complete
+
+Governed lifecycle for convergence promotion, bounded merge, retention, deprecation, and retirement decisions. All structural convergence actions require explicit human approval.
+
 ---
 
 ## Maturity Progression
