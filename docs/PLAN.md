@@ -252,6 +252,20 @@
 | Architecture simulation guardrails | ✅ IMPLEMENTED | 38 | `architecture-simulation/architecture-simulation-guardrails.ts` |
 | Architecture simulation outcomes | ✅ IMPLEMENTED | 38 | `architecture_simulation_outcomes` table |
 | Architecture simulation reviews | ✅ IMPLEMENTED | 38 | `architecture-simulation/architecture-simulation-review-manager.ts` |
+| Architecture change plans | ✅ IMPLEMENTED | 39 | `architecture_change_plans` table |
+| Architecture dependency planner | ✅ IMPLEMENTED | 39 | `architecture-planning/architecture-change-dependency-planner.ts` |
+| Architecture readiness assessor | ✅ IMPLEMENTED | 39 | `architecture-planning/architecture-rollout-readiness-assessor.ts` |
+| Architecture validation blueprints | ✅ IMPLEMENTED | 39 | `architecture-planning/architecture-validation-blueprint-synthesizer.ts` |
+| Architecture rollback blueprints | ✅ IMPLEMENTED | 39 | `architecture-planning/architecture-rollback-blueprint-synthesizer.ts` |
+| Architecture plan clustering | ✅ IMPLEMENTED | 39 | `architecture-planning/architecture-plan-clustering.ts` |
+| Architecture plan reviews | ✅ IMPLEMENTED | 39 | `architecture-planning/architecture-change-plan-review-manager.ts` |
+| Rollout sandbox registry | ✅ IMPLEMENTED | 40 | `architecture_rollout_sandboxes` table |
+| Migration sequence rehearsal | ✅ IMPLEMENTED | 40 | `architecture-rollout/architecture-migration-sequence-rehearsal.ts` |
+| Rollout fragility analyzer | ✅ IMPLEMENTED | 40 | `architecture-rollout/architecture-rollout-fragility-analyzer.ts` |
+| Migration readiness assessor | ✅ IMPLEMENTED | 40 | `architecture-rollout/architecture-migration-readiness-assessor.ts` |
+| Rollback viability rehearsal | ✅ IMPLEMENTED | 40 | `architecture-rollout/architecture-rollback-viability-rehearsal.ts` |
+| Sandbox guardrails | ✅ IMPLEMENTED | 40 | `architecture-rollout/architecture-rollout-sandbox-guardrails.ts` |
+| Sandbox review lifecycle | ✅ IMPLEMENTED | 40 | `architecture-rollout/architecture-rollout-sandbox-review-manager.ts` |
 
 ---
 
