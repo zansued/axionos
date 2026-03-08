@@ -3,9 +3,17 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-08
->
-> **Current state:** Level 5 — Institutional Engineering Memory Platform.
-> Thirty-three architectural layers active. Economic Optimization Layer (Sprint 48). Tenant-Aware Architecture Modes (Sprint 47). Platform Self-Stabilization v2 (Sprint 46). Autonomous Change Advisory Orchestrator (Sprint 45). Architecture Fitness Functions (Sprint 44). Architecture Portfolio Governance (Sprint 43). Controlled Architecture Migration Execution (Sprint 42). Architecture Rollout Pilot Governance (Sprint 41). Architecture Rollout Sandbox & Controlled Migration Readiness (Sprint 40). Architecture Change Planning & Rollout Readiness (Sprint 39). Architecture Change Simulation & Governance (Sprint 38). Discovery-Driven Architecture Signals (Sprint 37). Semantic Retrieval & Embedding Memory Expansion (Sprint 36). Autonomous Engineering Advisor (Sprint 35). Platform Self-Stabilization (Sprint 34). Strategy Portfolio Governance (Sprint 33). Execution Strategy Evolution (Sprint 32). Platform Self-Calibration (Sprint 31). Platform Intelligence Entry (Sprint 30). Workspace / Tenant Adaptive Policy Tuning (Sprint 29). Execution Mode Portfolio Optimization (Sprint 28). Execution Policy Intelligence (Sprint 27). Learning Agents v2 with Cross-Stage Policy Synthesis (Sprint 26). Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
+> **Current state:** Level 5 — Institutional Engineering Memory Platform. 33 architectural layers active (through Sprint 48).
+> **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
+
+## Document Authority
+
+| Scope | Rule |
+|-------|------|
+| **Owns** | System architecture, C4 diagrams, capability layers, containers, components, data flow, safety rules, AI efficiency layer, edge function architecture, database schema, technology stack, governing principle |
+| **Must not define** | Sprint-by-sprint execution ledger (→ PLAN.md), full roadmap/strategic narrative (→ ROADMAP.md), detailed Agent OS module specs (→ AGENTS.md), pipeline phase UX contracts (→ PIPELINE_CONTRACTS.md) |
+| **Derived from** | PLAN.md for sprint context in layer descriptions; AGENTS.md for Agent OS summary |
+| **Update rule** | Update when system structure or active architectural layers change |
 
 ---
 
