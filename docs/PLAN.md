@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 61 (Capability Registry Governance Layer) — ✅ Complete
-> **Next Sprint:** 62 (Multi-Party Policy & Revenue Governance Layer) — 📋 Planned
+> **Current Sprint:** 62 (Multi-Party Policy & Revenue Governance Layer) — ✅ Complete
+> **Next Sprint:** 63 (Institutional Outcome Assurance Layer) — 📋 Planned
 
 ## Document Authority
 
