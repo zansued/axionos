@@ -867,17 +867,17 @@ supabase/functions/
 
 ## 16. Forthcoming Architectural Direction
 
-> **Status:** Partially implemented. Sprint 52 (Operating Profiles & Policy Packs) is now complete.
+> **Status:** All three directions are now complete through Sprint 53.
 
-After architecture-scaled hardening (Sprints 46–48), convergence governance (Sprints 49–50), institutional convergence memory (Sprint 51), and operating profiles (Sprint 52), the platform is expected to evolve toward:
+After architecture-scaled hardening (Sprints 46–48), convergence governance (Sprints 49–50), institutional convergence memory (Sprint 51), operating profiles (Sprint 52), and product intelligence entry (Sprint 53), the platform has completed the full institutionalization arc:
 
 1. ~~**Institutional Convergence Memory**~~ ✅ Complete (Sprint 51) — Approved convergence decisions stored as persistent institutional memory with evidence lineage, pattern extraction, and quality feedback.
 2. ~~**Operating Profile Packaging**~~ ✅ Complete (Sprint 52) — Proven policies, convergence outcomes, and tenant-specific tuning composed into versioned, assignable operating profiles and policy packs with bounded overrides.
-3. **Bounded Product Intelligence** — Connecting execution outcomes to product-level signals in an advisory-first, governance-preserving manner.
+3. ~~**Bounded Product Intelligence**~~ ✅ Complete (Sprint 53) — Product signals, friction clusters, and opportunity candidates correlated with architecture, operating profiles, and governance in a bounded, advisory-first manner. Marketplace/ecosystem remains frozen.
 
 These directions reuse existing architectural layers (governance, memory, observability, policy, adaptive routing) without expanding the Agent OS plane structure. The focus shifts from building new capability planes to institutionalizing and packaging the intelligence already present.
 
-**Governing constraint:** All forthcoming directions remain subject to advisory-first, governance-before-autonomy principles. No autonomous architecture mutation.
+**Governing constraint:** All forthcoming directions remain subject to advisory-first, governance-before-autonomy principles. No autonomous architecture mutation. Marketplace and ecosystem capabilities remain frozen until explicit approval.
 
 ---
 

@@ -440,5 +440,6 @@ These sprints will be formalized when implementation begins.
 | Convergence Governance | 1 | 50 |
 | Institutional Convergence Memory | 1 | 51 |
 | Operating Profiles & Policy Packs | 1 | 52 |
+| Product Intelligence Entry | 1 | 53 |
 | Support | 11 | Various |
-| **Total** | **~97** | |
+| **Total** | **~98** | |
