@@ -3,8 +3,8 @@
 > Sprint-by-sprint implementation record mapping capabilities to architectural layers.
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 45 (Autonomous Change Advisory Orchestrator) — ✅ Complete
-> **Next Sprint:** 46 (Platform Self-Stabilization v2) — 📋 Planned
+> **Current Sprint:** 46 (Platform Self-Stabilization v2) — ✅ Complete
+> **Next Sprint:** 47 (Tenant-Aware Architecture Modes) — 📋 Planned
 
 ---
 
