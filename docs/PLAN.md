@@ -183,6 +183,12 @@
 | Architecture opportunity synthesis | ✅ IMPLEMENTED | 37 | `discovery-architecture/discovery-architecture-opportunity-synthesizer.ts` |
 | Discovery architecture recommendations | ✅ IMPLEMENTED | 37 | `discovery-architecture/discovery-architecture-recommendation-engine.ts` |
 | Architecture stress map | ✅ IMPLEMENTED | 37 | `discovery-architecture/architecture-stress-map.ts` |
+| Architecture change proposals | ✅ IMPLEMENTED | 38 | `architecture_change_proposals` table |
+| Architecture impact simulator | ✅ IMPLEMENTED | 38 | `architecture-simulation/architecture-impact-simulator.ts` |
+| Architecture boundary analyzer | ✅ IMPLEMENTED | 38 | `architecture-simulation/architecture-boundary-analyzer.ts` |
+| Architecture simulation guardrails | ✅ IMPLEMENTED | 38 | `architecture-simulation/architecture-simulation-guardrails.ts` |
+| Architecture simulation outcomes | ✅ IMPLEMENTED | 38 | `architecture_simulation_outcomes` table |
+| Architecture simulation reviews | ✅ IMPLEMENTED | 38 | `architecture-simulation/architecture-simulation-review-manager.ts` |
 
 ---
 
