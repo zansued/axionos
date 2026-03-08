@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 84 (Post-Deploy Learning & Feedback Assimilation) — ✅ Complete
-> **Next Planned:** Sprint 85 (Reliability-Aware Tuning) — 📋 Planned
+> **Current Sprint:** 85 (Reliability-Aware Delivery Tuning) — ✅ Complete
+> **Next Planned:** Sprint 86 (Delivery Optimization Governance) — 📋 Planned
 > **Reserved Horizon:** Blocks Q–S (Sprints 83–94) — Block Q in progress
 
 ## Document Authority
@@ -798,5 +798,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Marketplace Outcomes | 1 | 82 |
 | Delivery Outcome Causality | 1 | 83 |
 | Post-Deploy Feedback Assimilation | 1 | 84 |
+| Reliability-Aware Delivery Tuning | 1 | 85 |
 | Support | 11 | Various |
-| **Total** | **~135** | |
+| **Total** | **~136** | |

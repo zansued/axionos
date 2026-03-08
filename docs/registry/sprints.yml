@@ -123,7 +123,10 @@ sprints:
   # === SPRINT 84 — Post-Deploy Learning & Feedback Assimilation (Complete) ===
   - { sprint: 84, name: "Post-Deploy Learning & Feedback Assimilation",         status: complete, block: "Q", phase: "Autonomous Delivery Optimization", layer: "Post-Deploy Feedback Assimilation Layer" }
 
+  # === SPRINT 85 — Reliability-Aware Delivery Tuning (Complete) ===
+  - { sprint: 85, name: "Reliability-Aware Delivery Tuning",                    status: complete, block: "Q", phase: "Autonomous Delivery Optimization", layer: "Reliability-Aware Delivery Tuning Layer" }
+
   # === BLOCKS Q–S — Reserved Future Horizon ===
-  - { sprint: "85–86", name: "Autonomous Delivery Optimization & Outcome Assurance 2.0 (remaining)", status: reserved, block: "Q", phase: "Reserved", layer: "TBD" }
+  - { sprint: 86, name: "Delivery Optimization Governance",                      status: reserved, block: "Q", phase: "Reserved", layer: "TBD" }
   - { sprint: "87–90", name: "Advanced Distributed Runtime & Scaled Execution",          status: reserved, block: "R", phase: "Reserved", layer: "TBD" }
   - { sprint: "91–94", name: "Research Sandbox for Architecture Evolution",              status: reserved, block: "S", phase: "Reserved", layer: "TBD" }
