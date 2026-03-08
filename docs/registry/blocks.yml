@@ -19,5 +19,5 @@ blocks:
 
   # === IN PROGRESS ===
   - { block_id: "J",          block_name: "Trusted Ecosystem Foundation",                 sprint_range: "57–59", status: complete, purpose: "Capability exposure governance (✅), trust/admission (✅), ecosystem simulation (✅)" }
-  - { block_id: "K",          block_name: "Controlled Ecosystem Activation",              sprint_range: "60–62", status: in_progress, purpose: "Marketplace pilot (✅), capability registry, multi-party governance" }
+  - { block_id: "K",          block_name: "Controlled Ecosystem Activation",              sprint_range: "60–62", status: in_progress, purpose: "Marketplace pilot (✅), capability registry (✅), multi-party governance" }
   - { block_id: "L",          block_name: "System Roundness & Operating Completion",      sprint_range: "63–65", status: reserved, purpose: "Outcome assurance, canon integrity, operating completion" }
