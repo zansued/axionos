@@ -59,6 +59,7 @@ import { ExternalTrustAdmissionDashboard } from "@/components/observability/Exte
 import { LimitedMarketplacePilotDashboard } from "@/components/observability/LimitedMarketplacePilotDashboard";
 import { EcosystemSimulationSandboxDashboard } from "@/components/observability/EcosystemSimulationSandboxDashboard";
 import { CapabilityRegistryGovernanceDashboard } from "@/components/observability/CapabilityRegistryGovernanceDashboard";
+import { MultiPartyPolicyRevenueGovernanceDashboard } from "@/components/observability/MultiPartyPolicyRevenueGovernanceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
