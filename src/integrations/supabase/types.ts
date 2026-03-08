@@ -4793,6 +4793,70 @@ export type Database = {
           },
         ]
       }
+      ecosystem_blast_radius_estimates: {
+        Row: {
+          affected_scope: Json
+          blast_radius_score: number
+          containment_quality_score: number
+          created_at: string
+          id: string
+          organization_id: string
+          risk_factors: Json
+          rollback_strategies: Json
+          rollback_viability_score: number
+          run_id: string | null
+          scenario_id: string | null
+        }
+        Insert: {
+          affected_scope?: Json
+          blast_radius_score?: number
+          containment_quality_score?: number
+          created_at?: string
+          id?: string
+          organization_id: string
+          risk_factors?: Json
+          rollback_strategies?: Json
+          rollback_viability_score?: number
+          run_id?: string | null
+          scenario_id?: string | null
+        }
+        Update: {
+          affected_scope?: Json
+          blast_radius_score?: number
+          containment_quality_score?: number
+          created_at?: string
+          id?: string
+          organization_id?: string
+          risk_factors?: Json
+          rollback_strategies?: Json
+          rollback_viability_score?: number
+          run_id?: string | null
+          scenario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_blast_radius_estimates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_blast_radius_estimates_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_simulation_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_blast_radius_estimates_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_sandbox_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ecosystem_capability_inventory: {
         Row: {
           assumptions: Json
@@ -5010,6 +5074,64 @@ export type Database = {
           },
         ]
       }
+      ecosystem_policy_conflict_events: {
+        Row: {
+          affected_entities: Json
+          conflict_type: string
+          created_at: string
+          description: string
+          id: string
+          organization_id: string
+          run_id: string | null
+          scenario_id: string | null
+          severity: string
+        }
+        Insert: {
+          affected_entities?: Json
+          conflict_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          organization_id: string
+          run_id?: string | null
+          scenario_id?: string | null
+          severity?: string
+        }
+        Update: {
+          affected_entities?: Json
+          conflict_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          organization_id?: string
+          run_id?: string | null
+          scenario_id?: string | null
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_policy_conflict_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_policy_conflict_events_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_simulation_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_policy_conflict_events_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_sandbox_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ecosystem_readiness_outcomes: {
         Row: {
           assessment_id: string | null
@@ -5149,6 +5271,287 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ecosystem_sandbox_scenarios: {
+        Row: {
+          activation_readiness_signal: string
+          assumptions: Json
+          capability_domain: string
+          capability_name: string
+          created_at: string
+          evidence_links: Json
+          exposure_class: string
+          id: string
+          organization_id: string
+          sandbox_safety_score: number
+          sandbox_scope_type: string
+          scenario_name: string
+          scenario_type: string
+          simulated_actor_type: string
+          simulated_trust_tier: string
+          simulation_readiness_score: number
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          activation_readiness_signal?: string
+          assumptions?: Json
+          capability_domain?: string
+          capability_name?: string
+          created_at?: string
+          evidence_links?: Json
+          exposure_class?: string
+          id?: string
+          organization_id: string
+          sandbox_safety_score?: number
+          sandbox_scope_type?: string
+          scenario_name: string
+          scenario_type?: string
+          simulated_actor_type?: string
+          simulated_trust_tier?: string
+          simulation_readiness_score?: number
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          activation_readiness_signal?: string
+          assumptions?: Json
+          capability_domain?: string
+          capability_name?: string
+          created_at?: string
+          evidence_links?: Json
+          exposure_class?: string
+          id?: string
+          organization_id?: string
+          sandbox_safety_score?: number
+          sandbox_scope_type?: string
+          scenario_name?: string
+          scenario_type?: string
+          simulated_actor_type?: string
+          simulated_trust_tier?: string
+          simulation_readiness_score?: number
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_sandbox_scenarios_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_sandbox_scenarios_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ecosystem_simulation_outcomes: {
+        Row: {
+          created_at: string
+          evidence_refs: Json
+          expected_outcomes: Json
+          false_positive_activation_risk_score: number
+          id: string
+          organization_id: string
+          outcome_status: string
+          realized_outcomes: Json
+          recommendation_quality_score: number
+          recommendation_type: string
+          run_id: string | null
+          scenario_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          false_positive_activation_risk_score?: number
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          realized_outcomes?: Json
+          recommendation_quality_score?: number
+          recommendation_type?: string
+          run_id?: string | null
+          scenario_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          false_positive_activation_risk_score?: number
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          realized_outcomes?: Json
+          recommendation_quality_score?: number
+          recommendation_type?: string
+          run_id?: string | null
+          scenario_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_simulation_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_simulation_outcomes_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_simulation_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_simulation_outcomes_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_sandbox_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ecosystem_simulation_participants: {
+        Row: {
+          created_at: string
+          evidence_links: Json
+          id: string
+          organization_id: string
+          participant_name: string
+          participant_type: string
+          restriction_violation_score: number
+          run_id: string | null
+          scenario_id: string | null
+          simulated_participation_viability_score: number
+          simulated_trust_tier: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          participant_name: string
+          participant_type?: string
+          restriction_violation_score?: number
+          run_id?: string | null
+          scenario_id?: string | null
+          simulated_participation_viability_score?: number
+          simulated_trust_tier?: string
+        }
+        Update: {
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          participant_name?: string
+          participant_type?: string
+          restriction_violation_score?: number
+          run_id?: string | null
+          scenario_id?: string | null
+          simulated_participation_viability_score?: number
+          simulated_trust_tier?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_simulation_participants_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_simulation_participants_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_simulation_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_simulation_participants_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_sandbox_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ecosystem_simulation_runs: {
+        Row: {
+          assumptions: Json
+          blast_radius_score: number
+          containment_quality_score: number
+          created_at: string
+          id: string
+          organization_id: string
+          policy_conflict_score: number
+          result_summary: Json
+          rollback_viability_score: number
+          run_status: string
+          scenario_confidence_score: number
+          scenario_id: string | null
+          simulation_outcome_accuracy_score: number
+          trust_failure_score: number
+        }
+        Insert: {
+          assumptions?: Json
+          blast_radius_score?: number
+          containment_quality_score?: number
+          created_at?: string
+          id?: string
+          organization_id: string
+          policy_conflict_score?: number
+          result_summary?: Json
+          rollback_viability_score?: number
+          run_status?: string
+          scenario_confidence_score?: number
+          scenario_id?: string | null
+          simulation_outcome_accuracy_score?: number
+          trust_failure_score?: number
+        }
+        Update: {
+          assumptions?: Json
+          blast_radius_score?: number
+          containment_quality_score?: number
+          created_at?: string
+          id?: string
+          organization_id?: string
+          policy_conflict_score?: number
+          result_summary?: Json
+          rollback_viability_score?: number
+          run_status?: string
+          scenario_confidence_score?: number
+          scenario_id?: string | null
+          simulation_outcome_accuracy_score?: number
+          trust_failure_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_simulation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_simulation_runs_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_sandbox_scenarios"
             referencedColumns: ["id"]
           },
         ]

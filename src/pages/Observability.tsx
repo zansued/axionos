@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles, Globe, Eye, UserCheck, Store } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles, Globe, Eye, UserCheck, Store, FlaskRound } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -57,6 +57,7 @@ import { ControlledEcosystemReadinessDashboard } from "@/components/observabilit
 import { CapabilityExposureGovernanceDashboard } from "@/components/observability/CapabilityExposureGovernanceDashboard";
 import { ExternalTrustAdmissionDashboard } from "@/components/observability/ExternalTrustAdmissionDashboard";
 import { LimitedMarketplacePilotDashboard } from "@/components/observability/LimitedMarketplacePilotDashboard";
+import { EcosystemSimulationSandboxDashboard } from "@/components/observability/EcosystemSimulationSandboxDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -336,8 +337,9 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(46, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(47, 1fr)" }}>
             <TabsTrigger value="pilot-market" className="text-xs gap-1"><Store className="h-3 w-3" /> PilotMkt</TabsTrigger>
+            <TabsTrigger value="eco-sandbox" className="text-xs gap-1"><FlaskRound className="h-3 w-3" /> EcoSandbox</TabsTrigger>
             <TabsTrigger value="trust-gov" className="text-xs gap-1"><UserCheck className="h-3 w-3" /> TrustGov</TabsTrigger>
             <TabsTrigger value="exposure-gov" className="text-xs gap-1"><Eye className="h-3 w-3" /> ExposureGov</TabsTrigger>
             <TabsTrigger value="eco-ready" className="text-xs gap-1"><Globe className="h-3 w-3" /> EcoReady</TabsTrigger>
@@ -388,6 +390,11 @@ export default function Observability() {
           {/* ===== LIMITED MARKETPLACE PILOT ===== */}
           <TabsContent value="pilot-market" className="mt-4">
             <LimitedMarketplacePilotDashboard />
+          </TabsContent>
+
+          {/* ===== ECOSYSTEM SIMULATION & SANDBOX ===== */}
+          <TabsContent value="eco-sandbox" className="mt-4">
+            <EcosystemSimulationSandboxDashboard />
           </TabsContent>
 
           {/* ===== EXTERNAL TRUST & ADMISSION ===== */}
