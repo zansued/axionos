@@ -584,5 +584,6 @@ This document serves as the canonical sprint execution ledger. The following con
 | Capability Registry Governance | 1 | 61 |
 | Multi-Party Policy & Revenue Governance | 1 | 62 |
 | Institutional Outcome Assurance | 1 | 63 |
+| Canon Integrity & Drift Governance | 1 | 64 |
 | Support | 11 | Various |
-| **Total** | **~108** | |
+| **Total** | **~109** | |
