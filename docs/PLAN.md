@@ -503,5 +503,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | Institutional Convergence Memory | 1 | 51 |
 | Operating Profiles & Policy Packs | 1 | 52 |
 | Product Intelligence Entry | 1 | 53 |
+| Product Intelligence Operations | 1 | 54 |
+| Product Opportunity Portfolio Governance | 1 | 55 |
 | Support | 11 | Various |
-| **Total** | **~98** | |
+| **Total** | **~100** | |
