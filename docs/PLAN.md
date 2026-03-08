@@ -801,5 +801,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Reliability-Aware Delivery Tuning | 1 | 85 |
 | Outcome Assurance 2.0 | 1 | 86 |
 | Distributed Job Control Plane | 1 | 87 |
+| Cross-Region Execution & Recovery | 1 | 88 |
 | Support | 11 | Various |
-| **Total** | **~138** | |
+| **Total** | **~139** | |

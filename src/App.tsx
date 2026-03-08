@@ -129,6 +129,7 @@ const App = () => (
                       <Route path="/delivery-tuning" element={<ProtectedRoute><DeliveryTuning /></ProtectedRoute>} />
                       <Route path="/outcome-assurance" element={<ProtectedRoute><OutcomeAssurance /></ProtectedRoute>} />
                       <Route path="/distributed-jobs" element={<ProtectedRoute><DistributedJobs /></ProtectedRoute>} />
+                      <Route path="/cross-region-recovery" element={<ProtectedRoute><CrossRegionRecovery /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
