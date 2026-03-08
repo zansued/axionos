@@ -493,6 +493,57 @@ export type Database = {
           },
         ]
       }
+      agent_coordination_checkpoints: {
+        Row: {
+          agent_id: string
+          checkpoint_label: string
+          checkpoint_type: string
+          context_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          organization_id: string
+          snapshot: Json
+        }
+        Insert: {
+          agent_id?: string
+          checkpoint_label?: string
+          checkpoint_type?: string
+          context_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          snapshot?: Json
+        }
+        Update: {
+          agent_id?: string
+          checkpoint_label?: string
+          checkpoint_type?: string
+          context_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          snapshot?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_coordination_checkpoints_context_id_fkey"
+            columns: ["context_id"]
+            isOneToOne: false
+            referencedRelation: "agent_working_memory_contexts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_coordination_checkpoints_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_debate_arguments: {
         Row: {
           agent_id: string
@@ -1375,6 +1426,203 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_task_state_transitions: {
+        Row: {
+          context_id: string
+          created_at: string
+          from_state: string
+          id: string
+          organization_id: string
+          proposal_reason: string
+          proposed_by: string
+          resolution_reason: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          to_state: string
+        }
+        Insert: {
+          context_id: string
+          created_at?: string
+          from_state?: string
+          id?: string
+          organization_id: string
+          proposal_reason?: string
+          proposed_by?: string
+          resolution_reason?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          to_state?: string
+        }
+        Update: {
+          context_id?: string
+          created_at?: string
+          from_state?: string
+          id?: string
+          organization_id?: string
+          proposal_reason?: string
+          proposed_by?: string
+          resolution_reason?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          to_state?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_task_state_transitions_context_id_fkey"
+            columns: ["context_id"]
+            isOneToOne: false
+            referencedRelation: "agent_working_memory_contexts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_task_state_transitions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_working_memory_contexts: {
+        Row: {
+          agreed_assumptions: Json
+          audit_metadata: Json
+          blocked_reasons: Json
+          context_label: string
+          created_at: string
+          current_task_state: string
+          escalation_reason: string | null
+          id: string
+          initiative_id: string | null
+          open_issues: Json
+          organization_id: string
+          participating_agent_ids: string[]
+          risk_posture: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          agreed_assumptions?: Json
+          audit_metadata?: Json
+          blocked_reasons?: Json
+          context_label?: string
+          created_at?: string
+          current_task_state?: string
+          escalation_reason?: string | null
+          id?: string
+          initiative_id?: string | null
+          open_issues?: Json
+          organization_id: string
+          participating_agent_ids?: string[]
+          risk_posture?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          agreed_assumptions?: Json
+          audit_metadata?: Json
+          blocked_reasons?: Json
+          context_label?: string
+          created_at?: string
+          current_task_state?: string
+          escalation_reason?: string | null
+          id?: string
+          initiative_id?: string | null
+          open_issues?: Json
+          organization_id?: string
+          participating_agent_ids?: string[]
+          risk_posture?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_working_memory_contexts_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_working_memory_contexts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_working_memory_contexts_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_working_memory_entries: {
+        Row: {
+          agent_id: string
+          confidence: number
+          context_id: string
+          created_at: string
+          entry_type: string
+          id: string
+          key: string
+          organization_id: string
+          superseded_by: string | null
+          value: Json
+        }
+        Insert: {
+          agent_id?: string
+          confidence?: number
+          context_id: string
+          created_at?: string
+          entry_type?: string
+          id?: string
+          key?: string
+          organization_id: string
+          superseded_by?: string | null
+          value?: Json
+        }
+        Update: {
+          agent_id?: string
+          confidence?: number
+          context_id?: string
+          created_at?: string
+          entry_type?: string
+          id?: string
+          key?: string
+          organization_id?: string
+          superseded_by?: string | null
+          value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_working_memory_entries_context_id_fkey"
+            columns: ["context_id"]
+            isOneToOne: false
+            referencedRelation: "agent_working_memory_contexts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_working_memory_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_working_memory_entries_superseded_by_fkey"
+            columns: ["superseded_by"]
+            isOneToOne: false
+            referencedRelation: "agent_working_memory_entries"
             referencedColumns: ["id"]
           },
         ]
