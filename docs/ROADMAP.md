@@ -143,22 +143,20 @@ Governed lifecycle for convergence promotion, bounded merge, retention, deprecat
 
 ## Proposed Next Strategic Arc (Sprints 51–53)
 
-> **Status:** 📋 Proposed — not yet implemented. Sequencing is based on the logical progression from convergence governance.
+> **Status:** 📋 Proposed — not yet implemented. Sequencing is based on the logical progression from institutional convergence memory.
 
 ### Strategic Narrative
 
-Sprint 48 closed the cost/economic awareness gap. Sprint 49 introduced convergence detection, distinguishing healthy specialization from harmful fragmentation. Sprint 50 operationalized convergence governance with promotion, merge, retention, deprecation, and retirement lifecycle management.
+Sprint 48 closed the cost/economic awareness gap. Sprint 49 introduced convergence detection. Sprint 50 operationalized convergence governance. Sprint 51 turned approved decisions and outcomes into durable institutional memory.
 
-The next arc turns approved convergence decisions into institutional memory, packages that memory into reusable operating profiles, and opens a bounded product intelligence layer:
+The next arc packages that memory into reusable operating profiles and opens a bounded product intelligence layer:
 
-| Sprint | Name | Objective | Why After 50 |
+| Sprint | Name | Objective | Why After 51 |
 |--------|------|-----------|--------------|
-| 51 | Institutional Convergence Memory Layer | Turn approved convergence decisions and outcomes into persistent institutional memory that informs future convergence, calibration, and advisory actions | Convergence governance produces decisions; the platform needs to learn from them |
 | 52 | Operating Profiles & Policy Packs | Package institutional memory, convergence outcomes, and proven policies into composable, tenant-assignable operating profiles | Memory becomes actionable only when it can be packaged and reused |
 | 53 | Product Intelligence Entry | Begin bounded, advisory-first product intelligence — connecting execution outcomes to product-level signals without crossing governance boundaries | The platform is mature enough to reason about product-level impact |
 
 **Acceptance direction (high-level):**
-- Sprint 51: Convergence decision lineage, outcome-based memory formation, memory-informed advisory enrichment
 - Sprint 52: Profile composition from proven policies + convergence outcomes, tenant assignment, versioning, rollback
 - Sprint 53: Product signal ingestion, bounded product-level insight generation, advisory-only product recommendations
 
