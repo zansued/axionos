@@ -392,6 +392,11 @@ export default function Observability() {
             <LimitedMarketplacePilotDashboard />
           </TabsContent>
 
+          {/* ===== ECOSYSTEM SIMULATION & SANDBOX ===== */}
+          <TabsContent value="eco-sandbox" className="mt-4">
+            <EcosystemSimulationSandboxDashboard />
+          </TabsContent>
+
           {/* ===== EXTERNAL TRUST & ADMISSION ===== */}
           <TabsContent value="trust-gov" className="mt-4">
             <ExternalTrustAdmissionDashboard />
