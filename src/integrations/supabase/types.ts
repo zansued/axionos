@@ -2366,6 +2366,222 @@ export type Database = {
           },
         ]
       }
+      architecture_hypotheses: {
+        Row: {
+          audit_metadata: Json
+          confidence_score: number
+          created_at: string
+          expected_benefit: string
+          hypothesis_type: string
+          id: string
+          organization_id: string
+          originating_evidence_summary: string
+          problem_statement: string
+          proposed_idea: string
+          review_status: string
+          risk_posture: string
+          simulation_ready: boolean
+          target_area: string
+          uncertainty_posture: string
+          updated_at: string
+          validation_requirements: Json
+          workspace_id: string | null
+        }
+        Insert: {
+          audit_metadata?: Json
+          confidence_score?: number
+          created_at?: string
+          expected_benefit?: string
+          hypothesis_type?: string
+          id?: string
+          organization_id: string
+          originating_evidence_summary?: string
+          problem_statement?: string
+          proposed_idea?: string
+          review_status?: string
+          risk_posture?: string
+          simulation_ready?: boolean
+          target_area?: string
+          uncertainty_posture?: string
+          updated_at?: string
+          validation_requirements?: Json
+          workspace_id?: string | null
+        }
+        Update: {
+          audit_metadata?: Json
+          confidence_score?: number
+          created_at?: string
+          expected_benefit?: string
+          hypothesis_type?: string
+          id?: string
+          organization_id?: string
+          originating_evidence_summary?: string
+          problem_statement?: string
+          proposed_idea?: string
+          review_status?: string
+          risk_posture?: string
+          simulation_ready?: boolean
+          target_area?: string
+          uncertainty_posture?: string
+          updated_at?: string
+          validation_requirements?: Json
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_hypotheses_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_hypotheses_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_hypothesis_evidence: {
+        Row: {
+          created_at: string
+          evidence_refs: Json
+          evidence_source: string
+          evidence_strength: string
+          evidence_summary: string
+          evidence_type: string
+          hypothesis_id: string
+          id: string
+          organization_id: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_refs?: Json
+          evidence_source?: string
+          evidence_strength?: string
+          evidence_summary?: string
+          evidence_type?: string
+          hypothesis_id: string
+          id?: string
+          organization_id: string
+        }
+        Update: {
+          created_at?: string
+          evidence_refs?: Json
+          evidence_source?: string
+          evidence_strength?: string
+          evidence_summary?: string
+          evidence_type?: string
+          hypothesis_id?: string
+          id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_hypothesis_evidence_hypothesis_id_fkey"
+            columns: ["hypothesis_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_hypotheses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_hypothesis_evidence_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_hypothesis_reviews: {
+        Row: {
+          created_at: string
+          hypothesis_id: string
+          id: string
+          organization_id: string
+          review_notes: string
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          created_at?: string
+          hypothesis_id: string
+          id?: string
+          organization_id: string
+          review_notes?: string
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          created_at?: string
+          hypothesis_id?: string
+          id?: string
+          organization_id?: string
+          review_notes?: string
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_hypothesis_reviews_hypothesis_id_fkey"
+            columns: ["hypothesis_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_hypotheses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_hypothesis_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_hypothesis_tags: {
+        Row: {
+          created_at: string
+          hypothesis_id: string
+          id: string
+          organization_id: string
+          tag_key: string
+          tag_value: string
+        }
+        Insert: {
+          created_at?: string
+          hypothesis_id: string
+          id?: string
+          organization_id: string
+          tag_key?: string
+          tag_value?: string
+        }
+        Update: {
+          created_at?: string
+          hypothesis_id?: string
+          id?: string
+          organization_id?: string
+          tag_key?: string
+          tag_value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_hypothesis_tags_hypothesis_id_fkey"
+            columns: ["hypothesis_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_hypotheses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_hypothesis_tags_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_migration_executions: {
         Row: {
           activation_constraints: Json | null
