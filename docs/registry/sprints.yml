@@ -87,9 +87,11 @@ sprints:
   # === SPRINT 72 — Evidence Capture & Improvement Ledger (Complete) ===
   - { sprint: 72, name: "Evidence Capture & Improvement Ledger",             status: complete, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "Evidence Capture & Improvement Ledger Layer" }
 
-  # === SPRINTS 73–74 — Evidence-Governed Improvement Loop (Planned) ===
-  - { sprint: 73, name: "TBD — Governed Testing & Promotion",               status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "TBD" }
-  - { sprint: 74, name: "TBD — Improvement Outcome Tracking",               status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "TBD" }
+  # === SPRINT 73 — Improvement Candidate Distillation Engine (Complete) ===
+  - { sprint: 73, name: "Improvement Candidate Distillation Engine",         status: complete, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "Improvement Candidate Distillation Layer" }
+
+  # === SPRINT 74 — Evidence-Governed Improvement Loop (Planned) ===
+  - { sprint: 74, name: "TBD — Governed Benchmarking & Promotion",           status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "TBD" }
 
   # === BLOCKS O–S — Reserved Future Horizon ===
   - { sprint: "75–78", name: "Advanced Multi-Agent Coordination",                        status: reserved, block: "O", phase: "Reserved", layer: "TBD" }

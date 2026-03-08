@@ -1,7 +1,7 @@
 import {
   Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Map,
   Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
-  Plug, FileSearch,
+  Plug, FileSearch, Sparkles,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
@@ -43,6 +43,7 @@ const mainItems = [
 const bottomItems = [
   { title: "Adoption", url: "/adoption", icon: Search },
   { title: "Evidence", url: "/improvement-ledger", icon: FileSearch },
+  { title: "Candidates", url: "/improvement-candidates", icon: Sparkles },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },

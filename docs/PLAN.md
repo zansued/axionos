@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 72 (Evidence Capture & Improvement Ledger) — ✅ Complete
-> **Next Planned:** Sprints 73–74 (Evidence-Governed Improvement Loop) — 📋 Planned
+> **Current Sprint:** 73 (Improvement Candidate Distillation Engine) — ✅ Complete
+> **Next Planned:** Sprint 74 (Evidence-Governed Improvement Loop) — 📋 Planned
 > **Reserved Horizon:** Blocks O–S (Sprints 75–94) — 🔮 Reserved
 
 ## Document Authority
@@ -786,5 +786,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Adoption Intelligence & Customer Success | 1 | 70 |
 | Extension Management | 1 | 71 |
 | Evidence Management | 1 | 72 |
+| Candidate Distillation | 1 | 73 |
 | Support | 11 | Various |
-| **Total** | **~118** | |
+| **Total** | **~119** | |

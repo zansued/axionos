@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** 72 sprints complete. Sprint 72 (Evidence Capture & Improvement Ledger) complete. Sprints 73–74 are next planned.
+> **Last strategic change (2026-03-08):** 73 sprints complete. Sprint 73 (Improvement Candidate Distillation Engine) complete. Sprint 74 is next planned.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -51,7 +51,7 @@
 
 ## Strategic Directive
 
-AxionOS has completed **72 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, and evidence capture. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete. The extensibility foundation and evidence capture layer are operational.
+AxionOS has completed **73 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, evidence capture, and improvement candidate distillation. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete. The extensibility foundation, evidence capture layer, and candidate distillation engine are operational.
 
 **Post-Block M Strategic Position:**
 
@@ -90,7 +90,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 
 ---
 
-## Completed Canon (Sprints 1–72)
+## Completed Canon (Sprints 1–73)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -120,6 +120,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Block M — Product Experience & Delivery Maturity | 66–70 | User journey orchestration, role-based experience, one-click delivery & deploy assurance, onboarding/templates/starters, adoption intelligence & customer success |
 | Sprint 71 — Governed Extensibility | 71 | Platform extensions registry, approval-based activation, compatibility checks, audit trail, operator surface |
 | Sprint 72 — Evidence Capture & Improvement Ledger | 72 | Canonical evidence capture, improvement ledger, context linking, review workflow, operator evidence dashboard |
+| Sprint 73 — Improvement Candidate Distillation Engine | 73 | Candidate distillation from evidence, pattern clustering, provenance/explainability, triage workflow, operator candidates dashboard |
 
 ---
 
@@ -157,17 +158,19 @@ Sprint 72 established the canonical evidence capture and improvement ledger laye
 
 ---
 
-## Planned Next — Sprints 73–74: Evidence-Governed Improvement Loop — 📋 Planned
+## Sprint 73 — Improvement Candidate Distillation Engine ✅ Implemented
+
+Sprint 73 introduced the canonical improvement candidate distillation layer. The system now clusters operational evidence into structured, bounded, reviewable improvement candidates with full provenance, pattern detection, explainability, and triage workflow. A dedicated operator surface (`/improvement-candidates`) provides candidate review, triage, and "ready for benchmark" marking.
+
+**Strategic role:** Sprint 73 advances the Evidence-Governed Improvement Loop by transforming raw evidence into actionable (but advisory-only) improvement proposals. Candidates remain bounded and require human review — no autonomous mutation.
+
+---
+
+## Planned Next — Sprint 74: Governed Benchmarking & Promotion — 📋 Planned
 
 > **Status:** Planned — next in the execution queue.
 
-**Thesis:** AxionOS should become better over time through evidence-governed learning, not uncontrolled autonomy. This block turns operational evidence into bounded improvement proposals that are tested and promoted under governance.
-
-**Objectives:**
-- Bounded improvement proposal generation from evidence aggregation
-- Governed testing and promotion of improvement candidates
-- Rollback-safe experimentation with clear lineage and audit trail
-- Measured improvement cycles with outcome tracking
+**Thesis:** Complete the Evidence-Governed Improvement Loop by enabling governed sandbox benchmarking of accepted candidates and human-approved promotion of validated improvements.
 
 **Canon constraints (enforced):**
 - No autonomous architecture mutation
