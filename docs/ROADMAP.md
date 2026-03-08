@@ -128,6 +128,7 @@ The next strategic direction moves from external trust & admission toward **ecos
 | Block I (partial) — Product Opportunity Portfolio Governance | 55 | Portfolio ranking, conflict detection, capacity-aware prioritization, promotion/defer/reject/monitor decisions, outcome tracking |
 | Block I (complete) — Controlled Ecosystem Readiness | 56 | Capability inventory, exposure classification, safety prerequisites, trust model foundation, readiness assessment, ecosystem readiness outcomes |
 | Block J (partial) — Capability Exposure Governance | 57 | Exposure classes, governance cases, gate evaluation, restriction analysis, review workflow, governance outcomes |
+| Block J (partial) — External Trust & Admission | 58 | Actor registry, trust tiers, admission cases, requirement evaluation, risk posture analysis, trust drift detection, advisory recommendations |
 
 ---
 
