@@ -358,6 +358,12 @@ export default function Observability() {
             <DiscoveryArchitectureDashboard />
           </TabsContent>
 
+          {/* ===== ARCHITECTURE SIMULATION ===== */}
+          <TabsContent value="arch-sim" className="mt-4">
+            <ArchitectureSimulationDashboard />
+          </TabsContent>
+          </TabsContent>
+
           {/* ===== PLATFORM INTELLIGENCE ===== */}
           <TabsContent value="platform" className="mt-4">
             <PlatformIntelligenceDashboard />
