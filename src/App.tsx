@@ -53,6 +53,7 @@ import PostDeployFeedback from "./pages/PostDeployFeedback";
 import DeliveryTuning from "./pages/DeliveryTuning";
 import OutcomeAssurance from "./pages/OutcomeAssurance";
 import DistributedJobs from "./pages/DistributedJobs";
+import CrossRegionRecovery from "./pages/CrossRegionRecovery";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -128,6 +129,7 @@ const App = () => (
                       <Route path="/delivery-tuning" element={<ProtectedRoute><DeliveryTuning /></ProtectedRoute>} />
                       <Route path="/outcome-assurance" element={<ProtectedRoute><OutcomeAssurance /></ProtectedRoute>} />
                       <Route path="/distributed-jobs" element={<ProtectedRoute><DistributedJobs /></ProtectedRoute>} />
+                      <Route path="/cross-region-recovery" element={<ProtectedRoute><CrossRegionRecovery /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>

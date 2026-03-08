@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 87 (Distributed Job Control Plane) — ✅ Complete
-> **Next Planned:** Sprint 88 (Cross-Region Resilience) — 📋 Planned
+> **Current Sprint:** 88 (Cross-Region Execution & Recovery) — ✅ Complete
+> **Next Planned:** Sprint 89 (Tenant-Isolated Scaling) — 📋 Planned
 > **Reserved Horizon:** Blocks R–S (Sprints 87–94) — Block R in progress
 
 ## Document Authority
@@ -801,5 +801,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Reliability-Aware Delivery Tuning | 1 | 85 |
 | Outcome Assurance 2.0 | 1 | 86 |
 | Distributed Job Control Plane | 1 | 87 |
+| Cross-Region Execution & Recovery | 1 | 88 |
 | Support | 11 | Various |
-| **Total** | **~138** | |
+| **Total** | **~139** | |
