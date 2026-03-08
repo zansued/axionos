@@ -797,5 +797,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Pilot Marketplace | 1 | 81 |
 | Marketplace Outcomes | 1 | 82 |
 | Delivery Outcome Causality | 1 | 83 |
+| Post-Deploy Feedback Assimilation | 1 | 84 |
 | Support | 11 | Various |
-| **Total** | **~134** | |
+| **Total** | **~135** | |

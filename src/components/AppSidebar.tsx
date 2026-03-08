@@ -54,6 +54,7 @@ const bottomItems = [
   { title: "Pilot Mkt.", url: "/pilot-marketplace", icon: Store },
   { title: "Mkt. Outcomes", url: "/marketplace-outcomes", icon: TrendingUp },
   { title: "Delivery Out.", url: "/delivery-outcomes", icon: GitPullRequestArrow },
+  { title: "Post-Deploy", url: "/post-deploy-feedback", icon: Rss },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
