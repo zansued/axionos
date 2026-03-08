@@ -906,10 +906,10 @@ Internal sophistication makes the product trustworthy. It does not need to be th
 
 With 65 sprints complete and the first mature operating baseline achieved, the platform's architectural direction shifts from internal system building to **product experience and delivery maturity**.
 
-### Completed Internal Canon (Sprints 1–69)
-- ✅ All layers from execution kernel through institutional assurance, canon integrity, and product experience
-- ✅ 53 architectural layers active
-- ✅ First internally coherent operating canon + user journey orchestration + role-based experience separation + one-click delivery & deploy assurance + guided onboarding, templates, and vertical starters
+### Completed Internal Canon (Sprints 1–70)
+- ✅ All layers from execution kernel through institutional assurance, canon integrity, product experience, and adoption intelligence
+- ✅ 54 architectural layers active
+- ✅ First internally coherent operating canon + user journey orchestration + role-based experience + one-click delivery + guided onboarding + adoption intelligence & customer success loop
 
 ### Next Architectural Direction — Block M: Product Experience & Delivery Maturity
 
