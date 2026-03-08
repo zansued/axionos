@@ -214,6 +214,7 @@
 | `_shared/platform-stabilization/` | 6 | Stability monitor, stabilization engine, action engine, guardrails, outcome tracker, rollback engine |
 | `_shared/engineering-advisor/` | 8 | Signal aggregator, opportunity synthesizer, recommendation engine, prioritizer, explainer, review manager, lineage, clustering |
 | `_shared/semantic-retrieval/` | 8 | Retrieval engine, ranker, guardrails, quality evaluator, index manager, context builders (runtime, advisory, strategy, platform) |
+| `_shared/architecture-simulation/` | 6 | Impact simulator, boundary analyzer, guardrails, recommendation linker, review manager, explainer |
 
 ---
 
