@@ -56,6 +56,6 @@ export function explainAgenda(
       "Cannot auto-approve migrations",
       "Cannot auto-execute changes",
     ],
-    next_steps,
+    next_steps: nextSteps,
   };
 }

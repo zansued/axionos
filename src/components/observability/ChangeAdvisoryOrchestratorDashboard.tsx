@@ -116,7 +116,7 @@ export function ChangeAdvisoryOrchestratorDashboard() {
             <div className="space-y-1.5">
               {["Cannot mutate topology directly", "Cannot alter governance/billing", "All outputs advisory-first", "Cannot auto-approve migrations", "Cannot auto-execute changes"].map((s) => (
                 <div key={s} className="flex items-center gap-2 text-xs">
-                  <AlertTriangle className="h-3 w-3 text-yellow-500 shrink-0" />
+                  <AlertTriangle className="h-3 w-3 text-destructive shrink-0" />
                   <span className="text-muted-foreground">{s}</span>
                 </div>
               ))}
