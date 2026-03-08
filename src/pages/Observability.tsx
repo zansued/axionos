@@ -48,6 +48,7 @@ import { TenantArchitectureModesDashboard } from "@/components/observability/Ten
 import { EconomicOptimizationDashboard } from "@/components/observability/EconomicOptimizationDashboard";
 import { PlatformConvergenceDashboard } from "@/components/observability/PlatformConvergenceDashboard";
 import { ConvergenceGovernanceDashboard } from "@/components/observability/ConvergenceGovernanceDashboard";
+import { InstitutionalConvergenceMemoryDashboard } from "@/components/observability/InstitutionalConvergenceMemoryDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
