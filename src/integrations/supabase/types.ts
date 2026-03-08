@@ -3155,6 +3155,305 @@ export type Database = {
           },
         ]
       }
+      convergence_memory_entries: {
+        Row: {
+          action_type: string
+          assumptions: Json
+          context_signature: string
+          convergence_domain: string
+          created_at: string
+          evidence_density_score: number
+          expected_outcomes: Json
+          id: string
+          memory_quality_score: number
+          memory_type: string
+          organization_id: string
+          rationale: string
+          realized_outcomes: Json
+          regression_risk_score: number
+          reuse_confidence_score: number
+          source_case_id: string | null
+          source_decision_id: string | null
+          source_outcome_id: string | null
+          specialization_type: string
+          summary: string
+          tags: Json
+          title: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          action_type?: string
+          assumptions?: Json
+          context_signature?: string
+          convergence_domain?: string
+          created_at?: string
+          evidence_density_score?: number
+          expected_outcomes?: Json
+          id?: string
+          memory_quality_score?: number
+          memory_type?: string
+          organization_id: string
+          rationale?: string
+          realized_outcomes?: Json
+          regression_risk_score?: number
+          reuse_confidence_score?: number
+          source_case_id?: string | null
+          source_decision_id?: string | null
+          source_outcome_id?: string | null
+          specialization_type?: string
+          summary?: string
+          tags?: Json
+          title?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          action_type?: string
+          assumptions?: Json
+          context_signature?: string
+          convergence_domain?: string
+          created_at?: string
+          evidence_density_score?: number
+          expected_outcomes?: Json
+          id?: string
+          memory_quality_score?: number
+          memory_type?: string
+          organization_id?: string
+          rationale?: string
+          realized_outcomes?: Json
+          regression_risk_score?: number
+          reuse_confidence_score?: number
+          source_case_id?: string | null
+          source_decision_id?: string | null
+          source_outcome_id?: string | null
+          specialization_type?: string
+          summary?: string
+          tags?: Json
+          title?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_memory_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_memory_entries_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      convergence_memory_evidence: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          evidence_payload: Json
+          evidence_type: string
+          id: string
+          memory_entry_id: string
+          organization_id: string
+          source_ref: Json
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          evidence_payload?: Json
+          evidence_type?: string
+          id?: string
+          memory_entry_id: string
+          organization_id: string
+          source_ref?: Json
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          evidence_payload?: Json
+          evidence_type?: string
+          id?: string
+          memory_entry_id?: string
+          organization_id?: string
+          source_ref?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_memory_evidence_memory_entry_id_fkey"
+            columns: ["memory_entry_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_memory_evidence_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      convergence_memory_feedback: {
+        Row: {
+          created_at: string
+          feedback_notes: string
+          id: string
+          memory_entry_id: string | null
+          organization_id: string
+          retrieval_id: string | null
+          reviewer_ref: Json
+          usefulness_status: string
+        }
+        Insert: {
+          created_at?: string
+          feedback_notes?: string
+          id?: string
+          memory_entry_id?: string | null
+          organization_id: string
+          retrieval_id?: string | null
+          reviewer_ref?: Json
+          usefulness_status?: string
+        }
+        Update: {
+          created_at?: string
+          feedback_notes?: string
+          id?: string
+          memory_entry_id?: string | null
+          organization_id?: string
+          retrieval_id?: string | null
+          reviewer_ref?: Json
+          usefulness_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_memory_feedback_memory_entry_id_fkey"
+            columns: ["memory_entry_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_memory_feedback_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_memory_feedback_retrieval_id_fkey"
+            columns: ["retrieval_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_memory_retrievals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      convergence_memory_patterns: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          id: string
+          last_observed_at: string
+          occurrence_count: number
+          organization_id: string
+          pattern_description: string
+          pattern_key: string
+          pattern_name: string
+          pattern_strength: number
+          pattern_type: string
+          status: string
+          supporting_entry_ids: Json
+          updated_at: string
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          last_observed_at?: string
+          occurrence_count?: number
+          organization_id: string
+          pattern_description?: string
+          pattern_key?: string
+          pattern_name?: string
+          pattern_strength?: number
+          pattern_type?: string
+          status?: string
+          supporting_entry_ids?: Json
+          updated_at?: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          last_observed_at?: string
+          occurrence_count?: number
+          organization_id?: string
+          pattern_description?: string
+          pattern_key?: string
+          pattern_name?: string
+          pattern_strength?: number
+          pattern_type?: string
+          status?: string
+          supporting_entry_ids?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_memory_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      convergence_memory_retrievals: {
+        Row: {
+          created_at: string
+          id: string
+          matched_entry_ids: Json
+          organization_id: string
+          query_context: Json
+          relevance_scores: Json
+          requester_ref: Json
+          retrieval_purpose: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          matched_entry_ids?: Json
+          organization_id: string
+          query_context?: Json
+          relevance_scores?: Json
+          requester_ref?: Json
+          retrieval_purpose?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          matched_entry_ids?: Json
+          organization_id?: string
+          query_context?: Json
+          relevance_scores?: Json
+          requester_ref?: Json
+          retrieval_purpose?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_memory_retrievals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       convergence_outcomes: {
         Row: {
           action_taken: string

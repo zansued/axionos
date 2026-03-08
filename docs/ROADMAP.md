@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform Convergence Layer complete (Sprint 49). Convergence Governance & Promotion complete (Sprint 50). Ready for next horizon.
+> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform Convergence complete (Sprint 49). Convergence Governance complete (Sprint 50). Institutional Convergence Memory complete (Sprint 51). Ready for next horizon.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -26,7 +26,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 35 architectural layers active |
+| **System State** | 36 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -50,6 +50,7 @@
 | **Economic Optimization** | Active — advisory-first cost/ROI awareness + tradeoff scoring |
 | **Platform Convergence** | Active — advisory-first convergence detection, specialization vs fragmentation analysis, candidate building |
 | **Convergence Governance** | Active — governed lifecycle for promotion, merge, retention, deprecation, retirement decisions |
+| **Institutional Convergence Memory** | Active — durable, queryable, reusable convergence knowledge with evidence lineage |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
@@ -57,7 +58,7 @@
 
 ## Strategic Directive
 
-AxionOS has completed 50 implementation sprints spanning the full capability arc from deterministic execution to convergence governance. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, bounded self-stabilization, cross-layer engineering advisory, unified semantic retrieval, discovery-driven architecture signals, architecture change simulation/planning/sandbox/pilot/migration, portfolio governance, fitness functions, change advisory orchestration, tenant-aware architecture modes, economic optimization, platform convergence, and convergence governance — all under governed, advisory-first safety boundaries.
+AxionOS has completed 51 implementation sprints spanning the full capability arc from deterministic execution to institutional convergence memory. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, bounded self-stabilization, cross-layer engineering advisory, unified semantic retrieval, discovery-driven architecture signals, architecture change simulation/planning/sandbox/pilot/migration, portfolio governance, fitness functions, change advisory orchestration, tenant-aware architecture modes, economic optimization, platform convergence, convergence governance, and institutional convergence memory — all under governed, advisory-first safety boundaries.
 
 **All architecture-scaled blocks are complete:**
 1. ✅ Architecture-governed: pilot governance → controlled migration → portfolio governance (Sprints 41–43)
@@ -65,6 +66,7 @@ AxionOS has completed 50 implementation sprints spanning the full capability arc
 3. ✅ Platform hardening at scale: stabilization v2 → tenant architecture modes → economic optimization (Sprints 46–48)
 4. ✅ Platform convergence: advisory-first convergence detection + specialization vs fragmentation analysis (Sprint 49)
 5. ✅ Convergence governance: governed lifecycle for promotion, merge, retention, deprecation, retirement (Sprint 50)
+6. ✅ Institutional convergence memory: durable, queryable convergence knowledge with evidence lineage (Sprint 51)
 
 **Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy.
 
@@ -73,14 +75,14 @@ AxionOS has completed 50 implementation sprints spanning the full capability arc
 ## Implementation Horizons
 
 ```
-  DONE (1–40)                  DONE (41–43)                  DONE (44–45)                  DONE (46–48)                   DONE (49–50)                      PROPOSED (51–53)
+  DONE (1–40)                  DONE (41–43)                  DONE (44–45)                  DONE (46–48)                   DONE (49–51)                      PROPOSED (52–53)
   ───────────────►             ───────────────►              ───────────────►              ───────────────►               ───────────────►                  ───────────────►
   architecture-aware ✅         architecture-governed ✅       architecture-operating ✅      architecture-scaled ✅          convergence +                     institutionalization
-  (Kernel → Learning →          Pilot Governance →             Fitness Functions →           Stabilization v2 →             governance ✅                      + product intelligence
-   Meta → Memory → Gov →        Migration Execution →          Change Advisory               Tenant Architecture →          Platform Convergence +            (proposed)
-   Intelligence → Calibration   Portfolio Governance           Orchestrator                  Economic Optimization          Convergence Governance
-   → Strategy → Stabilization
-   → Advisory → Semantic →
+  (Kernel → Learning →          Pilot Governance →             Fitness Functions →           Stabilization v2 →             governance +                      + product intelligence
+   Meta → Memory → Gov →        Migration Execution →          Change Advisory               Tenant Architecture →          memory ✅                         (proposed)
+   Intelligence → Calibration   Portfolio Governance           Orchestrator                  Economic Optimization          Platform Convergence +
+   → Strategy → Stabilization                                                                                             Conv Governance +
+   → Advisory → Semantic →                                                                                                Conv Memory
    Discovery → Simulation →
    Planning → Sandbox)
 ```
@@ -107,6 +109,13 @@ AxionOS has completed 50 implementation sprints spanning the full capability arc
 | Architecture-Scaled | 46–48 | Stabilization v2, tenant architecture modes, economic optimization |
 | Platform Convergence | 49 | Advisory-first convergence detection, specialization vs fragmentation, candidate building |
 | Convergence Governance | 50 | Governed lifecycle for promotion, merge, retention, deprecation, retirement decisions |
+| Institutional Convergence Memory | 51 | Durable, queryable convergence knowledge with evidence lineage and pattern extraction |
+
+---
+
+## Block F — Institutional Convergence Memory (Sprint 51) ✅ Complete
+
+Durable institutional memory for convergence decisions, outcomes, evidence, patterns, and preservation heuristics. Turns episodic convergence governance into reusable organizational knowledge.
 
 ---
 
@@ -134,22 +143,20 @@ Governed lifecycle for convergence promotion, bounded merge, retention, deprecat
 
 ## Proposed Next Strategic Arc (Sprints 51–53)
 
-> **Status:** 📋 Proposed — not yet implemented. Sequencing is based on the logical progression from convergence governance.
+> **Status:** 📋 Proposed — not yet implemented. Sequencing is based on the logical progression from institutional convergence memory.
 
 ### Strategic Narrative
 
-Sprint 48 closed the cost/economic awareness gap. Sprint 49 introduced convergence detection, distinguishing healthy specialization from harmful fragmentation. Sprint 50 operationalized convergence governance with promotion, merge, retention, deprecation, and retirement lifecycle management.
+Sprint 48 closed the cost/economic awareness gap. Sprint 49 introduced convergence detection. Sprint 50 operationalized convergence governance. Sprint 51 turned approved decisions and outcomes into durable institutional memory.
 
-The next arc turns approved convergence decisions into institutional memory, packages that memory into reusable operating profiles, and opens a bounded product intelligence layer:
+The next arc packages that memory into reusable operating profiles and opens a bounded product intelligence layer:
 
-| Sprint | Name | Objective | Why After 50 |
+| Sprint | Name | Objective | Why After 51 |
 |--------|------|-----------|--------------|
-| 51 | Institutional Convergence Memory Layer | Turn approved convergence decisions and outcomes into persistent institutional memory that informs future convergence, calibration, and advisory actions | Convergence governance produces decisions; the platform needs to learn from them |
 | 52 | Operating Profiles & Policy Packs | Package institutional memory, convergence outcomes, and proven policies into composable, tenant-assignable operating profiles | Memory becomes actionable only when it can be packaged and reused |
 | 53 | Product Intelligence Entry | Begin bounded, advisory-first product intelligence — connecting execution outcomes to product-level signals without crossing governance boundaries | The platform is mature enough to reason about product-level impact |
 
 **Acceptance direction (high-level):**
-- Sprint 51: Convergence decision lineage, outcome-based memory formation, memory-informed advisory enrichment
 - Sprint 52: Profile composition from proven policies + convergence outcomes, tenant assignment, versioning, rollback
 - Sprint 53: Product signal ingestion, bounded product-level insight generation, advisory-only product recommendations
 
@@ -167,8 +174,9 @@ The next arc turns approved convergence decisions into institutional memory, pac
 | Scaled | 46–48 | ✅ Complete | Architecture-scaled: stability + tenants + economics |
 | Convergence | 49 | ✅ Complete | Platform convergence: specialization vs fragmentation |
 | Convergence Gov | 50 | ✅ Complete | Convergence governance: promotion + merge + retention + retirement |
+| Convergence Memory | 51 | ✅ Complete | Institutional convergence memory: durable knowledge + patterns + evidence |
 
-> ✅ All six architecture blocks are complete. The platform is ready for next strategic horizon (51+).
+> ✅ All seven architecture blocks are complete. The platform is ready for next strategic horizon (52+).
 
 ---
 
@@ -176,7 +184,7 @@ The next arc turns approved convergence decisions into institutional memory, pac
 
 > **Full module inventory:** [AGENTS.md](AGENTS.md) · **Architecture details:** [ARCHITECTURE.md](ARCHITECTURE.md)
 
-All 35 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, and the convergence governance layer.
+All 36 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, and the institutional convergence memory layer.
 
 ### Frozen Areas
 
@@ -206,6 +214,6 @@ All 35 architectural layers are operational. The kernel includes the 32-stage de
 
 ## Governing Principle
 
-> Fifty sprints complete. The platform supports governed convergence lifecycle across architecture modes, strategies, and specializations.
-> Next phase: proposed strategic arc (Sprints 51–53) — institutional convergence memory, operating profiles, product intelligence entry.
+> Fifty-one sprints complete. The platform supports institutional convergence memory across architecture modes, strategies, and specializations.
+> Next phase: proposed strategic arc (Sprints 52–53) — operating profiles, product intelligence entry.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.

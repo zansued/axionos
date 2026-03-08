@@ -242,13 +242,25 @@
 
 ---
 
-## Proposed Next Strategic Arc (Sprints 51–53)
+### Phase 15: Institutional Convergence Memory (Sprint 51) — ✅ COMPLETE
+
+**Goal:** Durable, queryable, reusable institutional memory for convergence decisions, outcomes, patterns, and preservation heuristics.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 51 | Institutional Convergence Memory Layer | Convergence Memory Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 51: Memory ingestion from governance cases, pattern extraction, local-specialization preservation analysis, memory retrieval and ranking, quality calibration, feedback tracking, structured explainability
+
+---
+
+## Proposed Next Strategic Arc (Sprints 52–53)
 
 > **Status:** 📋 Proposed — not yet implemented. Subject to revision based on operational outcomes.
 
 | Sprint | Name | Objective | Phase |
 |--------|------|-----------|-------|
-| 51 | Institutional Convergence Memory Layer | Turn convergence decisions and outcomes into persistent institutional memory | Institutionalization |
 | 52 | Operating Profiles & Policy Packs | Package memory and proven policies into composable, tenant-assignable profiles | Institutionalization |
 | 53 | Product Intelligence Entry | Bounded, advisory-first product-level intelligence | Product Intelligence |
 
@@ -400,5 +412,6 @@ These sprints will be formalized when implementation begins.
 | Economic Optimization | 1 | 48 |
 | Platform Convergence | 1 | 49 |
 | Convergence Governance | 1 | 50 |
+| Institutional Convergence Memory | 1 | 51 |
 | Support | 11 | Various |
-| **Total** | **~95** | |
+| **Total** | **~96** | |
