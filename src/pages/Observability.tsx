@@ -40,6 +40,7 @@ import { ArchitectureChangePlanningDashboard } from "@/components/observability/
 import { ArchitectureRolloutSandboxDashboard } from "@/components/observability/ArchitectureRolloutSandboxDashboard";
 import { ArchitectureRolloutPilotDashboard } from "@/components/observability/ArchitectureRolloutPilotDashboard";
 import { ArchitectureMigrationDashboard } from "@/components/observability/ArchitectureMigrationDashboard";
+import { ArchitecturePortfolioGovernanceDashboard } from "@/components/observability/ArchitecturePortfolioGovernanceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
