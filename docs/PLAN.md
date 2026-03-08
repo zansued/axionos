@@ -312,14 +312,13 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Committed Future Arc — Block I: Product-Intelligent Expansion (Sprints 54–56)
+## Committed Future Arc — Block I: Product-Intelligent Expansion (Sprints 55–56)
 
 > **Status:** 📋 Committed — next implementation sequence. Not yet implemented.
 
 | Sprint | Name | Objective | Target Layer | Status |
 |--------|------|-----------|-------------|--------|
-| 54 | Product Intelligence Operating Layer | Deepen product-architecture correlation, cross-tenant benchmarking, product-informed recommendations | Product Intelligence Operations Layer | 📋 Planned |
-| 55 | Product Opportunity Portfolio Governance | Govern product opportunities as a portfolio — ranking, conflicts, promotion/deferral, outcomes | Product Opportunity Governance Layer | 📋 Committed |
+| 55 | Product Opportunity Portfolio Governance | Govern product opportunities as a portfolio — ranking, conflicts, promotion/deferral, outcomes | Product Opportunity Governance Layer | 📋 Planned |
 | 56 | Controlled Ecosystem Readiness Layer | Assess ecosystem exposure readiness — capability inventory, safety prerequisites, trust model foundation | Ecosystem Readiness Layer | 📋 Committed |
 
 ---
