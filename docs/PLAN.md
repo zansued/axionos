@@ -251,5 +251,6 @@
 | Semantic Retrieval | 1 | 36 |
 | Discovery-Driven Architecture | 1 | 37 |
 | Architecture Change Simulation | 1 | 38 |
+| Architecture Change Planning | 1 | 39 |
 | Support | 11 | Various |
-| **Total** | **~83** | |
+| **Total** | **~84** | |
