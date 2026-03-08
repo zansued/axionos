@@ -108,6 +108,7 @@ AxionOS has completed 50 implementation sprints spanning the full capability arc
 | Architecture-Operating | 44–45 | Fitness functions, change advisory orchestrator |
 | Architecture-Scaled | 46–48 | Stabilization v2, tenant architecture modes, economic optimization |
 | Platform Convergence | 49 | Advisory-first convergence detection, specialization vs fragmentation, candidate building |
+| Convergence Governance | 50 | Governed lifecycle for promotion, merge, retention, deprecation, retirement decisions |
 
 ---
 
