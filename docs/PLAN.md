@@ -149,13 +149,15 @@
 
 ---
 
-### Phase 10: Architecture-Governed (Sprints 41–43) — 📋 PLANNED
+### Phase 10: Architecture-Governed (Sprints 41–43)
 
 **Goal:** Close the architecture change lifecycle from pilot to portfolio governance.
 
-| Sprint | Capability | Architectural Layer |
-|--------|-----------|-------------------|
-| 41 | Architecture Rollout Pilot Governance | Architecture Pilot Layer |
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 41 | Architecture Rollout Pilot Governance | Architecture Pilot Layer | ✅ Complete |
+| 42 | Controlled Architecture Migration Execution | Architecture Migration Layer | 📋 Planned |
+| 43 | Architecture Portfolio Governance | Architecture Portfolio Layer | 📋 Planned |
 | 42 | Controlled Architecture Migration Execution | Architecture Migration Layer |
 | 43 | Architecture Portfolio Governance | Architecture Portfolio Layer |
 

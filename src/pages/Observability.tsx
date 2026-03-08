@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -38,6 +38,7 @@ import { DiscoveryArchitectureDashboard } from "@/components/observability/Disco
 import { ArchitectureSimulationDashboard } from "@/components/observability/ArchitectureSimulationDashboard";
 import { ArchitectureChangePlanningDashboard } from "@/components/observability/ArchitectureChangePlanningDashboard";
 import { ArchitectureRolloutSandboxDashboard } from "@/components/observability/ArchitectureRolloutSandboxDashboard";
+import { ArchitectureRolloutPilotDashboard } from "@/components/observability/ArchitectureRolloutPilotDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -317,7 +318,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(27, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(28, 1fr)" }}>
+            <TabsTrigger value="arch-pilot" className="text-xs gap-1"><Target className="h-3 w-3" /> ArchPilot</TabsTrigger>
             <TabsTrigger value="advisor" className="text-xs gap-1"><Lightbulb className="h-3 w-3" /> Advisor</TabsTrigger>
             <TabsTrigger value="arch-plan" className="text-xs gap-1"><MapIcon className="h-3 w-3" /> ArchPlan</TabsTrigger>
             <TabsTrigger value="arch-sandbox" className="text-xs gap-1"><Box className="h-3 w-3" /> ArchSandbox</TabsTrigger>
@@ -375,6 +377,11 @@ export default function Observability() {
           {/* ===== ARCHITECTURE ROLLOUT SANDBOX ===== */}
           <TabsContent value="arch-sandbox" className="mt-4">
             <ArchitectureRolloutSandboxDashboard />
+          </TabsContent>
+
+          {/* ===== ARCHITECTURE ROLLOUT PILOT ===== */}
+          <TabsContent value="arch-pilot" className="mt-4">
+            <ArchitectureRolloutPilotDashboard />
           </TabsContent>
           {/* ===== PLATFORM INTELLIGENCE ===== */}
           <TabsContent value="platform" className="mt-4">

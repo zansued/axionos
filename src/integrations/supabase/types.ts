@@ -947,6 +947,53 @@ export type Database = {
           },
         ]
       }
+      architecture_pilot_eligibility_rules: {
+        Row: {
+          created_at: string
+          enforcement_mode: string
+          id: string
+          organization_id: string
+          rule_definition: Json
+          rule_key: string
+          rule_name: string
+          rule_scope: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          enforcement_mode?: string
+          id?: string
+          organization_id: string
+          rule_definition?: Json
+          rule_key: string
+          rule_name: string
+          rule_scope?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          enforcement_mode?: string
+          id?: string
+          organization_id?: string
+          rule_definition?: Json
+          rule_key?: string
+          rule_name?: string
+          rule_scope?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_pilot_eligibility_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_rollout_governance_profiles: {
         Row: {
           created_at: string
@@ -1037,6 +1084,232 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_rollout_pilot_outcomes: {
+        Row: {
+          baseline_summary: Json
+          created_at: string
+          delta_summary: Json
+          evidence_refs: Json | null
+          id: string
+          organization_id: string
+          outcome_status: string
+          pilot_id: string
+          pilot_summary: Json
+          risk_flags: Json | null
+        }
+        Insert: {
+          baseline_summary?: Json
+          created_at?: string
+          delta_summary?: Json
+          evidence_refs?: Json | null
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          pilot_id: string
+          pilot_summary?: Json
+          risk_flags?: Json | null
+        }
+        Update: {
+          baseline_summary?: Json
+          created_at?: string
+          delta_summary?: Json
+          evidence_refs?: Json | null
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          pilot_id?: string
+          pilot_summary?: Json
+          risk_flags?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_rollout_pilot_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_rollout_pilot_outcomes_pilot_id_fkey"
+            columns: ["pilot_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_rollout_pilots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_rollout_pilot_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          linked_changes: Json | null
+          organization_id: string
+          pilot_id: string
+          review_notes: string | null
+          review_reason_codes: Json | null
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id: string
+          pilot_id: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id?: string
+          pilot_id?: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_rollout_pilot_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_rollout_pilot_reviews_pilot_id_fkey"
+            columns: ["pilot_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_rollout_pilots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_rollout_pilot_rollbacks: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          pilot_id: string
+          restored_state: Json
+          rollback_mode: string
+          rollback_reason: Json
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          pilot_id: string
+          restored_state?: Json
+          rollback_mode?: string
+          rollback_reason?: Json
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          pilot_id?: string
+          restored_state?: Json
+          rollback_mode?: string
+          rollback_reason?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_rollout_pilot_rollbacks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_rollout_pilot_rollbacks_pilot_id_fkey"
+            columns: ["pilot_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_rollout_pilots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_rollout_pilots: {
+        Row: {
+          activation_window: Json | null
+          baseline_ref: Json
+          created_at: string
+          id: string
+          organization_id: string
+          pilot_constraints: Json
+          pilot_mode: string
+          pilot_name: string
+          pilot_scope: string
+          plan_id: string
+          rollback_triggers: Json
+          sandbox_outcome_id: string | null
+          status: string
+          stop_conditions: Json
+          target_entities: Json
+        }
+        Insert: {
+          activation_window?: Json | null
+          baseline_ref?: Json
+          created_at?: string
+          id?: string
+          organization_id: string
+          pilot_constraints?: Json
+          pilot_mode?: string
+          pilot_name: string
+          pilot_scope: string
+          plan_id: string
+          rollback_triggers?: Json
+          sandbox_outcome_id?: string | null
+          status?: string
+          stop_conditions?: Json
+          target_entities?: Json
+        }
+        Update: {
+          activation_window?: Json | null
+          baseline_ref?: Json
+          created_at?: string
+          id?: string
+          organization_id?: string
+          pilot_constraints?: Json
+          pilot_mode?: string
+          pilot_name?: string
+          pilot_scope?: string
+          plan_id?: string
+          rollback_triggers?: Json
+          sandbox_outcome_id?: string | null
+          status?: string
+          stop_conditions?: Json
+          target_entities?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_rollout_pilots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_rollout_pilots_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_change_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_rollout_pilots_sandbox_outcome_id_fkey"
+            columns: ["sandbox_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_rollout_sandbox_outcomes"
             referencedColumns: ["id"]
           },
         ]
