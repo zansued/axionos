@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -43,6 +43,7 @@ import { ArchitectureMigrationDashboard } from "@/components/observability/Archi
 import { ArchitecturePortfolioGovernanceDashboard } from "@/components/observability/ArchitecturePortfolioGovernanceDashboard";
 import { ArchitectureFitnessDashboard } from "@/components/observability/ArchitectureFitnessDashboard";
 import { ChangeAdvisoryOrchestratorDashboard } from "@/components/observability/ChangeAdvisoryOrchestratorDashboard";
+import { PlatformStabilizationV2Dashboard } from "@/components/observability/PlatformStabilizationV2Dashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -322,7 +323,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(32, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(33, 1fr)" }}>
+            <TabsTrigger value="stability-v2" className="text-xs gap-1"><ShieldCheck className="h-3 w-3" /> StabilityV2</TabsTrigger>
             <TabsTrigger value="change-orch" className="text-xs gap-1"><Workflow className="h-3 w-3" /> ChangeOrch</TabsTrigger>
             <TabsTrigger value="arch-fitness" className="text-xs gap-1"><Activity className="h-3 w-3" /> ArchFitness</TabsTrigger>
             <TabsTrigger value="arch-portfolio" className="text-xs gap-1"><Briefcase className="h-3 w-3" /> ArchPortfolio</TabsTrigger>
@@ -356,6 +358,11 @@ export default function Observability() {
             <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
+
+          {/* ===== PLATFORM STABILIZATION V2 ===== */}
+          <TabsContent value="stability-v2" className="mt-4">
+            <PlatformStabilizationV2Dashboard />
+          </TabsContent>
 
           {/* ===== ENGINEERING ADVISOR ===== */}
           <TabsContent value="advisor" className="mt-4">

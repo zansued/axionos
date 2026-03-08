@@ -5436,6 +5436,59 @@ export type Database = {
           },
         ]
       }
+      platform_stability_v2_signals: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          evidence_refs: Json | null
+          id: string
+          organization_id: string
+          scope_ref: Json | null
+          severity: string
+          signal_family: string
+          signal_key: string
+          signal_payload: Json
+          source_layers: Json
+          status: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id: string
+          scope_ref?: Json | null
+          severity?: string
+          signal_family: string
+          signal_key: string
+          signal_payload?: Json
+          source_layers?: Json
+          status?: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id?: string
+          scope_ref?: Json | null
+          severity?: string
+          signal_family?: string
+          signal_key?: string
+          signal_payload?: Json
+          source_layers?: Json
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_stability_v2_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_stabilization_actions: {
         Row: {
           action_mode: string
@@ -5482,6 +5535,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "platform_stabilization_actions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_stabilization_envelopes: {
+        Row: {
+          activation_mode: string
+          created_at: string
+          envelope_key: string
+          envelope_name: string
+          expiry_policy: Json | null
+          id: string
+          organization_id: string
+          stabilization_controls: Json
+          status: string
+          target_scope: string
+          updated_at: string
+        }
+        Insert: {
+          activation_mode?: string
+          created_at?: string
+          envelope_key: string
+          envelope_name: string
+          expiry_policy?: Json | null
+          id?: string
+          organization_id: string
+          stabilization_controls?: Json
+          status?: string
+          target_scope: string
+          updated_at?: string
+        }
+        Update: {
+          activation_mode?: string
+          created_at?: string
+          envelope_key?: string
+          envelope_name?: string
+          expiry_policy?: Json | null
+          id?: string
+          organization_id?: string
+          stabilization_controls?: Json
+          status?: string
+          target_scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_stabilization_envelopes_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -5581,6 +5684,105 @@ export type Database = {
             columns: ["stabilization_action_id"]
             isOneToOne: false
             referencedRelation: "platform_stabilization_actions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_stabilization_v2_outcomes: {
+        Row: {
+          after_metrics: Json | null
+          before_metrics: Json | null
+          created_at: string
+          evidence_refs: Json | null
+          id: string
+          organization_id: string
+          outcome_status: string
+          scope_ref: Json | null
+          stabilization_envelope_id: string | null
+        }
+        Insert: {
+          after_metrics?: Json | null
+          before_metrics?: Json | null
+          created_at?: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          scope_ref?: Json | null
+          stabilization_envelope_id?: string | null
+        }
+        Update: {
+          after_metrics?: Json | null
+          before_metrics?: Json | null
+          created_at?: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          scope_ref?: Json | null
+          stabilization_envelope_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_stabilization_v2_outcom_stabilization_envelope_id_fkey"
+            columns: ["stabilization_envelope_id"]
+            isOneToOne: false
+            referencedRelation: "platform_stabilization_envelopes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "platform_stabilization_v2_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_stabilization_v2_rollbacks: {
+        Row: {
+          created_at: string
+          envelope_id: string
+          id: string
+          organization_id: string
+          restored_state: Json
+          rollback_mode: string
+          rollback_reason: Json
+          rollback_scope: string
+        }
+        Insert: {
+          created_at?: string
+          envelope_id: string
+          id?: string
+          organization_id: string
+          restored_state?: Json
+          rollback_mode?: string
+          rollback_reason?: Json
+          rollback_scope?: string
+        }
+        Update: {
+          created_at?: string
+          envelope_id?: string
+          id?: string
+          organization_id?: string
+          restored_state?: Json
+          rollback_mode?: string
+          rollback_reason?: Json
+          rollback_scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_stabilization_v2_rollbacks_envelope_id_fkey"
+            columns: ["envelope_id"]
+            isOneToOne: false
+            referencedRelation: "platform_stabilization_envelopes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "platform_stabilization_v2_rollbacks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]

@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-08):** Sprint 45 complete. Autonomous Change Advisory Orchestrator active. Architecture change advice is now coordinated through a single advisory agenda with sequencing, conflict resolution, and load balancing.
+> **What changed (2026-03-08):** Sprint 46 complete. Platform Self-Stabilization v2 active. Multi-layer instability detection, cross-layer correlation, bounded stabilization envelopes, freeze/slowdown controls, and recovery path synthesis are now operational.
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
@@ -17,7 +17,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 30 architectural layers active |
+| **System State** | 31 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -36,6 +36,7 @@
 | **Architecture Portfolio** | Active — portfolio-level governance, conflict detection, cumulative blast radius |
 | **Architecture Fitness** | Active — continuous fitness evaluation, boundary/isolation/observability analysis, trend tracking |
 | **Change Advisory Orchestrator** | Active — unified change sequencing, conflict resolution, load balancing, advisory agendas |
+| **Platform Stabilization v2** | Active — multi-layer instability correlation, bounded envelopes, freeze controls, recovery paths |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
