@@ -252,6 +252,10 @@ AxionOS has completed 40 implementation sprints spanning the full capability arc
 | Platform Self-Stabilization | ✅ Operational |
 | Autonomous Engineering Advisor | ✅ Operational |
 | Semantic Retrieval & Embedding Memory | ✅ Operational |
+| Discovery-Driven Architecture Signals | ✅ Operational |
+| Architecture Change Simulation & Governance | ✅ Operational |
+| Architecture Change Planning & Rollout Readiness | ✅ Operational |
+| Architecture Rollout Sandbox | ✅ Operational |
 
 ### What to Freeze
 
