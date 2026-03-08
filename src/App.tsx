@@ -45,6 +45,7 @@ import AgentDebates from "./pages/AgentDebates";
 import WorkingMemory from "./pages/WorkingMemory";
 import SwarmExecution from "./pages/SwarmExecution";
 import CapabilityRegistry from "./pages/CapabilityRegistry";
+import CapabilityGovernance from "./pages/CapabilityGovernance";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
