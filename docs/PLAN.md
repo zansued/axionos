@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 69 (Onboarding, Templates & Vertical Starters Layer) — ✅ Complete
-> **Next Sprint:** 70 (Adoption Intelligence & Customer Success Loop) — 📋 Committed
+> **Current Sprint:** 70 (Adoption Intelligence & Customer Success Loop) — ✅ Complete
+> **Next Sprint:** 71 (TBD — post-Block M) — 🔮 Reserved
 
 ## Document Authority
 
