@@ -371,6 +371,11 @@ export default function Observability() {
           <TabsContent value="arch-plan" className="mt-4">
             <ArchitectureChangePlanningDashboard />
           </TabsContent>
+
+          {/* ===== ARCHITECTURE ROLLOUT SANDBOX ===== */}
+          <TabsContent value="arch-sandbox" className="mt-4">
+            <ArchitectureRolloutSandboxDashboard />
+          </TabsContent>
           {/* ===== PLATFORM INTELLIGENCE ===== */}
           <TabsContent value="platform" className="mt-4">
             <PlatformIntelligenceDashboard />
