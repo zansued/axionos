@@ -83,7 +83,8 @@ Internal sophistication serves the visible product experience. The user-facing j
     Candidates → Benchmarking & Promotion ✅ →
     Role Arbitration → Debate & Resolution →
     Working Memory & Task-State →
-    Bounded Swarm Execution ✅
+    Bounded Swarm Execution ✅ →
+    Capability Packaging & Registry ✅
 ```
 
 ---
