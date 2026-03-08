@@ -3,7 +3,7 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-08
-> **Current state:** Level 5 — Institutional Engineering Memory Platform. 52 architectural layers active (through Sprint 68 — One-Click Delivery & Deploy Assurance Layer).
+> **Current state:** Level 5 — Institutional Engineering Memory Platform. 53 architectural layers active (through Sprint 69 — Onboarding, Templates & Vertical Starters Layer).
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -906,10 +906,10 @@ Internal sophistication makes the product trustworthy. It does not need to be th
 
 With 65 sprints complete and the first mature operating baseline achieved, the platform's architectural direction shifts from internal system building to **product experience and delivery maturity**.
 
-### Completed Internal Canon (Sprints 1–68)
-- ✅ All layers from execution kernel through institutional assurance and canon integrity
-- ✅ 52 architectural layers active
-- ✅ First internally coherent operating canon + user journey orchestration + role-based experience separation + one-click delivery & deploy assurance
+### Completed Internal Canon (Sprints 1–69)
+- ✅ All layers from execution kernel through institutional assurance, canon integrity, and product experience
+- ✅ 53 architectural layers active
+- ✅ First internally coherent operating canon + user journey orchestration + role-based experience separation + one-click delivery & deploy assurance + guided onboarding, templates, and vertical starters
 
 ### Next Architectural Direction — Block M: Product Experience & Delivery Maturity
 
@@ -917,6 +917,8 @@ The next architectural work supports:
 - **User journey orchestration** — clear state, transitions, approvals, and progress across the full idea-to-deploy lifecycle
 - **Role-based product surfaces** — separating the default user journey from operator/governance views
 - **Delivery/deploy assurance experience** — seamless, governed one-click path from validated code to deployed software
+- **Onboarding/template-driven initiation** — reducing time-to-value with guided flows, reusable templates, and vertical starters
+- **Adoption intelligence and customer success feedback** — closing the loop between product usage and platform improvement
 - **Onboarding/template-driven initiation** — reducing time-to-value with guided flows and reusable starting points
 - **Adoption intelligence and customer success feedback** — closing the loop between product usage and platform improvement
 

@@ -29,6 +29,7 @@ import {
 const mainItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Journey", url: "/journey", icon: Map },
+  { title: "Onboarding", url: "/onboarding", icon: Rocket },
   { title: "Initiatives", url: "/initiatives", icon: Lightbulb },
   { title: "Agents", url: "/agents", icon: Users },
   { title: "Stories", url: "/stories", icon: Hammer },

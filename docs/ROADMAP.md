@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** Sprint 68 complete (One-Click Delivery & Deploy Assurance Layer). Block M in progress. 52 architectural layers active.
+> **Last strategic change (2026-03-08):** Sprint 69 complete (Onboarding, Templates & Vertical Starters Layer). Block M in progress. 53 architectural layers active.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -26,7 +26,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 52 architectural layers active |
+| **System State** | 53 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -67,6 +67,7 @@
 | **User Journey Orchestration** | Active — canonical visible journey, stage transitions, approval gates, artifact visibility, deployment readiness |
 | **Role-Based Experience** | Active — role-aware surfaces, navigation filtering, complexity leakage detection, approval visibility routing |
 | **One-Click Delivery & Deploy Assurance** | Active — governed one-click delivery, deploy confidence, blocker detection, rollback posture, output visibility |
+| **Onboarding, Templates & Vertical Starters** | Active — guided onboarding flows, reusable templates, domain-specific vertical starters, friction detection, initialization quality |
 | **Execution Mode** | Sprint-based implementation |
 
 ---

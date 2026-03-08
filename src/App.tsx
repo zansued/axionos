@@ -34,6 +34,7 @@ import MetaArtifacts from "./pages/MetaArtifacts";
 import Calibration from "./pages/Calibration";
 import PromptOptimization from "./pages/PromptOptimization";
 import Journey from "./pages/Journey";
+import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -71,6 +72,7 @@ const App = () => (
                       <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
                       <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                       <Route path="/journey" element={<ProtectedRoute><Journey /></ProtectedRoute>} />
+                      <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
                       <Route path="/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
                       <Route path="/code" element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
                       <Route path="/squads" element={<ProtectedRoute><Squads /></ProtectedRoute>} />
