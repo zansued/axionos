@@ -2841,6 +2841,229 @@ export type Database = {
           },
         ]
       }
+      convergence_candidates: {
+        Row: {
+          assumptions: Json
+          candidate_type: string
+          confidence_score: number
+          convergence_domain: string
+          convergence_expected_value: number
+          convergence_priority_score: number
+          created_at: string
+          deprecation_candidate_score: number
+          evidence_links: Json
+          id: string
+          merge_safety_score: number
+          organization_id: string
+          rationale_codes: Json
+          retention_justification_score: number
+          scope_type: string
+          status: string
+          target_entities: Json
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          candidate_type?: string
+          confidence_score?: number
+          convergence_domain?: string
+          convergence_expected_value?: number
+          convergence_priority_score?: number
+          created_at?: string
+          deprecation_candidate_score?: number
+          evidence_links?: Json
+          id?: string
+          merge_safety_score?: number
+          organization_id: string
+          rationale_codes?: Json
+          retention_justification_score?: number
+          scope_type?: string
+          status?: string
+          target_entities?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          candidate_type?: string
+          confidence_score?: number
+          convergence_domain?: string
+          convergence_expected_value?: number
+          convergence_priority_score?: number
+          created_at?: string
+          deprecation_candidate_score?: number
+          evidence_links?: Json
+          id?: string
+          merge_safety_score?: number
+          organization_id?: string
+          rationale_codes?: Json
+          retention_justification_score?: number
+          scope_type?: string
+          status?: string
+          target_entities?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_candidates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_candidates_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      convergence_outcomes: {
+        Row: {
+          action_taken: string
+          convergence_domain: string
+          created_at: string
+          delta_summary: Json
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          outcome_status: string
+          projected_impact: Json
+          realized_impact: Json
+          recommendation_id: string | null
+        }
+        Insert: {
+          action_taken?: string
+          convergence_domain?: string
+          created_at?: string
+          delta_summary?: Json
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          projected_impact?: Json
+          realized_impact?: Json
+          recommendation_id?: string | null
+        }
+        Update: {
+          action_taken?: string
+          convergence_domain?: string
+          created_at?: string
+          delta_summary?: Json
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          projected_impact?: Json
+          realized_impact?: Json
+          recommendation_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_outcomes_recommendation_id_fkey"
+            columns: ["recommendation_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_recommendations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      convergence_recommendations: {
+        Row: {
+          candidate_id: string | null
+          confidence_score: number
+          convergence_domain: string
+          created_at: string
+          evidence_links: Json
+          expected_impact: Json
+          id: string
+          organization_id: string
+          priority_score: number
+          recommendation_reason: Json
+          recommendation_type: string
+          review_requirements: Json
+          safety_class: string
+          status: string
+          target_entities: Json
+          target_scope: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          candidate_id?: string | null
+          confidence_score?: number
+          convergence_domain?: string
+          created_at?: string
+          evidence_links?: Json
+          expected_impact?: Json
+          id?: string
+          organization_id: string
+          priority_score?: number
+          recommendation_reason?: Json
+          recommendation_type?: string
+          review_requirements?: Json
+          safety_class?: string
+          status?: string
+          target_entities?: Json
+          target_scope?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          candidate_id?: string | null
+          confidence_score?: number
+          convergence_domain?: string
+          created_at?: string
+          evidence_links?: Json
+          expected_impact?: Json
+          id?: string
+          organization_id?: string
+          priority_score?: number
+          recommendation_reason?: Json
+          recommendation_type?: string
+          review_requirements?: Json
+          safety_class?: string
+          status?: string
+          target_entities?: Json
+          target_scope?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convergence_recommendations_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "convergence_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convergence_recommendations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cross_stage_learning_edges: {
         Row: {
           confidence_score: number
@@ -3160,6 +3383,75 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      divergence_signals: {
+        Row: {
+          convergence_domain: string
+          created_at: string
+          description: string
+          divergence_score: number
+          evidence_refs: Json
+          fragmentation_risk_score: number
+          id: string
+          organization_id: string
+          scope_id: string
+          scope_type: string
+          severity: string
+          signal_type: string
+          source_refs: Json
+          specialization_debt_score: number
+          workspace_id: string | null
+        }
+        Insert: {
+          convergence_domain?: string
+          created_at?: string
+          description?: string
+          divergence_score?: number
+          evidence_refs?: Json
+          fragmentation_risk_score?: number
+          id?: string
+          organization_id: string
+          scope_id?: string
+          scope_type?: string
+          severity?: string
+          signal_type?: string
+          source_refs?: Json
+          specialization_debt_score?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          convergence_domain?: string
+          created_at?: string
+          description?: string
+          divergence_score?: number
+          evidence_refs?: Json
+          fragmentation_risk_score?: number
+          id?: string
+          organization_id?: string
+          scope_id?: string
+          scope_type?: string
+          severity?: string
+          signal_type?: string
+          source_refs?: Json
+          specialization_debt_score?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "divergence_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "divergence_signals_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
@@ -5517,6 +5809,87 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_convergence_profiles: {
+        Row: {
+          assumptions: Json
+          beneficial_specialization_score: number
+          confidence_score: number
+          convergence_domain: string
+          convergence_priority_score: number
+          created_at: string
+          current_divergence_score: number
+          economic_redundancy_score: number
+          evidence_links: Json
+          fragmentation_risk_score: number
+          id: string
+          organization_id: string
+          rollback_complexity_score: number
+          scope_id: string
+          scope_type: string
+          specialization_debt_score: number
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          beneficial_specialization_score?: number
+          confidence_score?: number
+          convergence_domain?: string
+          convergence_priority_score?: number
+          created_at?: string
+          current_divergence_score?: number
+          economic_redundancy_score?: number
+          evidence_links?: Json
+          fragmentation_risk_score?: number
+          id?: string
+          organization_id: string
+          rollback_complexity_score?: number
+          scope_id?: string
+          scope_type?: string
+          specialization_debt_score?: number
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          beneficial_specialization_score?: number
+          confidence_score?: number
+          convergence_domain?: string
+          convergence_priority_score?: number
+          created_at?: string
+          current_divergence_score?: number
+          economic_redundancy_score?: number
+          evidence_links?: Json
+          fragmentation_risk_score?: number
+          id?: string
+          organization_id?: string
+          rollback_complexity_score?: number
+          scope_id?: string
+          scope_type?: string
+          specialization_debt_score?: number
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_convergence_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "platform_convergence_profiles_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
