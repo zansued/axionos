@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform Convergence Layer complete (Sprint 49). Ready for next horizon.
+> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform Convergence Layer complete (Sprint 49). Convergence Governance & Promotion complete (Sprint 50). Ready for next horizon.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -26,7 +26,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 34 architectural layers active |
+| **System State** | 35 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -49,6 +49,7 @@
 | **Tenant Architecture Modes** | Active — bounded architecture specialization by scope + anti-fragmentation |
 | **Economic Optimization** | Active — advisory-first cost/ROI awareness + tradeoff scoring |
 | **Platform Convergence** | Active — advisory-first convergence detection, specialization vs fragmentation analysis, candidate building |
+| **Convergence Governance** | Active — governed lifecycle for promotion, merge, retention, deprecation, retirement decisions |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
@@ -56,13 +57,14 @@
 
 ## Strategic Directive
 
-AxionOS has completed 49 implementation sprints spanning the full capability arc from deterministic execution to platform convergence. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, bounded self-stabilization, cross-layer engineering advisory, unified semantic retrieval, discovery-driven architecture signals, architecture change simulation/planning/sandbox/pilot/migration, portfolio governance, fitness functions, change advisory orchestration, tenant-aware architecture modes, economic optimization, and platform convergence — all under governed, advisory-first safety boundaries.
+AxionOS has completed 50 implementation sprints spanning the full capability arc from deterministic execution to convergence governance. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, bounded self-stabilization, cross-layer engineering advisory, unified semantic retrieval, discovery-driven architecture signals, architecture change simulation/planning/sandbox/pilot/migration, portfolio governance, fitness functions, change advisory orchestration, tenant-aware architecture modes, economic optimization, platform convergence, and convergence governance — all under governed, advisory-first safety boundaries.
 
 **All architecture-scaled blocks are complete:**
 1. ✅ Architecture-governed: pilot governance → controlled migration → portfolio governance (Sprints 41–43)
 2. ✅ Architecture-operating: fitness functions → change advisory orchestration (Sprints 44–45)
 3. ✅ Platform hardening at scale: stabilization v2 → tenant architecture modes → economic optimization (Sprints 46–48)
 4. ✅ Platform convergence: advisory-first convergence detection + specialization vs fragmentation analysis (Sprint 49)
+5. ✅ Convergence governance: governed lifecycle for promotion, merge, retention, deprecation, retirement (Sprint 50)
 
 **Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy.
 
@@ -106,6 +108,7 @@ AxionOS has completed 49 implementation sprints spanning the full capability arc
 | Architecture-Operating | 44–45 | Fitness functions, change advisory orchestrator |
 | Architecture-Scaled | 46–48 | Stabilization v2, tenant architecture modes, economic optimization |
 | Platform Convergence | 49 | Advisory-first convergence detection, specialization vs fragmentation, candidate building |
+| Convergence Governance | 50 | Governed lifecycle for promotion, merge, retention, deprecation, retirement decisions |
 
 ---
 
@@ -125,6 +128,10 @@ Platform hardening for scale, tenant diversity, and economic efficiency. Stabili
 
 Advisory-first convergence detection across architecture modes, strategy variants, calibrations, and local specializations. Distinguishes healthy specialization from harmful fragmentation.
 
+## Block E — Convergence Governance (Sprint 50) ✅ Complete
+
+Governed lifecycle for convergence promotion, bounded merge, retention, deprecation, and retirement decisions. All structural convergence actions require explicit human approval.
+
 ---
 
 ## Maturity Progression
@@ -136,8 +143,9 @@ Advisory-first convergence detection across architecture modes, strategy variant
 | Operating | 44–45 | ✅ Complete | Architecture-operating: fitness + orchestration |
 | Scaled | 46–48 | ✅ Complete | Architecture-scaled: stability + tenants + economics |
 | Convergence | 49 | ✅ Complete | Platform convergence: specialization vs fragmentation |
+| Convergence Gov | 50 | ✅ Complete | Convergence governance: promotion + merge + retention + retirement |
 
-> ✅ All five architecture blocks are complete. The platform is ready for next strategic horizon (50+).
+> ✅ All six architecture blocks are complete. The platform is ready for next strategic horizon (51+).
 
 ---
 
@@ -145,7 +153,7 @@ Advisory-first convergence detection across architecture modes, strategy variant
 
 > **Full module inventory:** [AGENTS.md](AGENTS.md) · **Architecture details:** [ARCHITECTURE.md](ARCHITECTURE.md)
 
-All 34 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, and the platform convergence layer.
+All 35 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, and the convergence governance layer.
 
 ### Frozen Areas
 
@@ -175,7 +183,8 @@ All 34 architectural layers are operational. The kernel includes the 32-stage de
 
 ## Governing Principle
 
-> Forty-nine sprints complete. The platform supports advisory-first platform convergence across architecture modes and specializations.
-> Next phase: strategic horizon (50+).
-> Focus now: convergence-guided optimization, cross-layer health synthesis.
+> Fifty sprints complete. The platform supports governed convergence lifecycle across architecture modes, strategies, and specializations.
+> Next phase: strategic horizon (51+).
+> Focus now: convergence-guided optimization, cross-layer health synthesis, governed promotion lifecycle.
+> Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.

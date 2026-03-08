@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -47,6 +47,7 @@ import { PlatformStabilizationV2Dashboard } from "@/components/observability/Pla
 import { TenantArchitectureModesDashboard } from "@/components/observability/TenantArchitectureModesDashboard";
 import { EconomicOptimizationDashboard } from "@/components/observability/EconomicOptimizationDashboard";
 import { PlatformConvergenceDashboard } from "@/components/observability/PlatformConvergenceDashboard";
+import { ConvergenceGovernanceDashboard } from "@/components/observability/ConvergenceGovernanceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -326,7 +327,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(36, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(37, 1fr)" }}>
+            <TabsTrigger value="conv-gov" className="text-xs gap-1"><Scale className="h-3 w-3" /> ConvGov</TabsTrigger>
             <TabsTrigger value="convergence" className="text-xs gap-1"><Merge className="h-3 w-3" /> Converge</TabsTrigger>
             <TabsTrigger value="arch-econ" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> ArchEcon</TabsTrigger>
             <TabsTrigger value="tenant-arch" className="text-xs gap-1"><Building2 className="h-3 w-3" /> TenantArch</TabsTrigger>
@@ -364,6 +366,11 @@ export default function Observability() {
             <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
+
+          {/* ===== CONVERGENCE GOVERNANCE ===== */}
+          <TabsContent value="conv-gov" className="mt-4">
+            <ConvergenceGovernanceDashboard />
+          </TabsContent>
 
           {/* ===== PLATFORM CONVERGENCE ===== */}
           <TabsContent value="convergence" className="mt-4">
