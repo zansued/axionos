@@ -17,7 +17,7 @@
 
 | Scope | Rule |
 |-------|------|
-| **Owns** | Phase-by-phase product contract (Idea → Deploy), user-visible stage behavior, inputs/outputs, control rules, state machines, definition of done, commercial/learning layer contracts, engineering memory pipeline contract |
+| **Owns** | Phase-by-phase product contract (Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software), user-visible stage behavior, inputs/outputs, control rules, state machines, definition of done, commercial/learning layer contracts, engineering memory pipeline contract |
 | **Must not define** | Broader roadmap strategy (→ ROADMAP.md), architecture layer narrative (→ ARCHITECTURE.md), sprint history unrelated to pipeline UX |
 | **Derived from** | AGENTS.md for agent references |
 | **Update rule** | Update when user-visible pipeline behavior changes |
