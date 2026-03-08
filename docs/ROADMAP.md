@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-08):** Sprint 40 — Architecture Rollout Sandbox & Controlled Migration Readiness. Approved plans can now be rehearsed in bounded sandboxes with migration sequencing, fragility analysis, rollback viability, and controlled readiness scoring. Previous: Architecture Change Planning & Rollout Readiness (Sprint 39).
+> **What changed (2026-03-08):** Sprint 40 complete. Roadmap updated with Sprints 41–48 covering Architecture Pilot Governance, Controlled Migration Execution, Architecture Portfolio Governance, Architecture Fitness Functions, Change Advisory Orchestrator, Platform Self-Stabilization v2, Tenant-Aware Architecture Modes, and Economic Optimization Layer.
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
