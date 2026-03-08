@@ -795,5 +795,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Capability Registry | 1 | 79 |
 | Capability Governance | 1 | 80 |
 | Pilot Marketplace | 1 | 81 |
+| Marketplace Outcomes | 1 | 82 |
 | Support | 11 | Various |
-| **Total** | **~132** | |
+| **Total** | **~133** | |
