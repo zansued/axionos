@@ -35,6 +35,7 @@ import Calibration from "./pages/Calibration";
 import PromptOptimization from "./pages/PromptOptimization";
 import Journey from "./pages/Journey";
 import Onboarding from "./pages/Onboarding";
+import AdoptionIntelligence from "./pages/AdoptionIntelligence";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
