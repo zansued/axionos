@@ -791,5 +791,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Agent Routing | 1 | 75 |
 | Agent Debate & Resolution | 1 | 76 |
 | Working Memory & Task-State | 1 | 77 |
+| Swarm Execution | 1 | 78 |
 | Support | 11 | Various |
-| **Total** | **~123** | |
+| **Total** | **~128** | |
