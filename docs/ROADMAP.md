@@ -129,20 +129,20 @@ The next strategic direction moves from capability exposure governance toward **
 
 ---
 
-## Committed Future Arc (Sprint 57)
+## Committed Future Arc (Sprint 58)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
 > **Block:** Block J — Trusted Ecosystem Foundation
 
-This sprint begins the trusted ecosystem foundation arc. It should still be reviewed and approved before execution begins.
+This sprint continues the trusted ecosystem foundation arc. It should still be reviewed and approved before execution begins.
 
 | Sprint | Name | Objective | Acceptance Direction |
 |--------|------|-----------|---------------------|
-| 57 | Capability Exposure Governance Layer | Govern which internal capabilities can be exposed externally and under what constraints | Exposure governance rules defined and reviewable; no capabilities actually exposed |
+| 58 | External Trust & Admission Layer | Define trust scoring, admission criteria, and safety boundaries for external participants | Trust scoring and admission defined; no external participants admitted |
 
-### Why 57 is committed
+### Why 58 is committed
 
-With Block I complete (product intelligence + ecosystem readiness), the platform has assessed its capabilities for exposure potential. The next step is establishing governance rules for actual capability exposure (57). It reuses existing AxionOS philosophy and Agent OS planes without expansion.
+With Sprint 57 complete (capability exposure governance), the platform has established governance rules for exposure. The next step is defining trust and admission criteria for external participants (58). It reuses existing AxionOS philosophy and Agent OS planes without expansion.
 
 ---
 
