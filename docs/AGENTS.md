@@ -1,11 +1,18 @@
 # AxionOS — Agent OS Reference
 
 > Consolidated reference for the Agent Operating System architecture.
-> Replaces individual AGENT_*.md files.
->
-> **What changed (2026-03-08):** Sprint 48 — Economic Optimization Layer. Advisory-first cost and ROI awareness across architecture changes, migration plans, policy evolution, strategy evolution, rollout planning, and tenant-aware architecture modes. Previous: Tenant-Aware Architecture Modes (Sprint 47).
+> Canonical source for planes, modules, agent types, contracts, safety boundaries, and events.
 >
 > Last updated: 2026-03-08
+
+## Document Authority
+
+| Scope | Rule |
+|-------|------|
+| **Owns** | Agent OS 5 planes, 18-module inventory, 5 agent types, operational agents, supporting engines, learning agents, meta-agents, memory layers, contracts, safety boundaries, events |
+| **Must not define** | Roadmap sequencing (→ ROADMAP.md), sprint execution ledger (→ PLAN.md), system containers/C4 diagrams (→ ARCHITECTURE.md) |
+| **Derived from** | PLAN.md for sprint context on module introductions |
+| **Update rule** | Update when Agent OS module inventory, contracts, or operational references change |
 
 ---
 
@@ -588,29 +595,10 @@ supabase/functions/_shared/agent-os/
 
 ## 15. Implementation Status
 
-| Module | Status |
-|--------|--------|
-| All 14 core modules | ✅ Designed with full TypeScript contracts |
-| Orchestrator + DAG Engine | ✅ Implemented and operational |
-| Memory System (basic) | ✅ Implemented (`agent_memory` table) |
-| Governance (gates, SLAs, audit) | ✅ Implemented |
-| Observability + Cost Tracking | ✅ Implemented |
-| Adaptive Learning | ✅ Implemented |
-| Learning Agents v1 (5 engines) | ✅ Implemented (Sprint 12) |
-| Learning Dashboard | ✅ Implemented (Sprint 12) |
-| Meta-Agents v1.4 (4 types) | ✅ Implemented (Sprints 13–20) |
-| Engineering Memory Full Stack | ✅ Implemented (Sprints 15–18) |
-| Memory-Aware Reasoning | ✅ Implemented (Sprint 18) |
-| Proposal Quality Feedback Loop | ✅ Implemented (Sprint 19) |
-| Advisory Calibration Layer | ✅ Implemented (Sprint 20) |
-| Prompt Optimization (A/B + Bounded Promotion) | ✅ Implemented (Sprints 21–22) |
-| Self-Improving Fix Agents v2 (Repair Policies) | ✅ Implemented (Sprint 23) |
-| Agent Memory Layer Operationalization | ✅ Implemented (Sprint 24) |
-| Predictive Error Detection Operationalization | ✅ Implemented (Sprint 25) |
-| Semantic Retrieval | ✅ Implemented (Sprint 36) |
-| Discovery-Driven Architecture Signals | ✅ Implemented (Sprint 37) |
-| Marketplace | ❄️ Frozen |
-| Distributed Runtime (advanced) | ❄️ Frozen |
+> **Canonical sprint-by-sprint record:** [PLAN.md](../PLAN.md)
+> **All 18 core Agent OS modules:** ✅ Designed with full TypeScript contracts
+> **Key operational systems:** Orchestrator + DAG Engine, Memory System, Governance, Observability, Learning Agents, Meta-Agents, Engineering Memory, Prompt Optimization, Agent Memory, Predictive Error Detection, Semantic Retrieval — all operational.
+> **Frozen:** Marketplace, advanced distributed runtime.
 
 ---
 
@@ -1350,4 +1338,6 @@ Architecture Rollout Sandbox allows approved architecture change plans to be reh
 
 ## 32. Governing Principle
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture. Platform Self-Calibration tunes operational thresholds within safe envelopes based on platform intelligence signals, with guardrails, rollback, and advisory-first governance preserving kernel integrity. Execution Strategy Evolution enables bounded experimentation with strategy variants, comparing them against baselines under governed conditions, and supporting safe promotion or rollback based on real outcome evidence. Strategy Portfolio Governance manages the lifecycle of strategy families as a governed portfolio, evaluating health, resolving conflicts, and generating advisory recommendations. Platform Self-Stabilization detects drift and oscillation across policies, strategies, and calibrations, proposing bounded stabilization actions and safe modes to restore operational stability. Autonomous Engineering Advisor synthesizes cross-layer advisory recommendations from all intelligence signals, providing structured, explainable, and reviewable engineering guidance. Semantic Retrieval provides unified embedding-backed contextual evidence access across all intelligence domains, with tenant isolation, domain guardrails, structured fallback, and full audit lineage. Discovery-Driven Architecture Signals correlate external and product-facing signals with internal evidence to generate advisory architecture recommendations. Architecture Change Simulation evaluates proposed architectural changes through bounded simulation with impact estimation, governance guardrails, and explainability. Architecture Change Planning converts accepted simulations into governed implementation plans with dependency mapping, blast radius estimation, validation/rollback blueprints, and readiness scoring. Architecture Rollout Sandbox rehearses approved plans in bounded sandboxes with migration sequencing, fragility analysis, rollback viability assessment, and controlled readiness scoring — all remaining advisory-first and review-driven.
+> **Canonical governing principle:** [ARCHITECTURE.md](ARCHITECTURE.md#15-governing-principle)
+>
+> The Agent OS is contract-driven and plane-separated. Learning is additive, bounded, and auditable. Memory informs but never commands. All structural evolution requires human review. Forbidden mutation families are immutable by automated systems. All advisory layers remain bounded, explainable, and review-driven.

@@ -1,10 +1,28 @@
 # AxionOS — Implementation Plan
 
 > Sprint-by-sprint implementation record mapping capabilities to architectural layers.
+> **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
 > **Current Sprint:** 48 (Economic Optimization Layer) — ✅ Complete
 > **Next Sprint:** 49 — 📋 Planned
+
+## Document Authority
+
+| Scope | Rule |
+|-------|------|
+| **Owns** | Current/next sprint, sprint-by-sprint implementation record, phase grouping, completion status, capability verification matrix, shared module and edge function registries |
+| **Must not define** | Deep architecture explanation (→ ARCHITECTURE.md), long-term strategic narrative (→ ROADMAP.md), detailed agent/module reference (→ AGENTS.md) |
+| **Derived from** | ARCHITECTURE.md for layer naming |
+| **Update rule** | Update when a sprint completes or starts |
+
+## Cross-Reference
+
+- **Strategic direction and maturity:** [ROADMAP.md](ROADMAP.md)
+- **Structural architecture view:** [ARCHITECTURE.md](ARCHITECTURE.md)
+- **Agent OS module specs:** [AGENTS.md](AGENTS.md)
+- **Pipeline UX contracts:** [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md)
+- **Sprint metadata registry:** [registry/sprints.yml](registry/sprints.yml)
 
 ---
 
@@ -149,7 +167,7 @@
 
 ---
 
-### Phase 10: Architecture-Governed (Sprints 41–43)
+### Phase 10: Architecture-Governed (Sprints 41–43) — ✅ COMPLETE
 
 **Goal:** Close the architecture change lifecycle from pilot to portfolio governance.
 
@@ -158,7 +176,6 @@
 | 41 | Architecture Rollout Pilot Governance | Architecture Pilot Layer | ✅ Complete |
 | 42 | Controlled Architecture Migration Execution | Architecture Migration Layer | ✅ Complete |
 | 43 | Architecture Portfolio Governance | Architecture Portfolio Layer | ✅ Complete |
-| 44 | Architecture Fitness Functions | Architecture Fitness Layer | ✅ Complete |
 
 **Key Milestones:**
 - Sprint 41: Real blast radius, activation/cancellation gates, pilot vs baseline comparison, instant rollback
@@ -167,14 +184,14 @@
 
 ---
 
-### Phase 11: Architecture-Operating (Sprints 44–45) — 📋 PLANNED
+### Phase 11: Architecture-Operating (Sprints 44–45) — ✅ COMPLETE
 
 **Goal:** Continuous architecture health measurement and unified change advisory orchestration.
 
-| Sprint | Capability | Architectural Layer |
-|--------|-----------|-------------------|
-| 44 | Architecture Fitness Functions | Architecture Fitness Layer |
-| 45 | Autonomous Change Advisory Orchestrator | Change Advisory Orchestration Layer |
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 44 | Architecture Fitness Functions | Architecture Fitness Layer | ✅ Complete |
+| 45 | Autonomous Change Advisory Orchestrator | Change Advisory Orchestration Layer | ✅ Complete |
 
 **Key Milestones:**
 - Sprint 44: Boundary fitness, tenant isolation fitness, observability coverage fitness, migration readiness drift
@@ -182,15 +199,15 @@
 
 ---
 
-### Phase 12: Architecture-Scaled (Sprints 46–48) — 📋 PLANNED
+### Phase 12: Architecture-Scaled (Sprints 46–48) — ✅ COMPLETE
 
 **Goal:** Platform hardening for scale, tenant diversity, and economic efficiency.
 
-| Sprint | Capability | Architectural Layer |
-|--------|-----------|-------------------|
-| 46 | Platform Self-Stabilization v2 | Platform Stabilization v2 Layer |
-| 47 | Tenant-Aware Architecture Modes | Tenant Architecture Layer |
-| 48 | Economic Optimization Layer | Economic Optimization Layer |
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 46 | Platform Self-Stabilization v2 | Platform Stabilization v2 Layer | ✅ Complete |
+| 47 | Tenant-Aware Architecture Modes | Tenant Architecture Layer | ✅ Complete |
+| 48 | Economic Optimization Layer | Economic Optimization Layer | ✅ Complete |
 
 **Key Milestones:**
 - Sprint 46: Oscillation suppression during rollout, adaptive freeze, stabilization-aware migration gating

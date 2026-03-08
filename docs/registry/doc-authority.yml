@@ -1,0 +1,94 @@
+# AxionOS — Document Authority Registry
+# Defines canonical ownership boundaries for each documentation file.
+# Last updated: 2026-03-08
+
+documents:
+
+  - file: docs/ARCHITECTURE.md
+    owns:
+      - system architecture (C4 containers, components, diagrams)
+      - capability layers and tier map
+      - architectural principles
+      - data flow between layers
+      - safety architecture
+      - AI efficiency layer
+      - edge function architecture
+      - database schema overview
+      - technology stack
+      - governing principle
+    must_not_define:
+      - sprint-by-sprint execution ledger (→ PLAN.md)
+      - full roadmap status or strategic narrative (→ ROADMAP.md)
+      - detailed Agent OS module specifications (→ AGENTS.md)
+      - pipeline phase UX contracts (→ PIPELINE_CONTRACTS.md)
+    derived_from:
+      - PLAN.md for sprint context in layer descriptions
+      - AGENTS.md for Agent OS summary
+    update_rule: Update when system structure or active architectural layers change.
+
+  - file: docs/ROADMAP.md
+    owns:
+      - current maturity level
+      - strategic direction and directive
+      - implementation horizons and block sequencing
+      - high-level completed capability arc
+      - what comes next at macro level
+    must_not_define:
+      - full sprint-by-sprint execution ledger (→ PLAN.md)
+      - module inventory or contracts (→ AGENTS.md)
+      - detailed architecture explanation (→ ARCHITECTURE.md)
+      - pipeline stage contracts (→ PIPELINE_CONTRACTS.md)
+    derived_from:
+      - PLAN.md for sprint completion status
+      - ARCHITECTURE.md for layer count
+    update_rule: Update when strategic block, maturity, or horizon changes.
+
+  - file: docs/PLAN.md
+    owns:
+      - current sprint and next sprint
+      - sprint-by-sprint implementation record
+      - phase grouping by sprint
+      - sprint completion status
+      - capability verification matrix
+      - shared module and edge function registries
+    must_not_define:
+      - deep architecture explanation (→ ARCHITECTURE.md)
+      - long-term strategic narrative (→ ROADMAP.md)
+      - detailed agent/module reference (→ AGENTS.md)
+    derived_from:
+      - ARCHITECTURE.md for layer naming
+    update_rule: Update when a sprint completes or starts.
+
+  - file: docs/AGENTS.md
+    owns:
+      - Agent OS 5 planes architecture
+      - 18-module inventory with versions
+      - 5 fundamental agent types
+      - active operational agents and modules
+      - supporting engines
+      - learning agents, meta-agents, memory layers
+      - contracts, safety boundaries, and events per module
+    must_not_define:
+      - roadmap sequencing or strategic direction (→ ROADMAP.md)
+      - sprint execution ledger (→ PLAN.md)
+      - system containers or C4 diagrams (→ ARCHITECTURE.md)
+    derived_from:
+      - PLAN.md for sprint context on module introductions
+    update_rule: Update when Agent OS module inventory, contracts, or operational references change.
+
+  - file: docs/PIPELINE_CONTRACTS.md
+    owns:
+      - phase-by-phase product contract (Idea → Discovery → Architecture → Engineering → Deploy)
+      - user-visible stage behavior
+      - stage inputs/outputs
+      - control rules and state machines
+      - definition of done by phase
+      - commercial and learning layer contracts
+      - engineering memory pipeline contract
+    must_not_define:
+      - broader roadmap strategy (→ ROADMAP.md)
+      - architecture layer narrative (→ ARCHITECTURE.md)
+      - sprint history unrelated to pipeline UX
+    derived_from:
+      - AGENTS.md for agent references
+    update_rule: Update when user-visible pipeline behavior changes.

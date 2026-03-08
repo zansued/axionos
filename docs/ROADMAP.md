@@ -2,13 +2,22 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-08):** Sprint 48 complete. Economic Optimization Layer active. Advisory-first cost and ROI awareness across architecture changes, migration plans, policy evolution, strategy evolution, and rollout planning are now operational.
->
 > **Current Mode**: Level 5 — Institutional Engineering Memory
->
 > **Current Maturity**: Level 5 ✅ Active
+> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform ready for convergence phase.
+>
+> **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
 > Last updated: 2026-03-08
+
+## Document Authority
+
+| Scope | Rule |
+|-------|------|
+| **Owns** | Current maturity level, strategic direction, implementation horizons, macro capability blocks |
+| **Must not define** | Sprint-by-sprint execution ledger (→ PLAN.md), module inventory (→ AGENTS.md), detailed architecture (→ ARCHITECTURE.md), pipeline contracts (→ PIPELINE_CONTRACTS.md) |
+| **Derived from** | PLAN.md for sprint completion status; ARCHITECTURE.md for layer count |
+| **Update rule** | Update when strategic block, maturity, or horizon changes |
 
 ---
 
@@ -76,135 +85,38 @@ AxionOS has completed 48 implementation sprints spanning the full capability arc
 
 ---
 
-## DONE — Completed Sprints (1–40)
+## Completed Capability Arc
 
-### Foundation Layer (Sprints 1–10)
+> **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
-| Sprint | Name | Status |
-|--------|------|--------|
-| 1 | Initiative Brief Formalization | ✅ Complete |
-| 2 | Initiative Simulation Engine | ✅ Complete |
-| 3 | Deploy Contract Completion | ✅ Complete |
-| 4 | Product-Level Observability | ✅ Complete |
-| 5 | Onboarding & Product Packaging | ✅ Complete |
-| 6 | Evidence-Oriented Repair Loop | ✅ Complete |
-| 7 | Error Pattern Library & Learning Foundation | ✅ Complete |
-| 8 | Preventive Engineering Layer | ✅ Complete |
-| 9 | Adaptive Repair Routing | ✅ Complete |
-| 10 | Learning Agents Foundation | ✅ Complete |
-
-### Operational Intelligence Layer (Sprints 11–12)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 11 | Commercial Readiness / Billing / Workspace Packaging | ✅ Complete |
-| 12 | Learning Agents v1 (5 engines + dashboard) | ✅ Complete |
-
-### Meta-Intelligence & Memory Layer (Sprints 13–20)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 13 | Meta-Agents v1 (4 types + recommendation lifecycle) | ✅ Complete |
-| 14 | Controlled Meta-Agent Actions (proposal generation) | ✅ Complete |
-| 15 | Engineering Memory Foundation | ✅ Complete |
-| 16 | Memory Retrieval Surfaces | ✅ Complete |
-| 17 | Memory Summaries | ✅ Complete |
-| 18 | Memory-Aware Meta-Agents | ✅ Complete |
-| 19 | Proposal Quality Feedback Loop | ✅ Complete |
-| 20 | Advisory Calibration Layer | ✅ Complete |
-
-### Learning & Repair Layer (Sprints 21–26)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 21 | Prompt Optimization Engine (A/B testing) | ✅ Complete |
-| 22 | Bounded Promotion & Rollback Guard | ✅ Complete |
-| 23 | Self-Improving Fix Agents v2 (Repair Policies) | ✅ Complete |
-| 24 | Agent Memory Layer Operationalization | ✅ Complete |
-| 25 | Predictive Error Detection Operationalization | ✅ Complete |
-| 26 | Learning Agents v2 (Cross-Stage Policy Synthesis) | ✅ Complete |
-
-### Execution Governance Layer (Sprints 27–29)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 27 | Execution Policy Intelligence | ✅ Complete |
-| 28 | Execution Mode Portfolio Optimization | ✅ Complete |
-| 29 | Workspace / Tenant Adaptive Policy Tuning | ✅ Complete |
-
-### Platform Intelligence & Calibration Layer (Sprints 30–31)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 30 | Platform Intelligence Entry | ✅ Complete |
-| 31 | Platform Self-Calibration | ✅ Complete |
-
-### Strategy Evolution Layer (Sprints 32–33)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 32 | Execution Strategy Evolution | ✅ Complete |
-| 33 | Strategy Portfolio Governance | ✅ Complete |
-
-### Platform Stabilization & Advisory Layer (Sprints 34–37)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 34 | Platform Self-Stabilization | ✅ Complete |
-| 35 | Autonomous Engineering Advisor | ✅ Complete |
-| 36 | Semantic Retrieval & Embedding Memory Expansion | ✅ Complete |
-| 37 | Discovery-Driven Architecture Signals | ✅ Complete |
-
-### Architecture Intelligence Layer (Sprints 38–40)
-
-| Sprint | Name | Status |
-|--------|------|--------|
-| 38 | Architecture Change Simulation & Governance | ✅ Complete |
-| 39 | Architecture Change Planning & Rollout Readiness | ✅ Complete |
-| 40 | Architecture Rollout Sandbox & Controlled Migration Readiness | ✅ Complete |
+| Block | Sprints | Capability Summary |
+|-------|---------|-------------------|
+| Foundation | 1–10 | 32-stage pipeline, DAG orchestration, CI validation, self-healing, prevention, routing, governance |
+| Operational Intelligence | 11–12 | Commercial readiness, billing, usage enforcement, learning agents v1 |
+| Meta-Intelligence & Memory | 13–20 | Memory-aware meta-agents, engineering memory, quality feedback, advisory calibration |
+| Learning & Repair | 21–26 | Prompt A/B testing, repair policies, agent memory, predictive detection, cross-stage synthesis |
+| Execution Governance | 27–29 | Policy intelligence, portfolio optimization, tenant adaptive tuning |
+| Platform Intelligence & Calibration | 30–31 | Health model, bounded threshold calibration |
+| Strategy Evolution & Governance | 32–33 | Strategy variant experimentation, portfolio governance |
+| Platform Stabilization & Advisory | 34–37 | Self-stabilization, engineering advisor, semantic retrieval, discovery architecture |
+| Architecture Intelligence | 38–40 | Change simulation, planning, rollout sandbox |
+| Architecture-Governed | 41–43 | Pilot governance, migration execution, portfolio governance |
+| Architecture-Operating | 44–45 | Fitness functions, change advisory orchestrator |
+| Architecture-Scaled | 46–48 | Stabilization v2, tenant architecture modes, economic optimization |
 
 ---
 
-## Block A — Architecture-Governed (Sprints 41–43)
+## Block A — Architecture-Governed (Sprints 41–43) ✅ Complete
 
-**Priority:** Immediate
-**Status:** 📋 Planned
-**Goal:** Close the architecture change lifecycle — from pilot to portfolio governance.
+Pilot governance → controlled migration → portfolio governance. First real migration execution (human-approved).
 
-| Sprint | Name | Objective | Acceptance Criteria |
-|--------|------|-----------|-------------------|
-| 41 | Architecture Rollout Pilot Governance | Controlled pilots with real blast radius, gates, baseline comparison, instant rollback | Pilot scopes selectable; eligibility criteria enforced; real vs estimated blast radius; activation/cancellation gates; pilot vs baseline comparison; instantaneous rollback; impact audit |
-| 42 | Controlled Architecture Migration Execution | Transform approved pilot into bounded migration with state machine, phased rollout, checkpoints | Phased rollout orchestration; activation windows; rollback checkpoints; migration state machine; real dependency activation order; tenant-safe slices; migration observability |
-| 43 | Architecture Portfolio Governance | Govern architecture changes as a portfolio, not isolated tickets | Change ranking; cross-proposal conflict detection; blast radius overlap; lifecycle management; deprecate/archive/prioritize; debt vs stability vs opportunity balancing |
+## Block B — Architecture-Operating (Sprints 44–45) ✅ Complete
 
-> ⚠️ Sprint 42 is the first time the platform executes migration (not just advises/rehearses). All execution remains human-approved.
+Continuous architecture fitness measurement + unified change advisory orchestration.
 
----
+## Block C — Architecture-Scaled (Sprints 46–48) ✅ Complete
 
-## Block B — Architecture-Operating (Sprints 44–45)
-
-**Priority:** High
-**Status:** 📋 Planned
-**Goal:** Make architecture continuously measurable and orchestrate change advisory into a single coordinated flow.
-
-| Sprint | Name | Objective | Acceptance Criteria |
-|--------|------|-----------|-------------------|
-| 44 | Architecture Fitness Functions | Continuous architectural health measurement | Boundary fitness checks; tenant isolation fitness; semantic retrieval dependency fitness; observability coverage fitness; policy/strategy coupling fitness; migration readiness drift |
-| 45 | Autonomous Change Advisory Orchestrator | Unified advisory-first orchestrator across advisor + simulation + planning + sandbox + pilot | Single change queue; prioritization across architectural, strategic, and operational changes; recommended rollout agenda; concurrent change conflict detection; cross-initiative sequencing |
-
----
-
-## Block C — Architecture-Scaled (Sprints 46–48)
-
-**Priority:** Medium
-**Status:** 📋 Planned
-**Goal:** Harden the platform for scale, tenant diversity, and economic efficiency.
-
-| Sprint | Name | Objective | Acceptance Criteria |
-|--------|------|-----------|-------------------|
-| 46 | Platform Self-Stabilization v2 | Stabilization aware of in-flight architecture changes | Oscillation suppression during rollout; adaptive freeze of unstable scopes; stabilization-aware migration gating; recovery mode during pilot; rollback clustering |
-| 47 | Tenant-Aware Architecture Modes | Bounded architectural specialization per tenant/context without forking | Architecture mode profiles; bounded tenant specialization; tenant cluster patterns; anti-fragmentation guardrails |
-| 48 | Economic Optimization Layer | Cost and ROI awareness across all changes | Cost-to-reliability optimization; migration ROI estimation; policy/strategy/architecture cost impact; economic tradeoff scoring; cost-aware rollout planning |
+Platform hardening for scale, tenant diversity, and economic efficiency. Stabilization v2, tenant architecture modes, economic optimization.
 
 ---
 
@@ -221,82 +133,19 @@ AxionOS has completed 48 implementation sprints spanning the full capability arc
 
 ---
 
-## Kernel — What Remains Active
+## Active Kernel
 
-| Module | Status |
-|--------|--------|
-| 32-stage deterministic pipeline | ✅ Operational |
-| Project Brain (knowledge graph) | ✅ Operational |
-| AI Efficiency Layer (compressor + cache + router) | ✅ Operational |
-| Smart Context Window (~60-80% token reduction) | ✅ Operational |
-| DAG Execution Engine (6 workers) | ✅ Operational |
-| Runtime Validation (tsc + vite via CI) | ✅ Operational |
-| Autonomous Build Repair + Fix Orchestrator | ✅ Operational |
-| Evidence-Oriented Repair Loop | ✅ Operational |
-| Error Pattern Library | ✅ Operational |
-| Preventive Engineering Layer | ✅ Operational |
-| Adaptive Repair Routing | ✅ Operational |
-| Learning Foundation | ✅ Operational |
-| Governance (gates, SLAs, audit logs) | ✅ Operational |
-| Product-Level Observability | ✅ Operational |
-| Stage & Agent IO Contracts | ✅ Implemented |
-| Commercial Readiness (plans, billing, enforcement) | ✅ Operational |
-| Learning Agents v1 (5 engines + dashboard) | ✅ Operational |
-| Meta-Agents v1.4 (4 types + quality + calibration) | ✅ Operational |
-| Proposal Quality Feedback Loop | ✅ Operational |
-| Advisory Calibration Layer | ✅ Operational |
-| Prompt Optimization (A/B + Bounded Promotion) | ✅ Operational |
-| Self-Improving Fix Agents v2 (Repair Policies) | ✅ Operational |
-| Agent Memory Layer | ✅ Operational |
-| Predictive Error Detection | ✅ Operational |
-| Cross-Stage Policy Synthesis (LA v2) | ✅ Operational |
-| Execution Policy Intelligence | ✅ Operational |
-| Execution Mode Portfolio Optimization | ✅ Operational |
-| Tenant/Workspace Adaptive Tuning | ✅ Operational |
-| Platform Intelligence (health model) | ✅ Operational |
-| Platform Self-Calibration | ✅ Operational |
-| Execution Strategy Evolution | ✅ Operational |
-| Strategy Portfolio Governance | ✅ Operational |
-| Platform Self-Stabilization | ✅ Operational |
-| Autonomous Engineering Advisor | ✅ Operational |
-| Semantic Retrieval & Embedding Memory | ✅ Operational |
-| Discovery-Driven Architecture Signals | ✅ Operational |
-| Architecture Change Simulation & Governance | ✅ Operational |
-| Architecture Change Planning & Rollout Readiness | ✅ Operational |
-| Architecture Rollout Sandbox | ✅ Operational |
-| Architecture Rollout Pilot Governance | ✅ Operational |
-| Controlled Architecture Migration Execution | ✅ Operational |
-| Architecture Portfolio Governance | ✅ Operational |
-| Architecture Fitness Functions | ✅ Operational |
-| Autonomous Change Advisory Orchestrator | ✅ Operational |
-| Platform Self-Stabilization v2 | ✅ Operational |
-| Tenant-Aware Architecture Modes | ✅ Operational |
-| Economic Optimization Layer | ✅ Operational |
+> **Full module inventory:** [AGENTS.md](AGENTS.md) · **Architecture details:** [ARCHITECTURE.md](ARCHITECTURE.md)
 
-### What to Freeze
+All 33 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, and the economic optimization layer.
+
+### Frozen Areas
 
 | Area | Reason |
 |------|--------|
 | Marketplace ecosystem | Not needed until product intelligence layer |
-| Global capability registry expansion | Current architecture is sufficient |
 | Advanced distributed runtime | Current runtime handles workload adequately |
-| Advanced multi-agent coordination | Existing coordination patterns meet current needs |
-
----
-
-## Agent OS v1.0 — Reference Architecture (Complete)
-
-The Agent OS is fully designed with 14 modules across 5 planes. No expansion needed.
-
-| Plane | Modules | Status |
-|-------|---------|--------|
-| **Core** | Runtime Protocol, Capability Model, Core Types | ✅ Complete |
-| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing | ✅ Complete |
-| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Partial (advanced features frozen) |
-| **Data** | Artifact Store, Memory System, Observability | ✅ Complete |
-| **Ecosystem** | Marketplace & Global Capability Registry | ❄️ Frozen |
-
-Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md)
+| Advanced multi-agent coordination | Existing patterns meet current needs |
 
 ---
 

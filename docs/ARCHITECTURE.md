@@ -3,9 +3,17 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-08
->
-> **Current state:** Level 5 — Institutional Engineering Memory Platform.
-> Thirty-three architectural layers active. Economic Optimization Layer (Sprint 48). Tenant-Aware Architecture Modes (Sprint 47). Platform Self-Stabilization v2 (Sprint 46). Autonomous Change Advisory Orchestrator (Sprint 45). Architecture Fitness Functions (Sprint 44). Architecture Portfolio Governance (Sprint 43). Controlled Architecture Migration Execution (Sprint 42). Architecture Rollout Pilot Governance (Sprint 41). Architecture Rollout Sandbox & Controlled Migration Readiness (Sprint 40). Architecture Change Planning & Rollout Readiness (Sprint 39). Architecture Change Simulation & Governance (Sprint 38). Discovery-Driven Architecture Signals (Sprint 37). Semantic Retrieval & Embedding Memory Expansion (Sprint 36). Autonomous Engineering Advisor (Sprint 35). Platform Self-Stabilization (Sprint 34). Strategy Portfolio Governance (Sprint 33). Execution Strategy Evolution (Sprint 32). Platform Self-Calibration (Sprint 31). Platform Intelligence Entry (Sprint 30). Workspace / Tenant Adaptive Policy Tuning (Sprint 29). Execution Mode Portfolio Optimization (Sprint 28). Execution Policy Intelligence (Sprint 27). Learning Agents v2 with Cross-Stage Policy Synthesis (Sprint 26). Predictive Error Detection Operationalization (Sprint 25). Agent Memory Layer Operationalization (Sprint 24). Self-Improving Fix Agents v2 with memory-aware repair policies (Sprint 23). Prompt Optimization closed-loop with Bounded Promotion & Rollback Guard (Sprint 22). Advisory Calibration Layer operational (Sprint 20).
+> **Current state:** Level 5 — Institutional Engineering Memory Platform. 33 architectural layers active (through Sprint 48).
+> **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
+
+## Document Authority
+
+| Scope | Rule |
+|-------|------|
+| **Owns** | System architecture, C4 diagrams, capability layers, containers, components, data flow, safety rules, AI efficiency layer, edge function architecture, database schema, technology stack, governing principle |
+| **Must not define** | Sprint-by-sprint execution ledger (→ PLAN.md), full roadmap/strategic narrative (→ ROADMAP.md), detailed Agent OS module specs (→ AGENTS.md), pipeline phase UX contracts (→ PIPELINE_CONTRACTS.md) |
+| **Derived from** | PLAN.md for sprint context in layer descriptions; AGENTS.md for Agent OS summary |
+| **Update rule** | Update when system structure or active architectural layers change |
 
 ---
 
@@ -398,83 +406,17 @@ Engineering Memory (Layer 5) is a **cross-layer infrastructure** that captures k
 
 ## 6. Agent Operating System (Agent OS) — v1.0 GA
 
-The Agent OS is the runtime architecture governing how agents are selected, executed, governed and coordinated. It consists of 14 modules organized into 5 architectural planes.
+The Agent OS is the runtime architecture governing how agents are selected, executed, governed and coordinated. It consists of 18 modules organized into 5 architectural planes.
 
-### Architecture Map
+> **Full specification:** [AGENTS.md](AGENTS.md) — canonical reference for planes, modules, agent types, contracts, safety boundaries, and events.
 
-```
-+-------------------------------------------------------------------+
-|                       ECOSYSTEM PLANE                              |
-|   Marketplace - Capability Registry - Package Manager - Trust      |
-+-------------------------------+-----------------------------------+
-                                | discovery
-+-------------------------------+-----------------------------------+
-|                       EXECUTION PLANE                              |
-|   Orchestrator - Coordination - Distributed Runtime                |
-|   LLM Adapter - Tool Adapter - Event Bus - Agent Registry          |
-+-----------+-----------------------+-------------------+-----------+
-            | decisions             | persistence       | telemetry
-+-----------+----------+  +---------+---------+  +------+----------+
-|    CONTROL PLANE     |  |    DATA PLANE     |  |   DATA PLANE    |
-|   Selection Engine   |  |   Artifact Store  |  |  Observability  |
-|   Policy Engine      |  |   Memory System   |  |  Audit Ledger   |
-|   Governance Layer   |  |                   |  |                 |
-|   Adaptive Routing   |  |                   |  |                 |
-+-----------+----------+  +---------+---------+  +------+----------+
-            |                       |                    |
-+-----------+-----------------------+--------------------+----------+
-|                         CORE PLANE                                 |
-|   Runtime Protocol - Capability Model - Core Types                 |
-|   (Contracts, Schemas, Identity -- no state, no side effects)      |
-+-------------------------------------------------------------------+
-```
-
-### Five Fundamental Agent Types
-
-| Agent Type | Responsibility | Example Modes |
-|-----------|---------------|---------------|
-| **Perception Agent** | Interprets ideas, requirements, market signals, context | `idea_intake`, `requirement_analysis`, `market_signal` |
-| **Design Agent** | Creates architecture, domain models, data models, API designs | `architecture`, `domain_modeling`, `data_modeling`, `api_design` |
-| **Build Agent** | Generates code, UI, configs, migrations, artifacts | `business_logic`, `api_generation`, `ui_generation` |
-| **Validation Agent** | Static analysis, runtime validation, QA, architectural checks | `static_analysis`, `runtime_build`, `drift_detection` |
-| **Evolution Agent** | Repair, learning, pattern extraction, prompt optimization | `build_repair`, `error_learning`, `pattern_extraction` |
-
-```
-Agent Specialization = Mode + Tools + Memory + Contract
-```
-
-### Plane Implementation Status
-
-| Plane | Status | Notes |
-|-------|--------|-------|
-| **Core** | ✅ Implemented | Identity, contracts, types fully specified |
-| **Control** | ✅ Implemented | Selection, policy, governance, adaptive routing operational |
-| **Execution** | ✅ Partial | Orchestrator + DAG operational. Advanced coordination/distributed runtime frozen |
-| **Data** | ✅ Implemented | Artifact store, memory, observability operational |
-| **Ecosystem** | ❄️ Frozen | Marketplace designed but not needed |
-
-### Module Inventory
-
-| # | Module | File | Plane | Version |
-|---|--------|------|-------|---------|
-| 1 | Runtime Protocol | `protocol.ts` | Core | v0.1 |
-| 2 | Capability Model | `capabilities.ts` | Core | v0.2 |
-| 3 | Core Types | `types.ts` | Core | v0.1 |
-| 4 | Selection Engine | `selection.ts` | Control | v0.2 |
-| 5 | Policy Engine | `policy-engine.ts` | Control | v0.2 |
-| 6 | Governance Layer | `governance.ts` | Control | v1.1 |
-| 7 | Adaptive Routing | `adaptive-routing.ts` | Control | v0.7 |
-| 8 | Orchestrator | `orchestrator.ts` | Execution | v0.1 |
-| 9 | Agent Registry | `registry.ts` | Execution | v0.1 |
-| 10 | Event Bus | `event-bus.ts` | Execution | v0.1 |
-| 11 | Multi-Agent Coordination | `coordination.ts` | Execution | v0.8 |
-| 12 | Distributed Runtime | `distributed-runtime.ts` | Execution | v0.9 |
-| 13 | LLM Adapter | `llm-adapter.ts` | Execution | v0.4 |
-| 14 | Tool Adapter | `tool-adapter.ts` | Execution | v0.5 |
-| 15 | Artifact Store | `artifact-store.ts` | Data | v0.1 |
-| 16 | Memory System | `memory-system.ts` | Data | v0.6 |
-| 17 | Observability | `observability.ts` | Data | v0.3 |
-| 18 | Marketplace | `marketplace.ts` | Ecosystem | v1.0 |
+| Plane | Status | Key Modules |
+|-------|--------|-------------|
+| **Core** | ✅ Implemented | Runtime Protocol, Capability Model, Core Types |
+| **Control** | ✅ Implemented | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing |
+| **Execution** | ✅ Partial | Orchestrator, Coordination, LLM/Tool Adapters (advanced coordination/distributed runtime frozen) |
+| **Data** | ✅ Implemented | Artifact Store, Memory System, Observability |
+| **Ecosystem** | ❄️ Frozen | Marketplace (designed, not needed) |
 
 ---
 
@@ -682,75 +624,30 @@ supabase/functions/
 
 ## 12. Implementation Status
 
-### Implemented
+> **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
+> **Summary:** 48 sprints complete. 49 systems implemented. All architecture-scaled blocks done.
 
-| # | System | Sprint | Details |
-|---|--------|--------|---------|
-| 1 | Pipeline (32 stages) | 1-10 | 50+ independent Edge Functions |
-| 2 | Project Brain | 1-10 | Nodes, edges, decisions, errors, prevention rules, tsvector, pgvector |
-| 3 | Dependency Scheduler | 1-10 | DAG builder, topological sort, wave computation |
-| 4 | Agent Swarm | 1-10 | Orchestrator + Worker, parallel execution (6 workers) |
-| 5 | Data Model Generator | 1-10 | Domain model to SQL tables, FK, indexes, RLS |
-| 6 | Autonomous UI Generator | 1-10 | Pages, components, hooks, navigation |
-| 7 | Adaptive Learning Engine | 1-10 | Prevention rules, patterns, cross-project |
-| 8 | CI-Triggered Fix Swarm | 1-10 | Webhook + Fix Orchestrator + auto-PR |
-| 9 | Self-Healing Codebase | 1-10 | Prevention rules with confidence scoring |
-| 10 | Architectural Drift Detection | 1-10 | Rule-based + AI hybrid |
-| 11 | Atomic Git Commits | 1-10 | Tree API for publish + fix PRs |
-| 12 | Runtime Validation | 1-10 | Real tsc + vite build via GitHub Actions CI |
-| 13 | Smart Context Window | 1-10 | ~60-80% token reduction |
-| 14 | AI Efficiency Layer | 1-10 | Prompt compression + semantic cache + model router |
-| 15 | Agent OS v1.0 | 1-10 | 14 modules, 5 planes, full TypeScript contracts |
-| 16 | Commercial Readiness | 11 | Plans, billing, workspace roles, usage enforcement |
-| 17 | Learning Agents v1 | 12 | Prompt analysis, strategy tracking, prediction, weight adaptation |
-| 18 | Meta-Agents v1.4 | 13+18+19+20 | 4 memory-aware meta-agents, quality feedback, advisory calibration |
-| 19 | Controlled Proposal Generation | 14 | 5 artifact types, review lifecycle, idempotency |
-| 20 | Engineering Memory Foundation | 15 | Memory tables, capture events, retrieval API, observability |
-| 21 | Memory Retrieval Surfaces | 16 | Structured retrieval for repair, meta-agents, artifacts, review |
-| 22 | Memory Summaries | 17 | 6 summary types, signal strength, generation service |
-| 23 | Memory-Aware Meta-Agents | 18 | Historical context, continuity scoring, redundancy guard, proposal v2 |
-| 24 | Proposal Quality Feedback Loop | 19 | Quality scoring, outcome tracking, confidence calibration |
-| 25 | Advisory Calibration Layer | 20 | 6 calibration domains, deterministic scoring, advisory-only signals |
-| 26 | Prompt Optimization Engine | 21 | A/B testing, variant selection, performance metrics |
-| 27 | Bounded Promotion & Rollback Guard | 22 | Phased rollout, health monitoring, auto-rollback |
-| 28 | Self-Improving Fix Agents v2 | 23 | Memory-aware repair policies, bounded adjustments, retry intelligence |
-| 29 | Agent Memory Operationalization | 24 | Per-agent memory profiles, structured memory records, quality scoring |
-| 30 | Predictive Error Detection | 25 | Runtime risk scoring, checkpoint evaluation, preventive actions |
-| 31 | Cross-Stage Policy Synthesis (LA v2) | 26 | Learning graph, policy synthesis, spillover detection |
-| 32 | Execution Policy Intelligence | 27 | Context classification, policy selection, bounded adjustments |
-| 33 | Portfolio Optimization | 28 | Portfolio evaluation, ranking, lifecycle, conflict detection |
-| 34 | Tenant Adaptive Tuning | 29 | Tenant preferences, override guards, drift detection |
-| 35 | Platform Intelligence Entry | 30 | Behavior aggregation, bottleneck detection, health model |
-| 36 | Platform Self-Calibration | 31 | Parameter registry, bounded proposals, guardrails, rollback |
-| 37 | Execution Strategy Evolution | 32 | Strategy families, variant synthesis, experiment runner, promotion/rollback |
-| 38 | Strategy Portfolio Governance | 33 | Strategy family lifecycle, portfolio health, conflict resolution |
-| 39 | Platform Self-Stabilization | 34 | Drift detection, oscillation suppression, safe modes, stability signals |
-| 40 | Autonomous Engineering Advisor | 35 | Cross-layer advisory synthesis, recommendation review workflow |
-| 41 | Semantic Retrieval | 36 | Unified embedding-backed retrieval, domain guardrails, session lineage |
-| 42 | Discovery-Driven Architecture Signals | 37 | External/product signal correlation, architecture recommendations |
-| 43 | Architecture Change Simulation | 38 | Bounded simulation, impact estimation, governance guardrails |
-| 44 | Architecture Change Planning | 39 | Implementation plans, blast radius, validation/rollback blueprints |
-| 45 | Architecture Rollout Sandbox | 40 | Bounded rehearsal, migration sequencing, fragility analysis, rollback viability |
-| 46 | Architecture Rollout Pilot Governance | 41 | Bounded pilots, baseline comparison, instant rollback, pilot guardrails |
-| 47 | Controlled Architecture Migration Execution | 42 | Staged rollout, checkpoint gates, tenant-safe slicing, deterministic rollback |
-| 48 | Architecture Portfolio Governance | 43 | Portfolio-level prioritization, conflict detection, cumulative blast radius, concurrency guard |
-| 49 | Architecture Fitness Functions | 44 | Continuous fitness evaluation, boundary/isolation/observability analysis, trend tracking, fitness recommendations |
+| Block | Sprints | Status |
+|-------|---------|--------|
+| Foundation + Operational Intelligence | 1–12 | ✅ Complete |
+| Meta-Intelligence & Memory | 13–20 | ✅ Complete |
+| Learning & Repair Intelligence | 21–26 | ✅ Complete |
+| Execution Governance | 27–29 | ✅ Complete |
+| Platform Intelligence & Calibration | 30–31 | ✅ Complete |
+| Strategy Evolution & Governance | 32–33 | ✅ Complete |
+| Platform Stabilization & Advisory | 34–37 | ✅ Complete |
+| Architecture Intelligence | 38–40 | ✅ Complete |
+| Architecture-Governed | 41–43 | ✅ Complete |
+| Architecture-Operating | 44–45 | ✅ Complete |
+| Architecture-Scaled | 46–48 | ✅ Complete |
 
 ### Frozen
 
 | Module | Reason |
 |--------|--------|
 | Marketplace ecosystem | Not needed until product intelligence layer |
-| Global capability registry expansion | Architecture sufficient |
 | Advanced distributed runtime | Current runtime is adequate |
 | Advanced multi-agent coordination | Existing coordination works |
-
-### Planned
-
-| Horizon | Module | Priority |
-|---------|--------|----------|
-| FUTURE | Autonomous Implementation | P3 |
-| FUTURE | Cross-Family Strategy Coordination | P2 |
 
 ---
 
@@ -947,36 +844,35 @@ supabase/functions/
 
 ### System Maturity
 
-| Level | Name | Status |
-|-------|------|--------|
-| Level 1 | Code Generator | ✅ Complete |
-| Level 2 | Software Builder | ✅ Complete |
-| Level 3 | Autonomous Engineering System | ✅ Complete |
-| Level 4 | Self-Learning Software Factory | ✅ Complete |
-| Level 4.5 | Meta-Aware Engineering Platform | ✅ Complete |
-| Level 5 | Institutional Engineering Memory | ✅ Current |
-| Level 5.5 | Contextual / Self-Improving Platform | 🔮 Future horizon |
-| Level 6 | Discovery-Driven Engineering | 🔮 Long-term |
+> **Canonical maturity table:** [ROADMAP.md](ROADMAP.md)
+> **Current:** Level 5 — Institutional Engineering Memory ✅
 
 ---
 
 ## 15. Governing Principle
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture. Platform Self-Calibration tunes operational thresholds within safe envelopes based on platform intelligence signals, with guardrails, rollback, and advisory-first governance preserving kernel integrity. Execution Strategy Evolution enables bounded experimentation with strategy variants, comparing them against baselines under governed conditions, and supporting safe promotion or rollback based on real outcome evidence. Strategy Portfolio Governance manages the lifecycle of strategy families as a governed portfolio, evaluating health, resolving conflicts, and generating advisory recommendations. Platform Self-Stabilization detects drift and oscillation across policies, strategies, and calibrations, proposing bounded stabilization actions and safe modes to restore operational stability. Autonomous Engineering Advisor synthesizes cross-layer advisory recommendations from all intelligence signals, providing structured, explainable, and reviewable engineering guidance. Semantic Retrieval provides unified embedding-backed contextual evidence access across all intelligence domains, with tenant isolation, domain guardrails, structured fallback, and full audit lineage. Discovery-Driven Architecture Signals correlate external and product-facing signals with internal evidence to generate advisory architecture recommendations. Architecture Change Simulation evaluates proposed architectural changes through bounded simulation with impact estimation, governance guardrails, and explainability. Architecture Change Planning converts accepted simulations into governed implementation plans with dependency mapping, blast radius estimation, validation/rollback blueprints, and readiness scoring. Architecture Rollout Sandbox rehearses approved plans in bounded sandboxes with migration sequencing, fragility analysis, rollback viability assessment, and controlled readiness scoring — all remaining advisory-first and review-driven.
+> The Agent OS is a contract-driven, plane-separated architecture. Decisions flow through Control, execution through Execution, state into Data, identity from Core, discovery via Ecosystem. No plane assumes another's responsibilities.
+>
+> **Core invariants:**
+> - Learning is additive, auditable, bounded — it cannot mutate the kernel directly
+> - Engineering Memory informs but never commands
+> - Calibration signals diagnose; humans decide when and how tuning is applied
+> - All structural evolution requires human review and approval
+> - Tenant isolation is absolute (organization_id + RLS)
+> - Forbidden mutation families: pipeline topology, governance rules, billing logic, plan enforcement, execution contracts, hard safety constraints
+> - Every promotion, calibration, strategy experiment, and architecture change preserves rollback capability
+> - All advisory layers (Platform Intelligence, Calibration, Strategy Evolution, Stabilization, Engineering Advisor, Semantic Retrieval, Architecture Simulation/Planning/Sandbox/Pilot/Migration, Portfolio Governance, Fitness Functions, Change Advisory, Tenant Architecture Modes, Economic Optimization) remain bounded, explainable, and review-driven
 
 ---
 
-## Source of Truth
+## Architecture / Documentation Boundaries
 
-The following documents must remain synchronized:
+- **ARCHITECTURE.md** (this file) defines system structure — containers, components, layers, data flow, safety rules
+- **ROADMAP.md** defines strategic direction — maturity, horizons, what comes next; this file references maturity from there
+- **PLAN.md** defines sprint execution — canonical sprint-by-sprint ledger; this file references sprint blocks from there
+- **AGENTS.md** defines Agent OS module reference — planes, modules, contracts, events; this file summarizes Agent OS but defers to AGENTS.md for full specs
+- **PIPELINE_CONTRACTS.md** defines product-level pipeline UX — phase behavior, inputs/outputs, control rules; this file defines pipeline stages architecturally but defers to PIPELINE_CONTRACTS.md for user-visible contracts
+- **docs/registry/** contains lightweight canonical metadata (sprints.yml, doc-authority.yml)
+- **docs/README.md** is the navigation and maintenance guide
 
-| Document | Purpose |
-|----------|---------|
-| `docs/ARCHITECTURE.md` | System architecture, C4 diagrams, capability layers (this file) |
-| `docs/ROADMAP.md` | Maturity horizons, execution priorities |
-| `docs/PLAN.md` | Sprint-level implementation phases |
-| `docs/AGENTS.md` | Agent OS module reference, agent types, contracts |
-| `docs/PIPELINE_CONTRACTS.md` | Operational contracts for the 5 pipeline phases |
-| `docs/diagrams/` | PlantUML source files for C4 diagrams (export/print-ready) |
-
-Diagrams in this file use **Mermaid** for GitHub rendering. PlantUML versions are in `docs/diagrams/` for corporate export.
+> Diagrams in this file use **Mermaid** for GitHub rendering. PlantUML versions are in `docs/diagrams/` for corporate export.
