@@ -43,6 +43,7 @@ import ImprovementBenchmarks from "./pages/ImprovementBenchmarks";
 import AgentRouting from "./pages/AgentRouting";
 import AgentDebates from "./pages/AgentDebates";
 import WorkingMemory from "./pages/WorkingMemory";
+import SwarmExecution from "./pages/SwarmExecution";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
