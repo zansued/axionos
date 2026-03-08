@@ -348,14 +348,13 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Reserved Horizon (Sprints 57–65)
+## Reserved Horizon (Sprints 58–65)
 
 > **Status:** 🔮 Reserved — strategic direction defined, details intentionally lightweight.
 > Reserved sprints should not be promoted without deliberate review.
 
 | Sprint | Name | Block | Status | Purpose |
 |--------|------|-------|--------|---------|
-| 57 | Capability Exposure Governance Layer | J — Trusted Ecosystem Foundation | 🔮 Reserved | Govern which capabilities can be exposed externally |
 | 58 | External Trust & Admission Layer | J — Trusted Ecosystem Foundation | 🔮 Reserved | Trust scoring and admission criteria for external participants |
 | 59 | Ecosystem Simulation & Sandbox Layer | J — Trusted Ecosystem Foundation | 🔮 Reserved | Simulate ecosystem interactions before real exposure |
 | 60 | Limited Marketplace Pilot Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | First controlled marketplace activation with rollback |
