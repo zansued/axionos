@@ -517,6 +517,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | `_shared/ecosystem-readiness/` | 9 | Capability inventory, exposure classifier, readiness assessor, safety prerequisites, trust model, policy foundation, risk bounding, recommendations, explainer |
 | `_shared/capability-exposure-governance/` | 9 | Case builder, exposure classifier, policy engine, restriction analyzer, review manager, gate evaluator, risk bounding, recommendations, explainer |
 | `_shared/external-trust-admission/` | 9 | Actor registry manager, trust tier classifier, admission case builder, requirement engine, risk posture analyzer, review manager, trust drift detector, recommendation engine, explainer |
+| `_shared/limited-marketplace-pilot/` | 9 | Program manager, capability selector, participant gatekeeper, interaction monitor, policy enforcer, risk monitor, learning engine, outcome validator, explainer |
 
 ---
 
