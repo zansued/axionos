@@ -399,5 +399,6 @@ These sprints will be formalized when implementation begins.
 | Tenant Architecture Modes | 1 | 47 |
 | Economic Optimization | 1 | 48 |
 | Platform Convergence | 1 | 49 |
+| Convergence Governance | 1 | 50 |
 | Support | 11 | Various |
-| **Total** | **~94** | |
+| **Total** | **~95** | |

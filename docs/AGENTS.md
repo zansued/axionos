@@ -1341,3 +1341,19 @@ Architecture Rollout Sandbox allows approved architecture change plans to be reh
 > **Canonical governing principle:** [ARCHITECTURE.md](ARCHITECTURE.md#15-governing-principle)
 >
 > The Agent OS is contract-driven and plane-separated. Learning is additive, bounded, and auditable. Memory informs but never commands. All structural evolution requires human review. Forbidden mutation families are immutable by automated systems. All advisory layers remain bounded, explainable, and review-driven.
+
+---
+
+## 33. Future Strategic Arc — Agent OS Implications
+
+> **Status:** Proposed — no Agent OS plane expansion is planned.
+
+The proposed next strategic arc (Sprints 51–53) reuses existing Agent OS planes and modules:
+
+| Future Capability | Existing Planes/Modules Used |
+|-------------------|------------------------------|
+| Institutional Convergence Memory | Data Plane (Memory System, Artifact Store), Control Plane (Governance) |
+| Operating Profiles & Policy Packs | Control Plane (Policy Engine, Selection Engine), Data Plane (Memory) |
+| Product Intelligence Entry | Data Plane (Observability), Control Plane (Governance), Execution Plane (Orchestrator) |
+
+The focus is on higher-order system behavior and institutionalization — not new plane expansion. The 5-plane, 18-module architecture remains stable.
