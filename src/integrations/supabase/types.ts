@@ -14571,6 +14571,362 @@ export type Database = {
           },
         ]
       }
+      orchestration_branches: {
+        Row: {
+          audit_metadata: Json
+          branch_key: string
+          branch_type: string
+          campaign_id: string
+          checkpoint_ref: Json | null
+          created_at: string
+          failure_reason: string | null
+          id: string
+          max_retries: number
+          organization_id: string
+          parent_branch_id: string | null
+          retry_count: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          audit_metadata?: Json
+          branch_key?: string
+          branch_type?: string
+          campaign_id: string
+          checkpoint_ref?: Json | null
+          created_at?: string
+          failure_reason?: string | null
+          id?: string
+          max_retries?: number
+          organization_id: string
+          parent_branch_id?: string | null
+          retry_count?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          audit_metadata?: Json
+          branch_key?: string
+          branch_type?: string
+          campaign_id?: string
+          checkpoint_ref?: Json | null
+          created_at?: string
+          failure_reason?: string | null
+          id?: string
+          max_retries?: number
+          organization_id?: string
+          parent_branch_id?: string | null
+          retry_count?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orchestration_branches_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "orchestration_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orchestration_branches_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orchestration_branches_parent_branch_id_fkey"
+            columns: ["parent_branch_id"]
+            isOneToOne: false
+            referencedRelation: "orchestration_branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orchestration_campaigns: {
+        Row: {
+          abort_posture: string
+          audit_metadata: Json
+          branch_blocked: number
+          branch_completed: number
+          branch_failed: number
+          branch_total: number
+          campaign_class: string
+          campaign_label: string
+          created_at: string
+          failure_domain_count: number
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          recovery_posture: string
+          status: string
+          sync_point_count: number
+          topology: Json
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          abort_posture?: string
+          audit_metadata?: Json
+          branch_blocked?: number
+          branch_completed?: number
+          branch_failed?: number
+          branch_total?: number
+          campaign_class?: string
+          campaign_label?: string
+          created_at?: string
+          failure_domain_count?: number
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          recovery_posture?: string
+          status?: string
+          sync_point_count?: number
+          topology?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          abort_posture?: string
+          audit_metadata?: Json
+          branch_blocked?: number
+          branch_completed?: number
+          branch_failed?: number
+          branch_total?: number
+          campaign_class?: string
+          campaign_label?: string
+          created_at?: string
+          failure_domain_count?: number
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          recovery_posture?: string
+          status?: string
+          sync_point_count?: number
+          topology?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orchestration_campaigns_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orchestration_campaigns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orchestration_campaigns_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orchestration_failures: {
+        Row: {
+          branch_id: string | null
+          campaign_id: string
+          containment_status: string
+          created_at: string
+          evidence_refs: Json
+          failure_domain: string
+          failure_reason: string
+          id: string
+          impact_scope: string
+          organization_id: string
+          severity: string
+        }
+        Insert: {
+          branch_id?: string | null
+          campaign_id: string
+          containment_status?: string
+          created_at?: string
+          evidence_refs?: Json
+          failure_domain?: string
+          failure_reason?: string
+          id?: string
+          impact_scope?: string
+          organization_id: string
+          severity?: string
+        }
+        Update: {
+          branch_id?: string | null
+          campaign_id?: string
+          containment_status?: string
+          created_at?: string
+          evidence_refs?: Json
+          failure_domain?: string
+          failure_reason?: string
+          id?: string
+          impact_scope?: string
+          organization_id?: string
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orchestration_failures_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "orchestration_branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orchestration_failures_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "orchestration_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orchestration_failures_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orchestration_recovery_events: {
+        Row: {
+          branch_id: string | null
+          campaign_id: string
+          created_at: string
+          evidence_refs: Json
+          failure_id: string | null
+          id: string
+          organization_id: string
+          recovery_notes: string
+          recovery_status: string
+          recovery_type: string
+          resolved_at: string | null
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          branch_id?: string | null
+          campaign_id: string
+          created_at?: string
+          evidence_refs?: Json
+          failure_id?: string | null
+          id?: string
+          organization_id: string
+          recovery_notes?: string
+          recovery_status?: string
+          recovery_type?: string
+          resolved_at?: string | null
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          branch_id?: string | null
+          campaign_id?: string
+          created_at?: string
+          evidence_refs?: Json
+          failure_id?: string | null
+          id?: string
+          organization_id?: string
+          recovery_notes?: string
+          recovery_status?: string
+          recovery_type?: string
+          resolved_at?: string | null
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orchestration_recovery_events_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "orchestration_branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orchestration_recovery_events_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "orchestration_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orchestration_recovery_events_failure_id_fkey"
+            columns: ["failure_id"]
+            isOneToOne: false
+            referencedRelation: "orchestration_failures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orchestration_recovery_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orchestration_sync_points: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          id: string
+          organization_id: string
+          required_branches: string[]
+          resolved_at: string | null
+          satisfied_branches: string[]
+          status: string
+          sync_label: string
+          sync_type: string
+          timeout_seconds: number | null
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          required_branches?: string[]
+          resolved_at?: string | null
+          satisfied_branches?: string[]
+          status?: string
+          sync_label?: string
+          sync_type?: string
+          timeout_seconds?: number | null
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          required_branches?: string[]
+          resolved_at?: string | null
+          satisfied_branches?: string[]
+          status?: string
+          sync_label?: string
+          sync_type?: string
+          timeout_seconds?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orchestration_sync_points_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "orchestration_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orchestration_sync_points_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_knowledge_base: {
         Row: {
           category: string

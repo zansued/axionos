@@ -55,6 +55,7 @@ import OutcomeAssurance from "./pages/OutcomeAssurance";
 import DistributedJobs from "./pages/DistributedJobs";
 import CrossRegionRecovery from "./pages/CrossRegionRecovery";
 import TenantRuntime from "./pages/TenantRuntime";
+import LargeScaleOrchestration from "./pages/LargeScaleOrchestration";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -132,6 +133,7 @@ const App = () => (
                       <Route path="/distributed-jobs" element={<ProtectedRoute><DistributedJobs /></ProtectedRoute>} />
                       <Route path="/cross-region-recovery" element={<ProtectedRoute><CrossRegionRecovery /></ProtectedRoute>} />
                       <Route path="/tenant-runtime" element={<ProtectedRoute><TenantRuntime /></ProtectedRoute>} />
+                      <Route path="/large-scale-orchestration" element={<ProtectedRoute><LargeScaleOrchestration /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>

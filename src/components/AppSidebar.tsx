@@ -60,6 +60,7 @@ const bottomItems = [
   { title: "Dist. Jobs", url: "/distributed-jobs", icon: Server },
   { title: "Regions", url: "/cross-region-recovery", icon: Globe },
   { title: "Tenant Runtime", url: "/tenant-runtime", icon: Server },
+  { title: "Orchestration", url: "/large-scale-orchestration", icon: Globe },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
