@@ -148,23 +148,21 @@ Governed lifecycle for convergence promotion, bounded merge, retention, deprecat
 
 ---
 
-## Proposed Next Strategic Arc (Sprints 51–53)
+## Proposed Next Strategic Arc (Sprint 53)
 
-> **Status:** 📋 Proposed — not yet implemented. Sequencing is based on the logical progression from institutional convergence memory.
+> **Status:** 📋 Proposed — not yet implemented. Sequencing is based on the logical progression from operating profiles.
 
 ### Strategic Narrative
 
-Sprint 48 closed the cost/economic awareness gap. Sprint 49 introduced convergence detection. Sprint 50 operationalized convergence governance. Sprint 51 turned approved decisions and outcomes into durable institutional memory.
+Sprint 48 closed the cost/economic awareness gap. Sprint 49 introduced convergence detection. Sprint 50 operationalized convergence governance. Sprint 51 turned approved decisions into durable institutional memory. Sprint 52 packaged that memory into reusable operating profiles and policy packs.
 
-The next arc packages that memory into reusable operating profiles and opens a bounded product intelligence layer:
+The next step opens a bounded product intelligence layer:
 
-| Sprint | Name | Objective | Why After 51 |
+| Sprint | Name | Objective | Why After 52 |
 |--------|------|-----------|--------------|
-| 52 | Operating Profiles & Policy Packs | Package institutional memory, convergence outcomes, and proven policies into composable, tenant-assignable operating profiles | Memory becomes actionable only when it can be packaged and reused |
-| 53 | Product Intelligence Entry | Begin bounded, advisory-first product intelligence — connecting execution outcomes to product-level signals without crossing governance boundaries | The platform is mature enough to reason about product-level impact |
+| 53 | Product Intelligence Entry | Begin bounded, advisory-first product intelligence — connecting execution outcomes to product-level signals without crossing governance boundaries | The platform now has packaged operating knowledge and is mature enough to reason about product-level impact |
 
 **Acceptance direction (high-level):**
-- Sprint 52: Profile composition from proven policies + convergence outcomes, tenant assignment, versioning, rollback
 - Sprint 53: Product signal ingestion, bounded product-level insight generation, advisory-only product recommendations
 
 **Governing constraint:** All proposed sprints remain subject to advisory-first, governance-before-autonomy principles. No autonomous architecture mutation. Human approval for structural change.
