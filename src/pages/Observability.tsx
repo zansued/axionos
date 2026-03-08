@@ -361,6 +361,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
+          {/* ===== TENANT ARCHITECTURE MODES ===== */}
+          <TabsContent value="tenant-arch" className="mt-4">
+            <TenantArchitectureModesDashboard />
+          </TabsContent>
+
           {/* ===== PLATFORM STABILIZATION V2 ===== */}
           <TabsContent value="stability-v2" className="mt-4">
             <PlatformStabilizationV2Dashboard />
