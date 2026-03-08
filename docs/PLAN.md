@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 56 (Controlled Ecosystem Readiness Layer) — ✅ Complete
-> **Next Sprint:** 57 (Capability Exposure Governance Layer) — 📋 Planned
+> **Current Sprint:** 57 (Capability Exposure Governance Layer) — ✅ Complete
+> **Next Sprint:** 58 (External Trust & Admission Layer) — 📋 Planned
 
 ## Document Authority
 
