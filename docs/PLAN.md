@@ -5,7 +5,8 @@
 >
 > **Last updated:** 2026-03-08
 > **Current Sprint:** 70 (Adoption Intelligence & Customer Success Loop) — ✅ Complete
-> **Next Sprint:** 71 (TBD — post-Block M) — 🔮 Reserved
+> **Next Block:** N (Evidence-Governed Improvement Loop, Sprints 71–74) — 📋 Planned
+> **Reserved Horizon:** Blocks O–S (Sprints 75–94) — 🔮 Reserved
 
 ## Document Authority
 
