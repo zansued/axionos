@@ -59,6 +59,7 @@ const bottomItems = [
   { title: "Assurance 2.0", url: "/outcome-assurance", icon: ShieldCheck },
   { title: "Dist. Jobs", url: "/distributed-jobs", icon: Server },
   { title: "Regions", url: "/cross-region-recovery", icon: Globe },
+  { title: "Tenant Runtime", url: "/tenant-runtime", icon: Server },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
