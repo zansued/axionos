@@ -155,22 +155,20 @@ Governed lifecycle for convergence promotion, bounded merge, retention, deprecat
 
 ---
 
-## Proposed Next Strategic Arc (Sprint 53)
+## Proposed Next Strategic Arc (Sprint 54+)
 
-> **Status:** 📋 Proposed — not yet implemented. Sequencing is based on the logical progression from operating profiles.
+> **Status:** 📋 Proposed — not yet implemented. Sequencing is based on the logical progression from product intelligence entry.
 
 ### Strategic Narrative
 
-Sprint 48 closed the cost/economic awareness gap. Sprint 49 introduced convergence detection. Sprint 50 operationalized convergence governance. Sprint 51 turned approved decisions into durable institutional memory. Sprint 52 packaged that memory into reusable operating profiles and policy packs.
+Sprint 48 closed the cost/economic awareness gap. Sprint 49 introduced convergence detection. Sprint 50 operationalized convergence governance. Sprint 51 turned approved decisions into durable institutional memory. Sprint 52 packaged that memory into reusable operating profiles and policy packs. Sprint 53 opened the bounded product intelligence layer.
 
-The next step opens a bounded product intelligence layer:
+The next horizon may expand toward:
 
-| Sprint | Name | Objective | Why After 52 |
+| Sprint | Name | Objective | Why After 53 |
 |--------|------|-----------|--------------|
-| 53 | Product Intelligence Entry | Begin bounded, advisory-first product intelligence — connecting execution outcomes to product-level signals without crossing governance boundaries | The platform now has packaged operating knowledge and is mature enough to reason about product-level impact |
-
-**Acceptance direction (high-level):**
-- Sprint 53: Product signal ingestion, bounded product-level insight generation, advisory-only product recommendations
+| 54 | Product Intelligence Maturation | Deepen product signal correlation, cross-tenant product benchmarking, product-informed architecture recommendations | Product intelligence entry provides the foundation for deeper product-level reasoning |
+| 55 | Ecosystem & Marketplace Entry | Begin bounded marketplace/ecosystem capabilities based on product intelligence | Product intelligence provides the evidence needed to safely open ecosystem capabilities |
 
 **Governing constraint:** All proposed sprints remain subject to advisory-first, governance-before-autonomy principles. No autonomous architecture mutation. Human approval for structural change.
 
