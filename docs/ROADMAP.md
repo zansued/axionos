@@ -132,20 +132,20 @@ The next strategic direction moves from external trust & admission toward **ecos
 
 ---
 
-## Committed Future Arc (Sprint 58)
+## Committed Future Arc (Sprint 59)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
 > **Block:** Block J — Trusted Ecosystem Foundation
 
-This sprint continues the trusted ecosystem foundation arc. It should still be reviewed and approved before execution begins.
+This sprint completes the trusted ecosystem foundation arc. It should still be reviewed and approved before execution begins.
 
 | Sprint | Name | Objective | Acceptance Direction |
 |--------|------|-----------|---------------------|
-| 58 | External Trust & Admission Layer | Define trust scoring, admission criteria, and safety boundaries for external participants | Trust scoring and admission defined; no external participants admitted |
+| 59 | Ecosystem Simulation & Sandbox Layer | Simulate ecosystem interactions in bounded sandboxes before real exposure | Sandboxed interaction simulation defined; no live ecosystem enabled |
 
-### Why 58 is committed
+### Why 59 is committed
 
-With Sprint 57 complete (capability exposure governance), the platform has established governance rules for exposure. The next step is defining trust and admission criteria for external participants (58). It reuses existing AxionOS philosophy and Agent OS planes without expansion.
+With Sprint 58 complete (external trust & admission), the platform has established trust models and admission criteria. The next step is ecosystem simulation (59) — testing interactions before real exposure. It reuses existing AxionOS philosophy and Agent OS planes without expansion.
 
 ---
 
