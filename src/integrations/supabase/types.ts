@@ -7734,6 +7734,374 @@ export type Database = {
           },
         ]
       }
+      institutional_assurance_reviews: {
+        Row: {
+          assessment_id: string | null
+          created_at: string
+          evidence_links: Json
+          id: string
+          linked_changes: Json
+          organization_id: string
+          recommendation_status: string
+          review_notes: string
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          assessment_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          linked_changes?: Json
+          organization_id: string
+          recommendation_status?: string
+          review_notes?: string
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          assessment_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          linked_changes?: Json
+          organization_id?: string
+          recommendation_status?: string
+          review_notes?: string
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_assurance_reviews_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_outcome_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_assurance_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_assurance_signals: {
+        Row: {
+          created_at: string
+          cross_layer_assurance_score: number
+          evidence_density_score: number
+          evidence_links: Json
+          id: string
+          organization_id: string
+          signal_layer: string
+          signal_payload: Json
+          signal_type: string
+          stability_score: number
+        }
+        Insert: {
+          created_at?: string
+          cross_layer_assurance_score?: number
+          evidence_density_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          signal_layer?: string
+          signal_payload?: Json
+          signal_type?: string
+          stability_score?: number
+        }
+        Update: {
+          created_at?: string
+          cross_layer_assurance_score?: number
+          evidence_density_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          signal_layer?: string
+          signal_payload?: Json
+          signal_type?: string
+          stability_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_assurance_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_outcome_assessments: {
+        Row: {
+          assumptions: Json
+          assurance_confidence_score: number
+          created_at: string
+          drift_score: number
+          evidence_density_score: number
+          evidence_links: Json
+          expected_outcome_score: number
+          expected_outcomes: Json
+          id: string
+          institutional_risk_score: number
+          model_id: string | null
+          organization_id: string
+          outcome_domain: string
+          outcome_scope_id: string
+          outcome_scope_type: string
+          outcome_variance_score: number
+          realized_outcome_score: number
+          realized_outcomes: Json
+          stability_score: number
+          updated_at: string
+        }
+        Insert: {
+          assumptions?: Json
+          assurance_confidence_score?: number
+          created_at?: string
+          drift_score?: number
+          evidence_density_score?: number
+          evidence_links?: Json
+          expected_outcome_score?: number
+          expected_outcomes?: Json
+          id?: string
+          institutional_risk_score?: number
+          model_id?: string | null
+          organization_id: string
+          outcome_domain?: string
+          outcome_scope_id?: string
+          outcome_scope_type?: string
+          outcome_variance_score?: number
+          realized_outcome_score?: number
+          realized_outcomes?: Json
+          stability_score?: number
+          updated_at?: string
+        }
+        Update: {
+          assumptions?: Json
+          assurance_confidence_score?: number
+          created_at?: string
+          drift_score?: number
+          evidence_density_score?: number
+          evidence_links?: Json
+          expected_outcome_score?: number
+          expected_outcomes?: Json
+          id?: string
+          institutional_risk_score?: number
+          model_id?: string | null
+          organization_id?: string
+          outcome_domain?: string
+          outcome_scope_id?: string
+          outcome_scope_type?: string
+          outcome_variance_score?: number
+          realized_outcome_score?: number
+          realized_outcomes?: Json
+          stability_score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_outcome_assessments_model_id_fkey"
+            columns: ["model_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_outcome_models"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_outcome_assessments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_outcome_assurance_outcomes: {
+        Row: {
+          assurance_outcome_accuracy_score: number
+          bounded_remediation_readiness_score: number
+          created_at: string
+          evidence_refs: Json
+          expected_outcomes: Json
+          id: string
+          organization_id: string
+          outcome_status: string
+          outcome_type: string
+          realized_outcomes: Json
+          review_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          assurance_outcome_accuracy_score?: number
+          bounded_remediation_readiness_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          outcome_type?: string
+          realized_outcomes?: Json
+          review_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assurance_outcome_accuracy_score?: number
+          bounded_remediation_readiness_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          outcome_type?: string
+          realized_outcomes?: Json
+          review_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_outcome_assurance_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_outcome_assurance_outcomes_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_assurance_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_outcome_models: {
+        Row: {
+          assurance_dimensions: Json
+          created_at: string
+          evidence_links: Json
+          evidence_requirements: Json
+          expected_outcome_definition: Json
+          id: string
+          organization_id: string
+          outcome_domain: string
+          outcome_model_name: string
+          outcome_scope_type: string
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assurance_dimensions?: Json
+          created_at?: string
+          evidence_links?: Json
+          evidence_requirements?: Json
+          expected_outcome_definition?: Json
+          id?: string
+          organization_id: string
+          outcome_domain?: string
+          outcome_model_name: string
+          outcome_scope_type?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assurance_dimensions?: Json
+          created_at?: string
+          evidence_links?: Json
+          evidence_requirements?: Json
+          expected_outcome_definition?: Json
+          id?: string
+          organization_id?: string
+          outcome_domain?: string
+          outcome_model_name?: string
+          outcome_scope_type?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_outcome_models_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_outcome_models_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_outcome_variances: {
+        Row: {
+          assessment_id: string | null
+          created_at: string
+          drift_score: number
+          evidence_links: Json
+          fragility_score: number
+          id: string
+          organization_id: string
+          outcome_domain: string
+          rationale: string
+          recurrence_count: number
+          remediation_priority_score: number
+          variance_type: string
+        }
+        Insert: {
+          assessment_id?: string | null
+          created_at?: string
+          drift_score?: number
+          evidence_links?: Json
+          fragility_score?: number
+          id?: string
+          organization_id: string
+          outcome_domain?: string
+          rationale?: string
+          recurrence_count?: number
+          remediation_priority_score?: number
+          variance_type?: string
+        }
+        Update: {
+          assessment_id?: string | null
+          created_at?: string
+          drift_score?: number
+          evidence_links?: Json
+          fragility_score?: number
+          id?: string
+          organization_id?: string
+          outcome_domain?: string
+          rationale?: string
+          recurrence_count?: number
+          remediation_priority_score?: number
+          variance_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_outcome_variances_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_outcome_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_outcome_variances_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       learning_recommendations: {
         Row: {
           confidence_score: number
