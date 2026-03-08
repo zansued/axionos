@@ -105,7 +105,7 @@ The next strategic direction moves from limited marketplace pilot toward **capab
 
 ---
 
-## Completed Canon (Sprints 1–58)
+## Completed Canon (Sprints 1–60)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
