@@ -105,6 +105,7 @@ const App = () => (
                       <Route path="/improvement-candidates" element={<ProtectedRoute><ImprovementCandidates /></ProtectedRoute>} />
                       <Route path="/improvement-benchmarks" element={<ProtectedRoute><ImprovementBenchmarks /></ProtectedRoute>} />
                       <Route path="/agent-routing" element={<ProtectedRoute><AgentRouting /></ProtectedRoute>} />
+                      <Route path="/agent-debates" element={<ProtectedRoute><AgentDebates /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
