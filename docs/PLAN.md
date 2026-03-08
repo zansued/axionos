@@ -1,10 +1,28 @@
 # AxionOS — Implementation Plan
 
 > Sprint-by-sprint implementation record mapping capabilities to architectural layers.
+> **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
 > **Current Sprint:** 48 (Economic Optimization Layer) — ✅ Complete
 > **Next Sprint:** 49 — 📋 Planned
+
+## Document Authority
+
+| Scope | Rule |
+|-------|------|
+| **Owns** | Current/next sprint, sprint-by-sprint implementation record, phase grouping, completion status, capability verification matrix, shared module and edge function registries |
+| **Must not define** | Deep architecture explanation (→ ARCHITECTURE.md), long-term strategic narrative (→ ROADMAP.md), detailed agent/module reference (→ AGENTS.md) |
+| **Derived from** | ARCHITECTURE.md for layer naming |
+| **Update rule** | Update when a sprint completes or starts |
+
+## Cross-Reference
+
+- **Strategic direction and maturity:** [ROADMAP.md](ROADMAP.md)
+- **Structural architecture view:** [ARCHITECTURE.md](ARCHITECTURE.md)
+- **Agent OS module specs:** [AGENTS.md](AGENTS.md)
+- **Pipeline UX contracts:** [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md)
+- **Sprint metadata registry:** [registry/sprints.yml](registry/sprints.yml)
 
 ---
 
