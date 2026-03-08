@@ -94,7 +94,7 @@ function OverviewSection({ ov }: { ov: any }) {
       <Card className="bg-card/50 border-border/50">
         <CardHeader className="pb-2"><CardTitle className="text-sm">Cost Exposure</CardTitle></CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold text-yellow-400">${(ov.total_cost_exposure || 0).toFixed(4)}</p>
+          <p className="text-2xl font-bold text-accent-foreground">${(ov.total_cost_exposure || 0).toFixed(4)}</p>
           <p className="text-xs text-muted-foreground mt-1">Avg confidence: {formatPct(ov.avg_confidence)}</p>
         </CardContent>
       </Card>
