@@ -121,21 +121,22 @@ serve(async (req) => {
 
     const memoryConfig = MEMORY_CAPTURE_MAP[action];
     if (memoryConfig) {
-      await sc.from("engineering_memory_entries").insert({
-        organization_id: artifact.organization_id,
-        memory_type: memoryConfig.memory_type,
-        memory_subtype: memoryConfig.memory_subtype,
-        title: `${action}: ${artifact.title}`,
-        summary: `Meta-artifact ${artifact_id} transitioned from ${previousStatus} to ${action}. Type: ${artifact.created_by_meta_agent}. Recommendation: ${artifact.recommendation_id}.`,
-        source_type: "meta_agent_artifact",
-        source_id: artifact_id,
-        related_component: artifact.created_by_meta_agent,
-        confidence_score: 0.8,
-        relevance_score: 0.9,
-        tags: [action, artifact.created_by_meta_agent, "meta_artifact"],
-      }).then(({ error: memErr }) => {
+      try {
+        const { error: memErr } = await sc.from("engineering_memory_entries").insert({
+          organization_id: artifact.organization_id,
+          memory_type: memoryConfig.memory_type,
+          memory_subtype: memoryConfig.memory_subtype,
+          title: `${action}: ${artifact.title}`,
+          summary: `Meta-artifact ${artifact_id} transitioned from ${previousStatus} to ${action}. Type: ${artifact.created_by_meta_agent}. Recommendation: ${artifact.recommendation_id}.`,
+          source_type: "meta_agent_artifact",
+          source_id: artifact_id,
+          related_component: artifact.created_by_meta_agent,
+          confidence_score: 0.8,
+          relevance_score: 0.9,
+          tags: [action, artifact.created_by_meta_agent, "meta_artifact"],
+        });
         if (memErr) console.error("Memory capture error:", memErr);
-      });
+      } catch (e) { console.error("Memory capture error:", e); }
     }
 
     // ── Sprint 19: Record quality feedback (fire-and-forget) ──
