@@ -7805,6 +7805,403 @@ export type Database = {
           },
         ]
       }
+      product_friction_clusters: {
+        Row: {
+          affected_signal_ids: Json
+          architecture_correlation_score: number
+          cluster_name: string
+          created_at: string
+          evidence_links: Json
+          friction_type: string
+          id: string
+          linked_architecture_mode_id: string | null
+          linked_operating_profile_id: string | null
+          linked_policy_pack_id: string | null
+          organization_id: string
+          product_area: string
+          profile_correlation_score: number
+          recurrence_count: number
+          severity_score: number
+          status: string
+          trend_direction: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          affected_signal_ids?: Json
+          architecture_correlation_score?: number
+          cluster_name?: string
+          created_at?: string
+          evidence_links?: Json
+          friction_type?: string
+          id?: string
+          linked_architecture_mode_id?: string | null
+          linked_operating_profile_id?: string | null
+          linked_policy_pack_id?: string | null
+          organization_id: string
+          product_area?: string
+          profile_correlation_score?: number
+          recurrence_count?: number
+          severity_score?: number
+          status?: string
+          trend_direction?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          affected_signal_ids?: Json
+          architecture_correlation_score?: number
+          cluster_name?: string
+          created_at?: string
+          evidence_links?: Json
+          friction_type?: string
+          id?: string
+          linked_architecture_mode_id?: string | null
+          linked_operating_profile_id?: string | null
+          linked_policy_pack_id?: string | null
+          organization_id?: string
+          product_area?: string
+          profile_correlation_score?: number
+          recurrence_count?: number
+          severity_score?: number
+          status?: string
+          trend_direction?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_friction_clusters_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_friction_clusters_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_intelligence_outcomes: {
+        Row: {
+          created_at: string
+          evidence_refs: Json
+          expected_adoption_gain: number
+          expected_friction_reduction: number
+          expected_product_impact: number
+          expected_retention_gain: number
+          id: string
+          notes: string
+          opportunity_id: string | null
+          organization_id: string
+          outcome_status: string
+          product_effectiveness_score: number
+          realized_adoption_gain: number
+          realized_friction_reduction: number
+          realized_product_impact: number
+          realized_retention_gain: number
+        }
+        Insert: {
+          created_at?: string
+          evidence_refs?: Json
+          expected_adoption_gain?: number
+          expected_friction_reduction?: number
+          expected_product_impact?: number
+          expected_retention_gain?: number
+          id?: string
+          notes?: string
+          opportunity_id?: string | null
+          organization_id: string
+          outcome_status?: string
+          product_effectiveness_score?: number
+          realized_adoption_gain?: number
+          realized_friction_reduction?: number
+          realized_product_impact?: number
+          realized_retention_gain?: number
+        }
+        Update: {
+          created_at?: string
+          evidence_refs?: Json
+          expected_adoption_gain?: number
+          expected_friction_reduction?: number
+          expected_product_impact?: number
+          expected_retention_gain?: number
+          id?: string
+          notes?: string
+          opportunity_id?: string | null
+          organization_id?: string
+          outcome_status?: string
+          product_effectiveness_score?: number
+          realized_adoption_gain?: number
+          realized_friction_reduction?: number
+          realized_product_impact?: number
+          realized_retention_gain?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_intelligence_outcomes_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "product_opportunity_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_intelligence_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_intelligence_profiles: {
+        Row: {
+          architecture_alignment_score: number
+          avg_adoption_score: number
+          avg_friction_score: number
+          avg_retention_score: number
+          avg_value_score: number
+          created_at: string
+          id: string
+          last_updated_at: string
+          linked_architecture_mode_id: string | null
+          linked_operating_profile_id: string | null
+          operating_profile_alignment_score: number
+          opportunity_density: number
+          organization_id: string
+          product_area: string
+          profile_scope_id: string
+          profile_scope_type: string
+          signal_count: number
+          signal_quality_posture: number
+          tenant_divergence_signal_score: number
+          workspace_id: string | null
+        }
+        Insert: {
+          architecture_alignment_score?: number
+          avg_adoption_score?: number
+          avg_friction_score?: number
+          avg_retention_score?: number
+          avg_value_score?: number
+          created_at?: string
+          id?: string
+          last_updated_at?: string
+          linked_architecture_mode_id?: string | null
+          linked_operating_profile_id?: string | null
+          operating_profile_alignment_score?: number
+          opportunity_density?: number
+          organization_id: string
+          product_area?: string
+          profile_scope_id?: string
+          profile_scope_type?: string
+          signal_count?: number
+          signal_quality_posture?: number
+          tenant_divergence_signal_score?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          architecture_alignment_score?: number
+          avg_adoption_score?: number
+          avg_friction_score?: number
+          avg_retention_score?: number
+          avg_value_score?: number
+          created_at?: string
+          id?: string
+          last_updated_at?: string
+          linked_architecture_mode_id?: string | null
+          linked_operating_profile_id?: string | null
+          operating_profile_alignment_score?: number
+          opportunity_density?: number
+          organization_id?: string
+          product_area?: string
+          profile_scope_id?: string
+          profile_scope_type?: string
+          signal_count?: number
+          signal_quality_posture?: number
+          tenant_divergence_signal_score?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_intelligence_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_intelligence_profiles_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_intelligence_reviews: {
+        Row: {
+          created_at: string
+          evidence_refs: Json
+          friction_cluster_id: string | null
+          id: string
+          opportunity_id: string | null
+          organization_id: string
+          review_notes: string
+          review_status: string
+          review_type: string
+          reviewer_ref: Json
+        }
+        Insert: {
+          created_at?: string
+          evidence_refs?: Json
+          friction_cluster_id?: string | null
+          id?: string
+          opportunity_id?: string | null
+          organization_id: string
+          review_notes?: string
+          review_status?: string
+          review_type?: string
+          reviewer_ref?: Json
+        }
+        Update: {
+          created_at?: string
+          evidence_refs?: Json
+          friction_cluster_id?: string | null
+          id?: string
+          opportunity_id?: string | null
+          organization_id?: string
+          review_notes?: string
+          review_status?: string
+          review_type?: string
+          reviewer_ref?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_intelligence_reviews_friction_cluster_id_fkey"
+            columns: ["friction_cluster_id"]
+            isOneToOne: false
+            referencedRelation: "product_friction_clusters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_intelligence_reviews_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "product_opportunity_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_intelligence_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_opportunity_candidates: {
+        Row: {
+          architecture_alignment_score: number
+          assumptions: Json
+          confidence_score: number
+          created_at: string
+          description: string
+          evidence_links: Json
+          expected_outcomes: Json
+          expected_product_impact_score: number
+          feasibility_score: number
+          friction_correlation: number
+          id: string
+          linked_architecture_mode_id: string | null
+          linked_operating_profile_id: string | null
+          linked_policy_pack_id: string | null
+          linked_strategy_variant_id: string | null
+          opportunity_score: number
+          opportunity_type: string
+          organization_id: string
+          priority_score: number
+          product_area: string
+          profile_alignment_score: number
+          status: string
+          title: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          architecture_alignment_score?: number
+          assumptions?: Json
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          expected_product_impact_score?: number
+          feasibility_score?: number
+          friction_correlation?: number
+          id?: string
+          linked_architecture_mode_id?: string | null
+          linked_operating_profile_id?: string | null
+          linked_policy_pack_id?: string | null
+          linked_strategy_variant_id?: string | null
+          opportunity_score?: number
+          opportunity_type?: string
+          organization_id: string
+          priority_score?: number
+          product_area?: string
+          profile_alignment_score?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          architecture_alignment_score?: number
+          assumptions?: Json
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          expected_product_impact_score?: number
+          feasibility_score?: number
+          friction_correlation?: number
+          id?: string
+          linked_architecture_mode_id?: string | null
+          linked_operating_profile_id?: string | null
+          linked_policy_pack_id?: string | null
+          linked_strategy_variant_id?: string | null
+          opportunity_score?: number
+          opportunity_type?: string
+          organization_id?: string
+          priority_score?: number
+          product_area?: string
+          profile_alignment_score?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_opportunity_candidates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_opportunity_candidates_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_plans: {
         Row: {
           created_at: string
@@ -7849,6 +8246,87 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      product_signal_events: {
+        Row: {
+          adoption_score: number
+          confidence_score: number
+          created_at: string
+          evidence_links: Json
+          friction_score: number
+          id: string
+          noise_penalty_score: number
+          organization_id: string
+          product_area: string
+          raw_payload: Json
+          retention_signal_score: number
+          signal_quality_score: number
+          signal_scope_id: string
+          signal_scope_type: string
+          signal_source: string
+          signal_type: string
+          tags: Json
+          value_signal_score: number
+          workspace_id: string | null
+        }
+        Insert: {
+          adoption_score?: number
+          confidence_score?: number
+          created_at?: string
+          evidence_links?: Json
+          friction_score?: number
+          id?: string
+          noise_penalty_score?: number
+          organization_id: string
+          product_area?: string
+          raw_payload?: Json
+          retention_signal_score?: number
+          signal_quality_score?: number
+          signal_scope_id?: string
+          signal_scope_type?: string
+          signal_source?: string
+          signal_type?: string
+          tags?: Json
+          value_signal_score?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          adoption_score?: number
+          confidence_score?: number
+          created_at?: string
+          evidence_links?: Json
+          friction_score?: number
+          id?: string
+          noise_penalty_score?: number
+          organization_id?: string
+          product_area?: string
+          raw_payload?: Json
+          retention_signal_score?: number
+          signal_quality_score?: number
+          signal_scope_id?: string
+          signal_scope_type?: string
+          signal_source?: string
+          signal_type?: string
+          tags?: Json
+          value_signal_score?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_signal_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_signal_events_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profile_adoption_reviews: {
         Row: {
