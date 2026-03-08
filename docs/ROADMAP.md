@@ -97,7 +97,7 @@ The next strategic direction moves from controlled ecosystem readiness toward **
 
 ---
 
-## Completed Canon (Sprints 1–55)
+## Completed Canon (Sprints 1–56)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
