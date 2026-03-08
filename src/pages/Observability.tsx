@@ -385,6 +385,11 @@ export default function Observability() {
           <TabsContent value="arch-pilot" className="mt-4">
             <ArchitectureRolloutPilotDashboard />
           </TabsContent>
+
+          {/* ===== ARCHITECTURE MIGRATION ===== */}
+          <TabsContent value="arch-migrate" className="mt-4">
+            <ArchitectureMigrationDashboard />
+          </TabsContent>
           {/* ===== PLATFORM INTELLIGENCE ===== */}
           <TabsContent value="platform" className="mt-4">
             <PlatformIntelligenceDashboard />
