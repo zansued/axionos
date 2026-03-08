@@ -125,6 +125,7 @@ The next strategic direction moves from capability exposure governance toward **
 | Block I (partial) — Product Intelligence Operations | 54 | Cross-tenant benchmarking, signal quality calibration, product-architecture/profile operational correlations, advisory recommendations |
 | Block I (partial) — Product Opportunity Portfolio Governance | 55 | Portfolio ranking, conflict detection, capacity-aware prioritization, promotion/defer/reject/monitor decisions, outcome tracking |
 | Block I (complete) — Controlled Ecosystem Readiness | 56 | Capability inventory, exposure classification, safety prerequisites, trust model foundation, readiness assessment, ecosystem readiness outcomes |
+| Block J (partial) — Capability Exposure Governance | 57 | Exposure classes, governance cases, gate evaluation, restriction analysis, review workflow, governance outcomes |
 
 ---
 
