@@ -25,6 +25,7 @@ import Observability from "./pages/Observability";
 import Planning from "./pages/Planning";
 import Workspace from "./pages/Workspace";
 import Artifacts from "./pages/Artifacts";
+import Delivery from "./pages/Delivery";
 import OrgSettings from "./pages/OrgSettings";
 import Billing from "./pages/Billing";
 import Connections from "./pages/Connections";
@@ -81,6 +82,7 @@ const App = () => (
                       <Route path="/planning" element={<Navigate to="/initiatives" replace />} />
                       <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
                       <Route path="/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
+                      <Route path="/delivery" element={<ProtectedRoute><Delivery /></ProtectedRoute>} />
                       <Route path="/org" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
                       <Route path="/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
                       <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />

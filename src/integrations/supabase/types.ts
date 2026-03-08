@@ -5120,6 +5120,475 @@ export type Database = {
           },
         ]
       }
+      delivery_assurance_outcomes: {
+        Row: {
+          assumptions: Json
+          created_at: string
+          degraded_delivery_visibility_score: number
+          delivery_assurance_quality_score: number
+          delivery_outcome_accuracy_score: number
+          delivery_visibility_score: number
+          deploy_confidence_score: number
+          deploy_readiness_score: number
+          deploy_success_clarity_score: number
+          evidence_links: Json
+          expected_outcomes: Json
+          final_mile_coherence_score: number
+          handoff_completeness_score: number
+          id: string
+          initiative_id: string | null
+          one_click_friction_score: number
+          organization_id: string
+          outcome_domain: string
+          output_accessibility_score: number
+          realized_outcomes: Json
+          recovery_readiness_score: number
+          rollback_readiness_score: number
+          updated_at: string
+        }
+        Insert: {
+          assumptions?: Json
+          created_at?: string
+          degraded_delivery_visibility_score?: number
+          delivery_assurance_quality_score?: number
+          delivery_outcome_accuracy_score?: number
+          delivery_visibility_score?: number
+          deploy_confidence_score?: number
+          deploy_readiness_score?: number
+          deploy_success_clarity_score?: number
+          evidence_links?: Json
+          expected_outcomes?: Json
+          final_mile_coherence_score?: number
+          handoff_completeness_score?: number
+          id?: string
+          initiative_id?: string | null
+          one_click_friction_score?: number
+          organization_id: string
+          outcome_domain?: string
+          output_accessibility_score?: number
+          realized_outcomes?: Json
+          recovery_readiness_score?: number
+          rollback_readiness_score?: number
+          updated_at?: string
+        }
+        Update: {
+          assumptions?: Json
+          created_at?: string
+          degraded_delivery_visibility_score?: number
+          delivery_assurance_quality_score?: number
+          delivery_outcome_accuracy_score?: number
+          delivery_visibility_score?: number
+          deploy_confidence_score?: number
+          deploy_readiness_score?: number
+          deploy_success_clarity_score?: number
+          evidence_links?: Json
+          expected_outcomes?: Json
+          final_mile_coherence_score?: number
+          handoff_completeness_score?: number
+          id?: string
+          initiative_id?: string | null
+          one_click_friction_score?: number
+          organization_id?: string
+          outcome_domain?: string
+          output_accessibility_score?: number
+          realized_outcomes?: Json
+          recovery_readiness_score?: number
+          rollback_readiness_score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_assurance_outcomes_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_assurance_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_orchestration_instances: {
+        Row: {
+          assumptions: Json
+          blocker_score: number
+          created_at: string
+          current_delivery_state: string
+          delivery_model_name: string
+          delivery_recommendation_status: string
+          delivery_visibility_score: number
+          deploy_confidence_score: number
+          deploy_readiness_score: number
+          deploy_url: string | null
+          evidence_links: Json
+          handoff_completeness_score: number
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          output_accessibility_score: number
+          preview_url: string | null
+          repo_url: string | null
+          rollback_readiness_score: number
+          updated_at: string
+          validation_gate_score: number
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          blocker_score?: number
+          created_at?: string
+          current_delivery_state?: string
+          delivery_model_name?: string
+          delivery_recommendation_status?: string
+          delivery_visibility_score?: number
+          deploy_confidence_score?: number
+          deploy_readiness_score?: number
+          deploy_url?: string | null
+          evidence_links?: Json
+          handoff_completeness_score?: number
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          output_accessibility_score?: number
+          preview_url?: string | null
+          repo_url?: string | null
+          rollback_readiness_score?: number
+          updated_at?: string
+          validation_gate_score?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          blocker_score?: number
+          created_at?: string
+          current_delivery_state?: string
+          delivery_model_name?: string
+          delivery_recommendation_status?: string
+          delivery_visibility_score?: number
+          deploy_confidence_score?: number
+          deploy_readiness_score?: number
+          deploy_url?: string | null
+          evidence_links?: Json
+          handoff_completeness_score?: number
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          output_accessibility_score?: number
+          preview_url?: string | null
+          repo_url?: string | null
+          rollback_readiness_score?: number
+          updated_at?: string
+          validation_gate_score?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_orchestration_instances_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_orchestration_instances_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_orchestration_instances_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_orchestration_models: {
+        Row: {
+          assumptions: Json
+          assurance_thresholds: Json
+          created_at: string
+          delivery_model_name: string
+          description: string | null
+          evidence_links: Json
+          gate_requirements: Json
+          id: string
+          organization_id: string
+          release_path_definition: Json
+          rollback_policy: Json
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          assurance_thresholds?: Json
+          created_at?: string
+          delivery_model_name?: string
+          description?: string | null
+          evidence_links?: Json
+          gate_requirements?: Json
+          id?: string
+          organization_id: string
+          release_path_definition?: Json
+          rollback_policy?: Json
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          assurance_thresholds?: Json
+          created_at?: string
+          delivery_model_name?: string
+          description?: string | null
+          evidence_links?: Json
+          gate_requirements?: Json
+          id?: string
+          organization_id?: string
+          release_path_definition?: Json
+          rollback_policy?: Json
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_orchestration_models_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_orchestration_models_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_output_views: {
+        Row: {
+          created_at: string
+          delivery_timestamp: string | null
+          delivery_visibility_score: number
+          deploy_url: string | null
+          handoff_completeness_score: number
+          handoff_status: string
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          output_accessibility_score: number
+          output_details: Json
+          preview_url: string | null
+          repo_url: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          delivery_timestamp?: string | null
+          delivery_visibility_score?: number
+          deploy_url?: string | null
+          handoff_completeness_score?: number
+          handoff_status?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          output_accessibility_score?: number
+          output_details?: Json
+          preview_url?: string | null
+          repo_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          delivery_timestamp?: string | null
+          delivery_visibility_score?: number
+          deploy_url?: string | null
+          handoff_completeness_score?: number
+          handoff_status?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          output_accessibility_score?: number
+          output_details?: Json
+          preview_url?: string | null
+          repo_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_output_views_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_output_views_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deploy_assurance_assessments: {
+        Row: {
+          assessment_status: string
+          blocker_count: number
+          blocker_details: Json
+          created_at: string
+          delivery_assurance_quality_score: number
+          deploy_confidence_score: number
+          deploy_readiness_score: number
+          deploy_success_clarity_score: number
+          evidence_links: Json
+          final_mile_coherence_score: number
+          id: string
+          initiative_id: string | null
+          one_click_friction_score: number
+          organization_id: string
+          recovery_readiness_score: number
+          rollback_readiness_score: number
+          updated_at: string
+          validation_gate_score: number
+        }
+        Insert: {
+          assessment_status?: string
+          blocker_count?: number
+          blocker_details?: Json
+          created_at?: string
+          delivery_assurance_quality_score?: number
+          deploy_confidence_score?: number
+          deploy_readiness_score?: number
+          deploy_success_clarity_score?: number
+          evidence_links?: Json
+          final_mile_coherence_score?: number
+          id?: string
+          initiative_id?: string | null
+          one_click_friction_score?: number
+          organization_id: string
+          recovery_readiness_score?: number
+          rollback_readiness_score?: number
+          updated_at?: string
+          validation_gate_score?: number
+        }
+        Update: {
+          assessment_status?: string
+          blocker_count?: number
+          blocker_details?: Json
+          created_at?: string
+          delivery_assurance_quality_score?: number
+          deploy_confidence_score?: number
+          deploy_readiness_score?: number
+          deploy_success_clarity_score?: number
+          evidence_links?: Json
+          final_mile_coherence_score?: number
+          id?: string
+          initiative_id?: string | null
+          one_click_friction_score?: number
+          organization_id?: string
+          recovery_readiness_score?: number
+          rollback_readiness_score?: number
+          updated_at?: string
+          validation_gate_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deploy_assurance_assessments_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deploy_assurance_assessments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deploy_recovery_states: {
+        Row: {
+          created_at: string
+          degraded_delivery_details: Json
+          degraded_delivery_visibility_score: number
+          degraded_delivery_visible: boolean
+          evidence_links: Json
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          recovery_action_label: string | null
+          recovery_readiness_score: number
+          recovery_state: string
+          rollback_available: boolean
+          rollback_target: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          degraded_delivery_details?: Json
+          degraded_delivery_visibility_score?: number
+          degraded_delivery_visible?: boolean
+          evidence_links?: Json
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          recovery_action_label?: string | null
+          recovery_readiness_score?: number
+          recovery_state?: string
+          rollback_available?: boolean
+          rollback_target?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          degraded_delivery_details?: Json
+          degraded_delivery_visibility_score?: number
+          degraded_delivery_visible?: boolean
+          evidence_links?: Json
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          recovery_action_label?: string | null
+          recovery_readiness_score?: number
+          recovery_state?: string
+          rollback_available?: boolean
+          rollback_target?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deploy_recovery_states_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deploy_recovery_states_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       discovery_architecture_recommendations: {
         Row: {
           confidence_score: number | null
