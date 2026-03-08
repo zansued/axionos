@@ -390,6 +390,11 @@ export default function Observability() {
             <ArchitectureRolloutPilotDashboard />
           </TabsContent>
 
+          {/* ===== ARCHITECTURE FITNESS ===== */}
+          <TabsContent value="arch-fitness" className="mt-4">
+            <ArchitectureFitnessDashboard />
+          </TabsContent>
+
           {/* ===== ARCHITECTURE PORTFOLIO ===== */}
           <TabsContent value="arch-portfolio" className="mt-4">
             <ArchitecturePortfolioGovernanceDashboard />
