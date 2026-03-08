@@ -624,75 +624,30 @@ supabase/functions/
 
 ## 12. Implementation Status
 
-### Implemented
+> **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
+> **Summary:** 48 sprints complete. 49 systems implemented. All architecture-scaled blocks done.
 
-| # | System | Sprint | Details |
-|---|--------|--------|---------|
-| 1 | Pipeline (32 stages) | 1-10 | 50+ independent Edge Functions |
-| 2 | Project Brain | 1-10 | Nodes, edges, decisions, errors, prevention rules, tsvector, pgvector |
-| 3 | Dependency Scheduler | 1-10 | DAG builder, topological sort, wave computation |
-| 4 | Agent Swarm | 1-10 | Orchestrator + Worker, parallel execution (6 workers) |
-| 5 | Data Model Generator | 1-10 | Domain model to SQL tables, FK, indexes, RLS |
-| 6 | Autonomous UI Generator | 1-10 | Pages, components, hooks, navigation |
-| 7 | Adaptive Learning Engine | 1-10 | Prevention rules, patterns, cross-project |
-| 8 | CI-Triggered Fix Swarm | 1-10 | Webhook + Fix Orchestrator + auto-PR |
-| 9 | Self-Healing Codebase | 1-10 | Prevention rules with confidence scoring |
-| 10 | Architectural Drift Detection | 1-10 | Rule-based + AI hybrid |
-| 11 | Atomic Git Commits | 1-10 | Tree API for publish + fix PRs |
-| 12 | Runtime Validation | 1-10 | Real tsc + vite build via GitHub Actions CI |
-| 13 | Smart Context Window | 1-10 | ~60-80% token reduction |
-| 14 | AI Efficiency Layer | 1-10 | Prompt compression + semantic cache + model router |
-| 15 | Agent OS v1.0 | 1-10 | 14 modules, 5 planes, full TypeScript contracts |
-| 16 | Commercial Readiness | 11 | Plans, billing, workspace roles, usage enforcement |
-| 17 | Learning Agents v1 | 12 | Prompt analysis, strategy tracking, prediction, weight adaptation |
-| 18 | Meta-Agents v1.4 | 13+18+19+20 | 4 memory-aware meta-agents, quality feedback, advisory calibration |
-| 19 | Controlled Proposal Generation | 14 | 5 artifact types, review lifecycle, idempotency |
-| 20 | Engineering Memory Foundation | 15 | Memory tables, capture events, retrieval API, observability |
-| 21 | Memory Retrieval Surfaces | 16 | Structured retrieval for repair, meta-agents, artifacts, review |
-| 22 | Memory Summaries | 17 | 6 summary types, signal strength, generation service |
-| 23 | Memory-Aware Meta-Agents | 18 | Historical context, continuity scoring, redundancy guard, proposal v2 |
-| 24 | Proposal Quality Feedback Loop | 19 | Quality scoring, outcome tracking, confidence calibration |
-| 25 | Advisory Calibration Layer | 20 | 6 calibration domains, deterministic scoring, advisory-only signals |
-| 26 | Prompt Optimization Engine | 21 | A/B testing, variant selection, performance metrics |
-| 27 | Bounded Promotion & Rollback Guard | 22 | Phased rollout, health monitoring, auto-rollback |
-| 28 | Self-Improving Fix Agents v2 | 23 | Memory-aware repair policies, bounded adjustments, retry intelligence |
-| 29 | Agent Memory Operationalization | 24 | Per-agent memory profiles, structured memory records, quality scoring |
-| 30 | Predictive Error Detection | 25 | Runtime risk scoring, checkpoint evaluation, preventive actions |
-| 31 | Cross-Stage Policy Synthesis (LA v2) | 26 | Learning graph, policy synthesis, spillover detection |
-| 32 | Execution Policy Intelligence | 27 | Context classification, policy selection, bounded adjustments |
-| 33 | Portfolio Optimization | 28 | Portfolio evaluation, ranking, lifecycle, conflict detection |
-| 34 | Tenant Adaptive Tuning | 29 | Tenant preferences, override guards, drift detection |
-| 35 | Platform Intelligence Entry | 30 | Behavior aggregation, bottleneck detection, health model |
-| 36 | Platform Self-Calibration | 31 | Parameter registry, bounded proposals, guardrails, rollback |
-| 37 | Execution Strategy Evolution | 32 | Strategy families, variant synthesis, experiment runner, promotion/rollback |
-| 38 | Strategy Portfolio Governance | 33 | Strategy family lifecycle, portfolio health, conflict resolution |
-| 39 | Platform Self-Stabilization | 34 | Drift detection, oscillation suppression, safe modes, stability signals |
-| 40 | Autonomous Engineering Advisor | 35 | Cross-layer advisory synthesis, recommendation review workflow |
-| 41 | Semantic Retrieval | 36 | Unified embedding-backed retrieval, domain guardrails, session lineage |
-| 42 | Discovery-Driven Architecture Signals | 37 | External/product signal correlation, architecture recommendations |
-| 43 | Architecture Change Simulation | 38 | Bounded simulation, impact estimation, governance guardrails |
-| 44 | Architecture Change Planning | 39 | Implementation plans, blast radius, validation/rollback blueprints |
-| 45 | Architecture Rollout Sandbox | 40 | Bounded rehearsal, migration sequencing, fragility analysis, rollback viability |
-| 46 | Architecture Rollout Pilot Governance | 41 | Bounded pilots, baseline comparison, instant rollback, pilot guardrails |
-| 47 | Controlled Architecture Migration Execution | 42 | Staged rollout, checkpoint gates, tenant-safe slicing, deterministic rollback |
-| 48 | Architecture Portfolio Governance | 43 | Portfolio-level prioritization, conflict detection, cumulative blast radius, concurrency guard |
-| 49 | Architecture Fitness Functions | 44 | Continuous fitness evaluation, boundary/isolation/observability analysis, trend tracking, fitness recommendations |
+| Block | Sprints | Status |
+|-------|---------|--------|
+| Foundation + Operational Intelligence | 1–12 | ✅ Complete |
+| Meta-Intelligence & Memory | 13–20 | ✅ Complete |
+| Learning & Repair Intelligence | 21–26 | ✅ Complete |
+| Execution Governance | 27–29 | ✅ Complete |
+| Platform Intelligence & Calibration | 30–31 | ✅ Complete |
+| Strategy Evolution & Governance | 32–33 | ✅ Complete |
+| Platform Stabilization & Advisory | 34–37 | ✅ Complete |
+| Architecture Intelligence | 38–40 | ✅ Complete |
+| Architecture-Governed | 41–43 | ✅ Complete |
+| Architecture-Operating | 44–45 | ✅ Complete |
+| Architecture-Scaled | 46–48 | ✅ Complete |
 
 ### Frozen
 
 | Module | Reason |
 |--------|--------|
 | Marketplace ecosystem | Not needed until product intelligence layer |
-| Global capability registry expansion | Architecture sufficient |
 | Advanced distributed runtime | Current runtime is adequate |
 | Advanced multi-agent coordination | Existing coordination works |
-
-### Planned
-
-| Horizon | Module | Priority |
-|---------|--------|----------|
-| FUTURE | Autonomous Implementation | P3 |
-| FUTURE | Cross-Family Strategy Coordination | P2 |
 
 ---
 
