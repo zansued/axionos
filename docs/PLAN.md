@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 73 (Improvement Candidate Distillation Engine) — ✅ Complete
-> **Next Planned:** Sprint 74 (Evidence-Governed Improvement Loop) — 📋 Planned
+> **Current Sprint:** 74 (Sandbox Benchmarking & Promotion Governance) — ✅ Complete
+> **Next Planned:** Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔮 Reserved
 > **Reserved Horizon:** Blocks O–S (Sprints 75–94) — 🔮 Reserved
 
 ## Document Authority
