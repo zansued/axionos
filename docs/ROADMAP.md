@@ -70,22 +70,17 @@ Internal sophistication serves the visible product experience. The user-facing j
 ## Implementation Horizons
 
 ```
-   COMPLETE (1–72)                 PLANNED (73–74)              RESERVED (75–94)
-   ──────────────────►             ──────────────►              ──────────────────►
-   Foundation → Learning →          Sprints 73–74:               Block O: Advanced Multi-Agent
-   Meta → Memory → Gov →            Evidence-Governed            Block P: Governed Ecosystem
-   Intelligence → Calibration →     Improvement Loop             Block Q: Delivery Optimization
-   Strategy → Stabilization →       (continued)                  Block R: Distributed Runtime
-   Advisory → Semantic →                                         Block S: Research Sandbox
-   Discovery → Architecture →
-  Pilot → Migration → Portfolio →
-  Fitness → Change Advisory →
-  Convergence → Conv Gov →
-  Conv Memory → Op Profiles →
-  Product Intelligence →
-  Ecosystem → Assurance →
-  Canon → Operating Completion →
-  Product Experience ✅
+   COMPLETE (1–74)                                               RESERVED (75–94)
+   ──────────────────────────────────────────────►               ──────────────────►
+   Foundation → Learning → Meta → Memory → Gov →                  Block O: Advanced Multi-Agent
+   Intelligence → Calibration → Strategy →                        Block P: Governed Ecosystem
+   Stabilization → Advisory → Semantic →                          Block Q: Delivery Optimization
+   Discovery → Architecture → Pilot → Migration →                 Block R: Distributed Runtime
+   Portfolio → Fitness → Change Advisory →                        Block S: Research Sandbox
+   Convergence → Op Profiles → Product Intelligence →
+   Ecosystem → Assurance → Canon → Operating Completion →
+   Product Experience → Extensibility → Evidence →
+   Candidates → Benchmarking & Promotion ✅
 ```
 
 ---
