@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 66 (User Journey Orchestration Layer) — ✅ Complete
-> **Next Sprint:** 67 (Role-Based Experience Layer) — 📋 Committed
+> **Current Sprint:** 67 (Role-Based Experience Layer) — ✅ Complete
+> **Next Sprint:** 68 (One-Click Delivery & Deploy Assurance Layer) — 📋 Committed
 
 ## Document Authority
 
