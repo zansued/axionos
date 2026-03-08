@@ -4,9 +4,9 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 85 (Reliability-Aware Delivery Tuning) — ✅ Complete
-> **Next Planned:** Sprint 86 (Delivery Optimization Governance) — 📋 Planned
-> **Reserved Horizon:** Blocks Q–S (Sprints 83–94) — Block Q in progress
+> **Current Sprint:** 86 (Outcome Assurance 2.0) — ✅ Complete
+> **Next Planned:** Sprint 87 (Advanced Distributed Runtime) — 📋 Planned
+> **Reserved Horizon:** Blocks R–S (Sprints 87–94) — Block Q complete
 
 ## Document Authority
 
