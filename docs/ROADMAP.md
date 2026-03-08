@@ -37,6 +37,8 @@
 | **Architecture Fitness** | Active — continuous fitness evaluation, boundary/isolation/observability analysis, trend tracking |
 | **Change Advisory Orchestrator** | Active — unified change sequencing, conflict resolution, load balancing, advisory agendas |
 | **Platform Stabilization v2** | Active — multi-layer instability correlation, bounded envelopes, freeze controls, recovery paths |
+| **Tenant Architecture Modes** | Active — bounded architecture specialization by scope + anti-fragmentation |
+| **Economic Optimization** | Active — advisory-first cost/ROI awareness + tradeoff scoring |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
