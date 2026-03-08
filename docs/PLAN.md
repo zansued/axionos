@@ -790,5 +790,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Benchmark Governance | 1 | 74 |
 | Agent Routing | 1 | 75 |
 | Agent Debate & Resolution | 1 | 76 |
+| Working Memory & Task-State | 1 | 77 |
 | Support | 11 | Various |
-| **Total** | **~122** | |
+| **Total** | **~123** | |

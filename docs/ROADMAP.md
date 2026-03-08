@@ -199,6 +199,14 @@ Sprint 76 introduced the first canonical multi-agent debate and resolution layer
 
 ---
 
+## Sprint 77 — Shared Working Memory & Task-State Negotiation ✅ Implemented
+
+Sprint 77 introduced the first canonical shared working memory and task-state negotiation layer. Coordinated agents can now operate against bounded, contextual working memory tied to initiatives and execution contexts. The system supports shared memory entries (observations, assumptions, decisions, constraints), negotiated task-state transitions (proposed → accepted/contested/escalated → resolved), and coordination checkpoints. A dedicated operator surface (`/working-memory`) provides context visibility, blocked/escalated state tracking, checkpoint timelines, and state transition audit trails.
+
+**Strategic role:** Sprint 77 deepens Block O by giving coordinated agents a governed, auditable shared context without introducing uncontrolled global mutation. Tenant isolation and governance invariants remain preserved.
+
+---
+
 ## Block P — Governed Capability Ecosystem & Early Marketplace (Sprints 79–82) — 🔮 Reserved
 
 > **Status:** Reserved — builds on existing ecosystem controls.
