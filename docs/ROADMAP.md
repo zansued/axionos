@@ -126,20 +126,20 @@ The next strategic direction moves from controlled ecosystem readiness toward **
 
 ---
 
-## Committed Future Arc (Sprint 56)
+## Committed Future Arc (Sprint 57)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
-> **Block:** Block I — Product-Intelligent Expansion (remaining)
+> **Block:** Block J — Trusted Ecosystem Foundation
 
-This sprint completes the committed product-intelligent expansion arc. It should still be reviewed and approved before execution begins.
+This sprint begins the trusted ecosystem foundation arc. It should still be reviewed and approved before execution begins.
 
 | Sprint | Name | Objective | Acceptance Direction |
 |--------|------|-----------|---------------------|
-| 56 | Controlled Ecosystem Readiness Layer | Prepare the platform for eventual ecosystem exposure — capability inventory, exposure readiness assessment, safety prerequisites, trust model foundation — without activating any external marketplace | Ecosystem readiness assessed and documented; exposure prerequisites defined; trust model designed; marketplace remains frozen |
+| 57 | Capability Exposure Governance Layer | Govern which internal capabilities can be exposed externally and under what constraints | Exposure governance rules defined and reviewable; no capabilities actually exposed |
 
-### Why 56 is committed
+### Why 57 is committed
 
-With product intelligence now operational (54) and opportunity governance in place (55), the next step is preparing for external exposure (56). It reuses existing AxionOS philosophy and Agent OS planes without expansion.
+With Block I complete (product intelligence + ecosystem readiness), the platform has assessed its capabilities for exposure potential. The next step is establishing governance rules for actual capability exposure (57). It reuses existing AxionOS philosophy and Agent OS planes without expansion.
 
 ---
 
