@@ -6049,6 +6049,401 @@ export type Database = {
           },
         ]
       }
+      external_actor_registry: {
+        Row: {
+          assumptions: Json
+          classification_metadata: Json
+          created_at: string
+          evidence_links: Json
+          external_actor_name: string
+          external_actor_scope: string
+          external_actor_type: string
+          id: string
+          identity_confidence_score: number
+          organization_id: string
+          restriction_level: string
+          status: string
+          trust_tier_id: string | null
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          classification_metadata?: Json
+          created_at?: string
+          evidence_links?: Json
+          external_actor_name: string
+          external_actor_scope?: string
+          external_actor_type?: string
+          id?: string
+          identity_confidence_score?: number
+          organization_id: string
+          restriction_level?: string
+          status?: string
+          trust_tier_id?: string | null
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          classification_metadata?: Json
+          created_at?: string
+          evidence_links?: Json
+          external_actor_name?: string
+          external_actor_scope?: string
+          external_actor_type?: string
+          id?: string
+          identity_confidence_score?: number
+          organization_id?: string
+          restriction_level?: string
+          status?: string
+          trust_tier_id?: string | null
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_actor_registry_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_actor_registry_trust_tier_id_fkey"
+            columns: ["trust_tier_id"]
+            isOneToOne: false
+            referencedRelation: "external_trust_tiers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_actor_registry_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_admission_cases: {
+        Row: {
+          actor_id: string | null
+          admission_case_type: string
+          admission_readiness_score: number
+          assumptions: Json
+          auditability_score: number
+          created_at: string
+          decision_status: string
+          evidence_completeness_score: number
+          evidence_links: Json
+          id: string
+          organization_id: string
+          policy_alignment_score: number
+          rationale: Json
+          recommendation_status: string
+          restriction_level: string
+          review_status: string
+          risk_score: number
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          actor_id?: string | null
+          admission_case_type?: string
+          admission_readiness_score?: number
+          assumptions?: Json
+          auditability_score?: number
+          created_at?: string
+          decision_status?: string
+          evidence_completeness_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          policy_alignment_score?: number
+          rationale?: Json
+          recommendation_status?: string
+          restriction_level?: string
+          review_status?: string
+          risk_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          actor_id?: string | null
+          admission_case_type?: string
+          admission_readiness_score?: number
+          assumptions?: Json
+          auditability_score?: number
+          created_at?: string
+          decision_status?: string
+          evidence_completeness_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          policy_alignment_score?: number
+          rationale?: Json
+          recommendation_status?: string
+          restriction_level?: string
+          review_status?: string
+          risk_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_admission_cases_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "external_actor_registry"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_admission_cases_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_admission_cases_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_admission_requirements: {
+        Row: {
+          admission_case_id: string | null
+          created_at: string
+          evidence_refs: Json
+          gap_description: string | null
+          id: string
+          is_met: boolean
+          organization_id: string
+          requirement_description: string
+          requirement_name: string
+          requirement_type: string
+          severity: string
+          updated_at: string
+        }
+        Insert: {
+          admission_case_id?: string | null
+          created_at?: string
+          evidence_refs?: Json
+          gap_description?: string | null
+          id?: string
+          is_met?: boolean
+          organization_id: string
+          requirement_description?: string
+          requirement_name: string
+          requirement_type?: string
+          severity?: string
+          updated_at?: string
+        }
+        Update: {
+          admission_case_id?: string | null
+          created_at?: string
+          evidence_refs?: Json
+          gap_description?: string | null
+          id?: string
+          is_met?: boolean
+          organization_id?: string
+          requirement_description?: string
+          requirement_name?: string
+          requirement_type?: string
+          severity?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_admission_requirements_admission_case_id_fkey"
+            columns: ["admission_case_id"]
+            isOneToOne: false
+            referencedRelation: "external_admission_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_admission_requirements_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_admission_reviews: {
+        Row: {
+          admission_case_id: string
+          created_at: string
+          id: string
+          linked_changes: Json | null
+          organization_id: string
+          review_notes: string | null
+          review_reason_codes: Json
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          admission_case_id: string
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id: string
+          review_notes?: string | null
+          review_reason_codes?: Json
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          admission_case_id?: string
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id?: string
+          review_notes?: string | null
+          review_reason_codes?: Json
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_admission_reviews_admission_case_id_fkey"
+            columns: ["admission_case_id"]
+            isOneToOne: false
+            referencedRelation: "external_admission_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_admission_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_trust_outcomes: {
+        Row: {
+          actor_id: string | null
+          admission_case_id: string | null
+          admission_outcome_accuracy_score: number
+          created_at: string
+          evidence_refs: Json
+          expected_outcomes: Json
+          id: string
+          organization_id: string
+          outcome_status: string
+          realized_outcomes: Json
+          recommendation_type: string
+          trust_drift_score: number
+          updated_at: string
+        }
+        Insert: {
+          actor_id?: string | null
+          admission_case_id?: string | null
+          admission_outcome_accuracy_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          realized_outcomes?: Json
+          recommendation_type?: string
+          trust_drift_score?: number
+          updated_at?: string
+        }
+        Update: {
+          actor_id?: string | null
+          admission_case_id?: string | null
+          admission_outcome_accuracy_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          realized_outcomes?: Json
+          recommendation_type?: string
+          trust_drift_score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_trust_outcomes_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "external_actor_registry"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_trust_outcomes_admission_case_id_fkey"
+            columns: ["admission_case_id"]
+            isOneToOne: false
+            referencedRelation: "external_admission_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_trust_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_trust_tiers: {
+        Row: {
+          admission_implications: Json
+          created_at: string
+          id: string
+          organization_id: string
+          restriction_defaults: Json
+          status: string
+          tier_definition: Json
+          tier_key: string
+          tier_level: number
+          tier_name: string
+          updated_at: string
+        }
+        Insert: {
+          admission_implications?: Json
+          created_at?: string
+          id?: string
+          organization_id: string
+          restriction_defaults?: Json
+          status?: string
+          tier_definition?: Json
+          tier_key: string
+          tier_level?: number
+          tier_name: string
+          updated_at?: string
+        }
+        Update: {
+          admission_implications?: Json
+          created_at?: string
+          id?: string
+          organization_id?: string
+          restriction_defaults?: Json
+          status?: string
+          tier_definition?: Json
+          tier_key?: string
+          tier_level?: number
+          tier_name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_trust_tiers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       git_connections: {
         Row: {
           connected_by: string
