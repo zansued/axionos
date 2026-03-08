@@ -1,13 +1,17 @@
 # AxionOS — Pipeline Product Contracts
 
-> Documentação operacional do produto. Cada fase responde:
-> - O usuário entende o que está acontecendo?
-> - O sistema mostra valor visível?
-> - Essa etapa aproxima do resultado final?
+> **This document represents the user-visible journey contract of AxionOS.**
+>
+> The core product promise: **"From idea to deployed software."**
+>
+> Each phase answers:
+> - Does the user understand what is happening?
+> - Does the system show visible value?
+> - Does this step bring the user closer to the final result?
 >
 > Last updated: 2026-03-08
 >
-> **Note:** This document remains the canonical user-visible pipeline contract through Sprint 53. The post-53 future canon (product intelligence maturation, ecosystem readiness, ecosystem activation) may influence surrounding governance, policy, and ecosystem layers without automatically changing the pipeline UX contract defined here. Pipeline behavior changes will be documented here only when they directly affect user-visible stage behavior.
+> **Note:** This document is the canonical user-visible pipeline contract. Internal governance, policy, ecosystem, and intelligence layers operate behind the scenes to ensure quality, safety, and auditability — but they do not change the user-facing journey contract unless a direct UX impact is required. Post-65 work (Block M: Product Experience & Delivery Maturity) will increasingly optimize clarity, approvals, transitions, delivery visibility, and deployment legibility across the existing pipeline defined here.
 
 ## Document Authority
 
