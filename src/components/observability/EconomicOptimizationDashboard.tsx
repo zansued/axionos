@@ -169,7 +169,7 @@ function AssessmentsSection({ ov, onExplain, explanation }: { ov: any; onExplain
               </div>
             ))}
             {explanation.explanation.safety_notes?.map((n: string, i: number) => (
-              <p key={i} className="text-xs text-yellow-400/80 flex items-center gap-1">
+              <p key={i} className="text-xs text-destructive flex items-center gap-1">
                 <ShieldAlert className="h-3 w-3" /> {n}
               </p>
             ))}
