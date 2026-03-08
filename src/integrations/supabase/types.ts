@@ -947,6 +947,288 @@ export type Database = {
           },
         ]
       }
+      architecture_migration_executions: {
+        Row: {
+          activation_constraints: Json | null
+          active_phase: number
+          baseline_ref: Json
+          created_at: string
+          id: string
+          migration_name: string
+          migration_state: string
+          organization_id: string
+          phase_sequence: Json
+          pilot_id: string | null
+          plan_id: string
+          rollback_blueprint: Json
+          rollout_profile: Json
+          target_scope: string
+          validation_blueprint: Json
+        }
+        Insert: {
+          activation_constraints?: Json | null
+          active_phase?: number
+          baseline_ref?: Json
+          created_at?: string
+          id?: string
+          migration_name: string
+          migration_state?: string
+          organization_id: string
+          phase_sequence?: Json
+          pilot_id?: string | null
+          plan_id: string
+          rollback_blueprint?: Json
+          rollout_profile?: Json
+          target_scope: string
+          validation_blueprint?: Json
+        }
+        Update: {
+          activation_constraints?: Json | null
+          active_phase?: number
+          baseline_ref?: Json
+          created_at?: string
+          id?: string
+          migration_name?: string
+          migration_state?: string
+          organization_id?: string
+          phase_sequence?: Json
+          pilot_id?: string | null
+          plan_id?: string
+          rollback_blueprint?: Json
+          rollout_profile?: Json
+          target_scope?: string
+          validation_blueprint?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_migration_executions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_migration_executions_pilot_id_fkey"
+            columns: ["pilot_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_rollout_pilots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_migration_executions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_change_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_migration_governance_profiles: {
+        Row: {
+          created_at: string
+          id: string
+          max_scope_breadth: number | null
+          organization_id: string
+          profile_constraints: Json
+          profile_key: string
+          profile_name: string
+          required_checkpoint_depth: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          max_scope_breadth?: number | null
+          organization_id: string
+          profile_constraints?: Json
+          profile_key: string
+          profile_name: string
+          required_checkpoint_depth?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          max_scope_breadth?: number | null
+          organization_id?: string
+          profile_constraints?: Json
+          profile_key?: string
+          profile_name?: string
+          required_checkpoint_depth?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_migration_governance_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_migration_outcomes: {
+        Row: {
+          baseline_summary: Json
+          created_at: string
+          delta_summary: Json
+          evidence_refs: Json | null
+          id: string
+          migration_execution_id: string
+          migration_summary: Json
+          organization_id: string
+          outcome_status: string
+          phase_number: number
+          risk_flags: Json | null
+          scope_slice: Json
+        }
+        Insert: {
+          baseline_summary?: Json
+          created_at?: string
+          delta_summary?: Json
+          evidence_refs?: Json | null
+          id?: string
+          migration_execution_id: string
+          migration_summary?: Json
+          organization_id: string
+          outcome_status?: string
+          phase_number?: number
+          risk_flags?: Json | null
+          scope_slice?: Json
+        }
+        Update: {
+          baseline_summary?: Json
+          created_at?: string
+          delta_summary?: Json
+          evidence_refs?: Json | null
+          id?: string
+          migration_execution_id?: string
+          migration_summary?: Json
+          organization_id?: string
+          outcome_status?: string
+          phase_number?: number
+          risk_flags?: Json | null
+          scope_slice?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_migration_outcomes_migration_execution_id_fkey"
+            columns: ["migration_execution_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_migration_executions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_migration_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_migration_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          linked_changes: Json | null
+          migration_execution_id: string
+          organization_id: string
+          review_notes: string | null
+          review_reason_codes: Json | null
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          migration_execution_id: string
+          organization_id: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          migration_execution_id?: string
+          organization_id?: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_migration_reviews_migration_execution_id_fkey"
+            columns: ["migration_execution_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_migration_executions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_migration_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_migration_rollbacks: {
+        Row: {
+          created_at: string
+          id: string
+          migration_execution_id: string
+          organization_id: string
+          restored_state: Json
+          rollback_mode: string
+          rollback_reason: Json
+          rollback_scope: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          migration_execution_id: string
+          organization_id: string
+          restored_state?: Json
+          rollback_mode?: string
+          rollback_reason?: Json
+          rollback_scope?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          migration_execution_id?: string
+          organization_id?: string
+          restored_state?: Json
+          rollback_mode?: string
+          rollback_reason?: Json
+          rollback_scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_migration_rollbacks_migration_execution_id_fkey"
+            columns: ["migration_execution_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_migration_executions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_migration_rollbacks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_pilot_eligibility_rules: {
         Row: {
           created_at: string
