@@ -365,6 +365,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
+          {/* ===== PLATFORM CONVERGENCE ===== */}
+          <TabsContent value="convergence" className="mt-4">
+            <PlatformConvergenceDashboard />
+          </TabsContent>
+
           {/* ===== ECONOMIC OPTIMIZATION ===== */}
           <TabsContent value="arch-econ" className="mt-4">
             <EconomicOptimizationDashboard />
