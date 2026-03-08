@@ -865,17 +865,14 @@ supabase/functions/
 
 ---
 
-## Source of Truth
+## Architecture / Documentation Boundaries
 
-The following documents must remain synchronized:
+- **ARCHITECTURE.md** (this file) defines system structure — containers, components, layers, data flow, safety rules
+- **ROADMAP.md** defines strategic direction — maturity, horizons, what comes next; this file references maturity from there
+- **PLAN.md** defines sprint execution — canonical sprint-by-sprint ledger; this file references sprint blocks from there
+- **AGENTS.md** defines Agent OS module reference — planes, modules, contracts, events; this file summarizes Agent OS but defers to AGENTS.md for full specs
+- **PIPELINE_CONTRACTS.md** defines product-level pipeline UX — phase behavior, inputs/outputs, control rules; this file defines pipeline stages architecturally but defers to PIPELINE_CONTRACTS.md for user-visible contracts
+- **docs/registry/** contains lightweight canonical metadata (sprints.yml, doc-authority.yml)
+- **docs/README.md** is the navigation and maintenance guide
 
-| Document | Purpose |
-|----------|---------|
-| `docs/ARCHITECTURE.md` | System architecture, C4 diagrams, capability layers (this file) |
-| `docs/ROADMAP.md` | Maturity horizons, execution priorities |
-| `docs/PLAN.md` | Sprint-level implementation phases |
-| `docs/AGENTS.md` | Agent OS module reference, agent types, contracts |
-| `docs/PIPELINE_CONTRACTS.md` | Operational contracts for the 5 pipeline phases |
-| `docs/diagrams/` | PlantUML source files for C4 diagrams (export/print-ready) |
-
-Diagrams in this file use **Mermaid** for GitHub rendering. PlantUML versions are in `docs/diagrams/` for corporate export.
+> Diagrams in this file use **Mermaid** for GitHub rendering. PlantUML versions are in `docs/diagrams/` for corporate export.
