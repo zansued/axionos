@@ -786,5 +786,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Adoption Intelligence & Customer Success | 1 | 70 |
 | Extension Management | 1 | 71 |
 | Evidence Management | 1 | 72 |
+| Candidate Distillation | 1 | 73 |
 | Support | 11 | Various |
-| **Total** | **~118** | |
+| **Total** | **~119** | |

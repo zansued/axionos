@@ -158,17 +158,19 @@ Sprint 72 established the canonical evidence capture and improvement ledger laye
 
 ---
 
-## Planned Next — Sprints 73–74: Evidence-Governed Improvement Loop — 📋 Planned
+## Sprint 73 — Improvement Candidate Distillation Engine ✅ Implemented
+
+Sprint 73 introduced the canonical improvement candidate distillation layer. The system now clusters operational evidence into structured, bounded, reviewable improvement candidates with full provenance, pattern detection, explainability, and triage workflow. A dedicated operator surface (`/improvement-candidates`) provides candidate review, triage, and "ready for benchmark" marking.
+
+**Strategic role:** Sprint 73 advances the Evidence-Governed Improvement Loop by transforming raw evidence into actionable (but advisory-only) improvement proposals. Candidates remain bounded and require human review — no autonomous mutation.
+
+---
+
+## Planned Next — Sprint 74: Governed Benchmarking & Promotion — 📋 Planned
 
 > **Status:** Planned — next in the execution queue.
 
-**Thesis:** AxionOS should become better over time through evidence-governed learning, not uncontrolled autonomy. This block turns operational evidence into bounded improvement proposals that are tested and promoted under governance.
-
-**Objectives:**
-- Bounded improvement proposal generation from evidence aggregation
-- Governed testing and promotion of improvement candidates
-- Rollback-safe experimentation with clear lineage and audit trail
-- Measured improvement cycles with outcome tracking
+**Thesis:** Complete the Evidence-Governed Improvement Loop by enabling governed sandbox benchmarking of accepted candidates and human-approved promotion of validated improvements.
 
 **Canon constraints (enforced):**
 - No autonomous architecture mutation
