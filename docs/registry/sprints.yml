@@ -84,8 +84,10 @@ sprints:
   # === SPRINT 71 — Governed Extensibility (Complete) ===
   - { sprint: 71, name: "Governed Extensibility & Developer Experience Foundation", status: complete, block: "N", phase: "Governed Extensibility", layer: "Governed Extensibility Layer" }
 
-  # === SPRINTS 72–74 — Evidence-Governed Improvement Loop (Planned) ===
-  - { sprint: 72, name: "TBD — Improvement Proposal Generation",            status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "TBD" }
+  # === SPRINT 72 — Evidence Capture & Improvement Ledger (Complete) ===
+  - { sprint: 72, name: "Evidence Capture & Improvement Ledger",             status: complete, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "Evidence Capture & Improvement Ledger Layer" }
+
+  # === SPRINTS 73–74 — Evidence-Governed Improvement Loop (Planned) ===
   - { sprint: 73, name: "TBD — Governed Testing & Promotion",               status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "TBD" }
   - { sprint: 74, name: "TBD — Improvement Outcome Tracking",               status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "TBD" }
 
