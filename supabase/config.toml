@@ -155,3 +155,6 @@ verify_jwt = false
 
 [functions.onboarding-templates-vertical-starters-engine]
 verify_jwt = false
+
+[functions.adoption-intelligence-customer-success-engine]
+verify_jwt = false

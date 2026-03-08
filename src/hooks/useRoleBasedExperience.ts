@@ -29,7 +29,7 @@ const DEFAULT_USER_SIDEBAR = new Set([
 
 const OPERATOR_SIDEBAR = new Set([
   ...DEFAULT_USER_SIDEBAR,
-  "Agents", "Code", "Audit", "Observability", "Connections",
+  "Agents", "Code", "Audit", "Observability", "Connections", "Adoption",
 ]);
 
 // Admin sees everything

@@ -58,7 +58,7 @@ export default function AdoptionIntelligence() {
                       <CardDescription className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> Strong Success</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold text-green-500">{strongCount}</div>
+                      <div className="text-2xl font-bold text-primary">{strongCount}</div>
                     </CardContent>
                   </Card>
                   <Card>
