@@ -95,6 +95,7 @@ const App = () => (
                       <Route path="/calibration" element={<ProtectedRoute><Calibration /></ProtectedRoute>} />
                       <Route path="/prompt-optimization" element={<ProtectedRoute><PromptOptimization /></ProtectedRoute>} />
                       <Route path="/adoption" element={<ProtectedRoute><AdoptionIntelligence /></ProtectedRoute>} />
+                      <Route path="/extensions" element={<ProtectedRoute><Extensions /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>

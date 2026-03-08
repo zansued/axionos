@@ -41,13 +41,14 @@ const mainItems = [
 
 const bottomItems = [
   { title: "Adoption", url: "/adoption", icon: Search },
+  { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
   { title: "Calibration", url: "/calibration", icon: Gauge },
   { title: "Prompt Opt.", url: "/prompt-optimization", icon: FlaskConical },
   { title: "Audit", url: "/audit", icon: Shield },
   { title: "Observability", url: "/observability", icon: Radio },
-  { title: "Connections", url: "/connections", icon: Package },
+  { title: "Connections", url: "/connections", icon: Settings },
   { title: "Billing", url: "/billing", icon: CreditCard },
   { title: "Settings", url: "/org", icon: Settings },
 ];
