@@ -26,7 +26,6 @@ interface CapabilityPackage {
   risk_posture: string;
   lifecycle_status: string;
   created_at: string;
-  capability_registry_entries?: any[];
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -63,7 +62,7 @@ export default function CapabilityRegistry() {
     setLoading(true);
     supabase
       .from("capability_packages" as any)
-      .select("*, capability_registry_entries(*)")
+      .select("*")
       .eq("organization_id", currentOrg.id)
       .order("created_at", { ascending: false })
       .then(({ data }) => {
@@ -76,7 +75,7 @@ export default function CapabilityRegistry() {
     setSelected(c);
     const [verRes, evtRes] = await Promise.all([
       supabase.from("capability_package_versions" as any).select("*").eq("package_id", c.id).order("created_at", { ascending: false }),
-      supabase.from("capability_registry_events" as any).select("*").eq("registry_entry_id", c.capability_registry_entries?.[0]?.id || "").order("created_at", { ascending: false }).limit(20),
+      supabase.from("capability_package_events" as any).select("*").eq("package_id", c.id).order("created_at", { ascending: false }).limit(20),
     ]);
     setVersions((verRes.data as any) || []);
     setEvents((evtRes.data as any) || []);
@@ -146,7 +145,6 @@ export default function CapabilityRegistry() {
                 <div className="space-y-2">
                   {filtered.map((c) => {
                     const Icon = CATEGORY_ICONS[c.category] || Box;
-                    const entry = c.capability_registry_entries?.[0];
                     return (
                       <Card key={c.id} className="border-border bg-card hover:bg-muted/30 cursor-pointer transition-colors" onClick={() => openDetail(c)}>
                         <CardContent className="py-3 flex items-center justify-between">
@@ -228,7 +226,7 @@ export default function CapabilityRegistry() {
 
                     {/* Events */}
                     <div>
-                      <h4 className="font-semibold text-foreground mb-2">Registry Events</h4>
+                      <h4 className="font-semibold text-foreground mb-2">Package Events</h4>
                       {events.length ? (
                         <ScrollArea className="max-h-40">
                           <div className="space-y-1">

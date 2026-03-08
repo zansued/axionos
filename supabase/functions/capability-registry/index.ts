@@ -41,11 +41,11 @@ function json(data: unknown, status = 200) {
 }
 
 async function registerCapability(sb: any, p: any) {
-  // Create package
   const { data: pkg, error: pkgErr } = await sb
     .from("capability_packages")
     .insert({
       organization_id: p.organization_id,
+      registry_entry_id: p.registry_entry_id || null,
       name: p.name || "",
       slug: p.slug || "",
       category: p.category || "general",
@@ -63,7 +63,6 @@ async function registerCapability(sb: any, p: any) {
     .single();
   if (pkgErr) return json({ error: pkgErr.message }, 400);
 
-  // Create initial version
   const { data: ver } = await sb
     .from("capability_package_versions")
     .insert({
@@ -76,31 +75,15 @@ async function registerCapability(sb: any, p: any) {
     .select()
     .single();
 
-  // Create registry entry
-  const { data: entry } = await sb
-    .from("capability_registry_entries")
-    .insert({
-      package_id: pkg.id,
-      organization_id: p.organization_id,
-      active_version_id: ver?.id || null,
-      visibility: p.visibility || "private",
-      registry_status: "registered",
-      dependencies: p.dependencies || [],
-      extension_id: p.extension_id || null,
-    })
-    .select()
-    .single();
-
-  // Emit event
-  await sb.from("capability_registry_events").insert({
-    registry_entry_id: entry.id,
+  await sb.from("capability_package_events").insert({
+    package_id: pkg.id,
     organization_id: p.organization_id,
     event_type: "capability.registered",
     actor_ref: p.actor_ref || {},
     event_payload: { package_name: pkg.name, version: ver?.version_label },
   });
 
-  return json({ package: pkg, version: ver, registry_entry: entry });
+  return json({ package: pkg, version: ver });
 }
 
 async function addVersion(sb: any, p: any) {
@@ -124,7 +107,7 @@ async function addVersion(sb: any, p: any) {
 async function listCapabilities(sb: any, p: any) {
   let q = sb
     .from("capability_packages")
-    .select("*, capability_registry_entries(*)")
+    .select("*")
     .eq("organization_id", p.organization_id)
     .order("created_at", { ascending: false })
     .limit(p.limit || 100);
@@ -136,16 +119,14 @@ async function listCapabilities(sb: any, p: any) {
 }
 
 async function capabilityDetail(sb: any, p: any) {
-  const [pkgRes, verRes, entryRes, evtRes] = await Promise.all([
+  const [pkgRes, verRes, evtRes] = await Promise.all([
     sb.from("capability_packages").select("*").eq("id", p.package_id).single(),
     sb.from("capability_package_versions").select("*").eq("package_id", p.package_id).order("created_at", { ascending: false }),
-    sb.from("capability_registry_entries").select("*").eq("package_id", p.package_id).single(),
-    sb.from("capability_registry_events").select("*").eq("registry_entry_id", p.registry_entry_id || "00000000-0000-0000-0000-000000000000").order("created_at", { ascending: false }).limit(20),
+    sb.from("capability_package_events").select("*").eq("package_id", p.package_id).order("created_at", { ascending: false }).limit(20),
   ]);
   return json({
     package: pkgRes.data,
     versions: verRes.data || [],
-    registry_entry: entryRes.data,
     events: evtRes.data || [],
   });
 }
@@ -153,30 +134,18 @@ async function capabilityDetail(sb: any, p: any) {
 async function updateStatus(sb: any, p: any) {
   const updates: any = { updated_at: new Date().toISOString() };
   if (p.lifecycle_status) updates.lifecycle_status = p.lifecycle_status;
-
-  const { error } = await sb
-    .from("capability_packages")
-    .update(updates)
-    .eq("id", p.package_id);
+  const { error } = await sb.from("capability_packages").update(updates).eq("id", p.package_id);
   if (error) return json({ error: error.message }, 400);
-
-  if (p.registry_entry_id && p.registry_status) {
-    await sb
-      .from("capability_registry_entries")
-      .update({ registry_status: p.registry_status, updated_at: new Date().toISOString() })
-      .eq("id", p.registry_entry_id);
-  }
-
   return json({ ok: true });
 }
 
 async function inspectDependencies(sb: any, p: any) {
   const { data } = await sb
-    .from("capability_registry_entries")
-    .select("dependencies")
-    .eq("package_id", p.package_id)
+    .from("capability_packages")
+    .select("compatibility_posture")
+    .eq("id", p.package_id)
     .single();
-  return json({ dependencies: data?.dependencies || [] });
+  return json({ compatibility: data?.compatibility_posture || {} });
 }
 
 async function explainCapability(sb: any, p: any) {
@@ -186,12 +155,6 @@ async function explainCapability(sb: any, p: any) {
     .eq("id", p.package_id)
     .single();
   if (!pkg) return json({ error: "Package not found" }, 404);
-
-  const { data: entry } = await sb
-    .from("capability_registry_entries")
-    .select("*")
-    .eq("package_id", p.package_id)
-    .single();
 
   return json({
     name: pkg.name,
@@ -204,8 +167,5 @@ async function explainCapability(sb: any, p: any) {
     rollback_ready: pkg.rollback_ready,
     risk_posture: pkg.risk_posture,
     lifecycle_status: pkg.lifecycle_status,
-    visibility: entry?.visibility,
-    registry_status: entry?.registry_status,
-    dependencies: entry?.dependencies || [],
   });
 }
