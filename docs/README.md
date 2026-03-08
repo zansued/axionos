@@ -51,7 +51,7 @@
 | `planned` | Next in queue, scope defined | `PLAN.md`, `registry/sprints.yml` |
 | `proposed` | Strategic direction, not yet scoped for implementation | `ROADMAP.md`, `registry/sprints.yml` |
 
-**Canon vs Proposal:** Sprints 1–50 are canonical (implemented). Sprints 51–53 are proposed strategic direction and may be revised before implementation.
+**Canon vs Proposal:** Sprints 1–53 are canonical (implemented). Sprints 54–55 are proposed strategic direction and may be revised before implementation.
 
 ---
 
