@@ -466,6 +466,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | `_shared/product-intelligence-entry/` | 8 | Signal ingestor, friction analyzer, opportunity detector, architecture/profile correlators, priority scorer, segmentation analyzer, explainer |
 | `_shared/product-intelligence-operations/` | 9 | Product benchmark engine, signal quality, architecture/profile correlators, priority, segmentation, recommendation, outcome validator, explainer |
 | `_shared/product-opportunity-portfolio/` | 9 | Portfolio builder, ranker, conflict detector, capacity scorer, decision engine, balance analyzer, outcome validator, watchlist manager, explainer |
+| `_shared/ecosystem-readiness/` | 9 | Capability inventory, exposure classifier, readiness assessor, safety prerequisites, trust model, policy foundation, risk bounding, recommendations, explainer |
 
 ---
 
