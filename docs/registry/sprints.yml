@@ -111,6 +111,9 @@ sprints:
   # === SPRINT 80 — Trust, Entitlements & Approval Flows (Complete) ===
   - { sprint: 80, name: "Trust, Entitlements & Approval Flows",                 status: complete, block: "P", phase: "Governed Capability Ecosystem", layer: "Capability Trust & Entitlement Layer" }
 
+  # === SPRINT 81 — Creator / Partner Pilot Marketplace (Complete) ===
+  - { sprint: 81, name: "Creator / Partner Pilot Marketplace",                  status: complete, block: "P", phase: "Governed Capability Ecosystem", layer: "Pilot Marketplace Layer" }
+
   # === BLOCKS P–S — Reserved Future Horizon ===
   - { sprint: "79–82", name: "Governed Capability Ecosystem & Early Marketplace",        status: reserved, block: "P", phase: "Reserved", layer: "TBD" }
   - { sprint: "83–86", name: "Autonomous Delivery Optimization & Outcome Assurance 2.0", status: reserved, block: "Q", phase: "Reserved", layer: "TBD" }

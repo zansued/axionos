@@ -795,5 +795,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Swarm Execution | 1 | 78 |
 | Capability Registry | 1 | 79 |
 | Capability Governance | 1 | 80 |
+| Pilot Marketplace | 1 | 81 |
 | Support | 11 | Various |
-| **Total** | **~131** | |
+| **Total** | **~132** | |
