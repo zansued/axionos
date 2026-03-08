@@ -116,6 +116,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Sprint 71 — Governed Extensibility | 71 | Platform extensions registry, approval-based activation, compatibility checks, audit trail, operator surface |
 | Sprint 72 — Evidence Capture & Improvement Ledger | 72 | Canonical evidence capture, improvement ledger, context linking, review workflow, operator evidence dashboard |
 | Sprint 73 — Improvement Candidate Distillation Engine | 73 | Candidate distillation from evidence, pattern clustering, provenance/explainability, triage workflow, operator candidates dashboard |
+| Sprint 74 — Sandbox Benchmarking & Promotion Governance | 74 | Sandbox benchmarking of candidates, baseline comparison, metric capture, promotion/rejection/deferral governance, operator benchmark dashboard |
 
 ---
 
