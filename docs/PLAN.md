@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 63 (Institutional Outcome Assurance Layer) — ✅ Complete
-> **Next Sprint:** 64 (Canon Integrity & Drift Governance Layer) — 📋 Planned
+> **Current Sprint:** 64 (Canon Integrity & Drift Governance Layer) — ✅ Complete
+> **Next Sprint:** 65 (Operating Completion Layer) — 📋 Planned
 
 ## Document Authority
 

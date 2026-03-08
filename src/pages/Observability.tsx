@@ -395,6 +395,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
+          {/* ===== CANON INTEGRITY & DRIFT GOVERNANCE ===== */}
+          <TabsContent value="canon-gov" className="mt-4">
+            <CanonIntegrityDriftGovernanceDashboard />
+          </TabsContent>
+
           {/* ===== INSTITUTIONAL OUTCOME ASSURANCE ===== */}
           <TabsContent value="outcome-assure" className="mt-4">
             <InstitutionalOutcomeAssuranceDashboard />
