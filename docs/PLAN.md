@@ -4,9 +4,9 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 89 (Tenant-Isolated Scale Runtime) — ✅ Complete
-> **Next Planned:** Sprint 90 (Runtime Completion) — 📋 Planned
-> **Reserved Horizon:** Blocks R–S (Sprints 87–94) — Block R in progress
+> **Current Sprint:** 90 (Resilient Large-Scale Orchestration) — ✅ Complete
+> **Next Planned:** Sprint 91 (Research Sandbox for Architecture Evolution) — 📋 Planned
+> **Reserved Horizon:** Blocks R–S (Sprints 87–94) — Block R complete
 
 ## Document Authority
 
