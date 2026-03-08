@@ -80,7 +80,8 @@ Internal sophistication serves the visible product experience. The user-facing j
    Convergence → Op Profiles → Product Intelligence →
    Ecosystem → Assurance → Canon → Operating Completion →
    Product Experience → Extensibility → Evidence →
-   Candidates → Benchmarking & Promotion ✅
+    Candidates → Benchmarking & Promotion ✅ →
+    Role Arbitration → Debate & Resolution ✅
 ```
 
 ---
