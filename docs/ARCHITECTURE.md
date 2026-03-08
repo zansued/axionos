@@ -875,16 +875,16 @@ supabase/functions/
 
 > **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-After 53 sprints completing the full arc from deterministic execution through product intelligence entry, the platform's architectural direction moves toward:
+After 54 sprints completing the full arc from deterministic execution through product intelligence operations, the platform's architectural direction moves toward:
 
-### Completed Institutionalization Arc (Sprints 49–53)
+### Completed Institutionalization Arc (Sprints 49–54)
 - ✅ Platform convergence and convergence governance (49–50)
 - ✅ Institutional convergence memory (51)
 - ✅ Operating profiles and policy packs (52)
 - ✅ Product intelligence entry (53)
+- ✅ Product intelligence operations (54)
 
-### Committed Direction (Sprints 54–56) — Block I: Product-Intelligent Expansion
-- **Product intelligence operations** — deepening product-architecture correlation into operational decision-making
+### Committed Direction (Sprints 55–56) — Block I: Product-Intelligent Expansion
 - **Product opportunity portfolio governance** — governing product opportunities with lifecycle management
 - **Controlled ecosystem readiness** — assessing exposure readiness without activating marketplace
 
