@@ -625,7 +625,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
-> **Summary:** 48 sprints complete. 49 systems implemented. All architecture-scaled blocks done.
+> **Summary:** 53 sprints complete. 38 architectural layers active. All blocks through Product Intelligence Entry done.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
@@ -640,12 +640,17 @@ supabase/functions/
 | Architecture-Governed | 41–43 | ✅ Complete |
 | Architecture-Operating | 44–45 | ✅ Complete |
 | Architecture-Scaled | 46–48 | ✅ Complete |
+| Platform Convergence | 49 | ✅ Complete |
+| Convergence Governance | 50 | ✅ Complete |
+| Institutional Convergence Memory | 51 | ✅ Complete |
+| Operating Profiles & Policy Packs | 52 | ✅ Complete |
+| Product Intelligence Entry | 53 | ✅ Complete |
 
 ### Frozen
 
 | Module | Reason |
 |--------|--------|
-| Marketplace ecosystem | Not needed until product intelligence layer |
+| Marketplace ecosystem | Frozen — deferred until ecosystem readiness (Sprint 56+) |
 | Advanced distributed runtime | Current runtime is adequate |
 | Advanced multi-agent coordination | Existing coordination works |
 
