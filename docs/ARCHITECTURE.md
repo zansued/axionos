@@ -644,6 +644,14 @@ supabase/functions/
 +-- Platform Intelligence           (1 function -- Sprint 30)
 +-- Platform Self-Calibration       (1 function -- Sprint 31)
 +-- Strategy Evolution              (1 function -- Sprint 32)
++-- Strategy Portfolio Governance   (1 function -- Sprint 33)
++-- Platform Self-Stabilization     (1 function -- Sprint 34)
++-- Engineering Advisor             (1 function -- Sprint 35)
++-- Semantic Retrieval              (1 function -- Sprint 36)
++-- Discovery Architecture          (1 function -- Sprint 37)
++-- Architecture Simulation         (1 function -- Sprint 38)
++-- Architecture Change Planning    (1 function -- Sprint 39)
++-- Architecture Rollout Sandbox    (1 function -- Sprint 40)
 +-- Support                         (11 functions)
 +-- _shared/                        (15+ helper modules)
     +-- agent-os/                   (14 Agent OS modules)
@@ -660,6 +668,14 @@ supabase/functions/
     +-- platform-intelligence/     (Behavior aggregator, bottleneck detector, pattern analyzer, insight generator, recommendation engine, health model)
     +-- platform-calibration/      (Signal interpreter, proposal engine, guardrails, runner, outcome tracker, rollback engine)
     +-- execution-strategy/        (Signal interpreter, variant synthesizer, guardrails, experiment runner, outcome tracker, promotion rules, rollback engine, lineage)
+    +-- strategy-portfolio/        (Portfolio lifecycle, health scoring, conflict resolution)
+    +-- platform-stabilization/    (Drift detector, oscillation detector, stability guard, safe modes)
+    +-- engineering-advisor/       (Advisor synthesis, signal processor, review manager, explainer)
+    +-- semantic-retrieval/        (Session manager, index manager, context builders, guardrails)
+    +-- discovery-architecture/    (Signal correlation, recommendation generator, evidence linker)
+    +-- architecture-simulation/   (Impact simulator, boundary analyzer, guardrails, review manager, explainer)
+    +-- architecture-planning/     (Dependency planner, readiness assessor, validation/rollback blueprints, clustering, review)
+    +-- architecture-rollout/      (Migration rehearsal, fragility analyzer, readiness assessor, rollback viability, sandbox guardrails)
 ```
 
 ---
@@ -707,6 +723,14 @@ supabase/functions/
 | 35 | Platform Intelligence Entry | 30 | Behavior aggregation, bottleneck detection, health model |
 | 36 | Platform Self-Calibration | 31 | Parameter registry, bounded proposals, guardrails, rollback |
 | 37 | Execution Strategy Evolution | 32 | Strategy families, variant synthesis, experiment runner, promotion/rollback |
+| 38 | Strategy Portfolio Governance | 33 | Strategy family lifecycle, portfolio health, conflict resolution |
+| 39 | Platform Self-Stabilization | 34 | Drift detection, oscillation suppression, safe modes, stability signals |
+| 40 | Autonomous Engineering Advisor | 35 | Cross-layer advisory synthesis, recommendation review workflow |
+| 41 | Semantic Retrieval | 36 | Unified embedding-backed retrieval, domain guardrails, session lineage |
+| 42 | Discovery-Driven Architecture Signals | 37 | External/product signal correlation, architecture recommendations |
+| 43 | Architecture Change Simulation | 38 | Bounded simulation, impact estimation, governance guardrails |
+| 44 | Architecture Change Planning | 39 | Implementation plans, blast radius, validation/rollback blueprints |
+| 45 | Architecture Rollout Sandbox | 40 | Bounded rehearsal, migration sequencing, fragility analysis, rollback viability |
 
 ### Frozen
 
@@ -853,6 +877,50 @@ supabase/functions/
 - `execution_strategy_experiments` — Controlled experiments
 - `execution_strategy_outcomes` — Experiment outcome tracking
 
+### Strategy Portfolio Governance Tables (Sprint 33)
+- `strategy_portfolio_entries` — Strategy family portfolio entries
+- `strategy_portfolio_health_snapshots` — Portfolio health snapshots
+- `strategy_portfolio_recommendations` — Governance recommendations
+
+### Platform Self-Stabilization Tables (Sprint 34)
+- `platform_stability_signals` — Stability signals (drift, oscillation)
+- `platform_stabilization_proposals` — Stabilization proposals
+- `platform_stabilization_applications` — Applied stabilizations
+- `platform_safe_mode_profiles` — Safe mode profiles
+
+### Autonomous Engineering Advisor Tables (Sprint 35)
+- `engineering_advisor_signals` — Cross-layer advisory signals
+- `engineering_advisor_recommendations` — Advisory recommendations
+- `engineering_advisor_reviews` — Recommendation review lifecycle
+
+### Semantic Retrieval Tables (Sprint 36)
+- `semantic_retrieval_sessions` — Retrieval sessions with audit
+- `semantic_retrieval_feedback` — Retrieval usefulness feedback
+- `semantic_index_profiles` — Index profiles per domain
+
+### Discovery Architecture Tables (Sprint 37)
+- `discovery_architecture_signals` — External/product signals
+- `discovery_architecture_recommendations` — Architecture recommendations
+- `discovery_architecture_evidence_links` — Evidence linkage
+
+### Architecture Simulation Tables (Sprint 38)
+- `architecture_change_proposals` — Change proposal registry
+- `architecture_simulation_scope_profiles` — Simulation scope profiles
+- `architecture_simulation_outcomes` — Simulation results
+- `architecture_simulation_reviews` — Simulation review lifecycle
+
+### Architecture Planning Tables (Sprint 39)
+- `architecture_change_plans` — Implementation plans with blast radius
+- `architecture_rollout_mode_profiles` — Rollout mode profiles
+- `architecture_change_plan_reviews` — Plan review lifecycle
+
+### Architecture Rollout Sandbox Tables (Sprint 40)
+- `architecture_rollout_sandboxes` — Sandbox rehearsal environments
+- `architecture_validation_hooks` — Validation hook registry
+- `architecture_rollout_sandbox_outcomes` — Sandbox rehearsal results
+- `architecture_rollout_governance_profiles` — Sandbox governance profiles
+- `architecture_rollout_sandbox_reviews` — Sandbox review lifecycle
+
 ---
 
 ## 14. Technology Stack
@@ -890,7 +958,7 @@ supabase/functions/
 
 ## 15. Governing Principle
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture. Platform Self-Calibration tunes operational thresholds within safe envelopes based on platform intelligence signals, with guardrails, rollback, and advisory-first governance preserving kernel integrity. Execution Strategy Evolution enables bounded experimentation with strategy variants, comparing them against baselines under governed conditions, and supporting safe promotion or rollback based on real outcome evidence.
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture. Platform Self-Calibration tunes operational thresholds within safe envelopes based on platform intelligence signals, with guardrails, rollback, and advisory-first governance preserving kernel integrity. Execution Strategy Evolution enables bounded experimentation with strategy variants, comparing them against baselines under governed conditions, and supporting safe promotion or rollback based on real outcome evidence. Strategy Portfolio Governance manages the lifecycle of strategy families as a governed portfolio, evaluating health, resolving conflicts, and generating advisory recommendations. Platform Self-Stabilization detects drift and oscillation across policies, strategies, and calibrations, proposing bounded stabilization actions and safe modes to restore operational stability. Autonomous Engineering Advisor synthesizes cross-layer advisory recommendations from all intelligence signals, providing structured, explainable, and reviewable engineering guidance. Semantic Retrieval provides unified embedding-backed contextual evidence access across all intelligence domains, with tenant isolation, domain guardrails, structured fallback, and full audit lineage. Discovery-Driven Architecture Signals correlate external and product-facing signals with internal evidence to generate advisory architecture recommendations. Architecture Change Simulation evaluates proposed architectural changes through bounded simulation with impact estimation, governance guardrails, and explainability. Architecture Change Planning converts accepted simulations into governed implementation plans with dependency mapping, blast radius estimation, validation/rollback blueprints, and readiness scoring. Architecture Rollout Sandbox rehearses approved plans in bounded sandboxes with migration sequencing, fragility analysis, rollback viability assessment, and controlled readiness scoring — all remaining advisory-first and review-driven.
 
 ---
 

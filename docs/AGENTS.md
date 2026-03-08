@@ -1185,6 +1185,169 @@ Semantic Retrieval provides a unified engine for embedding-backed contextual evi
 
 ---
 
-## 28. Governing Principle
+## 28. Discovery-Driven Architecture Signals (Active — Sprint 37)
 
-> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture. Platform Self-Calibration tunes operational thresholds within safe envelopes based on platform intelligence signals, with guardrails, rollback, and advisory-first governance preserving kernel integrity. Execution Strategy Evolution enables bounded experimentation with strategy variants, comparing them against baselines under governed conditions, and supporting safe promotion or rollback based on real outcome evidence. Semantic Retrieval provides unified embedding-backed contextual evidence access across all intelligence domains, with tenant isolation, domain guardrails, structured fallback, and full audit lineage — it strengthens contextual reasoning without introducing autonomous mutation.
+> **Status:** ✅ Active — External/product signal correlation with architecture recommendations
+
+### Overview
+
+Discovery-Driven Architecture Signals detect external and product-facing pressure indicators and correlate them with internal execution evidence to generate advisory architecture recommendations. The system identifies opportunities for architectural improvement based on real usage patterns, performance signals, and product evolution needs.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Signal Correlator | `discovery-architecture/discovery-signal-correlator.ts` | Correlate external signals with internal evidence |
+| Recommendation Generator | `discovery-architecture/discovery-recommendation-generator.ts` | Generate architecture recommendations |
+| Evidence Linker | `discovery-architecture/discovery-evidence-linker.ts` | Link signals to recommendations with provenance |
+
+### Safety Boundaries
+
+- Cannot mutate pipeline topology, governance, billing, or enforcement
+- All recommendations are advisory-first
+- Cannot bypass tenant isolation
+- Cannot auto-approve architecture changes
+
+### Events
+
+- `discovery_signal_detected` — External/product signal detected
+- `discovery_signal_correlated` — Signal correlated with internal evidence
+- `discovery_recommendation_created` — Architecture recommendation generated
+- `discovery_recommendation_reviewed` — Recommendation reviewed
+
+---
+
+## 29. Architecture Change Simulation & Governance (Active — Sprint 38)
+
+> **Status:** ✅ Active — Bounded simulation of architectural changes
+
+### Overview
+
+Architecture Change Simulation evaluates proposed architectural changes through bounded simulation before any real implementation. The system estimates impact across execution, governance, strategies, memory, platform intelligence, and tenant contexts, surfacing risks, tradeoffs, and confidence levels with full explainability.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Impact Simulator | `architecture-simulation/architecture-impact-simulator.ts` | Estimate impact across 10 dimensions |
+| Boundary Analyzer | `architecture-simulation/architecture-boundary-analyzer.ts` | Detect overlapping subsystems and dependency chains |
+| Guardrails | `architecture-simulation/architecture-simulation-guardrails.ts` | Hard simulation guardrails for forbidden mutations |
+| Recommendation Linker | `architecture-simulation/architecture-recommendation-linker.ts` | Map recommendations to change proposals |
+| Review Manager | `architecture-simulation/architecture-simulation-review-manager.ts` | Review lifecycle management |
+| Explainer | `architecture-simulation/architecture-simulation-explainer.ts` | Structured simulation explainability |
+
+### Safety Boundaries
+
+- Cannot mutate pipeline topology, governance, billing, or enforcement
+- Cannot change execution contracts or hard safety constraints
+- Cannot override tenant isolation
+- Cannot auto-approve implementations
+- All outputs remain advisory-first
+
+### Events
+
+- `architecture_change_proposal_created` — Proposal registered
+- `architecture_simulation_started` — Simulation initiated
+- `architecture_simulation_completed` — Simulation completed
+- `architecture_simulation_guardrail_blocked` — Guardrail blocked proposal
+- `architecture_simulation_reviewed` — Simulation reviewed
+- `architecture_simulation_accepted` — Simulation accepted
+- `architecture_simulation_rejected` — Simulation rejected
+
+---
+
+## 30. Architecture Change Planning & Rollout Readiness (Active — Sprint 39)
+
+> **Status:** ✅ Active — Governed implementation plans with blast radius and rollback
+
+### Overview
+
+Architecture Change Planning converts accepted simulation outcomes into structured implementation plans with dependency mapping, blast radius estimation, validation requirements, rollback blueprints, and readiness scoring. Plans go through a governed review lifecycle before rollout approval.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Dependency Planner | `architecture-planning/architecture-change-dependency-planner.ts` | Map blast radius, dependencies, sequencing |
+| Readiness Assessor | `architecture-planning/architecture-rollout-readiness-assessor.ts` | Compute readiness scores |
+| Validation Blueprint | `architecture-planning/architecture-validation-blueprint-synthesizer.ts` | Generate validation checkpoints |
+| Rollback Blueprint | `architecture-planning/architecture-rollback-blueprint-synthesizer.ts` | Synthesize rollback requirements |
+| Plan Clustering | `architecture-planning/architecture-plan-clustering.ts` | Deduplicate and cluster similar plans |
+| Review Manager | `architecture-planning/architecture-change-plan-review-manager.ts` | Plan review lifecycle |
+| Explainer | `architecture-planning/architecture-change-plan-explainer.ts` | Structured plan explainability |
+
+### Safety Boundaries
+
+- Cannot mutate pipeline topology, governance, billing, or enforcement
+- Cannot change execution contracts or hard safety constraints
+- Cannot override tenant isolation
+- Cannot auto-approve rollout
+- All outputs remain advisory-first and review-driven
+
+### Events
+
+- `architecture_change_plan_created` — Plan created from accepted simulation
+- `architecture_dependency_graph_generated` — Dependency graph generated
+- `architecture_rollout_readiness_scored` — Readiness score computed
+- `architecture_validation_blueprint_generated` — Validation blueprint created
+- `architecture_rollback_blueprint_generated` — Rollback blueprint created
+- `architecture_change_plan_reviewed` — Plan reviewed
+- `architecture_change_plan_ready` — Plan marked rollout-ready
+- `architecture_change_plan_blocked` — Plan blocked
+- `architecture_change_plan_rejected` — Plan rejected
+
+---
+
+## 31. Architecture Rollout Sandbox & Controlled Migration Readiness (Active — Sprint 40)
+
+> **Status:** ✅ Active — Bounded rehearsal of approved architecture plans
+
+### Overview
+
+Architecture Rollout Sandbox allows approved architecture change plans to be rehearsed in bounded sandbox environments before any production implementation. The system validates migration sequencing, dependency activation order, analyzes fragility, assesses rollback viability, and scores migration readiness through controlled rehearsals.
+
+### Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| Migration Sequence Rehearsal | `architecture-rollout/architecture-migration-sequence-rehearsal.ts` | Rehearse activation order and sequencing |
+| Fragility Analyzer | `architecture-rollout/architecture-rollout-fragility-analyzer.ts` | Evaluate rollback difficulty and dependency brittleness |
+| Migration Readiness Assessor | `architecture-rollout/architecture-migration-readiness-assessor.ts` | Score migration readiness |
+| Rollback Viability Rehearsal | `architecture-rollout/architecture-rollback-viability-rehearsal.ts` | Rehearse rollback viability |
+| Sandbox Guardrails | `architecture-rollout/architecture-rollout-sandbox-guardrails.ts` | Hard guardrails for sandbox rehearsals |
+| Review Manager | `architecture-rollout/architecture-rollout-sandbox-review-manager.ts` | Sandbox review lifecycle |
+| Explainer | `architecture-rollout/architecture-rollout-sandbox-explainer.ts` | Structured sandbox explainability |
+
+### Rehearsal Modes
+
+- `dry_run` — Simulate without any side effects
+- `staged_preview` — Preview staged migration steps
+- `shadow_readiness` — Shadow readiness assessment (highest fidelity)
+
+### Safety Boundaries
+
+- Cannot mutate production topology, governance, billing, or enforcement
+- Cannot change execution contracts or hard safety constraints
+- Cannot override tenant isolation
+- Cannot auto-approve migration execution
+- Cannot auto-run production rollout
+- All outputs remain advisory-first and review-driven
+
+### Events
+
+- `architecture_rollout_sandbox_created` — Sandbox created
+- `architecture_migration_sequence_rehearsed` — Migration sequence rehearsed
+- `architecture_rollout_fragility_detected` — Fragility detected
+- `architecture_migration_readiness_scored` — Readiness scored
+- `architecture_rollback_viability_rehearsed` — Rollback viability rehearsed
+- `architecture_rollout_sandbox_guardrail_blocked` — Guardrail blocked rehearsal
+- `architecture_rollout_sandbox_reviewed` — Sandbox reviewed
+- `architecture_rollout_sandbox_migration_ready` — Sandbox marked migration-ready
+- `architecture_rollout_sandbox_blocked` — Sandbox blocked
+- `architecture_rollout_sandbox_rejected` — Sandbox rejected
+
+---
+
+## 32. Governing Principle
+
+> The Agent OS is a contract-driven, plane-separated architecture where decisions flow down from Control, execution flows through Execution, state flows into Data, identity is defined in Core, and discovery extends through Ecosystem. No plane may assume the responsibilities of another. Learning is additive, auditable, and bounded — it cannot mutate the kernel directly. Engineering Memory is informational infrastructure — it informs but never commands. Memory-aware reasoning enriches analysis with historical context but preserves human authority over all structural decisions. Calibration signals diagnose where tuning should happen, but humans decide when and how tuning is applied. Repair policies are memory-aware and self-improving, but bounded to strategy selection only. Agent memory profiles persist per-agent operational context but remain non-invasive — they inform reasoning without dictating execution. Predictive error detection scores runtime risk and recommends bounded preventive actions, but cannot force pipeline changes or bypass governance. Cross-stage policy synthesis extends learning beyond local optimization, synthesizing bounded policies across stage boundaries while preserving kernel safety and auditability. Execution policy intelligence selects global operating modes based on context classification, applying bounded adjustments at safe runtime boundaries without mutating kernel structure. Execution mode portfolio optimization governs the set of available policies as a managed portfolio, ranking, evaluating lifecycle status, detecting conflicts, and generating recommendations — all auditable, reversible, and organization-isolated. Tenant adaptive policy tuning specializes global policy behavior per organization and workspace while preserving central governance, override guards, drift detection, and safe fallback to global defaults. Platform Intelligence observes system-level behavior across all layers, detecting structural bottlenecks and cross-platform patterns, generating advisory insights and prioritized recommendations without mutating kernel architecture. Platform Self-Calibration tunes operational thresholds within safe envelopes based on platform intelligence signals, with guardrails, rollback, and advisory-first governance preserving kernel integrity. Execution Strategy Evolution enables bounded experimentation with strategy variants, comparing them against baselines under governed conditions, and supporting safe promotion or rollback based on real outcome evidence. Strategy Portfolio Governance manages the lifecycle of strategy families as a governed portfolio, evaluating health, resolving conflicts, and generating advisory recommendations. Platform Self-Stabilization detects drift and oscillation across policies, strategies, and calibrations, proposing bounded stabilization actions and safe modes to restore operational stability. Autonomous Engineering Advisor synthesizes cross-layer advisory recommendations from all intelligence signals, providing structured, explainable, and reviewable engineering guidance. Semantic Retrieval provides unified embedding-backed contextual evidence access across all intelligence domains, with tenant isolation, domain guardrails, structured fallback, and full audit lineage. Discovery-Driven Architecture Signals correlate external and product-facing signals with internal evidence to generate advisory architecture recommendations. Architecture Change Simulation evaluates proposed architectural changes through bounded simulation with impact estimation, governance guardrails, and explainability. Architecture Change Planning converts accepted simulations into governed implementation plans with dependency mapping, blast radius estimation, validation/rollback blueprints, and readiness scoring. Architecture Rollout Sandbox rehearses approved plans in bounded sandboxes with migration sequencing, fragility analysis, rollback viability assessment, and controlled readiness scoring — all remaining advisory-first and review-driven.
