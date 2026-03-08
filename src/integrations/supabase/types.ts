@@ -7998,6 +7998,239 @@ export type Database = {
           },
         ]
       }
+      distributed_job_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_target: string
+          assignment_status: string
+          completed_at: string | null
+          id: string
+          job_id: string
+          notes: string
+          organization_id: string
+          started_at: string | null
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_target?: string
+          assignment_status?: string
+          completed_at?: string | null
+          id?: string
+          job_id: string
+          notes?: string
+          organization_id: string
+          started_at?: string | null
+        }
+        Update: {
+          assigned_at?: string
+          assigned_target?: string
+          assignment_status?: string
+          completed_at?: string | null
+          id?: string
+          job_id?: string
+          notes?: string
+          organization_id?: string
+          started_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "distributed_job_assignments_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "distributed_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distributed_job_assignments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      distributed_job_dependencies: {
+        Row: {
+          created_at: string
+          dependency_type: string
+          depends_on_job_id: string
+          id: string
+          job_id: string
+          organization_id: string
+        }
+        Insert: {
+          created_at?: string
+          dependency_type?: string
+          depends_on_job_id: string
+          id?: string
+          job_id: string
+          organization_id: string
+        }
+        Update: {
+          created_at?: string
+          dependency_type?: string
+          depends_on_job_id?: string
+          id?: string
+          job_id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "distributed_job_dependencies_depends_on_job_id_fkey"
+            columns: ["depends_on_job_id"]
+            isOneToOne: false
+            referencedRelation: "distributed_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distributed_job_dependencies_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "distributed_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distributed_job_dependencies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      distributed_job_events: {
+        Row: {
+          actor_ref: Json | null
+          created_at: string
+          event_type: string
+          from_status: string | null
+          id: string
+          job_id: string
+          organization_id: string
+          reason: string
+          to_status: string | null
+        }
+        Insert: {
+          actor_ref?: Json | null
+          created_at?: string
+          event_type?: string
+          from_status?: string | null
+          id?: string
+          job_id: string
+          organization_id: string
+          reason?: string
+          to_status?: string | null
+        }
+        Update: {
+          actor_ref?: Json | null
+          created_at?: string
+          event_type?: string
+          from_status?: string | null
+          id?: string
+          job_id?: string
+          organization_id?: string
+          reason?: string
+          to_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "distributed_job_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "distributed_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distributed_job_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      distributed_jobs: {
+        Row: {
+          abort_reason: string | null
+          audit_metadata: Json
+          created_at: string
+          fail_reason: string | null
+          id: string
+          initiative_id: string | null
+          job_class: string
+          job_label: string
+          lineage_refs: Json
+          max_retries: number
+          organization_id: string
+          priority: number
+          retry_count: number
+          routing_target: string
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          abort_reason?: string | null
+          audit_metadata?: Json
+          created_at?: string
+          fail_reason?: string | null
+          id?: string
+          initiative_id?: string | null
+          job_class?: string
+          job_label?: string
+          lineage_refs?: Json
+          max_retries?: number
+          organization_id: string
+          priority?: number
+          retry_count?: number
+          routing_target?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          abort_reason?: string | null
+          audit_metadata?: Json
+          created_at?: string
+          fail_reason?: string | null
+          id?: string
+          initiative_id?: string | null
+          job_class?: string
+          job_label?: string
+          lineage_refs?: Json
+          max_retries?: number
+          organization_id?: string
+          priority?: number
+          retry_count?: number
+          routing_target?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "distributed_jobs_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distributed_jobs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distributed_jobs_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       divergence_signals: {
         Row: {
           convergence_domain: string
