@@ -90,8 +90,8 @@ sprints:
   # === SPRINT 73 — Improvement Candidate Distillation Engine (Complete) ===
   - { sprint: 73, name: "Improvement Candidate Distillation Engine",         status: complete, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "Improvement Candidate Distillation Layer" }
 
-  # === SPRINT 74 — Evidence-Governed Improvement Loop (Planned) ===
-  - { sprint: 74, name: "TBD — Governed Benchmarking & Promotion",           status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "TBD" }
+  # === SPRINT 74 — Sandbox Benchmarking & Promotion Governance (Complete) ===
+  - { sprint: 74, name: "Sandbox Benchmarking & Promotion Governance",        status: complete, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "Benchmark & Promotion Governance Layer" }
 
   # === BLOCKS O–S — Reserved Future Horizon ===
   - { sprint: "75–78", name: "Advanced Multi-Agent Coordination",                        status: reserved, block: "O", phase: "Reserved", layer: "TBD" }

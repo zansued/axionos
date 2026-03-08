@@ -44,6 +44,7 @@ const bottomItems = [
   { title: "Adoption", url: "/adoption", icon: Search },
   { title: "Evidence", url: "/improvement-ledger", icon: FileSearch },
   { title: "Candidates", url: "/improvement-candidates", icon: Sparkles },
+  { title: "Benchmarks", url: "/improvement-benchmarks", icon: FlaskConical },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
