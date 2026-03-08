@@ -51,7 +51,7 @@
 
 ## Strategic Directive
 
-AxionOS has completed **71 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, and governed extensibility. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete. The extensibility foundation is operational.
+AxionOS has completed **72 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, and evidence capture. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete. The extensibility foundation and evidence capture layer are operational.
 
 **Post-Block M Strategic Position:**
 
