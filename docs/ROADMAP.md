@@ -171,9 +171,9 @@ With Block I complete (product intelligence + ecosystem readiness), the platform
 | 64 | Canon Integrity & Drift Governance Layer | Detect and govern drift between implemented behavior and canonical documentation/policies | Reserved |
 | 65 | Operating Completion Layer | Achieve the first internally coherent, complete operating canon of AxionOS | Reserved |
 
-### Why 57–65 are reserved
+### Why 58–65 are reserved
 
-The reserved horizon is strategically coherent but intentionally lightweight. These sprints depend on outcomes from the committed arc (54–56) and may be revised based on what is learned during product intelligence maturation and ecosystem readiness. Future implementation should proceed sprint-by-sprint with review, not in bulk.
+The reserved horizon is strategically coherent but intentionally lightweight. These sprints depend on outcomes from the committed arc (57) and may be revised based on what is learned during ecosystem foundation. Future implementation should proceed sprint-by-sprint with review, not in bulk.
 
 ---
 
