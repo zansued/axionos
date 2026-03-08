@@ -55,6 +55,7 @@ import OutcomeAssurance from "./pages/OutcomeAssurance";
 import DistributedJobs from "./pages/DistributedJobs";
 import CrossRegionRecovery from "./pages/CrossRegionRecovery";
 import TenantRuntime from "./pages/TenantRuntime";
+import LargeScaleOrchestration from "./pages/LargeScaleOrchestration";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
