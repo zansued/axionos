@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 70 (Adoption Intelligence & Customer Success Loop) — ✅ Complete
-> **Next Block:** N (Evidence-Governed Improvement Loop, Sprints 71–74) — 📋 Planned
+> **Current Sprint:** 71 (Governed Extensibility & Developer Experience Foundation) — ✅ Complete
+> **Next Planned:** Sprints 72–74 (Evidence-Governed Improvement Loop) — 📋 Planned
 > **Reserved Horizon:** Blocks O–S (Sprints 75–94) — 🔮 Reserved
 
 ## Document Authority
