@@ -521,6 +521,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | `_shared/limited-marketplace-pilot/` | 9 | Program manager, capability selector, participant gatekeeper, interaction monitor, policy enforcer, risk monitor, learning engine, outcome validator, explainer |
 | `_shared/capability-registry-governance/` | 9 | Entry manager, version governor, visibility engine, policy binder, compatibility analyzer, lifecycle manager, review engine, outcome validator, explainer |
 | `_shared/multi-party-policy-revenue-governance/` | 9 | Party role manager, policy frame builder, entitlement engine, value flow governor, conflict resolution analyzer, settlement readiness evaluator, fairness scorer, recommendation engine, explainer |
+| `_shared/institutional-outcome-assurance/` | 9 | Outcome model manager, expected-vs-realized analyzer, drift detector, confidence calibrator, cross-layer aggregator, fragility analyzer, remediation recommender, review manager, explainer |
 
 ---
 
