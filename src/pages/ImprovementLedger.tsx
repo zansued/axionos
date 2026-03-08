@@ -138,6 +138,12 @@ export default function ImprovementLedger() {
 
   return (
     <AppLayout>
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">Improvement Ledger</h1>
+        <p className="text-sm text-muted-foreground">Evidence capture & improvement tracking — Sprint 72</p>
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card>
