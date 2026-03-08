@@ -266,8 +266,8 @@ All 39 architectural layers are operational. The kernel includes the 32-stage de
 
 ## Governing Principle
 
-> Fifty-three sprints complete. The platform supports product intelligence entry connecting product signals to architecture, governance, and operating profiles.
-> Next committed arc: Sprints 54–56 — product intelligence operations, opportunity portfolio governance, controlled ecosystem readiness.
+> Fifty-four sprints complete. The platform supports product intelligence operations with cross-tenant benchmarking, signal quality calibration, product-architecture and product-profile correlations, and advisory-first operational recommendations.
+> Next committed arc: Sprints 55–56 — product opportunity portfolio governance, controlled ecosystem readiness.
 > Reserved horizon: Sprints 57–65 — trusted ecosystem foundation, controlled activation, system roundness and operating completion.
 > Round-enough target: Sprint 65 — first complete, internally coherent operating canon.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.
