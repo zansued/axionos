@@ -57,6 +57,7 @@ import { ControlledEcosystemReadinessDashboard } from "@/components/observabilit
 import { CapabilityExposureGovernanceDashboard } from "@/components/observability/CapabilityExposureGovernanceDashboard";
 import { ExternalTrustAdmissionDashboard } from "@/components/observability/ExternalTrustAdmissionDashboard";
 import { LimitedMarketplacePilotDashboard } from "@/components/observability/LimitedMarketplacePilotDashboard";
+import { EcosystemSimulationSandboxDashboard } from "@/components/observability/EcosystemSimulationSandboxDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
