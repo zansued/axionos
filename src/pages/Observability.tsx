@@ -52,6 +52,7 @@ import { InstitutionalConvergenceMemoryDashboard } from "@/components/observabil
 import { OperatingProfilesDashboard } from "@/components/observability/OperatingProfilesDashboard";
 import { ProductIntelligenceDashboard } from "@/components/observability/ProductIntelligenceDashboard";
 import { ProductIntelligenceOperationsDashboard } from "@/components/observability/ProductIntelligenceOperationsDashboard";
+import { ProductOpportunityPortfolioDashboard } from "@/components/observability/ProductOpportunityPortfolioDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
