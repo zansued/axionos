@@ -59,11 +59,11 @@ sprints:
   - { sprint: 51, name: "Institutional Convergence Memory Layer",            status: complete, block: "F",            phase: "Institutionalization",                layer: "Convergence Memory Layer" }
   - { sprint: 52, name: "Operating Profiles & Policy Packs",                 status: complete, block: "G",            phase: "Institutionalization",                layer: "Operating Profiles Layer" }
   - { sprint: 53, name: "Product Intelligence Entry",                        status: complete, block: "H",            phase: "Product Intelligence",                layer: "Product Intelligence Layer" }
+  - { sprint: 54, name: "Product Intelligence Operating Layer",              status: complete, block: "I",            phase: "Product-Intelligent Expansion",       layer: "Product Intelligence Operations Layer" }
 
-  # === COMMITTED FUTURE ARC (Sprints 54–56) — Block I ===
+  # === COMMITTED FUTURE ARC (Sprints 55–56) — Block I ===
 
-  - { sprint: 54, name: "Product Intelligence Operating Layer",              status: planned,    block: "I", phase: "Product-Intelligent Expansion", layer: "Product Intelligence Operations Layer",  objective: "Deepen product-architecture correlation and cross-tenant benchmarking" }
-  - { sprint: 55, name: "Product Opportunity Portfolio Governance",           status: committed,  block: "I", phase: "Product-Intelligent Expansion", layer: "Product Opportunity Governance Layer",   objective: "Govern product opportunities as a portfolio with lifecycle management" }
+  - { sprint: 55, name: "Product Opportunity Portfolio Governance",           status: planned,    block: "I", phase: "Product-Intelligent Expansion", layer: "Product Opportunity Governance Layer",   objective: "Govern product opportunities as a portfolio with lifecycle management" }
   - { sprint: 56, name: "Controlled Ecosystem Readiness Layer",              status: committed,  block: "I", phase: "Product-Intelligent Expansion", layer: "Ecosystem Readiness Layer",              objective: "Assess ecosystem exposure readiness without activating marketplace" }
 
   # === RESERVED HORIZON (Sprints 57–65) — Blocks J, K, L ===

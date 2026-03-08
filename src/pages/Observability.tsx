@@ -51,6 +51,7 @@ import { ConvergenceGovernanceDashboard } from "@/components/observability/Conve
 import { InstitutionalConvergenceMemoryDashboard } from "@/components/observability/InstitutionalConvergenceMemoryDashboard";
 import { OperatingProfilesDashboard } from "@/components/observability/OperatingProfilesDashboard";
 import { ProductIntelligenceDashboard } from "@/components/observability/ProductIntelligenceDashboard";
+import { ProductIntelligenceOperationsDashboard } from "@/components/observability/ProductIntelligenceOperationsDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -330,7 +331,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(40, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(41, 1fr)" }}>
+            <TabsTrigger value="product-ops" className="text-xs gap-1"><Activity className="h-3 w-3" /> ProdOps</TabsTrigger>
             <TabsTrigger value="product-intel" className="text-xs gap-1"><Sparkles className="h-3 w-3" /> ProdIntel</TabsTrigger>
             <TabsTrigger value="op-profiles" className="text-xs gap-1"><PackageOpen className="h-3 w-3" /> Profiles</TabsTrigger>
             <TabsTrigger value="conv-memory" className="text-xs gap-1"><BookOpen className="h-3 w-3" /> ConvMem</TabsTrigger>
@@ -372,6 +374,11 @@ export default function Observability() {
             <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
+
+          {/* ===== PRODUCT INTELLIGENCE OPERATIONS ===== */}
+          <TabsContent value="product-ops" className="mt-4">
+            <ProductIntelligenceOperationsDashboard />
+          </TabsContent>
 
           {/* ===== PRODUCT INTELLIGENCE ===== */}
           <TabsContent value="product-intel" className="mt-4">
