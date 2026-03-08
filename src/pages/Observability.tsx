@@ -336,7 +336,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(45, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(46, 1fr)" }}>
+            <TabsTrigger value="pilot-market" className="text-xs gap-1"><Store className="h-3 w-3" /> PilotMkt</TabsTrigger>
             <TabsTrigger value="trust-gov" className="text-xs gap-1"><UserCheck className="h-3 w-3" /> TrustGov</TabsTrigger>
             <TabsTrigger value="exposure-gov" className="text-xs gap-1"><Eye className="h-3 w-3" /> ExposureGov</TabsTrigger>
             <TabsTrigger value="eco-ready" className="text-xs gap-1"><Globe className="h-3 w-3" /> EcoReady</TabsTrigger>
