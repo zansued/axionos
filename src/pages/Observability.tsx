@@ -329,7 +329,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(38, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(39, 1fr)" }}>
+            <TabsTrigger value="op-profiles" className="text-xs gap-1"><PackageOpen className="h-3 w-3" /> Profiles</TabsTrigger>
             <TabsTrigger value="conv-memory" className="text-xs gap-1"><BookOpen className="h-3 w-3" /> ConvMem</TabsTrigger>
             <TabsTrigger value="conv-gov" className="text-xs gap-1"><Scale className="h-3 w-3" /> ConvGov</TabsTrigger>
             <TabsTrigger value="convergence" className="text-xs gap-1"><Merge className="h-3 w-3" /> Converge</TabsTrigger>
