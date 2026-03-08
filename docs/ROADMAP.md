@@ -93,7 +93,7 @@ The next strategic direction moves from product intelligence operations toward *
 
 ---
 
-## Completed Canon (Sprints 1–53)
+## Completed Canon (Sprints 1–54)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
