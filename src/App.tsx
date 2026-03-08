@@ -34,6 +34,7 @@ import MetaArtifacts from "./pages/MetaArtifacts";
 import Calibration from "./pages/Calibration";
 import PromptOptimization from "./pages/PromptOptimization";
 import Journey from "./pages/Journey";
+import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
