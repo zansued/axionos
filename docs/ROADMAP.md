@@ -52,16 +52,18 @@ AxionOS has completed 40 implementation sprints spanning the full capability arc
 ## Implementation Horizons
 
 ```
-  DONE (36 sprints)                    NOW                           NEXT                           LATER
+  DONE (40 sprints)                    BLOCK A (41-43)               BLOCK B (44-45)                BLOCK C (46-48)
   ──────────────────►                  ──────────────────►           ──────────────────►            ──────────────────►
-  Level 1-5                            Commercial                    Cross-Family Strategy         Discovery-Driven
-  (Kernel → Learning →                  Validation +                  Coordination +                Architecture +
-   Meta-Agents → Memory →              Intelligence                  Resilience Hardening          Autonomous
-   Governance → Intelligence →          Maturation                                                  Implementation
+  architecture-aware                   architecture-governed          architecture-operating         architecture-scaled
+  (Kernel → Learning →                 Pilot Governance →             Fitness Functions →            Stabilization v2 →
+   Meta-Agents → Memory →              Migration Execution →          Change Advisory                Tenant Architecture →
+   Governance → Intelligence →          Portfolio Governance           Orchestrator                   Economic Optimization
    Calibration → Strategy Evo →
    Portfolio Gov → Stabilization →
    Engineering Advisor →
-   Semantic Retrieval)
+   Semantic Retrieval →
+   Discovery Architecture →
+   Simulation → Planning → Sandbox)
 ```
 
 ---
