@@ -215,8 +215,8 @@ describe("Sprint 41 — Architecture Rollout Pilot Governance", () => {
     });
 
     it("rejects invalid transitions", () => {
-      expect(canTransition("draft", "active")).toBe(false);
-      expect(canTransition("archived", "active")).toBe(false);
+      expect(canTransition("draft", "approved")).toBe(false);
+      expect(canTransition("archived", "approved")).toBe(false);
     });
 
     it("returns valid transitions", () => {
