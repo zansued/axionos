@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 54 (Product Intelligence Operating Layer) — ✅ Complete
-> **Next Sprint:** 55 (Product Opportunity Portfolio Governance) — 📋 Committed
+> **Current Sprint:** 55 (Product Opportunity Portfolio Governance) — ✅ Complete
+> **Next Sprint:** 56 (Controlled Ecosystem Readiness Layer) — 📋 Planned
 
 ## Document Authority
 
