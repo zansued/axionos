@@ -35,8 +35,8 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
 - **Reserved horizon** sprints (57–65) should not be promoted to planned without deliberate review
-- **Committed** sprint (56) has defined objectives but should still be scoped in detail before implementation
-- The **planned** sprint (56) is the next to implement
+- **Committed** sprint (57) has defined objectives but should still be scoped in detail before implementation
+- The **planned** sprint (57) is the next to implement
 
 ---
 
@@ -52,10 +52,10 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 ### Current Canon Boundaries
 
-- **Sprints 1–54** = canonical complete (implemented and verified)
-- **Sprint 55** = planned (next to implement)
-- **Sprint 56** = committed (objectives defined, not yet implemented)
-- **Sprints 57–65** = reserved (strategic direction, intentionally lightweight)
+- **Sprints 1–56** = canonical complete (implemented and verified)
+- **Sprint 57** = planned (next to implement)
+- **Sprints 58–59** = committed (part of Block J, objectives defined)
+- **Sprints 60–65** = reserved (strategic direction, intentionally lightweight)
 
 ---
 

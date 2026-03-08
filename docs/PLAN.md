@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 55 (Product Opportunity Portfolio Governance) — ✅ Complete
-> **Next Sprint:** 56 (Controlled Ecosystem Readiness Layer) — 📋 Planned
+> **Current Sprint:** 56 (Controlled Ecosystem Readiness Layer) — ✅ Complete
+> **Next Sprint:** 57 (Capability Exposure Governance Layer) — 📋 Planned
 
 ## Document Authority
 
@@ -38,8 +38,8 @@ This document serves as the canonical sprint execution ledger. The following con
 | 🔮 Reserved | Strategic direction defined, not yet scoped for implementation | Lightweight — name, block, and one-line purpose only |
 
 - **Current/next sprint** should be highly detailed before implementation begins
-- **Committed future arc** (Sprint 56) should be moderately detailed
-- **Reserved horizon** (Sprints 57–65) should remain intentionally lightweight until promoted to committed
+- **Committed future arc** (Sprint 57) should be moderately detailed
+- **Reserved horizon** (Sprints 58–65) should remain intentionally lightweight until promoted to committed
 - Reserved sprints should not be promoted to planned without deliberate review
 
 ---
@@ -325,24 +325,36 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Committed Future Arc — Block I: Product-Intelligent Expansion (Sprint 56)
+### Phase 20: Controlled Ecosystem Readiness (Sprint 56) — ✅ COMPLETE
+
+**Goal:** Prepare the platform for eventual ecosystem exposure — capability inventory, exposure classification, safety prerequisites, trust model foundation, readiness assessment — without activating any marketplace.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 56 | Controlled Ecosystem Readiness Layer | Ecosystem Readiness Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 56: Capability inventory builder, exposure classifier, readiness assessor, safety prerequisite engine, trust model designer, policy foundation builder, risk bounding engine, readiness recommendation engine, readiness explainer, outcome tracking
+
+---
+
+## Committed Future Arc — Block J: Trusted Ecosystem Foundation (Sprint 57)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
 
 | Sprint | Name | Objective | Target Layer | Status |
 |--------|------|-----------|-------------|--------|
-| 56 | Controlled Ecosystem Readiness Layer | Assess ecosystem exposure readiness — capability inventory, safety prerequisites, trust model foundation | Ecosystem Readiness Layer | 📋 Planned |
+| 57 | Capability Exposure Governance Layer | Govern which capabilities can be exposed externally and under what constraints | Capability Exposure Governance Layer | 📋 Planned |
 
 ---
 
-## Reserved Horizon (Sprints 57–65)
+## Reserved Horizon (Sprints 58–65)
 
 > **Status:** 🔮 Reserved — strategic direction defined, details intentionally lightweight.
 > Reserved sprints should not be promoted without deliberate review.
 
 | Sprint | Name | Block | Status | Purpose |
 |--------|------|-------|--------|---------|
-| 57 | Capability Exposure Governance Layer | J — Trusted Ecosystem Foundation | 🔮 Reserved | Govern which capabilities can be exposed externally |
 | 58 | External Trust & Admission Layer | J — Trusted Ecosystem Foundation | 🔮 Reserved | Trust scoring and admission criteria for external participants |
 | 59 | Ecosystem Simulation & Sandbox Layer | J — Trusted Ecosystem Foundation | 🔮 Reserved | Simulate ecosystem interactions before real exposure |
 | 60 | Limited Marketplace Pilot Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | First controlled marketplace activation with rollback |
@@ -454,6 +466,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | `_shared/product-intelligence-entry/` | 8 | Signal ingestor, friction analyzer, opportunity detector, architecture/profile correlators, priority scorer, segmentation analyzer, explainer |
 | `_shared/product-intelligence-operations/` | 9 | Product benchmark engine, signal quality, architecture/profile correlators, priority, segmentation, recommendation, outcome validator, explainer |
 | `_shared/product-opportunity-portfolio/` | 9 | Portfolio builder, ranker, conflict detector, capacity scorer, decision engine, balance analyzer, outcome validator, watchlist manager, explainer |
+| `_shared/ecosystem-readiness/` | 9 | Capability inventory, exposure classifier, readiness assessor, safety prerequisites, trust model, policy foundation, risk bounding, recommendations, explainer |
 
 ---
 
@@ -507,5 +520,6 @@ This document serves as the canonical sprint execution ledger. The following con
 | Product Intelligence Entry | 1 | 53 |
 | Product Intelligence Operations | 1 | 54 |
 | Product Opportunity Portfolio Governance | 1 | 55 |
+| Controlled Ecosystem Readiness | 1 | 56 |
 | Support | 11 | Various |
-| **Total** | **~100** | |
+| **Total** | **~101** | |

@@ -4381,6 +4381,429 @@ export type Database = {
           },
         ]
       }
+      ecosystem_capability_inventory: {
+        Row: {
+          assumptions: Json
+          auditability_score: number
+          capability_domain: string
+          capability_name: string
+          capability_type: string
+          created_at: string
+          dependency_sensitivity_score: number
+          evidence_links: Json
+          exposure_candidate_status: string
+          exposure_restriction_score: number
+          externalization_risk_score: number
+          id: string
+          internal_criticality_score: number
+          organization_id: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          auditability_score?: number
+          capability_domain?: string
+          capability_name?: string
+          capability_type?: string
+          created_at?: string
+          dependency_sensitivity_score?: number
+          evidence_links?: Json
+          exposure_candidate_status?: string
+          exposure_restriction_score?: number
+          externalization_risk_score?: number
+          id?: string
+          internal_criticality_score?: number
+          organization_id: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          auditability_score?: number
+          capability_domain?: string
+          capability_name?: string
+          capability_type?: string
+          created_at?: string
+          dependency_sensitivity_score?: number
+          evidence_links?: Json
+          exposure_candidate_status?: string
+          exposure_restriction_score?: number
+          externalization_risk_score?: number
+          id?: string
+          internal_criticality_score?: number
+          organization_id?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_capability_inventory_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_capability_inventory_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ecosystem_exposure_policies: {
+        Row: {
+          assumptions: Json
+          created_at: string
+          evidence_links: Json
+          id: string
+          organization_id: string
+          policy_definition: Json
+          policy_domain: string
+          policy_name: string
+          policy_readiness_score: number
+          policy_scope: string
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          policy_definition?: Json
+          policy_domain?: string
+          policy_name?: string
+          policy_readiness_score?: number
+          policy_scope?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          policy_definition?: Json
+          policy_domain?: string
+          policy_name?: string
+          policy_readiness_score?: number
+          policy_scope?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_exposure_policies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_exposure_policies_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ecosystem_exposure_readiness_assessments: {
+        Row: {
+          assessment_scope_id: string
+          assessment_scope_type: string
+          assumptions: Json
+          blast_radius_readiness_score: number
+          capability_id: string | null
+          confidence_score: number
+          created_at: string
+          ecosystem_readiness_score: number
+          evidence_links: Json
+          id: string
+          organization_id: string
+          policy_readiness_score: number
+          readiness_status: string
+          safety_prerequisite_score: number
+          trust_requirement_score: number
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assessment_scope_id?: string
+          assessment_scope_type?: string
+          assumptions?: Json
+          blast_radius_readiness_score?: number
+          capability_id?: string | null
+          confidence_score?: number
+          created_at?: string
+          ecosystem_readiness_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          policy_readiness_score?: number
+          readiness_status?: string
+          safety_prerequisite_score?: number
+          trust_requirement_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assessment_scope_id?: string
+          assessment_scope_type?: string
+          assumptions?: Json
+          blast_radius_readiness_score?: number
+          capability_id?: string | null
+          confidence_score?: number
+          created_at?: string
+          ecosystem_readiness_score?: number
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          policy_readiness_score?: number
+          readiness_status?: string
+          safety_prerequisite_score?: number
+          trust_requirement_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_exposure_readiness_assessments_capability_id_fkey"
+            columns: ["capability_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_capability_inventory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_exposure_readiness_assessments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_exposure_readiness_assessments_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ecosystem_readiness_outcomes: {
+        Row: {
+          assessment_id: string | null
+          created_at: string
+          evidence_links: Json
+          expected_outcomes: Json
+          id: string
+          organization_id: string
+          outcome_status: string
+          readiness_outcome_accuracy_score: number
+          readiness_recommendation_quality_score: number
+          realized_outcomes: Json
+          recommendation_status: string
+          recommendation_type: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assessment_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          readiness_outcome_accuracy_score?: number
+          readiness_recommendation_quality_score?: number
+          realized_outcomes?: Json
+          recommendation_status?: string
+          recommendation_type?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assessment_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          readiness_outcome_accuracy_score?: number
+          readiness_recommendation_quality_score?: number
+          realized_outcomes?: Json
+          recommendation_status?: string
+          recommendation_type?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_readiness_outcomes_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_exposure_readiness_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_readiness_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_readiness_outcomes_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ecosystem_safety_prerequisites: {
+        Row: {
+          capability_id: string | null
+          created_at: string
+          evidence_links: Json
+          gap_description: string
+          id: string
+          is_met: boolean
+          organization_id: string
+          prerequisite_domain: string
+          prerequisite_name: string
+          prerequisite_type: string
+          severity: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          capability_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          gap_description?: string
+          id?: string
+          is_met?: boolean
+          organization_id: string
+          prerequisite_domain?: string
+          prerequisite_name?: string
+          prerequisite_type?: string
+          severity?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          capability_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          gap_description?: string
+          id?: string
+          is_met?: boolean
+          organization_id?: string
+          prerequisite_domain?: string
+          prerequisite_name?: string
+          prerequisite_type?: string
+          severity?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_safety_prerequisites_capability_id_fkey"
+            columns: ["capability_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_capability_inventory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_safety_prerequisites_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_safety_prerequisites_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ecosystem_trust_model_candidates: {
+        Row: {
+          assumptions: Json
+          created_at: string
+          evidence_links: Json
+          id: string
+          organization_id: string
+          status: string
+          trust_boundary_assumptions: Json
+          trust_level_definition: Json
+          trust_model_confidence_score: number
+          trust_model_name: string
+          trust_model_type: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id: string
+          status?: string
+          trust_boundary_assumptions?: Json
+          trust_level_definition?: Json
+          trust_model_confidence_score?: number
+          trust_model_name?: string
+          trust_model_type?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          organization_id?: string
+          status?: string
+          trust_boundary_assumptions?: Json
+          trust_level_definition?: Json
+          trust_model_confidence_score?: number
+          trust_model_name?: string
+          trust_model_type?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_trust_model_candidates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_trust_model_candidates_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       engineering_advisory_recommendations: {
         Row: {
           confidence_score: number | null

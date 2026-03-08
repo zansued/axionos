@@ -61,14 +61,14 @@ sprints:
   - { sprint: 53, name: "Product Intelligence Entry",                        status: complete, block: "H",            phase: "Product Intelligence",                layer: "Product Intelligence Layer" }
   - { sprint: 54, name: "Product Intelligence Operating Layer",              status: complete, block: "I",            phase: "Product-Intelligent Expansion",       layer: "Product Intelligence Operations Layer" }
   - { sprint: 55, name: "Product Opportunity Portfolio Governance",           status: complete, block: "I",            phase: "Product-Intelligent Expansion",       layer: "Product Opportunity Governance Layer" }
+  - { sprint: 56, name: "Controlled Ecosystem Readiness Layer",              status: complete, block: "I",            phase: "Product-Intelligent Expansion",       layer: "Ecosystem Readiness Layer" }
 
-  # === COMMITTED FUTURE ARC (Sprint 56) — Block I ===
+  # === COMMITTED FUTURE ARC (Sprint 57) — Block J ===
 
-  - { sprint: 56, name: "Controlled Ecosystem Readiness Layer",              status: planned,    block: "I", phase: "Product-Intelligent Expansion", layer: "Ecosystem Readiness Layer",              objective: "Assess ecosystem exposure readiness without activating marketplace" }
+  - { sprint: 57, name: "Capability Exposure Governance Layer",              status: planned,    block: "J", phase: "Trusted Ecosystem Foundation",          objective: "Govern which capabilities can be exposed externally" }
 
-  # === RESERVED HORIZON (Sprints 57–65) — Blocks J, K, L ===
+  # === RESERVED HORIZON (Sprints 58–65) — Blocks J, K, L ===
 
-  - { sprint: 57, name: "Capability Exposure Governance Layer",              status: reserved, block: "J", phase: "Trusted Ecosystem Foundation",          objective: "Govern which capabilities can be exposed externally" }
   - { sprint: 58, name: "External Trust & Admission Layer",                  status: reserved, block: "J", phase: "Trusted Ecosystem Foundation",          objective: "Trust scoring and admission criteria for external participants" }
   - { sprint: 59, name: "Ecosystem Simulation & Sandbox Layer",              status: reserved, block: "J", phase: "Trusted Ecosystem Foundation",          objective: "Simulate ecosystem interactions before real exposure" }
   - { sprint: 60, name: "Limited Marketplace Pilot Layer",                   status: reserved, block: "K", phase: "Controlled Ecosystem Activation",       objective: "First controlled marketplace activation with rollback" }
