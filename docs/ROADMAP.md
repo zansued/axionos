@@ -72,22 +72,23 @@ The next strategic direction moves from product intelligence operations toward *
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–53)                 COMMITTED (54–56)              RESERVED (57–65)
+  COMPLETE (1–54)                 COMMITTED (55–56)              RESERVED (57–65)
   ───────────────►                ───────────────►               ───────────────►
   Foundation → Learning →          Product-Intelligent            Trusted Ecosystem
   Meta → Memory → Gov →            Expansion                     Foundation →
-  Intelligence → Calibration →     Product Intelligence           Controlled Ecosystem
-  Strategy → Stabilization →       Operating Layer →              Activation →
-  Advisory → Semantic →            Product Opportunity            System Roundness &
-  Discovery → Simulation →         Portfolio Governance →         Operating Completion
-  Planning → Sandbox →             Controlled Ecosystem
-  Pilot → Migration →             Readiness
+  Intelligence → Calibration →     Product Opportunity            Controlled Ecosystem
+  Strategy → Stabilization →       Portfolio Governance →         Activation →
+  Advisory → Semantic →            Controlled Ecosystem           System Roundness &
+  Discovery → Simulation →         Readiness                     Operating Completion
+  Planning → Sandbox →
+  Pilot → Migration →
   Portfolio → Fitness →
   Change Advisory → Stab v2 →
   Tenant Arch → Economics →
   Convergence → Conv Gov →
   Conv Memory → Op Profiles →
-  Product Intelligence Entry ✅
+  Product Intelligence Entry →
+  Product Intelligence Ops ✅
 ```
 
 ---
