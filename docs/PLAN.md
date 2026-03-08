@@ -351,13 +351,26 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Committed Future Arc — Block J: Trusted Ecosystem Foundation (Sprint 58)
+### Phase 22: External Trust & Admission (Sprint 58) — ✅ COMPLETE
+
+**Goal:** Define trust evaluation, admission criteria, partner classification, and bounded eligibility model for future external ecosystem participation, without activating live external access.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 58 | External Trust & Admission Layer | External Trust & Admission Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 58: Actor registry manager, trust tier classifier, admission case builder, admission requirement engine, risk posture analyzer, admission review manager, trust drift detector, trust recommendation engine, trust admission explainer, outcome tracking
+
+---
+
+## Committed Future Arc — Block J: Trusted Ecosystem Foundation (Sprint 59)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
 
 | Sprint | Name | Objective | Target Layer | Status |
 |--------|------|-----------|-------------|--------|
-| 58 | External Trust & Admission Layer | Define trust scoring, admission criteria, and safety boundaries for external participants | External Trust & Admission Layer | 📋 Planned |
+| 59 | Ecosystem Simulation & Sandbox Layer | Simulate ecosystem interactions in bounded sandboxes before real exposure | Ecosystem Simulation Layer | 📋 Planned |
 
 ---
 
