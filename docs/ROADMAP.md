@@ -173,9 +173,9 @@ With Sprint 57 complete (capability exposure governance), the platform has estab
 | 64 | Canon Integrity & Drift Governance Layer | Detect and govern drift between implemented behavior and canonical documentation/policies | Reserved |
 | 65 | Operating Completion Layer | Achieve the first internally coherent, complete operating canon of AxionOS | Reserved |
 
-### Why 58–65 are reserved
+### Why 59–65 are reserved
 
-The reserved horizon is strategically coherent but intentionally lightweight. These sprints depend on outcomes from the committed arc (57) and may be revised based on what is learned during ecosystem foundation. Future implementation should proceed sprint-by-sprint with review, not in bulk.
+The reserved horizon is strategically coherent but intentionally lightweight. These sprints depend on outcomes from the committed arc (58) and may be revised based on what is learned during ecosystem foundation. Future implementation should proceed sprint-by-sprint with review, not in bulk.
 
 ---
 
