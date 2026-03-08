@@ -849,6 +849,247 @@ export type Database = {
           },
         ]
       }
+      agent_routing_candidates: {
+        Row: {
+          agent_id: string | null
+          capability_key: string
+          created_at: string
+          decision_id: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          rejection_reason: string | null
+          risk_score: number
+          selected: boolean
+          suitability_score: number
+        }
+        Insert: {
+          agent_id?: string | null
+          capability_key?: string
+          created_at?: string
+          decision_id: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          rejection_reason?: string | null
+          risk_score?: number
+          selected?: boolean
+          suitability_score?: number
+        }
+        Update: {
+          agent_id?: string | null
+          capability_key?: string
+          created_at?: string
+          decision_id?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          rejection_reason?: string | null
+          risk_score?: number
+          selected?: boolean
+          suitability_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_routing_candidates_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "agent_routing_decisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_routing_candidates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_routing_decisions: {
+        Row: {
+          chosen_agent_id: string | null
+          chosen_capability: string
+          confidence_score: number
+          created_at: string
+          evidence_refs: Json
+          fallback_path: Json
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          pipeline_stage: string
+          policy_constraints_applied: Json
+          risk_posture: string
+          routing_reason: string
+          status: string
+          task_context: Json
+          task_type: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          chosen_agent_id?: string | null
+          chosen_capability?: string
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          fallback_path?: Json
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          pipeline_stage?: string
+          policy_constraints_applied?: Json
+          risk_posture?: string
+          routing_reason?: string
+          status?: string
+          task_context?: Json
+          task_type?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          chosen_agent_id?: string | null
+          chosen_capability?: string
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          fallback_path?: Json
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          pipeline_stage?: string
+          policy_constraints_applied?: Json
+          risk_posture?: string
+          routing_reason?: string
+          status?: string
+          task_context?: Json
+          task_type?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_routing_decisions_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_routing_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_routing_decisions_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_routing_outcomes: {
+        Row: {
+          created_at: string
+          decision_id: string
+          fallback_agent_id: string | null
+          fallback_used: boolean
+          id: string
+          organization_id: string
+          outcome_metrics: Json
+          outcome_notes: string
+          outcome_status: string
+          success: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          decision_id: string
+          fallback_agent_id?: string | null
+          fallback_used?: boolean
+          id?: string
+          organization_id: string
+          outcome_metrics?: Json
+          outcome_notes?: string
+          outcome_status?: string
+          success?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          decision_id?: string
+          fallback_agent_id?: string | null
+          fallback_used?: boolean
+          id?: string
+          organization_id?: string
+          outcome_metrics?: Json
+          outcome_notes?: string
+          outcome_status?: string
+          success?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_routing_outcomes_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "agent_routing_decisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_routing_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_routing_review_events: {
+        Row: {
+          created_at: string
+          decision_id: string
+          event_type: string
+          id: string
+          organization_id: string
+          review_notes: string
+          reviewer_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          decision_id: string
+          event_type?: string
+          id?: string
+          organization_id: string
+          review_notes?: string
+          reviewer_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          decision_id?: string
+          event_type?: string
+          id?: string
+          organization_id?: string
+          review_notes?: string
+          reviewer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_routing_review_events_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "agent_routing_decisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_routing_review_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agents: {
         Row: {
           created_at: string
