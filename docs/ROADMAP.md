@@ -149,7 +149,7 @@ This means the focus shifts from building internal systems to making the user-vi
 | Block J — Trusted Ecosystem Foundation | 57–59 | Capability exposure governance, external trust & admission, ecosystem simulation & sandbox |
 | Block K — Controlled Ecosystem Activation | 60–62 | Limited marketplace pilot, capability registry governance, multi-party policy & revenue governance |
 | Block L — System Roundness & Operating Completion | 63–65 | Institutional outcome assurance, canon integrity & drift governance, operating completion |
-| Block M — Product Experience & Delivery Maturity (in progress) | 66 | User journey orchestration |
+| Block M — Product Experience & Delivery Maturity (in progress) | 66–67 | User journey orchestration, role-based experience |
 
 ---
 
