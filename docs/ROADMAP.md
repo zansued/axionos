@@ -66,6 +66,7 @@
 | **Canon Integrity & Drift Governance** | Active — cross-doc consistency, principle conformance, mutation boundary integrity, canon alignment |
 | **User Journey Orchestration** | Active — canonical visible journey, stage transitions, approval gates, artifact visibility, deployment readiness |
 | **Role-Based Experience** | Active — role-aware surfaces, navigation filtering, complexity leakage detection, approval visibility routing |
+| **One-Click Delivery & Deploy Assurance** | Active — governed one-click delivery, deploy confidence, blocker detection, rollback posture, output visibility |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
