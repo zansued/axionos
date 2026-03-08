@@ -800,5 +800,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Post-Deploy Feedback Assimilation | 1 | 84 |
 | Reliability-Aware Delivery Tuning | 1 | 85 |
 | Outcome Assurance 2.0 | 1 | 86 |
+| Distributed Job Control Plane | 1 | 87 |
 | Support | 11 | Various |
-| **Total** | **~137** | |
+| **Total** | **~138** | |
