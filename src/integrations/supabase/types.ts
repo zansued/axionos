@@ -93,6 +93,236 @@ export type Database = {
           },
         ]
       }
+      adoption_friction_clusters: {
+        Row: {
+          cluster_name: string
+          created_at: string
+          evidence_refs: Json
+          friction_zone: string
+          id: string
+          journey_stage: string
+          occurrence_count: number
+          organization_id: string
+          remediation_hint: string
+          severity: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          cluster_name?: string
+          created_at?: string
+          evidence_refs?: Json
+          friction_zone?: string
+          id?: string
+          journey_stage?: string
+          occurrence_count?: number
+          organization_id: string
+          remediation_hint?: string
+          severity?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          cluster_name?: string
+          created_at?: string
+          evidence_refs?: Json
+          friction_zone?: string
+          id?: string
+          journey_stage?: string
+          occurrence_count?: number
+          organization_id?: string
+          remediation_hint?: string
+          severity?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adoption_friction_clusters_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adoption_friction_clusters_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      adoption_intelligence_models: {
+        Row: {
+          created_at: string
+          id: string
+          milestone_definitions: Json
+          model_name: string
+          model_type: string
+          organization_id: string
+          status: string
+          success_criteria: Json
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          milestone_definitions?: Json
+          model_name?: string
+          model_type?: string
+          organization_id: string
+          status?: string
+          success_criteria?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          milestone_definitions?: Json
+          model_name?: string
+          model_type?: string
+          organization_id?: string
+          status?: string
+          success_criteria?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adoption_intelligence_models_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adoption_intelligence_models_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      adoption_journey_events: {
+        Row: {
+          created_at: string
+          event_payload: Json
+          event_type: string
+          id: string
+          initiative_id: string | null
+          journey_stage: string
+          organization_id: string
+          user_role_type: string
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_payload?: Json
+          event_type?: string
+          id?: string
+          initiative_id?: string | null
+          journey_stage?: string
+          organization_id: string
+          user_role_type?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_payload?: Json
+          event_type?: string
+          id?: string
+          initiative_id?: string | null
+          journey_stage?: string
+          organization_id?: string
+          user_role_type?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adoption_journey_events_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adoption_journey_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adoption_journey_events_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      adoption_outcomes: {
+        Row: {
+          accuracy_score: number
+          created_at: string
+          expected_outcomes: Json
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          outcome_domain: string
+          realized_outcomes: Json
+          workspace_id: string | null
+        }
+        Insert: {
+          accuracy_score?: number
+          created_at?: string
+          expected_outcomes?: Json
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          outcome_domain?: string
+          realized_outcomes?: Json
+          workspace_id?: string | null
+        }
+        Update: {
+          accuracy_score?: number
+          created_at?: string
+          expected_outcomes?: Json
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          outcome_domain?: string
+          realized_outcomes?: Json
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adoption_outcomes_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adoption_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adoption_outcomes_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       adrs: {
         Row: {
           approved_by: string | null
@@ -5116,6 +5346,130 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_success_recommendations: {
+        Row: {
+          created_at: string
+          description: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          priority_score: number
+          recommendation_type: string
+          status: string
+          target_role: string
+          target_stage: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          priority_score?: number
+          recommendation_type?: string
+          status?: string
+          target_role?: string
+          target_stage?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          priority_score?: number
+          recommendation_type?: string
+          status?: string
+          target_role?: string
+          target_stage?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_success_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_success_recommendations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_success_signals: {
+        Row: {
+          created_at: string
+          evidence_refs: Json
+          id: string
+          initiative_id: string | null
+          journey_stage: string
+          milestone_type: string
+          organization_id: string
+          signal_strength: number
+          signal_type: string
+          user_role_type: string
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          initiative_id?: string | null
+          journey_stage?: string
+          milestone_type?: string
+          organization_id: string
+          signal_strength?: number
+          signal_type?: string
+          user_role_type?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          initiative_id?: string | null
+          journey_stage?: string
+          milestone_type?: string
+          organization_id?: string
+          signal_strength?: number
+          signal_type?: string
+          user_role_type?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_success_signals_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_success_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_success_signals_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]

@@ -3,7 +3,7 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-08
-> **Current state:** Level 5 — Institutional Engineering Memory Platform. 53 architectural layers active (through Sprint 69 — Onboarding, Templates & Vertical Starters Layer).
+> **Current state:** Level 5 — Institutional Engineering Memory Platform. 54 architectural layers active (through Sprint 70 — Adoption Intelligence & Customer Success Loop). Block M complete.
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -906,10 +906,10 @@ Internal sophistication makes the product trustworthy. It does not need to be th
 
 With 65 sprints complete and the first mature operating baseline achieved, the platform's architectural direction shifts from internal system building to **product experience and delivery maturity**.
 
-### Completed Internal Canon (Sprints 1–69)
-- ✅ All layers from execution kernel through institutional assurance, canon integrity, and product experience
-- ✅ 53 architectural layers active
-- ✅ First internally coherent operating canon + user journey orchestration + role-based experience separation + one-click delivery & deploy assurance + guided onboarding, templates, and vertical starters
+### Completed Internal Canon (Sprints 1–70)
+- ✅ All layers from execution kernel through institutional assurance, canon integrity, product experience, and adoption intelligence
+- ✅ 54 architectural layers active
+- ✅ First internally coherent operating canon + user journey orchestration + role-based experience + one-click delivery + guided onboarding + adoption intelligence & customer success loop
 
 ### Next Architectural Direction — Block M: Product Experience & Delivery Maturity
 
@@ -918,11 +918,9 @@ The next architectural work supports:
 - **Role-based product surfaces** — separating the default user journey from operator/governance views
 - **Delivery/deploy assurance experience** — seamless, governed one-click path from validated code to deployed software
 - **Onboarding/template-driven initiation** — reducing time-to-value with guided flows, reusable templates, and vertical starters
-- **Adoption intelligence and customer success feedback** — closing the loop between product usage and platform improvement
-- **Onboarding/template-driven initiation** — reducing time-to-value with guided flows and reusable starting points
-- **Adoption intelligence and customer success feedback** — closing the loop between product usage and platform improvement
+- **Adoption intelligence and customer success feedback** — measuring real adoption, friction, success signals, and closing the loop for product improvement
 
-These are **not yet implemented**. They represent the committed and reserved architectural direction for Block M (Sprints 66–70).
+Block M is now **complete**. Future work (Block N+) will build on this product-ready foundation.
 
 **Governing constraint:** Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Internal sophistication serves the product experience — it does not replace it.
 

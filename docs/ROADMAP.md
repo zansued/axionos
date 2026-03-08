@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** Sprint 69 complete (Onboarding, Templates & Vertical Starters Layer). Block M in progress. 53 architectural layers active.
+> **Last strategic change (2026-03-08):** Sprint 70 complete (Adoption Intelligence & Customer Success Loop). Block M complete. 54 architectural layers active.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -26,7 +26,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 53 architectural layers active |
+| **System State** | 54 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -68,6 +68,7 @@
 | **Role-Based Experience** | Active — role-aware surfaces, navigation filtering, complexity leakage detection, approval visibility routing |
 | **One-Click Delivery & Deploy Assurance** | Active — governed one-click delivery, deploy confidence, blocker detection, rollback posture, output visibility |
 | **Onboarding, Templates & Vertical Starters** | Active — guided onboarding flows, reusable templates, domain-specific vertical starters, friction detection, initialization quality |
+| **Adoption Intelligence & Customer Success** | Active — adoption models, success signals, journey friction, template effectiveness, delivery correlation, intervention priorities |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
@@ -93,10 +94,10 @@ This means the focus shifts from building internal systems to making the user-vi
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–68)                 PLANNED (69)                    COMMITTED (70)                 RESERVED (71+)
-  ───────────────►                ───────────────►                ───────────────►               ───────────────►
-  Foundation → Learning →          Onboarding, Templates          Adoption Intelligence &        Future expansion
-  Meta → Memory → Gov →            & Vertical Starters            Customer Success Loop
+  COMPLETE (1–70)                 RESERVED (71+)
+  ───────────────►                ───────────────►
+  Foundation → Learning →          Future expansion
+  Meta → Memory → Gov →            (post-Block M)
   Intelligence → Calibration →
   Strategy → Stabilization →
   Advisory → Semantic →
