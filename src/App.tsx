@@ -119,6 +119,7 @@ const App = () => (
                       <Route path="/capability-governance" element={<ProtectedRoute><CapabilityGovernance /></ProtectedRoute>} />
                       <Route path="/pilot-marketplace" element={<ProtectedRoute><PilotMarketplace /></ProtectedRoute>} />
                       <Route path="/marketplace-outcomes" element={<ProtectedRoute><MarketplaceOutcomes /></ProtectedRoute>} />
+                      <Route path="/delivery-outcomes" element={<ProtectedRoute><DeliveryOutcomes /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
