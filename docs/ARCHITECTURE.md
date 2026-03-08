@@ -875,9 +875,9 @@ supabase/functions/
 
 > **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-After 57 sprints completing the full arc from deterministic execution through capability exposure governance, the platform's architectural direction moves toward:
+After 58 sprints completing the full arc from deterministic execution through external trust & admission, the platform's architectural direction moves toward:
 
-### Completed Institutionalization Arc (Sprints 49–57)
+### Completed Institutionalization Arc (Sprints 49–58)
 - ✅ Platform convergence and convergence governance (49–50)
 - ✅ Institutional convergence memory (51)
 - ✅ Operating profiles and policy packs (52)
@@ -886,12 +886,12 @@ After 57 sprints completing the full arc from deterministic execution through ca
 - ✅ Product opportunity portfolio governance (55)
 - ✅ Controlled ecosystem readiness (56)
 - ✅ Capability exposure governance (57)
+- ✅ External trust & admission (58)
 
-### Committed Direction (Sprint 58) — Block J: Trusted Ecosystem Foundation
-- **External trust & admission** — defining trust scoring, admission criteria, and safety boundaries for external participants
+### Committed Direction (Sprint 59) — Block J: Trusted Ecosystem Foundation
+- **Ecosystem simulation & sandbox** — simulating ecosystem interactions in bounded sandboxes before real exposure
 
-### Reserved Direction (Sprints 59–65) — Blocks J (cont), K, L
-- **Ecosystem simulation/sandboxing** before real exposure
+### Reserved Direction (Sprints 60–65) — Blocks K, L
 - **Limited marketplace pilot** with bounded scope and instant rollback
 - **Capability registry** and **multi-party policy/revenue governance**
 - **Institutional outcome assurance** and **canon integrity/drift governance**

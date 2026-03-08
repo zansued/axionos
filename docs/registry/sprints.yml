@@ -64,13 +64,13 @@ sprints:
   - { sprint: 56, name: "Controlled Ecosystem Readiness Layer",              status: complete, block: "I",            phase: "Product-Intelligent Expansion",       layer: "Ecosystem Readiness Layer" }
 
   - { sprint: 57, name: "Capability Exposure Governance Layer",              status: complete, block: "J",            phase: "Trusted Ecosystem Foundation",       layer: "Capability Exposure Governance Layer" }
+  - { sprint: 58, name: "External Trust & Admission Layer",                  status: complete, block: "J",            phase: "Trusted Ecosystem Foundation",       layer: "External Trust & Admission Layer" }
 
-  # === COMMITTED FUTURE ARC (Sprint 58) — Block J ===
+  # === COMMITTED FUTURE ARC (Sprint 59) — Block J ===
 
-  - { sprint: 58, name: "External Trust & Admission Layer",                  status: planned,    block: "J", phase: "Trusted Ecosystem Foundation",          objective: "Trust scoring and admission criteria for external participants" }
+  - { sprint: 59, name: "Ecosystem Simulation & Sandbox Layer",              status: planned,    block: "J", phase: "Trusted Ecosystem Foundation",          objective: "Simulate ecosystem interactions before real exposure" }
 
-  # === RESERVED HORIZON (Sprints 59–65) — Blocks J, K, L ===
-  - { sprint: 59, name: "Ecosystem Simulation & Sandbox Layer",              status: reserved, block: "J", phase: "Trusted Ecosystem Foundation",          objective: "Simulate ecosystem interactions before real exposure" }
+  # === RESERVED HORIZON (Sprints 60–65) — Blocks K, L ===
   - { sprint: 60, name: "Limited Marketplace Pilot Layer",                   status: reserved, block: "K", phase: "Controlled Ecosystem Activation",       objective: "First controlled marketplace activation with rollback" }
   - { sprint: 61, name: "Capability Registry Governance Layer",              status: reserved, block: "K", phase: "Controlled Ecosystem Activation",       objective: "Govern lifecycle of registered capabilities" }
   - { sprint: 62, name: "Multi-Party Policy & Revenue Governance Layer",     status: reserved, block: "K", phase: "Controlled Ecosystem Activation",       objective: "Policy negotiation and revenue sharing across participants" }
