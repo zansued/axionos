@@ -534,7 +534,24 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Block N — Evidence-Governed Improvement Loop (Sprints 71–74) — 📋 PLANNED
+## Sprint 71 — Governed Extensibility & Developer Experience Foundation ✅ Complete
+
+Sprint 71 established the first governed extensibility foundation for AxionOS. The system now supports canonical platform extensions with identity, category, versioning, permissions, compatibility constraints, rollback readiness, approval-based activation, and full auditability. A dedicated operator surface (`/extensions`) was introduced for extension visibility, approval flows, compatibility posture, deactivation, and rollback operations. All canon invariants remain preserved: advisory-first, governance before autonomy, rollback everywhere, human approval for structural change, tenant isolation, and no autonomous architecture mutation.
+
+### Key Deliverables
+- `platform_extensions`
+- `extension_activations`
+- `extension_compatibility_checks`
+- `extension_audit_events`
+- `extension-management` edge function with governed lifecycle actions
+- Operator-facing Extensions dashboard and lifecycle controls
+
+### Strategic Meaning
+Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed self-improvement roadmap, but creates the controlled extensibility and operator-grade delivery foundation that future blocks can build on safely.
+
+---
+
+## Next Planned Block — Sprints 72–74: Evidence-Governed Improvement Loop — 📋 PLANNED
 
 > **Strategic direction:** [ROADMAP.md](ROADMAP.md)
 
@@ -542,7 +559,6 @@ This document serves as the canonical sprint execution ledger. The following con
 
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 71 | TBD — Evidence Collection Foundation | N | 📋 Planned | Structured evidence collection from pipeline, repair, delivery, and adoption |
 | 72 | TBD — Improvement Proposal Generation | N | 📋 Planned | Bounded improvement proposals from evidence aggregation |
 | 73 | TBD — Governed Testing & Promotion | N | 📋 Planned | Governed testing and promotion of improvement candidates |
 | 74 | TBD — Improvement Outcome Tracking | N | 📋 Planned | Outcome tracking and feedback for improvement cycles |
