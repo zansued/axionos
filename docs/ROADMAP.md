@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-08):** Sprint 46 complete. Platform Self-Stabilization v2 active. Multi-layer instability detection, cross-layer correlation, bounded stabilization envelopes, freeze/slowdown controls, and recovery path synthesis are now operational.
+> **What changed (2026-03-08):** Sprint 47 complete. Tenant-Aware Architecture Modes active. Bounded architecture specialization by scope, anti-fragmentation controls, divergence drift detection, and mode health monitoring are now operational.
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
@@ -17,7 +17,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 31 architectural layers active |
+| **System State** | 32 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -308,7 +308,7 @@ Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTR
 
 ## Governing Principle
 
-> Forty sprints complete. The platform is architecture-aware with full advisory, simulation, planning, and sandbox capabilities.
-> Next phase: architecture-governed (Sprints 41–43) → architecture-operating (44–45) → architecture-scaled (46–48).
-> Focus now: pilot governance, controlled migration execution, and architecture portfolio governance.
+> Forty-seven sprints complete. The platform supports bounded tenant-aware architecture modes without fragmentation.
+> Next phase: architecture-operating (48–50) → platform convergence.
+> Focus now: tenant architecture specialization with anti-fragmentation controls.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.
