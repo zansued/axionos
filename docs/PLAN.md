@@ -249,5 +249,7 @@
 | Platform Self-Stabilization | 1 | 34 |
 | Autonomous Engineering Advisor | 1 | 35 |
 | Semantic Retrieval | 1 | 36 |
+| Discovery-Driven Architecture | 1 | 37 |
+| Architecture Change Simulation | 1 | 38 |
 | Support | 11 | Various |
-| **Total** | **~81** | |
+| **Total** | **~83** | |
