@@ -119,6 +119,7 @@ The next strategic direction moves from product opportunity governance toward **
 | Block G — Operating Profiles & Policy Packs | 52 | Reusable, governed, versioned operating profiles with bounded overrides and policy packs |
 | Block H — Product Intelligence Entry | 53 | Bounded, advisory-first product signal correlation, friction clustering, opportunity detection |
 | Block I (partial) — Product Intelligence Operations | 54 | Cross-tenant benchmarking, signal quality calibration, product-architecture/profile operational correlations, advisory recommendations |
+| Block I (partial) — Product Opportunity Portfolio Governance | 55 | Portfolio ranking, conflict detection, capacity-aware prioritization, promotion/defer/reject/monitor decisions, outcome tracking |
 
 ---
 
