@@ -213,11 +213,11 @@ AxionOS has completed 48 implementation sprints spanning the full capability arc
 | Phase | Sprints | State | Description |
 |-------|---------|-------|-------------|
 | Foundation | 1–40 | ✅ Complete | Architecture-aware: consciousness + rehearsal |
-| Governed | 41–43 | 📋 Planned | Architecture-governed: real pilot + migration + portfolio |
-| Operating | 44–45 | 📋 Planned | Architecture-operating: fitness + orchestration |
-| Scaled | 46–48 | 📋 Planned | Architecture-scaled: stability + tenants + economics |
+| Governed | 41–43 | ✅ Complete | Architecture-governed: real pilot + migration + portfolio |
+| Operating | 44–45 | ✅ Complete | Architecture-operating: fitness + orchestration |
+| Scaled | 46–48 | ✅ Complete | Architecture-scaled: stability + tenants + economics |
 
-> ⚠️ **Key Risk After Sprint 40:** Too much intelligence without change discipline. The sequence pilot → migration → portfolio is the safest path forward.
+> ✅ All four architecture blocks are complete. The platform is ready for convergence phase (49+).
 
 ---
 
