@@ -171,17 +171,19 @@ Sprint 74 completed the Evidence-Governed Improvement Loop by introducing govern
 
 ---
 
-## Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔮 Reserved
+## Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔄 In Progress
 
-> **Status:** Reserved — strategic direction defined, not scoped for implementation.
+> **Status:** In progress — Sprint 75 complete, Sprints 76–78 planned.
 
-**Thesis:** After evidence-governed improvement is established, AxionOS may evolve toward more advanced role arbitration, debate, resolution, shared working memory, and bounded multi-agent execution.
+**Thesis:** After evidence-governed improvement is established, AxionOS evolves toward more advanced role arbitration, debate, resolution, shared working memory, and bounded multi-agent execution.
 
-**Architectural intent:**
-- Advanced agent role negotiation and arbitration
-- Structured debate and consensus patterns
-- Shared working memory for multi-agent collaboration
-- Bounded multi-agent execution with governance oversight
+---
+
+## Sprint 75 — Role Arbitration & Capability Routing 2.0 ✅ Implemented
+
+Sprint 75 established the first upgraded role arbitration and capability routing layer. The system now makes context-aware routing decisions that consider task type, pipeline stage, prior evidence, risk posture, and policy constraints. Each routing decision is explainable — operators can inspect why a specific agent/capability was chosen, what alternatives were considered, and what fallback paths exist. A dedicated operator surface (`/agent-routing`) provides routing decision visibility, candidate comparison, failure pattern concentration, and bad-route flagging.
+
+**Strategic role:** Sprint 75 starts Block O by making agent selection more intelligent and legible without introducing uncontrolled autonomy. Routing decisions remain bounded, auditable, and governance-first.
 
 ---
 
