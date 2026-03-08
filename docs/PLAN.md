@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 57 (Capability Exposure Governance Layer) — ✅ Complete
-> **Next Sprint:** 58 (External Trust & Admission Layer) — 📋 Planned
+> **Current Sprint:** 58 (External Trust & Admission Layer) — ✅ Complete
+> **Next Sprint:** 59 (Ecosystem Simulation & Sandbox Layer) — 📋 Planned
 
 ## Document Authority
 
@@ -38,8 +38,8 @@ This document serves as the canonical sprint execution ledger. The following con
 | 🔮 Reserved | Strategic direction defined, not yet scoped for implementation | Lightweight — name, block, and one-line purpose only |
 
 - **Current/next sprint** should be highly detailed before implementation begins
-- **Committed future arc** (Sprint 58) should be moderately detailed
-- **Reserved horizon** (Sprints 59–65) should remain intentionally lightweight until promoted to committed
+- **Committed future arc** (Sprint 59) should be moderately detailed
+- **Reserved horizon** (Sprints 60–65) should remain intentionally lightweight until promoted to committed
 - Reserved sprints should not be promoted to planned without deliberate review
 
 ---
@@ -351,24 +351,36 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Committed Future Arc — Block J: Trusted Ecosystem Foundation (Sprint 58)
+### Phase 22: External Trust & Admission (Sprint 58) — ✅ COMPLETE
+
+**Goal:** Define trust evaluation, admission criteria, partner classification, and bounded eligibility model for future external ecosystem participation, without activating live external access.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 58 | External Trust & Admission Layer | External Trust & Admission Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 58: Actor registry manager, trust tier classifier, admission case builder, admission requirement engine, risk posture analyzer, admission review manager, trust drift detector, trust recommendation engine, trust admission explainer, outcome tracking
+
+---
+
+## Committed Future Arc — Block J: Trusted Ecosystem Foundation (Sprint 59)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
 
 | Sprint | Name | Objective | Target Layer | Status |
 |--------|------|-----------|-------------|--------|
-| 58 | External Trust & Admission Layer | Define trust scoring, admission criteria, and safety boundaries for external participants | External Trust & Admission Layer | 📋 Planned |
+| 59 | Ecosystem Simulation & Sandbox Layer | Simulate ecosystem interactions in bounded sandboxes before real exposure | Ecosystem Simulation Layer | 📋 Planned |
 
 ---
 
-## Reserved Horizon (Sprints 59–65)
+## Reserved Horizon (Sprints 60–65)
 
 > **Status:** 🔮 Reserved — strategic direction defined, details intentionally lightweight.
 > Reserved sprints should not be promoted without deliberate review.
 
 | Sprint | Name | Block | Status | Purpose |
 |--------|------|-------|--------|---------|
-| 59 | Ecosystem Simulation & Sandbox Layer | J — Trusted Ecosystem Foundation | 🔮 Reserved | Simulate ecosystem interactions before real exposure |
 | 60 | Limited Marketplace Pilot Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | First controlled marketplace activation with rollback |
 | 61 | Capability Registry Governance Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | Govern lifecycle of registered capabilities |
 | 62 | Multi-Party Policy & Revenue Governance Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | Policy negotiation and revenue sharing across participants |
@@ -480,6 +492,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | `_shared/product-opportunity-portfolio/` | 9 | Portfolio builder, ranker, conflict detector, capacity scorer, decision engine, balance analyzer, outcome validator, watchlist manager, explainer |
 | `_shared/ecosystem-readiness/` | 9 | Capability inventory, exposure classifier, readiness assessor, safety prerequisites, trust model, policy foundation, risk bounding, recommendations, explainer |
 | `_shared/capability-exposure-governance/` | 9 | Case builder, exposure classifier, policy engine, restriction analyzer, review manager, gate evaluator, risk bounding, recommendations, explainer |
+| `_shared/external-trust-admission/` | 9 | Actor registry manager, trust tier classifier, admission case builder, requirement engine, risk posture analyzer, review manager, trust drift detector, recommendation engine, explainer |
 
 ---
 
@@ -535,5 +548,6 @@ This document serves as the canonical sprint execution ledger. The following con
 | Product Opportunity Portfolio Governance | 1 | 55 |
 | Controlled Ecosystem Readiness | 1 | 56 |
 | Capability Exposure Governance | 1 | 57 |
+| External Trust & Admission | 1 | 58 |
 | Support | 11 | Various |
-| **Total** | **~102** | |
+| **Total** | **~103** | |

@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform Convergence complete (Sprint 49). Convergence Governance complete (Sprint 50). Institutional Convergence Memory complete (Sprint 51). Operating Profiles & Policy Packs complete (Sprint 52). Product Intelligence Entry complete (Sprint 53). Product Intelligence Operations complete (Sprint 54). Product Opportunity Portfolio Governance complete (Sprint 55). Controlled Ecosystem Readiness complete (Sprint 56). Capability Exposure Governance complete (Sprint 57). Block I complete. Block J started. Future canon formalized through Sprint 65.
+> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform Convergence complete (Sprint 49). Convergence Governance complete (Sprint 50). Institutional Convergence Memory complete (Sprint 51). Operating Profiles & Policy Packs complete (Sprint 52). Product Intelligence Entry complete (Sprint 53). Product Intelligence Operations complete (Sprint 54). Product Opportunity Portfolio Governance complete (Sprint 55). Controlled Ecosystem Readiness complete (Sprint 56). Capability Exposure Governance complete (Sprint 57). External Trust & Admission complete (Sprint 58). Block I complete. Block J in progress. Future canon formalized through Sprint 65.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -26,7 +26,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 42 architectural layers active |
+| **System State** | 43 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -57,6 +57,7 @@
 | **Product Opportunity Portfolio Governance** | Active — portfolio ranking, conflict detection, capacity-aware prioritization, outcome tracking |
 | **Controlled Ecosystem Readiness** | Active — capability inventory, exposure classification, safety prerequisites, trust model foundation, readiness assessment |
 | **Capability Exposure Governance** | Active — exposure classes, governance cases, gate evaluation, restriction analysis, review workflow, outcome tracking |
+| **External Trust & Admission** | Active — actor registry, trust tiers, admission cases, requirement evaluation, risk posture, drift detection, advisory recommendations |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
@@ -64,9 +65,9 @@
 
 ## Strategic Directive
 
-AxionOS has completed 57 implementation sprints spanning the full capability arc from deterministic execution to capability exposure governance. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, bounded self-stabilization, cross-layer engineering advisory, unified semantic retrieval, discovery-driven architecture signals, architecture change simulation/planning/sandbox/pilot/migration, portfolio governance, fitness functions, change advisory orchestration, tenant-aware architecture modes, economic optimization, platform convergence, convergence governance, institutional convergence memory, operating profiles, product intelligence entry, product intelligence operations, product opportunity portfolio governance, controlled ecosystem readiness, and capability exposure governance — all under governed, advisory-first safety boundaries.
+AxionOS has completed 58 implementation sprints spanning the full capability arc from deterministic execution to external trust & admission governance. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, bounded self-stabilization, cross-layer engineering advisory, unified semantic retrieval, discovery-driven architecture signals, architecture change simulation/planning/sandbox/pilot/migration, portfolio governance, fitness functions, change advisory orchestration, tenant-aware architecture modes, economic optimization, platform convergence, convergence governance, institutional convergence memory, operating profiles, product intelligence entry, product intelligence operations, product opportunity portfolio governance, controlled ecosystem readiness, capability exposure governance, and external trust & admission — all under governed, advisory-first safety boundaries.
 
-The next strategic direction moves from capability exposure governance toward **external trust & admission**, and ultimately toward a **round-enough operating completion** target at Sprint 65.
+The next strategic direction moves from external trust & admission toward **ecosystem simulation & sandboxing**, and ultimately toward a **round-enough operating completion** target at Sprint 65.
 
 **Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy.
 
@@ -75,14 +76,14 @@ The next strategic direction moves from capability exposure governance toward **
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–57)                 COMMITTED (58)                 RESERVED (59–65)
+  COMPLETE (1–58)                 COMMITTED (59)                 RESERVED (60–65)
   ───────────────►                ───────────────►               ───────────────►
-  Foundation → Learning →          Trusted Ecosystem              Trusted Ecosystem
-  Meta → Memory → Gov →            Foundation                    Foundation →
-  Intelligence → Calibration →     External Trust &              Controlled Ecosystem
-  Strategy → Stabilization →       Admission                    Activation →
-  Advisory → Semantic →                                          System Roundness &
-  Discovery → Simulation →                                      Operating Completion
+  Foundation → Learning →          Trusted Ecosystem              Controlled Ecosystem
+  Meta → Memory → Gov →            Foundation                    Activation →
+  Intelligence → Calibration →     Ecosystem Simulation &        System Roundness &
+  Strategy → Stabilization →       Sandbox                      Operating Completion
+  Advisory → Semantic →
+  Discovery → Simulation →
   Planning → Sandbox →
   Pilot → Migration →
   Portfolio → Fitness →
@@ -94,12 +95,13 @@ The next strategic direction moves from capability exposure governance toward **
   Product Intelligence Ops →
   Product Opp Portfolio Gov →
   Ecosystem Readiness →
-  Capability Exposure Gov ✅
+  Capability Exposure Gov →
+  External Trust & Admission ✅
 ```
 
 ---
 
-## Completed Canon (Sprints 1–57)
+## Completed Canon (Sprints 1–58)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -126,36 +128,31 @@ The next strategic direction moves from capability exposure governance toward **
 | Block I (partial) — Product Opportunity Portfolio Governance | 55 | Portfolio ranking, conflict detection, capacity-aware prioritization, promotion/defer/reject/monitor decisions, outcome tracking |
 | Block I (complete) — Controlled Ecosystem Readiness | 56 | Capability inventory, exposure classification, safety prerequisites, trust model foundation, readiness assessment, ecosystem readiness outcomes |
 | Block J (partial) — Capability Exposure Governance | 57 | Exposure classes, governance cases, gate evaluation, restriction analysis, review workflow, governance outcomes |
+| Block J (partial) — External Trust & Admission | 58 | Actor registry, trust tiers, admission cases, requirement evaluation, risk posture analysis, trust drift detection, advisory recommendations |
 
 ---
 
-## Committed Future Arc (Sprint 58)
+## Committed Future Arc (Sprint 59)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
 > **Block:** Block J — Trusted Ecosystem Foundation
 
-This sprint continues the trusted ecosystem foundation arc. It should still be reviewed and approved before execution begins.
+This sprint completes the trusted ecosystem foundation arc. It should still be reviewed and approved before execution begins.
 
 | Sprint | Name | Objective | Acceptance Direction |
 |--------|------|-----------|---------------------|
-| 58 | External Trust & Admission Layer | Define trust scoring, admission criteria, and safety boundaries for external participants | Trust scoring and admission defined; no external participants admitted |
+| 59 | Ecosystem Simulation & Sandbox Layer | Simulate ecosystem interactions in bounded sandboxes before real exposure | Sandboxed interaction simulation defined; no live ecosystem enabled |
 
-### Why 58 is committed
+### Why 59 is committed
 
-With Sprint 57 complete (capability exposure governance), the platform has established governance rules for exposure. The next step is defining trust and admission criteria for external participants (58). It reuses existing AxionOS philosophy and Agent OS planes without expansion.
+With Sprint 58 complete (external trust & admission), the platform has established trust models and admission criteria. The next step is ecosystem simulation (59) — testing interactions before real exposure. It reuses existing AxionOS philosophy and Agent OS planes without expansion.
 
 ---
 
-## Reserved Horizon (Sprints 59–65)
+## Reserved Horizon (Sprints 60–65)
 
 > **Status:** 🔮 Reserved — strategic direction is defined but intentionally lightweight. Details will be formalized sprint-by-sprint as the committed arc completes.
 > **Implementation should not begin on reserved sprints without deliberate review and promotion to committed status.**
-
-### Block J — Trusted Ecosystem Foundation (Sprint 59)
-
-| Sprint | Name | Purpose | Status |
-|--------|------|---------|--------|
-| 59 | Ecosystem Simulation & Sandbox Layer | Simulate ecosystem interactions in bounded sandboxes before real exposure | Reserved |
 
 ### Block K — Controlled Ecosystem Activation (Sprints 60–62)
 

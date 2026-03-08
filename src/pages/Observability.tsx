@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles, Globe, Eye } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles, Globe, Eye, UserCheck } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -55,6 +55,7 @@ import { ProductIntelligenceOperationsDashboard } from "@/components/observabili
 import { ProductOpportunityPortfolioDashboard } from "@/components/observability/ProductOpportunityPortfolioDashboard";
 import { ControlledEcosystemReadinessDashboard } from "@/components/observability/ControlledEcosystemReadinessDashboard";
 import { CapabilityExposureGovernanceDashboard } from "@/components/observability/CapabilityExposureGovernanceDashboard";
+import { ExternalTrustAdmissionDashboard } from "@/components/observability/ExternalTrustAdmissionDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -334,7 +335,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(44, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(45, 1fr)" }}>
+            <TabsTrigger value="trust-gov" className="text-xs gap-1"><UserCheck className="h-3 w-3" /> TrustGov</TabsTrigger>
             <TabsTrigger value="exposure-gov" className="text-xs gap-1"><Eye className="h-3 w-3" /> ExposureGov</TabsTrigger>
             <TabsTrigger value="eco-ready" className="text-xs gap-1"><Globe className="h-3 w-3" /> EcoReady</TabsTrigger>
             <TabsTrigger value="prod-portfolio" className="text-xs gap-1"><Briefcase className="h-3 w-3" /> ProdPortfolio</TabsTrigger>
@@ -380,6 +382,11 @@ export default function Observability() {
             <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
+
+          {/* ===== EXTERNAL TRUST & ADMISSION ===== */}
+          <TabsContent value="trust-gov" className="mt-4">
+            <ExternalTrustAdmissionDashboard />
+          </TabsContent>
 
           {/* ===== CAPABILITY EXPOSURE GOVERNANCE ===== */}
           <TabsContent value="exposure-gov" className="mt-4">
