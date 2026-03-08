@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles, Globe, Eye, UserCheck, Store, FlaskRound, PackageCheck } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles, Globe, Eye, UserCheck, Store, FlaskRound, PackageCheck, Handshake } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -59,6 +59,7 @@ import { ExternalTrustAdmissionDashboard } from "@/components/observability/Exte
 import { LimitedMarketplacePilotDashboard } from "@/components/observability/LimitedMarketplacePilotDashboard";
 import { EcosystemSimulationSandboxDashboard } from "@/components/observability/EcosystemSimulationSandboxDashboard";
 import { CapabilityRegistryGovernanceDashboard } from "@/components/observability/CapabilityRegistryGovernanceDashboard";
+import { MultiPartyPolicyRevenueGovernanceDashboard } from "@/components/observability/MultiPartyPolicyRevenueGovernanceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -338,7 +339,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(48, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(49, 1fr)" }}>
+            <TabsTrigger value="mp-gov" className="text-xs gap-1"><Handshake className="h-3 w-3" /> MultiPartyGov</TabsTrigger>
             <TabsTrigger value="cap-registry" className="text-xs gap-1"><PackageCheck className="h-3 w-3" /> CapRegistry</TabsTrigger>
             <TabsTrigger value="pilot-market" className="text-xs gap-1"><Store className="h-3 w-3" /> PilotMkt</TabsTrigger>
             <TabsTrigger value="eco-sandbox" className="text-xs gap-1"><FlaskRound className="h-3 w-3" /> EcoSandbox</TabsTrigger>
@@ -388,6 +390,11 @@ export default function Observability() {
             <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
+
+          {/* ===== MULTI-PARTY POLICY & REVENUE GOVERNANCE ===== */}
+          <TabsContent value="mp-gov" className="mt-4">
+            <MultiPartyPolicyRevenueGovernanceDashboard />
+          </TabsContent>
 
           {/* ===== CAPABILITY REGISTRY GOVERNANCE ===== */}
           <TabsContent value="cap-registry" className="mt-4">

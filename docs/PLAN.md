@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 61 (Capability Registry Governance Layer) — ✅ Complete
-> **Next Sprint:** 62 (Multi-Party Policy & Revenue Governance Layer) — 📋 Planned
+> **Current Sprint:** 62 (Multi-Party Policy & Revenue Governance Layer) — ✅ Complete
+> **Next Sprint:** 63 (Institutional Outcome Assurance Layer) — 📋 Planned
 
 ## Document Authority
 
@@ -520,6 +520,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | `_shared/ecosystem-simulation-sandbox/` | 9 | Scenario builder, simulation engine, policy conflict simulator, trust failure simulator, blast radius estimator, rollback viability analyzer, activation readiness scorer, recommendation engine, explainer |
 | `_shared/limited-marketplace-pilot/` | 9 | Program manager, capability selector, participant gatekeeper, interaction monitor, policy enforcer, risk monitor, learning engine, outcome validator, explainer |
 | `_shared/capability-registry-governance/` | 9 | Entry manager, version governor, visibility engine, policy binder, compatibility analyzer, lifecycle manager, review engine, outcome validator, explainer |
+| `_shared/multi-party-policy-revenue-governance/` | 9 | Party role manager, policy frame builder, entitlement engine, value flow governor, conflict resolution analyzer, settlement readiness evaluator, fairness scorer, recommendation engine, explainer |
 
 ---
 
@@ -579,5 +580,6 @@ This document serves as the canonical sprint execution ledger. The following con
 | Ecosystem Simulation & Sandbox | 1 | 59 |
 | Limited Marketplace Pilot | 1 | 60 |
 | Capability Registry Governance | 1 | 61 |
+| Multi-Party Policy & Revenue Governance | 1 | 62 |
 | Support | 11 | Various |
-| **Total** | **~106** | |
+| **Total** | **~107** | |
