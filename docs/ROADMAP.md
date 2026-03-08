@@ -251,7 +251,7 @@ All 42 architectural layers are operational. The kernel includes the 32-stage de
 
 | Area | Reason |
 |------|--------|
-| Marketplace ecosystem | Frozen — remains deferred until ecosystem foundation (Sprint 57+) |
+| Marketplace ecosystem | Frozen — remains deferred until ecosystem activation (Sprint 60+) |
 | Advanced distributed runtime | Current runtime handles workload adequately |
 | Advanced multi-agent coordination | Existing patterns meet current needs |
 
