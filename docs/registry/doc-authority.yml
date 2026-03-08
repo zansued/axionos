@@ -16,6 +16,7 @@ documents:
       - database schema overview
       - technology stack
       - governing principle
+      - product boundary model (internal vs operator vs user-facing)
       - forthcoming architectural direction
     must_not_define:
       - sprint-by-sprint execution ledger (→ PLAN.md)
@@ -33,8 +34,9 @@ documents:
       - strategic direction and directive
       - implementation horizons and block sequencing
       - high-level completed capability arc
-      - committed future arc (Sprints 54–56)
-      - reserved horizon (Sprints 57–65)
+      - committed future arc
+      - reserved horizon
+      - post-65 strategic thesis (product experience & delivery maturity)
       - round-enough target definition
       - what comes next at macro level
     must_not_define:
@@ -56,6 +58,7 @@ documents:
       - capability verification matrix
       - shared module and edge function registries
       - future canon guidance (detail levels)
+      - post-65 execution guidance
     must_not_define:
       - deep architecture explanation (→ ARCHITECTURE.md)
       - long-term strategic narrative (→ ROADMAP.md)
@@ -84,7 +87,7 @@ documents:
   - file: docs/PIPELINE_CONTRACTS.md
     owns:
       - phase-by-phase product contract (Idea → Discovery → Architecture → Engineering → Deploy)
-      - user-visible stage behavior
+      - user-visible stage behavior and journey contract
       - stage inputs/outputs
       - control rules and state machines
       - definition of done by phase
@@ -104,6 +107,7 @@ documents:
       - sprint status taxonomy
       - canon boundaries
       - continuation guidance if context is lost
+      - post-65 strategic guidance
       - maintenance protocol
       - normalization rules
     must_not_define:

@@ -1,10 +1,10 @@
 # AxionOS — System Evolution Roadmap
 
-> **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
+> **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated, deployed software.
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform Convergence complete (Sprint 49). Convergence Governance complete (Sprint 50). Institutional Convergence Memory complete (Sprint 51). Operating Profiles & Policy Packs complete (Sprint 52). Product Intelligence Entry complete (Sprint 53). Product Intelligence Operations complete (Sprint 54). Product Opportunity Portfolio Governance complete (Sprint 55). Controlled Ecosystem Readiness complete (Sprint 56). Capability Exposure Governance complete (Sprint 57). External Trust & Admission complete (Sprint 58). Ecosystem Simulation & Sandbox complete (Sprint 59). Limited Marketplace Pilot complete (Sprint 60). Capability Registry Governance complete (Sprint 61). Multi-Party Policy & Revenue Governance complete (Sprint 62). Institutional Outcome Assurance complete (Sprint 63). Canon Integrity & Drift Governance complete (Sprint 64). Block J complete. Block K complete. Block L in progress. Future canon formalized through Sprint 65.
+> **Last strategic change (2026-03-08):** All blocks through Block L complete (Sprints 1–65). First mature internal operating baseline achieved. Post-65 strategic direction formalized: Product Experience & Delivery Maturity.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -14,7 +14,7 @@
 
 | Scope | Rule |
 |-------|------|
-| **Owns** | Current maturity level, strategic direction, implementation horizons, macro capability blocks, committed future arc, reserved horizon |
+| **Owns** | Current maturity level, strategic direction, implementation horizons, macro capability blocks, committed future arc, reserved horizon, post-65 strategic thesis |
 | **Must not define** | Sprint-by-sprint execution ledger (→ PLAN.md), module inventory (→ AGENTS.md), detailed architecture (→ ARCHITECTURE.md), pipeline contracts (→ PIPELINE_CONTRACTS.md) |
 | **Derived from** | PLAN.md for sprint completion status; ARCHITECTURE.md for layer count |
 | **Update rule** | Update when strategic block, maturity, or horizon changes |
@@ -26,7 +26,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 45 architectural layers active |
+| **System State** | 49 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -60,6 +60,10 @@
 | **External Trust & Admission** | Active — actor registry, trust tiers, admission cases, requirement evaluation, risk posture, drift detection, advisory recommendations |
 | **Ecosystem Simulation & Sandbox** | Active — sandbox simulation, interaction modeling, blast radius estimation, rollback viability |
 | **Limited Marketplace Pilot** | Active — bounded pilot programs, capability/participant gating, interaction monitoring, policy enforcement, risk monitoring, learning signals |
+| **Capability Registry Governance** | Active — governed capability lifecycle, versioning, deprecation, quality gates |
+| **Multi-Party Policy & Revenue Governance** | Active — multi-party policy frames, entitlements, obligations, bounded value-flow governance |
+| **Institutional Outcome Assurance** | Active — expected vs realized outcome analysis, drift detection, cross-layer assurance, remediation |
+| **Canon Integrity & Drift Governance** | Active — cross-doc consistency, principle conformance, mutation boundary integrity, canon alignment |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
@@ -67,9 +71,17 @@
 
 ## Strategic Directive
 
-AxionOS has completed 60 implementation sprints spanning the full capability arc from deterministic execution to limited marketplace pilot activation. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, bounded self-stabilization, cross-layer engineering advisory, unified semantic retrieval, discovery-driven architecture signals, architecture change simulation/planning/sandbox/pilot/migration, portfolio governance, fitness functions, change advisory orchestration, tenant-aware architecture modes, economic optimization, platform convergence, convergence governance, institutional convergence memory, operating profiles, product intelligence entry, product intelligence operations, product opportunity portfolio governance, controlled ecosystem readiness, capability exposure governance, external trust & admission, ecosystem simulation & sandbox, and limited marketplace pilot — all under governed, advisory-first safety boundaries.
+AxionOS has completed 65 implementation sprints spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, and operating completion. The internal architecture is mature, coherent, and self-governing.
 
-The next strategic direction moves from limited marketplace pilot toward **capability registry governance**, and ultimately toward a **round-enough operating completion** target at Sprint 65.
+**Post-65 Strategic Shift:**
+
+The platform has reached its first **round-enough operating baseline**. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — is mature and complete.
+
+The next strategic direction is not deeper internal layering. The next direction is **productization of the platform promise**:
+
+> **"From idea to deployed software."**
+
+This means the focus shifts from building internal systems to making the user-visible journey clear, legible, and delightful. Internal sophistication remains critical, but it increasingly serves the visible product experience rather than being the primary development target.
 
 **Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy.
 
@@ -78,12 +90,12 @@ The next strategic direction moves from limited marketplace pilot toward **capab
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–60)                 COMMITTED (61)                 RESERVED (62–65)
-  ───────────────►                ───────────────►               ───────────────►
-  Foundation → Learning →          Controlled Ecosystem           Controlled Ecosystem
-  Meta → Memory → Gov →            Activation                    Activation →
-  Intelligence → Calibration →     Capability Registry           System Roundness &
-  Strategy → Stabilization →       Governance                   Operating Completion
+  COMPLETE (1–65)                 PLANNED (66)                    COMMITTED (67–68)              RESERVED (69–70)
+  ───────────────►                ───────────────►                ───────────────►               ───────────────►
+  Foundation → Learning →          Product Experience             Role-Based Experience →        Onboarding/Templates →
+  Meta → Memory → Gov →            & Delivery Maturity            One-Click Delivery &           Adoption Intelligence &
+  Intelligence → Calibration →     User Journey                   Deploy Assurance               Customer Success
+  Strategy → Stabilization →       Orchestration
   Advisory → Semantic →
   Discovery → Simulation →
   Planning → Sandbox →
@@ -93,19 +105,23 @@ The next strategic direction moves from limited marketplace pilot toward **capab
   Tenant Arch → Economics →
   Convergence → Conv Gov →
   Conv Memory → Op Profiles →
-  Product Intelligence Entry →
-  Product Intelligence Ops →
+  Product Intelligence →
   Product Opp Portfolio Gov →
   Ecosystem Readiness →
   Capability Exposure Gov →
   External Trust & Admission →
   Ecosystem Simulation →
-  Limited Marketplace Pilot ✅
+  Limited Marketplace Pilot →
+  Capability Registry Gov →
+  Multi-Party Policy/Revenue →
+  Outcome Assurance →
+  Canon Integrity →
+  Operating Completion ✅
 ```
 
 ---
 
-## Completed Canon (Sprints 1–60)
+## Completed Canon (Sprints 1–65)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -128,59 +144,67 @@ The next strategic direction moves from limited marketplace pilot toward **capab
 | Block F — Institutional Convergence Memory | 51 | Durable, queryable convergence knowledge with evidence lineage and pattern extraction |
 | Block G — Operating Profiles & Policy Packs | 52 | Reusable, governed, versioned operating profiles with bounded overrides and policy packs |
 | Block H — Product Intelligence Entry | 53 | Bounded, advisory-first product signal correlation, friction clustering, opportunity detection |
-| Block I (partial) — Product Intelligence Operations | 54 | Cross-tenant benchmarking, signal quality calibration, product-architecture/profile operational correlations, advisory recommendations |
-| Block I (partial) — Product Opportunity Portfolio Governance | 55 | Portfolio ranking, conflict detection, capacity-aware prioritization, promotion/defer/reject/monitor decisions, outcome tracking |
-| Block I (complete) — Controlled Ecosystem Readiness | 56 | Capability inventory, exposure classification, safety prerequisites, trust model foundation, readiness assessment, ecosystem readiness outcomes |
-| Block J (partial) — Capability Exposure Governance | 57 | Exposure classes, governance cases, gate evaluation, restriction analysis, review workflow, governance outcomes |
-| Block J (partial) — External Trust & Admission | 58 | Actor registry, trust tiers, admission cases, requirement evaluation, risk posture analysis, trust drift detection, advisory recommendations |
-| Block J (complete) — Ecosystem Simulation & Sandbox | 59 | Sandbox simulation, interaction modeling, blast radius estimation, rollback viability analysis |
-| Block K (partial) — Limited Marketplace Pilot | 60 | Bounded pilot programs, capability/participant gating, interaction monitoring, policy enforcement, risk monitoring, learning signals, outcome validation |
+| Block I — Product-Intelligent Expansion | 54–56 | Product intelligence operations, opportunity portfolio governance, controlled ecosystem readiness |
+| Block J — Trusted Ecosystem Foundation | 57–59 | Capability exposure governance, external trust & admission, ecosystem simulation & sandbox |
+| Block K — Controlled Ecosystem Activation | 60–62 | Limited marketplace pilot, capability registry governance, multi-party policy & revenue governance |
+| Block L — System Roundness & Operating Completion | 63–65 | Institutional outcome assurance, canon integrity & drift governance, operating completion |
 
 ---
 
-## Committed Future Arc (Sprint 61)
+## Post-65 Strategic Direction — Product Experience & Delivery Maturity
 
-> **Status:** 📋 Committed — next implementation. Not yet implemented.
-> **Block:** Block K — Controlled Ecosystem Activation
+Sprint 65 established the **first round-enough operating baseline** of AxionOS. The internal architecture is mature, coherent, and self-governing across all layers from execution kernel through institutional assurance and canon integrity.
 
-| Sprint | Name | Objective | Acceptance Direction |
-|--------|------|-----------|---------------------|
-| 61 | Capability Registry Governance Layer | Govern lifecycle of registered capabilities — versioning, deprecation, quality gates | Registry governance defined; capability lifecycle governed |
+### Why the focus shifts now
 
-### Why 61 is committed
+The platform's internal sophistication is not the same thing as the user-visible product experience. AxionOS now needs to make its core promise tangible to real users:
 
-With Sprint 60 complete (limited marketplace pilot), the platform has activated a bounded pilot marketplace. The next step is governing the lifecycle of registered capabilities (61) — versioning, deprecation, and quality gates. It reuses existing AxionOS philosophy and Agent OS planes without expansion.
+> **"Enter with an idea. Leave with deployed software."**
 
----
+The user should always understand:
+- **Where they are** in the journey
+- **What was generated** at each step
+- **What is next** in the sequence
+- **What requires approval** before proceeding
+- **What has already been deployed** and is live
 
-## Reserved Horizon (Sprints 62–65)
+### Three distinct layers to distinguish
 
-> **Status:** 🔮 Reserved — strategic direction is defined but intentionally lightweight. Details will be formalized sprint-by-sprint as the committed arc completes.
-> **Implementation should not begin on reserved sprints without deliberate review and promotion to committed status.**
+| Layer | Audience | Purpose |
+|-------|----------|---------|
+| **Internal System Architecture** | Platform engineers | Governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration |
+| **Advanced Operator Experience** | Operators / leads | Observability dashboards, risk posture, governance tools, policy management, product ops, ecosystem readiness, audit |
+| **User-Facing Product Journey** | End users | Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software |
 
-### Block K — Controlled Ecosystem Activation (Sprint 62)
+The next block focuses on the **third layer** — making the default user journey clear, legible, and complete — while the internal architecture and operator surfaces remain powerful backstage support.
 
-| Sprint | Name | Purpose | Status |
-|--------|------|---------|--------|
-| 62 | Multi-Party Policy & Revenue Governance Layer | Govern policy negotiation, revenue sharing, and compliance across multiple ecosystem participants | Reserved |
+### Why internal sophistication still matters
 
-### Block L — System Roundness & Operating Completion (Sprints 63–65)
-
-| Sprint | Name | Purpose | Status |
-|--------|------|---------|--------|
-| 63 | Institutional Outcome Assurance Layer | Validate that the platform consistently produces governed, evidence-backed outcomes across all layers | Reserved |
-| 64 | Canon Integrity & Drift Governance Layer | Detect and govern drift between implemented behavior and canonical documentation/policies | Reserved |
-| 65 | Operating Completion Layer | Achieve the first internally coherent, complete operating canon of AxionOS | Reserved |
-
-### Why 59–65 are reserved
-
-The reserved horizon is strategically coherent but intentionally lightweight. These sprints depend on outcomes from the committed arc (58) and may be revised based on what is learned during ecosystem foundation. Future implementation should proceed sprint-by-sprint with review, not in bulk.
+Internal maturity is what makes the product trustworthy. The user doesn't need to see governance engines, policy frames, or fitness functions. But those systems ensure that every generated artifact is governed, validated, and safe to deploy. The goal is not to remove internal sophistication — it is to stop exposing it as the default product surface.
 
 ---
 
-## Round Enough Target
+## Block M — Product Experience & Delivery Maturity (Sprints 66–70)
 
-Sprint 65 is not "software finished forever." It is the first **complete, internally coherent operating canon** of AxionOS, where:
+> **Purpose:** Transform the mature internal operating baseline into a clear, user-facing product experience that delivers on the promise "from idea to deployed software."
+
+| Sprint | Name | Objective | Status |
+|--------|------|-----------|--------|
+| 66 | User Journey Orchestration Layer | Orchestrate the visible user journey with clear state, transitions, approvals, and progress across the full idea-to-deploy lifecycle | 📋 Planned |
+| 67 | Role-Based Experience Layer | Separate product surfaces by role — default user journey vs operator/governance views — so the right audience sees the right experience | 📋 Committed |
+| 68 | One-Click Delivery & Deploy Assurance Layer | Provide a seamless, governed one-click path from validated code to deployed, accessible software with deploy assurance and visibility | 📋 Committed |
+| 69 | Onboarding, Templates & Vertical Starters | Reduce time-to-value with guided onboarding, reusable templates, and vertical-specific starting points | 🔮 Reserved |
+| 70 | Adoption Intelligence & Customer Success Loop | Measure adoption health, detect friction, and close the loop between product usage and platform improvement | 🔮 Reserved |
+
+### Why future work should still proceed one sprint at a time
+
+Even as the focus shifts to product experience, the sprint-by-sprint execution model remains essential. Each sprint should be reviewed, scoped in detail, and approved before implementation begins. Distant reserved sprints should remain intentionally lightweight until promoted.
+
+---
+
+## Round Enough Target (Achieved)
+
+Sprint 65 marks the first **complete, internally coherent operating canon** of AxionOS, where:
 
 - ✅ Convergence is institutionalized
 - ✅ Operating profiles and policy packs are reusable across scopes
@@ -192,7 +216,7 @@ Sprint 65 is not "software finished forever." It is the first **complete, intern
 - ✅ Canon integrity and drift governance prevents undocumented divergence
 - ✅ Operating completion marks the platform as round enough for sustained operation
 
-After Sprint 65, AxionOS enters a **sustained operating mode** — improvements continue, but the architectural foundation is complete and internally coherent. Future work becomes refinement, not foundation-building.
+After Sprint 65, AxionOS enters a **sustained operating mode** for internal architecture — improvements continue, but the architectural foundation is complete and internally coherent. Future work becomes productization, not foundation-building.
 
 ---
 
@@ -210,9 +234,10 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 | G | Operating Profiles & Policy Packs | 52 | ✅ Complete |
 | H | Product Intelligence Entry | 53 | ✅ Complete |
 | I | Product-Intelligent Expansion | 54–56 | ✅ Complete |
-| J | Trusted Ecosystem Foundation | 57–59 | 📋 In Progress (57 ✅, 58 📋, 59 🔮) |
-| K | Controlled Ecosystem Activation | 60–62 | 🔮 Reserved |
-| L | System Roundness & Operating Completion | 63–65 | 🔮 Reserved |
+| J | Trusted Ecosystem Foundation | 57–59 | ✅ Complete |
+| K | Controlled Ecosystem Activation | 60–62 | ✅ Complete |
+| L | System Roundness & Operating Completion | 63–65 | ✅ Complete |
+| M | Product Experience & Delivery Maturity | 66–70 | 📋 Next |
 
 ---
 
@@ -233,10 +258,14 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 | Product Opp Portfolio | 55 | ✅ Complete | Product opportunity portfolio governance: ranking, conflicts, capacity, decisions, outcomes |
 | Ecosystem Readiness | 56 | ✅ Complete | Controlled ecosystem readiness: capability inventory, exposure classification, safety prerequisites, trust model, readiness assessment |
 | Capability Exposure Gov | 57 | ✅ Complete | Capability exposure governance: exposure classes, governance cases, gate evaluation, restrictions, review workflow |
-| Trusted Ecosystem Foundation | 58 | 📋 Committed | External trust & admission |
-| Trusted Ecosystem Foundation | 59 | 🔮 Reserved | Ecosystem simulation & sandbox |
-| Controlled Ecosystem Activation | 60–62 | 🔮 Reserved | Marketplace pilot → capability registry → multi-party governance |
-| System Roundness | 63–65 | 🔮 Reserved | Outcome assurance → canon integrity → operating completion |
+| Trusted Ecosystem | 58 | ✅ Complete | External trust & admission: actor registry, trust tiers, admission governance |
+| Ecosystem Simulation | 59 | ✅ Complete | Ecosystem simulation & sandbox: bounded simulation, interaction modeling, blast radius |
+| Marketplace Pilot | 60 | ✅ Complete | Limited marketplace pilot: bounded pilot programs, capability/participant gating |
+| Capability Registry | 61 | ✅ Complete | Capability registry governance: lifecycle, versioning, deprecation, quality gates |
+| Multi-Party Governance | 62 | ✅ Complete | Multi-party policy & revenue governance: policy frames, entitlements, value flows |
+| Outcome Assurance | 63 | ✅ Complete | Institutional outcome assurance: expected vs realized outcomes, drift, remediation |
+| Canon Integrity | 64 | ✅ Complete | Canon integrity & drift governance: cross-doc consistency, principle conformance |
+| Operating Completion | 65 | ✅ Complete | First complete, internally coherent operating canon |
 
 ---
 
@@ -244,13 +273,13 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 
 > **Full module inventory:** [AGENTS.md](AGENTS.md) · **Architecture details:** [ARCHITECTURE.md](ARCHITECTURE.md)
 
-All 42 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, the institutional convergence memory layer, the operating profiles layer, the product intelligence entry layer, the product intelligence operations layer, the product opportunity portfolio governance layer, the controlled ecosystem readiness layer, and the capability exposure governance layer.
+All 49 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, the institutional convergence memory layer, the operating profiles layer, the product intelligence layers, the ecosystem readiness/exposure/trust/simulation/pilot/registry/multi-party layers, the institutional outcome assurance layer, and the canon integrity & drift governance layer.
 
 ### Frozen Areas
 
 | Area | Reason |
 |------|--------|
-| Marketplace ecosystem | Frozen — remains deferred until ecosystem activation (Sprint 60+) |
+| Marketplace ecosystem (full) | Bounded by pilot controls — full activation deferred |
 | Advanced distributed runtime | Current runtime handles workload adequately |
 | Advanced multi-agent coordination | Existing patterns meet current needs |
 
@@ -274,8 +303,10 @@ All 42 architectural layers are operational. The kernel includes the 32-stage de
 
 ## Governing Principle
 
-> Fifty-seven sprints complete. The platform supports capability exposure governance with exposure classes, governance cases, gate evaluation, restriction analysis, and review workflow.
-> Next committed sprint: Sprint 58 — external trust & admission.
-> Reserved horizon: Sprints 59–65 — ecosystem simulation, controlled activation, system roundness and operating completion.
-> Round-enough target: Sprint 65 — first complete, internally coherent operating canon.
+> Sixty-five sprints complete. The platform has reached its first internally coherent operating canon.
+> Internal architecture is mature: governance, intelligence, memory, calibration, ecosystem, assurance, and integrity layers are all active.
+> Next strategic direction: Block M — Product Experience & Delivery Maturity.
+> Next planned sprint: Sprint 66 — User Journey Orchestration Layer.
+> The focus shifts from building internal systems to making the user-visible journey clear, legible, and delightful.
+> Internal sophistication serves the product experience — it does not replace it.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.
