@@ -147,5 +147,8 @@ sprints:
   # === SPRINT 92 — Simulated Evolution Campaigns (Complete) ===
   - { sprint: 92, name: "Simulated Evolution Campaigns",                           status: complete, block: "S", phase: "Research Sandbox", layer: "Simulated Evolution Layer" }
 
+  # === SPRINT 93 — Cross-Tenant Pattern Synthesis (Complete) ===
+  - { sprint: 93, name: "Cross-Tenant Pattern Synthesis",                          status: complete, block: "S", phase: "Research Sandbox", layer: "Cross-Tenant Synthesis Layer" }
+
   # === BLOCK S — Remaining ===
-  - { sprint: "93–94", name: "Governed Promotion, Research Completion", status: reserved, block: "S", phase: "Reserved", layer: "TBD" }
+  - { sprint: "94", name: "Governed Architecture Promotion", status: reserved, block: "S", phase: "Reserved", layer: "TBD" }

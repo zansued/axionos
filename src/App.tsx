@@ -58,6 +58,7 @@ import TenantRuntime from "./pages/TenantRuntime";
 import LargeScaleOrchestration from "./pages/LargeScaleOrchestration";
 import ArchitectureHypotheses from "./pages/ArchitectureHypotheses";
 import ResearchSandbox from "./pages/ResearchSandbox";
+import ResearchPatterns from "./pages/ResearchPatterns";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -138,6 +139,7 @@ const App = () => (
                       <Route path="/large-scale-orchestration" element={<ProtectedRoute><LargeScaleOrchestration /></ProtectedRoute>} />
                       <Route path="/architecture-hypotheses" element={<ProtectedRoute><ArchitectureHypotheses /></ProtectedRoute>} />
                       <Route path="/research-sandbox" element={<ProtectedRoute><ResearchSandbox /></ProtectedRoute>} />
+                      <Route path="/research-patterns" element={<ProtectedRoute><ResearchPatterns /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>

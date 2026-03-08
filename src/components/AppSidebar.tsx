@@ -1,7 +1,7 @@
 import {
   Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Map,
   Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
-  Plug, FileSearch, Sparkles, Scale, BrainCircuit, Zap, PackageCheck, ShieldCheck, Store, TrendingUp, GitPullRequestArrow, Rss, Sliders, Server, Globe, Beaker,
+  Plug, FileSearch, Sparkles, Scale, BrainCircuit, Zap, PackageCheck, ShieldCheck, Store, TrendingUp, GitPullRequestArrow, Rss, Sliders, Server, Globe, Beaker, Network,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
@@ -63,6 +63,7 @@ const bottomItems = [
   { title: "Orchestration", url: "/large-scale-orchestration", icon: Globe },
   { title: "Hypotheses", url: "/architecture-hypotheses", icon: FlaskConical },
   { title: "Sim. Sandbox", url: "/research-sandbox", icon: Beaker },
+  { title: "Res. Patterns", url: "/research-patterns", icon: Network },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
