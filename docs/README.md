@@ -9,9 +9,9 @@
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
-| [ROADMAP.md](ROADMAP.md) | Strategic direction | Vision, maturity level, strategic directive, completed canon, committed future arc, reserved horizon, round-enough target |
+| [ROADMAP.md](ROADMAP.md) | Strategic direction | Vision, maturity level, strategic directive, completed canon, post-65 direction, Block M definition |
 | [PLAN.md](PLAN.md) | Sprint execution | Canonical sprint ledger, phase grouping, completion status, capability verification, future canon guidance |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System structure | C4 diagrams, capability layers, containers, components, data flow, safety rules, tech stack, forthcoming direction |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | System structure | C4 diagrams, capability layers, containers, components, data flow, safety rules, product boundary model, tech stack |
 | [AGENTS.md](AGENTS.md) | Agent OS reference | 5 planes, 18 modules, agent types, contracts, safety boundaries, events |
 | [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md) | Pipeline product UX | Phase-by-phase user-visible behavior, inputs/outputs, control rules, definition of done |
 | [registry/sprints.yml](registry/sprints.yml) | Sprint metadata | Lightweight canonical sprint status registry |
@@ -24,19 +24,49 @@
 
 If prior chat history is unavailable, follow this sequence to re-establish context:
 
-1. **Read ROADMAP.md first** — understand current maturity, strategic direction, completed canon, committed arc, and reserved horizon
+1. **Read ROADMAP.md first** — understand current maturity, strategic direction, completed canon, post-65 direction, and Block M thesis
 2. **Read PLAN.md next** — identify the current/next sprint, execution status, and future canon guidance
-3. **Use ARCHITECTURE.md** for structural context — layers, containers, data flow, forthcoming architectural direction
-4. **Use AGENTS.md** for Agent OS reference — only if agent system details are needed
-5. **Use PIPELINE_CONTRACTS.md** only if pipeline UX or stage behavior is affected
+3. **Use ARCHITECTURE.md** for structural context — layers, containers, data flow, product boundary model, forthcoming architectural direction
+4. **Use PIPELINE_CONTRACTS.md** for the visible journey contract — Idea → Discovery → Architecture → Engineering → Deploy
+5. **Use AGENTS.md** for Agent OS reference — only if agent system details are needed
 
 ### Implementation Rules
 
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
-- **Reserved horizon** sprints (62–65) should not be promoted to planned without deliberate review
-- **Committed** sprint (61) has defined objectives but should still be scoped in detail before implementation
-- The **planned** sprint (61) is the next to implement
+- Sprints 1–65 are the completed first mature operating canon — do not casually reopen
+- Block M sprints (66–70) focus on user-visible product experience, not internal layering
+- Do not collapse internal architecture and user-facing journey into the same surface
+
+---
+
+## After Sprint 65 — What Changes Strategically
+
+The platform has reached its **first mature internal operating baseline** at Sprint 65. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — is complete and self-governing.
+
+The next major focus is **Product Experience & Delivery Maturity** (Block M):
+
+- **Journey clarity** — the user always knows where they are, what was generated, what is next, and what requires approval
+- **Role separation** — default user journey vs operator/governance views are distinct surfaces
+- **Delivery/deploy visibility** — one-click path from validated code to deployed, accessible software
+- **Onboarding and templates** — reduce time-to-value with guided flows and reusable starting points
+- **Adoption intelligence** — measure adoption health and close the feedback loop
+
+Internal sophistication remains critical. It is what makes the product trustworthy. But it increasingly serves the visible product experience rather than being the primary development target.
+
+---
+
+## How To Continue Safely After Sprint 65
+
+1. Read **ROADMAP.md** first for strategic direction and post-65 thesis
+2. Read **PLAN.md** next for current and next sprint
+3. Use **ARCHITECTURE.md** for structural context and the product boundary model
+4. Use **PIPELINE_CONTRACTS.md** for the user-visible journey contract
+5. Use **AGENTS.md** for internal agent system reference only
+6. Implement future work **sprint by sprint** with human review
+7. Do **not** collapse internal architecture and user-facing journey into the same surface
+8. Do **not** casually reopen completed canon (Sprints 1–65) without deliberate review
+9. Internal layers are backstage support — the default product surface is the user journey
 
 ---
 
@@ -52,10 +82,10 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 ### Current Canon Boundaries
 
-- **Sprints 1–60** = canonical complete (implemented and verified)
-- **Sprint 61** = planned (next to implement)
-- **Sprint 62** = committed (part of Block K, objectives defined)
-- **Sprints 63–65** = reserved (strategic direction, intentionally lightweight)
+- **Sprints 1–65** = canonical complete (first mature operating baseline)
+- **Sprint 66** = planned (next to implement — User Journey Orchestration)
+- **Sprints 67–68** = committed (part of Block M, objectives defined)
+- **Sprints 69–70** = reserved (strategic direction, intentionally lightweight)
 
 ---
 

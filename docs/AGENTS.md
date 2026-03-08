@@ -1348,7 +1348,7 @@ Architecture Rollout Sandbox allows approved architecture change plans to be reh
 
 > **Status:** No Agent OS plane expansion is planned or required.
 
-Sprints 51–60 (Institutional Convergence Memory, Operating Profiles, Product Intelligence Entry, Product Intelligence Operations, Product Opportunity Portfolio Governance, Controlled Ecosystem Readiness, Capability Exposure Governance, External Trust & Admission, Ecosystem Simulation & Sandbox, Limited Marketplace Pilot) have been completed, reusing existing Agent OS planes:
+Sprints 51–65 have been completed, reusing existing Agent OS planes:
 
 | Completed Capability | Existing Planes/Modules Used |
 |---------------------|------------------------------|
@@ -1362,9 +1362,26 @@ Sprints 51–60 (Institutional Convergence Memory, Operating Profiles, Product I
 | External Trust & Admission | Control Plane (Governance, Policy Engine, Selection Engine), Data Plane (Memory, Observability), Execution Plane (Orchestrator) |
 | Ecosystem Simulation & Sandbox | Execution Plane (Orchestrator), Data Plane (Memory, Observability), Control Plane (Governance, Policy Engine) |
 | Limited Marketplace Pilot | Ecosystem Plane (bounded pilot activation), Control Plane (Governance, Policy Engine, Selection Engine), Data Plane (Memory, Observability), Execution Plane (Orchestrator) |
+| Capability Registry Governance | Control Plane (Governance, Policy Engine), Data Plane (Memory, Observability), Ecosystem Plane (bounded registry) |
+| Multi-Party Policy & Revenue Governance | Control Plane (Governance, Policy Engine), Data Plane (Memory, Observability), Execution Plane (Orchestrator) |
+| Institutional Outcome Assurance | Data Plane (Observability, Memory), Control Plane (Governance), Execution Plane (Orchestrator) |
+| Canon Integrity & Drift Governance | Data Plane (Observability, Memory), Control Plane (Governance, Policy Engine) |
+| Operating Completion | All planes (verification and coherence assessment) |
 
-The committed future sprint (Sprint 61: capability registry governance) and reserved horizon (Sprints 62–65: multi-party governance, operating completion) are higher-order governance and orchestration concerns. They reuse existing Agent OS planes without expansion.
+The Ecosystem Plane has been activated in bounded pilot-only mode (Sprint 60). Full marketplace activation remains staged and will not expand without explicit human approval.
 
-The Ecosystem Plane has been activated in bounded pilot-only mode (Sprint 60). Full marketplace activation is staged across Sprints 61–62 and will not expand without explicit human approval. Any future ecosystem-plane expansion remains governed and incremental.
+The 5-plane, 18-module architecture remains stable and sufficient for future work.
 
-The 5-plane, 18-module architecture remains stable.
+---
+
+## Post-65 Strategic Note
+
+Post-65 work (Block M: Product Experience & Delivery Maturity) primarily reuses the existing Agent OS foundation. The focus shifts from building new internal intelligence planes to orchestrating the user-visible product experience:
+
+- **User journey orchestration** reuses existing Execution Plane (Orchestrator) and Control Plane (Governance)
+- **Role-based experience** reuses Control Plane (Policy Engine, Governance) for surface separation
+- **Deploy assurance** reuses existing pipeline validation, publish, and deployment infrastructure
+- **Onboarding and templates** reuse Data Plane (Memory, Artifact Store) for reusable patterns
+- **Adoption intelligence** reuses Data Plane (Observability) and existing product intelligence layers
+
+This does not require new Agent OS plane expansion. The internal system becomes stronger backstage support — not a noisier default frontend. The Agent OS architecture remains the governed engine; the product surface is where the user interacts.

@@ -3,7 +3,7 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-08
-> **Current state:** Level 5 — Institutional Engineering Memory Platform. 49 architectural layers active (through Sprint 64).
+> **Current state:** Level 5 — Institutional Engineering Memory Platform. 49 architectural layers active (through Sprint 65 — first mature operating baseline).
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -625,7 +625,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
-> **Summary:** 54 sprints complete. 39 architectural layers active. All blocks through Product Intelligence Operations done.
+> **Summary:** 65 sprints complete. 49 architectural layers active. First mature operating baseline achieved.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
@@ -646,13 +646,18 @@ supabase/functions/
 | Operating Profiles & Policy Packs | 52 | ✅ Complete |
 | Product Intelligence Entry | 53 | ✅ Complete |
 | Product Intelligence Operations | 54 | ✅ Complete |
+| Product Opportunity Portfolio Governance | 55 | ✅ Complete |
+| Controlled Ecosystem Readiness | 56 | ✅ Complete |
+| Trusted Ecosystem Foundation (J) | 57–59 | ✅ Complete |
+| Controlled Ecosystem Activation (K) | 60–62 | ✅ Complete |
+| System Roundness & Operating Completion (L) | 63–65 | ✅ Complete |
 
 ### Frozen
 
 | Module | Reason |
 |--------|--------|
-| Marketplace ecosystem | Frozen — deferred until ecosystem readiness (Sprint 56+) |
-| Advanced distributed runtime | Current runtime is adequate |
+| Marketplace ecosystem (full) | Bounded by pilot controls — full activation deferred |
+| Advanced distributed runtime | Current runtime handles workload adequately |
 | Advanced multi-agent coordination | Existing coordination works |
 
 ---
@@ -867,40 +872,57 @@ supabase/functions/
 > - Tenant isolation is absolute (organization_id + RLS)
 > - Forbidden mutation families: pipeline topology, governance rules, billing logic, plan enforcement, execution contracts, hard safety constraints
 > - Every promotion, calibration, strategy experiment, and architecture change preserves rollback capability
-> - All advisory layers (Platform Intelligence, Calibration, Strategy Evolution, Stabilization, Engineering Advisor, Semantic Retrieval, Architecture Simulation/Planning/Sandbox/Pilot/Migration, Portfolio Governance, Fitness Functions, Change Advisory, Tenant Architecture Modes, Economic Optimization, Platform Convergence, Convergence Governance, Institutional Convergence Memory, Operating Profiles & Policy Packs, Product Intelligence Entry, Product Intelligence Operations, Product Opportunity Portfolio Governance, Controlled Ecosystem Readiness, Capability Exposure Governance, External Trust & Admission, Ecosystem Simulation & Sandbox, Limited Marketplace Pilot) remain bounded, explainable, and review-driven
+> - All advisory layers remain bounded, explainable, and review-driven
+> - Internal sophistication serves the product experience — unnecessary complexity must not leak into the default user-facing journey
 
 ---
 
-## 16. Forthcoming Architectural Direction
+## 16. Product Boundary Model
+
+AxionOS distinguishes three architectural surface layers. This distinction is critical for post-65 development:
+
+| Surface Layer | Audience | Purpose | Examples |
+|---------------|----------|---------|----------|
+| **Internal System Architecture** | Platform engineers | Governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration | All 49 architectural layers, Agent OS modules, learning/repair/calibration engines |
+| **Advanced Operator Surface** | Operators / leads | Governance dashboards, risk posture, policy management, product ops, ecosystem readiness, audit | Observability tabs, governance reviews, policy frames, fitness dimensions |
+| **User-Facing Product Journey** | End users | Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software | Pipeline stages, progress indicators, approval gates, deploy status |
+
+**Key principle:** Internal architecture powers the system. Operator surfaces expose governance and advanced controls. The **default product surface** should present the journey from idea to deployed software without unnecessary internal complexity.
+
+The user should always understand:
+- Where they are in the journey
+- What was generated at each step
+- What is next
+- What requires approval
+- What has been deployed
+
+Internal sophistication makes the product trustworthy. It does not need to be the default experience.
+
+---
+
+## 17. Forthcoming Architectural Direction After Sprint 65
 
 > **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-After 60 sprints completing the full arc from deterministic execution through limited marketplace pilot, the platform's architectural direction moves toward:
+With 65 sprints complete and the first mature operating baseline achieved, the platform's architectural direction shifts from internal system building to **product experience and delivery maturity**.
 
-### Completed Institutionalization & Ecosystem Arc (Sprints 49–60)
-- ✅ Platform convergence and convergence governance (49–50)
-- ✅ Institutional convergence memory (51)
-- ✅ Operating profiles and policy packs (52)
-- ✅ Product intelligence entry (53)
-- ✅ Product intelligence operations (54)
-- ✅ Product opportunity portfolio governance (55)
-- ✅ Controlled ecosystem readiness (56)
-- ✅ Capability exposure governance (57)
-- ✅ External trust & admission (58)
-- ✅ Ecosystem simulation & sandbox (59)
-- ✅ Limited marketplace pilot (60)
+### Completed Internal Canon (Sprints 1–65)
+- ✅ All layers from execution kernel through institutional assurance and canon integrity
+- ✅ 49 architectural layers active
+- ✅ First internally coherent operating canon
 
-### Committed Direction (Sprint 61) — Block K: Controlled Ecosystem Activation
-- **Capability registry governance** — governing lifecycle of registered capabilities with versioning, deprecation, and quality gates
+### Next Architectural Direction — Block M: Product Experience & Delivery Maturity
 
-### Reserved Direction (Sprints 62–65) — Blocks K (cont), L
-- **Multi-party policy/revenue governance**
-- **Institutional outcome assurance** and **canon integrity/drift governance**
-- **Operating completion** — first internally coherent operating canon
+The next architectural work supports:
+- **User journey orchestration** — clear state, transitions, approvals, and progress across the full idea-to-deploy lifecycle
+- **Role-based product surfaces** — separating the default user journey from operator/governance views
+- **Delivery/deploy assurance experience** — seamless, governed one-click path from validated code to deployed software
+- **Onboarding/template-driven initiation** — reducing time-to-value with guided flows and reusable starting points
+- **Adoption intelligence and customer success feedback** — closing the loop between product usage and platform improvement
 
-All forthcoming directions reuse existing architectural layers and Agent OS planes. No plane expansion is planned. The focus shifts from building new capability planes to governing ecosystem lifecycle.
+These are **not yet implemented**. They represent the committed and reserved architectural direction for Block M (Sprints 66–70).
 
-**Governing constraint:** Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Full marketplace activation remains bounded by pilot controls until explicitly expanded.
+**Governing constraint:** Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Internal sophistication serves the product experience — it does not replace it.
 
 ---
 

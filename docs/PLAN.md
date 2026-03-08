@@ -4,14 +4,14 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 64 (Canon Integrity & Drift Governance Layer) — ✅ Complete
-> **Next Sprint:** 65 (Operating Completion Layer) — 📋 Planned
+> **Current Sprint:** 65 (Operating Completion Layer) — ✅ Complete
+> **Next Sprint:** 66 (User Journey Orchestration Layer) — 📋 Planned
 
 ## Document Authority
 
 | Scope | Rule |
 |-------|------|
-| **Owns** | Current/next sprint, sprint-by-sprint implementation record, phase grouping, completion status, capability verification matrix, shared module and edge function registries |
+| **Owns** | Current/next sprint, sprint-by-sprint implementation record, phase grouping, completion status, capability verification matrix, shared module and edge function registries, post-65 execution guidance |
 | **Must not define** | Deep architecture explanation (→ ARCHITECTURE.md), long-term strategic narrative (→ ROADMAP.md), detailed agent/module reference (→ AGENTS.md) |
 | **Derived from** | ARCHITECTURE.md for layer naming |
 | **Update rule** | Update when a sprint completes or starts |
@@ -23,6 +23,18 @@
 - **Agent OS module specs:** [AGENTS.md](AGENTS.md)
 - **Pipeline UX contracts:** [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md)
 - **Sprint metadata registry:** [registry/sprints.yml](registry/sprints.yml)
+
+---
+
+## Post-65 Execution Guidance
+
+Sprints 1–65 represent the **completed first mature operating canon** of AxionOS. The internal architecture is mature, coherent, and self-governing.
+
+The next execution focus is **user-visible journey productization**:
+- The internal architecture is sufficient to support product experience work
+- Future sprints should increasingly prioritize journey clarity, role separation, delivery visibility, and adoption
+- Future sprints should not casually reopen completed canon unless deliberate review requires it
+- Implementation continues one sprint at a time with human review before each
 
 ---
 
@@ -38,8 +50,8 @@ This document serves as the canonical sprint execution ledger. The following con
 | 🔮 Reserved | Strategic direction defined, not yet scoped for implementation | Lightweight — name, block, and one-line purpose only |
 
 - **Current/next sprint** should be highly detailed before implementation begins
-- **Committed future arc** (Sprint 61) should be moderately detailed
-- **Reserved horizon** (Sprints 62–65) should remain intentionally lightweight until promoted to committed
+- **Committed future arc** (Sprints 67–68) should be moderately detailed
+- **Reserved horizon** (Sprints 69–70) should remain intentionally lightweight until promoted to committed
 - Reserved sprints should not be promoted to planned without deliberate review
 
 ---
@@ -390,27 +402,82 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Committed Future Arc — Block K: Controlled Ecosystem Activation (Sprint 61)
+### Phase 25: Capability Registry Governance (Sprint 61) — ✅ COMPLETE
 
-> **Status:** 📋 Committed — next implementation. Not yet implemented.
+**Goal:** Govern the lifecycle of registered capabilities with versioning, deprecation, quality gates, and review workflow.
 
-| Sprint | Name | Objective | Target Layer | Status |
-|--------|------|-----------|-------------|--------|
-| 61 | Capability Registry Governance Layer | Govern lifecycle of registered capabilities | Capability Registry Governance Layer | 📋 Planned |
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 61 | Capability Registry Governance Layer | Capability Registry Governance Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 61: Entry manager, version governor, visibility engine, policy binder, compatibility analyzer, lifecycle manager, review engine, outcome validator, explainer
 
 ---
 
-## Reserved Horizon (Sprints 62–65)
+### Phase 26: Multi-Party Policy & Revenue Governance (Sprint 62) — ✅ COMPLETE
 
-> **Status:** 🔮 Reserved — strategic direction defined, details intentionally lightweight.
-> Reserved sprints should not be promoted without deliberate review.
+**Goal:** Govern policy, obligations, rights, restrictions, and value/revenue flows across multiple ecosystem parties.
 
-| Sprint | Name | Block | Status | Purpose |
-|--------|------|-------|--------|---------|
-| 62 | Multi-Party Policy & Revenue Governance Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | Policy negotiation and revenue sharing across participants |
-| 63 | Institutional Outcome Assurance Layer | L — System Roundness & Operating Completion | 🔮 Reserved | Validate platform produces governed, evidence-backed outcomes |
-| 64 | Canon Integrity & Drift Governance Layer | L — System Roundness & Operating Completion | 🔮 Reserved | Detect drift between behavior and canonical documentation |
-| 65 | Operating Completion Layer | L — System Roundness & Operating Completion | 🔮 Reserved | First complete, internally coherent operating canon |
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 62 | Multi-Party Policy & Revenue Governance Layer | Multi-Party Policy & Revenue Governance Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 62: Party role manager, policy frame builder, entitlement engine, value flow governor, conflict resolution analyzer, settlement readiness evaluator, fairness scorer, recommendation engine, explainer
+
+---
+
+### Phase 27: Institutional Outcome Assurance (Sprint 63) — ✅ COMPLETE
+
+**Goal:** Verify whether the platform consistently produces intended outcomes across pipeline, architecture, product intelligence, ecosystem, and governance.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 63 | Institutional Outcome Assurance Layer | Institutional Outcome Assurance Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 63: Outcome model manager, expected-vs-realized analyzer, drift detector, confidence calibrator, cross-layer aggregator, fragility analyzer, remediation recommender, review manager, explainer
+
+---
+
+### Phase 28: Canon Integrity & Drift Governance (Sprint 64) — ✅ COMPLETE
+
+**Goal:** Verify platform alignment with canonical documentation, architecture, governance principles, and mutation boundaries.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 64 | Canon Integrity & Drift Governance Layer | Canon Integrity & Drift Governance Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 64: Integrity model manager, cross-doc consistency analyzer, principle conformance checker, mutation boundary analyzer, architecture alignment engine, governance alignment engine, drift detector, remediation recommender, explainer
+
+---
+
+### Phase 29: Operating Completion (Sprint 65) — ✅ COMPLETE
+
+**Goal:** Achieve the first complete, internally coherent operating canon of AxionOS.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 65 | Operating Completion Layer | Operating Completion Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 65: First internally coherent operating baseline established. All internal layers verified and canonical.
+
+---
+
+## Future Arc — Block M: Product Experience & Delivery Maturity (Sprints 66–70)
+
+> **Strategic direction:** [ROADMAP.md](ROADMAP.md)
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 66 | User Journey Orchestration Layer | M | 📋 Planned | Orchestrate the visible user journey with clear state, transitions, approvals, and progress |
+| 67 | Role-Based Experience Layer | M | 📋 Committed | Separate product surfaces by role — default user journey vs operator/governance views |
+| 68 | One-Click Delivery & Deploy Assurance Layer | M | 📋 Committed | Seamless, governed one-click path from validated code to deployed software |
+| 69 | Onboarding, Templates & Vertical Starters | M | 🔮 Reserved | Guided onboarding, reusable templates, vertical-specific starting points |
+| 70 | Adoption Intelligence & Customer Success Loop | M | 🔮 Reserved | Adoption health measurement, friction detection, platform improvement feedback |
 
 ---
 
@@ -482,6 +549,10 @@ This document serves as the canonical sprint execution ledger. The following con
 | Rollback viability rehearsal | ✅ IMPLEMENTED | 40 | `architecture-rollout/architecture-rollback-viability-rehearsal.ts` |
 | Sandbox guardrails | ✅ IMPLEMENTED | 40 | `architecture-rollout/architecture-rollout-sandbox-guardrails.ts` |
 | Sandbox review lifecycle | ✅ IMPLEMENTED | 40 | `architecture-rollout/architecture-rollout-sandbox-review-manager.ts` |
+| Capability registry governance | ✅ IMPLEMENTED | 61 | `capability-registry-governance/*`, `capability-registry-governance-engine` |
+| Multi-party policy & revenue governance | ✅ IMPLEMENTED | 62 | `multi-party-policy-revenue-governance/*`, `multi-party-policy-revenue-governance-engine` |
+| Institutional outcome assurance | ✅ IMPLEMENTED | 63 | `institutional-outcome-assurance/*`, `institutional-outcome-assurance-engine` |
+| Canon integrity & drift governance | ✅ IMPLEMENTED | 64 | `canon-integrity-drift-governance/*`, `canon-integrity-drift-governance-engine` |
 
 ---
 

@@ -4,7 +4,7 @@
 # Last updated: 2026-03-08
 
 sprints:
-  # === COMPLETE CANON (Sprints 1–53) ===
+  # === COMPLETE CANON (Sprints 1–65) ===
 
   - { sprint: 1,  name: "Initiative Brief Formalization",                    status: complete, block: "Foundation",   phase: "Foundation",                        layer: "Execution Kernel" }
   - { sprint: 2,  name: "Initiative Simulation Engine",                      status: complete, block: "Foundation",   phase: "Foundation",                        layer: "Execution Kernel" }
@@ -68,12 +68,17 @@ sprints:
   - { sprint: 59, name: "Ecosystem Simulation & Sandbox Layer",              status: complete, block: "J",            phase: "Trusted Ecosystem Foundation",       layer: "Ecosystem Simulation Layer" }
 
   - { sprint: 60, name: "Limited Marketplace Pilot Layer",                   status: complete, block: "K",            phase: "Controlled Ecosystem Activation",    layer: "Limited Marketplace Pilot Layer" }
-
-  - { sprint: 61, name: "Capability Registry Governance Layer",              status: complete,   block: "K",            phase: "Controlled Ecosystem Activation",    layer: "Capability Registry Governance Layer" }
-
-  - { sprint: 62, name: "Multi-Party Policy & Revenue Governance Layer",     status: complete, block: "K", phase: "Controlled Ecosystem Activation",       layer: "Multi-Party Policy & Revenue Governance Layer" }
+  - { sprint: 61, name: "Capability Registry Governance Layer",              status: complete, block: "K",            phase: "Controlled Ecosystem Activation",    layer: "Capability Registry Governance Layer" }
+  - { sprint: 62, name: "Multi-Party Policy & Revenue Governance Layer",     status: complete, block: "K",            phase: "Controlled Ecosystem Activation",    layer: "Multi-Party Policy & Revenue Governance Layer" }
 
   # === BLOCK L — System Roundness & Operating Completion ===
   - { sprint: 63, name: "Institutional Outcome Assurance Layer",             status: complete, block: "L", phase: "System Roundness & Operating Completion", layer: "Institutional Outcome Assurance Layer" }
   - { sprint: 64, name: "Canon Integrity & Drift Governance Layer",          status: complete, block: "L", phase: "System Roundness & Operating Completion", layer: "Canon Integrity & Drift Governance Layer" }
-  - { sprint: 65, name: "Operating Completion Layer",                        status: reserved, block: "L", phase: "System Roundness & Operating Completion", objective: "First complete, internally coherent operating canon" }
+  - { sprint: 65, name: "Operating Completion Layer",                        status: complete, block: "L", phase: "System Roundness & Operating Completion", layer: "Operating Completion Layer" }
+
+  # === BLOCK M — Product Experience & Delivery Maturity ===
+  - { sprint: 66, name: "User Journey Orchestration Layer",                  status: planned,    block: "M", phase: "Product Experience & Delivery Maturity", layer: "User Journey Orchestration Layer" }
+  - { sprint: 67, name: "Role-Based Experience Layer",                       status: committed,  block: "M", phase: "Product Experience & Delivery Maturity", layer: "Role-Based Experience Layer" }
+  - { sprint: 68, name: "One-Click Delivery & Deploy Assurance Layer",       status: committed,  block: "M", phase: "Product Experience & Delivery Maturity", layer: "One-Click Delivery & Deploy Assurance Layer" }
+  - { sprint: 69, name: "Onboarding, Templates & Vertical Starters",        status: reserved,   block: "M", phase: "Product Experience & Delivery Maturity", layer: "Onboarding & Templates Layer" }
+  - { sprint: 70, name: "Adoption Intelligence & Customer Success Loop",     status: reserved,   block: "M", phase: "Product Experience & Delivery Maturity", layer: "Adoption Intelligence Layer" }
