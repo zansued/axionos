@@ -189,6 +189,14 @@ Sprint 75 established the first upgraded role arbitration and capability routing
 
 ---
 
+## Sprint 76 — Multi-Agent Debate & Resolution Layer ✅ Implemented
+
+Sprint 76 introduced the first canonical multi-agent debate and resolution layer. The system now supports structured, bounded debate sessions where multiple agents can propose alternative positions, challenge assumptions, defend reasoning, and reach governed resolutions. Debates are depth-bounded (max rounds), risk-classified, and support escalation for unresolved conflicts requiring human review. A dedicated operator surface (`/agent-debates`) provides debate queue, active/resolved/escalated views, argument comparison, resolution detail, and governance controls.
+
+**Strategic role:** Sprint 76 deepens Block O by making multi-agent disagreement visible, structured, and governable. No autonomous architecture mutation is introduced.
+
+---
+
 ## Block P — Governed Capability Ecosystem & Early Marketplace (Sprints 79–82) — 🔮 Reserved
 
 > **Status:** Reserved — builds on existing ecosystem controls.

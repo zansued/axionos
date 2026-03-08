@@ -96,8 +96,11 @@ sprints:
   # === SPRINT 75 — Role Arbitration & Capability Routing 2.0 (Complete) ===
   - { sprint: 75, name: "Role Arbitration & Capability Routing 2.0",          status: complete, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "Role Arbitration & Routing Layer" }
 
+  # === SPRINT 76 — Multi-Agent Debate & Resolution Layer (Complete) ===
+  - { sprint: 76, name: "Multi-Agent Debate & Resolution Layer",              status: complete, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "Multi-Agent Debate & Resolution Layer" }
+
   # === BLOCKS O–S — Reserved Future Horizon ===
-  - { sprint: "76–78", name: "Advanced Multi-Agent Coordination (remaining)",             status: planned, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "TBD" }
+  - { sprint: "77–78", name: "Advanced Multi-Agent Coordination (remaining)",             status: planned, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "TBD" }
   - { sprint: "79–82", name: "Governed Capability Ecosystem & Early Marketplace",        status: reserved, block: "P", phase: "Reserved", layer: "TBD" }
   - { sprint: "83–86", name: "Autonomous Delivery Optimization & Outcome Assurance 2.0", status: reserved, block: "Q", phase: "Reserved", layer: "TBD" }
   - { sprint: "87–90", name: "Advanced Distributed Runtime & Scaled Execution",          status: reserved, block: "R", phase: "Reserved", layer: "TBD" }
