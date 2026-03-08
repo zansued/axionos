@@ -48,6 +48,7 @@ const bottomItems = [
   { title: "Routing", url: "/agent-routing", icon: Plug },
   { title: "Debates", url: "/agent-debates", icon: Scale },
   { title: "Working Mem.", url: "/working-memory", icon: BrainCircuit },
+  { title: "Swarm", url: "/swarm-execution", icon: Zap },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
