@@ -947,6 +947,53 @@ export type Database = {
           },
         ]
       }
+      architecture_rollout_governance_profiles: {
+        Row: {
+          created_at: string
+          id: string
+          max_scope_breadth: number | null
+          organization_id: string
+          profile_constraints: Json
+          profile_key: string
+          profile_name: string
+          required_validation_depth: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          max_scope_breadth?: number | null
+          organization_id: string
+          profile_constraints?: Json
+          profile_key: string
+          profile_name: string
+          required_validation_depth?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          max_scope_breadth?: number | null
+          organization_id?: string
+          profile_constraints?: Json
+          profile_key?: string
+          profile_name?: string
+          required_validation_depth?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_rollout_governance_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_rollout_mode_profiles: {
         Row: {
           created_at: string
@@ -990,6 +1037,171 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_rollout_sandbox_outcomes: {
+        Row: {
+          blocked_steps: Json | null
+          created_at: string
+          fragility_findings: Json | null
+          id: string
+          organization_id: string
+          outcome_status: string
+          readiness_summary: Json | null
+          rehearsal_summary: Json
+          rollback_viability_summary: Json | null
+          sandbox_id: string
+        }
+        Insert: {
+          blocked_steps?: Json | null
+          created_at?: string
+          fragility_findings?: Json | null
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          readiness_summary?: Json | null
+          rehearsal_summary?: Json
+          rollback_viability_summary?: Json | null
+          sandbox_id: string
+        }
+        Update: {
+          blocked_steps?: Json | null
+          created_at?: string
+          fragility_findings?: Json | null
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          readiness_summary?: Json | null
+          rehearsal_summary?: Json
+          rollback_viability_summary?: Json | null
+          sandbox_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_rollout_sandbox_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_rollout_sandbox_outcomes_sandbox_id_fkey"
+            columns: ["sandbox_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_rollout_sandboxes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_rollout_sandbox_reviews: {
+        Row: {
+          blocker_reasons: Json | null
+          created_at: string
+          id: string
+          linked_changes: Json | null
+          organization_id: string
+          review_notes: string | null
+          review_status: string
+          reviewer_ref: Json | null
+          sandbox_outcome_id: string
+        }
+        Insert: {
+          blocker_reasons?: Json | null
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id: string
+          review_notes?: string | null
+          review_status?: string
+          reviewer_ref?: Json | null
+          sandbox_outcome_id: string
+        }
+        Update: {
+          blocker_reasons?: Json | null
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id?: string
+          review_notes?: string | null
+          review_status?: string
+          reviewer_ref?: Json | null
+          sandbox_outcome_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_rollout_sandbox_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_rollout_sandbox_reviews_sandbox_outcome_id_fkey"
+            columns: ["sandbox_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_rollout_sandbox_outcomes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_rollout_sandboxes: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          plan_id: string
+          rehearsal_mode: string
+          rollback_hooks: Json | null
+          rollout_constraints: Json
+          sandbox_name: string
+          sandbox_payload: Json
+          sandbox_scope: string
+          status: string
+          validation_hooks: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          plan_id: string
+          rehearsal_mode?: string
+          rollback_hooks?: Json | null
+          rollout_constraints?: Json
+          sandbox_name: string
+          sandbox_payload?: Json
+          sandbox_scope: string
+          status?: string
+          validation_hooks?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          plan_id?: string
+          rehearsal_mode?: string
+          rollback_hooks?: Json | null
+          rollout_constraints?: Json
+          sandbox_name?: string
+          sandbox_payload?: Json
+          sandbox_scope?: string
+          status?: string
+          validation_hooks?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_rollout_sandboxes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_rollout_sandboxes_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_change_plans"
             referencedColumns: ["id"]
           },
         ]
@@ -1152,6 +1364,50 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "architecture_simulation_scope_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_validation_hooks: {
+        Row: {
+          created_at: string
+          hook_definition: Json
+          hook_key: string
+          hook_name: string
+          hook_scope: string
+          id: string
+          organization_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          hook_definition?: Json
+          hook_key: string
+          hook_name: string
+          hook_scope: string
+          id?: string
+          organization_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          hook_definition?: Json
+          hook_key?: string
+          hook_name?: string
+          hook_scope?: string
+          id?: string
+          organization_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_validation_hooks_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"

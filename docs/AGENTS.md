@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-08):** Sprint 39 — Architecture Change Planning & Rollout Readiness. Accepted architecture simulations can now be converted into governed implementation plans with dependency mapping, blast radius estimation, validation/rollback blueprints, and readiness scoring. Previous: Architecture Change Simulation & Governance (Sprint 38).
+> **What changed (2026-03-08):** Sprint 40 — Architecture Rollout Sandbox & Controlled Migration Readiness. Approved architecture change plans can now be rehearsed in bounded sandboxes with migration sequencing, fragility analysis, rollback viability assessment, and controlled readiness scoring. Previous: Architecture Change Planning & Rollout Readiness (Sprint 39).
 >
 > Last updated: 2026-03-08
 

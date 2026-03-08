@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -37,6 +37,7 @@ import { SemanticRetrievalDashboard } from "@/components/observability/SemanticR
 import { DiscoveryArchitectureDashboard } from "@/components/observability/DiscoveryArchitectureDashboard";
 import { ArchitectureSimulationDashboard } from "@/components/observability/ArchitectureSimulationDashboard";
 import { ArchitectureChangePlanningDashboard } from "@/components/observability/ArchitectureChangePlanningDashboard";
+import { ArchitectureRolloutSandboxDashboard } from "@/components/observability/ArchitectureRolloutSandboxDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -316,9 +317,10 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(26, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(27, 1fr)" }}>
             <TabsTrigger value="advisor" className="text-xs gap-1"><Lightbulb className="h-3 w-3" /> Advisor</TabsTrigger>
             <TabsTrigger value="arch-plan" className="text-xs gap-1"><MapIcon className="h-3 w-3" /> ArchPlan</TabsTrigger>
+            <TabsTrigger value="arch-sandbox" className="text-xs gap-1"><Box className="h-3 w-3" /> ArchSandbox</TabsTrigger>
             <TabsTrigger value="arch-sim" className="text-xs gap-1"><Beaker className="h-3 w-3" /> ArchSim</TabsTrigger>
             <TabsTrigger value="arch-disc" className="text-xs gap-1"><Compass className="h-3 w-3" /> ArchDisc</TabsTrigger>
             <TabsTrigger value="sem-retr" className="text-xs gap-1"><SearchCode className="h-3 w-3" /> SemRetr</TabsTrigger>
@@ -368,6 +370,11 @@ export default function Observability() {
           {/* ===== ARCHITECTURE CHANGE PLANNING ===== */}
           <TabsContent value="arch-plan" className="mt-4">
             <ArchitectureChangePlanningDashboard />
+          </TabsContent>
+
+          {/* ===== ARCHITECTURE ROLLOUT SANDBOX ===== */}
+          <TabsContent value="arch-sandbox" className="mt-4">
+            <ArchitectureRolloutSandboxDashboard />
           </TabsContent>
           {/* ===== PLATFORM INTELLIGENCE ===== */}
           <TabsContent value="platform" className="mt-4">
