@@ -5,6 +5,7 @@ import {
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useRoleBasedExperience, RoleSurface } from "@/hooks/useRoleBasedExperience";
 import {
   Sidebar,
   SidebarContent,
@@ -17,6 +18,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
@@ -48,11 +50,21 @@ const bottomItems = [
   { title: "Settings", url: "/org", icon: Settings },
 ];
 
+const ROLE_BADGE: Record<RoleSurface, { label: string; className: string }> = {
+  default_user: { label: "User", className: "bg-primary/20 text-primary border-primary/30" },
+  operator: { label: "Operator", className: "bg-accent/20 text-accent-foreground border-accent/30" },
+  admin: { label: "Admin", className: "bg-destructive/20 text-destructive border-destructive/30" },
+};
+
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const { signOut, user } = useAuth();
   const { setCommandOpen } = useWorkspace();
+  const { roleSurface, isSidebarItemVisible } = useRoleBasedExperience();
+
+  const visibleMainItems = mainItems.filter(item => isSidebarItemVisible(item.title));
+  const visibleBottomItems = bottomItems.filter(item => isSidebarItemVisible(item.title));
 
   const renderItem = (item: typeof mainItems[0]) => (
     <SidebarMenuItem key={item.title}>
@@ -78,6 +90,8 @@ export function AppSidebar() {
       </Tooltip>
     </SidebarMenuItem>
   );
+
+  const roleBadge = ROLE_BADGE[roleSurface];
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
@@ -139,27 +153,36 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainItems.map(renderItem)}
+              {visibleMainItems.map(renderItem)}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <Separator className="mx-3 w-auto" />
+        {visibleBottomItems.length > 0 && (
+          <>
+            <Separator className="mx-3 w-auto" />
 
-        {/* Bottom nav */}
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {bottomItems.map(renderItem)}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+            {/* Bottom nav */}
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {visibleBottomItems.map(renderItem)}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="p-2">
         {!collapsed && user && (
-          <div className="px-3 py-1">
-            <p className="text-[11px] text-muted-foreground truncate">{user.email}</p>
+          <div className="px-3 py-1 space-y-1">
+            <div className="flex items-center gap-2">
+              <p className="text-[11px] text-muted-foreground truncate flex-1">{user.email}</p>
+              <Badge variant="outline" className={`text-[9px] px-1.5 py-0 ${roleBadge.className}`}>
+                {roleBadge.label}
+              </Badge>
+            </div>
           </div>
         )}
         <Button
