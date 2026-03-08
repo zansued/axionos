@@ -60,6 +60,7 @@ import { LimitedMarketplacePilotDashboard } from "@/components/observability/Lim
 import { EcosystemSimulationSandboxDashboard } from "@/components/observability/EcosystemSimulationSandboxDashboard";
 import { CapabilityRegistryGovernanceDashboard } from "@/components/observability/CapabilityRegistryGovernanceDashboard";
 import { MultiPartyPolicyRevenueGovernanceDashboard } from "@/components/observability/MultiPartyPolicyRevenueGovernanceDashboard";
+import { InstitutionalOutcomeAssuranceDashboard } from "@/components/observability/InstitutionalOutcomeAssuranceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
