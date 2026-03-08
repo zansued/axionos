@@ -120,6 +120,10 @@ AxionOS has completed 52 implementation sprints spanning the full capability arc
 
 Durable institutional memory for convergence decisions, outcomes, evidence, patterns, and preservation heuristics. Turns episodic convergence governance into reusable organizational knowledge.
 
+## Block G — Operating Profiles & Policy Packs (Sprint 52) ✅ Complete
+
+Reusable, governed operating profiles built from institutional convergence memory and governance outcomes. Policy packs compose compatible policies into bounded bundles. Bounded local overrides preserve specialization while maintaining profile lineage. All profile adoptions are reviewable, versioned, and rollback-aware.
+
 ---
 
 ## Block A — Architecture-Governed (Sprints 41–43) ✅ Complete
