@@ -734,6 +734,7 @@ supabase/functions/
 | 46 | Architecture Rollout Pilot Governance | 41 | Bounded pilots, baseline comparison, instant rollback, pilot guardrails |
 | 47 | Controlled Architecture Migration Execution | 42 | Staged rollout, checkpoint gates, tenant-safe slicing, deterministic rollback |
 | 48 | Architecture Portfolio Governance | 43 | Portfolio-level prioritization, conflict detection, cumulative blast radius, concurrency guard |
+| 49 | Architecture Fitness Functions | 44 | Continuous fitness evaluation, boundary/isolation/observability analysis, trend tracking, fitness recommendations |
 
 ### Frozen
 

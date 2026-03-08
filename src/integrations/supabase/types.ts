@@ -947,6 +947,224 @@ export type Database = {
           },
         ]
       }
+      architecture_fitness_dimensions: {
+        Row: {
+          created_at: string
+          critical_threshold: Json
+          dimension_definition: Json
+          dimension_key: string
+          dimension_name: string
+          dimension_scope: string
+          id: string
+          organization_id: string
+          scoring_policy: Json
+          status: string
+          updated_at: string
+          warning_threshold: Json
+        }
+        Insert: {
+          created_at?: string
+          critical_threshold?: Json
+          dimension_definition?: Json
+          dimension_key: string
+          dimension_name: string
+          dimension_scope?: string
+          id?: string
+          organization_id: string
+          scoring_policy?: Json
+          status?: string
+          updated_at?: string
+          warning_threshold?: Json
+        }
+        Update: {
+          created_at?: string
+          critical_threshold?: Json
+          dimension_definition?: Json
+          dimension_key?: string
+          dimension_name?: string
+          dimension_scope?: string
+          id?: string
+          organization_id?: string
+          scoring_policy?: Json
+          status?: string
+          updated_at?: string
+          warning_threshold?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_fitness_dimensions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_fitness_evaluations: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          degradation_status: string
+          dimension_id: string
+          evidence_refs: Json | null
+          id: string
+          organization_id: string
+          rationale_codes: Json | null
+          scope_ref: Json | null
+          score: number
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          degradation_status?: string
+          dimension_id: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id: string
+          rationale_codes?: Json | null
+          scope_ref?: Json | null
+          score?: number
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          degradation_status?: string
+          dimension_id?: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id?: string
+          rationale_codes?: Json | null
+          scope_ref?: Json | null
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_fitness_evaluations_dimension_id_fkey"
+            columns: ["dimension_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_fitness_dimensions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_fitness_evaluations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_fitness_recommendations: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          dimension_id: string
+          id: string
+          organization_id: string
+          priority_score: number | null
+          recommendation_reason: Json
+          recommendation_type: string
+          status: string
+          target_entities: Json
+          target_scope: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          dimension_id: string
+          id?: string
+          organization_id: string
+          priority_score?: number | null
+          recommendation_reason?: Json
+          recommendation_type?: string
+          status?: string
+          target_entities?: Json
+          target_scope?: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          dimension_id?: string
+          id?: string
+          organization_id?: string
+          priority_score?: number | null
+          recommendation_reason?: Json
+          recommendation_type?: string
+          status?: string
+          target_entities?: Json
+          target_scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_fitness_recommendations_dimension_id_fkey"
+            columns: ["dimension_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_fitness_dimensions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_fitness_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_fitness_reviews: {
+        Row: {
+          created_at: string
+          evaluation_ref: Json | null
+          id: string
+          linked_changes: Json | null
+          organization_id: string
+          recommendation_id: string | null
+          review_notes: string | null
+          review_reason_codes: Json | null
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          created_at?: string
+          evaluation_ref?: Json | null
+          id?: string
+          linked_changes?: Json | null
+          organization_id: string
+          recommendation_id?: string | null
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          created_at?: string
+          evaluation_ref?: Json | null
+          id?: string
+          linked_changes?: Json | null
+          organization_id?: string
+          recommendation_id?: string | null
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_fitness_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_fitness_reviews_recommendation_id_fkey"
+            columns: ["recommendation_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_fitness_recommendations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_migration_executions: {
         Row: {
           activation_constraints: Json | null
