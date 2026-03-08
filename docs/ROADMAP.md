@@ -123,21 +123,20 @@ The next strategic direction moves from product opportunity governance toward **
 
 ---
 
-## Committed Future Arc (Sprints 55–56)
+## Committed Future Arc (Sprint 56)
 
-> **Status:** 📋 Committed — next implementation sequence. Not yet implemented.
+> **Status:** 📋 Committed — next implementation. Not yet implemented.
 > **Block:** Block I — Product-Intelligent Expansion (remaining)
 
-These sprints complete the committed product-intelligent expansion arc. Each sprint should still be reviewed and approved before execution begins.
+This sprint completes the committed product-intelligent expansion arc. It should still be reviewed and approved before execution begins.
 
 | Sprint | Name | Objective | Acceptance Direction |
 |--------|------|-----------|---------------------|
-| 55 | Product Opportunity Portfolio Governance | Govern the lifecycle of product opportunities as a portfolio — ranking, conflicts, promotion/deferral, outcome tracking across product-informed initiatives | Product opportunities governed as a portfolio with lifecycle management; conflicts detected; outcomes tracked; no auto-promotion |
 | 56 | Controlled Ecosystem Readiness Layer | Prepare the platform for eventual ecosystem exposure — capability inventory, exposure readiness assessment, safety prerequisites, trust model foundation — without activating any external marketplace | Ecosystem readiness assessed and documented; exposure prerequisites defined; trust model designed; marketplace remains frozen |
 
-### Why 55–56 are committed
+### Why 56 is committed
 
-These sprints follow the natural progression: with product intelligence now operational (54), the next step is governing the opportunities it produces (55), then preparing for external exposure (56). They reuse existing AxionOS philosophy and Agent OS planes without expansion.
+With product intelligence now operational (54) and opportunity governance in place (55), the next step is preparing for external exposure (56). It reuses existing AxionOS philosophy and Agent OS planes without expansion.
 
 ---
 
