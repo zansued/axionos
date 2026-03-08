@@ -875,9 +875,9 @@ supabase/functions/
 
 > **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-After 56 sprints completing the full arc from deterministic execution through controlled ecosystem readiness, the platform's architectural direction moves toward:
+After 57 sprints completing the full arc from deterministic execution through capability exposure governance, the platform's architectural direction moves toward:
 
-### Completed Institutionalization Arc (Sprints 49–56)
+### Completed Institutionalization Arc (Sprints 49–57)
 - ✅ Platform convergence and convergence governance (49–50)
 - ✅ Institutional convergence memory (51)
 - ✅ Operating profiles and policy packs (52)
@@ -885,12 +885,13 @@ After 56 sprints completing the full arc from deterministic execution through co
 - ✅ Product intelligence operations (54)
 - ✅ Product opportunity portfolio governance (55)
 - ✅ Controlled ecosystem readiness (56)
+- ✅ Capability exposure governance (57)
 
-### Committed Direction (Sprint 57) — Block J: Trusted Ecosystem Foundation
-- **Capability exposure governance** — governing which capabilities can be exposed externally
+### Committed Direction (Sprint 58) — Block J: Trusted Ecosystem Foundation
+- **External trust & admission** — defining trust scoring, admission criteria, and safety boundaries for external participants
 
-### Reserved Direction (Sprints 58–65) — Blocks J (cont), K, L
-- **External trust/admission** controls and **ecosystem simulation/sandboxing**
+### Reserved Direction (Sprints 59–65) — Blocks J (cont), K, L
+- **Ecosystem simulation/sandboxing** before real exposure
 - **Limited marketplace pilot** with bounded scope and instant rollback
 - **Capability registry** and **multi-party policy/revenue governance**
 - **Institutional outcome assurance** and **canon integrity/drift governance**
@@ -898,7 +899,7 @@ After 56 sprints completing the full arc from deterministic execution through co
 
 All forthcoming directions reuse existing architectural layers and Agent OS planes. No plane expansion is planned. The focus shifts from building new capability planes to governing ecosystem exposure.
 
-**Governing constraint:** Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Marketplace and ecosystem capabilities remain frozen until the staged foundation blocks are reached and explicitly approved.
+**Governing constraint:** Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Marketplace and ecosystem capabilities remain frozen until the staged activation blocks are reached and explicitly approved.
 
 ---
 

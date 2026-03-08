@@ -275,8 +275,8 @@ All 42 architectural layers are operational. The kernel includes the 32-stage de
 
 ## Governing Principle
 
-> Fifty-six sprints complete. The platform supports controlled ecosystem readiness with capability inventory, exposure classification, safety prerequisites, and trust model foundation.
-> Next committed sprint: Sprint 57 — capability exposure governance.
-> Reserved horizon: Sprints 58–65 — trusted ecosystem foundation (continued), controlled activation, system roundness and operating completion.
+> Fifty-seven sprints complete. The platform supports capability exposure governance with exposure classes, governance cases, gate evaluation, restriction analysis, and review workflow.
+> Next committed sprint: Sprint 58 — external trust & admission.
+> Reserved horizon: Sprints 59–65 — ecosystem simulation, controlled activation, system roundness and operating completion.
 > Round-enough target: Sprint 65 — first complete, internally coherent operating canon.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.
