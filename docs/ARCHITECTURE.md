@@ -877,6 +877,50 @@ supabase/functions/
 - `execution_strategy_experiments` — Controlled experiments
 - `execution_strategy_outcomes` — Experiment outcome tracking
 
+### Strategy Portfolio Governance Tables (Sprint 33)
+- `strategy_portfolio_entries` — Strategy family portfolio entries
+- `strategy_portfolio_health_snapshots` — Portfolio health snapshots
+- `strategy_portfolio_recommendations` — Governance recommendations
+
+### Platform Self-Stabilization Tables (Sprint 34)
+- `platform_stability_signals` — Stability signals (drift, oscillation)
+- `platform_stabilization_proposals` — Stabilization proposals
+- `platform_stabilization_applications` — Applied stabilizations
+- `platform_safe_mode_profiles` — Safe mode profiles
+
+### Autonomous Engineering Advisor Tables (Sprint 35)
+- `engineering_advisor_signals` — Cross-layer advisory signals
+- `engineering_advisor_recommendations` — Advisory recommendations
+- `engineering_advisor_reviews` — Recommendation review lifecycle
+
+### Semantic Retrieval Tables (Sprint 36)
+- `semantic_retrieval_sessions` — Retrieval sessions with audit
+- `semantic_retrieval_feedback` — Retrieval usefulness feedback
+- `semantic_index_profiles` — Index profiles per domain
+
+### Discovery Architecture Tables (Sprint 37)
+- `discovery_architecture_signals` — External/product signals
+- `discovery_architecture_recommendations` — Architecture recommendations
+- `discovery_architecture_evidence_links` — Evidence linkage
+
+### Architecture Simulation Tables (Sprint 38)
+- `architecture_change_proposals` — Change proposal registry
+- `architecture_simulation_scope_profiles` — Simulation scope profiles
+- `architecture_simulation_outcomes` — Simulation results
+- `architecture_simulation_reviews` — Simulation review lifecycle
+
+### Architecture Planning Tables (Sprint 39)
+- `architecture_change_plans` — Implementation plans with blast radius
+- `architecture_rollout_mode_profiles` — Rollout mode profiles
+- `architecture_change_plan_reviews` — Plan review lifecycle
+
+### Architecture Rollout Sandbox Tables (Sprint 40)
+- `architecture_rollout_sandboxes` — Sandbox rehearsal environments
+- `architecture_validation_hooks` — Validation hook registry
+- `architecture_rollout_sandbox_outcomes` — Sandbox rehearsal results
+- `architecture_rollout_governance_profiles` — Sandbox governance profiles
+- `architecture_rollout_sandbox_reviews` — Sandbox review lifecycle
+
 ---
 
 ## 14. Technology Stack
