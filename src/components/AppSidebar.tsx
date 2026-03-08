@@ -1,5 +1,5 @@
 import {
-  Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio,
+  Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Map,
   Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
@@ -26,6 +26,7 @@ import {
 
 const mainItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
+  { title: "Journey", url: "/journey", icon: Map },
   { title: "Initiatives", url: "/initiatives", icon: Lightbulb },
   { title: "Agents", url: "/agents", icon: Users },
   { title: "Stories", url: "/stories", icon: Hammer },

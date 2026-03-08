@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 65 (Operating Completion Layer) — ✅ Complete
-> **Next Sprint:** 66 (User Journey Orchestration Layer) — 📋 Planned
+> **Current Sprint:** 66 (User Journey Orchestration Layer) — ✅ Complete
+> **Next Sprint:** 67 (Role-Based Experience Layer) — 📋 Committed
 
 ## Document Authority
 
@@ -467,13 +467,25 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Future Arc — Block M: Product Experience & Delivery Maturity (Sprints 66–70)
+### Phase 30: User Journey Orchestration (Sprint 66) — ✅ COMPLETE
+
+**Goal:** Transform the mature internal operating baseline into a clear, guided, user-facing journey from idea to deployed software.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 66 | User Journey Orchestration Layer | User Journey Orchestration Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 66: User journey model manager, instance orchestrator, transition engine, approval gate manager, artifact visibility engine, next-step recommender, deployment visibility orchestrator, friction analyzer, explainer. Primary /journey route added to sidebar.
+
+---
+
+## Future Arc — Block M: Product Experience & Delivery Maturity (Sprints 67–70)
 
 > **Strategic direction:** [ROADMAP.md](ROADMAP.md)
 
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 66 | User Journey Orchestration Layer | M | 📋 Planned | Orchestrate the visible user journey with clear state, transitions, approvals, and progress |
 | 67 | Role-Based Experience Layer | M | 📋 Committed | Separate product surfaces by role — default user journey vs operator/governance views |
 | 68 | One-Click Delivery & Deploy Assurance Layer | M | 📋 Committed | Seamless, governed one-click path from validated code to deployed software |
 | 69 | Onboarding, Templates & Vertical Starters | M | 🔮 Reserved | Guided onboarding, reusable templates, vertical-specific starting points |
@@ -553,6 +565,8 @@ This document serves as the canonical sprint execution ledger. The following con
 | Multi-party policy & revenue governance | ✅ IMPLEMENTED | 62 | `multi-party-policy-revenue-governance/*`, `multi-party-policy-revenue-governance-engine` |
 | Institutional outcome assurance | ✅ IMPLEMENTED | 63 | `institutional-outcome-assurance/*`, `institutional-outcome-assurance-engine` |
 | Canon integrity & drift governance | ✅ IMPLEMENTED | 64 | `canon-integrity-drift-governance/*`, `canon-integrity-drift-governance-engine` |
+| Operating completion | ✅ IMPLEMENTED | 65 | `operating-completion/*`, `operating-completion-engine` |
+| User journey orchestration | ✅ IMPLEMENTED | 66 | `user-journey-orchestration/*`, `user-journey-orchestration-engine` |
 
 ---
 
@@ -594,6 +608,8 @@ This document serves as the canonical sprint execution ledger. The following con
 | `_shared/multi-party-policy-revenue-governance/` | 9 | Party role manager, policy frame builder, entitlement engine, value flow governor, conflict resolution analyzer, settlement readiness evaluator, fairness scorer, recommendation engine, explainer |
 | `_shared/institutional-outcome-assurance/` | 9 | Outcome model manager, expected-vs-realized analyzer, drift detector, confidence calibrator, cross-layer aggregator, fragility analyzer, remediation recommender, review manager, explainer |
 | `_shared/canon-integrity-drift-governance/` | 9 | Integrity model manager, cross-doc consistency analyzer, principle conformance checker, mutation boundary analyzer, architecture alignment engine, governance alignment engine, drift detector, remediation recommender, explainer |
+| `_shared/operating-completion/` | 9 | Completion model manager, round-enough evaluator, residual risk analyzer, baseline certification engine, cross-domain aggregator, open surface detector, review manager, completion recommender, explainer |
+| `_shared/user-journey-orchestration/` | 9 | Journey model manager, instance orchestrator, transition engine, approval gate manager, artifact visibility engine, next-step recommender, deployment visibility orchestrator, friction analyzer, explainer |
 
 ---
 
@@ -656,5 +672,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | Multi-Party Policy & Revenue Governance | 1 | 62 |
 | Institutional Outcome Assurance | 1 | 63 |
 | Canon Integrity & Drift Governance | 1 | 64 |
+| Operating Completion | 1 | 65 |
+| User Journey Orchestration | 1 | 66 |
 | Support | 11 | Various |
-| **Total** | **~109** | |
+| **Total** | **~112** | |

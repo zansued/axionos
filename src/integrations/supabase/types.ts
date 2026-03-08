@@ -16420,6 +16420,488 @@ export type Database = {
           },
         ]
       }
+      user_journey_approval_states: {
+        Row: {
+          approval_description: string | null
+          approval_label: string
+          approval_status: string
+          approval_type: string
+          created_at: string
+          evidence_links: Json
+          id: string
+          journey_instance_id: string
+          organization_id: string
+          required_actor_type: string
+          resolution_note: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          visible_stage: string
+        }
+        Insert: {
+          approval_description?: string | null
+          approval_label?: string
+          approval_status?: string
+          approval_type?: string
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          journey_instance_id: string
+          organization_id: string
+          required_actor_type?: string
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          visible_stage?: string
+        }
+        Update: {
+          approval_description?: string | null
+          approval_label?: string
+          approval_status?: string
+          approval_type?: string
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          journey_instance_id?: string
+          organization_id?: string
+          required_actor_type?: string
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          visible_stage?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_journey_approval_states_journey_instance_id_fkey"
+            columns: ["journey_instance_id"]
+            isOneToOne: false
+            referencedRelation: "user_journey_instances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_journey_approval_states_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_journey_artifact_views: {
+        Row: {
+          artifact_label: string
+          artifact_ref: Json
+          artifact_summary: string | null
+          artifact_type: string
+          created_at: string
+          id: string
+          journey_instance_id: string
+          organization_id: string
+          surfaced: boolean
+          visibility_priority: number
+          visible_stage: string
+        }
+        Insert: {
+          artifact_label?: string
+          artifact_ref?: Json
+          artifact_summary?: string | null
+          artifact_type?: string
+          created_at?: string
+          id?: string
+          journey_instance_id: string
+          organization_id: string
+          surfaced?: boolean
+          visibility_priority?: number
+          visible_stage?: string
+        }
+        Update: {
+          artifact_label?: string
+          artifact_ref?: Json
+          artifact_summary?: string | null
+          artifact_type?: string
+          created_at?: string
+          id?: string
+          journey_instance_id?: string
+          organization_id?: string
+          surfaced?: boolean
+          visibility_priority?: number
+          visible_stage?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_journey_artifact_views_journey_instance_id_fkey"
+            columns: ["journey_instance_id"]
+            isOneToOne: false
+            referencedRelation: "user_journey_instances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_journey_artifact_views_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_journey_instances: {
+        Row: {
+          approval_actor_type: string
+          approval_required: boolean
+          approval_state: string
+          assumptions: Json
+          clarity_score: number
+          created_at: string
+          current_internal_stage: string
+          current_visible_stage: string
+          deployment_visibility_score: number
+          evidence_links: Json
+          expected_outcomes: Json
+          handoff_readiness_score: number
+          id: string
+          initiative_id: string | null
+          journey_friction_score: number
+          journey_model_id: string | null
+          journey_progress_score: number
+          next_action_label: string
+          next_action_type: string
+          orchestration_health_score: number
+          organization_id: string
+          realized_outcomes: Json
+          recommendation_status: string
+          updated_at: string
+          visible_artifact_count: number
+          workspace_id: string | null
+        }
+        Insert: {
+          approval_actor_type?: string
+          approval_required?: boolean
+          approval_state?: string
+          assumptions?: Json
+          clarity_score?: number
+          created_at?: string
+          current_internal_stage?: string
+          current_visible_stage?: string
+          deployment_visibility_score?: number
+          evidence_links?: Json
+          expected_outcomes?: Json
+          handoff_readiness_score?: number
+          id?: string
+          initiative_id?: string | null
+          journey_friction_score?: number
+          journey_model_id?: string | null
+          journey_progress_score?: number
+          next_action_label?: string
+          next_action_type?: string
+          orchestration_health_score?: number
+          organization_id: string
+          realized_outcomes?: Json
+          recommendation_status?: string
+          updated_at?: string
+          visible_artifact_count?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          approval_actor_type?: string
+          approval_required?: boolean
+          approval_state?: string
+          assumptions?: Json
+          clarity_score?: number
+          created_at?: string
+          current_internal_stage?: string
+          current_visible_stage?: string
+          deployment_visibility_score?: number
+          evidence_links?: Json
+          expected_outcomes?: Json
+          handoff_readiness_score?: number
+          id?: string
+          initiative_id?: string | null
+          journey_friction_score?: number
+          journey_model_id?: string | null
+          journey_progress_score?: number
+          next_action_label?: string
+          next_action_type?: string
+          orchestration_health_score?: number
+          organization_id?: string
+          realized_outcomes?: Json
+          recommendation_status?: string
+          updated_at?: string
+          visible_artifact_count?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_journey_instances_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_journey_instances_journey_model_id_fkey"
+            columns: ["journey_model_id"]
+            isOneToOne: false
+            referencedRelation: "user_journey_models"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_journey_instances_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_journey_instances_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_journey_models: {
+        Row: {
+          approval_gate_definitions: Json
+          artifact_visibility_rules: Json
+          assumptions: Json
+          created_at: string
+          evidence_links: Json
+          id: string
+          journey_model_name: string
+          journey_model_version: string
+          organization_id: string
+          stage_definitions: Json
+          status: string
+          transition_rules: Json
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          approval_gate_definitions?: Json
+          artifact_visibility_rules?: Json
+          assumptions?: Json
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          journey_model_name?: string
+          journey_model_version?: string
+          organization_id: string
+          stage_definitions?: Json
+          status?: string
+          transition_rules?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          approval_gate_definitions?: Json
+          artifact_visibility_rules?: Json
+          assumptions?: Json
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          journey_model_name?: string
+          journey_model_version?: string
+          organization_id?: string
+          stage_definitions?: Json
+          status?: string
+          transition_rules?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_journey_models_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_journey_models_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_journey_outcomes: {
+        Row: {
+          approval_clarity_score: number
+          assumptions: Json
+          blocked_transition_score: number
+          created_at: string
+          deployment_visibility_score: number
+          evidence_links: Json
+          expected_outcomes: Json
+          handoff_readiness_score: number
+          id: string
+          internal_complexity_leakage_score: number
+          journey_clarity_score: number
+          journey_friction_score: number
+          journey_instance_id: string
+          journey_outcome_accuracy_score: number
+          journey_progress_score: number
+          next_step_confidence_score: number
+          orchestration_health_score: number
+          organization_id: string
+          outcome_domain: string
+          outcome_scope_id: string | null
+          outcome_scope_type: string
+          realized_outcomes: Json
+          recommendation_status: string
+          resume_readiness_score: number
+          updated_at: string
+          user_visible_coherence_score: number
+          visible_artifact_coverage_score: number
+        }
+        Insert: {
+          approval_clarity_score?: number
+          assumptions?: Json
+          blocked_transition_score?: number
+          created_at?: string
+          deployment_visibility_score?: number
+          evidence_links?: Json
+          expected_outcomes?: Json
+          handoff_readiness_score?: number
+          id?: string
+          internal_complexity_leakage_score?: number
+          journey_clarity_score?: number
+          journey_friction_score?: number
+          journey_instance_id: string
+          journey_outcome_accuracy_score?: number
+          journey_progress_score?: number
+          next_step_confidence_score?: number
+          orchestration_health_score?: number
+          organization_id: string
+          outcome_domain?: string
+          outcome_scope_id?: string | null
+          outcome_scope_type?: string
+          realized_outcomes?: Json
+          recommendation_status?: string
+          resume_readiness_score?: number
+          updated_at?: string
+          user_visible_coherence_score?: number
+          visible_artifact_coverage_score?: number
+        }
+        Update: {
+          approval_clarity_score?: number
+          assumptions?: Json
+          blocked_transition_score?: number
+          created_at?: string
+          deployment_visibility_score?: number
+          evidence_links?: Json
+          expected_outcomes?: Json
+          handoff_readiness_score?: number
+          id?: string
+          internal_complexity_leakage_score?: number
+          journey_clarity_score?: number
+          journey_friction_score?: number
+          journey_instance_id?: string
+          journey_outcome_accuracy_score?: number
+          journey_progress_score?: number
+          next_step_confidence_score?: number
+          orchestration_health_score?: number
+          organization_id?: string
+          outcome_domain?: string
+          outcome_scope_id?: string | null
+          outcome_scope_type?: string
+          realized_outcomes?: Json
+          recommendation_status?: string
+          resume_readiness_score?: number
+          updated_at?: string
+          user_visible_coherence_score?: number
+          visible_artifact_coverage_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_journey_outcomes_journey_instance_id_fkey"
+            columns: ["journey_instance_id"]
+            isOneToOne: false
+            referencedRelation: "user_journey_instances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_journey_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_journey_transitions: {
+        Row: {
+          approval_required: boolean
+          approval_status: string
+          block_reason: string | null
+          blocked: boolean
+          created_at: string
+          evidence_links: Json
+          from_internal_stage: string
+          from_visible_stage: string
+          id: string
+          journey_instance_id: string
+          organization_id: string
+          to_internal_stage: string
+          to_visible_stage: string
+          transition_health_score: number
+          trigger_label: string
+          trigger_type: string
+        }
+        Insert: {
+          approval_required?: boolean
+          approval_status?: string
+          block_reason?: string | null
+          blocked?: boolean
+          created_at?: string
+          evidence_links?: Json
+          from_internal_stage?: string
+          from_visible_stage?: string
+          id?: string
+          journey_instance_id: string
+          organization_id: string
+          to_internal_stage?: string
+          to_visible_stage?: string
+          transition_health_score?: number
+          trigger_label?: string
+          trigger_type?: string
+        }
+        Update: {
+          approval_required?: boolean
+          approval_status?: string
+          block_reason?: string | null
+          blocked?: boolean
+          created_at?: string
+          evidence_links?: Json
+          from_internal_stage?: string
+          from_visible_stage?: string
+          id?: string
+          journey_instance_id?: string
+          organization_id?: string
+          to_internal_stage?: string
+          to_visible_stage?: string
+          transition_health_score?: number
+          trigger_label?: string
+          trigger_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_journey_transitions_journey_instance_id_fkey"
+            columns: ["journey_instance_id"]
+            isOneToOne: false
+            referencedRelation: "user_journey_instances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_journey_transitions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       validation_runs: {
         Row: {
           artifact_id: string

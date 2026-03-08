@@ -3,7 +3,7 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-08
-> **Current state:** Level 5 — Institutional Engineering Memory Platform. 49 architectural layers active (through Sprint 65 — first mature operating baseline).
+> **Current state:** Level 5 — Institutional Engineering Memory Platform. 50 architectural layers active (through Sprint 66 — User Journey Orchestration Layer).
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -906,10 +906,10 @@ Internal sophistication makes the product trustworthy. It does not need to be th
 
 With 65 sprints complete and the first mature operating baseline achieved, the platform's architectural direction shifts from internal system building to **product experience and delivery maturity**.
 
-### Completed Internal Canon (Sprints 1–65)
+### Completed Internal Canon (Sprints 1–66)
 - ✅ All layers from execution kernel through institutional assurance and canon integrity
-- ✅ 49 architectural layers active
-- ✅ First internally coherent operating canon
+- ✅ 50 architectural layers active
+- ✅ First internally coherent operating canon + user journey orchestration
 
 ### Next Architectural Direction — Block M: Product Experience & Delivery Maturity
 
