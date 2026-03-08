@@ -143,3 +143,6 @@ verify_jwt = false
 
 [functions.tenant-architecture-modes]
 verify_jwt = false
+
+[functions.economic-optimization-engine]
+verify_jwt = false

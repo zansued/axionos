@@ -45,6 +45,7 @@ import { ArchitectureFitnessDashboard } from "@/components/observability/Archite
 import { ChangeAdvisoryOrchestratorDashboard } from "@/components/observability/ChangeAdvisoryOrchestratorDashboard";
 import { PlatformStabilizationV2Dashboard } from "@/components/observability/PlatformStabilizationV2Dashboard";
 import { TenantArchitectureModesDashboard } from "@/components/observability/TenantArchitectureModesDashboard";
+import { EconomicOptimizationDashboard } from "@/components/observability/EconomicOptimizationDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -324,7 +325,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(34, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(35, 1fr)" }}>
+            <TabsTrigger value="arch-econ" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> ArchEcon</TabsTrigger>
             <TabsTrigger value="tenant-arch" className="text-xs gap-1"><Building2 className="h-3 w-3" /> TenantArch</TabsTrigger>
             <TabsTrigger value="stability-v2" className="text-xs gap-1"><ShieldCheck className="h-3 w-3" /> StabilityV2</TabsTrigger>
             <TabsTrigger value="change-orch" className="text-xs gap-1"><Workflow className="h-3 w-3" /> ChangeOrch</TabsTrigger>
@@ -360,6 +362,11 @@ export default function Observability() {
             <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
+
+          {/* ===== ECONOMIC OPTIMIZATION ===== */}
+          <TabsContent value="arch-econ" className="mt-4">
+            <EconomicOptimizationDashboard />
+          </TabsContent>
 
           {/* ===== TENANT ARCHITECTURE MODES ===== */}
           <TabsContent value="tenant-arch" className="mt-4">
