@@ -8394,6 +8394,81 @@ export type Database = {
           },
         ]
       }
+      initiative_templates: {
+        Row: {
+          category: string
+          created_at: string
+          default_assumptions: Json
+          description: string
+          discovery_hints: Json
+          evidence_links: Json
+          icon: string
+          id: string
+          idea_scaffold: string
+          organization_id: string
+          starter_confidence_score: number
+          status: string
+          template_fit_score: number
+          template_name: string
+          template_type: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          default_assumptions?: Json
+          description?: string
+          discovery_hints?: Json
+          evidence_links?: Json
+          icon?: string
+          id?: string
+          idea_scaffold?: string
+          organization_id: string
+          starter_confidence_score?: number
+          status?: string
+          template_fit_score?: number
+          template_name?: string
+          template_type?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          default_assumptions?: Json
+          description?: string
+          discovery_hints?: Json
+          evidence_links?: Json
+          icon?: string
+          id?: string
+          idea_scaffold?: string
+          organization_id?: string
+          starter_confidence_score?: number
+          status?: string
+          template_fit_score?: number
+          template_name?: string
+          template_type?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "initiative_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "initiative_templates_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       initiatives: {
         Row: {
           approved_at_discovery: string | null
@@ -10060,6 +10135,255 @@ export type Database = {
           },
           {
             foreignKeyName: "multi_party_policy_frames_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_flows: {
+        Row: {
+          assumptions: Json
+          created_at: string
+          evidence_links: Json
+          flow_name: string
+          flow_type: string
+          id: string
+          onboarding_clarity_score: number
+          organization_id: string
+          status: string
+          step_definitions: Json
+          target_role: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          created_at?: string
+          evidence_links?: Json
+          flow_name?: string
+          flow_type?: string
+          id?: string
+          onboarding_clarity_score?: number
+          organization_id: string
+          status?: string
+          step_definitions?: Json
+          target_role?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          created_at?: string
+          evidence_links?: Json
+          flow_name?: string
+          flow_type?: string
+          id?: string
+          onboarding_clarity_score?: number
+          organization_id?: string
+          status?: string
+          step_definitions?: Json
+          target_role?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_flows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_flows_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_outcomes: {
+        Row: {
+          created_at: string
+          evidence_links: Json
+          expected_outcomes: Json
+          false_fit_penalty_score: number
+          guided_start_coherence_score: number
+          id: string
+          initiative_id: string | null
+          onboarding_outcome_accuracy_score: number
+          organization_id: string
+          realized_outcomes: Json
+          session_id: string | null
+          starter_path_effectiveness_score: number
+          template_id: string | null
+          template_usefulness_score: number
+          updated_at: string
+          vertical_starter_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          false_fit_penalty_score?: number
+          guided_start_coherence_score?: number
+          id?: string
+          initiative_id?: string | null
+          onboarding_outcome_accuracy_score?: number
+          organization_id: string
+          realized_outcomes?: Json
+          session_id?: string | null
+          starter_path_effectiveness_score?: number
+          template_id?: string | null
+          template_usefulness_score?: number
+          updated_at?: string
+          vertical_starter_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          false_fit_penalty_score?: number
+          guided_start_coherence_score?: number
+          id?: string
+          initiative_id?: string | null
+          onboarding_outcome_accuracy_score?: number
+          organization_id?: string
+          realized_outcomes?: Json
+          session_id?: string | null
+          starter_path_effectiveness_score?: number
+          template_id?: string | null
+          template_usefulness_score?: number
+          updated_at?: string
+          vertical_starter_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_outcomes_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_outcomes_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_outcomes_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "initiative_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_outcomes_vertical_starter_id_fkey"
+            columns: ["vertical_starter_id"]
+            isOneToOne: false
+            referencedRelation: "vertical_starters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_sessions: {
+        Row: {
+          abandonment_risk_score: number
+          created_at: string
+          current_step: number
+          first_run_friction_score: number
+          flow_id: string | null
+          friction_points: Json
+          id: string
+          onboarding_progress_score: number
+          organization_id: string
+          selections: Json
+          session_status: string
+          template_id: string | null
+          updated_at: string
+          user_id: string
+          vertical_starter_id: string | null
+          workspace_id: string | null
+        }
+        Insert: {
+          abandonment_risk_score?: number
+          created_at?: string
+          current_step?: number
+          first_run_friction_score?: number
+          flow_id?: string | null
+          friction_points?: Json
+          id?: string
+          onboarding_progress_score?: number
+          organization_id: string
+          selections?: Json
+          session_status?: string
+          template_id?: string | null
+          updated_at?: string
+          user_id: string
+          vertical_starter_id?: string | null
+          workspace_id?: string | null
+        }
+        Update: {
+          abandonment_risk_score?: number
+          created_at?: string
+          current_step?: number
+          first_run_friction_score?: number
+          flow_id?: string | null
+          friction_points?: Json
+          id?: string
+          onboarding_progress_score?: number
+          organization_id?: string
+          selections?: Json
+          session_status?: string
+          template_id?: string | null
+          updated_at?: string
+          user_id?: string
+          vertical_starter_id?: string | null
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_sessions_flow_id_fkey"
+            columns: ["flow_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_flows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_sessions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_sessions_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "initiative_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_sessions_vertical_starter_id_fkey"
+            columns: ["vertical_starter_id"]
+            isOneToOne: false
+            referencedRelation: "vertical_starters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_sessions_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
@@ -16821,6 +17145,73 @@ export type Database = {
           },
         ]
       }
+      template_initialization_rules: {
+        Row: {
+          created_at: string
+          id: string
+          initialization_payload: Json
+          initialization_quality_score: number
+          journey_defaults: Json
+          organization_id: string
+          rule_name: string
+          starter_artifacts: Json
+          status: string
+          template_id: string | null
+          updated_at: string
+          vertical_starter_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          initialization_payload?: Json
+          initialization_quality_score?: number
+          journey_defaults?: Json
+          organization_id: string
+          rule_name?: string
+          starter_artifacts?: Json
+          status?: string
+          template_id?: string | null
+          updated_at?: string
+          vertical_starter_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          initialization_payload?: Json
+          initialization_quality_score?: number
+          journey_defaults?: Json
+          organization_id?: string
+          rule_name?: string
+          starter_artifacts?: Json
+          status?: string
+          template_id?: string | null
+          updated_at?: string
+          vertical_starter_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "template_initialization_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "template_initialization_rules_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "initiative_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "template_initialization_rules_vertical_starter_id_fkey"
+            columns: ["vertical_starter_id"]
+            isOneToOne: false
+            referencedRelation: "vertical_starters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenant_architecture_mode_outcomes: {
         Row: {
           baseline_summary: Json
@@ -17834,6 +18225,78 @@ export type Database = {
             columns: ["artifact_id"]
             isOneToOne: false
             referencedRelation: "agent_outputs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vertical_starters: {
+        Row: {
+          assumption_visibility_score: number
+          category: string
+          created_at: string
+          default_stack: Json
+          description: string
+          evidence_links: Json
+          icon: string
+          id: string
+          included_templates: Json
+          organization_id: string
+          starter_type: string
+          status: string
+          updated_at: string
+          vertical_fit_score: number
+          vertical_name: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumption_visibility_score?: number
+          category?: string
+          created_at?: string
+          default_stack?: Json
+          description?: string
+          evidence_links?: Json
+          icon?: string
+          id?: string
+          included_templates?: Json
+          organization_id: string
+          starter_type?: string
+          status?: string
+          updated_at?: string
+          vertical_fit_score?: number
+          vertical_name?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumption_visibility_score?: number
+          category?: string
+          created_at?: string
+          default_stack?: Json
+          description?: string
+          evidence_links?: Json
+          icon?: string
+          id?: string
+          included_templates?: Json
+          organization_id?: string
+          starter_type?: string
+          status?: string
+          updated_at?: string
+          vertical_fit_score?: number
+          vertical_name?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vertical_starters_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vertical_starters_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
