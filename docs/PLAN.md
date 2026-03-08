@@ -371,5 +371,6 @@
 | Platform Stabilization v2 | 1 | 46 |
 | Tenant Architecture Modes | 1 | 47 |
 | Economic Optimization | 1 | 48 |
+| Platform Convergence | 1 | 49 |
 | Support | 11 | Various |
-| **Total** | **~93** | |
+| **Total** | **~94** | |
