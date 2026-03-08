@@ -1357,9 +1357,10 @@ Sprints 51–55 (Institutional Convergence Memory, Operating Profiles, Product I
 | Product Intelligence Entry | Data Plane (Observability, Memory), Control Plane (Governance), Execution Plane (Orchestrator) |
 | Product Intelligence Operations | Data Plane (Observability, Memory), Control Plane (Governance, Selection Engine), Execution Plane (Orchestrator) |
 | Product Opportunity Portfolio Governance | Control Plane (Governance, Policy Engine, Selection Engine), Data Plane (Memory, Observability), Execution Plane (Orchestrator) |
+| Controlled Ecosystem Readiness | Control Plane (Governance, Policy Engine), Data Plane (Memory, Observability), Execution Plane (Orchestrator) |
 
-The committed future sprint (Sprint 56: controlled ecosystem readiness) and reserved horizon (Sprints 57–65: ecosystem foundation, activation, operating completion) are higher-order governance and orchestration concerns. They reuse existing Agent OS planes without expansion.
+The committed future sprint (Sprint 57: capability exposure governance) and reserved horizon (Sprints 58–65: ecosystem foundation continued, activation, operating completion) are higher-order governance and orchestration concerns. They reuse existing Agent OS planes without expansion.
 
-The Ecosystem Plane remains frozen. Its activation is staged across Sprints 57–62 in the reserved horizon and will not begin until the committed arc (56) is complete and explicitly approved. Any future ecosystem-plane activation remains governed and incremental.
+The Ecosystem Plane remains frozen. Its activation is staged across Sprints 57–62 in the committed/reserved horizon and will not begin until each sprint is complete and explicitly approved. Any future ecosystem-plane activation remains governed and incremental.
 
 The 5-plane, 18-module architecture remains stable.
