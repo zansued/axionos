@@ -321,7 +321,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(30, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(31, 1fr)" }}>
+            <TabsTrigger value="arch-fitness" className="text-xs gap-1"><Activity className="h-3 w-3" /> ArchFitness</TabsTrigger>
             <TabsTrigger value="arch-portfolio" className="text-xs gap-1"><Briefcase className="h-3 w-3" /> ArchPortfolio</TabsTrigger>
             <TabsTrigger value="arch-migrate" className="text-xs gap-1"><ArrowRightLeft className="h-3 w-3" /> ArchMigrate</TabsTrigger>
             <TabsTrigger value="arch-pilot" className="text-xs gap-1"><Target className="h-3 w-3" /> ArchPilot</TabsTrigger>
