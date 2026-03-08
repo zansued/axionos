@@ -338,13 +338,26 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Committed Future Arc — Block J: Trusted Ecosystem Foundation (Sprint 57)
+### Phase 21: Capability Exposure Governance (Sprint 57) — ✅ COMPLETE
+
+**Goal:** Establish governed policy, review, classification, and control framework for future external capability exposure, without activating open ecosystem exchange.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 57 | Capability Exposure Governance Layer | Capability Exposure Governance Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 57: Exposure case builder, exposure classifier, policy engine, restriction analyzer, review manager, gate evaluator, risk bounding engine, governance recommendation engine, governance explainer, outcome tracking
+
+---
+
+## Committed Future Arc — Block J: Trusted Ecosystem Foundation (Sprint 58)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
 
 | Sprint | Name | Objective | Target Layer | Status |
 |--------|------|-----------|-------------|--------|
-| 57 | Capability Exposure Governance Layer | Govern which capabilities can be exposed externally and under what constraints | Capability Exposure Governance Layer | 📋 Planned |
+| 58 | External Trust & Admission Layer | Define trust scoring, admission criteria, and safety boundaries for external participants | External Trust & Admission Layer | 📋 Planned |
 
 ---
 
