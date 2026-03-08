@@ -8802,6 +8802,236 @@ export type Database = {
           },
         ]
       }
+      improvement_candidate_evidence: {
+        Row: {
+          candidate_id: string
+          contribution_summary: string
+          created_at: string
+          evidence_id: string
+          id: string
+          relevance_score: number
+        }
+        Insert: {
+          candidate_id: string
+          contribution_summary?: string
+          created_at?: string
+          evidence_id: string
+          id?: string
+          relevance_score?: number
+        }
+        Update: {
+          candidate_id?: string
+          contribution_summary?: string
+          created_at?: string
+          evidence_id?: string
+          id?: string
+          relevance_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_candidate_evidence_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_candidate_evidence_evidence_id_fkey"
+            columns: ["evidence_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_evidence"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      improvement_candidate_patterns: {
+        Row: {
+          affected_stages: string[]
+          created_at: string
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          linked_candidate_id: string | null
+          occurrence_count: number
+          organization_id: string
+          pattern_description: string
+          pattern_key: string
+          severity: string
+          source_types: string[]
+          structured_metadata: Json
+        }
+        Insert: {
+          affected_stages?: string[]
+          created_at?: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          linked_candidate_id?: string | null
+          occurrence_count?: number
+          organization_id: string
+          pattern_description?: string
+          pattern_key?: string
+          severity?: string
+          source_types?: string[]
+          structured_metadata?: Json
+        }
+        Update: {
+          affected_stages?: string[]
+          created_at?: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          linked_candidate_id?: string | null
+          occurrence_count?: number
+          organization_id?: string
+          pattern_description?: string
+          pattern_key?: string
+          severity?: string
+          source_types?: string[]
+          structured_metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_candidate_patterns_linked_candidate_id_fkey"
+            columns: ["linked_candidate_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_candidate_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      improvement_candidate_reviews: {
+        Row: {
+          action: string
+          candidate_id: string
+          created_at: string
+          id: string
+          new_status: string
+          notes: string | null
+          previous_status: string
+          reviewer_id: string
+        }
+        Insert: {
+          action?: string
+          candidate_id: string
+          created_at?: string
+          id?: string
+          new_status?: string
+          notes?: string | null
+          previous_status?: string
+          reviewer_id: string
+        }
+        Update: {
+          action?: string
+          candidate_id?: string
+          created_at?: string
+          id?: string
+          new_status?: string
+          notes?: string | null
+          previous_status?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_candidate_reviews_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_candidates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      improvement_candidates: {
+        Row: {
+          affected_stages: string[]
+          candidate_type: string
+          confidence_score: number
+          created_at: string
+          evidence_count: number
+          expected_benefit: string
+          explanation: string
+          id: string
+          organization_id: string
+          priority_score: number
+          recurrence_count: number
+          review_status: string
+          risk_posture: string
+          severity: string
+          source_pattern: string
+          structured_metadata: Json
+          summary: string
+          title: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          affected_stages?: string[]
+          candidate_type?: string
+          confidence_score?: number
+          created_at?: string
+          evidence_count?: number
+          expected_benefit?: string
+          explanation?: string
+          id?: string
+          organization_id: string
+          priority_score?: number
+          recurrence_count?: number
+          review_status?: string
+          risk_posture?: string
+          severity?: string
+          source_pattern?: string
+          structured_metadata?: Json
+          summary?: string
+          title?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          affected_stages?: string[]
+          candidate_type?: string
+          confidence_score?: number
+          created_at?: string
+          evidence_count?: number
+          expected_benefit?: string
+          explanation?: string
+          id?: string
+          organization_id?: string
+          priority_score?: number
+          recurrence_count?: number
+          review_status?: string
+          risk_posture?: string
+          severity?: string
+          source_pattern?: string
+          structured_metadata?: Json
+          summary?: string
+          title?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_candidates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_candidates_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       improvement_evidence: {
         Row: {
           affected_stage: string | null
