@@ -43,6 +43,7 @@ import { ArchitectureMigrationDashboard } from "@/components/observability/Archi
 import { ArchitecturePortfolioGovernanceDashboard } from "@/components/observability/ArchitecturePortfolioGovernanceDashboard";
 import { ArchitectureFitnessDashboard } from "@/components/observability/ArchitectureFitnessDashboard";
 import { ChangeAdvisoryOrchestratorDashboard } from "@/components/observability/ChangeAdvisoryOrchestratorDashboard";
+import { PlatformStabilizationV2Dashboard } from "@/components/observability/PlatformStabilizationV2Dashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
