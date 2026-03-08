@@ -73,14 +73,14 @@ The next strategic direction moves from product opportunity governance toward **
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–54)                 COMMITTED (55–56)              RESERVED (57–65)
+  COMPLETE (1–55)                 COMMITTED (56)                 RESERVED (57–65)
   ───────────────►                ───────────────►               ───────────────►
   Foundation → Learning →          Product-Intelligent            Trusted Ecosystem
   Meta → Memory → Gov →            Expansion                     Foundation →
-  Intelligence → Calibration →     Product Opportunity            Controlled Ecosystem
-  Strategy → Stabilization →       Portfolio Governance →         Activation →
-  Advisory → Semantic →            Controlled Ecosystem           System Roundness &
-  Discovery → Simulation →         Readiness                     Operating Completion
+  Intelligence → Calibration →     Controlled Ecosystem           Controlled Ecosystem
+  Strategy → Stabilization →       Readiness                     Activation →
+  Advisory → Semantic →                                          System Roundness &
+  Discovery → Simulation →                                      Operating Completion
   Planning → Sandbox →
   Pilot → Migration →
   Portfolio → Fitness →
@@ -89,7 +89,8 @@ The next strategic direction moves from product opportunity governance toward **
   Convergence → Conv Gov →
   Conv Memory → Op Profiles →
   Product Intelligence Entry →
-  Product Intelligence Ops ✅
+  Product Intelligence Ops →
+  Product Opp Portfolio Gov ✅
 ```
 
 ---
