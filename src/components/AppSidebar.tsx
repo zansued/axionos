@@ -56,6 +56,7 @@ const bottomItems = [
   { title: "Delivery Out.", url: "/delivery-outcomes", icon: GitPullRequestArrow },
   { title: "Post-Deploy", url: "/post-deploy-feedback", icon: Rss },
   { title: "Rel. Tuning", url: "/delivery-tuning", icon: Sliders },
+  { title: "Assurance 2.0", url: "/outcome-assurance", icon: ShieldCheck },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },

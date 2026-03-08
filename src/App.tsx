@@ -125,6 +125,7 @@ const App = () => (
                       <Route path="/delivery-outcomes" element={<ProtectedRoute><DeliveryOutcomes /></ProtectedRoute>} />
                       <Route path="/post-deploy-feedback" element={<ProtectedRoute><PostDeployFeedback /></ProtectedRoute>} />
                       <Route path="/delivery-tuning" element={<ProtectedRoute><DeliveryTuning /></ProtectedRoute>} />
+                      <Route path="/outcome-assurance" element={<ProtectedRoute><OutcomeAssurance /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>

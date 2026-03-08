@@ -799,5 +799,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Delivery Outcome Causality | 1 | 83 |
 | Post-Deploy Feedback Assimilation | 1 | 84 |
 | Reliability-Aware Delivery Tuning | 1 | 85 |
+| Outcome Assurance 2.0 | 1 | 86 |
 | Support | 11 | Various |
-| **Total** | **~136** | |
+| **Total** | **~137** | |

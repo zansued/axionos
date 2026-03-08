@@ -126,7 +126,9 @@ sprints:
   # === SPRINT 85 — Reliability-Aware Delivery Tuning (Complete) ===
   - { sprint: 85, name: "Reliability-Aware Delivery Tuning",                    status: complete, block: "Q", phase: "Autonomous Delivery Optimization", layer: "Reliability-Aware Delivery Tuning Layer" }
 
-  # === BLOCKS Q–S — Reserved Future Horizon ===
-  - { sprint: 86, name: "Delivery Optimization Governance",                      status: reserved, block: "Q", phase: "Reserved", layer: "TBD" }
+  # === SPRINT 86 — Outcome Assurance 2.0 (Complete) ===
+  - { sprint: 86, name: "Outcome Assurance 2.0",                                status: complete, block: "Q", phase: "Autonomous Delivery Optimization", layer: "Outcome Assurance 2.0 Layer" }
+
+  # === BLOCKS R–S — Reserved Future Horizon ===
   - { sprint: "87–90", name: "Advanced Distributed Runtime & Scaled Execution",          status: reserved, block: "R", phase: "Reserved", layer: "TBD" }
   - { sprint: "91–94", name: "Research Sandbox for Architecture Evolution",              status: reserved, block: "S", phase: "Reserved", layer: "TBD" }
