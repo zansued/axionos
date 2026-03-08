@@ -9598,6 +9598,440 @@ export type Database = {
           },
         ]
       }
+      operating_baseline_certifications: {
+        Row: {
+          baseline_snapshot: Json
+          certification_name: string
+          certification_readiness_score: number
+          certification_status: string
+          certified_at: string | null
+          completion_score: number
+          created_at: string
+          evidence_links: Json
+          id: string
+          open_surfaces_accepted: Json
+          organization_id: string
+          residual_risk_accepted: Json
+          reviewer_ref: Json | null
+          round_enough_score: number
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          baseline_snapshot?: Json
+          certification_name?: string
+          certification_readiness_score?: number
+          certification_status?: string
+          certified_at?: string | null
+          completion_score?: number
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          open_surfaces_accepted?: Json
+          organization_id: string
+          residual_risk_accepted?: Json
+          reviewer_ref?: Json | null
+          round_enough_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          baseline_snapshot?: Json
+          certification_name?: string
+          certification_readiness_score?: number
+          certification_status?: string
+          certified_at?: string | null
+          completion_score?: number
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          open_surfaces_accepted?: Json
+          organization_id?: string
+          residual_risk_accepted?: Json
+          reviewer_ref?: Json | null
+          round_enough_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_baseline_certifications_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_baseline_certifications_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operating_completion_assessments: {
+        Row: {
+          assumptions: Json
+          assurance_maturity_score: number
+          canon_integrity_score: number
+          certification_readiness_score: number
+          completion_domain: string
+          completion_scope_id: string | null
+          completion_scope_type: string
+          completion_score: number
+          created_at: string
+          ecosystem_boundedness_score: number
+          evidence_links: Json
+          governance_maturity_score: number
+          id: string
+          model_id: string | null
+          open_surface_score: number
+          organization_id: string
+          pipeline_operability_score: number
+          residual_risk_score: number
+          round_enough_score: number
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          assurance_maturity_score?: number
+          canon_integrity_score?: number
+          certification_readiness_score?: number
+          completion_domain?: string
+          completion_scope_id?: string | null
+          completion_scope_type?: string
+          completion_score?: number
+          created_at?: string
+          ecosystem_boundedness_score?: number
+          evidence_links?: Json
+          governance_maturity_score?: number
+          id?: string
+          model_id?: string | null
+          open_surface_score?: number
+          organization_id: string
+          pipeline_operability_score?: number
+          residual_risk_score?: number
+          round_enough_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          assurance_maturity_score?: number
+          canon_integrity_score?: number
+          certification_readiness_score?: number
+          completion_domain?: string
+          completion_scope_id?: string | null
+          completion_scope_type?: string
+          completion_score?: number
+          created_at?: string
+          ecosystem_boundedness_score?: number
+          evidence_links?: Json
+          governance_maturity_score?: number
+          id?: string
+          model_id?: string | null
+          open_surface_score?: number
+          organization_id?: string
+          pipeline_operability_score?: number
+          residual_risk_score?: number
+          round_enough_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_completion_assessments_model_id_fkey"
+            columns: ["model_id"]
+            isOneToOne: false
+            referencedRelation: "operating_completion_models"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_completion_assessments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_completion_assessments_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operating_completion_gaps: {
+        Row: {
+          assessment_id: string | null
+          created_at: string
+          evidence_links: Json
+          gap_description: string
+          gap_domain: string
+          gap_type: string
+          id: string
+          is_intentional: boolean
+          open_surface_score: number
+          organization_id: string
+          rationale: string
+          residual_risk_score: number
+          severity: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assessment_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          gap_description?: string
+          gap_domain?: string
+          gap_type?: string
+          id?: string
+          is_intentional?: boolean
+          open_surface_score?: number
+          organization_id: string
+          rationale?: string
+          residual_risk_score?: number
+          severity?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assessment_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          gap_description?: string
+          gap_domain?: string
+          gap_type?: string
+          id?: string
+          is_intentional?: boolean
+          open_surface_score?: number
+          organization_id?: string
+          rationale?: string
+          residual_risk_score?: number
+          severity?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_completion_gaps_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "operating_completion_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_completion_gaps_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_completion_gaps_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operating_completion_models: {
+        Row: {
+          certification_criteria: Json
+          completion_domain: string
+          completion_model_name: string
+          completion_scope_type: string
+          created_at: string
+          dimensions: Json
+          id: string
+          organization_id: string
+          round_enough_criteria: Json
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          certification_criteria?: Json
+          completion_domain?: string
+          completion_model_name?: string
+          completion_scope_type?: string
+          created_at?: string
+          dimensions?: Json
+          id?: string
+          organization_id: string
+          round_enough_criteria?: Json
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          certification_criteria?: Json
+          completion_domain?: string
+          completion_model_name?: string
+          completion_scope_type?: string
+          created_at?: string
+          dimensions?: Json
+          id?: string
+          organization_id?: string
+          round_enough_criteria?: Json
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_completion_models_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_completion_models_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operating_completion_outcomes: {
+        Row: {
+          baseline_drift_flags: Json
+          certification_id: string | null
+          created_at: string
+          evidence_links: Json
+          expected_outcomes: Json
+          false_positive_flags: Json
+          id: string
+          organization_id: string
+          outcome_accuracy_score: number
+          realized_outcomes: Json
+          review_id: string | null
+          workspace_id: string | null
+        }
+        Insert: {
+          baseline_drift_flags?: Json
+          certification_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          false_positive_flags?: Json
+          id?: string
+          organization_id: string
+          outcome_accuracy_score?: number
+          realized_outcomes?: Json
+          review_id?: string | null
+          workspace_id?: string | null
+        }
+        Update: {
+          baseline_drift_flags?: Json
+          certification_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          false_positive_flags?: Json
+          id?: string
+          organization_id?: string
+          outcome_accuracy_score?: number
+          realized_outcomes?: Json
+          review_id?: string | null
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_completion_outcomes_certification_id_fkey"
+            columns: ["certification_id"]
+            isOneToOne: false
+            referencedRelation: "operating_baseline_certifications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_completion_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_completion_outcomes_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "operating_completion_reviews"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_completion_outcomes_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operating_completion_reviews: {
+        Row: {
+          assessment_id: string | null
+          created_at: string
+          id: string
+          linked_gaps: Json
+          organization_id: string
+          recommendation_status: string
+          review_notes: string | null
+          review_status: string
+          reviewer_ref: Json | null
+          workspace_id: string | null
+        }
+        Insert: {
+          assessment_id?: string | null
+          created_at?: string
+          id?: string
+          linked_gaps?: Json
+          organization_id: string
+          recommendation_status?: string
+          review_notes?: string | null
+          review_status?: string
+          reviewer_ref?: Json | null
+          workspace_id?: string | null
+        }
+        Update: {
+          assessment_id?: string | null
+          created_at?: string
+          id?: string
+          linked_gaps?: Json
+          organization_id?: string
+          recommendation_status?: string
+          review_notes?: string | null
+          review_status?: string
+          reviewer_ref?: Json | null
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_completion_reviews_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "operating_completion_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_completion_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_completion_reviews_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       operating_profile_bindings: {
         Row: {
           binding_status: string
