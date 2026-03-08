@@ -861,7 +861,23 @@ supabase/functions/
 > - Tenant isolation is absolute (organization_id + RLS)
 > - Forbidden mutation families: pipeline topology, governance rules, billing logic, plan enforcement, execution contracts, hard safety constraints
 > - Every promotion, calibration, strategy experiment, and architecture change preserves rollback capability
-> - All advisory layers (Platform Intelligence, Calibration, Strategy Evolution, Stabilization, Engineering Advisor, Semantic Retrieval, Architecture Simulation/Planning/Sandbox/Pilot/Migration, Portfolio Governance, Fitness Functions, Change Advisory, Tenant Architecture Modes, Economic Optimization, Platform Convergence) remain bounded, explainable, and review-driven
+> - All advisory layers (Platform Intelligence, Calibration, Strategy Evolution, Stabilization, Engineering Advisor, Semantic Retrieval, Architecture Simulation/Planning/Sandbox/Pilot/Migration, Portfolio Governance, Fitness Functions, Change Advisory, Tenant Architecture Modes, Economic Optimization, Platform Convergence, Convergence Governance) remain bounded, explainable, and review-driven
+
+---
+
+## 16. Forthcoming Architectural Direction
+
+> **Status:** Proposed — not yet implemented.
+
+After architecture-scaled hardening (Sprints 46–48) and convergence governance (Sprints 49–50), the platform is expected to evolve toward:
+
+1. **Institutional Convergence Memory** — Capturing approved convergence decisions and their outcomes as persistent institutional memory that enriches future advisory, calibration, and governance actions.
+2. **Operating Profile Packaging** — Composing proven policies, convergence outcomes, and tenant-specific tuning into versioned, assignable operating profiles and policy packs.
+3. **Bounded Product Intelligence** — Connecting execution outcomes to product-level signals in an advisory-first, governance-preserving manner.
+
+These directions reuse existing architectural layers (governance, memory, observability, policy, adaptive routing) without expanding the Agent OS plane structure. The focus shifts from building new capability planes to institutionalizing and packaging the intelligence already present.
+
+**Governing constraint:** All forthcoming directions remain subject to advisory-first, governance-before-autonomy principles. No autonomous architecture mutation.
 
 ---
 

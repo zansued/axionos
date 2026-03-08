@@ -229,6 +229,33 @@
 
 ---
 
+### Phase 14: Convergence Governance (Sprint 50) — ✅ COMPLETE
+
+**Goal:** Governed lifecycle for convergence promotion, bounded merge, retention, deprecation, and retirement decisions.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 50 | Convergence Governance & Promotion Layer | Convergence Governance Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 50: Governance case building, promotion readiness evaluation, bounded merge planning, retention justification, deprecation/retirement planning, rollout assessment, outcome validation, review lifecycle
+
+---
+
+## Proposed Next Strategic Arc (Sprints 51–53)
+
+> **Status:** 📋 Proposed — not yet implemented. Subject to revision based on operational outcomes.
+
+| Sprint | Name | Objective | Phase |
+|--------|------|-----------|-------|
+| 51 | Institutional Convergence Memory Layer | Turn convergence decisions and outcomes into persistent institutional memory | Institutionalization |
+| 52 | Operating Profiles & Policy Packs | Package memory and proven policies into composable, tenant-assignable profiles | Institutionalization |
+| 53 | Product Intelligence Entry | Bounded, advisory-first product-level intelligence | Product Intelligence |
+
+These sprints will be formalized when implementation begins.
+
+---
+
 ## Capability Verification Matrix
 
 | Capability | Status | Sprint | Key Modules |
@@ -372,5 +399,6 @@
 | Tenant Architecture Modes | 1 | 47 |
 | Economic Optimization | 1 | 48 |
 | Platform Convergence | 1 | 49 |
+| Convergence Governance | 1 | 50 |
 | Support | 11 | Various |
-| **Total** | **~94** | |
+| **Total** | **~95** | |

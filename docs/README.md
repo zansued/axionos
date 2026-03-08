@@ -43,6 +43,18 @@
 
 ---
 
+## Sprint Status Taxonomy
+
+| Status | Meaning | Where Tracked |
+|--------|---------|---------------|
+| `complete` | Implemented and verified | `PLAN.md`, `registry/sprints.yml` |
+| `planned` | Next in queue, scope defined | `PLAN.md`, `registry/sprints.yml` |
+| `proposed` | Strategic direction, not yet scoped for implementation | `ROADMAP.md`, `registry/sprints.yml` |
+
+**Canon vs Proposal:** Sprints 1–50 are canonical (implemented). Sprints 51–53 are proposed strategic direction and may be revised before implementation.
+
+---
+
 ## Normalization Rules
 
 - Each document has a single authority boundary (defined in `registry/doc-authority.yml`)
@@ -52,4 +64,5 @@
 - Architectural layer definitions are canonical in `ARCHITECTURE.md` only
 - Module/contract specifications are canonical in `AGENTS.md` only
 - Phase UX contracts are canonical in `PIPELINE_CONTRACTS.md` only
-- Derived summaries (e.g. "33 layers active" in ARCHITECTURE.md header) are allowed when clearly referencing the canonical source
+- Proposed future sprints are canonical in `ROADMAP.md` (strategic direction) and `registry/sprints.yml` (metadata)
+- Derived summaries (e.g. "35 layers active" in ARCHITECTURE.md header) are allowed when clearly referencing the canonical source
