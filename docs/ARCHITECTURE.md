@@ -733,6 +733,7 @@ supabase/functions/
 | 45 | Architecture Rollout Sandbox | 40 | Bounded rehearsal, migration sequencing, fragility analysis, rollback viability |
 | 46 | Architecture Rollout Pilot Governance | 41 | Bounded pilots, baseline comparison, instant rollback, pilot guardrails |
 | 47 | Controlled Architecture Migration Execution | 42 | Staged rollout, checkpoint gates, tenant-safe slicing, deterministic rollback |
+| 48 | Architecture Portfolio Governance | 43 | Portfolio-level prioritization, conflict detection, cumulative blast radius, concurrency guard |
 
 ### Frozen
 

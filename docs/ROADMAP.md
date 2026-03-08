@@ -17,7 +17,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 27 architectural layers active |
+| **System State** | 28 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -33,6 +33,7 @@
 | **Architecture Sandbox** | Active — bounded rollout rehearsal + migration readiness + fragility analysis |
 | **Architecture Pilot** | Active — bounded real-world pilot governance + baseline comparison + instant rollback |
 | **Architecture Migration** | Active — staged, checkpoint-gated, reversible migration execution |
+| **Architecture Portfolio** | Active — portfolio-level governance, conflict detection, cumulative blast radius |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
