@@ -174,8 +174,9 @@ The next arc packages that memory into reusable operating profiles and opens a b
 | Scaled | 46–48 | ✅ Complete | Architecture-scaled: stability + tenants + economics |
 | Convergence | 49 | ✅ Complete | Platform convergence: specialization vs fragmentation |
 | Convergence Gov | 50 | ✅ Complete | Convergence governance: promotion + merge + retention + retirement |
+| Convergence Memory | 51 | ✅ Complete | Institutional convergence memory: durable knowledge + patterns + evidence |
 
-> ✅ All six architecture blocks are complete. The platform is ready for next strategic horizon (51+).
+> ✅ All seven architecture blocks are complete. The platform is ready for next strategic horizon (52+).
 
 ---
 
