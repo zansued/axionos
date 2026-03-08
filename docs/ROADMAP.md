@@ -65,7 +65,7 @@
 | **Institutional Outcome Assurance** | Active — expected vs realized outcome analysis, drift detection, cross-layer assurance, remediation |
 | **Canon Integrity & Drift Governance** | Active — cross-doc consistency, principle conformance, mutation boundary integrity, canon alignment |
 | **User Journey Orchestration** | Active — canonical visible journey, stage transitions, approval gates, artifact visibility, deployment readiness |
-| **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
+| **Role-Based Experience** | Active — role-aware surfaces, navigation filtering, complexity leakage detection, approval visibility routing |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
