@@ -732,6 +732,7 @@ supabase/functions/
 | 44 | Architecture Change Planning | 39 | Implementation plans, blast radius, validation/rollback blueprints |
 | 45 | Architecture Rollout Sandbox | 40 | Bounded rehearsal, migration sequencing, fragility analysis, rollback viability |
 | 46 | Architecture Rollout Pilot Governance | 41 | Bounded pilots, baseline comparison, instant rollback, pilot guardrails |
+| 47 | Controlled Architecture Migration Execution | 42 | Staged rollout, checkpoint gates, tenant-safe slicing, deterministic rollback |
 
 ### Frozen
 
