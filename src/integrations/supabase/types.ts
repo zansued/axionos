@@ -14499,6 +14499,244 @@ export type Database = {
         }
         Relationships: []
       }
+      outcome_assurance_factors: {
+        Row: {
+          confidence: number
+          created_at: string
+          evidence_refs: Json
+          explanation: string
+          factor_direction: string
+          factor_label: string
+          factor_type: string
+          id: string
+          organization_id: string
+          posture_id: string
+          weight: number
+        }
+        Insert: {
+          confidence?: number
+          created_at?: string
+          evidence_refs?: Json
+          explanation?: string
+          factor_direction?: string
+          factor_label?: string
+          factor_type?: string
+          id?: string
+          organization_id: string
+          posture_id: string
+          weight?: number
+        }
+        Update: {
+          confidence?: number
+          created_at?: string
+          evidence_refs?: Json
+          explanation?: string
+          factor_direction?: string
+          factor_label?: string
+          factor_type?: string
+          id?: string
+          organization_id?: string
+          posture_id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outcome_assurance_factors_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "outcome_assurance_factors_posture_id_fkey"
+            columns: ["posture_id"]
+            isOneToOne: false
+            referencedRelation: "outcome_assurance_postures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outcome_assurance_postures: {
+        Row: {
+          audit_metadata: Json
+          blocker_count: number
+          blockers: Json
+          confidence_score: number
+          created_at: string
+          evidence_refs: Json
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          posture_label: string
+          posture_status: string
+          readiness_score: number
+          reliability_score: number
+          review_summary: string
+          risk_score: number
+          uncertainty_score: number
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          audit_metadata?: Json
+          blocker_count?: number
+          blockers?: Json
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          posture_label?: string
+          posture_status?: string
+          readiness_score?: number
+          reliability_score?: number
+          review_summary?: string
+          risk_score?: number
+          uncertainty_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          audit_metadata?: Json
+          blocker_count?: number
+          blockers?: Json
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          posture_label?: string
+          posture_status?: string
+          readiness_score?: number
+          reliability_score?: number
+          review_summary?: string
+          risk_score?: number
+          uncertainty_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outcome_assurance_postures_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "outcome_assurance_postures_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "outcome_assurance_postures_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outcome_assurance_recommendations: {
+        Row: {
+          created_at: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          posture_id: string
+          priority_score: number
+          recommendation_text: string
+          recommendation_type: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          posture_id: string
+          priority_score?: number
+          recommendation_text?: string
+          recommendation_type?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          posture_id?: string
+          priority_score?: number
+          recommendation_text?: string
+          recommendation_type?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outcome_assurance_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "outcome_assurance_recommendations_posture_id_fkey"
+            columns: ["posture_id"]
+            isOneToOne: false
+            referencedRelation: "outcome_assurance_postures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outcome_assurance_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          posture_id: string
+          review_notes: string
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          posture_id: string
+          review_notes?: string
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          posture_id?: string
+          review_notes?: string
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outcome_assurance_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "outcome_assurance_reviews_posture_id_fkey"
+            columns: ["posture_id"]
+            isOneToOne: false
+            referencedRelation: "outcome_assurance_postures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pilot_capability_submissions: {
         Row: {
           affected_surfaces: Json
