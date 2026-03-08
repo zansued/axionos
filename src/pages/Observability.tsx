@@ -377,6 +377,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
+          {/* ===== PRODUCT OPPORTUNITY PORTFOLIO ===== */}
+          <TabsContent value="prod-portfolio" className="mt-4">
+            <ProductOpportunityPortfolioDashboard />
+          </TabsContent>
+
           {/* ===== PRODUCT INTELLIGENCE OPERATIONS ===== */}
           <TabsContent value="product-ops" className="mt-4">
             <ProductIntelligenceOperationsDashboard />
