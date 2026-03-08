@@ -27,10 +27,12 @@
 ## Visão Geral do Ciclo
 
 ```
-  Idea → Discovery → Architecture → Engineering → Deploy
-    │         │            │              │           │
-    │         │            │              │           └─ Repositório validado e publicado
-    │         │            │              └─ Código gerado, testado e reparado
+  Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software
+    │         │            │              │            │          │          │
+    │         │            │              │            │          │          └─ Software acessível, URL publicada, handoff completo
+    │         │            │              │            │          └─ Repositório publicado e deploy executado
+    │         │            │              │            └─ Código validado, reparado, build OK
+    │         │            │              └─ Código gerado: schema, lógica, API, UI
     │         │            └─ Plano técnico completo com simulação
     │         └─ Oportunidade validada com mercado e estratégia
     └─ Captura da ideia bruta do usuário
