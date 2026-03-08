@@ -760,6 +760,133 @@ export type Database = {
         }
         Relationships: []
       }
+      architecture_change_plan_reviews: {
+        Row: {
+          blocker_reasons: Json | null
+          created_at: string
+          id: string
+          linked_changes: Json | null
+          organization_id: string
+          plan_id: string
+          review_notes: string | null
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          blocker_reasons?: Json | null
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id: string
+          plan_id: string
+          review_notes?: string | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          blocker_reasons?: Json | null
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id?: string
+          plan_id?: string
+          review_notes?: string | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_change_plan_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_change_plan_reviews_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_change_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_change_plans: {
+        Row: {
+          blast_radius: Json | null
+          created_at: string
+          dependency_graph: Json | null
+          id: string
+          implementation_risk: string
+          organization_id: string
+          plan_name: string
+          plan_payload: Json
+          proposal_id: string
+          readiness_score: number | null
+          rollback_blueprint: Json | null
+          simulation_outcome_id: string
+          status: string
+          target_scope: string
+          validation_requirements: Json | null
+        }
+        Insert: {
+          blast_radius?: Json | null
+          created_at?: string
+          dependency_graph?: Json | null
+          id?: string
+          implementation_risk?: string
+          organization_id: string
+          plan_name: string
+          plan_payload?: Json
+          proposal_id: string
+          readiness_score?: number | null
+          rollback_blueprint?: Json | null
+          simulation_outcome_id: string
+          status?: string
+          target_scope: string
+          validation_requirements?: Json | null
+        }
+        Update: {
+          blast_radius?: Json | null
+          created_at?: string
+          dependency_graph?: Json | null
+          id?: string
+          implementation_risk?: string
+          organization_id?: string
+          plan_name?: string
+          plan_payload?: Json
+          proposal_id?: string
+          readiness_score?: number | null
+          rollback_blueprint?: Json | null
+          simulation_outcome_id?: string
+          status?: string
+          target_scope?: string
+          validation_requirements?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_change_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_change_plans_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_change_proposals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_change_plans_simulation_outcome_id_fkey"
+            columns: ["simulation_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_simulation_outcomes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_change_proposals: {
         Row: {
           confidence_score: number | null
@@ -816,6 +943,53 @@ export type Database = {
             columns: ["source_recommendation_id"]
             isOneToOne: false
             referencedRelation: "discovery_architecture_recommendations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_rollout_mode_profiles: {
+        Row: {
+          created_at: string
+          id: string
+          max_scope_breadth: number | null
+          organization_id: string
+          profile_key: string
+          profile_name: string
+          required_review_depth: string
+          rollout_constraints: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          max_scope_breadth?: number | null
+          organization_id: string
+          profile_key: string
+          profile_name: string
+          required_review_depth?: string
+          rollout_constraints?: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          max_scope_breadth?: number | null
+          organization_id?: string
+          profile_key?: string
+          profile_name?: string
+          required_review_depth?: string
+          rollout_constraints?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_rollout_mode_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
