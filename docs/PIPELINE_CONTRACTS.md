@@ -387,11 +387,11 @@
 
 ---
 
-## Interação com Meta-Agents (Planejado — Não Implementado)
+## Interação com Meta-Agents (Active — Sprints 13+)
 
-> **Status:** 📋 Arquitetura planejada — Não implementado
+> **Status:** ✅ Active — Meta-Agents v1.4 operational (Sprints 13–20)
 
-Quando implementados, Meta-Agents interagirão com o pipeline **apenas** através de:
+Meta-Agents interact with the pipeline **only** through read access:
 
 | Fonte | Tipo de Acesso | Propósito |
 |-------|---------------|-----------|

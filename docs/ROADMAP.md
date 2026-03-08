@@ -133,82 +133,19 @@ Platform hardening for scale, tenant diversity, and economic efficiency. Stabili
 
 ---
 
-## Kernel — What Remains Active
+## Active Kernel
 
-| Module | Status |
-|--------|--------|
-| 32-stage deterministic pipeline | ✅ Operational |
-| Project Brain (knowledge graph) | ✅ Operational |
-| AI Efficiency Layer (compressor + cache + router) | ✅ Operational |
-| Smart Context Window (~60-80% token reduction) | ✅ Operational |
-| DAG Execution Engine (6 workers) | ✅ Operational |
-| Runtime Validation (tsc + vite via CI) | ✅ Operational |
-| Autonomous Build Repair + Fix Orchestrator | ✅ Operational |
-| Evidence-Oriented Repair Loop | ✅ Operational |
-| Error Pattern Library | ✅ Operational |
-| Preventive Engineering Layer | ✅ Operational |
-| Adaptive Repair Routing | ✅ Operational |
-| Learning Foundation | ✅ Operational |
-| Governance (gates, SLAs, audit logs) | ✅ Operational |
-| Product-Level Observability | ✅ Operational |
-| Stage & Agent IO Contracts | ✅ Implemented |
-| Commercial Readiness (plans, billing, enforcement) | ✅ Operational |
-| Learning Agents v1 (5 engines + dashboard) | ✅ Operational |
-| Meta-Agents v1.4 (4 types + quality + calibration) | ✅ Operational |
-| Proposal Quality Feedback Loop | ✅ Operational |
-| Advisory Calibration Layer | ✅ Operational |
-| Prompt Optimization (A/B + Bounded Promotion) | ✅ Operational |
-| Self-Improving Fix Agents v2 (Repair Policies) | ✅ Operational |
-| Agent Memory Layer | ✅ Operational |
-| Predictive Error Detection | ✅ Operational |
-| Cross-Stage Policy Synthesis (LA v2) | ✅ Operational |
-| Execution Policy Intelligence | ✅ Operational |
-| Execution Mode Portfolio Optimization | ✅ Operational |
-| Tenant/Workspace Adaptive Tuning | ✅ Operational |
-| Platform Intelligence (health model) | ✅ Operational |
-| Platform Self-Calibration | ✅ Operational |
-| Execution Strategy Evolution | ✅ Operational |
-| Strategy Portfolio Governance | ✅ Operational |
-| Platform Self-Stabilization | ✅ Operational |
-| Autonomous Engineering Advisor | ✅ Operational |
-| Semantic Retrieval & Embedding Memory | ✅ Operational |
-| Discovery-Driven Architecture Signals | ✅ Operational |
-| Architecture Change Simulation & Governance | ✅ Operational |
-| Architecture Change Planning & Rollout Readiness | ✅ Operational |
-| Architecture Rollout Sandbox | ✅ Operational |
-| Architecture Rollout Pilot Governance | ✅ Operational |
-| Controlled Architecture Migration Execution | ✅ Operational |
-| Architecture Portfolio Governance | ✅ Operational |
-| Architecture Fitness Functions | ✅ Operational |
-| Autonomous Change Advisory Orchestrator | ✅ Operational |
-| Platform Self-Stabilization v2 | ✅ Operational |
-| Tenant-Aware Architecture Modes | ✅ Operational |
-| Economic Optimization Layer | ✅ Operational |
+> **Full module inventory:** [AGENTS.md](AGENTS.md) · **Architecture details:** [ARCHITECTURE.md](ARCHITECTURE.md)
 
-### What to Freeze
+All 33 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, and the economic optimization layer.
+
+### Frozen Areas
 
 | Area | Reason |
 |------|--------|
 | Marketplace ecosystem | Not needed until product intelligence layer |
-| Global capability registry expansion | Current architecture is sufficient |
 | Advanced distributed runtime | Current runtime handles workload adequately |
-| Advanced multi-agent coordination | Existing coordination patterns meet current needs |
-
----
-
-## Agent OS v1.0 — Reference Architecture (Complete)
-
-The Agent OS is fully designed with 14 modules across 5 planes. No expansion needed.
-
-| Plane | Modules | Status |
-|-------|---------|--------|
-| **Core** | Runtime Protocol, Capability Model, Core Types | ✅ Complete |
-| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing | ✅ Complete |
-| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Partial (advanced features frozen) |
-| **Data** | Artifact Store, Memory System, Observability | ✅ Complete |
-| **Ecosystem** | Marketplace & Global Capability Registry | ❄️ Frozen |
-
-Full specification: [AGENTS.md](AGENTS.md) | Pipeline contracts: [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md)
+| Advanced multi-agent coordination | Existing patterns meet current needs |
 
 ---
 

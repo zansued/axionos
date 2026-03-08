@@ -199,15 +199,15 @@
 
 ---
 
-### Phase 12: Architecture-Scaled (Sprints 46–48) — 📋 PLANNED
+### Phase 12: Architecture-Scaled (Sprints 46–48) — ✅ COMPLETE
 
 **Goal:** Platform hardening for scale, tenant diversity, and economic efficiency.
 
-| Sprint | Capability | Architectural Layer |
-|--------|-----------|-------------------|
-| 46 | Platform Self-Stabilization v2 | Platform Stabilization v2 Layer |
-| 47 | Tenant-Aware Architecture Modes | Tenant Architecture Layer |
-| 48 | Economic Optimization Layer | Economic Optimization Layer |
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 46 | Platform Self-Stabilization v2 | Platform Stabilization v2 Layer | ✅ Complete |
+| 47 | Tenant-Aware Architecture Modes | Tenant Architecture Layer | ✅ Complete |
+| 48 | Economic Optimization Layer | Economic Optimization Layer | ✅ Complete |
 
 **Key Milestones:**
 - Sprint 46: Oscillation suppression during rollout, adaptive freeze, stabilization-aware migration gating
