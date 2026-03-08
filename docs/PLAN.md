@@ -452,6 +452,8 @@ This document serves as the canonical sprint execution ledger. The following con
 | `_shared/architecture-rollout/` | 7 | Migration rehearsal, fragility analyzer, readiness assessor, rollback viability, guardrails, review manager, explainer |
 | `_shared/operating-profiles/` | 9 | Profile builder, policy pack composer, fit analyzer, comparator, override manager, adoption planner, outcome validator, governance calibrator, explainer |
 | `_shared/product-intelligence-entry/` | 8 | Signal ingestor, friction analyzer, opportunity detector, architecture/profile correlators, priority scorer, segmentation analyzer, explainer |
+| `_shared/product-intelligence-operations/` | 9 | Product benchmark engine, signal quality, architecture/profile correlators, priority, segmentation, recommendation, outcome validator, explainer |
+| `_shared/product-opportunity-portfolio/` | 9 | Portfolio builder, ranker, conflict detector, capacity scorer, decision engine, balance analyzer, outcome validator, watchlist manager, explainer |
 
 ---
 
