@@ -51,6 +51,7 @@ import MarketplaceOutcomes from "./pages/MarketplaceOutcomes";
 import DeliveryOutcomes from "./pages/DeliveryOutcomes";
 import PostDeployFeedback from "./pages/PostDeployFeedback";
 import DeliveryTuning from "./pages/DeliveryTuning";
+import OutcomeAssurance from "./pages/OutcomeAssurance";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -124,6 +125,7 @@ const App = () => (
                       <Route path="/delivery-outcomes" element={<ProtectedRoute><DeliveryOutcomes /></ProtectedRoute>} />
                       <Route path="/post-deploy-feedback" element={<ProtectedRoute><PostDeployFeedback /></ProtectedRoute>} />
                       <Route path="/delivery-tuning" element={<ProtectedRoute><DeliveryTuning /></ProtectedRoute>} />
+                      <Route path="/outcome-assurance" element={<ProtectedRoute><OutcomeAssurance /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
