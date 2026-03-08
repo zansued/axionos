@@ -121,31 +121,34 @@ serve(async (req) => {
 
     const memoryConfig = MEMORY_CAPTURE_MAP[action];
     if (memoryConfig) {
-      await sc.from("engineering_memory_entries").insert({
-        organization_id: artifact.organization_id,
-        memory_type: memoryConfig.memory_type,
-        memory_subtype: memoryConfig.memory_subtype,
-        title: `${action}: ${artifact.title}`,
-        summary: `Meta-artifact ${artifact_id} transitioned from ${previousStatus} to ${action}. Type: ${artifact.created_by_meta_agent}. Recommendation: ${artifact.recommendation_id}.`,
-        source_type: "meta_agent_artifact",
-        source_id: artifact_id,
-        related_component: artifact.created_by_meta_agent,
-        confidence_score: 0.8,
-        relevance_score: 0.9,
-        tags: [action, artifact.created_by_meta_agent, "meta_artifact"],
-      }).then(({ error: memErr }) => {
+      try {
+        const { error: memErr } = await sc.from("engineering_memory_entries").insert({
+          organization_id: artifact.organization_id,
+          memory_type: memoryConfig.memory_type,
+          memory_subtype: memoryConfig.memory_subtype,
+          title: `${action}: ${artifact.title}`,
+          summary: `Meta-artifact ${artifact_id} transitioned from ${previousStatus} to ${action}. Type: ${artifact.created_by_meta_agent}. Recommendation: ${artifact.recommendation_id}.`,
+          source_type: "meta_agent_artifact",
+          source_id: artifact_id,
+          related_component: artifact.created_by_meta_agent,
+          confidence_score: 0.8,
+          relevance_score: 0.9,
+          tags: [action, artifact.created_by_meta_agent, "meta_artifact"],
+        });
         if (memErr) console.error("Memory capture error:", memErr);
-      });
+      } catch (e) { console.error("Memory capture error:", e); }
     }
 
     // ── Sprint 19: Record quality feedback (fire-and-forget) ──
-    const artFull = await sc
-      .from("meta_agent_artifacts")
-      .select("created_at, artifact_type, content")
-      .eq("id", artifact_id)
-      .single()
-      .then(({ data }) => data)
-      .catch(() => null);
+    let artFull: any = null;
+    try {
+      const { data } = await sc
+        .from("meta_agent_artifacts")
+        .select("created_at, artifact_type, content")
+        .eq("id", artifact_id)
+        .single();
+      artFull = data;
+    } catch { /* ignore */ }
 
     if (artFull) {
       const content = artFull.content as any;
@@ -208,20 +211,22 @@ serve(async (req) => {
         notes: review_notes,
       });
 
-      await sc.from("proposal_quality_feedback").insert({
-        organization_id: artifact.organization_id,
-        entity_type: "artifact",
-        entity_id: artifact_id,
-        source_meta_agent_type: artifact.created_by_meta_agent || "",
-        artifact_type: artFull.artifact_type,
-        decision_signal: decisionMap[action] || action,
-        follow_through_signal: action === "implemented" ? "implemented" : "unknown",
-        quality_score: fbScores.quality_score,
-        usefulness_score: fbScores.usefulness_score,
-        historical_support_score: fbScores.historical_support_score,
-        historical_conflict_score: fbScores.historical_conflict_score,
-        notes: review_notes || null,
-      }).catch((e: any) => console.error("Feedback record error:", e));
+      try {
+        await sc.from("proposal_quality_feedback").insert({
+          organization_id: artifact.organization_id,
+          entity_type: "artifact",
+          entity_id: artifact_id,
+          source_meta_agent_type: artifact.created_by_meta_agent || "",
+          artifact_type: artFull.artifact_type,
+          decision_signal: decisionMap[action] || action,
+          follow_through_signal: action === "implemented" ? "implemented" : "unknown",
+          quality_score: fbScores.quality_score,
+          usefulness_score: fbScores.usefulness_score,
+          historical_support_score: fbScores.historical_support_score,
+          historical_conflict_score: fbScores.historical_conflict_score,
+          notes: review_notes || null,
+        });
+      } catch (e: any) { console.error("Feedback record error:", e); }
     }
 
     return jsonResponse({
