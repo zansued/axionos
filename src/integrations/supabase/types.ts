@@ -7452,6 +7452,254 @@ export type Database = {
           },
         ]
       }
+      delivery_reliability_postures: {
+        Row: {
+          created_at: string
+          delivery_confidence: number
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          posture_context: Json
+          posture_label: string
+          regression_frequency: number
+          reliability_score: number
+          risk_posture: string
+          rollback_frequency: number
+          updated_at: string
+          validation_stability: number
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          delivery_confidence?: number
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          posture_context?: Json
+          posture_label?: string
+          regression_frequency?: number
+          reliability_score?: number
+          risk_posture?: string
+          rollback_frequency?: number
+          updated_at?: string
+          validation_stability?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          delivery_confidence?: number
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          posture_context?: Json
+          posture_label?: string
+          regression_frequency?: number
+          reliability_score?: number
+          risk_posture?: string
+          rollback_frequency?: number
+          updated_at?: string
+          validation_stability?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_reliability_postures_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_reliability_postures_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_reliability_postures_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_tuning_recommendations: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          evidence_refs: Json
+          expected_benefit: string
+          id: string
+          organization_id: string
+          posture_id: string | null
+          reliability_rationale: string
+          risk_posture: string
+          status: string
+          trade_off_posture: string
+          tuning_target: string
+          uncertainty_notes: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_benefit?: string
+          id?: string
+          organization_id: string
+          posture_id?: string | null
+          reliability_rationale?: string
+          risk_posture?: string
+          status?: string
+          trade_off_posture?: string
+          tuning_target?: string
+          uncertainty_notes?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_benefit?: string
+          id?: string
+          organization_id?: string
+          posture_id?: string | null
+          reliability_rationale?: string
+          risk_posture?: string
+          status?: string
+          trade_off_posture?: string
+          tuning_target?: string
+          uncertainty_notes?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_tuning_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_tuning_recommendations_posture_id_fkey"
+            columns: ["posture_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_reliability_postures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_tuning_recommendations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_tuning_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          new_status: string
+          organization_id: string
+          previous_status: string
+          recommendation_id: string
+          review_action: string
+          review_notes: string
+          reviewer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          new_status?: string
+          organization_id: string
+          previous_status?: string
+          recommendation_id: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          new_status?: string
+          organization_id?: string
+          previous_status?: string
+          recommendation_id?: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_tuning_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_tuning_reviews_recommendation_id_fkey"
+            columns: ["recommendation_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_tuning_recommendations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_tuning_signals: {
+        Row: {
+          created_at: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          posture_id: string | null
+          severity: string
+          signal_summary: string
+          signal_type: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          posture_id?: string | null
+          severity?: string
+          signal_summary?: string
+          signal_type?: string
+        }
+        Update: {
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          posture_id?: string | null
+          severity?: string
+          signal_summary?: string
+          signal_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_tuning_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_tuning_signals_posture_id_fkey"
+            columns: ["posture_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_reliability_postures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deploy_assurance_assessments: {
         Row: {
           assessment_status: string
