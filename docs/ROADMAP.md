@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-08):** Sprint 39 — Architecture Change Planning & Rollout Readiness. Accepted simulations can now become governed implementation plans with blast radius, validation, rollback blueprints, and readiness scoring. Previous: Architecture Change Simulation & Governance (Sprint 38).
+> **What changed (2026-03-08):** Sprint 40 — Architecture Rollout Sandbox & Controlled Migration Readiness. Approved plans can now be rehearsed in bounded sandboxes with migration sequencing, fragility analysis, rollback viability, and controlled readiness scoring. Previous: Architecture Change Planning & Rollout Readiness (Sprint 39).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
