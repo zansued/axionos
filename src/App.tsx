@@ -57,6 +57,7 @@ import CrossRegionRecovery from "./pages/CrossRegionRecovery";
 import TenantRuntime from "./pages/TenantRuntime";
 import LargeScaleOrchestration from "./pages/LargeScaleOrchestration";
 import ArchitectureHypotheses from "./pages/ArchitectureHypotheses";
+import ResearchSandbox from "./pages/ResearchSandbox";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -136,6 +137,7 @@ const App = () => (
                       <Route path="/tenant-runtime" element={<ProtectedRoute><TenantRuntime /></ProtectedRoute>} />
                       <Route path="/large-scale-orchestration" element={<ProtectedRoute><LargeScaleOrchestration /></ProtectedRoute>} />
                       <Route path="/architecture-hypotheses" element={<ProtectedRoute><ArchitectureHypotheses /></ProtectedRoute>} />
+                      <Route path="/research-sandbox" element={<ProtectedRoute><ResearchSandbox /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
