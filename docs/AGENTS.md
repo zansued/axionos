@@ -1348,7 +1348,7 @@ Architecture Rollout Sandbox allows approved architecture change plans to be reh
 
 > **Status:** No Agent OS plane expansion is planned or required.
 
-Sprints 51–58 (Institutional Convergence Memory, Operating Profiles, Product Intelligence Entry, Product Intelligence Operations, Product Opportunity Portfolio Governance, Controlled Ecosystem Readiness, Capability Exposure Governance, External Trust & Admission) have been completed, reusing existing Agent OS planes:
+Sprints 51–60 (Institutional Convergence Memory, Operating Profiles, Product Intelligence Entry, Product Intelligence Operations, Product Opportunity Portfolio Governance, Controlled Ecosystem Readiness, Capability Exposure Governance, External Trust & Admission, Ecosystem Simulation & Sandbox, Limited Marketplace Pilot) have been completed, reusing existing Agent OS planes:
 
 | Completed Capability | Existing Planes/Modules Used |
 |---------------------|------------------------------|
@@ -1360,9 +1360,11 @@ Sprints 51–58 (Institutional Convergence Memory, Operating Profiles, Product I
 | Controlled Ecosystem Readiness | Control Plane (Governance, Policy Engine), Data Plane (Memory, Observability), Execution Plane (Orchestrator) |
 | Capability Exposure Governance | Control Plane (Governance, Policy Engine, Selection Engine), Data Plane (Memory, Observability), Execution Plane (Orchestrator) |
 | External Trust & Admission | Control Plane (Governance, Policy Engine, Selection Engine), Data Plane (Memory, Observability), Execution Plane (Orchestrator) |
+| Ecosystem Simulation & Sandbox | Execution Plane (Orchestrator), Data Plane (Memory, Observability), Control Plane (Governance, Policy Engine) |
+| Limited Marketplace Pilot | Ecosystem Plane (bounded pilot activation), Control Plane (Governance, Policy Engine, Selection Engine), Data Plane (Memory, Observability), Execution Plane (Orchestrator) |
 
-The committed future sprint (Sprint 59: ecosystem simulation & sandbox) and reserved horizon (Sprints 60–65: controlled ecosystem activation, operating completion) are higher-order governance and orchestration concerns. They reuse existing Agent OS planes without expansion.
+The committed future sprint (Sprint 61: capability registry governance) and reserved horizon (Sprints 62–65: multi-party governance, operating completion) are higher-order governance and orchestration concerns. They reuse existing Agent OS planes without expansion.
 
-The Ecosystem Plane remains frozen. Its activation is staged across Sprints 60–62 in the reserved horizon and will not begin until each preceding sprint is complete and explicitly approved. Any future ecosystem-plane activation remains governed and incremental.
+The Ecosystem Plane has been activated in bounded pilot-only mode (Sprint 60). Full marketplace activation is staged across Sprints 61–62 and will not expand without explicit human approval. Any future ecosystem-plane expansion remains governed and incremental.
 
 The 5-plane, 18-module architecture remains stable.

@@ -3,7 +3,7 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-08
-> **Current state:** Level 5 — Institutional Engineering Memory Platform. 43 architectural layers active (through Sprint 58).
+> **Current state:** Level 5 — Institutional Engineering Memory Platform. 45 architectural layers active (through Sprint 60).
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -867,7 +867,7 @@ supabase/functions/
 > - Tenant isolation is absolute (organization_id + RLS)
 > - Forbidden mutation families: pipeline topology, governance rules, billing logic, plan enforcement, execution contracts, hard safety constraints
 > - Every promotion, calibration, strategy experiment, and architecture change preserves rollback capability
-> - All advisory layers (Platform Intelligence, Calibration, Strategy Evolution, Stabilization, Engineering Advisor, Semantic Retrieval, Architecture Simulation/Planning/Sandbox/Pilot/Migration, Portfolio Governance, Fitness Functions, Change Advisory, Tenant Architecture Modes, Economic Optimization, Platform Convergence, Convergence Governance, Institutional Convergence Memory, Operating Profiles & Policy Packs, Product Intelligence Entry, Product Intelligence Operations, Product Opportunity Portfolio Governance, Controlled Ecosystem Readiness, Capability Exposure Governance, External Trust & Admission) remain bounded, explainable, and review-driven
+> - All advisory layers (Platform Intelligence, Calibration, Strategy Evolution, Stabilization, Engineering Advisor, Semantic Retrieval, Architecture Simulation/Planning/Sandbox/Pilot/Migration, Portfolio Governance, Fitness Functions, Change Advisory, Tenant Architecture Modes, Economic Optimization, Platform Convergence, Convergence Governance, Institutional Convergence Memory, Operating Profiles & Policy Packs, Product Intelligence Entry, Product Intelligence Operations, Product Opportunity Portfolio Governance, Controlled Ecosystem Readiness, Capability Exposure Governance, External Trust & Admission, Ecosystem Simulation & Sandbox, Limited Marketplace Pilot) remain bounded, explainable, and review-driven
 
 ---
 
@@ -875,9 +875,9 @@ supabase/functions/
 
 > **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-After 58 sprints completing the full arc from deterministic execution through external trust & admission, the platform's architectural direction moves toward:
+After 60 sprints completing the full arc from deterministic execution through limited marketplace pilot, the platform's architectural direction moves toward:
 
-### Completed Institutionalization Arc (Sprints 49–58)
+### Completed Institutionalization & Ecosystem Arc (Sprints 49–60)
 - ✅ Platform convergence and convergence governance (49–50)
 - ✅ Institutional convergence memory (51)
 - ✅ Operating profiles and policy packs (52)
@@ -887,19 +887,20 @@ After 58 sprints completing the full arc from deterministic execution through ex
 - ✅ Controlled ecosystem readiness (56)
 - ✅ Capability exposure governance (57)
 - ✅ External trust & admission (58)
+- ✅ Ecosystem simulation & sandbox (59)
+- ✅ Limited marketplace pilot (60)
 
-### Committed Direction (Sprint 59) — Block J: Trusted Ecosystem Foundation
-- **Ecosystem simulation & sandbox** — simulating ecosystem interactions in bounded sandboxes before real exposure
+### Committed Direction (Sprint 61) — Block K: Controlled Ecosystem Activation
+- **Capability registry governance** — governing lifecycle of registered capabilities with versioning, deprecation, and quality gates
 
-### Reserved Direction (Sprints 60–65) — Blocks K, L
-- **Limited marketplace pilot** with bounded scope and instant rollback
-- **Capability registry** and **multi-party policy/revenue governance**
+### Reserved Direction (Sprints 62–65) — Blocks K (cont), L
+- **Multi-party policy/revenue governance**
 - **Institutional outcome assurance** and **canon integrity/drift governance**
 - **Operating completion** — first internally coherent operating canon
 
-All forthcoming directions reuse existing architectural layers and Agent OS planes. No plane expansion is planned. The focus shifts from building new capability planes to governing ecosystem exposure.
+All forthcoming directions reuse existing architectural layers and Agent OS planes. No plane expansion is planned. The focus shifts from building new capability planes to governing ecosystem lifecycle.
 
-**Governing constraint:** Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Marketplace and ecosystem capabilities remain frozen until the staged activation blocks are reached and explicitly approved.
+**Governing constraint:** Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Full marketplace activation remains bounded by pilot controls until explicitly expanded.
 
 ---
 

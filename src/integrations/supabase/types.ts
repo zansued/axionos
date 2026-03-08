@@ -6958,6 +6958,428 @@ export type Database = {
           },
         ]
       }
+      marketplace_pilot_capabilities: {
+        Row: {
+          capability_domain: string
+          capability_name: string
+          created_at: string
+          evidence_links: Json
+          exposure_class: string
+          id: string
+          organization_id: string
+          pilot_capability_eligibility_score: number
+          pilot_capability_status: string
+          pilot_program_id: string | null
+          policy_compliance_score: number
+          rationale: Json
+          restrictions: Json
+          trust_requirement_score: number
+          updated_at: string
+        }
+        Insert: {
+          capability_domain?: string
+          capability_name: string
+          created_at?: string
+          evidence_links?: Json
+          exposure_class?: string
+          id?: string
+          organization_id: string
+          pilot_capability_eligibility_score?: number
+          pilot_capability_status?: string
+          pilot_program_id?: string | null
+          policy_compliance_score?: number
+          rationale?: Json
+          restrictions?: Json
+          trust_requirement_score?: number
+          updated_at?: string
+        }
+        Update: {
+          capability_domain?: string
+          capability_name?: string
+          created_at?: string
+          evidence_links?: Json
+          exposure_class?: string
+          id?: string
+          organization_id?: string
+          pilot_capability_eligibility_score?: number
+          pilot_capability_status?: string
+          pilot_program_id?: string | null
+          policy_compliance_score?: number
+          rationale?: Json
+          restrictions?: Json
+          trust_requirement_score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_pilot_capabilities_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_pilot_capabilities_pilot_program_id_fkey"
+            columns: ["pilot_program_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_pilot_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_pilot_interactions: {
+        Row: {
+          anomaly_flags: Json
+          capability_id: string | null
+          created_at: string
+          id: string
+          interaction_metadata: Json
+          interaction_status: string
+          interaction_type: string
+          organization_id: string
+          participant_id: string | null
+          pilot_program_id: string | null
+          policy_compliance_score: number
+          trust_stability_score: number
+        }
+        Insert: {
+          anomaly_flags?: Json
+          capability_id?: string | null
+          created_at?: string
+          id?: string
+          interaction_metadata?: Json
+          interaction_status?: string
+          interaction_type?: string
+          organization_id: string
+          participant_id?: string | null
+          pilot_program_id?: string | null
+          policy_compliance_score?: number
+          trust_stability_score?: number
+        }
+        Update: {
+          anomaly_flags?: Json
+          capability_id?: string | null
+          created_at?: string
+          id?: string
+          interaction_metadata?: Json
+          interaction_status?: string
+          interaction_type?: string
+          organization_id?: string
+          participant_id?: string | null
+          pilot_program_id?: string | null
+          policy_compliance_score?: number
+          trust_stability_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_pilot_interactions_capability_id_fkey"
+            columns: ["capability_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_pilot_capabilities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_pilot_interactions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_pilot_interactions_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_pilot_participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_pilot_interactions_pilot_program_id_fkey"
+            columns: ["pilot_program_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_pilot_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_pilot_outcomes: {
+        Row: {
+          created_at: string
+          evidence_refs: Json
+          expected_outcomes: Json
+          id: string
+          organization_id: string
+          outcome_status: string
+          pilot_learning_score: number
+          pilot_outcome_accuracy_score: number
+          pilot_program_id: string | null
+          pilot_risk_score: number
+          pilot_value_signal_score: number
+          realized_outcomes: Json
+          recommendation_type: string
+          rollback_trigger_score: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          pilot_learning_score?: number
+          pilot_outcome_accuracy_score?: number
+          pilot_program_id?: string | null
+          pilot_risk_score?: number
+          pilot_value_signal_score?: number
+          realized_outcomes?: Json
+          recommendation_type?: string
+          rollback_trigger_score?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          pilot_learning_score?: number
+          pilot_outcome_accuracy_score?: number
+          pilot_program_id?: string | null
+          pilot_risk_score?: number
+          pilot_value_signal_score?: number
+          realized_outcomes?: Json
+          recommendation_type?: string
+          rollback_trigger_score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_pilot_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_pilot_outcomes_pilot_program_id_fkey"
+            columns: ["pilot_program_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_pilot_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_pilot_participants: {
+        Row: {
+          created_at: string
+          evidence_links: Json
+          external_actor_id: string | null
+          id: string
+          organization_id: string
+          participant_name: string
+          participant_status: string
+          participant_type: string
+          pilot_participant_eligibility_score: number
+          pilot_program_id: string | null
+          trust_stability_score: number
+          trust_tier: string
+          updated_at: string
+          violation_count: number
+        }
+        Insert: {
+          created_at?: string
+          evidence_links?: Json
+          external_actor_id?: string | null
+          id?: string
+          organization_id: string
+          participant_name: string
+          participant_status?: string
+          participant_type?: string
+          pilot_participant_eligibility_score?: number
+          pilot_program_id?: string | null
+          trust_stability_score?: number
+          trust_tier?: string
+          updated_at?: string
+          violation_count?: number
+        }
+        Update: {
+          created_at?: string
+          evidence_links?: Json
+          external_actor_id?: string | null
+          id?: string
+          organization_id?: string
+          participant_name?: string
+          participant_status?: string
+          participant_type?: string
+          pilot_participant_eligibility_score?: number
+          pilot_program_id?: string | null
+          trust_stability_score?: number
+          trust_tier?: string
+          updated_at?: string
+          violation_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_pilot_participants_external_actor_id_fkey"
+            columns: ["external_actor_id"]
+            isOneToOne: false
+            referencedRelation: "external_actor_registry"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_pilot_participants_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_pilot_participants_pilot_program_id_fkey"
+            columns: ["pilot_program_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_pilot_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_pilot_policy_events: {
+        Row: {
+          capability_id: string | null
+          created_at: string
+          description: string
+          event_type: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          participant_id: string | null
+          pilot_program_id: string | null
+          policy_result: string
+          severity: string
+        }
+        Insert: {
+          capability_id?: string | null
+          created_at?: string
+          description?: string
+          event_type?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          participant_id?: string | null
+          pilot_program_id?: string | null
+          policy_result?: string
+          severity?: string
+        }
+        Update: {
+          capability_id?: string | null
+          created_at?: string
+          description?: string
+          event_type?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          participant_id?: string | null
+          pilot_program_id?: string | null
+          policy_result?: string
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_pilot_policy_events_capability_id_fkey"
+            columns: ["capability_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_pilot_capabilities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_pilot_policy_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_pilot_policy_events_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_pilot_participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_pilot_policy_events_pilot_program_id_fkey"
+            columns: ["pilot_program_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_pilot_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_pilot_programs: {
+        Row: {
+          created_at: string
+          evidence_links: Json
+          governance_constraints: Json
+          id: string
+          max_capabilities: number
+          max_participants: number
+          organization_id: string
+          pilot_activation_status: string
+          pilot_objectives: Json
+          pilot_program_name: string
+          pilot_scope_type: string
+          rollback_policy: Json
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          evidence_links?: Json
+          governance_constraints?: Json
+          id?: string
+          max_capabilities?: number
+          max_participants?: number
+          organization_id: string
+          pilot_activation_status?: string
+          pilot_objectives?: Json
+          pilot_program_name: string
+          pilot_scope_type?: string
+          rollback_policy?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          evidence_links?: Json
+          governance_constraints?: Json
+          id?: string
+          max_capabilities?: number
+          max_participants?: number
+          organization_id?: string
+          pilot_activation_status?: string
+          pilot_objectives?: Json
+          pilot_program_name?: string
+          pilot_scope_type?: string
+          rollback_policy?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_pilot_programs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_pilot_programs_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       memory_links: {
         Row: {
           created_at: string

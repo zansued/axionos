@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 58 (External Trust & Admission Layer) — ✅ Complete
-> **Next Sprint:** 59 (Ecosystem Simulation & Sandbox Layer) — 📋 Planned
+> **Current Sprint:** 60 (Limited Marketplace Pilot Layer) — ✅ Complete
+> **Next Sprint:** 61 (Capability Registry Governance Layer) — 📋 Planned
 
 ## Document Authority
 
@@ -38,8 +38,8 @@ This document serves as the canonical sprint execution ledger. The following con
 | 🔮 Reserved | Strategic direction defined, not yet scoped for implementation | Lightweight — name, block, and one-line purpose only |
 
 - **Current/next sprint** should be highly detailed before implementation begins
-- **Committed future arc** (Sprint 59) should be moderately detailed
-- **Reserved horizon** (Sprints 60–65) should remain intentionally lightweight until promoted to committed
+- **Committed future arc** (Sprint 61) should be moderately detailed
+- **Reserved horizon** (Sprints 62–65) should remain intentionally lightweight until promoted to committed
 - Reserved sprints should not be promoted to planned without deliberate review
 
 ---
@@ -364,25 +364,49 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Committed Future Arc — Block J: Trusted Ecosystem Foundation (Sprint 59)
+### Phase 23: Ecosystem Simulation & Sandbox (Sprint 59) — ✅ COMPLETE
+
+**Goal:** Simulate ecosystem interactions in bounded sandboxes before real exposure.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 59 | Ecosystem Simulation & Sandbox Layer | Ecosystem Simulation Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 59: Sandbox simulation, interaction modeling, blast radius estimation, rollback viability analysis
+
+---
+
+### Phase 24: Limited Marketplace Pilot (Sprint 60) — ✅ COMPLETE
+
+**Goal:** Enable a tightly governed, bounded, reversible pilot marketplace environment based on prior readiness, governance, trust, and sandbox layers.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 60 | Limited Marketplace Pilot Layer | Limited Marketplace Pilot Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 60: Pilot program manager, capability selector, participant gatekeeper, interaction monitor, policy enforcer, risk monitor, learning engine, outcome validator, explainer
+
+---
+
+## Committed Future Arc — Block K: Controlled Ecosystem Activation (Sprint 61)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
 
 | Sprint | Name | Objective | Target Layer | Status |
 |--------|------|-----------|-------------|--------|
-| 59 | Ecosystem Simulation & Sandbox Layer | Simulate ecosystem interactions in bounded sandboxes before real exposure | Ecosystem Simulation Layer | 📋 Planned |
+| 61 | Capability Registry Governance Layer | Govern lifecycle of registered capabilities | Capability Registry Governance Layer | 📋 Planned |
 
 ---
 
-## Reserved Horizon (Sprints 60–65)
+## Reserved Horizon (Sprints 62–65)
 
 > **Status:** 🔮 Reserved — strategic direction defined, details intentionally lightweight.
 > Reserved sprints should not be promoted without deliberate review.
 
 | Sprint | Name | Block | Status | Purpose |
 |--------|------|-------|--------|---------|
-| 60 | Limited Marketplace Pilot Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | First controlled marketplace activation with rollback |
-| 61 | Capability Registry Governance Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | Govern lifecycle of registered capabilities |
 | 62 | Multi-Party Policy & Revenue Governance Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | Policy negotiation and revenue sharing across participants |
 | 63 | Institutional Outcome Assurance Layer | L — System Roundness & Operating Completion | 🔮 Reserved | Validate platform produces governed, evidence-backed outcomes |
 | 64 | Canon Integrity & Drift Governance Layer | L — System Roundness & Operating Completion | 🔮 Reserved | Detect drift between behavior and canonical documentation |
@@ -493,6 +517,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | `_shared/ecosystem-readiness/` | 9 | Capability inventory, exposure classifier, readiness assessor, safety prerequisites, trust model, policy foundation, risk bounding, recommendations, explainer |
 | `_shared/capability-exposure-governance/` | 9 | Case builder, exposure classifier, policy engine, restriction analyzer, review manager, gate evaluator, risk bounding, recommendations, explainer |
 | `_shared/external-trust-admission/` | 9 | Actor registry manager, trust tier classifier, admission case builder, requirement engine, risk posture analyzer, review manager, trust drift detector, recommendation engine, explainer |
+| `_shared/limited-marketplace-pilot/` | 9 | Program manager, capability selector, participant gatekeeper, interaction monitor, policy enforcer, risk monitor, learning engine, outcome validator, explainer |
 
 ---
 
@@ -549,5 +574,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | Controlled Ecosystem Readiness | 1 | 56 |
 | Capability Exposure Governance | 1 | 57 |
 | External Trust & Admission | 1 | 58 |
+| Ecosystem Simulation & Sandbox | 1 | 59 |
+| Limited Marketplace Pilot | 1 | 60 |
 | Support | 11 | Various |
-| **Total** | **~103** | |
+| **Total** | **~105** | |
