@@ -47,6 +47,7 @@ import SwarmExecution from "./pages/SwarmExecution";
 import CapabilityRegistry from "./pages/CapabilityRegistry";
 import CapabilityGovernance from "./pages/CapabilityGovernance";
 import PilotMarketplace from "./pages/PilotMarketplace";
+import MarketplaceOutcomes from "./pages/MarketplaceOutcomes";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -116,6 +117,7 @@ const App = () => (
                       <Route path="/capability-registry" element={<ProtectedRoute><CapabilityRegistry /></ProtectedRoute>} />
                       <Route path="/capability-governance" element={<ProtectedRoute><CapabilityGovernance /></ProtectedRoute>} />
                       <Route path="/pilot-marketplace" element={<ProtectedRoute><PilotMarketplace /></ProtectedRoute>} />
+                      <Route path="/marketplace-outcomes" element={<ProtectedRoute><MarketplaceOutcomes /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
