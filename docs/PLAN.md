@@ -4,9 +4,9 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 78 (Bounded Swarm Execution for Complex Initiatives) — ✅ Complete
-> **Next Planned:** Sprint 79 (Governed Capability Exchange Foundation) — 📋 Planned
-> **Reserved Horizon:** Blocks P–S (Sprints 79–94) — Block O complete
+> **Current Sprint:** 79 (Capability Packaging & Registry UX) — ✅ Complete
+> **Next Planned:** Sprint 80 (Marketplace Discovery & Governed Exchange) — 📋 Planned
+> **Reserved Horizon:** Blocks P–S (Sprints 79–94) — Block P in progress
 
 ## Document Authority
 
@@ -792,5 +792,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Agent Debate & Resolution | 1 | 76 |
 | Working Memory & Task-State | 1 | 77 |
 | Swarm Execution | 1 | 78 |
+| Capability Registry | 1 | 79 |
 | Support | 11 | Various |
-| **Total** | **~128** | |
+| **Total** | **~130** | |

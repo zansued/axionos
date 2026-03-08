@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** 78 sprints complete. Block N complete. Block O (Advanced Multi-Agent Coordination) complete — Sprints 75–78 complete.
+> **Last strategic change (2026-03-08):** 79 sprints complete. Block O complete. Block P (Governed Capability Ecosystem & Early Marketplace) in progress — Sprint 79 complete.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -51,7 +51,7 @@
 
 ## Strategic Directive
 
-AxionOS has completed **78 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, evidence capture, improvement candidate distillation, sandbox benchmarking & promotion governance, role arbitration & capability routing 2.0, multi-agent debate & resolution, shared working memory & task-state negotiation, and bounded swarm execution. The internal architecture is mature, coherent, and self-governing. Block O (Advanced Multi-Agent Coordination) is complete.
+AxionOS has completed **79 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, evidence capture, improvement candidate distillation, sandbox benchmarking & promotion governance, advanced multi-agent coordination (routing, debate, working memory, swarm execution), and capability packaging & registry UX. The internal architecture is mature, coherent, and self-governing. Block P (Governed Capability Ecosystem & Early Marketplace) is in progress.
 
 **Post-Block M Strategic Position:**
 
@@ -83,12 +83,13 @@ Internal sophistication serves the visible product experience. The user-facing j
     Candidates → Benchmarking & Promotion ✅ →
     Role Arbitration → Debate & Resolution →
     Working Memory & Task-State →
-    Bounded Swarm Execution ✅
+    Bounded Swarm Execution ✅ →
+    Capability Packaging & Registry ✅
 ```
 
 ---
 
-## Completed Canon (Sprints 1–78)
+## Completed Canon (Sprints 1–79)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -124,6 +125,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Sprint 76 — Multi-Agent Debate & Resolution Layer | 76 | Structured bounded debate sessions, position/argument/resolution tracking, escalation, operator debate dashboard |
 | Sprint 77 — Shared Working Memory & Task-State Negotiation | 77 | Bounded shared working memory contexts, negotiated task-state transitions, coordination checkpoints, operator working memory dashboard |
 | Sprint 78 — Bounded Swarm Execution for Complex Initiatives | 78 | Bounded swarm campaigns, parallel branches, checkpoints, abort/rollback posture, escalation, operator swarm dashboard |
+| Sprint 79 — Capability Packaging & Registry UX | 79 | Capability packages with versioning, lifecycle governance, explainability, registry linkage, operator registry dashboard |
 
 ---
 

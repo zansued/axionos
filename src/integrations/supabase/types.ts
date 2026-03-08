@@ -4481,6 +4481,183 @@ export type Database = {
           },
         ]
       }
+      capability_package_events: {
+        Row: {
+          actor_ref: Json
+          created_at: string
+          event_payload: Json
+          event_type: string
+          id: string
+          organization_id: string
+          package_id: string
+        }
+        Insert: {
+          actor_ref?: Json
+          created_at?: string
+          event_payload?: Json
+          event_type?: string
+          id?: string
+          organization_id: string
+          package_id: string
+        }
+        Update: {
+          actor_ref?: Json
+          created_at?: string
+          event_payload?: Json
+          event_type?: string
+          id?: string
+          organization_id?: string
+          package_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_package_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_package_events_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "capability_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_package_versions: {
+        Row: {
+          changelog: string
+          compatibility_notes: string | null
+          created_at: string
+          id: string
+          organization_id: string
+          package_id: string
+          package_payload: Json
+          published_at: string | null
+          status: string
+          version_label: string
+        }
+        Insert: {
+          changelog?: string
+          compatibility_notes?: string | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          package_id: string
+          package_payload?: Json
+          published_at?: string | null
+          status?: string
+          version_label?: string
+        }
+        Update: {
+          changelog?: string
+          compatibility_notes?: string | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          package_id?: string
+          package_payload?: Json
+          published_at?: string | null
+          status?: string
+          version_label?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_package_versions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_package_versions_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "capability_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_packages: {
+        Row: {
+          affected_surfaces: string[]
+          audit_metadata: Json
+          category: string
+          compatibility_posture: Json
+          created_at: string
+          description: string
+          id: string
+          lifecycle_status: string
+          name: string
+          organization_id: string
+          owner_ref: Json
+          registry_entry_id: string | null
+          required_scopes: string[]
+          risk_posture: string
+          rollback_ready: boolean
+          slug: string
+          source_type: string
+          updated_at: string
+        }
+        Insert: {
+          affected_surfaces?: string[]
+          audit_metadata?: Json
+          category?: string
+          compatibility_posture?: Json
+          created_at?: string
+          description?: string
+          id?: string
+          lifecycle_status?: string
+          name?: string
+          organization_id: string
+          owner_ref?: Json
+          registry_entry_id?: string | null
+          required_scopes?: string[]
+          risk_posture?: string
+          rollback_ready?: boolean
+          slug?: string
+          source_type?: string
+          updated_at?: string
+        }
+        Update: {
+          affected_surfaces?: string[]
+          audit_metadata?: Json
+          category?: string
+          compatibility_posture?: Json
+          created_at?: string
+          description?: string
+          id?: string
+          lifecycle_status?: string
+          name?: string
+          organization_id?: string
+          owner_ref?: Json
+          registry_entry_id?: string | null
+          required_scopes?: string[]
+          risk_posture?: string
+          rollback_ready?: boolean
+          slug?: string
+          source_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_packages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_packages_registry_entry_id_fkey"
+            columns: ["registry_entry_id"]
+            isOneToOne: false
+            referencedRelation: "capability_registry_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       capability_registry_compatibility_rules: {
         Row: {
           compatibility_score: number
