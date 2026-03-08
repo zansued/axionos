@@ -292,6 +292,8 @@
 | `_shared/engineering-advisor/` | 8 | Signal aggregator, opportunity synthesizer, recommendation engine, prioritizer, explainer, review manager, lineage, clustering |
 | `_shared/semantic-retrieval/` | 8 | Retrieval engine, ranker, guardrails, quality evaluator, index manager, context builders (runtime, advisory, strategy, platform) |
 | `_shared/architecture-simulation/` | 6 | Impact simulator, boundary analyzer, guardrails, recommendation linker, review manager, explainer |
+| `_shared/architecture-planning/` | 7 | Dependency planner, readiness assessor, validation/rollback blueprints, clustering, review manager, explainer |
+| `_shared/architecture-rollout/` | 7 | Migration rehearsal, fragility analyzer, readiness assessor, rollback viability, guardrails, review manager, explainer |
 
 ---
 
