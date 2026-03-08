@@ -190,7 +190,7 @@ The next step opens a bounded product intelligence layer:
 
 > **Full module inventory:** [AGENTS.md](AGENTS.md) · **Architecture details:** [ARCHITECTURE.md](ARCHITECTURE.md)
 
-All 36 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, and the institutional convergence memory layer.
+All 37 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, the institutional convergence memory layer, and the operating profiles layer.
 
 ### Frozen Areas
 
