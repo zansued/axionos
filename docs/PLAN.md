@@ -3,7 +3,7 @@
 > Sprint-by-sprint implementation record mapping capabilities to architectural layers.
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 39 (Architecture Change Planning & Rollout Readiness) — ✅ Complete
+> **Current Sprint:** 40 (Architecture Rollout Sandbox & Controlled Migration Readiness) — ✅ Complete
 
 ---
 
