@@ -331,7 +331,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(40, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(41, 1fr)" }}>
+            <TabsTrigger value="product-ops" className="text-xs gap-1"><Activity className="h-3 w-3" /> ProdOps</TabsTrigger>
             <TabsTrigger value="product-intel" className="text-xs gap-1"><Sparkles className="h-3 w-3" /> ProdIntel</TabsTrigger>
             <TabsTrigger value="op-profiles" className="text-xs gap-1"><PackageOpen className="h-3 w-3" /> Profiles</TabsTrigger>
             <TabsTrigger value="conv-memory" className="text-xs gap-1"><BookOpen className="h-3 w-3" /> ConvMem</TabsTrigger>
