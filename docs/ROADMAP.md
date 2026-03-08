@@ -120,22 +120,21 @@ The next strategic direction moves from product intelligence operations toward *
 
 ---
 
-## Committed Future Arc (Sprints 54–56)
+## Committed Future Arc (Sprints 55–56)
 
 > **Status:** 📋 Committed — next implementation sequence. Not yet implemented.
-> **Block:** Block I — Product-Intelligent Expansion
+> **Block:** Block I — Product-Intelligent Expansion (remaining)
 
-These sprints are the committed next strategic arc. They have been planned with enough detail to enable sprint-by-sprint implementation. Each sprint should still be reviewed and approved before execution begins.
+These sprints complete the committed product-intelligent expansion arc. Each sprint should still be reviewed and approved before execution begins.
 
 | Sprint | Name | Objective | Acceptance Direction |
 |--------|------|-----------|---------------------|
-| 54 | Product Intelligence Operating Layer | Deepen product signal correlation into operational decision-making — cross-tenant product benchmarking, product-informed architecture recommendations, product signal maturation from entry to operational use | Product signals influence advisory flows with measurable quality; cross-tenant benchmarking operational; product-architecture correlation deepened beyond entry-level |
-| 55 | Product Opportunity Portfolio Governance | Govern the lifecycle of product opportunities as a portfolio — ranking, conflict detection, promotion/deferral, outcome tracking across product-informed initiatives | Product opportunities governed as a portfolio with lifecycle management; conflicts detected; outcomes tracked; no auto-promotion |
+| 55 | Product Opportunity Portfolio Governance | Govern the lifecycle of product opportunities as a portfolio — ranking, conflicts, promotion/deferral, outcome tracking across product-informed initiatives | Product opportunities governed as a portfolio with lifecycle management; conflicts detected; outcomes tracked; no auto-promotion |
 | 56 | Controlled Ecosystem Readiness Layer | Prepare the platform for eventual ecosystem exposure — capability inventory, exposure readiness assessment, safety prerequisites, trust model foundation — without activating any external marketplace | Ecosystem readiness assessed and documented; exposure prerequisites defined; trust model designed; marketplace remains frozen |
 
-### Why 54–56 are committed
+### Why 55–56 are committed
 
-These sprints follow the natural progression from product intelligence entry: first operationalize the intelligence (54), then govern the opportunities it produces (55), then prepare for external exposure (56). They reuse existing AxionOS philosophy and Agent OS planes without expansion.
+These sprints follow the natural progression: with product intelligence now operational (54), the next step is governing the opportunities it produces (55), then preparing for external exposure (56). They reuse existing AxionOS philosophy and Agent OS planes without expansion.
 
 ---
 
