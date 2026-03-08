@@ -152,3 +152,6 @@ verify_jwt = false
 
 [functions.one-click-delivery-deploy-assurance-engine]
 verify_jwt = false
+
+[functions.onboarding-templates-vertical-starters-engine]
+verify_jwt = false

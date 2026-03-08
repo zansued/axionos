@@ -24,7 +24,7 @@ function deriveRole(orgRole: string | null): RoleSurface {
 
 // Sidebar items visible per role
 const DEFAULT_USER_SIDEBAR = new Set([
-  "Dashboard", "Journey", "Initiatives", "Stories", "Kanban", "Workspace", "Deployments",
+  "Dashboard", "Journey", "Onboarding", "Initiatives", "Stories", "Kanban", "Workspace", "Deployments",
 ]);
 
 const OPERATOR_SIDEBAR = new Set([
