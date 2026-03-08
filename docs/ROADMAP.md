@@ -149,7 +149,15 @@ Sprint 71 introduced the first governed extensibility foundation for AxionOS. Pl
 
 ---
 
-## Planned Next Block — Sprints 72–74: Evidence-Governed Improvement Loop — 📋 Planned
+## Sprint 72 — Evidence Capture & Improvement Ledger ✅ Implemented
+
+Sprint 72 established the canonical evidence capture and improvement ledger layer. The system now captures, normalizes, links, and reviews operational evidence from validations, repairs, rollbacks, deployments, extensions, anomalies, and operator observations. A dedicated operator surface (`/improvement-ledger`) provides structured evidence review.
+
+**Strategic role:** Sprint 72 begins the Evidence-Governed Improvement Loop. It provides the durable evidence foundation that future sprints will use to generate bounded improvement proposals and track outcomes.
+
+---
+
+## Planned Next — Sprints 73–74: Evidence-Governed Improvement Loop — 📋 Planned
 
 > **Status:** Planned — next in the execution queue.
 
