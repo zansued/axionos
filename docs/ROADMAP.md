@@ -57,6 +57,7 @@
 | **Product Opportunity Portfolio Governance** | Active — portfolio ranking, conflict detection, capacity-aware prioritization, outcome tracking |
 | **Controlled Ecosystem Readiness** | Active — capability inventory, exposure classification, safety prerequisites, trust model foundation, readiness assessment |
 | **Capability Exposure Governance** | Active — exposure classes, governance cases, gate evaluation, restriction analysis, review workflow, outcome tracking |
+| **External Trust & Admission** | Active — actor registry, trust tiers, admission cases, requirement evaluation, risk posture, drift detection, advisory recommendations |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
