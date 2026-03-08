@@ -2,7 +2,7 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-08):** Sprint 45 complete. Autonomous Change Advisory Orchestrator active. Architecture change advice is now coordinated through a single advisory agenda with sequencing, conflict resolution, and load balancing.
+> **What changed (2026-03-08):** Sprint 46 complete. Platform Self-Stabilization v2 active. Multi-layer instability detection, cross-layer correlation, bounded stabilization envelopes, freeze/slowdown controls, and recovery path synthesis are now operational.
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
