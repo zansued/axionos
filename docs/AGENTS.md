@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-08):** Sprint 38 — Architecture Change Simulation & Governance. Advisory architectural recommendations can now be simulated before implementation with bounded impact estimation, boundary analysis, and governance guardrails. Previous: Discovery-Driven Architecture Signals (Sprint 37).
+> **What changed (2026-03-08):** Sprint 39 — Architecture Change Planning & Rollout Readiness. Accepted architecture simulations can now be converted into governed implementation plans with dependency mapping, blast radius estimation, validation/rollback blueprints, and readiness scoring. Previous: Architecture Change Simulation & Governance (Sprint 38).
 >
 > Last updated: 2026-03-08
 
