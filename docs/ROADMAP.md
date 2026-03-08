@@ -227,7 +227,8 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 | Operating Profiles | 52 | ✅ Complete | Operating profiles & policy packs: reusable, governed, versioned profiles |
 | Product Intelligence | 53 | ✅ Complete | Product intelligence entry: bounded, advisory-first product signals + opportunities |
 | Product Ops | 54 | ✅ Complete | Product intelligence operations: benchmarking, quality calibration, correlations, recommendations |
-| Product-Intelligent Expansion | 55–56 | 📋 Committed | Opportunity governance → ecosystem readiness |
+| Product Opp Portfolio | 55 | ✅ Complete | Product opportunity portfolio governance: ranking, conflicts, capacity, decisions, outcomes |
+| Product-Intelligent Expansion | 56 | 📋 Committed | Controlled ecosystem readiness |
 | Trusted Ecosystem Foundation | 57–59 | 🔮 Reserved | Capability exposure → trust/admission → ecosystem simulation |
 | Controlled Ecosystem Activation | 60–62 | 🔮 Reserved | Marketplace pilot → capability registry → multi-party governance |
 | System Roundness | 63–65 | 🔮 Reserved | Outcome assurance → canon integrity → operating completion |
