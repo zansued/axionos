@@ -20,7 +20,7 @@ blocks:
   - { block_id: "M",          block_name: "Product Experience & Delivery Maturity",       sprint_range: "66–70", status: complete, purpose: "User journey orchestration, role-based experience, deploy assurance, onboarding, adoption intelligence" }
 
   # === PLANNED ===
-  - { block_id: "N",          block_name: "Evidence-Governed Improvement Loop",           sprint_range: "71–74", status: planned,  purpose: "Evidence collection, bounded improvement proposals, governed testing/promotion, rollback-safe experimentation" }
+  - { block_id: "N",          block_name: "Evidence-Governed Improvement Loop",           sprint_range: "71–74", status: "partial (71 complete)", purpose: "Governed extensibility (71 ✅), bounded improvement proposals, governed testing/promotion, rollback-safe experimentation" }
 
   # === RESERVED ===
   - { block_id: "O",          block_name: "Advanced Multi-Agent Coordination",            sprint_range: "75–78", status: reserved, purpose: "Role arbitration, debate, shared working memory, bounded multi-agent execution" }
