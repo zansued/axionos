@@ -1,209 +1,114 @@
-# AxionOS — Execution Plan
 
-> Last updated: 2026-03-07
-> Mode: **Level 5 — Institutional Engineering Memory**
-> Execution: **Sprint-based**
 
----
+## Sprint 67 — Role-Based Experience Layer — Implementation Plan
 
-## Strategic Directive
+### Problem
+The platform currently exposes all 52+ observability tabs and all sidebar items to every user regardless of role. Internal system complexity leaks into the default user experience. Sprint 67 separates surfaces by role: Default User, Operator, and Admin/System.
 
-AxionOS has completed its Level 4.5 milestone. The execution kernel is stable. The learning layer is active. Meta-agents generate architectural recommendations. Accepted recommendations produce structured engineering proposals via controlled artifact generation. Engineering Memory Foundation is operational.
+### Architecture Overview
 
-**The focus is now:**
-1. Activate memory retrieval surfaces across repair, meta-agents, and proposals
-2. Introduce periodic memory synthesis for long-term pattern detection
-3. Enable memory-aware meta-agents for contextual recommendations
-4. Governance before autonomy. Memory before discovery. Contextual intelligence before automated experimentation.
+```text
+┌─────────────────────────────────────────────────┐
+│  Role-Based Experience Engine (Edge Function)   │
+│  overview | define_role_models | evaluate_nav   │
+│  evaluate_permissions | detect_leakage | explain│
+└──────────────┬──────────────────────────────────┘
+               │
+┌──────────────┴──────────────────────────────────┐
+│  9 Shared Modules (_shared/role-based-experience)│
+│  role-model-mgr | nav-orchestrator | perms      │
+│  info-layers | leakage-detector | approval-vis  │
+│  quality-analyzer | outcome-validator | explainer│
+└──────────────┬──────────────────────────────────┘
+               │
+┌──────────────┴──────────────────────────────────┐
+│  6 Tables (RLS by organization_id)              │
+│  role_experience_models | role_navigation_profiles│
+│  role_surface_permissions | role_information_layers│
+│  role_experience_overrides | role_experience_outcomes│
+└─────────────────────────────────────────────────┘
+```
 
----
+### 1. Database Migration (1 migration file)
 
-## Strategic Principle
+Create 6 tables with full RLS policies (SELECT/INSERT/UPDATE for org members), validation triggers, and timestamps. Fields as specified in the sprint prompt.
 
-> **Governance before autonomy.**
-> **Memory before discovery.**
-> **Contextual intelligence before automated experimentation.**
+### 2. Shared Modules
 
-Every new capability must be governable, auditable, and non-destructive before it is expanded. AxionOS does not pursue autonomy for its own sake.
+Create `supabase/functions/_shared/role-based-experience/` with 9 modules:
+- `role-experience-model-manager.ts` — role definitions (default_user, operator, admin)
+- `role-navigation-orchestrator.ts` — builds sidebar/tab lists per role
+- `role-surface-permission-engine.ts` — action/view permissions per role
+- `role-information-layer-manager.ts` — information density control
+- `complexity-leakage-detector.ts` — detects internal complexity in default surface
+- `approval-visibility-router.ts` — routes approvals to correct role
+- `role-experience-quality-analyzer.ts` — quality scoring per surface
+- `role-experience-outcome-validator.ts` — expected vs realized outcomes
+- `role-based-experience-explainer.ts` — structured explanations
 
----
+All deterministic, pure-function modules following existing patterns.
 
-## Completed Sprints
+### 3. Edge Function
 
-### Level 3 — Autonomous Engineering System (Sprints 1–10) ✅
+Create `supabase/functions/role-based-experience-engine/index.ts` with actions:
+`overview`, `define_role_models`, `evaluate_navigation`, `evaluate_permissions`, `evaluate_information_layers`, `detect_complexity_leakage`, `role_experience_outcomes`, `explain`
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 1 | Initiative Brief — structured idea intake contract | ✅ |
-| Sprint 2 | Simulation Engine — feasibility gate before execution | ✅ |
-| Sprint 3 | Deploy Contract — publish-to-deploy state machine | ✅ |
-| Sprint 4 | Product Observability — initiative lifecycle metrics | ✅ |
-| Sprint 5 | Onboarding & Packaging — user activation and product framing | ✅ |
-| Sprint 6 | Repair Evidence — traceable, evidence-based repair loop | ✅ |
-| Sprint 7 | Error Pattern Library — pattern intelligence and strategy effectiveness | ✅ |
-| Sprint 8 | Prevention Layer — active guardrails from known patterns | ✅ |
-| Sprint 9 | Adaptive Routing — evidence-informed repair strategy selection | ✅ |
-| Sprint 10 | Learning Foundation — learning records, prompt outcomes, aggregation | ✅ |
+### 4. Frontend Changes
 
-### Level 4 — Self-Learning Software Factory (Sprints 11–12) ✅
+**A. Role-aware navigation in AppSidebar.tsx**
+- Add role concept (default_user / operator / admin) using org member role mapping
+- Default users see: Dashboard, Journey, Initiatives, Stories, Kanban, Workspace, Deployments
+- Operators additionally see: Agents, Code, Audit, Observability, Connections
+- Admins see everything including Meta-Agents, Meta-Artifacts, Calibration, Prompt Opt, Billing, Settings
+- Add a role indicator badge in sidebar footer
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 11 | Commercial Readiness — plans, billing, workspace isolation, usage enforcement | ✅ |
-| Sprint 12 | Learning Agents v1 — prompt analysis, strategy tracking, prediction, weight adaptation | ✅ |
+**B. Role-aware Observability tabs**
+- Operator role: sees performance, costs, quality, repair, patterns, prevention, predictive, live, cross-stage, exec-policy tabs
+- Admin role: sees all 52+ tabs
+- Default users: redirected to Journey page (Observability not in their nav)
 
-### Level 4.5 — Meta-Aware Engineering Platform (Sprints 13–15) ✅
+**C. New components**
+- `src/hooks/useRoleBasedExperience.ts` — hook calling edge function + local role derivation from org member role
+- `src/components/observability/RoleBasedExperienceDashboard.tsx` — admin-facing dashboard showing role definitions, navigation mapping, permission posture, complexity leakage analysis, and outcome validation
+- Add "RoleExp" tab to Observability (admin-only visible)
+- `src/components/RoleGuard.tsx` — wrapper component that shows/hides content by role
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 13 | Meta-Agents v1 — 4 active meta-agents, recommendation lifecycle, deduplication | ✅ |
-| Sprint 13.5 | Meta-Agent Hardening — safety validation, tenant isolation, mutation protection | ✅ |
-| Sprint 14 | Controlled Proposal Generation — 5 artifact types, review lifecycle, idempotency | ✅ |
-| Sprint 14.5 | Proposal Hardening — content quality, linkage validation, non-mutation proof | ✅ |
-| Sprint 15 | Engineering Memory Foundation — memory tables, capture events, retrieval API, observability | ✅ |
-| Sprint 16 | Memory Retrieval Surfaces — repair, meta-agent, artifact, review retrieval with ranking | ✅ |
-| Sprint 17 | Memory Summaries — 6 summary types, signal strength scoring, generation service, UI | ✅ |
-| Sprint 18 | Memory-Aware Meta-Agents — historical context enrichment, continuity scoring, redundancy guard, proposal layer v2 | ✅ |
-| Sprint 19 | Proposal Quality Feedback Loop — outcome tracking, quality scoring, confidence calibration, memory effectiveness | ✅ |
-| Sprint 20 | Advisory Calibration Layer — 6 calibration domains, deterministic scoring, advisory-only diagnostic signals | ✅ |
+**D. Role derivation logic**
+- Map existing `org_role` (owner/admin → admin surface, editor → operator surface, viewer → default_user surface)
+- No new auth system needed — reuses existing `organization_members.role`
 
----
+### 5. Core Metrics (14)
 
-## Current State
+All computed deterministically in shared modules:
+`role_experience_quality_score`, `navigation_clarity_score`, `complexity_exposure_score`, `internal_complexity_leakage_score`, `approval_visibility_score`, `information_summarization_score`, `operator_surface_effectiveness_score`, `default_user_journey_clarity_score`, `admin_surface_integrity_score`, `permission_alignment_score`, `role_friction_score`, `role_experience_outcome_accuracy_score`, `bounded_visibility_coherence_score`, `role_surface_separation_score`
 
-AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
+### 6. Documentation Updates
 
-- **Execution:** Stable 32-stage deterministic pipeline with DAG orchestration, runtime validation, autonomous repair, and preventive engineering.
-- **Learning:** Active rule-based learning with prompt outcome analysis, strategy effectiveness tracking, predictive error detection, and bounded weight adjustment.
-- **Meta-Analysis:** 4 memory-aware meta-agents with historical context enrichment, continuity scoring, redundancy suppression, alignment classification, quality feedback loop, and advisory calibration. Recommendation-only — no system mutation.
-- **Proposal Generation:** Accepted recommendations produce structured engineering proposals with Related Historical Context sections, decision/outcome signals, and historical novelty indicators.
-- **Engineering Memory:** Full stack operational — foundation, retrieval surfaces, summaries, and memory-aware reasoning.
-- **Quality Feedback:** Proposal quality tracking with outcome signals, confidence calibration, and memory effectiveness measurement.
-- **Advisory Calibration:** Structured diagnostic signals across 6 calibration domains — advisory-only, no automatic tuning.
-- **Historical Intelligence:** Continuity scoring, redundancy guard, and historical alignment active across all meta-agents and proposals.
-- **Commercial:** Product plans, billing, workspace isolation, and usage enforcement active.
-- **Governance:** Full audit trail, stage permissions, SLA enforcement, and review workflows across recommendations and artifacts.
+Update: `ROADMAP.md`, `PLAN.md`, `ARCHITECTURE.md`, `PIPELINE_CONTRACTS.md`, `README.md`, `registry/sprints.yml`
+- Mark Sprint 67 complete, Sprint 68 as next planned
+- Update layer count to 51
+- Document the three-surface model and role derivation
 
----
+### 7. Safety Constraints
 
-## Next Phases
+- No privilege escalation — role mapping is read-only from existing org membership
+- No weakening of approvals — operator/admin surfaces retain full governance visibility
+- No hiding material risk from operator/admin roles
+- Tenant isolation via RLS
+- Advisory-first: role surfaces are recommendations, not hard access control (governance remains in existing RLS)
 
-### Level 5 — Institutional Engineering Memory ✅
+### 8. Key Implementation Decisions
 
-**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2** ✅
+- Role derivation reuses existing `organization_members.role` enum — no new role table needed
+- Sidebar filtering is client-side based on derived role — keeps it simple and reversible
+- Observability tabs filtered by role — admin sees all, operator sees operational subset, default user doesn't access Observability
+- The RoleBasedExperienceDashboard is itself an admin-only diagnostic surface
 
-Meta-agents and proposals reason with historical engineering context:
+### Estimated Deliverables
+- 1 migration file (6 tables + RLS + triggers)
+- 9 shared modules
+- 1 edge function
+- 4 new frontend files (hook, dashboard, RoleGuard, updated sidebar)
+- 5 doc files updated
+- 1 registry file updated
 
-- ✅ Memory context layer per meta-agent type
-- ✅ Historical continuity scoring (support/conflict/context)
-- ✅ Historical alignment classification (5 categories)
-- ✅ Redundancy guard with conservative suppression rules
-- ✅ Proposal Layer v2 with Related Historical Context
-- ✅ Decision/outcome-aware framing
-- ✅ Graceful degradation on memory unavailability
-
-### Level 5.5 — Self-Improving Engineering Platform
-
-- Memory summaries drive long-horizon evolution signals
-- Strategy reuse patterns inform repair routing improvements
-- Semantic indexing enables contextual similarity queries
-- Memory decay and relevance scoring refine knowledge quality
-
-### Level 6 — Discovery-Driven Engineering (Future Horizon)
-
-- Architecture experimentation informed by accumulated memory
-- Automated hypothesis generation from long-term patterns
-- Controlled experimentation with governance safeguards
-- This level is a vision, not a current priority
-
----
-
-## Success Metrics
-
-| Metric | Target |
-|--------|--------|
-| Pipeline success rate (no manual intervention) | > 80% |
-| Build OK rate | > 90% |
-| Deploy success rate | > 85% |
-| Average retries per initiative | < 2 |
-| Automatic repair success rate | > 70% |
-| Cost per initiative | Tracked & declining |
-| Time from idea to validated repository | < 15 min |
-| Time from idea to deployment | < 20 min |
-| Memory entries captured per initiative | Tracked |
-| Memory retrieval frequency | Tracked |
-
----
-
-## Active Kernel Components
-
-| Component | Status |
-|-----------|--------|
-| 32-stage deterministic pipeline | ✅ |
-| Project Brain (knowledge graph + semantic search) | ✅ |
-| DAG Execution Engine (Kahn's algorithm, 6 workers) | ✅ |
-| AI Efficiency Layer (compressor + cache + router) | ✅ |
-| Smart Context Window (~60-80% token reduction) | ✅ |
-| Runtime Validation (tsc + vite via CI) | ✅ |
-| Autonomous Build Repair + Fix Orchestrator | ✅ |
-| Evidence-Oriented Repair Loop | ✅ |
-| Error Pattern Library | ✅ |
-| Preventive Engineering Layer | ✅ |
-| Adaptive Repair Routing | ✅ |
-| Learning Foundation | ✅ |
-| Learning Agents v1 | ✅ |
-| Meta-Agents v1.2 (4 memory-aware agents) | ✅ |
-| Controlled Proposal Generation | ✅ |
-| Engineering Memory Foundation | ✅ |
-| Governance (gates, SLAs, audit logs) | ✅ |
-| Observability + Cost Tracking | ✅ |
-| Commercial Readiness (plans, billing, usage) | ✅ |
-| Proposal Quality Feedback Loop | ✅ |
-| Advisory Calibration Layer | ✅ |
-
----
-
-## Agent OS v1.0 — Reference Architecture (Frozen)
-
-The Agent OS is fully designed. No expansion needed.
-
-| Plane | Modules | Status |
-|-------|---------|--------|
-| **Core** | Runtime Protocol, Capability Model, Core Types | ✅ Designed |
-| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing | ✅ Designed |
-| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Designed |
-| **Data** | Artifact Store, Memory System, Observability | ✅ Designed |
-| **Ecosystem** | Marketplace & Global Capability Registry | ✅ Designed |
-
----
-
-## Technology Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
-| State | TanStack React Query + React Context |
-| Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
-| AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
-| Git | GitHub API v3 (Tree API for atomic commits) |
-| Deploy | Vercel/Netlify auto-generated configs |
-
----
-
-## Product Positioning
-
-**Present AxionOS as:**
-- An autonomous software engineering platform
-- A governed SaaS / MVP generator
-- A system that transforms ideas into validated repositories
-- A meta-aware platform that analyzes its own performance and generates improvement proposals
-- A system accumulating institutional engineering experience
-
-**Do NOT present as:**
-- A startup factory
-- A global marketplace of agents
-- An abstract agent operating system
-- An AGI system
-- A fully autonomous self-modifying system
-
-> Pipeline contracts: [docs/PIPELINE_CONTRACTS.md](../docs/PIPELINE_CONTRACTS.md) | Agents: [docs/AGENTS.md](../docs/AGENTS.md) | Roadmap: [docs/ROADMAP.md](../docs/ROADMAP.md)
