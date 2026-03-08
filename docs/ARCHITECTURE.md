@@ -625,7 +625,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
-> **Summary:** 65 sprints complete. 49 architectural layers active. First mature operating baseline achieved.
+> **Summary:** 70 sprints complete. 54 architectural layers active. Block M (Product Experience & Delivery Maturity) complete.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
@@ -651,6 +651,7 @@ supabase/functions/
 | Trusted Ecosystem Foundation (J) | 57–59 | ✅ Complete |
 | Controlled Ecosystem Activation (K) | 60–62 | ✅ Complete |
 | System Roundness & Operating Completion (L) | 63–65 | ✅ Complete |
+| Product Experience & Delivery Maturity (M) | 66–70 | ✅ Complete |
 
 ### Frozen
 
