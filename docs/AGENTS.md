@@ -1348,12 +1348,13 @@ Architecture Rollout Sandbox allows approved architecture change plans to be reh
 
 > **Status:** Proposed — no Agent OS plane expansion is planned.
 
-The proposed next strategic arc (Sprints 51–53) reuses existing Agent OS planes and modules:
+The proposed next strategic arc (Sprints 52–53) reuses existing Agent OS planes and modules:
 
 | Future Capability | Existing Planes/Modules Used |
 |-------------------|------------------------------|
-| Institutional Convergence Memory | Data Plane (Memory System, Artifact Store), Control Plane (Governance) |
 | Operating Profiles & Policy Packs | Control Plane (Policy Engine, Selection Engine), Data Plane (Memory) |
 | Product Intelligence Entry | Data Plane (Observability), Control Plane (Governance), Execution Plane (Orchestrator) |
+
+Sprint 51 (Institutional Convergence Memory) has been completed, reusing Data Plane (Memory System, Artifact Store) and Control Plane (Governance) without plane expansion.
 
 The focus is on higher-order system behavior and institutionalization — not new plane expansion. The 5-plane, 18-module architecture remains stable.
