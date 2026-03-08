@@ -252,5 +252,6 @@
 | Discovery-Driven Architecture | 1 | 37 |
 | Architecture Change Simulation | 1 | 38 |
 | Architecture Change Planning | 1 | 39 |
+| Architecture Rollout Sandbox | 1 | 40 |
 | Support | 11 | Various |
-| **Total** | **~84** | |
+| **Total** | **~85** | |
