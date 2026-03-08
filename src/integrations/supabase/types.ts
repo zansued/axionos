@@ -7805,6 +7805,154 @@ export type Database = {
           },
         ]
       }
+      product_architecture_correlations: {
+        Row: {
+          adoption_score: number
+          architecture_alignment_score: number
+          architecture_mode_id: string | null
+          confidence_score: number
+          correlation_strength: string
+          correlation_type: string
+          created_at: string
+          evidence_links: Json
+          fitness_impact_score: number
+          friction_score: number
+          id: string
+          limitations: string | null
+          organization_id: string
+          product_area: string | null
+          retention_score: number
+          stability_impact_score: number
+          value_score: number
+          workspace_id: string | null
+        }
+        Insert: {
+          adoption_score?: number
+          architecture_alignment_score?: number
+          architecture_mode_id?: string | null
+          confidence_score?: number
+          correlation_strength?: string
+          correlation_type?: string
+          created_at?: string
+          evidence_links?: Json
+          fitness_impact_score?: number
+          friction_score?: number
+          id?: string
+          limitations?: string | null
+          organization_id: string
+          product_area?: string | null
+          retention_score?: number
+          stability_impact_score?: number
+          value_score?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          adoption_score?: number
+          architecture_alignment_score?: number
+          architecture_mode_id?: string | null
+          confidence_score?: number
+          correlation_strength?: string
+          correlation_type?: string
+          created_at?: string
+          evidence_links?: Json
+          fitness_impact_score?: number
+          friction_score?: number
+          id?: string
+          limitations?: string | null
+          organization_id?: string
+          product_area?: string | null
+          retention_score?: number
+          stability_impact_score?: number
+          value_score?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_architecture_correlations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_architecture_correlations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_benchmark_outcomes: {
+        Row: {
+          benchmark_id: string | null
+          created_at: string
+          drift_detected: boolean
+          evidence_links: Json
+          expected_impact: number
+          false_positive: boolean
+          id: string
+          notes: string | null
+          organization_id: string
+          outcome_status: string
+          realized_impact: number
+          recommendation_id: string | null
+          usefulness_score: number
+        }
+        Insert: {
+          benchmark_id?: string | null
+          created_at?: string
+          drift_detected?: boolean
+          evidence_links?: Json
+          expected_impact?: number
+          false_positive?: boolean
+          id?: string
+          notes?: string | null
+          organization_id: string
+          outcome_status?: string
+          realized_impact?: number
+          recommendation_id?: string | null
+          usefulness_score?: number
+        }
+        Update: {
+          benchmark_id?: string | null
+          created_at?: string
+          drift_detected?: boolean
+          evidence_links?: Json
+          expected_impact?: number
+          false_positive?: boolean
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          outcome_status?: string
+          realized_impact?: number
+          recommendation_id?: string | null
+          usefulness_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_benchmark_outcomes_benchmark_id_fkey"
+            columns: ["benchmark_id"]
+            isOneToOne: false
+            referencedRelation: "product_operational_benchmarks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_benchmark_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_benchmark_outcomes_recommendation_id_fkey"
+            columns: ["recommendation_id"]
+            isOneToOne: false
+            referencedRelation: "product_operational_recommendations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_friction_clusters: {
         Row: {
           affected_signal_ids: Json
@@ -8103,6 +8251,177 @@ export type Database = {
           },
         ]
       }
+      product_operational_benchmarks: {
+        Row: {
+          adoption_score: number
+          architecture_alignment_score: number
+          assumptions: Json
+          benchmark_period: string
+          benchmark_rank: number | null
+          benchmark_scope_id: string | null
+          benchmark_scope_type: string
+          confidence_score: number
+          created_at: string
+          evidence_links: Json
+          friction_score: number
+          id: string
+          operating_profile_alignment_score: number
+          organization_id: string
+          product_area: string | null
+          product_priority_score: number
+          product_signal_quality_score: number
+          retention_score: number
+          signal_noise_penalty_score: number
+          updated_at: string
+          value_score: number
+          workspace_id: string | null
+        }
+        Insert: {
+          adoption_score?: number
+          architecture_alignment_score?: number
+          assumptions?: Json
+          benchmark_period?: string
+          benchmark_rank?: number | null
+          benchmark_scope_id?: string | null
+          benchmark_scope_type?: string
+          confidence_score?: number
+          created_at?: string
+          evidence_links?: Json
+          friction_score?: number
+          id?: string
+          operating_profile_alignment_score?: number
+          organization_id: string
+          product_area?: string | null
+          product_priority_score?: number
+          product_signal_quality_score?: number
+          retention_score?: number
+          signal_noise_penalty_score?: number
+          updated_at?: string
+          value_score?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          adoption_score?: number
+          architecture_alignment_score?: number
+          assumptions?: Json
+          benchmark_period?: string
+          benchmark_rank?: number | null
+          benchmark_scope_id?: string | null
+          benchmark_scope_type?: string
+          confidence_score?: number
+          created_at?: string
+          evidence_links?: Json
+          friction_score?: number
+          id?: string
+          operating_profile_alignment_score?: number
+          organization_id?: string
+          product_area?: string | null
+          product_priority_score?: number
+          product_signal_quality_score?: number
+          retention_score?: number
+          signal_noise_penalty_score?: number
+          updated_at?: string
+          value_score?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_operational_benchmarks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_operational_benchmarks_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_operational_recommendations: {
+        Row: {
+          architecture_alignment_score: number
+          assumptions: Json
+          confidence_score: number
+          created_at: string
+          description: string
+          evidence_links: Json
+          expected_impact_score: number
+          expected_outcomes: Json
+          id: string
+          organization_id: string
+          priority_score: number
+          product_area: string | null
+          profile_alignment_score: number
+          rationale: string
+          recommendation_status: string
+          recommendation_type: string
+          title: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          architecture_alignment_score?: number
+          assumptions?: Json
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          evidence_links?: Json
+          expected_impact_score?: number
+          expected_outcomes?: Json
+          id?: string
+          organization_id: string
+          priority_score?: number
+          product_area?: string | null
+          profile_alignment_score?: number
+          rationale?: string
+          recommendation_status?: string
+          recommendation_type?: string
+          title?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          architecture_alignment_score?: number
+          assumptions?: Json
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          evidence_links?: Json
+          expected_impact_score?: number
+          expected_outcomes?: Json
+          id?: string
+          organization_id?: string
+          priority_score?: number
+          product_area?: string | null
+          profile_alignment_score?: number
+          rationale?: string
+          recommendation_status?: string
+          recommendation_type?: string
+          title?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_operational_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_operational_recommendations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_opportunity_candidates: {
         Row: {
           architecture_alignment_score: number
@@ -8247,6 +8566,84 @@ export type Database = {
         }
         Relationships: []
       }
+      product_profile_correlations: {
+        Row: {
+          adoption_score: number
+          confidence_score: number
+          correlation_strength: string
+          correlation_type: string
+          created_at: string
+          evidence_links: Json
+          friction_score: number
+          id: string
+          limitations: string | null
+          operating_profile_id: string | null
+          organization_id: string
+          override_impact_score: number
+          policy_pack_id: string | null
+          product_area: string | null
+          profile_alignment_score: number
+          retention_score: number
+          value_score: number
+          workspace_id: string | null
+        }
+        Insert: {
+          adoption_score?: number
+          confidence_score?: number
+          correlation_strength?: string
+          correlation_type?: string
+          created_at?: string
+          evidence_links?: Json
+          friction_score?: number
+          id?: string
+          limitations?: string | null
+          operating_profile_id?: string | null
+          organization_id: string
+          override_impact_score?: number
+          policy_pack_id?: string | null
+          product_area?: string | null
+          profile_alignment_score?: number
+          retention_score?: number
+          value_score?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          adoption_score?: number
+          confidence_score?: number
+          correlation_strength?: string
+          correlation_type?: string
+          created_at?: string
+          evidence_links?: Json
+          friction_score?: number
+          id?: string
+          limitations?: string | null
+          operating_profile_id?: string | null
+          organization_id?: string
+          override_impact_score?: number
+          policy_pack_id?: string | null
+          product_area?: string | null
+          profile_alignment_score?: number
+          retention_score?: number
+          value_score?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_profile_correlations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_profile_correlations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_signal_events: {
         Row: {
           adoption_score: number
@@ -8321,6 +8718,72 @@ export type Database = {
           },
           {
             foreignKeyName: "product_signal_events_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_signal_quality_reviews: {
+        Row: {
+          confidence_score: number
+          consistency_score: number
+          created_at: string
+          evidence_links: Json
+          id: string
+          noise_penalty_score: number
+          organization_id: string
+          product_area: string | null
+          quality_score: number
+          review_notes: string | null
+          review_period: string
+          signal_id: string | null
+          signal_type: string
+          workspace_id: string | null
+        }
+        Insert: {
+          confidence_score?: number
+          consistency_score?: number
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          noise_penalty_score?: number
+          organization_id: string
+          product_area?: string | null
+          quality_score?: number
+          review_notes?: string | null
+          review_period?: string
+          signal_id?: string | null
+          signal_type?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          confidence_score?: number
+          consistency_score?: number
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          noise_penalty_score?: number
+          organization_id?: string
+          product_area?: string | null
+          quality_score?: number
+          review_notes?: string | null
+          review_period?: string
+          signal_id?: string | null
+          signal_type?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_signal_quality_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_signal_quality_reviews_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
