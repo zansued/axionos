@@ -52,6 +52,7 @@ import DeliveryOutcomes from "./pages/DeliveryOutcomes";
 import PostDeployFeedback from "./pages/PostDeployFeedback";
 import DeliveryTuning from "./pages/DeliveryTuning";
 import OutcomeAssurance from "./pages/OutcomeAssurance";
+import DistributedJobs from "./pages/DistributedJobs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
