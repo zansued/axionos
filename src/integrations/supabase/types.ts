@@ -7835,6 +7835,56 @@ export type Database = {
           },
         ]
       }
+      ecosystem_participants: {
+        Row: {
+          audit_metadata: Json
+          contact_info: Json
+          created_at: string
+          id: string
+          organization_id: string
+          participant_name: string
+          participant_type: string
+          participation_status: string
+          review_posture: string
+          trust_status: string
+          updated_at: string
+        }
+        Insert: {
+          audit_metadata?: Json
+          contact_info?: Json
+          created_at?: string
+          id?: string
+          organization_id: string
+          participant_name?: string
+          participant_type?: string
+          participation_status?: string
+          review_posture?: string
+          trust_status?: string
+          updated_at?: string
+        }
+        Update: {
+          audit_metadata?: Json
+          contact_info?: Json
+          created_at?: string
+          id?: string
+          organization_id?: string
+          participant_name?: string
+          participant_type?: string
+          participation_status?: string
+          review_posture?: string
+          trust_status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ecosystem_participants_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ecosystem_party_roles: {
         Row: {
           created_at: string
@@ -13742,6 +13792,193 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      pilot_capability_submissions: {
+        Row: {
+          affected_surfaces: Json
+          audit_metadata: Json
+          capability_package_id: string | null
+          compatibility_posture: string
+          created_at: string
+          id: string
+          organization_id: string
+          participant_id: string
+          risk_posture: string
+          rollback_ready: boolean
+          submission_description: string
+          submission_name: string
+          submission_payload: Json
+          submission_status: string
+          updated_at: string
+        }
+        Insert: {
+          affected_surfaces?: Json
+          audit_metadata?: Json
+          capability_package_id?: string | null
+          compatibility_posture?: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          participant_id: string
+          risk_posture?: string
+          rollback_ready?: boolean
+          submission_description?: string
+          submission_name?: string
+          submission_payload?: Json
+          submission_status?: string
+          updated_at?: string
+        }
+        Update: {
+          affected_surfaces?: Json
+          audit_metadata?: Json
+          capability_package_id?: string | null
+          compatibility_posture?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          participant_id?: string
+          risk_posture?: string
+          rollback_ready?: boolean
+          submission_description?: string
+          submission_name?: string
+          submission_payload?: Json
+          submission_status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pilot_capability_submissions_capability_package_id_fkey"
+            columns: ["capability_package_id"]
+            isOneToOne: false
+            referencedRelation: "capability_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pilot_capability_submissions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pilot_capability_submissions_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "ecosystem_participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pilot_marketplace_exposure: {
+        Row: {
+          audit_metadata: Json
+          created_at: string
+          expired_at: string | null
+          exposed_at: string | null
+          exposure_scope: string
+          exposure_status: string
+          id: string
+          organization_id: string
+          submission_id: string
+          updated_at: string
+        }
+        Insert: {
+          audit_metadata?: Json
+          created_at?: string
+          expired_at?: string | null
+          exposed_at?: string | null
+          exposure_scope?: string
+          exposure_status?: string
+          id?: string
+          organization_id: string
+          submission_id: string
+          updated_at?: string
+        }
+        Update: {
+          audit_metadata?: Json
+          created_at?: string
+          expired_at?: string | null
+          exposed_at?: string | null
+          exposure_scope?: string
+          exposure_status?: string
+          id?: string
+          organization_id?: string
+          submission_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pilot_marketplace_exposure_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pilot_marketplace_exposure_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "pilot_capability_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pilot_marketplace_reviews: {
+        Row: {
+          audit_metadata: Json
+          compatibility_assessment: Json
+          conditions: Json
+          created_at: string
+          id: string
+          organization_id: string
+          review_action: string
+          review_notes: string
+          reviewer_id: string
+          risk_assessment: Json
+          submission_id: string
+        }
+        Insert: {
+          audit_metadata?: Json
+          compatibility_assessment?: Json
+          conditions?: Json
+          created_at?: string
+          id?: string
+          organization_id: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string
+          risk_assessment?: Json
+          submission_id: string
+        }
+        Update: {
+          audit_metadata?: Json
+          compatibility_assessment?: Json
+          conditions?: Json
+          created_at?: string
+          id?: string
+          organization_id?: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string
+          risk_assessment?: Json
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pilot_marketplace_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pilot_marketplace_reviews_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "pilot_capability_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       pipeline_gate_permissions: {
         Row: {
