@@ -867,7 +867,7 @@ supabase/functions/
 > - Tenant isolation is absolute (organization_id + RLS)
 > - Forbidden mutation families: pipeline topology, governance rules, billing logic, plan enforcement, execution contracts, hard safety constraints
 > - Every promotion, calibration, strategy experiment, and architecture change preserves rollback capability
-> - All advisory layers (Platform Intelligence, Calibration, Strategy Evolution, Stabilization, Engineering Advisor, Semantic Retrieval, Architecture Simulation/Planning/Sandbox/Pilot/Migration, Portfolio Governance, Fitness Functions, Change Advisory, Tenant Architecture Modes, Economic Optimization, Platform Convergence, Convergence Governance, Institutional Convergence Memory, Operating Profiles & Policy Packs, Product Intelligence Entry, Product Intelligence Operations, Product Opportunity Portfolio Governance, Controlled Ecosystem Readiness) remain bounded, explainable, and review-driven
+> - All advisory layers (Platform Intelligence, Calibration, Strategy Evolution, Stabilization, Engineering Advisor, Semantic Retrieval, Architecture Simulation/Planning/Sandbox/Pilot/Migration, Portfolio Governance, Fitness Functions, Change Advisory, Tenant Architecture Modes, Economic Optimization, Platform Convergence, Convergence Governance, Institutional Convergence Memory, Operating Profiles & Policy Packs, Product Intelligence Entry, Product Intelligence Operations, Product Opportunity Portfolio Governance, Controlled Ecosystem Readiness, Capability Exposure Governance) remain bounded, explainable, and review-driven
 
 ---
 
