@@ -202,7 +202,7 @@ All 38 architectural layers are operational. The kernel includes the 32-stage de
 
 | Area | Reason |
 |------|--------|
-| Marketplace ecosystem | Not needed until product intelligence layer |
+| Marketplace ecosystem | Frozen — product intelligence entry is complete but marketplace remains deferred until ecosystem maturity |
 | Advanced distributed runtime | Current runtime handles workload adequately |
 | Advanced multi-agent coordination | Existing patterns meet current needs |
 
