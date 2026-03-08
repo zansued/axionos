@@ -15536,6 +15536,228 @@ export type Database = {
           },
         ]
       }
+      post_deploy_feedback_clusters: {
+        Row: {
+          cluster_label: string
+          cluster_type: string
+          created_at: string
+          id: string
+          impact_summary: string
+          organization_id: string
+          severity: string
+          signal_count: number
+          signal_ids: Json
+          updated_at: string
+        }
+        Insert: {
+          cluster_label?: string
+          cluster_type?: string
+          created_at?: string
+          id?: string
+          impact_summary?: string
+          organization_id: string
+          severity?: string
+          signal_count?: number
+          signal_ids?: Json
+          updated_at?: string
+        }
+        Update: {
+          cluster_label?: string
+          cluster_type?: string
+          created_at?: string
+          id?: string
+          impact_summary?: string
+          organization_id?: string
+          severity?: string
+          signal_count?: number
+          signal_ids?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_deploy_feedback_clusters_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_deploy_feedback_links: {
+        Row: {
+          created_at: string
+          id: string
+          link_context: Json
+          link_target_id: string
+          link_target_type: string
+          organization_id: string
+          relevance_score: number
+          signal_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          link_context?: Json
+          link_target_id: string
+          link_target_type?: string
+          organization_id: string
+          relevance_score?: number
+          signal_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          link_context?: Json
+          link_target_id?: string
+          link_target_type?: string
+          organization_id?: string
+          relevance_score?: number
+          signal_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_deploy_feedback_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_deploy_feedback_links_signal_id_fkey"
+            columns: ["signal_id"]
+            isOneToOne: false
+            referencedRelation: "post_deploy_feedback_signals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_deploy_feedback_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          new_status: string
+          organization_id: string
+          previous_status: string
+          review_action: string
+          review_notes: string
+          reviewer_id: string
+          signal_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          new_status?: string
+          organization_id: string
+          previous_status?: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id: string
+          signal_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          new_status?: string
+          organization_id?: string
+          previous_status?: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string
+          signal_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_deploy_feedback_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_deploy_feedback_reviews_signal_id_fkey"
+            columns: ["signal_id"]
+            isOneToOne: false
+            referencedRelation: "post_deploy_feedback_signals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_deploy_feedback_signals: {
+        Row: {
+          adoption_relevance: number
+          assimilation_status: string
+          created_at: string
+          id: string
+          impact_area: string
+          initiative_id: string | null
+          linked_capability_id: string | null
+          organization_id: string
+          reliability_relevance: number
+          severity: string
+          signal_payload: Json
+          signal_summary: string
+          signal_type: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          adoption_relevance?: number
+          assimilation_status?: string
+          created_at?: string
+          id?: string
+          impact_area?: string
+          initiative_id?: string | null
+          linked_capability_id?: string | null
+          organization_id: string
+          reliability_relevance?: number
+          severity?: string
+          signal_payload?: Json
+          signal_summary?: string
+          signal_type?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          adoption_relevance?: number
+          assimilation_status?: string
+          created_at?: string
+          id?: string
+          impact_area?: string
+          initiative_id?: string | null
+          linked_capability_id?: string | null
+          organization_id?: string
+          reliability_relevance?: number
+          severity?: string
+          signal_payload?: Json
+          signal_summary?: string
+          signal_type?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_deploy_feedback_signals_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_deploy_feedback_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_deploy_feedback_signals_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       predictive_error_patterns: {
         Row: {
           contributing_factors: Json

@@ -1,7 +1,7 @@
 import {
   Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Map,
   Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
-  Plug, FileSearch, Sparkles, Scale, BrainCircuit, Zap, PackageCheck, ShieldCheck, Store, TrendingUp, GitPullRequestArrow,
+  Plug, FileSearch, Sparkles, Scale, BrainCircuit, Zap, PackageCheck, ShieldCheck, Store, TrendingUp, GitPullRequestArrow, Rss,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
@@ -54,6 +54,7 @@ const bottomItems = [
   { title: "Pilot Mkt.", url: "/pilot-marketplace", icon: Store },
   { title: "Mkt. Outcomes", url: "/marketplace-outcomes", icon: TrendingUp },
   { title: "Delivery Out.", url: "/delivery-outcomes", icon: GitPullRequestArrow },
+  { title: "Post-Deploy", url: "/post-deploy-feedback", icon: Rss },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },

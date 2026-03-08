@@ -49,6 +49,7 @@ import CapabilityGovernance from "./pages/CapabilityGovernance";
 import PilotMarketplace from "./pages/PilotMarketplace";
 import MarketplaceOutcomes from "./pages/MarketplaceOutcomes";
 import DeliveryOutcomes from "./pages/DeliveryOutcomes";
+import PostDeployFeedback from "./pages/PostDeployFeedback";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -120,6 +121,7 @@ const App = () => (
                       <Route path="/pilot-marketplace" element={<ProtectedRoute><PilotMarketplace /></ProtectedRoute>} />
                       <Route path="/marketplace-outcomes" element={<ProtectedRoute><MarketplaceOutcomes /></ProtectedRoute>} />
                       <Route path="/delivery-outcomes" element={<ProtectedRoute><DeliveryOutcomes /></ProtectedRoute>} />
+                      <Route path="/post-deploy-feedback" element={<ProtectedRoute><PostDeployFeedback /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>

@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 83 (Delivery Outcome Causality Layer) — ✅ Complete
-> **Next Planned:** Sprint 84 (Post-Deploy Learning) — 📋 Planned
+> **Current Sprint:** 84 (Post-Deploy Learning & Feedback Assimilation) — ✅ Complete
+> **Next Planned:** Sprint 85 (Reliability-Aware Tuning) — 📋 Planned
 > **Reserved Horizon:** Blocks Q–S (Sprints 83–94) — Block Q in progress
 
 ## Document Authority
@@ -797,5 +797,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Pilot Marketplace | 1 | 81 |
 | Marketplace Outcomes | 1 | 82 |
 | Delivery Outcome Causality | 1 | 83 |
+| Post-Deploy Feedback Assimilation | 1 | 84 |
 | Support | 11 | Various |
-| **Total** | **~134** | |
+| **Total** | **~135** | |
