@@ -147,51 +147,69 @@ AxionOS has completed 40 implementation sprints spanning the full capability arc
 | 36 | Semantic Retrieval & Embedding Memory Expansion | ✅ Complete |
 | 37 | Discovery-Driven Architecture Signals | ✅ Complete |
 
----
+### Architecture Intelligence Layer (Sprints 38–40)
 
-## NOW — Commercial Stability & Intelligence Maturation
-
-**Priority:** High
-**Status:** 🔄 In Progress
-
-### Focus Areas
-
-| Area | Description |
-|------|-------------|
-| Commercial Validation | Real billing flows, Stripe integration, customer onboarding |
-| Learning Stabilization | Validate learning agents improve outcomes with real execution data |
-| Platform Intelligence Maturation | Validate bottleneck detection, pattern analysis, health model accuracy |
-| Strategy Evolution Validation | Validate strategy variant experimentation produces measurable improvements |
-| Calibration Tuning | Confirm calibration proposals are safe and effective with real workloads |
+| Sprint | Name | Status |
+|--------|------|--------|
+| 38 | Architecture Change Simulation & Governance | ✅ Complete |
+| 39 | Architecture Change Planning & Rollout Readiness | ✅ Complete |
+| 40 | Architecture Rollout Sandbox & Controlled Migration Readiness | ✅ Complete |
 
 ---
 
-## NEXT — Cross-Family Strategy Coordination
+## Block A — Architecture-Governed (Sprints 41–43)
+
+**Priority:** Immediate
+**Status:** 📋 Planned
+**Goal:** Close the architecture change lifecycle — from pilot to portfolio governance.
+
+| Sprint | Name | Objective | Acceptance Criteria |
+|--------|------|-----------|-------------------|
+| 41 | Architecture Rollout Pilot Governance | Controlled pilots with real blast radius, gates, baseline comparison, instant rollback | Pilot scopes selectable; eligibility criteria enforced; real vs estimated blast radius; activation/cancellation gates; pilot vs baseline comparison; instantaneous rollback; impact audit |
+| 42 | Controlled Architecture Migration Execution | Transform approved pilot into bounded migration with state machine, phased rollout, checkpoints | Phased rollout orchestration; activation windows; rollback checkpoints; migration state machine; real dependency activation order; tenant-safe slices; migration observability |
+| 43 | Architecture Portfolio Governance | Govern architecture changes as a portfolio, not isolated tickets | Change ranking; cross-proposal conflict detection; blast radius overlap; lifecycle management; deprecate/archive/prioritize; debt vs stability vs opportunity balancing |
+
+> ⚠️ Sprint 42 is the first time the platform executes migration (not just advises/rehearses). All execution remains human-approved.
+
+---
+
+## Block B — Architecture-Operating (Sprints 44–45)
 
 **Priority:** High
 **Status:** 📋 Planned
-**Dependency:** Requires stable commercial and intelligence layers
+**Goal:** Make architecture continuously measurable and orchestrate change advisory into a single coordinated flow.
 
-### Modules
-
-| Module | Description |
-|--------|-------------|
-| Cross-Family Strategy Coordination | Multi-family strategy optimization |
-| Resilience Hardening | Platform resilience under failure conditions |
+| Sprint | Name | Objective | Acceptance Criteria |
+|--------|------|-----------|-------------------|
+| 44 | Architecture Fitness Functions | Continuous architectural health measurement | Boundary fitness checks; tenant isolation fitness; semantic retrieval dependency fitness; observability coverage fitness; policy/strategy coupling fitness; migration readiness drift |
+| 45 | Autonomous Change Advisory Orchestrator | Unified advisory-first orchestrator across advisor + simulation + planning + sandbox + pilot | Single change queue; prioritization across architectural, strategic, and operational changes; recommended rollout agenda; concurrent change conflict detection; cross-initiative sequencing |
 
 ---
 
-## LATER — Discovery-Driven Architecture
+## Block C — Architecture-Scaled (Sprints 46–48)
 
-**Priority:** Long-term
+**Priority:** Medium
 **Status:** 📋 Planned
+**Goal:** Harden the platform for scale, tenant diversity, and economic efficiency.
 
-### Modules
+| Sprint | Name | Objective | Acceptance Criteria |
+|--------|------|-----------|-------------------|
+| 46 | Platform Self-Stabilization v2 | Stabilization aware of in-flight architecture changes | Oscillation suppression during rollout; adaptive freeze of unstable scopes; stabilization-aware migration gating; recovery mode during pilot; rollback clustering |
+| 47 | Tenant-Aware Architecture Modes | Bounded architectural specialization per tenant/context without forking | Architecture mode profiles; bounded tenant specialization; tenant cluster patterns; anti-fragmentation guardrails |
+| 48 | Economic Optimization Layer | Cost and ROI awareness across all changes | Cost-to-reliability optimization; migration ROI estimation; policy/strategy/architecture cost impact; economic tradeoff scoring; cost-aware rollout planning |
 
-| Module | Description |
-|--------|-------------|
-| Discovery-Driven Architecture | Architecture experimentation based on market signals |
-| Autonomous Implementation | End-to-end autonomous code generation |
+---
+
+## Maturity Progression
+
+| Phase | Sprints | State | Description |
+|-------|---------|-------|-------------|
+| Foundation | 1–40 | ✅ Complete | Architecture-aware: consciousness + rehearsal |
+| Governed | 41–43 | 📋 Planned | Architecture-governed: real pilot + migration + portfolio |
+| Operating | 44–45 | 📋 Planned | Architecture-operating: fitness + orchestration |
+| Scaled | 46–48 | 📋 Planned | Architecture-scaled: stability + tenants + economics |
+
+> ⚠️ **Key Risk After Sprint 40:** Too much intelligence without change discipline. The sequence pilot → migration → portfolio is the safest path forward.
 
 ---
 
