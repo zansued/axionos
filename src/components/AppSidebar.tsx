@@ -1,7 +1,7 @@
 import {
   Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Map,
   Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
-  Plug, FileSearch, Sparkles, Scale,
+  Plug, FileSearch, Sparkles, Scale, BrainCircuit,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
@@ -47,6 +47,7 @@ const bottomItems = [
   { title: "Benchmarks", url: "/improvement-benchmarks", icon: FlaskConical },
   { title: "Routing", url: "/agent-routing", icon: Plug },
   { title: "Debates", url: "/agent-debates", icon: Scale },
+  { title: "Working Mem.", url: "/working-memory", icon: BrainCircuit },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },

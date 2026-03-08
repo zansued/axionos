@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** 76 sprints complete. Block N complete. Block O (Advanced Multi-Agent Coordination) in progress — Sprints 75–76 complete.
+> **Last strategic change (2026-03-08):** 77 sprints complete. Block N complete. Block O (Advanced Multi-Agent Coordination) in progress — Sprints 75–77 complete.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -51,7 +51,7 @@
 
 ## Strategic Directive
 
-AxionOS has completed **76 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, evidence capture, improvement candidate distillation, sandbox benchmarking & promotion governance, role arbitration & capability routing 2.0, and multi-agent debate & resolution. The internal architecture is mature, coherent, and self-governing. Block O (Advanced Multi-Agent Coordination) is in progress.
+AxionOS has completed **77 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, evidence capture, improvement candidate distillation, sandbox benchmarking & promotion governance, role arbitration & capability routing 2.0, multi-agent debate & resolution, and shared working memory & task-state negotiation. The internal architecture is mature, coherent, and self-governing. Block O (Advanced Multi-Agent Coordination) is in progress.
 
 **Post-Block M Strategic Position:**
 
@@ -70,7 +70,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 ## Implementation Horizons
 
 ```
-   COMPLETE (1–76)                                               RESERVED (77–94)
+   COMPLETE (1–77)                                               RESERVED (78–94)
    ──────────────────────────────────────────────►               ──────────────────►
    Foundation → Learning → Meta → Memory → Gov →                  Block O: Advanced Multi-Agent
    Intelligence → Calibration → Strategy →                        Block P: Governed Ecosystem
@@ -81,12 +81,13 @@ Internal sophistication serves the visible product experience. The user-facing j
    Ecosystem → Assurance → Canon → Operating Completion →
    Product Experience → Extensibility → Evidence →
     Candidates → Benchmarking & Promotion ✅ →
-    Role Arbitration → Debate & Resolution ✅
+    Role Arbitration → Debate & Resolution →
+    Working Memory & Task-State ✅
 ```
 
 ---
 
-## Completed Canon (Sprints 1–76)
+## Completed Canon (Sprints 1–77)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -120,6 +121,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Sprint 74 — Sandbox Benchmarking & Promotion Governance | 74 | Sandbox benchmarking of candidates, baseline comparison, metric capture, promotion/rejection/deferral governance, operator benchmark dashboard |
 | Sprint 75 — Role Arbitration & Capability Routing 2.0 | 75 | Context-aware agent/capability routing, suitability scoring, candidate comparison, fallback paths, operator routing dashboard |
 | Sprint 76 — Multi-Agent Debate & Resolution Layer | 76 | Structured bounded debate sessions, position/argument/resolution tracking, escalation, operator debate dashboard |
+| Sprint 77 — Shared Working Memory & Task-State Negotiation | 77 | Bounded shared working memory contexts, negotiated task-state transitions, coordination checkpoints, operator working memory dashboard |
 
 ---
 
@@ -175,7 +177,7 @@ Sprint 74 completed the Evidence-Governed Improvement Loop by introducing govern
 
 ## Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔄 In Progress
 
-> **Status:** In progress — Sprints 75–76 complete, Sprints 77–78 planned.
+> **Status:** In progress — Sprints 75–77 complete, Sprint 78 planned.
 
 **Thesis:** After evidence-governed improvement is established, AxionOS evolves toward more advanced role arbitration, debate, resolution, shared working memory, and bounded multi-agent execution.
 
@@ -194,6 +196,14 @@ Sprint 75 established the first upgraded role arbitration and capability routing
 Sprint 76 introduced the first canonical multi-agent debate and resolution layer. The system now supports structured, bounded debate sessions where multiple agents can propose alternative positions, challenge assumptions, defend reasoning, and reach governed resolutions. Debates are depth-bounded (max rounds), risk-classified, and support escalation for unresolved conflicts requiring human review. A dedicated operator surface (`/agent-debates`) provides debate queue, active/resolved/escalated views, argument comparison, resolution detail, and governance controls.
 
 **Strategic role:** Sprint 76 deepens Block O by making multi-agent disagreement visible, structured, and governable. No autonomous architecture mutation is introduced.
+
+---
+
+## Sprint 77 — Shared Working Memory & Task-State Negotiation ✅ Implemented
+
+Sprint 77 introduced the first canonical shared working memory and task-state negotiation layer. Coordinated agents can now operate against bounded, contextual working memory tied to initiatives and execution contexts. The system supports shared memory entries (observations, assumptions, decisions, constraints), negotiated task-state transitions (proposed → accepted/contested/escalated → resolved), and coordination checkpoints. A dedicated operator surface (`/working-memory`) provides context visibility, blocked/escalated state tracking, checkpoint timelines, and state transition audit trails.
+
+**Strategic role:** Sprint 77 deepens Block O by giving coordinated agents a governed, auditable shared context without introducing uncontrolled global mutation. Tenant isolation and governance invariants remain preserved.
 
 ---
 

@@ -23,7 +23,7 @@ blocks:
   - { block_id: "N",          block_name: "Evidence-Governed Improvement Loop",           sprint_range: "71–74", status: complete, purpose: "Governed extensibility (71 ✅), evidence capture & improvement ledger (72 ✅), improvement candidate distillation (73 ✅), sandbox benchmarking & promotion governance (74 ✅)" }
 
   # === RESERVED ===
-  - { block_id: "O",          block_name: "Advanced Multi-Agent Coordination",            sprint_range: "75–78", status: "partial (75–76 complete)", purpose: "Role arbitration & capability routing 2.0 (75 ✅), multi-agent debate & resolution (76 ✅), shared working memory (77 planned), bounded swarm execution (78 planned)" }
+  - { block_id: "O",          block_name: "Advanced Multi-Agent Coordination",            sprint_range: "75–78", status: "partial (75–77 complete)", purpose: "Role arbitration & capability routing 2.0 (75 ✅), multi-agent debate & resolution (76 ✅), shared working memory & task-state (77 ✅), bounded swarm execution (78 planned)" }
   - { block_id: "P",          block_name: "Governed Capability Ecosystem & Early Marketplace", sprint_range: "79–82", status: reserved, purpose: "Governed capability exchange, marketplace UX, extended trust/sandbox" }
   - { block_id: "Q",          block_name: "Autonomous Delivery Optimization & Outcome Assurance 2.0", sprint_range: "83–86", status: reserved, purpose: "Causal delivery analysis, post-deploy learning, reliability-aware tuning" }
   - { block_id: "R",          block_name: "Advanced Distributed Runtime & Scaled Execution", sprint_range: "87–90", status: reserved, purpose: "Distributed job control, cross-region resilience, tenant-isolated scale" }
