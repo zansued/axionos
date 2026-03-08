@@ -83,7 +83,8 @@ Internal sophistication remains critical. It is what makes the product trustwort
 ### Current Canon Boundaries
 
 - **Sprints 1–70** = canonical complete (first mature operating baseline + Block M: Product Experience & Delivery Maturity)
-- **Sprint 71+** = reserved (post-Block M, strategic direction TBD)
+- **Sprints 71–74** = planned (Block N: Evidence-Governed Improvement Loop)
+- **Sprints 75–94** = reserved (Blocks O–S: future strategic horizon)
 
 ---
 
