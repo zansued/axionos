@@ -35,38 +35,42 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
 - Sprints 1–65 are the completed first mature operating canon — do not casually reopen
-- Block M sprints (66–70) focus on user-visible product experience, not internal layering
+- Block M (66–70) is complete — user-visible product experience and delivery maturity
+- Block N (71–74) is the next planned block — evidence-governed improvement loop
+- Blocks O–S (75–94) are reserved — do not treat as implemented
 - Do not collapse internal architecture and user-facing journey into the same surface
 
 ---
 
-## After Sprint 65 — What Changes Strategically
+## After Sprint 70 — What Changes Strategically
 
-The platform has reached its **first mature internal operating baseline** at Sprint 65. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — is complete and self-governing.
+The platform has completed its **product-ready operating baseline** at Sprint 70. Block M (Product Experience & Delivery Maturity) is complete. The internal architecture and user-facing product experience are mature.
 
-The next major focus is **Product Experience & Delivery Maturity** (Block M):
+The next strategic arc is **governed self-improvement and ecosystem evolution**:
 
-- **Journey clarity** — the user always knows where they are, what was generated, what is next, and what requires approval
-- **Role separation** — default user journey vs operator/governance views are distinct surfaces
-- **Delivery/deploy visibility** — one-click path from validated code to deployed, accessible software
-- **Onboarding and templates** — reduce time-to-value with guided flows and reusable starting points
-- **Adoption intelligence** — measure adoption health and close the feedback loop
+- **Block N (71–74, Planned)** — Evidence-Governed Improvement Loop: turning operational evidence into bounded improvement proposals under governance
+- **Block O (75–78, Reserved)** — Advanced Multi-Agent Coordination
+- **Block P (79–82, Reserved)** — Governed Capability Ecosystem & Early Marketplace
+- **Block Q (83–86, Reserved)** — Delivery Optimization & Outcome Assurance 2.0
+- **Block R (87–90, Reserved)** — Advanced Distributed Runtime & Scaled Execution
+- **Block S (91–94, Reserved)** — Research Sandbox for Architecture Evolution
 
-Internal sophistication remains critical. It is what makes the product trustworthy. But it increasingly serves the visible product experience rather than being the primary development target.
+Internal sophistication remains critical. Future blocks deepen it through evidence-governed improvement, not uncontrolled autonomy.
 
 ---
 
-## How To Continue Safely After Sprint 65
+## How To Continue Safely After Sprint 70
 
-1. Read **ROADMAP.md** first for strategic direction and post-65 thesis
+1. Read **ROADMAP.md** first for strategic direction and post-70 roadmap
 2. Read **PLAN.md** next for current and next sprint
 3. Use **ARCHITECTURE.md** for structural context and the product boundary model
 4. Use **PIPELINE_CONTRACTS.md** for the user-visible journey contract
 5. Use **AGENTS.md** for internal agent system reference only
 6. Implement future work **sprint by sprint** with human review
 7. Do **not** collapse internal architecture and user-facing journey into the same surface
-8. Do **not** casually reopen completed canon (Sprints 1–65) without deliberate review
+8. Do **not** casually reopen completed canon (Sprints 1–70) without deliberate review
 9. Internal layers are backstage support — the default product surface is the user journey
+10. Block N (Sprints 71–74) is the next planned block — scope each sprint before implementation
 
 ---
 
@@ -83,7 +87,8 @@ Internal sophistication remains critical. It is what makes the product trustwort
 ### Current Canon Boundaries
 
 - **Sprints 1–70** = canonical complete (first mature operating baseline + Block M: Product Experience & Delivery Maturity)
-- **Sprint 71+** = reserved (post-Block M, strategic direction TBD)
+- **Sprints 71–74** = planned (Block N: Evidence-Governed Improvement Loop)
+- **Sprints 75–94** = reserved (Blocks O–S: future strategic horizon)
 
 ---
 

@@ -5,13 +5,14 @@
 >
 > **Last updated:** 2026-03-08
 > **Current Sprint:** 70 (Adoption Intelligence & Customer Success Loop) — ✅ Complete
-> **Next Sprint:** 71 (TBD — post-Block M) — 🔮 Reserved
+> **Next Block:** N (Evidence-Governed Improvement Loop, Sprints 71–74) — 📋 Planned
+> **Reserved Horizon:** Blocks O–S (Sprints 75–94) — 🔮 Reserved
 
 ## Document Authority
 
 | Scope | Rule |
 |-------|------|
-| **Owns** | Current/next sprint, sprint-by-sprint implementation record, phase grouping, completion status, capability verification matrix, shared module and edge function registries, post-65 execution guidance |
+| **Owns** | Current/next sprint, sprint-by-sprint implementation record, phase grouping, completion status, capability verification matrix, shared module and edge function registries, post-70 execution guidance |
 | **Must not define** | Deep architecture explanation (→ ARCHITECTURE.md), long-term strategic narrative (→ ROADMAP.md), detailed agent/module reference (→ AGENTS.md) |
 | **Derived from** | ARCHITECTURE.md for layer naming |
 | **Update rule** | Update when a sprint completes or starts |
@@ -26,15 +27,16 @@
 
 ---
 
-## Post-65 Execution Guidance
+## Post-70 Execution Guidance
 
-Sprints 1–65 represent the **completed first mature operating canon** of AxionOS. The internal architecture is mature, coherent, and self-governing.
+Sprints 1–70 represent the **completed product-ready operating canon** of AxionOS. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete.
 
-The next execution focus is **user-visible journey productization**:
-- The internal architecture is sufficient to support product experience work
-- Future sprints should increasingly prioritize journey clarity, role separation, delivery visibility, and adoption
+The next execution focus is **evidence-governed improvement** (Block N):
+- The internal architecture and product experience foundation are complete
+- Future sprints should deepen evidence-based learning, improvement proposal generation, and governed promotion
 - Future sprints should not casually reopen completed canon unless deliberate review requires it
 - Implementation continues one sprint at a time with human review before each
+- No autonomous architecture mutation — all structural changes require human approval
 
 ---
 
@@ -50,8 +52,9 @@ This document serves as the canonical sprint execution ledger. The following con
 | 🔮 Reserved | Strategic direction defined, not yet scoped for implementation | Lightweight — name, block, and one-line purpose only |
 
 - **Current/next sprint** should be highly detailed before implementation begins
-- **Reserved horizon** (Sprint 71+) should remain intentionally lightweight until promoted to committed
-- Reserved sprints should not be promoted to planned without deliberate review
+- **Planned block** (Block N, Sprints 71–74) should be scoped sprint-by-sprint before implementation
+- **Reserved horizon** (Blocks O–S, Sprints 75–94) should remain intentionally lightweight until promoted to planned
+- Reserved blocks should not be promoted without deliberate review
 
 ---
 
@@ -531,26 +534,36 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Post-Block M — Sprint 71: Governed Extensibility & Developer Experience Foundation — ✅ COMPLETE
-
-**Goal:** Build the first governed extensibility and developer experience foundation — safe extension points, integration contracts, approval-based activation, compatibility visibility, and rollback posture — without mutating the kernel or collapsing the default user journey.
-
-| Sprint | Capability | Architectural Layer | Status |
-|--------|-----------|-------------------|--------|
-| 71 | Governed Extensibility & Developer Experience Foundation | Extensibility Foundation Layer | ✅ Complete |
-
-**Key Milestones:**
-- Sprint 71: Extension registry data model (platform_extensions, extension_activations, extension_compatibility_checks, extension_audit_events), approval-based activation workflow, compatibility/risk assessment, operator extension management UI, rollback/deactivation flows, full audit trail, tenant-isolated RLS.
-
----
-
-## Future Arc — Post-Sprint 71 (Sprint 72+)
+## Block N — Evidence-Governed Improvement Loop (Sprints 71–74) — 📋 PLANNED
 
 > **Strategic direction:** [ROADMAP.md](ROADMAP.md)
 
+**Goal:** Turn operational evidence into bounded improvement proposals that are tested and promoted under governance. AxionOS should become better over time through evidence, not uncontrolled autonomy.
+
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 72+ | TBD | N+ | 🔮 Reserved | Further extensibility, developer SDK, or platform maturity |
+| 71 | TBD — Evidence Collection Foundation | N | 📋 Planned | Structured evidence collection from pipeline, repair, delivery, and adoption |
+| 72 | TBD — Improvement Proposal Generation | N | 📋 Planned | Bounded improvement proposals from evidence aggregation |
+| 73 | TBD — Governed Testing & Promotion | N | 📋 Planned | Governed testing and promotion of improvement candidates |
+| 74 | TBD — Improvement Outcome Tracking | N | 📋 Planned | Outcome tracking and feedback for improvement cycles |
+
+**Canon constraints:** No autonomous architecture mutation. Human approval for structural change. Rollback everywhere. Bounded learning and promotion. Tenant isolation preserved.
+
+---
+
+## Reserved Future Horizon — Blocks O–S (Sprints 75–94)
+
+> **Strategic direction:** [ROADMAP.md](ROADMAP.md)
+
+| Block | Sprints | Name | Status |
+|-------|---------|------|--------|
+| O | 75–78 | Advanced Multi-Agent Coordination | 🔮 Reserved |
+| P | 79–82 | Governed Capability Ecosystem & Early Marketplace | 🔮 Reserved |
+| Q | 83–86 | Autonomous Delivery Optimization & Outcome Assurance 2.0 | 🔮 Reserved |
+| R | 87–90 | Advanced Distributed Runtime & Scaled Execution | 🔮 Reserved |
+| S | 91–94 | Research Sandbox for Architecture Evolution | 🔮 Reserved |
+
+Reserved blocks are strategic direction only. They will not be promoted to planned without deliberate review.
 
 ---
 

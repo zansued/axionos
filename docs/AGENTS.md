@@ -1374,14 +1374,51 @@ The 5-plane, 18-module architecture remains stable and sufficient for future wor
 
 ---
 
-## Post-65 Strategic Note
+## Post-70 Strategic Note — Agent Evolution Roadmap
 
-Post-65 work (Block M: Product Experience & Delivery Maturity) primarily reuses the existing Agent OS foundation. The focus shifts from building new internal intelligence planes to orchestrating the user-visible product experience:
+Block M (Product Experience & Delivery Maturity, Sprints 66–70) is complete. It reused the existing Agent OS foundation without new plane expansion.
 
-- **User journey orchestration** reuses existing Execution Plane (Orchestrator) and Control Plane (Governance)
-- **Role-based experience** reuses Control Plane (Policy Engine, Governance) for surface separation
-- **Deploy assurance** reuses existing pipeline validation, publish, and deployment infrastructure
-- **Onboarding and templates** reuse Data Plane (Memory, Artifact Store) for reusable patterns
-- **Adoption intelligence** reuses Data Plane (Observability) and existing product intelligence layers
+The following describes **how agents may evolve** in future blocks. None of this is implemented unless explicitly noted.
 
-This does not require new Agent OS plane expansion. The internal system becomes stronger backstage support — not a noisier default frontend. The Agent OS architecture remains the governed engine; the product surface is where the user interacts.
+### Block N — Evidence-Governed Improvement Loop (Planned, Sprints 71–74)
+
+Agents may gain evidence-aware improvement capabilities:
+- Structured evidence collection from agent execution outcomes
+- Bounded improvement proposal generation from evidence aggregation
+- Governed testing and promotion of improvement candidates
+- Rollback-safe agent-level experimentation
+
+This reuses existing Learning Engine, Memory System, and Governance Layer infrastructure.
+
+### Block O — Advanced Multi-Agent Coordination (Reserved, Sprints 75–78)
+
+The Agent OS Execution Plane may evolve:
+- Advanced role arbitration beyond current selection engine
+- Structured debate and consensus patterns (extends existing coordination module v0.8)
+- Shared working memory for multi-agent collaboration
+- Bounded multi-agent execution with governance oversight
+
+### Block P — Governed Capability Ecosystem (Reserved, Sprints 79–82)
+
+Agents may participate in a governed capability exchange:
+- Agent capability publishing and discovery through the Ecosystem Plane
+- Governed admission, trust scoring, and sandbox testing for external agents
+- This extends the existing bounded pilot (Sprint 60) — not a full open marketplace
+
+### Block S — Research Sandbox for Architecture Evolution (Reserved, Sprints 91–94)
+
+Agent-driven architecture research may emerge:
+- Architecture hypothesis generation by meta-agents
+- Simulated evolution campaigns in sandboxed environments
+- Cross-tenant pattern synthesis under governed conditions
+- All promotion requires explicit human approval — no autonomous architecture mutation
+
+### Invariants Across All Future Evolution
+
+The 5-plane, 18-module architecture remains stable. Future agent evolution must:
+- Preserve the existing plane dependency hierarchy
+- Maintain advisory-first, governance-before-autonomy
+- Ensure all structural changes require human review
+- Preserve tenant isolation (organization_id + RLS)
+- Maintain rollback capability for all agent-level changes
+- Never allow agents to mutate pipeline topology, governance rules, billing, or safety constraints
