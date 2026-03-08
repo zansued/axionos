@@ -342,7 +342,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(51, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(52, 1fr)" }}>
+            <TabsTrigger value="completion" className="text-xs gap-1"><CheckCircle2 className="h-3 w-3" /> Completion</TabsTrigger>
             <TabsTrigger value="canon-gov" className="text-xs gap-1"><ScrollText className="h-3 w-3" /> CanonGov</TabsTrigger>
             <TabsTrigger value="outcome-assure" className="text-xs gap-1"><BadgeCheck className="h-3 w-3" /> OutcomeAssure</TabsTrigger>
             <TabsTrigger value="mp-gov" className="text-xs gap-1"><Handshake className="h-3 w-3" /> MultiPartyGov</TabsTrigger>
