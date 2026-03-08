@@ -35,8 +35,8 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
 - **Reserved horizon** sprints (57–65) should not be promoted to planned without deliberate review
-- **Committed** sprint (56) has defined objectives but should still be scoped in detail before implementation
-- The **planned** sprint (56) is the next to implement
+- **Committed** sprint (57) has defined objectives but should still be scoped in detail before implementation
+- The **planned** sprint (57) is the next to implement
 
 ---
 
