@@ -25,6 +25,7 @@ import Observability from "./pages/Observability";
 import Planning from "./pages/Planning";
 import Workspace from "./pages/Workspace";
 import Artifacts from "./pages/Artifacts";
+import Delivery from "./pages/Delivery";
 import OrgSettings from "./pages/OrgSettings";
 import Billing from "./pages/Billing";
 import Connections from "./pages/Connections";
