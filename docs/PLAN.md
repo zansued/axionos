@@ -130,9 +130,71 @@
 | 35 | Autonomous Engineering Advisor | Engineering Advisory Layer |
 | 36 | Semantic Retrieval & Embedding Memory Expansion | Semantic Retrieval Layer |
 | 37 | Discovery-Driven Architecture Signals | Discovery Architecture Layer |
-| 38 | Architecture Change Simulation & Governance | Architecture Simulation Layer |
 
-**Delivered:** Stability monitoring, stabilization actions, bounded interventions, rollback-safe stabilization, engineering signal aggregation, opportunity synthesis, prioritized recommendations, explainability, review workflows, advisory clustering, unified embedding-backed retrieval, domain registry, index management, ranking, guardrails, retrieval quality evaluation, discovery signal aggregation, architecture stress mapping, architecture opportunity synthesis, discovery-driven recommendations, architecture change proposals, simulation scope profiles, impact simulation, boundary analysis, guardrails, simulation outcomes, review workflows.
+**Delivered:** Stability monitoring, stabilization actions, bounded interventions, rollback-safe stabilization, engineering signal aggregation, opportunity synthesis, prioritized recommendations, explainability, review workflows, advisory clustering, unified embedding-backed retrieval, domain registry, index management, ranking, guardrails, retrieval quality evaluation, discovery signal aggregation, architecture stress mapping, architecture opportunity synthesis, discovery-driven recommendations.
+
+---
+
+### Phase 9: Architecture Intelligence (Sprints 38–40)
+
+**Goal:** Bounded simulation, governed planning, and sandbox rehearsal for architecture changes.
+
+| Sprint | Capability | Architectural Layer |
+|--------|-----------|-------------------|
+| 38 | Architecture Change Simulation & Governance | Architecture Simulation Layer |
+| 39 | Architecture Change Planning & Rollout Readiness | Architecture Planning Layer |
+| 40 | Architecture Rollout Sandbox & Controlled Migration Readiness | Architecture Rollout Sandbox Layer |
+
+**Delivered:** Architecture change proposals, simulation scope profiles, impact simulation, boundary analysis, simulation guardrails, simulation outcomes and reviews, implementation plans, dependency mapping, blast radius estimation, validation/rollback blueprints, readiness scoring, plan review lifecycle, rollout sandboxes, migration sequence rehearsal, fragility analysis, rollback viability rehearsal, sandbox guardrails, sandbox governance profiles, sandbox review lifecycle.
+
+---
+
+### Phase 10: Architecture-Governed (Sprints 41–43) — 📋 PLANNED
+
+**Goal:** Close the architecture change lifecycle from pilot to portfolio governance.
+
+| Sprint | Capability | Architectural Layer |
+|--------|-----------|-------------------|
+| 41 | Architecture Rollout Pilot Governance | Architecture Pilot Layer |
+| 42 | Controlled Architecture Migration Execution | Architecture Migration Layer |
+| 43 | Architecture Portfolio Governance | Architecture Portfolio Layer |
+
+**Key Milestones:**
+- Sprint 41: Real blast radius, activation/cancellation gates, pilot vs baseline comparison, instant rollback
+- Sprint 42: First real migration execution (human-approved), phased rollout, state machine, tenant-safe slices
+- Sprint 43: Change ranking, conflict detection, blast radius overlap, debt/stability/opportunity balancing
+
+---
+
+### Phase 11: Architecture-Operating (Sprints 44–45) — 📋 PLANNED
+
+**Goal:** Continuous architecture health measurement and unified change advisory orchestration.
+
+| Sprint | Capability | Architectural Layer |
+|--------|-----------|-------------------|
+| 44 | Architecture Fitness Functions | Architecture Fitness Layer |
+| 45 | Autonomous Change Advisory Orchestrator | Change Advisory Orchestration Layer |
+
+**Key Milestones:**
+- Sprint 44: Boundary fitness, tenant isolation fitness, observability coverage fitness, migration readiness drift
+- Sprint 45: Single change queue, cross-type prioritization, concurrent change conflict, rollout agenda
+
+---
+
+### Phase 12: Architecture-Scaled (Sprints 46–48) — 📋 PLANNED
+
+**Goal:** Platform hardening for scale, tenant diversity, and economic efficiency.
+
+| Sprint | Capability | Architectural Layer |
+|--------|-----------|-------------------|
+| 46 | Platform Self-Stabilization v2 | Platform Stabilization v2 Layer |
+| 47 | Tenant-Aware Architecture Modes | Tenant Architecture Layer |
+| 48 | Economic Optimization Layer | Economic Optimization Layer |
+
+**Key Milestones:**
+- Sprint 46: Oscillation suppression during rollout, adaptive freeze, stabilization-aware migration gating
+- Sprint 47: Architecture mode profiles, bounded tenant specialization, anti-fragmentation guardrails
+- Sprint 48: Cost-to-reliability optimization, migration ROI, economic tradeoff scoring
 
 ---
 
