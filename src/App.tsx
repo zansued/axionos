@@ -53,6 +53,7 @@ import PostDeployFeedback from "./pages/PostDeployFeedback";
 import DeliveryTuning from "./pages/DeliveryTuning";
 import OutcomeAssurance from "./pages/OutcomeAssurance";
 import DistributedJobs from "./pages/DistributedJobs";
+import CrossRegionRecovery from "./pages/CrossRegionRecovery";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
