@@ -17,6 +17,14 @@ blocks:
   - { block_id: "J",          block_name: "Trusted Ecosystem Foundation",                 sprint_range: "57–59", status: complete, purpose: "Capability exposure governance, trust/admission, ecosystem simulation" }
   - { block_id: "K",          block_name: "Controlled Ecosystem Activation",              sprint_range: "60–62", status: complete, purpose: "Marketplace pilot, capability registry, multi-party governance" }
   - { block_id: "L",          block_name: "System Roundness & Operating Completion",      sprint_range: "63–65", status: complete, purpose: "Outcome assurance, canon integrity, operating completion" }
+  - { block_id: "M",          block_name: "Product Experience & Delivery Maturity",       sprint_range: "66–70", status: complete, purpose: "User journey orchestration, role-based experience, deploy assurance, onboarding, adoption intelligence" }
 
-  # === COMPLETE ===
-  - { block_id: "M",          block_name: "Product Experience & Delivery Maturity",       sprint_range: "66–70", status: complete,  purpose: "User journey orchestration, role-based experience, deploy assurance, onboarding, adoption intelligence" }
+  # === PLANNED ===
+  - { block_id: "N",          block_name: "Evidence-Governed Improvement Loop",           sprint_range: "71–74", status: planned,  purpose: "Evidence collection, bounded improvement proposals, governed testing/promotion, rollback-safe experimentation" }
+
+  # === RESERVED ===
+  - { block_id: "O",          block_name: "Advanced Multi-Agent Coordination",            sprint_range: "75–78", status: reserved, purpose: "Role arbitration, debate, shared working memory, bounded multi-agent execution" }
+  - { block_id: "P",          block_name: "Governed Capability Ecosystem & Early Marketplace", sprint_range: "79–82", status: reserved, purpose: "Governed capability exchange, marketplace UX, extended trust/sandbox" }
+  - { block_id: "Q",          block_name: "Autonomous Delivery Optimization & Outcome Assurance 2.0", sprint_range: "83–86", status: reserved, purpose: "Causal delivery analysis, post-deploy learning, reliability-aware tuning" }
+  - { block_id: "R",          block_name: "Advanced Distributed Runtime & Scaled Execution", sprint_range: "87–90", status: reserved, purpose: "Distributed job control, cross-region resilience, tenant-isolated scale" }
+  - { block_id: "S",          block_name: "Research Sandbox for Architecture Evolution",  sprint_range: "91–94", status: reserved, purpose: "Architecture hypothesis generation, simulated evolution, human-governed promotion" }
