@@ -38,8 +38,8 @@ This document serves as the canonical sprint execution ledger. The following con
 | 🔮 Reserved | Strategic direction defined, not yet scoped for implementation | Lightweight — name, block, and one-line purpose only |
 
 - **Current/next sprint** should be highly detailed before implementation begins
-- **Committed future arc** (Sprint 58) should be moderately detailed
-- **Reserved horizon** (Sprints 59–65) should remain intentionally lightweight until promoted to committed
+- **Committed future arc** (Sprint 59) should be moderately detailed
+- **Reserved horizon** (Sprints 60–65) should remain intentionally lightweight until promoted to committed
 - Reserved sprints should not be promoted to planned without deliberate review
 
 ---
