@@ -7141,6 +7141,248 @@ export type Database = {
           },
         ]
       }
+      delivery_outcome_analysis_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          new_status: string
+          organization_id: string
+          outcome_id: string
+          previous_status: string
+          review_action: string
+          review_notes: string
+          reviewer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          new_status?: string
+          organization_id: string
+          outcome_id: string
+          previous_status?: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          new_status?: string
+          organization_id?: string
+          outcome_id?: string
+          previous_status?: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_outcome_analysis_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_outcome_analysis_reviews_outcome_id_fkey"
+            columns: ["outcome_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_outcome_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_outcome_causality_links: {
+        Row: {
+          confidence_posture: string
+          counterfactors: Json
+          created_at: string
+          factor_id: string
+          id: string
+          link_strength: string
+          link_type: string
+          organization_id: string
+          outcome_id: string
+          supporting_signals: Json
+        }
+        Insert: {
+          confidence_posture?: string
+          counterfactors?: Json
+          created_at?: string
+          factor_id: string
+          id?: string
+          link_strength?: string
+          link_type?: string
+          organization_id: string
+          outcome_id: string
+          supporting_signals?: Json
+        }
+        Update: {
+          confidence_posture?: string
+          counterfactors?: Json
+          created_at?: string
+          factor_id?: string
+          id?: string
+          link_strength?: string
+          link_type?: string
+          organization_id?: string
+          outcome_id?: string
+          supporting_signals?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_outcome_causality_links_factor_id_fkey"
+            columns: ["factor_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_outcome_factors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_outcome_causality_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_outcome_causality_links_outcome_id_fkey"
+            columns: ["outcome_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_outcome_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_outcome_factors: {
+        Row: {
+          confidence_score: number
+          contribution_weight: number
+          created_at: string
+          evidence_refs: Json
+          factor_direction: string
+          factor_label: string
+          factor_type: string
+          id: string
+          organization_id: string
+          outcome_id: string
+          uncertainty_reason: string
+        }
+        Insert: {
+          confidence_score?: number
+          contribution_weight?: number
+          created_at?: string
+          evidence_refs?: Json
+          factor_direction?: string
+          factor_label?: string
+          factor_type?: string
+          id?: string
+          organization_id: string
+          outcome_id: string
+          uncertainty_reason?: string
+        }
+        Update: {
+          confidence_score?: number
+          contribution_weight?: number
+          created_at?: string
+          evidence_refs?: Json
+          factor_direction?: string
+          factor_label?: string
+          factor_type?: string
+          id?: string
+          organization_id?: string
+          outcome_id?: string
+          uncertainty_reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_outcome_factors_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_outcome_factors_outcome_id_fkey"
+            columns: ["outcome_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_outcome_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_outcome_records: {
+        Row: {
+          analysis_status: string
+          confidence_score: number
+          created_at: string
+          delivery_context: Json
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          outcome_metrics: Json
+          outcome_status: string
+          outcome_summary: string
+          outcome_type: string
+          uncertainty_notes: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          analysis_status?: string
+          confidence_score?: number
+          created_at?: string
+          delivery_context?: Json
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          outcome_metrics?: Json
+          outcome_status?: string
+          outcome_summary?: string
+          outcome_type?: string
+          uncertainty_notes?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          analysis_status?: string
+          confidence_score?: number
+          created_at?: string
+          delivery_context?: Json
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          outcome_metrics?: Json
+          outcome_status?: string
+          outcome_summary?: string
+          outcome_type?: string
+          uncertainty_notes?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_outcome_records_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_outcome_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_outcome_records_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       delivery_output_views: {
         Row: {
           created_at: string

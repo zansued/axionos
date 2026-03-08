@@ -4,9 +4,9 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 82 (Outcome-Aware Capability Marketplace) — ✅ Complete
-> **Next Planned:** Sprint 83 (Causal Delivery Analysis) — 📋 Planned
-> **Reserved Horizon:** Blocks P–S (Sprints 79–94) — Block P complete
+> **Current Sprint:** 83 (Delivery Outcome Causality Layer) — ✅ Complete
+> **Next Planned:** Sprint 84 (Post-Deploy Learning) — 📋 Planned
+> **Reserved Horizon:** Blocks Q–S (Sprints 83–94) — Block Q in progress
 
 ## Document Authority
 
@@ -796,5 +796,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Capability Governance | 1 | 80 |
 | Pilot Marketplace | 1 | 81 |
 | Marketplace Outcomes | 1 | 82 |
+| Delivery Outcome Causality | 1 | 83 |
 | Support | 11 | Various |
-| **Total** | **~133** | |
+| **Total** | **~134** | |
