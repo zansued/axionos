@@ -760,6 +760,231 @@ export type Database = {
         }
         Relationships: []
       }
+      architecture_change_proposals: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          id: string
+          organization_id: string
+          priority_score: number | null
+          proposal_payload: Json
+          proposal_type: string
+          safety_class: string
+          source_recommendation_id: string | null
+          status: string
+          target_entities: Json
+          target_scope: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          priority_score?: number | null
+          proposal_payload?: Json
+          proposal_type: string
+          safety_class?: string
+          source_recommendation_id?: string | null
+          status?: string
+          target_entities?: Json
+          target_scope: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          priority_score?: number | null
+          proposal_payload?: Json
+          proposal_type?: string
+          safety_class?: string
+          source_recommendation_id?: string | null
+          status?: string
+          target_entities?: Json
+          target_scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_change_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_change_proposals_source_recommendation_id_fkey"
+            columns: ["source_recommendation_id"]
+            isOneToOne: false
+            referencedRelation: "discovery_architecture_recommendations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_simulation_outcomes: {
+        Row: {
+          affected_layers: Json
+          confidence_score: number | null
+          created_at: string
+          expected_benefits: Json | null
+          expected_tradeoffs: Json | null
+          id: string
+          organization_id: string
+          proposal_id: string
+          risk_flags: Json | null
+          scope_profile_id: string
+          simulation_summary: Json
+          status: string
+        }
+        Insert: {
+          affected_layers?: Json
+          confidence_score?: number | null
+          created_at?: string
+          expected_benefits?: Json | null
+          expected_tradeoffs?: Json | null
+          id?: string
+          organization_id: string
+          proposal_id: string
+          risk_flags?: Json | null
+          scope_profile_id: string
+          simulation_summary?: Json
+          status?: string
+        }
+        Update: {
+          affected_layers?: Json
+          confidence_score?: number | null
+          created_at?: string
+          expected_benefits?: Json | null
+          expected_tradeoffs?: Json | null
+          id?: string
+          organization_id?: string
+          proposal_id?: string
+          risk_flags?: Json | null
+          scope_profile_id?: string
+          simulation_summary?: Json
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_simulation_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_simulation_outcomes_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_change_proposals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_simulation_outcomes_scope_profile_id_fkey"
+            columns: ["scope_profile_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_simulation_scope_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_simulation_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          linked_changes: Json | null
+          organization_id: string
+          review_notes: string | null
+          review_reason_codes: Json | null
+          review_status: string
+          reviewer_ref: Json | null
+          simulation_outcome_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+          simulation_outcome_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id?: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+          simulation_outcome_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_simulation_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_simulation_reviews_simulation_outcome_id_fkey"
+            columns: ["simulation_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_simulation_outcomes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_simulation_scope_profiles: {
+        Row: {
+          allowed_entities: Json
+          created_at: string
+          forbidden_entities: Json
+          id: string
+          max_scope_breadth: number | null
+          organization_id: string
+          scope_key: string
+          scope_name: string
+          simulation_mode: string
+          updated_at: string
+        }
+        Insert: {
+          allowed_entities?: Json
+          created_at?: string
+          forbidden_entities?: Json
+          id?: string
+          max_scope_breadth?: number | null
+          organization_id: string
+          scope_key: string
+          scope_name: string
+          simulation_mode?: string
+          updated_at?: string
+        }
+        Update: {
+          allowed_entities?: Json
+          created_at?: string
+          forbidden_entities?: Json
+          id?: string
+          max_scope_breadth?: number | null
+          organization_id?: string
+          scope_key?: string
+          scope_name?: string
+          simulation_mode?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_simulation_scope_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       artifact_reviews: {
         Row: {
           action: string
