@@ -61,6 +61,7 @@ import { EcosystemSimulationSandboxDashboard } from "@/components/observability/
 import { CapabilityRegistryGovernanceDashboard } from "@/components/observability/CapabilityRegistryGovernanceDashboard";
 import { MultiPartyPolicyRevenueGovernanceDashboard } from "@/components/observability/MultiPartyPolicyRevenueGovernanceDashboard";
 import { InstitutionalOutcomeAssuranceDashboard } from "@/components/observability/InstitutionalOutcomeAssuranceDashboard";
+import { CanonIntegrityDriftGovernanceDashboard } from "@/components/observability/CanonIntegrityDriftGovernanceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
