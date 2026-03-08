@@ -140,14 +140,21 @@ Future blocks build on the third layer's clarity while deepening the first two l
 
 ---
 
-## Block N — Evidence-Governed Improvement Loop (Sprints 71–74) — 📋 Planned
+## Sprint 71 — Governed Extensibility & Developer Experience Foundation ✅ Implemented
 
-> **Status:** Planned — next block in the execution queue.
+Sprint 71 introduced the first governed extensibility foundation for AxionOS. Platform extensions now have canonical registration, compatibility checks, approval-based activation, rollback posture, full audit trail, and tenant-isolated governance. A dedicated operator surface was added for extension lifecycle management.
+
+**Strategic role:** Sprint 71 is a bridge sprint after Block M. It strengthens AxionOS as a governed software factory by making extensibility visible, reviewable, and reversible before deeper self-improvement and coordination layers are expanded.
+
+---
+
+## Planned Next Block — Sprints 72–74: Evidence-Governed Improvement Loop — 📋 Planned
+
+> **Status:** Planned — next in the execution queue.
 
 **Thesis:** AxionOS should become better over time through evidence-governed learning, not uncontrolled autonomy. This block turns operational evidence into bounded improvement proposals that are tested and promoted under governance.
 
 **Objectives:**
-- Structured evidence collection from pipeline outcomes, repair patterns, delivery results, and adoption signals
 - Bounded improvement proposal generation from evidence aggregation
 - Governed testing and promotion of improvement candidates
 - Rollback-safe experimentation with clear lineage and audit trail

@@ -768,5 +768,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | One-Click Delivery & Deploy Assurance | 1 | 68 |
 | Onboarding, Templates & Vertical Starters | 1 | 69 |
 | Adoption Intelligence & Customer Success | 1 | 70 |
+| Extension Management | 1 | 71 |
 | Support | 11 | Various |
-| **Total** | **~116** | |
+| **Total** | **~117** | |
