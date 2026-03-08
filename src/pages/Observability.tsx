@@ -317,6 +317,7 @@ export default function Observability() {
         <Tabs defaultValue="performance">
           <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(25, 1fr)" }}>
             <TabsTrigger value="advisor" className="text-xs gap-1"><Lightbulb className="h-3 w-3" /> Advisor</TabsTrigger>
+            <TabsTrigger value="arch-sim" className="text-xs gap-1"><Beaker className="h-3 w-3" /> ArchSim</TabsTrigger>
             <TabsTrigger value="arch-disc" className="text-xs gap-1"><Compass className="h-3 w-3" /> ArchDisc</TabsTrigger>
             <TabsTrigger value="sem-retr" className="text-xs gap-1"><SearchCode className="h-3 w-3" /> SemRetr</TabsTrigger>
             <TabsTrigger value="platform" className="text-xs gap-1"><Orbit className="h-3 w-3" /> PlatInt</TabsTrigger>
