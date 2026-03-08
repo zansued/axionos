@@ -19313,6 +19313,339 @@ export type Database = {
           },
         ]
       }
+      swarm_execution_agents: {
+        Row: {
+          agent_id: string
+          agent_role: string
+          assigned_branch_ids: string[]
+          campaign_id: string
+          created_at: string
+          id: string
+          last_heartbeat: string | null
+          organization_id: string
+          status: string
+        }
+        Insert: {
+          agent_id?: string
+          agent_role?: string
+          assigned_branch_ids?: string[]
+          campaign_id: string
+          created_at?: string
+          id?: string
+          last_heartbeat?: string | null
+          organization_id: string
+          status?: string
+        }
+        Update: {
+          agent_id?: string
+          agent_role?: string
+          assigned_branch_ids?: string[]
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          last_heartbeat?: string | null
+          organization_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swarm_execution_agents_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "swarm_execution_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swarm_execution_agents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      swarm_execution_branches: {
+        Row: {
+          assigned_agent_id: string | null
+          branch_label: string
+          branch_plan: Json
+          branch_type: string
+          campaign_id: string
+          created_at: string
+          id: string
+          organization_id: string
+          parent_branch_id: string | null
+          result_artifacts: Json
+          result_summary: string | null
+          retries_used: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_agent_id?: string | null
+          branch_label?: string
+          branch_plan?: Json
+          branch_type?: string
+          campaign_id: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          parent_branch_id?: string | null
+          result_artifacts?: Json
+          result_summary?: string | null
+          retries_used?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_agent_id?: string | null
+          branch_label?: string
+          branch_plan?: Json
+          branch_type?: string
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          parent_branch_id?: string | null
+          result_artifacts?: Json
+          result_summary?: string | null
+          retries_used?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swarm_execution_branches_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "swarm_execution_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swarm_execution_branches_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swarm_execution_branches_parent_branch_id_fkey"
+            columns: ["parent_branch_id"]
+            isOneToOne: false
+            referencedRelation: "swarm_execution_branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      swarm_execution_campaigns: {
+        Row: {
+          abort_posture: Json
+          audit_metadata: Json
+          bounded_scope: Json
+          campaign_description: string
+          campaign_name: string
+          checkpoint_schedule: Json
+          created_at: string
+          escalated: boolean
+          escalation_reason: string | null
+          escalation_triggers: Json
+          execution_plan: Json
+          id: string
+          initiative_id: string | null
+          max_branches: number
+          max_retries: number
+          organization_id: string
+          participating_agent_ids: string[]
+          risk_posture: string
+          rollback_posture: Json
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          abort_posture?: Json
+          audit_metadata?: Json
+          bounded_scope?: Json
+          campaign_description?: string
+          campaign_name?: string
+          checkpoint_schedule?: Json
+          created_at?: string
+          escalated?: boolean
+          escalation_reason?: string | null
+          escalation_triggers?: Json
+          execution_plan?: Json
+          id?: string
+          initiative_id?: string | null
+          max_branches?: number
+          max_retries?: number
+          organization_id: string
+          participating_agent_ids?: string[]
+          risk_posture?: string
+          rollback_posture?: Json
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          abort_posture?: Json
+          audit_metadata?: Json
+          bounded_scope?: Json
+          campaign_description?: string
+          campaign_name?: string
+          checkpoint_schedule?: Json
+          created_at?: string
+          escalated?: boolean
+          escalation_reason?: string | null
+          escalation_triggers?: Json
+          execution_plan?: Json
+          id?: string
+          initiative_id?: string | null
+          max_branches?: number
+          max_retries?: number
+          organization_id?: string
+          participating_agent_ids?: string[]
+          risk_posture?: string
+          rollback_posture?: Json
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swarm_execution_campaigns_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swarm_execution_campaigns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swarm_execution_campaigns_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      swarm_execution_checkpoints: {
+        Row: {
+          branches_completed: string[]
+          branches_required: string[]
+          campaign_id: string
+          checkpoint_label: string
+          checkpoint_type: string
+          created_at: string
+          id: string
+          notes: string | null
+          organization_id: string
+          snapshot: Json
+          status: string
+        }
+        Insert: {
+          branches_completed?: string[]
+          branches_required?: string[]
+          campaign_id: string
+          checkpoint_label?: string
+          checkpoint_type?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          snapshot?: Json
+          status?: string
+        }
+        Update: {
+          branches_completed?: string[]
+          branches_required?: string[]
+          campaign_id?: string
+          checkpoint_label?: string
+          checkpoint_type?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          snapshot?: Json
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swarm_execution_checkpoints_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "swarm_execution_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swarm_execution_checkpoints_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      swarm_execution_events: {
+        Row: {
+          agent_id: string | null
+          branch_id: string | null
+          campaign_id: string
+          created_at: string
+          event_payload: Json
+          event_type: string
+          id: string
+          organization_id: string
+        }
+        Insert: {
+          agent_id?: string | null
+          branch_id?: string | null
+          campaign_id: string
+          created_at?: string
+          event_payload?: Json
+          event_type?: string
+          id?: string
+          organization_id: string
+        }
+        Update: {
+          agent_id?: string | null
+          branch_id?: string | null
+          campaign_id?: string
+          created_at?: string
+          event_payload?: Json
+          event_type?: string
+          id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swarm_execution_events_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "swarm_execution_branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swarm_execution_events_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "swarm_execution_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swarm_execution_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       template_initialization_rules: {
         Row: {
           created_at: string

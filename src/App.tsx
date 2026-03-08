@@ -43,6 +43,7 @@ import ImprovementBenchmarks from "./pages/ImprovementBenchmarks";
 import AgentRouting from "./pages/AgentRouting";
 import AgentDebates from "./pages/AgentDebates";
 import WorkingMemory from "./pages/WorkingMemory";
+import SwarmExecution from "./pages/SwarmExecution";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -108,6 +109,7 @@ const App = () => (
                       <Route path="/agent-routing" element={<ProtectedRoute><AgentRouting /></ProtectedRoute>} />
                       <Route path="/agent-debates" element={<ProtectedRoute><AgentDebates /></ProtectedRoute>} />
                       <Route path="/working-memory" element={<ProtectedRoute><WorkingMemory /></ProtectedRoute>} />
+                      <Route path="/swarm-execution" element={<ProtectedRoute><SwarmExecution /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
