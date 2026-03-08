@@ -1051,6 +1051,95 @@ export type Database = {
           },
         ]
       }
+      architecture_economic_assessments: {
+        Row: {
+          change_ref: Json
+          change_type: string
+          cost_to_reliability_ratio: number | null
+          cost_to_stability_ratio: number | null
+          created_at: string
+          economic_confidence_score: number | null
+          economic_tradeoff_score: number | null
+          evidence_refs: Json | null
+          forecast_variance_score: number | null
+          id: string
+          migration_roi_30d: number | null
+          migration_roi_90d: number | null
+          organization_id: string
+          projected_change_cost: number | null
+          projected_operational_cost_delta: number | null
+          projected_reliability_gain: number | null
+          projected_rollback_cost: number | null
+          projected_stability_gain: number | null
+          rationale_codes: Json | null
+          rollback_reserve_ratio: number | null
+          rollout_cost_envelope: number | null
+          status: string
+          tenant_divergence_cost: number | null
+          updated_at: string
+        }
+        Insert: {
+          change_ref?: Json
+          change_type?: string
+          cost_to_reliability_ratio?: number | null
+          cost_to_stability_ratio?: number | null
+          created_at?: string
+          economic_confidence_score?: number | null
+          economic_tradeoff_score?: number | null
+          evidence_refs?: Json | null
+          forecast_variance_score?: number | null
+          id?: string
+          migration_roi_30d?: number | null
+          migration_roi_90d?: number | null
+          organization_id: string
+          projected_change_cost?: number | null
+          projected_operational_cost_delta?: number | null
+          projected_reliability_gain?: number | null
+          projected_rollback_cost?: number | null
+          projected_stability_gain?: number | null
+          rationale_codes?: Json | null
+          rollback_reserve_ratio?: number | null
+          rollout_cost_envelope?: number | null
+          status?: string
+          tenant_divergence_cost?: number | null
+          updated_at?: string
+        }
+        Update: {
+          change_ref?: Json
+          change_type?: string
+          cost_to_reliability_ratio?: number | null
+          cost_to_stability_ratio?: number | null
+          created_at?: string
+          economic_confidence_score?: number | null
+          economic_tradeoff_score?: number | null
+          evidence_refs?: Json | null
+          forecast_variance_score?: number | null
+          id?: string
+          migration_roi_30d?: number | null
+          migration_roi_90d?: number | null
+          organization_id?: string
+          projected_change_cost?: number | null
+          projected_operational_cost_delta?: number | null
+          projected_reliability_gain?: number | null
+          projected_rollback_cost?: number | null
+          projected_stability_gain?: number | null
+          rationale_codes?: Json | null
+          rollback_reserve_ratio?: number | null
+          rollout_cost_envelope?: number | null
+          status?: string
+          tenant_divergence_cost?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_economic_assessments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_fitness_dimensions: {
         Row: {
           created_at: string
@@ -3068,6 +3157,199 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "discovery_architecture_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      economic_optimization_outcomes: {
+        Row: {
+          assessment_id: string | null
+          created_at: string
+          delta_summary: Json
+          evidence_refs: Json | null
+          forecast_error: number | null
+          id: string
+          organization_id: string
+          outcome_status: string
+          projected_summary: Json
+          realized_summary: Json
+          recommendation_id: string | null
+          scope_ref: Json | null
+        }
+        Insert: {
+          assessment_id?: string | null
+          created_at?: string
+          delta_summary?: Json
+          evidence_refs?: Json | null
+          forecast_error?: number | null
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          projected_summary?: Json
+          realized_summary?: Json
+          recommendation_id?: string | null
+          scope_ref?: Json | null
+        }
+        Update: {
+          assessment_id?: string | null
+          created_at?: string
+          delta_summary?: Json
+          evidence_refs?: Json | null
+          forecast_error?: number | null
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          projected_summary?: Json
+          realized_summary?: Json
+          recommendation_id?: string | null
+          scope_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "economic_optimization_outcomes_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_economic_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "economic_optimization_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "economic_optimization_outcomes_recommendation_id_fkey"
+            columns: ["recommendation_id"]
+            isOneToOne: false
+            referencedRelation: "economic_optimization_recommendations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      economic_optimization_recommendations: {
+        Row: {
+          assessment_id: string | null
+          confidence_score: number | null
+          created_at: string
+          expected_value: number | null
+          id: string
+          organization_id: string
+          priority_score: number | null
+          recommendation_reason: Json
+          recommendation_type: string
+          status: string
+          target_entities: Json
+          target_scope: string
+        }
+        Insert: {
+          assessment_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          expected_value?: number | null
+          id?: string
+          organization_id: string
+          priority_score?: number | null
+          recommendation_reason?: Json
+          recommendation_type?: string
+          status?: string
+          target_entities?: Json
+          target_scope?: string
+        }
+        Update: {
+          assessment_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          expected_value?: number | null
+          id?: string
+          organization_id?: string
+          priority_score?: number | null
+          recommendation_reason?: Json
+          recommendation_type?: string
+          status?: string
+          target_entities?: Json
+          target_scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "economic_optimization_recommendations_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_economic_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "economic_optimization_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      economic_tradeoff_scenarios: {
+        Row: {
+          assessment_id: string
+          confidence_score: number | null
+          created_at: string
+          id: string
+          organization_id: string
+          projected_cost: number | null
+          projected_roi_30d: number | null
+          projected_roi_90d: number | null
+          rationale_codes: Json | null
+          rollback_exposure: number | null
+          scenario_key: string
+          scenario_name: string
+          scenario_payload: Json
+          tradeoff_score: number | null
+        }
+        Insert: {
+          assessment_id: string
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          projected_cost?: number | null
+          projected_roi_30d?: number | null
+          projected_roi_90d?: number | null
+          rationale_codes?: Json | null
+          rollback_exposure?: number | null
+          scenario_key?: string
+          scenario_name?: string
+          scenario_payload?: Json
+          tradeoff_score?: number | null
+        }
+        Update: {
+          assessment_id?: string
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          projected_cost?: number | null
+          projected_roi_30d?: number | null
+          projected_roi_90d?: number | null
+          rationale_codes?: Json | null
+          rollback_exposure?: number | null
+          scenario_key?: string
+          scenario_name?: string
+          scenario_payload?: Json
+          tradeoff_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "economic_tradeoff_scenarios_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_economic_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "economic_tradeoff_scenarios_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -7779,6 +8061,66 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "repair_strategy_weights_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rollout_economic_plans: {
+        Row: {
+          assessment_id: string
+          confidence_score: number | null
+          created_at: string
+          id: string
+          organization_id: string
+          phases: Json
+          plan_name: string
+          rollback_reserve: number | null
+          status: string
+          stop_loss_thresholds: Json | null
+          total_budget_envelope: number | null
+          updated_at: string
+        }
+        Insert: {
+          assessment_id: string
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          phases?: Json
+          plan_name?: string
+          rollback_reserve?: number | null
+          status?: string
+          stop_loss_thresholds?: Json | null
+          total_budget_envelope?: number | null
+          updated_at?: string
+        }
+        Update: {
+          assessment_id?: string
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          phases?: Json
+          plan_name?: string
+          rollback_reserve?: number | null
+          status?: string
+          stop_loss_thresholds?: Json | null
+          total_budget_envelope?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rollout_economic_plans_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_economic_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rollout_economic_plans_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
