@@ -565,6 +565,8 @@ This document serves as the canonical sprint execution ledger. The following con
 | Multi-party policy & revenue governance | ✅ IMPLEMENTED | 62 | `multi-party-policy-revenue-governance/*`, `multi-party-policy-revenue-governance-engine` |
 | Institutional outcome assurance | ✅ IMPLEMENTED | 63 | `institutional-outcome-assurance/*`, `institutional-outcome-assurance-engine` |
 | Canon integrity & drift governance | ✅ IMPLEMENTED | 64 | `canon-integrity-drift-governance/*`, `canon-integrity-drift-governance-engine` |
+| Operating completion | ✅ IMPLEMENTED | 65 | `operating-completion/*`, `operating-completion-engine` |
+| User journey orchestration | ✅ IMPLEMENTED | 66 | `user-journey-orchestration/*`, `user-journey-orchestration-engine` |
 
 ---
 
