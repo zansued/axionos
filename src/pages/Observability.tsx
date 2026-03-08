@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -46,6 +46,7 @@ import { ChangeAdvisoryOrchestratorDashboard } from "@/components/observability/
 import { PlatformStabilizationV2Dashboard } from "@/components/observability/PlatformStabilizationV2Dashboard";
 import { TenantArchitectureModesDashboard } from "@/components/observability/TenantArchitectureModesDashboard";
 import { EconomicOptimizationDashboard } from "@/components/observability/EconomicOptimizationDashboard";
+import { PlatformConvergenceDashboard } from "@/components/observability/PlatformConvergenceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -325,7 +326,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(35, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(36, 1fr)" }}>
+            <TabsTrigger value="convergence" className="text-xs gap-1"><Merge className="h-3 w-3" /> Converge</TabsTrigger>
             <TabsTrigger value="arch-econ" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> ArchEcon</TabsTrigger>
             <TabsTrigger value="tenant-arch" className="text-xs gap-1"><Building2 className="h-3 w-3" /> TenantArch</TabsTrigger>
             <TabsTrigger value="stability-v2" className="text-xs gap-1"><ShieldCheck className="h-3 w-3" /> StabilityV2</TabsTrigger>
@@ -362,6 +364,11 @@ export default function Observability() {
             <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
+
+          {/* ===== PLATFORM CONVERGENCE ===== */}
+          <TabsContent value="convergence" className="mt-4">
+            <PlatformConvergenceDashboard />
+          </TabsContent>
 
           {/* ===== ECONOMIC OPTIMIZATION ===== */}
           <TabsContent value="arch-econ" className="mt-4">

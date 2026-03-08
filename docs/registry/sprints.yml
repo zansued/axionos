@@ -52,4 +52,5 @@ sprints:
   - { sprint: 46, name: "Platform Self-Stabilization v2",                    status: complete, phase: "Architecture-Scaled",             layer: "Platform Stabilization v2 Layer" }
   - { sprint: 47, name: "Tenant-Aware Architecture Modes",                   status: complete, phase: "Architecture-Scaled",             layer: "Tenant Architecture Layer" }
   - { sprint: 48, name: "Economic Optimization Layer",                       status: complete, phase: "Architecture-Scaled",             layer: "Economic Optimization Layer" }
-  - { sprint: 49, name: "TBD",                                               status: planned,  phase: "Convergence",                    layer: "TBD" }
+  - { sprint: 49, name: "Platform Convergence Layer",                        status: complete, phase: "Platform Convergence",           layer: "Platform Convergence Layer" }
+  - { sprint: 50, name: "TBD",                                               status: planned,  phase: "TBD",                           layer: "TBD" }
