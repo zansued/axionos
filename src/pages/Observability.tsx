@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -50,6 +50,7 @@ import { PlatformConvergenceDashboard } from "@/components/observability/Platfor
 import { ConvergenceGovernanceDashboard } from "@/components/observability/ConvergenceGovernanceDashboard";
 import { InstitutionalConvergenceMemoryDashboard } from "@/components/observability/InstitutionalConvergenceMemoryDashboard";
 import { OperatingProfilesDashboard } from "@/components/observability/OperatingProfilesDashboard";
+import { ProductIntelligenceDashboard } from "@/components/observability/ProductIntelligenceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -329,7 +330,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(39, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(40, 1fr)" }}>
+            <TabsTrigger value="product-intel" className="text-xs gap-1"><Sparkles className="h-3 w-3" /> ProdIntel</TabsTrigger>
             <TabsTrigger value="op-profiles" className="text-xs gap-1"><PackageOpen className="h-3 w-3" /> Profiles</TabsTrigger>
             <TabsTrigger value="conv-memory" className="text-xs gap-1"><BookOpen className="h-3 w-3" /> ConvMem</TabsTrigger>
             <TabsTrigger value="conv-gov" className="text-xs gap-1"><Scale className="h-3 w-3" /> ConvGov</TabsTrigger>
@@ -370,6 +372,11 @@ export default function Observability() {
             <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
+
+          {/* ===== PRODUCT INTELLIGENCE ===== */}
+          <TabsContent value="product-intel" className="mt-4">
+            <ProductIntelligenceDashboard />
+          </TabsContent>
 
           {/* ===== OPERATING PROFILES ===== */}
           <TabsContent value="op-profiles" className="mt-4">
