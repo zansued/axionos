@@ -4,10 +4,9 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 81 (Creator / Partner Pilot Marketplace) — ✅ Complete
-> **Next Planned:** Sprint 82 (Exchange Governance) — 📋 Planned
-> **Reserved Horizon:** Blocks P–S (Sprints 79–94) — Block P in progress
-> **Reserved Horizon:** Blocks P–S (Sprints 79–94) — Block P in progress
+> **Current Sprint:** 82 (Outcome-Aware Capability Marketplace) — ✅ Complete
+> **Next Planned:** Sprint 83 (Causal Delivery Analysis) — 📋 Planned
+> **Reserved Horizon:** Blocks P–S (Sprints 79–94) — Block P complete
 
 ## Document Authority
 
