@@ -119,6 +119,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Block L — System Roundness & Operating Completion | 63–65 | Institutional outcome assurance, canon integrity & drift governance, operating completion |
 | Block M — Product Experience & Delivery Maturity | 66–70 | User journey orchestration, role-based experience, one-click delivery & deploy assurance, onboarding/templates/starters, adoption intelligence & customer success |
 | Sprint 71 — Governed Extensibility | 71 | Platform extensions registry, approval-based activation, compatibility checks, audit trail, operator surface |
+| Sprint 72 — Evidence Capture & Improvement Ledger | 72 | Canonical evidence capture, improvement ledger, context linking, review workflow, operator evidence dashboard |
 
 ---
 
