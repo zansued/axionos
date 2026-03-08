@@ -905,23 +905,23 @@ Internal sophistication makes the product trustworthy. It does not need to be th
 
 > **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-With 65 sprints complete and the first mature operating baseline achieved, the platform's architectural direction shifts from internal system building to **product experience and delivery maturity**.
+With 70 sprints complete and Block M (Product Experience & Delivery Maturity) delivered, the platform has achieved its first product-ready operating baseline. The architectural direction has successfully shifted from internal system building to **product experience and delivery maturity**.
 
-### Completed Internal Canon (Sprints 1–70)
+### Completed Canon (Sprints 1–70)
 - ✅ All layers from execution kernel through institutional assurance, canon integrity, product experience, and adoption intelligence
 - ✅ 54 architectural layers active
 - ✅ First internally coherent operating canon + user journey orchestration + role-based experience + one-click delivery + guided onboarding + adoption intelligence & customer success loop
 
-### Next Architectural Direction — Block M: Product Experience & Delivery Maturity
+### Completed Architectural Direction — Block M: Product Experience & Delivery Maturity
 
-The next architectural work supports:
-- **User journey orchestration** — clear state, transitions, approvals, and progress across the full idea-to-deploy lifecycle
+Block M delivered:
+- **User journey orchestration** — clear state, transitions, approvals, and progress across the full idea-to-deliver lifecycle
 - **Role-based product surfaces** — separating the default user journey from operator/governance views
-- **Delivery/deploy assurance experience** — seamless, governed one-click path from validated code to deployed software
+- **Delivery/deploy assurance experience** — seamless, governed one-click path from validated code to delivered software
 - **Onboarding/template-driven initiation** — reducing time-to-value with guided flows, reusable templates, and vertical starters
 - **Adoption intelligence and customer success feedback** — measuring real adoption, friction, success signals, and closing the loop for product improvement
 
-Block M is now **complete**. Future work (Block N+) will build on this product-ready foundation.
+Block M is **complete**. Future work (Sprint 71+ / Block N+) will build on this product-ready foundation.
 
 **Governing constraint:** Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Internal sophistication serves the product experience — it does not replace it.
 
