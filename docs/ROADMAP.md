@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** 73 sprints complete. Sprint 73 (Improvement Candidate Distillation Engine) complete. Sprint 74 is next planned.
+> **Last strategic change (2026-03-08):** 74 sprints complete. Block N (Evidence-Governed Improvement Loop) complete. Block O (Advanced Multi-Agent Coordination) is next reserved.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -51,11 +51,11 @@
 
 ## Strategic Directive
 
-AxionOS has completed **73 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, evidence capture, and improvement candidate distillation. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete. The extensibility foundation, evidence capture layer, and candidate distillation engine are operational.
+AxionOS has completed **74 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, evidence capture, improvement candidate distillation, and sandbox benchmarking & promotion governance. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete. The evidence-governed improvement loop (Block N) is complete.
 
 **Post-Block M Strategic Position:**
 
-The platform has reached its first **product-ready operating baseline**. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — is mature and complete. The product experience layer — user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — is complete.
+The platform has reached its first **product-ready operating baseline**. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — is mature and complete. The product experience layer — user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — is complete. The evidence-governed improvement loop — evidence capture, candidate distillation, sandbox benchmarking, promotion governance — is complete.
 
 The strategic direction achieved through Block M was **productization of the platform promise**:
 
@@ -70,27 +70,22 @@ Internal sophistication serves the visible product experience. The user-facing j
 ## Implementation Horizons
 
 ```
-   COMPLETE (1–72)                 PLANNED (73–74)              RESERVED (75–94)
-   ──────────────────►             ──────────────►              ──────────────────►
-   Foundation → Learning →          Sprints 73–74:               Block O: Advanced Multi-Agent
-   Meta → Memory → Gov →            Evidence-Governed            Block P: Governed Ecosystem
-   Intelligence → Calibration →     Improvement Loop             Block Q: Delivery Optimization
-   Strategy → Stabilization →       (continued)                  Block R: Distributed Runtime
-   Advisory → Semantic →                                         Block S: Research Sandbox
-   Discovery → Architecture →
-  Pilot → Migration → Portfolio →
-  Fitness → Change Advisory →
-  Convergence → Conv Gov →
-  Conv Memory → Op Profiles →
-  Product Intelligence →
-  Ecosystem → Assurance →
-  Canon → Operating Completion →
-  Product Experience ✅
+   COMPLETE (1–74)                                               RESERVED (75–94)
+   ──────────────────────────────────────────────►               ──────────────────►
+   Foundation → Learning → Meta → Memory → Gov →                  Block O: Advanced Multi-Agent
+   Intelligence → Calibration → Strategy →                        Block P: Governed Ecosystem
+   Stabilization → Advisory → Semantic →                          Block Q: Delivery Optimization
+   Discovery → Architecture → Pilot → Migration →                 Block R: Distributed Runtime
+   Portfolio → Fitness → Change Advisory →                        Block S: Research Sandbox
+   Convergence → Op Profiles → Product Intelligence →
+   Ecosystem → Assurance → Canon → Operating Completion →
+   Product Experience → Extensibility → Evidence →
+   Candidates → Benchmarking & Promotion ✅
 ```
 
 ---
 
-## Completed Canon (Sprints 1–73)
+## Completed Canon (Sprints 1–74)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -121,6 +116,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Sprint 71 — Governed Extensibility | 71 | Platform extensions registry, approval-based activation, compatibility checks, audit trail, operator surface |
 | Sprint 72 — Evidence Capture & Improvement Ledger | 72 | Canonical evidence capture, improvement ledger, context linking, review workflow, operator evidence dashboard |
 | Sprint 73 — Improvement Candidate Distillation Engine | 73 | Candidate distillation from evidence, pattern clustering, provenance/explainability, triage workflow, operator candidates dashboard |
+| Sprint 74 — Sandbox Benchmarking & Promotion Governance | 74 | Sandbox benchmarking of candidates, baseline comparison, metric capture, promotion/rejection/deferral governance, operator benchmark dashboard |
 
 ---
 
@@ -166,18 +162,11 @@ Sprint 73 introduced the canonical improvement candidate distillation layer. The
 
 ---
 
-## Planned Next — Sprint 74: Governed Benchmarking & Promotion — 📋 Planned
+## Sprint 74 — Sandbox Benchmarking & Promotion Governance ✅ Implemented
 
-> **Status:** Planned — next in the execution queue.
+Sprint 74 completed the Evidence-Governed Improvement Loop by introducing governed sandbox benchmarking and promotion governance. Improvement candidates can now be benchmarked against baselines in controlled sandbox conditions, with structured metric comparison, risk posture assessment, stability signals, and explainable recommendations. Promotion, rejection, deferral, and archival decisions are fully human-reviewed, auditable, and tenant-isolated. A dedicated operator surface (`/improvement-benchmarks`) provides benchmark queue, results, metric comparison, and governance controls.
 
-**Thesis:** Complete the Evidence-Governed Improvement Loop by enabling governed sandbox benchmarking of accepted candidates and human-approved promotion of validated improvements.
-
-**Canon constraints (enforced):**
-- No autonomous architecture mutation
-- Human approval for structural change
-- Rollback everywhere
-- Bounded learning and promotion
-- Tenant isolation preserved
+**Strategic role:** Sprint 74 closes Block N. AxionOS now has a complete evidence-governed improvement loop: evidence capture → candidate distillation → sandbox benchmarking → human-governed promotion. No autonomous mutation behavior was introduced.
 
 ---
 
