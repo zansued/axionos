@@ -1276,6 +1276,161 @@ export type Database = {
           },
         ]
       }
+      architecture_portfolio_members: {
+        Row: {
+          blast_radius_weight: number | null
+          conflict_risk_score: number | null
+          contribution_score: number | null
+          created_at: string
+          id: string
+          lifecycle_state: string
+          member_ref: Json
+          member_type: string
+          organization_id: string
+          portfolio_id: string
+        }
+        Insert: {
+          blast_radius_weight?: number | null
+          conflict_risk_score?: number | null
+          contribution_score?: number | null
+          created_at?: string
+          id?: string
+          lifecycle_state?: string
+          member_ref?: Json
+          member_type?: string
+          organization_id: string
+          portfolio_id: string
+        }
+        Update: {
+          blast_radius_weight?: number | null
+          conflict_risk_score?: number | null
+          contribution_score?: number | null
+          created_at?: string
+          id?: string
+          lifecycle_state?: string
+          member_ref?: Json
+          member_type?: string
+          organization_id?: string
+          portfolio_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_portfolio_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_portfolio_members_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_portfolio_recommendations: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          id: string
+          organization_id: string
+          portfolio_id: string
+          priority_score: number | null
+          recommendation_reason: Json
+          recommendation_type: string
+          status: string
+          target_members: Json
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          portfolio_id: string
+          priority_score?: number | null
+          recommendation_reason?: Json
+          recommendation_type?: string
+          status?: string
+          target_members?: Json
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          portfolio_id?: string
+          priority_score?: number | null
+          recommendation_reason?: Json
+          recommendation_type?: string
+          status?: string
+          target_members?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_portfolio_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_portfolio_recommendations_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_portfolios: {
+        Row: {
+          created_at: string
+          id: string
+          lifecycle_status: string
+          organization_id: string
+          portfolio_constraints: Json
+          portfolio_key: string
+          portfolio_name: string
+          portfolio_scope: string
+          portfolio_theme: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lifecycle_status?: string
+          organization_id: string
+          portfolio_constraints?: Json
+          portfolio_key: string
+          portfolio_name: string
+          portfolio_scope?: string
+          portfolio_theme?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lifecycle_status?: string
+          organization_id?: string
+          portfolio_constraints?: Json
+          portfolio_key?: string
+          portfolio_name?: string
+          portfolio_scope?: string
+          portfolio_theme?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_portfolios_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_rollout_governance_profiles: {
         Row: {
           created_at: string
