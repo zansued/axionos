@@ -233,8 +233,9 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 | Product Ops | 54 | ✅ Complete | Product intelligence operations: benchmarking, quality calibration, correlations, recommendations |
 | Product Opp Portfolio | 55 | ✅ Complete | Product opportunity portfolio governance: ranking, conflicts, capacity, decisions, outcomes |
 | Ecosystem Readiness | 56 | ✅ Complete | Controlled ecosystem readiness: capability inventory, exposure classification, safety prerequisites, trust model, readiness assessment |
-| Trusted Ecosystem Foundation | 57 | 📋 Committed | Capability exposure governance |
-| Trusted Ecosystem Foundation | 58–59 | 🔮 Reserved | Trust/admission → ecosystem simulation |
+| Capability Exposure Gov | 57 | ✅ Complete | Capability exposure governance: exposure classes, governance cases, gate evaluation, restrictions, review workflow |
+| Trusted Ecosystem Foundation | 58 | 📋 Committed | External trust & admission |
+| Trusted Ecosystem Foundation | 59 | 🔮 Reserved | Ecosystem simulation & sandbox |
 | Controlled Ecosystem Activation | 60–62 | 🔮 Reserved | Marketplace pilot → capability registry → multi-party governance |
 | System Roundness | 63–65 | 🔮 Reserved | Outcome assurance → canon integrity → operating completion |
 
