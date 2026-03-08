@@ -519,6 +519,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | `_shared/external-trust-admission/` | 9 | Actor registry manager, trust tier classifier, admission case builder, requirement engine, risk posture analyzer, review manager, trust drift detector, recommendation engine, explainer |
 | `_shared/ecosystem-simulation-sandbox/` | 9 | Scenario builder, simulation engine, policy conflict simulator, trust failure simulator, blast radius estimator, rollback viability analyzer, activation readiness scorer, recommendation engine, explainer |
 | `_shared/limited-marketplace-pilot/` | 9 | Program manager, capability selector, participant gatekeeper, interaction monitor, policy enforcer, risk monitor, learning engine, outcome validator, explainer |
+| `_shared/capability-registry-governance/` | 9 | Entry manager, version governor, visibility engine, policy binder, compatibility analyzer, lifecycle manager, review engine, outcome validator, explainer |
 
 ---
 
