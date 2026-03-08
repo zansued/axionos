@@ -8802,6 +8802,264 @@ export type Database = {
           },
         ]
       }
+      improvement_evidence: {
+        Row: {
+          affected_stage: string | null
+          archived_at: string | null
+          created_at: string
+          detail: string | null
+          id: string
+          initiative_id: string | null
+          linked_activation_id: string | null
+          linked_extension_id: string | null
+          organization_id: string
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          severity: string
+          source_type: string
+          structured_metadata: Json
+          summary: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          affected_stage?: string | null
+          archived_at?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          initiative_id?: string | null
+          linked_activation_id?: string | null
+          linked_extension_id?: string | null
+          organization_id: string
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity?: string
+          source_type?: string
+          structured_metadata?: Json
+          summary?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          affected_stage?: string | null
+          archived_at?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          initiative_id?: string | null
+          linked_activation_id?: string | null
+          linked_extension_id?: string | null
+          organization_id?: string
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity?: string
+          source_type?: string
+          structured_metadata?: Json
+          summary?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_evidence_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_evidence_linked_activation_id_fkey"
+            columns: ["linked_activation_id"]
+            isOneToOne: false
+            referencedRelation: "extension_activations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_evidence_linked_extension_id_fkey"
+            columns: ["linked_extension_id"]
+            isOneToOne: false
+            referencedRelation: "platform_extensions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_evidence_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_evidence_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      improvement_evidence_links: {
+        Row: {
+          created_at: string
+          evidence_id: string
+          id: string
+          link_metadata: Json
+          link_type: string
+          organization_id: string
+          target_id: string
+          target_table: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_id: string
+          id?: string
+          link_metadata?: Json
+          link_type?: string
+          organization_id: string
+          target_id: string
+          target_table?: string
+        }
+        Update: {
+          created_at?: string
+          evidence_id?: string
+          id?: string
+          link_metadata?: Json
+          link_type?: string
+          organization_id?: string
+          target_id?: string
+          target_table?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_evidence_links_evidence_id_fkey"
+            columns: ["evidence_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_evidence"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_evidence_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      improvement_ledgers: {
+        Row: {
+          created_at: string
+          description: string | null
+          evidence_count: number
+          high_severity_count: number
+          id: string
+          ledger_name: string
+          ledger_type: string
+          organization_id: string
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          evidence_count?: number
+          high_severity_count?: number
+          id?: string
+          ledger_name?: string
+          ledger_type?: string
+          organization_id: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          evidence_count?: number
+          high_severity_count?: number
+          id?: string
+          ledger_name?: string
+          ledger_type?: string
+          organization_id?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_ledgers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_ledgers_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      improvement_review_events: {
+        Row: {
+          action: string
+          actor_id: string
+          created_at: string
+          event_metadata: Json
+          evidence_id: string
+          id: string
+          new_status: string | null
+          notes: string | null
+          organization_id: string
+          previous_status: string | null
+        }
+        Insert: {
+          action?: string
+          actor_id: string
+          created_at?: string
+          event_metadata?: Json
+          evidence_id: string
+          id?: string
+          new_status?: string | null
+          notes?: string | null
+          organization_id: string
+          previous_status?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          created_at?: string
+          event_metadata?: Json
+          evidence_id?: string
+          id?: string
+          new_status?: string | null
+          notes?: string | null
+          organization_id?: string
+          previous_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_review_events_evidence_id_fkey"
+            columns: ["evidence_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_evidence"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_review_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       initiative_jobs: {
         Row: {
           completed_at: string | null
