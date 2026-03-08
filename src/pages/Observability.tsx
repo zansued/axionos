@@ -35,6 +35,7 @@ import { PlatformStabilizationDashboard } from "@/components/observability/Platf
 import { EngineeringAdvisorDashboard } from "@/components/observability/EngineeringAdvisorDashboard";
 import { SemanticRetrievalDashboard } from "@/components/observability/SemanticRetrievalDashboard";
 import { DiscoveryArchitectureDashboard } from "@/components/observability/DiscoveryArchitectureDashboard";
+import { ArchitectureSimulationDashboard } from "@/components/observability/ArchitectureSimulationDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
