@@ -285,7 +285,7 @@
 
 ---
 
-## Fase 6: Growth (Secundária)
+## Fase 7: Growth (Secundária)
 
 > **Status:** Implementada mas secundária para o produto-prova atual.
 > O foco é fechar o ciclo Idea → Deploy primeiro.
