@@ -4,8 +4,9 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 79 (Capability Packaging & Registry UX) — ✅ Complete
-> **Next Planned:** Sprint 80 (Marketplace Discovery & Governed Exchange) — 📋 Planned
+> **Current Sprint:** 80 (Trust, Entitlements & Approval Flows) — ✅ Complete
+> **Next Planned:** Sprint 81 (Extended Trust/Sandbox) — 📋 Planned
+> **Reserved Horizon:** Blocks P–S (Sprints 79–94) — Block P in progress
 > **Reserved Horizon:** Blocks P–S (Sprints 79–94) — Block P in progress
 
 ## Document Authority
