@@ -498,7 +498,7 @@ O Project Brain serve como centro de evidência visual:
 | Retries médios por iniciativa | < 2 |
 | Taxa de reparo automático com sucesso | > 70% |
 | Custo por iniciativa | Rastreado e declinante |
-| Tempo ideia → repositório validado | < 15 min |
+| Tempo ideia → software entregue | < 15 min |
 | Clareza do progresso para o usuário | Feedback visual claro |
 
 ---
