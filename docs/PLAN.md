@@ -676,5 +676,6 @@ This document serves as the canonical sprint execution ledger. The following con
 | User Journey Orchestration | 1 | 66 |
 | Role-Based Experience | 1 | 67 |
 | One-Click Delivery & Deploy Assurance | 1 | 68 |
+| Onboarding, Templates & Vertical Starters | 1 | 69 |
 | Support | 11 | Various |
-| **Total** | **~114** | |
+| **Total** | **~115** | |

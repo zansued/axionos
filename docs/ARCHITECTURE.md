@@ -917,6 +917,8 @@ The next architectural work supports:
 - **User journey orchestration** — clear state, transitions, approvals, and progress across the full idea-to-deploy lifecycle
 - **Role-based product surfaces** — separating the default user journey from operator/governance views
 - **Delivery/deploy assurance experience** — seamless, governed one-click path from validated code to deployed software
+- **Onboarding/template-driven initiation** — reducing time-to-value with guided flows, reusable templates, and vertical starters
+- **Adoption intelligence and customer success feedback** — closing the loop between product usage and platform improvement
 - **Onboarding/template-driven initiation** — reducing time-to-value with guided flows and reusable starting points
 - **Adoption intelligence and customer success feedback** — closing the loop between product usage and platform improvement
 
