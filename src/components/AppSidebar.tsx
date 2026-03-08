@@ -62,6 +62,7 @@ const bottomItems = [
   { title: "Tenant Runtime", url: "/tenant-runtime", icon: Server },
   { title: "Orchestration", url: "/large-scale-orchestration", icon: Globe },
   { title: "Hypotheses", url: "/architecture-hypotheses", icon: FlaskConical },
+  { title: "Sim. Sandbox", url: "/research-sandbox", icon: Beaker },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
