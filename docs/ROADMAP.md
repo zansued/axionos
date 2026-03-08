@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** 72 sprints complete. Sprint 72 (Evidence Capture & Improvement Ledger) complete. Sprints 73–74 are next planned.
+> **Last strategic change (2026-03-08):** 73 sprints complete. Sprint 73 (Improvement Candidate Distillation Engine) complete. Sprint 74 is next planned.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
