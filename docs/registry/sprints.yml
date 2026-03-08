@@ -135,6 +135,9 @@ sprints:
   # === SPRINT 88 — Cross-Region Execution & Recovery (Complete) ===
   - { sprint: 88, name: "Cross-Region Execution & Recovery",                     status: complete, block: "R", phase: "Advanced Distributed Runtime", layer: "Cross-Region Recovery Layer" }
 
+  # === SPRINT 89 — Tenant-Isolated Scale Runtime (Complete) ===
+  - { sprint: 89, name: "Tenant-Isolated Scale Runtime",                          status: complete, block: "R", phase: "Advanced Distributed Runtime", layer: "Tenant-Isolated Scale Runtime Layer" }
+
   # === BLOCKS R–S — Reserved Future Horizon ===
-  - { sprint: "89–90", name: "Tenant-Isolated Scaling & Runtime Completion",             status: reserved, block: "R", phase: "Reserved", layer: "TBD" }
+  - { sprint: 90, name: "Runtime Completion",                                     status: reserved, block: "R", phase: "Reserved", layer: "TBD" }
   - { sprint: "91–94", name: "Research Sandbox for Architecture Evolution",              status: reserved, block: "S", phase: "Reserved", layer: "TBD" }

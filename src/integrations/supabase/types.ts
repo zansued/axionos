@@ -22438,6 +22438,311 @@ export type Database = {
           },
         ]
       }
+      tenant_runtime_contention_events: {
+        Row: {
+          affected_workloads: number
+          contention_source: string
+          created_at: string
+          event_type: string
+          evidence_refs: Json
+          id: string
+          noisy_neighbor_detected: boolean
+          organization_id: string
+          posture_id: string | null
+          resolution_notes: string
+          resolution_status: string
+          segment_id: string | null
+          severity: string
+          workspace_id: string | null
+        }
+        Insert: {
+          affected_workloads?: number
+          contention_source?: string
+          created_at?: string
+          event_type?: string
+          evidence_refs?: Json
+          id?: string
+          noisy_neighbor_detected?: boolean
+          organization_id: string
+          posture_id?: string | null
+          resolution_notes?: string
+          resolution_status?: string
+          segment_id?: string | null
+          severity?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          affected_workloads?: number
+          contention_source?: string
+          created_at?: string
+          event_type?: string
+          evidence_refs?: Json
+          id?: string
+          noisy_neighbor_detected?: boolean
+          organization_id?: string
+          posture_id?: string | null
+          resolution_notes?: string
+          resolution_status?: string
+          segment_id?: string | null
+          severity?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_runtime_contention_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_runtime_contention_events_posture_id_fkey"
+            columns: ["posture_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_runtime_postures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_runtime_contention_events_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_runtime_segments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_runtime_contention_events_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_runtime_fairness_reviews: {
+        Row: {
+          created_at: string
+          evidence_refs: Json
+          fairness_score: number
+          id: string
+          organization_id: string
+          posture_id: string | null
+          review_notes: string
+          review_status: string
+          review_type: string
+          reviewer_ref: Json | null
+          segment_id: string | null
+          violations_found: number
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          evidence_refs?: Json
+          fairness_score?: number
+          id?: string
+          organization_id: string
+          posture_id?: string | null
+          review_notes?: string
+          review_status?: string
+          review_type?: string
+          reviewer_ref?: Json | null
+          segment_id?: string | null
+          violations_found?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          evidence_refs?: Json
+          fairness_score?: number
+          id?: string
+          organization_id?: string
+          posture_id?: string | null
+          review_notes?: string
+          review_status?: string
+          review_type?: string
+          reviewer_ref?: Json | null
+          segment_id?: string | null
+          violations_found?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_runtime_fairness_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_runtime_fairness_reviews_posture_id_fkey"
+            columns: ["posture_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_runtime_postures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_runtime_fairness_reviews_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_runtime_segments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_runtime_fairness_reviews_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_runtime_postures: {
+        Row: {
+          active_workload_count: number
+          audit_metadata: Json
+          blast_radius_scope: string
+          contention_posture: string
+          created_at: string
+          fairness_posture: string
+          id: string
+          isolation_posture: string
+          organization_id: string
+          posture_confidence: number
+          resource_constraints: Json
+          segment_label: string
+          updated_at: string
+          workload_profile: Json
+          workspace_id: string | null
+        }
+        Insert: {
+          active_workload_count?: number
+          audit_metadata?: Json
+          blast_radius_scope?: string
+          contention_posture?: string
+          created_at?: string
+          fairness_posture?: string
+          id?: string
+          isolation_posture?: string
+          organization_id: string
+          posture_confidence?: number
+          resource_constraints?: Json
+          segment_label?: string
+          updated_at?: string
+          workload_profile?: Json
+          workspace_id?: string | null
+        }
+        Update: {
+          active_workload_count?: number
+          audit_metadata?: Json
+          blast_radius_scope?: string
+          contention_posture?: string
+          created_at?: string
+          fairness_posture?: string
+          id?: string
+          isolation_posture?: string
+          organization_id?: string
+          posture_confidence?: number
+          resource_constraints?: Json
+          segment_label?: string
+          updated_at?: string
+          workload_profile?: Json
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_runtime_postures_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_runtime_postures_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_runtime_segments: {
+        Row: {
+          audit_metadata: Json
+          created_at: string
+          current_concurrency: number
+          id: string
+          isolation_level: string
+          max_concurrency: number
+          organization_id: string
+          partition_label: string
+          posture_id: string | null
+          risk_level: string
+          segment_key: string
+          segment_type: string
+          status: string
+          updated_at: string
+          workload_class: string
+          workspace_id: string | null
+        }
+        Insert: {
+          audit_metadata?: Json
+          created_at?: string
+          current_concurrency?: number
+          id?: string
+          isolation_level?: string
+          max_concurrency?: number
+          organization_id: string
+          partition_label?: string
+          posture_id?: string | null
+          risk_level?: string
+          segment_key?: string
+          segment_type?: string
+          status?: string
+          updated_at?: string
+          workload_class?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          audit_metadata?: Json
+          created_at?: string
+          current_concurrency?: number
+          id?: string
+          isolation_level?: string
+          max_concurrency?: number
+          organization_id?: string
+          partition_label?: string
+          posture_id?: string | null
+          risk_level?: string
+          segment_key?: string
+          segment_type?: string
+          status?: string
+          updated_at?: string
+          workload_class?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_runtime_segments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_runtime_segments_posture_id_fkey"
+            columns: ["posture_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_runtime_postures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_runtime_segments_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       usage_monthly_snapshots: {
         Row: {
           created_at: string
