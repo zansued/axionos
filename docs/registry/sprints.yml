@@ -1,0 +1,55 @@
+# AxionOS — Canonical Sprint Registry
+# Single source of truth for sprint metadata.
+# Detailed descriptions live in PLAN.md.
+# Last updated: 2026-03-08
+
+sprints:
+  - { sprint: 1,  name: "Initiative Brief Formalization",                    status: complete, phase: "Foundation",                      layer: "Execution Kernel" }
+  - { sprint: 2,  name: "Initiative Simulation Engine",                      status: complete, phase: "Foundation",                      layer: "Execution Kernel" }
+  - { sprint: 3,  name: "Deploy Contract Completion",                        status: complete, phase: "Foundation",                      layer: "Execution Kernel" }
+  - { sprint: 4,  name: "Product-Level Observability",                       status: complete, phase: "Foundation",                      layer: "Execution Kernel (Observability)" }
+  - { sprint: 5,  name: "Onboarding & Product Packaging",                    status: complete, phase: "Foundation",                      layer: "Execution Kernel" }
+  - { sprint: 6,  name: "Evidence-Oriented Repair Loop",                     status: complete, phase: "Foundation",                      layer: "Execution Kernel (Repair)" }
+  - { sprint: 7,  name: "Error Pattern Library & Learning Foundation",       status: complete, phase: "Foundation",                      layer: "Execution Kernel (Prevention)" }
+  - { sprint: 8,  name: "Preventive Engineering Layer",                      status: complete, phase: "Foundation",                      layer: "Execution Kernel (Prevention)" }
+  - { sprint: 9,  name: "Adaptive Repair Routing",                           status: complete, phase: "Foundation",                      layer: "Execution Kernel (Routing)" }
+  - { sprint: 10, name: "Learning Agents Foundation",                        status: complete, phase: "Foundation",                      layer: "Execution Kernel (Learning Substrate)" }
+  - { sprint: 11, name: "Commercial Readiness / Billing / Workspace",        status: complete, phase: "Operational Intelligence",        layer: "Commercial Readiness Layer" }
+  - { sprint: 12, name: "Learning Agents v1 (5 engines + dashboard)",        status: complete, phase: "Operational Intelligence",        layer: "Learning Agents Layer" }
+  - { sprint: 13, name: "Meta-Agents v1 (4 types)",                          status: complete, phase: "Meta-Intelligence & Memory",      layer: "Meta-Agent Coordination Layer" }
+  - { sprint: 14, name: "Controlled Meta-Agent Actions",                     status: complete, phase: "Meta-Intelligence & Memory",      layer: "Proposal Generation Layer" }
+  - { sprint: 15, name: "Engineering Memory Foundation",                     status: complete, phase: "Meta-Intelligence & Memory",      layer: "Engineering Memory Architecture" }
+  - { sprint: 16, name: "Memory Retrieval Surfaces",                         status: complete, phase: "Meta-Intelligence & Memory",      layer: "Engineering Memory Architecture" }
+  - { sprint: 17, name: "Memory Summaries",                                  status: complete, phase: "Meta-Intelligence & Memory",      layer: "Engineering Memory Architecture" }
+  - { sprint: 18, name: "Memory-Aware Meta-Agents",                          status: complete, phase: "Meta-Intelligence & Memory",      layer: "Meta-Agent + Memory (cross-layer)" }
+  - { sprint: 19, name: "Proposal Quality Feedback Loop",                    status: complete, phase: "Meta-Intelligence & Memory",      layer: "Proposal Quality & Calibration Layer" }
+  - { sprint: 20, name: "Advisory Calibration Layer",                        status: complete, phase: "Meta-Intelligence & Memory",      layer: "Proposal Quality & Calibration Layer" }
+  - { sprint: 21, name: "Prompt Optimization Engine (A/B testing)",          status: complete, phase: "Learning & Repair Intelligence",  layer: "Prompt Optimization Layer" }
+  - { sprint: 22, name: "Bounded Promotion & Rollback Guard",               status: complete, phase: "Learning & Repair Intelligence",  layer: "Prompt Optimization Layer" }
+  - { sprint: 23, name: "Self-Improving Fix Agents v2 (Repair Policies)",   status: complete, phase: "Learning & Repair Intelligence",  layer: "Repair Intelligence Layer" }
+  - { sprint: 24, name: "Agent Memory Layer Operationalization",             status: complete, phase: "Learning & Repair Intelligence",  layer: "Agent Memory Layer" }
+  - { sprint: 25, name: "Predictive Error Detection Operationalization",     status: complete, phase: "Learning & Repair Intelligence",  layer: "Predictive Detection Layer" }
+  - { sprint: 26, name: "Learning Agents v2 (Cross-Stage Policy Synthesis)", status: complete, phase: "Learning & Repair Intelligence",  layer: "Cross-Stage Learning Layer" }
+  - { sprint: 27, name: "Execution Policy Intelligence",                     status: complete, phase: "Execution Governance",            layer: "Execution Governance Layer" }
+  - { sprint: 28, name: "Execution Mode Portfolio Optimization",             status: complete, phase: "Execution Governance",            layer: "Execution Governance Layer" }
+  - { sprint: 29, name: "Workspace / Tenant Adaptive Policy Tuning",        status: complete, phase: "Execution Governance",            layer: "Execution Governance Layer" }
+  - { sprint: 30, name: "Platform Intelligence Entry",                       status: complete, phase: "Platform Intelligence & Calibration", layer: "Platform Intelligence Layer" }
+  - { sprint: 31, name: "Platform Self-Calibration",                         status: complete, phase: "Platform Intelligence & Calibration", layer: "Platform Calibration Layer" }
+  - { sprint: 32, name: "Execution Strategy Evolution",                      status: complete, phase: "Strategy Evolution & Governance",  layer: "Strategy Evolution Layer" }
+  - { sprint: 33, name: "Strategy Portfolio Governance",                     status: complete, phase: "Strategy Evolution & Governance",  layer: "Strategy Portfolio Governance Layer" }
+  - { sprint: 34, name: "Platform Self-Stabilization",                       status: complete, phase: "Platform Stabilization & Advisory", layer: "Platform Stabilization Layer" }
+  - { sprint: 35, name: "Autonomous Engineering Advisor",                    status: complete, phase: "Platform Stabilization & Advisory", layer: "Engineering Advisory Layer" }
+  - { sprint: 36, name: "Semantic Retrieval & Embedding Memory Expansion",   status: complete, phase: "Platform Stabilization & Advisory", layer: "Semantic Retrieval Layer" }
+  - { sprint: 37, name: "Discovery-Driven Architecture Signals",             status: complete, phase: "Platform Stabilization & Advisory", layer: "Discovery Architecture Layer" }
+  - { sprint: 38, name: "Architecture Change Simulation & Governance",       status: complete, phase: "Architecture Intelligence",       layer: "Architecture Simulation Layer" }
+  - { sprint: 39, name: "Architecture Change Planning & Rollout Readiness",  status: complete, phase: "Architecture Intelligence",       layer: "Architecture Planning Layer" }
+  - { sprint: 40, name: "Architecture Rollout Sandbox",                      status: complete, phase: "Architecture Intelligence",       layer: "Architecture Rollout Sandbox Layer" }
+  - { sprint: 41, name: "Architecture Rollout Pilot Governance",             status: complete, phase: "Architecture-Governed",           layer: "Architecture Pilot Layer" }
+  - { sprint: 42, name: "Controlled Architecture Migration Execution",       status: complete, phase: "Architecture-Governed",           layer: "Architecture Migration Layer" }
+  - { sprint: 43, name: "Architecture Portfolio Governance",                 status: complete, phase: "Architecture-Governed",           layer: "Architecture Portfolio Layer" }
+  - { sprint: 44, name: "Architecture Fitness Functions",                    status: complete, phase: "Architecture-Operating",          layer: "Architecture Fitness Layer" }
+  - { sprint: 45, name: "Autonomous Change Advisory Orchestrator",           status: complete, phase: "Architecture-Operating",          layer: "Change Advisory Orchestration Layer" }
+  - { sprint: 46, name: "Platform Self-Stabilization v2",                    status: complete, phase: "Architecture-Scaled",             layer: "Platform Stabilization v2 Layer" }
+  - { sprint: 47, name: "Tenant-Aware Architecture Modes",                   status: complete, phase: "Architecture-Scaled",             layer: "Tenant Architecture Layer" }
+  - { sprint: 48, name: "Economic Optimization Layer",                       status: complete, phase: "Architecture-Scaled",             layer: "Economic Optimization Layer" }
+  - { sprint: 49, name: "TBD",                                               status: planned,  phase: "Convergence",                    layer: "TBD" }
