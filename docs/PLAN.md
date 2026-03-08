@@ -4,9 +4,9 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 74 (Sandbox Benchmarking & Promotion Governance) — ✅ Complete
-> **Next Planned:** Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔮 Reserved
-> **Reserved Horizon:** Blocks O–S (Sprints 75–94) — 🔮 Reserved
+> **Current Sprint:** 75 (Role Arbitration & Capability Routing 2.0) — ✅ Complete
+> **Next Planned:** Sprint 76 (Multi-Agent Debate & Resolution Layer) — 📋 Planned
+> **Reserved Horizon:** Blocks O–S (Sprints 75–94) — Block O in progress
 
 ## Document Authority
 
@@ -788,5 +788,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Evidence Management | 1 | 72 |
 | Candidate Distillation | 1 | 73 |
 | Benchmark Governance | 1 | 74 |
+| Agent Routing | 1 | 75 |
 | Support | 11 | Various |
-| **Total** | **~120** | |
+| **Total** | **~121** | |

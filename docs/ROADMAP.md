@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** 74 sprints complete. Block N (Evidence-Governed Improvement Loop) complete. Block O (Advanced Multi-Agent Coordination) is next reserved.
+> **Last strategic change (2026-03-08):** 75 sprints complete. Block N complete. Block O (Advanced Multi-Agent Coordination) in progress — Sprint 75 complete.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -51,7 +51,7 @@
 
 ## Strategic Directive
 
-AxionOS has completed **74 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, evidence capture, improvement candidate distillation, and sandbox benchmarking & promotion governance. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete. The evidence-governed improvement loop (Block N) is complete.
+AxionOS has completed **75 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, evidence capture, improvement candidate distillation, sandbox benchmarking & promotion governance, and role arbitration & capability routing 2.0. The internal architecture is mature, coherent, and self-governing. Block O (Advanced Multi-Agent Coordination) is in progress.
 
 **Post-Block M Strategic Position:**
 
@@ -85,7 +85,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 
 ---
 
-## Completed Canon (Sprints 1–74)
+## Completed Canon (Sprints 1–75)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -117,6 +117,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Sprint 72 — Evidence Capture & Improvement Ledger | 72 | Canonical evidence capture, improvement ledger, context linking, review workflow, operator evidence dashboard |
 | Sprint 73 — Improvement Candidate Distillation Engine | 73 | Candidate distillation from evidence, pattern clustering, provenance/explainability, triage workflow, operator candidates dashboard |
 | Sprint 74 — Sandbox Benchmarking & Promotion Governance | 74 | Sandbox benchmarking of candidates, baseline comparison, metric capture, promotion/rejection/deferral governance, operator benchmark dashboard |
+| Sprint 75 — Role Arbitration & Capability Routing 2.0 | 75 | Context-aware agent/capability routing, suitability scoring, candidate comparison, fallback paths, operator routing dashboard |
 
 ---
 
@@ -170,17 +171,19 @@ Sprint 74 completed the Evidence-Governed Improvement Loop by introducing govern
 
 ---
 
-## Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔮 Reserved
+## Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔄 In Progress
 
-> **Status:** Reserved — strategic direction defined, not scoped for implementation.
+> **Status:** In progress — Sprint 75 complete, Sprints 76–78 planned.
 
-**Thesis:** After evidence-governed improvement is established, AxionOS may evolve toward more advanced role arbitration, debate, resolution, shared working memory, and bounded multi-agent execution.
+**Thesis:** After evidence-governed improvement is established, AxionOS evolves toward more advanced role arbitration, debate, resolution, shared working memory, and bounded multi-agent execution.
 
-**Architectural intent:**
-- Advanced agent role negotiation and arbitration
-- Structured debate and consensus patterns
-- Shared working memory for multi-agent collaboration
-- Bounded multi-agent execution with governance oversight
+---
+
+## Sprint 75 — Role Arbitration & Capability Routing 2.0 ✅ Implemented
+
+Sprint 75 established the first upgraded role arbitration and capability routing layer. The system now makes context-aware routing decisions that consider task type, pipeline stage, prior evidence, risk posture, and policy constraints. Each routing decision is explainable — operators can inspect why a specific agent/capability was chosen, what alternatives were considered, and what fallback paths exist. A dedicated operator surface (`/agent-routing`) provides routing decision visibility, candidate comparison, failure pattern concentration, and bad-route flagging.
+
+**Strategic role:** Sprint 75 starts Block O by making agent selection more intelligent and legible without introducing uncontrolled autonomy. Routing decisions remain bounded, auditable, and governance-first.
 
 ---
 
