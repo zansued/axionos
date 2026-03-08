@@ -92,12 +92,12 @@ This means the focus shifts from building internal systems to making the user-vi
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–66)                 PLANNED (67)                    COMMITTED (68)                 RESERVED (69–70)
+  COMPLETE (1–68)                 PLANNED (69)                    COMMITTED (70)                 RESERVED (71+)
   ───────────────►                ───────────────►                ───────────────►               ───────────────►
-  Foundation → Learning →          Product Experience             Role-Based Experience →        Onboarding/Templates →
-  Meta → Memory → Gov →            & Delivery Maturity            One-Click Delivery &           Adoption Intelligence &
-  Intelligence → Calibration →     User Journey                   Deploy Assurance               Customer Success
-  Strategy → Stabilization →       Orchestration
+  Foundation → Learning →          Onboarding, Templates          Adoption Intelligence &        Future expansion
+  Meta → Memory → Gov →            & Vertical Starters            Customer Success Loop
+  Intelligence → Calibration →
+  Strategy → Stabilization →
   Advisory → Semantic →
   Discovery → Simulation →
   Planning → Sandbox →
