@@ -57,6 +57,7 @@ import CrossRegionRecovery from "./pages/CrossRegionRecovery";
 import TenantRuntime from "./pages/TenantRuntime";
 import LargeScaleOrchestration from "./pages/LargeScaleOrchestration";
 import ArchitectureHypotheses from "./pages/ArchitectureHypotheses";
+import ResearchSandbox from "./pages/ResearchSandbox";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
