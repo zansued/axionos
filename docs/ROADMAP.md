@@ -180,8 +180,9 @@ The next step opens a bounded product intelligence layer:
 | Convergence | 49 | ✅ Complete | Platform convergence: specialization vs fragmentation |
 | Convergence Gov | 50 | ✅ Complete | Convergence governance: promotion + merge + retention + retirement |
 | Convergence Memory | 51 | ✅ Complete | Institutional convergence memory: durable knowledge + patterns + evidence |
+| Operating Profiles | 52 | ✅ Complete | Operating profiles & policy packs: reusable, governed, versioned profiles |
 
-> ✅ All seven architecture blocks are complete. The platform is ready for next strategic horizon (52+).
+> ✅ All eight architecture blocks are complete. The platform is ready for next strategic horizon (53+).
 
 ---
 
