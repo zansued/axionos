@@ -143,8 +143,9 @@ Governed lifecycle for convergence promotion, bounded merge, retention, deprecat
 | Operating | 44–45 | ✅ Complete | Architecture-operating: fitness + orchestration |
 | Scaled | 46–48 | ✅ Complete | Architecture-scaled: stability + tenants + economics |
 | Convergence | 49 | ✅ Complete | Platform convergence: specialization vs fragmentation |
+| Convergence Gov | 50 | ✅ Complete | Convergence governance: promotion + merge + retention + retirement |
 
-> ✅ All five architecture blocks are complete. The platform is ready for next strategic horizon (50+).
+> ✅ All six architecture blocks are complete. The platform is ready for next strategic horizon (51+).
 
 ---
 
