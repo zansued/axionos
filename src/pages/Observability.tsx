@@ -53,6 +53,7 @@ import { OperatingProfilesDashboard } from "@/components/observability/Operating
 import { ProductIntelligenceDashboard } from "@/components/observability/ProductIntelligenceDashboard";
 import { ProductIntelligenceOperationsDashboard } from "@/components/observability/ProductIntelligenceOperationsDashboard";
 import { ProductOpportunityPortfolioDashboard } from "@/components/observability/ProductOpportunityPortfolioDashboard";
+import { ControlledEcosystemReadinessDashboard } from "@/components/observability/ControlledEcosystemReadinessDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
