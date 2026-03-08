@@ -8802,6 +8802,154 @@ export type Database = {
           },
         ]
       }
+      improvement_benchmark_metrics: {
+        Row: {
+          baseline_value: number | null
+          benchmark_run_id: string
+          candidate_value: number | null
+          created_at: string
+          delta: number | null
+          delta_pct: number | null
+          direction: string
+          id: string
+          metric_key: string
+          metric_label: string
+          organization_id: string
+          significance: string
+        }
+        Insert: {
+          baseline_value?: number | null
+          benchmark_run_id: string
+          candidate_value?: number | null
+          created_at?: string
+          delta?: number | null
+          delta_pct?: number | null
+          direction?: string
+          id?: string
+          metric_key: string
+          metric_label?: string
+          organization_id: string
+          significance?: string
+        }
+        Update: {
+          baseline_value?: number | null
+          benchmark_run_id?: string
+          candidate_value?: number | null
+          created_at?: string
+          delta?: number | null
+          delta_pct?: number | null
+          direction?: string
+          id?: string
+          metric_key?: string
+          metric_label?: string
+          organization_id?: string
+          significance?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_benchmark_metrics_benchmark_run_id_fkey"
+            columns: ["benchmark_run_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_benchmark_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_benchmark_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      improvement_benchmark_runs: {
+        Row: {
+          baseline_reference: Json
+          benchmark_config: Json
+          benchmark_type: string
+          candidate_id: string
+          completed_at: string | null
+          created_at: string
+          gain_indicators: Json
+          id: string
+          organization_id: string
+          recommendation_summary: string
+          regression_indicators: Json
+          result_metrics: Json
+          risk_posture: string
+          sandbox_scope: string
+          stability_signal: string
+          started_at: string | null
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          baseline_reference?: Json
+          benchmark_config?: Json
+          benchmark_type?: string
+          candidate_id: string
+          completed_at?: string | null
+          created_at?: string
+          gain_indicators?: Json
+          id?: string
+          organization_id: string
+          recommendation_summary?: string
+          regression_indicators?: Json
+          result_metrics?: Json
+          risk_posture?: string
+          sandbox_scope?: string
+          stability_signal?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          baseline_reference?: Json
+          benchmark_config?: Json
+          benchmark_type?: string
+          candidate_id?: string
+          completed_at?: string | null
+          created_at?: string
+          gain_indicators?: Json
+          id?: string
+          organization_id?: string
+          recommendation_summary?: string
+          regression_indicators?: Json
+          result_metrics?: Json
+          risk_posture?: string
+          sandbox_scope?: string
+          stability_signal?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_benchmark_runs_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_benchmark_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_benchmark_runs_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       improvement_candidate_evidence: {
         Row: {
           candidate_id: string
@@ -9232,6 +9380,141 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      improvement_promotion_decisions: {
+        Row: {
+          audit_metadata: Json
+          benchmark_run_id: string | null
+          candidate_id: string
+          created_at: string
+          decided_by: string | null
+          decision: string
+          decision_reason: string
+          id: string
+          organization_id: string
+          review_id: string | null
+          rollback_posture: string
+        }
+        Insert: {
+          audit_metadata?: Json
+          benchmark_run_id?: string | null
+          candidate_id: string
+          created_at?: string
+          decided_by?: string | null
+          decision?: string
+          decision_reason?: string
+          id?: string
+          organization_id: string
+          review_id?: string | null
+          rollback_posture?: string
+        }
+        Update: {
+          audit_metadata?: Json
+          benchmark_run_id?: string | null
+          candidate_id?: string
+          created_at?: string
+          decided_by?: string | null
+          decision?: string
+          decision_reason?: string
+          id?: string
+          organization_id?: string
+          review_id?: string | null
+          rollback_posture?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_promotion_decisions_benchmark_run_id_fkey"
+            columns: ["benchmark_run_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_benchmark_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_promotion_decisions_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_promotion_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_promotion_decisions_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_promotion_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      improvement_promotion_reviews: {
+        Row: {
+          benchmark_run_id: string
+          candidate_id: string
+          created_at: string
+          id: string
+          organization_id: string
+          recommendation: string
+          review_notes: string
+          review_status: string
+          reviewer_id: string | null
+          risk_assessment: string
+          updated_at: string
+        }
+        Insert: {
+          benchmark_run_id: string
+          candidate_id: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          recommendation?: string
+          review_notes?: string
+          review_status?: string
+          reviewer_id?: string | null
+          risk_assessment?: string
+          updated_at?: string
+        }
+        Update: {
+          benchmark_run_id?: string
+          candidate_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          recommendation?: string
+          review_notes?: string
+          review_status?: string
+          reviewer_id?: string | null
+          risk_assessment?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "improvement_promotion_reviews_benchmark_run_id_fkey"
+            columns: ["benchmark_run_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_benchmark_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_promotion_reviews_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "improvement_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "improvement_promotion_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
