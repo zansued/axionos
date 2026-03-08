@@ -270,6 +270,10 @@ After Sprint 65, AxionOS enters a **sustained operating mode** for internal arch
 | Canon Integrity | 64 | ✅ Complete | Canon integrity & drift governance: cross-doc consistency, principle conformance |
 | Operating Completion | 65 | ✅ Complete | First complete, internally coherent operating canon |
 | User Journey Orchestration | 66 | ✅ Complete | Canonical visible journey, transitions, approvals, artifact visibility, delivery |
+| Role-Based Experience | 67 | ✅ Complete | Role-aware surfaces, navigation filtering, complexity leakage detection, approval visibility routing |
+| One-Click Delivery & Deploy Assurance | 68 | ✅ Complete | Governed one-click delivery, deploy confidence, blocker detection, rollback posture, output visibility |
+| Onboarding, Templates & Starters | 69 | ✅ Complete | Guided onboarding flows, reusable templates, domain-specific vertical starters, friction detection |
+| Adoption Intelligence & Customer Success | 70 | ✅ Complete | Adoption models, success signals, journey friction, template effectiveness, delivery correlation |
 
 ---
 
