@@ -236,7 +236,7 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 
 > **Full module inventory:** [AGENTS.md](AGENTS.md) · **Architecture details:** [ARCHITECTURE.md](ARCHITECTURE.md)
 
-All 38 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, the institutional convergence memory layer, the operating profiles layer, and the product intelligence entry layer.
+All 39 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, the institutional convergence memory layer, the operating profiles layer, the product intelligence entry layer, and the product intelligence operations layer.
 
 ### Frozen Areas
 
