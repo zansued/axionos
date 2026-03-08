@@ -134,7 +134,7 @@ export function PlatformConvergenceDashboard() {
             <CardContent className="space-y-3">
               <div className="grid grid-cols-3 gap-3 text-sm">
                 <div className="flex flex-col"><span className="text-muted-foreground">Hit Rate</span><span className="font-medium">{formatPct(out.hit_rate)}</span></div>
-                <div className="flex flex-col"><span className="text-muted-foreground">Helpful</span><span className="font-medium text-green-500">{out.helpful_count ?? 0}</span></div>
+                <div className="flex flex-col"><span className="text-muted-foreground">Helpful</span><span className="font-medium text-primary">{out.helpful_count ?? 0}</span></div>
                 <div className="flex flex-col"><span className="text-muted-foreground">Harmful</span><span className="font-medium text-destructive">{out.harmful_count ?? 0}</span></div>
               </div>
               {(out.outcomes || []).length === 0 ? (
