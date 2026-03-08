@@ -707,6 +707,14 @@ supabase/functions/
 | 35 | Platform Intelligence Entry | 30 | Behavior aggregation, bottleneck detection, health model |
 | 36 | Platform Self-Calibration | 31 | Parameter registry, bounded proposals, guardrails, rollback |
 | 37 | Execution Strategy Evolution | 32 | Strategy families, variant synthesis, experiment runner, promotion/rollback |
+| 38 | Strategy Portfolio Governance | 33 | Strategy family lifecycle, portfolio health, conflict resolution |
+| 39 | Platform Self-Stabilization | 34 | Drift detection, oscillation suppression, safe modes, stability signals |
+| 40 | Autonomous Engineering Advisor | 35 | Cross-layer advisory synthesis, recommendation review workflow |
+| 41 | Semantic Retrieval | 36 | Unified embedding-backed retrieval, domain guardrails, session lineage |
+| 42 | Discovery-Driven Architecture Signals | 37 | External/product signal correlation, architecture recommendations |
+| 43 | Architecture Change Simulation | 38 | Bounded simulation, impact estimation, governance guardrails |
+| 44 | Architecture Change Planning | 39 | Implementation plans, blast radius, validation/rollback blueprints |
+| 45 | Architecture Rollout Sandbox | 40 | Bounded rehearsal, migration sequencing, fragility analysis, rollback viability |
 
 ### Frozen
 
