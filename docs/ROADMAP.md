@@ -50,6 +50,7 @@
 | **Economic Optimization** | Active — advisory-first cost/ROI awareness + tradeoff scoring |
 | **Platform Convergence** | Active — advisory-first convergence detection, specialization vs fragmentation analysis, candidate building |
 | **Convergence Governance** | Active — governed lifecycle for promotion, merge, retention, deprecation, retirement decisions |
+| **Institutional Convergence Memory** | Active — durable, queryable, reusable convergence knowledge with evidence lineage |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
