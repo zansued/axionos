@@ -406,83 +406,17 @@ Engineering Memory (Layer 5) is a **cross-layer infrastructure** that captures k
 
 ## 6. Agent Operating System (Agent OS) — v1.0 GA
 
-The Agent OS is the runtime architecture governing how agents are selected, executed, governed and coordinated. It consists of 14 modules organized into 5 architectural planes.
+The Agent OS is the runtime architecture governing how agents are selected, executed, governed and coordinated. It consists of 18 modules organized into 5 architectural planes.
 
-### Architecture Map
+> **Full specification:** [AGENTS.md](AGENTS.md) — canonical reference for planes, modules, agent types, contracts, safety boundaries, and events.
 
-```
-+-------------------------------------------------------------------+
-|                       ECOSYSTEM PLANE                              |
-|   Marketplace - Capability Registry - Package Manager - Trust      |
-+-------------------------------+-----------------------------------+
-                                | discovery
-+-------------------------------+-----------------------------------+
-|                       EXECUTION PLANE                              |
-|   Orchestrator - Coordination - Distributed Runtime                |
-|   LLM Adapter - Tool Adapter - Event Bus - Agent Registry          |
-+-----------+-----------------------+-------------------+-----------+
-            | decisions             | persistence       | telemetry
-+-----------+----------+  +---------+---------+  +------+----------+
-|    CONTROL PLANE     |  |    DATA PLANE     |  |   DATA PLANE    |
-|   Selection Engine   |  |   Artifact Store  |  |  Observability  |
-|   Policy Engine      |  |   Memory System   |  |  Audit Ledger   |
-|   Governance Layer   |  |                   |  |                 |
-|   Adaptive Routing   |  |                   |  |                 |
-+-----------+----------+  +---------+---------+  +------+----------+
-            |                       |                    |
-+-----------+-----------------------+--------------------+----------+
-|                         CORE PLANE                                 |
-|   Runtime Protocol - Capability Model - Core Types                 |
-|   (Contracts, Schemas, Identity -- no state, no side effects)      |
-+-------------------------------------------------------------------+
-```
-
-### Five Fundamental Agent Types
-
-| Agent Type | Responsibility | Example Modes |
-|-----------|---------------|---------------|
-| **Perception Agent** | Interprets ideas, requirements, market signals, context | `idea_intake`, `requirement_analysis`, `market_signal` |
-| **Design Agent** | Creates architecture, domain models, data models, API designs | `architecture`, `domain_modeling`, `data_modeling`, `api_design` |
-| **Build Agent** | Generates code, UI, configs, migrations, artifacts | `business_logic`, `api_generation`, `ui_generation` |
-| **Validation Agent** | Static analysis, runtime validation, QA, architectural checks | `static_analysis`, `runtime_build`, `drift_detection` |
-| **Evolution Agent** | Repair, learning, pattern extraction, prompt optimization | `build_repair`, `error_learning`, `pattern_extraction` |
-
-```
-Agent Specialization = Mode + Tools + Memory + Contract
-```
-
-### Plane Implementation Status
-
-| Plane | Status | Notes |
-|-------|--------|-------|
-| **Core** | ✅ Implemented | Identity, contracts, types fully specified |
-| **Control** | ✅ Implemented | Selection, policy, governance, adaptive routing operational |
-| **Execution** | ✅ Partial | Orchestrator + DAG operational. Advanced coordination/distributed runtime frozen |
-| **Data** | ✅ Implemented | Artifact store, memory, observability operational |
-| **Ecosystem** | ❄️ Frozen | Marketplace designed but not needed |
-
-### Module Inventory
-
-| # | Module | File | Plane | Version |
-|---|--------|------|-------|---------|
-| 1 | Runtime Protocol | `protocol.ts` | Core | v0.1 |
-| 2 | Capability Model | `capabilities.ts` | Core | v0.2 |
-| 3 | Core Types | `types.ts` | Core | v0.1 |
-| 4 | Selection Engine | `selection.ts` | Control | v0.2 |
-| 5 | Policy Engine | `policy-engine.ts` | Control | v0.2 |
-| 6 | Governance Layer | `governance.ts` | Control | v1.1 |
-| 7 | Adaptive Routing | `adaptive-routing.ts` | Control | v0.7 |
-| 8 | Orchestrator | `orchestrator.ts` | Execution | v0.1 |
-| 9 | Agent Registry | `registry.ts` | Execution | v0.1 |
-| 10 | Event Bus | `event-bus.ts` | Execution | v0.1 |
-| 11 | Multi-Agent Coordination | `coordination.ts` | Execution | v0.8 |
-| 12 | Distributed Runtime | `distributed-runtime.ts` | Execution | v0.9 |
-| 13 | LLM Adapter | `llm-adapter.ts` | Execution | v0.4 |
-| 14 | Tool Adapter | `tool-adapter.ts` | Execution | v0.5 |
-| 15 | Artifact Store | `artifact-store.ts` | Data | v0.1 |
-| 16 | Memory System | `memory-system.ts` | Data | v0.6 |
-| 17 | Observability | `observability.ts` | Data | v0.3 |
-| 18 | Marketplace | `marketplace.ts` | Ecosystem | v1.0 |
+| Plane | Status | Key Modules |
+|-------|--------|-------------|
+| **Core** | ✅ Implemented | Runtime Protocol, Capability Model, Core Types |
+| **Control** | ✅ Implemented | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing |
+| **Execution** | ✅ Partial | Orchestrator, Coordination, LLM/Tool Adapters (advanced coordination/distributed runtime frozen) |
+| **Data** | ✅ Implemented | Artifact Store, Memory System, Observability |
+| **Ecosystem** | ❄️ Frozen | Marketplace (designed, not needed) |
 
 ---
 
