@@ -15003,6 +15003,435 @@ export type Database = {
           },
         ]
       }
+      role_experience_models: {
+        Row: {
+          assumptions: Json
+          complexity_threshold: number
+          created_at: string
+          default_surface_type: string
+          description: string | null
+          evidence_links: Json
+          id: string
+          navigation_profile_name: string
+          organization_id: string
+          role_name: string
+          role_type: string
+          status: string
+          updated_at: string
+          visibility_rules: Json
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          complexity_threshold?: number
+          created_at?: string
+          default_surface_type?: string
+          description?: string | null
+          evidence_links?: Json
+          id?: string
+          navigation_profile_name?: string
+          organization_id: string
+          role_name?: string
+          role_type?: string
+          status?: string
+          updated_at?: string
+          visibility_rules?: Json
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          complexity_threshold?: number
+          created_at?: string
+          default_surface_type?: string
+          description?: string | null
+          evidence_links?: Json
+          id?: string
+          navigation_profile_name?: string
+          organization_id?: string
+          role_name?: string
+          role_type?: string
+          status?: string
+          updated_at?: string
+          visibility_rules?: Json
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_experience_models_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_experience_models_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      role_experience_outcomes: {
+        Row: {
+          admin_surface_integrity_score: number
+          approval_visibility_score: number
+          assumptions: Json
+          bounded_visibility_coherence_score: number
+          complexity_exposure_score: number
+          created_at: string
+          default_user_journey_clarity_score: number
+          evidence_links: Json
+          expected_outcomes: Json
+          id: string
+          information_summarization_score: number
+          internal_complexity_leakage_score: number
+          navigation_clarity_score: number
+          operator_surface_effectiveness_score: number
+          organization_id: string
+          outcome_domain: string
+          permission_alignment_score: number
+          realized_outcomes: Json
+          role_experience_outcome_accuracy_score: number
+          role_experience_quality_score: number
+          role_friction_score: number
+          role_name: string
+          role_surface_separation_score: number
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          admin_surface_integrity_score?: number
+          approval_visibility_score?: number
+          assumptions?: Json
+          bounded_visibility_coherence_score?: number
+          complexity_exposure_score?: number
+          created_at?: string
+          default_user_journey_clarity_score?: number
+          evidence_links?: Json
+          expected_outcomes?: Json
+          id?: string
+          information_summarization_score?: number
+          internal_complexity_leakage_score?: number
+          navigation_clarity_score?: number
+          operator_surface_effectiveness_score?: number
+          organization_id: string
+          outcome_domain?: string
+          permission_alignment_score?: number
+          realized_outcomes?: Json
+          role_experience_outcome_accuracy_score?: number
+          role_experience_quality_score?: number
+          role_friction_score?: number
+          role_name?: string
+          role_surface_separation_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          admin_surface_integrity_score?: number
+          approval_visibility_score?: number
+          assumptions?: Json
+          bounded_visibility_coherence_score?: number
+          complexity_exposure_score?: number
+          created_at?: string
+          default_user_journey_clarity_score?: number
+          evidence_links?: Json
+          expected_outcomes?: Json
+          id?: string
+          information_summarization_score?: number
+          internal_complexity_leakage_score?: number
+          navigation_clarity_score?: number
+          operator_surface_effectiveness_score?: number
+          organization_id?: string
+          outcome_domain?: string
+          permission_alignment_score?: number
+          realized_outcomes?: Json
+          role_experience_outcome_accuracy_score?: number
+          role_experience_quality_score?: number
+          role_friction_score?: number
+          role_name?: string
+          role_surface_separation_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_experience_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_experience_outcomes_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      role_experience_overrides: {
+        Row: {
+          assumptions: Json
+          created_at: string
+          evidence_links: Json
+          experience_quality_score: number
+          friction_score: number
+          id: string
+          organization_id: string
+          override_key: string
+          override_status: string
+          override_value: Json
+          recommendation_status: string
+          role_name: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json
+          created_at?: string
+          evidence_links?: Json
+          experience_quality_score?: number
+          friction_score?: number
+          id?: string
+          organization_id: string
+          override_key?: string
+          override_status?: string
+          override_value?: Json
+          recommendation_status?: string
+          role_name?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          created_at?: string
+          evidence_links?: Json
+          experience_quality_score?: number
+          friction_score?: number
+          id?: string
+          organization_id?: string
+          override_key?: string
+          override_status?: string
+          override_value?: Json
+          recommendation_status?: string
+          role_name?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_experience_overrides_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_experience_overrides_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      role_information_layers: {
+        Row: {
+          created_at: string
+          evidence_links: Json
+          id: string
+          information_class: string
+          information_summarization_score: number
+          organization_id: string
+          rationale: string | null
+          role_name: string
+          status: string
+          summarization_level: string
+          updated_at: string
+          visibility_mode: string
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          information_class?: string
+          information_summarization_score?: number
+          organization_id: string
+          rationale?: string | null
+          role_name?: string
+          status?: string
+          summarization_level?: string
+          updated_at?: string
+          visibility_mode?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          information_class?: string
+          information_summarization_score?: number
+          organization_id?: string
+          rationale?: string | null
+          role_name?: string
+          status?: string
+          summarization_level?: string
+          updated_at?: string
+          visibility_mode?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_information_layers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_information_layers_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      role_navigation_profiles: {
+        Row: {
+          complexity_exposure_score: number
+          created_at: string
+          evidence_links: Json
+          id: string
+          navigation_items: Json
+          organization_id: string
+          profile_name: string
+          role_name: string
+          status: string
+          surface_priority: string
+          tab_items: Json
+          updated_at: string
+          visibility_density_score: number
+          workspace_id: string | null
+        }
+        Insert: {
+          complexity_exposure_score?: number
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          navigation_items?: Json
+          organization_id: string
+          profile_name?: string
+          role_name?: string
+          status?: string
+          surface_priority?: string
+          tab_items?: Json
+          updated_at?: string
+          visibility_density_score?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          complexity_exposure_score?: number
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          navigation_items?: Json
+          organization_id?: string
+          profile_name?: string
+          role_name?: string
+          status?: string
+          surface_priority?: string
+          tab_items?: Json
+          updated_at?: string
+          visibility_density_score?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_navigation_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_navigation_profiles_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      role_surface_permissions: {
+        Row: {
+          allowed: boolean
+          approval_visibility_score: number
+          created_at: string
+          evidence_links: Json
+          governance_surface_score: number
+          id: string
+          organization_id: string
+          permission_scope_id: string | null
+          permission_scope_type: string
+          role_name: string
+          status: string
+          surface_key: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          allowed?: boolean
+          approval_visibility_score?: number
+          created_at?: string
+          evidence_links?: Json
+          governance_surface_score?: number
+          id?: string
+          organization_id: string
+          permission_scope_id?: string | null
+          permission_scope_type?: string
+          role_name?: string
+          status?: string
+          surface_key?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          allowed?: boolean
+          approval_visibility_score?: number
+          created_at?: string
+          evidence_links?: Json
+          governance_surface_score?: number
+          id?: string
+          organization_id?: string
+          permission_scope_id?: string | null
+          permission_scope_type?: string
+          role_name?: string
+          status?: string
+          surface_key?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_surface_permissions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_surface_permissions_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rollout_economic_plans: {
         Row: {
           assessment_id: string

@@ -3,7 +3,7 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-08
-> **Current state:** Level 5 — Institutional Engineering Memory Platform. 50 architectural layers active (through Sprint 66 — User Journey Orchestration Layer).
+> **Current state:** Level 5 — Institutional Engineering Memory Platform. 51 architectural layers active (through Sprint 67 — Role-Based Experience Layer).
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -883,8 +883,8 @@ AxionOS distinguishes three architectural surface layers. This distinction is cr
 
 | Surface Layer | Audience | Purpose | Examples |
 |---------------|----------|---------|----------|
-| **Internal System Architecture** | Platform engineers | Governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration | All 49 architectural layers, Agent OS modules, learning/repair/calibration engines |
-| **Advanced Operator Surface** | Operators / leads | Governance dashboards, risk posture, policy management, product ops, ecosystem readiness, audit | Observability tabs, governance reviews, policy frames, fitness dimensions |
+| **Internal System Architecture** | Platform engineers | Governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration | All 51 architectural layers, Agent OS modules, learning/repair/calibration engines |
+| **Advanced Operator Surface** | Operators / leads | Governance dashboards, risk posture, policy management, product ops, ecosystem readiness, audit | Operational observability tabs, governance reviews, policy frames, fitness dimensions |
 | **User-Facing Product Journey** | End users | Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software | Pipeline stages, progress indicators, approval gates, deploy status |
 
 **Key principle:** Internal architecture powers the system. Operator surfaces expose governance and advanced controls. The **default product surface** should present the journey from idea to deployed software without unnecessary internal complexity.
@@ -906,10 +906,10 @@ Internal sophistication makes the product trustworthy. It does not need to be th
 
 With 65 sprints complete and the first mature operating baseline achieved, the platform's architectural direction shifts from internal system building to **product experience and delivery maturity**.
 
-### Completed Internal Canon (Sprints 1–66)
+### Completed Internal Canon (Sprints 1–67)
 - ✅ All layers from execution kernel through institutional assurance and canon integrity
-- ✅ 50 architectural layers active
-- ✅ First internally coherent operating canon + user journey orchestration
+- ✅ 51 architectural layers active
+- ✅ First internally coherent operating canon + user journey orchestration + role-based experience separation
 
 ### Next Architectural Direction — Block M: Product Experience & Delivery Maturity
 

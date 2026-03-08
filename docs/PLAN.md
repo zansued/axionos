@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 66 (User Journey Orchestration Layer) — ✅ Complete
-> **Next Sprint:** 67 (Role-Based Experience Layer) — 📋 Committed
+> **Current Sprint:** 67 (Role-Based Experience Layer) — ✅ Complete
+> **Next Sprint:** 68 (One-Click Delivery & Deploy Assurance Layer) — 📋 Committed
 
 ## Document Authority
 
@@ -50,7 +50,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | 🔮 Reserved | Strategic direction defined, not yet scoped for implementation | Lightweight — name, block, and one-line purpose only |
 
 - **Current/next sprint** should be highly detailed before implementation begins
-- **Committed future arc** (Sprints 67–68) should be moderately detailed
+- **Committed future arc** (Sprint 68) should be moderately detailed
 - **Reserved horizon** (Sprints 69–70) should remain intentionally lightweight until promoted to committed
 - Reserved sprints should not be promoted to planned without deliberate review
 
@@ -674,5 +674,6 @@ This document serves as the canonical sprint execution ledger. The following con
 | Canon Integrity & Drift Governance | 1 | 64 |
 | Operating Completion | 1 | 65 |
 | User Journey Orchestration | 1 | 66 |
+| Role-Based Experience | 1 | 67 |
 | Support | 11 | Various |
-| **Total** | **~112** | |
+| **Total** | **~113** | |

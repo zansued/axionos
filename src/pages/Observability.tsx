@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles, Globe, Eye, UserCheck, Store, FlaskRound, PackageCheck, Handshake, BadgeCheck, ScrollText, CheckCircle2 } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles, Globe, Eye, UserCheck, Store, FlaskRound, PackageCheck, Handshake, BadgeCheck, ScrollText, CheckCircle2, Users as UsersIcon } from "lucide-react";
+import { useRoleBasedExperience } from "@/hooks/useRoleBasedExperience";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -63,6 +64,7 @@ import { MultiPartyPolicyRevenueGovernanceDashboard } from "@/components/observa
 import { InstitutionalOutcomeAssuranceDashboard } from "@/components/observability/InstitutionalOutcomeAssuranceDashboard";
 import { CanonIntegrityDriftGovernanceDashboard } from "@/components/observability/CanonIntegrityDriftGovernanceDashboard";
 import { OperatingCompletionDashboard } from "@/components/observability/OperatingCompletionDashboard";
+import { RoleBasedExperienceDashboard } from "@/components/observability/RoleBasedExperienceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -109,6 +111,7 @@ function formatTimeAgo(ts: string) {
 
 export default function Observability() {
   const { currentOrg } = useOrg();
+  const { isObsTabVisible, isAdmin } = useRoleBasedExperience();
   const [events, setEvents] = useState<LiveEvent[]>([]);
   const [paused, setPaused] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<"connected" | "connecting" | "error">("connecting");
@@ -342,60 +345,120 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(52, 1fr)" }}>
-            <TabsTrigger value="completion" className="text-xs gap-1"><CheckCircle2 className="h-3 w-3" /> Completion</TabsTrigger>
-            <TabsTrigger value="canon-gov" className="text-xs gap-1"><ScrollText className="h-3 w-3" /> CanonGov</TabsTrigger>
-            <TabsTrigger value="outcome-assure" className="text-xs gap-1"><BadgeCheck className="h-3 w-3" /> OutcomeAssure</TabsTrigger>
-            <TabsTrigger value="mp-gov" className="text-xs gap-1"><Handshake className="h-3 w-3" /> MultiPartyGov</TabsTrigger>
-            <TabsTrigger value="cap-registry" className="text-xs gap-1"><PackageCheck className="h-3 w-3" /> CapRegistry</TabsTrigger>
-            <TabsTrigger value="pilot-market" className="text-xs gap-1"><Store className="h-3 w-3" /> PilotMkt</TabsTrigger>
-            <TabsTrigger value="eco-sandbox" className="text-xs gap-1"><FlaskRound className="h-3 w-3" /> EcoSandbox</TabsTrigger>
-            <TabsTrigger value="trust-gov" className="text-xs gap-1"><UserCheck className="h-3 w-3" /> TrustGov</TabsTrigger>
-            <TabsTrigger value="exposure-gov" className="text-xs gap-1"><Eye className="h-3 w-3" /> ExposureGov</TabsTrigger>
-            <TabsTrigger value="eco-ready" className="text-xs gap-1"><Globe className="h-3 w-3" /> EcoReady</TabsTrigger>
-            <TabsTrigger value="prod-portfolio" className="text-xs gap-1"><Briefcase className="h-3 w-3" /> ProdPortfolio</TabsTrigger>
-            <TabsTrigger value="product-ops" className="text-xs gap-1"><Activity className="h-3 w-3" /> ProdOps</TabsTrigger>
-            <TabsTrigger value="product-intel" className="text-xs gap-1"><Sparkles className="h-3 w-3" /> ProdIntel</TabsTrigger>
-            <TabsTrigger value="op-profiles" className="text-xs gap-1"><PackageOpen className="h-3 w-3" /> Profiles</TabsTrigger>
-            <TabsTrigger value="conv-memory" className="text-xs gap-1"><BookOpen className="h-3 w-3" /> ConvMem</TabsTrigger>
-            <TabsTrigger value="conv-gov" className="text-xs gap-1"><Scale className="h-3 w-3" /> ConvGov</TabsTrigger>
-            <TabsTrigger value="convergence" className="text-xs gap-1"><Merge className="h-3 w-3" /> Converge</TabsTrigger>
-            <TabsTrigger value="arch-econ" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> ArchEcon</TabsTrigger>
-            <TabsTrigger value="tenant-arch" className="text-xs gap-1"><Building2 className="h-3 w-3" /> TenantArch</TabsTrigger>
-            <TabsTrigger value="stability-v2" className="text-xs gap-1"><ShieldCheck className="h-3 w-3" /> StabilityV2</TabsTrigger>
-            <TabsTrigger value="change-orch" className="text-xs gap-1"><Workflow className="h-3 w-3" /> ChangeOrch</TabsTrigger>
-            <TabsTrigger value="arch-fitness" className="text-xs gap-1"><Activity className="h-3 w-3" /> ArchFitness</TabsTrigger>
-            <TabsTrigger value="arch-portfolio" className="text-xs gap-1"><Briefcase className="h-3 w-3" /> ArchPortfolio</TabsTrigger>
-            <TabsTrigger value="arch-migrate" className="text-xs gap-1"><ArrowRightLeft className="h-3 w-3" /> ArchMigrate</TabsTrigger>
-            <TabsTrigger value="arch-pilot" className="text-xs gap-1"><Target className="h-3 w-3" /> ArchPilot</TabsTrigger>
-            <TabsTrigger value="advisor" className="text-xs gap-1"><Lightbulb className="h-3 w-3" /> Advisor</TabsTrigger>
-            <TabsTrigger value="arch-plan" className="text-xs gap-1"><MapIcon className="h-3 w-3" /> ArchPlan</TabsTrigger>
-            <TabsTrigger value="arch-sandbox" className="text-xs gap-1"><Box className="h-3 w-3" /> ArchSandbox</TabsTrigger>
-            <TabsTrigger value="arch-sim" className="text-xs gap-1"><Beaker className="h-3 w-3" /> ArchSim</TabsTrigger>
-            <TabsTrigger value="arch-disc" className="text-xs gap-1"><Compass className="h-3 w-3" /> ArchDisc</TabsTrigger>
-            <TabsTrigger value="sem-retr" className="text-xs gap-1"><SearchCode className="h-3 w-3" /> SemRetr</TabsTrigger>
-            <TabsTrigger value="platform" className="text-xs gap-1"><Orbit className="h-3 w-3" /> PlatInt</TabsTrigger>
-            <TabsTrigger value="calibration" className="text-xs gap-1"><SlidersHorizontal className="h-3 w-3" /> Calib</TabsTrigger>
-            <TabsTrigger value="stability" className="text-xs gap-1"><Anchor className="h-3 w-3" /> Stability</TabsTrigger>
-            <TabsTrigger value="strategy-evo" className="text-xs gap-1"><FlaskConical className="h-3 w-3" /> StratEvo</TabsTrigger>
-            <TabsTrigger value="strat-portfolio" className="text-xs gap-1"><Layers className="h-3 w-3" /> StratPort</TabsTrigger>
-            <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Perf</TabsTrigger>
-            <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>
-            <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Quality</TabsTrigger>
-            <TabsTrigger value="patterns" className="text-xs gap-1"><Bug className="h-3 w-3" /> Patterns</TabsTrigger>
-            <TabsTrigger value="prevention" className="text-xs gap-1"><Shield className="h-3 w-3" /> Prev</TabsTrigger>
-            <TabsTrigger value="predictive" className="text-xs gap-1"><ShieldAlert className="h-3 w-3" /> Predict</TabsTrigger>
-            <TabsTrigger value="repair" className="text-xs gap-1"><Wrench className="h-3 w-3" /> Repair</TabsTrigger>
-            <TabsTrigger value="cross-stage" className="text-xs gap-1"><GitBranch className="h-3 w-3" /> X-Stage</TabsTrigger>
-            <TabsTrigger value="exec-policy" className="text-xs gap-1"><Gauge className="h-3 w-3" /> ExPol</TabsTrigger>
-            <TabsTrigger value="portfolio" className="text-xs gap-1"><Layers className="h-3 w-3" /> Portfolio</TabsTrigger>
-            <TabsTrigger value="tenant" className="text-xs gap-1"><Building2 className="h-3 w-3" /> Tenant</TabsTrigger>
-            <TabsTrigger value="learning" className="text-xs gap-1"><GraduationCap className="h-3 w-3" /> Learn</TabsTrigger>
-            <TabsTrigger value="agent-memory" className="text-xs gap-1"><Cpu className="h-3 w-3" /> AgMem</TabsTrigger>
-            <TabsTrigger value="memory" className="text-xs gap-1"><Brain className="h-3 w-3" /> Mem</TabsTrigger>
-            <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
-            <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: `repeat(${[
+            isAdmin && "role-exp",
+            isObsTabVisible("completion") && "completion",
+            isObsTabVisible("canon-gov") && "canon-gov",
+            isObsTabVisible("outcome-assure") && "outcome-assure",
+            isObsTabVisible("mp-gov") && "mp-gov",
+            isObsTabVisible("cap-registry") && "cap-registry",
+            isObsTabVisible("pilot-market") && "pilot-market",
+            isObsTabVisible("eco-sandbox") && "eco-sandbox",
+            isObsTabVisible("trust-gov") && "trust-gov",
+            isObsTabVisible("exposure-gov") && "exposure-gov",
+            isObsTabVisible("eco-ready") && "eco-ready",
+            isObsTabVisible("prod-portfolio") && "prod-portfolio",
+            isObsTabVisible("product-ops") && "product-ops",
+            isObsTabVisible("product-intel") && "product-intel",
+            isObsTabVisible("op-profiles") && "op-profiles",
+            isObsTabVisible("conv-memory") && "conv-memory",
+            isObsTabVisible("conv-gov") && "conv-gov",
+            isObsTabVisible("convergence") && "convergence",
+            isObsTabVisible("arch-econ") && "arch-econ",
+            isObsTabVisible("tenant-arch") && "tenant-arch",
+            isObsTabVisible("stability-v2") && "stability-v2",
+            isObsTabVisible("change-orch") && "change-orch",
+            isObsTabVisible("arch-fitness") && "arch-fitness",
+            isObsTabVisible("arch-portfolio") && "arch-portfolio",
+            isObsTabVisible("arch-migrate") && "arch-migrate",
+            isObsTabVisible("arch-pilot") && "arch-pilot",
+            isObsTabVisible("advisor") && "advisor",
+            isObsTabVisible("arch-plan") && "arch-plan",
+            isObsTabVisible("arch-sandbox") && "arch-sandbox",
+            isObsTabVisible("arch-sim") && "arch-sim",
+            isObsTabVisible("arch-disc") && "arch-disc",
+            isObsTabVisible("sem-retr") && "sem-retr",
+            isObsTabVisible("platform") && "platform",
+            isObsTabVisible("calibration") && "calibration",
+            isObsTabVisible("stability") && "stability",
+            isObsTabVisible("strategy-evo") && "strategy-evo",
+            isObsTabVisible("strat-portfolio") && "strat-portfolio",
+            isObsTabVisible("performance") && "performance",
+            isObsTabVisible("costs") && "costs",
+            isObsTabVisible("quality") && "quality",
+            isObsTabVisible("patterns") && "patterns",
+            isObsTabVisible("prevention") && "prevention",
+            isObsTabVisible("predictive") && "predictive",
+            isObsTabVisible("repair") && "repair",
+            isObsTabVisible("cross-stage") && "cross-stage",
+            isObsTabVisible("exec-policy") && "exec-policy",
+            isObsTabVisible("portfolio") && "portfolio",
+            isObsTabVisible("tenant") && "tenant",
+            isObsTabVisible("learning") && "learning",
+            isObsTabVisible("agent-memory") && "agent-memory",
+            isObsTabVisible("memory") && "memory",
+            isObsTabVisible("summaries") && "summaries",
+            isObsTabVisible("live") && "live",
+          ].filter(Boolean).length}, 1fr)` }}>
+            {isAdmin && <TabsTrigger value="role-exp" className="text-xs gap-1"><UsersIcon className="h-3 w-3" /> RoleExp</TabsTrigger>}
+            {isObsTabVisible("completion") && <TabsTrigger value="completion" className="text-xs gap-1"><CheckCircle2 className="h-3 w-3" /> Completion</TabsTrigger>}
+            {isObsTabVisible("canon-gov") && <TabsTrigger value="canon-gov" className="text-xs gap-1"><ScrollText className="h-3 w-3" /> CanonGov</TabsTrigger>}
+            {isObsTabVisible("outcome-assure") && <TabsTrigger value="outcome-assure" className="text-xs gap-1"><BadgeCheck className="h-3 w-3" /> OutcomeAssure</TabsTrigger>}
+            {isObsTabVisible("mp-gov") && <TabsTrigger value="mp-gov" className="text-xs gap-1"><Handshake className="h-3 w-3" /> MultiPartyGov</TabsTrigger>}
+            {isObsTabVisible("cap-registry") && <TabsTrigger value="cap-registry" className="text-xs gap-1"><PackageCheck className="h-3 w-3" /> CapRegistry</TabsTrigger>}
+            {isObsTabVisible("pilot-market") && <TabsTrigger value="pilot-market" className="text-xs gap-1"><Store className="h-3 w-3" /> PilotMkt</TabsTrigger>}
+            {isObsTabVisible("eco-sandbox") && <TabsTrigger value="eco-sandbox" className="text-xs gap-1"><FlaskRound className="h-3 w-3" /> EcoSandbox</TabsTrigger>}
+            {isObsTabVisible("trust-gov") && <TabsTrigger value="trust-gov" className="text-xs gap-1"><UserCheck className="h-3 w-3" /> TrustGov</TabsTrigger>}
+            {isObsTabVisible("exposure-gov") && <TabsTrigger value="exposure-gov" className="text-xs gap-1"><Eye className="h-3 w-3" /> ExposureGov</TabsTrigger>}
+            {isObsTabVisible("eco-ready") && <TabsTrigger value="eco-ready" className="text-xs gap-1"><Globe className="h-3 w-3" /> EcoReady</TabsTrigger>}
+            {isObsTabVisible("prod-portfolio") && <TabsTrigger value="prod-portfolio" className="text-xs gap-1"><Briefcase className="h-3 w-3" /> ProdPortfolio</TabsTrigger>}
+            {isObsTabVisible("product-ops") && <TabsTrigger value="product-ops" className="text-xs gap-1"><Activity className="h-3 w-3" /> ProdOps</TabsTrigger>}
+            {isObsTabVisible("product-intel") && <TabsTrigger value="product-intel" className="text-xs gap-1"><Sparkles className="h-3 w-3" /> ProdIntel</TabsTrigger>}
+            {isObsTabVisible("op-profiles") && <TabsTrigger value="op-profiles" className="text-xs gap-1"><PackageOpen className="h-3 w-3" /> Profiles</TabsTrigger>}
+            {isObsTabVisible("conv-memory") && <TabsTrigger value="conv-memory" className="text-xs gap-1"><BookOpen className="h-3 w-3" /> ConvMem</TabsTrigger>}
+            {isObsTabVisible("conv-gov") && <TabsTrigger value="conv-gov" className="text-xs gap-1"><Scale className="h-3 w-3" /> ConvGov</TabsTrigger>}
+            {isObsTabVisible("convergence") && <TabsTrigger value="convergence" className="text-xs gap-1"><Merge className="h-3 w-3" /> Converge</TabsTrigger>}
+            {isObsTabVisible("arch-econ") && <TabsTrigger value="arch-econ" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> ArchEcon</TabsTrigger>}
+            {isObsTabVisible("tenant-arch") && <TabsTrigger value="tenant-arch" className="text-xs gap-1"><Building2 className="h-3 w-3" /> TenantArch</TabsTrigger>}
+            {isObsTabVisible("stability-v2") && <TabsTrigger value="stability-v2" className="text-xs gap-1"><ShieldCheck className="h-3 w-3" /> StabilityV2</TabsTrigger>}
+            {isObsTabVisible("change-orch") && <TabsTrigger value="change-orch" className="text-xs gap-1"><Workflow className="h-3 w-3" /> ChangeOrch</TabsTrigger>}
+            {isObsTabVisible("arch-fitness") && <TabsTrigger value="arch-fitness" className="text-xs gap-1"><Activity className="h-3 w-3" /> ArchFitness</TabsTrigger>}
+            {isObsTabVisible("arch-portfolio") && <TabsTrigger value="arch-portfolio" className="text-xs gap-1"><Briefcase className="h-3 w-3" /> ArchPortfolio</TabsTrigger>}
+            {isObsTabVisible("arch-migrate") && <TabsTrigger value="arch-migrate" className="text-xs gap-1"><ArrowRightLeft className="h-3 w-3" /> ArchMigrate</TabsTrigger>}
+            {isObsTabVisible("arch-pilot") && <TabsTrigger value="arch-pilot" className="text-xs gap-1"><Target className="h-3 w-3" /> ArchPilot</TabsTrigger>}
+            {isObsTabVisible("advisor") && <TabsTrigger value="advisor" className="text-xs gap-1"><Lightbulb className="h-3 w-3" /> Advisor</TabsTrigger>}
+            {isObsTabVisible("arch-plan") && <TabsTrigger value="arch-plan" className="text-xs gap-1"><MapIcon className="h-3 w-3" /> ArchPlan</TabsTrigger>}
+            {isObsTabVisible("arch-sandbox") && <TabsTrigger value="arch-sandbox" className="text-xs gap-1"><Box className="h-3 w-3" /> ArchSandbox</TabsTrigger>}
+            {isObsTabVisible("arch-sim") && <TabsTrigger value="arch-sim" className="text-xs gap-1"><Beaker className="h-3 w-3" /> ArchSim</TabsTrigger>}
+            {isObsTabVisible("arch-disc") && <TabsTrigger value="arch-disc" className="text-xs gap-1"><Compass className="h-3 w-3" /> ArchDisc</TabsTrigger>}
+            {isObsTabVisible("sem-retr") && <TabsTrigger value="sem-retr" className="text-xs gap-1"><SearchCode className="h-3 w-3" /> SemRetr</TabsTrigger>}
+            {isObsTabVisible("platform") && <TabsTrigger value="platform" className="text-xs gap-1"><Orbit className="h-3 w-3" /> PlatInt</TabsTrigger>}
+            {isObsTabVisible("calibration") && <TabsTrigger value="calibration" className="text-xs gap-1"><SlidersHorizontal className="h-3 w-3" /> Calib</TabsTrigger>}
+            {isObsTabVisible("stability") && <TabsTrigger value="stability" className="text-xs gap-1"><Anchor className="h-3 w-3" /> Stability</TabsTrigger>}
+            {isObsTabVisible("strategy-evo") && <TabsTrigger value="strategy-evo" className="text-xs gap-1"><FlaskConical className="h-3 w-3" /> StratEvo</TabsTrigger>}
+            {isObsTabVisible("strat-portfolio") && <TabsTrigger value="strat-portfolio" className="text-xs gap-1"><Layers className="h-3 w-3" /> StratPort</TabsTrigger>}
+            {isObsTabVisible("performance") && <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Perf</TabsTrigger>}
+            {isObsTabVisible("costs") && <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>}
+            {isObsTabVisible("quality") && <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Quality</TabsTrigger>}
+            {isObsTabVisible("patterns") && <TabsTrigger value="patterns" className="text-xs gap-1"><Bug className="h-3 w-3" /> Patterns</TabsTrigger>}
+            {isObsTabVisible("prevention") && <TabsTrigger value="prevention" className="text-xs gap-1"><Shield className="h-3 w-3" /> Prev</TabsTrigger>}
+            {isObsTabVisible("predictive") && <TabsTrigger value="predictive" className="text-xs gap-1"><ShieldAlert className="h-3 w-3" /> Predict</TabsTrigger>}
+            {isObsTabVisible("repair") && <TabsTrigger value="repair" className="text-xs gap-1"><Wrench className="h-3 w-3" /> Repair</TabsTrigger>}
+            {isObsTabVisible("cross-stage") && <TabsTrigger value="cross-stage" className="text-xs gap-1"><GitBranch className="h-3 w-3" /> X-Stage</TabsTrigger>}
+            {isObsTabVisible("exec-policy") && <TabsTrigger value="exec-policy" className="text-xs gap-1"><Gauge className="h-3 w-3" /> ExPol</TabsTrigger>}
+            {isObsTabVisible("portfolio") && <TabsTrigger value="portfolio" className="text-xs gap-1"><Layers className="h-3 w-3" /> Portfolio</TabsTrigger>}
+            {isObsTabVisible("tenant") && <TabsTrigger value="tenant" className="text-xs gap-1"><Building2 className="h-3 w-3" /> Tenant</TabsTrigger>}
+            {isObsTabVisible("learning") && <TabsTrigger value="learning" className="text-xs gap-1"><GraduationCap className="h-3 w-3" /> Learn</TabsTrigger>}
+            {isObsTabVisible("agent-memory") && <TabsTrigger value="agent-memory" className="text-xs gap-1"><Cpu className="h-3 w-3" /> AgMem</TabsTrigger>}
+            {isObsTabVisible("memory") && <TabsTrigger value="memory" className="text-xs gap-1"><Brain className="h-3 w-3" /> Mem</TabsTrigger>}
+            {isObsTabVisible("summaries") && <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>}
+            {isObsTabVisible("live") && <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>}
           </TabsList>
+
+          {/* ===== ROLE-BASED EXPERIENCE (Admin only) ===== */}
+          <TabsContent value="role-exp" className="mt-4">
+            <RoleBasedExperienceDashboard />
+          </TabsContent>
 
           {/* ===== OPERATING COMPLETION ===== */}
           <TabsContent value="completion" className="mt-4">
