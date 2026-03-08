@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Replaces individual AGENT_*.md files.
 >
-> **What changed (2026-03-08):** Sprint 40 — Architecture Rollout Sandbox & Controlled Migration Readiness. Approved architecture change plans can now be rehearsed in bounded sandboxes with migration sequencing, fragility analysis, rollback viability assessment, and controlled readiness scoring. Previous: Architecture Change Planning & Rollout Readiness (Sprint 39).
+> **What changed (2026-03-08):** Sprint 48 — Economic Optimization Layer. Advisory-first cost and ROI awareness across architecture changes, migration plans, policy evolution, strategy evolution, rollout planning, and tenant-aware architecture modes. Previous: Tenant-Aware Architecture Modes (Sprint 47).
 >
 > Last updated: 2026-03-08
 
