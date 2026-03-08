@@ -46,6 +46,7 @@ const bottomItems = [
   { title: "Candidates", url: "/improvement-candidates", icon: Sparkles },
   { title: "Benchmarks", url: "/improvement-benchmarks", icon: FlaskConical },
   { title: "Routing", url: "/agent-routing", icon: Plug },
+  { title: "Debates", url: "/agent-debates", icon: Scale },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
