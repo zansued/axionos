@@ -144,5 +144,8 @@ sprints:
   # === SPRINT 91 — Architecture Hypothesis Engine (Complete) ===
   - { sprint: 91, name: "Architecture Hypothesis Engine",                          status: complete, block: "S", phase: "Research Sandbox", layer: "Architecture Hypothesis Layer" }
 
+  # === SPRINT 92 — Simulated Evolution Campaigns (Complete) ===
+  - { sprint: 92, name: "Simulated Evolution Campaigns",                           status: complete, block: "S", phase: "Research Sandbox", layer: "Simulated Evolution Layer" }
+
   # === BLOCK S — Remaining ===
-  - { sprint: "92–94", name: "Simulated Evolution, Governed Promotion, Research Completion", status: reserved, block: "S", phase: "Reserved", layer: "TBD" }
+  - { sprint: "93–94", name: "Governed Promotion, Research Completion", status: reserved, block: "S", phase: "Reserved", layer: "TBD" }

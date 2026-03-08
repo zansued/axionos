@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 91 (Architecture Hypothesis Engine) — ✅ Complete
-> **Next Planned:** Sprint 92 (Simulated Architecture Evolution) — 📋 Planned
+> **Current Sprint:** 92 (Simulated Evolution Campaigns) — ✅ Complete
+> **Next Planned:** Sprint 93 (Governed Architecture Promotion) — 📋 Planned
 > **Reserved Horizon:** Block S (Sprints 91–94) — Block S in progress
 
 ## Document Authority
