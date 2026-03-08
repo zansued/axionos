@@ -2684,6 +2684,383 @@ export type Database = {
           },
         ]
       }
+      canon_conformance_signals: {
+        Row: {
+          conformance_score: number
+          created_at: string
+          evidence_links: Json
+          id: string
+          mutation_boundary_integrity_score: number
+          organization_id: string
+          principle_alignment_score: number
+          signal_layer: string
+          signal_payload: Json
+          signal_type: string
+        }
+        Insert: {
+          conformance_score?: number
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          mutation_boundary_integrity_score?: number
+          organization_id: string
+          principle_alignment_score?: number
+          signal_layer?: string
+          signal_payload?: Json
+          signal_type?: string
+        }
+        Update: {
+          conformance_score?: number
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          mutation_boundary_integrity_score?: number
+          organization_id?: string
+          principle_alignment_score?: number
+          signal_layer?: string
+          signal_payload?: Json
+          signal_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_conformance_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_drift_events: {
+        Row: {
+          assessment_id: string | null
+          created_at: string
+          description: string
+          drift_score: number
+          drift_type: string
+          evidence_links: Json
+          id: string
+          integrity_domain: string
+          organization_id: string
+          principle_violated: string
+          recurrence_count: number
+          severity: string
+        }
+        Insert: {
+          assessment_id?: string | null
+          created_at?: string
+          description?: string
+          drift_score?: number
+          drift_type?: string
+          evidence_links?: Json
+          id?: string
+          integrity_domain?: string
+          organization_id: string
+          principle_violated?: string
+          recurrence_count?: number
+          severity?: string
+        }
+        Update: {
+          assessment_id?: string | null
+          created_at?: string
+          description?: string
+          drift_score?: number
+          drift_type?: string
+          evidence_links?: Json
+          id?: string
+          integrity_domain?: string
+          organization_id?: string
+          principle_violated?: string
+          recurrence_count?: number
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_drift_events_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "canon_integrity_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_drift_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_integrity_assessments: {
+        Row: {
+          architecture_canon_alignment_score: number
+          assumptions: Json
+          conformance_score: number
+          created_at: string
+          cross_doc_consistency_score: number
+          drift_score: number
+          evidence_links: Json
+          expected_outcomes: Json
+          governance_canon_alignment_score: number
+          id: string
+          inconsistency_score: number
+          integrity_domain: string
+          integrity_risk_score: number
+          integrity_scope_id: string
+          integrity_scope_type: string
+          model_id: string | null
+          mutation_boundary_integrity_score: number
+          operational_conformance_score: number
+          organization_id: string
+          principle_alignment_score: number
+          realized_outcomes: Json
+          remediation_priority_score: number
+          updated_at: string
+        }
+        Insert: {
+          architecture_canon_alignment_score?: number
+          assumptions?: Json
+          conformance_score?: number
+          created_at?: string
+          cross_doc_consistency_score?: number
+          drift_score?: number
+          evidence_links?: Json
+          expected_outcomes?: Json
+          governance_canon_alignment_score?: number
+          id?: string
+          inconsistency_score?: number
+          integrity_domain?: string
+          integrity_risk_score?: number
+          integrity_scope_id?: string
+          integrity_scope_type?: string
+          model_id?: string | null
+          mutation_boundary_integrity_score?: number
+          operational_conformance_score?: number
+          organization_id: string
+          principle_alignment_score?: number
+          realized_outcomes?: Json
+          remediation_priority_score?: number
+          updated_at?: string
+        }
+        Update: {
+          architecture_canon_alignment_score?: number
+          assumptions?: Json
+          conformance_score?: number
+          created_at?: string
+          cross_doc_consistency_score?: number
+          drift_score?: number
+          evidence_links?: Json
+          expected_outcomes?: Json
+          governance_canon_alignment_score?: number
+          id?: string
+          inconsistency_score?: number
+          integrity_domain?: string
+          integrity_risk_score?: number
+          integrity_scope_id?: string
+          integrity_scope_type?: string
+          model_id?: string | null
+          mutation_boundary_integrity_score?: number
+          operational_conformance_score?: number
+          organization_id?: string
+          principle_alignment_score?: number
+          realized_outcomes?: Json
+          remediation_priority_score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_integrity_assessments_model_id_fkey"
+            columns: ["model_id"]
+            isOneToOne: false
+            referencedRelation: "canon_integrity_models"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_integrity_assessments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_integrity_models: {
+        Row: {
+          canonical_source_name: string
+          canonical_source_type: string
+          created_at: string
+          evidence_links: Json
+          id: string
+          integrity_check_definition: Json
+          integrity_domain: string
+          integrity_scope_type: string
+          organization_id: string
+          source_of_truth_mapping: Json
+          status: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          canonical_source_name: string
+          canonical_source_type?: string
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          integrity_check_definition?: Json
+          integrity_domain?: string
+          integrity_scope_type?: string
+          organization_id: string
+          source_of_truth_mapping?: Json
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          canonical_source_name?: string
+          canonical_source_type?: string
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          integrity_check_definition?: Json
+          integrity_domain?: string
+          integrity_scope_type?: string
+          organization_id?: string
+          source_of_truth_mapping?: Json
+          status?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_integrity_models_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_integrity_models_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_integrity_outcomes: {
+        Row: {
+          bounded_alignment_readiness_score: number
+          canon_outcome_accuracy_score: number
+          created_at: string
+          evidence_refs: Json
+          expected_outcomes: Json
+          id: string
+          organization_id: string
+          outcome_status: string
+          outcome_type: string
+          realized_outcomes: Json
+          review_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          bounded_alignment_readiness_score?: number
+          canon_outcome_accuracy_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id: string
+          outcome_status?: string
+          outcome_type?: string
+          realized_outcomes?: Json
+          review_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bounded_alignment_readiness_score?: number
+          canon_outcome_accuracy_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          expected_outcomes?: Json
+          id?: string
+          organization_id?: string
+          outcome_status?: string
+          outcome_type?: string
+          realized_outcomes?: Json
+          review_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_integrity_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_integrity_outcomes_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "canon_integrity_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_integrity_reviews: {
+        Row: {
+          assessment_id: string | null
+          created_at: string
+          evidence_links: Json
+          id: string
+          linked_changes: Json
+          organization_id: string
+          recommendation_status: string
+          review_notes: string
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          assessment_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          linked_changes?: Json
+          organization_id: string
+          recommendation_status?: string
+          review_notes?: string
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          assessment_id?: string | null
+          created_at?: string
+          evidence_links?: Json
+          id?: string
+          linked_changes?: Json
+          organization_id?: string
+          recommendation_status?: string
+          review_notes?: string
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_integrity_reviews_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "canon_integrity_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_integrity_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       capability_exposure_classes: {
         Row: {
           audit_requirements: Json

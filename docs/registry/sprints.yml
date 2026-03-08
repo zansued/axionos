@@ -75,5 +75,5 @@ sprints:
 
   # === BLOCK L — System Roundness & Operating Completion ===
   - { sprint: 63, name: "Institutional Outcome Assurance Layer",             status: complete, block: "L", phase: "System Roundness & Operating Completion", layer: "Institutional Outcome Assurance Layer" }
-  - { sprint: 64, name: "Canon Integrity & Drift Governance Layer",          status: reserved, block: "L", phase: "System Roundness & Operating Completion", objective: "Detect drift between behavior and canonical documentation" }
+  - { sprint: 64, name: "Canon Integrity & Drift Governance Layer",          status: complete, block: "L", phase: "System Roundness & Operating Completion", layer: "Canon Integrity & Drift Governance Layer" }
   - { sprint: 65, name: "Operating Completion Layer",                        status: reserved, block: "L", phase: "System Roundness & Operating Completion", objective: "First complete, internally coherent operating canon" }
