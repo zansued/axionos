@@ -4664,6 +4664,222 @@ export type Database = {
           },
         ]
       }
+      capability_marketplace_decisions: {
+        Row: {
+          audit_metadata: Json
+          capability_package_id: string
+          created_at: string
+          decided_by: string
+          decision_reason: string
+          decision_type: string
+          id: string
+          new_standing: string
+          organization_id: string
+          previous_standing: string
+        }
+        Insert: {
+          audit_metadata?: Json
+          capability_package_id: string
+          created_at?: string
+          decided_by?: string
+          decision_reason?: string
+          decision_type?: string
+          id?: string
+          new_standing?: string
+          organization_id: string
+          previous_standing?: string
+        }
+        Update: {
+          audit_metadata?: Json
+          capability_package_id?: string
+          created_at?: string
+          decided_by?: string
+          decision_reason?: string
+          decision_type?: string
+          id?: string
+          new_standing?: string
+          organization_id?: string
+          previous_standing?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_marketplace_decisions_capability_package_id_fkey"
+            columns: ["capability_package_id"]
+            isOneToOne: false
+            referencedRelation: "capability_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_marketplace_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_marketplace_reviews: {
+        Row: {
+          audit_metadata: Json
+          created_at: string
+          id: string
+          organization_id: string
+          posture_id: string
+          review_action: string
+          review_notes: string
+          reviewer_id: string
+        }
+        Insert: {
+          audit_metadata?: Json
+          created_at?: string
+          id?: string
+          organization_id: string
+          posture_id: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string
+        }
+        Update: {
+          audit_metadata?: Json
+          created_at?: string
+          id?: string
+          organization_id?: string
+          posture_id?: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_marketplace_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_marketplace_reviews_posture_id_fkey"
+            columns: ["posture_id"]
+            isOneToOne: false
+            referencedRelation: "capability_outcome_postures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_marketplace_signals: {
+        Row: {
+          capability_package_id: string
+          created_at: string
+          id: string
+          organization_id: string
+          severity: string
+          signal_payload: Json
+          signal_source: string
+          signal_type: string
+        }
+        Insert: {
+          capability_package_id: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          severity?: string
+          signal_payload?: Json
+          signal_source?: string
+          signal_type?: string
+        }
+        Update: {
+          capability_package_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          severity?: string
+          signal_payload?: Json
+          signal_source?: string
+          signal_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_marketplace_signals_capability_package_id_fkey"
+            columns: ["capability_package_id"]
+            isOneToOne: false
+            referencedRelation: "capability_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_marketplace_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_outcome_postures: {
+        Row: {
+          audit_metadata: Json
+          capability_package_id: string
+          compatibility_confidence: number
+          created_at: string
+          health_score: number
+          id: string
+          organization_id: string
+          reliability_score: number
+          review_summary: string
+          risk_posture: string
+          rollback_readiness: string
+          standing: string
+          updated_at: string
+          usage_signal: Json
+        }
+        Insert: {
+          audit_metadata?: Json
+          capability_package_id: string
+          compatibility_confidence?: number
+          created_at?: string
+          health_score?: number
+          id?: string
+          organization_id: string
+          reliability_score?: number
+          review_summary?: string
+          risk_posture?: string
+          rollback_readiness?: string
+          standing?: string
+          updated_at?: string
+          usage_signal?: Json
+        }
+        Update: {
+          audit_metadata?: Json
+          capability_package_id?: string
+          compatibility_confidence?: number
+          created_at?: string
+          health_score?: number
+          id?: string
+          organization_id?: string
+          reliability_score?: number
+          review_summary?: string
+          risk_posture?: string
+          rollback_readiness?: string
+          standing?: string
+          updated_at?: string
+          usage_signal?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_outcome_postures_capability_package_id_fkey"
+            columns: ["capability_package_id"]
+            isOneToOne: false
+            referencedRelation: "capability_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_outcome_postures_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       capability_package_events: {
         Row: {
           actor_ref: Json
