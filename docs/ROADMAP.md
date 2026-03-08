@@ -91,7 +91,7 @@ This means the focus shifts from building internal systems to making the user-vi
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–65)                 PLANNED (66)                    COMMITTED (67–68)              RESERVED (69–70)
+  COMPLETE (1–66)                 PLANNED (67)                    COMMITTED (68)                 RESERVED (69–70)
   ───────────────►                ───────────────►                ───────────────►               ───────────────►
   Foundation → Learning →          Product Experience             Role-Based Experience →        Onboarding/Templates →
   Meta → Memory → Gov →            & Delivery Maturity            One-Click Delivery &           Adoption Intelligence &
