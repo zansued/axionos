@@ -1,7 +1,7 @@
 import {
   Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Map,
   Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
-  Plug, FileSearch, Sparkles, Scale,
+  Plug, FileSearch, Sparkles, Scale, BrainCircuit,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
