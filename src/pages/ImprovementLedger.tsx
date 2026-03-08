@@ -137,7 +137,7 @@ export default function ImprovementLedger() {
   const SourceIcon = (type: string) => SOURCE_ICONS[type] || Info;
 
   return (
-    <AppLayout title="Improvement Ledger" subtitle="Evidence capture & improvement tracking — Sprint 72">
+    <AppLayout>
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card>
