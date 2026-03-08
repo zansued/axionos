@@ -137,6 +137,7 @@ const App = () => (
                       <Route path="/tenant-runtime" element={<ProtectedRoute><TenantRuntime /></ProtectedRoute>} />
                       <Route path="/large-scale-orchestration" element={<ProtectedRoute><LargeScaleOrchestration /></ProtectedRoute>} />
                       <Route path="/architecture-hypotheses" element={<ProtectedRoute><ArchitectureHypotheses /></ProtectedRoute>} />
+                      <Route path="/research-sandbox" element={<ProtectedRoute><ResearchSandbox /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
