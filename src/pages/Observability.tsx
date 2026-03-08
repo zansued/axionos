@@ -381,6 +381,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
+          {/* ===== CAPABILITY EXPOSURE GOVERNANCE ===== */}
+          <TabsContent value="exposure-gov" className="mt-4">
+            <CapabilityExposureGovernanceDashboard />
+          </TabsContent>
+
           {/* ===== CONTROLLED ECOSYSTEM READINESS ===== */}
           <TabsContent value="eco-ready" className="mt-4">
             <ControlledEcosystemReadinessDashboard />
