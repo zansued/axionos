@@ -121,6 +121,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Sprint 74 — Sandbox Benchmarking & Promotion Governance | 74 | Sandbox benchmarking of candidates, baseline comparison, metric capture, promotion/rejection/deferral governance, operator benchmark dashboard |
 | Sprint 75 — Role Arbitration & Capability Routing 2.0 | 75 | Context-aware agent/capability routing, suitability scoring, candidate comparison, fallback paths, operator routing dashboard |
 | Sprint 76 — Multi-Agent Debate & Resolution Layer | 76 | Structured bounded debate sessions, position/argument/resolution tracking, escalation, operator debate dashboard |
+| Sprint 77 — Shared Working Memory & Task-State Negotiation | 77 | Bounded shared working memory contexts, negotiated task-state transitions, coordination checkpoints, operator working memory dashboard |
 
 ---
 
