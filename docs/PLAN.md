@@ -157,7 +157,7 @@
 |--------|-----------|-------------------|--------|
 | 41 | Architecture Rollout Pilot Governance | Architecture Pilot Layer | ✅ Complete |
 | 42 | Controlled Architecture Migration Execution | Architecture Migration Layer | ✅ Complete |
-| 43 | Architecture Portfolio Governance | Architecture Portfolio Layer | 📋 Planned |
+| 43 | Architecture Portfolio Governance | Architecture Portfolio Layer | ✅ Complete |
 
 **Key Milestones:**
 - Sprint 41: Real blast radius, activation/cancellation gates, pilot vs baseline comparison, instant rollback
