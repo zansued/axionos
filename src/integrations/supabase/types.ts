@@ -3551,6 +3551,193 @@ export type Database = {
           },
         ]
       }
+      architecture_simulation_campaign_reviews: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          id: string
+          organization_id: string
+          review_notes: string | null
+          review_reason_codes: Json | null
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_simulation_campaign_reviews_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_simulation_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_simulation_campaign_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_simulation_campaigns: {
+        Row: {
+          audit_metadata: Json
+          baseline_reference: Json
+          campaign_name: string
+          created_at: string
+          evaluation_status: string
+          gain_indicators: Json
+          hypothesis_id: string | null
+          id: string
+          organization_id: string
+          regression_indicators: Json
+          research_scope: string
+          result_summary: Json
+          scenario_type: string
+          simulated_change_model: Json
+          uncertainty_posture: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          audit_metadata?: Json
+          baseline_reference?: Json
+          campaign_name?: string
+          created_at?: string
+          evaluation_status?: string
+          gain_indicators?: Json
+          hypothesis_id?: string | null
+          id?: string
+          organization_id: string
+          regression_indicators?: Json
+          research_scope?: string
+          result_summary?: Json
+          scenario_type?: string
+          simulated_change_model?: Json
+          uncertainty_posture?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          audit_metadata?: Json
+          baseline_reference?: Json
+          campaign_name?: string
+          created_at?: string
+          evaluation_status?: string
+          gain_indicators?: Json
+          hypothesis_id?: string | null
+          id?: string
+          organization_id?: string
+          regression_indicators?: Json
+          research_scope?: string
+          result_summary?: Json
+          scenario_type?: string
+          simulated_change_model?: Json
+          uncertainty_posture?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_simulation_campaigns_hypothesis_id_fkey"
+            columns: ["hypothesis_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_hypotheses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_simulation_campaigns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_simulation_campaigns_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_simulation_metrics: {
+        Row: {
+          baseline_value: number
+          campaign_id: string
+          created_at: string
+          delta: number
+          delta_direction: string
+          id: string
+          metric_domain: string
+          metric_name: string
+          organization_id: string
+          significance: string
+          simulated_value: number
+        }
+        Insert: {
+          baseline_value?: number
+          campaign_id: string
+          created_at?: string
+          delta?: number
+          delta_direction?: string
+          id?: string
+          metric_domain?: string
+          metric_name?: string
+          organization_id: string
+          significance?: string
+          simulated_value?: number
+        }
+        Update: {
+          baseline_value?: number
+          campaign_id?: string
+          created_at?: string
+          delta?: number
+          delta_direction?: string
+          id?: string
+          metric_domain?: string
+          metric_name?: string
+          organization_id?: string
+          significance?: string
+          simulated_value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_simulation_metrics_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_simulation_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_simulation_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_simulation_outcomes: {
         Row: {
           affected_layers: Json
@@ -3614,6 +3801,69 @@ export type Database = {
             columns: ["scope_profile_id"]
             isOneToOne: false
             referencedRelation: "architecture_simulation_scope_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_simulation_results: {
+        Row: {
+          baseline_metrics: Json
+          campaign_id: string
+          confidence_score: number
+          created_at: string
+          delta_summary: Json
+          gains: Json
+          id: string
+          inconclusive_areas: Json
+          limitations: Json
+          organization_id: string
+          regressions: Json
+          result_type: string
+          simulated_metrics: Json
+        }
+        Insert: {
+          baseline_metrics?: Json
+          campaign_id: string
+          confidence_score?: number
+          created_at?: string
+          delta_summary?: Json
+          gains?: Json
+          id?: string
+          inconclusive_areas?: Json
+          limitations?: Json
+          organization_id: string
+          regressions?: Json
+          result_type?: string
+          simulated_metrics?: Json
+        }
+        Update: {
+          baseline_metrics?: Json
+          campaign_id?: string
+          confidence_score?: number
+          created_at?: string
+          delta_summary?: Json
+          gains?: Json
+          id?: string
+          inconclusive_areas?: Json
+          limitations?: Json
+          organization_id?: string
+          regressions?: Json
+          result_type?: string
+          simulated_metrics?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_simulation_results_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_simulation_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_simulation_results_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
