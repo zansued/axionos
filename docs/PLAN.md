@@ -672,5 +672,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | Multi-Party Policy & Revenue Governance | 1 | 62 |
 | Institutional Outcome Assurance | 1 | 63 |
 | Canon Integrity & Drift Governance | 1 | 64 |
+| Operating Completion | 1 | 65 |
+| User Journey Orchestration | 1 | 66 |
 | Support | 11 | Various |
-| **Total** | **~109** | |
+| **Total** | **~112** | |
