@@ -493,6 +493,295 @@ export type Database = {
           },
         ]
       }
+      agent_debate_arguments: {
+        Row: {
+          agent_id: string
+          argument_type: string
+          content: string
+          created_at: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          position_id: string | null
+          round_number: number
+          session_id: string
+          strength: number
+          target_position_id: string | null
+        }
+        Insert: {
+          agent_id?: string
+          argument_type?: string
+          content?: string
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          position_id?: string | null
+          round_number?: number
+          session_id: string
+          strength?: number
+          target_position_id?: string | null
+        }
+        Update: {
+          agent_id?: string
+          argument_type?: string
+          content?: string
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          position_id?: string | null
+          round_number?: number
+          session_id?: string
+          strength?: number
+          target_position_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_debate_arguments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_debate_arguments_position_id_fkey"
+            columns: ["position_id"]
+            isOneToOne: false
+            referencedRelation: "agent_debate_positions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_debate_arguments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "agent_debate_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_debate_arguments_target_position_id_fkey"
+            columns: ["target_position_id"]
+            isOneToOne: false
+            referencedRelation: "agent_debate_positions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_debate_positions: {
+        Row: {
+          agent_id: string
+          confidence: number
+          created_at: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          position_label: string
+          position_type: string
+          reasoning: string
+          round_number: number
+          session_id: string
+        }
+        Insert: {
+          agent_id?: string
+          confidence?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          position_label?: string
+          position_type?: string
+          reasoning?: string
+          round_number?: number
+          session_id: string
+        }
+        Update: {
+          agent_id?: string
+          confidence?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          position_label?: string
+          position_type?: string
+          reasoning?: string
+          round_number?: number
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_debate_positions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_debate_positions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "agent_debate_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_debate_resolutions: {
+        Row: {
+          confidence: number
+          created_at: string
+          dissenting_views: Json
+          human_review_notes: string | null
+          human_review_status: string | null
+          id: string
+          organization_id: string
+          requires_human_review: boolean
+          resolution_summary: string
+          resolution_type: string
+          resolved_at: string
+          reviewer_id: string | null
+          session_id: string
+          winning_position_id: string | null
+        }
+        Insert: {
+          confidence?: number
+          created_at?: string
+          dissenting_views?: Json
+          human_review_notes?: string | null
+          human_review_status?: string | null
+          id?: string
+          organization_id: string
+          requires_human_review?: boolean
+          resolution_summary?: string
+          resolution_type?: string
+          resolved_at?: string
+          reviewer_id?: string | null
+          session_id: string
+          winning_position_id?: string | null
+        }
+        Update: {
+          confidence?: number
+          created_at?: string
+          dissenting_views?: Json
+          human_review_notes?: string | null
+          human_review_status?: string | null
+          id?: string
+          organization_id?: string
+          requires_human_review?: boolean
+          resolution_summary?: string
+          resolution_type?: string
+          resolved_at?: string
+          reviewer_id?: string | null
+          session_id?: string
+          winning_position_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_debate_resolutions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_debate_resolutions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "agent_debate_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_debate_resolutions_winning_position_id_fkey"
+            columns: ["winning_position_id"]
+            isOneToOne: false
+            referencedRelation: "agent_debate_positions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_debate_sessions: {
+        Row: {
+          audit_metadata: Json
+          created_at: string
+          current_round: number
+          debate_context: Json
+          escalated: boolean
+          escalation_reason: string | null
+          id: string
+          initiative_id: string | null
+          max_rounds: number
+          organization_id: string
+          participating_agent_ids: string[]
+          resolution_confidence: number | null
+          resolution_outcome: string | null
+          risk_posture: string
+          status: string
+          topic: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          audit_metadata?: Json
+          created_at?: string
+          current_round?: number
+          debate_context?: Json
+          escalated?: boolean
+          escalation_reason?: string | null
+          id?: string
+          initiative_id?: string | null
+          max_rounds?: number
+          organization_id: string
+          participating_agent_ids?: string[]
+          resolution_confidence?: number | null
+          resolution_outcome?: string | null
+          risk_posture?: string
+          status?: string
+          topic?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          audit_metadata?: Json
+          created_at?: string
+          current_round?: number
+          debate_context?: Json
+          escalated?: boolean
+          escalation_reason?: string | null
+          id?: string
+          initiative_id?: string | null
+          max_rounds?: number
+          organization_id?: string
+          participating_agent_ids?: string[]
+          resolution_confidence?: number | null
+          resolution_outcome?: string | null
+          risk_posture?: string
+          status?: string
+          topic?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_debate_sessions_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_debate_sessions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_debate_sessions_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_memory: {
         Row: {
           agent_id: string

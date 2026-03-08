@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** 75 sprints complete. Block N complete. Block O (Advanced Multi-Agent Coordination) in progress — Sprint 75 complete.
+> **Last strategic change (2026-03-08):** 76 sprints complete. Block N complete. Block O (Advanced Multi-Agent Coordination) in progress — Sprints 75–76 complete.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -51,7 +51,7 @@
 
 ## Strategic Directive
 
-AxionOS has completed **75 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, evidence capture, improvement candidate distillation, sandbox benchmarking & promotion governance, and role arbitration & capability routing 2.0. The internal architecture is mature, coherent, and self-governing. Block O (Advanced Multi-Agent Coordination) is in progress.
+AxionOS has completed **76 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, evidence capture, improvement candidate distillation, sandbox benchmarking & promotion governance, role arbitration & capability routing 2.0, and multi-agent debate & resolution. The internal architecture is mature, coherent, and self-governing. Block O (Advanced Multi-Agent Coordination) is in progress.
 
 **Post-Block M Strategic Position:**
 
@@ -70,7 +70,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 ## Implementation Horizons
 
 ```
-   COMPLETE (1–74)                                               RESERVED (75–94)
+   COMPLETE (1–76)                                               RESERVED (77–94)
    ──────────────────────────────────────────────►               ──────────────────►
    Foundation → Learning → Meta → Memory → Gov →                  Block O: Advanced Multi-Agent
    Intelligence → Calibration → Strategy →                        Block P: Governed Ecosystem
@@ -80,12 +80,13 @@ Internal sophistication serves the visible product experience. The user-facing j
    Convergence → Op Profiles → Product Intelligence →
    Ecosystem → Assurance → Canon → Operating Completion →
    Product Experience → Extensibility → Evidence →
-   Candidates → Benchmarking & Promotion ✅
+    Candidates → Benchmarking & Promotion ✅ →
+    Role Arbitration → Debate & Resolution ✅
 ```
 
 ---
 
-## Completed Canon (Sprints 1–75)
+## Completed Canon (Sprints 1–76)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -118,6 +119,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Sprint 73 — Improvement Candidate Distillation Engine | 73 | Candidate distillation from evidence, pattern clustering, provenance/explainability, triage workflow, operator candidates dashboard |
 | Sprint 74 — Sandbox Benchmarking & Promotion Governance | 74 | Sandbox benchmarking of candidates, baseline comparison, metric capture, promotion/rejection/deferral governance, operator benchmark dashboard |
 | Sprint 75 — Role Arbitration & Capability Routing 2.0 | 75 | Context-aware agent/capability routing, suitability scoring, candidate comparison, fallback paths, operator routing dashboard |
+| Sprint 76 — Multi-Agent Debate & Resolution Layer | 76 | Structured bounded debate sessions, position/argument/resolution tracking, escalation, operator debate dashboard |
 
 ---
 
@@ -173,7 +175,7 @@ Sprint 74 completed the Evidence-Governed Improvement Loop by introducing govern
 
 ## Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔄 In Progress
 
-> **Status:** In progress — Sprint 75 complete, Sprints 76–78 planned.
+> **Status:** In progress — Sprints 75–76 complete, Sprints 77–78 planned.
 
 **Thesis:** After evidence-governed improvement is established, AxionOS evolves toward more advanced role arbitration, debate, resolution, shared working memory, and bounded multi-agent execution.
 
@@ -184,6 +186,14 @@ Sprint 74 completed the Evidence-Governed Improvement Loop by introducing govern
 Sprint 75 established the first upgraded role arbitration and capability routing layer. The system now makes context-aware routing decisions that consider task type, pipeline stage, prior evidence, risk posture, and policy constraints. Each routing decision is explainable — operators can inspect why a specific agent/capability was chosen, what alternatives were considered, and what fallback paths exist. A dedicated operator surface (`/agent-routing`) provides routing decision visibility, candidate comparison, failure pattern concentration, and bad-route flagging.
 
 **Strategic role:** Sprint 75 starts Block O by making agent selection more intelligent and legible without introducing uncontrolled autonomy. Routing decisions remain bounded, auditable, and governance-first.
+
+---
+
+## Sprint 76 — Multi-Agent Debate & Resolution Layer ✅ Implemented
+
+Sprint 76 introduced the first canonical multi-agent debate and resolution layer. The system now supports structured, bounded debate sessions where multiple agents can propose alternative positions, challenge assumptions, defend reasoning, and reach governed resolutions. Debates are depth-bounded (max rounds), risk-classified, and support escalation for unresolved conflicts requiring human review. A dedicated operator surface (`/agent-debates`) provides debate queue, active/resolved/escalated views, argument comparison, resolution detail, and governance controls.
+
+**Strategic role:** Sprint 76 deepens Block O by making multi-agent disagreement visible, structured, and governable. No autonomous architecture mutation is introduced.
 
 ---
 

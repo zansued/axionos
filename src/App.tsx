@@ -41,6 +41,7 @@ import ImprovementLedger from "./pages/ImprovementLedger";
 import ImprovementCandidates from "./pages/ImprovementCandidates";
 import ImprovementBenchmarks from "./pages/ImprovementBenchmarks";
 import AgentRouting from "./pages/AgentRouting";
+import AgentDebates from "./pages/AgentDebates";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -104,6 +105,7 @@ const App = () => (
                       <Route path="/improvement-candidates" element={<ProtectedRoute><ImprovementCandidates /></ProtectedRoute>} />
                       <Route path="/improvement-benchmarks" element={<ProtectedRoute><ImprovementBenchmarks /></ProtectedRoute>} />
                       <Route path="/agent-routing" element={<ProtectedRoute><AgentRouting /></ProtectedRoute>} />
+                      <Route path="/agent-debates" element={<ProtectedRoute><AgentDebates /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>

@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 75 (Role Arbitration & Capability Routing 2.0) — ✅ Complete
-> **Next Planned:** Sprint 76 (Multi-Agent Debate & Resolution Layer) — 📋 Planned
+> **Current Sprint:** 76 (Multi-Agent Debate & Resolution Layer) — ✅ Complete
+> **Next Planned:** Sprint 77 (Shared Working Memory & Task-State Negotiation) — 📋 Planned
 > **Reserved Horizon:** Blocks O–S (Sprints 75–94) — Block O in progress
 
 ## Document Authority
@@ -789,5 +789,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Candidate Distillation | 1 | 73 |
 | Benchmark Governance | 1 | 74 |
 | Agent Routing | 1 | 75 |
+| Agent Debate & Resolution | 1 | 76 |
 | Support | 11 | Various |
-| **Total** | **~121** | |
+| **Total** | **~122** | |
