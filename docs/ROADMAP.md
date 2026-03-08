@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** Sprint 66 complete (User Journey Orchestration Layer). Block M in progress. 50 architectural layers active.
+> **Last strategic change (2026-03-08):** Sprint 67 complete (Role-Based Experience Layer). Block M in progress. 51 architectural layers active.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
