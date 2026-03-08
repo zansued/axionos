@@ -2,7 +2,7 @@
 
 > **This document represents the user-visible journey contract of AxionOS.**
 >
-> The core product promise: **"From idea to deployed software."**
+> The core product promise: **"From idea to delivered software."**
 >
 > Each phase answers:
 > - Does the user understand what is happening?

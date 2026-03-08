@@ -191,7 +191,7 @@ Internal maturity is what makes the product trustworthy. The user doesn't need t
 
 ## Block M — Product Experience & Delivery Maturity (Sprints 66–70)
 
-> **Purpose:** Transform the mature internal operating baseline into a clear, user-facing product experience that delivers on the promise "from idea to deployed software."
+> **Purpose:** Transform the mature internal operating baseline into a clear, user-facing product experience that delivers on the promise "from idea to delivered software."
 
 | Sprint | Name | Objective | Status |
 |--------|------|-----------|--------|
