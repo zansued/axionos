@@ -325,13 +325,26 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Committed Future Arc — Block I: Product-Intelligent Expansion (Sprint 56)
+### Phase 20: Controlled Ecosystem Readiness (Sprint 56) — ✅ COMPLETE
+
+**Goal:** Prepare the platform for eventual ecosystem exposure — capability inventory, exposure classification, safety prerequisites, trust model foundation, readiness assessment — without activating any marketplace.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 56 | Controlled Ecosystem Readiness Layer | Ecosystem Readiness Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 56: Capability inventory builder, exposure classifier, readiness assessor, safety prerequisite engine, trust model designer, policy foundation builder, risk bounding engine, readiness recommendation engine, readiness explainer, outcome tracking
+
+---
+
+## Committed Future Arc — Block J: Trusted Ecosystem Foundation (Sprint 57)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
 
 | Sprint | Name | Objective | Target Layer | Status |
 |--------|------|-----------|-------------|--------|
-| 56 | Controlled Ecosystem Readiness Layer | Assess ecosystem exposure readiness — capability inventory, safety prerequisites, trust model foundation | Ecosystem Readiness Layer | 📋 Planned |
+| 57 | Capability Exposure Governance Layer | Govern which capabilities can be exposed externally and under what constraints | Capability Exposure Governance Layer | 📋 Planned |
 
 ---
 
