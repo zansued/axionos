@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 87 (Distributed Job Control Plane) — ✅ Complete
-> **Next Planned:** Sprint 88 (Cross-Region Resilience) — 📋 Planned
+> **Current Sprint:** 88 (Cross-Region Execution & Recovery) — ✅ Complete
+> **Next Planned:** Sprint 89 (Tenant-Isolated Scaling) — 📋 Planned
 > **Reserved Horizon:** Blocks R–S (Sprints 87–94) — Block R in progress
 
 ## Document Authority
