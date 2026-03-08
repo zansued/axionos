@@ -111,6 +111,7 @@ function formatTimeAgo(ts: string) {
 
 export default function Observability() {
   const { currentOrg } = useOrg();
+  const { isObsTabVisible, isAdmin } = useRoleBasedExperience();
   const [events, setEvents] = useState<LiveEvent[]>([]);
   const [paused, setPaused] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<"connected" | "connecting" | "error">("connecting");
