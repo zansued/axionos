@@ -12,7 +12,7 @@
 
 | Scope | Rule |
 |-------|------|
-| **Owns** | Current/next sprint, sprint-by-sprint implementation record, phase grouping, completion status, capability verification matrix, shared module and edge function registries, post-65 execution guidance |
+| **Owns** | Current/next sprint, sprint-by-sprint implementation record, phase grouping, completion status, capability verification matrix, shared module and edge function registries, post-70 execution guidance |
 | **Must not define** | Deep architecture explanation (→ ARCHITECTURE.md), long-term strategic narrative (→ ROADMAP.md), detailed agent/module reference (→ AGENTS.md) |
 | **Derived from** | ARCHITECTURE.md for layer naming |
 | **Update rule** | Update when a sprint completes or starts |
