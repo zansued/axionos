@@ -392,6 +392,11 @@ export default function Observability() {
             <ArchitectureRolloutPilotDashboard />
           </TabsContent>
 
+          {/* ===== CHANGE ADVISORY ORCHESTRATOR ===== */}
+          <TabsContent value="change-orch" className="mt-4">
+            <ChangeAdvisoryOrchestratorDashboard />
+          </TabsContent>
+
           {/* ===== ARCHITECTURE FITNESS ===== */}
           <TabsContent value="arch-fitness" className="mt-4">
             <ArchitectureFitnessDashboard />
