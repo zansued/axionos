@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** 70 sprints complete. Block M complete. Block N (Evidence-Governed Improvement Loop) is the next planned block.
+> **Last strategic change (2026-03-08):** 71 sprints complete. Sprint 71 (Governed Extensibility) complete. Sprints 72–74 (Evidence-Governed Improvement Loop) are next planned.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
