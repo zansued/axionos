@@ -731,6 +731,7 @@ supabase/functions/
 | 43 | Architecture Change Simulation | 38 | Bounded simulation, impact estimation, governance guardrails |
 | 44 | Architecture Change Planning | 39 | Implementation plans, blast radius, validation/rollback blueprints |
 | 45 | Architecture Rollout Sandbox | 40 | Bounded rehearsal, migration sequencing, fragility analysis, rollback viability |
+| 46 | Architecture Rollout Pilot Governance | 41 | Bounded pilots, baseline comparison, instant rollback, pilot guardrails |
 
 ### Frozen
 
