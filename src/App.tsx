@@ -36,6 +36,7 @@ import PromptOptimization from "./pages/PromptOptimization";
 import Journey from "./pages/Journey";
 import Onboarding from "./pages/Onboarding";
 import AdoptionIntelligence from "./pages/AdoptionIntelligence";
+import Extensions from "./pages/Extensions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -94,6 +95,7 @@ const App = () => (
                       <Route path="/calibration" element={<ProtectedRoute><Calibration /></ProtectedRoute>} />
                       <Route path="/prompt-optimization" element={<ProtectedRoute><PromptOptimization /></ProtectedRoute>} />
                       <Route path="/adoption" element={<ProtectedRoute><AdoptionIntelligence /></ProtectedRoute>} />
+                      <Route path="/extensions" element={<ProtectedRoute><Extensions /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>

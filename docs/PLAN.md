@@ -531,15 +531,26 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Future Arc — Post-Block M (Sprint 71+)
+## Post-Block M — Sprint 71: Governed Extensibility & Developer Experience Foundation — ✅ COMPLETE
+
+**Goal:** Build the first governed extensibility and developer experience foundation — safe extension points, integration contracts, approval-based activation, compatibility visibility, and rollback posture — without mutating the kernel or collapsing the default user journey.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 71 | Governed Extensibility & Developer Experience Foundation | Extensibility Foundation Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 71: Extension registry data model (platform_extensions, extension_activations, extension_compatibility_checks, extension_audit_events), approval-based activation workflow, compatibility/risk assessment, operator extension management UI, rollback/deactivation flows, full audit trail, tenant-isolated RLS.
+
+---
+
+## Future Arc — Post-Sprint 71 (Sprint 72+)
 
 > **Strategic direction:** [ROADMAP.md](ROADMAP.md)
 
-Block M (Product Experience & Delivery Maturity) is complete. Sprint 71+ is reserved for post-Block M expansion.
-
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 71+ | TBD | N+ | 🔮 Reserved | Post-Block M expansion — platform extensibility, developer experience, or further product maturity |
+| 72+ | TBD | N+ | 🔮 Reserved | Further extensibility, developer SDK, or platform maturity |
 
 ---
 
