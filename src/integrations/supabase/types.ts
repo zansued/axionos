@@ -760,6 +760,110 @@ export type Database = {
         }
         Relationships: []
       }
+      architecture_change_agenda_reviews: {
+        Row: {
+          agenda_id: string
+          created_at: string
+          id: string
+          linked_changes: Json | null
+          organization_id: string
+          review_notes: string | null
+          review_reason_codes: Json | null
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          agenda_id: string
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          agenda_id?: string
+          created_at?: string
+          id?: string
+          linked_changes?: Json | null
+          organization_id?: string
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_change_agenda_reviews_agenda_id_fkey"
+            columns: ["agenda_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_change_agendas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_change_agenda_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_change_agendas: {
+        Row: {
+          agenda_health_score: number | null
+          agenda_name: string
+          agenda_payload: Json
+          agenda_scope: string
+          bundled_items: Json | null
+          created_at: string
+          deferred_items: Json | null
+          id: string
+          organization_id: string
+          sequencing_graph: Json | null
+          status: string
+          suppressed_items: Json | null
+        }
+        Insert: {
+          agenda_health_score?: number | null
+          agenda_name: string
+          agenda_payload?: Json
+          agenda_scope: string
+          bundled_items?: Json | null
+          created_at?: string
+          deferred_items?: Json | null
+          id?: string
+          organization_id: string
+          sequencing_graph?: Json | null
+          status?: string
+          suppressed_items?: Json | null
+        }
+        Update: {
+          agenda_health_score?: number | null
+          agenda_name?: string
+          agenda_payload?: Json
+          agenda_scope?: string
+          bundled_items?: Json | null
+          created_at?: string
+          deferred_items?: Json | null
+          id?: string
+          organization_id?: string
+          sequencing_graph?: Json | null
+          status?: string
+          suppressed_items?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_change_agendas_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_change_plan_reviews: {
         Row: {
           blocker_reasons: Json | null
@@ -2487,6 +2591,59 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "product_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      change_advisory_signals: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          evidence_refs: Json | null
+          id: string
+          organization_id: string
+          priority_hint: number | null
+          signal_payload: Json
+          signal_source: string
+          signal_type: string
+          status: string
+          target_entities: Json
+          target_scope: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id: string
+          priority_hint?: number | null
+          signal_payload?: Json
+          signal_source: string
+          signal_type: string
+          status?: string
+          target_entities?: Json
+          target_scope: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          evidence_refs?: Json | null
+          id?: string
+          organization_id?: string
+          priority_hint?: number | null
+          signal_payload?: Json
+          signal_source?: string
+          signal_type?: string
+          status?: string
+          target_entities?: Json
+          target_scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "change_advisory_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
