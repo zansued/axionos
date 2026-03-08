@@ -918,11 +918,9 @@ The next architectural work supports:
 - **Role-based product surfaces** — separating the default user journey from operator/governance views
 - **Delivery/deploy assurance experience** — seamless, governed one-click path from validated code to deployed software
 - **Onboarding/template-driven initiation** — reducing time-to-value with guided flows, reusable templates, and vertical starters
-- **Adoption intelligence and customer success feedback** — closing the loop between product usage and platform improvement
-- **Onboarding/template-driven initiation** — reducing time-to-value with guided flows and reusable starting points
-- **Adoption intelligence and customer success feedback** — closing the loop between product usage and platform improvement
+- **Adoption intelligence and customer success feedback** — measuring real adoption, friction, success signals, and closing the loop for product improvement
 
-These are **not yet implemented**. They represent the committed and reserved architectural direction for Block M (Sprints 66–70).
+Block M is now **complete**. Future work (Block N+) will build on this product-ready foundation.
 
 **Governing constraint:** Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Internal sophistication serves the product experience — it does not replace it.
 

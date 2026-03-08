@@ -94,10 +94,10 @@ This means the focus shifts from building internal systems to making the user-vi
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–68)                 PLANNED (69)                    COMMITTED (70)                 RESERVED (71+)
-  ───────────────►                ───────────────►                ───────────────►               ───────────────►
-  Foundation → Learning →          Onboarding, Templates          Adoption Intelligence &        Future expansion
-  Meta → Memory → Gov →            & Vertical Starters            Customer Success Loop
+  COMPLETE (1–70)                 RESERVED (71+)
+  ───────────────►                ───────────────►
+  Foundation → Learning →          Future expansion
+  Meta → Memory → Gov →            (post-Block M)
   Intelligence → Calibration →
   Strategy → Stabilization →
   Advisory → Semantic →

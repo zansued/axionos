@@ -677,5 +677,6 @@ This document serves as the canonical sprint execution ledger. The following con
 | Role-Based Experience | 1 | 67 |
 | One-Click Delivery & Deploy Assurance | 1 | 68 |
 | Onboarding, Templates & Vertical Starters | 1 | 69 |
+| Adoption Intelligence & Customer Success | 1 | 70 |
 | Support | 11 | Various |
-| **Total** | **~115** | |
+| **Total** | **~116** | |
