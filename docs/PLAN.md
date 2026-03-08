@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 71 (Governed Extensibility & Developer Experience Foundation) — ✅ Complete
-> **Next Planned:** Sprints 72–74 (Evidence-Governed Improvement Loop) — 📋 Planned
+> **Current Sprint:** 72 (Evidence Capture & Improvement Ledger) — ✅ Complete
+> **Next Planned:** Sprints 73–74 (Evidence-Governed Improvement Loop) — 📋 Planned
 > **Reserved Horizon:** Blocks O–S (Sprints 75–94) — 🔮 Reserved
 
 ## Document Authority
@@ -551,15 +551,31 @@ Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed
 
 ---
 
-## Next Planned Block — Sprints 72–74: Evidence-Governed Improvement Loop — 📋 PLANNED
+## Sprint 72 — Evidence Capture & Improvement Ledger ✅ Complete
+
+Sprint 72 established the canonical evidence capture and improvement ledger layer for AxionOS. The system now captures, normalizes, links, and reviews operational evidence from validations, repairs, rollbacks, deployments, extensions, anomalies, and operator observations. A dedicated operator surface (`/improvement-ledger`) provides KPIs, filtered evidence lists, detail views with linked context, review history, and review controls. All evidence is tenant-isolated and auditable. No autonomous mutation is introduced.
+
+### Key Deliverables
+- `improvement_evidence` — canonical evidence table
+- `improvement_evidence_links` — context linking
+- `improvement_ledgers` — improvement grouping
+- `improvement_review_events` — review audit trail
+- `evidence-management` edge function (ingest, list, detail, link, review, archive, explain, ledger ops)
+- Operator-facing Improvement Ledger dashboard with KPIs, filters, detail drawer, and review controls
+
+### Strategic Meaning
+Sprint 72 begins the Evidence-Governed Improvement Loop (Block N). It provides the durable evidence foundation that future sprints (73–74) will use to generate bounded improvement proposals and track their outcomes.
+
+---
+
+## Next Planned — Sprints 73–74: Evidence-Governed Improvement Loop — 📋 PLANNED
 
 > **Strategic direction:** [ROADMAP.md](ROADMAP.md)
 
-**Goal:** Turn operational evidence into bounded improvement proposals that are tested and promoted under governance. AxionOS should become better over time through evidence, not uncontrolled autonomy.
+**Goal:** Turn captured evidence into bounded improvement proposals, test them under governance, and track outcomes.
 
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 72 | TBD — Improvement Proposal Generation | N | 📋 Planned | Bounded improvement proposals from evidence aggregation |
 | 73 | TBD — Governed Testing & Promotion | N | 📋 Planned | Governed testing and promotion of improvement candidates |
 | 74 | TBD — Improvement Outcome Tracking | N | 📋 Planned | Outcome tracking and feedback for improvement cycles |
 
@@ -769,5 +785,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Onboarding, Templates & Vertical Starters | 1 | 69 |
 | Adoption Intelligence & Customer Success | 1 | 70 |
 | Extension Management | 1 | 71 |
+| Evidence Management | 1 | 72 |
 | Support | 11 | Various |
-| **Total** | **~117** | |
+| **Total** | **~118** | |

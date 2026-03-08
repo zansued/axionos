@@ -37,6 +37,7 @@ import Journey from "./pages/Journey";
 import Onboarding from "./pages/Onboarding";
 import AdoptionIntelligence from "./pages/AdoptionIntelligence";
 import Extensions from "./pages/Extensions";
+import ImprovementLedger from "./pages/ImprovementLedger";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -96,6 +97,7 @@ const App = () => (
                       <Route path="/prompt-optimization" element={<ProtectedRoute><PromptOptimization /></ProtectedRoute>} />
                       <Route path="/adoption" element={<ProtectedRoute><AdoptionIntelligence /></ProtectedRoute>} />
                       <Route path="/extensions" element={<ProtectedRoute><Extensions /></ProtectedRoute>} />
+                      <Route path="/improvement-ledger" element={<ProtectedRoute><ImprovementLedger /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>

@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** 71 sprints complete. Sprint 71 (Governed Extensibility) complete. Sprints 72–74 (Evidence-Governed Improvement Loop) are next planned.
+> **Last strategic change (2026-03-08):** 72 sprints complete. Sprint 72 (Evidence Capture & Improvement Ledger) complete. Sprints 73–74 are next planned.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -51,7 +51,7 @@
 
 ## Strategic Directive
 
-AxionOS has completed **71 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, and governed extensibility. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete. The extensibility foundation is operational.
+AxionOS has completed **72 implementation sprints** spanning the full capability arc from deterministic execution through institutional outcome assurance, canon integrity governance, operating completion, product experience & delivery maturity, governed extensibility, and evidence capture. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete. The extensibility foundation and evidence capture layer are operational.
 
 **Post-Block M Strategic Position:**
 
@@ -70,12 +70,12 @@ Internal sophistication serves the visible product experience. The user-facing j
 ## Implementation Horizons
 
 ```
-   COMPLETE (1–71)                 PLANNED (72–74)              RESERVED (75–94)
+   COMPLETE (1–72)                 PLANNED (73–74)              RESERVED (75–94)
    ──────────────────►             ──────────────►              ──────────────────►
-   Foundation → Learning →          Sprints 72–74:               Block O: Advanced Multi-Agent
+   Foundation → Learning →          Sprints 73–74:               Block O: Advanced Multi-Agent
    Meta → Memory → Gov →            Evidence-Governed            Block P: Governed Ecosystem
    Intelligence → Calibration →     Improvement Loop             Block Q: Delivery Optimization
-   Strategy → Stabilization →                                    Block R: Distributed Runtime
+   Strategy → Stabilization →       (continued)                  Block R: Distributed Runtime
    Advisory → Semantic →                                         Block S: Research Sandbox
    Discovery → Architecture →
   Pilot → Migration → Portfolio →
@@ -90,7 +90,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 
 ---
 
-## Completed Canon (Sprints 1–71)
+## Completed Canon (Sprints 1–72)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -119,6 +119,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Block L — System Roundness & Operating Completion | 63–65 | Institutional outcome assurance, canon integrity & drift governance, operating completion |
 | Block M — Product Experience & Delivery Maturity | 66–70 | User journey orchestration, role-based experience, one-click delivery & deploy assurance, onboarding/templates/starters, adoption intelligence & customer success |
 | Sprint 71 — Governed Extensibility | 71 | Platform extensions registry, approval-based activation, compatibility checks, audit trail, operator surface |
+| Sprint 72 — Evidence Capture & Improvement Ledger | 72 | Canonical evidence capture, improvement ledger, context linking, review workflow, operator evidence dashboard |
 
 ---
 
@@ -148,7 +149,15 @@ Sprint 71 introduced the first governed extensibility foundation for AxionOS. Pl
 
 ---
 
-## Planned Next Block — Sprints 72–74: Evidence-Governed Improvement Loop — 📋 Planned
+## Sprint 72 — Evidence Capture & Improvement Ledger ✅ Implemented
+
+Sprint 72 established the canonical evidence capture and improvement ledger layer. The system now captures, normalizes, links, and reviews operational evidence from validations, repairs, rollbacks, deployments, extensions, anomalies, and operator observations. A dedicated operator surface (`/improvement-ledger`) provides structured evidence review.
+
+**Strategic role:** Sprint 72 begins the Evidence-Governed Improvement Loop. It provides the durable evidence foundation that future sprints will use to generate bounded improvement proposals and track outcomes.
+
+---
+
+## Planned Next — Sprints 73–74: Evidence-Governed Improvement Loop — 📋 Planned
 
 > **Status:** Planned — next in the execution queue.
 
