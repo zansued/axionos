@@ -37,6 +37,7 @@ import { SemanticRetrievalDashboard } from "@/components/observability/SemanticR
 import { DiscoveryArchitectureDashboard } from "@/components/observability/DiscoveryArchitectureDashboard";
 import { ArchitectureSimulationDashboard } from "@/components/observability/ArchitectureSimulationDashboard";
 import { ArchitectureChangePlanningDashboard } from "@/components/observability/ArchitectureChangePlanningDashboard";
+import { ArchitectureRolloutSandboxDashboard } from "@/components/observability/ArchitectureRolloutSandboxDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
