@@ -146,16 +146,15 @@ With Sprint 57 complete (capability exposure governance), the platform has estab
 
 ---
 
-## Reserved Horizon (Sprints 58–65)
+## Reserved Horizon (Sprints 59–65)
 
 > **Status:** 🔮 Reserved — strategic direction is defined but intentionally lightweight. Details will be formalized sprint-by-sprint as the committed arc completes.
 > **Implementation should not begin on reserved sprints without deliberate review and promotion to committed status.**
 
-### Block J — Trusted Ecosystem Foundation (Sprints 58–59)
+### Block J — Trusted Ecosystem Foundation (Sprint 59)
 
 | Sprint | Name | Purpose | Status |
 |--------|------|---------|--------|
-| 58 | External Trust & Admission Layer | Define trust scoring, admission criteria, and safety boundaries for external participants | Reserved |
 | 59 | Ecosystem Simulation & Sandbox Layer | Simulate ecosystem interactions in bounded sandboxes before real exposure | Reserved |
 
 ### Block K — Controlled Ecosystem Activation (Sprints 60–62)
