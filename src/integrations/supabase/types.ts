@@ -6042,6 +6042,249 @@ export type Database = {
           },
         ]
       }
+      operating_profile_bindings: {
+        Row: {
+          binding_status: string
+          bound_at: string | null
+          created_at: string
+          id: string
+          organization_id: string
+          profile_id: string
+          reviewer_ref: Json
+          rollback_plan: Json
+          scope_id: string
+          scope_type: string
+          unbound_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          binding_status?: string
+          bound_at?: string | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          profile_id: string
+          reviewer_ref?: Json
+          rollback_plan?: Json
+          scope_id?: string
+          scope_type?: string
+          unbound_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          binding_status?: string
+          bound_at?: string | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          profile_id?: string
+          reviewer_ref?: Json
+          rollback_plan?: Json
+          scope_id?: string
+          scope_type?: string
+          unbound_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_profile_bindings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_profile_bindings_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "operating_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operating_profile_overrides: {
+        Row: {
+          created_at: string
+          id: string
+          justification: string
+          organization_id: string
+          override_key: string
+          override_pressure_score: number
+          override_scope: string
+          override_value: Json
+          profile_id: string
+          promotion_candidate: boolean
+          review_status: string
+          reviewer_ref: Json
+          scope_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          justification?: string
+          organization_id: string
+          override_key?: string
+          override_pressure_score?: number
+          override_scope?: string
+          override_value?: Json
+          profile_id: string
+          promotion_candidate?: boolean
+          review_status?: string
+          reviewer_ref?: Json
+          scope_id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          justification?: string
+          organization_id?: string
+          override_key?: string
+          override_pressure_score?: number
+          override_scope?: string
+          override_value?: Json
+          profile_id?: string
+          promotion_candidate?: boolean
+          review_status?: string
+          reviewer_ref?: Json
+          scope_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_profile_overrides_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_profile_overrides_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "operating_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operating_profiles: {
+        Row: {
+          adoption_status: string
+          architecture_mode_compatibility: Json
+          assumptions: Json
+          cost_bias_score: number
+          created_at: string
+          description: string
+          evidence_links: Json
+          expected_outcomes: Json
+          governance_strictness_score: number
+          id: string
+          organization_id: string
+          override_budget_score: number
+          policy_pack_ids: Json
+          profile_drift_score: number
+          profile_name: string
+          profile_type: string
+          profile_version: number
+          realized_outcomes: Json
+          review_status: string
+          rollback_viability_score: number
+          scope_type: string
+          shared_reuse_score: number
+          source_convergence_decision_id: string | null
+          source_governance_case_id: string | null
+          source_memory_pattern_id: string | null
+          speed_bias_score: number
+          stability_bias_score: number
+          tags: Json
+          tenant_fit_score: number
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          adoption_status?: string
+          architecture_mode_compatibility?: Json
+          assumptions?: Json
+          cost_bias_score?: number
+          created_at?: string
+          description?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          governance_strictness_score?: number
+          id?: string
+          organization_id: string
+          override_budget_score?: number
+          policy_pack_ids?: Json
+          profile_drift_score?: number
+          profile_name?: string
+          profile_type?: string
+          profile_version?: number
+          realized_outcomes?: Json
+          review_status?: string
+          rollback_viability_score?: number
+          scope_type?: string
+          shared_reuse_score?: number
+          source_convergence_decision_id?: string | null
+          source_governance_case_id?: string | null
+          source_memory_pattern_id?: string | null
+          speed_bias_score?: number
+          stability_bias_score?: number
+          tags?: Json
+          tenant_fit_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          adoption_status?: string
+          architecture_mode_compatibility?: Json
+          assumptions?: Json
+          cost_bias_score?: number
+          created_at?: string
+          description?: string
+          evidence_links?: Json
+          expected_outcomes?: Json
+          governance_strictness_score?: number
+          id?: string
+          organization_id?: string
+          override_budget_score?: number
+          policy_pack_ids?: Json
+          profile_drift_score?: number
+          profile_name?: string
+          profile_type?: string
+          profile_version?: number
+          realized_outcomes?: Json
+          review_status?: string
+          rollback_viability_score?: number
+          scope_type?: string
+          shared_reuse_score?: number
+          source_convergence_decision_id?: string | null
+          source_governance_case_id?: string | null
+          source_memory_pattern_id?: string | null
+          speed_bias_score?: number
+          stability_bias_score?: number
+          tags?: Json
+          tenant_fit_score?: number
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_profiles_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_knowledge_base: {
         Row: {
           category: string
@@ -7174,6 +7417,62 @@ export type Database = {
           },
         ]
       }
+      policy_packs: {
+        Row: {
+          cohesion_score: number
+          compatibility_constraints: Json
+          created_at: string
+          description: string
+          id: string
+          organization_id: string
+          pack_name: string
+          pack_type: string
+          pack_version: number
+          policy_definitions: Json
+          reuse_footprint: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          cohesion_score?: number
+          compatibility_constraints?: Json
+          created_at?: string
+          description?: string
+          id?: string
+          organization_id: string
+          pack_name?: string
+          pack_type?: string
+          pack_version?: number
+          policy_definitions?: Json
+          reuse_footprint?: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          cohesion_score?: number
+          compatibility_constraints?: Json
+          created_at?: string
+          description?: string
+          id?: string
+          organization_id?: string
+          pack_name?: string
+          pack_type?: string
+          pack_version?: number
+          policy_definitions?: Json
+          reuse_footprint?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_packs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       predictive_error_patterns: {
         Row: {
           contributing_factors: Json
@@ -7550,6 +7849,149 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      profile_adoption_reviews: {
+        Row: {
+          binding_id: string | null
+          created_at: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          profile_id: string
+          review_notes: string
+          review_status: string
+          review_type: string
+          reviewer_ref: Json
+        }
+        Insert: {
+          binding_id?: string | null
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          profile_id: string
+          review_notes?: string
+          review_status?: string
+          review_type?: string
+          reviewer_ref?: Json
+        }
+        Update: {
+          binding_id?: string | null
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          profile_id?: string
+          review_notes?: string
+          review_status?: string
+          review_type?: string
+          reviewer_ref?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_adoption_reviews_binding_id_fkey"
+            columns: ["binding_id"]
+            isOneToOne: false
+            referencedRelation: "operating_profile_bindings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_adoption_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_adoption_reviews_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "operating_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_outcomes: {
+        Row: {
+          binding_id: string | null
+          created_at: string
+          evidence_refs: Json
+          expected_cost_efficiency_gain: number
+          expected_fragmentation_reduction: number
+          expected_speed_gain: number
+          expected_stability_gain: number
+          id: string
+          notes: string
+          organization_id: string
+          outcome_status: string
+          profile_effectiveness_score: number
+          profile_id: string
+          realized_cost_efficiency_gain: number
+          realized_fragmentation_reduction: number
+          realized_speed_gain: number
+          realized_stability_gain: number
+        }
+        Insert: {
+          binding_id?: string | null
+          created_at?: string
+          evidence_refs?: Json
+          expected_cost_efficiency_gain?: number
+          expected_fragmentation_reduction?: number
+          expected_speed_gain?: number
+          expected_stability_gain?: number
+          id?: string
+          notes?: string
+          organization_id: string
+          outcome_status?: string
+          profile_effectiveness_score?: number
+          profile_id: string
+          realized_cost_efficiency_gain?: number
+          realized_fragmentation_reduction?: number
+          realized_speed_gain?: number
+          realized_stability_gain?: number
+        }
+        Update: {
+          binding_id?: string | null
+          created_at?: string
+          evidence_refs?: Json
+          expected_cost_efficiency_gain?: number
+          expected_fragmentation_reduction?: number
+          expected_speed_gain?: number
+          expected_stability_gain?: number
+          id?: string
+          notes?: string
+          organization_id?: string
+          outcome_status?: string
+          profile_effectiveness_score?: number
+          profile_id?: string
+          realized_cost_efficiency_gain?: number
+          realized_fragmentation_reduction?: number
+          realized_speed_gain?: number
+          realized_stability_gain?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_outcomes_binding_id_fkey"
+            columns: ["binding_id"]
+            isOneToOne: false
+            referencedRelation: "operating_profile_bindings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_outcomes_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "operating_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
