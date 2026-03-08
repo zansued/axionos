@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 function jsonResponse(data: unknown, status = 200) {
@@ -93,7 +93,6 @@ serve(async (req) => {
           confidence: confidence.confidence_score,
         });
 
-        // Persist
         const { data: assessment } = await client.from("architecture_economic_assessments").insert({
           organization_id,
           change_ref: p.change_ref || {},
@@ -154,6 +153,105 @@ serve(async (req) => {
         }).select().single();
 
         return jsonResponse({ success: true, plan, saved });
+      }
+
+      case "migration_roi": {
+        const { estimateMigrationROI } = await import("../_shared/architecture-economics/migration-roi-estimator.ts");
+        const { calibrateConfidence } = await import("../_shared/architecture-economics/economic-confidence-calibrator.ts");
+        const p = payload || {};
+
+        const confidence = calibrateConfidence({
+          evidenceDensity: p.evidence_density || 2,
+          historicalVariance: p.historical_variance || 0.4,
+          signalAgreement: p.signal_agreement || 0.6,
+          dataRecency: p.data_recency || 0.7,
+          changeComplexity: p.change_complexity || 0.5,
+        });
+
+        const roi = estimateMigrationROI({
+          implementationCost: p.implementation_cost || 0,
+          rollbackCost: p.rollback_cost || 0,
+          projectedMonthlySavings: p.projected_monthly_savings || 0,
+          reliabilityGain: p.reliability_gain || 0,
+          stabilityGain: p.stability_gain || 0,
+          evidenceDensity: p.evidence_density || 2,
+        });
+
+        const justified = roi.migration_roi_30d > 0 && confidence.confidence_score > 0.4;
+        const recommendation = justified
+          ? roi.break_even_days && roi.break_even_days <= 30
+            ? "strongly_recommended"
+            : roi.break_even_days && roi.break_even_days <= 90
+              ? "recommended"
+              : "conditionally_recommended"
+          : "not_recommended";
+
+        return jsonResponse({
+          roi,
+          confidence,
+          justified,
+          recommendation,
+          assumptions: [
+            "Based on bounded heuristics and historical execution data.",
+            "Savings projections assume stable operational conditions.",
+            "Advisory-only — no automated migration initiated.",
+          ],
+        });
+      }
+
+      case "rollout_economics": {
+        const { planCostAwareRollout } = await import("../_shared/architecture-economics/cost-aware-rollout-planner.ts");
+        const { calibrateConfidence } = await import("../_shared/architecture-economics/economic-confidence-calibrator.ts");
+        const p = payload || {};
+
+        // Generate 3 scenarios: conservative, balanced, aggressive
+        const scenarios = ["conservative", "balanced", "aggressive"].map((label) => {
+          const riskLevel = label === "conservative" ? "low" : label === "aggressive" ? "high" : "moderate";
+          const phaseCount = label === "conservative" ? 5 : label === "aggressive" ? 2 : 3;
+
+          const plan = planCostAwareRollout({
+            totalProjectedCost: p.total_projected_cost || 1,
+            rollbackCost: p.rollback_cost || 0.3,
+            phaseCount,
+            riskLevel,
+            confidence: p.confidence || 0.6,
+          });
+
+          return { label, risk_level: riskLevel, ...plan };
+        });
+
+        const confidence = calibrateConfidence({
+          evidenceDensity: p.evidence_density || 2,
+          historicalVariance: p.historical_variance || 0.4,
+          signalAgreement: p.signal_agreement || 0.6,
+          dataRecency: p.data_recency || 0.7,
+          changeComplexity: p.change_complexity || 0.5,
+        });
+
+        return jsonResponse({ scenarios, confidence });
+      }
+
+      case "tenant_mode_economics": {
+        const { analyzeFragmentationCost } = await import("../_shared/architecture-economics/tenant-fragmentation-cost-analyzer.ts");
+        const p = payload || {};
+
+        const analysis = analyzeFragmentationCost({
+          tenantModeCount: p.tenant_mode_count || 1,
+          tenantCount: p.tenant_count || 1,
+          avgModeDivergence: p.avg_mode_divergence || 0.2,
+          avgModeAdoption: p.avg_mode_adoption || 0.5,
+          reliabilityDelta: p.reliability_delta || 0,
+          stabilityDelta: p.stability_delta || 0,
+          baseOperatingCost: p.base_operating_cost || 1,
+        });
+
+        return jsonResponse({
+          analysis,
+          advisory: analysis.net_economic_value > 0
+            ? "Tenant specialization is economically beneficial under current conditions."
+            : "Tenant specialization fragmentation cost exceeds specialization benefit. Consider consolidation.",
+          safety_note: "Advisory-only. No tenant architecture mode mutation performed.",
+        });
       }
 
       case "recommendations": {
