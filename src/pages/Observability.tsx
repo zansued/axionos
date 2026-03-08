@@ -383,6 +383,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
+          {/* ===== EXTERNAL TRUST & ADMISSION ===== */}
+          <TabsContent value="trust-gov" className="mt-4">
+            <ExternalTrustAdmissionDashboard />
+          </TabsContent>
+
           {/* ===== CAPABILITY EXPOSURE GOVERNANCE ===== */}
           <TabsContent value="exposure-gov" className="mt-4">
             <CapabilityExposureGovernanceDashboard />
