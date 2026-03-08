@@ -1346,9 +1346,9 @@ Architecture Rollout Sandbox allows approved architecture change plans to be reh
 
 ## 33. Future Strategic Arc — Agent OS Implications
 
-> **Status:** No Agent OS plane expansion is planned.
+> **Status:** No Agent OS plane expansion is planned or required.
 
-Sprint 51 (Institutional Convergence Memory), Sprint 52 (Operating Profiles & Policy Packs), and Sprint 53 (Product Intelligence Entry) have been completed, reusing existing Agent OS planes:
+Sprints 51–53 (Institutional Convergence Memory, Operating Profiles, Product Intelligence Entry) have been completed, reusing existing Agent OS planes:
 
 | Completed Capability | Existing Planes/Modules Used |
 |---------------------|------------------------------|
@@ -1356,4 +1356,8 @@ Sprint 51 (Institutional Convergence Memory), Sprint 52 (Operating Profiles & Po
 | Operating Profiles & Policy Packs | Control Plane (Policy Engine, Selection Engine, Governance), Data Plane (Memory) |
 | Product Intelligence Entry | Data Plane (Observability, Memory), Control Plane (Governance), Execution Plane (Orchestrator) |
 
-The focus is on higher-order system behavior and institutionalization — not new plane expansion. The 5-plane, 18-module architecture remains stable.
+The committed future arc (Sprints 54–56: product intelligence operations, opportunity governance, ecosystem readiness) and reserved horizon (Sprints 57–65: ecosystem foundation, activation, operating completion) are higher-order governance and orchestration concerns. They reuse existing Agent OS planes without expansion.
+
+The Ecosystem Plane remains frozen. Its activation is staged across Sprints 57–62 in the reserved horizon and will not begin until the committed arc (54–56) is complete and explicitly approved. Any future ecosystem-plane activation remains governed and incremental.
+
+The 5-plane, 18-module architecture remains stable.
