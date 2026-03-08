@@ -364,25 +364,49 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Committed Future Arc — Block J: Trusted Ecosystem Foundation (Sprint 59)
+### Phase 23: Ecosystem Simulation & Sandbox (Sprint 59) — ✅ COMPLETE
+
+**Goal:** Simulate ecosystem interactions in bounded sandboxes before real exposure.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 59 | Ecosystem Simulation & Sandbox Layer | Ecosystem Simulation Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 59: Sandbox simulation, interaction modeling, blast radius estimation, rollback viability analysis
+
+---
+
+### Phase 24: Limited Marketplace Pilot (Sprint 60) — ✅ COMPLETE
+
+**Goal:** Enable a tightly governed, bounded, reversible pilot marketplace environment based on prior readiness, governance, trust, and sandbox layers.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 60 | Limited Marketplace Pilot Layer | Limited Marketplace Pilot Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 60: Pilot program manager, capability selector, participant gatekeeper, interaction monitor, policy enforcer, risk monitor, learning engine, outcome validator, explainer
+
+---
+
+## Committed Future Arc — Block K: Controlled Ecosystem Activation (Sprint 61)
 
 > **Status:** 📋 Committed — next implementation. Not yet implemented.
 
 | Sprint | Name | Objective | Target Layer | Status |
 |--------|------|-----------|-------------|--------|
-| 59 | Ecosystem Simulation & Sandbox Layer | Simulate ecosystem interactions in bounded sandboxes before real exposure | Ecosystem Simulation Layer | 📋 Planned |
+| 61 | Capability Registry Governance Layer | Govern lifecycle of registered capabilities | Capability Registry Governance Layer | 📋 Planned |
 
 ---
 
-## Reserved Horizon (Sprints 60–65)
+## Reserved Horizon (Sprints 62–65)
 
 > **Status:** 🔮 Reserved — strategic direction defined, details intentionally lightweight.
 > Reserved sprints should not be promoted without deliberate review.
 
 | Sprint | Name | Block | Status | Purpose |
 |--------|------|-------|--------|---------|
-| 60 | Limited Marketplace Pilot Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | First controlled marketplace activation with rollback |
-| 61 | Capability Registry Governance Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | Govern lifecycle of registered capabilities |
 | 62 | Multi-Party Policy & Revenue Governance Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | Policy negotiation and revenue sharing across participants |
 | 63 | Institutional Outcome Assurance Layer | L — System Roundness & Operating Completion | 🔮 Reserved | Validate platform produces governed, evidence-backed outcomes |
 | 64 | Canon Integrity & Drift Governance Layer | L — System Roundness & Operating Completion | 🔮 Reserved | Detect drift between behavior and canonical documentation |
