@@ -370,28 +370,28 @@
 - Contratos de stage IO devem permanecer estáveis
 - Mudanças em contratos requerem versionamento explícito
 - Learning não pode alterar a forma (shape) de contratos existentes
-- Meta-Agents não podem modificar contratos diretamente (quando implementados)
+- Meta-Agents não podem modificar contratos diretamente
 
 ### Isolamento
 
 - Camadas comerciais consomem dados de observabilidade, não duplicam o kernel
 - Acesso cross-tenant a contratos é **proibido**
 - Todas as consultas agregadas devem incluir filtro `organization_id`
-- Meta-Agents terão acesso somente leitura a dados de observabilidade e learning
+- Meta-Agents têm acesso somente leitura a dados de observabilidade e learning
 
 ### Separação de Responsabilidades
 
 - Learning gera recomendações, não executa mudanças automaticamente
 - Commercial verifica limites, não modifica comportamento do pipeline
 - O kernel processa estágios, não conhece billing ou learning
-- Meta-Agents (quando implementados) geram recomendações de alto nível, não mutam o sistema
+- Meta-Agents geram recomendações de alto nível, não mutam o sistema
 
 ### Auditabilidade
 
 - Toda decisão de learning é registrada em `audit_logs`
 - Todo bloqueio de uso é registrado em `audit_logs`
 - Eventos rastreáveis: `LEARNING_UPDATE`, `USAGE_LIMIT_EXCEEDED`, `PIPELINE_EXECUTION`, `REPAIR_APPLIED`
-- Meta-Agent recommendations (planejado) serão rastreáveis via `meta_agent_recommendations` table
+- Meta-Agent recommendations são rastreáveis via `meta_agent_recommendations` table
 
 ---
 

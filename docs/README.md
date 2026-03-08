@@ -82,10 +82,8 @@ Internal sophistication remains critical. It is what makes the product trustwort
 
 ### Current Canon Boundaries
 
-- **Sprints 1–65** = canonical complete (first mature operating baseline)
-- **Sprint 66** = planned (next to implement — User Journey Orchestration)
-- **Sprints 67–68** = committed (part of Block M, objectives defined)
-- **Sprints 69–70** = reserved (strategic direction, intentionally lightweight)
+- **Sprints 1–70** = canonical complete (first mature operating baseline + Block M: Product Experience & Delivery Maturity)
+- **Sprint 71+** = reserved (post-Block M, strategic direction TBD)
 
 ---
 

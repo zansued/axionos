@@ -479,16 +479,67 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Future Arc — Block M: Product Experience & Delivery Maturity (Sprints 67–70)
+### Phase 31: Role-Based Experience (Sprint 67) — ✅ COMPLETE
+
+**Goal:** Separate product surfaces by role — default user journey vs operator/governance views.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 67 | Role-Based Experience Layer | Role-Based Experience Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 67: Role-aware sidebar filtering, complexity leakage detection, approval visibility routing, operator/admin surface separation.
+
+---
+
+### Phase 32: One-Click Delivery & Deploy Assurance (Sprint 68) — ✅ COMPLETE
+
+**Goal:** Provide a seamless, governed one-click path from validated code to deployed, accessible software.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 68 | One-Click Delivery & Deploy Assurance Layer | One-Click Delivery & Deploy Assurance Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 68: Delivery orchestration models, deploy readiness/confidence scoring, blocker detection, rollback posture, output visibility, governed one-click delivery path.
+
+---
+
+### Phase 33: Onboarding, Templates & Vertical Starters (Sprint 69) — ✅ COMPLETE
+
+**Goal:** Reduce time-to-value with guided onboarding, reusable templates, and vertical-specific starting points.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 69 | Onboarding, Templates & Vertical Starters Layer | Onboarding & Templates Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 69: Guided onboarding flows, reusable template registry, domain-specific vertical starters, onboarding friction detection, initialization quality scoring.
+
+---
+
+### Phase 34: Adoption Intelligence & Customer Success (Sprint 70) — ✅ COMPLETE
+
+**Goal:** Measure adoption health, detect friction, and close the loop between product usage and platform improvement.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 70 | Adoption Intelligence & Customer Success Loop | Adoption Intelligence Layer | ✅ Complete |
+
+**Key Milestones:**
+- Sprint 70: Adoption models, customer success signals, journey friction analysis, template/starter effectiveness, delivery-adoption correlation, intervention priorities, outcome validation.
+
+---
+
+## Future Arc — Post-Block M (Sprint 71+)
 
 > **Strategic direction:** [ROADMAP.md](ROADMAP.md)
 
+Block M (Product Experience & Delivery Maturity) is complete. Sprint 71+ is reserved for post-Block M expansion.
+
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 67 | Role-Based Experience Layer | M | 📋 Committed | Separate product surfaces by role — default user journey vs operator/governance views |
-| 68 | One-Click Delivery & Deploy Assurance Layer | M | 📋 Committed | Seamless, governed one-click path from validated code to deployed software |
-| 69 | Onboarding, Templates & Vertical Starters | M | 🔮 Reserved | Guided onboarding, reusable templates, vertical-specific starting points |
-| 70 | Adoption Intelligence & Customer Success Loop | M | 🔮 Reserved | Adoption health measurement, friction detection, platform improvement feedback |
+| 71+ | TBD | N+ | 🔮 Reserved | Post-Block M expansion — platform extensibility, developer experience, or further product maturity |
 
 ---
 

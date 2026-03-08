@@ -311,10 +311,11 @@ All 54 architectural layers are operational. The kernel includes the 32-stage de
 
 ## Governing Principle
 
-> Sixty-six sprints complete. The platform has reached its first internally coherent operating canon and the first user-facing journey orchestration layer.
+> Seventy sprints complete. Block M (Product Experience & Delivery Maturity) is complete.
+> The platform has reached its first internally coherent operating canon plus a full product experience and delivery maturity layer.
 > Internal architecture is mature: governance, intelligence, memory, calibration, ecosystem, assurance, and integrity layers are all active.
-> User journey orchestration now provides canonical visible journey from idea to deployed software.
-> Next strategic direction: Block M continues — Sprint 67 (Role-Based Experience Layer).
-> The focus shifts from building internal systems to making the user-visible journey clear, legible, and delightful.
+> Product experience is mature: user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, and adoption intelligence are all active.
+> Next strategic direction: post-Block M (Sprint 71+) — reserved for future expansion.
+> The platform now delivers on the promise: **from idea to delivered software**.
 > Internal sophistication serves the product experience — it does not replace it.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.
