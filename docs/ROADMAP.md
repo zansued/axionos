@@ -81,7 +81,8 @@ Internal sophistication serves the visible product experience. The user-facing j
    Ecosystem → Assurance → Canon → Operating Completion →
    Product Experience → Extensibility → Evidence →
     Candidates → Benchmarking & Promotion ✅ →
-    Role Arbitration → Debate & Resolution ✅
+    Role Arbitration → Debate & Resolution →
+    Working Memory & Task-State ✅
 ```
 
 ---
