@@ -2,8 +2,8 @@
 
 > Sprint-by-sprint implementation record mapping capabilities to architectural layers.
 >
-> **Last updated:** 2026-03-07
-> **Current Sprint:** 37 (Discovery-Driven Architecture Signals) — ✅ Complete
+> **Last updated:** 2026-03-08
+> **Current Sprint:** 38 (Architecture Change Simulation & Governance) — ✅ Complete
 
 ---
 
