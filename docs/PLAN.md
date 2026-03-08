@@ -578,5 +578,6 @@ This document serves as the canonical sprint execution ledger. The following con
 | External Trust & Admission | 1 | 58 |
 | Ecosystem Simulation & Sandbox | 1 | 59 |
 | Limited Marketplace Pilot | 1 | 60 |
+| Capability Registry Governance | 1 | 61 |
 | Support | 11 | Various |
-| **Total** | **~105** | |
+| **Total** | **~106** | |
