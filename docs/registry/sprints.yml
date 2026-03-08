@@ -71,11 +71,9 @@ sprints:
 
   - { sprint: 61, name: "Capability Registry Governance Layer",              status: complete,   block: "K",            phase: "Controlled Ecosystem Activation",    layer: "Capability Registry Governance Layer" }
 
-  # === COMMITTED FUTURE ARC (Sprint 62) — Block K ===
+  - { sprint: 62, name: "Multi-Party Policy & Revenue Governance Layer",     status: complete, block: "K", phase: "Controlled Ecosystem Activation",       layer: "Multi-Party Policy & Revenue Governance Layer" }
 
-  # === RESERVED HORIZON (Sprints 62–65) — Blocks K, L ===
-  
-  - { sprint: 62, name: "Multi-Party Policy & Revenue Governance Layer",     status: reserved, block: "K", phase: "Controlled Ecosystem Activation",       objective: "Policy negotiation and revenue sharing across participants" }
+  # === RESERVED HORIZON (Sprints 63–65) — Block L ===
   - { sprint: 63, name: "Institutional Outcome Assurance Layer",             status: reserved, block: "L", phase: "System Roundness & Operating Completion", objective: "Validate platform produces governed, evidence-backed outcomes" }
   - { sprint: 64, name: "Canon Integrity & Drift Governance Layer",          status: reserved, block: "L", phase: "System Roundness & Operating Completion", objective: "Detect drift between behavior and canonical documentation" }
   - { sprint: 65, name: "Operating Completion Layer",                        status: reserved, block: "L", phase: "System Roundness & Operating Completion", objective: "First complete, internally coherent operating canon" }

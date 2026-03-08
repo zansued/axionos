@@ -391,6 +391,11 @@ export default function Observability() {
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
 
+          {/* ===== MULTI-PARTY POLICY & REVENUE GOVERNANCE ===== */}
+          <TabsContent value="mp-gov" className="mt-4">
+            <MultiPartyPolicyRevenueGovernanceDashboard />
+          </TabsContent>
+
           {/* ===== CAPABILITY REGISTRY GOVERNANCE ===== */}
           <TabsContent value="cap-registry" className="mt-4">
             <CapabilityRegistryGovernanceDashboard />

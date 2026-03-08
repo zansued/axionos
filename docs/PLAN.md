@@ -580,5 +580,6 @@ This document serves as the canonical sprint execution ledger. The following con
 | Ecosystem Simulation & Sandbox | 1 | 59 |
 | Limited Marketplace Pilot | 1 | 60 |
 | Capability Registry Governance | 1 | 61 |
+| Multi-Party Policy & Revenue Governance | 1 | 62 |
 | Support | 11 | Various |
-| **Total** | **~106** | |
+| **Total** | **~107** | |
