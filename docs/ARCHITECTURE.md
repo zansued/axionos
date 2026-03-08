@@ -625,7 +625,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
-> **Summary:** 54 sprints complete. 39 architectural layers active. All blocks through Product Intelligence Operations done.
+> **Summary:** 65 sprints complete. 49 architectural layers active. First mature operating baseline achieved.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
@@ -646,13 +646,18 @@ supabase/functions/
 | Operating Profiles & Policy Packs | 52 | ✅ Complete |
 | Product Intelligence Entry | 53 | ✅ Complete |
 | Product Intelligence Operations | 54 | ✅ Complete |
+| Product Opportunity Portfolio Governance | 55 | ✅ Complete |
+| Controlled Ecosystem Readiness | 56 | ✅ Complete |
+| Trusted Ecosystem Foundation (J) | 57–59 | ✅ Complete |
+| Controlled Ecosystem Activation (K) | 60–62 | ✅ Complete |
+| System Roundness & Operating Completion (L) | 63–65 | ✅ Complete |
 
 ### Frozen
 
 | Module | Reason |
 |--------|--------|
-| Marketplace ecosystem | Frozen — deferred until ecosystem readiness (Sprint 56+) |
-| Advanced distributed runtime | Current runtime is adequate |
+| Marketplace ecosystem (full) | Bounded by pilot controls — full activation deferred |
+| Advanced distributed runtime | Current runtime handles workload adequately |
 | Advanced multi-agent coordination | Existing coordination works |
 
 ---
