@@ -44,6 +44,7 @@ import { ArchitecturePortfolioGovernanceDashboard } from "@/components/observabi
 import { ArchitectureFitnessDashboard } from "@/components/observability/ArchitectureFitnessDashboard";
 import { ChangeAdvisoryOrchestratorDashboard } from "@/components/observability/ChangeAdvisoryOrchestratorDashboard";
 import { PlatformStabilizationV2Dashboard } from "@/components/observability/PlatformStabilizationV2Dashboard";
+import { TenantArchitectureModesDashboard } from "@/components/observability/TenantArchitectureModesDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
