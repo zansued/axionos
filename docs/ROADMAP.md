@@ -2,13 +2,22 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-08):** Sprint 48 complete. Economic Optimization Layer active. Advisory-first cost and ROI awareness across architecture changes, migration plans, policy evolution, strategy evolution, and rollout planning are now operational.
->
 > **Current Mode**: Level 5 — Institutional Engineering Memory
->
 > **Current Maturity**: Level 5 ✅ Active
+> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform ready for convergence phase.
+>
+> **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
 > Last updated: 2026-03-08
+
+## Document Authority
+
+| Scope | Rule |
+|-------|------|
+| **Owns** | Current maturity level, strategic direction, implementation horizons, macro capability blocks |
+| **Must not define** | Sprint-by-sprint execution ledger (→ PLAN.md), module inventory (→ AGENTS.md), detailed architecture (→ ARCHITECTURE.md), pipeline contracts (→ PIPELINE_CONTRACTS.md) |
+| **Derived from** | PLAN.md for sprint completion status; ARCHITECTURE.md for layer count |
+| **Update rule** | Update when strategic block, maturity, or horizon changes |
 
 ---
 
