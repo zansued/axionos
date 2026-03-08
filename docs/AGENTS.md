@@ -1,11 +1,18 @@
 # AxionOS — Agent OS Reference
 
 > Consolidated reference for the Agent Operating System architecture.
-> Replaces individual AGENT_*.md files.
->
-> **What changed (2026-03-08):** Sprint 48 — Economic Optimization Layer. Advisory-first cost and ROI awareness across architecture changes, migration plans, policy evolution, strategy evolution, rollout planning, and tenant-aware architecture modes. Previous: Tenant-Aware Architecture Modes (Sprint 47).
+> Canonical source for planes, modules, agent types, contracts, safety boundaries, and events.
 >
 > Last updated: 2026-03-08
+
+## Document Authority
+
+| Scope | Rule |
+|-------|------|
+| **Owns** | Agent OS 5 planes, 18-module inventory, 5 agent types, operational agents, supporting engines, learning agents, meta-agents, memory layers, contracts, safety boundaries, events |
+| **Must not define** | Roadmap sequencing (→ ROADMAP.md), sprint execution ledger (→ PLAN.md), system containers/C4 diagrams (→ ARCHITECTURE.md) |
+| **Derived from** | PLAN.md for sprint context on module introductions |
+| **Update rule** | Update when Agent OS module inventory, contracts, or operational references change |
 
 ---
 
