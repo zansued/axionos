@@ -45,6 +45,7 @@ import AgentDebates from "./pages/AgentDebates";
 import WorkingMemory from "./pages/WorkingMemory";
 import SwarmExecution from "./pages/SwarmExecution";
 import CapabilityRegistry from "./pages/CapabilityRegistry";
+import CapabilityGovernance from "./pages/CapabilityGovernance";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -112,6 +113,7 @@ const App = () => (
                       <Route path="/working-memory" element={<ProtectedRoute><WorkingMemory /></ProtectedRoute>} />
                       <Route path="/swarm-execution" element={<ProtectedRoute><SwarmExecution /></ProtectedRoute>} />
                       <Route path="/capability-registry" element={<ProtectedRoute><CapabilityRegistry /></ProtectedRoute>} />
+                      <Route path="/capability-governance" element={<ProtectedRoute><CapabilityGovernance /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>

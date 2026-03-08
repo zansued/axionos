@@ -4069,6 +4069,189 @@ export type Database = {
           },
         ]
       }
+      capability_access_requests: {
+        Row: {
+          audit_metadata: Json
+          capability_package_id: string
+          created_at: string
+          id: string
+          organization_id: string
+          request_reason: string
+          request_status: string
+          requested_access_level: string
+          requested_by: string
+          resolution_notes: string
+          resolved_at: string | null
+          resolved_by: string
+          updated_at: string
+        }
+        Insert: {
+          audit_metadata?: Json
+          capability_package_id: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          request_reason?: string
+          request_status?: string
+          requested_access_level?: string
+          requested_by?: string
+          resolution_notes?: string
+          resolved_at?: string | null
+          resolved_by?: string
+          updated_at?: string
+        }
+        Update: {
+          audit_metadata?: Json
+          capability_package_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          request_reason?: string
+          request_status?: string
+          requested_access_level?: string
+          requested_by?: string
+          resolution_notes?: string
+          resolved_at?: string | null
+          resolved_by?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_access_requests_capability_package_id_fkey"
+            columns: ["capability_package_id"]
+            isOneToOne: false
+            referencedRelation: "capability_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_access_requests_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_approval_reviews: {
+        Row: {
+          audit_metadata: Json
+          conditions: Json
+          created_at: string
+          id: string
+          organization_id: string
+          request_id: string
+          review_action: string
+          review_notes: string
+          reviewer_id: string
+        }
+        Insert: {
+          audit_metadata?: Json
+          conditions?: Json
+          created_at?: string
+          id?: string
+          organization_id: string
+          request_id: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string
+        }
+        Update: {
+          audit_metadata?: Json
+          conditions?: Json
+          created_at?: string
+          id?: string
+          organization_id?: string
+          request_id?: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_approval_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_approval_reviews_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "capability_access_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_entitlements: {
+        Row: {
+          access_level: string
+          approval_required: boolean
+          audit_metadata: Json
+          capability_package_id: string
+          created_at: string
+          entitlement_status: string
+          expires_at: string | null
+          granted_at: string | null
+          granted_by: string
+          id: string
+          organization_id: string
+          principal_id: string
+          principal_type: string
+          review_metadata: Json
+          updated_at: string
+        }
+        Insert: {
+          access_level?: string
+          approval_required?: boolean
+          audit_metadata?: Json
+          capability_package_id: string
+          created_at?: string
+          entitlement_status?: string
+          expires_at?: string | null
+          granted_at?: string | null
+          granted_by?: string
+          id?: string
+          organization_id: string
+          principal_id?: string
+          principal_type?: string
+          review_metadata?: Json
+          updated_at?: string
+        }
+        Update: {
+          access_level?: string
+          approval_required?: boolean
+          audit_metadata?: Json
+          capability_package_id?: string
+          created_at?: string
+          entitlement_status?: string
+          expires_at?: string | null
+          granted_at?: string | null
+          granted_by?: string
+          id?: string
+          organization_id?: string
+          principal_id?: string
+          principal_type?: string
+          review_metadata?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_entitlements_capability_package_id_fkey"
+            columns: ["capability_package_id"]
+            isOneToOne: false
+            referencedRelation: "capability_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_entitlements_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       capability_exposure_classes: {
         Row: {
           audit_requirements: Json
@@ -5020,6 +5203,63 @@ export type Database = {
             columns: ["registry_entry_id"]
             isOneToOne: false
             referencedRelation: "capability_registry_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capability_trust_postures: {
+        Row: {
+          audit_metadata: Json
+          capability_package_id: string
+          created_at: string
+          id: string
+          organization_id: string
+          review_notes: string
+          reviewed_at: string | null
+          reviewed_by: string
+          risk_posture: string
+          trust_level: string
+          updated_at: string
+        }
+        Insert: {
+          audit_metadata?: Json
+          capability_package_id: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          review_notes?: string
+          reviewed_at?: string | null
+          reviewed_by?: string
+          risk_posture?: string
+          trust_level?: string
+          updated_at?: string
+        }
+        Update: {
+          audit_metadata?: Json
+          capability_package_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          review_notes?: string
+          reviewed_at?: string | null
+          reviewed_by?: string
+          risk_posture?: string
+          trust_level?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_trust_postures_capability_package_id_fkey"
+            columns: ["capability_package_id"]
+            isOneToOne: false
+            referencedRelation: "capability_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capability_trust_postures_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]

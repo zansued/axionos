@@ -1,7 +1,7 @@
 import {
   Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Map,
   Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
-  Plug, FileSearch, Sparkles, Scale, BrainCircuit, Zap, PackageCheck,
+  Plug, FileSearch, Sparkles, Scale, BrainCircuit, Zap, PackageCheck, ShieldCheck,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
@@ -50,6 +50,7 @@ const bottomItems = [
   { title: "Working Mem.", url: "/working-memory", icon: BrainCircuit },
   { title: "Swarm", url: "/swarm-execution", icon: Zap },
   { title: "Capabilities", url: "/capability-registry", icon: PackageCheck },
+  { title: "Cap. Gov.", url: "/capability-governance", icon: ShieldCheck },
   { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
