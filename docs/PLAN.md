@@ -789,5 +789,6 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Candidate Distillation | 1 | 73 |
 | Benchmark Governance | 1 | 74 |
 | Agent Routing | 1 | 75 |
+| Agent Debate & Resolution | 1 | 76 |
 | Support | 11 | Various |
-| **Total** | **~121** | |
+| **Total** | **~122** | |
