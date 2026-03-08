@@ -534,26 +534,36 @@ This document serves as the canonical sprint execution ledger. The following con
 
 ---
 
-## Post-Block M — Sprint 71: Governed Extensibility & Developer Experience Foundation — ✅ COMPLETE
-
-**Goal:** Build the first governed extensibility and developer experience foundation — safe extension points, integration contracts, approval-based activation, compatibility visibility, and rollback posture — without mutating the kernel or collapsing the default user journey.
-
-| Sprint | Capability | Architectural Layer | Status |
-|--------|-----------|-------------------|--------|
-| 71 | Governed Extensibility & Developer Experience Foundation | Extensibility Foundation Layer | ✅ Complete |
-
-**Key Milestones:**
-- Sprint 71: Extension registry data model (platform_extensions, extension_activations, extension_compatibility_checks, extension_audit_events), approval-based activation workflow, compatibility/risk assessment, operator extension management UI, rollback/deactivation flows, full audit trail, tenant-isolated RLS.
-
----
-
-## Future Arc — Post-Sprint 71 (Sprint 72+)
+## Block N — Evidence-Governed Improvement Loop (Sprints 71–74) — 📋 PLANNED
 
 > **Strategic direction:** [ROADMAP.md](ROADMAP.md)
 
+**Goal:** Turn operational evidence into bounded improvement proposals that are tested and promoted under governance. AxionOS should become better over time through evidence, not uncontrolled autonomy.
+
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 72+ | TBD | N+ | 🔮 Reserved | Further extensibility, developer SDK, or platform maturity |
+| 71 | TBD — Evidence Collection Foundation | N | 📋 Planned | Structured evidence collection from pipeline, repair, delivery, and adoption |
+| 72 | TBD — Improvement Proposal Generation | N | 📋 Planned | Bounded improvement proposals from evidence aggregation |
+| 73 | TBD — Governed Testing & Promotion | N | 📋 Planned | Governed testing and promotion of improvement candidates |
+| 74 | TBD — Improvement Outcome Tracking | N | 📋 Planned | Outcome tracking and feedback for improvement cycles |
+
+**Canon constraints:** No autonomous architecture mutation. Human approval for structural change. Rollback everywhere. Bounded learning and promotion. Tenant isolation preserved.
+
+---
+
+## Reserved Future Horizon — Blocks O–S (Sprints 75–94)
+
+> **Strategic direction:** [ROADMAP.md](ROADMAP.md)
+
+| Block | Sprints | Name | Status |
+|-------|---------|------|--------|
+| O | 75–78 | Advanced Multi-Agent Coordination | 🔮 Reserved |
+| P | 79–82 | Governed Capability Ecosystem & Early Marketplace | 🔮 Reserved |
+| Q | 83–86 | Autonomous Delivery Optimization & Outcome Assurance 2.0 | 🔮 Reserved |
+| R | 87–90 | Advanced Distributed Runtime & Scaled Execution | 🔮 Reserved |
+| S | 91–94 | Research Sandbox for Architecture Evolution | 🔮 Reserved |
+
+Reserved blocks are strategic direction only. They will not be promoted to planned without deliberate review.
 
 ---
 

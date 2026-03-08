@@ -37,8 +37,22 @@ Everything runs inside a **32-stage deterministic pipeline** with full cost trac
 | Level 4 | Self-Learning Software Factory | ✅ Complete |
 | Level 4.5 | Meta-Aware Engineering Platform | ✅ Complete |
 | Level 5 | Institutional Engineering Memory | ✅ Current |
-| Level 5.5 | Contextual / Self-Improving Platform | 🔮 Future horizon |
-| Level 6 | Discovery-Driven Engineering | 🔮 Long-term |
+
+---
+
+## Roadmap
+
+| Scope | Sprints | Status |
+|-------|---------|--------|
+| Completed canon (Foundation → Product Experience) | 1–70 | ✅ Complete |
+| Evidence-Governed Improvement Loop (Block N) | 71–74 | 📋 Planned |
+| Advanced Multi-Agent Coordination (Block O) | 75–78 | 🔮 Reserved |
+| Governed Capability Ecosystem (Block P) | 79–82 | 🔮 Reserved |
+| Delivery Optimization (Block Q) | 83–86 | 🔮 Reserved |
+| Distributed Runtime (Block R) | 87–90 | 🔮 Reserved |
+| Research Sandbox (Block S) | 91–94 | 🔮 Reserved |
+
+> Full roadmap: [ROADMAP.md](docs/ROADMAP.md) · Sprint ledger: [PLAN.md](docs/PLAN.md)
 
 ---
 

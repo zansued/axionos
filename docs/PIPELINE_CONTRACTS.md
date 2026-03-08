@@ -537,3 +537,36 @@ Memory provides **optional enrichment** to pipeline stages:
 - **Semantic Retrieval:** Unified embedding-backed retrieval across all domains (Sprint 36)
 
 Memory enrichment is always **additive** — it enhances decisions but never gates them.
+
+---
+
+## Forward-Looking Pipeline Evolution
+
+> **Status:** The following describes how **future planned and reserved blocks** may affect the visible pipeline. None of this is implemented unless explicitly noted. The canonical roadmap is in [ROADMAP.md](ROADMAP.md).
+
+### Block N — Evidence-Governed Improvement Loop (Planned, Sprints 71–74)
+
+Block N may improve the **quality and learning loops behind the pipeline** without changing the visible journey contract:
+- Pipeline outcomes feed structured evidence collection
+- Repair, validation, and delivery patterns are aggregated for bounded improvement proposals
+- Improvement candidates are tested and promoted under governance
+- The user-facing journey (Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software) remains unchanged
+
+**Pipeline impact:** Internal quality improvement. No new user-visible stages or approval gates.
+
+### Blocks O–S — Reserved Future Direction (Sprints 75–94)
+
+Later blocks may affect the pipeline in these ways:
+- **Block O (Advanced Multi-Agent Coordination):** May improve agent coordination during Engineering and Validation phases — internal optimization, not journey-visible
+- **Block P (Governed Capability Ecosystem):** May allow extensions to enrich pipeline stages — any visible impact must be legible and bounded
+- **Block Q (Delivery Optimization):** May improve deploy confidence, post-deploy learning, and delivery reliability — visible as better outcomes, not more complexity
+- **Block R (Distributed Runtime):** May improve execution scale and resilience — transparent to the user journey
+- **Block S (Research Sandbox):** Architecture evolution research — sandboxed, no direct pipeline impact
+
+### Pipeline Stability Guarantee
+
+The default user-facing journey remains:
+
+> **Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software**
+
+Future blocks may deepen the intelligence, coordination, and reliability behind each stage, but the visible pipeline contract is stable. Internal complexity must not leak into the default user journey.

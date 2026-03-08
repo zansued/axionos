@@ -899,29 +899,51 @@ Internal sophistication makes the product trustworthy. It does not need to be th
 
 ---
 
-## 17. Forthcoming Architectural Direction After Sprint 65
+## 17. Architectural Direction — Post-Block M
 
 > **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-With 70 sprints complete and Block M (Product Experience & Delivery Maturity) delivered, the platform has achieved its first product-ready operating baseline. The architectural direction has successfully shifted from internal system building to **product experience and delivery maturity**.
+With 70 sprints complete and Block M (Product Experience & Delivery Maturity) delivered, the platform has achieved its first product-ready operating baseline. 54 architectural layers are active.
 
 ### Completed Canon (Sprints 1–70)
+
 - ✅ All layers from execution kernel through institutional assurance, canon integrity, product experience, and adoption intelligence
 - ✅ 54 architectural layers active
-- ✅ First internally coherent operating canon + user journey orchestration + role-based experience + one-click delivery + guided onboarding + adoption intelligence & customer success loop
+- ✅ First internally coherent operating canon + full product experience maturity
 
-### Completed Architectural Direction — Block M: Product Experience & Delivery Maturity
+### Future Architectural Direction
 
-Block M delivered:
-- **User journey orchestration** — clear state, transitions, approvals, and progress across the full idea-to-deliver lifecycle
-- **Role-based product surfaces** — separating the default user journey from operator/governance views
-- **Delivery/deploy assurance experience** — seamless, governed one-click path from validated code to delivered software
-- **Onboarding/template-driven initiation** — reducing time-to-value with guided flows, reusable templates, and vertical starters
-- **Adoption intelligence and customer success feedback** — measuring real adoption, friction, success signals, and closing the loop for product improvement
+The following blocks describe **planned and reserved architectural direction**, not implemented architecture. No modules, layers, or APIs exist for these blocks yet.
 
-Block M is **complete**. Future work (Sprint 71+ / Block N+) will build on this product-ready foundation.
+#### Block N — Evidence-Governed Improvement Loop (Sprints 71–74) — 📋 Planned
 
-**Governing constraint:** Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Internal sophistication serves the product experience — it does not replace it.
+**Architectural intent:** Introduce structured evidence collection from pipeline outcomes, bounded improvement proposal generation, governed testing/promotion, and rollback-safe experimentation. This block deepens the existing learning, memory, and calibration layers without mutating kernel structure.
+
+**Expected architectural impact:** New evidence aggregation infrastructure, improvement proposal lifecycle, governed experiment execution. Reuses existing learning, memory, and governance planes.
+
+#### Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔮 Reserved
+
+**Architectural intent:** Evolve the Agent OS Execution Plane toward advanced role arbitration, debate patterns, shared working memory, and bounded multi-agent execution. Builds on existing coordination module (v0.8).
+
+#### Block P — Governed Capability Ecosystem & Early Marketplace (Sprints 79–82) — 🔮 Reserved
+
+**Architectural intent:** Extend the existing Ecosystem Plane from bounded pilot to governed capability exchange. Not a full open marketplace — extends existing trust, admission, sandbox, and registry layers.
+
+#### Block Q — Delivery Optimization & Outcome Assurance 2.0 (Sprints 83–86) — 🔮 Reserved
+
+**Architectural intent:** Deepen causal understanding of delivery outcomes, post-deploy learning, and reliability-aware pipeline tuning. Builds on existing outcome assurance (Sprint 63) and adoption intelligence (Sprint 70).
+
+#### Block R — Advanced Distributed Runtime & Scaled Execution (Sprints 87–90) — 🔮 Reserved
+
+**Architectural intent:** Evolve the Execution Plane Distributed Runtime (v0.9, currently frozen) toward production-grade job control, cross-region resilience, and tenant-isolated scale.
+
+#### Block S — Research Sandbox for Architecture Evolution (Sprints 91–94) — 🔮 Reserved
+
+**Architectural intent:** Support architecture hypothesis generation and simulated evolution campaigns in sandboxed environments. No autonomous architecture mutation — all promotion is human-governed.
+
+### Governing Constraint
+
+Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Internal sophistication serves the product experience — it does not replace it. All future blocks must preserve rollback capability, tenant isolation, and human authority over structural change.
 
 ---
 

@@ -35,7 +35,9 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
 - Sprints 1–65 are the completed first mature operating canon — do not casually reopen
-- Block M sprints (66–70) focus on user-visible product experience, not internal layering
+- Block M (66–70) is complete — user-visible product experience and delivery maturity
+- Block N (71–74) is the next planned block — evidence-governed improvement loop
+- Blocks O–S (75–94) are reserved — do not treat as implemented
 - Do not collapse internal architecture and user-facing journey into the same surface
 
 ---
