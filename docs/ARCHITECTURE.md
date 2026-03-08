@@ -625,7 +625,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
-> **Summary:** 70 sprints complete. 54 architectural layers active. Block M (Product Experience & Delivery Maturity) complete.
+> **Summary:** 70 sprints complete. 54 architectural layers active. Block M (Product Experience & Delivery Maturity) complete. Block N (Evidence-Governed Improvement Loop) is the next planned block.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
@@ -652,14 +652,12 @@ supabase/functions/
 | Controlled Ecosystem Activation (K) | 60–62 | ✅ Complete |
 | System Roundness & Operating Completion (L) | 63–65 | ✅ Complete |
 | Product Experience & Delivery Maturity (M) | 66–70 | ✅ Complete |
-
-### Frozen
-
-| Module | Reason |
-|--------|--------|
-| Marketplace ecosystem (full) | Bounded by pilot controls — full activation deferred |
-| Advanced distributed runtime | Current runtime handles workload adequately |
-| Advanced multi-agent coordination | Existing coordination works |
+| Evidence-Governed Improvement Loop (N) | 71–74 | 📋 Planned |
+| Advanced Multi-Agent Coordination (O) | 75–78 | 🔮 Reserved |
+| Governed Capability Ecosystem (P) | 79–82 | 🔮 Reserved |
+| Delivery Optimization (Q) | 83–86 | 🔮 Reserved |
+| Distributed Runtime (R) | 87–90 | 🔮 Reserved |
+| Research Sandbox (S) | 91–94 | 🔮 Reserved |
 
 ---
 
