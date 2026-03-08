@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** All blocks through Block L complete (Sprints 1–65). First mature internal operating baseline achieved. Post-65 strategic direction formalized: Product Experience & Delivery Maturity.
+> **Last strategic change (2026-03-08):** Sprint 66 complete (User Journey Orchestration Layer). Block M in progress. 50 architectural layers active.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
