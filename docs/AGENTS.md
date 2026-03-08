@@ -595,29 +595,10 @@ supabase/functions/_shared/agent-os/
 
 ## 15. Implementation Status
 
-| Module | Status |
-|--------|--------|
-| All 14 core modules | ✅ Designed with full TypeScript contracts |
-| Orchestrator + DAG Engine | ✅ Implemented and operational |
-| Memory System (basic) | ✅ Implemented (`agent_memory` table) |
-| Governance (gates, SLAs, audit) | ✅ Implemented |
-| Observability + Cost Tracking | ✅ Implemented |
-| Adaptive Learning | ✅ Implemented |
-| Learning Agents v1 (5 engines) | ✅ Implemented (Sprint 12) |
-| Learning Dashboard | ✅ Implemented (Sprint 12) |
-| Meta-Agents v1.4 (4 types) | ✅ Implemented (Sprints 13–20) |
-| Engineering Memory Full Stack | ✅ Implemented (Sprints 15–18) |
-| Memory-Aware Reasoning | ✅ Implemented (Sprint 18) |
-| Proposal Quality Feedback Loop | ✅ Implemented (Sprint 19) |
-| Advisory Calibration Layer | ✅ Implemented (Sprint 20) |
-| Prompt Optimization (A/B + Bounded Promotion) | ✅ Implemented (Sprints 21–22) |
-| Self-Improving Fix Agents v2 (Repair Policies) | ✅ Implemented (Sprint 23) |
-| Agent Memory Layer Operationalization | ✅ Implemented (Sprint 24) |
-| Predictive Error Detection Operationalization | ✅ Implemented (Sprint 25) |
-| Semantic Retrieval | ✅ Implemented (Sprint 36) |
-| Discovery-Driven Architecture Signals | ✅ Implemented (Sprint 37) |
-| Marketplace | ❄️ Frozen |
-| Distributed Runtime (advanced) | ❄️ Frozen |
+> **Canonical sprint-by-sprint record:** [PLAN.md](../PLAN.md)
+> **All 18 core Agent OS modules:** ✅ Designed with full TypeScript contracts
+> **Key operational systems:** Orchestrator + DAG Engine, Memory System, Governance, Observability, Learning Agents, Meta-Agents, Engineering Memory, Prompt Optimization, Agent Memory, Predictive Error Detection, Semantic Retrieval — all operational.
+> **Frozen:** Marketplace, advanced distributed runtime.
 
 ---
 
