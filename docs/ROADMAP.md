@@ -2,13 +2,13 @@
 
 > **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated repositories.
 >
-> **What changed (2026-03-07):** Sprint 37 — Discovery-Driven Architecture Signals. External and product-facing discovery signals now inform advisory architectural recommendations. Previous: Semantic Retrieval & Embedding Memory Expansion (Sprint 36).
+> **What changed (2026-03-08):** Sprint 38 — Architecture Change Simulation & Governance. Advisory architectural recommendations can now be simulated before implementation. Previous: Discovery-Driven Architecture Signals (Sprint 37).
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 >
 > **Current Maturity**: Level 5 ✅ Active
 >
-> Last updated: 2026-03-07
+> Last updated: 2026-03-08
 
 ---
 
