@@ -16,6 +16,7 @@ documents:
       - database schema overview
       - technology stack
       - governing principle
+      - forthcoming architectural direction
     must_not_define:
       - sprint-by-sprint execution ledger (→ PLAN.md)
       - full roadmap status or strategic narrative (→ ROADMAP.md)
@@ -32,6 +33,9 @@ documents:
       - strategic direction and directive
       - implementation horizons and block sequencing
       - high-level completed capability arc
+      - committed future arc (Sprints 54–56)
+      - reserved horizon (Sprints 57–65)
+      - round-enough target definition
       - what comes next at macro level
     must_not_define:
       - full sprint-by-sprint execution ledger (→ PLAN.md)
@@ -51,6 +55,7 @@ documents:
       - sprint completion status
       - capability verification matrix
       - shared module and edge function registries
+      - future canon guidance (detail levels)
     must_not_define:
       - deep architecture explanation (→ ARCHITECTURE.md)
       - long-term strategic narrative (→ ROADMAP.md)
@@ -92,3 +97,17 @@ documents:
     derived_from:
       - AGENTS.md for agent references
     update_rule: Update when user-visible pipeline behavior changes.
+
+  - file: docs/README.md
+    owns:
+      - documentation navigation index
+      - sprint status taxonomy
+      - canon boundaries
+      - continuation guidance if context is lost
+      - maintenance protocol
+      - normalization rules
+    must_not_define:
+      - sprint details (→ PLAN.md)
+      - strategic narrative (→ ROADMAP.md)
+      - architectural content (→ ARCHITECTURE.md)
+    update_rule: Update when document structure, status taxonomy, or canon boundaries change.

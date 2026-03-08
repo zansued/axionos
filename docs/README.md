@@ -9,13 +9,53 @@
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System structure | C4 diagrams, capability layers, containers, components, data flow, safety rules, tech stack |
-| [ROADMAP.md](ROADMAP.md) | Strategic direction | Vision, maturity level, strategic directive, implementation horizons, next phase |
-| [PLAN.md](PLAN.md) | Sprint execution | Canonical sprint ledger, phase grouping, completion status, capability verification |
+| [ROADMAP.md](ROADMAP.md) | Strategic direction | Vision, maturity level, strategic directive, completed canon, committed future arc, reserved horizon, round-enough target |
+| [PLAN.md](PLAN.md) | Sprint execution | Canonical sprint ledger, phase grouping, completion status, capability verification, future canon guidance |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | System structure | C4 diagrams, capability layers, containers, components, data flow, safety rules, tech stack, forthcoming direction |
 | [AGENTS.md](AGENTS.md) | Agent OS reference | 5 planes, 18 modules, agent types, contracts, safety boundaries, events |
 | [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md) | Pipeline product UX | Phase-by-phase user-visible behavior, inputs/outputs, control rules, definition of done |
 | [registry/sprints.yml](registry/sprints.yml) | Sprint metadata | Lightweight canonical sprint status registry |
+| [registry/blocks.yml](registry/blocks.yml) | Block metadata | Block structure with sprint ranges and status |
 | [registry/doc-authority.yml](registry/doc-authority.yml) | Doc ownership | Authority boundaries per document |
+
+---
+
+## How to Continue If Conversation Context Is Lost
+
+If prior chat history is unavailable, follow this sequence to re-establish context:
+
+1. **Read ROADMAP.md first** — understand current maturity, strategic direction, completed canon, committed arc, and reserved horizon
+2. **Read PLAN.md next** — identify the current/next sprint, execution status, and future canon guidance
+3. **Use ARCHITECTURE.md** for structural context — layers, containers, data flow, forthcoming architectural direction
+4. **Use AGENTS.md** for Agent OS reference — only if agent system details are needed
+5. **Use PIPELINE_CONTRACTS.md** only if pipeline UX or stage behavior is affected
+
+### Implementation Rules
+
+- Future sprint implementation should proceed **one sprint at a time**
+- Each sprint should be reviewed and approved before execution begins
+- **Reserved horizon** sprints (57–65) should not be promoted to planned without deliberate review
+- **Committed** sprints (55–56) have defined objectives but should still be scoped in detail before implementation
+- The **planned** sprint (54) is the next to implement
+
+---
+
+## Sprint Status Taxonomy
+
+| Status | Meaning | Where Tracked |
+|--------|---------|---------------|
+| `complete` | Implemented and verified | `PLAN.md`, `registry/sprints.yml` |
+| `planned` | Next in queue, scope defined, ready for implementation | `PLAN.md`, `registry/sprints.yml` |
+| `committed` | Part of committed future arc, objectives defined | `PLAN.md`, `ROADMAP.md`, `registry/sprints.yml` |
+| `reserved` | Strategic direction defined, intentionally lightweight | `ROADMAP.md`, `registry/sprints.yml` |
+| `frozen` | Explicitly deferred, not scheduled | `ROADMAP.md` (frozen areas) |
+
+### Current Canon Boundaries
+
+- **Sprints 1–53** = canonical complete (implemented and verified)
+- **Sprint 54** = planned (next to implement)
+- **Sprints 55–56** = committed (objectives defined, not yet implemented)
+- **Sprints 57–65** = reserved (strategic direction, intentionally lightweight)
 
 ---
 
@@ -29,6 +69,7 @@
 | Agent OS module, contract, or event added | `AGENTS.md` |
 | Pipeline phase UX or contract changed | `PIPELINE_CONTRACTS.md` |
 | Sprint metadata (number, name, status, phase) | `registry/sprints.yml` |
+| Block structure changed | `registry/blocks.yml` |
 
 ---
 
@@ -39,19 +80,7 @@
 3. **When system structure or active architectural layers change:** update `ARCHITECTURE.md`
 4. **When Agent OS module inventory, contracts, or operational references change:** update `AGENTS.md`
 5. **When user-visible pipeline behavior changes:** update `PIPELINE_CONTRACTS.md`
-6. **Always:** keep `registry/sprints.yml` synchronized as the canonical sprint source
-
----
-
-## Sprint Status Taxonomy
-
-| Status | Meaning | Where Tracked |
-|--------|---------|---------------|
-| `complete` | Implemented and verified | `PLAN.md`, `registry/sprints.yml` |
-| `planned` | Next in queue, scope defined | `PLAN.md`, `registry/sprints.yml` |
-| `proposed` | Strategic direction, not yet scoped for implementation | `ROADMAP.md`, `registry/sprints.yml` |
-
-**Canon vs Proposal:** Sprints 1–53 are canonical (implemented). Sprints 54–55 are proposed strategic direction and may be revised before implementation.
+6. **Always:** keep `registry/sprints.yml` and `registry/blocks.yml` synchronized
 
 ---
 
@@ -64,5 +93,6 @@
 - Architectural layer definitions are canonical in `ARCHITECTURE.md` only
 - Module/contract specifications are canonical in `AGENTS.md` only
 - Phase UX contracts are canonical in `PIPELINE_CONTRACTS.md` only
-- Proposed future sprints are canonical in `ROADMAP.md` (strategic direction) and `registry/sprints.yml` (metadata)
-- Derived summaries (e.g. "35 layers active" in ARCHITECTURE.md header) are allowed when clearly referencing the canonical source
+- Committed future arc is canonical in `ROADMAP.md` (strategic direction) and `PLAN.md` (execution detail)
+- Reserved horizon is canonical in `ROADMAP.md`
+- Derived summaries are allowed when clearly referencing the canonical source

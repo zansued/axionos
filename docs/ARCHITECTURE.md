@@ -625,7 +625,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
-> **Summary:** 48 sprints complete. 49 systems implemented. All architecture-scaled blocks done.
+> **Summary:** 53 sprints complete. 38 architectural layers active. All blocks through Product Intelligence Entry done.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
@@ -640,12 +640,17 @@ supabase/functions/
 | Architecture-Governed | 41–43 | ✅ Complete |
 | Architecture-Operating | 44–45 | ✅ Complete |
 | Architecture-Scaled | 46–48 | ✅ Complete |
+| Platform Convergence | 49 | ✅ Complete |
+| Convergence Governance | 50 | ✅ Complete |
+| Institutional Convergence Memory | 51 | ✅ Complete |
+| Operating Profiles & Policy Packs | 52 | ✅ Complete |
+| Product Intelligence Entry | 53 | ✅ Complete |
 
 ### Frozen
 
 | Module | Reason |
 |--------|--------|
-| Marketplace ecosystem | Not needed until product intelligence layer |
+| Marketplace ecosystem | Frozen — deferred until ecosystem readiness (Sprint 56+) |
 | Advanced distributed runtime | Current runtime is adequate |
 | Advanced multi-agent coordination | Existing coordination works |
 
@@ -867,17 +872,32 @@ supabase/functions/
 
 ## 16. Forthcoming Architectural Direction
 
-> **Status:** All three directions are now complete through Sprint 53.
+> **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-After architecture-scaled hardening (Sprints 46–48), convergence governance (Sprints 49–50), institutional convergence memory (Sprint 51), operating profiles (Sprint 52), and product intelligence entry (Sprint 53), the platform has completed the full institutionalization arc:
+After 53 sprints completing the full arc from deterministic execution through product intelligence entry, the platform's architectural direction moves toward:
 
-1. ~~**Institutional Convergence Memory**~~ ✅ Complete (Sprint 51) — Approved convergence decisions stored as persistent institutional memory with evidence lineage, pattern extraction, and quality feedback.
-2. ~~**Operating Profile Packaging**~~ ✅ Complete (Sprint 52) — Proven policies, convergence outcomes, and tenant-specific tuning composed into versioned, assignable operating profiles and policy packs with bounded overrides.
-3. ~~**Bounded Product Intelligence**~~ ✅ Complete (Sprint 53) — Product signals, friction clusters, and opportunity candidates correlated with architecture, operating profiles, and governance in a bounded, advisory-first manner. Marketplace/ecosystem remains frozen.
+### Completed Institutionalization Arc (Sprints 49–53)
+- ✅ Platform convergence and convergence governance (49–50)
+- ✅ Institutional convergence memory (51)
+- ✅ Operating profiles and policy packs (52)
+- ✅ Product intelligence entry (53)
 
-These directions reuse existing architectural layers (governance, memory, observability, policy, adaptive routing) without expanding the Agent OS plane structure. The focus shifts from building new capability planes to institutionalizing and packaging the intelligence already present.
+### Committed Direction (Sprints 54–56) — Block I: Product-Intelligent Expansion
+- **Product intelligence operations** — deepening product-architecture correlation into operational decision-making
+- **Product opportunity portfolio governance** — governing product opportunities with lifecycle management
+- **Controlled ecosystem readiness** — assessing exposure readiness without activating marketplace
 
-**Governing constraint:** All forthcoming directions remain subject to advisory-first, governance-before-autonomy principles. No autonomous architecture mutation. Marketplace and ecosystem capabilities remain frozen until explicit approval.
+### Reserved Direction (Sprints 57–65) — Blocks J, K, L
+- **Capability exposure governance** and **external trust/admission** controls
+- **Ecosystem simulation/sandboxing** before real exposure
+- **Limited marketplace pilot** with bounded scope and instant rollback
+- **Capability registry** and **multi-party policy/revenue governance**
+- **Institutional outcome assurance** and **canon integrity/drift governance**
+- **Operating completion** — first internally coherent operating canon
+
+All forthcoming directions reuse existing architectural layers and Agent OS planes. No plane expansion is planned. The focus shifts from building new capability planes to institutionalizing intelligence and governing ecosystem exposure.
+
+**Governing constraint:** Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Marketplace and ecosystem capabilities remain frozen until the staged readiness/foundation blocks are reached and explicitly approved.
 
 ---
 

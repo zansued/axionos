@@ -1,0 +1,23 @@
+# AxionOS — Block Structure Registry
+# Defines the strategic block groupings for sprint organization.
+# Last updated: 2026-03-08
+
+blocks:
+  # === COMPLETE ===
+  - { block_id: "Foundation", block_name: "Foundation through Architecture Intelligence", sprint_range: "1–40",  status: complete, purpose: "Deterministic execution, learning, governance, calibration, strategy, stabilization, advisory, architecture intelligence" }
+  - { block_id: "A",          block_name: "Architecture-Governed",                        sprint_range: "41–43", status: complete, purpose: "Pilot governance, migration execution, portfolio governance" }
+  - { block_id: "B",          block_name: "Architecture-Operating",                       sprint_range: "44–45", status: complete, purpose: "Fitness functions, change advisory orchestration" }
+  - { block_id: "C",          block_name: "Architecture-Scaled",                          sprint_range: "46–48", status: complete, purpose: "Stabilization v2, tenant architecture modes, economic optimization" }
+  - { block_id: "D",          block_name: "Platform Convergence",                         sprint_range: "49",    status: complete, purpose: "Advisory-first convergence detection and specialization analysis" }
+  - { block_id: "E",          block_name: "Convergence Governance",                       sprint_range: "50",    status: complete, purpose: "Governed lifecycle for convergence decisions" }
+  - { block_id: "F",          block_name: "Institutional Convergence Memory",             sprint_range: "51",    status: complete, purpose: "Durable, queryable convergence knowledge with evidence lineage" }
+  - { block_id: "G",          block_name: "Operating Profiles & Policy Packs",            sprint_range: "52",    status: complete, purpose: "Reusable, governed operating profiles and policy packs" }
+  - { block_id: "H",          block_name: "Product Intelligence Entry",                   sprint_range: "53",    status: complete, purpose: "Bounded product signal correlation and opportunity detection" }
+
+  # === COMMITTED ===
+  - { block_id: "I",          block_name: "Product-Intelligent Expansion",                sprint_range: "54–56", status: committed, purpose: "Product intelligence operations, opportunity governance, ecosystem readiness" }
+
+  # === RESERVED ===
+  - { block_id: "J",          block_name: "Trusted Ecosystem Foundation",                 sprint_range: "57–59", status: reserved, purpose: "Capability exposure governance, trust/admission, ecosystem simulation" }
+  - { block_id: "K",          block_name: "Controlled Ecosystem Activation",              sprint_range: "60–62", status: reserved, purpose: "Marketplace pilot, capability registry, multi-party governance" }
+  - { block_id: "L",          block_name: "System Roundness & Operating Completion",      sprint_range: "63–65", status: reserved, purpose: "Outcome assurance, canon integrity, operating completion" }

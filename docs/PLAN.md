@@ -5,7 +5,7 @@
 >
 > **Last updated:** 2026-03-08
 > **Current Sprint:** 53 (Product Intelligence Entry) — ✅ Complete
-> **Next Sprint:** 54 — 📋 Proposed
+> **Next Sprint:** 54 (Product Intelligence Operating Layer) — 📋 Planned
 
 ## Document Authority
 
@@ -23,6 +23,24 @@
 - **Agent OS module specs:** [AGENTS.md](AGENTS.md)
 - **Pipeline UX contracts:** [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md)
 - **Sprint metadata registry:** [registry/sprints.yml](registry/sprints.yml)
+
+---
+
+## Future Canon Guidance
+
+This document serves as the canonical sprint execution ledger. The following conventions apply:
+
+| Status | Meaning | Detail Level |
+|--------|---------|-------------|
+| ✅ Complete | Implemented and verified | Full historical record preserved |
+| 📋 Planned | Next sprint in queue, scope defined | Highly detailed — ready for implementation |
+| 📋 Committed | Part of the committed future arc, scope outlined | Moderately detailed — objectives and acceptance direction defined |
+| 🔮 Reserved | Strategic direction defined, not yet scoped for implementation | Lightweight — name, block, and one-line purpose only |
+
+- **Current/next sprint** should be highly detailed before implementation begins
+- **Committed future arc** (Sprints 55–56) should be moderately detailed
+- **Reserved horizon** (Sprints 57–65) should remain intentionally lightweight until promoted to committed
+- Reserved sprints should not be promoted to planned without deliberate review
 
 ---
 
@@ -281,16 +299,34 @@
 
 ---
 
-## Proposed Next Strategic Arc (Sprint 54+)
+## Committed Future Arc — Block I: Product-Intelligent Expansion (Sprints 54–56)
 
-> **Status:** 📋 Proposed — not yet implemented. Subject to revision based on operational outcomes.
+> **Status:** 📋 Committed — next implementation sequence. Not yet implemented.
 
-| Sprint | Name | Objective | Phase |
-|--------|------|-----------|-------|
-| 54 | Product Intelligence Maturation | Deepen product-architecture correlation and cross-tenant benchmarking | Product Intelligence |
-| 55 | Ecosystem & Marketplace Entry | Begin bounded marketplace/ecosystem capabilities | Ecosystem |
+| Sprint | Name | Objective | Target Layer | Status |
+|--------|------|-----------|-------------|--------|
+| 54 | Product Intelligence Operating Layer | Deepen product-architecture correlation, cross-tenant benchmarking, product-informed recommendations | Product Intelligence Operations Layer | 📋 Planned |
+| 55 | Product Opportunity Portfolio Governance | Govern product opportunities as a portfolio — ranking, conflicts, promotion/deferral, outcomes | Product Opportunity Governance Layer | 📋 Committed |
+| 56 | Controlled Ecosystem Readiness Layer | Assess ecosystem exposure readiness — capability inventory, safety prerequisites, trust model foundation | Ecosystem Readiness Layer | 📋 Committed |
 
-These sprints will be formalized when implementation begins.
+---
+
+## Reserved Horizon (Sprints 57–65)
+
+> **Status:** 🔮 Reserved — strategic direction defined, details intentionally lightweight.
+> Reserved sprints should not be promoted without deliberate review.
+
+| Sprint | Name | Block | Status | Purpose |
+|--------|------|-------|--------|---------|
+| 57 | Capability Exposure Governance Layer | J — Trusted Ecosystem Foundation | 🔮 Reserved | Govern which capabilities can be exposed externally |
+| 58 | External Trust & Admission Layer | J — Trusted Ecosystem Foundation | 🔮 Reserved | Trust scoring and admission criteria for external participants |
+| 59 | Ecosystem Simulation & Sandbox Layer | J — Trusted Ecosystem Foundation | 🔮 Reserved | Simulate ecosystem interactions before real exposure |
+| 60 | Limited Marketplace Pilot Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | First controlled marketplace activation with rollback |
+| 61 | Capability Registry Governance Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | Govern lifecycle of registered capabilities |
+| 62 | Multi-Party Policy & Revenue Governance Layer | K — Controlled Ecosystem Activation | 🔮 Reserved | Policy negotiation and revenue sharing across participants |
+| 63 | Institutional Outcome Assurance Layer | L — System Roundness & Operating Completion | 🔮 Reserved | Validate platform produces governed, evidence-backed outcomes |
+| 64 | Canon Integrity & Drift Governance Layer | L — System Roundness & Operating Completion | 🔮 Reserved | Detect drift between behavior and canonical documentation |
+| 65 | Operating Completion Layer | L — System Roundness & Operating Completion | 🔮 Reserved | First complete, internally coherent operating canon |
 
 ---
 
@@ -390,6 +426,8 @@ These sprints will be formalized when implementation begins.
 | `_shared/architecture-simulation/` | 6 | Impact simulator, boundary analyzer, guardrails, recommendation linker, review manager, explainer |
 | `_shared/architecture-planning/` | 7 | Dependency planner, readiness assessor, validation/rollback blueprints, clustering, review manager, explainer |
 | `_shared/architecture-rollout/` | 7 | Migration rehearsal, fragility analyzer, readiness assessor, rollback viability, guardrails, review manager, explainer |
+| `_shared/operating-profiles/` | 9 | Profile builder, policy pack composer, fit analyzer, comparator, override manager, adoption planner, outcome validator, governance calibrator, explainer |
+| `_shared/product-intelligence-entry/` | 8 | Signal ingestor, friction analyzer, opportunity detector, architecture/profile correlators, priority scorer, segmentation analyzer, explainer |
 
 ---
 
