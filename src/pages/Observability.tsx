@@ -58,6 +58,7 @@ import { CapabilityExposureGovernanceDashboard } from "@/components/observabilit
 import { ExternalTrustAdmissionDashboard } from "@/components/observability/ExternalTrustAdmissionDashboard";
 import { LimitedMarketplacePilotDashboard } from "@/components/observability/LimitedMarketplacePilotDashboard";
 import { EcosystemSimulationSandboxDashboard } from "@/components/observability/EcosystemSimulationSandboxDashboard";
+import { CapabilityRegistryGovernanceDashboard } from "@/components/observability/CapabilityRegistryGovernanceDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
