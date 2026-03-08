@@ -62,6 +62,7 @@ import { CapabilityRegistryGovernanceDashboard } from "@/components/observabilit
 import { MultiPartyPolicyRevenueGovernanceDashboard } from "@/components/observability/MultiPartyPolicyRevenueGovernanceDashboard";
 import { InstitutionalOutcomeAssuranceDashboard } from "@/components/observability/InstitutionalOutcomeAssuranceDashboard";
 import { CanonIntegrityDriftGovernanceDashboard } from "@/components/observability/CanonIntegrityDriftGovernanceDashboard";
+import { OperatingCompletionDashboard } from "@/components/observability/OperatingCompletionDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
