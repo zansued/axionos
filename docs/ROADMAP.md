@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** 79 sprints complete. Block O complete. Block P (Governed Capability Ecosystem & Early Marketplace) in progress — Sprint 79 complete.
+> **Last strategic change (2026-03-08):** 80 sprints complete. Block O complete. Block P (Governed Capability Ecosystem & Early Marketplace) in progress — Sprint 80 complete.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
