@@ -4,8 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-08
-> **Current Sprint:** 76 (Multi-Agent Debate & Resolution Layer) — ✅ Complete
-> **Next Planned:** Sprint 77 (Shared Working Memory & Task-State Negotiation) — 📋 Planned
+> **Current Sprint:** 77 (Shared Working Memory & Task-State Negotiation) — ✅ Complete
+> **Next Planned:** Sprint 78 (Bounded Swarm Execution for Complex Initiatives) — 📋 Planned
 > **Reserved Horizon:** Blocks O–S (Sprints 75–94) — Block O in progress
 
 ## Document Authority
