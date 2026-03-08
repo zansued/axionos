@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles, Globe, Eye, UserCheck, Store, FlaskRound, PackageCheck, Handshake, BadgeCheck, ScrollText } from "lucide-react";
+import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles, Globe, Eye, UserCheck, Store, FlaskRound, PackageCheck, Handshake, BadgeCheck, ScrollText, CheckCircle2 } from "lucide-react";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
 import { CostsDashboard } from "@/components/observability/CostsDashboard";
 import { AppLayout } from "@/components/AppLayout";
@@ -62,6 +62,7 @@ import { CapabilityRegistryGovernanceDashboard } from "@/components/observabilit
 import { MultiPartyPolicyRevenueGovernanceDashboard } from "@/components/observability/MultiPartyPolicyRevenueGovernanceDashboard";
 import { InstitutionalOutcomeAssuranceDashboard } from "@/components/observability/InstitutionalOutcomeAssuranceDashboard";
 import { CanonIntegrityDriftGovernanceDashboard } from "@/components/observability/CanonIntegrityDriftGovernanceDashboard";
+import { OperatingCompletionDashboard } from "@/components/observability/OperatingCompletionDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -341,7 +342,8 @@ export default function Observability() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance">
-          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(51, 1fr)" }}>
+          <TabsList className="grid w-full h-9" style={{ gridTemplateColumns: "repeat(52, 1fr)" }}>
+            <TabsTrigger value="completion" className="text-xs gap-1"><CheckCircle2 className="h-3 w-3" /> Completion</TabsTrigger>
             <TabsTrigger value="canon-gov" className="text-xs gap-1"><ScrollText className="h-3 w-3" /> CanonGov</TabsTrigger>
             <TabsTrigger value="outcome-assure" className="text-xs gap-1"><BadgeCheck className="h-3 w-3" /> OutcomeAssure</TabsTrigger>
             <TabsTrigger value="mp-gov" className="text-xs gap-1"><Handshake className="h-3 w-3" /> MultiPartyGov</TabsTrigger>
@@ -394,6 +396,11 @@ export default function Observability() {
             <TabsTrigger value="summaries" className="text-xs gap-1"><FileText className="h-3 w-3" /> Sum</TabsTrigger>
             <TabsTrigger value="live" className="text-xs gap-1"><Radio className="h-3 w-3" /> Live</TabsTrigger>
           </TabsList>
+
+          {/* ===== OPERATING COMPLETION ===== */}
+          <TabsContent value="completion" className="mt-4">
+            <OperatingCompletionDashboard />
+          </TabsContent>
 
           {/* ===== CANON INTEGRITY & DRIFT GOVERNANCE ===== */}
           <TabsContent value="canon-gov" className="mt-4">
