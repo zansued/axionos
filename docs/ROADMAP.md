@@ -143,7 +143,7 @@ With Block I complete (product intelligence + ecosystem readiness), the platform
 
 ---
 
-## Reserved Horizon (Sprints 57–65)
+## Reserved Horizon (Sprints 58–65)
 
 > **Status:** 🔮 Reserved — strategic direction is defined but intentionally lightweight. Details will be formalized sprint-by-sprint as the committed arc completes.
 > **Implementation should not begin on reserved sprints without deliberate review and promotion to committed status.**
