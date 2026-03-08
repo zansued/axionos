@@ -112,6 +112,7 @@ AxionOS has completed 52 implementation sprints spanning the full capability arc
 | Platform Convergence | 49 | Advisory-first convergence detection, specialization vs fragmentation, candidate building |
 | Convergence Governance | 50 | Governed lifecycle for promotion, merge, retention, deprecation, retirement decisions |
 | Institutional Convergence Memory | 51 | Durable, queryable convergence knowledge with evidence lineage and pattern extraction |
+| Operating Profiles & Policy Packs | 52 | Reusable, governed, versioned operating profiles with bounded overrides and policy packs |
 
 ---
 
