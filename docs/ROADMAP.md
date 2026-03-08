@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform Convergence complete (Sprint 49). Convergence Governance complete (Sprint 50). Institutional Convergence Memory complete (Sprint 51). Operating Profiles & Policy Packs complete (Sprint 52). Product Intelligence Entry complete (Sprint 53). Product Intelligence Operations complete (Sprint 54). Future canon formalized through Sprint 65.
+> **Last strategic change (2026-03-08):** All architecture-scaled blocks complete (Sprints 46–48). Platform Convergence complete (Sprint 49). Convergence Governance complete (Sprint 50). Institutional Convergence Memory complete (Sprint 51). Operating Profiles & Policy Packs complete (Sprint 52). Product Intelligence Entry complete (Sprint 53). Product Intelligence Operations complete (Sprint 54). Product Opportunity Portfolio Governance complete (Sprint 55). Future canon formalized through Sprint 65.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -26,7 +26,7 @@
 | Dimension | State |
 |-----------|-------|
 | **Platform Stage** | Level 5 — Institutional Engineering Memory |
-| **System State** | 39 architectural layers active |
+| **System State** | 40 architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -54,6 +54,7 @@
 | **Operating Profiles & Policy Packs** | Active — reusable, governed, versioned operating profiles with bounded overrides |
 | **Product Intelligence Entry** | Active — bounded, advisory-first product signal correlation + opportunity detection |
 | **Product Intelligence Operations** | Active — cross-tenant benchmarking, product-architecture/profile correlations, decision-grade signal quality |
+| **Product Opportunity Portfolio Governance** | Active — portfolio ranking, conflict detection, capacity-aware prioritization, outcome tracking |
 | **Strategy Evolution** | Active — bounded variant experimentation + promotion/rollback |
 | **Execution Mode** | Sprint-based implementation |
 
@@ -61,9 +62,9 @@
 
 ## Strategic Directive
 
-AxionOS has completed 54 implementation sprints spanning the full capability arc from deterministic execution to product intelligence operations. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, bounded self-stabilization, cross-layer engineering advisory, unified semantic retrieval, discovery-driven architecture signals, architecture change simulation/planning/sandbox/pilot/migration, portfolio governance, fitness functions, change advisory orchestration, tenant-aware architecture modes, economic optimization, platform convergence, convergence governance, institutional convergence memory, operating profiles, product intelligence entry, and product intelligence operations — all under governed, advisory-first safety boundaries.
+AxionOS has completed 55 implementation sprints spanning the full capability arc from deterministic execution to product opportunity portfolio governance. The architecture supports structured inputs, deterministic execution, evidence-based repair, preventive guardrails, adaptive routing, multi-layer learning, platform intelligence, self-calibration, strategy evolution, strategy portfolio governance, bounded self-stabilization, cross-layer engineering advisory, unified semantic retrieval, discovery-driven architecture signals, architecture change simulation/planning/sandbox/pilot/migration, portfolio governance, fitness functions, change advisory orchestration, tenant-aware architecture modes, economic optimization, platform convergence, convergence governance, institutional convergence memory, operating profiles, product intelligence entry, product intelligence operations, and product opportunity portfolio governance — all under governed, advisory-first safety boundaries.
 
-The next strategic direction moves from product intelligence operations toward **product opportunity governance**, **controlled ecosystem readiness**, and ultimately toward a **round-enough operating completion** target at Sprint 65.
+The next strategic direction moves from product opportunity governance toward **controlled ecosystem readiness**, and ultimately toward a **round-enough operating completion** target at Sprint 65.
 
 **Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy.
 
@@ -72,14 +73,14 @@ The next strategic direction moves from product intelligence operations toward *
 ## Implementation Horizons
 
 ```
-  COMPLETE (1–54)                 COMMITTED (55–56)              RESERVED (57–65)
+  COMPLETE (1–55)                 COMMITTED (56)                 RESERVED (57–65)
   ───────────────►                ───────────────►               ───────────────►
   Foundation → Learning →          Product-Intelligent            Trusted Ecosystem
   Meta → Memory → Gov →            Expansion                     Foundation →
-  Intelligence → Calibration →     Product Opportunity            Controlled Ecosystem
-  Strategy → Stabilization →       Portfolio Governance →         Activation →
-  Advisory → Semantic →            Controlled Ecosystem           System Roundness &
-  Discovery → Simulation →         Readiness                     Operating Completion
+  Intelligence → Calibration →     Controlled Ecosystem           Controlled Ecosystem
+  Strategy → Stabilization →       Readiness                     Activation →
+  Advisory → Semantic →                                          System Roundness &
+  Discovery → Simulation →                                      Operating Completion
   Planning → Sandbox →
   Pilot → Migration →
   Portfolio → Fitness →
@@ -88,12 +89,13 @@ The next strategic direction moves from product intelligence operations toward *
   Convergence → Conv Gov →
   Conv Memory → Op Profiles →
   Product Intelligence Entry →
-  Product Intelligence Ops ✅
+  Product Intelligence Ops →
+  Product Opp Portfolio Gov ✅
 ```
 
 ---
 
-## Completed Canon (Sprints 1–54)
+## Completed Canon (Sprints 1–55)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -117,24 +119,24 @@ The next strategic direction moves from product intelligence operations toward *
 | Block G — Operating Profiles & Policy Packs | 52 | Reusable, governed, versioned operating profiles with bounded overrides and policy packs |
 | Block H — Product Intelligence Entry | 53 | Bounded, advisory-first product signal correlation, friction clustering, opportunity detection |
 | Block I (partial) — Product Intelligence Operations | 54 | Cross-tenant benchmarking, signal quality calibration, product-architecture/profile operational correlations, advisory recommendations |
+| Block I (partial) — Product Opportunity Portfolio Governance | 55 | Portfolio ranking, conflict detection, capacity-aware prioritization, promotion/defer/reject/monitor decisions, outcome tracking |
 
 ---
 
-## Committed Future Arc (Sprints 55–56)
+## Committed Future Arc (Sprint 56)
 
-> **Status:** 📋 Committed — next implementation sequence. Not yet implemented.
+> **Status:** 📋 Committed — next implementation. Not yet implemented.
 > **Block:** Block I — Product-Intelligent Expansion (remaining)
 
-These sprints complete the committed product-intelligent expansion arc. Each sprint should still be reviewed and approved before execution begins.
+This sprint completes the committed product-intelligent expansion arc. It should still be reviewed and approved before execution begins.
 
 | Sprint | Name | Objective | Acceptance Direction |
 |--------|------|-----------|---------------------|
-| 55 | Product Opportunity Portfolio Governance | Govern the lifecycle of product opportunities as a portfolio — ranking, conflicts, promotion/deferral, outcome tracking across product-informed initiatives | Product opportunities governed as a portfolio with lifecycle management; conflicts detected; outcomes tracked; no auto-promotion |
 | 56 | Controlled Ecosystem Readiness Layer | Prepare the platform for eventual ecosystem exposure — capability inventory, exposure readiness assessment, safety prerequisites, trust model foundation — without activating any external marketplace | Ecosystem readiness assessed and documented; exposure prerequisites defined; trust model designed; marketplace remains frozen |
 
-### Why 55–56 are committed
+### Why 56 is committed
 
-These sprints follow the natural progression: with product intelligence now operational (54), the next step is governing the opportunities it produces (55), then preparing for external exposure (56). They reuse existing AxionOS philosophy and Agent OS planes without expansion.
+With product intelligence now operational (54) and opportunity governance in place (55), the next step is preparing for external exposure (56). It reuses existing AxionOS philosophy and Agent OS planes without expansion.
 
 ---
 
@@ -204,7 +206,7 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 | F | Institutional Convergence Memory | 51 | ✅ Complete |
 | G | Operating Profiles & Policy Packs | 52 | ✅ Complete |
 | H | Product Intelligence Entry | 53 | ✅ Complete |
-| I | Product-Intelligent Expansion | 54–56 | 📋 Committed |
+| I | Product-Intelligent Expansion | 54–56 | 📋 Committed (54–55 ✅, 56 📋) |
 | J | Trusted Ecosystem Foundation | 57–59 | 🔮 Reserved |
 | K | Controlled Ecosystem Activation | 60–62 | 🔮 Reserved |
 | L | System Roundness & Operating Completion | 63–65 | 🔮 Reserved |
@@ -225,7 +227,8 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 | Operating Profiles | 52 | ✅ Complete | Operating profiles & policy packs: reusable, governed, versioned profiles |
 | Product Intelligence | 53 | ✅ Complete | Product intelligence entry: bounded, advisory-first product signals + opportunities |
 | Product Ops | 54 | ✅ Complete | Product intelligence operations: benchmarking, quality calibration, correlations, recommendations |
-| Product-Intelligent Expansion | 55–56 | 📋 Committed | Opportunity governance → ecosystem readiness |
+| Product Opp Portfolio | 55 | ✅ Complete | Product opportunity portfolio governance: ranking, conflicts, capacity, decisions, outcomes |
+| Product-Intelligent Expansion | 56 | 📋 Committed | Controlled ecosystem readiness |
 | Trusted Ecosystem Foundation | 57–59 | 🔮 Reserved | Capability exposure → trust/admission → ecosystem simulation |
 | Controlled Ecosystem Activation | 60–62 | 🔮 Reserved | Marketplace pilot → capability registry → multi-party governance |
 | System Roundness | 63–65 | 🔮 Reserved | Outcome assurance → canon integrity → operating completion |
@@ -236,7 +239,7 @@ After Sprint 65, AxionOS enters a **sustained operating mode** — improvements 
 
 > **Full module inventory:** [AGENTS.md](AGENTS.md) · **Architecture details:** [ARCHITECTURE.md](ARCHITECTURE.md)
 
-All 39 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, the institutional convergence memory layer, the operating profiles layer, the product intelligence entry layer, and the product intelligence operations layer.
+All 40 architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the platform convergence layer, the convergence governance layer, the institutional convergence memory layer, the operating profiles layer, the product intelligence entry layer, the product intelligence operations layer, and the product opportunity portfolio governance layer.
 
 ### Frozen Areas
 
@@ -266,8 +269,8 @@ All 39 architectural layers are operational. The kernel includes the 32-stage de
 
 ## Governing Principle
 
-> Fifty-four sprints complete. The platform supports product intelligence operations with cross-tenant benchmarking, signal quality calibration, product-architecture and product-profile correlations, and advisory-first operational recommendations.
-> Next committed arc: Sprints 55–56 — product opportunity portfolio governance, controlled ecosystem readiness.
+> Fifty-five sprints complete. The platform supports product opportunity portfolio governance with ranking, conflict detection, capacity-aware prioritization, and outcome tracking.
+> Next committed sprint: Sprint 56 — controlled ecosystem readiness.
 > Reserved horizon: Sprints 57–65 — trusted ecosystem foundation, controlled activation, system roundness and operating completion.
 > Round-enough target: Sprint 65 — first complete, internally coherent operating canon.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.

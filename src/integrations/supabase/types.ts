@@ -8521,6 +8521,463 @@ export type Database = {
           },
         ]
       }
+      product_opportunity_capacity_models: {
+        Row: {
+          assumptions: Json | null
+          capacity_headroom_score: number | null
+          capacity_scope: string
+          created_at: string
+          current_active_count: number | null
+          id: string
+          max_concurrent_promotions: number | null
+          organization_id: string
+          queue_pressure_score: number | null
+          resource_utilization_score: number | null
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json | null
+          capacity_headroom_score?: number | null
+          capacity_scope?: string
+          created_at?: string
+          current_active_count?: number | null
+          id?: string
+          max_concurrent_promotions?: number | null
+          organization_id: string
+          queue_pressure_score?: number | null
+          resource_utilization_score?: number | null
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json | null
+          capacity_headroom_score?: number | null
+          capacity_scope?: string
+          created_at?: string
+          current_active_count?: number | null
+          id?: string
+          max_concurrent_promotions?: number | null
+          organization_id?: string
+          queue_pressure_score?: number | null
+          resource_utilization_score?: number | null
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_opportunity_capacity_models_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_opportunity_capacity_models_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_opportunity_conflicts: {
+        Row: {
+          affected_items: Json
+          cannibalization_score: number | null
+          confidence_score: number | null
+          conflict_type: string
+          created_at: string
+          description: string | null
+          evidence_links: Json | null
+          id: string
+          organization_id: string
+          overlap_score: number | null
+          portfolio_id: string | null
+          recommended_resolution: string | null
+          severity: string
+          status: string
+        }
+        Insert: {
+          affected_items?: Json
+          cannibalization_score?: number | null
+          confidence_score?: number | null
+          conflict_type?: string
+          created_at?: string
+          description?: string | null
+          evidence_links?: Json | null
+          id?: string
+          organization_id: string
+          overlap_score?: number | null
+          portfolio_id?: string | null
+          recommended_resolution?: string | null
+          severity?: string
+          status?: string
+        }
+        Update: {
+          affected_items?: Json
+          cannibalization_score?: number | null
+          confidence_score?: number | null
+          conflict_type?: string
+          created_at?: string
+          description?: string | null
+          evidence_links?: Json | null
+          id?: string
+          organization_id?: string
+          overlap_score?: number | null
+          portfolio_id?: string | null
+          recommended_resolution?: string | null
+          severity?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_opportunity_conflicts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_opportunity_conflicts_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "product_opportunity_portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_opportunity_decisions: {
+        Row: {
+          created_at: string
+          decision_status: string
+          decision_type: string
+          evidence_links: Json | null
+          id: string
+          item_id: string | null
+          organization_id: string
+          portfolio_id: string | null
+          rationale: string | null
+          review_notes: string | null
+          reviewer_ref: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          decision_status?: string
+          decision_type?: string
+          evidence_links?: Json | null
+          id?: string
+          item_id?: string | null
+          organization_id: string
+          portfolio_id?: string | null
+          rationale?: string | null
+          review_notes?: string | null
+          reviewer_ref?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          decision_status?: string
+          decision_type?: string
+          evidence_links?: Json | null
+          id?: string
+          item_id?: string | null
+          organization_id?: string
+          portfolio_id?: string | null
+          rationale?: string | null
+          review_notes?: string | null
+          reviewer_ref?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_opportunity_decisions_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "product_opportunity_portfolio_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_opportunity_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_opportunity_decisions_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "product_opportunity_portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_opportunity_outcomes: {
+        Row: {
+          created_at: string
+          decision_id: string | null
+          evidence_links: Json | null
+          expected_outcomes: Json | null
+          false_positive_flag: boolean | null
+          id: string
+          item_id: string | null
+          organization_id: string
+          outcome_status: string
+          portfolio_decision_quality_score: number | null
+          portfolio_id: string | null
+          portfolio_outcome_accuracy_score: number | null
+          realized_outcomes: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          decision_id?: string | null
+          evidence_links?: Json | null
+          expected_outcomes?: Json | null
+          false_positive_flag?: boolean | null
+          id?: string
+          item_id?: string | null
+          organization_id: string
+          outcome_status?: string
+          portfolio_decision_quality_score?: number | null
+          portfolio_id?: string | null
+          portfolio_outcome_accuracy_score?: number | null
+          realized_outcomes?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          decision_id?: string | null
+          evidence_links?: Json | null
+          expected_outcomes?: Json | null
+          false_positive_flag?: boolean | null
+          id?: string
+          item_id?: string | null
+          organization_id?: string
+          outcome_status?: string
+          portfolio_decision_quality_score?: number | null
+          portfolio_id?: string | null
+          portfolio_outcome_accuracy_score?: number | null
+          realized_outcomes?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_opportunity_outcomes_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "product_opportunity_decisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_opportunity_outcomes_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "product_opportunity_portfolio_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_opportunity_outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_opportunity_outcomes_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "product_opportunity_portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_opportunity_portfolio_items: {
+        Row: {
+          assumptions: Json | null
+          cannibalization_score: number | null
+          capacity_pressure_score: number | null
+          confidence_score: number | null
+          conflict_score: number | null
+          created_at: string
+          deferral_justification_score: number | null
+          evidence_links: Json | null
+          expected_value_score: number | null
+          feasibility_score: number | null
+          governance_state: string
+          id: string
+          linked_architecture_correlation_id: string | null
+          linked_benchmark_id: string | null
+          linked_profile_correlation_id: string | null
+          linked_recommendation_id: string | null
+          opportunity_ref: Json
+          organization_id: string
+          overlap_score: number | null
+          portfolio_id: string
+          portfolio_priority_score: number | null
+          promotion_readiness_score: number | null
+          rationale: string[] | null
+          strategic_fit_score: number | null
+          updated_at: string
+          watchlist_relevance_score: number | null
+          workspace_id: string | null
+        }
+        Insert: {
+          assumptions?: Json | null
+          cannibalization_score?: number | null
+          capacity_pressure_score?: number | null
+          confidence_score?: number | null
+          conflict_score?: number | null
+          created_at?: string
+          deferral_justification_score?: number | null
+          evidence_links?: Json | null
+          expected_value_score?: number | null
+          feasibility_score?: number | null
+          governance_state?: string
+          id?: string
+          linked_architecture_correlation_id?: string | null
+          linked_benchmark_id?: string | null
+          linked_profile_correlation_id?: string | null
+          linked_recommendation_id?: string | null
+          opportunity_ref?: Json
+          organization_id: string
+          overlap_score?: number | null
+          portfolio_id: string
+          portfolio_priority_score?: number | null
+          promotion_readiness_score?: number | null
+          rationale?: string[] | null
+          strategic_fit_score?: number | null
+          updated_at?: string
+          watchlist_relevance_score?: number | null
+          workspace_id?: string | null
+        }
+        Update: {
+          assumptions?: Json | null
+          cannibalization_score?: number | null
+          capacity_pressure_score?: number | null
+          confidence_score?: number | null
+          conflict_score?: number | null
+          created_at?: string
+          deferral_justification_score?: number | null
+          evidence_links?: Json | null
+          expected_value_score?: number | null
+          feasibility_score?: number | null
+          governance_state?: string
+          id?: string
+          linked_architecture_correlation_id?: string | null
+          linked_benchmark_id?: string | null
+          linked_profile_correlation_id?: string | null
+          linked_recommendation_id?: string | null
+          opportunity_ref?: Json
+          organization_id?: string
+          overlap_score?: number | null
+          portfolio_id?: string
+          portfolio_priority_score?: number | null
+          promotion_readiness_score?: number | null
+          rationale?: string[] | null
+          strategic_fit_score?: number | null
+          updated_at?: string
+          watchlist_relevance_score?: number | null
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_opportunity_portfolio_items_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_opportunity_portfolio_items_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "product_opportunity_portfolios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_opportunity_portfolio_items_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_opportunity_portfolios: {
+        Row: {
+          created_at: string
+          deferred_count: number | null
+          evidence_links: Json | null
+          id: string
+          lifecycle_status: string
+          monitored_count: number | null
+          organization_id: string
+          portfolio_balance_score: number | null
+          portfolio_name: string
+          portfolio_scope_id: string | null
+          portfolio_scope_type: string
+          promoted_count: number | null
+          rejected_count: number | null
+          total_items: number | null
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          deferred_count?: number | null
+          evidence_links?: Json | null
+          id?: string
+          lifecycle_status?: string
+          monitored_count?: number | null
+          organization_id: string
+          portfolio_balance_score?: number | null
+          portfolio_name?: string
+          portfolio_scope_id?: string | null
+          portfolio_scope_type?: string
+          promoted_count?: number | null
+          rejected_count?: number | null
+          total_items?: number | null
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          deferred_count?: number | null
+          evidence_links?: Json | null
+          id?: string
+          lifecycle_status?: string
+          monitored_count?: number | null
+          organization_id?: string
+          portfolio_balance_score?: number | null
+          portfolio_name?: string
+          portfolio_scope_id?: string | null
+          portfolio_scope_type?: string
+          promoted_count?: number | null
+          rejected_count?: number | null
+          total_items?: number | null
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_opportunity_portfolios_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_opportunity_portfolios_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_plans: {
         Row: {
           created_at: string
