@@ -384,7 +384,6 @@ export default function Observability() {
           <TabsContent value="product-intel" className="mt-4">
             <ProductIntelligenceDashboard />
           </TabsContent>
-          </TabsContent>
 
           {/* ===== OPERATING PROFILES ===== */}
           <TabsContent value="op-profiles" className="mt-4">
