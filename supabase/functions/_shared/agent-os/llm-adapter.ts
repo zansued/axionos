@@ -388,7 +388,7 @@ export interface LLMAdapterConfig {
 }
 
 export const DEFAULT_LLM_ADAPTER_CONFIG: LLMAdapterConfig = {
-  default_model: "google/gemini-2.5-flash",
+  default_model: "deepseek-chat",
   default_temperature: 0.7,
   default_max_tokens: 4096,
   default_timeout_ms: 30_000,
@@ -397,8 +397,8 @@ export const DEFAULT_LLM_ADAPTER_CONFIG: LLMAdapterConfig = {
   cost_tracking_enabled: true,
   fallback_enabled: true,
   fallback_chain: [
-    "google/gemini-2.5-flash",
-    "google/gemini-2.5-flash-lite",
+    "deepseek-chat",
+    "gpt-4o-mini",
   ],
 };
 
