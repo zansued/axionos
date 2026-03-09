@@ -229,11 +229,18 @@ async function executeSubjob(
       return result;
     }
     case "architecture.dependencies": {
-      // Use COMPACT summaries instead of full JSON to reduce input from ~7k to ~1.5k tokens
-      const compactSys = compactSystemArchSummary(systemResult);
-      const compactData = compactDataArchSummary(completedResults["architecture.data"] || {});
-      const compactApi = compactApiArchSummary(completedResults["architecture.api"] || {});
-      const p = dependencyPlannerPrompt(projectContext, compactSys, compactData, compactApi);
+      // Build minimal intermediate summary instead of forwarding raw artifacts
+      const intermediateSummary = buildIntermediateSummary(projectContext, systemResult);
+      const dataResult = completedResults["architecture.data"] || {};
+      const apiResult = completedResults["architecture.api"] || {};
+      // Enrich summary with core entity/endpoint names
+      const enrichedSummary = {
+        ...intermediateSummary,
+        tables: ((dataResult.tables as any[]) || []).slice(0, 5).map((t: any) => t.name),
+        endpoints: ((apiResult.endpoints as any[]) || []).slice(0, 6).map((e: any) => `${e.method} ${e.path}`),
+        edge_functions: ((apiResult.edge_functions as any[]) || []).slice(0, 3).map((f: any) => f.name),
+      };
+      const p = dependencyPlannerPrompt(projectContext, JSON.stringify(enrichedSummary));
       const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, false, {
         stage: "architecture.dependencies",
         organizationId: executionMeta.organizationId,
