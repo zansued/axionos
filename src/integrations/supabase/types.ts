@@ -8078,6 +8078,147 @@ export type Database = {
           },
         ]
       }
+      decision_explanations: {
+        Row: {
+          decision_id: string
+          explanation_content: Json
+          explanation_type: string
+          generated_at: string
+          id: string
+          organization_id: string
+        }
+        Insert: {
+          decision_id: string
+          explanation_content?: Json
+          explanation_type?: string
+          generated_at?: string
+          id?: string
+          organization_id: string
+        }
+        Update: {
+          decision_id?: string
+          explanation_content?: Json
+          explanation_type?: string
+          generated_at?: string
+          id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "decision_explanations_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_decisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "decision_explanations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      decision_reviews: {
+        Row: {
+          created_at: string
+          decision_id: string
+          id: string
+          organization_id: string
+          outcome_alignment: number | null
+          review_action: string
+          review_notes: string
+          reviewer_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          decision_id: string
+          id?: string
+          organization_id: string
+          outcome_alignment?: number | null
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          decision_id?: string
+          id?: string
+          organization_id?: string
+          outcome_alignment?: number | null
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "decision_reviews_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_decisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "decision_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      decision_signal_links: {
+        Row: {
+          contribution_weight: number
+          created_at: string
+          decision_id: string
+          id: string
+          organization_id: string
+          signal_source_id: string | null
+          signal_source_table: string | null
+          signal_summary: string
+          signal_type: string
+        }
+        Insert: {
+          contribution_weight?: number
+          created_at?: string
+          decision_id: string
+          id?: string
+          organization_id: string
+          signal_source_id?: string | null
+          signal_source_table?: string | null
+          signal_summary?: string
+          signal_type?: string
+        }
+        Update: {
+          contribution_weight?: number
+          created_at?: string
+          decision_id?: string
+          id?: string
+          organization_id?: string
+          signal_source_id?: string | null
+          signal_source_table?: string | null
+          signal_summary?: string
+          signal_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "decision_signal_links_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_decisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "decision_signal_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       delivery_assurance_outcomes: {
         Row: {
           assumptions: Json
@@ -13614,6 +13755,108 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_decisions: {
+        Row: {
+          approval_posture: Database["public"]["Enums"]["approval_posture"]
+          audit_metadata: Json
+          confidence_posture: Database["public"]["Enums"]["confidence_posture"]
+          confidence_score: number
+          contributing_doctrine_count: number
+          contributing_memory_count: number
+          created_at: string
+          decision_class: Database["public"]["Enums"]["decision_class"]
+          decision_context: Json
+          decision_description: string
+          decision_key: string
+          decision_title: string
+          escalation_reason: string | null
+          id: string
+          organization_id: string
+          recommendation: string
+          recommendation_rationale: string
+          resolved_at: string | null
+          resolved_by: string | null
+          risk_posture: string
+          risk_score: number
+          status: Database["public"]["Enums"]["decision_status"]
+          trade_offs: Json
+          uncertainty_notes: string | null
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          approval_posture?: Database["public"]["Enums"]["approval_posture"]
+          audit_metadata?: Json
+          confidence_posture?: Database["public"]["Enums"]["confidence_posture"]
+          confidence_score?: number
+          contributing_doctrine_count?: number
+          contributing_memory_count?: number
+          created_at?: string
+          decision_class?: Database["public"]["Enums"]["decision_class"]
+          decision_context?: Json
+          decision_description?: string
+          decision_key?: string
+          decision_title?: string
+          escalation_reason?: string | null
+          id?: string
+          organization_id: string
+          recommendation?: string
+          recommendation_rationale?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          risk_posture?: string
+          risk_score?: number
+          status?: Database["public"]["Enums"]["decision_status"]
+          trade_offs?: Json
+          uncertainty_notes?: string | null
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          approval_posture?: Database["public"]["Enums"]["approval_posture"]
+          audit_metadata?: Json
+          confidence_posture?: Database["public"]["Enums"]["confidence_posture"]
+          confidence_score?: number
+          contributing_doctrine_count?: number
+          contributing_memory_count?: number
+          created_at?: string
+          decision_class?: Database["public"]["Enums"]["decision_class"]
+          decision_context?: Json
+          decision_description?: string
+          decision_key?: string
+          decision_title?: string
+          escalation_reason?: string | null
+          id?: string
+          organization_id?: string
+          recommendation?: string
+          recommendation_rationale?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          risk_posture?: string
+          risk_score?: number
+          status?: Database["public"]["Enums"]["decision_status"]
+          trade_offs?: Json
+          uncertainty_notes?: string | null
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_decisions_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
@@ -25620,11 +25863,35 @@ export type Database = {
         | "fix_agent"
         | "release_agent"
       agent_status: "active" | "inactive"
+      approval_posture:
+        | "advisory_only"
+        | "suggested_approval"
+        | "requires_review"
+        | "requires_approval"
+        | "escalate_to_admin"
       autonomy_level:
         | "recommend_only"
         | "auto_execute_notify"
         | "auto_execute_bounded"
         | "requires_approval"
+      confidence_posture: "very_low" | "low" | "moderate" | "high" | "very_high"
+      decision_class:
+        | "governance_recommendation"
+        | "routing_decision_support"
+        | "capability_activation_posture"
+        | "benchmark_escalation"
+        | "intervention_recommendation"
+        | "bounded_autonomy_decision"
+        | "promotion_guidance"
+        | "delivery_readiness"
+      decision_status:
+        | "draft"
+        | "pending"
+        | "accepted"
+        | "rejected"
+        | "deferred"
+        | "escalated"
+        | "archived"
       doctrine_lifecycle:
         | "draft"
         | "candidate"
@@ -25918,11 +26185,38 @@ export const Constants = {
         "release_agent",
       ],
       agent_status: ["active", "inactive"],
+      approval_posture: [
+        "advisory_only",
+        "suggested_approval",
+        "requires_review",
+        "requires_approval",
+        "escalate_to_admin",
+      ],
       autonomy_level: [
         "recommend_only",
         "auto_execute_notify",
         "auto_execute_bounded",
         "requires_approval",
+      ],
+      confidence_posture: ["very_low", "low", "moderate", "high", "very_high"],
+      decision_class: [
+        "governance_recommendation",
+        "routing_decision_support",
+        "capability_activation_posture",
+        "benchmark_escalation",
+        "intervention_recommendation",
+        "bounded_autonomy_decision",
+        "promotion_guidance",
+        "delivery_readiness",
+      ],
+      decision_status: [
+        "draft",
+        "pending",
+        "accepted",
+        "rejected",
+        "deferred",
+        "escalated",
+        "archived",
       ],
       doctrine_lifecycle: [
         "draft",

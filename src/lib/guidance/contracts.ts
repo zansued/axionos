@@ -517,6 +517,38 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
     },
     approvalPosture: "optional",
   },
+  {
+    key: "decision-engine",
+    title: { pt: "Motor de Decisão Institucional", en: "Decision Engine" },
+    description: {
+      pt: "Suporte a decisões institucional usando memória, doutrina, resultados e sinais de governança para recomendações consistentes.",
+      en: "Institutional decision support using memory, doctrine, outcomes, and governance signals for consistent recommendations.",
+    },
+    audience: { pt: "Operadores e administradores", en: "Operators and administrators" },
+    surface: "workspace",
+    actions: [
+      { pt: "Revisar recomendações pendentes", en: "Review pending recommendations" },
+      { pt: "Inspecionar sinais contribuintes e trade-offs", en: "Inspect contributing signals and trade-offs" },
+      { pt: "Aceitar, rejeitar, adiar ou escalar decisões", en: "Accept, reject, defer, or escalate decisions" },
+    ],
+    whenRelevant: {
+      pt: "Quando houver recomendações de decisão pendentes baseadas em inteligência institucional.",
+      en: "When there are pending decision recommendations based on institutional intelligence.",
+    },
+    whenIgnorable: {
+      pt: "Se não há decisões pendentes de revisão.",
+      en: "If there are no decisions pending review.",
+    },
+    nextStep: {
+      pt: "Revisar decisões de alta confiança e resolver decisões escaladas.",
+      en: "Review high-confidence decisions and resolve escalated decisions.",
+    },
+    approvalPosture: "required",
+    approvalHint: {
+      pt: "Decisões sensíveis e estruturais exigem aprovação humana explícita.",
+      en: "Sensitive and structural decisions require explicit human approval.",
+    },
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────
