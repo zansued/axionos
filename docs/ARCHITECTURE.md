@@ -1070,6 +1070,10 @@ With 106 sprints complete, all blocks from Foundation through Sovereign Institut
 
 **Architectural contribution:** Institutional memory constitution (amendment governance, protection rules, memory sovereignty), sovereign decision rights orchestration (authority delegation, escalation), dependency sovereignty & external reliance governance (substitution readiness, sovereignty posture), strategic succession & long-horizon continuity (knowledge concentration detection, handoff orchestration, transition risk assessment).
 
+#### Block W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
+
+**Architectural contribution (planned):** Multi-horizon strategic alignment engine (short/medium/long-term coordination, urgency vs strategy governance), institutional tradeoff arbitration system (explicit sacrifice tracking, auditable tradeoff objects), mission integrity & drift prevention (telos compass, strategic/moral/operational drift detection), civilizational continuity simulation layer (long-horizon scenario modeling, regulatory/technology/capacity shift foresight).
+
 ### Governing Constraint
 
 Advisory-first, governance-before-autonomy. No autonomous architecture mutation. Internal sophistication serves the product experience — it does not replace it. All future blocks must preserve rollback capability, tenant isolation, and human authority over structural change.
