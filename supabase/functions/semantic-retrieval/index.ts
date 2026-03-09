@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { runSemanticRetrieval } from "../_shared/semantic-retrieval/semantic-retrieval-engine.ts";
 import { evaluateRetrievalQuality } from "../_shared/semantic-retrieval/semantic-retrieval-quality-evaluator.ts";
 import { getIndexStatuses, rebuildIndex, freezeIndex } from "../_shared/semantic-retrieval/semantic-retrieval-index-manager.ts";
