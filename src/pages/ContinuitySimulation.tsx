@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FlaskConical, AlertTriangle, Activity, Shield, Eye, Layers, Play, BookOpen } from "lucide-react";
 import { toast } from "sonner";
-import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoreBar, ScoringTransparencyCard } from "@/components/block-w/BlockWShared";
+import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoreBar, ScoringTransparencyCard, CausalModifierCard } from "@/components/block-w/BlockWShared";
 
 async function invokeEngine(orgId: string, action: string) {
   const { data: { session } } = await supabase.auth.getSession();
