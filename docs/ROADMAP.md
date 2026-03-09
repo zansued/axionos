@@ -59,17 +59,76 @@
 
 ## Strategic Directive
 
-AxionOS has completed **94 implementation sprints** spanning the full capability arc from deterministic execution through architecture research and governed promotion. The internal architecture is mature, coherent, and self-governing. All planned and reserved blocks have been implemented.
+AxionOS has completed **94 implementation sprints** spanning the full capability arc from deterministic execution through architecture research and governed promotion. The internal architecture is mature, coherent, and self-governing. All planned and reserved blocks have been implemented conceptually, bringing the platform to its new strategic frontier.
 
 **Post-Sprint 94 Strategic Position:**
 
-The platform has reached its **full canon implementation**. Every block from Foundation through Block S (Research Sandbox for Architecture Evolution) is complete. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, and architecture research — is mature and operational.
+The platform has reached its **full canon implementation**. Every block from Foundation through Block S (Research Sandbox for Architecture Evolution) is conceptually complete in the roadmap. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, and architecture research — is mature and operational.
 
-The strategic direction achieved through Sprint 94 is the **complete realization of the governed self-improving software factory**:
+---
 
-> **"From idea to delivered software."**
+## AxionOS Next Level Thesis
 
-Internal sophistication serves the visible product experience. The user-facing journey is clear, legible, and governed. The platform now operates with evidence-governed improvement, advanced multi-agent coordination, a governed capability ecosystem, delivery optimization, distributed runtime, and architecture research capabilities.
+AxionOS is entering a new maturity phase: **Governed Intelligence & Decision Maturity**.
+
+This means the next level of AxionOS is not simply "more modules" or "more internal complexity." It is the conversion of existing sophistication into four higher-order capabilities:
+- **explain better**
+- **decide better**
+- **learn better**
+- **coordinate better**
+
+**Core Thesis:** AxionOS must evolve from a governed software factory into a governed intelligence operating system for software delivery, decision support, and evidence-based system evolution.
+
+What this new phase prioritizes:
+- contextual guidance
+- contextual copilot systems
+- evidence-governed learning
+- role-aware decision support
+- stronger routing and arbitration
+- better coordination quality
+- clearer governance-aware platform intelligence
+
+What this phase does NOT prioritize right now:
+- open marketplace expansion
+- premature distributed runtime complexity
+- autonomous architecture mutation
+- theatrical autonomy without governance
+
+### Thaw Strategy
+
+To safely achieve Governed Intelligence & Decision Maturity, we employ a phased "thaw" of our planned and reserved blocks. This ensures we do not activate advanced autonomy without corresponding governance.
+
+- **Active thaw now:**
+  - Block N (Sprints 72–74), Evidence-Governed Improvement Loop
+- **Partial thaw next:**
+  - Sprint 75, Role Arbitration & Capability Routing 2.0 (The first safe coordination thaw of Block O)
+- **Still reserved:**
+  - deeper multi-agent debate (rest of Block O)
+  - shared working memory (rest of Block O)
+  - bounded swarm execution (rest of Block O)
+  - marketplace expansion (Block P)
+  - advanced distributed runtime (Block R)
+  - architecture evolution sandbox (Block S)
+  - autonomous delivery optimization (Block Q)
+
+```mermaid
+flowchart TD
+    subgraph Core["Operating Baseline"]
+        A[Governed Software Delivery]
+    end
+    subgraph NextLevel["Governed Intelligence & Decision Maturity"]
+        B[Guidance & Copilot]
+        C[Evidence-Governed Improvement<br/><b>Active Thaw Now</b>]
+        D[Routing & Arbitration<br/><b>Partial Thaw Next</b>]
+    end
+    subgraph Future["Later Horizons"]
+        E[Later Coordination / Ecosystem /<br/>Runtime / Research<br/><b>Still Reserved</b>]
+    end
+    Core --> NextLevel
+    B --> C
+    C --> D
+    D --> E
+```
 
 **Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy.
 
