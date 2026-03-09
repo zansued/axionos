@@ -13159,6 +13159,262 @@ export type Database = {
           },
         ]
       }
+      institutional_memories: {
+        Row: {
+          confidence_score: number
+          contributing_signals: Json
+          created_at: string
+          created_by: string | null
+          id: string
+          last_reviewed_at: string | null
+          last_reviewed_by: string | null
+          lifecycle_status: string
+          memory_description: string
+          memory_key: string
+          memory_payload: Json
+          memory_scope: string
+          memory_title: string
+          memory_type: string
+          organization_id: string
+          recurrence_count: number
+          reuse_potential: string
+          review_status: string
+          uncertainty_notes: string | null
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          confidence_score?: number
+          contributing_signals?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_reviewed_at?: string | null
+          last_reviewed_by?: string | null
+          lifecycle_status?: string
+          memory_description?: string
+          memory_key?: string
+          memory_payload?: Json
+          memory_scope?: string
+          memory_title?: string
+          memory_type?: string
+          organization_id: string
+          recurrence_count?: number
+          reuse_potential?: string
+          review_status?: string
+          uncertainty_notes?: string | null
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          confidence_score?: number
+          contributing_signals?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_reviewed_at?: string | null
+          last_reviewed_by?: string | null
+          lifecycle_status?: string
+          memory_description?: string
+          memory_key?: string
+          memory_payload?: Json
+          memory_scope?: string
+          memory_title?: string
+          memory_type?: string
+          organization_id?: string
+          recurrence_count?: number
+          reuse_potential?: string
+          review_status?: string
+          uncertainty_notes?: string | null
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_memories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_memories_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_memory_lineage: {
+        Row: {
+          created_at: string
+          from_memory_id: string
+          id: string
+          organization_id: string
+          relationship_notes: string | null
+          relationship_strength: number
+          relationship_type: string
+          to_memory_id: string
+        }
+        Insert: {
+          created_at?: string
+          from_memory_id: string
+          id?: string
+          organization_id: string
+          relationship_notes?: string | null
+          relationship_strength?: number
+          relationship_type?: string
+          to_memory_id: string
+        }
+        Update: {
+          created_at?: string
+          from_memory_id?: string
+          id?: string
+          organization_id?: string
+          relationship_notes?: string | null
+          relationship_strength?: number
+          relationship_type?: string
+          to_memory_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_memory_lineage_from_memory_id_fkey"
+            columns: ["from_memory_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_memories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_memory_lineage_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_memory_lineage_to_memory_id_fkey"
+            columns: ["to_memory_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_memories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_memory_reviews: {
+        Row: {
+          confidence_adjustment: number | null
+          created_at: string
+          id: string
+          lifecycle_recommendation: string | null
+          memory_id: string
+          organization_id: string
+          resolved_at: string | null
+          reuse_recommendation: string | null
+          review_notes: string | null
+          review_status: string
+          review_type: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          confidence_adjustment?: number | null
+          created_at?: string
+          id?: string
+          lifecycle_recommendation?: string | null
+          memory_id: string
+          organization_id: string
+          resolved_at?: string | null
+          reuse_recommendation?: string | null
+          review_notes?: string | null
+          review_status?: string
+          review_type?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          confidence_adjustment?: number | null
+          created_at?: string
+          id?: string
+          lifecycle_recommendation?: string | null
+          memory_id?: string
+          organization_id?: string
+          resolved_at?: string | null
+          reuse_recommendation?: string | null
+          review_notes?: string | null
+          review_status?: string
+          review_type?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_memory_reviews_memory_id_fkey"
+            columns: ["memory_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_memories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_memory_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_memory_sources: {
+        Row: {
+          contribution_notes: string | null
+          contribution_weight: number
+          created_at: string
+          id: string
+          memory_id: string
+          organization_id: string
+          source_id: string | null
+          source_key: string | null
+          source_table: string
+          source_type: string
+        }
+        Insert: {
+          contribution_notes?: string | null
+          contribution_weight?: number
+          created_at?: string
+          id?: string
+          memory_id: string
+          organization_id: string
+          source_id?: string | null
+          source_key?: string | null
+          source_table?: string
+          source_type?: string
+        }
+        Update: {
+          contribution_notes?: string | null
+          contribution_weight?: number
+          created_at?: string
+          id?: string
+          memory_id?: string
+          organization_id?: string
+          source_id?: string | null
+          source_key?: string | null
+          source_table?: string
+          source_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_memory_sources_memory_id_fkey"
+            columns: ["memory_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_memories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_memory_sources_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       institutional_outcome_assessments: {
         Row: {
           assumptions: Json
