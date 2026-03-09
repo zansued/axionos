@@ -1,7 +1,7 @@
 # AxionOS — Documentation Index
 
 > Single navigation point for all AxionOS documentation.
-> Last updated: 2026-03-08
+> Last updated: 2026-03-09
 
 ---
 
@@ -9,9 +9,9 @@
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
-| [ROADMAP.md](ROADMAP.md) | Strategic direction | Vision, maturity level, strategic directive, completed canon, post-65 direction, Block M definition |
+| [ROADMAP.md](ROADMAP.md) | Strategic direction | Vision, maturity level, strategic directive, completed canon, post-71 direction, Block N–S definitions |
 | [PLAN.md](PLAN.md) | Sprint execution | Canonical sprint ledger, phase grouping, completion status, capability verification, future canon guidance |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System structure | C4 diagrams, capability layers, containers, components, data flow, safety rules, product boundary model, tech stack |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | System structure | C4 diagrams, capability layers, containers, components, data flow, safety rules, product boundary model, role/surface model, tech stack |
 | [AGENTS.md](AGENTS.md) | Agent OS reference | 5 planes, 18 modules, agent types, contracts, safety boundaries, events |
 | [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md) | Pipeline product UX | Phase-by-phase user-visible behavior, inputs/outputs, control rules, definition of done |
 | [registry/sprints.yml](registry/sprints.yml) | Sprint metadata | Lightweight canonical sprint status registry |
@@ -24,9 +24,9 @@
 
 If prior chat history is unavailable, follow this sequence to re-establish context:
 
-1. **Read ROADMAP.md first** — understand current maturity, strategic direction, completed canon, post-65 direction, and Block M thesis
+1. **Read ROADMAP.md first** — understand current maturity, strategic direction, completed canon through Sprint 71, and Block N–S roadmap
 2. **Read PLAN.md next** — identify the current/next sprint, execution status, and future canon guidance
-3. **Use ARCHITECTURE.md** for structural context — layers, containers, data flow, product boundary model, forthcoming architectural direction
+3. **Use ARCHITECTURE.md** for structural context — layers, containers, data flow, product boundary model, role/surface model, forthcoming architectural direction
 4. **Use PIPELINE_CONTRACTS.md** for the visible journey contract — Idea → Discovery → Architecture → Engineering → Deploy
 5. **Use AGENTS.md** for Agent OS reference — only if agent system details are needed
 
@@ -34,21 +34,54 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
-- Sprints 1–65 are the completed first mature operating canon — do not casually reopen
-- Block M (66–70) is complete — user-visible product experience and delivery maturity
-- Block N (71–74) is the next planned block — evidence-governed improvement loop
+- Sprints 1–71 are the completed canon — do not casually reopen
+- Block N (72–74) is the next planned block — evidence-governed improvement loop
 - Blocks O–S (75–94) are reserved — do not treat as implemented
 - Do not collapse internal architecture and user-facing journey into the same surface
 
 ---
 
-## After Sprint 70 — What Changes Strategically
+## Product Thesis
 
-The platform has completed its **product-ready operating baseline** at Sprint 70. Block M (Product Experience & Delivery Maturity) is complete. The internal architecture and user-facing product experience are mature.
+AxionOS is a **governed self-improving software factory**.
+
+The platform promise remains: **from idea to delivered software**.
+
+The default user-facing journey remains:
+> Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software
+
+---
+
+## Canonical Boundary Model
+
+| # | Layer | Description |
+|---|-------|-------------|
+| 1 | **Internal System Architecture** | Engines, governance, intelligence, memory, calibration, evidence loops, benchmarking |
+| 2 | **Advanced Operator Surface** | Workspace governance, evidence review, candidates, benchmarks, delivery outcomes, audit |
+| 3 | **Platform Governance Surface** | Routing, debates, working memory, swarm, marketplace, meta-agents, calibration, observability |
+| 4 | **User-Facing Product Surface** | Dashboard, Journey, Onboarding, Initiatives, Stories, Code, Deployments, AutoPilot |
+
+---
+
+## Role and Surface Access Model
+
+| Role | Product | Workspace | Platform |
+|------|---------|-----------|----------|
+| End User | ✅ | — | — |
+| Operator | ✅ | ✅ | — |
+| Tenant Owner | ✅ | ✅ | — |
+| Platform Reviewer | ✅ | ✅ | ✅ |
+| Platform Admin | ✅ | ✅ | ✅ |
+
+---
+
+## After Sprint 71 — What Changes Strategically
+
+The platform has completed its **product-ready operating baseline** at Sprint 70, extended by Sprint 71 (Governed Extensibility).
 
 The next strategic arc is **governed self-improvement and ecosystem evolution**:
 
-- **Block N (71–74, Planned)** — Evidence-Governed Improvement Loop: turning operational evidence into bounded improvement proposals under governance
+- **Block N (72–74, Planned)** — Evidence-Governed Improvement Loop: turning operational evidence into bounded improvement proposals under governance
 - **Block O (75–78, Reserved)** — Advanced Multi-Agent Coordination
 - **Block P (79–82, Reserved)** — Governed Capability Ecosystem & Early Marketplace
 - **Block Q (83–86, Reserved)** — Delivery Optimization & Outcome Assurance 2.0
@@ -59,18 +92,18 @@ Internal sophistication remains critical. Future blocks deepen it through eviden
 
 ---
 
-## How To Continue Safely After Sprint 70
+## How To Continue Safely After Sprint 71
 
-1. Read **ROADMAP.md** first for strategic direction and post-70 roadmap
+1. Read **ROADMAP.md** first for strategic direction and post-71 roadmap
 2. Read **PLAN.md** next for current and next sprint
-3. Use **ARCHITECTURE.md** for structural context and the product boundary model
+3. Use **ARCHITECTURE.md** for structural context, the product boundary model, and the role/surface model
 4. Use **PIPELINE_CONTRACTS.md** for the user-visible journey contract
 5. Use **AGENTS.md** for internal agent system reference only
 6. Implement future work **sprint by sprint** with human review
 7. Do **not** collapse internal architecture and user-facing journey into the same surface
-8. Do **not** casually reopen completed canon (Sprints 1–70) without deliberate review
+8. Do **not** casually reopen completed canon (Sprints 1–71) without deliberate review
 9. Internal layers are backstage support — the default product surface is the user journey
-10. Block N (Sprints 71–74) is the next planned block — scope each sprint before implementation
+10. Block N (Sprints 72–74) is the next planned block — scope each sprint before implementation
 
 ---
 
@@ -86,9 +119,21 @@ Internal sophistication remains critical. Future blocks deepen it through eviden
 
 ### Current Canon Boundaries
 
-- **Sprints 1–70** = canonical complete (first mature operating baseline + Block M: Product Experience & Delivery Maturity)
-- **Sprints 71–74** = planned (Block N: Evidence-Governed Improvement Loop)
+- **Sprints 1–71** = canonical complete (first mature operating baseline + Block M + Governed Extensibility)
+- **Sprints 72–74** = planned (Block N: Evidence-Governed Improvement Loop)
 - **Sprints 75–94** = reserved (Blocks O–S: future strategic horizon)
+
+---
+
+## Invariants
+
+- **advisory-first** — all intelligence outputs are recommendations
+- **governance before autonomy** — human approval for structural change
+- **rollback everywhere** — every change preserves rollback capability
+- **bounded adaptation** — all learning within declared envelopes
+- **human approval for structural change** — no autonomous architecture mutation
+- **tenant isolation** — all data scoped by organization_id with RLS
+- **no autonomous architecture mutation** — forbidden mutation families enforced
 
 ---
 

@@ -4,9 +4,9 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-09
-> **Current Sprint:** 94 (Human-Governed Architecture Promotion) — ✅ Complete
-> **Next Planned:** TBD
-> **Reserved Horizon:** Block S (Sprints 91–94) — ✅ Complete
+> **Current Sprint:** 71 (Governed Extensibility & Developer Experience Foundation) — ✅ Complete
+> **Next Planned:** Sprint 72 (Evidence Capture & Improvement Ledger) — 📋 Planned
+> **Reserved Horizon:** Blocks O–S (Sprints 75–94)
 
 ## Document Authority
 
@@ -32,7 +32,7 @@
 Sprints 1–70 represent the **completed product-ready operating canon** of AxionOS. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete.
 
 The next execution focus is **evidence-governed improvement** (Block N):
-- The internal architecture and product experience foundation are complete
+- The internal architecture and product experience foundation are complete through Sprint 71
 - Future sprints should deepen evidence-based learning, improvement proposal generation, and governed promotion
 - Future sprints should not casually reopen completed canon unless deliberate review requires it
 - Implementation continues one sprint at a time with human review before each
@@ -52,7 +52,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | 🔮 Reserved | Strategic direction defined, not yet scoped for implementation | Lightweight — name, block, and one-line purpose only |
 
 - **Current/next sprint** should be highly detailed before implementation begins
-- **Planned block** (Block N, Sprints 71–74) should be scoped sprint-by-sprint before implementation
+- **Planned block** (Block N, Sprints 72–74) should be scoped sprint-by-sprint before implementation
 - **Reserved horizon** (Blocks O–S, Sprints 75–94) should remain intentionally lightweight until promoted to planned
 - Reserved blocks should not be promoted without deliberate review
 
@@ -551,24 +551,7 @@ Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed
 
 ---
 
-## Sprint 72 — Evidence Capture & Improvement Ledger ✅ Complete
-
-Sprint 72 established the canonical evidence capture and improvement ledger layer for AxionOS. The system now captures, normalizes, links, and reviews operational evidence from validations, repairs, rollbacks, deployments, extensions, anomalies, and operator observations. A dedicated operator surface (`/improvement-ledger`) provides KPIs, filtered evidence lists, detail views with linked context, review history, and review controls. All evidence is tenant-isolated and auditable. No autonomous mutation is introduced.
-
-### Key Deliverables
-- `improvement_evidence` — canonical evidence table
-- `improvement_evidence_links` — context linking
-- `improvement_ledgers` — improvement grouping
-- `improvement_review_events` — review audit trail
-- `evidence-management` edge function (ingest, list, detail, link, review, archive, explain, ledger ops)
-- Operator-facing Improvement Ledger dashboard with KPIs, filters, detail drawer, and review controls
-
-### Strategic Meaning
-Sprint 72 begins the Evidence-Governed Improvement Loop (Block N). It provides the durable evidence foundation that future sprints (73–74) will use to generate bounded improvement proposals and track their outcomes.
-
----
-
-## Next Planned — Sprints 73–74: Evidence-Governed Improvement Loop — 📋 PLANNED
+## Next Planned — Block N: Evidence-Governed Improvement Loop (Sprints 72–74) — 📋 PLANNED
 
 > **Strategic direction:** [ROADMAP.md](ROADMAP.md)
 
@@ -576,8 +559,9 @@ Sprint 72 begins the Evidence-Governed Improvement Loop (Block N). It provides t
 
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 73 | TBD — Governed Testing & Promotion | N | 📋 Planned | Governed testing and promotion of improvement candidates |
-| 74 | TBD — Improvement Outcome Tracking | N | 📋 Planned | Outcome tracking and feedback for improvement cycles |
+| 72 | Evidence Capture & Improvement Ledger | N | 📋 Planned | Capture structured operational evidence from validations, repairs, rollbacks, extensions, anomalies, and operator signals |
+| 73 | Improvement Candidate Distillation Engine | N | 📋 Planned | Transform evidence into bounded, reviewable improvement candidates with provenance, recurrence signals, and triage workflow |
+| 74 | Sandbox Benchmarking & Promotion Governance | N | 📋 Planned | Evaluate candidates in sandbox conditions, compare against baseline, support human-governed promotion/rejection/deferral |
 
 **Canon constraints:** No autonomous architecture mutation. Human approval for structural change. Rollback everywhere. Bounded learning and promotion. Tenant isolation preserved.
 
@@ -785,22 +769,5 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Onboarding, Templates & Vertical Starters | 1 | 69 |
 | Adoption Intelligence & Customer Success | 1 | 70 |
 | Extension Management | 1 | 71 |
-| Evidence Management | 1 | 72 |
-| Candidate Distillation | 1 | 73 |
-| Benchmark Governance | 1 | 74 |
-| Agent Routing | 1 | 75 |
-| Agent Debate & Resolution | 1 | 76 |
-| Working Memory & Task-State | 1 | 77 |
-| Swarm Execution | 1 | 78 |
-| Capability Registry | 1 | 79 |
-| Capability Governance | 1 | 80 |
-| Pilot Marketplace | 1 | 81 |
-| Marketplace Outcomes | 1 | 82 |
-| Delivery Outcome Causality | 1 | 83 |
-| Post-Deploy Feedback Assimilation | 1 | 84 |
-| Reliability-Aware Delivery Tuning | 1 | 85 |
-| Outcome Assurance 2.0 | 1 | 86 |
-| Distributed Job Control Plane | 1 | 87 |
-| Cross-Region Execution & Recovery | 1 | 88 |
 | Support | 11 | Various |
-| **Total** | **~139** | |
+| **Total** | **~93** | |

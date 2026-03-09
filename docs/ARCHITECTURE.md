@@ -2,8 +2,8 @@
 
 > Technical architecture of the autonomous software engineering system.
 >
-> **Last updated:** 2026-03-08
-> **Current state:** Level 5 — Institutional Engineering Memory Platform. 54 architectural layers active (through Sprint 70). Block M complete. Next planned: Block N (Evidence-Governed Improvement Loop).
+> **Last updated:** 2026-03-09
+> **Current state:** Level 5 — Institutional Engineering Memory Platform. 54 architectural layers active (through Sprint 71). Block M complete. Sprint 71 (Governed Extensibility) complete. Next planned: Block N (Evidence-Governed Improvement Loop, Sprints 72–74).
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -625,7 +625,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
-> **Summary:** 70 sprints complete. 54 architectural layers active. Block M (Product Experience & Delivery Maturity) complete. Block N (Evidence-Governed Improvement Loop) is the next planned block.
+> **Summary:** 71 sprints complete. 54 architectural layers active. Sprint 71 (Governed Extensibility) complete. Block N (Evidence-Governed Improvement Loop, Sprints 72–74) is the next planned block.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
@@ -652,7 +652,7 @@ supabase/functions/
 | Controlled Ecosystem Activation (K) | 60–62 | ✅ Complete |
 | System Roundness & Operating Completion (L) | 63–65 | ✅ Complete |
 | Product Experience & Delivery Maturity (M) | 66–70 | ✅ Complete |
-| Evidence-Governed Improvement Loop (N) | 71–74 | 📋 Planned |
+| Evidence-Governed Improvement Loop (N) | 72–74 | 📋 Planned |
 | Advanced Multi-Agent Coordination (O) | 75–78 | 🔮 Reserved |
 | Governed Capability Ecosystem (P) | 79–82 | 🔮 Reserved |
 | Delivery Optimization (Q) | 83–86 | 🔮 Reserved |
@@ -878,24 +878,26 @@ supabase/functions/
 
 ## 16. Product Boundary Model
 
-AxionOS distinguishes three architectural surface layers. This distinction is critical for post-65 development:
+AxionOS distinguishes four architectural surface layers:
 
 | Surface Layer | Audience | Purpose | Examples |
 |---------------|----------|---------|----------|
 | **Internal System Architecture** | Platform engineers | Governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration | All 54 architectural layers, Agent OS modules, learning/repair/calibration engines |
 | **Advanced Operator Surface** | Operators / leads | Governance dashboards, risk posture, policy management, product ops, ecosystem readiness, audit | Operational observability tabs, governance reviews, policy frames, fitness dimensions |
-| **User-Facing Product Journey** | End users | Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software | Pipeline stages, progress indicators, approval gates, deploy status |
+| **Platform Governance Surface** | Platform reviewers / admins | Infrastructure controls, multi-tenant orchestration, advanced AI pipeline tooling | Routing, debates, working memory, swarm, marketplace, meta-agents, calibration, observability |
+| **User-Facing Product Surface** | End users | Dashboard, Journey, Onboarding, Initiatives, Stories, Code, Deployments, AutoPilot | Pipeline stages, progress indicators, approval gates, deploy status |
+
+### Role and Surface Access Model
+
+| Role | Product | Workspace | Platform |
+|------|---------|-----------|----------|
+| **End User** | ✅ | — | — |
+| **Operator** | ✅ | ✅ | — |
+| **Tenant Owner** | ✅ | ✅ | — |
+| **Platform Reviewer** | ✅ | ✅ | ✅ |
+| **Platform Admin** | ✅ | ✅ | ✅ |
 
 **Key principle:** Internal architecture powers the system. Operator surfaces expose governance and advanced controls. The **default product surface** should present the journey from idea to delivered software without unnecessary internal complexity.
-
-The user should always understand:
-- Where they are in the journey
-- What was generated at each step
-- What is next
-- What requires approval
-- What has been deployed
-
-Internal sophistication makes the product trustworthy. It does not need to be the default experience.
 
 ---
 
@@ -903,7 +905,7 @@ Internal sophistication makes the product trustworthy. It does not need to be th
 
 > **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-With 70 sprints complete and Block M (Product Experience & Delivery Maturity) delivered, the platform has achieved its first product-ready operating baseline. 54 architectural layers are active.
+With 71 sprints complete, Sprint 71 (Governed Extensibility) delivered, the platform has achieved its first product-ready operating baseline with governed extensibility. 54 architectural layers are active.
 
 ### Completed Canon (Sprints 1–70)
 
@@ -915,7 +917,7 @@ With 70 sprints complete and Block M (Product Experience & Delivery Maturity) de
 
 The following blocks describe **planned and reserved architectural direction**, not implemented architecture. No modules, layers, or APIs exist for these blocks yet.
 
-#### Block N — Evidence-Governed Improvement Loop (Sprints 71–74) — 📋 Planned
+#### Block N — Evidence-Governed Improvement Loop (Sprints 72–74) — 📋 Planned
 
 **Architectural intent:** Introduce structured evidence collection from pipeline outcomes, bounded improvement proposal generation, governed testing/promotion, and rollback-safe experimentation. This block deepens the existing learning, memory, and calibration layers without mutating kernel structure.
 

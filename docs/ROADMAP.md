@@ -1,14 +1,16 @@
 # AxionOS — System Evolution Roadmap
 
-> **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated, delivered software.
+> **Vision**: AxionOS is a governed self-improving software factory that transforms ideas into governed, validated, delivered software.
+>
+> **Product promise**: From idea to delivered software.
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-09):** 94 sprints complete. Block R complete. Block S complete (Sprints 91–94 complete).
+> **Last strategic change (2026-03-09):** 71 sprints complete. Block M complete. Sprint 71 (Governed Extensibility) complete. Block N (Sprints 72–74) planned. Blocks O–S (Sprints 75–94) reserved.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
-> Last updated: 2026-03-08
+> Last updated: 2026-03-09
 
 ## Document Authority
 
@@ -55,7 +57,7 @@ AxionOS has completed **79 implementation sprints** spanning the full capability
 
 **Post-Block M Strategic Position:**
 
-The platform has reached its first **product-ready operating baseline**. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — is mature and complete. The product experience layer — user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — is complete. The evidence-governed improvement loop — evidence capture, candidate distillation, sandbox benchmarking, promotion governance — is complete.
+The platform has reached its first **product-ready operating baseline**. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — is mature and complete. The product experience layer — user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — is complete. Sprint 71 established governed extensibility. Block N (Evidence-Governed Improvement Loop, Sprints 72–74) is the next planned block.
 
 The strategic direction achieved through Block M was **productization of the platform promise**:
 
@@ -70,26 +72,21 @@ Internal sophistication serves the visible product experience. The user-facing j
 ## Implementation Horizons
 
 ```
-   COMPLETE (1–78)                                               RESERVED (79–94)
+   COMPLETE (1–71)                                               PLANNED / RESERVED (72–94)
    ──────────────────────────────────────────────►               ──────────────────►
-   Foundation → Learning → Meta → Memory → Gov →                  Block P: Governed Ecosystem
-   Intelligence → Calibration → Strategy →                        Block Q: Delivery Optimization
-   Stabilization → Advisory → Semantic →                          Block R: Distributed Runtime
-   Discovery → Architecture → Pilot → Migration →                 Block S: Research Sandbox
-   Portfolio → Fitness → Change Advisory →
-   Convergence → Op Profiles → Product Intelligence →
+   Foundation → Learning → Meta → Memory → Gov →                  Block N: Evidence-Governed Improvement
+   Intelligence → Calibration → Strategy →                        Block O: Multi-Agent Coordination
+   Stabilization → Advisory → Semantic →                          Block P: Governed Ecosystem
+   Discovery → Architecture → Pilot → Migration →                 Block Q: Delivery Optimization
+   Portfolio → Fitness → Change Advisory →                        Block R: Distributed Runtime
+   Convergence → Op Profiles → Product Intelligence →             Block S: Research Sandbox
    Ecosystem → Assurance → Canon → Operating Completion →
-   Product Experience → Extensibility → Evidence →
-    Candidates → Benchmarking & Promotion ✅ →
-    Role Arbitration → Debate & Resolution →
-    Working Memory & Task-State →
-    Bounded Swarm Execution ✅ →
-    Capability Packaging & Registry ✅
+   Product Experience → Extensibility ✅
 ```
 
 ---
 
-## Completed Canon (Sprints 1–79)
+## Completed Canon (Sprints 1–71)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -118,14 +115,6 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Block L — System Roundness & Operating Completion | 63–65 | Institutional outcome assurance, canon integrity & drift governance, operating completion |
 | Block M — Product Experience & Delivery Maturity | 66–70 | User journey orchestration, role-based experience, one-click delivery & deploy assurance, onboarding/templates/starters, adoption intelligence & customer success |
 | Sprint 71 — Governed Extensibility | 71 | Platform extensions registry, approval-based activation, compatibility checks, audit trail, operator surface |
-| Sprint 72 — Evidence Capture & Improvement Ledger | 72 | Canonical evidence capture, improvement ledger, context linking, review workflow, operator evidence dashboard |
-| Sprint 73 — Improvement Candidate Distillation Engine | 73 | Candidate distillation from evidence, pattern clustering, provenance/explainability, triage workflow, operator candidates dashboard |
-| Sprint 74 — Sandbox Benchmarking & Promotion Governance | 74 | Sandbox benchmarking of candidates, baseline comparison, metric capture, promotion/rejection/deferral governance, operator benchmark dashboard |
-| Sprint 75 — Role Arbitration & Capability Routing 2.0 | 75 | Context-aware agent/capability routing, suitability scoring, candidate comparison, fallback paths, operator routing dashboard |
-| Sprint 76 — Multi-Agent Debate & Resolution Layer | 76 | Structured bounded debate sessions, position/argument/resolution tracking, escalation, operator debate dashboard |
-| Sprint 77 — Shared Working Memory & Task-State Negotiation | 77 | Bounded shared working memory contexts, negotiated task-state transitions, coordination checkpoints, operator working memory dashboard |
-| Sprint 78 — Bounded Swarm Execution for Complex Initiatives | 78 | Bounded swarm campaigns, parallel branches, checkpoints, abort/rollback posture, escalation, operator swarm dashboard |
-| Sprint 79 — Capability Packaging & Registry UX | 79 | Capability packages with versioning, lifecycle governance, explainability, registry linkage, operator registry dashboard |
 
 ---
 
@@ -155,59 +144,23 @@ Sprint 71 introduced the first governed extensibility foundation for AxionOS. Pl
 
 ---
 
-## Sprint 72 — Evidence Capture & Improvement Ledger ✅ Implemented
+## Block N — Evidence-Governed Improvement Loop (Sprints 72–74) — 📋 Planned
 
-Sprint 72 established the canonical evidence capture and improvement ledger layer. The system now captures, normalizes, links, and reviews operational evidence from validations, repairs, rollbacks, deployments, extensions, anomalies, and operator observations. A dedicated operator surface (`/improvement-ledger`) provides structured evidence review.
+> **Status:** Planned — next block for implementation.
 
-**Strategic role:** Sprint 72 begins the Evidence-Governed Improvement Loop. It provides the durable evidence foundation that future sprints will use to generate bounded improvement proposals and track outcomes.
+**Thesis:** AxionOS becomes better over time through evidence-governed learning, not uncontrolled autonomy.
 
----
-
-## Sprint 73 — Improvement Candidate Distillation Engine ✅ Implemented
-
-Sprint 73 introduced the canonical improvement candidate distillation layer. The system now clusters operational evidence into structured, bounded, reviewable improvement candidates with full provenance, pattern detection, explainability, and triage workflow. A dedicated operator surface (`/improvement-candidates`) provides candidate review, triage, and "ready for benchmark" marking.
-
-**Strategic role:** Sprint 73 advances the Evidence-Governed Improvement Loop by transforming raw evidence into actionable (but advisory-only) improvement proposals. Candidates remain bounded and require human review — no autonomous mutation.
+| Sprint | Name | Objective |
+|--------|------|-----------|
+| 72 | Evidence Capture & Improvement Ledger | Capture structured operational evidence from validations, repairs, rollbacks, extension lifecycle, execution anomalies, and operator signals |
+| 73 | Improvement Candidate Distillation Engine | Transform evidence into bounded, reviewable improvement candidates with provenance, recurrence signals, confidence posture, and triage workflow |
+| 74 | Sandbox Benchmarking & Promotion Governance | Evaluate eligible candidates in sandbox conditions, compare against baseline, and support human-governed promotion, rejection, deferment, or archive decisions |
 
 ---
 
-## Sprint 74 — Sandbox Benchmarking & Promotion Governance ✅ Implemented
+## Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔮 Reserved
 
-Sprint 74 completed the Evidence-Governed Improvement Loop by introducing governed sandbox benchmarking and promotion governance. Improvement candidates can now be benchmarked against baselines in controlled sandbox conditions, with structured metric comparison, risk posture assessment, stability signals, and explainable recommendations. Promotion, rejection, deferral, and archival decisions are fully human-reviewed, auditable, and tenant-isolated. A dedicated operator surface (`/improvement-benchmarks`) provides benchmark queue, results, metric comparison, and governance controls.
-
-**Strategic role:** Sprint 74 closes Block N. AxionOS now has a complete evidence-governed improvement loop: evidence capture → candidate distillation → sandbox benchmarking → human-governed promotion. No autonomous mutation behavior was introduced.
-
----
-
-## Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔄 In Progress
-
-> **Status:** In progress — Sprints 75–77 complete, Sprint 78 planned.
-
-**Thesis:** After evidence-governed improvement is established, AxionOS evolves toward more advanced role arbitration, debate, resolution, shared working memory, and bounded multi-agent execution.
-
----
-
-## Sprint 75 — Role Arbitration & Capability Routing 2.0 ✅ Implemented
-
-Sprint 75 established the first upgraded role arbitration and capability routing layer. The system now makes context-aware routing decisions that consider task type, pipeline stage, prior evidence, risk posture, and policy constraints. Each routing decision is explainable — operators can inspect why a specific agent/capability was chosen, what alternatives were considered, and what fallback paths exist. A dedicated operator surface (`/agent-routing`) provides routing decision visibility, candidate comparison, failure pattern concentration, and bad-route flagging.
-
-**Strategic role:** Sprint 75 starts Block O by making agent selection more intelligent and legible without introducing uncontrolled autonomy. Routing decisions remain bounded, auditable, and governance-first.
-
----
-
-## Sprint 76 — Multi-Agent Debate & Resolution Layer ✅ Implemented
-
-Sprint 76 introduced the first canonical multi-agent debate and resolution layer. The system now supports structured, bounded debate sessions where multiple agents can propose alternative positions, challenge assumptions, defend reasoning, and reach governed resolutions. Debates are depth-bounded (max rounds), risk-classified, and support escalation for unresolved conflicts requiring human review. A dedicated operator surface (`/agent-debates`) provides debate queue, active/resolved/escalated views, argument comparison, resolution detail, and governance controls.
-
-**Strategic role:** Sprint 76 deepens Block O by making multi-agent disagreement visible, structured, and governable. No autonomous architecture mutation is introduced.
-
----
-
-## Sprint 77 — Shared Working Memory & Task-State Negotiation ✅ Implemented
-
-Sprint 77 introduced the first canonical shared working memory and task-state negotiation layer. Coordinated agents can now operate against bounded, contextual working memory tied to initiatives and execution contexts. The system supports shared memory entries (observations, assumptions, decisions, constraints), negotiated task-state transitions (proposed → accepted/contested/escalated → resolved), and coordination checkpoints. A dedicated operator surface (`/working-memory`) provides context visibility, blocked/escalated state tracking, checkpoint timelines, and state transition audit trails.
-
-**Strategic role:** Sprint 77 deepens Block O by giving coordinated agents a governed, auditable shared context without introducing uncontrolled global mutation. Tenant isolation and governance invariants remain preserved.
+> **Status:** Reserved — builds on evidence-governed improvement.
 
 ---
 
@@ -287,7 +240,8 @@ This is **not** a full open marketplace. It extends existing bounded pilot mecha
 | K | Controlled Ecosystem Activation | 60–62 | ✅ Complete |
 | L | System Roundness & Operating Completion | 63–65 | ✅ Complete |
 | M | Product Experience & Delivery Maturity | 66–70 | ✅ Complete |
-| N | Evidence-Governed Improvement Loop | 71–74 | 📋 Planned |
+| — | Governed Extensibility (Bridge Sprint) | 71 | ✅ Complete |
+| N | Evidence-Governed Improvement Loop | 72–74 | 📋 Planned |
 | O | Advanced Multi-Agent Coordination | 75–78 | 🔮 Reserved |
 | P | Governed Capability Ecosystem & Early Marketplace | 79–82 | 🔮 Reserved |
 | Q | Autonomous Delivery Optimization & Outcome Assurance 2.0 | 83–86 | 🔮 Reserved |
@@ -358,10 +312,10 @@ All 54 architectural layers are operational. The kernel includes the 32-stage de
 
 ## Governing Principle
 
-> Seventy sprints complete. Block M (Product Experience & Delivery Maturity) is complete. The platform has reached its first internally coherent operating canon and a full product experience and delivery maturity layer.
+> Seventy-one sprints complete. Block M (Product Experience & Delivery Maturity) is complete. Sprint 71 (Governed Extensibility) is complete.
 > Internal architecture is mature: governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — all active.
 > Product experience is mature: user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — all active.
-> Next planned direction: Block N (Evidence-Governed Improvement Loop, Sprints 71–74). Reserved horizon: Blocks O–S (Sprints 75–94).
+> Next planned direction: Block N (Evidence-Governed Improvement Loop, Sprints 72–74). Reserved horizon: Blocks O–S (Sprints 75–94).
 > The platform delivers on the promise: **from idea to delivered software**.
 > Internal sophistication serves the product experience — it does not replace it.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.

@@ -1,10 +1,10 @@
 # AxionOS — Canonical Sprint Registry
 # Single source of truth for sprint metadata.
 # Detailed descriptions live in PLAN.md. Strategic context in ROADMAP.md.
-# Last updated: 2026-03-08
+# Last updated: 2026-03-09
 
 sprints:
-  # === COMPLETE CANON (Sprints 1–70) ===
+  # === COMPLETE CANON (Sprints 1–71) ===
 
   - { sprint: 1,  name: "Initiative Brief Formalization",                    status: complete, block: "Foundation",   phase: "Foundation",                        layer: "Execution Kernel" }
   - { sprint: 2,  name: "Initiative Simulation Engine",                      status: complete, block: "Foundation",   phase: "Foundation",                        layer: "Execution Kernel" }
@@ -68,87 +68,47 @@ sprints:
   - { sprint: 60, name: "Limited Marketplace Pilot Layer",                   status: complete, block: "K",            phase: "Controlled Ecosystem Activation",    layer: "Limited Marketplace Pilot Layer" }
   - { sprint: 61, name: "Capability Registry Governance Layer",              status: complete, block: "K",            phase: "Controlled Ecosystem Activation",    layer: "Capability Registry Governance Layer" }
   - { sprint: 62, name: "Multi-Party Policy & Revenue Governance Layer",     status: complete, block: "K",            phase: "Controlled Ecosystem Activation",    layer: "Multi-Party Policy & Revenue Governance Layer" }
-
-  # === BLOCK L — System Roundness & Operating Completion ===
   - { sprint: 63, name: "Institutional Outcome Assurance Layer",             status: complete, block: "L", phase: "System Roundness & Operating Completion", layer: "Institutional Outcome Assurance Layer" }
   - { sprint: 64, name: "Canon Integrity & Drift Governance Layer",          status: complete, block: "L", phase: "System Roundness & Operating Completion", layer: "Canon Integrity & Drift Governance Layer" }
   - { sprint: 65, name: "Operating Completion Layer",                        status: complete, block: "L", phase: "System Roundness & Operating Completion", layer: "Operating Completion Layer" }
-
-  # === BLOCK M — Product Experience & Delivery Maturity ===
   - { sprint: 66, name: "User Journey Orchestration Layer",                  status: complete, block: "M", phase: "Product Experience & Delivery Maturity", layer: "User Journey Orchestration Layer" }
   - { sprint: 67, name: "Role-Based Experience Layer",                       status: complete, block: "M", phase: "Product Experience & Delivery Maturity", layer: "Role-Based Experience Layer" }
   - { sprint: 68, name: "One-Click Delivery & Deploy Assurance Layer",       status: complete, block: "M", phase: "Product Experience & Delivery Maturity", layer: "One-Click Delivery & Deploy Assurance Layer" }
   - { sprint: 69, name: "Onboarding, Templates & Vertical Starters",        status: complete, block: "M", phase: "Product Experience & Delivery Maturity", layer: "Onboarding & Templates Layer" }
   - { sprint: 70, name: "Adoption Intelligence & Customer Success Loop",     status: complete, block: "M", phase: "Product Experience & Delivery Maturity", layer: "Adoption Intelligence Layer" }
+  - { sprint: 71, name: "Governed Extensibility & Developer Experience Foundation", status: complete, block: "Bridge", phase: "Governed Extensibility", layer: "Governed Extensibility Layer" }
 
-  # === SPRINT 71 — Governed Extensibility (Complete) ===
-  - { sprint: 71, name: "Governed Extensibility & Developer Experience Foundation", status: complete, block: "N", phase: "Governed Extensibility", layer: "Governed Extensibility Layer" }
+  # === BLOCK N — Evidence-Governed Improvement Loop (Planned) ===
+  - { sprint: 72, name: "Evidence Capture & Improvement Ledger",             status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "Evidence Capture & Improvement Ledger Layer" }
+  - { sprint: 73, name: "Improvement Candidate Distillation Engine",         status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "Improvement Candidate Distillation Layer" }
+  - { sprint: 74, name: "Sandbox Benchmarking & Promotion Governance",       status: planned, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "Benchmark & Promotion Governance Layer" }
 
-  # === SPRINT 72 — Evidence Capture & Improvement Ledger (Complete) ===
-  - { sprint: 72, name: "Evidence Capture & Improvement Ledger",             status: complete, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "Evidence Capture & Improvement Ledger Layer" }
+  # === BLOCK O — Advanced Multi-Agent Coordination (Reserved) ===
+  - { sprint: 75, name: "Role Arbitration & Capability Routing 2.0",         status: reserved, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "TBD" }
+  - { sprint: 76, name: "Multi-Agent Debate & Resolution Layer",             status: reserved, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "TBD" }
+  - { sprint: 77, name: "Shared Working Memory & Task-State Negotiation",    status: reserved, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "TBD" }
+  - { sprint: 78, name: "Bounded Swarm Execution for Complex Initiatives",   status: reserved, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "TBD" }
 
-  # === SPRINT 73 — Improvement Candidate Distillation Engine (Complete) ===
-  - { sprint: 73, name: "Improvement Candidate Distillation Engine",         status: complete, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "Improvement Candidate Distillation Layer" }
+  # === BLOCK P — Governed Capability Ecosystem (Reserved) ===
+  - { sprint: 79, name: "Capability Packaging & Registry UX",                status: reserved, block: "P", phase: "Governed Capability Ecosystem", layer: "TBD" }
+  - { sprint: 80, name: "Trust, Entitlements & Approval Flows",              status: reserved, block: "P", phase: "Governed Capability Ecosystem", layer: "TBD" }
+  - { sprint: 81, name: "Creator / Partner Pilot Marketplace",               status: reserved, block: "P", phase: "Governed Capability Ecosystem", layer: "TBD" }
+  - { sprint: 82, name: "Outcome-Aware Capability Marketplace",              status: reserved, block: "P", phase: "Governed Capability Ecosystem", layer: "TBD" }
 
-  # === SPRINT 74 — Sandbox Benchmarking & Promotion Governance (Complete) ===
-  - { sprint: 74, name: "Sandbox Benchmarking & Promotion Governance",        status: complete, block: "N", phase: "Evidence-Governed Improvement Loop", layer: "Benchmark & Promotion Governance Layer" }
+  # === BLOCK Q — Autonomous Delivery Optimization (Reserved) ===
+  - { sprint: 83, name: "Delivery Outcome Causality Layer",                  status: reserved, block: "Q", phase: "Autonomous Delivery Optimization", layer: "TBD" }
+  - { sprint: 84, name: "Post-Deploy Learning & Feedback Assimilation",      status: reserved, block: "Q", phase: "Autonomous Delivery Optimization", layer: "TBD" }
+  - { sprint: 85, name: "Reliability-Aware Delivery Tuning",                 status: reserved, block: "Q", phase: "Autonomous Delivery Optimization", layer: "TBD" }
+  - { sprint: 86, name: "Outcome Assurance 2.0",                             status: reserved, block: "Q", phase: "Autonomous Delivery Optimization", layer: "TBD" }
 
-  # === SPRINT 75 — Role Arbitration & Capability Routing 2.0 (Complete) ===
-  - { sprint: 75, name: "Role Arbitration & Capability Routing 2.0",          status: complete, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "Role Arbitration & Routing Layer" }
+  # === BLOCK R — Advanced Distributed Runtime (Reserved) ===
+  - { sprint: 87, name: "Distributed Job Control Plane",                     status: reserved, block: "R", phase: "Advanced Distributed Runtime", layer: "TBD" }
+  - { sprint: 88, name: "Cross-Region Execution & Recovery",                 status: reserved, block: "R", phase: "Advanced Distributed Runtime", layer: "TBD" }
+  - { sprint: 89, name: "Tenant-Isolated Scale Runtime",                     status: reserved, block: "R", phase: "Advanced Distributed Runtime", layer: "TBD" }
+  - { sprint: 90, name: "Resilient Large-Scale Orchestration",               status: reserved, block: "R", phase: "Advanced Distributed Runtime", layer: "TBD" }
 
-  # === SPRINT 76 — Multi-Agent Debate & Resolution Layer (Complete) ===
-  - { sprint: 76, name: "Multi-Agent Debate & Resolution Layer",              status: complete, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "Multi-Agent Debate & Resolution Layer" }
-
-  # === SPRINT 77 — Shared Working Memory & Task-State Negotiation (Complete) ===
-  - { sprint: 77, name: "Shared Working Memory & Task-State Negotiation",     status: complete, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "Shared Working Memory & Task-State Layer" }
-
-  # === SPRINT 78 — Bounded Swarm Execution for Complex Initiatives (Complete) ===
-  - { sprint: 78, name: "Bounded Swarm Execution for Complex Initiatives",    status: complete, block: "O", phase: "Advanced Multi-Agent Coordination", layer: "Bounded Swarm Execution Layer" }
-
-  # === SPRINT 79 — Capability Packaging & Registry UX (Complete) ===
-  - { sprint: 79, name: "Capability Packaging & Registry UX",                  status: complete, block: "P", phase: "Governed Capability Ecosystem", layer: "Capability Packaging & Registry Layer" }
-
-  # === SPRINT 80 — Trust, Entitlements & Approval Flows (Complete) ===
-  - { sprint: 80, name: "Trust, Entitlements & Approval Flows",                 status: complete, block: "P", phase: "Governed Capability Ecosystem", layer: "Capability Trust & Entitlement Layer" }
-
-  # === SPRINT 81 — Creator / Partner Pilot Marketplace (Complete) ===
-  - { sprint: 81, name: "Creator / Partner Pilot Marketplace",                  status: complete, block: "P", phase: "Governed Capability Ecosystem", layer: "Pilot Marketplace Layer" }
-
-  # === SPRINT 82 — Outcome-Aware Capability Marketplace (Complete) ===
-  - { sprint: 82, name: "Outcome-Aware Capability Marketplace",                  status: complete, block: "P", phase: "Governed Capability Ecosystem", layer: "Outcome-Aware Marketplace Layer" }
-
-  # === SPRINT 83 — Delivery Outcome Causality Layer (Complete) ===
-  - { sprint: 83, name: "Delivery Outcome Causality Layer",                     status: complete, block: "Q", phase: "Autonomous Delivery Optimization", layer: "Delivery Outcome Causality Layer" }
-
-  # === SPRINT 84 — Post-Deploy Learning & Feedback Assimilation (Complete) ===
-  - { sprint: 84, name: "Post-Deploy Learning & Feedback Assimilation",         status: complete, block: "Q", phase: "Autonomous Delivery Optimization", layer: "Post-Deploy Feedback Assimilation Layer" }
-
-  # === SPRINT 85 — Reliability-Aware Delivery Tuning (Complete) ===
-  - { sprint: 85, name: "Reliability-Aware Delivery Tuning",                    status: complete, block: "Q", phase: "Autonomous Delivery Optimization", layer: "Reliability-Aware Delivery Tuning Layer" }
-
-  # === SPRINT 86 — Outcome Assurance 2.0 (Complete) ===
-  - { sprint: 86, name: "Outcome Assurance 2.0",                                status: complete, block: "Q", phase: "Autonomous Delivery Optimization", layer: "Outcome Assurance 2.0 Layer" }
-
-  # === SPRINT 87 — Distributed Job Control Plane (Complete) ===
-  - { sprint: 87, name: "Distributed Job Control Plane",                         status: complete, block: "R", phase: "Advanced Distributed Runtime", layer: "Distributed Job Control Plane Layer" }
-
-  # === SPRINT 88 — Cross-Region Execution & Recovery (Complete) ===
-  - { sprint: 88, name: "Cross-Region Execution & Recovery",                     status: complete, block: "R", phase: "Advanced Distributed Runtime", layer: "Cross-Region Recovery Layer" }
-
-  # === SPRINT 89 — Tenant-Isolated Scale Runtime (Complete) ===
-  - { sprint: 89, name: "Tenant-Isolated Scale Runtime",                          status: complete, block: "R", phase: "Advanced Distributed Runtime", layer: "Tenant-Isolated Scale Runtime Layer" }
-
-  # === SPRINT 90 — Resilient Large-Scale Orchestration (Complete) ===
-  - { sprint: 90, name: "Resilient Large-Scale Orchestration",                    status: complete, block: "R", phase: "Advanced Distributed Runtime", layer: "Resilient Orchestration Layer" }
-
-  # === SPRINT 91 — Architecture Hypothesis Engine (Complete) ===
-  - { sprint: 91, name: "Architecture Hypothesis Engine",                          status: complete, block: "S", phase: "Research Sandbox", layer: "Architecture Hypothesis Layer" }
-
-  # === SPRINT 92 — Simulated Evolution Campaigns (Complete) ===
-  - { sprint: 92, name: "Simulated Evolution Campaigns",                           status: complete, block: "S", phase: "Research Sandbox", layer: "Simulated Evolution Layer" }
-
-  # === SPRINT 93 — Cross-Tenant Pattern Synthesis (Complete) ===
-  - { sprint: 93, name: "Cross-Tenant Pattern Synthesis",                          status: complete, block: "S", phase: "Research Sandbox", layer: "Cross-Tenant Synthesis Layer" }
-
-  # === BLOCK S — Remaining ===
-  - { sprint: "94", name: "Governed Architecture Promotion", status: reserved, block: "S", phase: "Reserved", layer: "TBD" }
+  # === BLOCK S — Research Sandbox (Reserved) ===
+  - { sprint: 91, name: "Architecture Hypothesis Engine",                    status: reserved, block: "S", phase: "Research Sandbox", layer: "TBD" }
+  - { sprint: 92, name: "Simulated Evolution Campaigns",                     status: reserved, block: "S", phase: "Research Sandbox", layer: "TBD" }
+  - { sprint: 93, name: "Cross-Tenant Pattern Synthesis",                    status: reserved, block: "S", phase: "Research Sandbox", layer: "TBD" }
+  - { sprint: 94, name: "Human-Governed Architecture Promotion",             status: reserved, block: "S", phase: "Research Sandbox", layer: "TBD" }
