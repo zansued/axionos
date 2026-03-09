@@ -953,7 +953,7 @@ supabase/functions/
 ### System Maturity
 
 > **Canonical maturity table:** [ROADMAP.md](ROADMAP.md)
-> **Current:** Level 5 — Institutional Engineering Memory ✅
+> **Current:** Level 6 — Sovereign Institutional Intelligence ✅
 
 ---
 
