@@ -1,6 +1,7 @@
 /**
  * Architecture Subjob Prompts
  * Centralized prompt definitions for each architecture agent.
+ * v3: MVP-scoped outputs with hard limits for Data/API to prevent timeouts.
  */
 
 export function systemArchitectPrompt(projectContext: string, requirementsData: string, productArchData: string): { system: string; user: string } {
@@ -47,18 +48,25 @@ Defina a arquitetura técnica do sistema:
 
 export function dataArchitectPrompt(projectContext: string, requirementsData: string, systemArchJson: string): { system: string; user: string } {
   return {
-    system: `Você é o Data Architect Agent — especialista em modelagem de dados e banco de dados. Use a arquitetura de sistema definida anteriormente. Retorne APENAS JSON válido, sem markdown e sem texto extra. Seja objetivo e compacto.`,
-    user: `${projectContext}
+    system: `You are a Data Architect Agent. Return ONLY valid JSON. Be extremely concise. No markdown, no explanation, no comments. MVP scope only.`,
+    user: `PROJECT: ${projectContext}
 
-REQUISITOS (compactos): ${requirementsData}
-ARQUITETURA DE SISTEMA (resumo): ${systemArchJson}
+SYSTEM ARCHITECTURE (summary): ${systemArchJson}
+REQUIREMENTS (compact): ${requirementsData}
 
-Modele o banco de dados de forma enxuta, priorizando MVP e escalabilidade inicial:
+Design the MVP database. HARD LIMITS — do NOT exceed:
+- Maximum 6 tables
+- Maximum 8 columns per table
+- Maximum 6 relationships
+- Maximum 8 RLS policies total
+- No narrative text — only structured JSON
+
+Return this exact JSON shape:
 {
   "tables": [
     {
       "name": "string",
-      "description": "string",
+      "description": "one short sentence",
       "columns": [
         {"name": "string", "type": "string", "nullable": false, "default": "string|null"}
       ],
@@ -70,54 +78,48 @@ Modele o banco de dados de forma enxuta, priorizando MVP e escalabilidade inicia
     }
   ],
   "relationships": [
-    {"from_table": "string", "from_column": "string", "to_table": "string", "to_column": "string", "type": "one-to-one|one-to-many|many-to-many", "on_delete": "CASCADE|SET NULL|RESTRICT"}
+    {"from_table": "string", "from_column": "string", "to_table": "string", "to_column": "string", "type": "one-to-many", "on_delete": "CASCADE|SET NULL"}
   ],
   "enums": [{"name": "string", "values": ["string"]}],
-  "migration_strategy": "string"
-}
-
-Limites obrigatórios:
-- máximo 10 tabelas
-- máximo 12 colunas por tabela
-- máximo 20 policies RLS no total
-- descrições curtas (1 linha)`,
+  "migration_strategy": "one sentence"
+}`,
   };
 }
 
 export function apiArchitectPrompt(projectContext: string, requirementsData: string, systemArchJson: string): { system: string; user: string } {
   return {
-    system: `Você é o API Architect Agent — especialista em design de APIs. Defina contratos consistentes com a arquitetura. Retorne APENAS JSON válido, sem markdown e sem texto extra. Seja objetivo e compacto.`,
-    user: `${projectContext}
+    system: `You are an API Architect Agent. Return ONLY valid JSON. Be extremely concise. No markdown, no explanation, no comments. MVP scope only.`,
+    user: `PROJECT: ${projectContext}
 
-ARQUITETURA DE SISTEMA (resumo): ${systemArchJson}
-REQUISITOS (compactos): ${requirementsData}
+SYSTEM ARCHITECTURE (summary): ${systemArchJson}
+REQUIREMENTS (compact): ${requirementsData}
 
-Defina os contratos de API com foco em MVP:
+Design the MVP API contracts. HARD LIMITS — do NOT exceed:
+- Maximum 8 endpoints
+- Maximum 4 edge functions
+- Maximum 2 realtime channels
+- No narrative text — only structured JSON
+- Keep request_body and response minimal (just key property names, no nested schemas)
+
+Return this exact JSON shape:
 {
-  "api_style": "REST|GraphQL|RPC",
-  "base_url": "string",
-  "auth_strategy": {"type": "JWT|API Key|OAuth", "header": "string", "flow": "string"},
+  "api_style": "REST",
+  "base_url": "/api/v1",
+  "auth_strategy": {"type": "JWT", "header": "Authorization", "flow": "supabase_auth"},
   "endpoints": [
     {
-      "method": "GET|POST|PUT|PATCH|DELETE",
+      "method": "GET|POST|PUT|DELETE",
       "path": "string",
-      "description": "string",
+      "description": "one short sentence",
       "auth_required": true,
-      "request_body": {"type": "object", "properties": {}},
-      "response": {"status": 200, "body": {"type": "object", "properties": {}}},
-      "errors": [{"status": 400, "description": "string"}],
-      "rate_limit": "string|null"
+      "request_body": {},
+      "response": {"status": 200},
+      "errors": [{"status": 400, "description": "string"}]
     }
   ],
-  "edge_functions": [{"name": "string", "description": "string", "trigger": "HTTP|Webhook|Cron", "auth": true}],
-  "realtime_channels": [{"name": "string", "table": "string", "events": ["INSERT|UPDATE|DELETE"]}]
-}
-
-Limites obrigatórios:
-- máximo 12 endpoints
-- máximo 6 edge_functions
-- descrições curtas (1 linha)
-- evitar payloads excessivos em request/response`,
+  "edge_functions": [{"name": "string", "description": "one sentence", "trigger": "HTTP", "auth": true}],
+  "realtime_channels": [{"name": "string", "table": "string", "events": ["INSERT"]}]
+}`,
   };
 }
 

@@ -1,6 +1,7 @@
 /**
  * Architecture Subjob Diagnostics — Sprint 72
- * Per-attempt diagnostic tracking, failure classification, and bottleneck analysis.
+ * Per-attempt diagnostic tracking, failure classification, bottleneck analysis,
+ * and timing breakdown (provider, parse, persist).
  */
 
 import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -25,6 +26,8 @@ export interface AttemptDiagnostic {
   estimated_input_tokens: number;
   estimated_output_tokens: number;
   provider_latency_ms: number | null;
+  parse_ms: number | null;
+  persist_ms: number | null;
   parse_status: "success" | "failed" | "skipped";
   persist_status: "success" | "failed" | "skipped";
   terminal_status: string;
@@ -58,6 +61,8 @@ export function createAttemptDiagnostic(params: {
   contextSizeChars: number;
   outputChars: number;
   providerLatencyMs: number | null;
+  parseMs: number | null;
+  persistMs: number | null;
   durationMs: number;
   parseStatus: "success" | "failed" | "skipped";
   persistStatus: "success" | "failed" | "skipped";
@@ -77,6 +82,8 @@ export function createAttemptDiagnostic(params: {
     estimated_input_tokens: estimateTokens(params.promptSizeChars),
     estimated_output_tokens: estimateTokens(params.outputChars),
     provider_latency_ms: params.providerLatencyMs,
+    parse_ms: params.parseMs,
+    persist_ms: params.persistMs,
     parse_status: params.parseStatus,
     persist_status: params.persistStatus,
     terminal_status: params.terminalStatus,
@@ -96,7 +103,6 @@ export async function appendDiagnostic(
   promptSizeChars: number,
   contextSizeChars: number,
 ): Promise<void> {
-  // Fetch current diagnostics_log
   const { data } = await client
     .from("pipeline_subjobs")
     .select("diagnostics_log")
@@ -171,7 +177,6 @@ export function analyzeBottlenecks(
   let totalAttempts = 0;
   let totalRetries = 0;
 
-  // Collect failure types
   for (const s of subjobs) {
     const logs = Array.isArray(s.diagnostics_log) ? s.diagnostics_log : [];
     totalAttempts += logs.length || 1;
@@ -187,19 +192,16 @@ export function analyzeBottlenecks(
     }
   }
 
-  // Largest prompts
   const promptSizes = subjobs
     .filter(s => (s.prompt_size_chars || 0) > 0)
     .map(s => ({ subjob: s.subjob_key, chars: s.prompt_size_chars || 0, est_tokens: estimateTokens(s.prompt_size_chars || 0) }))
     .sort((a, b) => b.chars - a.chars);
 
-  // Longest stages
   const durations = subjobs
     .filter(s => (s.duration_ms || 0) > 0)
     .map(s => ({ subjob: s.subjob_key, duration_ms: s.duration_ms || 0 }))
     .sort((a, b) => b.duration_ms - a.duration_ms);
 
-  // Bottleneck detection
   if (promptSizes.length > 0 && promptSizes[0].est_tokens > 3000) {
     bottlenecks.push(`Large prompt in ${promptSizes[0].subjob}: ~${promptSizes[0].est_tokens} tokens`);
   }
@@ -210,7 +212,6 @@ export function analyzeBottlenecks(
     bottlenecks.push(`High retry count: ${totalRetries} retries across ${subjobs.length} subjobs`);
   }
 
-  // Most frequent failure
   const sortedFailures = Object.entries(failureCounts).sort((a, b) => b[1] - a[1]);
   const mostFrequent = sortedFailures.length > 0 ? sortedFailures[0][0] : null;
 
@@ -222,7 +223,6 @@ export function analyzeBottlenecks(
     bottlenecks.push("Provider errors suggest rate limiting or service degradation");
   }
 
-  // Recommendation
   let recommendation = "No immediate action needed — pipeline is healthy.";
   if (mostFrequent === "failed_timeout") {
     recommendation = "Consider increasing timeouts or compressing prompts further. Check if provider latency has degraded.";
