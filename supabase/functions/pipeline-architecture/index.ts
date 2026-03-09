@@ -1,6 +1,7 @@
 // Layer 2 — Technical Architecture (Subjob Orchestrator)
 // Orchestrates: System → [Data ∥ API] → Dependencies → Synthesis
 // Each agent runs as an isolated subjob with independent persistence and timeout handling.
+// v2: Background processing + per-attempt diagnostics + compact context
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
@@ -17,6 +18,10 @@ import {
   systemArchitectPrompt, dataArchitectPrompt,
   apiArchitectPrompt, dependencyPlannerPrompt,
 } from "../_shared/architecture-subjob/prompts.ts";
+import {
+  createAttemptDiagnostic, appendDiagnostic, classifyFailure,
+  compactSystemArchSummary, analyzeBottlenecks, estimateTokens,
+} from "../_shared/architecture-subjob/diagnostics.ts";
 
 interface AgentOutput {
   role: string;
@@ -25,6 +30,9 @@ interface AgentOutput {
   costUsd: number;
   durationMs: number;
   result: Record<string, unknown>;
+  rawOutputChars: number;
+  promptChars: number;
+  contextChars: number;
 }
 
 async function runAgent(
@@ -34,9 +42,11 @@ async function runAgent(
   userPrompt: string,
   usePro = false,
 ): Promise<AgentOutput> {
+  const promptChars = systemPrompt.length + userPrompt.length;
   const aiResult = await callAI(apiKey, systemPrompt, userPrompt, true, 3, usePro);
+  const rawOutputChars = aiResult.content?.length || 0;
   const result = JSON.parse(aiResult.content);
-  return { role, model: aiResult.model, tokens: aiResult.tokens, costUsd: aiResult.costUsd, durationMs: aiResult.durationMs, result };
+  return { role, model: aiResult.model, tokens: aiResult.tokens, costUsd: aiResult.costUsd, durationMs: aiResult.durationMs, result, rawOutputChars, promptChars, contextChars: 0 };
 }
 
 /** Execute a single subjob by key, using results from completed dependencies */
@@ -48,36 +58,46 @@ async function executeSubjob(
   productArchData: string,
   completedResults: Record<string, Record<string, unknown>>,
 ): Promise<AgentOutput> {
-  const systemArchJson = JSON.stringify(completedResults["architecture.system"] || {}, null, 2);
+  // Use compact summary for downstream agents instead of full system output
+  const systemResult = completedResults["architecture.system"] || {};
+  const compactSysContext = compactSystemArchSummary(systemResult);
+  const fullSystemArchJson = JSON.stringify(systemResult, null, 2);
   const dataArchJson = JSON.stringify(completedResults["architecture.data"] || {}, null, 2);
   const apiArchJson = JSON.stringify(completedResults["architecture.api"] || {}, null, 2);
 
   switch (subjobKey) {
     case "architecture.system": {
       const p = systemArchitectPrompt(projectContext, requirementsData, productArchData);
-      return runAgent(apiKey, "system_architect", p.system, p.user, true);
+      const result = await runAgent(apiKey, "system_architect", p.system, p.user, true);
+      result.contextChars = 0;
+      return result;
     }
     case "architecture.data": {
-      const p = dataArchitectPrompt(projectContext, requirementsData, systemArchJson);
-      return runAgent(apiKey, "data_architect", p.system, p.user, true);
+      // Use compact context instead of full system arch
+      const p = dataArchitectPrompt(projectContext, requirementsData, compactSysContext);
+      const result = await runAgent(apiKey, "data_architect", p.system, p.user, true);
+      result.contextChars = compactSysContext.length;
+      return result;
     }
     case "architecture.api": {
-      const p = apiArchitectPrompt(projectContext, requirementsData, systemArchJson);
-      return runAgent(apiKey, "api_architect", p.system, p.user, false);
+      // Use compact context instead of full system arch
+      const p = apiArchitectPrompt(projectContext, requirementsData, compactSysContext);
+      const result = await runAgent(apiKey, "api_architect", p.system, p.user, false);
+      result.contextChars = compactSysContext.length;
+      return result;
     }
     case "architecture.dependencies": {
-      const p = dependencyPlannerPrompt(projectContext, systemArchJson, dataArchJson, apiArchJson);
-      return runAgent(apiKey, "dependency_planner", p.system, p.user, true);
+      const p = dependencyPlannerPrompt(projectContext, fullSystemArchJson, dataArchJson, apiArchJson);
+      const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, true);
+      result.contextChars = fullSystemArchJson.length + dataArchJson.length + apiArchJson.length;
+      return result;
     }
     case "architecture.synthesis": {
-      // Synthesis: consolidate all results into architecture content
       const archContent = buildArchitectureContent(completedResults);
       return {
-        role: "synthesis",
-        model: "deterministic",
-        tokens: 0,
-        costUsd: 0,
-        durationMs: 0,
+        role: "synthesis", model: "deterministic", tokens: 0,
+        costUsd: 0, durationMs: 0, rawOutputChars: archContent.length,
+        promptChars: 0, contextChars: 0,
         result: { architecture_content: archContent, synthesized: true },
       };
     }
@@ -250,7 +270,16 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
         await markSubjobRunning(serviceClient, subjob.id);
         const def = ARCHITECTURE_SUBJOBS.find(d => d.key === subjob.subjob_key);
         const label = def?.label || subjob.subjob_key;
-        await pipelineLog(ctx, `subjob_${subjob.subjob_key}_start`, `▶ ${label} iniciando...`);
+        const startedAt = new Date().toISOString();
+        const startMs = Date.now();
+        await pipelineLog(ctx, `subjob_${subjob.subjob_key}_start`, `▶ ${label} iniciando (attempt ${subjob.attempt_number})...`);
+
+        let parseStatus: "success" | "failed" | "skipped" = "skipped";
+        let persistStatus: "success" | "failed" | "skipped" = "skipped";
+        let promptChars = 0;
+        let contextChars = 0;
+        let outputChars = 0;
+        let modelUsed: string | null = null;
 
         try {
           const timeoutMs = def?.timeoutMs || 45_000;
@@ -263,10 +292,22 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           );
           const agentResult = await Promise.race([agentPromise, timeoutPromise]);
 
-          await completeSubjob(serviceClient, subjob.id, agentResult.result, {
-            model: agentResult.model, tokens: agentResult.tokens,
-            costUsd: agentResult.costUsd, durationMs: agentResult.durationMs,
-          });
+          parseStatus = "success"; // If we got here, JSON parsed OK
+          promptChars = agentResult.promptChars;
+          contextChars = agentResult.contextChars;
+          outputChars = agentResult.rawOutputChars;
+          modelUsed = agentResult.model;
+
+          try {
+            await completeSubjob(serviceClient, subjob.id, agentResult.result, {
+              model: agentResult.model, tokens: agentResult.tokens,
+              costUsd: agentResult.costUsd, durationMs: agentResult.durationMs,
+            });
+            persistStatus = "success";
+          } catch (persistErr: any) {
+            persistStatus = "failed";
+            throw new Error(`Persistence failed: ${persistErr.message}`);
+          }
 
           if (subjob.subjob_key !== "architecture.synthesis") {
             await serviceClient.from("agent_outputs").insert({
@@ -278,26 +319,54 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
             });
           }
 
+          // Record success diagnostic
+          const durationMs = Date.now() - startMs;
+          const diag = createAttemptDiagnostic({
+            attemptNumber: subjob.attempt_number || 1,
+            startedAt, model: modelUsed, promptSizeChars: promptChars,
+            contextSizeChars: contextChars, outputChars, providerLatencyMs: agentResult.durationMs,
+            durationMs, parseStatus, persistStatus, terminalStatus: "completed",
+            error: null, retryTrigger: null,
+          });
+          await appendDiagnostic(serviceClient, subjob.id, diag, null, null, promptChars, contextChars);
+
           completedResults[subjob.subjob_key] = agentResult.result;
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_complete`,
-            `✓ ${label}: ${agentResult.tokens} tokens, $${agentResult.costUsd.toFixed(4)}, ${agentResult.durationMs}ms`
+            `✓ ${label}: ${agentResult.tokens} tokens, $${agentResult.costUsd.toFixed(4)}, ${durationMs}ms (prompt: ${Math.ceil(promptChars/1000)}k, ctx: ${Math.ceil(contextChars/1000)}k)`
           );
           return { key: subjob.subjob_key, success: true };
         } catch (err: any) {
-          const isTimeout = err.message?.includes("Timeout");
-          if (isTimeout && subjob.attempt_number < (subjob.max_attempts || 3) - 1) {
+          const durationMs = Date.now() - startMs;
+          const failureType = classifyFailure(err.message || "unknown");
+          const isTimeout = failureType === "failed_timeout";
+          const isParseError = failureType === "failed_parse";
+
+          // Record failure diagnostic
+          const retryTrigger = isTimeout ? "auto_timeout" : isParseError ? "auto_parse" : null;
+          const diag = createAttemptDiagnostic({
+            attemptNumber: subjob.attempt_number || 1,
+            startedAt, model: modelUsed, promptSizeChars: promptChars,
+            contextSizeChars: contextChars, outputChars, providerLatencyMs: null,
+            durationMs, parseStatus, persistStatus,
+            terminalStatus: subjob.attempt_number < (subjob.max_attempts || 3) - 1 ? "retrying" : failureType,
+            error: err.message, retryTrigger,
+          });
+          await appendDiagnostic(serviceClient, subjob.id, diag, failureType, retryTrigger, promptChars, contextChars);
+
+          // Auto-retry on first timeout or parse failure
+          if ((isTimeout || isParseError) && subjob.attempt_number < (subjob.max_attempts || 3) - 1) {
             const { resetSubjobForRetry } = await import("../_shared/architecture-subjob/subjob-manager.ts");
-            await failSubjob(serviceClient, subjob.id, err.message || "Timeout", true);
+            await failSubjob(serviceClient, subjob.id, err.message || failureType, isTimeout);
             await resetSubjobForRetry(serviceClient, subjob.id);
             await pipelineLog(ctx, `subjob_${subjob.subjob_key}_auto_retry`,
-              `⟳ ${label} timeout — auto-retry (attempt ${subjob.attempt_number + 2})`, { is_timeout: true }
+              `⟳ ${label} ${failureType} — auto-retry (attempt ${subjob.attempt_number + 2})`, { failure_type: failureType }
             );
             return { key: subjob.subjob_key, success: false, retrying: true };
           }
           await failSubjob(serviceClient, subjob.id, err.message || "Unknown error", isTimeout);
           await blockDependents(serviceClient, jobId, subjob.subjob_key);
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_failed`,
-            `✗ ${label} falhou: ${err.message}`, { is_timeout: isTimeout }
+            `✗ ${label} [${failureType}]: ${err.message}`, { failure_type: failureType }
           );
           return { key: subjob.subjob_key, success: false, error: err.message };
         }
@@ -411,9 +480,21 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
       orchestration: "subjob_v1_bg",
     }, { model: "multi-agent", costUsd: totalCost, durationMs: totalDuration });
 
+    // Generate and log bottleneck analysis
+    const bottleneckSummary = analyzeBottlenecks(subjobs.map(s => ({
+      subjob_key: s.subjob_key,
+      status: s.status,
+      duration_ms: s.duration_ms,
+      prompt_size_chars: (s as any).prompt_size_chars || 0,
+      context_size_chars: (s as any).context_size_chars || 0,
+      diagnostics_log: (s as any).diagnostics_log || [],
+      failure_type: (s as any).failure_type || null,
+      attempt_number: s.attempt_number,
+    })));
+
     await pipelineLog(ctx, "pipeline_architecture_complete",
       `Camada 2 concluída (background): ${totalTokens} tokens, $${totalCost.toFixed(4)}, ${totalDuration}ms`,
-      { tokens: totalTokens, cost_usd: totalCost, duration_ms: totalDuration }
+      { tokens: totalTokens, cost_usd: totalCost, duration_ms: totalDuration, bottleneck_summary: bottleneckSummary }
     );
 
     await pipelineLog(ctx, "pipeline_architecture_simulation_queued",
