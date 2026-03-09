@@ -1,172 +1,115 @@
 /**
  * Architecture Subjob Prompts
  * Centralized prompt definitions for each architecture agent.
- * v3: MVP-scoped outputs with hard limits for Data/API to prevent timeouts.
+ * v4: Ultra-compact prompts with strict token budgets and output caps.
  */
 
 export function systemArchitectPrompt(projectContext: string, requirementsData: string, productArchData: string): { system: string; user: string } {
   return {
-    system: `Você é o System Architect Agent — especialista em arquitetura de sistemas. Define stack, camadas e estrutura do projeto. Retorne APENAS JSON válido.`,
+    system: `System Architect. Return ONLY valid JSON. No markdown, no prose.`,
     user: `${projectContext}
 
-REQUISITOS: ${requirementsData}
-ARQUITETURA DE PRODUTO: ${productArchData}
+REQ: ${requirementsData}
+PRODUCT_ARCH: ${productArchData}
 
-Defina a arquitetura técnica do sistema:
+Return JSON:
 {
   "stack": {
-    "frontend": {"framework": "string", "language": "string", "styling": "string", "state_management": "string", "routing": "string"},
-    "backend": {"type": "string (BaaS|API|serverless)", "platform": "string", "language": "string"},
-    "database": {"type": "string", "provider": "string"},
-    "auth": {"method": "string", "provider": "string"},
-    "storage": {"provider": "string", "use_cases": ["string"]},
-    "hosting": {"frontend": "string", "backend": "string"},
-    "ci_cd": "string"
+    "frontend": {"framework": "str", "language": "str", "styling": "str", "state_management": "str", "routing": "str"},
+    "backend": {"type": "BaaS|API|serverless", "platform": "str", "language": "str"},
+    "database": {"type": "str", "provider": "str"},
+    "auth": {"method": "str", "provider": "str"},
+    "storage": {"provider": "str", "use_cases": ["str"]},
+    "hosting": {"frontend": "str", "backend": "str"},
+    "ci_cd": "str"
   },
-  "layers": [
-    {"name": "string", "responsibility": "string", "technologies": ["string"]}
-  ],
+  "layers": [{"name": "str", "responsibility": "str", "technologies": ["str"]}],
   "project_structure": {
-    "root_dirs": ["src/", "public/", "supabase/"],
-    "src_structure": {
-      "pages": "Páginas/rotas da aplicação",
-      "components": "Componentes reutilizáveis",
-      "hooks": "Custom hooks",
-      "contexts": "Context providers",
-      "services": "Serviços e API clients",
-      "utils": "Utilitários",
-      "types": "Tipos TypeScript"
-    }
+    "root_dirs": ["src/","public/","supabase/"],
+    "src_structure": {"pages":"str","components":"str","hooks":"str","contexts":"str","services":"str","utils":"str","types":"str"}
   },
-  "architecture_patterns": ["string"],
-  "scalability_considerations": ["string"],
-  "security_measures": ["string"],
-  "justification": "Por que essa stack é a melhor escolha para este projeto"
+  "architecture_patterns": ["str"],
+  "scalability_considerations": ["str"],
+  "security_measures": ["str"],
+  "justification": "one sentence"
 }`,
   };
 }
 
 export function dataArchitectPrompt(projectContext: string, requirementsData: string, systemArchJson: string): { system: string; user: string } {
   return {
-    system: `You are a Data Architect Agent. Return ONLY valid JSON. Be extremely concise. No markdown, no explanation, no comments. MVP scope only.`,
-    user: `PROJECT: ${projectContext}
+    system: `Data Architect. Return ONLY valid JSON. No prose. MVP only.`,
+    user: `CTX: ${projectContext}
+ARCH: ${systemArchJson}
+REQ: ${requirementsData}
 
-SYSTEM ARCHITECTURE (summary): ${systemArchJson}
-REQUIREMENTS (compact): ${requirementsData}
+MVP database. HARD LIMITS:
+- Max 5 tables, max 6 cols each
+- Max 4 relationships
+- Max 6 RLS policies total
+- No indexes unless critical
+- No explanations
 
-Design the MVP database. HARD LIMITS — do NOT exceed:
-- Maximum 6 tables
-- Maximum 8 columns per table
-- Maximum 6 relationships
-- Maximum 8 RLS policies total
-- No narrative text — only structured JSON
-
-Return this exact JSON shape:
+JSON:
 {
-  "tables": [
-    {
-      "name": "string",
-      "description": "one short sentence",
-      "columns": [
-        {"name": "string", "type": "string", "nullable": false, "default": "string|null"}
-      ],
-      "primary_key": "string",
-      "indexes": [{"columns": ["string"], "unique": false}],
-      "rls_policies": [
-        {"name": "string", "command": "SELECT|INSERT|UPDATE|DELETE|ALL", "using": "string", "with_check": "string|null"}
-      ]
-    }
-  ],
-  "relationships": [
-    {"from_table": "string", "from_column": "string", "to_table": "string", "to_column": "string", "type": "one-to-many", "on_delete": "CASCADE|SET NULL"}
-  ],
-  "enums": [{"name": "string", "values": ["string"]}],
-  "migration_strategy": "one sentence"
+  "tables": [{"name":"str","description":"<10 words","columns":[{"name":"str","type":"str","nullable":false,"default":"str|null"}],"primary_key":"str","indexes":[],"rls_policies":[{"name":"str","command":"SELECT|INSERT|UPDATE|DELETE","using":"str","with_check":"str|null"}]}],
+  "relationships": [{"from_table":"str","from_column":"str","to_table":"str","to_column":"str","type":"one-to-many","on_delete":"CASCADE|SET NULL"}],
+  "enums": [{"name":"str","values":["str"]}],
+  "migration_strategy": "<10 words"
 }`,
   };
 }
 
 export function apiArchitectPrompt(projectContext: string, requirementsData: string, systemArchJson: string): { system: string; user: string } {
   return {
-    system: `You are an API Architect Agent. Return ONLY valid JSON. Be extremely concise. No markdown, no explanation, no comments. MVP scope only.`,
-    user: `PROJECT: ${projectContext}
+    system: `API Architect. Return ONLY valid JSON. No prose. MVP only.`,
+    user: `CTX: ${projectContext}
+ARCH: ${systemArchJson}
+REQ: ${requirementsData}
 
-SYSTEM ARCHITECTURE (summary): ${systemArchJson}
-REQUIREMENTS (compact): ${requirementsData}
+MVP API. HARD LIMITS:
+- Max 6 endpoints
+- Max 3 edge functions
+- Max 2 realtime channels
+- No nested schemas
+- No explanations
 
-Design the MVP API contracts. HARD LIMITS — do NOT exceed:
-- Maximum 8 endpoints
-- Maximum 4 edge functions
-- Maximum 2 realtime channels
-- No narrative text — only structured JSON
-- Keep request_body and response minimal (just key property names, no nested schemas)
-
-Return this exact JSON shape:
+JSON:
 {
-  "api_style": "REST",
-  "base_url": "/api/v1",
-  "auth_strategy": {"type": "JWT", "header": "Authorization", "flow": "supabase_auth"},
-  "endpoints": [
-    {
-      "method": "GET|POST|PUT|DELETE",
-      "path": "string",
-      "description": "one short sentence",
-      "auth_required": true,
-      "request_body": {},
-      "response": {"status": 200},
-      "errors": [{"status": 400, "description": "string"}]
-    }
-  ],
-  "edge_functions": [{"name": "string", "description": "one sentence", "trigger": "HTTP", "auth": true}],
-  "realtime_channels": [{"name": "string", "table": "string", "events": ["INSERT"]}]
+  "api_style":"REST",
+  "base_url":"/api/v1",
+  "auth_strategy":{"type":"JWT","header":"Authorization","flow":"supabase_auth"},
+  "endpoints":[{"method":"GET|POST|PUT|DELETE","path":"str","description":"<10 words","auth_required":true,"request_body":{},"response":{"status":200},"errors":[{"status":400,"description":"str"}]}],
+  "edge_functions":[{"name":"str","description":"<10 words","trigger":"HTTP","auth":true}],
+  "realtime_channels":[{"name":"str","table":"str","events":["INSERT"]}]
 }`,
   };
 }
 
 export function dependencyPlannerPrompt(
   projectContext: string,
-  systemArchJson: string,
-  dataArchJson: string,
-  apiArchJson: string,
+  intermediateSummary: string,
 ): { system: string; user: string } {
   return {
-    system: `You are a Dependency Planner Agent. Return ONLY valid JSON. Be extremely concise. No markdown, no explanation. MVP scope only.`,
-    user: `PROJECT: ${projectContext}
+    system: `Dependency Planner. Return ONLY valid JSON. No prose.`,
+    user: `CTX: ${projectContext}
+SUMMARY: ${intermediateSummary}
 
-SYSTEM ARCH (summary): ${systemArchJson}
-DATA MODEL (summary): ${dataArchJson}
-API CONTRACTS (summary): ${apiArchJson}
+Plan code generation dependencies. HARD LIMITS:
+- Max 12 nodes, 12 edges
+- Max 3 phases
+- Max 6 npm deps
+- Max 2 risk areas
 
-Plan the code generation dependency graph. HARD LIMITS:
-- Maximum 15 nodes
-- Maximum 15 edges
-- Maximum 4 generation phases
-- Maximum 8 npm dependencies
-- Maximum 3 risk areas
-- No narrative text — only structured JSON
-
-Return this exact JSON shape:
+JSON:
 {
-  "dependency_graph": {
-    "nodes": [
-      {"id": "string", "type": "config|schema|type|service|hook|component|page", "layer": "infra|data|service|ui"}
-    ],
-    "edges": [
-      {"from": "string", "to": "string", "type": "imports|uses|configures"}
-    ]
-  },
-  "generation_order": [
-    {"phase": 1, "label": "string", "files": ["string"], "parallel": true}
-  ],
-  "npm_dependencies": [
-    {"package": "string", "version": "string", "dev": false}
-  ],
-  "critical_path": ["string"],
-  "risk_areas": [
-    {"area": "string", "risk": "low|medium|high", "mitigation": "one sentence"}
-  ],
-  "estimated_files_count": 0,
-  "estimated_generation_phases": 0
+  "dependency_graph":{"nodes":[{"id":"str","type":"config|schema|type|service|hook|component|page","layer":"infra|data|service|ui"}],"edges":[{"from":"str","to":"str","type":"imports|uses|configures"}]},
+  "generation_order":[{"phase":1,"label":"str","files":["str"],"parallel":true}],
+  "npm_dependencies":[{"package":"str","version":"str","dev":false}],
+  "critical_path":["str"],
+  "risk_areas":[{"area":"str","risk":"low|medium|high","mitigation":"<10 words"}],
+  "estimated_files_count":0,
+  "estimated_generation_phases":0
 }`,
   };
 }
