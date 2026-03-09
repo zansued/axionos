@@ -10,7 +10,7 @@ import {
   Columns3, Search, FileSearch, Sparkles, FlaskConical, GitPullRequestArrow,
   Rss, PackageCheck, ShieldCheck, Package, Shield, Settings, CreditCard, Plug,
   Users, Scale, BrainCircuit, Zap, Store, TrendingUp, Brain, FileText, Gauge,
-  Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck,
+  Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
@@ -118,6 +118,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Sim. Sandbox",  url: "/research-sandbox",           icon: Beaker },
   { title: "Res. Patterns", url: "/research-patterns",          icon: Network },
   { title: "Promotion",     url: "/architecture-promotion",     icon: ClipboardCheck },
+  { title: "AI Routing",    url: "/ai-routing-policy",          icon: Route },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */

@@ -61,6 +61,7 @@ import ArchitectureHypotheses from "./pages/ArchitectureHypotheses";
 import ResearchSandbox from "./pages/ResearchSandbox";
 import ResearchPatterns from "./pages/ResearchPatterns";
 import ArchitecturePromotion from "./pages/ArchitecturePromotion";
+import AIRoutingPolicy from "./pages/AIRoutingPolicy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -158,6 +159,7 @@ const App = () => (
                         <Route path="/research-sandbox"          element={<P><ResearchSandbox /></P>} />
                         <Route path="/research-patterns"         element={<P><ResearchPatterns /></P>} />
                         <Route path="/architecture-promotion"    element={<P><ArchitecturePromotion /></P>} />
+                        <Route path="/ai-routing-policy"         element={<P><AIRoutingPolicy /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>

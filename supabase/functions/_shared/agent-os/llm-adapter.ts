@@ -398,7 +398,7 @@ export const DEFAULT_LLM_ADAPTER_CONFIG: LLMAdapterConfig = {
   fallback_enabled: true,
   fallback_chain: [
     "deepseek-chat",
-    "gpt-4o-mini",
+    "gpt-5-mini",
   ],
 };
 
