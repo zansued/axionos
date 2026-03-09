@@ -62,6 +62,7 @@ import ResearchSandbox from "./pages/ResearchSandbox";
 import ResearchPatterns from "./pages/ResearchPatterns";
 import ArchitecturePromotion from "./pages/ArchitecturePromotion";
 import AIRoutingPolicy from "./pages/AIRoutingPolicy";
+import IntelligenceMemory from "./pages/IntelligenceMemory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
