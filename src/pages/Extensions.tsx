@@ -61,6 +61,7 @@ export default function Extensions() {
   const [notes, setNotes] = useState("");
   const [compatResult, setCompatResult] = useState<any>(null);
   const [tab, setTab] = useState("all");
+  const { guidance, whyNow } = usePageGuidance("extensions");
 
   const { data: extensionsData, isLoading, error: queryError } = useQuery({
     queryKey: ["platform-extensions", currentOrg?.id],
