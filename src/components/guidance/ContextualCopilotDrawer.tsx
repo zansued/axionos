@@ -125,7 +125,7 @@ export function ContextualCopilotDrawer({ pageKey, guidance, canonicalRole, open
             <div className="flex items-center gap-2">
               <Compass className="h-4 w-4 text-primary" />
               <span className="text-sm font-semibold">
-                {lang === "pt" ? "Guia Contextual" : "Contextual Guide"}
+                {submodeLabel}
               </span>
             </div>
             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onClose}>
