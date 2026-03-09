@@ -57,7 +57,7 @@ AxionOS has completed **79 implementation sprints** spanning the full capability
 
 **Post-Block M Strategic Position:**
 
-The platform has reached its first **product-ready operating baseline**. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — is mature and complete. The product experience layer — user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — is complete. The evidence-governed improvement loop — evidence capture, candidate distillation, sandbox benchmarking, promotion governance — is complete.
+The platform has reached its first **product-ready operating baseline**. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — is mature and complete. The product experience layer — user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — is complete. Sprint 71 established governed extensibility. Block N (Evidence-Governed Improvement Loop, Sprints 72–74) is the next planned block.
 
 The strategic direction achieved through Block M was **productization of the platform promise**:
 
