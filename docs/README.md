@@ -79,16 +79,17 @@ The default user-facing journey remains:
 
 The platform has completed its **product-ready operating baseline** at Sprint 70, extended by Sprint 71 (Governed Extensibility).
 
-The next strategic arc is **governed self-improvement and ecosystem evolution**:
+The next strategic arc is **Governed Intelligence & Decision Maturity**:
 
-- **Block N (72–74, Planned)** — Evidence-Governed Improvement Loop: turning operational evidence into bounded improvement proposals under governance
-- **Block O (75–78, Reserved)** — Advanced Multi-Agent Coordination
-- **Block P (79–82, Reserved)** — Governed Capability Ecosystem & Early Marketplace
-- **Block Q (83–86, Reserved)** — Delivery Optimization & Outcome Assurance 2.0
-- **Block R (87–90, Reserved)** — Advanced Distributed Runtime & Scaled Execution
-- **Block S (91–94, Reserved)** — Research Sandbox for Architecture Evolution
+- **Block N (72–74, Planned) — Active thaw now:** Evidence-Governed Improvement Loop: turning operational evidence into bounded improvement proposals under governance
+- **Block O (Sprint 75, Planned) — Partial thaw next:** Role Arbitration & Capability Routing 2.0 as the first safe coordination thaw
+- **Block O (76–78, Reserved) — Still reserved:** Deeper advanced multi-agent coordination (debate, shared memory, swarm)
+- **Block P (79–82, Reserved) — Still reserved:** Governed Capability Ecosystem & Early Marketplace
+- **Block Q (83–86, Reserved) — Still reserved:** Delivery Optimization & Outcome Assurance 2.0
+- **Block R (87–90, Reserved) — Still reserved:** Advanced Distributed Runtime & Scaled Execution
+- **Block S (91–94, Reserved) — Still reserved:** Research Sandbox for Architecture Evolution
 
-Internal sophistication remains critical. Future blocks deepen it through evidence-governed improvement, not uncontrolled autonomy.
+Internal sophistication remains critical. Future blocks deepen it through evidence-governed improvement and better routing, not uncontrolled autonomy.
 
 ---
 
