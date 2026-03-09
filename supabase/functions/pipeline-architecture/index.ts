@@ -150,10 +150,10 @@ function estimateSubjobInput(
       return { promptChars: p.system.length + p.user.length, contextChars: compactSysContext.length };
     }
     case "architecture.dependencies": {
-      const p = dependencyPlannerPrompt(projectContext, fullSystemArchJson, dataArchJson, apiArchJson);
+      const p = dependencyPlannerPrompt(projectContext, compactSysContext, compactDataContext, compactApiContext);
       return {
         promptChars: p.system.length + p.user.length,
-        contextChars: fullSystemArchJson.length + dataArchJson.length + apiArchJson.length,
+        contextChars: compactSysContext.length + compactDataContext.length + compactApiContext.length,
       };
     }
     default:
