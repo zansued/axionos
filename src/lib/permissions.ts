@@ -10,7 +10,7 @@ import {
   Columns3, Search, FileSearch, Sparkles, FlaskConical, GitPullRequestArrow,
   Rss, PackageCheck, ShieldCheck, Package, Shield, Settings, CreditCard, Plug,
   Users, Scale, BrainCircuit, Zap, Store, TrendingUp, Brain, FileText, Gauge,
-  Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route,
+  Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route, Compass,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
@@ -71,6 +71,7 @@ export const WORKSPACE_FULL_NAV: NavItem[] = [
   { title: "Capabilities",  url: "/capability-registry",      icon: PackageCheck },
   { title: "Cap. Gov.",     url: "/capability-governance",    icon: ShieldCheck },
   { title: "Extensions",    url: "/extensions",               icon: Package },
+  { title: "Horizons",     url: "/multi-horizon-alignment",  icon: Compass },
   { title: "Audit",         url: "/audit",                    icon: Shield },
   { title: "Settings",      url: "/org",                      icon: Settings },
   { title: "Billing",       url: "/billing",                  icon: CreditCard },
