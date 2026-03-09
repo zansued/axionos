@@ -26,34 +26,13 @@
 
 ---
 
-## Post-70 Execution Guidance
+## Canon Status
 
-Sprints 1–70 represent the **completed product-ready operating canon** of AxionOS. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete.
+All 94 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Research Sandbox for Architecture Evolution (Sprint 94) — is implemented and operational.
 
-The next execution focus is **evidence-governed improvement** (Block N):
-- The internal architecture and product experience foundation are complete through Sprint 71
-- Future sprints should deepen evidence-based learning, improvement proposal generation, and governed promotion
-- Future sprints should not casually reopen completed canon unless deliberate review requires it
-- Implementation continues one sprint at a time with human review before each
 - No autonomous architecture mutation — all structural changes require human approval
-
----
-
-## Future Canon Guidance
-
-This document serves as the canonical sprint execution ledger. The following conventions apply:
-
-| Status | Meaning | Detail Level |
-|--------|---------|-------------|
-| ✅ Complete | Implemented and verified | Full historical record preserved |
-| 📋 Planned | Next sprint in queue, scope defined | Highly detailed — ready for implementation |
-| 📋 Committed | Part of the committed future arc, scope outlined | Moderately detailed — objectives and acceptance direction defined |
-| 🔮 Reserved | Strategic direction defined, not yet scoped for implementation | Lightweight — name, block, and one-line purpose only |
-
-- **Current/next sprint** should be highly detailed before implementation begins
-- **Planned block** (Block N, Sprints 72–74) should be scoped sprint-by-sprint before implementation
-- **Reserved horizon** (Blocks O–S, Sprints 75–94) should remain intentionally lightweight until promoted to planned
-- Reserved blocks should not be promoted without deliberate review
+- Governance before autonomy remains the governing principle
+- All 77+ architectural layers are active and verified
 
 ---
 
