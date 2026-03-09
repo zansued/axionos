@@ -780,6 +780,40 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Changes to critical dependencies should be reviewed.",
     },
   },
+  },
+  {
+    key: "strategic-succession",
+    title: { pt: "Sucessão Estratégica", en: "Strategic Succession" },
+    description: {
+      pt: "Governança de sucessão e continuidade institucional de longo horizonte.",
+      en: "Strategic succession & long-horizon institutional continuity governance.",
+    },
+    audience: { pt: "Owners e Admins", en: "Owners and Admins" },
+    surface: "workspace",
+    actions: [
+      { pt: "Mapear papéis críticos", en: "Map critical roles" },
+      { pt: "Avaliar prontidão de sucessão", en: "Assess succession readiness" },
+      { pt: "Detectar concentração de conhecimento", en: "Detect knowledge concentration" },
+      { pt: "Modelar planos de sucessão", en: "Model succession plans" },
+    ],
+    whenRelevant: {
+      pt: "Quando há risco de perda de continuidade por turnover, transição ou reestruturação.",
+      en: "When continuity risk exists from turnover, transition, or restructuring.",
+    },
+    whenIgnorable: {
+      pt: "Se a postura de sucessão é saudável e todos os papéis críticos têm backup.",
+      en: "If succession posture is healthy and all critical roles have backup.",
+    },
+    nextStep: {
+      pt: "Registrar papéis críticos e avaliar prontidão de continuidade.",
+      en: "Register critical roles and assess continuity readiness.",
+    },
+    approvalPosture: "recommended",
+    approvalHint: {
+      pt: "Transições de liderança e mudanças de mandato devem ser revisadas.",
+      en: "Leadership transitions and mandate changes should be reviewed.",
+    },
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────
