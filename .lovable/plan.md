@@ -97,7 +97,7 @@ AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
 |--------|-------------|--------|
 | Sprint 95 | Institutional Memory Consolidation — unified queryable institutional knowledge | ✅ |
 | Sprint 96 | Doctrine & Playbook Synthesis — playbooks, doctrine packs, operational heuristics | ✅ |
-| Sprint 97 | Bounded Autonomous Operations — safe autonomy for repetitive low-risk operations | 🔲 |
+| Sprint 97 | Bounded Autonomous Operations — safe autonomy for repetitive low-risk operations | ✅ |
 | Sprint 98 | Institutional Decision Engine — memory + doctrine + risk → consistent recommendations | 🔲 |
 
 ### Future Horizons

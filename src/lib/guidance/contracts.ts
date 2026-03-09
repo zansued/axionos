@@ -489,6 +489,34 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Doctrines require human review before activation.",
     },
   },
+  {
+    key: "bounded-operations",
+    title: { pt: "Operações Autônomas Limitadas", en: "Bounded Operations" },
+    description: {
+      pt: "Operações autônomas seguras e repetíveis sob governança explícita, visibilidade e postura de rollback.",
+      en: "Safe, repeatable autonomous operations under explicit governance, visibility, and rollback posture.",
+    },
+    audience: { pt: "Operadores e administradores", en: "Operators and administrators" },
+    surface: "workspace",
+    actions: [
+      { pt: "Revisar operações executadas e bloqueadas", en: "Review executed and blocked operations" },
+      { pt: "Inspecionar postura de autonomia", en: "Inspect autonomy posture" },
+      { pt: "Executar rollback quando necessário", en: "Execute rollback when needed" },
+    ],
+    whenRelevant: {
+      pt: "Quando quiser monitorar operações automatizadas e garantir que permanecem dentro dos limites.",
+      en: "When you want to monitor automated operations and ensure they remain within bounds.",
+    },
+    whenIgnorable: {
+      pt: "Se não há operações autônomas pendentes ou em execução.",
+      en: "If there are no pending or executing autonomous operations.",
+    },
+    nextStep: {
+      pt: "Revisar operações bloqueadas e ajustar regras de autonomia.",
+      en: "Review blocked operations and adjust autonomy rules.",
+    },
+    approvalPosture: "optional",
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────
