@@ -228,14 +228,18 @@ async function executeSubjob(
       return result;
     }
     case "architecture.dependencies": {
-      const p = dependencyPlannerPrompt(projectContext, fullSystemArchJson, dataArchJson, apiArchJson);
-      const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, true, {
+      // Use COMPACT summaries instead of full JSON to reduce input from ~7k to ~1.5k tokens
+      const compactSys = compactSystemArchSummary(systemResult);
+      const compactData = compactDataArchSummary(completedResults["architecture.data"] || {});
+      const compactApi = compactApiArchSummary(completedResults["architecture.api"] || {});
+      const p = dependencyPlannerPrompt(projectContext, compactSys, compactData, compactApi);
+      const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, false, {
         stage: "architecture.dependencies",
         organizationId: executionMeta.organizationId,
         initiativeId: executionMeta.initiativeId,
         abortSignal: executionMeta.abortSignal,
       });
-      result.contextChars = fullSystemArchJson.length + dataArchJson.length + apiArchJson.length;
+      result.contextChars = compactSys.length + compactData.length + compactApi.length;
       return result;
     }
     case "architecture.synthesis": {
