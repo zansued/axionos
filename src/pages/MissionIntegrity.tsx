@@ -10,7 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Shield, AlertTriangle, Activity, HeartPulse, Eye, RefreshCw, PlayCircle, ShieldAlert, Info, Clock } from "lucide-react";
 import { toast } from "sonner";
-import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoreBar, ScoringTransparencyCard } from "@/components/block-w/BlockWShared";
+import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoreBar, ScoringTransparencyCard, CausalModifierCard } from "@/components/block-w/BlockWShared";
 
 async function invokeEngine(orgId: string, action: string) {
   const { data: { session } } = await supabase.auth.getSession();
