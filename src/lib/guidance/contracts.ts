@@ -615,6 +615,39 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Severe or structural conflicts require human approval for resolution.",
     },
   },
+  {
+    key: "federated-boundaries",
+    title: { pt: "Fronteiras Federadas", en: "Federated Boundaries" },
+    description: {
+      pt: "Controle o que atravessa fronteiras entre domínios, tenants e unidades — com políticas, transformações e explicabilidade.",
+      en: "Control what crosses boundaries between domains, tenants, and units — with policies, transformations, and explainability.",
+    },
+    audience: { pt: "Operadores e administradores", en: "Operators and administrators" },
+    surface: "workspace",
+    actions: [
+      { pt: "Visualizar mapa de fronteiras federadas", en: "View federated boundary map" },
+      { pt: "Analisar decisões de transferência", en: "Analyze transfer decisions" },
+      { pt: "Detectar violações de fronteira", en: "Detect boundary violations" },
+      { pt: "Verificar padrões compartilhados", en: "Check shared patterns" },
+    ],
+    whenRelevant: {
+      pt: "Quando há necessidade de cooperação controlada entre domínios ou tenants.",
+      en: "When controlled cooperation between domains or tenants is needed.",
+    },
+    whenIgnorable: {
+      pt: "Se opera em domínio único sem federação.",
+      en: "If operating in a single domain without federation.",
+    },
+    nextStep: {
+      pt: "Modelar fronteiras e definir políticas de transferência.",
+      en: "Model boundaries and define transfer policies.",
+    },
+    approvalPosture: "required",
+    approvalHint: {
+      pt: "Transferências entre fronteiras controladas ou hard exigem revisão.",
+      en: "Transfers across controlled or hard boundaries require review.",
+    },
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────

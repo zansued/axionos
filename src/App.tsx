@@ -68,6 +68,7 @@ import BoundedOperations from "./pages/BoundedOperations";
 import DecisionEngine from "./pages/DecisionEngine";
 import DoctrineAdaptation from "./pages/DoctrineAdaptation";
 import InstitutionalConflicts from "./pages/InstitutionalConflicts";
+import FederatedBoundaries from "./pages/FederatedBoundaries";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -135,6 +136,7 @@ const App = () => (
                         <Route path="/decision-engine"        element={<W><DecisionEngine /></W>} />
                         <Route path="/doctrine-adaptation"    element={<W><DoctrineAdaptation /></W>} />
                         <Route path="/institutional-conflicts" element={<W><InstitutionalConflicts /></W>} />
+                        <Route path="/federated-boundaries"    element={<W><FederatedBoundaries /></W>} />
                         <Route path="/improvement-ledger"      element={<W><ImprovementLedger /></W>} />
                         <Route path="/improvement-candidates"  element={<W><ImprovementCandidates /></W>} />
                         <Route path="/improvement-benchmarks"  element={<W><ImprovementBenchmarks /></W>} />
