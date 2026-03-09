@@ -50,7 +50,6 @@ export default function CapabilityGovernance() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [drawerType, setDrawerType] = useState<string>("");
   const ov = overview.data as any;
-  const { guidance, whyNowText } = usePageGuidance("capability-governance");
 
   const kpis = [
     { label: "Active Entitlements", value: ov?.active_entitlements ?? "—", icon: CheckCircle, color: "text-emerald-400" },
