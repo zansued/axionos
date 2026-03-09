@@ -324,40 +324,66 @@ export default function StrategicSuccession() {
           {/* Succession Plans */}
           <TabsContent value="plans">
             <Card className="bg-card border-border">
-              <ScrollArea className="max-h-[500px]">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Code</TableHead>
-                      <TableHead>Type</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Trigger</TableHead>
-                      <TableHead>Handoff Viability</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {plans.length === 0 ? (
-                      <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">No succession plans.</TableCell></TableRow>
-                    ) : plans.map((p: any) => {
+              <ScrollArea className="max-h-[600px]">
+                {plans.length === 0 ? (
+                  <p className="text-sm text-muted-foreground py-8 text-center">No succession plans.</p>
+                ) : (
+                  <div className="divide-y divide-border">
+                    {plans.map((p: any) => {
                       const handoff = assessment?.handoffResults?.find((h: HandoffResult) => h.planId === p.id);
+                      const hs = Array.isArray(p.handoff_sequence) ? p.handoff_sequence : [];
+                      const kt = Array.isArray(p.knowledge_transfer_steps) ? p.knowledge_transfer_steps : [];
+                      const at = Array.isArray(p.authority_transfer_steps) ? p.authority_transfer_steps : [];
+                      const cc = Array.isArray(p.continuity_checks) ? p.continuity_checks : [];
+                      const hasDetails = hs.length > 0 || kt.length > 0 || at.length > 0 || cc.length > 0;
+
                       return (
-                        <TableRow key={p.id}>
-                          <TableCell className="font-mono text-xs">{p.plan_code}</TableCell>
-                          <TableCell className="text-sm">{p.succession_type}</TableCell>
-                          <TableCell><Badge variant={p.status === "active" ? "default" : "secondary"} className="text-xs">{p.status}</Badge></TableCell>
-                          <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate">{typeof p.trigger_conditions === "string" ? p.trigger_conditions : JSON.stringify(p.trigger_conditions)}</TableCell>
-                          <TableCell>
-                            {handoff ? (
-                              <span className={`text-xs font-medium ${handoff.viable ? "text-primary" : "text-destructive"}`}>
-                                {handoff.completeness}% {handoff.viable ? "✓" : `— ${handoff.gaps.length} gaps`}
-                              </span>
-                            ) : <span className="text-xs text-muted-foreground">—</span>}
-                          </TableCell>
-                        </TableRow>
+                        <Collapsible key={p.id}>
+                          <div className="p-4">
+                            <CollapsibleTrigger className="flex items-center justify-between w-full text-left group">
+                              <div className="flex items-center gap-3 flex-1 min-w-0">
+                                <span className="font-mono text-xs text-foreground">{p.plan_code}</span>
+                                <Badge variant={p.status === "active" ? "default" : "secondary"} className="text-xs shrink-0">{p.status}</Badge>
+                                <span className="text-xs text-muted-foreground truncate">{p.succession_type}</span>
+                                {handoff && (
+                                  <span className={`text-xs font-medium shrink-0 ${handoff.viable ? "text-primary" : "text-destructive"}`}>
+                                    Viability: {handoff.completeness}% {handoff.viable ? "✓" : `(${handoff.gaps.length} gaps)`}
+                                  </span>
+                                )}
+                              </div>
+                              {hasDetails && <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-data-[state=open]:rotate-180" />}
+                            </CollapsibleTrigger>
+
+                            {/* Trigger conditions summary */}
+                            <p className="text-xs text-muted-foreground mt-1 max-w-xl truncate">
+                              Trigger: {typeof p.trigger_conditions === "string" ? p.trigger_conditions : JSON.stringify(p.trigger_conditions)}
+                            </p>
+
+                            {/* Handoff gaps */}
+                            {handoff && !handoff.viable && handoff.gaps.length > 0 && (
+                              <div className="mt-2">
+                                {handoff.gaps.map((g, i) => (
+                                  <span key={i} className="inline-block text-[10px] bg-destructive/10 text-destructive rounded px-1.5 py-0.5 mr-1 mb-1">{g}</span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {hasDetails && (
+                            <CollapsibleContent>
+                              <div className="px-4 pb-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <TransferSection title="Handoff Sequence" items={hs} icon={ArrowRightLeft} />
+                                <TransferSection title="Knowledge Transfer" items={kt} icon={Brain} />
+                                <TransferSection title="Authority Transfer" items={at} icon={Shield} />
+                                <TransferSection title="Continuity Checks" items={cc} icon={ClipboardList} />
+                              </div>
+                            </CollapsibleContent>
+                          )}
+                        </Collapsible>
                       );
                     })}
-                  </TableBody>
-                </Table>
+                  </div>
+                )}
               </ScrollArea>
             </Card>
           </TabsContent>
