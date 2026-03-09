@@ -155,10 +155,19 @@ function estimateSubjobInput(
       return { promptChars: p.system.length + p.user.length, contextChars: compactSysContext.length };
     }
     case "architecture.dependencies": {
-      const p = dependencyPlannerPrompt(projectContext, compactSysContext, compactDataContext, compactApiContext);
+      const intermediateSummary = buildIntermediateSummary(projectContext, completedResults["architecture.system"] || null);
+      const dataRes = completedResults["architecture.data"] || {};
+      const apiRes = completedResults["architecture.api"] || {};
+      const enriched = JSON.stringify({
+        ...intermediateSummary,
+        tables: ((dataRes.tables as any[]) || []).slice(0, 5).map((t: any) => t.name),
+        endpoints: ((apiRes.endpoints as any[]) || []).slice(0, 6).map((e: any) => `${e.method} ${e.path}`),
+        edge_functions: ((apiRes.edge_functions as any[]) || []).slice(0, 3).map((f: any) => f.name),
+      });
+      const p = dependencyPlannerPrompt(projectContext, enriched);
       return {
         promptChars: p.system.length + p.user.length,
-        contextChars: compactSysContext.length + compactDataContext.length + compactApiContext.length,
+        contextChars: enriched.length,
       };
     }
     default:
