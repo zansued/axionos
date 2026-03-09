@@ -76,7 +76,7 @@ export default function ContinuitySimulation() {
       subject_type: values.subject_type || "institution",
       summary: values.summary || "",
       active: true,
-      subject_ref: {},
+      subject_ref: "{}",
     }]);
     if (error) toast.error(error.message);
     else { toast.success("Subject created"); qc.invalidateQueries({ queryKey: ["continuity-sim-overview"] }); }

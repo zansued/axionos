@@ -131,7 +131,7 @@ export default function TradeoffArbitration() {
       domain: values.domain || "general",
       summary: values.summary || "",
       active: true,
-      subject_ref: {},
+      subject_ref: "{}",
     });
     if (error) toast.error(error.message);
     else { toast.success("Subject created"); load(); }
