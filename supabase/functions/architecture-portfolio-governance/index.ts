@@ -30,6 +30,8 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "Not a member of this organization" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
+    const json = (d: unknown) => new Response(JSON.stringify(d), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+
     if (action === "overview") {
       const [portfolios, members, recs] = await Promise.all([
         sc.from("architecture_portfolios").select("id, lifecycle_status").eq("organization_id", organization_id),
