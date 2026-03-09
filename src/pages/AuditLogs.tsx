@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
+import { PageIntroCard } from "@/components/guidance";
+import { usePageGuidance } from "@/hooks/usePageGuidance";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOrg } from "@/contexts/OrgContext";
 import { supabase } from "@/integrations/supabase/client";
