@@ -156,6 +156,14 @@ flowchart TD
    Delivery Optimization →
    Distributed Runtime →
    Architecture Research ✅
+
+   PLANNED (95–98)
+   ──────────────────────────────────────────────────────────────────────────────►
+   Block T — Governed Intelligence OS
+   Sprint 95: Institutional Memory Consolidation
+   Sprint 96: Doctrine & Playbook Synthesis
+   Sprint 97: Bounded Autonomous Operations
+   Sprint 98: Institutional Decision Engine
 ```
 
 ---
