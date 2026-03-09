@@ -86,13 +86,13 @@ Limites obrigatórios:
 
 export function apiArchitectPrompt(projectContext: string, requirementsData: string, systemArchJson: string): { system: string; user: string } {
   return {
-    system: `Você é o API Architect Agent — especialista em design de APIs. Defina os contratos de API completos baseados na arquitetura. Retorne APENAS JSON válido.`,
+    system: `Você é o API Architect Agent — especialista em design de APIs. Defina contratos consistentes com a arquitetura. Retorne APENAS JSON válido, sem markdown e sem texto extra. Seja objetivo e compacto.`,
     user: `${projectContext}
 
-ARQUITETURA DE SISTEMA: ${systemArchJson}
-REQUISITOS: ${requirementsData}
+ARQUITETURA DE SISTEMA (resumo): ${systemArchJson}
+REQUISITOS (compactos): ${requirementsData}
 
-Defina os contratos de API:
+Defina os contratos de API com foco em MVP:
 {
   "api_style": "REST|GraphQL|RPC",
   "base_url": "string",
@@ -111,7 +111,13 @@ Defina os contratos de API:
   ],
   "edge_functions": [{"name": "string", "description": "string", "trigger": "HTTP|Webhook|Cron", "auth": true}],
   "realtime_channels": [{"name": "string", "table": "string", "events": ["INSERT|UPDATE|DELETE"]}]
-}`,
+}
+
+Limites obrigatórios:
+- máximo 12 endpoints
+- máximo 6 edge_functions
+- descrições curtas (1 linha)
+- evitar payloads excessivos em request/response`,
   };
 }
 
