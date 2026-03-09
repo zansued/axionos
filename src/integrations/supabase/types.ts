@@ -4885,6 +4885,111 @@ export type Database = {
           },
         ]
       }
+      boundary_transfer_policies: {
+        Row: {
+          active: boolean
+          boundary_id: string
+          created_at: string
+          id: string
+          justification_requirements: string
+          organization_id: string
+          review_policy: string
+          sensitivity_level: string
+          signal_type: string
+          transfer_mode: Database["public"]["Enums"]["transfer_mode"]
+        }
+        Insert: {
+          active?: boolean
+          boundary_id: string
+          created_at?: string
+          id?: string
+          justification_requirements?: string
+          organization_id: string
+          review_policy?: string
+          sensitivity_level?: string
+          signal_type?: string
+          transfer_mode?: Database["public"]["Enums"]["transfer_mode"]
+        }
+        Update: {
+          active?: boolean
+          boundary_id?: string
+          created_at?: string
+          id?: string
+          justification_requirements?: string
+          organization_id?: string
+          review_policy?: string
+          sensitivity_level?: string
+          signal_type?: string
+          transfer_mode?: Database["public"]["Enums"]["transfer_mode"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boundary_transfer_policies_boundary_id_fkey"
+            columns: ["boundary_id"]
+            isOneToOne: false
+            referencedRelation: "federated_boundaries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "boundary_transfer_policies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      boundary_violation_events: {
+        Row: {
+          boundary_id: string
+          created_at: string
+          event_summary: string
+          id: string
+          organization_id: string
+          payload: Json
+          resolved_at: string | null
+          severity: string
+          violation_type: string
+        }
+        Insert: {
+          boundary_id: string
+          created_at?: string
+          event_summary?: string
+          id?: string
+          organization_id: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+          violation_type?: string
+        }
+        Update: {
+          boundary_id?: string
+          created_at?: string
+          event_summary?: string
+          id?: string
+          organization_id?: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+          violation_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boundary_violation_events_boundary_id_fkey"
+            columns: ["boundary_id"]
+            isOneToOne: false
+            referencedRelation: "federated_boundaries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "boundary_violation_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_conformance_signals: {
         Row: {
           conformance_score: number
@@ -12877,6 +12982,154 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "external_trust_tiers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      federated_boundaries: {
+        Row: {
+          boundary_code: string
+          boundary_status: string
+          boundary_type: Database["public"]["Enums"]["boundary_type"]
+          created_at: string
+          description: string
+          id: string
+          organization_id: string
+          source_scope: string
+          target_scope: string
+          updated_at: string
+        }
+        Insert: {
+          boundary_code?: string
+          boundary_status?: string
+          boundary_type?: Database["public"]["Enums"]["boundary_type"]
+          created_at?: string
+          description?: string
+          id?: string
+          organization_id: string
+          source_scope?: string
+          target_scope?: string
+          updated_at?: string
+        }
+        Update: {
+          boundary_code?: string
+          boundary_status?: string
+          boundary_type?: Database["public"]["Enums"]["boundary_type"]
+          created_at?: string
+          description?: string
+          id?: string
+          organization_id?: string
+          source_scope?: string
+          target_scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "federated_boundaries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      federated_shared_patterns: {
+        Row: {
+          aggregation_method: string
+          confidence_score: number
+          created_at: string
+          id: string
+          organization_id: string
+          origin_scope: string
+          pattern_code: string
+          pattern_summary: string
+          shareability_type: string
+        }
+        Insert: {
+          aggregation_method?: string
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          organization_id: string
+          origin_scope?: string
+          pattern_code?: string
+          pattern_summary?: string
+          shareability_type?: string
+        }
+        Update: {
+          aggregation_method?: string
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          organization_id?: string
+          origin_scope?: string
+          pattern_code?: string
+          pattern_summary?: string
+          shareability_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "federated_shared_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      federated_transfer_events: {
+        Row: {
+          boundary_id: string
+          created_at: string
+          evidence: Json
+          id: string
+          organization_id: string
+          reason_summary: string
+          signal_type: string
+          source_entity: string
+          target_entity: string
+          transfer_decision: Database["public"]["Enums"]["transfer_decision"]
+          transformation_type: string | null
+        }
+        Insert: {
+          boundary_id: string
+          created_at?: string
+          evidence?: Json
+          id?: string
+          organization_id: string
+          reason_summary?: string
+          signal_type?: string
+          source_entity?: string
+          target_entity?: string
+          transfer_decision?: Database["public"]["Enums"]["transfer_decision"]
+          transformation_type?: string | null
+        }
+        Update: {
+          boundary_id?: string
+          created_at?: string
+          evidence?: Json
+          id?: string
+          organization_id?: string
+          reason_summary?: string
+          signal_type?: string
+          source_entity?: string
+          target_entity?: string
+          transfer_decision?: Database["public"]["Enums"]["transfer_decision"]
+          transformation_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "federated_transfer_events_boundary_id_fkey"
+            columns: ["boundary_id"]
+            isOneToOne: false
+            referencedRelation: "federated_boundaries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "federated_transfer_events_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -26410,6 +26663,7 @@ export type Database = {
         | "auto_execute_notify"
         | "auto_execute_bounded"
         | "requires_approval"
+      boundary_type: "hard" | "controlled" | "advisory" | "aggregate_only"
       confidence_posture: "very_low" | "low" | "moderate" | "high" | "very_high"
       conflict_status:
         | "detected"
@@ -26590,6 +26844,13 @@ export type Database = {
       story_priority: "low" | "medium" | "high" | "critical"
       story_status: "todo" | "in_progress" | "done" | "blocked"
       subtask_status: "pending" | "in_progress" | "completed" | "failed"
+      transfer_decision: "allowed" | "denied" | "transformed" | "escalated"
+      transfer_mode:
+        | "deny"
+        | "allow"
+        | "allow_aggregated"
+        | "allow_anonymized"
+        | "allow_with_review"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -26769,6 +27030,7 @@ export const Constants = {
         "auto_execute_bounded",
         "requires_approval",
       ],
+      boundary_type: ["hard", "controlled", "advisory", "aggregate_only"],
       confidence_posture: ["very_low", "low", "moderate", "high", "very_high"],
       conflict_status: [
         "detected",
@@ -26962,6 +27224,14 @@ export const Constants = {
       story_priority: ["low", "medium", "high", "critical"],
       story_status: ["todo", "in_progress", "done", "blocked"],
       subtask_status: ["pending", "in_progress", "completed", "failed"],
+      transfer_decision: ["allowed", "denied", "transformed", "escalated"],
+      transfer_mode: [
+        "deny",
+        "allow",
+        "allow_aggregated",
+        "allow_anonymized",
+        "allow_with_review",
+      ],
     },
   },
 } as const
