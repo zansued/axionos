@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { planDependencies } from "../_shared/architecture-planning/architecture-change-dependency-planner.ts";
 import { assessReadiness } from "../_shared/architecture-planning/architecture-rollout-readiness-assessor.ts";
 import { synthesizeValidationBlueprint } from "../_shared/architecture-planning/architecture-validation-blueprint-synthesizer.ts";
