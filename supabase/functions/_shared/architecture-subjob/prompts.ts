@@ -130,32 +130,40 @@ export function dependencyPlannerPrompt(
   apiArchJson: string,
 ): { system: string; user: string } {
   return {
-    system: `Você é o Dependency Planner Agent — especialista em análise de dependências e ordem de geração. Crie o grafo de dependências do projeto. Retorne APENAS JSON válido.`,
-    user: `${projectContext}
+    system: `You are a Dependency Planner Agent. Return ONLY valid JSON. Be extremely concise. No markdown, no explanation. MVP scope only.`,
+    user: `PROJECT: ${projectContext}
 
-ARQUITETURA DE SISTEMA: ${systemArchJson}
-MODELO DE DADOS: ${dataArchJson}
-CONTRATOS DE API: ${apiArchJson}
+SYSTEM ARCH (summary): ${systemArchJson}
+DATA MODEL (summary): ${dataArchJson}
+API CONTRACTS (summary): ${apiArchJson}
 
-Crie o grafo de dependências para geração de código:
+Plan the code generation dependency graph. HARD LIMITS:
+- Maximum 15 nodes
+- Maximum 15 edges
+- Maximum 4 generation phases
+- Maximum 8 npm dependencies
+- Maximum 3 risk areas
+- No narrative text — only structured JSON
+
+Return this exact JSON shape:
 {
   "dependency_graph": {
     "nodes": [
-      {"id": "string (file path or module)", "type": "config|schema|type|service|hook|component|page|test", "layer": "infra|data|service|ui|test", "description": "string"}
+      {"id": "string", "type": "config|schema|type|service|hook|component|page", "layer": "infra|data|service|ui"}
     ],
     "edges": [
-      {"from": "string", "to": "string", "type": "imports|extends|uses|configures"}
+      {"from": "string", "to": "string", "type": "imports|uses|configures"}
     ]
   },
   "generation_order": [
-    {"phase": 1, "label": "Infraestrutura", "files": ["string"], "parallel": true}
+    {"phase": 1, "label": "string", "files": ["string"], "parallel": true}
   ],
   "npm_dependencies": [
-    {"package": "string", "version": "string", "dev": false, "justification": "string"}
+    {"package": "string", "version": "string", "dev": false}
   ],
   "critical_path": ["string"],
   "risk_areas": [
-    {"area": "string", "risk": "low|medium|high", "mitigation": "string"}
+    {"area": "string", "risk": "low|medium|high", "mitigation": "one sentence"}
   ],
   "estimated_files_count": 0,
   "estimated_generation_phases": 0

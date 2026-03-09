@@ -20,7 +20,8 @@ import {
 } from "../_shared/architecture-subjob/prompts.ts";
 import {
   createAttemptDiagnostic, appendDiagnostic, classifyFailure,
-  compactSystemArchSummary, analyzeBottlenecks, estimateTokens,
+  compactSystemArchSummary, compactDataArchSummary, compactApiArchSummary,
+  analyzeBottlenecks, estimateTokens,
 } from "../_shared/architecture-subjob/diagnostics.ts";
 
 interface AgentOutput {
@@ -132,9 +133,8 @@ function estimateSubjobInput(
 ): { promptChars: number; contextChars: number } {
   const systemResult = completedResults["architecture.system"] || {};
   const compactSysContext = compactSystemArchSummary(systemResult);
-  const fullSystemArchJson = JSON.stringify(systemResult, null, 2);
-  const dataArchJson = JSON.stringify(completedResults["architecture.data"] || {}, null, 2);
-  const apiArchJson = JSON.stringify(completedResults["architecture.api"] || {}, null, 2);
+  const compactDataContext = compactDataArchSummary(completedResults["architecture.data"] || {});
+  const compactApiContext = compactApiArchSummary(completedResults["architecture.api"] || {});
 
   switch (subjobKey) {
     case "architecture.system": {
@@ -150,10 +150,10 @@ function estimateSubjobInput(
       return { promptChars: p.system.length + p.user.length, contextChars: compactSysContext.length };
     }
     case "architecture.dependencies": {
-      const p = dependencyPlannerPrompt(projectContext, fullSystemArchJson, dataArchJson, apiArchJson);
+      const p = dependencyPlannerPrompt(projectContext, compactSysContext, compactDataContext, compactApiContext);
       return {
         promptChars: p.system.length + p.user.length,
-        contextChars: fullSystemArchJson.length + dataArchJson.length + apiArchJson.length,
+        contextChars: compactSysContext.length + compactDataContext.length + compactApiContext.length,
       };
     }
     default:
@@ -186,9 +186,6 @@ async function executeSubjob(
   // Use compact summary for downstream agents instead of full system output
   const systemResult = completedResults["architecture.system"] || {};
   const compactSysContext = compactSystemArchSummary(systemResult);
-  const fullSystemArchJson = JSON.stringify(systemResult, null, 2);
-  const dataArchJson = JSON.stringify(completedResults["architecture.data"] || {}, null, 2);
-  const apiArchJson = JSON.stringify(completedResults["architecture.api"] || {}, null, 2);
 
   switch (subjobKey) {
     case "architecture.system": {
@@ -227,14 +224,18 @@ async function executeSubjob(
       return result;
     }
     case "architecture.dependencies": {
-      const p = dependencyPlannerPrompt(projectContext, fullSystemArchJson, dataArchJson, apiArchJson);
-      const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, true, {
+      // Use COMPACT summaries instead of full JSON to reduce input from ~7k to ~1.5k tokens
+      const compactSys = compactSystemArchSummary(systemResult);
+      const compactData = compactDataArchSummary(completedResults["architecture.data"] || {});
+      const compactApi = compactApiArchSummary(completedResults["architecture.api"] || {});
+      const p = dependencyPlannerPrompt(projectContext, compactSys, compactData, compactApi);
+      const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, false, {
         stage: "architecture.dependencies",
         organizationId: executionMeta.organizationId,
         initiativeId: executionMeta.initiativeId,
         abortSignal: executionMeta.abortSignal,
       });
-      result.contextChars = fullSystemArchJson.length + dataArchJson.length + apiArchJson.length;
+      result.contextChars = compactSys.length + compactData.length + compactApi.length;
       return result;
     }
     case "architecture.synthesis": {
