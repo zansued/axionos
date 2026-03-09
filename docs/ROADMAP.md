@@ -214,12 +214,12 @@ flowchart TD
 | L | System Roundness & Operating Completion | 63–65 | ✅ Complete |
 | M | Product Experience & Delivery Maturity | 66–70 | ✅ Complete |
 | — | Governed Extensibility (Bridge Sprint) | 71 | ✅ Complete |
-| N | Evidence-Governed Improvement Loop | 72–74 | ✅ Complete |
-| O | Advanced Multi-Agent Coordination | 75–78 | ✅ Complete |
-| P | Governed Capability Ecosystem & Early Marketplace | 79–82 | ✅ Complete |
-| Q | Autonomous Delivery Optimization & Outcome Assurance 2.0 | 83–86 | ✅ Complete |
-| R | Advanced Distributed Runtime & Scaled Execution | 87–90 | ✅ Complete |
-| S | Research Sandbox for Architecture Evolution | 91–94 | ✅ Complete |
+| N | Evidence-Governed Improvement Loop | 72–74 | 🔥 Planned — Active Thaw Now |
+| O | Advanced Multi-Agent Coordination | 75–78 | 🧊 Reserved — Partial Thaw Next (Sprint 75 only) |
+| P | Governed Capability Ecosystem & Early Marketplace | 79–82 | ❄️ Reserved — Still Reserved |
+| Q | Autonomous Delivery Optimization & Outcome Assurance 2.0 | 83–86 | ❄️ Reserved — Still Reserved |
+| R | Advanced Distributed Runtime & Scaled Execution | 87–90 | ❄️ Reserved — Still Reserved |
+| S | Research Sandbox for Architecture Evolution | 91–94 | ❄️ Reserved — Still Reserved |
 
 ---
 
