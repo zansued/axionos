@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { detectDrift } from "../_shared/platform-stabilization/platform-drift-detector.ts";
 import { detectOscillation } from "../_shared/platform-stabilization/platform-oscillation-detector.ts";
 import { generateStabilizationProposals, validateStabilizationTarget } from "../_shared/platform-stabilization/platform-stability-guard.ts";
