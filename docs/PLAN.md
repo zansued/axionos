@@ -835,5 +835,14 @@ Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed
 | Onboarding, Templates & Vertical Starters | 1 | 69 |
 | Adoption Intelligence & Customer Success | 1 | 70 |
 | Extension Management | 1 | 71 |
+| Evidence-Governed Improvement | 3 | 72–74 |
+| Multi-Agent Coordination | 4 | 75–78 |
+| Capability Ecosystem | 4 | 79–82 |
+| Delivery Optimization | 4 | 83–86 |
+| Distributed Runtime | 4 | 87–90 |
+| Architecture Research | 4 | 91–94 |
+| Governed Intelligence OS | 4 | 95–98 |
+| Adaptive Institutional Ecosystem | 4 | 99–102 |
+| Sovereign Institutional Intelligence | 4 | 103–106 |
 | Support | 11 | Various |
-| **Total** | **~93** | |
+| **Total** | **~125** | |
