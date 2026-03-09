@@ -28,6 +28,8 @@ interface AttemptDiag {
   estimated_input_tokens: number;
   estimated_output_tokens: number;
   provider_latency_ms: number | null;
+  parse_ms: number | null;
+  persist_ms: number | null;
   parse_status: string;
   persist_status: string;
   terminal_status: string;
