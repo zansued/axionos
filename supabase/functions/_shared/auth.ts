@@ -57,3 +57,23 @@ export async function authenticateWithRateLimit(
 
   return result;
 }
+
+/**
+ * Verify that the authenticated user is a member of the given organization.
+ * Returns a 403 Response on failure, or void on success.
+ */
+export async function requireOrgMembership(
+  serviceClient: SupabaseClient,
+  userId: string,
+  organizationId: string
+): Promise<Response | void> {
+  const { data } = await serviceClient
+    .from("organization_members")
+    .select("role")
+    .eq("organization_id", organizationId)
+    .eq("user_id", userId)
+    .single();
+  if (!data) {
+    return errorResponse("Not a member of this organization", 403);
+  }
+}
