@@ -23,6 +23,11 @@ import {
   compactSystemArchSummary, compactDataArchSummary, compactApiArchSummary,
   analyzeBottlenecks, estimateTokens,
 } from "../_shared/architecture-subjob/diagnostics.ts";
+import {
+  checkInputBudget, checkOutputGuardrail, checkRegressionSafety,
+  computeOptimizationDelta, buildIntermediateSummary, serializeIntermediateSummary,
+  type OptimizationDelta,
+} from "../_shared/architecture-subjob/optimization.ts";
 
 interface AgentOutput {
   role: string;
