@@ -319,7 +319,7 @@ serve(async (req) => {
   // ──── Background processing via EdgeRuntime.waitUntil ────
   // Return immediately so we don't hold the parallel run slot
   const backgroundTask = processArchitectureInBackground(
-    jobId, user, initiative, ctx, serviceClient, apiKey, dp, retrySubjobKey
+    jobId, user, initiative, ctx, serviceClient, apiKey, dp, retrySubjobKey, sequentialMode
   );
 
   // @ts-ignore — EdgeRuntime.waitUntil is available in Deno Deploy / Supabase Edge
