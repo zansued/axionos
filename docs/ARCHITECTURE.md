@@ -898,7 +898,11 @@ supabase/functions/
 | Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
 | State Management | TanStack React Query + React Context |
 | Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
-| AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
+| AI Engine — Economy | DeepSeek (`deepseek-chat`, `deepseek-reasoner`) |
+| AI Engine — High Confidence | OpenAI (`gpt-5-mini`) |
+| AI Engine — Premium | OpenAI (`gpt-5.4` / `gpt-5.2`) |
+| AI Engine — Fallback Transport | Lovable AI Gateway (explicit OpenAI models, no Gemini) |
+| AI Efficiency Layer | Prompt compression + semantic cache + canonical routing matrix |
 | Git Integration | GitHub API v3 (Tree API for atomic commits, PRs) |
 | Deployment | Vercel/Netlify configs auto-generated |
 
