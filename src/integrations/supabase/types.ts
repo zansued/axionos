@@ -7135,6 +7135,227 @@ export type Database = {
           },
         ]
       }
+      continuity_assets: {
+        Row: {
+          asset_code: string
+          asset_name: string
+          asset_type: string
+          continuity_tier: string
+          created_at: string
+          criticality_level: string
+          domain: string
+          id: string
+          organization_id: string
+          owner_ref: string
+          updated_at: string
+        }
+        Insert: {
+          asset_code?: string
+          asset_name?: string
+          asset_type?: string
+          continuity_tier?: string
+          created_at?: string
+          criticality_level?: string
+          domain?: string
+          id?: string
+          organization_id: string
+          owner_ref?: string
+          updated_at?: string
+        }
+        Update: {
+          asset_code?: string
+          asset_name?: string
+          asset_type?: string
+          continuity_tier?: string
+          created_at?: string
+          criticality_level?: string
+          domain?: string
+          id?: string
+          organization_id?: string
+          owner_ref?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "continuity_assets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      continuity_dependencies: {
+        Row: {
+          asset_id: string
+          created_at: string
+          dependency_strength: string
+          dependency_type: string
+          depends_on_asset_id: string
+          fallback_exists: boolean
+          id: string
+          organization_id: string
+          recovery_complexity: string
+        }
+        Insert: {
+          asset_id: string
+          created_at?: string
+          dependency_strength?: string
+          dependency_type?: string
+          depends_on_asset_id: string
+          fallback_exists?: boolean
+          id?: string
+          organization_id: string
+          recovery_complexity?: string
+        }
+        Update: {
+          asset_id?: string
+          created_at?: string
+          dependency_strength?: string
+          dependency_type?: string
+          depends_on_asset_id?: string
+          fallback_exists?: boolean
+          id?: string
+          organization_id?: string
+          recovery_complexity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "continuity_dependencies_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "continuity_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "continuity_dependencies_depends_on_asset_id_fkey"
+            columns: ["depends_on_asset_id"]
+            isOneToOne: false
+            referencedRelation: "continuity_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "continuity_dependencies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      continuity_incidents: {
+        Row: {
+          continuity_plan_id: string | null
+          created_at: string
+          disruption_type: string
+          domain: string
+          id: string
+          impacted_assets: Json
+          incident_code: string
+          incident_status: string
+          incident_summary: string
+          organization_id: string
+          resolved_at: string | null
+          severity: string
+        }
+        Insert: {
+          continuity_plan_id?: string | null
+          created_at?: string
+          disruption_type?: string
+          domain?: string
+          id?: string
+          impacted_assets?: Json
+          incident_code?: string
+          incident_status?: string
+          incident_summary?: string
+          organization_id: string
+          resolved_at?: string | null
+          severity?: string
+        }
+        Update: {
+          continuity_plan_id?: string | null
+          created_at?: string
+          disruption_type?: string
+          domain?: string
+          id?: string
+          impacted_assets?: Json
+          incident_code?: string
+          incident_status?: string
+          incident_summary?: string
+          organization_id?: string
+          resolved_at?: string | null
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "continuity_incidents_continuity_plan_id_fkey"
+            columns: ["continuity_plan_id"]
+            isOneToOne: false
+            referencedRelation: "continuity_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "continuity_incidents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      continuity_plans: {
+        Row: {
+          activation_criteria: string
+          created_at: string
+          disruption_type: string
+          domain: string
+          fallback_sequence: Json
+          id: string
+          organization_id: string
+          plan_code: string
+          plan_status: string
+          plan_summary: string
+          recovery_sequence: Json
+          updated_at: string
+        }
+        Insert: {
+          activation_criteria?: string
+          created_at?: string
+          disruption_type?: string
+          domain?: string
+          fallback_sequence?: Json
+          id?: string
+          organization_id: string
+          plan_code?: string
+          plan_status?: string
+          plan_summary?: string
+          recovery_sequence?: Json
+          updated_at?: string
+        }
+        Update: {
+          activation_criteria?: string
+          created_at?: string
+          disruption_type?: string
+          domain?: string
+          fallback_sequence?: Json
+          id?: string
+          organization_id?: string
+          plan_code?: string
+          plan_status?: string
+          plan_summary?: string
+          recovery_sequence?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "continuity_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       convergence_candidates: {
         Row: {
           assumptions: Json
@@ -23310,6 +23531,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "repair_strategy_weights_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      resilience_assessments: {
+        Row: {
+          assessment_scope: string
+          assessment_summary: string
+          continuity_score: number
+          coordination_fragility_score: number
+          created_at: string
+          domain: string
+          fallback_readiness_score: number
+          id: string
+          memory_recovery_score: number
+          organization_id: string
+          resilience_score: number
+        }
+        Insert: {
+          assessment_scope?: string
+          assessment_summary?: string
+          continuity_score?: number
+          coordination_fragility_score?: number
+          created_at?: string
+          domain?: string
+          fallback_readiness_score?: number
+          id?: string
+          memory_recovery_score?: number
+          organization_id: string
+          resilience_score?: number
+        }
+        Update: {
+          assessment_scope?: string
+          assessment_summary?: string
+          continuity_score?: number
+          coordination_fragility_score?: number
+          created_at?: string
+          domain?: string
+          fallback_readiness_score?: number
+          id?: string
+          memory_recovery_score?: number
+          organization_id?: string
+          resilience_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resilience_assessments_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
