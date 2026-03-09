@@ -917,7 +917,7 @@ With 71 sprints complete, Sprint 71 (Governed Extensibility) delivered, the plat
 
 The following blocks describe **planned and reserved architectural direction**, not implemented architecture. No modules, layers, or APIs exist for these blocks yet.
 
-#### Block N — Evidence-Governed Improvement Loop (Sprints 71–74) — 📋 Planned
+#### Block N — Evidence-Governed Improvement Loop (Sprints 72–74) — 📋 Planned
 
 **Architectural intent:** Introduce structured evidence collection from pipeline outcomes, bounded improvement proposal generation, governed testing/promotion, and rollback-safe experimentation. This block deepens the existing learning, memory, and calibration layers without mutating kernel structure.
 
