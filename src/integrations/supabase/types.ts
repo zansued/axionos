@@ -7473,6 +7473,56 @@ export type Database = {
           },
         ]
       }
+      continuity_simulation_constitutions: {
+        Row: {
+          constitution_code: string
+          constitution_name: string
+          created_at: string
+          created_by: string | null
+          default_horizon_settings: Json
+          id: string
+          organization_id: string
+          scope: string
+          simulation_principles: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string | null
+          default_horizon_settings?: Json
+          id?: string
+          organization_id: string
+          scope?: string
+          simulation_principles?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string | null
+          default_horizon_settings?: Json
+          id?: string
+          organization_id?: string
+          scope?: string
+          simulation_principles?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "continuity_simulation_constitutions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       continuity_transition_events: {
         Row: {
           continuity_impact: string
@@ -14154,6 +14204,61 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      future_continuity_snapshots: {
+        Row: {
+          continuity_score: number
+          created_at: string
+          future_state_type: string
+          id: string
+          organization_id: string
+          scenario_id: string | null
+          snapshot_summary: string
+          subject_id: string | null
+        }
+        Insert: {
+          continuity_score?: number
+          created_at?: string
+          future_state_type?: string
+          id?: string
+          organization_id: string
+          scenario_id?: string | null
+          snapshot_summary?: string
+          subject_id?: string | null
+        }
+        Update: {
+          continuity_score?: number
+          created_at?: string
+          future_state_type?: string
+          id?: string
+          organization_id?: string
+          scenario_id?: string | null
+          snapshot_summary?: string
+          subject_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "future_continuity_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "future_continuity_snapshots_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "simulation_scenarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "future_continuity_snapshots_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "simulation_subjects"
             referencedColumns: ["id"]
           },
         ]
@@ -25917,6 +26022,77 @@ export type Database = {
           },
         ]
       }
+      scenario_simulation_runs: {
+        Row: {
+          constitution_id: string | null
+          continuity_stress_score: number
+          created_at: string
+          id: string
+          identity_preservation_score: number
+          organization_id: string
+          scenario_id: string | null
+          simulation_summary: string
+          subject_id: string | null
+          survivability_score: number
+          viability_score: number
+        }
+        Insert: {
+          constitution_id?: string | null
+          continuity_stress_score?: number
+          created_at?: string
+          id?: string
+          identity_preservation_score?: number
+          organization_id: string
+          scenario_id?: string | null
+          simulation_summary?: string
+          subject_id?: string | null
+          survivability_score?: number
+          viability_score?: number
+        }
+        Update: {
+          constitution_id?: string | null
+          continuity_stress_score?: number
+          created_at?: string
+          id?: string
+          identity_preservation_score?: number
+          organization_id?: string
+          scenario_id?: string | null
+          simulation_summary?: string
+          subject_id?: string | null
+          survivability_score?: number
+          viability_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scenario_simulation_runs_constitution_id_fkey"
+            columns: ["constitution_id"]
+            isOneToOne: false
+            referencedRelation: "continuity_simulation_constitutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scenario_simulation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scenario_simulation_runs_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "simulation_scenarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scenario_simulation_runs_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "simulation_subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       semantic_retrieval_domains: {
         Row: {
           created_at: string | null
@@ -26088,6 +26264,205 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "semantic_retrieval_sessions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      simulation_recommendations: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          mitigation_priority: string
+          organization_id: string
+          rationale: string
+          recommendation_summary: string
+          recommendation_type: string
+          simulation_run_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          mitigation_priority?: string
+          organization_id: string
+          rationale?: string
+          recommendation_summary?: string
+          recommendation_type?: string
+          simulation_run_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          mitigation_priority?: string
+          organization_id?: string
+          rationale?: string
+          recommendation_summary?: string
+          recommendation_type?: string
+          simulation_run_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "simulation_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "simulation_recommendations_simulation_run_id_fkey"
+            columns: ["simulation_run_id"]
+            isOneToOne: false
+            referencedRelation: "scenario_simulation_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      simulation_scenarios: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          organization_id: string
+          scenario_code: string
+          scenario_name: string
+          scenario_scope: string
+          scenario_summary: string
+          scenario_type: string
+          stress_factors: Json
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          organization_id: string
+          scenario_code?: string
+          scenario_name?: string
+          scenario_scope?: string
+          scenario_summary?: string
+          scenario_type?: string
+          stress_factors?: Json
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          organization_id?: string
+          scenario_code?: string
+          scenario_name?: string
+          scenario_scope?: string
+          scenario_summary?: string
+          scenario_type?: string
+          stress_factors?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "simulation_scenarios_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      simulation_stress_points: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          payload: Json
+          severity: string
+          simulation_run_id: string | null
+          stress_summary: string
+          stress_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          payload?: Json
+          severity?: string
+          simulation_run_id?: string | null
+          stress_summary?: string
+          stress_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          payload?: Json
+          severity?: string
+          simulation_run_id?: string | null
+          stress_summary?: string
+          stress_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "simulation_stress_points_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "simulation_stress_points_simulation_run_id_fkey"
+            columns: ["simulation_run_id"]
+            isOneToOne: false
+            referencedRelation: "scenario_simulation_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      simulation_subjects: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          organization_id: string
+          subject_code: string
+          subject_ref: string | null
+          subject_type: string
+          summary: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          organization_id: string
+          subject_code?: string
+          subject_ref?: string | null
+          subject_type?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          organization_id?: string
+          subject_code?: string
+          subject_ref?: string | null
+          subject_type?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "simulation_subjects_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"

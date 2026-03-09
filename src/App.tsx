@@ -77,6 +77,7 @@ import StrategicSuccession from "./pages/StrategicSuccession";
 import MultiHorizonAlignment from "./pages/MultiHorizonAlignment";
 import TradeoffArbitration from "./pages/TradeoffArbitration";
 import MissionIntegrity from "./pages/MissionIntegrity";
+import ContinuitySimulation from "./pages/ContinuitySimulation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -153,6 +154,7 @@ const App = () => (
                         <Route path="/multi-horizon-alignment" element={<W><MultiHorizonAlignment /></W>} />
                         <Route path="/tradeoff-arbitration" element={<W><TradeoffArbitration /></W>} />
                         <Route path="/mission-integrity" element={<W><MissionIntegrity /></W>} />
+                        <Route path="/continuity-simulation" element={<W><ContinuitySimulation /></W>} />
                         <Route path="/improvement-ledger"      element={<W><ImprovementLedger /></W>} />
                         <Route path="/improvement-candidates"  element={<W><ImprovementCandidates /></W>} />
                         <Route path="/improvement-benchmarks"  element={<W><ImprovementBenchmarks /></W>} />
