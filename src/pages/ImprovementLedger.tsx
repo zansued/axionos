@@ -76,7 +76,7 @@ export default function ImprovementLedger() {
   const [severityFilter, setSeverityFilter] = useState<string>("all");
   const [reviewFilter, setReviewFilter] = useState<string>("all");
   const [reviewNotes, setReviewNotes] = useState("");
-  const { guidance, whyNow } = usePageGuidance("evidence");
+  const { guidance, whyNowText } = usePageGuidance("evidence");
 
   const orgId = currentOrg?.id;
 

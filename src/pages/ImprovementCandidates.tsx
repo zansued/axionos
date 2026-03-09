@@ -80,7 +80,7 @@ export default function ImprovementCandidates() {
   const [selected, setSelected] = useState<Candidate | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [typeFilter, setTypeFilter] = useState("all");
-  const { guidance, whyNow } = usePageGuidance("candidates");
+  const { guidance, whyNowText } = usePageGuidance("candidates");
   const [sevFilter, setSevFilter] = useState("all");
   const [reviewFilter, setReviewFilter] = useState("all");
   const [notes, setNotes] = useState("");
