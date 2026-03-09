@@ -470,7 +470,7 @@ Return ONLY JSON:
       pr_url: prUrl,
       branch: fixBranch,
       total_errors: ciErrors.length,
-    }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+    }, { model: "routed", costUsd: totalCost, durationMs: 0 });
 
     return jsonResponse({
       success: true,

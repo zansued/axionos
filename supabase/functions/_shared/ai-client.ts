@@ -1,9 +1,11 @@
-// Unified AI client: handles OpenAI and Lovable AI Gateway with retries, cost tracking,
-// and AI Efficiency Layer (prompt compression, semantic cache, model routing)
+// Unified AI client: handles OpenAI and DeepSeek with retries, cost tracking,
+// and AI Efficiency Layer (prompt compression, semantic cache, model routing).
+// Primary providers: OpenAI + DeepSeek. No Gemini defaults.
 
 import { compressPrompt } from "./prompt-compressor.ts";
 import { lookupCache, storeInCache } from "./semantic-cache.ts";
 import { routeModel, getModelTier } from "./model-router.ts";
+import { routeRequest, getFastConfig, getStrongConfig, logRoutingDecision, type RoutingTier, type TaskClass } from "./ai-router.ts";
 
 export interface AIResult {
   content: string;
@@ -28,30 +30,56 @@ export interface AIConfig {
   proModel: string;
 }
 
-/** Get AI configuration based on available API keys */
+/** Get AI configuration based on available API keys.
+ *  Priority: OpenAI > DeepSeek > Lovable Gateway (last resort).
+ *  No Gemini defaults.
+ */
 export function getAIConfig(): AIConfig {
   const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-  const useOpenAI = !!OPENAI_API_KEY;
+  const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
 
+  if (OPENAI_API_KEY) {
+    const modelFast = Deno.env.get("OPENAI_MODEL_FAST") || "gpt-4o-mini";
+    const modelStrong = Deno.env.get("OPENAI_MODEL_STRONG") || "gpt-4o";
+    return {
+      url: "https://api.openai.com/v1/chat/completions",
+      key: OPENAI_API_KEY,
+      model: modelFast,
+      proModel: modelStrong,
+    };
+  }
+
+  if (DEEPSEEK_API_KEY) {
+    const modelFast = Deno.env.get("DEEPSEEK_MODEL_FAST") || "deepseek-chat";
+    const modelStrong = Deno.env.get("DEEPSEEK_MODEL_STRONG") || "deepseek-chat";
+    return {
+      url: "https://api.deepseek.com/v1/chat/completions",
+      key: DEEPSEEK_API_KEY,
+      model: modelFast,
+      proModel: modelStrong,
+    };
+  }
+
+  // Last resort: Lovable AI Gateway (no Gemini model names — uses gateway defaults)
+  const LOVABLE_KEY = Deno.env.get("LOVABLE_API_KEY") || "";
   return {
-    url: useOpenAI
-      ? "https://api.openai.com/v1/chat/completions"
-      : "https://ai.gateway.lovable.dev/v1/chat/completions",
-    key: useOpenAI ? OPENAI_API_KEY! : (Deno.env.get("LOVABLE_API_KEY") || ""),
-    model: useOpenAI ? "gpt-4o-mini" : "google/gemini-2.5-flash",
-    proModel: useOpenAI ? "gpt-4o-mini" : "google/gemini-2.5-pro",
+    url: "https://ai.gateway.lovable.dev/v1/chat/completions",
+    key: LOVABLE_KEY,
+    model: "openai/gpt-5-nano",
+    proModel: "openai/gpt-5",
   };
 }
 
 /**
  * Call AI with Efficiency Layer: compression → cache → routing → retry.
+ * Uses canonical AI Router for provider selection.
  *
  * @param apiKey - Fallback API key
  * @param systemPrompt - System message
  * @param userPrompt - User message
  * @param jsonMode - Request JSON response format
  * @param maxRetries - Max retry attempts (default 3)
- * @param usePro - Use pro model for higher quality (default false)
+ * @param usePro - Use pro/strong model for higher quality (default false)
  * @param stage - Pipeline stage for routing/caching
  * @param orgId - Organization ID for cache scoping
  * @param initiativeId - Initiative ID for cache scoping
@@ -69,9 +97,18 @@ export async function callAI(
   initiativeId?: string,
   skipEfficiency = false,
 ): Promise<AIResult> {
-  const config = getAIConfig();
-  const effectiveKey = config.key || apiKey;
-  const useOpenAI = config.url.includes("openai.com");
+  // Use canonical router for provider selection
+  const routing = routeRequest({
+    systemPrompt,
+    userPrompt,
+    stage,
+    forceTier: usePro ? "high_confidence" : undefined,
+  });
+  logRoutingDecision(routing.metadata);
+
+  const effectiveUrl = routing.primary.url;
+  const effectiveKey = routing.primary.key || apiKey;
+  const isExternalProvider = !effectiveUrl.includes("lovable.dev");
 
   let compressedSystem = systemPrompt;
   let compressedUser = userPrompt;
@@ -79,7 +116,7 @@ export async function callAI(
   let tokensSaved = 0;
 
   // ── Efficiency Layer ──
-  if (!skipEfficiency && !useOpenAI) {
+  if (!skipEfficiency) {
     // 1. Prompt Compression
     try {
       const combined = systemPrompt + "\n" + userPrompt;
@@ -127,129 +164,143 @@ export async function callAI(
     }
   }
 
-  // 3. Model Routing
-  let effectiveModel: string;
-  let routingDecision;
+  // 3. Model from routing decision
+  const effectiveModel = routing.primary.model;
+  const routingDecision = {
+    model: effectiveModel,
+    complexity: routing.metadata.complexity,
+    reason: routing.metadata.reason,
+    estimatedCostMultiplier: routing.metadata.estimatedCostMultiplier,
+  };
 
-  if (usePro) {
-    effectiveModel = config.proModel;
-    routingDecision = { model: config.proModel, complexity: "high" as const, reason: "Forced pro", estimatedCostMultiplier: 1 };
-  } else if (!skipEfficiency && !useOpenAI) {
-    routingDecision = routeModel(compressedSystem, compressedUser, stage);
-    effectiveModel = routingDecision.model;
-    console.log(`[efficiency] Routed to ${effectiveModel} (${routingDecision.complexity}: ${routingDecision.reason})`);
-  } else {
-    effectiveModel = config.model;
-    routingDecision = { model: config.model, complexity: "medium" as const, reason: "Default", estimatedCostMultiplier: 0.5 };
-  }
+  console.log(`[efficiency] Routed to ${effectiveModel} via ${routing.metadata.provider} (${routingDecision.complexity}: ${routingDecision.reason})`);
 
-  // ── Standard AI Call with Retries ──
+  // ── AI Call with Retries + Fallback ──
   let lastError: Error | null = null;
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      const start = Date.now();
-      const body: Record<string, unknown> = {
-        model: effectiveModel,
-        messages: [
-          { role: "system", content: compressedSystem },
-          { role: "user", content: compressedUser },
-        ],
-      };
-      if (jsonMode) body.response_format = { type: "json_object" };
+  const configs = [
+    { url: effectiveUrl, key: effectiveKey, model: effectiveModel },
+    ...(routing.fallback ? [{ url: routing.fallback.url, key: routing.fallback.key, model: routing.fallback.model }] : []),
+  ];
 
-      const resp = await fetch(config.url, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${effectiveKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
+  for (const cfg of configs) {
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const start = Date.now();
+        const body: Record<string, unknown> = {
+          model: cfg.model,
+          messages: [
+            { role: "system", content: compressedSystem },
+            { role: "user", content: compressedUser },
+          ],
+        };
+        if (jsonMode) body.response_format = { type: "json_object" };
 
-      if (resp.status === 429 || resp.status >= 500) {
-        const backoffMs = Math.min(1000 * Math.pow(2, attempt), 15000) + Math.random() * 1000;
-        console.warn(`AI ${resp.status}, retry ${attempt + 1}/${maxRetries} after ${Math.round(backoffMs)}ms`);
-        await new Promise(r => setTimeout(r, backoffMs));
-        lastError = new Error(`AI error ${resp.status}`);
-        continue;
-      }
+        const resp = await fetch(cfg.url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${cfg.key}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        });
 
-      if (!resp.ok) {
-        const t = await resp.text();
-        throw new Error(`AI error ${resp.status}: ${t}`);
-      }
+        if (resp.status === 429 || resp.status >= 500) {
+          const backoffMs = Math.min(1000 * Math.pow(2, attempt), 15000) + Math.random() * 1000;
+          console.warn(`AI ${resp.status} from ${cfg.model}, retry ${attempt + 1}/${maxRetries} after ${Math.round(backoffMs)}ms`);
+          await new Promise(r => setTimeout(r, backoffMs));
+          lastError = new Error(`AI error ${resp.status}`);
+          continue;
+        }
 
-      const data = await resp.json();
-      const durationMs = Date.now() - start;
-      const tokens = data.usage?.total_tokens || 0;
-      const costUsd = useOpenAI ? tokens * 0.0000004 : tokens * 0.000001;
-      const content = data.choices?.[0]?.message?.content || "";
+        if (!resp.ok) {
+          const t = await resp.text();
+          throw new Error(`AI error ${resp.status}: ${t}`);
+        }
 
-      // Store in semantic cache (async, non-blocking)
-      if (!skipEfficiency && stage && !useOpenAI) {
-        try {
-          const cacheResult = await lookupCache(
-            compressedSystem + "\n" + compressedUser,
-            stage,
-            effectiveKey,
-            orgId,
-          );
-          if (!cacheResult.hit) {
-            storeInCache(
-              cacheResult.promptHash,
-              cacheResult.embedding,
-              content,
+        const data = await resp.json();
+        const durationMs = Date.now() - start;
+        const tokens = data.usage?.total_tokens || 0;
+        const costUsd = estimateCost(cfg.model, tokens);
+        const content = data.choices?.[0]?.message?.content || "";
+        const isFallback = cfg.model !== effectiveModel;
+
+        // Store in semantic cache (async, non-blocking)
+        if (!skipEfficiency && stage) {
+          try {
+            const cacheResult = await lookupCache(
+              compressedSystem + "\n" + compressedUser,
               stage,
-              effectiveModel,
-              tokens,
+              cfg.key,
               orgId,
-              initiativeId,
-            ).catch(e => console.warn("[efficiency] Cache store failed:", e));
+            );
+            if (!cacheResult.hit) {
+              storeInCache(
+                cacheResult.promptHash,
+                cacheResult.embedding,
+                content,
+                stage,
+                cfg.model,
+                tokens,
+                orgId,
+                initiativeId,
+              ).catch(e => console.warn("[efficiency] Cache store failed:", e));
+            }
+          } catch (e) {
+            console.warn("[efficiency] Cache store failed:", e);
           }
-        } catch (e) {
-          console.warn("[efficiency] Cache store failed:", e);
+        }
+
+        return {
+          content,
+          tokens,
+          durationMs,
+          costUsd,
+          model: cfg.model,
+          efficiency: skipEfficiency ? undefined : {
+            cacheHit: false,
+            compressionRatio,
+            routedModel: cfg.model,
+            complexity: routingDecision.complexity,
+            tokensSaved,
+          },
+        };
+      } catch (e) {
+        lastError = e instanceof Error ? e : new Error(String(e));
+        if (attempt < maxRetries - 1) {
+          const backoffMs = Math.min(1000 * Math.pow(2, attempt), 15000) + Math.random() * 1000;
+          console.warn(`callAI error on ${cfg.model}, retry ${attempt + 1}/${maxRetries} after ${Math.round(backoffMs)}ms:`, lastError.message);
+          await new Promise(r => setTimeout(r, backoffMs));
         }
       }
-
-      return {
-        content,
-        tokens,
-        durationMs,
-        costUsd,
-        model: effectiveModel,
-        efficiency: skipEfficiency ? undefined : {
-          cacheHit: false,
-          compressionRatio,
-          routedModel: effectiveModel,
-          complexity: routingDecision.complexity,
-          tokensSaved,
-        },
-      };
-    } catch (e) {
-      lastError = e instanceof Error ? e : new Error(String(e));
-      if (attempt < maxRetries - 1) {
-        const backoffMs = Math.min(1000 * Math.pow(2, attempt), 15000) + Math.random() * 1000;
-        console.warn(`callAI error, retry ${attempt + 1}/${maxRetries} after ${Math.round(backoffMs)}ms:`, lastError.message);
-        await new Promise(r => setTimeout(r, backoffMs));
-      }
+    }
+    // If primary provider exhausted retries, try fallback
+    if (configs.indexOf(cfg) < configs.length - 1) {
+      console.warn(`[ai-router] Primary provider ${cfg.model} exhausted, falling back to next provider`);
     }
   }
-  throw lastError || new Error("callAI failed after retries");
+  throw lastError || new Error("callAI failed after retries across all providers");
 }
 
 /**
  * Simple AI call without retries (for non-critical or streaming use cases).
  * Returns the raw fetch Response for streaming support.
+ * Uses canonical router for provider selection.
  */
 export async function callAIRaw(
   systemPrompt: string,
   userPrompt: string,
-  options: { jsonMode?: boolean; stream?: boolean } = {}
+  options: { jsonMode?: boolean; stream?: boolean; stage?: string; tier?: RoutingTier } = {}
 ): Promise<Response> {
-  const config = getAIConfig();
-  
+  const routing = routeRequest({
+    systemPrompt,
+    userPrompt,
+    stage: options.stage,
+    forceTier: options.tier,
+  });
+  logRoutingDecision(routing.metadata);
+
   const body: Record<string, unknown> = {
-    model: config.model,
+    model: routing.primary.model,
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt },
@@ -258,12 +309,21 @@ export async function callAIRaw(
   if (options.jsonMode) body.response_format = { type: "json_object" };
   if (options.stream) body.stream = true;
 
-  return fetch(config.url, {
+  return fetch(routing.primary.url, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${config.key}`,
+      Authorization: `Bearer ${routing.primary.key}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
   });
+}
+
+/** Estimate cost per token by model */
+function estimateCost(model: string, tokens: number): number {
+  if (model.includes("deepseek")) return tokens * 0.00000027; // ~$0.27/M tokens
+  if (model.includes("gpt-4o-mini")) return tokens * 0.0000004;
+  if (model.includes("gpt-4o")) return tokens * 0.000005;
+  if (model.includes("gpt-5")) return tokens * 0.000003;
+  return tokens * 0.000001; // generic fallback
 }

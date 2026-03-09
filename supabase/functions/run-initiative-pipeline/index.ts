@@ -20,14 +20,18 @@ const DEPLOY_VERCEL_JSON = JSON.stringify(DEPLOY_VERCEL_CONFIG, null, 2);
 
 async function callAI(apiKey: string, systemPrompt: string, userPrompt: string, jsonMode = false, maxRetries = 3) {
   const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+  const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
   
-  // Use OpenAI directly if key is available, otherwise fallback to Lovable AI Gateway
+  // Provider priority: OpenAI > DeepSeek > Lovable Gateway (no Gemini)
   const useOpenAI = !!OPENAI_API_KEY;
+  const useDeepSeek = !useOpenAI && !!DEEPSEEK_API_KEY;
   const aiUrl = useOpenAI
     ? "https://api.openai.com/v1/chat/completions"
+    : useDeepSeek
+    ? "https://api.deepseek.com/v1/chat/completions"
     : "https://ai.gateway.lovable.dev/v1/chat/completions";
-  const aiKey = useOpenAI ? OPENAI_API_KEY : apiKey;
-  const aiModel = useOpenAI ? "gpt-4o-mini" : "google/gemini-2.5-flash";
+  const aiKey = useOpenAI ? OPENAI_API_KEY : useDeepSeek ? DEEPSEEK_API_KEY : apiKey;
+  const aiModel = useOpenAI ? "gpt-4o-mini" : useDeepSeek ? "deepseek-chat" : "openai/gpt-5-nano";
 
   let lastError: Error | null = null;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -725,7 +729,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
           total_subtasks: totalSubtasks,
           scaffold_files: scaffoldFiles,
           total_tokens: totalTokens,
-        }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: prdResult.durationMs + archResult.durationMs + storiesResult.durationMs });
+        }, { model: aiModel, costUsd: totalCost, durationMs: prdResult.durationMs + archResult.durationMs + storiesResult.durationMs });
         await log("pipeline_planning_complete", `Planning completo: ${createdStories.length} stories, ${totalSubtasks} subtasks (${scaffoldFiles} scaffold)`, { totalTokens, cost_usd: totalCost });
 
         return new Response(JSON.stringify({
@@ -1300,7 +1304,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
                     type: "code", status: qaApproved ? "draft" : "pending_review",
                     summary: `${subtask.file_path} — ${subtask.description.slice(0, 150)}`,
                     raw_output: { file_path: subtask.file_path, file_type: subtask.file_type, language: ext, content: codeContent, chain_of_agents: true },
-                    model_used: "google/gemini-2.5-flash", prompt_used: subtask.description,
+                    model_used: aiModel, prompt_used: subtask.description,
                     tokens_used: totalTokens, cost_estimate: totalCost,
                   }).select("id").single();
 
@@ -1315,7 +1319,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
                   if (subtaskJobId) await completeJob(subtaskJobId, {
                     artifact_id: artifact?.id, file_path: subtask.file_path,
                     chain_of_agents: true, qa_approved: qaApproved,
-                  }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+                  }, { model: aiModel, costUsd: totalCost, durationMs: 0 });
 
                   codeFilesGenerated++;
                 } else if (hasFilePath) {
@@ -1469,7 +1473,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, total_tokens: totalTokens,
           chain_of_agents: hasChain,
-        }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+        }, { model: aiModel, costUsd: totalCost, durationMs: 0 });
 
         await log("pipeline_execution_complete", `Execução Chain-of-Agents concluída: ${executedCount} subtasks (${codeFilesGenerated} arquivos), ${failedCount} falhas`, {
           total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated, chain_of_agents: hasChain,
@@ -1596,7 +1600,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
               batch_incomplete: false,
               overall_pass: true,
               skipped: "all_already_approved",
-            }, { model: "google/gemini-2.5-flash", costUsd: 0, durationMs: 0 });
+            }, { model: aiModel, costUsd: 0, durationMs: 0 });
           }
 
           return new Response(JSON.stringify({
@@ -1975,7 +1979,7 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
           remaining_to_validate: remainingToValidate,
           batch_incomplete: batchIncomplete,
           overall_pass: overallPass,
-        }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+        }, { model: aiModel, costUsd: totalCost, durationMs: 0 });
 
         await log("pipeline_validation_complete",
           `Validação em lote concluída: ${artifactsBatch.length} processados, ${remainingToValidate} pendentes para aprovação, ${rejectedCountFinal} rejeitados`, {
@@ -2577,7 +2581,7 @@ Seja conciso e profissional.`
           repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
           ai_generated: { branch: baseBranch, commit_count: commitMessages.length },
           health_report: healthReport,
-        }, { model: "google/gemini-2.5-flash", costUsd: totalAiCost, durationMs: 0 });
+        }, { model: aiModel, costUsd: totalAiCost, durationMs: 0 });
 
         await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos direto na branch ${baseBranch} em ${actualOwner}/${actualRepo}`, {
           branch: baseBranch, ai_tokens: totalAiTokens, repo: `${actualOwner}/${actualRepo}`,

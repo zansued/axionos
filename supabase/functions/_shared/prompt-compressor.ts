@@ -6,7 +6,7 @@
  * unresolved errors, build config, system rules.
  * Removes: verbose logs, explanations, redundant text.
  *
- * Uses lightweight model (gemini-2.5-flash-lite) to summarize.
+ * Uses cheapest available provider (DeepSeek or OpenAI) to summarize.
  */
 
 import { getAIConfig } from "./ai-client.ts";
@@ -158,7 +158,7 @@ Output ONLY the compressed context. No commentary.`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-lite",
+        model: config.model, // Uses cheapest available model via router
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },

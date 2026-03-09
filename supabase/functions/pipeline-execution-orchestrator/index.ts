@@ -461,7 +461,7 @@ serve(async (req) => {
         chain: ["code_architect", "developer", "integration_agent"],
         scheduler: "swarm", max_workers: MAX_WORKERS,
         skipped: skippedCount, savings_percent: incremental.stats.savingsPercent,
-      }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+      }, { model: "routed", costUsd: totalCost, durationMs: 0 });
 
       await pipelineLog(ctx, "orchestrator_complete",
         `Orchestrator concluído: ${executedCount} gerados, ${skippedCount} reutilizados (${incremental.stats.savingsPercent}% economia), ${failedCount} falhas, ${waveNum} waves`,

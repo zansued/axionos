@@ -7,7 +7,7 @@
 
 import type { PipelineContext } from "./pipeline-helpers.ts";
 
-const EMBEDDING_MODEL = "google/gemini-2.5-flash";
+const EMBEDDING_MODEL = "deepseek-chat";
 const EMBEDDING_DIMENSION = 768;
 
 /**

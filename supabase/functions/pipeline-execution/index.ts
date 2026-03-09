@@ -501,7 +501,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`
       total_tokens: totalTokens, waves_executed: waveNum,
       chain: ["code_architect", "developer", "integration_agent"],
       scheduler: "dag",
-    }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+    }, { model: "routed", costUsd: totalCost, durationMs: 0 });
 
     await pipelineLog(ctx, "pipeline_execution_complete",
       `Camada 4 concluída (DAG): ${executedCount} subtasks (${codeFilesGenerated} arquivos) em ${waveNum} waves, ${failedCount} falhas`,

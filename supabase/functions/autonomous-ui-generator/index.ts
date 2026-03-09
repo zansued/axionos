@@ -127,7 +127,7 @@ Requirements:
     let uiStructure: any;
     try {
       const aiResult = await callAI({
-        model: "google/gemini-2.5-flash",
+        model: "deepseek-chat",
         prompt,
         serviceClient,
         initiativeId,
