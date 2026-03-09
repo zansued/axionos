@@ -425,6 +425,38 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Changes to agent policies require administrative approval.",
     },
   },
+  {
+    key: "platform-extensions",
+    title: { pt: "Extensões da Plataforma", en: "Platform Extensions" },
+    description: {
+      pt: "Gestão governada de extensões de plataforma: ativação, rollback e verificação de compatibilidade.",
+      en: "Governed platform extension management: activation, rollback, and compatibility verification.",
+    },
+    audience: { pt: "Administradores da plataforma", en: "Platform administrators" },
+    surface: "platform",
+    actions: [
+      { pt: "Ativar ou desativar extensões", en: "Activate or deactivate extensions" },
+      { pt: "Reverter extensões com problemas", en: "Roll back problematic extensions" },
+      { pt: "Verificar compatibilidade", en: "Check compatibility" },
+    ],
+    whenRelevant: {
+      pt: "Quando quiser gerenciar extensões com controle de risco e governança.",
+      en: "When you want to manage extensions with risk control and governance.",
+    },
+    whenIgnorable: {
+      pt: "Se nenhuma extensão está pendente de ativação ou revisão.",
+      en: "If no extension is pending activation or review.",
+    },
+    nextStep: {
+      pt: "Revisar extensões pendentes de aprovação e verificar compatibilidade.",
+      en: "Review extensions pending approval and verify compatibility.",
+    },
+    approvalPosture: "required",
+    approvalHint: {
+      pt: "Ativação de extensões de plataforma exige aprovação administrativa.",
+      en: "Platform extension activation requires administrative approval.",
+    },
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────
