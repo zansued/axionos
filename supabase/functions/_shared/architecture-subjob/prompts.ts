@@ -47,13 +47,13 @@ Defina a arquitetura técnica do sistema:
 
 export function dataArchitectPrompt(projectContext: string, requirementsData: string, systemArchJson: string): { system: string; user: string } {
   return {
-    system: `Você é o Data Architect Agent — especialista em modelagem de dados e banco de dados. Use a arquitetura de sistema definida anteriormente. Retorne APENAS JSON válido.`,
+    system: `Você é o Data Architect Agent — especialista em modelagem de dados e banco de dados. Use a arquitetura de sistema definida anteriormente. Retorne APENAS JSON válido, sem markdown e sem texto extra. Seja objetivo e compacto.`,
     user: `${projectContext}
 
-REQUISITOS: ${requirementsData}
-ARQUITETURA DE SISTEMA: ${systemArchJson}
+REQUISITOS (compactos): ${requirementsData}
+ARQUITETURA DE SISTEMA (resumo): ${systemArchJson}
 
-Modele o banco de dados:
+Modele o banco de dados de forma enxuta, priorizando MVP e escalabilidade inicial:
 {
   "tables": [
     {
@@ -74,7 +74,13 @@ Modele o banco de dados:
   ],
   "enums": [{"name": "string", "values": ["string"]}],
   "migration_strategy": "string"
-}`,
+}
+
+Limites obrigatórios:
+- máximo 10 tabelas
+- máximo 12 colunas por tabela
+- máximo 20 policies RLS no total
+- descrições curtas (1 linha)`,
   };
 }
 
