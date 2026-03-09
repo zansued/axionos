@@ -76,31 +76,31 @@ AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
 - **Execution:** Stable 32-stage deterministic pipeline with DAG orchestration, runtime validation, autonomous repair, and preventive engineering.
 - **Learning:** Active rule-based learning with prompt outcome analysis, strategy effectiveness tracking, predictive error detection, and bounded weight adjustment.
 - **Meta-Analysis:** 4 memory-aware meta-agents with historical context enrichment, continuity scoring, redundancy suppression, alignment classification, quality feedback loop, and advisory calibration. Recommendation-only — no system mutation.
-- **Proposal Generation:** Accepted recommendations produce structured engineering proposals with Related Historical Context sections, decision/outcome signals, and historical novelty indicators.
+- **Guidance & Copilot:** ✅ Active — PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, 4 copilot submodes, centralized content registries.
 - **Engineering Memory:** Full stack operational — foundation, retrieval surfaces, summaries, and memory-aware reasoning.
-- **Quality Feedback:** Proposal quality tracking with outcome signals, confidence calibration, and memory effectiveness measurement.
-- **Advisory Calibration:** Structured diagnostic signals across 6 calibration domains — advisory-only, no automatic tuning.
-- **Historical Intelligence:** Continuity scoring, redundancy guard, and historical alignment active across all meta-agents and proposals.
+- **Multi-Agent Coordination:** ✅ Active — role arbitration, debate & resolution, shared working memory, bounded swarm execution.
+- **Ecosystem:** ✅ Active — capability packaging, trust/entitlements, partner marketplace, outcome-aware marketplace.
+- **Distributed Runtime:** ✅ Active — job control, cross-region recovery, tenant-isolated scale, resilient orchestration.
+- **Architecture Research:** ✅ Active — hypothesis engine, simulated evolution, cross-tenant synthesis, governed promotion.
 - **Commercial:** Product plans, billing, workspace isolation, and usage enforcement active.
 - **Governance:** Full audit trail, stage permissions, SLA enforcement, and review workflows across recommendations and artifacts.
 
 ---
 
-## Next Phases
+## Next Phase
 
-### Level 5 — Institutional Engineering Memory ✅
+### Block T — Governed Intelligence OS (Sprints 95–98) — 🔲 Planned
 
-**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2** ✅
+**Thesis:** Consolidate existing capabilities into an operating system for governed intelligence.
 
-Meta-agents and proposals reason with historical engineering context:
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 95 | Institutional Memory Consolidation — unified queryable institutional knowledge | 🔲 |
+| Sprint 96 | Doctrine & Playbook Synthesis — playbooks, doctrine packs, operational heuristics | 🔲 |
+| Sprint 97 | Bounded Autonomous Operations — safe autonomy for repetitive low-risk operations | 🔲 |
+| Sprint 98 | Institutional Decision Engine — memory + doctrine + risk → consistent recommendations | 🔲 |
 
-- ✅ Memory context layer per meta-agent type
-- ✅ Historical continuity scoring (support/conflict/context)
-- ✅ Historical alignment classification (5 categories)
-- ✅ Redundancy guard with conservative suppression rules
-- ✅ Proposal Layer v2 with Related Historical Context
-- ✅ Decision/outcome-aware framing
-- ✅ Graceful degradation on memory unavailability
+### Future Horizons
 
 ### Level 5.5 — Self-Improving Engineering Platform
 

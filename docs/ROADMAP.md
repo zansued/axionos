@@ -156,6 +156,14 @@ flowchart TD
    Delivery Optimization →
    Distributed Runtime →
    Architecture Research ✅
+
+   PLANNED (95–98)
+   ──────────────────────────────────────────────────────────────────────────────►
+   Block T — Governed Intelligence OS
+   Sprint 95: Institutional Memory Consolidation
+   Sprint 96: Doctrine & Playbook Synthesis
+   Sprint 97: Bounded Autonomous Operations
+   Sprint 98: Institutional Decision Engine
 ```
 
 ---
@@ -196,6 +204,21 @@ flowchart TD
 | Block R — Distributed Runtime & Scaled Execution | 87–90 | Distributed job control plane, cross-region execution & recovery, tenant-isolated scale runtime, resilient large-scale orchestration |
 | Block S — Research Sandbox for Architecture Evolution | 91–94 | Architecture hypothesis engine, simulated evolution campaigns, cross-tenant pattern synthesis, human-governed architecture promotion |
 
+### Planned: Block T — Governed Intelligence OS (Sprints 95–98)
+
+> **Thesis:** AxionOS enters a new maturity phase where existing capabilities — coordination, evidence loops, guidance systems, and governance layers — consolidate into an operating system for governed intelligence.
+
+This block focuses on: institutional memory, doctrine synthesis, decision consistency, bounded autonomous operations, accumulated operational intelligence, and long-horizon system coherence.
+
+| Sprint | Deliverable | Description |
+|--------|-------------|-------------|
+| Sprint 95 | Institutional Memory Consolidation | Consolidate operational and decisional memory into unified, queryable institutional knowledge. Merge convergence memory, engineering memory, agent memory, and platform intelligence into a coherent institutional memory substrate. |
+| Sprint 96 | Doctrine & Playbook Synthesis | Transform accumulated institutional memory into actionable playbooks, doctrine packs, and operational heuristics. Generate reusable decision templates from historical patterns. |
+| Sprint 97 | Bounded Autonomous Operations | Enable safe autonomous execution for repetitive, low-risk, well-understood operations. Governance gates for escalation. All autonomous actions bounded, reversible, and auditable. |
+| Sprint 98 | Institutional Decision Engine | Use institutional memory + doctrine + risk signals + outcome history to recommend and act with greater consistency. Advisory-first with configurable autonomy tiers. Human authority preserved for structural decisions. |
+
+**Governing constraint:** Advisory-first. Governance before autonomy. No autonomous architecture mutation. Bounded autonomy applies only to repetitive, low-risk operations with proven track records. All structural changes require human approval.
+
 ---
 
 ## Block Structure Summary
@@ -223,6 +246,7 @@ flowchart TD
 | Q | Autonomous Delivery Optimization & Outcome Assurance 2.0 | 83–86 | ✅ Complete |
 | R | Advanced Distributed Runtime & Scaled Execution | 87–90 | ✅ Complete |
 | S | Research Sandbox for Architecture Evolution | 91–94 | ✅ Complete |
+| T | Governed Intelligence OS | 95–98 | 🔲 Planned |
 
 ---
 
@@ -247,6 +271,7 @@ flowchart TD
 | Delivery Optimization | 83–86 | ✅ Complete | Delivery causality, post-deploy learning, reliability tuning, outcome assurance 2.0 |
 | Distributed Runtime | 87–90 | ✅ Complete | Distributed job control, cross-region recovery, tenant-isolated scale, resilient orchestration |
 | Architecture Research | 91–94 | ✅ Complete | Hypothesis engine, simulated evolution, cross-tenant synthesis, governed promotion |
+| **Governed Intelligence OS** | **95–98** | **🔲 Planned** | Institutional memory consolidation, doctrine synthesis, bounded autonomous ops, institutional decision engine |
 
 ---
 
