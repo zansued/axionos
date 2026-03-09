@@ -4538,6 +4538,299 @@ export type Database = {
           },
         ]
       }
+      autonomous_operation_executions: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          error_message: string | null
+          execution_input: Json
+          execution_output: Json | null
+          execution_type: string
+          id: string
+          operation_id: string
+          organization_id: string
+          rollback_available: boolean
+          rollback_executed: boolean
+          rule_id: string | null
+          success: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          execution_input?: Json
+          execution_output?: Json | null
+          execution_type?: string
+          id?: string
+          operation_id: string
+          organization_id: string
+          rollback_available?: boolean
+          rollback_executed?: boolean
+          rule_id?: string | null
+          success?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          execution_input?: Json
+          execution_output?: Json | null
+          execution_type?: string
+          id?: string
+          operation_id?: string
+          organization_id?: string
+          rollback_available?: boolean
+          rollback_executed?: boolean
+          rule_id?: string | null
+          success?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomous_operation_executions_operation_id_fkey"
+            columns: ["operation_id"]
+            isOneToOne: false
+            referencedRelation: "autonomous_operations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomous_operation_executions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomous_operation_executions_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "autonomous_operation_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      autonomous_operation_reviews: {
+        Row: {
+          approved: boolean | null
+          created_at: string
+          id: string
+          operation_id: string
+          organization_id: string
+          review_action: string
+          review_notes: string
+          reviewer_id: string | null
+        }
+        Insert: {
+          approved?: boolean | null
+          created_at?: string
+          id?: string
+          operation_id: string
+          organization_id: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string | null
+        }
+        Update: {
+          approved?: boolean | null
+          created_at?: string
+          id?: string
+          operation_id?: string
+          organization_id?: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomous_operation_reviews_operation_id_fkey"
+            columns: ["operation_id"]
+            isOneToOne: false
+            referencedRelation: "autonomous_operations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomous_operation_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      autonomous_operation_rules: {
+        Row: {
+          autonomy_level: Database["public"]["Enums"]["autonomy_level"]
+          condition_payload: Json
+          created_at: string
+          enabled: boolean
+          governing_doctrine_id: string | null
+          id: string
+          max_risk_score: number
+          operation_type: string
+          organization_id: string
+          required_confidence: number
+          rule_description: string
+          rule_key: string
+          rule_title: string
+          times_blocked: number
+          times_triggered: number
+          updated_at: string
+        }
+        Insert: {
+          autonomy_level?: Database["public"]["Enums"]["autonomy_level"]
+          condition_payload?: Json
+          created_at?: string
+          enabled?: boolean
+          governing_doctrine_id?: string | null
+          id?: string
+          max_risk_score?: number
+          operation_type?: string
+          organization_id: string
+          required_confidence?: number
+          rule_description?: string
+          rule_key?: string
+          rule_title?: string
+          times_blocked?: number
+          times_triggered?: number
+          updated_at?: string
+        }
+        Update: {
+          autonomy_level?: Database["public"]["Enums"]["autonomy_level"]
+          condition_payload?: Json
+          created_at?: string
+          enabled?: boolean
+          governing_doctrine_id?: string | null
+          id?: string
+          max_risk_score?: number
+          operation_type?: string
+          organization_id?: string
+          required_confidence?: number
+          rule_description?: string
+          rule_key?: string
+          rule_title?: string
+          times_blocked?: number
+          times_triggered?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomous_operation_rules_governing_doctrine_id_fkey"
+            columns: ["governing_doctrine_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_doctrines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomous_operation_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      autonomous_operations: {
+        Row: {
+          approval_posture: string
+          audit_metadata: Json
+          autonomy_level: Database["public"]["Enums"]["autonomy_level"]
+          confidence_score: number
+          created_at: string
+          executed_at: string | null
+          execution_result: Json | null
+          execution_scope: string
+          governing_doctrine_id: string | null
+          governing_rule_id: string | null
+          id: string
+          operation_description: string
+          operation_key: string
+          operation_title: string
+          operation_type: string
+          organization_id: string
+          risk_score: number
+          rollback_data: Json | null
+          rollback_posture: Database["public"]["Enums"]["rollback_posture"]
+          rolled_back_at: string | null
+          status: Database["public"]["Enums"]["operation_status"]
+          trigger_condition: Json
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          approval_posture?: string
+          audit_metadata?: Json
+          autonomy_level?: Database["public"]["Enums"]["autonomy_level"]
+          confidence_score?: number
+          created_at?: string
+          executed_at?: string | null
+          execution_result?: Json | null
+          execution_scope?: string
+          governing_doctrine_id?: string | null
+          governing_rule_id?: string | null
+          id?: string
+          operation_description?: string
+          operation_key?: string
+          operation_title?: string
+          operation_type?: string
+          organization_id: string
+          risk_score?: number
+          rollback_data?: Json | null
+          rollback_posture?: Database["public"]["Enums"]["rollback_posture"]
+          rolled_back_at?: string | null
+          status?: Database["public"]["Enums"]["operation_status"]
+          trigger_condition?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          approval_posture?: string
+          audit_metadata?: Json
+          autonomy_level?: Database["public"]["Enums"]["autonomy_level"]
+          confidence_score?: number
+          created_at?: string
+          executed_at?: string | null
+          execution_result?: Json | null
+          execution_scope?: string
+          governing_doctrine_id?: string | null
+          governing_rule_id?: string | null
+          id?: string
+          operation_description?: string
+          operation_key?: string
+          operation_title?: string
+          operation_type?: string
+          organization_id?: string
+          risk_score?: number
+          rollback_data?: Json | null
+          rollback_posture?: Database["public"]["Enums"]["rollback_posture"]
+          rolled_back_at?: string | null
+          status?: Database["public"]["Enums"]["operation_status"]
+          trigger_condition?: Json
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomous_operations_governing_doctrine_id_fkey"
+            columns: ["governing_doctrine_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_doctrines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomous_operations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomous_operations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       billing_accounts: {
         Row: {
           billing_email: string | null
@@ -25327,6 +25620,11 @@ export type Database = {
         | "fix_agent"
         | "release_agent"
       agent_status: "active" | "inactive"
+      autonomy_level:
+        | "recommend_only"
+        | "auto_execute_notify"
+        | "auto_execute_bounded"
+        | "requires_approval"
       doctrine_lifecycle:
         | "draft"
         | "candidate"
@@ -25435,6 +25733,15 @@ export type Database = {
         | "validating"
         | "publishing"
         | "completed"
+      operation_status:
+        | "pending"
+        | "evaluating"
+        | "approved"
+        | "executing"
+        | "completed"
+        | "blocked"
+        | "rolled_back"
+        | "failed"
       org_role: "owner" | "admin" | "editor" | "reviewer" | "viewer"
       output_status:
         | "draft"
@@ -25444,6 +25751,11 @@ export type Database = {
         | "deployed"
       output_type: "code" | "content" | "decision" | "analysis"
       phase_status: "pending" | "in_progress" | "completed"
+      rollback_posture:
+        | "not_applicable"
+        | "manual_rollback"
+        | "auto_rollback_available"
+        | "auto_rolled_back"
       story_priority: "low" | "medium" | "high" | "critical"
       story_status: "todo" | "in_progress" | "done" | "blocked"
       subtask_status: "pending" | "in_progress" | "completed" | "failed"
@@ -25606,6 +25918,12 @@ export const Constants = {
         "release_agent",
       ],
       agent_status: ["active", "inactive"],
+      autonomy_level: [
+        "recommend_only",
+        "auto_execute_notify",
+        "auto_execute_bounded",
+        "requires_approval",
+      ],
       doctrine_lifecycle: [
         "draft",
         "candidate",
@@ -25719,6 +26037,16 @@ export const Constants = {
         "publishing",
         "completed",
       ],
+      operation_status: [
+        "pending",
+        "evaluating",
+        "approved",
+        "executing",
+        "completed",
+        "blocked",
+        "rolled_back",
+        "failed",
+      ],
       org_role: ["owner", "admin", "editor", "reviewer", "viewer"],
       output_status: [
         "draft",
@@ -25729,6 +26057,12 @@ export const Constants = {
       ],
       output_type: ["code", "content", "decision", "analysis"],
       phase_status: ["pending", "in_progress", "completed"],
+      rollback_posture: [
+        "not_applicable",
+        "manual_rollback",
+        "auto_rollback_available",
+        "auto_rolled_back",
+      ],
       story_priority: ["low", "medium", "high", "critical"],
       story_status: ["todo", "in_progress", "done", "blocked"],
       subtask_status: ["pending", "in_progress", "completed", "failed"],

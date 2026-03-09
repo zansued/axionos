@@ -64,6 +64,7 @@ import ArchitecturePromotion from "./pages/ArchitecturePromotion";
 import AIRoutingPolicy from "./pages/AIRoutingPolicy";
 import IntelligenceMemory from "./pages/IntelligenceMemory";
 import Playbooks from "./pages/Playbooks";
+import BoundedOperations from "./pages/BoundedOperations";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -127,6 +128,7 @@ const App = () => (
                         <Route path="/adoption"                element={<W><AdoptionIntelligence /></W>} />
                         <Route path="/intelligence-memory"    element={<W><IntelligenceMemory /></W>} />
                         <Route path="/playbooks"              element={<W><Playbooks /></W>} />
+                        <Route path="/bounded-operations"     element={<W><BoundedOperations /></W>} />
                         <Route path="/improvement-ledger"      element={<W><ImprovementLedger /></W>} />
                         <Route path="/improvement-candidates"  element={<W><ImprovementCandidates /></W>} />
                         <Route path="/improvement-benchmarks"  element={<W><ImprovementBenchmarks /></W>} />
