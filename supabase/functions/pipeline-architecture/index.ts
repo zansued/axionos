@@ -269,9 +269,10 @@ serve(async (req) => {
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey, body } = result;
 
-  // Support retry mode: only re-execute specific subjobs
+  // Support retry mode and diagnostic sequential mode
   const retrySubjobKey = body.retrySubjobKey as string | undefined;
   const existingJobId = body.existingJobId as string | undefined;
+  const sequentialMode = body.sequentialMode === true;
 
   const dp = initiative.discovery_payload || {};
 
