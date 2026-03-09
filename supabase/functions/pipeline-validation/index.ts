@@ -63,7 +63,7 @@ serve(async (req) => {
       if (jobId) await completeJob(ctx, jobId, {
         artifacts_validated: artifacts.length, passed: artifacts.length, failed: 0, fixed: 0,
         remaining_to_validate: 0, batch_incomplete: false, overall_pass: true, skipped: "all_already_approved",
-      }, { model: "google/gemini-2.5-flash", costUsd: 0, durationMs: 0 });
+      }, { model: "routed", costUsd: 0, durationMs: 0 });
       return jsonResponse({ success: true, artifacts_validated: artifacts.length, passed: artifacts.length, failed: 0, fixed: 0, remaining_to_validate: 0, batch_incomplete: false, overall_pass: true, job_id: jobId });
     }
 
