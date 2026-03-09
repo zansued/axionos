@@ -200,6 +200,9 @@ export default function Artifacts() {
   return (
     <AppLayout>
       <div className="space-y-6">
+        {/* Contextual Guidance */}
+        <PageIntroCard guidance={getGuidanceForPage("deployments")!} compact />
+
         <div className="flex items-center justify-between">
           <div>
             <h1 className="font-display text-3xl font-bold tracking-tight">Artefatos</h1>

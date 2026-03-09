@@ -333,6 +333,9 @@ export default function Observability() {
           </div>
         </div>
 
+        {/* Contextual Guidance */}
+        <PageIntroCard guidance={getGuidanceForPage("observability")!} compact />
+
         {/* Top Stats */}
         <div className="grid gap-3 grid-cols-2 md:grid-cols-6">
           <StatCard icon={Users} label="Agentes Ativos" value={agents.length} />
