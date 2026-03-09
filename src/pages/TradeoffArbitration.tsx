@@ -14,7 +14,7 @@ import {
   CheckCircle2, RotateCcw, Eye, TrendingUp, TrendingDown,
 } from "lucide-react";
 import { toast } from "sonner";
-import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoringTransparencyCard } from "@/components/block-w/BlockWShared";
+import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoringTransparencyCard, CausalModifierCard } from "@/components/block-w/BlockWShared";
 
 // ── Types ──
 interface Overview { constitutions: number; dimensions: number; active_subjects: number; open_events: number; active_recommendations: number; }
