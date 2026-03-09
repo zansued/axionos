@@ -1,0 +1,1 @@
+UPDATE product_plans SET max_parallel_runs = 4 WHERE plan_name = 'Starter';
