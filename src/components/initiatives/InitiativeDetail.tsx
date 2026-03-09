@@ -32,6 +32,7 @@ import { InitiativeObservabilityCard } from "./InitiativeObservabilityCard";
 import { InitiativeOutcomeCard } from "./InitiativeOutcomeCard";
 import { RepairEvidenceCard } from "./RepairEvidenceCard";
 import { RepairRoutingCard } from "./RepairRoutingCard";
+import { ArchitectureSubjobsPanel } from "./ArchitectureSubjobsPanel";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 import PipelineGraphView from "./PipelineGraphView";
 
@@ -436,6 +437,12 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
           </CardContent>
         </Card>
       )}
+
+      {/* Architecture Subjobs Panel */}
+      <ArchitectureSubjobsPanel
+        initiativeId={initiative.id}
+        jobId={jobs.find((j: any) => j.stage === "architecture")?.id || null}
+      />
 
       {/* Execution Progress (real-time) */}
       <ExecutionProgress initiativeId={initiative.id} stageStatus={stageStatus} />

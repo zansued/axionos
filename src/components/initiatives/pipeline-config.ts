@@ -286,7 +286,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "architecture_ready":
-      return [{ stage: "architecture", label: "Iniciar Arquitetura (4 agentes)", type: "run" }];
+      return [{ stage: "architecture", label: "Iniciar Arquitetura (5 subjobs)", type: "run" }];
     case "architecting":
       return [{ stage: "architecture", label: "Re-executar Arquitetura", type: "run" }];
     case "architected":
