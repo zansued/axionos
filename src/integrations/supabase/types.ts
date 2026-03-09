@@ -17630,6 +17630,326 @@ export type Database = {
           },
         ]
       }
+      mission_alignment_evaluations: {
+        Row: {
+          adaptation_score: number
+          alignment_score: number
+          constitution_id: string
+          created_at: string
+          drift_risk_score: number
+          erosion_score: number
+          evaluation_summary: string
+          id: string
+          organization_id: string
+          subject_id: string
+        }
+        Insert: {
+          adaptation_score?: number
+          alignment_score?: number
+          constitution_id: string
+          created_at?: string
+          drift_risk_score?: number
+          erosion_score?: number
+          evaluation_summary?: string
+          id?: string
+          organization_id: string
+          subject_id: string
+        }
+        Update: {
+          adaptation_score?: number
+          alignment_score?: number
+          constitution_id?: string
+          created_at?: string
+          drift_risk_score?: number
+          erosion_score?: number
+          evaluation_summary?: string
+          id?: string
+          organization_id?: string
+          subject_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mission_alignment_evaluations_constitution_id_fkey"
+            columns: ["constitution_id"]
+            isOneToOne: false
+            referencedRelation: "mission_constitutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mission_alignment_evaluations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mission_alignment_evaluations_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "mission_integrity_subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mission_constitutions: {
+        Row: {
+          constitution_code: string
+          constitution_name: string
+          created_at: string
+          created_by: string
+          id: string
+          identity_principles: string
+          mission_statement: string
+          organization_id: string
+          protected_commitments: Json
+          scope: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          identity_principles?: string
+          mission_statement?: string
+          organization_id: string
+          protected_commitments?: Json
+          scope?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          identity_principles?: string
+          mission_statement?: string
+          organization_id?: string
+          protected_commitments?: Json
+          scope?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mission_constitutions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mission_correction_recommendations: {
+        Row: {
+          active: boolean
+          correction_priority: string
+          created_at: string
+          id: string
+          organization_id: string
+          rationale: string
+          recommendation_summary: string
+          recommendation_type: string
+          subject_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          correction_priority?: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          rationale?: string
+          recommendation_summary?: string
+          recommendation_type?: string
+          subject_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          correction_priority?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          rationale?: string
+          recommendation_summary?: string
+          recommendation_type?: string
+          subject_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mission_correction_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mission_correction_recommendations_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "mission_integrity_subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mission_drift_events: {
+        Row: {
+          created_at: string
+          drift_type: string
+          event_summary: string
+          id: string
+          organization_id: string
+          payload: Json
+          resolved_at: string | null
+          severity: string
+          subject_id: string
+        }
+        Insert: {
+          created_at?: string
+          drift_type?: string
+          event_summary?: string
+          id?: string
+          organization_id: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+          subject_id: string
+        }
+        Update: {
+          created_at?: string
+          drift_type?: string
+          event_summary?: string
+          id?: string
+          organization_id?: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+          subject_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mission_drift_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mission_drift_events_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "mission_integrity_subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mission_integrity_snapshots: {
+        Row: {
+          constitution_id: string
+          correction_readiness_score: number
+          created_at: string
+          drift_density_score: number
+          id: string
+          mission_health_score: number
+          organization_id: string
+          snapshot_scope: string
+          snapshot_summary: string
+        }
+        Insert: {
+          constitution_id: string
+          correction_readiness_score?: number
+          created_at?: string
+          drift_density_score?: number
+          id?: string
+          mission_health_score?: number
+          organization_id: string
+          snapshot_scope?: string
+          snapshot_summary?: string
+        }
+        Update: {
+          constitution_id?: string
+          correction_readiness_score?: number
+          created_at?: string
+          drift_density_score?: number
+          id?: string
+          mission_health_score?: number
+          organization_id?: string
+          snapshot_scope?: string
+          snapshot_summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mission_integrity_snapshots_constitution_id_fkey"
+            columns: ["constitution_id"]
+            isOneToOne: false
+            referencedRelation: "mission_constitutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mission_integrity_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mission_integrity_subjects: {
+        Row: {
+          active: boolean
+          created_at: string
+          domain: string
+          id: string
+          organization_id: string
+          subject_code: string
+          subject_ref: string
+          subject_type: string
+          summary: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          domain?: string
+          id?: string
+          organization_id: string
+          subject_code?: string
+          subject_ref?: string
+          subject_type?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          domain?: string
+          id?: string
+          organization_id?: string
+          subject_code?: string
+          subject_ref?: string
+          subject_type?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mission_integrity_subjects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       multi_horizon_recommendations: {
         Row: {
           active: boolean
