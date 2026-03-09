@@ -878,24 +878,26 @@ supabase/functions/
 
 ## 16. Product Boundary Model
 
-AxionOS distinguishes three architectural surface layers. This distinction is critical for post-65 development:
+AxionOS distinguishes four architectural surface layers:
 
 | Surface Layer | Audience | Purpose | Examples |
 |---------------|----------|---------|----------|
 | **Internal System Architecture** | Platform engineers | Governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration | All 54 architectural layers, Agent OS modules, learning/repair/calibration engines |
 | **Advanced Operator Surface** | Operators / leads | Governance dashboards, risk posture, policy management, product ops, ecosystem readiness, audit | Operational observability tabs, governance reviews, policy frames, fitness dimensions |
-| **User-Facing Product Journey** | End users | Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software | Pipeline stages, progress indicators, approval gates, deploy status |
+| **Platform Governance Surface** | Platform reviewers / admins | Infrastructure controls, multi-tenant orchestration, advanced AI pipeline tooling | Routing, debates, working memory, swarm, marketplace, meta-agents, calibration, observability |
+| **User-Facing Product Surface** | End users | Dashboard, Journey, Onboarding, Initiatives, Stories, Code, Deployments, AutoPilot | Pipeline stages, progress indicators, approval gates, deploy status |
+
+### Role and Surface Access Model
+
+| Role | Product | Workspace | Platform |
+|------|---------|-----------|----------|
+| **End User** | ✅ | — | — |
+| **Operator** | ✅ | ✅ | — |
+| **Tenant Owner** | ✅ | ✅ | — |
+| **Platform Reviewer** | ✅ | ✅ | ✅ |
+| **Platform Admin** | ✅ | ✅ | ✅ |
 
 **Key principle:** Internal architecture powers the system. Operator surfaces expose governance and advanced controls. The **default product surface** should present the journey from idea to delivered software without unnecessary internal complexity.
-
-The user should always understand:
-- Where they are in the journey
-- What was generated at each step
-- What is next
-- What requires approval
-- What has been deployed
-
-Internal sophistication makes the product trustworthy. It does not need to be the default experience.
 
 ---
 
