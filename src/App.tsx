@@ -140,6 +140,7 @@ const App = () => (
                         <Route path="/institutional-conflicts" element={<W><InstitutionalConflicts /></W>} />
                         <Route path="/federated-boundaries"    element={<W><FederatedBoundaries /></W>} />
                         <Route path="/resilience-continuity"   element={<W><ResilienceContinuity /></W>} />
+                        <Route path="/memory-constitution"     element={<W><InstitutionalMemoryConstitution /></W>} />
                         <Route path="/improvement-ledger"      element={<W><ImprovementLedger /></W>} />
                         <Route path="/improvement-candidates"  element={<W><ImprovementCandidates /></W>} />
                         <Route path="/improvement-benchmarks"  element={<W><ImprovementBenchmarks /></W>} />
