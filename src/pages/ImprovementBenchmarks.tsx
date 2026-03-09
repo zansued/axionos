@@ -56,6 +56,7 @@ const riskIcons: Record<string, typeof ShieldCheck> = {
 export default function ImprovementBenchmarks() {
   const [selectedBenchmark, setSelectedBenchmark] = useState<typeof mockBenchmarks[0] | null>(null);
   const [activeTab, setActiveTab] = useState("benchmarks");
+  const { guidance, whyNow } = usePageGuidance("benchmarks");
 
   const totalRuns = mockBenchmarks.length;
   const completedRuns = mockBenchmarks.filter(b => b.status === "completed").length;
