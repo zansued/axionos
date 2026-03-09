@@ -70,7 +70,7 @@ export interface CopilotDrawerContent {
   /** Page key — must match PageGuidanceContract.key */
   key: string;
   /** Role-specific overrides (falls back to base guidance if absent) */
-  roleOverrides?: Partial<Record<string, CopilotRoleContent>>;
+  roleOverrides?: Partial<Record<string, Partial<CopilotRoleContent>>>;
   /** Default drawer content (used when no role override matches) */
   default: CopilotRoleContent;
 }
