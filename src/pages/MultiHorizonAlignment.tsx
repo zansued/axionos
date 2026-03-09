@@ -13,10 +13,13 @@ import { Progress } from "@/components/ui/progress";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Compass, Layers, AlertTriangle, ShieldAlert, Target, ArrowRightLeft,
-  ChevronDown, RefreshCw, Info, TrendingUp, Clock, Shield, Plus, Settings,
+  ChevronDown, RefreshCw, Info, TrendingUp, Clock, Shield, Plus, Settings, BookOpen,
 } from "lucide-react";
 import { toast } from "sonner";
 import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoreBar, ScoringTransparencyCard, CausalModifierCard } from "@/components/block-w/BlockWShared";
+import { BlockWConstitutionManager, HORIZON_CONSTITUTION_FIELDS } from "@/components/block-w/BlockWConstitutionManager";
+import { BlockWSubjectManager } from "@/components/block-w/BlockWSubjectManager";
+import { BlockWHistoryChart } from "@/components/block-w/BlockWHistoryChart";
 
 // ── Types ──
 interface Overview {
@@ -103,6 +106,9 @@ export default function MultiHorizonAlignment() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [evalResult, setEvalResult] = useState<EvalResult | null>(null);
   const [crossSignals, setCrossSignals] = useState<any>(null);
+  const [constitutions, setConstitutions] = useState<any[]>([]);
+  const [allSubjects, setAllSubjects] = useState<any[]>([]);
+  const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [evaluating, setEvaluating] = useState(false);
 
@@ -112,16 +118,22 @@ export default function MultiHorizonAlignment() {
     if (!orgId) return;
     setLoading(true);
     try {
-      const [ov, co, re, signals] = await Promise.all([
+      const [ov, co, re, signals, constData, subjData, histData] = await Promise.all([
         callEngine(orgId, "overview"),
         callEngine(orgId, "conflicts"),
         callEngine(orgId, "recommendations"),
         callEngine(orgId, "cross_sprint_signals").catch(() => null),
+        callEngine(orgId, "constitutions").catch(() => ({ constitutions: [] })),
+        callEngine(orgId, "subjects_all").catch(() => ({ subjects: [] })),
+        callEngine(orgId, "evaluation_history").catch(() => ({ history: [] })),
       ]);
       setOverview(ov);
       setConflicts(co.conflicts ?? []);
       setRecommendations(re.recommendations ?? []);
       if (signals) setCrossSignals(signals);
+      setConstitutions(constData.constitutions ?? []);
+      setAllSubjects(subjData.subjects ?? []);
+      setHistory(histData.history ?? []);
 
       // Reconstruct from DB
       const { data: evals } = await supabase
@@ -227,7 +239,6 @@ export default function MultiHorizonAlignment() {
               <p className="text-sm font-medium text-foreground">Multi-Horizon Strategic Alignment</p>
               <p className="text-xs text-muted-foreground">
                 Evaluates whether operational activity aligns with short, medium, long-term, and mission continuity horizons.
-                Detects when short-term efficiency undermines long-term strategy or mission continuity.
               </p>
             </div>
           </CardContent>
@@ -266,13 +277,15 @@ export default function MultiHorizonAlignment() {
         </div>
 
         <Tabs defaultValue="dashboard" className="space-y-4">
-          <TabsList className="bg-muted/50">
+          <TabsList className="bg-muted/50 flex-wrap h-auto gap-1">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="matrix">Alignment Matrix</TabsTrigger>
             <TabsTrigger value="conflicts">Conflicts</TabsTrigger>
             <TabsTrigger value="risk">Deferred Risk</TabsTrigger>
             <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
             <TabsTrigger value="explain">Explain</TabsTrigger>
+            <TabsTrigger value="history">History</TabsTrigger>
+            <TabsTrigger value="governance">Governance</TabsTrigger>
             <TabsTrigger value="integration">Integration</TabsTrigger>
           </TabsList>
 
@@ -441,15 +454,14 @@ export default function MultiHorizonAlignment() {
                     {recommendations.map(r => (
                       <div key={r.id} className="border border-border/50 rounded-lg p-3 space-y-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium">{r.recommendation_summary}</span>
-                          <Badge className={`text-[10px] ${priorityColor[r.priority_level] ?? ""}`}>{r.priority_level}</Badge>
+                          <span className="text-sm font-medium">{r.strategic_alignment_subjects?.title ?? "Unknown"}</span>
+                          <div className="flex gap-1">
+                            <Badge variant="outline" className={`text-[10px] ${priorityColor[r.priority_level] || ""}`}>{r.priority_level}</Badge>
+                            <Badge variant="outline" className="text-[10px]">{r.recommendation_type}</Badge>
+                          </div>
                         </div>
-                        <p className="text-xs text-muted-foreground">{r.rationale}</p>
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-[9px]">→ {r.target_horizon.replace(/_/g, " ")}</Badge>
-                          <Badge variant="outline" className="text-[9px]">{r.recommendation_type.replace(/_/g, " ")}</Badge>
-                        </div>
-                        {r.tradeoff_note && <p className="text-[10px] text-accent-foreground/70 italic">⚖ {r.tradeoff_note}</p>}
+                        <p className="text-xs text-muted-foreground">{r.recommendation_summary}</p>
+                        <p className="text-[10px] text-muted-foreground italic">{r.rationale}</p>
                       </div>
                     ))}
                   </div>
@@ -459,50 +471,82 @@ export default function MultiHorizonAlignment() {
           </TabsContent>
 
           {/* EXPLAIN */}
-          <TabsContent value="explain">
-            <div className="space-y-3">
-              {evalResult?.explanations?.length ? (
-                <>
-                  <ScoringTransparencyCard scores={[
-                    { label: "Alignment Score", value: evalResult.explanations[0]?.composite_alignment || 0, method: "heuristic" },
-                    { label: "Tension Score", value: evalResult.explanations[0]?.composite_tension || 0, method: "heuristic" },
-                  ]} />
-                  {evalResult.explanations.map((ex, i) => (
-                    <Card key={i} className="border-border/50">
-                      <CardHeader className="pb-2">
-                        <div className="flex items-center justify-between">
-                          <CardTitle className="text-sm">{ex.subject_title}</CardTitle>
-                          <PostureBadge posture={ex.overall_posture} />
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <p className="text-xs text-muted-foreground">{ex.institutional_health_narrative}</p>
-                        <div className="grid grid-cols-2 gap-3">
-                          <ScoreBar label="Alignment" value={ex.composite_alignment} />
-                          <ScoreBar label="Tension" value={ex.composite_tension} dangerous />
-                        </div>
-                        <div className="space-y-1">
-                          {ex.horizon_breakdown.map(h => (
-                            <div key={h.horizon_type} className="flex items-start gap-2 text-xs">
-                              <Layers className="h-3.5 w-3.5 mt-0.5 text-muted-foreground shrink-0" />
-                              <span className="text-muted-foreground">{h.narrative}</span>
-                            </div>
-                          ))}
-                        </div>
-                        {ex.conflict_summary !== "No active temporal conflicts detected." && (
-                          <p className="text-[10px] text-destructive">{ex.conflict_summary}</p>
-                        )}
-                      </CardContent>
-                    </Card>
-                  ))}
-                </>
-              ) : (
-                <Card className="border-border/50"><CardContent className="p-8 text-center text-muted-foreground">
-                  <Info className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p>Run an evaluation to see horizon alignment explanations.</p>
-                </CardContent></Card>
-              )}
-            </div>
+          <TabsContent value="explain" className="space-y-4">
+            {!evalResult?.explanations?.length ? (
+              <Card className="border-border/50"><CardContent className="p-8 text-center text-muted-foreground">Run an evaluation to see explanations.</CardContent></Card>
+            ) : (
+              <div className="space-y-3">
+                <ScoringTransparencyCard scores={[
+                  { label: "Composite Alignment", value: evalResult.explanations[0]?.composite_alignment || 0, method: "structural" },
+                  { label: "Composite Tension", value: evalResult.explanations[0]?.composite_tension || 0, method: "structural" },
+                ]} />
+                {evalResult.explanations.map((ev, i) => (
+                  <Card key={i} className="border-border/50">
+                    <CardContent className="p-4 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-sm">{ev.subject_title}</span>
+                        <PostureBadge posture={ev.overall_posture} />
+                      </div>
+                      <p className="text-xs text-muted-foreground">{ev.institutional_health_narrative}</p>
+                      <p className="text-xs text-muted-foreground">{ev.deferred_risk_summary}</p>
+                      <p className="text-xs text-muted-foreground">{ev.conflict_summary}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* HISTORY */}
+          <TabsContent value="history" className="space-y-4">
+            <BlockWHistoryChart
+              title="Horizon Alignment Trend"
+              description="How alignment, tension, and deferred risk evolve over evaluation cycles."
+              data={history}
+              metrics={[
+                { key: "alignment", label: "Alignment", color: "hsl(142, 71%, 45%)" },
+                { key: "tension", label: "Tension", color: "hsl(38, 92%, 50%)", dangerous: true },
+                { key: "deferred_risk", label: "Deferred Risk", color: "hsl(0, 84%, 60%)", dangerous: true },
+              ]}
+              loading={loading}
+            />
+          </TabsContent>
+
+          {/* GOVERNANCE */}
+          <TabsContent value="governance" className="space-y-4">
+            {orgId && (
+              <>
+                <BlockWConstitutionManager
+                  tableName="strategic_horizon_constitutions"
+                  sprintLabel="Horizon"
+                  orgId={orgId}
+                  constitutions={constitutions}
+                  loading={loading}
+                  onRefresh={loadData}
+                  fields={HORIZON_CONSTITUTION_FIELDS}
+                />
+                <BlockWSubjectManager
+                  tableName="strategic_alignment_subjects"
+                  label="Manage Alignment Subjects"
+                  subjects={allSubjects}
+                  loading={loading}
+                  onRefresh={loadData}
+                  fields={[
+                    { name: "title", label: "Title", type: "text" },
+                    { name: "subject_type", label: "Type", type: "select", options: [
+                      { value: "initiative", label: "Initiative" }, { value: "policy", label: "Policy" },
+                      { value: "plan", label: "Plan" }, { value: "decision", label: "Decision" },
+                      { value: "program", label: "Program" }, { value: "portfolio", label: "Portfolio" },
+                    ] },
+                    { name: "domain", label: "Domain", type: "select", options: [
+                      { value: "delivery", label: "Delivery" }, { value: "governance", label: "Governance" },
+                      { value: "strategy", label: "Strategy" }, { value: "general", label: "General" },
+                    ] },
+                    { name: "summary", label: "Summary", type: "textarea" },
+                  ]}
+                />
+              </>
+            )}
           </TabsContent>
 
           {/* INTEGRATION */}
@@ -514,9 +558,7 @@ export default function MultiHorizonAlignment() {
                   title="Simulation Feedback (Sprint 110 → 107)"
                   signals={[
                     { label: "Avg Survivability", value: crossSignals.simulation_feedback.avg_survivability },
-                    { label: "Avg Identity Preservation", value: crossSignals.simulation_feedback.avg_identity_preservation },
-                    { label: "Worst Future State", value: crossSignals.simulation_feedback.worst_future_state },
-                    { label: "Fragile Subjects", value: crossSignals.simulation_feedback.has_fragile_subjects ? "Yes" : "No", severity: crossSignals.simulation_feedback.has_fragile_subjects ? "high" : "low" },
+                    { label: "Has Fragility", value: crossSignals.simulation_feedback.has_degraded_states ? "Detected" : "No", severity: crossSignals.simulation_feedback.has_degraded_states ? "high" : "low" },
                   ]}
                   relatedRoute="/continuity-simulation"
                   relatedLabel="View Simulations"
