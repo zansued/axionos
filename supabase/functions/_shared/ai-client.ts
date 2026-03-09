@@ -83,6 +83,7 @@ export async function callAI(
   orgId?: string,
   initiativeId?: string,
   skipEfficiency = false,
+  abortSignal?: AbortSignal,
 ): Promise<AIResult> {
   const routing = routeRequest({
     systemPrompt,
