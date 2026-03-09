@@ -351,7 +351,10 @@ async function processArchitectureInBackground(
   retrySubjobKey?: string,
   sequentialMode = false,
 ) {
-    // Clean up any stuck running subjobs
+  try {
+    if (sequentialMode) {
+      await pipelineLog(ctx, "architecture_sequential_mode", "🔬 Diagnostic: running Data & API sequentially");
+    }
     const cleaned = await cleanupStuckSubjobs(serviceClient, jobId, 120_000);
     if (cleaned > 0) {
       await pipelineLog(ctx, "subjobs_timeout_cleanup", `${cleaned} subjobs marcados como timeout`);
