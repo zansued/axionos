@@ -212,20 +212,34 @@ flowchart TD
 | Block R — Distributed Runtime & Scaled Execution | 87–90 | Distributed job control plane, cross-region execution & recovery, tenant-isolated scale runtime, resilient large-scale orchestration |
 | Block S — Research Sandbox for Architecture Evolution | 91–94 | Architecture hypothesis engine, simulated evolution campaigns, cross-tenant pattern synthesis, human-governed architecture promotion |
 
-### Planned: Block T — Governed Intelligence OS (Sprints 95–98)
+### Complete: Block T — Governed Intelligence OS (Sprints 95–98) ✅
 
-> **Thesis:** AxionOS enters a new maturity phase where existing capabilities — coordination, evidence loops, guidance systems, and governance layers — consolidate into an operating system for governed intelligence.
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 95 | Institutional Memory Consolidation | ✅ |
+| Sprint 96 | Doctrine & Playbook Synthesis | ✅ |
+| Sprint 97 | Bounded Autonomous Operations | ✅ |
+| Sprint 98 | Institutional Decision Engine | ✅ |
 
-This block focuses on: institutional memory, doctrine synthesis, decision consistency, bounded autonomous operations, accumulated operational intelligence, and long-horizon system coherence.
+### Planned: Block U — Adaptive Institutional Ecosystem (Sprints 99–102)
+
+> **Thesis:** AxionOS evolves from a Governed Intelligence OS into an Adaptive Institutional Ecosystem. The system begins to govern intelligence across institutions, preserve coherence across domains, adapt doctrine across contexts, resolve conflicts between strategies and organizational realities, and build long-horizon institutional resilience.
+
+**Subtitle:** Cross-context doctrine adaptation, conflict resolution, and resilience orchestration.
 
 | Sprint | Deliverable | Description |
 |--------|-------------|-------------|
-| Sprint 95 | Institutional Memory Consolidation | Consolidate operational and decisional memory into unified, queryable institutional knowledge. Merge convergence memory, engineering memory, agent memory, and platform intelligence into a coherent institutional memory substrate. |
-| Sprint 96 | Doctrine & Playbook Synthesis | Transform accumulated institutional memory into actionable playbooks, doctrine packs, and operational heuristics. Generate reusable decision templates from historical patterns. |
-| Sprint 97 | Bounded Autonomous Operations | Enable safe autonomous execution for repetitive, low-risk, well-understood operations. Governance gates for escalation. All autonomous actions bounded, reversible, and auditable. |
-| Sprint 98 | Institutional Decision Engine | Use institutional memory + doctrine + risk signals + outcome history to recommend and act with greater consistency. Advisory-first with configurable autonomy tiers. Human authority preserved for structural decisions. |
+| Sprint 99 | Cross-Context Doctrine Adaptation | Adapt doctrine/playbooks by workspace type, profile, operational context, and maturity. Doctrine variation model, context-aware applicability, exception handling, adaptive doctrine recommendations. |
+| Sprint 100 | Institutional Conflict Resolution Engine | Detect and mediate conflicts between policies, doctrines, workspace needs, platform rules, capability constraints, and strategic priorities. Conflict classes, resolution strategies, escalation posture, human review ladder. |
+| Sprint 101 | Federated Intelligence Boundaries | Enable shared intelligence across contexts without breaking isolation. Federated synthesis rules, abstraction boundaries, safe cross-context learning, bounded shared doctrine signals. |
+| Sprint 102 | Resilience & Continuity Governance | Govern institutional continuity across failure, drift, policy conflict, degraded autonomy, and doctrine obsolescence. Resilience posture model, doctrine drift detection, continuity playbooks, institutional fallback modes. |
 
-**Governing constraint:** Advisory-first. Governance before autonomy. No autonomous architecture mutation. Bounded autonomy applies only to repetitive, low-risk operations with proven track records. All structural changes require human approval.
+**Governing constraints:**
+- Advisory-first. Governance before autonomy.
+- No autonomous architecture mutation.
+- Tenant isolation preserved across federated intelligence boundaries.
+- No unrestricted self-evolution or centralization that kills local autonomy.
+- Shared intelligence must not become data leakage.
 
 ---
 
