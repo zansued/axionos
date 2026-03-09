@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { authenticateWithRateLimit, requireOrgMembership } from "../_shared/auth.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { INITIATIVE_BLUEPRINT_SYSTEM_PROMPT, buildUserPrompt } from "../_shared/prompts/initiative-blueprint.prompt.ts";
 import { validateInitiativeBrief } from "../_shared/contracts/initiative-brief.schema.ts";
