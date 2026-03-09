@@ -18,8 +18,20 @@ serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const client = createClient(supabaseUrl, serviceKey);
 
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) return jsonResponse({ error: "Unauthorized" }, 401);
+
+    const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: { user }, error: userErr } = await userClient.auth.getUser();
+    if (userErr || !user) return jsonResponse({ error: "Unauthorized" }, 401);
+
     const { action, organization_id, payload } = await req.json();
     if (!organization_id) return jsonResponse({ error: "organization_id required" }, 400);
+
+    const { data: _member } = await client.from("organization_members").select("role").eq("organization_id", organization_id).eq("user_id", user.id).single();
+    if (!_member) return jsonResponse({ error: "Not a member of this organization" }, 403);
 
     switch (action) {
       case "overview": {
