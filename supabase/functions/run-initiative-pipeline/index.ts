@@ -1319,7 +1319,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
                   if (subtaskJobId) await completeJob(subtaskJobId, {
                     artifact_id: artifact?.id, file_path: subtask.file_path,
                     chain_of_agents: true, qa_approved: qaApproved,
-                  }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+                  }, { model: aiModel, costUsd: totalCost, durationMs: 0 });
 
                   codeFilesGenerated++;
                 } else if (hasFilePath) {
