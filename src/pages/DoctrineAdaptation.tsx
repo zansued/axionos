@@ -153,6 +153,7 @@ export default function DoctrineAdaptation() {
     <>
       <PageGuidanceShell pageKey="doctrine-adaptation" />
       <div className="min-h-screen bg-background p-6 space-y-6">
+        <div className="flex items-center gap-3">
           <ArrowRightLeft className="h-7 w-7 text-primary" />
           <div>
             <h1 className="text-2xl font-bold text-foreground">Doctrine Adaptation</h1>
