@@ -91,12 +91,10 @@ export default function Dashboard() {
             </p>
           </motion.div>
 
-          {/* Contextual Guidance */}
-          {dashboardGuidance && (
-            <motion.div variants={item}>
-              <PageIntroCard guidance={dashboardGuidance} whyNow={whyNowText} compact />
-            </motion.div>
-          )}
+          {/* Contextual Guidance + Copilot */}
+          <motion.div variants={item}>
+            <PageGuidanceShell pageKey="dashboard" />
+          </motion.div>
 
           {/* First-run hero */}
           {!hasInitiatives && !isLoading && (
