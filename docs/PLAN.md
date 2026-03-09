@@ -6,6 +6,7 @@
 > **Last updated:** 2026-03-09
 > **Canon Status:** 106 sprints complete — all blocks (Foundation through V) implemented
 > **Latest Sprint:** 106 (Strategic Succession & Long-Horizon Continuity) — ✅ Complete
+> **Next Block:** W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
 
 ## Document Authority
 
