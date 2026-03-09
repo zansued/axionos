@@ -38,6 +38,9 @@ serve(async (req) => {
 
     if (!organization_id) return errorResponse("organization_id required", 400);
 
+    const memberCheck = await requireOrgMembership(sc, user.id, organization_id);
+    if (memberCheck instanceof Response) return memberCheck;
+
     // ─── OVERVIEW ───
     if (action === "overview") {
       const [{ data: params }, { data: proposals }, { data: applications }, { data: rollbacks }] = await Promise.all([

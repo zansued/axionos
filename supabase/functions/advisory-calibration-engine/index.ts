@@ -33,6 +33,9 @@ serve(async (req) => {
 
     if (!organization_id) return errorResponse("organization_id required", 400);
 
+    const memberCheck = await requireOrgMembership(sc, user.id, organization_id);
+    if (memberCheck instanceof Response) return memberCheck;
+
     // ─── GENERATE SIGNALS ───
     if (action === "generate_signals") {
       const result = await generateCalibrationSignals(sc, user.id, organization_id, body.workspace_id);

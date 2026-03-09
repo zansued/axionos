@@ -41,6 +41,9 @@ serve(async (req) => {
     const { action, organization_id } = body;
     if (!organization_id) return errorResponse("organization_id required", 400);
 
+    const memberCheck = await requireOrgMembership(sc, user.id, organization_id);
+    if (memberCheck instanceof Response) return memberCheck;
+
     const orgFilter = `organization_id.is.null,organization_id.eq.${organization_id}`;
 
     // ─── OVERVIEW ───
