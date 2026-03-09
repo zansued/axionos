@@ -625,7 +625,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
-> **Summary:** 70 sprints complete. 54 architectural layers active. Block M (Product Experience & Delivery Maturity) complete. Block N (Evidence-Governed Improvement Loop) is the next planned block.
+> **Summary:** 71 sprints complete. 54 architectural layers active. Sprint 71 (Governed Extensibility) complete. Block N (Evidence-Governed Improvement Loop, Sprints 72–74) is the next planned block.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
