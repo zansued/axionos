@@ -11,6 +11,7 @@ import { GovernanceMentorDrawer } from "./GovernanceMentorDrawer";
 import { CopilotTrigger } from "./CopilotTrigger";
 import { useCopilotDrawer } from "@/hooks/useCopilotDrawer";
 import { useGovernanceMentor } from "@/hooks/useGovernanceMentor";
+import type { CopilotSubmode } from "@/lib/guidance/types";
 
 interface PageGuidanceShellProps {
   pageKey: string;
@@ -25,6 +26,13 @@ export function PageGuidanceShell({ pageKey, showIntroCard = true, compact = tru
   const { isMentorMode, mentorContent } = useGovernanceMentor(pageKey);
 
   if (!guidance) return null;
+
+  // Derive canonical submode
+  const submode: CopilotSubmode = isMentorMode
+    ? "governance_mentor"
+    : canonicalRole === "end_user"
+    ? "product_copilot"
+    : "workspace_copilot";
 
   return (
     <>
