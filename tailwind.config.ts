@@ -42,6 +42,11 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        surface: {
+          product: "hsl(var(--surface-product))",
+          workspace: "hsl(var(--surface-workspace))",
+          platform: "hsl(var(--surface-platform))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
