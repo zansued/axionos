@@ -438,6 +438,12 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
         </Card>
       )}
 
+      {/* Architecture Subjobs Panel */}
+      <ArchitectureSubjobsPanel
+        initiativeId={initiative.id}
+        jobId={jobs.find((j: any) => j.stage === "architecture")?.id || null}
+      />
+
       {/* Execution Progress (real-time) */}
       <ExecutionProgress initiativeId={initiative.id} stageStatus={stageStatus} />
 
