@@ -44,13 +44,14 @@ Everything runs inside a **32-stage deterministic pipeline** with full cost trac
 
 | Scope | Sprints | Status |
 |-------|---------|--------|
-| Completed canon (Foundation → Product Experience) | 1–70 | ✅ Complete |
-| Evidence-Governed Improvement Loop (Block N) | 71–74 | 📋 Planned |
-| Advanced Multi-Agent Coordination (Block O) | 75–78 | 🔮 Reserved |
-| Governed Capability Ecosystem (Block P) | 79–82 | 🔮 Reserved |
-| Delivery Optimization (Block Q) | 83–86 | 🔮 Reserved |
-| Distributed Runtime (Block R) | 87–90 | 🔮 Reserved |
-| Research Sandbox (Block S) | 91–94 | 🔮 Reserved |
+| Foundation through Product Experience | 1–70 | ✅ Complete |
+| Governed Extensibility (Bridge Sprint) | 71 | ✅ Complete |
+| Evidence-Governed Improvement Loop (Block N) | 72–74 | ✅ Complete |
+| Advanced Multi-Agent Coordination (Block O) | 75–78 | ✅ Complete |
+| Governed Capability Ecosystem (Block P) | 79–82 | ✅ Complete |
+| Delivery Optimization (Block Q) | 83–86 | ✅ Complete |
+| Distributed Runtime (Block R) | 87–90 | ✅ Complete |
+| Research Sandbox (Block S) | 91–94 | ✅ Complete |
 
 > Full roadmap: [ROADMAP.md](docs/ROADMAP.md) · Sprint ledger: [PLAN.md](docs/PLAN.md)
 
@@ -87,6 +88,24 @@ Full initiative lifecycle metrics: pipeline/build/deploy success rates, time fro
 
 ### Governed Execution
 Stage gates, SLA enforcement, approval workflows, and complete audit logging. Every action is traceable and bounded.
+
+### Evidence-Governed Improvement
+Operational evidence is captured, distilled into improvement candidates, benchmarked in sandbox conditions, and promoted through human-governed decisions.
+
+### Multi-Agent Coordination
+Role arbitration, structured debate & resolution, shared working memory, task-state negotiation, and bounded swarm execution for complex initiatives.
+
+### Governed Capability Ecosystem
+Capability packaging, trust/entitlements, partner marketplace, and outcome-aware capability exchange — all governed and reversible.
+
+### Delivery Optimization
+Delivery outcome causality analysis, post-deploy learning, reliability-aware tuning, and outcome assurance 2.0 for higher-confidence software delivery.
+
+### Distributed Runtime
+Distributed job control plane, cross-region resilience, tenant-isolated scale runtime, and resilient large-scale orchestration.
+
+### Architecture Research
+Hypothesis generation, simulated evolution campaigns, cross-tenant pattern synthesis, and human-governed architecture promotion.
 
 ---
 
@@ -210,7 +229,7 @@ flowchart TB
 | [Architecture](docs/ARCHITECTURE.md) | System architecture, 32-stage pipeline, tech stack |
 | [Agent OS](docs/AGENTS.md) | Agent Operating System: 14 modules, 5 planes, contracts |
 | [Roadmap](docs/ROADMAP.md) | Implementation priorities and evolution plan |
-| [Execution Plan](.lovable/plan.md) | Current sprint priorities and success metrics |
+| [Execution Plan](docs/PLAN.md) | Current sprint priorities and success metrics |
 
 ---
 
