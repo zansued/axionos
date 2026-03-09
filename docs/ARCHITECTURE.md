@@ -431,9 +431,9 @@ The Agent OS is the runtime architecture governing how agents are selected, exec
 |-------|--------|-------------|
 | **Core** | ✅ Implemented | Runtime Protocol, Capability Model, Core Types |
 | **Control** | ✅ Implemented | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing |
-| **Execution** | ✅ Partial | Orchestrator, Coordination, LLM/Tool Adapters (advanced coordination/distributed runtime frozen) |
+| **Execution** | ✅ Implemented | Orchestrator, Coordination, Distributed Runtime, LLM/Tool Adapters |
 | **Data** | ✅ Implemented | Artifact Store, Memory System, Observability |
-| **Ecosystem** | ❄️ Frozen | Marketplace (designed, not needed) |
+| **Ecosystem** | ✅ Implemented | Marketplace, Capability Registry, Trust Scoring, Package Management |
 
 ---
 
