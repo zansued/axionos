@@ -43,7 +43,7 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 ## Product Thesis
 
-AxionOS is a **governed self-improving software factory** that is moving toward **governed intelligence and decision maturity**.
+AxionOS is a **governed intelligence operating system** evolving toward an **adaptive institutional ecosystem**.
 
 The platform promise remains: **from idea to delivered software**.
 

@@ -112,3 +112,15 @@ sprints:
   - { sprint: 92, name: "Simulated Evolution Campaigns",                     status: complete, block: "S", phase: "Research Sandbox", layer: "Simulated Evolution Layer" }
   - { sprint: 93, name: "Cross-Tenant Pattern Synthesis",                    status: complete, block: "S", phase: "Research Sandbox", layer: "Cross-Tenant Synthesis Layer" }
   - { sprint: 94, name: "Human-Governed Architecture Promotion",             status: complete, block: "S", phase: "Research Sandbox", layer: "Architecture Promotion Layer" }
+
+  # === BLOCK T — Governed Intelligence OS ===
+  - { sprint: 95, name: "Institutional Memory Consolidation",                 status: complete, block: "T", phase: "Governed Intelligence OS", layer: "Institutional Memory Consolidation Layer" }
+  - { sprint: 96, name: "Doctrine & Playbook Synthesis",                      status: complete, block: "T", phase: "Governed Intelligence OS", layer: "Doctrine & Playbook Synthesis Layer" }
+  - { sprint: 97, name: "Bounded Autonomous Operations",                      status: complete, block: "T", phase: "Governed Intelligence OS", layer: "Bounded Autonomous Operations Layer" }
+  - { sprint: 98, name: "Institutional Decision Engine",                      status: complete, block: "T", phase: "Governed Intelligence OS", layer: "Institutional Decision Engine Layer" }
+
+  # === BLOCK U — Adaptive Institutional Ecosystem (PLANNED) ===
+  - { sprint: 99,  name: "Cross-Context Doctrine Adaptation",                 status: planned,  block: "U", phase: "Adaptive Institutional Ecosystem", layer: "Cross-Context Doctrine Adaptation Layer" }
+  - { sprint: 100, name: "Institutional Conflict Resolution Engine",           status: planned,  block: "U", phase: "Adaptive Institutional Ecosystem", layer: "Institutional Conflict Resolution Layer" }
+  - { sprint: 101, name: "Federated Intelligence Boundaries",                 status: planned,  block: "U", phase: "Adaptive Institutional Ecosystem", layer: "Federated Intelligence Boundaries Layer" }
+  - { sprint: 102, name: "Resilience & Continuity Governance",                 status: planned,  block: "U", phase: "Adaptive Institutional Ecosystem", layer: "Resilience & Continuity Governance Layer" }
