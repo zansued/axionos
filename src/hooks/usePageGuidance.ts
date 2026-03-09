@@ -8,9 +8,9 @@
 
 import { useMemo } from "react";
 import { useRoleBasedExperience } from "@/hooks/useRoleBasedExperience";
+import { useI18n } from "@/contexts/I18nContext";
 import { getGuidanceForPage } from "@/lib/guidance/contracts";
 import type { PageGuidanceContract, GuidanceSurface } from "@/lib/guidance/types";
-import type { CanonicalRole } from "@/lib/permissions";
 
 /** Which surfaces each canonical role can see guidance for */
 const ROLE_SURFACE_ACCESS: Record<string, GuidanceSurface[]> = {
@@ -46,6 +46,16 @@ const ROLE_WHY_NOW: Record<string, Record<string, { pt: string; en: string }>> =
       pt: "Novos sinais operacionais foram coletados recentemente.",
       en: "New operational signals were recently collected.",
     },
+    benchmarks: {
+      pt: "Candidatos aguardam benchmarking para decisão de promoção.",
+      en: "Candidates are awaiting benchmarking for promotion decisions.",
+    },
+  },
+  tenant_owner: {
+    extensions: {
+      pt: "Gerencie extensões do workspace com controle de governança.",
+      en: "Manage workspace extensions with governance control.",
+    },
   },
   platform_admin: {
     observability: {
@@ -60,26 +70,37 @@ const ROLE_WHY_NOW: Record<string, Record<string, { pt: string; en: string }>> =
       pt: "Mudanças em políticas de agentes requerem revisão administrativa.",
       en: "Changes to agent policies require administrative review.",
     },
+    audit: {
+      pt: "Rastreie decisões e eventos do sistema para compliance.",
+      en: "Trace system decisions and events for compliance.",
+    },
+    "platform-extensions": {
+      pt: "Extensões de plataforma pendentes podem exigir aprovação.",
+      en: "Pending platform extensions may require approval.",
+    },
   },
 };
 
 export function usePageGuidance(pageKey: string) {
   const { canonicalRole } = useRoleBasedExperience();
+  const { locale } = useI18n();
+  const lang = locale === "pt-BR" ? "pt" : "en";
 
   return useMemo(() => {
     const guidance = getGuidanceForPage(pageKey);
-    if (!guidance) return { guidance: null, whyNow: undefined };
+    if (!guidance) return { guidance: null, whyNow: undefined, whyNowText: undefined };
 
     // Check if the current role can see guidance for this surface
     const allowedSurfaces = ROLE_SURFACE_ACCESS[canonicalRole] ?? ROLE_SURFACE_ACCESS.end_user;
     if (!allowedSurfaces.includes(guidance.surface)) {
-      return { guidance: null, whyNow: undefined };
+      return { guidance: null, whyNow: undefined, whyNowText: undefined };
     }
 
     // Get role-specific "why now" hint
     const roleHints = ROLE_WHY_NOW[canonicalRole];
     const whyNow = roleHints?.[pageKey];
+    const whyNowText = whyNow?.[lang];
 
-    return { guidance, whyNow };
-  }, [pageKey, canonicalRole]);
+    return { guidance, whyNow, whyNowText };
+  }, [pageKey, canonicalRole, lang]);
 }
