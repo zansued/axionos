@@ -905,7 +905,7 @@ AxionOS distinguishes four architectural surface layers:
 
 > **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-With 70 sprints complete and Block M (Product Experience & Delivery Maturity) delivered, the platform has achieved its first product-ready operating baseline. 54 architectural layers are active.
+With 71 sprints complete, Sprint 71 (Governed Extensibility) delivered, the platform has achieved its first product-ready operating baseline with governed extensibility. 54 architectural layers are active.
 
 ### Completed Canon (Sprints 1–70)
 
