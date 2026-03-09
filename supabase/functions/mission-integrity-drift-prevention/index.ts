@@ -6,6 +6,7 @@ import { generateCorrections } from "../_shared/mission-integrity/mission-correc
 import { explainMissionIntegrity } from "../_shared/mission-integrity/mission-explainer.ts";
 import { resolveActiveConstitution, extractProtectedCommitments } from "../_shared/mission-integrity/mission-constitution-resolver.ts";
 import { filterActiveSubjects, groupSubjectsByDomain } from "../_shared/mission-integrity/mission-subject-mapper.ts";
+import { extractTradeoffSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -329,6 +330,15 @@ Deno.serve(async (req) => {
           posture_levels: ["mission_aligned", "healthy_adaptation", "mild_drift", "significant_drift", "active_erosion", "normative_compromise"],
           core_principles: ["advisory-first", "no-silent-erosion", "mission-before-performance", "drift-is-measurable", "adaptation-is-not-erosion"],
           safety_constraints: ["Advisory-first", "No autonomous mission rewrite", "Human review for corrections", "Tenant isolation via RLS"],
+        };
+        break;
+      }
+
+      case "cross_sprint_signals": {
+        const tradeoffSignals = await extractTradeoffSignals(supabase, organization_id);
+        result = {
+          tradeoff_pressure: tradeoffSignals,
+          integration_note: "Tradeoff arbitration signals (Sprint 108) surface mission-corrosive sacrifices as drift pressure inputs.",
         };
         break;
       }

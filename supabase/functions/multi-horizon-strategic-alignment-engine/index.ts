@@ -13,6 +13,7 @@ import { detectTemporalConflicts } from "../_shared/multi-horizon-alignment/temp
 import { assessDeferredRisk } from "../_shared/multi-horizon-alignment/deferred-risk-evaluator.ts";
 import { generateRecommendations } from "../_shared/multi-horizon-alignment/horizon-recommendation-engine.ts";
 import { explainHorizonPosture } from "../_shared/multi-horizon-alignment/horizon-explainer.ts";
+import { extractSimulationSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
 
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -230,6 +231,15 @@ Deno.serve(async (req) => {
       const explanation = explainHorizonPosture(evaluation, risk, conflicts, recommendations);
 
       return json({ explanation, risk, conflicts, recommendations });
+    }
+
+    // ── CROSS-SPRINT SIGNALS ──
+    if (action === "cross_sprint_signals") {
+      const simSignals = await extractSimulationSignals(serviceClient, organization_id);
+      return json({
+        simulation_feedback: simSignals,
+        integration_note: "Simulation signals (Sprint 110) feed back into horizon alignment to highlight future continuity fragility and identity risk.",
+      });
     }
 
     return json({ error: `Unknown action: ${action}` }, 400);

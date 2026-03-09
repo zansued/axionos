@@ -6,6 +6,7 @@ import { assessIdentityPreservation } from "../_shared/continuity-simulation/ide
 import { detectStressPoints } from "../_shared/continuity-simulation/stress-pathway-detector.ts";
 import { generateRecommendations } from "../_shared/continuity-simulation/simulation-recommendation-engine.ts";
 import { explainSimulation } from "../_shared/continuity-simulation/simulation-explainer.ts";
+import { extractMissionSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -313,6 +314,15 @@ Deno.serve(async (req) => {
           governance_principles: ["Advisory-first", "Inspectable scenarios", "Multiple futures modeled", "Identity preservation distinct from survival", "Tenant isolation via RLS"],
           scenario_types: ["regulatory_shift", "political_shift", "technological_disruption", "budget_collapse", "talent_loss", "trust_erosion", "dependency_failure", "mission_drift_compound"],
           future_states: ["stable", "strained", "degraded", "fragmented", "collapsed", "adaptive_recovery"],
+        };
+        break;
+      }
+
+      case "cross_sprint_signals": {
+        const missionSignals = await extractMissionSignals(supabase, organization_id);
+        result = {
+          mission_context: missionSignals,
+          integration_note: "Mission integrity signals (Sprint 109) feed erosion and drift density into continuity simulation posture.",
         };
         break;
       }

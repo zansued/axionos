@@ -13,6 +13,7 @@ import { assessCompromiseRisk } from "../_shared/tradeoff-arbitration/compromise
 import { evaluateReversibility } from "../_shared/tradeoff-arbitration/reversibility-evaluator.ts";
 import { generateArbitrationRecommendations } from "../_shared/tradeoff-arbitration/tradeoff-arbitration-engine.ts";
 import { explainTradeoff } from "../_shared/tradeoff-arbitration/tradeoff-explainer.ts";
+import { extractHorizonSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
 
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -225,6 +226,15 @@ Deno.serve(async (req) => {
       const explanation = explainTradeoff(analysis, risk, reversibility, recommendations);
 
       return json({ explanation, analysis, risk, reversibility, recommendations });
+    }
+
+    // ── CROSS-SPRINT SIGNALS ──
+    if (action === "cross_sprint_signals") {
+      const horizonSignals = await extractHorizonSignals(serviceClient, organization_id);
+      return json({
+        horizon_context: horizonSignals,
+        integration_note: "Horizon alignment signals (Sprint 107) provide temporal bias and deferred risk context for tradeoff arbitration.",
+      });
     }
 
     return json({ error: `Unknown action: ${action}` }, 400);
