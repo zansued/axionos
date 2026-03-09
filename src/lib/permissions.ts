@@ -73,6 +73,7 @@ export const WORKSPACE_FULL_NAV: NavItem[] = [
   { title: "Extensions",    url: "/extensions",               icon: Package },
   { title: "Horizons",     url: "/multi-horizon-alignment",  icon: Compass },
   { title: "Tradeoffs",   url: "/tradeoff-arbitration",     icon: Scale },
+  { title: "Mission",     url: "/mission-integrity",        icon: ShieldCheck },
   { title: "Audit",         url: "/audit",                    icon: Shield },
   { title: "Settings",      url: "/org",                      icon: Settings },
   { title: "Billing",       url: "/billing",                  icon: CreditCard },
