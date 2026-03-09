@@ -11,6 +11,7 @@ import { usePageGuidance } from "@/hooks/usePageGuidance";
 
 export default function AdoptionIntelligence() {
   const { overview } = useAdoptionIntelligence();
+  const { guidance, whyNow } = usePageGuidance("adoption");
   const items = overview.data ?? [];
 
   const avgAdoption = items.length > 0 ? items.reduce((s: number, i: any) => s + (i.adoption_score ?? 0), 0) / items.length : 0;
