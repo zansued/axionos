@@ -58,36 +58,46 @@ async function executeSubjob(
   productArchData: string,
   completedResults: Record<string, Record<string, unknown>>,
 ): Promise<AgentOutput> {
-  const systemArchJson = JSON.stringify(completedResults["architecture.system"] || {}, null, 2);
+  // Use compact summary for downstream agents instead of full system output
+  const systemResult = completedResults["architecture.system"] || {};
+  const compactSysContext = compactSystemArchSummary(systemResult);
+  const fullSystemArchJson = JSON.stringify(systemResult, null, 2);
   const dataArchJson = JSON.stringify(completedResults["architecture.data"] || {}, null, 2);
   const apiArchJson = JSON.stringify(completedResults["architecture.api"] || {}, null, 2);
 
   switch (subjobKey) {
     case "architecture.system": {
       const p = systemArchitectPrompt(projectContext, requirementsData, productArchData);
-      return runAgent(apiKey, "system_architect", p.system, p.user, true);
+      const result = await runAgent(apiKey, "system_architect", p.system, p.user, true);
+      result.contextChars = 0;
+      return result;
     }
     case "architecture.data": {
-      const p = dataArchitectPrompt(projectContext, requirementsData, systemArchJson);
-      return runAgent(apiKey, "data_architect", p.system, p.user, true);
+      // Use compact context instead of full system arch
+      const p = dataArchitectPrompt(projectContext, requirementsData, compactSysContext);
+      const result = await runAgent(apiKey, "data_architect", p.system, p.user, true);
+      result.contextChars = compactSysContext.length;
+      return result;
     }
     case "architecture.api": {
-      const p = apiArchitectPrompt(projectContext, requirementsData, systemArchJson);
-      return runAgent(apiKey, "api_architect", p.system, p.user, false);
+      // Use compact context instead of full system arch
+      const p = apiArchitectPrompt(projectContext, requirementsData, compactSysContext);
+      const result = await runAgent(apiKey, "api_architect", p.system, p.user, false);
+      result.contextChars = compactSysContext.length;
+      return result;
     }
     case "architecture.dependencies": {
-      const p = dependencyPlannerPrompt(projectContext, systemArchJson, dataArchJson, apiArchJson);
-      return runAgent(apiKey, "dependency_planner", p.system, p.user, true);
+      const p = dependencyPlannerPrompt(projectContext, fullSystemArchJson, dataArchJson, apiArchJson);
+      const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, true);
+      result.contextChars = fullSystemArchJson.length + dataArchJson.length + apiArchJson.length;
+      return result;
     }
     case "architecture.synthesis": {
-      // Synthesis: consolidate all results into architecture content
       const archContent = buildArchitectureContent(completedResults);
       return {
-        role: "synthesis",
-        model: "deterministic",
-        tokens: 0,
-        costUsd: 0,
-        durationMs: 0,
+        role: "synthesis", model: "deterministic", tokens: 0,
+        costUsd: 0, durationMs: 0, rawOutputChars: archContent.length,
+        promptChars: 0, contextChars: 0,
         result: { architecture_content: archContent, synthesized: true },
       };
     }
