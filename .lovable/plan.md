@@ -105,7 +105,7 @@ AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
 | Sprint | Deliverable | Status |
 |--------|-------------|--------|
 | Sprint 99 | Cross-Context Doctrine Adaptation — adapt doctrine by workspace type, profile, context, maturity | ✅ |
-| Sprint 100 | Institutional Conflict Resolution Engine — detect/mediate conflicts between policies, doctrines, strategies | 🔲 |
+| Sprint 100 | Institutional Conflict Resolution Engine — detect/mediate conflicts between policies, doctrines, strategies | ✅ |
 | Sprint 101 | Federated Intelligence Boundaries — shared intelligence across contexts without breaking isolation | 🔲 |
 | Sprint 102 | Resilience & Continuity Governance — institutional continuity across failure, drift, obsolescence | 🔲 |
 
