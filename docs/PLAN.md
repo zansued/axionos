@@ -769,22 +769,5 @@ Reserved blocks are strategic direction only. They will not be promoted to plann
 | Onboarding, Templates & Vertical Starters | 1 | 69 |
 | Adoption Intelligence & Customer Success | 1 | 70 |
 | Extension Management | 1 | 71 |
-| Evidence Management | 1 | 72 |
-| Candidate Distillation | 1 | 73 |
-| Benchmark Governance | 1 | 74 |
-| Agent Routing | 1 | 75 |
-| Agent Debate & Resolution | 1 | 76 |
-| Working Memory & Task-State | 1 | 77 |
-| Swarm Execution | 1 | 78 |
-| Capability Registry | 1 | 79 |
-| Capability Governance | 1 | 80 |
-| Pilot Marketplace | 1 | 81 |
-| Marketplace Outcomes | 1 | 82 |
-| Delivery Outcome Causality | 1 | 83 |
-| Post-Deploy Feedback Assimilation | 1 | 84 |
-| Reliability-Aware Delivery Tuning | 1 | 85 |
-| Outcome Assurance 2.0 | 1 | 86 |
-| Distributed Job Control Plane | 1 | 87 |
-| Cross-Region Execution & Recovery | 1 | 88 |
 | Support | 11 | Various |
-| **Total** | **~139** | |
+| **Total** | **~93** | |
