@@ -57,7 +57,7 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
     const requirementsData = dp.requirements ? JSON.stringify(dp.requirements, null, 2) : "Não disponível";
     const productArchData = dp.product_architecture ? JSON.stringify(dp.product_architecture, null, 2) : "Não disponível";
 
-    // ──── Agent 5: System Architect ────
+    // ──── Step 1: System Architect (must run first — others depend on it) ────
     await pipelineLog(ctx, "agent_system_architect_start", "🏛️ System Architect definindo stack e estrutura...");
     const systemArch = await runAgent(
       apiKey,
@@ -110,16 +110,21 @@ Defina a arquitetura técnica do sistema:
       model_used: systemArch.model, tokens_used: systemArch.tokens, cost_estimate: systemArch.costUsd,
     });
 
-    // ──── Agent 6: Data Architect ────
+    // ──── Step 2: Data Architect ∥ API Architect (parallel — both depend only on System Architect) ────
     await pipelineLog(ctx, "agent_data_architect_start", "🗃️ Data Architect modelando banco de dados...");
-    const dataArch = await runAgent(
-      apiKey,
-      "data_architect",
-      `Você é o Data Architect Agent — especialista em modelagem de dados e banco de dados. Use a arquitetura de sistema definida anteriormente. Retorne APENAS JSON válido.`,
-      `${projectContext}
+    await pipelineLog(ctx, "agent_api_architect_start", "🔌 API Architect definindo contratos (em paralelo)...");
+
+    const systemArchJson = JSON.stringify(systemArch.result, null, 2);
+
+    const [dataArch, apiArch] = await Promise.all([
+      runAgent(
+        apiKey,
+        "data_architect",
+        `Você é o Data Architect Agent — especialista em modelagem de dados e banco de dados. Use a arquitetura de sistema definida anteriormente. Retorne APENAS JSON válido.`,
+        `${projectContext}
 
 REQUISITOS: ${requirementsData}
-ARQUITETURA DE SISTEMA: ${JSON.stringify(systemArch.result, null, 2)}
+ARQUITETURA DE SISTEMA: ${systemArchJson}
 
 Modele o banco de dados completo:
 {
@@ -151,27 +156,16 @@ Modele o banco de dados completo:
   ],
   "migration_strategy": "Estratégia de migração e seed data"
 }`,
-      true,
-    );
+        true,
+      ),
+      runAgent(
+        apiKey,
+        "api_architect",
+        `Você é o API Architect Agent — especialista em design de APIs. Defina os contratos de API completos baseados na arquitetura. Retorne APENAS JSON válido.`,
+        `${projectContext}
 
-    await serviceClient.from("agent_outputs").insert({
-      organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
-      type: "analysis", status: "approved",
-      summary: `Data Architect: ${(dataArch.result.tables as any[])?.length || 0} tabelas, ${(dataArch.result.relationships as any[])?.length || 0} relacionamentos`,
-      raw_output: { agent: "data_architect", layer: 2, ...dataArch.result },
-      model_used: dataArch.model, tokens_used: dataArch.tokens, cost_estimate: dataArch.costUsd,
-    });
-
-    // ──── Agent 7: API Architect ────
-    await pipelineLog(ctx, "agent_api_architect_start", "🔌 API Architect definindo contratos...");
-    const apiArch = await runAgent(
-      apiKey,
-      "api_architect",
-      `Você é o API Architect Agent — especialista em design de APIs. Defina os contratos de API completos baseados na arquitetura e dados. Retorne APENAS JSON válido.`,
-      `${projectContext}
-
-ARQUITETURA DE SISTEMA: ${JSON.stringify(systemArch.result, null, 2)}
-MODELO DE DADOS: ${JSON.stringify(dataArch.result, null, 2)}
+ARQUITETURA DE SISTEMA: ${systemArchJson}
+REQUISITOS: ${requirementsData}
 
 Defina os contratos de API:
 {
@@ -201,8 +195,19 @@ Defina os contratos de API:
   ],
   "versioning_strategy": "URL path|Header|Query param"
 }`,
-    );
+      ),
+    ]);
 
+    // Persist Data Architect output
+    await serviceClient.from("agent_outputs").insert({
+      organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
+      type: "analysis", status: "approved",
+      summary: `Data Architect: ${(dataArch.result.tables as any[])?.length || 0} tabelas, ${(dataArch.result.relationships as any[])?.length || 0} relacionamentos`,
+      raw_output: { agent: "data_architect", layer: 2, ...dataArch.result },
+      model_used: dataArch.model, tokens_used: dataArch.tokens, cost_estimate: dataArch.costUsd,
+    });
+
+    // Persist API Architect output
     await serviceClient.from("agent_outputs").insert({
       organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
       type: "analysis", status: "approved",
@@ -211,7 +216,7 @@ Defina os contratos de API:
       model_used: apiArch.model, tokens_used: apiArch.tokens, cost_estimate: apiArch.costUsd,
     });
 
-    // ──── Agent 8: Dependency Planner ────
+    // ──── Step 3: Dependency Planner (depends on all three above) ────
     await pipelineLog(ctx, "agent_dependency_planner_start", "🔗 Dependency Planner criando grafo de dependências...");
     const depPlanner = await runAgent(
       apiKey,
