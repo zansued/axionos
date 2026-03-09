@@ -88,7 +88,7 @@ export default function AIRoutingPolicy() {
         </div>
 
         {/* Contextual Guidance */}
-        <PageIntroCard guidance={getGuidanceForPage("routing")!} compact />
+        <PageGuidanceShell pageKey="routing" />
 
         {/* Tier Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

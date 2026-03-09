@@ -335,7 +335,7 @@ export default function Observability() {
         </div>
 
         {/* Contextual Guidance */}
-        <PageIntroCard guidance={getGuidanceForPage("observability")!} compact />
+        <PageGuidanceShell pageKey="observability" />
 
         {/* Top Stats */}
         <div className="grid gap-3 grid-cols-2 md:grid-cols-6">

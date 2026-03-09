@@ -152,7 +152,7 @@ export default function UserJourneyDashboard() {
         </div>
 
         {/* Contextual Guidance */}
-        <PageIntroCard guidance={getGuidanceForPage("journey")!} compact />
+        <PageGuidanceShell pageKey="journey" />
 
         {/* Overview Stats */}
         <div className="grid gap-3 grid-cols-2 md:grid-cols-5">
