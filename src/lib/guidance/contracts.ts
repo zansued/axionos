@@ -780,7 +780,6 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Changes to critical dependencies should be reviewed.",
     },
   },
-  },
   {
     key: "strategic-succession",
     title: { pt: "Sucessão Estratégica", en: "Strategic Succession" },
