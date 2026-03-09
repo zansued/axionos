@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
-import { PageIntroCard } from "@/components/guidance";
-import { usePageGuidance } from "@/hooks/usePageGuidance";
+import { PageGuidanceShell } from "@/components/guidance";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -46,7 +45,6 @@ const statusColors: Record<string, string> = {
 export default function AgentRouting() {
   const [selectedDecision, setSelectedDecision] = useState<typeof mockDecisions[0] | null>(null);
   const [activeTab, setActiveTab] = useState("decisions");
-  const { guidance, whyNowText } = usePageGuidance("routing");
 
   const total = mockDecisions.length;
   const flagged = mockDecisions.filter(d => d.status === "flagged").length;
@@ -60,7 +58,7 @@ export default function AgentRouting() {
         <AppSidebar />
         <SidebarInset className="flex-1">
           <div className="p-6 space-y-6">
-            {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
+            <PageGuidanceShell pageKey="routing" />
             <div>
               <h1 className="text-2xl font-bold text-foreground">Agent Routing & Arbitration</h1>
               <p className="text-sm text-muted-foreground mt-1">Context-aware capability routing decisions with explainability, fallback paths, and governance audit.</p>

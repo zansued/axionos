@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
-import { PageIntroCard } from "@/components/guidance";
-import { usePageGuidance } from "@/hooks/usePageGuidance";
+import { PageGuidanceShell } from "@/components/guidance";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOrg } from "@/contexts/OrgContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -62,7 +61,6 @@ export default function AuditLogs() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [expandedLog, setExpandedLog] = useState<string | null>(null);
   const { t } = useI18n();
-  const { guidance, whyNowText } = usePageGuidance("audit");
 
   const { data: logs = [], isLoading, refetch, isFetching } = useQuery({
     queryKey: ["audit-logs", severityFilter, categoryFilter],
@@ -204,7 +202,7 @@ export default function AuditLogs() {
   return (
     <AppLayout>
       <div className="space-y-6">
-        {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
+        <PageGuidanceShell pageKey="audit" />
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>

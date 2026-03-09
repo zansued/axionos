@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { PageIntroCard, getGuidanceForPage } from "@/components/guidance";
+import { PageGuidanceShell } from "@/components/guidance";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -88,7 +88,7 @@ export default function AIRoutingPolicy() {
         </div>
 
         {/* Contextual Guidance */}
-        <PageIntroCard guidance={getGuidanceForPage("routing")!} compact />
+        <PageGuidanceShell pageKey="routing" />
 
         {/* Tier Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

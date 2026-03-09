@@ -17,7 +17,7 @@ import { useI18n } from "@/contexts/I18nContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Lightbulb, Download } from "lucide-react";
-import { PageIntroCard, getGuidanceForPage } from "@/components/guidance";
+import { PageGuidanceShell } from "@/components/guidance";
 import { exportToCSV } from "@/lib/export-utils";
 import {
   DropdownMenu,
@@ -225,7 +225,7 @@ export default function Initiatives() {
         </div>
 
         {/* Contextual Guidance */}
-        <PageIntroCard guidance={getGuidanceForPage("initiatives")!} compact />
+        <PageGuidanceShell pageKey="initiatives" />
 
         {breaches.length > 0 && (
           <SLABreachAlerts breaches={breaches} onNavigate={(id) => setSelectedId(id)} />

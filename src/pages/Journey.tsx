@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PageIntroCard, getGuidanceForPage } from "@/components/guidance";
+import { PageGuidanceShell } from "@/components/guidance";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -152,7 +152,7 @@ export default function UserJourneyDashboard() {
         </div>
 
         {/* Contextual Guidance */}
-        <PageIntroCard guidance={getGuidanceForPage("journey")!} compact />
+        <PageGuidanceShell pageKey="journey" />
 
         {/* Overview Stats */}
         <div className="grid gap-3 grid-cols-2 md:grid-cols-5">
