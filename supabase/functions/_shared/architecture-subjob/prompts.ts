@@ -104,9 +104,7 @@ Defina os contratos de API:
     }
   ],
   "edge_functions": [{"name": "string", "description": "string", "trigger": "HTTP|Webhook|Cron", "auth": true}],
-  "realtime_channels": [{"name": "string", "table": "string", "events": ["INSERT|UPDATE|DELETE"], "filter": "string|null"}],
-  "webhooks": [{"event": "string", "url": "string", "payload": {}}],
-  "versioning_strategy": "URL path|Header|Query param"
+  "realtime_channels": [{"name": "string", "table": "string", "events": ["INSERT|UPDATE|DELETE"]}]
 }`,
   };
 }
