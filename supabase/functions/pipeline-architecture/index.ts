@@ -580,9 +580,16 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           );
           return { key: subjob.subjob_key, success: false, error: err.message };
         }
-      });
+      };
 
-      await Promise.all(execPromises);
+      // Execute ready subjobs (parallel or sequential based on mode)
+      if (sequentialMode) {
+        for (const subjob of ready) {
+          await executeOne(subjob);
+        }
+      } else {
+        await Promise.all(ready.map(executeOne));
+      }
     }
 
     // Final check
