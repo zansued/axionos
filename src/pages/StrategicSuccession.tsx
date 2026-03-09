@@ -8,7 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Shield, Users, AlertTriangle, Brain, ArrowRightLeft, ClipboardList, Info, Activity } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Shield, Users, AlertTriangle, Brain, ArrowRightLeft, ClipboardList, Info, Activity, ChevronDown } from "lucide-react";
 
 interface Overview {
   constitutions: number;
