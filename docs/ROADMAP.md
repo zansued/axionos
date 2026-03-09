@@ -263,10 +263,10 @@ All 77+ architectural layers are operational. The kernel includes the 32-stage d
 
 ## Governing Principle
 
-> Ninety-four sprints mapped. All blocks (Foundation through S) are in the strategic record. Full canon defined.
-> Internal architecture is mature: governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration — all active.
+> Ninety-four sprints complete. All blocks (Foundation through S) are complete. Full canon implemented.
+> Internal architecture is mature: governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, architecture research — all active.
 > Product experience is mature: user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — all active.
 > The platform delivers on the promise: **from idea to delivered software**.
 > Internal sophistication serves the product experience — it does not replace it.
-> **Next phase: Governed Intelligence & Decision Maturity** — evidence-governed improvement (active thaw), routing/arbitration (partial thaw next), deeper coordination/ecosystem/runtime/research (still reserved).
+> **Next phase: Governed Intelligence & Decision Maturity** — contextual guidance, copilot systems, decision quality, evidence-governed learning.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.
