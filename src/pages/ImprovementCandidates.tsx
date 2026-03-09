@@ -78,6 +78,7 @@ export default function ImprovementCandidates() {
   const qc = useQueryClient();
   const [selected, setSelected] = useState<Candidate | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [typeFilter, setTypeFilter] = useState("all");
   const [sevFilter, setSevFilter] = useState("all");
   const [reviewFilter, setReviewFilter] = useState("all");
   const [notes, setNotes] = useState("");
