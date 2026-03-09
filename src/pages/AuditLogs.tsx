@@ -61,7 +61,6 @@ export default function AuditLogs() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [expandedLog, setExpandedLog] = useState<string | null>(null);
   const { t } = useI18n();
-  const { guidance, whyNowText } = usePageGuidance("audit");
 
   const { data: logs = [], isLoading, refetch, isFetching } = useQuery({
     queryKey: ["audit-logs", severityFilter, categoryFilter],
