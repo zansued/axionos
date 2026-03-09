@@ -299,6 +299,7 @@ function SessionDetail({
   onGoBack,
   onDelete,
   onRefreshAgents,
+  onRefreshSessions,
 }: {
   session: any;
   agents: any[];
@@ -308,12 +309,14 @@ function SessionDetail({
   onGoBack: () => void;
   onDelete: () => void;
   onRefreshAgents: () => void;
+  onRefreshSessions: () => void;
 }) {
   const { toast } = useToast();
   const [generatingPrd, setGeneratingPrd] = useState(false);
   const [generatingArch, setGeneratingArch] = useState(false);
   const [generatingStories, setGeneratingStories] = useState(false);
   const [generatingMissingAgents, setGeneratingMissingAgents] = useState(false);
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stepIdx = getStepIndex(session.status);
   const currentStep = PIPELINE_STEPS[stepIdx];
   const isCompleted = session.status === "completed";
