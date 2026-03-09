@@ -1,5 +1,5 @@
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticate } from "../_shared/auth.ts";
+import { authenticate, requireOrgMembership } from "../_shared/auth.ts";
 
 Deno.serve(async (req: Request) => {
   const cors = handleCors(req);
