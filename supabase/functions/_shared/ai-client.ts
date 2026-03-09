@@ -1,11 +1,13 @@
 // Unified AI client: handles OpenAI and DeepSeek with retries, cost tracking,
 // and AI Efficiency Layer (prompt compression, semantic cache, model routing).
 // Primary providers: OpenAI + DeepSeek. No Gemini defaults.
+// Routing delegated to Canonical AI Router + Routing Matrix.
 
 import { compressPrompt } from "./prompt-compressor.ts";
 import { lookupCache, storeInCache } from "./semantic-cache.ts";
 import { routeModel, getModelTier } from "./model-router.ts";
-import { routeRequest, getFastConfig, getStrongConfig, logRoutingDecision, type RoutingTier, type TaskClass } from "./ai-router.ts";
+import { routeRequest, getFastConfig, getStrongConfig, getPremiumConfig, logRoutingDecision, type RoutingTier, type TaskClass } from "./ai-router.ts";
+import { estimateTokenCost, CANONICAL_MODELS } from "./ai-routing-matrix.ts";
 
 export interface AIResult {
   content: string;
@@ -39,51 +41,36 @@ export function getAIConfig(): AIConfig {
   const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
 
   if (OPENAI_API_KEY) {
-    const modelFast = Deno.env.get("OPENAI_MODEL_FAST") || "gpt-4o-mini";
-    const modelStrong = Deno.env.get("OPENAI_MODEL_STRONG") || "gpt-4o";
     return {
       url: "https://api.openai.com/v1/chat/completions",
       key: OPENAI_API_KEY,
-      model: modelFast,
-      proModel: modelStrong,
+      model: Deno.env.get("OPENAI_MODEL_FAST") || CANONICAL_MODELS.GPT5_MINI,
+      proModel: Deno.env.get("OPENAI_MODEL_STRONG") || CANONICAL_MODELS.GPT5_4,
     };
   }
 
   if (DEEPSEEK_API_KEY) {
-    const modelFast = Deno.env.get("DEEPSEEK_MODEL_FAST") || "deepseek-chat";
-    const modelStrong = Deno.env.get("DEEPSEEK_MODEL_STRONG") || "deepseek-chat";
     return {
       url: "https://api.deepseek.com/v1/chat/completions",
       key: DEEPSEEK_API_KEY,
-      model: modelFast,
-      proModel: modelStrong,
+      model: Deno.env.get("DEEPSEEK_MODEL_FAST") || CANONICAL_MODELS.DEEPSEEK_CHAT,
+      proModel: Deno.env.get("DEEPSEEK_MODEL_STRONG") || CANONICAL_MODELS.DEEPSEEK_REASONER,
     };
   }
 
-  // Last resort: Lovable AI Gateway (no Gemini model names — uses gateway defaults)
+  // Last resort: Lovable AI Gateway — explicit OpenAI models, never Gemini
   const LOVABLE_KEY = Deno.env.get("LOVABLE_API_KEY") || "";
   return {
     url: "https://ai.gateway.lovable.dev/v1/chat/completions",
     key: LOVABLE_KEY,
-    model: "openai/gpt-5-nano",
-    proModel: "openai/gpt-5",
+    model: CANONICAL_MODELS.GATEWAY_GPT5_NANO,
+    proModel: CANONICAL_MODELS.GATEWAY_GPT5_MINI,
   };
 }
 
 /**
  * Call AI with Efficiency Layer: compression → cache → routing → retry.
  * Uses canonical AI Router for provider selection.
- *
- * @param apiKey - Fallback API key
- * @param systemPrompt - System message
- * @param userPrompt - User message
- * @param jsonMode - Request JSON response format
- * @param maxRetries - Max retry attempts (default 3)
- * @param usePro - Use pro/strong model for higher quality (default false)
- * @param stage - Pipeline stage for routing/caching
- * @param orgId - Organization ID for cache scoping
- * @param initiativeId - Initiative ID for cache scoping
- * @param skipEfficiency - Skip efficiency layer entirely
  */
 export async function callAI(
   apiKey: string,
@@ -97,7 +84,6 @@ export async function callAI(
   initiativeId?: string,
   skipEfficiency = false,
 ): Promise<AIResult> {
-  // Use canonical router for provider selection
   const routing = routeRequest({
     systemPrompt,
     userPrompt,
@@ -108,7 +94,6 @@ export async function callAI(
 
   const effectiveUrl = routing.primary.url;
   const effectiveKey = routing.primary.key || apiKey;
-  const isExternalProvider = !effectiveUrl.includes("lovable.dev");
 
   let compressedSystem = systemPrompt;
   let compressedUser = userPrompt;
@@ -220,9 +205,8 @@ export async function callAI(
         const data = await resp.json();
         const durationMs = Date.now() - start;
         const tokens = data.usage?.total_tokens || 0;
-        const costUsd = estimateCost(cfg.model, tokens);
+        const costUsd = estimateTokenCost(cfg.model, tokens);
         const content = data.choices?.[0]?.message?.content || "";
-        const isFallback = cfg.model !== effectiveModel;
 
         // Store in semantic cache (async, non-blocking)
         if (!skipEfficiency && stage) {
@@ -273,7 +257,6 @@ export async function callAI(
         }
       }
     }
-    // If primary provider exhausted retries, try fallback
     if (configs.indexOf(cfg) < configs.length - 1) {
       console.warn(`[ai-router] Primary provider ${cfg.model} exhausted, falling back to next provider`);
     }
@@ -283,7 +266,6 @@ export async function callAI(
 
 /**
  * Simple AI call without retries (for non-critical or streaming use cases).
- * Returns the raw fetch Response for streaming support.
  * Uses canonical router for provider selection.
  */
 export async function callAIRaw(
@@ -317,13 +299,4 @@ export async function callAIRaw(
     },
     body: JSON.stringify(body),
   });
-}
-
-/** Estimate cost per token by model */
-function estimateCost(model: string, tokens: number): number {
-  if (model.includes("deepseek")) return tokens * 0.00000027; // ~$0.27/M tokens
-  if (model.includes("gpt-4o-mini")) return tokens * 0.0000004;
-  if (model.includes("gpt-4o")) return tokens * 0.000005;
-  if (model.includes("gpt-5")) return tokens * 0.000003;
-  return tokens * 0.000001; // generic fallback
 }
