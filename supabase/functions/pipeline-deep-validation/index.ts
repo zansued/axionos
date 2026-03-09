@@ -244,7 +244,7 @@ Retorne APENAS JSON:
       passed,
       errors: errors.slice(0, 30),
       warnings: warnings.slice(0, 15),
-    }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+    }, { model: "routed", costUsd: totalCost, durationMs: 0 });
 
     await pipelineLog(ctx, "deep_validation_complete",
       `Deep Static Analysis: ${fileCount} arquivos, ${errors.length} erros, ${warnings.length} warnings${passed ? " ✅" : " ❌"}`,
