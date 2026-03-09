@@ -115,14 +115,6 @@ Internal sophistication serves the visible product experience. The user-facing j
 | Block L — System Roundness & Operating Completion | 63–65 | Institutional outcome assurance, canon integrity & drift governance, operating completion |
 | Block M — Product Experience & Delivery Maturity | 66–70 | User journey orchestration, role-based experience, one-click delivery & deploy assurance, onboarding/templates/starters, adoption intelligence & customer success |
 | Sprint 71 — Governed Extensibility | 71 | Platform extensions registry, approval-based activation, compatibility checks, audit trail, operator surface |
-| Sprint 72 — Evidence Capture & Improvement Ledger | 72 | Canonical evidence capture, improvement ledger, context linking, review workflow, operator evidence dashboard |
-| Sprint 73 — Improvement Candidate Distillation Engine | 73 | Candidate distillation from evidence, pattern clustering, provenance/explainability, triage workflow, operator candidates dashboard |
-| Sprint 74 — Sandbox Benchmarking & Promotion Governance | 74 | Sandbox benchmarking of candidates, baseline comparison, metric capture, promotion/rejection/deferral governance, operator benchmark dashboard |
-| Sprint 75 — Role Arbitration & Capability Routing 2.0 | 75 | Context-aware agent/capability routing, suitability scoring, candidate comparison, fallback paths, operator routing dashboard |
-| Sprint 76 — Multi-Agent Debate & Resolution Layer | 76 | Structured bounded debate sessions, position/argument/resolution tracking, escalation, operator debate dashboard |
-| Sprint 77 — Shared Working Memory & Task-State Negotiation | 77 | Bounded shared working memory contexts, negotiated task-state transitions, coordination checkpoints, operator working memory dashboard |
-| Sprint 78 — Bounded Swarm Execution for Complex Initiatives | 78 | Bounded swarm campaigns, parallel branches, checkpoints, abort/rollback posture, escalation, operator swarm dashboard |
-| Sprint 79 — Capability Packaging & Registry UX | 79 | Capability packages with versioning, lifecycle governance, explainability, registry linkage, operator registry dashboard |
 
 ---
 
