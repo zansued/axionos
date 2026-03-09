@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { computeRiskScore, computeRiskBand } from "../_shared/predictive/predictive-risk-engine.ts";
 import { evaluateCheckpoint, resolveCheckpointType } from "../_shared/predictive/predictive-checkpoint-runner.ts";
 import { classifyActions } from "../_shared/predictive/preventive-action-engine.ts";
