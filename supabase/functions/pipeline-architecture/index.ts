@@ -270,7 +270,16 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
         await markSubjobRunning(serviceClient, subjob.id);
         const def = ARCHITECTURE_SUBJOBS.find(d => d.key === subjob.subjob_key);
         const label = def?.label || subjob.subjob_key;
-        await pipelineLog(ctx, `subjob_${subjob.subjob_key}_start`, `▶ ${label} iniciando...`);
+        const startedAt = new Date().toISOString();
+        const startMs = Date.now();
+        await pipelineLog(ctx, `subjob_${subjob.subjob_key}_start`, `▶ ${label} iniciando (attempt ${subjob.attempt_number})...`);
+
+        let parseStatus: "success" | "failed" | "skipped" = "skipped";
+        let persistStatus: "success" | "failed" | "skipped" = "skipped";
+        let promptChars = 0;
+        let contextChars = 0;
+        let outputChars = 0;
+        let modelUsed: string | null = null;
 
         try {
           const timeoutMs = def?.timeoutMs || 45_000;
@@ -283,10 +292,22 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           );
           const agentResult = await Promise.race([agentPromise, timeoutPromise]);
 
-          await completeSubjob(serviceClient, subjob.id, agentResult.result, {
-            model: agentResult.model, tokens: agentResult.tokens,
-            costUsd: agentResult.costUsd, durationMs: agentResult.durationMs,
-          });
+          parseStatus = "success"; // If we got here, JSON parsed OK
+          promptChars = agentResult.promptChars;
+          contextChars = agentResult.contextChars;
+          outputChars = agentResult.rawOutputChars;
+          modelUsed = agentResult.model;
+
+          try {
+            await completeSubjob(serviceClient, subjob.id, agentResult.result, {
+              model: agentResult.model, tokens: agentResult.tokens,
+              costUsd: agentResult.costUsd, durationMs: agentResult.durationMs,
+            });
+            persistStatus = "success";
+          } catch (persistErr: any) {
+            persistStatus = "failed";
+            throw new Error(`Persistence failed: ${persistErr.message}`);
+          }
 
           if (subjob.subjob_key !== "architecture.synthesis") {
             await serviceClient.from("agent_outputs").insert({
@@ -298,26 +319,54 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
             });
           }
 
+          // Record success diagnostic
+          const durationMs = Date.now() - startMs;
+          const diag = createAttemptDiagnostic({
+            attemptNumber: subjob.attempt_number || 1,
+            startedAt, model: modelUsed, promptSizeChars: promptChars,
+            contextSizeChars: contextChars, outputChars, providerLatencyMs: agentResult.durationMs,
+            durationMs, parseStatus, persistStatus, terminalStatus: "completed",
+            error: null, retryTrigger: null,
+          });
+          await appendDiagnostic(serviceClient, subjob.id, diag, null, null, promptChars, contextChars);
+
           completedResults[subjob.subjob_key] = agentResult.result;
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_complete`,
-            `✓ ${label}: ${agentResult.tokens} tokens, $${agentResult.costUsd.toFixed(4)}, ${agentResult.durationMs}ms`
+            `✓ ${label}: ${agentResult.tokens} tokens, $${agentResult.costUsd.toFixed(4)}, ${durationMs}ms (prompt: ${Math.ceil(promptChars/1000)}k, ctx: ${Math.ceil(contextChars/1000)}k)`
           );
           return { key: subjob.subjob_key, success: true };
         } catch (err: any) {
-          const isTimeout = err.message?.includes("Timeout");
-          if (isTimeout && subjob.attempt_number < (subjob.max_attempts || 3) - 1) {
+          const durationMs = Date.now() - startMs;
+          const failureType = classifyFailure(err.message || "unknown");
+          const isTimeout = failureType === "failed_timeout";
+          const isParseError = failureType === "failed_parse";
+
+          // Record failure diagnostic
+          const retryTrigger = isTimeout ? "auto_timeout" : isParseError ? "auto_parse" : null;
+          const diag = createAttemptDiagnostic({
+            attemptNumber: subjob.attempt_number || 1,
+            startedAt, model: modelUsed, promptSizeChars: promptChars,
+            contextSizeChars: contextChars, outputChars, providerLatencyMs: null,
+            durationMs, parseStatus, persistStatus,
+            terminalStatus: subjob.attempt_number < (subjob.max_attempts || 3) - 1 ? "retrying" : failureType,
+            error: err.message, retryTrigger,
+          });
+          await appendDiagnostic(serviceClient, subjob.id, diag, failureType, retryTrigger, promptChars, contextChars);
+
+          // Auto-retry on first timeout or parse failure
+          if ((isTimeout || isParseError) && subjob.attempt_number < (subjob.max_attempts || 3) - 1) {
             const { resetSubjobForRetry } = await import("../_shared/architecture-subjob/subjob-manager.ts");
-            await failSubjob(serviceClient, subjob.id, err.message || "Timeout", true);
+            await failSubjob(serviceClient, subjob.id, err.message || failureType, isTimeout);
             await resetSubjobForRetry(serviceClient, subjob.id);
             await pipelineLog(ctx, `subjob_${subjob.subjob_key}_auto_retry`,
-              `⟳ ${label} timeout — auto-retry (attempt ${subjob.attempt_number + 2})`, { is_timeout: true }
+              `⟳ ${label} ${failureType} — auto-retry (attempt ${subjob.attempt_number + 2})`, { failure_type: failureType }
             );
             return { key: subjob.subjob_key, success: false, retrying: true };
           }
           await failSubjob(serviceClient, subjob.id, err.message || "Unknown error", isTimeout);
           await blockDependents(serviceClient, jobId, subjob.subjob_key);
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_failed`,
-            `✗ ${label} falhou: ${err.message}`, { is_timeout: isTimeout }
+            `✗ ${label} [${failureType}]: ${err.message}`, { failure_type: failureType }
           );
           return { key: subjob.subjob_key, success: false, error: err.message };
         }
