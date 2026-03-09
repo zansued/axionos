@@ -3,7 +3,7 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-09
-> **Current state:** Level 5 — Institutional Engineering Memory Platform. 77+ architectural layers active. All blocks (Foundation through S) complete. All 94 sprints implemented.
+> **Current state:** Level 6 — Sovereign Institutional Intelligence. 85+ architectural layers active. All blocks (Foundation through V) complete. All 106 sprints implemented.
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -349,19 +349,18 @@ flowchart TB
 
 ---
 
-## 5. Architectural Direction: Governed Intelligence & Decision Maturity
+## 5. Architectural Direction: Sovereign Institutional Intelligence — ✅ Implemented
 
-### AxionOS Next Level Thesis — ✅ Implemented
+With all 106 sprints complete, 85+ architectural layers active, and the full stack from execution kernel through sovereign institutional intelligence operational, AxionOS has achieved its **Sovereign Institutional Intelligence** thesis.
 
-With all 94 sprints complete, 77+ architectural layers active, and the Contextual Guidance & Copilot system operational, AxionOS has achieved its **Governed Intelligence & Decision Maturity** thesis.
-
-The four pillars are implemented:
-- **Explain better** — ✅ PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, CopilotTrigger, 4 copilot submodes (product, workspace, governance_mentor, architecture_mentor), centralized content registries
-- **Decide better** — ✅ Role-aware experience (useRoleBasedExperience), approval posture hints, next-best-action recommendations
-- **Learn better** — ✅ Evidence-governed improvement loops (Block N), cross-stage learning, predictive detection, calibration
-- **Coordinate better** — ✅ Multi-agent coordination (debate, working memory, bounded swarm — Block O)
-
-The current architectural focus is on deepening intelligence quality: refining copilot recommendations, improving cross-layer advisory legibility, and strengthening the guidance-to-adoption feedback loop.
+The seven pillars are implemented:
+- **Explain better** — ✅ PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, CopilotTrigger, 4 copilot submodes, centralized content registries
+- **Decide better** — ✅ Institutional Decision Engine, sovereign decision rights, role-aware experience, approval posture hints
+- **Learn better** — ✅ Evidence-governed improvement loops, cross-stage learning, predictive detection, calibration
+- **Coordinate better** — ✅ Multi-agent coordination (debate, working memory, bounded swarm)
+- **Operate autonomously (bounded)** — ✅ Bounded autonomous operations, autonomy ladder, rollback posture
+- **Adapt institutionally** — ✅ Cross-context doctrine adaptation, institutional conflict resolution, federated intelligence, resilience governance
+- **Govern sovereignty** — ✅ Memory constitution, sovereign decision rights, dependency sovereignty, strategic succession
 
 ---
 
@@ -716,7 +715,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
-> **Summary:** 94 sprints complete. 77+ architectural layers active. All blocks (Foundation through S) implemented and operational.
+> **Summary:** 106 sprints complete. 85+ architectural layers active. All blocks (Foundation through V) implemented and operational.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
@@ -750,6 +749,9 @@ supabase/functions/
 | Delivery Optimization & Outcome Assurance 2.0 (Q) | 83–86 | ✅ Complete |
 | Distributed Runtime & Scaled Execution (R) | 87–90 | ✅ Complete |
 | Research Sandbox for Architecture Evolution (S) | 91–94 | ✅ Complete |
+| Governed Intelligence OS (T) | 95–98 | ✅ Complete |
+| Adaptive Institutional Ecosystem (U) | 99–102 | ✅ Complete |
+| Sovereign Institutional Intelligence (V) | 103–106 | ✅ Complete |
 
 ---
 
@@ -951,7 +953,7 @@ supabase/functions/
 ### System Maturity
 
 > **Canonical maturity table:** [ROADMAP.md](ROADMAP.md)
-> **Current:** Level 5 — Institutional Engineering Memory ✅
+> **Current:** Level 6 — Sovereign Institutional Intelligence ✅
 
 ---
 
@@ -997,73 +999,55 @@ AxionOS distinguishes four architectural surface layers:
 
 ---
 
-## 17. Architectural Direction — Post-Block S
+## 17. Architectural Direction — Post-Block V
 
 > **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-With 94 sprints complete, all blocks from Foundation through Research Sandbox (S) delivered, the platform has achieved full architectural maturity across all planned blocks. 77+ architectural layers are active.
+With 106 sprints complete, all blocks from Foundation through Sovereign Institutional Intelligence (V) delivered, the platform has achieved full architectural maturity. 85+ architectural layers are active.
 
-### Planned: Block T — Governed Intelligence OS (Sprints 95–98)
+### Completed Canon (Sprints 1–106)
 
-Block T consolidates existing capabilities into an operating system for governed intelligence. It does not add new planes or modules for their own sake — it converts accumulated sophistication into institutional decision consistency.
-
-```mermaid
-flowchart LR
-    subgraph Sprint95["Sprint 95"]
-        A["Institutional Memory\nConsolidation"]
-    end
-    subgraph Sprint96["Sprint 96"]
-        B["Doctrine &\nPlaybook Synthesis"]
-    end
-    subgraph Sprint97["Sprint 97"]
-        C["Bounded Autonomous\nOperations"]
-    end
-    subgraph Sprint98["Sprint 98"]
-        D["Institutional\nDecision Engine"]
-    end
-    A --> B --> C --> D
-```
-
-| Sprint | Architectural Contribution |
-|--------|---------------------------|
-| 95 | Unified institutional memory substrate — merge convergence, engineering, agent, and platform memory into queryable institutional knowledge |
-| 96 | Doctrine engine — transform institutional memory into playbooks, doctrine packs, and operational heuristics |
-| 97 | Bounded autonomy layer — safe autonomous execution for repetitive, low-risk operations with governance escalation gates |
-| 98 | Institutional decision engine — memory + doctrine + risk + outcome → consistent advisory recommendations with configurable autonomy tiers |
-
-**Governing constraint:** Advisory-first. Bounded autonomy applies only to repetitive, low-risk operations with proven track records. All structural changes require human approval. No autonomous architecture mutation.
-
-### Completed Canon (Sprints 1–94)
-
-- ✅ All layers from execution kernel through institutional assurance, canon integrity, product experience, adoption intelligence, governed extensibility, evidence-governed improvement, advanced multi-agent coordination, governed capability ecosystem, delivery optimization, distributed runtime, and research sandbox
-- ✅ 77+ architectural layers active
+- ✅ All layers from execution kernel through sovereign institutional intelligence
+- ✅ 85+ architectural layers active
 - ✅ Full operating canon with all planned blocks implemented
 
-### Implemented Blocks (N–S)
+### Implemented Blocks (N–V)
 
 #### Block N — Evidence-Governed Improvement Loop (Sprints 72–74) — ✅ Complete
 
-**Architectural contribution:** Structured evidence collection from pipeline outcomes, bounded improvement proposal generation, governed testing/promotion, and rollback-safe experimentation. Deepens the existing learning, memory, and calibration layers without mutating kernel structure.
+**Architectural contribution:** Structured evidence collection from pipeline outcomes, bounded improvement proposal generation, governed testing/promotion, and rollback-safe experimentation.
 
 #### Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — ✅ Complete
 
 **Architectural contribution:** Advanced role arbitration, bounded debate and resolution, shared working memory and task-state negotiation, bounded swarm execution with checkpoints and rollback posture.
 
-#### Block P — Governed Capability Ecosystem & Early Marketplace (Sprints 79–82) — ✅ Complete
+#### Block P — Governed Capability Ecosystem (Sprints 79–82) — ✅ Complete
 
-**Architectural contribution:** Capability packaging and registry, trust and entitlement governance, creator/partner pilot marketplace, outcome-aware capability exchange.
+**Architectural contribution:** Capability packaging with semantic versioning, trust/entitlement governance, partner marketplace pilot, outcome-aware capability exchange.
 
-#### Block Q — Delivery Optimization & Outcome Assurance 2.0 (Sprints 83–86) — ✅ Complete
+#### Block Q — Autonomous Delivery Optimization (Sprints 83–86) — ✅ Complete
 
-**Architectural contribution:** Delivery outcome causality analysis, post-deploy learning and feedback assimilation, reliability-aware delivery tuning, enriched outcome assurance with uncertainty modeling.
+**Architectural contribution:** Delivery outcome causality analysis, post-deploy learning assimilation, reliability-aware tuning, outcome assurance 2.0.
 
-#### Block R — Advanced Distributed Runtime & Scaled Execution (Sprints 87–90) — ✅ Complete
+#### Block R — Advanced Distributed Runtime (Sprints 87–90) — ✅ Complete
 
-**Architectural contribution:** Distributed job control plane, cross-region execution and recovery, tenant-isolated scale runtime, resilient large-scale orchestration with bounded failure handling.
+**Architectural contribution:** Distributed job control plane, cross-region recovery, tenant-isolated scale runtime, resilient large-scale orchestration.
 
-#### Block S — Research Sandbox for Architecture Evolution (Sprints 91–94) — ✅ Complete
+#### Block S — Research Sandbox (Sprints 91–94) — ✅ Complete
 
-**Architectural contribution:** Architecture hypothesis engine, simulated evolution campaigns, cross-tenant pattern synthesis, human-governed architecture promotion with dossier-based review.
+**Architectural contribution:** Architecture hypothesis engine, simulated evolution campaigns, cross-tenant pattern synthesis, human-governed architecture promotion.
+
+#### Block T — Governed Intelligence OS (Sprints 95–98) — ✅ Complete
+
+**Architectural contribution:** Institutional memory consolidation, doctrine & playbook synthesis, bounded autonomous operations, institutional decision engine.
+
+#### Block U — Adaptive Institutional Ecosystem (Sprints 99–102) — ✅ Complete
+
+**Architectural contribution:** Cross-context doctrine adaptation, institutional conflict resolution, federated intelligence boundaries with tenant isolation, resilience & continuity governance.
+
+#### Block V — Sovereign Institutional Intelligence (Sprints 103–106) — ✅ Complete
+
+**Architectural contribution:** Institutional memory constitution (amendment governance, protection rules, memory sovereignty), sovereign decision rights orchestration (authority delegation, escalation), dependency sovereignty & external reliance governance (substitution readiness, sovereignty posture), strategic succession & long-horizon continuity (knowledge concentration detection, handoff orchestration, transition risk assessment).
 
 ### Governing Constraint
 

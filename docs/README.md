@@ -24,7 +24,7 @@
 
 If prior chat history is unavailable, follow this sequence to re-establish context:
 
-1. **Read ROADMAP.md first** — understand current maturity, strategic direction, completed canon through Sprint 71, and Block N–S roadmap
+1. **Read ROADMAP.md first** — understand current maturity, strategic direction, completed canon through Sprint 106, and block structure
 2. **Read PLAN.md next** — identify the current/next sprint, execution status, and future canon guidance
 3. **Use ARCHITECTURE.md** for structural context — layers, containers, data flow, product boundary model, role/surface model, forthcoming architectural direction
 4. **Use PIPELINE_CONTRACTS.md** for the visible journey contract — Idea → Discovery → Architecture → Engineering → Deploy
@@ -34,9 +34,8 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
-- Sprints 1–71 are the completed canon — do not casually reopen
-- Block N (72–74) is the next planned block — evidence-governed improvement loop
-- Blocks O–S (75–94) are reserved — do not treat as implemented
+- Sprints 1–106 are the completed canon — do not casually reopen
+- All blocks (Foundation through V) are complete
 - Do not collapse internal architecture and user-facing journey into the same surface
 
 ---
@@ -56,7 +55,7 @@ The default user-facing journey remains:
 
 | # | Layer | Description |
 |---|-------|-------------|
-| 1 | **Internal System Architecture** | Engines, governance, intelligence, memory, calibration, evidence loops, benchmarking |
+| 1 | **Internal System Architecture** | Engines, governance, intelligence, memory, calibration, evidence loops, benchmarking, sovereign institutional intelligence |
 | 2 | **Advanced Operator Surface** | Workspace governance, evidence review, candidates, benchmarks, delivery outcomes, audit |
 | 3 | **Platform Governance Surface** | Routing, debates, working memory, swarm, marketplace, meta-agents, calibration, observability |
 | 4 | **User-Facing Product Surface** | Dashboard, Journey, Onboarding, Initiatives, Stories, Code, Deployments, AutoPilot |
@@ -75,32 +74,30 @@ The default user-facing journey remains:
 
 ---
 
-## After Sprint 94 — What Changes Strategically
+## After Sprint 106 — What Changes Strategically
 
-The platform has completed its **Governed Intelligence OS** at Sprint 98, spanning all blocks from Foundation through Block T.
+The platform has completed its **Sovereign Institutional Intelligence** at Sprint 106, spanning all blocks from Foundation through Block V.
 
-The next strategic arc is **Adaptive Institutional Ecosystem (Block U)**:
-
-All 98 sprints are complete. The focus shifts from single-context intelligence to cross-context institutional adaptation:
-- Cross-context doctrine adaptation
-- Institutional conflict resolution
-- Federated intelligence boundaries (with tenant isolation)
-- Resilience & continuity governance
+All 106 sprints are complete. The platform has achieved Level 6 — Sovereign Institutional Intelligence. The focus shifts from building new layers to:
+- Deepening intelligence quality and advisory precision
+- Strengthening the product experience and adoption feedback loop
+- Hardening institutional governance across distributed and federated contexts
+- Long-horizon institutional resilience and strategic succession maturity
 
 Internal sophistication remains critical. The next level deepens it through adaptive institutional coherence, not uncontrolled autonomy.
 
 ---
 
-## How To Continue Safely After Sprint 94
+## How To Continue Safely After Sprint 106
 
-1. Read **ROADMAP.md** first for strategic direction and the Next Level Thesis
+1. Read **ROADMAP.md** first for strategic direction
 2. Read **PLAN.md** next for current canon status
 3. Use **ARCHITECTURE.md** for structural context, the product boundary model, and the role/surface model
 4. Use **PIPELINE_CONTRACTS.md** for the user-visible journey contract
 5. Use **AGENTS.md** for internal agent system reference only
 6. Implement future work **sprint by sprint** with human review
 7. Do **not** collapse internal architecture and user-facing journey into the same surface
-8. Do **not** casually reopen completed canon (Sprints 1–98) without deliberate review
+8. Do **not** casually reopen completed canon (Sprints 1–106) without deliberate review
 9. Internal layers are backstage support — the default product surface is the user journey
 
 ---
@@ -117,8 +114,7 @@ Internal sophistication remains critical. The next level deepens it through adap
 
 ### Current Canon Boundaries
 
-- **Sprints 1–98** = canonical complete (full canon — Foundation through Block T)
-- **Sprints 99–102** = planned (Block U — Adaptive Institutional Ecosystem)
+- **Sprints 1–106** = canonical complete (full canon — Foundation through Block V)
 
 ---
 

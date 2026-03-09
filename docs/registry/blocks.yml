@@ -30,5 +30,5 @@ blocks:
 
   - { block_id: "U",          block_name: "Adaptive Institutional Ecosystem",             sprint_range: "99–102", status: complete, purpose: "Cross-context doctrine adaptation, institutional conflict resolution, federated intelligence boundaries, resilience & continuity governance" }
 
-  # === BLOCK V — Sovereign Institutional Intelligence ===
-  - { block_id: "V",          block_name: "Sovereign Institutional Intelligence",         sprint_range: "103–106", status: in_progress, purpose: "Institutional memory constitution, sovereign decision rights, dependency sovereignty, strategic succession & long-horizon continuity" }
+  # === BLOCK V — Sovereign Institutional Intelligence === COMPLETE
+  - { block_id: "V",          block_name: "Sovereign Institutional Intelligence",         sprint_range: "103–106", status: complete, purpose: "Institutional memory constitution, sovereign decision rights, dependency sovereignty, strategic succession & long-horizon continuity" }
