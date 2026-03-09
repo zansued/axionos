@@ -506,6 +506,10 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           );
           return { key: subjob.subjob_key, success: true };
         } catch (err: any) {
+          if (timeoutHandle !== null) {
+            clearTimeout(timeoutHandle);
+            timeoutHandle = null;
+          }
           const durationMs = Date.now() - startMs;
           const failureType = classifyFailure(err.message || "unknown");
           const isTimeout = failureType === "failed_timeout";
