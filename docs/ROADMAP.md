@@ -240,7 +240,8 @@ This is **not** a full open marketplace. It extends existing bounded pilot mecha
 | K | Controlled Ecosystem Activation | 60–62 | ✅ Complete |
 | L | System Roundness & Operating Completion | 63–65 | ✅ Complete |
 | M | Product Experience & Delivery Maturity | 66–70 | ✅ Complete |
-| N | Evidence-Governed Improvement Loop | 71–74 | 📋 Planned |
+| — | Governed Extensibility (Bridge Sprint) | 71 | ✅ Complete |
+| N | Evidence-Governed Improvement Loop | 72–74 | 📋 Planned |
 | O | Advanced Multi-Agent Coordination | 75–78 | 🔮 Reserved |
 | P | Governed Capability Ecosystem & Early Marketplace | 79–82 | 🔮 Reserved |
 | Q | Autonomous Delivery Optimization & Outcome Assurance 2.0 | 83–86 | 🔮 Reserved |
