@@ -480,9 +480,21 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
       orchestration: "subjob_v1_bg",
     }, { model: "multi-agent", costUsd: totalCost, durationMs: totalDuration });
 
+    // Generate and log bottleneck analysis
+    const bottleneckSummary = analyzeBottlenecks(subjobs.map(s => ({
+      subjob_key: s.subjob_key,
+      status: s.status,
+      duration_ms: s.duration_ms,
+      prompt_size_chars: (s as any).prompt_size_chars || 0,
+      context_size_chars: (s as any).context_size_chars || 0,
+      diagnostics_log: (s as any).diagnostics_log || [],
+      failure_type: (s as any).failure_type || null,
+      attempt_number: s.attempt_number,
+    })));
+
     await pipelineLog(ctx, "pipeline_architecture_complete",
       `Camada 2 concluída (background): ${totalTokens} tokens, $${totalCost.toFixed(4)}, ${totalDuration}ms`,
-      { tokens: totalTokens, cost_usd: totalCost, duration_ms: totalDuration }
+      { tokens: totalTokens, cost_usd: totalCost, duration_ms: totalDuration, bottleneck_summary: bottleneckSummary }
     );
 
     await pipelineLog(ctx, "pipeline_architecture_simulation_queued",
