@@ -1,6 +1,5 @@
 import { AppLayout } from "@/components/AppLayout";
-import { PageIntroCard } from "@/components/guidance";
-import { usePageGuidance } from "@/hooks/usePageGuidance";
+import { PageGuidanceShell } from "@/components/guidance";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
