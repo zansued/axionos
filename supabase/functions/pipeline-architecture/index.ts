@@ -752,9 +752,17 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
       attempt_number: s.attempt_number,
     })));
 
+    // Budget compliance summary
+    const budgetCompliance: Record<string, string> = {};
+    for (const s of subjobs) {
+      if (s.subjob_key === "architecture.synthesis") continue;
+      const bc = checkInputBudget(s.subjob_key, (s as any).prompt_size_chars || 0, (s as any).context_size_chars || 0);
+      budgetCompliance[s.subjob_key] = `${bc.status} (${bc.inputTokens}/${bc.budgetTokens}t)`;
+    }
+
     await pipelineLog(ctx, "pipeline_architecture_complete",
-      `Camada 2 concluída (background): ${totalTokens} tokens, $${totalCost.toFixed(4)}, ${totalDuration}ms`,
-      { tokens: totalTokens, cost_usd: totalCost, duration_ms: totalDuration, bottleneck_summary: bottleneckSummary }
+      `Camada 2 concluída: ${totalTokens}t $${totalCost.toFixed(4)} ${totalDuration}ms`,
+      { tokens: totalTokens, cost_usd: totalCost, duration_ms: totalDuration, bottleneck_summary: bottleneckSummary, budget_compliance: budgetCompliance }
     );
 
     await pipelineLog(ctx, "pipeline_architecture_simulation_queued",
