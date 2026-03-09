@@ -1979,7 +1979,7 @@ Retorne o output COMPLETO corrigido. Sem markdown wrapping, sem explicações ex
           remaining_to_validate: remainingToValidate,
           batch_incomplete: batchIncomplete,
           overall_pass: overallPass,
-        }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+        }, { model: aiModel, costUsd: totalCost, durationMs: 0 });
 
         await log("pipeline_validation_complete",
           `Validação em lote concluída: ${artifactsBatch.length} processados, ${remainingToValidate} pendentes para aprovação, ${rejectedCountFinal} rejeitados`, {
