@@ -125,6 +125,40 @@ export default function TradeoffArbitration() {
       if (dim.data?.dimensions) setDimensions(dim.data.dimensions);
       if (ev.data?.events) setEvents(ev.data.events);
       if (rec.data?.recommendations) setRecommendations(rec.data.recommendations);
+
+      // Reconstruct evaluation matrix from persisted data
+      if (!evalResult && orgId) {
+        const { data: evals } = await supabase
+          .from("tradeoff_evaluations")
+          .select("*, tradeoff_subjects(title, subject_type)")
+          .eq("organization_id", orgId)
+          .order("created_at", { ascending: false })
+          .limit(50);
+        if (evals && evals.length > 0) {
+          setEvalResult({
+            evaluated_subjects: evals.length,
+            events_generated: ev.data?.events?.length ?? 0,
+            recommendations_generated: rec.data?.recommendations?.length ?? 0,
+            evaluations: evals.map((e: any) => ({
+              subject: e.tradeoff_subjects?.title ?? "Unknown",
+              net_posture: (e.arbitration_summary?.match(/Posture: (\w+)/)?.[1]) ?? "balanced",
+              risk_level: (e.arbitration_summary?.match(/Risk: (\w+)/)?.[1]) ?? "acceptable",
+              reversibility: e.reversibility_score >= 0.8 ? "fully_reversible" : e.reversibility_score >= 0.5 ? "partially_reversible" : e.reversibility_score >= 0.3 ? "difficult_to_reverse" : "irreversible",
+              gains: Array.isArray(e.gain_dimensions) ? e.gain_dimensions.length : 0,
+              sacrifices: Array.isArray(e.sacrifice_dimensions) ? e.sacrifice_dimensions.length : 0,
+            })),
+            explanations: evals.map((e: any) => ({
+              subject_title: e.tradeoff_subjects?.title ?? "Unknown",
+              net_posture: (e.arbitration_summary?.match(/Posture: (\w+)/)?.[1]) ?? "balanced",
+              risk_level: (e.arbitration_summary?.match(/Risk: (\w+)/)?.[1]) ?? "acceptable",
+              reversibility_label: e.reversibility_score >= 0.8 ? "fully_reversible" : e.reversibility_score >= 0.5 ? "partially_reversible" : "difficult_to_reverse",
+              gains_summary: Array.isArray(e.gain_dimensions) ? `Gains: ${e.gain_dimensions.map((g: any) => g.dimension_name).join(", ")}` : "No gains",
+              sacrifices_summary: Array.isArray(e.sacrifice_dimensions) ? `Sacrifices: ${e.sacrifice_dimensions.map((s: any) => s.dimension_name).join(", ")}` : "No sacrifices",
+              institutional_advisory: e.arbitration_summary ?? "",
+            })),
+          });
+        }
+      }
     } catch { toast.error("Failed to load tradeoff data"); }
     setLoading(false);
   }
