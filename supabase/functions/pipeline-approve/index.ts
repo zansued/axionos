@@ -30,7 +30,12 @@ serve(async (req) => {
     revenue_strategized: { field: "approved_at_discovery", nextStatus: "discovered" },
     // Project Foundation & Architecture stages
     discovered: { field: "approved_at_discovery", nextStatus: "architecture_ready" },
+    architected: { field: "approved_at_planning", nextStatus: "architecture_simulated" },
+    architecture_simulated: { field: "approved_at_planning", nextStatus: "preventive_validated" },
+    preventive_validated: { field: "approved_at_planning", nextStatus: "bootstrap_planned" },
+    bootstrap_planned: { field: "approved_at_planning", nextStatus: "foundation_scaffolded" },
     scaffolded: { field: "approved_at_discovery", nextStatus: "simulating_modules" },
+    foundation_scaffolded: { field: "approved_at_planning", nextStatus: "simulating_modules" },
     modules_simulated: { field: "approved_at_discovery", nextStatus: "analyzing_dependencies" },
     dependencies_analyzed: { field: "approved_at_discovery", nextStatus: "bootstrapping_schema" },
     // Engineering stages
