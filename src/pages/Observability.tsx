@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { PageIntroCard, getGuidanceForPage } from "@/components/guidance";
 import { Cpu, ShieldAlert, GitBranch, Gauge, Layers, Building2, Orbit, SlidersHorizontal, FlaskConical, Anchor, Lightbulb, SearchCode, Compass, Beaker, MapIcon, Box, Target, ArrowRightLeft, Briefcase, Workflow, ShieldCheck, Merge, Scale, BookOpen, PackageOpen, Sparkles, Globe, Eye, UserCheck, Store, FlaskRound, PackageCheck, Handshake, BadgeCheck, ScrollText, CheckCircle2, Users as UsersIcon } from "lucide-react";
 import { useRoleBasedExperience } from "@/hooks/useRoleBasedExperience";
 import { AgentMemoryPanel } from "@/components/agents/AgentMemoryPanel";
