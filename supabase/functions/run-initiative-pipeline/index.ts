@@ -2581,7 +2581,7 @@ Seja conciso e profissional.`
           repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
           ai_generated: { branch: baseBranch, commit_count: commitMessages.length },
           health_report: healthReport,
-        }, { model: "google/gemini-2.5-flash", costUsd: totalAiCost, durationMs: 0 });
+        }, { model: aiModel, costUsd: totalAiCost, durationMs: 0 });
 
         await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos direto na branch ${baseBranch} em ${actualOwner}/${actualRepo}`, {
           branch: baseBranch, ai_tokens: totalAiTokens, repo: `${actualOwner}/${actualRepo}`,

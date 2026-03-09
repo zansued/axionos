@@ -320,7 +320,7 @@ Regras:
       passed: approvedCount, failed: rejected, pending_review: pending,
       fixed: fixedCount, results: validationResults,
       remaining_to_validate: remaining, batch_incomplete: batchIncomplete, overall_pass: overallPass,
-    }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+    }, { model: "routed", costUsd: totalCost, durationMs: 0 });
 
     await pipelineLog(ctx, "pipeline_validation_complete",
       `Fix Loop v2: ${batch.length} processados, ${fixedCount} corrigidos, ${pending} escalados, ${remaining} pendentes`,

@@ -776,7 +776,7 @@ ${brainContext.slice(0, 2000)}`,
         errors_found: errors.length,
         patches_applied: commit.files.length,
         commit_sha: commit.sha,
-      }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs });
+      }, { model: "routed", costUsd: totalCost, durationMs });
     }
 
     await pipelineLog(ctx, "build_repair_complete",

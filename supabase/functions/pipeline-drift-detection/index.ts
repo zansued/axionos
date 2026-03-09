@@ -250,7 +250,7 @@ ${Object.keys(virtualFS).join("\n")}`,
       errors_count: errors.length,
       warnings_count: warnings.length,
       files_analyzed: fileCount,
-    }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+    }, { model: "routed", costUsd: totalCost, durationMs: 0 });
 
     await pipelineLog(ctx, "drift_detection_complete",
       `Drift Detection: ${fileCount} files, ${errors.length} errors, ${warnings.length} warnings, drift score: ${driftScore}%${passed ? " ✅" : " ⚠️"}`,

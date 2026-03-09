@@ -817,7 +817,7 @@ ${brainContext.slice(0, 2000)}`,
       commit_sha: newCommit.sha,
       structural_patches: structuralPatches.length,
       ai_patches: aiPatches.length,
-    }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+    }, { model: "routed", costUsd: totalCost, durationMs: 0 });
 
     await pipelineLog(ctx, "self_healing_complete",
       `🔧 Self-Healing attempt ${attempt} complete. ${committedFiles.length} files patched. Build will re-trigger via CI.`,

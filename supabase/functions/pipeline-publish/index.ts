@@ -403,7 +403,7 @@ Retorne APENAS JSON:
       preflight: { pass: preflight.preflight_pass, risk: preflight.risk_level },
       verification: { healthy: verification.deploy_healthy, confidence: verification.confidence },
       skipped_files: skippedFiles,
-    }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+    }, { model: "routed", costUsd: totalCost, durationMs: 0 });
 
     // Persist deploy metadata on initiative
     await updateInitiative(ctx, {
