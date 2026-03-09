@@ -219,11 +219,16 @@ export function InitiativeOutcomeCard({ initiative }: InitiativeOutcomeCardProps
           <div className={`p-2 rounded-lg bg-muted/50 shrink-0 ${outcome.color}`}>
             <Icon className={`h-5 w-5 ${outcome.status === "in_progress" ? "animate-spin" : ""}`} />
           </div>
-          <div className="flex-1 min-w-0 space-y-2">
-            <div>
-              <p className="text-sm font-medium">{info.title}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{info.description}</p>
-            </div>
+           <div className="flex-1 min-w-0 space-y-2">
+              <div>
+                <p className="text-sm font-medium">{info.title}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{info.description}</p>
+                {hint && (
+                  <p className="text-xs text-primary/80 mt-1.5 animate-pulse transition-all duration-500" key={hint}>
+                    💡 {hint}
+                  </p>
+                )}
+              </div>
             {info.actions && info.actions.length > 0 && (
               <div className="flex gap-2 flex-wrap">
                 {info.actions.map((action, i) => (
