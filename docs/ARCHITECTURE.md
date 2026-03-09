@@ -351,70 +351,109 @@ flowchart TB
 
 ## 5. Architectural Direction: Governed Intelligence & Decision Maturity
 
-### AxionOS Next Level Thesis
+### AxionOS Next Level Thesis — ✅ Implemented
 
-With all 94 sprints complete and 77+ architectural layers active, AxionOS is entering a new architectural phase: **Governed Intelligence & Decision Maturity**.
+With all 94 sprints complete, 77+ architectural layers active, and the Contextual Guidance & Copilot system operational, AxionOS has achieved its **Governed Intelligence & Decision Maturity** thesis.
 
-The next level of architecture maturity is not about adding more internal planes for their own sake, but about strengthening:
-- **Decision quality**: Better recommendations supported by contextual history.
-- **Evidence-governed improvement**: Using systemic data to drive platform evolution safely (Block N — complete).
-- **Routing/arbitration quality**: Smarter, more aware task delegation and capability routing (Block O — complete).
-- **Human-facing legibility**: Enhancing clarity, explanation, and contextual guidance for operators.
-- **Governed coordination**: Multi-agent coordination operational (debate, working memory, bounded swarm — all active).
+The four pillars are implemented:
+- **Explain better** — ✅ PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, CopilotTrigger, 4 copilot submodes (product, workspace, governance_mentor, architecture_mentor), centralized content registries
+- **Decide better** — ✅ Role-aware experience (useRoleBasedExperience), approval posture hints, next-best-action recommendations
+- **Learn better** — ✅ Evidence-governed improvement loops (Block N), cross-stage learning, predictive detection, calibration
+- **Coordinate better** — ✅ Multi-agent coordination (debate, working memory, bounded swarm — Block O)
 
-The immediate strategic focus is converting existing internal sophistication into user-facing intelligence: contextual guidance, copilot systems, and role-aware decision support.
+The current architectural focus is on deepening intelligence quality: refining copilot recommendations, improving cross-layer advisory legibility, and strengthening the guidance-to-adoption feedback loop.
 
 ---
 
 ## 6. Capability Layers
 
 ```
-  ═══════════════════════════════════════════════════════════════════
-  TIER 7: SEMANTIC RETRIEVAL LAYER
-  ═══════════════════════════════════════════════════════════════════
-  Layer 21: Semantic Retrieval & Embedding Memory   ← Active (Sprint 36)
+   ═══════════════════════════════════════════════════════════════════
+   TIER 10: USER-FACING INTELLIGENCE LAYER
+   ═══════════════════════════════════════════════════════════════════
+   Contextual Guidance & Copilot System            ← Active (Sprints 66-71+)
+     - PageGuidanceShell (page-level guidance contracts)
+     - ContextualCopilotDrawer (role-aware decision support)
+     - GovernanceMentorDrawer (governance mentor mode)
+     - CopilotTrigger (contextual activation)
+     - WhyThisMattersNow / NextBestAction / ApprovalHint
+     - 4 Copilot Submodes: product, workspace, governance_mentor, architecture_mentor
+     - Centralized content registry (copilot-content.ts, governance-mentor-content.ts)
 
-  ═══════════════════════════════════════════════════════════════════
-  TIER 6: STRATEGY EVOLUTION LAYER
-  ═══════════════════════════════════════════════════════════════════
-  Layer 17: Execution Strategy Evolution          ← Active (Sprint 32)
+   ═══════════════════════════════════════════════════════════════════
+   TIER 9: ARCHITECTURE RESEARCH & EVOLUTION LAYER
+   ═══════════════════════════════════════════════════════════════════
+   Architecture Hypothesis Engine                  ← Active (Sprint 91)
+   Simulated Evolution Campaigns                   ← Active (Sprint 92)
+   Cross-Tenant Pattern Synthesis                  ← Active (Sprint 93)
+   Governed Architecture Promotion                 ← Active (Sprint 94)
 
-  ═══════════════════════════════════════════════════════════════════
-  TIER 5: PLATFORM INTELLIGENCE & CALIBRATION LAYER
-  ═══════════════════════════════════════════════════════════════════
-  Layer 16: Platform Self-Calibration             ← Active (Sprint 31)
-  Layer 15: Platform Intelligence Entry           ← Active (Sprint 30)
+   ═══════════════════════════════════════════════════════════════════
+   TIER 8: DISTRIBUTED RUNTIME & DELIVERY LAYER
+   ═══════════════════════════════════════════════════════════════════
+   Distributed Job Control Plane                   ← Active (Sprint 87)
+   Cross-Region Recovery                           ← Active (Sprint 88)
+   Tenant-Isolated Scale Runtime                   ← Active (Sprint 89)
+   Resilient Orchestration                         ← Active (Sprint 90)
+   Delivery Causality Analysis                     ← Active (Sprint 83)
+   Post-Deploy Learning                            ← Active (Sprint 84)
+   Reliability-Aware Tuning                        ← Active (Sprint 85)
+   Outcome Assurance 2.0                           ← Active (Sprint 86)
 
-  ═══════════════════════════════════════════════════════════════════
-  TIER 4: EXECUTION GOVERNANCE LAYER
-  ═══════════════════════════════════════════════════════════════════
-  Layer 14: Tenant/Workspace Adaptive Tuning      ← Active (Sprint 29)
-  Layer 13: Execution Mode Portfolio Optimization  ← Active (Sprint 28)
-  Layer 12: Execution Policy Intelligence         ← Active (Sprint 27)
+   ═══════════════════════════════════════════════════════════════════
+   TIER 7: ECOSYSTEM & MARKETPLACE LAYER
+   ═══════════════════════════════════════════════════════════════════
+   Capability Packaging & Registry                 ← Active (Sprint 79)
+   Trust & Entitlement Governance                  ← Active (Sprint 80)
+   Partner Marketplace Pilot                       ← Active (Sprint 81)
+   Outcome-Aware Capability Exchange               ← Active (Sprint 82)
 
-  ═══════════════════════════════════════════════════════════════════
-  TIER 3: LEARNING & INTELLIGENCE LAYER
-  ═══════════════════════════════════════════════════════════════════
-  Layer 11: Cross-Stage Policy Synthesis (LA v2)  ← Active (Sprint 26)
-  Layer 10: Predictive Error Detection            ← Active (Sprint 25)
-  Layer 9:  Agent Memory Operationalization       ← Active (Sprint 24)
-  Layer 8:  Self-Improving Fix Agents v2          ← Active (Sprint 23)
-  Layer 7:  Prompt Optimization + Rollback        ← Active (Sprints 21-22)
+   ═══════════════════════════════════════════════════════════════════
+   TIER 6: MULTI-AGENT COORDINATION LAYER
+   ═══════════════════════════════════════════════════════════════════
+   Role Arbitration & Capability Routing 2.0       ← Active (Sprint 75)
+   Debate & Resolution Protocol                    ← Active (Sprint 76)
+   Shared Working Memory & Task-State Negotiation  ← Active (Sprint 77)
+   Bounded Swarm Execution                         ← Active (Sprint 78)
 
-  ═══════════════════════════════════════════════════════════════════
-  TIER 2: META-INTELLIGENCE & MEMORY LAYER
-  ═══════════════════════════════════════════════════════════════════
-  Layer 6:  Proposal Quality & Calibration        ← Active (Sprints 19-20)
-  Layer 5:  Engineering Memory Architecture       ← Cross-layer (Sprints 15-18)
-  Layer 4:  Proposal Generation + Meta-Agents     ← Active (Sprints 13-14)
+   ═══════════════════════════════════════════════════════════════════
+   TIER 5: SEMANTIC RETRIEVAL & STRATEGY LAYER
+   ═══════════════════════════════════════════════════════════════════
+   Layer 21: Semantic Retrieval & Embedding Memory ← Active (Sprint 36)
+   Layer 17: Execution Strategy Evolution          ← Active (Sprint 32)
 
-  ═══════════════════════════════════════════════════════════════════
-  TIER 1: FOUNDATION LAYER
-  ═══════════════════════════════════════════════════════════════════
-  Layer 3:  Learning Agents v1                    ← Active (Sprint 12)
-  Layer 2:  Commercial Readiness                  ← Active (Sprint 11)
-  Layer 1:  Execution Kernel                      ← Active (Sprints 1-10)
-            (Pipeline + Prevention + Routing + Governance + Observability)
+   ═══════════════════════════════════════════════════════════════════
+   TIER 4: PLATFORM INTELLIGENCE & CALIBRATION LAYER
+   ═══════════════════════════════════════════════════════════════════
+   Layer 16: Platform Self-Calibration             ← Active (Sprint 31)
+   Layer 15: Platform Intelligence Entry           ← Active (Sprint 30)
+
+   ═══════════════════════════════════════════════════════════════════
+   TIER 3: EXECUTION GOVERNANCE LAYER
+   ═══════════════════════════════════════════════════════════════════
+   Layer 14: Tenant/Workspace Adaptive Tuning      ← Active (Sprint 29)
+   Layer 13: Execution Mode Portfolio Optimization  ← Active (Sprint 28)
+   Layer 12: Execution Policy Intelligence         ← Active (Sprint 27)
+
+   ═══════════════════════════════════════════════════════════════════
+   TIER 2: LEARNING & INTELLIGENCE LAYER
+   ═══════════════════════════════════════════════════════════════════
+   Layer 11: Cross-Stage Policy Synthesis (LA v2)  ← Active (Sprint 26)
+   Layer 10: Predictive Error Detection            ← Active (Sprint 25)
+   Layer 9:  Agent Memory Operationalization       ← Active (Sprint 24)
+   Layer 8:  Self-Improving Fix Agents v2          ← Active (Sprint 23)
+   Layer 7:  Prompt Optimization + Rollback        ← Active (Sprints 21-22)
+   Layer 6:  Proposal Quality & Calibration        ← Active (Sprints 19-20)
+   Layer 5:  Engineering Memory Architecture       ← Cross-layer (Sprints 15-18)
+   Layer 4:  Proposal Generation + Meta-Agents     ← Active (Sprints 13-14)
+
+   ═══════════════════════════════════════════════════════════════════
+   TIER 1: FOUNDATION LAYER
+   ═══════════════════════════════════════════════════════════════════
+   Layer 3:  Learning Agents v1                    ← Active (Sprint 12)
+   Layer 2:  Commercial Readiness                  ← Active (Sprint 11)
+   Layer 1:  Execution Kernel                      ← Active (Sprints 1-10)
+             (Pipeline + Prevention + Routing + Governance + Observability)
 ```
 
 Engineering Memory (Layer 5) is a **cross-layer infrastructure** that captures knowledge from all layers but does not interfere with their operation.
@@ -431,9 +470,9 @@ The Agent OS is the runtime architecture governing how agents are selected, exec
 |-------|--------|-------------|
 | **Core** | ✅ Implemented | Runtime Protocol, Capability Model, Core Types |
 | **Control** | ✅ Implemented | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing |
-| **Execution** | ✅ Partial | Orchestrator, Coordination, LLM/Tool Adapters (advanced coordination/distributed runtime frozen) |
+| **Execution** | ✅ Implemented | Orchestrator, Coordination, Distributed Runtime, LLM/Tool Adapters |
 | **Data** | ✅ Implemented | Artifact Store, Memory System, Observability |
-| **Ecosystem** | ❄️ Frozen | Marketplace (designed, not needed) |
+| **Ecosystem** | ✅ Implemented | Marketplace, Capability Registry, Trust Scoring, Package Management |
 
 ---
 
