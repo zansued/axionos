@@ -141,6 +141,7 @@ const App = () => (
                       <Route path="/architecture-hypotheses" element={<ProtectedRoute><ArchitectureHypotheses /></ProtectedRoute>} />
                       <Route path="/research-sandbox" element={<ProtectedRoute><ResearchSandbox /></ProtectedRoute>} />
                       <Route path="/research-patterns" element={<ProtectedRoute><ResearchPatterns /></ProtectedRoute>} />
+                      <Route path="/architecture-promotion" element={<ProtectedRoute><ArchitecturePromotion /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
