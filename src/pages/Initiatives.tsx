@@ -232,15 +232,17 @@ export default function Initiatives() {
           <SLABreachAlerts breaches={breaches} onNavigate={(id) => setSelectedId(id)} />
         )}
 
-        <div className="grid gap-6 lg:grid-cols-[340px,1fr]">
-          <InitiativeList
-            initiatives={initiatives}
-            isLoading={isLoading}
-            selectedId={selectedId}
-            onSelect={setSelectedId}
-          />
-
-          {selected ? (
+        {selected ? (
+          <div className="space-y-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1.5 text-muted-foreground hover:text-foreground -ml-2"
+              onClick={() => setSelectedId(null)}
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              {locale === "en-US" ? "All initiatives" : "Todas iniciativas"}
+            </Button>
             <InitiativeDetail
               initiative={selected}
               jobs={jobs}
@@ -252,24 +254,15 @@ export default function Initiatives() {
               onRollbackToStage={(macroKey) => rollbackToStage(selected.id, macroKey)}
               onDelete={() => handleDeleteInitiative(selected.id)}
             />
-          ) : (
-            <Card className="border-dashed border-2 flex items-center justify-center min-h-[400px]">
-              <CardContent className="text-center space-y-4 py-12">
-                <div className="h-14 w-14 rounded-xl bg-muted flex items-center justify-center mx-auto">
-                  <Lightbulb className="h-7 w-7 text-muted-foreground/40" />
-                </div>
-                <div className="space-y-1.5">
-                  <p className="text-sm font-medium">{t("initiatives.selectPrompt")}</p>
-                  <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-                    {locale === "en-US"
-                      ? "Select an initiative from the list to see its pipeline progress, deployed artifacts, and product metrics."
-                      : "Selecione uma iniciativa da lista para ver o progresso do pipeline, artefatos publicados e métricas de produto."}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+          </div>
+        ) : (
+          <InitiativeList
+            initiatives={initiatives}
+            isLoading={isLoading}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+          />
+        )}
       </div>
     </AppLayout>
   );
