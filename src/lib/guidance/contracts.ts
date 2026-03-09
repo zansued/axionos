@@ -582,6 +582,39 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Adaptations of core or immutable doctrines require human review.",
     },
   },
+  {
+    key: "institutional-conflicts",
+    title: { pt: "Conflitos Institucionais", en: "Institutional Conflicts" },
+    description: {
+      pt: "Detecte, classifique e resolva conflitos entre políticas, doutrinas, jurisdições e prioridades institucionais.",
+      en: "Detect, classify, and resolve conflicts between policies, doctrines, jurisdictions, and institutional priorities.",
+    },
+    audience: { pt: "Operadores e administradores", en: "Operators and administrators" },
+    surface: "workspace",
+    actions: [
+      { pt: "Visualizar conflitos abertos e triados", en: "View open and triaged conflicts" },
+      { pt: "Analisar caminhos de resolução sugeridos", en: "Analyze suggested resolution paths" },
+      { pt: "Comparar com precedentes institucionais", en: "Compare with institutional precedents" },
+      { pt: "Escalar conflitos severos", en: "Escalate severe conflicts" },
+    ],
+    whenRelevant: {
+      pt: "Quando há conflitos institucionais detectados ou tensões entre políticas e doutrinas.",
+      en: "When institutional conflicts are detected or tensions exist between policies and doctrines.",
+    },
+    whenIgnorable: {
+      pt: "Se não há conflitos abertos.",
+      en: "If there are no open conflicts.",
+    },
+    nextStep: {
+      pt: "Triar conflitos detectados e gerar caminhos de resolução.",
+      en: "Triage detected conflicts and generate resolution paths.",
+    },
+    approvalPosture: "required",
+    approvalHint: {
+      pt: "Conflitos severos ou estruturais exigem aprovação humana para resolução.",
+      en: "Severe or structural conflicts require human approval for resolution.",
+    },
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────

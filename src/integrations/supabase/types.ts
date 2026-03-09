@@ -6776,6 +6776,206 @@ export type Database = {
           },
         ]
       }
+      conflict_evidence_records: {
+        Row: {
+          conflict_id: string
+          created_at: string
+          evidence_payload: Json
+          evidence_source: string
+          evidence_type: string
+          id: string
+          organization_id: string
+          reliability_score: number
+        }
+        Insert: {
+          conflict_id: string
+          created_at?: string
+          evidence_payload?: Json
+          evidence_source?: string
+          evidence_type?: string
+          id?: string
+          organization_id: string
+          reliability_score?: number
+        }
+        Update: {
+          conflict_id?: string
+          created_at?: string
+          evidence_payload?: Json
+          evidence_source?: string
+          evidence_type?: string
+          id?: string
+          organization_id?: string
+          reliability_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conflict_evidence_records_conflict_id_fkey"
+            columns: ["conflict_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_conflicts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conflict_evidence_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conflict_precedents: {
+        Row: {
+          conflict_type: Database["public"]["Enums"]["conflict_type"]
+          created_at: string
+          id: string
+          institutional_scope: string
+          organization_id: string
+          outcome_quality_score: number
+          precedent_code: string
+          precedent_summary: string
+          resolution_pattern: string
+          reusability_score: number
+        }
+        Insert: {
+          conflict_type?: Database["public"]["Enums"]["conflict_type"]
+          created_at?: string
+          id?: string
+          institutional_scope?: string
+          organization_id: string
+          outcome_quality_score?: number
+          precedent_code?: string
+          precedent_summary?: string
+          resolution_pattern?: string
+          reusability_score?: number
+        }
+        Update: {
+          conflict_type?: Database["public"]["Enums"]["conflict_type"]
+          created_at?: string
+          id?: string
+          institutional_scope?: string
+          organization_id?: string
+          outcome_quality_score?: number
+          precedent_code?: string
+          precedent_summary?: string
+          resolution_pattern?: string
+          reusability_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conflict_precedents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conflict_resolution_events: {
+        Row: {
+          actor_id: string
+          actor_type: string
+          conflict_id: string
+          created_at: string
+          event_payload: Json
+          event_summary: string
+          event_type: string
+          id: string
+          organization_id: string
+        }
+        Insert: {
+          actor_id?: string
+          actor_type?: string
+          conflict_id: string
+          created_at?: string
+          event_payload?: Json
+          event_summary?: string
+          event_type?: string
+          id?: string
+          organization_id: string
+        }
+        Update: {
+          actor_id?: string
+          actor_type?: string
+          conflict_id?: string
+          created_at?: string
+          event_payload?: Json
+          event_summary?: string
+          event_type?: string
+          id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conflict_resolution_events_conflict_id_fkey"
+            columns: ["conflict_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_conflicts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conflict_resolution_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conflict_resolution_paths: {
+        Row: {
+          advisory_score: number
+          conflict_id: string
+          created_at: string
+          id: string
+          organization_id: string
+          path_summary: string
+          path_type: Database["public"]["Enums"]["resolution_path_type"]
+          precedent_alignment_score: number
+          recommended: boolean
+          risk_tradeoff_score: number
+        }
+        Insert: {
+          advisory_score?: number
+          conflict_id: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          path_summary?: string
+          path_type?: Database["public"]["Enums"]["resolution_path_type"]
+          precedent_alignment_score?: number
+          recommended?: boolean
+          risk_tradeoff_score?: number
+        }
+        Update: {
+          advisory_score?: number
+          conflict_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          path_summary?: string
+          path_type?: Database["public"]["Enums"]["resolution_path_type"]
+          precedent_alignment_score?: number
+          recommended?: boolean
+          risk_tradeoff_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conflict_resolution_paths_conflict_id_fkey"
+            columns: ["conflict_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_conflicts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conflict_resolution_paths_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_documents: {
         Row: {
           created_at: string
@@ -14013,6 +14213,78 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_conflicts: {
+        Row: {
+          blast_radius: string
+          conflict_code: string
+          conflict_summary: string
+          conflict_title: string
+          conflict_type: Database["public"]["Enums"]["conflict_type"]
+          created_at: string
+          detected_by: string
+          id: string
+          involved_domains: Json
+          involved_subjects: Json
+          organization_id: string
+          severity: string
+          status: Database["public"]["Enums"]["conflict_status"]
+          updated_at: string
+          urgency: string
+          workspace_id: string | null
+        }
+        Insert: {
+          blast_radius?: string
+          conflict_code?: string
+          conflict_summary?: string
+          conflict_title?: string
+          conflict_type?: Database["public"]["Enums"]["conflict_type"]
+          created_at?: string
+          detected_by?: string
+          id?: string
+          involved_domains?: Json
+          involved_subjects?: Json
+          organization_id: string
+          severity?: string
+          status?: Database["public"]["Enums"]["conflict_status"]
+          updated_at?: string
+          urgency?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          blast_radius?: string
+          conflict_code?: string
+          conflict_summary?: string
+          conflict_title?: string
+          conflict_type?: Database["public"]["Enums"]["conflict_type"]
+          created_at?: string
+          detected_by?: string
+          id?: string
+          involved_domains?: Json
+          involved_subjects?: Json
+          organization_id?: string
+          severity?: string
+          status?: Database["public"]["Enums"]["conflict_status"]
+          updated_at?: string
+          urgency?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_conflicts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_conflicts_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
@@ -26139,6 +26411,22 @@ export type Database = {
         | "auto_execute_bounded"
         | "requires_approval"
       confidence_posture: "very_low" | "low" | "moderate" | "high" | "very_high"
+      conflict_status:
+        | "detected"
+        | "triaged"
+        | "under_review"
+        | "resolved"
+        | "escalated"
+        | "archived"
+      conflict_type:
+        | "doctrine"
+        | "priority"
+        | "policy"
+        | "jurisdiction"
+        | "resource"
+        | "sequencing"
+        | "compliance"
+        | "interpretation"
       decision_class:
         | "governance_recommendation"
         | "routing_decision_support"
@@ -26286,6 +26574,14 @@ export type Database = {
         | "deployed"
       output_type: "code" | "content" | "decision" | "analysis"
       phase_status: "pending" | "in_progress" | "completed"
+      resolution_path_type:
+        | "mediation"
+        | "override"
+        | "exception"
+        | "deferment"
+        | "split_scope"
+        | "escalation"
+        | "rollback"
       rollback_posture:
         | "not_applicable"
         | "manual_rollback"
@@ -26474,6 +26770,24 @@ export const Constants = {
         "requires_approval",
       ],
       confidence_posture: ["very_low", "low", "moderate", "high", "very_high"],
+      conflict_status: [
+        "detected",
+        "triaged",
+        "under_review",
+        "resolved",
+        "escalated",
+        "archived",
+      ],
+      conflict_type: [
+        "doctrine",
+        "priority",
+        "policy",
+        "jurisdiction",
+        "resource",
+        "sequencing",
+        "compliance",
+        "interpretation",
+      ],
       decision_class: [
         "governance_recommendation",
         "routing_decision_support",
@@ -26630,6 +26944,15 @@ export const Constants = {
       ],
       output_type: ["code", "content", "decision", "analysis"],
       phase_status: ["pending", "in_progress", "completed"],
+      resolution_path_type: [
+        "mediation",
+        "override",
+        "exception",
+        "deferment",
+        "split_scope",
+        "escalation",
+        "rollback",
+      ],
       rollback_posture: [
         "not_applicable",
         "manual_rollback",
