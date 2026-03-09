@@ -413,10 +413,21 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
         }
       }
 
-      const ready = getReadySubjobs(subjobs);
+      let ready = getReadySubjobs(subjobs);
       if (ready.length === 0) break;
 
-      const execPromises = ready.map(async (subjob) => {
+      // Sequential diagnostic mode: run data and api one at a time
+      if (sequentialMode && ready.length > 1) {
+        const sequentialKeys = ["architecture.data", "architecture.api"];
+        const hasMultipleChildAgents = ready.filter(s => sequentialKeys.includes(s.subjob_key)).length > 1;
+        if (hasMultipleChildAgents) {
+          // Run only the first one this wave
+          ready = [ready[0]];
+          await pipelineLog(ctx, "sequential_mode_active", `🔬 Sequential: running only ${ready[0].subjob_key} this wave`);
+        }
+      }
+
+      const executeOne = async (subjob: typeof ready[0]) => {
         await markSubjobRunning(serviceClient, subjob.id);
         const def = ARCHITECTURE_SUBJOBS.find(d => d.key === subjob.subjob_key);
         const label = def?.label || subjob.subjob_key;
@@ -431,6 +442,9 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
         let outputChars = 0;
         let modelUsed: string | null = null;
         let timeoutHandle: number | null = null;
+        let providerMs = 0;
+        let parseMs = 0;
+        let persistMs = 0;
 
         try {
           const estimatedInput = estimateSubjobInput(
@@ -447,6 +461,10 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           const baseTimeoutMs = def?.timeoutMs || 45_000;
           const timeoutMs = getAdaptiveTimeoutMs(baseTimeoutMs, promptChars, contextChars, subjob.attempt_number || 1);
           const abortController = new AbortController();
+
+          await pipelineLog(ctx, `subjob_${subjob.subjob_key}_config`,
+            `⏱ timeout=${Math.round(timeoutMs/1000)}s, prompt=${Math.ceil(promptChars/1000)}k chars, ctx=${Math.ceil(contextChars/1000)}k chars`
+          );
 
           const agentPromise = executeSubjob(
             subjob.subjob_key,
@@ -476,20 +494,25 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
             timeoutHandle = null;
           }
 
-          parseStatus = "success"; // If we got here, JSON parsed OK
+          parseStatus = "success";
           promptChars = agentResult.promptChars;
           contextChars = agentResult.contextChars;
           outputChars = agentResult.rawOutputChars;
           modelUsed = agentResult.model;
+          providerMs = agentResult.providerMs;
+          parseMs = agentResult.parseMs;
 
+          const persistStart = Date.now();
           try {
             await completeSubjob(serviceClient, subjob.id, agentResult.result, {
               model: agentResult.model, tokens: agentResult.tokens,
               costUsd: agentResult.costUsd, durationMs: agentResult.durationMs,
             });
             persistStatus = "success";
+            persistMs = Date.now() - persistStart;
           } catch (persistErr: any) {
             persistStatus = "failed";
+            persistMs = Date.now() - persistStart;
             throw new Error(`Persistence failed: ${persistErr.message}`);
           }
 
@@ -503,12 +526,12 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
             });
           }
 
-          // Record success diagnostic
           const durationMs = Date.now() - startMs;
           const diag = createAttemptDiagnostic({
             attemptNumber: subjob.attempt_number || 1,
             startedAt, model: modelUsed, promptSizeChars: promptChars,
-            contextSizeChars: contextChars, outputChars, providerLatencyMs: agentResult.durationMs,
+            contextSizeChars: contextChars, outputChars, providerLatencyMs: providerMs,
+            parseMs, persistMs,
             durationMs, parseStatus, persistStatus, terminalStatus: "completed",
             error: null, retryTrigger: null,
           });
@@ -516,7 +539,7 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
 
           completedResults[subjob.subjob_key] = agentResult.result;
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_complete`,
-            `✓ ${label}: ${agentResult.tokens} tokens, $${agentResult.costUsd.toFixed(4)}, ${durationMs}ms (prompt: ${Math.ceil(promptChars/1000)}k, ctx: ${Math.ceil(contextChars/1000)}k)`
+            `✓ ${label}: ${agentResult.tokens}t $${agentResult.costUsd.toFixed(4)} ${durationMs}ms [provider=${providerMs}ms parse=${parseMs}ms persist=${persistMs}ms] prompt=${Math.ceil(promptChars/1000)}k out=${Math.ceil(outputChars/1000)}k`
           );
           return { key: subjob.subjob_key, success: true };
         } catch (err: any) {
@@ -529,19 +552,18 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           const isTimeout = failureType === "failed_timeout";
           const isParseError = failureType === "failed_parse";
 
-          // Record failure diagnostic
           const retryTrigger = isTimeout ? "auto_timeout" : isParseError ? "auto_parse" : null;
           const diag = createAttemptDiagnostic({
             attemptNumber: subjob.attempt_number || 1,
             startedAt, model: modelUsed, promptSizeChars: promptChars,
-            contextSizeChars: contextChars, outputChars, providerLatencyMs: null,
+            contextSizeChars: contextChars, outputChars, providerLatencyMs: providerMs || null,
+            parseMs: parseMs || null, persistMs: persistMs || null,
             durationMs, parseStatus, persistStatus,
             terminalStatus: subjob.attempt_number < (subjob.max_attempts || 3) - 1 ? "retrying" : failureType,
             error: err.message, retryTrigger,
           });
           await appendDiagnostic(serviceClient, subjob.id, diag, failureType, retryTrigger, promptChars, contextChars);
 
-          // Auto-retry on first timeout or parse failure
           if ((isTimeout || isParseError) && subjob.attempt_number < (subjob.max_attempts || 3) - 1) {
             const { resetSubjobForRetry } = await import("../_shared/architecture-subjob/subjob-manager.ts");
             await failSubjob(serviceClient, subjob.id, err.message || failureType, isTimeout);
