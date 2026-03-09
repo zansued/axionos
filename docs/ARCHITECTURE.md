@@ -3,7 +3,7 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-09
-> **Current state:** Level 5 — Institutional Engineering Memory Platform. 54 architectural layers active (through Sprint 71). Block M complete. Sprint 71 (Governed Extensibility) complete. Next planned: Block N (Evidence-Governed Improvement Loop, Sprints 72–74).
+> **Current state:** Level 5 — Institutional Engineering Memory Platform. 77+ architectural layers active. All blocks (Foundation through S) complete. All 94 sprints implemented.
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -353,20 +353,16 @@ flowchart TB
 
 ### AxionOS Next Level Thesis
 
-AxionOS is entering a new architectural phase: **Governed Intelligence & Decision Maturity**.
+With all 94 sprints complete and 77+ architectural layers active, AxionOS is entering a new architectural phase: **Governed Intelligence & Decision Maturity**.
 
 The next level of architecture maturity is not about adding more internal planes for their own sake, but about strengthening:
 - **Decision quality**: Better recommendations supported by contextual history.
-- **Evidence-governed improvement**: Using systemic data to drive platform evolution safely.
-- **Routing/arbitration quality**: Smarter, more aware task delegation and capability routing.
+- **Evidence-governed improvement**: Using systemic data to drive platform evolution safely (Block N — complete).
+- **Routing/arbitration quality**: Smarter, more aware task delegation and capability routing (Block O — complete).
 - **Human-facing legibility**: Enhancing clarity, explanation, and contextual guidance for operators.
-- **Governed coordination**: Controlled expansion of multi-agent capabilities.
+- **Governed coordination**: Multi-agent coordination operational (debate, working memory, bounded swarm — all active).
 
-### Implementation Posture
-
-- **Active thaw now**: The Evidence-Governed Improvement Loop is the immediate next maturity engine.
-- **Partial thaw next**: Role Arbitration & Capability Routing (Sprint 75) is the first safe coordination thaw.
-- **Still reserved**: Deeper coordination, open ecosystem expansion, large-scale distributed runtime complexity, and architectural research remain later-horizon concerns. They are intentionally reserved to prevent premature complexity and theatrical autonomy without governance.
+The immediate strategic focus is converting existing internal sophistication into user-facing intelligence: contextual guidance, copilot systems, and role-aware decision support.
 
 ---
 
@@ -554,29 +550,64 @@ flowchart LR
 
 ## 10. AI Efficiency Layer
 
+The AI Efficiency Layer optimizes token consumption, cost, and quality across all AI calls. It consists of four integrated engines orchestrated through the unified `callAI()` client (`_shared/ai-client.ts`).
+
+### Canonical AI Routing Matrix
+**File:** `_shared/ai-routing-matrix.ts`
+
+The routing matrix is the single source of truth for all AI provider/model routing decisions. It classifies every AI call by task class and routes to the optimal provider/model combination.
+
+**Primary Providers:**
+- **DeepSeek** — Economy-first engine for high-volume, drafting, extraction
+- **OpenAI (GPT-5-mini)** — High-confidence engine for structured output, governance, user-facing
+- **OpenAI (GPT-5.4)** — Premium escalation for rare strategic/architecture reviews
+- **Pollinations** — Optional experimental fallback only (disabled by default)
+- **Lovable AI Gateway** — Transport fallback when no external API keys are configured (explicit OpenAI model names, never Gemini)
+
+**Routing Tiers:**
+
+| Tier | Default Provider | Model | Cost | Use Cases |
+|------|-----------------|-------|------|-----------|
+| Economy | DeepSeek | `deepseek-chat` | 0.2x | Classification, tagging, extraction, summarization, rewriting, drafting, embedding, prompt compression |
+| Balanced | DeepSeek | `deepseek-chat` / `deepseek-reasoner` | 0.5x | First-pass code, workspace analysis, heavy reasoning (cost-sensitive), generic tasks |
+| High Confidence | OpenAI | `gpt-5-mini` | 0.8x | Strict structured output, governance recommendations, user-facing responses, architecture reasoning, code refactor |
+| Premium | OpenAI | `gpt-5.4` | 1.0x | Rare executive synthesis, premium architecture review, critical strategic decisions |
+
+**Task Classification:** 14 task classes mapped to tiers: `simple_transform`, `extraction`, `summarization`, `drafting`, `workspace_analysis`, `code_generation`, `code_refactor`, `strict_structured_output`, `user_facing_response`, `governance_recommendation`, `architecture_reasoning`, `heavy_reasoning_cost_sensitive`, `premium_strategy`, `embedding_generation`, `prompt_compression`, `generic`.
+
+**Pipeline Stage Mapping:** `_shared/ai-routing-matrix.ts` maps known pipeline stages to their canonical task class (e.g., `architecture` → `architecture_reasoning`, `api_generation` → `strict_structured_output`, `observability` → `extraction`).
+
+### AI Router
+**File:** `_shared/ai-router.ts`
+
+Runtime resolution layer that handles:
+- Provider availability checks (OpenAI key → DeepSeek key → Lovable Gateway)
+- Heuristic complexity analysis when no explicit task class is provided
+- Fallback chain assembly with provider swap
+- Observability logging of all routing decisions
+
 ### Prompt Compression Engine
 **File:** `_shared/prompt-compressor.ts`
-**Result:** 60-90% token reduction while preserving engineering-critical information
+**Result:** 60–90% token reduction while preserving engineering-critical information. Uses rule-based cleaning first, then AI-assisted compression for large prompts (>8000 chars).
 
 ### Semantic Cache Engine
 **File:** `_shared/semantic-cache.ts`
 **Table:** `ai_prompt_cache` (with `vector(768)` column)
-**Threshold:** cosine similarity > 0.92 returns cached response
+**Threshold:** cosine similarity > 0.92 returns cached response. Tracks hit counts and tokens saved.
 
-### Model Router Engine
+### Model Router (Legacy Bridge)
 **File:** `_shared/model-router.ts`
+Delegates to the canonical AI Router. Maintained for backward compatibility.
 
-| Complexity | Model | Cost Multiplier |
-|-----------|-------|-----------------|
-| Low | `google/gemini-2.5-flash-lite` | 0.2x |
-| Medium | `google/gemini-2.5-flash` | 0.5x |
-| High | `google/gemini-2.5-pro` | 1.0x |
-
-### Integration Point
+### Integration Flow
 All modules integrate transparently in `callAI()` (`_shared/ai-client.ts`):
 ```
-callAI() -> compress -> cache lookup -> route model -> LLM call -> cache store -> return
+callAI() → compress → cache lookup → canonical route (matrix + availability) → LLM call (with retry + fallback chain) → cache store → return
 ```
+
+**Provider Priority:** OpenAI (direct) → DeepSeek (direct) → Lovable AI Gateway (explicit OpenAI models, never Gemini defaults).
+
+**Canonical Invariant:** Gemini is explicitly removed as a default route. AxionOS controls its own model selection based on task class, risk, and cost — not gateway defaults.
 
 ---
 
@@ -863,7 +894,11 @@ supabase/functions/
 | Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
 | State Management | TanStack React Query + React Context |
 | Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
-| AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
+| AI Engine — Economy | DeepSeek (`deepseek-chat`, `deepseek-reasoner`) |
+| AI Engine — High Confidence | OpenAI (`gpt-5-mini`) |
+| AI Engine — Premium | OpenAI (`gpt-5.4` / `gpt-5.2`) |
+| AI Engine — Fallback Transport | Lovable AI Gateway (explicit OpenAI models, no Gemini) |
+| AI Efficiency Layer | Prompt compression + semantic cache + canonical routing matrix |
 | Git Integration | GitHub API v3 (Tree API for atomic commits, PRs) |
 | Deployment | Vercel/Netlify configs auto-generated |
 

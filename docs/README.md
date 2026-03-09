@@ -75,36 +75,33 @@ The default user-facing journey remains:
 
 ---
 
-## After Sprint 71 — What Changes Strategically
+## After Sprint 94 — What Changes Strategically
 
-The platform has completed its **product-ready operating baseline** at Sprint 70, extended by Sprint 71 (Governed Extensibility).
+The platform has completed its **full canon implementation** at Sprint 94, spanning all blocks from Foundation through Research Sandbox for Architecture Evolution.
 
 The next strategic arc is **Governed Intelligence & Decision Maturity**:
 
-- **Block N (72–74, Planned) — Active thaw now:** Evidence-Governed Improvement Loop: turning operational evidence into bounded improvement proposals under governance
-- **Block O (Sprint 75, Planned) — Partial thaw next:** Role Arbitration & Capability Routing 2.0 as the first safe coordination thaw
-- **Block O (76–78, Reserved) — Still reserved:** Deeper advanced multi-agent coordination (debate, shared memory, swarm)
-- **Block P (79–82, Reserved) — Still reserved:** Governed Capability Ecosystem & Early Marketplace
-- **Block Q (83–86, Reserved) — Still reserved:** Delivery Optimization & Outcome Assurance 2.0
-- **Block R (87–90, Reserved) — Still reserved:** Advanced Distributed Runtime & Scaled Execution
-- **Block S (91–94, Reserved) — Still reserved:** Research Sandbox for Architecture Evolution
+All 94 sprints are complete. The focus shifts from building new internal layers to converting existing sophistication into higher-order capabilities:
+- Contextual guidance and copilot systems
+- Evidence-governed learning
+- Role-aware decision support
+- Decision quality and legibility
 
-Internal sophistication remains critical. Future blocks deepen it through evidence-governed improvement and better routing, not uncontrolled autonomy.
+Internal sophistication remains critical. The next level deepens it through governed intelligence, not uncontrolled autonomy.
 
 ---
 
-## How To Continue Safely After Sprint 71
+## How To Continue Safely After Sprint 94
 
-1. Read **ROADMAP.md** first for strategic direction and post-71 roadmap
-2. Read **PLAN.md** next for current and next sprint
+1. Read **ROADMAP.md** first for strategic direction and the Next Level Thesis
+2. Read **PLAN.md** next for current canon status
 3. Use **ARCHITECTURE.md** for structural context, the product boundary model, and the role/surface model
 4. Use **PIPELINE_CONTRACTS.md** for the user-visible journey contract
 5. Use **AGENTS.md** for internal agent system reference only
 6. Implement future work **sprint by sprint** with human review
 7. Do **not** collapse internal architecture and user-facing journey into the same surface
-8. Do **not** casually reopen completed canon (Sprints 1–71) without deliberate review
+8. Do **not** casually reopen completed canon (Sprints 1–94) without deliberate review
 9. Internal layers are backstage support — the default product surface is the user journey
-10. Block N (Sprints 72–74) is the next planned block — scope each sprint before implementation
 
 ---
 
@@ -120,10 +117,7 @@ Internal sophistication remains critical. Future blocks deepen it through eviden
 
 ### Current Canon Boundaries
 
-- **Sprints 1–71** = canonical complete (first mature operating baseline + Block M + Governed Extensibility)
-- **Sprints 72–74** = planned — active thaw now (Block N: Evidence-Governed Improvement Loop)
-- **Sprint 75** = reserved — partial thaw next (Role Arbitration & Capability Routing 2.0)
-- **Sprints 76–94** = reserved — still reserved (rest of Blocks O–S)
+- **Sprints 1–94** = canonical complete (full canon — Foundation through Block S)
 
 ---
 

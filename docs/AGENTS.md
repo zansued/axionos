@@ -348,9 +348,8 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 **Purpose:** Enable agent and capability sharing across environments.
 
-> **Status:** ❄️ Frozen — still reserved. Ecosystem expansion is not a current priority.
-> The immediate strategic focus is evidence-governed improvement (Block N, active thaw) and routing/arbitration quality (Sprint 75, partial thaw next).
-> Deeper coordination, marketplace, and ecosystem capabilities remain reserved.
+> **Status:** ✅ Active — Governed capability ecosystem operational (Block P, Sprints 79–82).
+> Capability packaging, trust/entitlements, partner marketplace pilot, and outcome-aware capability exchange are implemented.
 
 - Capability registry with semantic versioning
 - Package management for agent bundles
