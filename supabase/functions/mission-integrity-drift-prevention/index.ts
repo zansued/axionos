@@ -103,6 +103,43 @@ Deno.serve(async (req) => {
         break;
       }
 
+      case "subjects_all": {
+        const { data } = await supabase.from("mission_integrity_subjects").select("*").eq("organization_id", organization_id).order("created_at", { ascending: false }).limit(200);
+        result = { subjects: data || [] };
+        break;
+      }
+
+      case "evaluation_history": {
+        const { data } = await supabase
+          .from("mission_alignment_evaluations")
+          .select("alignment_score, drift_risk_score, erosion_score, adaptation_score, posture, created_at")
+          .eq("organization_id", organization_id)
+          .order("created_at", { ascending: true })
+          .limit(500);
+
+        if (!data || data.length === 0) { result = { history: [] }; break; }
+
+        const byDate = new Map<string, { alignment: number[]; drift: number[]; erosion: number[] }>();
+        for (const row of data) {
+          const date = new Date(row.created_at).toISOString().slice(0, 10);
+          if (!byDate.has(date)) byDate.set(date, { alignment: [], drift: [], erosion: [] });
+          const g = byDate.get(date)!;
+          g.alignment.push(Number(row.alignment_score));
+          g.drift.push(Number(row.drift_risk_score));
+          g.erosion.push(Number(row.erosion_score));
+        }
+
+        const history = Array.from(byDate.entries()).map(([date, g]) => ({
+          date,
+          alignment: g.alignment.reduce((a, b) => a + b, 0) / g.alignment.length,
+          drift_risk: g.drift.reduce((a, b) => a + b, 0) / g.drift.length,
+          erosion: g.erosion.reduce((a, b) => a + b, 0) / g.erosion.length,
+        }));
+
+        result = { history };
+        break;
+      }
+
       case "evaluate": {
         const { data } = await supabase.from("mission_alignment_evaluations").select("*, mission_constitutions(constitution_name), mission_integrity_subjects(title, domain, subject_type)").eq("organization_id", organization_id).order("created_at", { ascending: false }).limit(200);
         result = { evaluations: data || [] };

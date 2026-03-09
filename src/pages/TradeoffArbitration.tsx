@@ -15,6 +15,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoringTransparencyCard, CausalModifierCard } from "@/components/block-w/BlockWShared";
+import { BlockWConstitutionManager, TRADEOFF_CONSTITUTION_FIELDS } from "@/components/block-w/BlockWConstitutionManager";
+import { BlockWSubjectManager } from "@/components/block-w/BlockWSubjectManager";
+import { BlockWHistoryChart } from "@/components/block-w/BlockWHistoryChart";
 
 // ── Types ──
 interface Overview { constitutions: number; dimensions: number; active_subjects: number; open_events: number; active_recommendations: number; }
@@ -35,8 +38,8 @@ function invoke(action: string, orgId: string, extra?: Record<string, unknown>) 
 }
 
 const riskColor: Record<string, string> = {
-  acceptable: "bg-green-500/20 text-green-400 border-green-500/30",
-  elevated: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+  acceptable: "bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/30",
+  elevated: "bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 border-yellow-500/30",
   high: "bg-orange-500/20 text-orange-400 border-orange-500/30",
   unacceptable: "bg-destructive/20 text-destructive border-destructive/30",
 };
@@ -52,6 +55,9 @@ export default function TradeoffArbitration() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [evalResult, setEvalResult] = useState<EvalResult | null>(null);
   const [crossSignals, setCrossSignals] = useState<any>(null);
+  const [constitutions, setConstitutions] = useState<any[]>([]);
+  const [allSubjects, setAllSubjects] = useState<any[]>([]);
+  const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
 
@@ -59,18 +65,24 @@ export default function TradeoffArbitration() {
     if (!orgId) return;
     setLoading(true);
     try {
-      const [ov, dim, ev, rec, signals] = await Promise.all([
+      const [ov, dim, ev, rec, signals, constData, subjData, histData] = await Promise.all([
         invoke("overview", orgId),
         invoke("dimensions", orgId),
         invoke("arbitration_events", orgId),
         invoke("recommendations", orgId),
         invoke("cross_sprint_signals", orgId).catch(() => ({ data: null })),
+        invoke("constitutions", orgId).catch(() => ({ data: { constitutions: [] } })),
+        invoke("subjects_all", orgId).catch(() => ({ data: { subjects: [] } })),
+        invoke("evaluation_history", orgId).catch(() => ({ data: { history: [] } })),
       ]);
       if (ov.data) setOverview(ov.data);
       if (dim.data?.dimensions) setDimensions(dim.data.dimensions);
       if (ev.data?.events) setEvents(ev.data.events);
       if (rec.data?.recommendations) setRecommendations(rec.data.recommendations);
       if (signals.data) setCrossSignals(signals.data);
+      setConstitutions(constData.data?.constitutions ?? []);
+      setAllSubjects(subjData.data?.subjects ?? []);
+      setHistory(histData.data?.history ?? []);
 
       // Reconstruct eval from DB
       if (!evalResult && orgId) {
@@ -179,12 +191,14 @@ export default function TradeoffArbitration() {
         </div>
 
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList>
+          <TabsList className="flex-wrap h-auto gap-1">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="matrix">Gain / Sacrifice</TabsTrigger>
             <TabsTrigger value="events">Events</TabsTrigger>
             <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
             <TabsTrigger value="dimensions">Dimensions</TabsTrigger>
+            <TabsTrigger value="history">History</TabsTrigger>
+            <TabsTrigger value="governance">Governance</TabsTrigger>
             <TabsTrigger value="integration">Integration</TabsTrigger>
           </TabsList>
 
@@ -255,7 +269,7 @@ export default function TradeoffArbitration() {
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-green-400" /> Gain vs Sacrifice Matrix
+                    <TrendingUp className="h-4 w-4 text-green-700 dark:text-green-400" /> Gain vs Sacrifice Matrix
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -277,7 +291,7 @@ export default function TradeoffArbitration() {
                             <TableCell className="font-medium text-sm">{ev.subject}</TableCell>
                             <TableCell><PostureBadge posture={ev.net_posture} /></TableCell>
                             <TableCell className="text-center">
-                              <span className="flex items-center justify-center gap-1 text-green-400"><TrendingUp className="h-3 w-3" />{ev.gains}</span>
+                              <span className="flex items-center justify-center gap-1 text-green-700 dark:text-green-400"><TrendingUp className="h-3 w-3" />{ev.gains}</span>
                             </TableCell>
                             <TableCell className="text-center">
                               <span className="flex items-center justify-center gap-1 text-destructive"><TrendingDown className="h-3 w-3" />{ev.sacrifices}</span>
@@ -359,7 +373,7 @@ export default function TradeoffArbitration() {
                         <div className="flex gap-4 text-xs mt-1">
                           {rec.preserved_values?.length > 0 && (
                             <div className="flex items-center gap-1">
-                              <TrendingUp className="h-3 w-3 text-green-400" />
+                              <TrendingUp className="h-3 w-3 text-green-700 dark:text-green-400" />
                               <span className="text-muted-foreground">Preserved: {rec.preserved_values.join(", ")}</span>
                             </div>
                           )}
@@ -409,6 +423,57 @@ export default function TradeoffArbitration() {
                   </Table>
                 </CardContent>
               </Card>
+            )}
+          </TabsContent>
+
+          {/* HISTORY */}
+          <TabsContent value="history" className="space-y-4">
+            <BlockWHistoryChart
+              title="Tradeoff Risk & Reversibility Trend"
+              description="How compromise risk, reversibility, and legitimacy tension evolve over arbitration cycles."
+              data={history}
+              metrics={[
+                { key: "compromise_risk", label: "Compromise Risk", color: "hsl(0, 84%, 60%)", dangerous: true },
+                { key: "reversibility", label: "Reversibility", color: "hsl(142, 71%, 45%)" },
+                { key: "legitimacy_tension", label: "Legitimacy Tension", color: "hsl(38, 92%, 50%)", dangerous: true },
+              ]}
+              loading={loading}
+            />
+          </TabsContent>
+
+          {/* GOVERNANCE */}
+          <TabsContent value="governance" className="space-y-4">
+            {orgId && (
+              <>
+                <BlockWConstitutionManager
+                  tableName="tradeoff_constitutions"
+                  sprintLabel="Tradeoff"
+                  orgId={orgId}
+                  constitutions={constitutions}
+                  loading={loading}
+                  onRefresh={load}
+                  fields={TRADEOFF_CONSTITUTION_FIELDS}
+                />
+                <BlockWSubjectManager
+                  tableName="tradeoff_subjects"
+                  label="Manage Tradeoff Subjects"
+                  subjects={allSubjects}
+                  loading={loading}
+                  onRefresh={load}
+                  fields={[
+                    { name: "title", label: "Title", type: "text" },
+                    { name: "subject_type", label: "Type", type: "select", options: [
+                      { value: "decision", label: "Decision" }, { value: "initiative", label: "Initiative" },
+                      { value: "policy", label: "Policy" }, { value: "plan", label: "Plan" },
+                    ] },
+                    { name: "domain", label: "Domain", type: "select", options: [
+                      { value: "general", label: "General" }, { value: "governance", label: "Governance" },
+                      { value: "strategy", label: "Strategy" }, { value: "delivery", label: "Delivery" },
+                    ] },
+                    { name: "summary", label: "Summary", type: "textarea" },
+                  ]}
+                />
+              </>
             )}
           </TabsContent>
 
