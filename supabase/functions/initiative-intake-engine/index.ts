@@ -24,6 +24,9 @@ serve(async (req) => {
       return errorResponse("organization_id is required", 400);
     }
 
+    const memberCheck = await requireOrgMembership(auth.serviceClient, auth.user.id, organization_id);
+    if (memberCheck instanceof Response) return memberCheck;
+
     // Step 1: Run AI analysis to generate structured blueprint
     const userPrompt = buildUserPrompt(idea_text, additional_context);
 
