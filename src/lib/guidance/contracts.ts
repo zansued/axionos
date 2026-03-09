@@ -681,6 +681,39 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Activation of continuity plans for critical disruptions requires human approval.",
     },
   },
+  {
+    key: "memory-constitution",
+    title: { pt: "Constituição de Memória", en: "Memory Constitution" },
+    description: {
+      pt: "Governe o que a instituição deve lembrar, pode esquecer, deve preservar e pode reconstruir.",
+      en: "Govern what the institution must remember, may forget, must preserve, and can reconstruct.",
+    },
+    audience: { pt: "Operadores e administradores", en: "Operators and administrators" },
+    surface: "workspace",
+    actions: [
+      { pt: "Classificar ativos de memória institucional", en: "Classify institutional memory assets" },
+      { pt: "Gerenciar políticas de retenção", en: "Manage retention policies" },
+      { pt: "Monitorar eventos de perda de memória", en: "Monitor memory loss events" },
+      { pt: "Inspecionar caminhos de reconstrução", en: "Inspect reconstruction paths" },
+    ],
+    whenRelevant: {
+      pt: "Quando há risco de amnésia institucional ou necessidade de governar retenção de conhecimento.",
+      en: "When institutional amnesia risk exists or knowledge retention governance is needed.",
+    },
+    whenIgnorable: {
+      pt: "Se a postura de memória é saudável e não há eventos de perda.",
+      en: "If memory posture is healthy and no loss events exist.",
+    },
+    nextStep: {
+      pt: "Classificar memórias críticas e definir políticas de retenção.",
+      en: "Classify critical memories and define retention policies.",
+    },
+    approvalPosture: "required",
+    approvalHint: {
+      pt: "Exclusão de memória crítica ou precedente protegido exige revisão humana.",
+      en: "Deletion of critical memory or protected precedent requires human review.",
+    },
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────

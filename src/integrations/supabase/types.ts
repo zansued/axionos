@@ -15039,6 +15039,144 @@ export type Database = {
           },
         ]
       }
+      institutional_memory_assets: {
+        Row: {
+          constitution_id: string | null
+          created_at: string
+          current_status: string
+          domain: string
+          id: string
+          memory_class_id: string | null
+          memory_code: string
+          memory_payload: Json
+          organization_id: string
+          precedent_weight: number
+          reconstruction_priority: string
+          retention_deadline: string | null
+          sensitivity_level: string
+          source_ref: string
+          source_type: string
+          summary: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          constitution_id?: string | null
+          created_at?: string
+          current_status?: string
+          domain?: string
+          id?: string
+          memory_class_id?: string | null
+          memory_code?: string
+          memory_payload?: Json
+          organization_id: string
+          precedent_weight?: number
+          reconstruction_priority?: string
+          retention_deadline?: string | null
+          sensitivity_level?: string
+          source_ref?: string
+          source_type?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          constitution_id?: string | null
+          created_at?: string
+          current_status?: string
+          domain?: string
+          id?: string
+          memory_class_id?: string | null
+          memory_code?: string
+          memory_payload?: Json
+          organization_id?: string
+          precedent_weight?: number
+          reconstruction_priority?: string
+          retention_deadline?: string | null
+          sensitivity_level?: string
+          source_ref?: string
+          source_type?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_memory_assets_constitution_id_fkey"
+            columns: ["constitution_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_memory_constitutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_memory_assets_memory_class_id_fkey"
+            columns: ["memory_class_id"]
+            isOneToOne: false
+            referencedRelation: "memory_asset_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_memory_assets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_memory_constitutions: {
+        Row: {
+          constitution_code: string
+          constitution_name: string
+          constitution_scope: string
+          constitution_status: string
+          constitutional_principles: string
+          created_at: string
+          created_by: string
+          default_reconstruction_policy: Json
+          default_retention_policy: Json
+          id: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          constitution_code?: string
+          constitution_name?: string
+          constitution_scope?: string
+          constitution_status?: string
+          constitutional_principles?: string
+          created_at?: string
+          created_by?: string
+          default_reconstruction_policy?: Json
+          default_retention_policy?: Json
+          id?: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          constitution_code?: string
+          constitution_name?: string
+          constitution_scope?: string
+          constitution_status?: string
+          constitutional_principles?: string
+          created_at?: string
+          created_by?: string
+          default_reconstruction_policy?: Json
+          default_retention_policy?: Json
+          id?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_memory_constitutions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       institutional_memory_lineage: {
         Row: {
           created_at: string
@@ -16025,6 +16163,59 @@ export type Database = {
           },
         ]
       }
+      memory_asset_classes: {
+        Row: {
+          active: boolean
+          class_code: string
+          class_name: string
+          class_type: string
+          created_at: string
+          deletion_requires_review: boolean
+          description: string
+          id: string
+          organization_id: string
+          reconstruction_required: boolean
+          retention_level: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          class_code?: string
+          class_name?: string
+          class_type?: string
+          created_at?: string
+          deletion_requires_review?: boolean
+          description?: string
+          id?: string
+          organization_id: string
+          reconstruction_required?: boolean
+          retention_level?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          class_code?: string
+          class_name?: string
+          class_type?: string
+          created_at?: string
+          deletion_requires_review?: boolean
+          description?: string
+          id?: string
+          organization_id?: string
+          reconstruction_required?: boolean
+          retention_level?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_asset_classes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       memory_links: {
         Row: {
           created_at: string
@@ -16070,6 +16261,181 @@ export type Database = {
             columns: ["to_memory_id"]
             isOneToOne: false
             referencedRelation: "engineering_memory_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_loss_events: {
+        Row: {
+          created_at: string
+          event_payload: Json
+          event_summary: string
+          id: string
+          loss_type: string
+          memory_asset_id: string | null
+          organization_id: string
+          recoverability_level: string
+          resolved_at: string | null
+          severity: string
+        }
+        Insert: {
+          created_at?: string
+          event_payload?: Json
+          event_summary?: string
+          id?: string
+          loss_type?: string
+          memory_asset_id?: string | null
+          organization_id: string
+          recoverability_level?: string
+          resolved_at?: string | null
+          severity?: string
+        }
+        Update: {
+          created_at?: string
+          event_payload?: Json
+          event_summary?: string
+          id?: string
+          loss_type?: string
+          memory_asset_id?: string | null
+          organization_id?: string
+          recoverability_level?: string
+          resolved_at?: string | null
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_loss_events_memory_asset_id_fkey"
+            columns: ["memory_asset_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_memory_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memory_loss_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_reconstruction_paths: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          id: string
+          memory_asset_id: string
+          organization_id: string
+          path_status: string
+          reconstruction_sources: Json
+          reconstruction_type: string
+          recovery_sequence: Json
+          updated_at: string
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          memory_asset_id: string
+          organization_id: string
+          path_status?: string
+          reconstruction_sources?: Json
+          reconstruction_type?: string
+          recovery_sequence?: Json
+          updated_at?: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          memory_asset_id?: string
+          organization_id?: string
+          path_status?: string
+          reconstruction_sources?: Json
+          reconstruction_type?: string
+          recovery_sequence?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_reconstruction_paths_memory_asset_id_fkey"
+            columns: ["memory_asset_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_memory_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memory_reconstruction_paths_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_retention_policies: {
+        Row: {
+          active: boolean
+          constitution_id: string | null
+          created_at: string
+          deletion_rule_text: string
+          id: string
+          memory_class_id: string | null
+          organization_id: string
+          policy_name: string
+          requires_human_review: boolean
+          retention_rule_text: string
+          review_cycle_days: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          constitution_id?: string | null
+          created_at?: string
+          deletion_rule_text?: string
+          id?: string
+          memory_class_id?: string | null
+          organization_id: string
+          policy_name?: string
+          requires_human_review?: boolean
+          retention_rule_text?: string
+          review_cycle_days?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          constitution_id?: string | null
+          created_at?: string
+          deletion_rule_text?: string
+          id?: string
+          memory_class_id?: string | null
+          organization_id?: string
+          policy_name?: string
+          requires_human_review?: boolean
+          retention_rule_text?: string
+          review_cycle_days?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_retention_policies_constitution_id_fkey"
+            columns: ["constitution_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_memory_constitutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memory_retention_policies_memory_class_id_fkey"
+            columns: ["memory_class_id"]
+            isOneToOne: false
+            referencedRelation: "memory_asset_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memory_retention_policies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]

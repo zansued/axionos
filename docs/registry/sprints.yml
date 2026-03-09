@@ -119,8 +119,14 @@ sprints:
   - { sprint: 97, name: "Bounded Autonomous Operations",                      status: complete, block: "T", phase: "Governed Intelligence OS", layer: "Bounded Autonomous Operations Layer" }
   - { sprint: 98, name: "Institutional Decision Engine",                      status: complete, block: "T", phase: "Governed Intelligence OS", layer: "Institutional Decision Engine Layer" }
 
-  # === BLOCK U — Adaptive Institutional Ecosystem (PLANNED) ===
+  # === BLOCK U — Adaptive Institutional Ecosystem ===
   - { sprint: 99,  name: "Cross-Context Doctrine Adaptation",                 status: complete, block: "U", phase: "Adaptive Institutional Ecosystem", layer: "Cross-Context Doctrine Adaptation Layer" }
   - { sprint: 100, name: "Institutional Conflict Resolution Engine",           status: complete, block: "U", phase: "Adaptive Institutional Ecosystem", layer: "Institutional Conflict Resolution Layer" }
   - { sprint: 101, name: "Federated Intelligence Boundaries",                 status: complete, block: "U", phase: "Adaptive Institutional Ecosystem", layer: "Federated Intelligence Boundaries Layer" }
   - { sprint: 102, name: "Resilience & Continuity Governance",                 status: complete, block: "U", phase: "Adaptive Institutional Ecosystem", layer: "Resilience & Continuity Governance Layer" }
+
+  # === BLOCK V — Sovereign Institutional Intelligence ===
+  - { sprint: 103, name: "Institutional Memory Constitution",                  status: complete, block: "V", phase: "Sovereign Institutional Intelligence", layer: "Institutional Memory Constitution Layer" }
+  - { sprint: 104, name: "Sovereign Decision Rights Orchestration",            status: planned,  block: "V", phase: "Sovereign Institutional Intelligence", layer: "Sovereign Decision Rights Layer" }
+  - { sprint: 105, name: "Dependency Sovereignty & External Reliance Governance", status: planned, block: "V", phase: "Sovereign Institutional Intelligence", layer: "Dependency Sovereignty Layer" }
+  - { sprint: 106, name: "Strategic Succession & Long-Horizon Continuity",     status: planned,  block: "V", phase: "Sovereign Institutional Intelligence", layer: "Strategic Succession Layer" }
