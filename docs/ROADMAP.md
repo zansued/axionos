@@ -6,6 +6,7 @@
 >
 > **Current Mode**: Level 6 — Sovereign Institutional Intelligence
 > **Current Maturity**: Level 6 ✅ Active
+> **Next Block**: W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
 > **Last strategic change (2026-03-09):** 106 sprints complete. All blocks (Foundation through V) complete. Sovereign Institutional Intelligence operational.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
