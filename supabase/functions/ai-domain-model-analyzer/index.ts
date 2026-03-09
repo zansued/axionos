@@ -51,103 +51,77 @@ serve(async (req) => {
       .eq("node_type", "project_description")
       .maybeSingle();
 
-    // Build project description from multiple sources
     const projectDescription = (descNode?.metadata as any)?.description
       || initiative.refined_idea
       || initiative.description
       || initiative.idea_raw
       || initiative.title;
 
-    // 4. Call LLM to analyze domain
-    const systemPrompt = `You are a Domain Model Architect. Analyze the project description and extract a structured domain model.
+    // 4. Multi-attempt domain analysis with progressive simplification
+    let domainModel: any = null;
+    let aiResult: any = null;
+    let attemptUsed = 0;
 
-Return a valid JSON object with this exact structure:
-{
-  "entities": [
-    {
-      "name": "entity_name_snake_case",
-      "attributes": [
-        { "name": "attribute_name", "type": "uuid|text|integer|boolean|timestamp|jsonb|numeric|text[]", "primary_key": false, "nullable": true, "default": null, "description": "brief description" }
-      ],
-      "description": "What this entity represents"
-    }
-  ],
-  "relationships": [
-    { "from": "source_entity", "to": "target_entity", "field": "foreign_key_field", "type": "many_to_one|one_to_one|many_to_many", "description": "relationship description" }
-  ],
-  "business_rules": [
-    { "rule": "description of the business rule", "entities_involved": ["entity1", "entity2"] }
-  ]
-}
+    const attempts = [
+      { label: "full", maxEntities: null, simplified: false },
+      { label: "simplified", maxEntities: 10, simplified: true },
+      { label: "minimal", maxEntities: 6, simplified: true },
+    ];
 
-Rules:
-- Every entity must have an "id" attribute (uuid, primary key, default gen_random_uuid())
-- Every entity must have "created_at" (timestamp, default now())
-- Include foreign key fields in the source entity attributes
-- Use snake_case for all names
-- Be thorough: extract ALL entities, even implicit ones
-- Include junction tables for many-to-many relationships
-- Infer reasonable attributes even if not explicitly stated
-- Include at least the standard attributes: id, created_at, updated_at`;
+    for (let i = 0; i < attempts.length; i++) {
+      const attempt = attempts[i];
+      attemptUsed = i + 1;
+      console.log(`[domain-analyzer] Attempt ${attemptUsed}/${attempts.length}: ${attempt.label}`);
 
-    const userPrompt = `Analyze this project and extract the complete domain model:
+      try {
+        const { systemPrompt, userPrompt } = buildPrompts(
+          initiative,
+          projectDescription,
+          attempt.maxEntities,
+          attempt.simplified,
+        );
 
-PROJECT: ${initiative.title}
-DESCRIPTION: ${projectDescription}
-${initiative.architecture_content ? `\nARCHITECTURE NOTES:\n${initiative.architecture_content.slice(0, 2000)}` : ""}
-${initiative.discovery_payload ? `\nDISCOVERY CONTEXT:\n${JSON.stringify(initiative.discovery_payload).slice(0, 2000)}` : ""}
+        aiResult = await callAI("", systemPrompt, userPrompt, true, 3, false);
+        domainModel = parseAIResponse(aiResult.content);
 
-Extract ALL entities, their attributes with types, relationships and business rules.`;
-
-    const aiResult = await callAI("", systemPrompt, userPrompt, true, 3, false);
-
-    // 5. Parse domain model
-    let domainModel: any;
-    try {
-      domainModel = JSON.parse(aiResult.content);
-    } catch {
-      // Try to extract JSON from markdown code blocks
-      const jsonMatch = aiResult.content.match(/```(?:json)?\s*([\s\S]*?)```/);
-      if (jsonMatch) {
-        domainModel = JSON.parse(jsonMatch[1].trim());
-      } else {
-        throw new Error("Failed to parse domain model from AI response");
+        if (domainModel && domainModel.entities && domainModel.entities.length > 0) {
+          console.log(`[domain-analyzer] Success on attempt ${attemptUsed}: ${domainModel.entities.length} entities`);
+          break;
+        }
+        domainModel = null;
+      } catch (parseErr) {
+        console.warn(`[domain-analyzer] Attempt ${attemptUsed} failed:`, parseErr.message);
+        domainModel = null;
       }
     }
 
-    // 6. Validate: at least one entity
-    if (!domainModel.entities || domainModel.entities.length === 0) {
-      console.warn("No entities detected, using fallback templates");
+    // Final fallback: use deterministic model
+    if (!domainModel || !domainModel.entities || domainModel.entities.length === 0) {
+      console.warn("[domain-analyzer] All AI attempts failed, using fallback model");
       domainModel = generateFallbackModel(initiative.title, projectDescription);
+      attemptUsed = -1;
     }
 
-    // Ensure all entities have required attributes
+    // 5. Ensure all entities have required attributes
     for (const entity of domainModel.entities) {
+      if (!entity.attributes) entity.attributes = [];
       const hasId = entity.attributes.some((a: any) => a.name === "id");
       if (!hasId) {
         entity.attributes.unshift({
-          name: "id",
-          type: "uuid",
-          primary_key: true,
-          nullable: false,
-          default: "gen_random_uuid()",
-          description: "Primary key",
+          name: "id", type: "uuid", primary_key: true, nullable: false,
+          default: "gen_random_uuid()", description: "Primary key",
         });
       }
       const hasCreatedAt = entity.attributes.some((a: any) => a.name === "created_at");
       if (!hasCreatedAt) {
         entity.attributes.push({
-          name: "created_at",
-          type: "timestamp",
-          primary_key: false,
-          nullable: false,
-          default: "now()",
-          description: "Creation timestamp",
+          name: "created_at", type: "timestamp", primary_key: false, nullable: false,
+          default: "now()", description: "Creation timestamp",
         });
       }
     }
 
-    // 7. Build report
+    // 6. Build report
     const totalAttributes = domainModel.entities.reduce(
       (sum: number, e: any) => sum + (e.attributes?.length || 0), 0
     );
@@ -157,9 +131,11 @@ Extract ALL entities, their attributes with types, relationships and business ru
       attributes_detected: totalAttributes,
       business_rules_detected: domainModel.business_rules?.length || 0,
       entity_names: domainModel.entities.map((e: any) => e.name),
+      attempt_used: attemptUsed,
+      fallback_used: attemptUsed === -1,
     };
 
-    // 8. Store domain_model node in Project Brain
+    // 7. Store domain_model node in Project Brain
     await serviceClient.from("project_brain_nodes").upsert(
       {
         initiative_id: initiativeId,
@@ -171,14 +147,14 @@ Extract ALL entities, their attributes with types, relationships and business ru
           ...domainModel,
           report,
           analyzed_at: new Date().toISOString(),
-          model_used: aiResult.model,
-          tokens_used: aiResult.tokens,
+          model_used: aiResult?.model || "fallback",
+          tokens_used: aiResult?.tokens || 0,
         },
       },
       { onConflict: "initiative_id,node_type,name" }
     );
 
-    // 9. Also store the report node
+    // 8. Also store the report node
     await serviceClient.from("project_brain_nodes").upsert(
       {
         initiative_id: initiativeId,
@@ -193,7 +169,7 @@ Extract ALL entities, their attributes with types, relationships and business ru
 
     const durationMs = Date.now() - startTime;
 
-    // 10. Update job
+    // 9. Update job
     if (job) {
       await serviceClient
         .from("initiative_jobs")
@@ -201,14 +177,14 @@ Extract ALL entities, their attributes with types, relationships and business ru
           status: "completed",
           completed_at: new Date().toISOString(),
           duration_ms: durationMs,
-          cost_usd: aiResult.costUsd,
-          model: aiResult.model,
+          cost_usd: aiResult?.costUsd || 0,
+          model: aiResult?.model || "fallback",
           outputs: { domain_model: domainModel, report },
         })
         .eq("id", job.id);
     }
 
-    // 11. Update initiative status → domain_analyzed
+    // 10. Update initiative status → domain_analyzed
     await serviceClient
       .from("initiatives")
       .update({ stage_status: "domain_analyzed" } as any)
@@ -218,26 +194,123 @@ Extract ALL entities, their attributes with types, relationships and business ru
       success: true,
       ...report,
       duration_ms: durationMs,
-      model_used: aiResult.model,
-      tokens_used: aiResult.tokens,
+      model_used: aiResult?.model || "fallback",
+      tokens_used: aiResult?.tokens || 0,
     });
   } catch (e) {
     console.error("ai-domain-model-analyzer error:", e);
 
     // Revert status on failure
     try {
-      const { initiativeId } = await req.clone().json().catch(() => ({}));
-      if (initiativeId) {
+      const body = await req.clone().json().catch(() => ({}));
+      if (body?.initiativeId) {
         await serviceClient
           .from("initiatives")
           .update({ stage_status: "db_provisioned" } as any)
-          .eq("id", initiativeId);
+          .eq("id", body.initiativeId);
       }
     } catch {}
 
     return errorResponse(e instanceof Error ? e.message : "Domain model analysis failed", 500);
   }
 });
+
+/** Build prompts with progressive simplification */
+function buildPrompts(
+  initiative: any,
+  projectDescription: string,
+  maxEntities: number | null,
+  simplified: boolean,
+) {
+  const entityLimit = maxEntities ? `\n- Generate at most ${maxEntities} entities (focus on the most important ones)` : "";
+  const simplifiedNote = simplified
+    ? `\n- Keep attributes minimal: only id, created_at, and 2-4 domain-specific attributes per entity\n- Keep relationships simple\n- Limit business rules to 3`
+    : "";
+
+  const systemPrompt = `You are a Domain Model Architect. Analyze the project and extract a structured domain model.
+
+IMPORTANT: Return ONLY a raw JSON object. No markdown, no code blocks, no explanation.
+
+The JSON must have this structure:
+{
+  "entities": [
+    {
+      "name": "entity_name_snake_case",
+      "attributes": [
+        { "name": "attribute_name", "type": "uuid|text|integer|boolean|timestamp|jsonb|numeric|text[]", "primary_key": false, "nullable": true, "default": null, "description": "brief" }
+      ],
+      "description": "What this entity represents"
+    }
+  ],
+  "relationships": [
+    { "from": "source", "to": "target", "field": "fk_field", "type": "many_to_one|one_to_one|many_to_many", "description": "desc" }
+  ],
+  "business_rules": [
+    { "rule": "description", "entities_involved": ["entity1"] }
+  ]
+}
+
+Rules:
+- Every entity must have "id" (uuid, primary key, default gen_random_uuid())
+- Every entity must have "created_at" (timestamp, default now())
+- Use snake_case for all names${entityLimit}${simplifiedNote}
+
+Return ONLY valid JSON. No other text.`;
+
+  // Truncate context more aggressively in simplified mode
+  const archSlice = simplified ? 800 : 2000;
+  const discSlice = simplified ? 500 : 2000;
+
+  const userPrompt = `Extract the domain model for:
+
+PROJECT: ${initiative.title}
+DESCRIPTION: ${(projectDescription || "").slice(0, simplified ? 1000 : 3000)}
+${initiative.architecture_content ? `\nARCHITECTURE:\n${initiative.architecture_content.slice(0, archSlice)}` : ""}
+${initiative.discovery_payload ? `\nCONTEXT:\n${JSON.stringify(initiative.discovery_payload).slice(0, discSlice)}` : ""}
+
+Return ONLY the JSON object.`;
+
+  return { systemPrompt, userPrompt };
+}
+
+/** Robust JSON parser with multiple extraction strategies */
+function parseAIResponse(content: string): any {
+  if (!content || typeof content !== "string") return null;
+
+  // Strategy 1: Direct parse
+  try {
+    return JSON.parse(content.trim());
+  } catch {}
+
+  // Strategy 2: Extract from markdown code blocks
+  const codeBlockMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (codeBlockMatch) {
+    try {
+      return JSON.parse(codeBlockMatch[1].trim());
+    } catch {}
+  }
+
+  // Strategy 3: Find first { to last }
+  const firstBrace = content.indexOf("{");
+  const lastBrace = content.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace > firstBrace) {
+    try {
+      return JSON.parse(content.slice(firstBrace, lastBrace + 1));
+    } catch {}
+  }
+
+  // Strategy 4: Try to fix common issues (trailing commas, single quotes)
+  try {
+    let cleaned = content.slice(
+      Math.max(0, content.indexOf("{")),
+      content.lastIndexOf("}") + 1
+    );
+    cleaned = cleaned.replace(/,\s*([}\]])/g, "$1"); // trailing commas
+    return JSON.parse(cleaned);
+  } catch {}
+
+  return null;
+}
 
 /** Fallback domain model based on generic SaaS patterns */
 function generateFallbackModel(title: string, description: string) {
