@@ -9200,6 +9200,172 @@ export type Database = {
           },
         ]
       }
+      doctrine_applicability_rules: {
+        Row: {
+          condition_payload: Json
+          condition_type: string
+          created_at: string
+          doctrine_id: string
+          enabled: boolean
+          id: string
+          organization_id: string
+          priority: number
+          rule_description: string
+          rule_key: string
+        }
+        Insert: {
+          condition_payload?: Json
+          condition_type?: string
+          created_at?: string
+          doctrine_id: string
+          enabled?: boolean
+          id?: string
+          organization_id: string
+          priority?: number
+          rule_description?: string
+          rule_key?: string
+        }
+        Update: {
+          condition_payload?: Json
+          condition_type?: string
+          created_at?: string
+          doctrine_id?: string
+          enabled?: boolean
+          id?: string
+          organization_id?: string
+          priority?: number
+          rule_description?: string
+          rule_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctrine_applicability_rules_doctrine_id_fkey"
+            columns: ["doctrine_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_doctrines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "doctrine_applicability_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      doctrine_memory_links: {
+        Row: {
+          contribution_type: string
+          contribution_weight: number
+          created_at: string
+          doctrine_id: string
+          id: string
+          memory_id: string
+          notes: string | null
+          organization_id: string
+        }
+        Insert: {
+          contribution_type?: string
+          contribution_weight?: number
+          created_at?: string
+          doctrine_id: string
+          id?: string
+          memory_id: string
+          notes?: string | null
+          organization_id: string
+        }
+        Update: {
+          contribution_type?: string
+          contribution_weight?: number
+          created_at?: string
+          doctrine_id?: string
+          id?: string
+          memory_id?: string
+          notes?: string | null
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctrine_memory_links_doctrine_id_fkey"
+            columns: ["doctrine_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_doctrines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "doctrine_memory_links_memory_id_fkey"
+            columns: ["memory_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_memories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "doctrine_memory_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      doctrine_reviews: {
+        Row: {
+          confidence_adjustment: number | null
+          created_at: string
+          doctrine_id: string
+          id: string
+          organization_id: string
+          review_action: string
+          review_notes: string
+          reviewer_id: string | null
+          strength_recommendation:
+            | Database["public"]["Enums"]["doctrine_strength"]
+            | null
+        }
+        Insert: {
+          confidence_adjustment?: number | null
+          created_at?: string
+          doctrine_id: string
+          id?: string
+          organization_id: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string | null
+          strength_recommendation?:
+            | Database["public"]["Enums"]["doctrine_strength"]
+            | null
+        }
+        Update: {
+          confidence_adjustment?: number | null
+          created_at?: string
+          doctrine_id?: string
+          id?: string
+          organization_id?: string
+          review_action?: string
+          review_notes?: string
+          reviewer_id?: string | null
+          strength_recommendation?:
+            | Database["public"]["Enums"]["doctrine_strength"]
+            | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctrine_reviews_doctrine_id_fkey"
+            columns: ["doctrine_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_doctrines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "doctrine_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       economic_optimization_outcomes: {
         Row: {
           assessment_id: string | null
@@ -13155,6 +13321,93 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_doctrines: {
+        Row: {
+          applicability_summary: string
+          audit_metadata: Json
+          confidence_score: number
+          contributing_memory_count: number
+          created_at: string
+          doctrine_description: string
+          doctrine_key: string
+          doctrine_scope: string
+          doctrine_title: string
+          doctrine_type: Database["public"]["Enums"]["doctrine_type"]
+          exceptions_caveats: string | null
+          id: string
+          lifecycle_status: Database["public"]["Enums"]["doctrine_lifecycle"]
+          organization_id: string
+          recommendation_strength: Database["public"]["Enums"]["doctrine_strength"]
+          review_status: string
+          synthesis_metadata: Json
+          target_role: string
+          target_surface: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          applicability_summary?: string
+          audit_metadata?: Json
+          confidence_score?: number
+          contributing_memory_count?: number
+          created_at?: string
+          doctrine_description?: string
+          doctrine_key?: string
+          doctrine_scope?: string
+          doctrine_title?: string
+          doctrine_type?: Database["public"]["Enums"]["doctrine_type"]
+          exceptions_caveats?: string | null
+          id?: string
+          lifecycle_status?: Database["public"]["Enums"]["doctrine_lifecycle"]
+          organization_id: string
+          recommendation_strength?: Database["public"]["Enums"]["doctrine_strength"]
+          review_status?: string
+          synthesis_metadata?: Json
+          target_role?: string
+          target_surface?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          applicability_summary?: string
+          audit_metadata?: Json
+          confidence_score?: number
+          contributing_memory_count?: number
+          created_at?: string
+          doctrine_description?: string
+          doctrine_key?: string
+          doctrine_scope?: string
+          doctrine_title?: string
+          doctrine_type?: Database["public"]["Enums"]["doctrine_type"]
+          exceptions_caveats?: string | null
+          id?: string
+          lifecycle_status?: Database["public"]["Enums"]["doctrine_lifecycle"]
+          organization_id?: string
+          recommendation_strength?: Database["public"]["Enums"]["doctrine_strength"]
+          review_status?: string
+          synthesis_metadata?: Json
+          target_role?: string
+          target_surface?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_doctrines_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_doctrines_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
@@ -25074,6 +25327,26 @@ export type Database = {
         | "fix_agent"
         | "release_agent"
       agent_status: "active" | "inactive"
+      doctrine_lifecycle:
+        | "draft"
+        | "candidate"
+        | "active"
+        | "deprecated"
+        | "archived"
+      doctrine_strength:
+        | "weak_suggestion"
+        | "moderate_recommendation"
+        | "strong_recommendation"
+        | "canonical_doctrine"
+      doctrine_type:
+        | "governance_playbook"
+        | "routing_playbook"
+        | "capability_governance_playbook"
+        | "benchmark_playbook"
+        | "adoption_intervention_playbook"
+        | "post_deploy_response_playbook"
+        | "delivery_quality_playbook"
+        | "mentor_recommendation_playbook"
       initiative_stage_status:
         | "draft"
         | "discovery_ready"
@@ -25333,6 +25606,29 @@ export const Constants = {
         "release_agent",
       ],
       agent_status: ["active", "inactive"],
+      doctrine_lifecycle: [
+        "draft",
+        "candidate",
+        "active",
+        "deprecated",
+        "archived",
+      ],
+      doctrine_strength: [
+        "weak_suggestion",
+        "moderate_recommendation",
+        "strong_recommendation",
+        "canonical_doctrine",
+      ],
+      doctrine_type: [
+        "governance_playbook",
+        "routing_playbook",
+        "capability_governance_playbook",
+        "benchmark_playbook",
+        "adoption_intervention_playbook",
+        "post_deploy_response_playbook",
+        "delivery_quality_playbook",
+        "mentor_recommendation_playbook",
+      ],
       initiative_stage_status: [
         "draft",
         "discovery_ready",
