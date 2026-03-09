@@ -1,12 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { FlaskConical, AlertTriangle, Activity, Shield, Eye, Layers, Radio } from "lucide-react";
+import { FlaskConical, AlertTriangle, Activity, Shield, Eye, Layers, Play, BookOpen } from "lucide-react";
+import { toast } from "sonner";
 
 async function invokeEngine(orgId: string, action: string) {
   const { data: { session } } = await supabase.auth.getSession();
@@ -54,6 +57,17 @@ function FutureStateBadge({ state }: { state: string }) {
   return <Badge className={styles[state] || "bg-muted text-muted-foreground"}>{state.replace(/_/g, " ")}</Badge>;
 }
 
+function PostureBadge({ posture }: { posture: string }) {
+  const styles: Record<string, string> = {
+    resilient: "bg-green-500/20 text-green-400",
+    strained_but_viable: "bg-yellow-500/20 text-yellow-400",
+    degraded: "bg-orange-500/20 text-orange-400",
+    fragile: "bg-destructive/20 text-destructive",
+    critical: "bg-destructive/30 text-destructive",
+  };
+  return <Badge className={styles[posture] || "bg-muted text-muted-foreground"}>{posture.replace(/_/g, " ")}</Badge>;
+}
+
 /* ── Dashboard ── */
 function ContinuityDashboard({ data }: { data: any }) {
   if (!data) return <p className="text-sm text-muted-foreground">Loading overview…</p>;
@@ -92,7 +106,7 @@ function ContinuityDashboard({ data }: { data: any }) {
 /* ── Scenario Explorer ── */
 function ScenarioExplorer({ data }: { data: any }) {
   const runs = data?.runs || [];
-  if (runs.length === 0) return <p className="text-sm text-muted-foreground">No simulation runs yet.</p>;
+  if (runs.length === 0) return <p className="text-sm text-muted-foreground">No simulation runs yet. Click "Run Simulation" to generate results.</p>;
   return (
     <div className="space-y-3">
       {runs.map((r: any) => (
@@ -185,37 +199,96 @@ function RecommendationsPanel({ data }: { data: any }) {
   );
 }
 
+/* ── Explain Panel ── */
+function ExplainPanel({ data }: { data: any }) {
+  const explanations = data?.explanations || [];
+  if (explanations.length === 0) return <p className="text-sm text-muted-foreground">Run a simulation to generate explanations.</p>;
+  return (
+    <div className="space-y-3">
+      {explanations.map((e: any, i: number) => (
+        <Card key={i}>
+          <CardContent className="pt-4 space-y-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm font-medium">{e.subject}</div>
+                <div className="text-xs text-muted-foreground">Scenario: {e.scenario}</div>
+              </div>
+              <PostureBadge posture={e.posture} />
+            </div>
+            <p className="text-sm">{e.explanation}</p>
+            {e.key_observations?.length > 0 && (
+              <ul className="list-disc list-inside text-xs text-muted-foreground space-y-1">
+                {e.key_observations.map((obs: string, j: number) => (
+                  <li key={j}>{obs}</li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
 /* ── Main Page ── */
 export default function ContinuitySimulation() {
   const { currentOrg } = useOrg();
   const orgId = currentOrg?.id || "";
+  const qc = useQueryClient();
+  const [running, setRunning] = useState(false);
 
   const overview = useQuery({ queryKey: ["continuity-sim-overview", orgId], queryFn: () => invokeEngine(orgId, "overview"), enabled: !!orgId });
   const simulate = useQuery({ queryKey: ["continuity-sim-runs", orgId], queryFn: () => invokeEngine(orgId, "simulate"), enabled: !!orgId });
   const stress = useQuery({ queryKey: ["continuity-sim-stress", orgId], queryFn: () => invokeEngine(orgId, "stress_points"), enabled: !!orgId });
   const snapshots = useQuery({ queryKey: ["continuity-sim-snapshots", orgId], queryFn: () => invokeEngine(orgId, "snapshots"), enabled: !!orgId });
   const recommendations = useQuery({ queryKey: ["continuity-sim-recs", orgId], queryFn: () => invokeEngine(orgId, "recommendations"), enabled: !!orgId });
+  const explain = useQuery({ queryKey: ["continuity-sim-explain", orgId], queryFn: () => invokeEngine(orgId, "explain"), enabled: !!orgId });
+
+  async function runSimulation() {
+    setRunning(true);
+    try {
+      await invokeEngine(orgId, "run_simulation");
+      toast.success("Simulation completed");
+      qc.invalidateQueries({ queryKey: ["continuity-sim-overview"] });
+      qc.invalidateQueries({ queryKey: ["continuity-sim-runs"] });
+      qc.invalidateQueries({ queryKey: ["continuity-sim-stress"] });
+      qc.invalidateQueries({ queryKey: ["continuity-sim-snapshots"] });
+      qc.invalidateQueries({ queryKey: ["continuity-sim-recs"] });
+      qc.invalidateQueries({ queryKey: ["continuity-sim-explain"] });
+    } catch (e: any) {
+      toast.error(e.message || "Simulation failed");
+    } finally {
+      setRunning(false);
+    }
+  }
 
   return (
     <AppLayout>
       <div className="space-y-6 max-w-6xl mx-auto">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <FlaskConical className="h-6 w-6 text-primary" />
-            Continuity Simulation
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Long-horizon institutional continuity simulation — model disruption, stress, and survivability
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+              <FlaskConical className="h-6 w-6 text-primary" />
+              Continuity Simulation
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Long-horizon institutional continuity simulation — model disruption, stress, and survivability
+            </p>
+          </div>
+          <Button onClick={runSimulation} disabled={running || !orgId} className="gap-2">
+            <Play className="h-4 w-4" />
+            {running ? "Running…" : "Run Simulation"}
+          </Button>
         </div>
 
         <Tabs defaultValue="dashboard" className="space-y-4">
-          <TabsList className="grid grid-cols-5 w-full max-w-2xl">
+          <TabsList className="grid grid-cols-6 w-full max-w-3xl">
             <TabsTrigger value="dashboard" className="gap-1 text-xs"><Activity className="h-3 w-3" />Dashboard</TabsTrigger>
             <TabsTrigger value="scenarios" className="gap-1 text-xs"><Layers className="h-3 w-3" />Scenarios</TabsTrigger>
             <TabsTrigger value="stress" className="gap-1 text-xs"><AlertTriangle className="h-3 w-3" />Stress</TabsTrigger>
             <TabsTrigger value="futures" className="gap-1 text-xs"><Eye className="h-3 w-3" />Futures</TabsTrigger>
             <TabsTrigger value="recs" className="gap-1 text-xs"><Shield className="h-3 w-3" />Recs</TabsTrigger>
+            <TabsTrigger value="explain" className="gap-1 text-xs"><BookOpen className="h-3 w-3" />Explain</TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard"><ContinuityDashboard data={overview.data} /></TabsContent>
@@ -223,6 +296,7 @@ export default function ContinuitySimulation() {
           <TabsContent value="stress"><StressPathwayPanel data={stress.data} /></TabsContent>
           <TabsContent value="futures"><FutureStatePanel data={snapshots.data} /></TabsContent>
           <TabsContent value="recs"><RecommendationsPanel data={recommendations.data} /></TabsContent>
+          <TabsContent value="explain"><ExplainPanel data={explain.data} /></TabsContent>
         </Tabs>
       </div>
     </AppLayout>

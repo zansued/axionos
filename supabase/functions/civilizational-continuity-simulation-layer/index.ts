@@ -1,4 +1,11 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { resolveActiveConstitution, extractHorizonSettings } from "../_shared/continuity-simulation/simulation-constitution-resolver.ts";
+import { computeScenarioSeverity, modelDisruptionPathway } from "../_shared/continuity-simulation/scenario-modeler.ts";
+import { simulateFutureState } from "../_shared/continuity-simulation/future-state-simulator.ts";
+import { assessIdentityPreservation } from "../_shared/continuity-simulation/identity-preservation-assessor.ts";
+import { detectStressPoints } from "../_shared/continuity-simulation/stress-pathway-detector.ts";
+import { generateRecommendations } from "../_shared/continuity-simulation/simulation-recommendation-engine.ts";
+import { explainSimulation } from "../_shared/continuity-simulation/simulation-explainer.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -90,6 +97,166 @@ Deno.serve(async (req) => {
         break;
       }
 
+      /* ── run_simulation: wire all shared modules ── */
+      case "run_simulation": {
+        // 1. Fetch constitutions, scenarios, subjects
+        const [{ data: constitutions }, { data: scenarios }, { data: subjects }] = await Promise.all([
+          supabase.from("continuity_simulation_constitutions").select("*").eq("organization_id", organization_id),
+          supabase.from("simulation_scenarios").select("*").eq("organization_id", organization_id).eq("active", true),
+          supabase.from("simulation_subjects").select("*").eq("organization_id", organization_id).eq("active", true),
+        ]);
+
+        const activeConstitution = resolveActiveConstitution(constitutions || []);
+        const horizonSettings = activeConstitution ? extractHorizonSettings(activeConstitution) : {};
+        const activeScenarios = scenarios || [];
+        const activeSubjects = subjects || [];
+
+        if (activeScenarios.length === 0 || activeSubjects.length === 0) {
+          result = { runs: [], stress_points: [], recommendations: [], snapshots: [], explanation: "No active scenarios or subjects to simulate." };
+          break;
+        }
+
+        // 2. Cleanup stale data
+        await Promise.all([
+          supabase.from("scenario_simulation_runs").delete().eq("organization_id", organization_id),
+          supabase.from("simulation_stress_points").delete().eq("organization_id", organization_id),
+          supabase.from("simulation_recommendations").delete().eq("organization_id", organization_id),
+          supabase.from("future_continuity_snapshots").delete().eq("organization_id", organization_id),
+        ]);
+
+        const allRuns: any[] = [];
+        const allStress: any[] = [];
+        const allRecs: any[] = [];
+        const allSnapshots: any[] = [];
+        const allExplanations: any[] = [];
+
+        // 3. For each scenario × subject pair, run full simulation
+        for (const scenario of activeScenarios) {
+          const severity = computeScenarioSeverity(scenario as any);
+          const pathway = modelDisruptionPathway(scenario as any);
+
+          for (const subject of activeSubjects) {
+            // Heuristic: derive resilience/identity from subject type
+            const subjectResilience = subject.subject_type === "institution" ? 0.7
+              : subject.subject_type === "service" ? 0.5
+              : subject.subject_type === "portfolio" ? 0.6
+              : 0.55;
+            const missionAlignment = subject.summary?.length > 50 ? 0.7 : 0.5;
+
+            // a) Future state simulation
+            const simResult = simulateFutureState({
+              scenario_severity: severity,
+              subject_resilience: subjectResilience,
+              identity_strength: missionAlignment,
+            });
+
+            // b) Identity preservation
+            const identityAssessment = assessIdentityPreservation(severity, subject.subject_type, missionAlignment);
+
+            // c) Stress pathway detection
+            const stressPoints = detectStressPoints(scenario.scenario_type, severity, subject.subject_type);
+
+            // d) Recommendations
+            const recs = generateRecommendations(
+              simResult.survivability_score,
+              simResult.identity_preservation_score,
+              simResult.continuity_stress_score,
+              scenario.scenario_type,
+            );
+
+            // e) Explanation
+            const explanation = explainSimulation(
+              simResult.survivability_score,
+              simResult.identity_preservation_score,
+              simResult.continuity_stress_score,
+              simResult.viability_score,
+              scenario.scenario_type,
+              subject.title,
+            );
+
+            // Insert run
+            const { data: runData } = await supabase.from("scenario_simulation_runs").insert({
+              organization_id,
+              scenario_id: scenario.id,
+              subject_id: subject.id,
+              constitution_id: activeConstitution?.id || null,
+              viability_score: simResult.viability_score,
+              continuity_stress_score: simResult.continuity_stress_score,
+              identity_preservation_score: simResult.identity_preservation_score,
+              survivability_score: simResult.survivability_score,
+              simulation_summary: simResult.simulation_summary,
+            }).select().single();
+
+            const runId = runData?.id;
+
+            // Insert stress points
+            for (const sp of stressPoints) {
+              const { data: spData } = await supabase.from("simulation_stress_points").insert({
+                organization_id,
+                simulation_run_id: runId,
+                stress_type: sp.stress_type,
+                severity: sp.severity,
+                stress_summary: sp.stress_summary,
+                payload: sp.payload,
+              }).select().single();
+              if (spData) allStress.push(spData);
+            }
+
+            // Insert recommendations
+            for (const rec of recs) {
+              const { data: recData } = await supabase.from("simulation_recommendations").insert({
+                organization_id,
+                simulation_run_id: runId,
+                recommendation_type: rec.recommendation_type,
+                recommendation_summary: rec.recommendation_summary,
+                mitigation_priority: rec.mitigation_priority,
+                rationale: rec.rationale,
+              }).select().single();
+              if (recData) allRecs.push(recData);
+            }
+
+            // Insert future snapshot
+            const { data: snapData } = await supabase.from("future_continuity_snapshots").insert({
+              organization_id,
+              scenario_id: scenario.id,
+              subject_id: subject.id,
+              future_state_type: simResult.future_state_type,
+              continuity_score: simResult.survivability_score,
+              snapshot_summary: simResult.simulation_summary,
+            }).select().single();
+            if (snapData) allSnapshots.push(snapData);
+
+            allRuns.push({
+              ...(runData || {}),
+              scenario_name: scenario.scenario_name,
+              scenario_type: scenario.scenario_type,
+              subject_title: subject.title,
+              subject_type: subject.subject_type,
+              identity_assessment: identityAssessment,
+              disruption_pathway: pathway,
+              explanation,
+            });
+
+            allExplanations.push({
+              scenario: scenario.scenario_name,
+              subject: subject.title,
+              ...explanation,
+            });
+          }
+        }
+
+        result = {
+          runs: allRuns,
+          stress_points: allStress,
+          recommendations: allRecs,
+          snapshots: allSnapshots,
+          explanations: allExplanations,
+          constitution: activeConstitution ? { id: activeConstitution.id, name: activeConstitution.constitution_name } : null,
+          horizon_settings: horizonSettings,
+        };
+        break;
+      }
+
       case "stress_points": {
         const { data } = await supabase.from("simulation_stress_points")
           .select("*, scenario_simulation_runs(simulation_summary)")
@@ -118,11 +285,34 @@ Deno.serve(async (req) => {
       }
 
       case "explain": {
+        // Reconstruct explanations from persisted runs
+        const { data: runs } = await supabase.from("scenario_simulation_runs")
+          .select("*, simulation_scenarios(scenario_name, scenario_type), simulation_subjects(title, subject_type)")
+          .eq("organization_id", organization_id)
+          .order("created_at", { ascending: false }).limit(50);
+
+        const explanations = (runs || []).map((r: any) => {
+          const exp = explainSimulation(
+            Number(r.survivability_score),
+            Number(r.identity_preservation_score),
+            Number(r.continuity_stress_score),
+            Number(r.viability_score),
+            r.simulation_scenarios?.scenario_type || "unknown",
+            r.simulation_subjects?.title || "Unknown",
+          );
+          return {
+            run_id: r.id,
+            scenario: r.simulation_scenarios?.scenario_name,
+            subject: r.simulation_subjects?.title,
+            ...exp,
+          };
+        });
+
         result = {
-          explanation: "Civilizational Continuity Simulation models long-horizon disruption scenarios to evaluate institutional survivability, identity preservation, and future-state resilience.",
+          explanations,
+          governance_principles: ["Advisory-first", "Inspectable scenarios", "Multiple futures modeled", "Identity preservation distinct from survival", "Tenant isolation via RLS"],
           scenario_types: ["regulatory_shift", "political_shift", "technological_disruption", "budget_collapse", "talent_loss", "trust_erosion", "dependency_failure", "mission_drift_compound"],
           future_states: ["stable", "strained", "degraded", "fragmented", "collapsed", "adaptive_recovery"],
-          governance_principles: ["Advisory-first", "Inspectable scenarios", "Multiple futures modeled", "Identity preservation distinct from survival", "Tenant isolation via RLS"],
         };
         break;
       }
