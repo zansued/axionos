@@ -349,19 +349,18 @@ flowchart TB
 
 ---
 
-## 5. Architectural Direction: Governed Intelligence & Decision Maturity
+## 5. Architectural Direction: Sovereign Institutional Intelligence — ✅ Implemented
 
-### AxionOS Next Level Thesis — ✅ Implemented
+With all 106 sprints complete, 85+ architectural layers active, and the full stack from execution kernel through sovereign institutional intelligence operational, AxionOS has achieved its **Sovereign Institutional Intelligence** thesis.
 
-With all 94 sprints complete, 77+ architectural layers active, and the Contextual Guidance & Copilot system operational, AxionOS has achieved its **Governed Intelligence & Decision Maturity** thesis.
-
-The four pillars are implemented:
-- **Explain better** — ✅ PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, CopilotTrigger, 4 copilot submodes (product, workspace, governance_mentor, architecture_mentor), centralized content registries
-- **Decide better** — ✅ Role-aware experience (useRoleBasedExperience), approval posture hints, next-best-action recommendations
-- **Learn better** — ✅ Evidence-governed improvement loops (Block N), cross-stage learning, predictive detection, calibration
-- **Coordinate better** — ✅ Multi-agent coordination (debate, working memory, bounded swarm — Block O)
-
-The current architectural focus is on deepening intelligence quality: refining copilot recommendations, improving cross-layer advisory legibility, and strengthening the guidance-to-adoption feedback loop.
+The seven pillars are implemented:
+- **Explain better** — ✅ PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, CopilotTrigger, 4 copilot submodes, centralized content registries
+- **Decide better** — ✅ Institutional Decision Engine, sovereign decision rights, role-aware experience, approval posture hints
+- **Learn better** — ✅ Evidence-governed improvement loops, cross-stage learning, predictive detection, calibration
+- **Coordinate better** — ✅ Multi-agent coordination (debate, working memory, bounded swarm)
+- **Operate autonomously (bounded)** — ✅ Bounded autonomous operations, autonomy ladder, rollback posture
+- **Adapt institutionally** — ✅ Cross-context doctrine adaptation, institutional conflict resolution, federated intelligence, resilience governance
+- **Govern sovereignty** — ✅ Memory constitution, sovereign decision rights, dependency sovereignty, strategic succession
 
 ---
 
