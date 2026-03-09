@@ -94,9 +94,9 @@ export default function Dashboard() {
           </motion.div>
 
           {/* Contextual Guidance */}
-          {getGuidanceForPage("dashboard") && (
+          {dashboardGuidance && (
             <motion.div variants={item}>
-              <PageIntroCard guidance={getGuidanceForPage("dashboard")!} compact />
+              <PageIntroCard guidance={dashboardGuidance} whyNow={whyNowText} compact />
             </motion.div>
           )}
 
