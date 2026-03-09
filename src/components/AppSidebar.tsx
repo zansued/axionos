@@ -1,17 +1,20 @@
-import {
-  Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Map,
-  Hammer, Package, GitBranch, Rocket, CreditCard, ClipboardCheck, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
-  Plug, FileSearch, Sparkles, Scale, BrainCircuit, Zap, PackageCheck, ShieldCheck, Store, TrendingUp, GitPullRequestArrow, Rss, Sliders, Server, Globe, Beaker, Network,
-} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { LogOut, Search, Rocket, Zap } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
-import { useRoleBasedExperience, RoleSurface } from "@/hooks/useRoleBasedExperience";
+import { useRoleBasedExperience } from "@/hooks/useRoleBasedExperience";
+import {
+  CANONICAL_ROLE_LABELS,
+  CANONICAL_ROLE_BADGE_STYLES,
+  NavItem,
+} from "@/lib/permissions";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -21,80 +24,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-const mainItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Journey", url: "/journey", icon: Map },
-  { title: "Onboarding", url: "/onboarding", icon: Rocket },
-  { title: "Initiatives", url: "/initiatives", icon: Lightbulb },
-  { title: "Agents", url: "/agents", icon: Users },
-  { title: "Stories", url: "/stories", icon: Hammer },
-  { title: "Code", url: "/code", icon: Code2 },
-  { title: "Workspace", url: "/workspace", icon: GitBranch },
-  { title: "Kanban", url: "/kanban", icon: Columns3 },
-  { title: "Deployments", url: "/artifacts", icon: Rocket },
-];
+// ─── Single nav row ──────────────────────────────────────────────────────────
 
-const bottomItems = [
-  { title: "Adoption", url: "/adoption", icon: Search },
-  { title: "Evidence", url: "/improvement-ledger", icon: FileSearch },
-  { title: "Candidates", url: "/improvement-candidates", icon: Sparkles },
-  { title: "Benchmarks", url: "/improvement-benchmarks", icon: FlaskConical },
-  { title: "Routing", url: "/agent-routing", icon: Plug },
-  { title: "Debates", url: "/agent-debates", icon: Scale },
-  { title: "Working Mem.", url: "/working-memory", icon: BrainCircuit },
-  { title: "Swarm", url: "/swarm-execution", icon: Zap },
-  { title: "Capabilities", url: "/capability-registry", icon: PackageCheck },
-  { title: "Cap. Gov.", url: "/capability-governance", icon: ShieldCheck },
-  { title: "Pilot Mkt.", url: "/pilot-marketplace", icon: Store },
-  { title: "Mkt. Outcomes", url: "/marketplace-outcomes", icon: TrendingUp },
-  { title: "Delivery Out.", url: "/delivery-outcomes", icon: GitPullRequestArrow },
-  { title: "Post-Deploy", url: "/post-deploy-feedback", icon: Rss },
-  { title: "Rel. Tuning", url: "/delivery-tuning", icon: Sliders },
-  { title: "Assurance 2.0", url: "/outcome-assurance", icon: ShieldCheck },
-  { title: "Dist. Jobs", url: "/distributed-jobs", icon: Server },
-  { title: "Regions", url: "/cross-region-recovery", icon: Globe },
-  { title: "Tenant Runtime", url: "/tenant-runtime", icon: Server },
-  { title: "Orchestration", url: "/large-scale-orchestration", icon: Globe },
-  { title: "Hypotheses", url: "/architecture-hypotheses", icon: FlaskConical },
-  { title: "Promotion", url: "/architecture-promotion", icon: ClipboardCheck },
-  { title: "Sim. Sandbox", url: "/research-sandbox", icon: Beaker },
-  { title: "Res. Patterns", url: "/research-patterns", icon: Network },
-  { title: "Extensions", url: "/extensions", icon: Package },
-  { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
-  { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
-  { title: "Calibration", url: "/calibration", icon: Gauge },
-  { title: "Prompt Opt.", url: "/prompt-optimization", icon: FlaskConical },
-  { title: "Audit", url: "/audit", icon: Shield },
-  { title: "Observability", url: "/observability", icon: Radio },
-  { title: "Connections", url: "/connections", icon: Plug },
-  { title: "Billing", url: "/billing", icon: CreditCard },
-  { title: "Settings", url: "/org", icon: Settings },
-];
-
-const ROLE_BADGE: Record<RoleSurface, { label: string; className: string }> = {
-  default_user: { label: "User", className: "bg-primary/20 text-primary border-primary/30" },
-  operator: { label: "Operator", className: "bg-accent/20 text-accent-foreground border-accent/30" },
-  admin: { label: "Admin", className: "bg-destructive/20 text-destructive border-destructive/30" },
-};
-
-export function AppSidebar() {
-  const { state } = useSidebar();
-  const collapsed = state === "collapsed";
-  const { signOut, user } = useAuth();
-  const { setCommandOpen } = useWorkspace();
-  const { roleSurface, isSidebarItemVisible } = useRoleBasedExperience();
-
-  const visibleMainItems = mainItems.filter(item => isSidebarItemVisible(item.title));
-  const visibleBottomItems = bottomItems.filter(item => isSidebarItemVisible(item.title));
-
-  const renderItem = (item: typeof mainItems[0]) => (
-    <SidebarMenuItem key={item.title}>
+function NavItemRow({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
+  return (
+    <SidebarMenuItem>
       <Tooltip>
         <TooltipTrigger asChild>
           <SidebarMenuButton asChild>
@@ -117,13 +53,37 @@ export function AppSidebar() {
       </Tooltip>
     </SidebarMenuItem>
   );
+}
 
-  const roleBadge = ROLE_BADGE[roleSurface];
+// ─── Section group label ─────────────────────────────────────────────────────
+
+function SectionLabel({ label, collapsed }: { label: string; collapsed: boolean }) {
+  if (collapsed) return null;
+  return (
+    <SidebarGroupLabel className="text-[10px] font-semibold tracking-widest text-muted-foreground/50 uppercase px-3 pb-1 pt-0">
+      {label}
+    </SidebarGroupLabel>
+  );
+}
+
+// ─── AppSidebar ──────────────────────────────────────────────────────────────
+
+export function AppSidebar() {
+  const { state }          = useSidebar();
+  const collapsed          = state === "collapsed";
+  const { signOut, user }  = useAuth();
+  const { setCommandOpen } = useWorkspace();
+  const navigate           = useNavigate();
+  const { canonicalRole, navGroups } = useRoleBasedExperience();
+
+  const roleBadgeLabel = CANONICAL_ROLE_LABELS[canonicalRole];
+  const roleBadgeClass = CANONICAL_ROLE_BADGE_STYLES[canonicalRole];
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarContent>
-        {/* Brand */}
+
+        {/* ── Brand ── */}
         <SidebarGroup>
           <SidebarGroupContent>
             <div className="flex items-center gap-2 px-3 py-3">
@@ -139,8 +99,8 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Search trigger */}
-        {!collapsed && (
+        {/* ── Search trigger ── */}
+        {!collapsed ? (
           <SidebarGroup>
             <SidebarGroupContent>
               <button
@@ -153,9 +113,7 @@ export function AppSidebar() {
               </button>
             </SidebarGroupContent>
           </SidebarGroup>
-        )}
-
-        {collapsed && (
+        ) : (
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu>
@@ -176,29 +134,72 @@ export function AppSidebar() {
 
         <Separator className="mx-3 w-auto" />
 
-        {/* Main nav */}
+        {/* ── PRODUCT ── */}
         <SidebarGroup>
+          <SectionLabel label="Product" collapsed={collapsed} />
           <SidebarGroupContent>
             <SidebarMenu>
-              {visibleMainItems.map(renderItem)}
+              {navGroups.product.map((item) => (
+                <NavItemRow key={item.url} item={item} collapsed={collapsed} />
+              ))}
+
+              {/* AutoPilot CTA */}
+              <SidebarMenuItem>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SidebarMenuButton asChild>
+                      <button
+                        onClick={() => navigate("/journey")}
+                        className="flex items-center gap-3 px-3 py-2 w-full rounded-md bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 transition-colors mt-1"
+                      >
+                        <Zap className="h-4 w-4 shrink-0" />
+                        {!collapsed && <span className="text-sm font-medium">AutoPilot</span>}
+                      </button>
+                    </SidebarMenuButton>
+                  </TooltipTrigger>
+                  {collapsed && (
+                    <TooltipContent side="right" className="text-xs">AutoPilot</TooltipContent>
+                  )}
+                </Tooltip>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {visibleBottomItems.length > 0 && (
+        {/* ── WORKSPACE ── */}
+        {navGroups.workspace.length > 0 && (
           <>
             <Separator className="mx-3 w-auto" />
-
-            {/* Bottom nav */}
             <SidebarGroup>
+              <SectionLabel label="Workspace" collapsed={collapsed} />
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {visibleBottomItems.map(renderItem)}
+                  {navGroups.workspace.map((item) => (
+                    <NavItemRow key={item.url} item={item} collapsed={collapsed} />
+                  ))}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
           </>
         )}
+
+        {/* ── PLATFORM ── */}
+        {navGroups.platform.length > 0 && (
+          <>
+            <Separator className="mx-3 w-auto" />
+            <SidebarGroup>
+              <SectionLabel label="Platform" collapsed={collapsed} />
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {navGroups.platform.map((item) => (
+                    <NavItemRow key={item.url} item={item} collapsed={collapsed} />
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        )}
+
       </SidebarContent>
 
       <SidebarFooter className="p-2">
@@ -206,8 +207,8 @@ export function AppSidebar() {
           <div className="px-3 py-1 space-y-1">
             <div className="flex items-center gap-2">
               <p className="text-[11px] text-muted-foreground truncate flex-1">{user.email}</p>
-              <Badge variant="outline" className={`text-[9px] px-1.5 py-0 ${roleBadge.className}`}>
-                {roleBadge.label}
+              <Badge variant="outline" className={`text-[9px] px-1.5 py-0 ${roleBadgeClass}`}>
+                {roleBadgeLabel}
               </Badge>
             </div>
           </div>

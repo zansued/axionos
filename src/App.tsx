@@ -12,6 +12,7 @@ import { I18nProvider } from "@/contexts/I18nContext";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import { CommandPalette } from "@/components/CommandPalette";
 import { KeyboardShortcutsManager } from "@/components/KeyboardShortcutsManager";
+import { SurfaceGuard } from "@/components/SurfaceGuard";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Initiatives from "./pages/Initiatives";
@@ -78,6 +79,14 @@ function AuthRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+// Convenience wrappers
+const W = ({ children }: { children: React.ReactNode }) => (
+  <ProtectedRoute><SurfaceGuard surface="workspace">{children}</SurfaceGuard></ProtectedRoute>
+);
+const P = ({ children }: { children: React.ReactNode }) => (
+  <ProtectedRoute><SurfaceGuard surface="platform">{children}</SurfaceGuard></ProtectedRoute>
+);
+
 const App = () => (
   <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
     <I18nProvider>
@@ -94,55 +103,63 @@ const App = () => (
                       <CommandPalette />
                       <KeyboardShortcutsManager />
                       <Routes>
-                      <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-                      <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                      <Route path="/journey" element={<ProtectedRoute><Journey /></ProtectedRoute>} />
-                      <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-                      <Route path="/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
-                      <Route path="/code" element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
-                      <Route path="/squads" element={<ProtectedRoute><Squads /></ProtectedRoute>} />
-                      <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
-                      <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
-                      <Route path="/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
-                      <Route path="/audit" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
-                      <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
-                      <Route path="/planning" element={<Navigate to="/initiatives" replace />} />
-                      <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
-                      <Route path="/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
-                      <Route path="/delivery" element={<ProtectedRoute><Delivery /></ProtectedRoute>} />
-                      <Route path="/org" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
-                      <Route path="/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
-                      <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
-                      <Route path="/meta-agents" element={<ProtectedRoute><MetaAgents /></ProtectedRoute>} />
-                      <Route path="/meta-artifacts" element={<ProtectedRoute><MetaArtifacts /></ProtectedRoute>} />
-                      <Route path="/calibration" element={<ProtectedRoute><Calibration /></ProtectedRoute>} />
-                      <Route path="/prompt-optimization" element={<ProtectedRoute><PromptOptimization /></ProtectedRoute>} />
-                      <Route path="/adoption" element={<ProtectedRoute><AdoptionIntelligence /></ProtectedRoute>} />
-                      <Route path="/extensions" element={<ProtectedRoute><Extensions /></ProtectedRoute>} />
-                      <Route path="/improvement-ledger" element={<ProtectedRoute><ImprovementLedger /></ProtectedRoute>} />
-                      <Route path="/improvement-candidates" element={<ProtectedRoute><ImprovementCandidates /></ProtectedRoute>} />
-                      <Route path="/improvement-benchmarks" element={<ProtectedRoute><ImprovementBenchmarks /></ProtectedRoute>} />
-                      <Route path="/agent-routing" element={<ProtectedRoute><AgentRouting /></ProtectedRoute>} />
-                      <Route path="/agent-debates" element={<ProtectedRoute><AgentDebates /></ProtectedRoute>} />
-                      <Route path="/working-memory" element={<ProtectedRoute><WorkingMemory /></ProtectedRoute>} />
-                      <Route path="/swarm-execution" element={<ProtectedRoute><SwarmExecution /></ProtectedRoute>} />
-                      <Route path="/capability-registry" element={<ProtectedRoute><CapabilityRegistry /></ProtectedRoute>} />
-                      <Route path="/capability-governance" element={<ProtectedRoute><CapabilityGovernance /></ProtectedRoute>} />
-                      <Route path="/pilot-marketplace" element={<ProtectedRoute><PilotMarketplace /></ProtectedRoute>} />
-                      <Route path="/marketplace-outcomes" element={<ProtectedRoute><MarketplaceOutcomes /></ProtectedRoute>} />
-                      <Route path="/delivery-outcomes" element={<ProtectedRoute><DeliveryOutcomes /></ProtectedRoute>} />
-                      <Route path="/post-deploy-feedback" element={<ProtectedRoute><PostDeployFeedback /></ProtectedRoute>} />
-                      <Route path="/delivery-tuning" element={<ProtectedRoute><DeliveryTuning /></ProtectedRoute>} />
-                      <Route path="/outcome-assurance" element={<ProtectedRoute><OutcomeAssurance /></ProtectedRoute>} />
-                      <Route path="/distributed-jobs" element={<ProtectedRoute><DistributedJobs /></ProtectedRoute>} />
-                      <Route path="/cross-region-recovery" element={<ProtectedRoute><CrossRegionRecovery /></ProtectedRoute>} />
-                      <Route path="/tenant-runtime" element={<ProtectedRoute><TenantRuntime /></ProtectedRoute>} />
-                      <Route path="/large-scale-orchestration" element={<ProtectedRoute><LargeScaleOrchestration /></ProtectedRoute>} />
-                      <Route path="/architecture-hypotheses" element={<ProtectedRoute><ArchitectureHypotheses /></ProtectedRoute>} />
-                      <Route path="/research-sandbox" element={<ProtectedRoute><ResearchSandbox /></ProtectedRoute>} />
-                      <Route path="/research-patterns" element={<ProtectedRoute><ResearchPatterns /></ProtectedRoute>} />
-                      <Route path="/architecture-promotion" element={<ProtectedRoute><ArchitecturePromotion /></ProtectedRoute>} />
-                      <Route path="*" element={<NotFound />} />
+                        {/* ── Auth ── */}
+                        <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+
+                        {/* ── Product surface (all roles) ── */}
+                        <Route path="/"           element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                        <Route path="/journey"    element={<ProtectedRoute><Journey /></ProtectedRoute>} />
+                        <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+                        <Route path="/initiatives"element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
+                        <Route path="/code"       element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
+                        <Route path="/squads"     element={<ProtectedRoute><Squads /></ProtectedRoute>} />
+                        <Route path="/stories"    element={<ProtectedRoute><Stories /></ProtectedRoute>} />
+                        <Route path="/kanban"     element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
+                        <Route path="/workspace"  element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
+                        <Route path="/artifacts"  element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
+                        <Route path="/delivery"   element={<ProtectedRoute><Delivery /></ProtectedRoute>} />
+                        <Route path="/planning"   element={<Navigate to="/initiatives" replace />} />
+
+                        {/* ── Workspace surface ── */}
+                        <Route path="/adoption"                element={<W><AdoptionIntelligence /></W>} />
+                        <Route path="/improvement-ledger"      element={<W><ImprovementLedger /></W>} />
+                        <Route path="/improvement-candidates"  element={<W><ImprovementCandidates /></W>} />
+                        <Route path="/improvement-benchmarks"  element={<W><ImprovementBenchmarks /></W>} />
+                        <Route path="/capability-registry"     element={<W><CapabilityRegistry /></W>} />
+                        <Route path="/capability-governance"   element={<W><CapabilityGovernance /></W>} />
+                        <Route path="/delivery-outcomes"       element={<W><DeliveryOutcomes /></W>} />
+                        <Route path="/post-deploy-feedback"    element={<W><PostDeployFeedback /></W>} />
+                        <Route path="/extensions"              element={<W><Extensions /></W>} />
+                        <Route path="/audit"                   element={<W><AuditLogs /></W>} />
+                        <Route path="/connections"             element={<W><Connections /></W>} />
+                        <Route path="/billing"                 element={<W><Billing /></W>} />
+                        <Route path="/org"                     element={<W><OrgSettings /></W>} />
+
+                        {/* ── Platform surface ── */}
+                        <Route path="/agents"                    element={<P><Agents /></P>} />
+                        <Route path="/agent-routing"             element={<P><AgentRouting /></P>} />
+                        <Route path="/agent-debates"             element={<P><AgentDebates /></P>} />
+                        <Route path="/working-memory"            element={<P><WorkingMemory /></P>} />
+                        <Route path="/swarm-execution"           element={<P><SwarmExecution /></P>} />
+                        <Route path="/pilot-marketplace"         element={<P><PilotMarketplace /></P>} />
+                        <Route path="/marketplace-outcomes"      element={<P><MarketplaceOutcomes /></P>} />
+                        <Route path="/meta-agents"               element={<P><MetaAgents /></P>} />
+                        <Route path="/meta-artifacts"            element={<P><MetaArtifacts /></P>} />
+                        <Route path="/calibration"               element={<P><Calibration /></P>} />
+                        <Route path="/prompt-optimization"       element={<P><PromptOptimization /></P>} />
+                        <Route path="/observability"             element={<P><Observability /></P>} />
+                        <Route path="/distributed-jobs"          element={<P><DistributedJobs /></P>} />
+                        <Route path="/cross-region-recovery"     element={<P><CrossRegionRecovery /></P>} />
+                        <Route path="/tenant-runtime"            element={<P><TenantRuntime /></P>} />
+                        <Route path="/large-scale-orchestration" element={<P><LargeScaleOrchestration /></P>} />
+                        <Route path="/delivery-tuning"           element={<P><DeliveryTuning /></P>} />
+                        <Route path="/outcome-assurance"         element={<P><OutcomeAssurance /></P>} />
+                        <Route path="/architecture-hypotheses"   element={<P><ArchitectureHypotheses /></P>} />
+                        <Route path="/research-sandbox"          element={<P><ResearchSandbox /></P>} />
+                        <Route path="/research-patterns"         element={<P><ResearchPatterns /></P>} />
+                        <Route path="/architecture-promotion"    element={<P><ArchitecturePromotion /></P>} />
+
+                        <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
                   </WorkspaceProvider>
