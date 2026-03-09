@@ -168,12 +168,17 @@ export function InitiativeObservabilityCard({ initiativeId }: { initiativeId: st
   );
 }
 
-function MetricTile({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
-  return (
-    <div className="rounded-lg bg-muted/30 p-2 text-center">
-      <Icon className="h-3.5 w-3.5 mx-auto mb-0.5 text-muted-foreground" />
-      <p className="text-xs font-bold">{value}</p>
-      <p className="text-[9px] text-muted-foreground">{label}</p>
-    </div>
-  );
-}
+import React from "react";
+
+const MetricTile = React.forwardRef<HTMLDivElement, { icon: any; label: string; value: string }>(
+  ({ icon: Icon, label, value }, ref) => {
+    return (
+      <div ref={ref} className="rounded-lg bg-muted/30 p-2 text-center">
+        <Icon className="h-3.5 w-3.5 mx-auto mb-0.5 text-muted-foreground" />
+        <p className="text-xs font-bold">{value}</p>
+        <p className="text-[9px] text-muted-foreground">{label}</p>
+      </div>
+    );
+  }
+);
+MetricTile.displayName = "MetricTile";
