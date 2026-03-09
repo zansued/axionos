@@ -20,7 +20,8 @@ import {
 } from "../_shared/architecture-subjob/prompts.ts";
 import {
   createAttemptDiagnostic, appendDiagnostic, classifyFailure,
-  compactSystemArchSummary, analyzeBottlenecks, estimateTokens,
+  compactSystemArchSummary, compactDataArchSummary, compactApiArchSummary,
+  analyzeBottlenecks, estimateTokens,
 } from "../_shared/architecture-subjob/diagnostics.ts";
 
 interface AgentOutput {
