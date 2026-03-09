@@ -158,3 +158,6 @@ verify_jwt = false
 
 [functions.adoption-intelligence-customer-success-engine]
 verify_jwt = false
+
+[functions.institutional-memory]
+verify_jwt = false
