@@ -75,6 +75,7 @@ import SovereignDecisionRights from "./pages/SovereignDecisionRights";
 import DependencySovereignty from "./pages/DependencySovereignty";
 import StrategicSuccession from "./pages/StrategicSuccession";
 import MultiHorizonAlignment from "./pages/MultiHorizonAlignment";
+import TradeoffArbitration from "./pages/TradeoffArbitration";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
