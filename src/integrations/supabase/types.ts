@@ -27932,6 +27932,325 @@ export type Database = {
           },
         ]
       }
+      tradeoff_arbitration_events: {
+        Row: {
+          affected_dimensions: Json
+          arbitration_type: string
+          created_at: string
+          event_summary: string
+          id: string
+          organization_id: string
+          payload: Json
+          resolved_at: string | null
+          severity: string
+          subject_id: string
+        }
+        Insert: {
+          affected_dimensions?: Json
+          arbitration_type?: string
+          created_at?: string
+          event_summary?: string
+          id?: string
+          organization_id: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+          subject_id: string
+        }
+        Update: {
+          affected_dimensions?: Json
+          arbitration_type?: string
+          created_at?: string
+          event_summary?: string
+          id?: string
+          organization_id?: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+          subject_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tradeoff_arbitration_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tradeoff_arbitration_events_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "tradeoff_subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tradeoff_constitutions: {
+        Row: {
+          arbitration_defaults: Json
+          constitution_code: string
+          constitution_name: string
+          created_at: string
+          created_by: string | null
+          id: string
+          organization_id: string
+          scope: string
+          status: string
+          tradeoff_principles: string
+          updated_at: string
+        }
+        Insert: {
+          arbitration_defaults?: Json
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          organization_id: string
+          scope?: string
+          status?: string
+          tradeoff_principles?: string
+          updated_at?: string
+        }
+        Update: {
+          arbitration_defaults?: Json
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          organization_id?: string
+          scope?: string
+          status?: string
+          tradeoff_principles?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tradeoff_constitutions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tradeoff_dimensions: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string
+          dimension_code: string
+          dimension_name: string
+          dimension_type: string
+          id: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          dimension_code?: string
+          dimension_name?: string
+          dimension_type?: string
+          id?: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          dimension_code?: string
+          dimension_name?: string
+          dimension_type?: string
+          id?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tradeoff_dimensions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tradeoff_evaluations: {
+        Row: {
+          arbitration_summary: string
+          compromise_risk_score: number
+          constitution_id: string | null
+          created_at: string
+          gain_dimensions: Json
+          id: string
+          legitimacy_tension_score: number
+          organization_id: string
+          reversibility_score: number
+          sacrifice_dimensions: Json
+          subject_id: string
+        }
+        Insert: {
+          arbitration_summary?: string
+          compromise_risk_score?: number
+          constitution_id?: string | null
+          created_at?: string
+          gain_dimensions?: Json
+          id?: string
+          legitimacy_tension_score?: number
+          organization_id: string
+          reversibility_score?: number
+          sacrifice_dimensions?: Json
+          subject_id: string
+        }
+        Update: {
+          arbitration_summary?: string
+          compromise_risk_score?: number
+          constitution_id?: string | null
+          created_at?: string
+          gain_dimensions?: Json
+          id?: string
+          legitimacy_tension_score?: number
+          organization_id?: string
+          reversibility_score?: number
+          sacrifice_dimensions?: Json
+          subject_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tradeoff_evaluations_constitution_id_fkey"
+            columns: ["constitution_id"]
+            isOneToOne: false
+            referencedRelation: "tradeoff_constitutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tradeoff_evaluations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tradeoff_evaluations_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "tradeoff_subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tradeoff_recommendations: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          organization_id: string
+          preserved_values: Json
+          rationale: string
+          recommendation_summary: string
+          recommendation_type: string
+          sacrificed_values: Json
+          subject_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          organization_id: string
+          preserved_values?: Json
+          rationale?: string
+          recommendation_summary?: string
+          recommendation_type?: string
+          sacrificed_values?: Json
+          subject_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          organization_id?: string
+          preserved_values?: Json
+          rationale?: string
+          recommendation_summary?: string
+          recommendation_type?: string
+          sacrificed_values?: Json
+          subject_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tradeoff_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tradeoff_recommendations_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "tradeoff_subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tradeoff_subjects: {
+        Row: {
+          active: boolean
+          created_at: string
+          domain: string
+          id: string
+          organization_id: string
+          subject_code: string
+          subject_ref: Json
+          subject_type: string
+          summary: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          domain?: string
+          id?: string
+          organization_id: string
+          subject_code?: string
+          subject_ref?: Json
+          subject_type?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          domain?: string
+          id?: string
+          organization_id?: string
+          subject_code?: string
+          subject_ref?: Json
+          subject_type?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tradeoff_subjects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       usage_monthly_snapshots: {
         Row: {
           created_at: string

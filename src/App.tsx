@@ -75,6 +75,7 @@ import SovereignDecisionRights from "./pages/SovereignDecisionRights";
 import DependencySovereignty from "./pages/DependencySovereignty";
 import StrategicSuccession from "./pages/StrategicSuccession";
 import MultiHorizonAlignment from "./pages/MultiHorizonAlignment";
+import TradeoffArbitration from "./pages/TradeoffArbitration";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -149,6 +150,7 @@ const App = () => (
                         <Route path="/dependency-sovereignty"  element={<W><DependencySovereignty /></W>} />
                         <Route path="/strategic-succession"    element={<W><StrategicSuccession /></W>} />
                         <Route path="/multi-horizon-alignment" element={<W><MultiHorizonAlignment /></W>} />
+                        <Route path="/tradeoff-arbitration" element={<W><TradeoffArbitration /></W>} />
                         <Route path="/improvement-ledger"      element={<W><ImprovementLedger /></W>} />
                         <Route path="/improvement-candidates"  element={<W><ImprovementCandidates /></W>} />
                         <Route path="/improvement-benchmarks"  element={<W><ImprovementBenchmarks /></W>} />
