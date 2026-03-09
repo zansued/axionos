@@ -164,8 +164,14 @@ async function executeSubjob(
   apiKey: string,
   projectContext: string,
   requirementsData: string,
+  requirementsDataCompact: string,
   productArchData: string,
   completedResults: Record<string, Record<string, unknown>>,
+  executionMeta: {
+    organizationId: string;
+    initiativeId: string;
+    abortSignal?: AbortSignal;
+  },
 ): Promise<AgentOutput> {
   // Use compact summary for downstream agents instead of full system output
   const systemResult = completedResults["architecture.system"] || {};
@@ -177,27 +183,47 @@ async function executeSubjob(
   switch (subjobKey) {
     case "architecture.system": {
       const p = systemArchitectPrompt(projectContext, requirementsData, productArchData);
-      const result = await runAgent(apiKey, "system_architect", p.system, p.user, true);
+      const result = await runAgent(apiKey, "system_architect", p.system, p.user, true, {
+        stage: "architecture.system",
+        organizationId: executionMeta.organizationId,
+        initiativeId: executionMeta.initiativeId,
+        abortSignal: executionMeta.abortSignal,
+      });
       result.contextChars = 0;
       return result;
     }
     case "architecture.data": {
-      // Use compact context instead of full system arch
-      const p = dataArchitectPrompt(projectContext, requirementsData, compactSysContext);
-      const result = await runAgent(apiKey, "data_architect", p.system, p.user, true);
+      // Use compact context and compact requirements for child agent
+      const p = dataArchitectPrompt(projectContext, requirementsDataCompact, compactSysContext);
+      const result = await runAgent(apiKey, "data_architect", p.system, p.user, false, {
+        stage: "architecture.data",
+        organizationId: executionMeta.organizationId,
+        initiativeId: executionMeta.initiativeId,
+        abortSignal: executionMeta.abortSignal,
+      });
       result.contextChars = compactSysContext.length;
       return result;
     }
     case "architecture.api": {
-      // Use compact context instead of full system arch
-      const p = apiArchitectPrompt(projectContext, requirementsData, compactSysContext);
-      const result = await runAgent(apiKey, "api_architect", p.system, p.user, false);
+      // Use compact context and compact requirements for child agent
+      const p = apiArchitectPrompt(projectContext, requirementsDataCompact, compactSysContext);
+      const result = await runAgent(apiKey, "api_architect", p.system, p.user, false, {
+        stage: "architecture.api",
+        organizationId: executionMeta.organizationId,
+        initiativeId: executionMeta.initiativeId,
+        abortSignal: executionMeta.abortSignal,
+      });
       result.contextChars = compactSysContext.length;
       return result;
     }
     case "architecture.dependencies": {
       const p = dependencyPlannerPrompt(projectContext, fullSystemArchJson, dataArchJson, apiArchJson);
-      const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, true);
+      const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, true, {
+        stage: "architecture.dependencies",
+        organizationId: executionMeta.organizationId,
+        initiativeId: executionMeta.initiativeId,
+        abortSignal: executionMeta.abortSignal,
+      });
       result.contextChars = fullSystemArchJson.length + dataArchJson.length + apiArchJson.length;
       return result;
     }
