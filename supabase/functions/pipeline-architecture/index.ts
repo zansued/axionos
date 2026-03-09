@@ -157,8 +157,8 @@ serve(async (req) => {
       subjobs = await getSubjobs(serviceClient, jobId);
     }
 
-    // Clean up any stuck running subjobs (> 60s)
-    const cleaned = await cleanupStuckSubjobs(serviceClient, jobId, 60_000);
+    // Clean up any stuck running subjobs (> 120s to align with increased timeouts)
+    const cleaned = await cleanupStuckSubjobs(serviceClient, jobId, 120_000);
     if (cleaned > 0) {
       await pipelineLog(ctx, "subjobs_timeout_cleanup", `${cleaned} subjobs marcados como timeout`);
     }
@@ -294,6 +294,16 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           return { key: subjob.subjob_key, success: true };
         } catch (err: any) {
           const isTimeout = err.message?.includes("Timeout");
+          // Auto-retry on first timeout: mark as retryable instead of terminal failure
+          if (isTimeout && subjob.attempt_number < (subjob.max_attempts || 3) - 1) {
+            const { resetSubjobForRetry } = await import("../_shared/architecture-subjob/subjob-manager.ts");
+            await failSubjob(serviceClient, subjob.id, err.message || "Timeout", true);
+            await resetSubjobForRetry(serviceClient, subjob.id);
+            await pipelineLog(ctx, `subjob_${subjob.subjob_key}_auto_retry`,
+              `⟳ ${label} timeout — auto-retry (attempt ${subjob.attempt_number + 2})`, { is_timeout: true }
+            );
+            return { key: subjob.subjob_key, success: false, error: err.message, retrying: true };
+          }
           await failSubjob(serviceClient, subjob.id, err.message || "Unknown error", isTimeout);
           await blockDependents(serviceClient, jobId!, subjob.subjob_key);
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_failed`,

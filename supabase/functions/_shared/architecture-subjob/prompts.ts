@@ -53,17 +53,17 @@ export function dataArchitectPrompt(projectContext: string, requirementsData: st
 REQUISITOS: ${requirementsData}
 ARQUITETURA DE SISTEMA: ${systemArchJson}
 
-Modele o banco de dados completo:
+Modele o banco de dados:
 {
   "tables": [
     {
       "name": "string",
       "description": "string",
       "columns": [
-        {"name": "string", "type": "string (uuid|text|integer|boolean|timestamp|jsonb|etc)", "nullable": false, "default": "string|null", "description": "string"}
+        {"name": "string", "type": "string", "nullable": false, "default": "string|null"}
       ],
       "primary_key": "string",
-      "indexes": [{"columns": ["string"], "unique": false, "name": "string"}],
+      "indexes": [{"columns": ["string"], "unique": false}],
       "rls_policies": [
         {"name": "string", "command": "SELECT|INSERT|UPDATE|DELETE|ALL", "using": "string", "with_check": "string|null"}
       ]
@@ -73,9 +73,7 @@ Modele o banco de dados completo:
     {"from_table": "string", "from_column": "string", "to_table": "string", "to_column": "string", "type": "one-to-one|one-to-many|many-to-many", "on_delete": "CASCADE|SET NULL|RESTRICT"}
   ],
   "enums": [{"name": "string", "values": ["string"]}],
-  "functions": [{"name": "string", "description": "string", "returns": "string", "security": "definer|invoker"}],
-  "storage_buckets": [{"name": "string", "public": false, "file_types": ["string"], "max_size_mb": 10}],
-  "migration_strategy": "Estratégia de migração e seed data"
+  "migration_strategy": "string"
 }`,
   };
 }
@@ -106,9 +104,7 @@ Defina os contratos de API:
     }
   ],
   "edge_functions": [{"name": "string", "description": "string", "trigger": "HTTP|Webhook|Cron", "auth": true}],
-  "realtime_channels": [{"name": "string", "table": "string", "events": ["INSERT|UPDATE|DELETE"], "filter": "string|null"}],
-  "webhooks": [{"event": "string", "url": "string", "payload": {}}],
-  "versioning_strategy": "URL path|Header|Query param"
+  "realtime_channels": [{"name": "string", "table": "string", "events": ["INSERT|UPDATE|DELETE"]}]
 }`,
   };
 }
