@@ -13,6 +13,7 @@ import { detectTemporalConflicts } from "../_shared/multi-horizon-alignment/temp
 import { assessDeferredRisk } from "../_shared/multi-horizon-alignment/deferred-risk-evaluator.ts";
 import { generateRecommendations } from "../_shared/multi-horizon-alignment/horizon-recommendation-engine.ts";
 import { explainHorizonPosture } from "../_shared/multi-horizon-alignment/horizon-explainer.ts";
+import { extractSimulationSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
 
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
