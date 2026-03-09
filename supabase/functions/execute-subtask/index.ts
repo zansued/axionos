@@ -82,6 +82,8 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
     // Create versioned agent_output artifact
     let artifactId: string | null = null;
     if (organizationId) {
+      const memberCheck = await requireOrgMembership(serviceClient, user.id, organizationId);
+      if (memberCheck instanceof Response) return memberCheck;
       const outputType = agent.role === "architect" ? "decision"
         : agent.role === "dev" || agent.role === "devops" ? "code"
         : agent.role === "analyst" || agent.role === "po" ? "content"

@@ -33,12 +33,15 @@ serve(async (req) => {
   try {
     const auth = await authenticate(req);
     if (auth instanceof Response) return auth;
-    const { serviceClient: sc } = auth as AuthContext;
+    const { user, serviceClient: sc } = auth as AuthContext;
 
     const body = await req.json();
     const { action, organization_id } = body;
 
     if (!organization_id) return errorResponse("organization_id required", 400);
+
+    const memberCheck = await requireOrgMembership(sc, user.id, organization_id);
+    if (memberCheck instanceof Response) return memberCheck;
 
     // ─── REPAIR SURFACE ───
     if (action === "retrieve_for_repair") {

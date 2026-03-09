@@ -24,6 +24,9 @@ Deno.serve(async (req: Request) => {
       return new Response(JSON.stringify({ error: "organization_id required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
+    const memberCheck = await requireOrgMembership(serviceClient, user.id, organization_id);
+    if (memberCheck instanceof Response) return memberCheck;
+
     const json = (data: unknown) => new Response(JSON.stringify(data), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
     switch (action) {
