@@ -69,7 +69,7 @@ export default function ImprovementBenchmarks() {
         <AppSidebar />
         <SidebarInset className="flex-1">
           <div className="p-6 space-y-6">
-            {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
+            <PageGuidanceShell pageKey="benchmarks" />
             <div>
               <h1 className="text-2xl font-bold text-foreground">Sandbox Benchmarking & Promotion</h1>
               <p className="text-sm text-muted-foreground mt-1">Governed benchmarking of improvement candidates with human-reviewed promotion decisions.</p>
