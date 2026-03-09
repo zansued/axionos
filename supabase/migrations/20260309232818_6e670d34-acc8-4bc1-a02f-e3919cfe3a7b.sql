@@ -1,0 +1,1 @@
+UPDATE initiative_jobs SET status = 'failed', error = 'Auto-cleanup: stale parallel run blocking pipeline', completed_at = now() WHERE status = 'running' AND created_at < now() - interval '1 minute';
