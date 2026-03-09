@@ -1,5 +1,5 @@
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticate } from "../_shared/auth.ts";
+import { authenticate, requireOrgMembership } from "../_shared/auth.ts";
 
 Deno.serve(async (req: Request) => {
   const cors = handleCors(req);
@@ -8,10 +8,13 @@ Deno.serve(async (req: Request) => {
   try {
     const authResult = await authenticate(req);
     if (authResult instanceof Response) return authResult;
-    const { serviceClient } = authResult;
+    const { user, serviceClient } = authResult;
 
     const { action, organization_id, job_id } = await req.json();
     if (!organization_id) return errorResponse("organization_id required", 400);
+
+    const memberCheck = await requireOrgMembership(serviceClient, user.id, organization_id);
+    if (memberCheck instanceof Response) return memberCheck;
 
     switch (action) {
       case "overview": {

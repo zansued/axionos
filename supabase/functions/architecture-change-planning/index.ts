@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { planDependencies } from "../_shared/architecture-planning/architecture-change-dependency-planner.ts";
 import { assessReadiness } from "../_shared/architecture-planning/architecture-rollout-readiness-assessor.ts";
 import { synthesizeValidationBlueprint } from "../_shared/architecture-planning/architecture-validation-blueprint-synthesizer.ts";
@@ -20,11 +20,14 @@ serve(async (req) => {
   try {
     const auth = await authenticate(req);
     if (auth instanceof Response) return auth;
-    const { serviceClient: sc } = auth as AuthContext;
+    const { user, serviceClient: sc } = auth as AuthContext;
 
     const body = await req.json();
     const { action, organization_id } = body;
     if (!organization_id) return errorResponse("organization_id required", 400);
+
+    const memberCheck = await requireOrgMembership(sc, user.id, organization_id);
+    if (memberCheck instanceof Response) return memberCheck;
 
     // ─── OVERVIEW ───
     if (action === "overview") {

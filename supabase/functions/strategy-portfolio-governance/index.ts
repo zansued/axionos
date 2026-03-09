@@ -26,6 +26,9 @@ serve(async (req) => {
   const { action, organizationId } = body;
   if (!organizationId) return errorResponse("organizationId required", 400);
 
+  const { data: _member } = await supabase.from("organization_members").select("role").eq("organization_id", organizationId).eq("user_id", user.id).single();
+  if (!_member) return errorResponse("Not a member of this organization", 403);
+
   try {
     switch (action) {
       case "overview": {

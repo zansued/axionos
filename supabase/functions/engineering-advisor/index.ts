@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { aggregateAdvisorySignals } from "../_shared/engineering-advisor/engineering-advisory-signal-aggregator.ts";
 import { synthesizeOpportunities } from "../_shared/engineering-advisor/engineering-opportunity-synthesizer.ts";
 import { generateRecommendations } from "../_shared/engineering-advisor/engineering-advisory-recommendation-engine.ts";
@@ -21,6 +21,9 @@ serve(async (req) => {
     const body = await req.json();
     const { action, organization_id } = body;
     if (!organization_id) return errorResponse("organization_id required", 400);
+
+    const memberCheck = await requireOrgMembership(sc, user.id, organization_id);
+    if (memberCheck instanceof Response) return memberCheck;
 
     const orgFilter = `organization_id.is.null,organization_id.eq.${organization_id}`;
 

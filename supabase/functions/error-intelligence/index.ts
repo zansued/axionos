@@ -49,6 +49,12 @@ serve(async (req) => {
     if (!action) return errorResponse("action is required", 400);
     if (!organization_id) return errorResponse("organization_id is required", 400);
 
+    // Verify org membership for non-service/webhook callers
+    if (!isService && !isWebhook) {
+      const { data: _member } = await sc.from("organization_members").select("role").eq("organization_id", organization_id).eq("user_id", userId).single();
+      if (!_member) return errorResponse("Not a member of this organization", 403);
+    }
+
     switch (action) {
       // ══════════════════════════════════════════
       // ANALYZE PATTERNS — scan errors, generate prevention rules

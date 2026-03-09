@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, corsHeaders, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { authenticateWithRateLimit, requireOrgMembership } from "../_shared/auth.ts";
 import { callAI } from "../_shared/ai-client.ts";
 
 serve(async (req) => {
@@ -82,6 +82,8 @@ Produza o output completo para esta subtask. Inclua detalhes técnicos, decisõe
     // Create versioned agent_output artifact
     let artifactId: string | null = null;
     if (organizationId) {
+      const memberCheck = await requireOrgMembership(serviceClient, user.id, organizationId);
+      if (memberCheck instanceof Response) return memberCheck;
       const outputType = agent.role === "architect" ? "decision"
         : agent.role === "dev" || agent.role === "devops" ? "code"
         : agent.role === "analyst" || agent.role === "po" ? "content"

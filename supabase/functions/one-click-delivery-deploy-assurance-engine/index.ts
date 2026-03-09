@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
-import { authenticate } from "../_shared/auth.ts";
+import { authenticate, requireOrgMembership } from "../_shared/auth.ts";
 import { DEFAULT_DELIVERY_MODEL, getDeliveryStateLabel } from "../_shared/one-click-delivery-deploy-assurance/delivery-orchestration-model-manager.ts";
 import { evaluateDeliveryReadiness } from "../_shared/one-click-delivery-deploy-assurance/delivery-readiness-evaluator.ts";
 import { computeDeployAssurance } from "../_shared/one-click-delivery-deploy-assurance/deploy-assurance-engine.ts";
@@ -23,6 +23,9 @@ Deno.serve(async (req: Request) => {
     if (!organization_id) {
       return new Response(JSON.stringify({ error: "organization_id required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
+
+    const memberCheck = await requireOrgMembership(serviceClient, user.id, organization_id);
+    if (memberCheck instanceof Response) return memberCheck;
 
     const json = (data: unknown) => new Response(JSON.stringify(data), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
 

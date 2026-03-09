@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { retrieveAgentMemory } from "../_shared/agent-memory/agent-memory-retriever.ts";
 import { assembleMemoryInjection, memoryBlockToString } from "../_shared/agent-memory/agent-memory-injector.ts";
 import { writeAgentMemory, updateAgentMemoryProfile } from "../_shared/agent-memory/agent-memory-writer.ts";
@@ -33,12 +33,15 @@ serve(async (req) => {
   try {
     const auth = await authenticate(req);
     if (auth instanceof Response) return auth;
-    const { serviceClient: sc } = auth as AuthContext;
+    const { user, serviceClient: sc } = auth as AuthContext;
 
     const body = await req.json();
     const { action, organization_id } = body;
 
     if (!organization_id) return errorResponse("organization_id required", 400);
+
+    const memberCheck = await requireOrgMembership(sc, user.id, organization_id);
+    if (memberCheck instanceof Response) return memberCheck;
 
     // ─── OVERVIEW ───
     if (action === "agent_memory_overview" || action === "agent_memory_quality") {

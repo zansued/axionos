@@ -22,8 +22,27 @@ Deno.serve(async (req) => {
 
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
+  // Authenticate user
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    return jsonResponse({ error: 'Unauthorized' }, 401);
+  }
+  const userClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
+    global: { headers: { Authorization: authHeader } },
+  });
+  const { data: { user }, error: userErr } = await userClient.auth.getUser();
+  if (userErr || !user) {
+    return jsonResponse({ error: 'Unauthorized' }, 401);
+  }
+
   try {
     const { action, params } = await req.json();
+
+    // Verify org membership if params contain organization_id
+    if (params?.organization_id) {
+      const { data: _member } = await supabase.from('organization_members').select('role').eq('organization_id', params.organization_id).eq('user_id', user.id).single();
+      if (!_member) return jsonResponse({ error: 'Not a member of this organization' }, 403);
+    }
 
     switch (action) {
       case 'overview':
