@@ -55,11 +55,11 @@ export function CopilotTrigger({ onClick, compact, submode }: CopilotTriggerProp
               className="h-7 w-7 shrink-0"
               onClick={onClick}
             >
-              <Compass className="h-3.5 w-3.5" />
+              <Icon className="h-3.5 w-3.5" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            <p className="text-xs">{locale === "pt-BR" ? "Abrir guia contextual" : "Open contextual guide"}</p>
+            <p className="text-xs">{tooltipText}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -73,7 +73,7 @@ export function CopilotTrigger({ onClick, compact, submode }: CopilotTriggerProp
       className="h-7 gap-1.5 text-xs"
       onClick={onClick}
     >
-      <Compass className="h-3 w-3" />
+      <Icon className="h-3 w-3" />
       {label}
     </Button>
   );

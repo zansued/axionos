@@ -42,7 +42,7 @@ export function PageGuidanceShell({ pageKey, showIntroCard = true, compact = tru
             <PageIntroCard guidance={guidance} whyNow={whyNowText} compact={compact} />
           </div>
           <div className="pt-1">
-            <CopilotTrigger onClick={openDrawer} compact />
+            <CopilotTrigger onClick={openDrawer} compact submode={submode} />
           </div>
         </div>
       )}

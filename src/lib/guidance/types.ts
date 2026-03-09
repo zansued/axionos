@@ -24,6 +24,16 @@ export type GuidanceSurface = "product" | "workspace" | "platform";
 
 export type ApprovalPosture = "none" | "optional" | "recommended" | "required";
 
+/**
+ * Copilot Submodes (Canonical)
+ * Defines the 4 official submodes of the Contextual Guidance & Copilot Layer:
+ *   - product_copilot: For end users (Product Surface)
+ *   - workspace_copilot: For operators and tenant owners (Workspace Governance Surface)
+ *   - governance_mentor: For platform admins/reviewers (Platform Governance Surface)
+ *   - architecture_mentor: For platform admins/reviewers (Platform Governance Surface) [Phase 4]
+ */
+export type CopilotSubmode = "product_copilot" | "workspace_copilot" | "governance_mentor" | "architecture_mentor";
+
 export interface PageGuidanceContract {
   /** Machine key for the area */
   key: string;

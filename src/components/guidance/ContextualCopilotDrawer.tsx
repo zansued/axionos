@@ -256,8 +256,8 @@ export function ContextualCopilotDrawer({ pageKey, guidance, canonicalRole, open
           <div className="border-t border-border px-4 py-2.5 shrink-0">
             <p className="text-[10px] text-muted-foreground/60 text-center">
               {lang === "pt"
-                ? "Guia contextual • Consultivo apenas • Sem ações autônomas"
-                : "Contextual guide • Advisory only • No autonomous actions"}
+                ? `${submodeLabel} • Consultivo apenas • Sem ações autônomas`
+                : `${submodeLabel} • Advisory only • No autonomous actions`}
             </p>
           </div>
         </motion.aside>
