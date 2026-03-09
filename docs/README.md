@@ -91,18 +91,17 @@ Internal sophistication remains critical. The next level deepens it through gove
 
 ---
 
-## How To Continue Safely After Sprint 71
+## How To Continue Safely After Sprint 94
 
-1. Read **ROADMAP.md** first for strategic direction and post-71 roadmap
-2. Read **PLAN.md** next for current and next sprint
+1. Read **ROADMAP.md** first for strategic direction and the Next Level Thesis
+2. Read **PLAN.md** next for current canon status
 3. Use **ARCHITECTURE.md** for structural context, the product boundary model, and the role/surface model
 4. Use **PIPELINE_CONTRACTS.md** for the user-visible journey contract
 5. Use **AGENTS.md** for internal agent system reference only
 6. Implement future work **sprint by sprint** with human review
 7. Do **not** collapse internal architecture and user-facing journey into the same surface
-8. Do **not** casually reopen completed canon (Sprints 1–71) without deliberate review
+8. Do **not** casually reopen completed canon (Sprints 1–94) without deliberate review
 9. Internal layers are backstage support — the default product surface is the user journey
-10. Block N (Sprints 72–74) is the next planned block — scope each sprint before implementation
 
 ---
 
