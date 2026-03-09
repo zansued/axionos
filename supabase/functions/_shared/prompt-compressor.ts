@@ -6,7 +6,7 @@
  * unresolved errors, build config, system rules.
  * Removes: verbose logs, explanations, redundant text.
  *
- * Uses lightweight model (gemini-2.5-flash-lite) to summarize.
+ * Uses cheapest available provider (DeepSeek or OpenAI) to summarize.
  */
 
 import { getAIConfig } from "./ai-client.ts";
