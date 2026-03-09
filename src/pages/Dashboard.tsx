@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/AppLayout";
+import { PageIntroCard, getGuidanceForPage } from "@/components/guidance";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -89,6 +90,13 @@ export default function Dashboard() {
                 : "Da ideia ao produto deployado — acompanhe suas iniciativas"}
             </p>
           </motion.div>
+
+          {/* Contextual Guidance */}
+          {getGuidanceForPage("dashboard") && (
+            <motion.div variants={item}>
+              <PageIntroCard guidance={getGuidanceForPage("dashboard")!} compact />
+            </motion.div>
+          )}
 
           {/* First-run hero */}
           {!hasInitiatives && !isLoading && (

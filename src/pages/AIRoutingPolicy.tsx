@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { PageIntroCard, getGuidanceForPage } from "@/components/guidance";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -85,6 +86,9 @@ export default function AIRoutingPolicy() {
             Canonical routing matrix governing all AI provider/model decisions in AxionOS.
           </p>
         </div>
+
+        {/* Contextual Guidance */}
+        <PageIntroCard guidance={getGuidanceForPage("routing")!} compact />
 
         {/* Tier Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
