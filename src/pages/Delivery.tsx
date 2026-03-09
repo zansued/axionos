@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
-import { PageIntroCard } from "@/components/guidance";
-import { usePageGuidance } from "@/hooks/usePageGuidance";
+import { PageGuidanceShell } from "@/components/guidance";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
