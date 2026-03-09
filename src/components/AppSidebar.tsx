@@ -1,20 +1,29 @@
-import { useNavigate } from "react-router-dom";
-import { LogOut, Search, Rocket, Zap } from "lucide-react";
+// AppSidebar – surface-aware navigation with animated SurfaceSwitcher.
+
+import { useState, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { LogOut, Search, Zap } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useRoleBasedExperience } from "@/hooks/useRoleBasedExperience";
 import {
+  SurfaceSwitcher,
+  getSurfaceForRoute,
+  getSurfaceMetadata,
+  type SurfaceId,
+} from "@/components/SurfaceSwitcher";
+import {
   CANONICAL_ROLE_LABELS,
   CANONICAL_ROLE_BADGE_STYLES,
-  NavItem,
+  type NavItem,
 } from "@/lib/permissions";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -24,11 +33,23 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-// ─── Single nav row ──────────────────────────────────────────────────────────
+// ─── NavItemRow ──────────────────────────────────────────────────────────────
 
-function NavItemRow({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
+function NavItemRow({
+  item,
+  collapsed,
+  surfaceColor,
+}: {
+  item: NavItem;
+  collapsed: boolean;
+  surfaceColor: string;
+}) {
   return (
     <SidebarMenuItem>
       <Tooltip>
@@ -37,11 +58,18 @@ function NavItemRow({ item, collapsed }: { item: NavItem; collapsed: boolean }) 
             <NavLink
               to={item.url}
               end={item.url === "/"}
-              className="flex items-center gap-3 px-3 py-2 rounded-md text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
+              className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
               activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+              style={
+                {
+                  "--surface-active": `hsl(var(${surfaceColor}) / 0.15)`,
+                } as React.CSSProperties
+              }
             >
-              <item.icon className="h-4 w-4 shrink-0" />
-              {!collapsed && <span className="text-sm">{item.title}</span>}
+              <item.icon className="h-4 w-4 shrink-0 opacity-70" />
+              {!collapsed && (
+                <span className="text-[13px]">{item.title}</span>
+              )}
             </NavLink>
           </SidebarMenuButton>
         </TooltipTrigger>
@@ -55,76 +83,125 @@ function NavItemRow({ item, collapsed }: { item: NavItem; collapsed: boolean }) 
   );
 }
 
-// ─── Section group label ─────────────────────────────────────────────────────
-
-function SectionLabel({ label, collapsed }: { label: string; collapsed: boolean }) {
-  if (collapsed) return null;
-  return (
-    <SidebarGroupLabel className="text-[10px] font-semibold tracking-widest text-muted-foreground/50 uppercase px-3 pb-1 pt-0">
-      {label}
-    </SidebarGroupLabel>
-  );
-}
-
 // ─── AppSidebar ──────────────────────────────────────────────────────────────
 
 export function AppSidebar() {
-  const { state }          = useSidebar();
-  const collapsed          = state === "collapsed";
-  const { signOut, user }  = useAuth();
+  const { state } = useSidebar();
+  const collapsed = state === "collapsed";
+  const { signOut, user } = useAuth();
   const { setCommandOpen } = useWorkspace();
-  const navigate           = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { canonicalRole, navGroups } = useRoleBasedExperience();
 
+  // Derive active surface from current route
+  const routeSurface = useMemo(
+    () => getSurfaceForRoute(location.pathname, navGroups),
+    [location.pathname, navGroups]
+  );
+  const [activeSurface, setActiveSurface] = useState<SurfaceId>(routeSurface);
+
+  // Sync surface when route changes
+  useMemo(() => {
+    setActiveSurface(routeSurface);
+  }, [routeSurface]);
+
+  // Get nav items for active surface
+  const activeNavItems = useMemo(() => {
+    switch (activeSurface) {
+      case "platform":
+        return navGroups.platform;
+      case "workspace":
+        return navGroups.workspace;
+      default:
+        return navGroups.product;
+    }
+  }, [activeSurface, navGroups]);
+
+  const surfaceMeta = getSurfaceMetadata(activeSurface);
   const roleBadgeLabel = CANONICAL_ROLE_LABELS[canonicalRole];
   const roleBadgeClass = CANONICAL_ROLE_BADGE_STYLES[canonicalRole];
 
+  const handleSurfaceChange = (surface: SurfaceId) => {
+    setActiveSurface(surface);
+    // Navigate to first route of new surface
+    const targetNav =
+      surface === "platform"
+        ? navGroups.platform
+        : surface === "workspace"
+        ? navGroups.workspace
+        : navGroups.product;
+    if (targetNav.length > 0) {
+      navigate(targetNav[0].url);
+    }
+  };
+
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
-      <SidebarContent>
-
+      <SidebarContent className="gap-0">
         {/* ── Brand ── */}
-        <SidebarGroup>
+        <SidebarGroup className="pb-0">
           <SidebarGroupContent>
-            <div className="flex items-center gap-2 px-3 py-3">
-              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shrink-0">
-                <Rocket className="h-4 w-4 text-primary-foreground" />
+            <div className="flex items-center gap-2 px-2 py-3">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary">
+                <span className="text-xs font-bold text-primary-foreground">
+                  Ax
+                </span>
               </div>
               {!collapsed && (
-                <span className="font-display text-sm font-bold tracking-tight">
-                  Axion<span className="text-muted-foreground font-normal">OS</span>
+                <span className="font-display text-sm font-semibold tracking-tight">
+                  Axion<span className="font-normal text-muted-foreground">OS</span>
                 </span>
               )}
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* ── Search trigger ── */}
+        {/* ── Surface Switcher ── */}
+        <SidebarGroup className="px-2 pb-2 pt-0">
+          <SidebarGroupContent>
+            <SurfaceSwitcher
+              role={canonicalRole}
+              activeSurface={activeSurface}
+              onSurfaceChange={handleSurfaceChange}
+              collapsed={collapsed}
+            />
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* ── Search ── */}
         {!collapsed ? (
-          <SidebarGroup>
+          <SidebarGroup className="px-2 pb-2 pt-0">
             <SidebarGroupContent>
               <button
                 onClick={() => setCommandOpen(true)}
-                className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-muted-foreground rounded-md border border-border bg-muted/30 hover:bg-muted/50 transition-colors"
+                className="flex w-full items-center gap-2 rounded-md border border-sidebar-border bg-sidebar-accent/30 px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-sidebar-accent/50"
               >
                 <Search className="h-3.5 w-3.5" />
                 <span>Search...</span>
-                <kbd className="ml-auto text-[10px] font-mono bg-muted px-1.5 py-0.5 rounded">⌘K</kbd>
+                <kbd className="ml-auto rounded bg-sidebar-accent px-1.5 py-0.5 font-mono text-[10px]">
+                  ⌘K
+                </kbd>
               </button>
             </SidebarGroupContent>
           </SidebarGroup>
         ) : (
-          <SidebarGroup>
+          <SidebarGroup className="px-2 pb-2 pt-0">
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <SidebarMenuButton onClick={() => setCommandOpen(true)}>
-                        <Search className="h-4 w-4 mx-auto" />
+                      <SidebarMenuButton
+                        onClick={() => setCommandOpen(true)}
+                        className="justify-center"
+                      >
+                        <Search className="h-4 w-4" />
                       </SidebarMenuButton>
                     </TooltipTrigger>
-                    <TooltipContent side="right" className="text-xs">Search ⌘K</TooltipContent>
+                    <TooltipContent side="right" className="text-xs">
+                      Search ⌘K
+                    </TooltipContent>
                   </Tooltip>
                 </SidebarMenuItem>
               </SidebarMenu>
@@ -132,82 +209,82 @@ export function AppSidebar() {
           </SidebarGroup>
         )}
 
-        <Separator className="mx-3 w-auto" />
+        <Separator className="mx-2 w-auto" />
 
-        {/* ── PRODUCT ── */}
-        <SidebarGroup>
-          <SectionLabel label="Product" collapsed={collapsed} />
+        {/* ── Navigation ── */}
+        <SidebarGroup className="flex-1 px-2 pt-2">
+          {!collapsed && (
+            <div className="mb-1.5 px-2">
+              <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
+                {surfaceMeta.label}
+              </p>
+            </div>
+          )}
           <SidebarGroupContent>
-            <SidebarMenu>
-              {navGroups.product.map((item) => (
-                <NavItemRow key={item.url} item={item} collapsed={collapsed} />
-              ))}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeSurface}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.15 }}
+              >
+                <SidebarMenu className="space-y-0.5">
+                  {activeNavItems.map((item) => (
+                    <NavItemRow
+                      key={item.url}
+                      item={item}
+                      collapsed={collapsed}
+                      surfaceColor={surfaceMeta.colorVar}
+                    />
+                  ))}
 
-              {/* AutoPilot CTA */}
-              <SidebarMenuItem>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SidebarMenuButton asChild>
-                      <button
-                        onClick={() => navigate("/journey")}
-                        className="flex items-center gap-3 px-3 py-2 w-full rounded-md bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 transition-colors mt-1"
-                      >
-                        <Zap className="h-4 w-4 shrink-0" />
-                        {!collapsed && <span className="text-sm font-medium">AutoPilot</span>}
-                      </button>
-                    </SidebarMenuButton>
-                  </TooltipTrigger>
-                  {collapsed && (
-                    <TooltipContent side="right" className="text-xs">AutoPilot</TooltipContent>
+                  {/* AutoPilot CTA – only on Product surface */}
+                  {activeSurface === "product" && (
+                    <SidebarMenuItem className="pt-2">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <SidebarMenuButton asChild>
+                            <button
+                              onClick={() => navigate("/journey")}
+                              className="flex w-full items-center gap-2.5 rounded-md border border-surface-product/30 bg-surface-product/10 px-2.5 py-2 text-surface-product transition-colors hover:bg-surface-product/20"
+                            >
+                              <Zap className="h-4 w-4 shrink-0" />
+                              {!collapsed && (
+                                <span className="text-[13px] font-medium">
+                                  AutoPilot
+                                </span>
+                              )}
+                            </button>
+                          </SidebarMenuButton>
+                        </TooltipTrigger>
+                        {collapsed && (
+                          <TooltipContent side="right" className="text-xs">
+                            AutoPilot
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
+                    </SidebarMenuItem>
                   )}
-                </Tooltip>
-              </SidebarMenuItem>
-            </SidebarMenu>
+                </SidebarMenu>
+              </motion.div>
+            </AnimatePresence>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        {/* ── WORKSPACE ── */}
-        {navGroups.workspace.length > 0 && (
-          <>
-            <Separator className="mx-3 w-auto" />
-            <SidebarGroup>
-              <SectionLabel label="Workspace" collapsed={collapsed} />
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {navGroups.workspace.map((item) => (
-                    <NavItemRow key={item.url} item={item} collapsed={collapsed} />
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </>
-        )}
-
-        {/* ── PLATFORM ── */}
-        {navGroups.platform.length > 0 && (
-          <>
-            <Separator className="mx-3 w-auto" />
-            <SidebarGroup>
-              <SectionLabel label="Platform" collapsed={collapsed} />
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {navGroups.platform.map((item) => (
-                    <NavItemRow key={item.url} item={item} collapsed={collapsed} />
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </>
-        )}
-
       </SidebarContent>
 
+      {/* ── Footer ── */}
       <SidebarFooter className="p-2">
         {!collapsed && user && (
-          <div className="px-3 py-1 space-y-1">
+          <div className="mb-1 space-y-0.5 px-2">
             <div className="flex items-center gap-2">
-              <p className="text-[11px] text-muted-foreground truncate flex-1">{user.email}</p>
-              <Badge variant="outline" className={`text-[9px] px-1.5 py-0 ${roleBadgeClass}`}>
+              <p className="flex-1 truncate text-[11px] text-muted-foreground">
+                {user.email}
+              </p>
+              <Badge
+                variant="outline"
+                className={`px-1.5 py-0 text-[9px] ${roleBadgeClass}`}
+              >
                 {roleBadgeLabel}
               </Badge>
             </div>
