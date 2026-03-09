@@ -416,17 +416,51 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
         let contextChars = 0;
         let outputChars = 0;
         let modelUsed: string | null = null;
+        let timeoutHandle: number | null = null;
 
         try {
-          const timeoutMs = def?.timeoutMs || 45_000;
+          const estimatedInput = estimateSubjobInput(
+            subjob.subjob_key,
+            projectContext,
+            requirementsData,
+            requirementsDataCompact,
+            productArchData,
+            completedResults,
+          );
+          promptChars = estimatedInput.promptChars;
+          contextChars = estimatedInput.contextChars;
+
+          const baseTimeoutMs = def?.timeoutMs || 45_000;
+          const timeoutMs = getAdaptiveTimeoutMs(baseTimeoutMs, promptChars, contextChars, subjob.attempt_number || 1);
+          const abortController = new AbortController();
+
           const agentPromise = executeSubjob(
-            subjob.subjob_key, apiKey, projectContext,
-            requirementsData, productArchData, completedResults,
+            subjob.subjob_key,
+            apiKey,
+            projectContext,
+            requirementsData,
+            requirementsDataCompact,
+            productArchData,
+            completedResults,
+            {
+              organizationId: ctx.organizationId,
+              initiativeId: ctx.initiativeId,
+              abortSignal: abortController.signal,
+            },
           );
-          const timeoutPromise = new Promise<never>((_, reject) =>
-            setTimeout(() => reject(new Error(`Timeout: ${subjob.subjob_key} exceeded ${timeoutMs}ms`)), timeoutMs)
-          );
+
+          const timeoutPromise = new Promise<never>((_, reject) => {
+            timeoutHandle = setTimeout(() => {
+              abortController.abort();
+              reject(new Error(`Timeout: ${subjob.subjob_key} exceeded ${timeoutMs}ms`));
+            }, timeoutMs) as unknown as number;
+          });
+
           const agentResult = await Promise.race([agentPromise, timeoutPromise]);
+          if (timeoutHandle !== null) {
+            clearTimeout(timeoutHandle);
+            timeoutHandle = null;
+          }
 
           parseStatus = "success"; // If we got here, JSON parsed OK
           promptChars = agentResult.promptChars;
