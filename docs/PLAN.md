@@ -52,7 +52,7 @@ This document serves as the canonical sprint execution ledger. The following con
 | 🔮 Reserved | Strategic direction defined, not yet scoped for implementation | Lightweight — name, block, and one-line purpose only |
 
 - **Current/next sprint** should be highly detailed before implementation begins
-- **Planned block** (Block N, Sprints 71–74) should be scoped sprint-by-sprint before implementation
+- **Planned block** (Block N, Sprints 72–74) should be scoped sprint-by-sprint before implementation
 - **Reserved horizon** (Blocks O–S, Sprints 75–94) should remain intentionally lightweight until promoted to planned
 - Reserved blocks should not be promoted without deliberate review
 
