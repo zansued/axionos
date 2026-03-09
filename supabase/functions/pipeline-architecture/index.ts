@@ -562,11 +562,29 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           });
           await appendDiagnostic(serviceClient, subjob.id, diag, null, null, promptChars, contextChars);
 
+          // Output guardrail check
+          const guardrail = checkOutputGuardrail(subjob.subjob_key, outputChars);
+          if (guardrail.exceeded) {
+            await pipelineLog(ctx, `subjob_${subjob.subjob_key}_guardrail`, `⚠ Output exceeded cap: ${outputChars}/${guardrail.maxChars} chars`);
+          }
+
+          // Regression safety check
+          const regression = checkRegressionSafety(subjob.subjob_key, agentResult.result);
+          if (!regression.passed) {
+            await pipelineLog(ctx, `subjob_${subjob.subjob_key}_regression`, `⚠ Regression: ${regression.warnings.join("; ")}`);
+          }
+
+          // Optimization telemetry delta
+          const optDelta = computeOptimizationDelta(
+            subjob.subjob_key, null,
+            { promptChars, contextChars, durationMs, outputChars, result: agentResult.result },
+          );
+
           completedResults[subjob.subjob_key] = agentResult.result;
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_complete`,
-            `✓ ${label}: ${agentResult.tokens}t $${agentResult.costUsd.toFixed(4)} ${durationMs}ms [provider=${providerMs}ms parse=${parseMs}ms persist=${persistMs}ms] prompt=${Math.ceil(promptChars/1000)}k out=${Math.ceil(outputChars/1000)}k`
+            `✓ ${label}: ${agentResult.tokens}t $${agentResult.costUsd.toFixed(4)} ${durationMs}ms budget=${optDelta.budgetStatus} regression=${regression.passed ? "ok" : "warn"}`
           );
-          return { key: subjob.subjob_key, success: true };
+          return { key: subjob.subjob_key, success: true, optDelta };
         } catch (err: any) {
           if (timeoutHandle !== null) {
             clearTimeout(timeoutHandle);
