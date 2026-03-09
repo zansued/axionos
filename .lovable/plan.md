@@ -87,21 +87,20 @@ AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
 
 ---
 
-## Next Phases
+## Next Phase
 
-### Level 5 — Institutional Engineering Memory ✅
+### Block T — Governed Intelligence OS (Sprints 95–98) — 🔲 Planned
 
-**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2** ✅
+**Thesis:** Consolidate existing capabilities into an operating system for governed intelligence.
 
-Meta-agents and proposals reason with historical engineering context:
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 95 | Institutional Memory Consolidation — unified queryable institutional knowledge | 🔲 |
+| Sprint 96 | Doctrine & Playbook Synthesis — playbooks, doctrine packs, operational heuristics | 🔲 |
+| Sprint 97 | Bounded Autonomous Operations — safe autonomy for repetitive low-risk operations | 🔲 |
+| Sprint 98 | Institutional Decision Engine — memory + doctrine + risk → consistent recommendations | 🔲 |
 
-- ✅ Memory context layer per meta-agent type
-- ✅ Historical continuity scoring (support/conflict/context)
-- ✅ Historical alignment classification (5 categories)
-- ✅ Redundancy guard with conservative suppression rules
-- ✅ Proposal Layer v2 with Related Historical Context
-- ✅ Decision/outcome-aware framing
-- ✅ Graceful degradation on memory unavailability
+### Future Horizons
 
 ### Level 5.5 — Self-Improving Engineering Platform
 

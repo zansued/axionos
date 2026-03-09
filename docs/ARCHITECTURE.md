@@ -1003,6 +1003,36 @@ AxionOS distinguishes four architectural surface layers:
 
 With 94 sprints complete, all blocks from Foundation through Research Sandbox (S) delivered, the platform has achieved full architectural maturity across all planned blocks. 77+ architectural layers are active.
 
+### Planned: Block T — Governed Intelligence OS (Sprints 95–98)
+
+Block T consolidates existing capabilities into an operating system for governed intelligence. It does not add new planes or modules for their own sake — it converts accumulated sophistication into institutional decision consistency.
+
+```mermaid
+flowchart LR
+    subgraph Sprint95["Sprint 95"]
+        A["Institutional Memory\nConsolidation"]
+    end
+    subgraph Sprint96["Sprint 96"]
+        B["Doctrine &\nPlaybook Synthesis"]
+    end
+    subgraph Sprint97["Sprint 97"]
+        C["Bounded Autonomous\nOperations"]
+    end
+    subgraph Sprint98["Sprint 98"]
+        D["Institutional\nDecision Engine"]
+    end
+    A --> B --> C --> D
+```
+
+| Sprint | Architectural Contribution |
+|--------|---------------------------|
+| 95 | Unified institutional memory substrate — merge convergence, engineering, agent, and platform memory into queryable institutional knowledge |
+| 96 | Doctrine engine — transform institutional memory into playbooks, doctrine packs, and operational heuristics |
+| 97 | Bounded autonomy layer — safe autonomous execution for repetitive, low-risk operations with governance escalation gates |
+| 98 | Institutional decision engine — memory + doctrine + risk + outcome → consistent advisory recommendations with configurable autonomy tiers |
+
+**Governing constraint:** Advisory-first. Bounded autonomy applies only to repetitive, low-risk operations with proven track records. All structural changes require human approval. No autonomous architecture mutation.
+
 ### Completed Canon (Sprints 1–94)
 
 - ✅ All layers from execution kernel through institutional assurance, canon integrity, product experience, adoption intelligence, governed extensibility, evidence-governed improvement, advanced multi-agent coordination, governed capability ecosystem, delivery optimization, distributed runtime, and research sandbox
