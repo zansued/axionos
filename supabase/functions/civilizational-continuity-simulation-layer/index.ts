@@ -6,6 +6,7 @@ import { assessIdentityPreservation } from "../_shared/continuity-simulation/ide
 import { detectStressPoints } from "../_shared/continuity-simulation/stress-pathway-detector.ts";
 import { generateRecommendations } from "../_shared/continuity-simulation/simulation-recommendation-engine.ts";
 import { explainSimulation } from "../_shared/continuity-simulation/simulation-explainer.ts";
+import { extractMissionSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
