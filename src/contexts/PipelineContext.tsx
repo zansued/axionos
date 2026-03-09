@@ -229,7 +229,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
         };
 
         const functionName = getStageFunctionName(stage);
-        const { data: result, error } = await supabase.functions.invoke(functionName, {
+        const { data: rawResult, error } = await supabase.functions.invoke(functionName, {
           body: payload,
         });
 
@@ -245,6 +245,35 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
             if (errJson?.error) message = errJson.error;
           }
           throw new Error(message);
+        }
+
+        // Handle background-processed stages: poll job until completion
+        let result = rawResult;
+        if (result?.status === "processing" && result?.job_id) {
+          toast({ title: `⏳ ${stage} em processamento em background...` });
+          const jobId = result.job_id;
+          const maxPolls = 120; // up to ~4 minutes
+          for (let i = 0; i < maxPolls; i++) {
+            await new Promise((r) => setTimeout(r, 2000));
+            const { data: job } = await supabase
+              .from("initiative_jobs")
+              .select("status, outputs, error")
+              .eq("id", jobId)
+              .single();
+            if (!job) continue;
+            if (job.status === "success") {
+              result = { success: true, ...(typeof job.outputs === "object" && job.outputs ? job.outputs : {}) };
+              break;
+            }
+            if (job.status === "failed") {
+              throw new Error(typeof job.error === "string" ? job.error : "Background job failed");
+            }
+            // Still running, continue polling
+          }
+          // If still processing after max polls, treat as timeout
+          if (result?.status === "processing") {
+            throw new Error("Background job timed out. Check pipeline status.");
+          }
         }
         const stageLabels: Record<string, string> = {
           // v3 Venture Intelligence Layer
