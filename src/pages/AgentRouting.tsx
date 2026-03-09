@@ -45,7 +45,6 @@ const statusColors: Record<string, string> = {
 export default function AgentRouting() {
   const [selectedDecision, setSelectedDecision] = useState<typeof mockDecisions[0] | null>(null);
   const [activeTab, setActiveTab] = useState("decisions");
-  const { guidance, whyNowText } = usePageGuidance("routing");
 
   const total = mockDecisions.length;
   const flagged = mockDecisions.filter(d => d.status === "flagged").length;
