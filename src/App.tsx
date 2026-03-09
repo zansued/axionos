@@ -66,6 +66,7 @@ import IntelligenceMemory from "./pages/IntelligenceMemory";
 import Playbooks from "./pages/Playbooks";
 import BoundedOperations from "./pages/BoundedOperations";
 import DecisionEngine from "./pages/DecisionEngine";
+import DoctrineAdaptation from "./pages/DoctrineAdaptation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
