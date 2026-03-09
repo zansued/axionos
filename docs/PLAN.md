@@ -610,6 +610,45 @@ Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed
 
 ---
 
+## Block T — Governed Intelligence OS (Sprints 95–98) — ✅ COMPLETE
+
+**Goal:** Consolidate existing capabilities into an institutional decision system with doctrine synthesis, bounded autonomous operations, and memory consolidation.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 95 | Institutional Memory Consolidation | T | ✅ Complete | Unified institutional memory substrate merging convergence, engineering, agent, and platform memory |
+| 96 | Doctrine & Playbook Synthesis | T | ✅ Complete | Transform institutional memory into playbooks, doctrine packs, and operational heuristics |
+| 97 | Bounded Autonomous Operations | T | ✅ Complete | Safe autonomous execution for repetitive, low-risk operations with governance escalation gates |
+| 98 | Institutional Decision Engine | T | ✅ Complete | Memory + doctrine + risk + outcome → consistent advisory recommendations with configurable autonomy tiers |
+
+---
+
+## Block U — Adaptive Institutional Ecosystem (Sprints 99–102) — ✅ COMPLETE
+
+**Goal:** Evolve from Governed Intelligence OS to Adaptive Institutional Ecosystem — governing intelligence across institutions, preserving coherence, adapting doctrine across contexts, resolving conflicts, and building long-horizon institutional resilience.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 99 | Cross-Context Doctrine Adaptation | U | ✅ Complete | Adapt doctrine/playbooks by workspace type, profile, operational context, and maturity |
+| 100 | Institutional Conflict Resolution Engine | U | ✅ Complete | Detect and mediate conflicts between policies, doctrines, workspace needs, platform rules, and strategic priorities |
+| 101 | Federated Intelligence Boundaries | U | ✅ Complete | Enable shared intelligence across contexts without breaking isolation |
+| 102 | Resilience & Continuity Governance | U | ✅ Complete | Govern institutional continuity across failure, drift, policy conflict, degraded autonomy, and doctrine obsolescence |
+
+---
+
+## Block V — Sovereign Institutional Intelligence (Sprints 103–106) — ✅ COMPLETE
+
+**Goal:** Establish sovereign institutional intelligence with memory constitution, decision rights orchestration, dependency sovereignty, and strategic succession.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 103 | Institutional Memory Constitution | V | ✅ Complete | Memory-level constitution defining amendment governance, protection rules, and institutional memory sovereignty |
+| 104 | Sovereign Decision Rights Orchestration | V | ✅ Complete | Orchestrate decision authority, delegation, escalation, and sovereign rights across institutional contexts |
+| 105 | Dependency Sovereignty & External Reliance Governance | V | ✅ Complete | Govern external dependencies, reliance risk, substitution readiness, and sovereignty posture |
+| 106 | Strategic Succession & Long-Horizon Continuity | V | ✅ Complete | Succession planning, knowledge concentration detection, handoff orchestration, transition risk assessment, long-horizon continuity governance |
+
+---
+
 ## Capability Verification Matrix
 
 | Capability | Status | Sprint | Key Modules |
