@@ -55,6 +55,12 @@ serve(async (req) => {
     return errorResponse(`Max retry attempts (${subjob.max_attempts}) reached`, 400);
   }
 
+  // Mark manual retry cause for observability
+  await serviceClient
+    .from("pipeline_subjobs")
+    .update({ retry_trigger: "manual" })
+    .eq("id", subjob.id);
+
   // Invoke the pipeline-architecture function with retry params
   const { data, error } = await userClient.functions.invoke("pipeline-architecture", {
     body: {

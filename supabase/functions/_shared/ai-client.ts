@@ -83,6 +83,7 @@ export async function callAI(
   orgId?: string,
   initiativeId?: string,
   skipEfficiency = false,
+  abortSignal?: AbortSignal,
 ): Promise<AIResult> {
   const routing = routeRequest({
     systemPrompt,
@@ -187,6 +188,7 @@ export async function callAI(
             "Content-Type": "application/json",
           },
           body: JSON.stringify(body),
+          signal: abortSignal,
         });
 
         if (resp.status === 429 || resp.status >= 500) {

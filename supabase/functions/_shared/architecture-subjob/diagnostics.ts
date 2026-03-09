@@ -138,7 +138,7 @@ export function compactSystemArchSummary(systemResult: Record<string, unknown>):
     project_structure: systemResult.project_structure ? "defined" : "not_defined",
   };
 
-  return JSON.stringify(summary, null, 2);
+  return JSON.stringify(summary);
 }
 
 // ─── Bottleneck Analysis ───

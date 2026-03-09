@@ -41,12 +41,121 @@ async function runAgent(
   systemPrompt: string,
   userPrompt: string,
   usePro = false,
+  options: {
+    stage?: string;
+    organizationId?: string;
+    initiativeId?: string;
+    maxRetries?: number;
+    abortSignal?: AbortSignal;
+  } = {},
 ): Promise<AgentOutput> {
   const promptChars = systemPrompt.length + userPrompt.length;
-  const aiResult = await callAI(apiKey, systemPrompt, userPrompt, true, 3, usePro);
+  const aiResult = await callAI(
+    apiKey,
+    systemPrompt,
+    userPrompt,
+    true,
+    options.maxRetries ?? 2,
+    usePro,
+    options.stage,
+    options.organizationId,
+    options.initiativeId,
+    false,
+    options.abortSignal,
+  );
+
   const rawOutputChars = aiResult.content?.length || 0;
   const result = JSON.parse(aiResult.content);
-  return { role, model: aiResult.model, tokens: aiResult.tokens, costUsd: aiResult.costUsd, durationMs: aiResult.durationMs, result, rawOutputChars, promptChars, contextChars: 0 };
+  return {
+    role,
+    model: aiResult.model,
+    tokens: aiResult.tokens,
+    costUsd: aiResult.costUsd,
+    durationMs: aiResult.durationMs,
+    result,
+    rawOutputChars,
+    promptChars,
+    contextChars: 0,
+  };
+}
+
+function compactPayloadForChildAgents(payload: unknown, maxChars = 3200): string {
+  if (!payload) return "Não disponível";
+
+  const raw = typeof payload === "string" ? payload : JSON.stringify(payload);
+  if (raw.length <= maxChars) return raw;
+
+  if (payload && typeof payload === "object" && !Array.isArray(payload)) {
+    const obj = payload as Record<string, unknown>;
+    const prioritizedKeys = [
+      "core_requirements",
+      "functional_requirements",
+      "non_functional_requirements",
+      "entities",
+      "features",
+      "user_flows",
+      "constraints",
+      "integrations",
+      "acceptance_criteria",
+      "success_metrics",
+    ];
+
+    const compact: Record<string, unknown> = {};
+    for (const key of prioritizedKeys) {
+      if (key in obj) compact[key] = obj[key];
+    }
+
+    const compactRaw = JSON.stringify(Object.keys(compact).length > 0 ? compact : obj);
+    if (compactRaw.length <= maxChars) return compactRaw;
+  }
+
+  return `${raw.slice(0, maxChars)}\n...[truncated ${raw.length - maxChars} chars]`;
+}
+
+function estimateSubjobInput(
+  subjobKey: string,
+  projectContext: string,
+  requirementsData: string,
+  requirementsDataCompact: string,
+  productArchData: string,
+  completedResults: Record<string, Record<string, unknown>>,
+): { promptChars: number; contextChars: number } {
+  const systemResult = completedResults["architecture.system"] || {};
+  const compactSysContext = compactSystemArchSummary(systemResult);
+  const fullSystemArchJson = JSON.stringify(systemResult, null, 2);
+  const dataArchJson = JSON.stringify(completedResults["architecture.data"] || {}, null, 2);
+  const apiArchJson = JSON.stringify(completedResults["architecture.api"] || {}, null, 2);
+
+  switch (subjobKey) {
+    case "architecture.system": {
+      const p = systemArchitectPrompt(projectContext, requirementsData, productArchData);
+      return { promptChars: p.system.length + p.user.length, contextChars: 0 };
+    }
+    case "architecture.data": {
+      const p = dataArchitectPrompt(projectContext, requirementsDataCompact, compactSysContext);
+      return { promptChars: p.system.length + p.user.length, contextChars: compactSysContext.length };
+    }
+    case "architecture.api": {
+      const p = apiArchitectPrompt(projectContext, requirementsDataCompact, compactSysContext);
+      return { promptChars: p.system.length + p.user.length, contextChars: compactSysContext.length };
+    }
+    case "architecture.dependencies": {
+      const p = dependencyPlannerPrompt(projectContext, fullSystemArchJson, dataArchJson, apiArchJson);
+      return {
+        promptChars: p.system.length + p.user.length,
+        contextChars: fullSystemArchJson.length + dataArchJson.length + apiArchJson.length,
+      };
+    }
+    default:
+      return { promptChars: 0, contextChars: 0 };
+  }
+}
+
+function getAdaptiveTimeoutMs(baseTimeoutMs: number, promptChars: number, contextChars: number, attemptNumber: number): number {
+  const estimatedInputTokens = estimateTokens(promptChars + contextChars);
+  const tokenBudgetBoost = Math.min(70_000, estimatedInputTokens * 12);
+  const retryBoost = attemptNumber > 1 ? 15_000 : 0;
+  return Math.min(180_000, baseTimeoutMs + tokenBudgetBoost + retryBoost);
 }
 
 /** Execute a single subjob by key, using results from completed dependencies */
@@ -55,8 +164,14 @@ async function executeSubjob(
   apiKey: string,
   projectContext: string,
   requirementsData: string,
+  requirementsDataCompact: string,
   productArchData: string,
   completedResults: Record<string, Record<string, unknown>>,
+  executionMeta: {
+    organizationId: string;
+    initiativeId: string;
+    abortSignal?: AbortSignal;
+  },
 ): Promise<AgentOutput> {
   // Use compact summary for downstream agents instead of full system output
   const systemResult = completedResults["architecture.system"] || {};
@@ -68,27 +183,47 @@ async function executeSubjob(
   switch (subjobKey) {
     case "architecture.system": {
       const p = systemArchitectPrompt(projectContext, requirementsData, productArchData);
-      const result = await runAgent(apiKey, "system_architect", p.system, p.user, true);
+      const result = await runAgent(apiKey, "system_architect", p.system, p.user, true, {
+        stage: "architecture.system",
+        organizationId: executionMeta.organizationId,
+        initiativeId: executionMeta.initiativeId,
+        abortSignal: executionMeta.abortSignal,
+      });
       result.contextChars = 0;
       return result;
     }
     case "architecture.data": {
-      // Use compact context instead of full system arch
-      const p = dataArchitectPrompt(projectContext, requirementsData, compactSysContext);
-      const result = await runAgent(apiKey, "data_architect", p.system, p.user, true);
+      // Use compact context and compact requirements for child agent
+      const p = dataArchitectPrompt(projectContext, requirementsDataCompact, compactSysContext);
+      const result = await runAgent(apiKey, "data_architect", p.system, p.user, false, {
+        stage: "architecture.data",
+        organizationId: executionMeta.organizationId,
+        initiativeId: executionMeta.initiativeId,
+        abortSignal: executionMeta.abortSignal,
+      });
       result.contextChars = compactSysContext.length;
       return result;
     }
     case "architecture.api": {
-      // Use compact context instead of full system arch
-      const p = apiArchitectPrompt(projectContext, requirementsData, compactSysContext);
-      const result = await runAgent(apiKey, "api_architect", p.system, p.user, false);
+      // Use compact context and compact requirements for child agent
+      const p = apiArchitectPrompt(projectContext, requirementsDataCompact, compactSysContext);
+      const result = await runAgent(apiKey, "api_architect", p.system, p.user, false, {
+        stage: "architecture.api",
+        organizationId: executionMeta.organizationId,
+        initiativeId: executionMeta.initiativeId,
+        abortSignal: executionMeta.abortSignal,
+      });
       result.contextChars = compactSysContext.length;
       return result;
     }
     case "architecture.dependencies": {
       const p = dependencyPlannerPrompt(projectContext, fullSystemArchJson, dataArchJson, apiArchJson);
-      const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, true);
+      const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, true, {
+        stage: "architecture.dependencies",
+        organizationId: executionMeta.organizationId,
+        initiativeId: executionMeta.initiativeId,
+        abortSignal: executionMeta.abortSignal,
+      });
       result.contextChars = fullSystemArchJson.length + dataArchJson.length + apiArchJson.length;
       return result;
     }
@@ -225,6 +360,7 @@ MVP: ${initiative.mvp_scope || "A definir"}
 Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
 
     const requirementsData = dp.requirements ? JSON.stringify(dp.requirements, null, 2) : "Não disponível";
+    const requirementsDataCompact = compactPayloadForChildAgents(dp.requirements);
     const productArchData = dp.product_architecture ? JSON.stringify(dp.product_architecture, null, 2) : "Não disponível";
 
     // Collect completed results for dependency injection
@@ -280,17 +416,51 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
         let contextChars = 0;
         let outputChars = 0;
         let modelUsed: string | null = null;
+        let timeoutHandle: number | null = null;
 
         try {
-          const timeoutMs = def?.timeoutMs || 45_000;
+          const estimatedInput = estimateSubjobInput(
+            subjob.subjob_key,
+            projectContext,
+            requirementsData,
+            requirementsDataCompact,
+            productArchData,
+            completedResults,
+          );
+          promptChars = estimatedInput.promptChars;
+          contextChars = estimatedInput.contextChars;
+
+          const baseTimeoutMs = def?.timeoutMs || 45_000;
+          const timeoutMs = getAdaptiveTimeoutMs(baseTimeoutMs, promptChars, contextChars, subjob.attempt_number || 1);
+          const abortController = new AbortController();
+
           const agentPromise = executeSubjob(
-            subjob.subjob_key, apiKey, projectContext,
-            requirementsData, productArchData, completedResults,
+            subjob.subjob_key,
+            apiKey,
+            projectContext,
+            requirementsData,
+            requirementsDataCompact,
+            productArchData,
+            completedResults,
+            {
+              organizationId: ctx.organizationId,
+              initiativeId: ctx.initiativeId,
+              abortSignal: abortController.signal,
+            },
           );
-          const timeoutPromise = new Promise<never>((_, reject) =>
-            setTimeout(() => reject(new Error(`Timeout: ${subjob.subjob_key} exceeded ${timeoutMs}ms`)), timeoutMs)
-          );
+
+          const timeoutPromise = new Promise<never>((_, reject) => {
+            timeoutHandle = setTimeout(() => {
+              abortController.abort();
+              reject(new Error(`Timeout: ${subjob.subjob_key} exceeded ${timeoutMs}ms`));
+            }, timeoutMs) as unknown as number;
+          });
+
           const agentResult = await Promise.race([agentPromise, timeoutPromise]);
+          if (timeoutHandle !== null) {
+            clearTimeout(timeoutHandle);
+            timeoutHandle = null;
+          }
 
           parseStatus = "success"; // If we got here, JSON parsed OK
           promptChars = agentResult.promptChars;
@@ -336,6 +506,10 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           );
           return { key: subjob.subjob_key, success: true };
         } catch (err: any) {
+          if (timeoutHandle !== null) {
+            clearTimeout(timeoutHandle);
+            timeoutHandle = null;
+          }
           const durationMs = Date.now() - startMs;
           const failureType = classifyFailure(err.message || "unknown");
           const isTimeout = failureType === "failed_timeout";
