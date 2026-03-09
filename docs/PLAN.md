@@ -870,5 +870,6 @@ Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed
 | Governed Intelligence OS | 4 | 95–98 |
 | Adaptive Institutional Ecosystem | 4 | 99–102 |
 | Sovereign Institutional Intelligence | 4 | 103–106 |
+| Strategic Autonomy & Civilizational Coordination | 4 | 107–110 |
 | Support | 11 | Various |
-| **Total** | **~125** | |
+| **Total** | **~129** | |
