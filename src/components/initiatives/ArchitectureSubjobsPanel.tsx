@@ -28,6 +28,8 @@ interface AttemptDiag {
   estimated_input_tokens: number;
   estimated_output_tokens: number;
   provider_latency_ms: number | null;
+  parse_ms: number | null;
+  persist_ms: number | null;
   parse_status: string;
   persist_status: string;
   terminal_status: string;
@@ -274,7 +276,7 @@ export function ArchitectureSubjobsPanel({ initiativeId, jobId }: ArchitectureSu
                   </p>
                   {diagLogs.map((diag, i) => (
                     <div key={i} className={`text-[10px] p-1.5 rounded ${diag.failure_type ? "bg-destructive/5" : "bg-accent/5"}`}>
-                      <div className="flex items-center gap-2 flex-wrap">
+                    <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium">#{diag.attempt_number}</span>
                         <span>{(diag.duration_ms / 1000).toFixed(1)}s</span>
                         {diag.model && <span className="text-muted-foreground">{diag.model}</span>}
@@ -284,10 +286,13 @@ export function ArchitectureSubjobsPanel({ initiativeId, jobId }: ArchitectureSu
                         <span className={diag.persist_status === "failed" ? "text-destructive" : "text-muted-foreground"}>
                           persist: {diag.persist_status}
                         </span>
+                      </div>
+                      <div className="flex items-center gap-2 flex-wrap text-muted-foreground mt-0.5">
+                        {diag.provider_latency_ms != null && <span>provider: {(diag.provider_latency_ms / 1000).toFixed(1)}s</span>}
+                        {diag.parse_ms != null && diag.parse_ms > 0 && <span>parse: {diag.parse_ms}ms</span>}
+                        {diag.persist_ms != null && diag.persist_ms > 0 && <span>persist: {diag.persist_ms}ms</span>}
                         {diag.estimated_input_tokens > 0 && (
-                          <span className="text-muted-foreground">
-                            in: ~{diag.estimated_input_tokens}t · out: ~{diag.estimated_output_tokens}t
-                          </span>
+                          <span>in: ~{diag.estimated_input_tokens}t · out: ~{diag.estimated_output_tokens}t</span>
                         )}
                       </div>
                       {diag.failure_reason && (
