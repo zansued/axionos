@@ -1,5 +1,12 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
+import { categorizeRoles } from "../_shared/strategic-succession/critical-role-mapper.ts";
+import { detectKnowledgeConcentration } from "../_shared/strategic-succession/knowledge-concentration-detector.ts";
+import { scoreSuccessionReadiness } from "../_shared/strategic-succession/succession-readiness-scorer.ts";
+import { evaluateHandoffViability } from "../_shared/strategic-succession/handoff-orchestration-engine.ts";
+import { evaluateStrategyContinuity } from "../_shared/strategic-succession/strategy-continuity-evaluator.ts";
+import { detectTransitionRisks } from "../_shared/strategic-succession/transition-risk-detector.ts";
+import { explainSuccession } from "../_shared/strategic-succession/succession-explainer.ts";
 
 const url = Deno.env.get("SUPABASE_URL")!;
 const sKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -34,10 +41,10 @@ Deno.serve(async (req) => {
           sc.from("succession_assessments").select("*", { count: "exact", head: true }).eq("organization_id", organization_id),
           sc.from("continuity_transition_events").select("*", { count: "exact", head: true }).eq("organization_id", organization_id).is("resolved_at", null),
         ]);
-        // Snapshot: roles without backup
         const { data: profiles } = await sc.from("role_continuity_profiles").select("backup_exists,knowledge_concentration_score,succession_readiness_level").eq("organization_id", organization_id);
-        const noBackup = (profiles ?? []).filter((p: any) => !p.backup_exists).length;
-        const highConcentration = (profiles ?? []).filter((p: any) => (p.knowledge_concentration_score ?? 0) > 0.7).length;
+        const all = profiles ?? [];
+        const noBackup = all.filter((p: any) => !p.backup_exists).length;
+        const highConcentration = all.filter((p: any) => (p.knowledge_concentration_score ?? 0) > 0.6).length;
         result = {
           constitutions: cRes.count ?? 0,
           critical_roles: rRes.count ?? 0,
@@ -57,7 +64,9 @@ Deno.serve(async (req) => {
       }
       case "critical_roles": {
         const { data } = await sc.from("critical_roles").select("*").eq("organization_id", organization_id).order("criticality_level").limit(200);
-        result = data ?? [];
+        // Enrich with categorization from shared module
+        const categorized = categorizeRoles(data ?? []);
+        result = { roles: data ?? [], categorization: { totalRoles: categorized.total, criticalCount: categorized.critical.length, leadershipCount: categorized.leadership.length, knowledgeAnchorCount: categorized.knowledgeAnchors.length, domains: Object.keys(categorized.byDomain) } };
         break;
       }
       case "continuity_profiles": {
@@ -80,42 +89,149 @@ Deno.serve(async (req) => {
         result = data ?? [];
         break;
       }
+
+      // --- Uses shared modules for real computation ---
+      case "compute_assessment": {
+        const { data: profiles } = await sc.from("role_continuity_profiles").select("*").eq("organization_id", organization_id);
+        const { data: roles } = await sc.from("critical_roles").select("*").eq("organization_id", organization_id);
+        const { data: plans } = await sc.from("succession_plans").select("*").eq("organization_id", organization_id);
+        const allProfiles = profiles ?? [];
+        const allRoles = roles ?? [];
+
+        // Knowledge concentration detection
+        const concentrationInputs = allProfiles.map((p: any) => ({
+          roleId: p.role_id,
+          roleName: p.current_owner_ref ?? p.role_id,
+          knowledgeConcentrationScore: p.knowledge_concentration_score ?? 0,
+          backupExists: p.backup_exists ?? false,
+          handoffMaturityScore: p.handoff_maturity_score ?? 0,
+          criticalityLevel: allRoles.find((r: any) => r.id === p.role_id)?.criticality_level ?? "medium",
+        }));
+        const concentrationRisks = detectKnowledgeConcentration(concentrationInputs);
+
+        // Succession readiness per profile
+        const readinessResults = allProfiles.map((p: any) => {
+          const role = allRoles.find((r: any) => r.id === p.role_id);
+          const rolePlans = (plans ?? []).filter((pl: any) => pl.role_id === p.role_id);
+          return {
+            roleId: p.role_id,
+            ownerRef: p.current_owner_ref,
+            ...scoreSuccessionReadiness({
+              backupExists: p.backup_exists ?? false,
+              successionPlanExists: rolePlans.length > 0,
+              successionPlanActive: rolePlans.some((pl: any) => pl.status === "active"),
+              handoffMaturityScore: p.handoff_maturity_score ?? 0,
+              knowledgeConcentrationScore: p.knowledge_concentration_score ?? 0,
+              criticalityLevel: role?.criticality_level ?? "medium",
+            }),
+          };
+        });
+
+        // Transition risk detection
+        const transitionInputs = allProfiles.map((p: any) => {
+          const role = allRoles.find((r: any) => r.id === p.role_id);
+          const rolePlans = (plans ?? []).filter((pl: any) => pl.role_id === p.role_id);
+          return {
+            roleName: role?.role_name ?? p.current_owner_ref ?? "unknown",
+            criticalityLevel: role?.criticality_level ?? "medium",
+            backupExists: p.backup_exists ?? false,
+            successionPlanActive: rolePlans.some((pl: any) => pl.status === "active"),
+            handoffMaturityScore: p.handoff_maturity_score ?? 0,
+            knowledgeConcentrationScore: p.knowledge_concentration_score ?? 0,
+          };
+        });
+        const transitionRisks = detectTransitionRisks(transitionInputs);
+
+        // Handoff viability per plan
+        const handoffResults = (plans ?? []).map((pl: any) => ({
+          planId: pl.id,
+          planCode: pl.plan_code,
+          ...evaluateHandoffViability({
+            handoff_sequence: pl.handoff_sequence ?? [],
+            knowledge_transfer_steps: pl.knowledge_transfer_steps ?? [],
+            authority_transfer_steps: pl.authority_transfer_steps ?? [],
+            continuity_checks: pl.continuity_checks ?? [],
+          }),
+        }));
+
+        // Strategy continuity aggregate
+        const avgReadiness = readinessResults.length > 0 ? readinessResults.reduce((s: number, r: any) => s + r.score, 0) / readinessResults.length : 0;
+        const avgConc = concentrationRisks.length > 0 ? concentrationInputs.reduce((s: number, c: any) => s + c.knowledgeConcentrationScore * 100, 0) / concentrationInputs.length : 0;
+        const avgHandoff = handoffResults.length > 0 ? handoffResults.reduce((s: number, h: any) => s + h.completeness, 0) / handoffResults.length : 0;
+        const continuity = evaluateStrategyContinuity({
+          readinessScore: avgReadiness,
+          concentrationRiskScore: avgConc,
+          handoffViabilityScore: avgHandoff,
+          memoryPreservationScore: 50,
+          authorityIntegrityScore: 50,
+        });
+
+        result = {
+          concentrationRisks,
+          readinessResults,
+          transitionRisks,
+          handoffResults,
+          continuity,
+        };
+        break;
+      }
+
       case "recommendations": {
         const { data: profiles } = await sc.from("role_continuity_profiles").select("backup_exists,knowledge_concentration_score,handoff_maturity_score,succession_readiness_level").eq("organization_id", organization_id);
         const recs: string[] = [];
         const all = profiles ?? [];
         const noBackup = all.filter((p: any) => !p.backup_exists);
         if (noBackup.length > 0) recs.push(`${noBackup.length} critical roles without designated backup.`);
-        const highConc = all.filter((p: any) => (p.knowledge_concentration_score ?? 0) > 0.7);
-        if (highConc.length > 0) recs.push(`${highConc.length} roles with dangerous knowledge concentration.`);
+        const highConc = all.filter((p: any) => (p.knowledge_concentration_score ?? 0) > 0.6);
+        if (highConc.length > 0) recs.push(`${highConc.length} roles with dangerous knowledge concentration (>60%).`);
         const lowHandoff = all.filter((p: any) => (p.handoff_maturity_score ?? 0) < 0.3);
-        if (lowHandoff.length > 0) recs.push(`${lowHandoff.length} roles with weak handoff maturity.`);
+        if (lowHandoff.length > 0) recs.push(`${lowHandoff.length} roles with weak handoff maturity (<30%).`);
+        const fragile = all.filter((p: any) => p.succession_readiness_level === "fragile");
+        if (fragile.length > 0) recs.push(`${fragile.length} roles with fragile succession readiness.`);
         const { count: openTransitions } = await sc.from("continuity_transition_events").select("*", { count: "exact", head: true }).eq("organization_id", organization_id).is("resolved_at", null);
         if ((openTransitions ?? 0) > 0) recs.push(`${openTransitions} unresolved transition events.`);
         if (recs.length === 0) recs.push("Succession posture is healthy.");
         result = { recommendations: recs };
         break;
       }
+
       case "explain": {
         const { role_id } = params;
         const { data: role } = await sc.from("critical_roles").select("*").eq("id", role_id).single();
         if (!role) { result = { error: "Role not found" }; break; }
         const { data: profile } = await sc.from("role_continuity_profiles").select("*").eq("role_id", role_id).order("created_at", { ascending: false }).limit(1).maybeSingle();
-        const { data: plans } = await sc.from("succession_plans").select("status,succession_type").eq("role_id", role_id);
+        const { data: rolePlans } = await sc.from("succession_plans").select("status,succession_type").eq("role_id", role_id);
+
+        // Use shared explainer for structured output
+        const explanation = explainSuccession({
+          roleName: role.role_name,
+          readinessLevel: profile?.succession_readiness_level ?? "unknown",
+          readinessScore: profile ? scoreSuccessionReadiness({
+            backupExists: profile.backup_exists ?? false,
+            successionPlanExists: (rolePlans ?? []).length > 0,
+            successionPlanActive: (rolePlans ?? []).some((p: any) => p.status === "active"),
+            handoffMaturityScore: profile.handoff_maturity_score ?? 0,
+            knowledgeConcentrationScore: profile.knowledge_concentration_score ?? 0,
+            criticalityLevel: role.criticality_level ?? "medium",
+          }).score : 0,
+          backupExists: profile?.backup_exists ?? false,
+          knowledgeConcentrationScore: profile?.knowledge_concentration_score ?? 0,
+          handoffMaturityScore: profile?.handoff_maturity_score ?? 0,
+          successionPlanActive: (rolePlans ?? []).some((p: any) => p.status === "active"),
+        });
+
         result = {
           role: role.role_name,
           domain: role.domain,
           criticality: role.criticality_level,
           continuity_tier: role.continuity_tier,
-          backup_exists: profile?.backup_exists ?? false,
-          knowledge_concentration: profile?.knowledge_concentration_score ?? 0,
-          handoff_maturity: profile?.handoff_maturity_score ?? 0,
-          readiness: profile?.succession_readiness_level ?? "unknown",
-          plans: (plans ?? []).length,
-          active_plan: (plans ?? []).some((p: any) => p.status === "active"),
+          explanation,
+          plans_count: (rolePlans ?? []).length,
+          has_active_plan: (rolePlans ?? []).some((p: any) => p.status === "active"),
         };
         break;
       }
+
       default:
         result = { error: `Unknown action: ${action}` };
     }
