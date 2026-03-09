@@ -1473,7 +1473,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, total_tokens: totalTokens,
           chain_of_agents: hasChain,
-        }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: 0 });
+        }, { model: aiModel, costUsd: totalCost, durationMs: 0 });
 
         await log("pipeline_execution_complete", `Execução Chain-of-Agents concluída: ${executedCount} subtasks (${codeFilesGenerated} arquivos), ${failedCount} falhas`, {
           total_tokens: totalTokens, cost_usd: totalCost, code_files: codeFilesGenerated, chain_of_agents: hasChain,
