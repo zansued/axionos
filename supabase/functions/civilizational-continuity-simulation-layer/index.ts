@@ -95,6 +95,49 @@ Deno.serve(async (req) => {
         break;
       }
 
+      case "subjects_all": {
+        const { data } = await supabase.from("simulation_subjects").select("*").eq("organization_id", organization_id).order("created_at", { ascending: false }).limit(200);
+        result = { subjects: data || [] };
+        break;
+      }
+
+      case "scenarios_all": {
+        const { data } = await supabase.from("simulation_scenarios").select("*").eq("organization_id", organization_id).order("created_at", { ascending: false }).limit(200);
+        result = { scenarios: data || [] };
+        break;
+      }
+
+      case "simulation_history": {
+        const { data } = await supabase
+          .from("scenario_simulation_runs")
+          .select("survivability_score, identity_preservation_score, continuity_stress_score, viability_score, created_at")
+          .eq("organization_id", organization_id)
+          .order("created_at", { ascending: true })
+          .limit(500);
+
+        if (!data || data.length === 0) { result = { history: [] }; break; }
+
+        const byDate = new Map<string, { surv: number[]; identity: number[]; stress: number[] }>();
+        for (const row of data) {
+          const date = new Date(row.created_at).toISOString().slice(0, 10);
+          if (!byDate.has(date)) byDate.set(date, { surv: [], identity: [], stress: [] });
+          const g = byDate.get(date)!;
+          g.surv.push(Number(row.survivability_score));
+          g.identity.push(Number(row.identity_preservation_score));
+          g.stress.push(Number(row.continuity_stress_score));
+        }
+
+        const history = Array.from(byDate.entries()).map(([date, g]) => ({
+          date,
+          survivability: g.surv.reduce((a, b) => a + b, 0) / g.surv.length,
+          identity_preservation: g.identity.reduce((a, b) => a + b, 0) / g.identity.length,
+          continuity_stress: g.stress.reduce((a, b) => a + b, 0) / g.stress.length,
+        }));
+
+        result = { history };
+        break;
+      }
+
       case "simulate": {
         const { data: runs } = await supabase.from("scenario_simulation_runs")
           .select("*, simulation_scenarios(scenario_name, scenario_type), simulation_subjects(title, subject_type)")
