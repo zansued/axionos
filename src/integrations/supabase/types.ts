@@ -14218,6 +14218,131 @@ export type Database = {
           },
         ]
       }
+      horizon_alignment_evaluations: {
+        Row: {
+          alignment_score: number
+          constitution_id: string
+          created_at: string
+          deferred_risk_score: number
+          evaluation_summary: string
+          horizon_id: string
+          id: string
+          organization_id: string
+          subject_id: string
+          support_level: string
+          tension_score: number
+        }
+        Insert: {
+          alignment_score?: number
+          constitution_id: string
+          created_at?: string
+          deferred_risk_score?: number
+          evaluation_summary?: string
+          horizon_id: string
+          id?: string
+          organization_id: string
+          subject_id: string
+          support_level?: string
+          tension_score?: number
+        }
+        Update: {
+          alignment_score?: number
+          constitution_id?: string
+          created_at?: string
+          deferred_risk_score?: number
+          evaluation_summary?: string
+          horizon_id?: string
+          id?: string
+          organization_id?: string
+          subject_id?: string
+          support_level?: string
+          tension_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "horizon_alignment_evaluations_constitution_id_fkey"
+            columns: ["constitution_id"]
+            isOneToOne: false
+            referencedRelation: "strategic_horizon_constitutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "horizon_alignment_evaluations_horizon_id_fkey"
+            columns: ["horizon_id"]
+            isOneToOne: false
+            referencedRelation: "strategic_horizons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "horizon_alignment_evaluations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "horizon_alignment_evaluations_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "strategic_alignment_subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      horizon_conflict_events: {
+        Row: {
+          affected_horizons: Json
+          conflict_type: string
+          created_at: string
+          event_summary: string
+          id: string
+          organization_id: string
+          payload: Json
+          resolved_at: string | null
+          severity: string
+          subject_id: string
+        }
+        Insert: {
+          affected_horizons?: Json
+          conflict_type?: string
+          created_at?: string
+          event_summary?: string
+          id?: string
+          organization_id: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+          subject_id: string
+        }
+        Update: {
+          affected_horizons?: Json
+          conflict_type?: string
+          created_at?: string
+          event_summary?: string
+          id?: string
+          organization_id?: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+          subject_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "horizon_conflict_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "horizon_conflict_events_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "strategic_alignment_subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       improvement_benchmark_metrics: {
         Row: {
           baseline_value: number | null
@@ -17501,6 +17626,66 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      multi_horizon_recommendations: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          organization_id: string
+          priority_level: string
+          rationale: string
+          recommendation_summary: string
+          recommendation_type: string
+          subject_id: string
+          target_horizon: string
+          tradeoff_note: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          organization_id: string
+          priority_level?: string
+          rationale?: string
+          recommendation_summary?: string
+          recommendation_type?: string
+          subject_id: string
+          target_horizon?: string
+          tradeoff_note?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          organization_id?: string
+          priority_level?: string
+          rationale?: string
+          recommendation_summary?: string
+          recommendation_type?: string
+          subject_id?: string
+          target_horizon?: string
+          tradeoff_note?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "multi_horizon_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "multi_horizon_recommendations_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "strategic_alignment_subjects"
             referencedColumns: ["id"]
           },
         ]
@@ -25874,6 +26059,153 @@ export type Database = {
             columns: ["phase_id"]
             isOneToOne: false
             referencedRelation: "story_phases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strategic_alignment_subjects: {
+        Row: {
+          active: boolean
+          created_at: string
+          domain: string
+          id: string
+          organization_id: string
+          subject_code: string
+          subject_ref: Json
+          subject_type: string
+          summary: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          domain?: string
+          id?: string
+          organization_id: string
+          subject_code?: string
+          subject_ref?: Json
+          subject_type?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          domain?: string
+          id?: string
+          organization_id?: string
+          subject_code?: string
+          subject_ref?: Json
+          subject_type?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategic_alignment_subjects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strategic_horizon_constitutions: {
+        Row: {
+          constitution_code: string
+          constitution_name: string
+          created_at: string
+          created_by: string | null
+          default_horizon_weights: Json
+          horizon_principles: string
+          id: string
+          organization_id: string
+          scope: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string | null
+          default_horizon_weights?: Json
+          horizon_principles?: string
+          id?: string
+          organization_id: string
+          scope?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string | null
+          default_horizon_weights?: Json
+          horizon_principles?: string
+          id?: string
+          organization_id?: string
+          scope?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategic_horizon_constitutions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strategic_horizons: {
+        Row: {
+          active: boolean
+          created_at: string
+          default_timeframe: string
+          description: string
+          horizon_code: string
+          horizon_name: string
+          horizon_type: string
+          id: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          default_timeframe?: string
+          description?: string
+          horizon_code?: string
+          horizon_name?: string
+          horizon_type?: string
+          id?: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          default_timeframe?: string
+          description?: string
+          horizon_code?: string
+          horizon_name?: string
+          horizon_type?: string
+          id?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategic_horizons_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
