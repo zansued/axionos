@@ -247,7 +247,7 @@ async function executeSubjob(
         initiativeId: executionMeta.initiativeId,
         abortSignal: executionMeta.abortSignal,
       });
-      result.contextChars = compactSys.length + compactData.length + compactApi.length;
+      result.contextChars = JSON.stringify(enrichedSummary).length;
       return result;
     }
     case "architecture.synthesis": {
