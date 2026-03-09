@@ -62,6 +62,7 @@ import ResearchSandbox from "./pages/ResearchSandbox";
 import ResearchPatterns from "./pages/ResearchPatterns";
 import ArchitecturePromotion from "./pages/ArchitecturePromotion";
 import AIRoutingPolicy from "./pages/AIRoutingPolicy";
+import IntelligenceMemory from "./pages/IntelligenceMemory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -123,6 +124,7 @@ const App = () => (
 
                         {/* ── Workspace surface ── */}
                         <Route path="/adoption"                element={<W><AdoptionIntelligence /></W>} />
+                        <Route path="/intelligence-memory"    element={<W><IntelligenceMemory /></W>} />
                         <Route path="/improvement-ledger"      element={<W><ImprovementLedger /></W>} />
                         <Route path="/improvement-candidates"  element={<W><ImprovementCandidates /></W>} />
                         <Route path="/improvement-benchmarks"  element={<W><ImprovementBenchmarks /></W>} />
