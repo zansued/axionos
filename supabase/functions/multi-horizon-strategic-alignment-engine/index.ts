@@ -14,6 +14,7 @@ import { assessDeferredRisk } from "../_shared/multi-horizon-alignment/deferred-
 import { generateRecommendations } from "../_shared/multi-horizon-alignment/horizon-recommendation-engine.ts";
 import { explainHorizonPosture } from "../_shared/multi-horizon-alignment/horizon-explainer.ts";
 import { extractSimulationSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
+import { computeSimulationToHorizonModifiers, aggregateModifiers, applyModifier, formatModifierExplanation } from "../_shared/block-w-integration/causal-modifiers.ts";
 
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -71,7 +72,6 @@ Deno.serve(async (req) => {
     if (action === "horizons") {
       let horizons = await resolveActiveHorizons(serviceClient, organization_id);
       if (horizons.length === 0) {
-        // Seed defaults
         const defaults = getDefaultHorizons().map((h) => ({ ...h, organization_id, active: true }));
         const { data } = await serviceClient.from("strategic_horizons").insert(defaults).select();
         horizons = data ?? [];
@@ -89,7 +89,7 @@ Deno.serve(async (req) => {
       return json({ subjects });
     }
 
-    // ── EVALUATE ──
+    // ── EVALUATE (with causal modifiers from Sprint 110) ──
     if (action === "evaluate") {
       const constitution = await resolveActiveConstitution(serviceClient, organization_id);
       const weights = constitution?.default_horizon_weights ?? { short_term: 0.25, medium_term: 0.30, long_term: 0.25, mission_continuity: 0.20 };
@@ -98,9 +98,15 @@ Deno.serve(async (req) => {
       if (horizons.length === 0) return json({ error: "No active horizons. Call action=horizons first." }, 400);
 
       const subjects = await listSubjects(serviceClient, organization_id, { active: true });
-      if (subjects.length === 0) return json({ evaluations: [], conflicts: [], recommendations: [], explanations: [] });
+      if (subjects.length === 0) return json({ evaluations: [], conflicts: [], recommendations: [], explanations: [], cross_sprint_modifiers: [] });
 
-      // Cleanup previous evaluation data to prevent accumulation
+      // Fetch simulation signals for causal modifiers (Sprint 110 → 107)
+      const simSignals = await extractSimulationSignals(serviceClient, organization_id);
+      const causalMods = computeSimulationToHorizonModifiers(simSignals);
+      const deferredRiskMods = aggregateModifiers(causalMods, "deferred_risk_awareness");
+      const fragMods = aggregateModifiers(causalMods, "long_term_fragility");
+
+      // Cleanup previous evaluation data
       await Promise.all([
         serviceClient.from("horizon_alignment_evaluations").delete().eq("organization_id", organization_id),
         serviceClient.from("horizon_conflict_events").delete().eq("organization_id", organization_id).is("resolved_at", null),
@@ -119,13 +125,31 @@ Deno.serve(async (req) => {
         const recommendations = generateRecommendations(evaluation, risk, conflicts);
         const explanation = explainHorizonPosture(evaluation, risk, conflicts, recommendations);
 
-        evaluations.push(evaluation);
+        // Apply causal modifiers to deferred risk scores for long_term and mission_continuity
+        const adjustedScores = evaluation.scores.map(s => {
+          if (s.horizon_type === "long_term" || s.horizon_type === "mission_continuity") {
+            const adjustedDeferred = applyModifier(s.deferred_risk_score, deferredRiskMods);
+            return { ...s, deferred_risk_score: adjustedDeferred };
+          }
+          return s;
+        });
+
+        evaluations.push({ ...evaluation, scores: adjustedScores });
         allConflicts.push(...conflicts);
         allRecommendations.push(...recommendations);
-        allExplanations.push(explanation);
 
-        // Persist evaluations
-        for (const score of evaluation.scores) {
+        // Build causal-aware explanation
+        const causalNote = causalMods.length > 0
+          ? ` [Cross-sprint: ${deferredRiskMods.summary}]`
+          : "";
+        allExplanations.push({
+          ...explanation,
+          cross_sprint_modifiers: causalMods,
+          causal_explanation: causalNote,
+        });
+
+        // Persist evaluations with adjusted scores
+        for (const score of adjustedScores) {
           await serviceClient.from("horizon_alignment_evaluations").insert({
             organization_id,
             constitution_id: constitution?.id ?? null,
@@ -135,7 +159,7 @@ Deno.serve(async (req) => {
             tension_score: score.tension_score,
             deferred_risk_score: score.deferred_risk_score,
             support_level: score.support_level,
-            evaluation_summary: `Posture: ${evaluation.overall_posture}`,
+            evaluation_summary: `Posture: ${evaluation.overall_posture}${causalNote}`,
           });
         }
 
@@ -181,6 +205,12 @@ Deno.serve(async (req) => {
         conflicts: allConflicts,
         recommendations: allRecommendations,
         explanations: allExplanations,
+        cross_sprint_modifiers: {
+          source: "Sprint 110 → Sprint 107",
+          modifiers: causalMods,
+          deferred_risk_adjustment: deferredRiskMods,
+          fragility_adjustment: fragMods,
+        },
       });
     }
 
@@ -230,15 +260,33 @@ Deno.serve(async (req) => {
       const recommendations = generateRecommendations(evaluation, risk, conflicts);
       const explanation = explainHorizonPosture(evaluation, risk, conflicts, recommendations);
 
-      return json({ explanation, risk, conflicts, recommendations });
+      // Causal context
+      const simSignals = await extractSimulationSignals(serviceClient, organization_id);
+      const causalMods = computeSimulationToHorizonModifiers(simSignals);
+
+      return json({
+        explanation,
+        risk,
+        conflicts,
+        recommendations,
+        cross_sprint_modifiers: causalMods,
+        causal_explanation: formatModifierExplanation(causalMods),
+      });
     }
 
     // ── CROSS-SPRINT SIGNALS ──
     if (action === "cross_sprint_signals") {
       const simSignals = await extractSimulationSignals(serviceClient, organization_id);
+      const causalMods = computeSimulationToHorizonModifiers(simSignals);
+      const deferredRiskMods = aggregateModifiers(causalMods, "deferred_risk_awareness");
+      const fragMods = aggregateModifiers(causalMods, "long_term_fragility");
+
       return json({
         simulation_feedback: simSignals,
-        integration_note: "Simulation signals (Sprint 110) feed back into horizon alignment to highlight future continuity fragility and identity risk.",
+        causal_modifiers: causalMods,
+        deferred_risk_adjustment: deferredRiskMods,
+        fragility_adjustment: fragMods,
+        integration_note: "Simulation signals (Sprint 110) causally influence deferred risk scores and long-term fragility assessments.",
       });
     }
 

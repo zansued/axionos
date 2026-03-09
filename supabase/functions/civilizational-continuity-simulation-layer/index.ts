@@ -7,6 +7,12 @@ import { detectStressPoints } from "../_shared/continuity-simulation/stress-path
 import { generateRecommendations } from "../_shared/continuity-simulation/simulation-recommendation-engine.ts";
 import { explainSimulation } from "../_shared/continuity-simulation/simulation-explainer.ts";
 import { extractMissionSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
+import {
+  computeMissionToSimulationModifiers,
+  aggregateModifiers,
+  applyModifier,
+  formatModifierExplanation,
+} from "../_shared/block-w-integration/causal-modifiers.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -98,9 +104,8 @@ Deno.serve(async (req) => {
         break;
       }
 
-      /* ── run_simulation: wire all shared modules ── */
+      /* ── run_simulation: with causal modifiers from Sprint 109 ── */
       case "run_simulation": {
-        // 1. Fetch constitutions, scenarios, subjects
         const [{ data: constitutions }, { data: scenarios }, { data: subjects }] = await Promise.all([
           supabase.from("continuity_simulation_constitutions").select("*").eq("organization_id", organization_id),
           supabase.from("simulation_scenarios").select("*").eq("organization_id", organization_id).eq("active", true),
@@ -117,7 +122,14 @@ Deno.serve(async (req) => {
           break;
         }
 
-        // 2. Cleanup stale data
+        // Fetch mission signals for causal modifiers (Sprint 109 → 110)
+        const missionSignals = await extractMissionSignals(supabase, organization_id);
+        const causalMods = computeMissionToSimulationModifiers(missionSignals);
+        const identityModBundle = aggregateModifiers(causalMods, "identity_preservation_score");
+        const survivabilityModBundle = aggregateModifiers(causalMods, "survivability_score");
+        const stressModBundle = aggregateModifiers(causalMods, "continuity_stress_score");
+
+        // Cleanup stale data
         await Promise.all([
           supabase.from("scenario_simulation_runs").delete().eq("organization_id", organization_id),
           supabase.from("simulation_stress_points").delete().eq("organization_id", organization_id),
@@ -131,66 +143,62 @@ Deno.serve(async (req) => {
         const allSnapshots: any[] = [];
         const allExplanations: any[] = [];
 
-        // 3. For each scenario × subject pair, run full simulation
         for (const scenario of activeScenarios) {
           const severity = computeScenarioSeverity(scenario as any);
           const pathway = modelDisruptionPathway(scenario as any);
 
           for (const subject of activeSubjects) {
-            // Heuristic: derive resilience/identity from subject type
             const subjectResilience = subject.subject_type === "institution" ? 0.7
               : subject.subject_type === "service" ? 0.5
               : subject.subject_type === "portfolio" ? 0.6
               : 0.55;
             const missionAlignment = subject.summary?.length > 50 ? 0.7 : 0.5;
 
-            // a) Future state simulation
+            // Base simulation
             const simResult = simulateFutureState({
               scenario_severity: severity,
               subject_resilience: subjectResilience,
               identity_strength: missionAlignment,
             });
 
-            // b) Identity preservation
+            // Apply causal modifiers from Sprint 109
+            const adjustedIdentity = applyModifier(simResult.identity_preservation_score, identityModBundle);
+            const adjustedSurvivability = applyModifier(simResult.survivability_score, survivabilityModBundle);
+            const adjustedStress = applyModifier(simResult.continuity_stress_score, stressModBundle);
+
+            // Reclassify future state with adjusted survivability
+            let adjustedFutureState = simResult.future_state_type;
+            if (adjustedSurvivability >= 0.8) adjustedFutureState = "stable";
+            else if (adjustedSurvivability >= 0.65) adjustedFutureState = "strained";
+            else if (adjustedSurvivability >= 0.5) adjustedFutureState = "degraded";
+            else if (adjustedSurvivability >= 0.35) adjustedFutureState = "fragmented";
+            else if (adjustedSurvivability >= 0.2) adjustedFutureState = "adaptive_recovery";
+            else adjustedFutureState = "collapsed";
+
+            const causalNote = causalMods.length > 0
+              ? ` [Cross-sprint: identity ${identityModBundle.total_adjustment > 0 ? "+" : ""}${(identityModBundle.total_adjustment * 100).toFixed(1)}%, survivability ${survivabilityModBundle.total_adjustment > 0 ? "+" : ""}${(survivabilityModBundle.total_adjustment * 100).toFixed(1)}%]`
+              : "";
+
             const identityAssessment = assessIdentityPreservation(severity, subject.subject_type, missionAlignment);
-
-            // c) Stress pathway detection
             const stressPoints = detectStressPoints(scenario.scenario_type, severity, subject.subject_type);
+            const recs = generateRecommendations(adjustedSurvivability, adjustedIdentity, adjustedStress, scenario.scenario_type);
+            const explanation = explainSimulation(adjustedSurvivability, adjustedIdentity, adjustedStress, simResult.viability_score, scenario.scenario_type, subject.title);
 
-            // d) Recommendations
-            const recs = generateRecommendations(
-              simResult.survivability_score,
-              simResult.identity_preservation_score,
-              simResult.continuity_stress_score,
-              scenario.scenario_type,
-            );
-
-            // e) Explanation
-            const explanation = explainSimulation(
-              simResult.survivability_score,
-              simResult.identity_preservation_score,
-              simResult.continuity_stress_score,
-              simResult.viability_score,
-              scenario.scenario_type,
-              subject.title,
-            );
-
-            // Insert run
+            // Insert run with adjusted scores
             const { data: runData } = await supabase.from("scenario_simulation_runs").insert({
               organization_id,
               scenario_id: scenario.id,
               subject_id: subject.id,
               constitution_id: activeConstitution?.id || null,
               viability_score: simResult.viability_score,
-              continuity_stress_score: simResult.continuity_stress_score,
-              identity_preservation_score: simResult.identity_preservation_score,
-              survivability_score: simResult.survivability_score,
-              simulation_summary: simResult.simulation_summary,
+              continuity_stress_score: Math.round(adjustedStress * 1000) / 1000,
+              identity_preservation_score: Math.round(adjustedIdentity * 1000) / 1000,
+              survivability_score: Math.round(adjustedSurvivability * 1000) / 1000,
+              simulation_summary: `${simResult.simulation_summary}${causalNote}`,
             }).select().single();
 
             const runId = runData?.id;
 
-            // Insert stress points
             for (const sp of stressPoints) {
               const { data: spData } = await supabase.from("simulation_stress_points").insert({
                 organization_id,
@@ -203,7 +211,6 @@ Deno.serve(async (req) => {
               if (spData) allStress.push(spData);
             }
 
-            // Insert recommendations
             for (const rec of recs) {
               const { data: recData } = await supabase.from("simulation_recommendations").insert({
                 organization_id,
@@ -216,14 +223,13 @@ Deno.serve(async (req) => {
               if (recData) allRecs.push(recData);
             }
 
-            // Insert future snapshot
             const { data: snapData } = await supabase.from("future_continuity_snapshots").insert({
               organization_id,
               scenario_id: scenario.id,
               subject_id: subject.id,
-              future_state_type: simResult.future_state_type,
-              continuity_score: simResult.survivability_score,
-              snapshot_summary: simResult.simulation_summary,
+              future_state_type: adjustedFutureState,
+              continuity_score: Math.round(adjustedSurvivability * 1000) / 1000,
+              snapshot_summary: `${simResult.simulation_summary}${causalNote}`,
             }).select().single();
             if (snapData) allSnapshots.push(snapData);
 
@@ -236,12 +242,18 @@ Deno.serve(async (req) => {
               identity_assessment: identityAssessment,
               disruption_pathway: pathway,
               explanation,
+              base_survivability: simResult.survivability_score,
+              adjusted_survivability: Math.round(adjustedSurvivability * 1000) / 1000,
+              base_identity: simResult.identity_preservation_score,
+              adjusted_identity: Math.round(adjustedIdentity * 1000) / 1000,
             });
 
             allExplanations.push({
               scenario: scenario.scenario_name,
               subject: subject.title,
               ...explanation,
+              cross_sprint_modifiers: causalMods,
+              causal_explanation: causalNote,
             });
           }
         }
@@ -254,6 +266,13 @@ Deno.serve(async (req) => {
           explanations: allExplanations,
           constitution: activeConstitution ? { id: activeConstitution.id, name: activeConstitution.constitution_name } : null,
           horizon_settings: horizonSettings,
+          cross_sprint_modifiers: {
+            source: "Sprint 109 → Sprint 110",
+            modifiers: causalMods,
+            identity_adjustment: identityModBundle,
+            survivability_adjustment: survivabilityModBundle,
+            stress_adjustment: stressModBundle,
+          },
         };
         break;
       }
@@ -286,7 +305,6 @@ Deno.serve(async (req) => {
       }
 
       case "explain": {
-        // Reconstruct explanations from persisted runs
         const { data: runs } = await supabase.from("scenario_simulation_runs")
           .select("*, simulation_scenarios(scenario_name, scenario_type), simulation_subjects(title, subject_type)")
           .eq("organization_id", organization_id)
@@ -320,9 +338,16 @@ Deno.serve(async (req) => {
 
       case "cross_sprint_signals": {
         const missionSignals = await extractMissionSignals(supabase, organization_id);
+        const causalMods = computeMissionToSimulationModifiers(missionSignals);
+        const identityBundle = aggregateModifiers(causalMods, "identity_preservation_score");
+        const survivabilityBundle = aggregateModifiers(causalMods, "survivability_score");
+
         result = {
           mission_context: missionSignals,
-          integration_note: "Mission integrity signals (Sprint 109) feed erosion and drift density into continuity simulation posture.",
+          causal_modifiers: causalMods,
+          identity_adjustment: identityBundle,
+          survivability_adjustment: survivabilityBundle,
+          integration_note: "Mission integrity signals (Sprint 109) causally influence identity preservation and survivability scores in simulation.",
         };
         break;
       }
