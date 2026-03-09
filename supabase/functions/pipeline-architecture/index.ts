@@ -133,9 +133,8 @@ function estimateSubjobInput(
 ): { promptChars: number; contextChars: number } {
   const systemResult = completedResults["architecture.system"] || {};
   const compactSysContext = compactSystemArchSummary(systemResult);
-  const fullSystemArchJson = JSON.stringify(systemResult, null, 2);
-  const dataArchJson = JSON.stringify(completedResults["architecture.data"] || {}, null, 2);
-  const apiArchJson = JSON.stringify(completedResults["architecture.api"] || {}, null, 2);
+  const compactDataContext = compactDataArchSummary(completedResults["architecture.data"] || {});
+  const compactApiContext = compactApiArchSummary(completedResults["architecture.api"] || {});
 
   switch (subjobKey) {
     case "architecture.system": {
