@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { aggregateDiscoverySignals } from "../_shared/discovery-architecture/discovery-signal-aggregator.ts";
 import { synthesizeArchitectureOpportunities } from "../_shared/discovery-architecture/discovery-architecture-opportunity-synthesizer.ts";
 import { generateArchitectureRecommendations } from "../_shared/discovery-architecture/discovery-architecture-recommendation-engine.ts";
