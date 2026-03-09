@@ -457,6 +457,38 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Platform extension activation requires administrative approval.",
     },
   },
+  {
+    key: "playbooks",
+    title: { pt: "Doutrina & Playbooks", en: "Doctrine & Playbooks" },
+    description: {
+      pt: "Orientação institucional sintetizada a partir de memória acumulada: playbooks, heurísticas e doutrinas governáveis.",
+      en: "Synthesized institutional guidance from accumulated memory: playbooks, heuristics, and governable doctrines.",
+    },
+    audience: { pt: "Operadores e administradores", en: "Operators and administrators" },
+    surface: "workspace",
+    actions: [
+      { pt: "Revisar playbooks ativos", en: "Review active playbooks" },
+      { pt: "Inspecionar linhagem de memórias", en: "Inspect memory lineage" },
+      { pt: "Aprovar ou arquivar doutrinas", en: "Approve or archive doctrines" },
+    ],
+    whenRelevant: {
+      pt: "Quando quiser entender lições recorrentes e orientação operacional consolidada.",
+      en: "When you want to understand recurring lessons and consolidated operational guidance.",
+    },
+    whenIgnorable: {
+      pt: "Se o sistema ainda está acumulando memória e poucos padrões foram consolidados.",
+      en: "If the system is still accumulating memory and few patterns have been consolidated.",
+    },
+    nextStep: {
+      pt: "Revisar doutrinas pendentes e ativar playbooks de alta confiança.",
+      en: "Review pending doctrines and activate high-confidence playbooks.",
+    },
+    approvalPosture: "required",
+    approvalHint: {
+      pt: "Doutrinas exigem revisão humana antes de serem ativadas.",
+      en: "Doctrines require human review before activation.",
+    },
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────
