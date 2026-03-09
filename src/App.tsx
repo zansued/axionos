@@ -64,6 +64,7 @@ import ArchitecturePromotion from "./pages/ArchitecturePromotion";
 import AIRoutingPolicy from "./pages/AIRoutingPolicy";
 import IntelligenceMemory from "./pages/IntelligenceMemory";
 import Playbooks from "./pages/Playbooks";
+import BoundedOperations from "./pages/BoundedOperations";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
