@@ -41,12 +41,121 @@ async function runAgent(
   systemPrompt: string,
   userPrompt: string,
   usePro = false,
+  options: {
+    stage?: string;
+    organizationId?: string;
+    initiativeId?: string;
+    maxRetries?: number;
+    abortSignal?: AbortSignal;
+  } = {},
 ): Promise<AgentOutput> {
   const promptChars = systemPrompt.length + userPrompt.length;
-  const aiResult = await callAI(apiKey, systemPrompt, userPrompt, true, 3, usePro);
+  const aiResult = await callAI(
+    apiKey,
+    systemPrompt,
+    userPrompt,
+    true,
+    options.maxRetries ?? 2,
+    usePro,
+    options.stage,
+    options.organizationId,
+    options.initiativeId,
+    false,
+    options.abortSignal,
+  );
+
   const rawOutputChars = aiResult.content?.length || 0;
   const result = JSON.parse(aiResult.content);
-  return { role, model: aiResult.model, tokens: aiResult.tokens, costUsd: aiResult.costUsd, durationMs: aiResult.durationMs, result, rawOutputChars, promptChars, contextChars: 0 };
+  return {
+    role,
+    model: aiResult.model,
+    tokens: aiResult.tokens,
+    costUsd: aiResult.costUsd,
+    durationMs: aiResult.durationMs,
+    result,
+    rawOutputChars,
+    promptChars,
+    contextChars: 0,
+  };
+}
+
+function compactPayloadForChildAgents(payload: unknown, maxChars = 3200): string {
+  if (!payload) return "Não disponível";
+
+  const raw = typeof payload === "string" ? payload : JSON.stringify(payload);
+  if (raw.length <= maxChars) return raw;
+
+  if (payload && typeof payload === "object" && !Array.isArray(payload)) {
+    const obj = payload as Record<string, unknown>;
+    const prioritizedKeys = [
+      "core_requirements",
+      "functional_requirements",
+      "non_functional_requirements",
+      "entities",
+      "features",
+      "user_flows",
+      "constraints",
+      "integrations",
+      "acceptance_criteria",
+      "success_metrics",
+    ];
+
+    const compact: Record<string, unknown> = {};
+    for (const key of prioritizedKeys) {
+      if (key in obj) compact[key] = obj[key];
+    }
+
+    const compactRaw = JSON.stringify(Object.keys(compact).length > 0 ? compact : obj);
+    if (compactRaw.length <= maxChars) return compactRaw;
+  }
+
+  return `${raw.slice(0, maxChars)}\n...[truncated ${raw.length - maxChars} chars]`;
+}
+
+function estimateSubjobInput(
+  subjobKey: string,
+  projectContext: string,
+  requirementsData: string,
+  requirementsDataCompact: string,
+  productArchData: string,
+  completedResults: Record<string, Record<string, unknown>>,
+): { promptChars: number; contextChars: number } {
+  const systemResult = completedResults["architecture.system"] || {};
+  const compactSysContext = compactSystemArchSummary(systemResult);
+  const fullSystemArchJson = JSON.stringify(systemResult, null, 2);
+  const dataArchJson = JSON.stringify(completedResults["architecture.data"] || {}, null, 2);
+  const apiArchJson = JSON.stringify(completedResults["architecture.api"] || {}, null, 2);
+
+  switch (subjobKey) {
+    case "architecture.system": {
+      const p = systemArchitectPrompt(projectContext, requirementsData, productArchData);
+      return { promptChars: p.system.length + p.user.length, contextChars: 0 };
+    }
+    case "architecture.data": {
+      const p = dataArchitectPrompt(projectContext, requirementsDataCompact, compactSysContext);
+      return { promptChars: p.system.length + p.user.length, contextChars: compactSysContext.length };
+    }
+    case "architecture.api": {
+      const p = apiArchitectPrompt(projectContext, requirementsDataCompact, compactSysContext);
+      return { promptChars: p.system.length + p.user.length, contextChars: compactSysContext.length };
+    }
+    case "architecture.dependencies": {
+      const p = dependencyPlannerPrompt(projectContext, fullSystemArchJson, dataArchJson, apiArchJson);
+      return {
+        promptChars: p.system.length + p.user.length,
+        contextChars: fullSystemArchJson.length + dataArchJson.length + apiArchJson.length,
+      };
+    }
+    default:
+      return { promptChars: 0, contextChars: 0 };
+  }
+}
+
+function getAdaptiveTimeoutMs(baseTimeoutMs: number, promptChars: number, contextChars: number, attemptNumber: number): number {
+  const estimatedInputTokens = estimateTokens(promptChars + contextChars);
+  const tokenBudgetBoost = Math.min(70_000, estimatedInputTokens * 12);
+  const retryBoost = attemptNumber > 1 ? 15_000 : 0;
+  return Math.min(180_000, baseTimeoutMs + tokenBudgetBoost + retryBoost);
 }
 
 /** Execute a single subjob by key, using results from completed dependencies */
