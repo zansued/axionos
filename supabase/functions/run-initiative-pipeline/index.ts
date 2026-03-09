@@ -20,14 +20,18 @@ const DEPLOY_VERCEL_JSON = JSON.stringify(DEPLOY_VERCEL_CONFIG, null, 2);
 
 async function callAI(apiKey: string, systemPrompt: string, userPrompt: string, jsonMode = false, maxRetries = 3) {
   const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+  const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
   
-  // Use OpenAI directly if key is available, otherwise fallback to Lovable AI Gateway
+  // Provider priority: OpenAI > DeepSeek > Lovable Gateway (no Gemini)
   const useOpenAI = !!OPENAI_API_KEY;
+  const useDeepSeek = !useOpenAI && !!DEEPSEEK_API_KEY;
   const aiUrl = useOpenAI
     ? "https://api.openai.com/v1/chat/completions"
+    : useDeepSeek
+    ? "https://api.deepseek.com/v1/chat/completions"
     : "https://ai.gateway.lovable.dev/v1/chat/completions";
-  const aiKey = useOpenAI ? OPENAI_API_KEY : apiKey;
-  const aiModel = useOpenAI ? "gpt-4o-mini" : "google/gemini-2.5-flash";
+  const aiKey = useOpenAI ? OPENAI_API_KEY : useDeepSeek ? DEEPSEEK_API_KEY : apiKey;
+  const aiModel = useOpenAI ? "gpt-4o-mini" : useDeepSeek ? "deepseek-chat" : "openai/gpt-5-nano";
 
   let lastError: Error | null = null;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
