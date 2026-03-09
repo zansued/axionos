@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
+import { PageIntroCard } from "@/components/guidance";
+import { usePageGuidance } from "@/hooks/usePageGuidance";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,6 +38,7 @@ export default function Delivery() {
   const { assessReadiness, explain } = useOneClickDelivery();
   const [detail, setDetail] = useState<any>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
+  const { guidance, whyNowText } = usePageGuidance("deployments");
 
   const items = overview.data ?? [];
   const readyCount = items.filter((i: any) => i.is_ready).length;
@@ -55,6 +58,7 @@ export default function Delivery() {
   return (
     <AppLayout>
       <div className="p-6 space-y-6 max-w-7xl mx-auto">
+        {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">

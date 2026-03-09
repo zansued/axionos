@@ -1,5 +1,6 @@
 import { AppLayout } from "@/components/AppLayout";
-import { PageIntroCard, getGuidanceForPage } from "@/components/guidance";
+import { PageIntroCard } from "@/components/guidance";
+import { usePageGuidance } from "@/hooks/usePageGuidance";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -58,6 +59,7 @@ export default function Dashboard() {
   const { locale } = useI18n();
   const navigate = useNavigate();
   const { showOnboarding } = useOnboarding();
+  const { guidance: dashboardGuidance, whyNowText } = usePageGuidance("dashboard");
   const en = locale === "en-US";
 
   const { data: recentInitiatives = [] } = useQuery({
@@ -92,9 +94,9 @@ export default function Dashboard() {
           </motion.div>
 
           {/* Contextual Guidance */}
-          {getGuidanceForPage("dashboard") && (
+          {dashboardGuidance && (
             <motion.div variants={item}>
-              <PageIntroCard guidance={getGuidanceForPage("dashboard")!} compact />
+              <PageIntroCard guidance={dashboardGuidance} whyNow={whyNowText} compact />
             </motion.div>
           )}
 

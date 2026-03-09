@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
+import { PageIntroCard } from "@/components/guidance";
+import { usePageGuidance } from "@/hooks/usePageGuidance";
 import { useOrg } from "@/contexts/OrgContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,6 +61,7 @@ export default function Extensions() {
   const [notes, setNotes] = useState("");
   const [compatResult, setCompatResult] = useState<any>(null);
   const [tab, setTab] = useState("all");
+  const { guidance, whyNowText } = usePageGuidance("extensions");
 
   const { data: extensionsData, isLoading, error: queryError } = useQuery({
     queryKey: ["platform-extensions", currentOrg?.id],
@@ -131,6 +134,7 @@ export default function Extensions() {
   return (
     <AppLayout>
       <div className="space-y-6">
+        {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">

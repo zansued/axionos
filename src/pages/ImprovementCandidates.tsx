@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
+import { PageIntroCard } from "@/components/guidance";
+import { usePageGuidance } from "@/hooks/usePageGuidance";
 import { useOrg } from "@/contexts/OrgContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -78,6 +80,7 @@ export default function ImprovementCandidates() {
   const [selected, setSelected] = useState<Candidate | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [typeFilter, setTypeFilter] = useState("all");
+  const { guidance, whyNowText } = usePageGuidance("candidates");
   const [sevFilter, setSevFilter] = useState("all");
   const [reviewFilter, setReviewFilter] = useState("all");
   const [notes, setNotes] = useState("");
@@ -165,6 +168,7 @@ export default function ImprovementCandidates() {
 
   return (
     <AppLayout>
+      {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Improvement Candidates</h1>

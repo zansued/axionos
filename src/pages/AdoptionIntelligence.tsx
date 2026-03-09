@@ -6,9 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, AlertTriangle, CheckCircle2, Users, BarChart3, Target } from "lucide-react";
+import { PageIntroCard } from "@/components/guidance";
+import { usePageGuidance } from "@/hooks/usePageGuidance";
 
 export default function AdoptionIntelligence() {
   const { overview } = useAdoptionIntelligence();
+  const { guidance, whyNowText } = usePageGuidance("adoption");
   const items = overview.data ?? [];
 
   const avgAdoption = items.length > 0 ? items.reduce((s: number, i: any) => s + (i.adoption_score ?? 0), 0) / items.length : 0;
@@ -21,6 +24,7 @@ export default function AdoptionIntelligence() {
         <AppSidebar />
         <SidebarInset className="flex-1">
           <div className="p-6 space-y-6">
+            {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
             <div>
               <h1 className="text-2xl font-bold text-foreground">Adoption Intelligence</h1>
               <p className="text-muted-foreground">Customer success signals, journey adoption, and friction analysis.</p>

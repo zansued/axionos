@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
+import { PageIntroCard } from "@/components/guidance";
+import { usePageGuidance } from "@/hooks/usePageGuidance";
 import { useOrg } from "@/contexts/OrgContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -74,6 +76,7 @@ export default function ImprovementLedger() {
   const [severityFilter, setSeverityFilter] = useState<string>("all");
   const [reviewFilter, setReviewFilter] = useState<string>("all");
   const [reviewNotes, setReviewNotes] = useState("");
+  const { guidance, whyNowText } = usePageGuidance("evidence");
 
   const orgId = currentOrg?.id;
 
@@ -138,6 +141,7 @@ export default function ImprovementLedger() {
 
   return (
     <AppLayout>
+      {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Improvement Ledger</h1>

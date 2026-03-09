@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { PageIntroCard } from "@/components/guidance";
+import { usePageGuidance } from "@/hooks/usePageGuidance";
 import { useOrg } from "@/contexts/OrgContext";
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
@@ -54,6 +56,7 @@ const riskIcons: Record<string, typeof ShieldCheck> = {
 export default function ImprovementBenchmarks() {
   const [selectedBenchmark, setSelectedBenchmark] = useState<typeof mockBenchmarks[0] | null>(null);
   const [activeTab, setActiveTab] = useState("benchmarks");
+  const { guidance, whyNowText } = usePageGuidance("benchmarks");
 
   const totalRuns = mockBenchmarks.length;
   const completedRuns = mockBenchmarks.filter(b => b.status === "completed").length;
@@ -68,6 +71,7 @@ export default function ImprovementBenchmarks() {
         <AppSidebar />
         <SidebarInset className="flex-1">
           <div className="p-6 space-y-6">
+            {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
             <div>
               <h1 className="text-2xl font-bold text-foreground">Sandbox Benchmarking & Promotion</h1>
               <p className="text-sm text-muted-foreground mt-1">Governed benchmarking of improvement candidates with human-reviewed promotion decisions.</p>

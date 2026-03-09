@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { PageIntroCard } from "@/components/guidance";
+import { usePageGuidance } from "@/hooks/usePageGuidance";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -49,6 +51,7 @@ export default function CapabilityGovernance() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [drawerType, setDrawerType] = useState<string>("");
   const ov = overview.data as any;
+  const { guidance, whyNowText } = usePageGuidance("capability-governance");
 
   const kpis = [
     { label: "Active Entitlements", value: ov?.active_entitlements ?? "—", icon: CheckCircle, color: "text-emerald-400" },
@@ -64,6 +67,7 @@ export default function CapabilityGovernance() {
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         <main className="flex-1 p-6 space-y-6 overflow-auto">
+          {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
           <div>
             <h1 className="text-2xl font-bold text-foreground">Capability Governance</h1>
             <p className="text-sm text-muted-foreground">Trust postures, entitlements, and approval flows for governed capability access.</p>
