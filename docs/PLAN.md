@@ -653,6 +653,28 @@ Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed
 
 ---
 
+## Block W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 PLANNED
+
+**Goal:** Extend from sovereign institutional intelligence to strategic autonomy and civilizational coordination — governing multi-horizon alignment, institutional tradeoff arbitration, mission integrity preservation, and long-horizon continuity simulation.
+
+**Architectural prerequisite:** Block V (Sovereign Institutional Intelligence) must be complete. Block W builds on memory constitution, sovereign decision rights, dependency sovereignty, and strategic succession.
+
+**Strategic thesis:** If Block V made AxionOS a sovereign institution, Block W begins to make it a **strategic intelligence for organizational civilization** — aligning horizons, arbitrating sacrifices, maintaining mission integrity, and simulating futures.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 107 | Multi-Horizon Strategic Alignment Engine | W | 🔜 Planned | Coordinate decisions across short, medium, long-term, and institutional continuity horizons. Detect when immediate optimization conflicts with long-term direction. Govern tension between urgency, execution, strategy, legacy, and long horizon. |
+| 108 | Institutional Tradeoff Arbitration System | W | 🔜 Planned | Create explicit, governed mechanisms for arbitrating institutional tradeoffs (speed vs quality, cost vs sovereignty, compliance vs experience). Transform tradeoffs into auditable, explainable governance objects. |
+| 109 | Mission Integrity & Drift Prevention | W | 🔜 Planned | Ensure the system does not become efficient at something that diverges from its core mission. Detect strategic, moral, institutional, and operational drift. Act as a mission integrity compass. |
+| 110 | Civilizational Continuity Simulation Layer | W | 🔜 Planned | Simulate scenarios of rupture, transition, and continuity in long horizons — regulatory change, technology shifts, capacity erosion, organizational transformation. Enable institutional foresight beyond incident-level thinking. |
+
+**Block W logical chain:**
+- Block U answered: how to adapt, resolve conflict, federate, resist
+- Block V answered: how to remember, decide sovereignly, reduce external dependency, survive succession
+- **Block W answers: how to align horizons, arbitrate sacrifices, maintain mission, traverse long futures without losing direction**
+
+---
+
 ## Capability Verification Matrix
 
 | Capability | Status | Sprint | Key Modules |
