@@ -22,15 +22,15 @@ export const ARCHITECTURE_SUBJOBS: SubjobDefinition[] = [
     agentRole: "system_architect",
     dependsOn: [],
     usePro: true,
-    timeoutMs: 45_000,
+    timeoutMs: 90_000,
   },
   {
     key: "architecture.data",
     label: "Data Architect",
     agentRole: "data_architect",
     dependsOn: ["architecture.system"],
-    usePro: true,
-    timeoutMs: 45_000,
+    usePro: false,
+    timeoutMs: 90_000,
   },
   {
     key: "architecture.api",
@@ -38,7 +38,7 @@ export const ARCHITECTURE_SUBJOBS: SubjobDefinition[] = [
     agentRole: "api_architect",
     dependsOn: ["architecture.system"],
     usePro: false,
-    timeoutMs: 45_000,
+    timeoutMs: 90_000,
   },
   {
     key: "architecture.dependencies",
@@ -46,7 +46,7 @@ export const ARCHITECTURE_SUBJOBS: SubjobDefinition[] = [
     agentRole: "dependency_planner",
     dependsOn: ["architecture.data", "architecture.api"],
     usePro: true,
-    timeoutMs: 45_000,
+    timeoutMs: 60_000,
   },
   {
     key: "architecture.synthesis",
@@ -54,7 +54,7 @@ export const ARCHITECTURE_SUBJOBS: SubjobDefinition[] = [
     agentRole: "synthesis",
     dependsOn: ["architecture.system", "architecture.data", "architecture.api", "architecture.dependencies"],
     usePro: false,
-    timeoutMs: 20_000,
+    timeoutMs: 10_000,
   },
 ];
 
