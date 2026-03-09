@@ -184,7 +184,7 @@ The Agent OS is fully designed. No expansion needed.
 | Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
 | State | TanStack React Query + React Context |
 | Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
-| AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
+| AI Engine | DeepSeek (economy) + OpenAI GPT-5-mini (high-confidence) + GPT-5.4 (premium) + Lovable AI Gateway (fallback transport) |
 | Git | GitHub API v3 (Tree API for atomic commits) |
 | Deploy | Vercel/Netlify auto-generated configs |
 
