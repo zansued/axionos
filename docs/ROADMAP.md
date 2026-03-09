@@ -83,57 +83,61 @@ This means the next level of AxionOS is not simply "more modules" or "more inter
 - **learn better** — ✅ evidence-governed improvement loops **active** (Blocks N through S complete)
 - **coordinate better** — ✅ multi-agent coordination **operational** (debate, working memory, bounded swarm)
 
-**Core Thesis:** AxionOS has evolved from a governed software factory into a governed intelligence operating system for software delivery, decision support, and evidence-based system evolution.
+**Core Thesis:** AxionOS has evolved from a governed software factory into a governed intelligence operating system. The next arc transforms it into an **adaptive institutional ecosystem** — where intelligence, doctrine, and decisions operate across contexts, domains, and organizational boundaries while preserving governance and tenant isolation.
 
-### What has been achieved
+### What has been achieved (Sprints 1–98)
 
-The four pillars of the Next Level Thesis are **implemented**:
+All five pillars of the Governed Intelligence OS are **implemented**:
 
 | Pillar | Status | Key Components |
 |--------|--------|---------------|
-| **Explain Better** | ✅ Active | PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, CopilotTrigger, WhyThisMattersNow, NextBestAction, ApprovalHint, centralized content registries |
-| **Decide Better** | ✅ Active | Role-based experience (useRoleBasedExperience), copilot submodes (product, workspace, governance_mentor, architecture_mentor), approval posture hints |
-| **Learn Better** | ✅ Active | Evidence-governed improvement (Block N), cross-stage learning, predictive error detection, calibration, strategy evolution |
-| **Coordinate Better** | ✅ Active | Role arbitration (Sprint 75), debate & resolution (Sprint 76), shared working memory (Sprint 77), bounded swarm (Sprint 78) |
+| **Explain Better** | ✅ Active | PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, centralized content registries |
+| **Decide Better** | ✅ Active | Institutional Decision Engine, role-based experience, approval posture hints |
+| **Learn Better** | ✅ Active | Evidence-governed improvement, doctrine synthesis, institutional memory consolidation |
+| **Coordinate Better** | ✅ Active | Multi-agent coordination, bounded swarm, debate & resolution |
+| **Operate Autonomously (Bounded)** | ✅ Active | Bounded autonomous operations, autonomy ladder, rollback posture |
 
-### What this phase now focuses on (post-implementation)
+### Next Level Thesis — Adaptive Institutional Ecosystem (Block U)
 
-- deepening copilot intelligence with AI-assisted contextual recommendations
-- refining role-aware guidance quality based on adoption signals
-- improving cross-layer advisory synthesis legibility
-- strengthening the feedback loop between guidance, adoption, and platform intelligence
+AxionOS evolves from a **Governed Intelligence Operating System** into an **Adaptive Institutional Ecosystem**.
 
-### What this phase does NOT prioritize
+The system no longer focuses only on remembering, recommending, coordinating, and deciding. It now focuses on:
+- **governing intelligence across institutions**
+- **preserving coherence across domains**
+- **adapting doctrine across contexts**
+- **resolving conflicts between strategies, capabilities, and organizational realities**
+- **building long-horizon institutional resilience**
 
-- open marketplace expansion beyond current governed pilot
-- premature distributed runtime scale-out
-- autonomous architecture mutation
-- theatrical autonomy without governance
+> From intelligence OS to adaptive institutional ecosystem.
+
+If Sprints 95–98 form the "institutional brain," then 99–102 form the **institutional adaptive metabolism**.
 
 ```mermaid
 flowchart TD
-    subgraph Complete["Implemented (Sprints 1-94)"]
+    subgraph Complete["Implemented (Sprints 1-98)"]
         A[Governed Software Delivery]
         B[Evidence-Governed Improvement]
         C[Multi-Agent Coordination]
         D[Capability Ecosystem]
-        E[Delivery Optimization]
-        F[Distributed Runtime]
-        G[Architecture Research]
+        E[Distributed Runtime]
+        F[Architecture Research]
+        G[Governed Intelligence OS]
     end
-    subgraph NextLevel["Next Level Thesis — ✅ Implemented"]
-        H["Guidance & Copilot ✅"]
-        I["Decision Maturity ✅"]
-        J[Governed Intelligence OS]
+    subgraph NextLevel["Block U — Planned"]
+        H[Cross-Context Doctrine Adaptation]
+        I[Institutional Conflict Resolution]
+        J[Federated Intelligence Boundaries]
+        K[Resilience and Continuity Governance]
     end
     Complete --> NextLevel
+    G --> H
     H --> I
     I --> J
-    style H fill:#16a34a,color:#fff
-    style I fill:#16a34a,color:#fff
+    J --> K
+    style G fill:#16a34a,color:#fff
 ```
 
-**Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy.
+**Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy. Tenant isolation preserved across federated intelligence boundaries.
 
 ---
 
