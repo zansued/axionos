@@ -91,6 +91,12 @@ export function InitiativeOutcomeCard({ initiative }: InitiativeOutcomeCardProps
         ? "The pipeline is processing your initiative. Each step is tracked and traceable."
         : "O pipeline está processando sua iniciativa. Cada etapa é rastreada e rastreável.",
     },
+    completed: {
+      title: en ? "Initiative completed" : "Iniciativa concluída",
+      description: en
+        ? "This initiative has been fully processed and completed successfully."
+        : "Esta iniciativa foi totalmente processada e concluída com sucesso.",
+    },
   };
 
   const info = content[outcome.status] || content.in_progress;
