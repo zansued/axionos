@@ -4,7 +4,7 @@
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-08):** 93 sprints complete. Block R complete. Block S in progress (Sprints 91–93 complete).
+> **Last strategic change (2026-03-09):** 94 sprints complete. Block R complete. Block S complete (Sprints 91–94 complete).
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >

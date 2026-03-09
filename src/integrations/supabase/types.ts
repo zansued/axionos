@@ -3207,6 +3207,227 @@ export type Database = {
           },
         ]
       }
+      architecture_promotion_decisions: {
+        Row: {
+          created_at: string
+          decided_at: string
+          decided_by_ref: Json | null
+          decision: string
+          dossier_id: string
+          id: string
+          organization_id: string
+          rationale: string
+          rollback_posture: string
+          structural_review_required: boolean
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string
+          decided_by_ref?: Json | null
+          decision?: string
+          dossier_id: string
+          id?: string
+          organization_id: string
+          rationale?: string
+          rollback_posture?: string
+          structural_review_required?: boolean
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string
+          decided_by_ref?: Json | null
+          decision?: string
+          dossier_id?: string
+          id?: string
+          organization_id?: string
+          rationale?: string
+          rollback_posture?: string
+          structural_review_required?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_promotion_decisions_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_promotion_dossiers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_promotion_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_promotion_dossiers: {
+        Row: {
+          approvals_received: number
+          audit_metadata: Json
+          created_at: string
+          decision_status: string
+          dossier_title: string
+          expected_benefit: string
+          id: string
+          linked_hypothesis_ids: string[]
+          linked_pattern_ids: string[]
+          linked_simulation_ids: string[]
+          organization_id: string
+          proposed_direction: string
+          required_approvals: number
+          review_notes: string | null
+          risk_posture: string
+          uncertainty_posture: string
+          updated_at: string
+        }
+        Insert: {
+          approvals_received?: number
+          audit_metadata?: Json
+          created_at?: string
+          decision_status?: string
+          dossier_title?: string
+          expected_benefit?: string
+          id?: string
+          linked_hypothesis_ids?: string[]
+          linked_pattern_ids?: string[]
+          linked_simulation_ids?: string[]
+          organization_id: string
+          proposed_direction?: string
+          required_approvals?: number
+          review_notes?: string | null
+          risk_posture?: string
+          uncertainty_posture?: string
+          updated_at?: string
+        }
+        Update: {
+          approvals_received?: number
+          audit_metadata?: Json
+          created_at?: string
+          decision_status?: string
+          dossier_title?: string
+          expected_benefit?: string
+          id?: string
+          linked_hypothesis_ids?: string[]
+          linked_pattern_ids?: string[]
+          linked_simulation_ids?: string[]
+          organization_id?: string
+          proposed_direction?: string
+          required_approvals?: number
+          review_notes?: string | null
+          risk_posture?: string
+          uncertainty_posture?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_promotion_dossiers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_promotion_lineage: {
+        Row: {
+          confidence_contribution: number
+          created_at: string
+          dossier_id: string
+          evidence_summary: string
+          id: string
+          lineage_type: string
+          organization_id: string
+          source_ref_id: string | null
+          source_ref_type: string
+        }
+        Insert: {
+          confidence_contribution?: number
+          created_at?: string
+          dossier_id: string
+          evidence_summary?: string
+          id?: string
+          lineage_type?: string
+          organization_id: string
+          source_ref_id?: string | null
+          source_ref_type?: string
+        }
+        Update: {
+          confidence_contribution?: number
+          created_at?: string
+          dossier_id?: string
+          evidence_summary?: string
+          id?: string
+          lineage_type?: string
+          organization_id?: string
+          source_ref_id?: string | null
+          source_ref_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_promotion_lineage_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_promotion_dossiers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_promotion_lineage_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architecture_promotion_reviews: {
+        Row: {
+          created_at: string
+          dossier_id: string
+          id: string
+          organization_id: string
+          review_notes: string | null
+          review_reason_codes: Json
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          created_at?: string
+          dossier_id: string
+          id?: string
+          organization_id: string
+          review_notes?: string | null
+          review_reason_codes?: Json
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          created_at?: string
+          dossier_id?: string
+          id?: string
+          organization_id?: string
+          review_notes?: string | null
+          review_reason_codes?: Json
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architecture_promotion_reviews_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "architecture_promotion_dossiers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architecture_promotion_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_rollout_governance_profiles: {
         Row: {
           created_at: string

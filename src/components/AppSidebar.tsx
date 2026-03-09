@@ -1,6 +1,6 @@
 import {
   Lightbulb, Users, LayoutDashboard, LogOut, Columns3, Shield, Radio, Map,
-  Hammer, Package, GitBranch, Rocket, CreditCard, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
+  Hammer, Package, GitBranch, Rocket, CreditCard, ClipboardCheck, Code2, Settings, Search, Brain, FileText, Gauge, FlaskConical,
   Plug, FileSearch, Sparkles, Scale, BrainCircuit, Zap, PackageCheck, ShieldCheck, Store, TrendingUp, GitPullRequestArrow, Rss, Sliders, Server, Globe, Beaker, Network,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
@@ -62,6 +62,7 @@ const bottomItems = [
   { title: "Tenant Runtime", url: "/tenant-runtime", icon: Server },
   { title: "Orchestration", url: "/large-scale-orchestration", icon: Globe },
   { title: "Hypotheses", url: "/architecture-hypotheses", icon: FlaskConical },
+  { title: "Promotion", url: "/architecture-promotion", icon: ClipboardCheck },
   { title: "Sim. Sandbox", url: "/research-sandbox", icon: Beaker },
   { title: "Res. Patterns", url: "/research-patterns", icon: Network },
   { title: "Extensions", url: "/extensions", icon: Package },

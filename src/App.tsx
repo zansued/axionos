@@ -59,6 +59,7 @@ import LargeScaleOrchestration from "./pages/LargeScaleOrchestration";
 import ArchitectureHypotheses from "./pages/ArchitectureHypotheses";
 import ResearchSandbox from "./pages/ResearchSandbox";
 import ResearchPatterns from "./pages/ResearchPatterns";
+import ArchitecturePromotion from "./pages/ArchitecturePromotion";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -140,6 +141,7 @@ const App = () => (
                       <Route path="/architecture-hypotheses" element={<ProtectedRoute><ArchitectureHypotheses /></ProtectedRoute>} />
                       <Route path="/research-sandbox" element={<ProtectedRoute><ResearchSandbox /></ProtectedRoute>} />
                       <Route path="/research-patterns" element={<ProtectedRoute><ResearchPatterns /></ProtectedRoute>} />
+                      <Route path="/architecture-promotion" element={<ProtectedRoute><ArchitecturePromotion /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                       </Routes>
                     </OnboardingProvider>
