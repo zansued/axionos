@@ -102,7 +102,7 @@ export function GovernanceMentorDrawer({ content, open, onClose }: GovernanceMen
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4 text-primary" />
               <span className="text-sm font-semibold">
-                {lang === "pt" ? "Mentor de Governança" : "Governance Mentor"}
+                {lang === "pt" ? "Mentor Mode de Governança" : "Governance Mentor Mode"}
               </span>
             </div>
             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onClose}>
@@ -258,8 +258,8 @@ export function GovernanceMentorDrawer({ content, open, onClose }: GovernanceMen
           <div className="border-t border-border px-4 py-2.5 shrink-0">
             <p className="text-[10px] text-muted-foreground/60 text-center">
               {lang === "pt"
-                ? "Mentor de Governança • Consultivo apenas • Não aprova nem executa"
-                : "Governance Mentor • Advisory only • Does not approve or execute"}
+                ? "Mentor Mode de Governança • Consultivo apenas • Não aprova nem executa"
+                : "Governance Mentor Mode • Advisory only • Does not approve or execute"}
             </p>
           </div>
         </motion.aside>

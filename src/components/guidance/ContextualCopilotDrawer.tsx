@@ -76,6 +76,12 @@ export function ContextualCopilotDrawer({ pageKey, guidance, canonicalRole, open
   const lang = locale === "pt-BR" ? "pt" : "en";
   const navigate = useNavigate();
 
+  // Derive copilot submode based on role (canonical)
+  const isEndUser = canonicalRole === "end_user";
+  const submodeLabel = isEndUser
+    ? (lang === "pt" ? "Copilot de Produto" : "Product Copilot")
+    : (lang === "pt" ? "Copilot do Workspace" : "Workspace Copilot");
+
   // Resolve copilot content with role fallback
   const copilotData = getCopilotContent(pageKey);
   const roleContent = copilotData?.roleOverrides?.[canonicalRole];
@@ -101,8 +107,8 @@ export function ContextualCopilotDrawer({ pageKey, guidance, canonicalRole, open
   const surfaceLabel = guidance.surface === "product"
     ? (lang === "pt" ? "Superfície de Produto" : "Product Surface")
     : guidance.surface === "workspace"
-    ? (lang === "pt" ? "Governança do Workspace" : "Workspace Governance")
-    : (lang === "pt" ? "Governança da Plataforma" : "Platform Governance");
+    ? (lang === "pt" ? "Superfície de Governança do Workspace" : "Workspace Governance Surface")
+    : (lang === "pt" ? "Superfície de Governança da Plataforma" : "Platform Governance Surface");
 
   return (
     <AnimatePresence>
@@ -119,7 +125,7 @@ export function ContextualCopilotDrawer({ pageKey, guidance, canonicalRole, open
             <div className="flex items-center gap-2">
               <Compass className="h-4 w-4 text-primary" />
               <span className="text-sm font-semibold">
-                {lang === "pt" ? "Guia Contextual" : "Contextual Guide"}
+                {submodeLabel}
               </span>
             </div>
             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onClose}>
@@ -250,8 +256,8 @@ export function ContextualCopilotDrawer({ pageKey, guidance, canonicalRole, open
           <div className="border-t border-border px-4 py-2.5 shrink-0">
             <p className="text-[10px] text-muted-foreground/60 text-center">
               {lang === "pt"
-                ? "Guia contextual • Consultivo apenas • Sem ações autônomas"
-                : "Contextual guide • Advisory only • No autonomous actions"}
+                ? `${submodeLabel} • Consultivo apenas • Sem ações autônomas`
+                : `${submodeLabel} • Advisory only • No autonomous actions`}
             </p>
           </div>
         </motion.aside>

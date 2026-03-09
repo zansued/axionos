@@ -79,6 +79,32 @@ const ROLE_WHY_NOW: Record<string, Record<string, { pt: string; en: string }>> =
       en: "Pending platform extensions may require approval.",
     },
   },
+  platform_reviewer: {
+    observability: {
+      pt: "Revise métricas de saúde operacional para decisões de governança.",
+      en: "Review operational health metrics for governance decisions.",
+    },
+    routing: {
+      pt: "Analise decisões de roteamento para garantir conformidade com políticas.",
+      en: "Analyze routing decisions to ensure policy compliance.",
+    },
+    "capability-governance": {
+      pt: "Revise mudanças de confiança de capacidades antes de aprovação.",
+      en: "Review capability trust level changes before approval.",
+    },
+    audit: {
+      pt: "Inspecione trilhas de auditoria para identificar anomalias.",
+      en: "Inspect audit trails to identify anomalies.",
+    },
+    benchmarks: {
+      pt: "Revise benchmarks de candidatos antes de promoção.",
+      en: "Review candidate benchmarks before promotion.",
+    },
+    candidates: {
+      pt: "Avalie candidatos de melhoria para aprovação ou rejeição.",
+      en: "Evaluate improvement candidates for approval or rejection.",
+    },
+  },
 };
 
 export function usePageGuidance(pageKey: string) {
