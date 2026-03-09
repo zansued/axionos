@@ -1304,7 +1304,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
                     type: "code", status: qaApproved ? "draft" : "pending_review",
                     summary: `${subtask.file_path} — ${subtask.description.slice(0, 150)}`,
                     raw_output: { file_path: subtask.file_path, file_type: subtask.file_type, language: ext, content: codeContent, chain_of_agents: true },
-                    model_used: "google/gemini-2.5-flash", prompt_used: subtask.description,
+                    model_used: aiModel, prompt_used: subtask.description,
                     tokens_used: totalTokens, cost_estimate: totalCost,
                   }).select("id").single();
 
