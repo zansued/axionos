@@ -4,9 +4,8 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-09
-> **Current Sprint:** 71 (Governed Extensibility & Developer Experience Foundation) — ✅ Complete
-> **Next Planned:** Sprint 72 (Evidence Capture & Improvement Ledger) — 📋 Planned
-> **Reserved Horizon:** Blocks O–S (Sprints 75–94)
+> **Canon Status:** 94 sprints complete — all blocks (Foundation through S) implemented
+> **Latest Sprint:** 94 (Human-Governed Architecture Promotion) — ✅ Complete
 
 ## Document Authority
 
