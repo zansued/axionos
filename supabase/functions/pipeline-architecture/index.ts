@@ -360,6 +360,7 @@ MVP: ${initiative.mvp_scope || "A definir"}
 Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
 
     const requirementsData = dp.requirements ? JSON.stringify(dp.requirements, null, 2) : "Não disponível";
+    const requirementsDataCompact = compactPayloadForChildAgents(dp.requirements);
     const productArchData = dp.product_architecture ? JSON.stringify(dp.product_architecture, null, 2) : "Não disponível";
 
     // Collect completed results for dependency injection
