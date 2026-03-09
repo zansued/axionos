@@ -17,65 +17,28 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, FileText, Cpu, BookOpen, Users, ArrowRight, CheckCircle2, Circle, Clock, Trash2, Sparkles, Loader2, AlertTriangle, Wand2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const GENERATE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-planning-content`;
-
-async function streamAIContent({
-  title, type, existingPrd, onDelta, onDone, onError,
+/**
+ * Start background AI generation for a planning session.
+ * The edge function saves directly to planning_sessions; we poll for updates.
+ */
+async function startBackgroundGeneration({
+  sessionId, title, type, existingPrd, onStarted, onError,
 }: {
-  title: string; type: "prd" | "architecture"; existingPrd?: string;
-  onDelta: (text: string) => void; onDone: () => void; onError: (err: string) => void;
+  sessionId: string; title: string; type: "prd" | "architecture"; existingPrd?: string;
+  onStarted: () => void; onError: (err: string) => void;
 }) {
-  const session = (await supabase.auth.getSession()).data.session;
-  if (!session?.access_token) {
-    onError("Usuário não autenticado");
-    return;
-  }
-  const resp = await fetch(GENERATE_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${session.access_token}`,
-    },
-    body: JSON.stringify({ title, type, existingPrd }),
-  });
-
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({ error: "Erro desconhecido" }));
-    onError(err.error || `Erro ${resp.status}`);
-    return;
-  }
-
-  if (!resp.body) { onError("Sem resposta do servidor"); return; }
-
-  const reader = resp.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-
-    let newlineIndex: number;
-    while ((newlineIndex = buffer.indexOf("\n")) !== -1) {
-      let line = buffer.slice(0, newlineIndex);
-      buffer = buffer.slice(newlineIndex + 1);
-      if (line.endsWith("\r")) line = line.slice(0, -1);
-      if (line.startsWith(":") || line.trim() === "") continue;
-      if (!line.startsWith("data: ")) continue;
-      const jsonStr = line.slice(6).trim();
-      if (jsonStr === "[DONE]") { onDone(); return; }
-      try {
-        const parsed = JSON.parse(jsonStr);
-        const content = parsed.choices?.[0]?.delta?.content;
-        if (content) onDelta(content);
-      } catch {
-        buffer = line + "\n" + buffer;
-        break;
-      }
+  try {
+    const { data, error } = await supabase.functions.invoke("generate-planning-content", {
+      body: { sessionId, title, type, existingPrd },
+    });
+    if (error) {
+      onError(error.message || "Erro ao iniciar geração");
+      return;
     }
+    onStarted();
+  } catch (e: any) {
+    onError(e?.message || "Erro desconhecido");
   }
-  onDone();
 }
 
 const PIPELINE_STEPS = [
