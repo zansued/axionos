@@ -59,17 +59,17 @@
 
 ## Strategic Directive
 
-AxionOS has completed **94 implementation sprints** spanning the full capability arc from deterministic execution through architecture research and governed promotion. The internal architecture is mature, coherent, and self-governing. All planned and reserved blocks have been implemented.
+AxionOS has completed **98 implementation sprints** spanning the full capability arc from deterministic execution through governed intelligence and institutional decision-making. The internal architecture is mature, coherent, and self-governing. All blocks through T (Governed Intelligence OS) are complete.
 
-**Post-Sprint 94 Strategic Position:**
+**Post-Sprint 98 Strategic Position:**
 
-The platform has reached its **full canon implementation**. Every block from Foundation through Block S (Research Sandbox for Architecture Evolution) is complete. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, and architecture research — is mature and operational.
+The platform has reached its **Governed Intelligence OS** milestone. Every block from Foundation through Block T is complete. The internal architecture — governance, intelligence, memory, doctrine synthesis, bounded autonomous operations, institutional decision engine, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, and architecture research — is mature and operational.
 
-The strategic direction achieved through Sprint 94 is the **complete realization of the governed self-improving software factory**:
+The strategic direction achieved through Sprint 98 is the realization of a **governed intelligence operating system for software delivery**:
 
-> **"From idea to delivered software."**
+> **"From idea to delivered software — with institutional intelligence."**
 
-Internal sophistication serves the visible product experience. The user-facing journey is clear, legible, and governed. The platform now operates with evidence-governed improvement, advanced multi-agent coordination, a governed capability ecosystem, delivery optimization, distributed runtime, and architecture research capabilities.
+Internal sophistication serves the visible product experience. The user-facing journey is clear, legible, and governed. The platform now operates with institutional memory consolidation, doctrine & playbook synthesis, bounded autonomous operations, and an institutional decision engine.
 
 ---
 
