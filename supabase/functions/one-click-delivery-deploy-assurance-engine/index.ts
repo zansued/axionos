@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
-import { authenticate } from "../_shared/auth.ts";
+import { authenticate, requireOrgMembership } from "../_shared/auth.ts";
 import { DEFAULT_DELIVERY_MODEL, getDeliveryStateLabel } from "../_shared/one-click-delivery-deploy-assurance/delivery-orchestration-model-manager.ts";
 import { evaluateDeliveryReadiness } from "../_shared/one-click-delivery-deploy-assurance/delivery-readiness-evaluator.ts";
 import { computeDeployAssurance } from "../_shared/one-click-delivery-deploy-assurance/deploy-assurance-engine.ts";
