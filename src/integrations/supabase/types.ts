@@ -19670,18 +19670,23 @@ export type Database = {
         Row: {
           attempt_number: number | null
           completed_at: string | null
+          context_size_chars: number | null
           cost_usd: number | null
           created_at: string
           depends_on: string[]
+          diagnostics_log: Json | null
           duration_ms: number | null
           error: string | null
+          failure_type: string | null
           id: string
           initiative_id: string
           job_id: string
           max_attempts: number | null
           model_used: string | null
           organization_id: string
+          prompt_size_chars: number | null
           result: Json | null
+          retry_trigger: string | null
           stage: string
           started_at: string | null
           status: string
@@ -19692,18 +19697,23 @@ export type Database = {
         Insert: {
           attempt_number?: number | null
           completed_at?: string | null
+          context_size_chars?: number | null
           cost_usd?: number | null
           created_at?: string
           depends_on?: string[]
+          diagnostics_log?: Json | null
           duration_ms?: number | null
           error?: string | null
+          failure_type?: string | null
           id?: string
           initiative_id: string
           job_id: string
           max_attempts?: number | null
           model_used?: string | null
           organization_id: string
+          prompt_size_chars?: number | null
           result?: Json | null
+          retry_trigger?: string | null
           stage?: string
           started_at?: string | null
           status?: string
@@ -19714,18 +19724,23 @@ export type Database = {
         Update: {
           attempt_number?: number | null
           completed_at?: string | null
+          context_size_chars?: number | null
           cost_usd?: number | null
           created_at?: string
           depends_on?: string[]
+          diagnostics_log?: Json | null
           duration_ms?: number | null
           error?: string | null
+          failure_type?: string | null
           id?: string
           initiative_id?: string
           job_id?: string
           max_attempts?: number | null
           model_used?: string | null
           organization_id?: string
+          prompt_size_chars?: number | null
           result?: Json | null
+          retry_trigger?: string | null
           stage?: string
           started_at?: string | null
           status?: string
