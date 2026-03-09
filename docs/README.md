@@ -77,17 +77,17 @@ The default user-facing journey remains:
 
 ## After Sprint 94 — What Changes Strategically
 
-The platform has completed its **full canon implementation** at Sprint 94, spanning all blocks from Foundation through Research Sandbox for Architecture Evolution.
+The platform has completed its **Governed Intelligence OS** at Sprint 98, spanning all blocks from Foundation through Block T.
 
-The next strategic arc is **Governed Intelligence & Decision Maturity**:
+The next strategic arc is **Adaptive Institutional Ecosystem (Block U)**:
 
-All 94 sprints are complete. The focus shifts from building new internal layers to converting existing sophistication into higher-order capabilities:
-- Contextual guidance and copilot systems
-- Evidence-governed learning
-- Role-aware decision support
-- Decision quality and legibility
+All 98 sprints are complete. The focus shifts from single-context intelligence to cross-context institutional adaptation:
+- Cross-context doctrine adaptation
+- Institutional conflict resolution
+- Federated intelligence boundaries (with tenant isolation)
+- Resilience & continuity governance
 
-Internal sophistication remains critical. The next level deepens it through governed intelligence, not uncontrolled autonomy.
+Internal sophistication remains critical. The next level deepens it through adaptive institutional coherence, not uncontrolled autonomy.
 
 ---
 
