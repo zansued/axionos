@@ -30,9 +30,13 @@
 
 All 106 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Sovereign Institutional Intelligence (Sprint 106) — is implemented and operational.
 
+**Next:** Block W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
+
 ### Current Strategic Position
 
 AxionOS has completed all 106 sprints spanning blocks Foundation through V (Sovereign Institutional Intelligence). The platform has achieved **Level 6 — Sovereign Institutional Intelligence**, with 85+ architectural layers active. The internal architecture is mature, coherent, and self-governing across governance, intelligence, memory, doctrine, decision engine, bounded autonomy, calibration, observability, ecosystem controls, adaptive institutional ecosystem, and sovereign institutional intelligence.
+
+Block W (Sprints 107–110) is the next planned evolution, extending the platform from sovereign institutional intelligence to **strategic autonomy and civilizational coordination** — multi-horizon alignment, tradeoff arbitration, mission integrity, and long-horizon continuity simulation.
 
 - No autonomous architecture mutation — all structural changes require human approval.
 - Governance before autonomy remains the governing principle.
