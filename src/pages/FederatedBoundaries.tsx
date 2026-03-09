@@ -109,10 +109,10 @@ export default function FederatedBoundaries() {
   return (
     <AppLayout>
       <div className="space-y-6">
-        <PageHeader
-          title="Federated Intelligence Boundaries"
-          description="Control what crosses boundaries, at what level, with which restrictions and under which guarantees."
-        />
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Federated Intelligence Boundaries</h1>
+          <p className="text-muted-foreground">Control what crosses boundaries, at what level, with which restrictions and under which guarantees.</p>
+        </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
