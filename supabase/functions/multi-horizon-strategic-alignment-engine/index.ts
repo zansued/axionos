@@ -68,6 +68,49 @@ Deno.serve(async (req) => {
       return json({ constitutions: data ?? [] });
     }
 
+    // ── SUBJECTS LIST (with inactive) ──
+    if (action === "subjects_all") {
+      const { data } = await serviceClient
+        .from("strategic_alignment_subjects")
+        .select("*")
+        .eq("organization_id", organization_id)
+        .order("created_at", { ascending: false })
+        .limit(200);
+      return json({ subjects: data ?? [] });
+    }
+
+    // ── HISTORY — evaluation trend over time ──
+    if (action === "evaluation_history") {
+      const { data } = await serviceClient
+        .from("horizon_alignment_evaluations")
+        .select("alignment_score, tension_score, deferred_risk_score, created_at, strategic_horizons(horizon_type)")
+        .eq("organization_id", organization_id)
+        .order("created_at", { ascending: true })
+        .limit(500);
+
+      if (!data || data.length === 0) return json({ history: [] });
+
+      // Group by date (day)
+      const byDate = new Map<string, { alignment: number[]; tension: number[]; deferred_risk: number[] }>();
+      for (const row of data) {
+        const date = new Date(row.created_at).toISOString().slice(0, 10);
+        if (!byDate.has(date)) byDate.set(date, { alignment: [], tension: [], deferred_risk: [] });
+        const g = byDate.get(date)!;
+        g.alignment.push(Number(row.alignment_score));
+        g.tension.push(Number(row.tension_score));
+        g.deferred_risk.push(Number(row.deferred_risk_score));
+      }
+
+      const history = Array.from(byDate.entries()).map(([date, g]) => ({
+        date,
+        alignment: g.alignment.reduce((a, b) => a + b, 0) / g.alignment.length,
+        tension: g.tension.reduce((a, b) => a + b, 0) / g.tension.length,
+        deferred_risk: g.deferred_risk.reduce((a, b) => a + b, 0) / g.deferred_risk.length,
+      }));
+
+      return json({ history });
+    }
+
     // ── HORIZONS ──
     if (action === "horizons") {
       let horizons = await resolveActiveHorizons(serviceClient, organization_id);

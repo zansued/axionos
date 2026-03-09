@@ -70,6 +70,43 @@ Deno.serve(async (req) => {
       return json({ constitutions: data ?? [] });
     }
 
+    // ── SUBJECTS ALL (with inactive) ──
+    if (action === "subjects_all") {
+      const { data } = await serviceClient.from("tradeoff_subjects").select("*").eq("organization_id", organization_id).order("created_at", { ascending: false }).limit(200);
+      return json({ subjects: data ?? [] });
+    }
+
+    // ── EVALUATION HISTORY ──
+    if (action === "evaluation_history") {
+      const { data } = await serviceClient
+        .from("tradeoff_evaluations")
+        .select("compromise_risk_score, reversibility_score, legitimacy_tension_score, created_at")
+        .eq("organization_id", organization_id)
+        .order("created_at", { ascending: true })
+        .limit(500);
+
+      if (!data || data.length === 0) return json({ history: [] });
+
+      const byDate = new Map<string, { risk: number[]; reversibility: number[]; tension: number[] }>();
+      for (const row of data) {
+        const date = new Date(row.created_at).toISOString().slice(0, 10);
+        if (!byDate.has(date)) byDate.set(date, { risk: [], reversibility: [], tension: [] });
+        const g = byDate.get(date)!;
+        g.risk.push(Number(row.compromise_risk_score));
+        g.reversibility.push(Number(row.reversibility_score));
+        g.tension.push(Number(row.legitimacy_tension_score));
+      }
+
+      const history = Array.from(byDate.entries()).map(([date, g]) => ({
+        date,
+        compromise_risk: g.risk.reduce((a, b) => a + b, 0) / g.risk.length,
+        reversibility: g.reversibility.reduce((a, b) => a + b, 0) / g.reversibility.length,
+        legitimacy_tension: g.tension.reduce((a, b) => a + b, 0) / g.tension.length,
+      }));
+
+      return json({ history });
+    }
+
     // ── DIMENSIONS ──
     if (action === "dimensions") {
       let dims = await resolveActiveDimensions(serviceClient, organization_id);
