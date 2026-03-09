@@ -1,209 +1,80 @@
-# AxionOS — Execution Plan
 
-> Last updated: 2026-03-07
-> Mode: **Level 5 — Institutional Engineering Memory**
-> Execution: **Sprint-based**
 
----
+## Governance Mentor Mode — Implementation Plan
 
-## Strategic Directive
+### What We're Building
 
-AxionOS has completed its Level 4.5 milestone. The execution kernel is stable. The learning layer is active. Meta-agents generate architectural recommendations. Accepted recommendations produce structured engineering proposals via controlled artifact generation. Engineering Memory Foundation is operational.
+A specialized **Governance Mentor Mode** panel that extends the existing Copilot Drawer for platform-governance pages. When a `platform_admin` or `platform_reviewer` opens the Copilot on governance-sensitive pages, they see an enhanced mentor view with decision summary, risk/blast radius, rollback posture, recommendation, confidence/uncertainty, and trade-offs.
 
-**The focus is now:**
-1. Activate memory retrieval surfaces across repair, meta-agents, and proposals
-2. Introduce periodic memory synthesis for long-term pattern detection
-3. Enable memory-aware meta-agents for contextual recommendations
-4. Governance before autonomy. Memory before discovery. Contextual intelligence before automated experimentation.
+This builds directly on the existing `ContextualCopilotDrawer`, `PageGuidanceShell`, and `useCopilotDrawer` architecture.
 
----
+### Architecture
 
-## Strategic Principle
+```text
+PageGuidanceShell
+  └─ CopilotTrigger (existing)
+  └─ ContextualCopilotDrawer (existing — standard mode)
+  └─ GovernanceMentorDrawer (NEW — replaces drawer when mentor mode applies)
 
-> **Governance before autonomy.**
-> **Memory before discovery.**
-> **Contextual intelligence before automated experimentation.**
+useCopilotDrawer → detects if governance mentor mode should activate
+  based on: canonicalRole ∈ {platform_admin, platform_reviewer}
+          + page has governance mentor content
+```
 
-Every new capability must be governable, auditable, and non-destructive before it is expanded. AxionOS does not pursue autonomy for its own sake.
+### New Files
 
----
+1. **`src/lib/guidance/governance-mentor-content.ts`** — Centralized registry of mentor content per governance page (routing, extensions, capability-governance, audit, observability, benchmarks, candidates). Each entry provides:
+   - `decisionType`, `summary`, `whyNow`
+   - `riskLevel` (low/medium/high), `blastRadius` (local/tenant/platform)
+   - `rollbackPosture` (clear/partial/complex)
+   - `recommendation` (approve/approve_with_caution/defer/reject/needs_evidence/send_to_benchmark/restrict_scope)
+   - `recommendationReason`, `confidence` (0-1), `uncertainties[]`
+   - `tradeoffs[]` (each with two sides)
+   - `suggestedActions[]`
 
-## Completed Sprints
+2. **`src/lib/guidance/governance-mentor-types.ts`** — Type definitions for `GovernanceMentorContent`, `RiskLevel`, `BlastRadius`, `RollbackPosture`, `MentorRecommendation`, `TradeOff`.
 
-### Level 3 — Autonomous Engineering System (Sprints 1–10) ✅
+3. **`src/components/guidance/GovernanceMentorDrawer.tsx`** — The mentor panel component. Structured sections:
+   - Decision summary header with decision type badge
+   - Why review matters now
+   - Recommendation with status badge + reason + confidence bar
+   - Risk & blast radius (color-coded)
+   - Rollback posture
+   - Uncertainty list
+   - Trade-offs (two-column)
+   - Suggested actions
+   - Footer: "Advisory only — does not approve or execute"
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 1 | Initiative Brief — structured idea intake contract | ✅ |
-| Sprint 2 | Simulation Engine — feasibility gate before execution | ✅ |
-| Sprint 3 | Deploy Contract — publish-to-deploy state machine | ✅ |
-| Sprint 4 | Product Observability — initiative lifecycle metrics | ✅ |
-| Sprint 5 | Onboarding & Packaging — user activation and product framing | ✅ |
-| Sprint 6 | Repair Evidence — traceable, evidence-based repair loop | ✅ |
-| Sprint 7 | Error Pattern Library — pattern intelligence and strategy effectiveness | ✅ |
-| Sprint 8 | Prevention Layer — active guardrails from known patterns | ✅ |
-| Sprint 9 | Adaptive Routing — evidence-informed repair strategy selection | ✅ |
-| Sprint 10 | Learning Foundation — learning records, prompt outcomes, aggregation | ✅ |
+4. **`src/hooks/useGovernanceMentor.ts`** — Hook that checks if mentor mode should activate (role + page has mentor content) and returns resolved content.
 
-### Level 4 — Self-Learning Software Factory (Sprints 11–12) ✅
+### Modified Files
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 11 | Commercial Readiness — plans, billing, workspace isolation, usage enforcement | ✅ |
-| Sprint 12 | Learning Agents v1 — prompt analysis, strategy tracking, prediction, weight adaptation | ✅ |
+5. **`src/components/guidance/PageGuidanceShell.tsx`** — Render `GovernanceMentorDrawer` instead of `ContextualCopilotDrawer` when `useGovernanceMentor` returns active content.
 
-### Level 4.5 — Meta-Aware Engineering Platform (Sprints 13–15) ✅
+6. **`src/components/guidance/index.ts`** — Export new component.
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 13 | Meta-Agents v1 — 4 active meta-agents, recommendation lifecycle, deduplication | ✅ |
-| Sprint 13.5 | Meta-Agent Hardening — safety validation, tenant isolation, mutation protection | ✅ |
-| Sprint 14 | Controlled Proposal Generation — 5 artifact types, review lifecycle, idempotency | ✅ |
-| Sprint 14.5 | Proposal Hardening — content quality, linkage validation, non-mutation proof | ✅ |
-| Sprint 15 | Engineering Memory Foundation — memory tables, capture events, retrieval API, observability | ✅ |
-| Sprint 16 | Memory Retrieval Surfaces — repair, meta-agent, artifact, review retrieval with ranking | ✅ |
-| Sprint 17 | Memory Summaries — 6 summary types, signal strength scoring, generation service, UI | ✅ |
-| Sprint 18 | Memory-Aware Meta-Agents — historical context enrichment, continuity scoring, redundancy guard, proposal layer v2 | ✅ |
-| Sprint 19 | Proposal Quality Feedback Loop — outcome tracking, quality scoring, confidence calibration, memory effectiveness | ✅ |
-| Sprint 20 | Advisory Calibration Layer — 6 calibration domains, deterministic scoring, advisory-only diagnostic signals | ✅ |
+### Design Details
 
----
+- **Role gate**: Only `platform_admin` and `platform_reviewer` see mentor mode. Other roles get the standard copilot drawer as before.
+- **7 priority pages**: routing, capability-governance, audit, observability, extensions, benchmarks, candidates.
+- **Visual language**: Compact sections with icons, color-coded risk/recommendation badges, confidence progress bar, structured uncertainty list. Premium, calm, high-signal.
+- **Canon compliance**: Footer and recommendation labels explicitly state advisory-only posture. No approve/reject buttons that execute actions — only navigation suggestions.
 
-## Current State
+### Content Examples
 
-AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
+**Routing page mentor:**
+- Decision type: "Routing Policy Review"
+- Risk: medium, blast radius: platform
+- Rollback: clear
+- Recommendation: "Approve with caution"
+- Confidence: 0.75
+- Uncertainty: "Fallback cost impact under high load not yet benchmarked"
+- Trade-off: "Speed vs Safety — faster routing reduces latency but may skip quality checks"
 
-- **Execution:** Stable 32-stage deterministic pipeline with DAG orchestration, runtime validation, autonomous repair, and preventive engineering.
-- **Learning:** Active rule-based learning with prompt outcome analysis, strategy effectiveness tracking, predictive error detection, and bounded weight adjustment.
-- **Meta-Analysis:** 4 memory-aware meta-agents with historical context enrichment, continuity scoring, redundancy suppression, alignment classification, quality feedback loop, and advisory calibration. Recommendation-only — no system mutation.
-- **Proposal Generation:** Accepted recommendations produce structured engineering proposals with Related Historical Context sections, decision/outcome signals, and historical novelty indicators.
-- **Engineering Memory:** Full stack operational — foundation, retrieval surfaces, summaries, and memory-aware reasoning.
-- **Quality Feedback:** Proposal quality tracking with outcome signals, confidence calibration, and memory effectiveness measurement.
-- **Advisory Calibration:** Structured diagnostic signals across 6 calibration domains — advisory-only, no automatic tuning.
-- **Historical Intelligence:** Continuity scoring, redundancy guard, and historical alignment active across all meta-agents and proposals.
-- **Commercial:** Product plans, billing, workspace isolation, and usage enforcement active.
-- **Governance:** Full audit trail, stage permissions, SLA enforcement, and review workflows across recommendations and artifacts.
+**Capability Governance mentor:**
+- Decision type: "Capability Trust Level Change"
+- Risk: high, blast radius: platform
+- Rollback: partial
+- Recommendation: "Needs more evidence"
+- Confidence: 0.55
 
----
-
-## Next Phases
-
-### Level 5 — Institutional Engineering Memory ✅
-
-**Sprint 18 — Memory-Aware Meta-Agents / Proposal Layer v2** ✅
-
-Meta-agents and proposals reason with historical engineering context:
-
-- ✅ Memory context layer per meta-agent type
-- ✅ Historical continuity scoring (support/conflict/context)
-- ✅ Historical alignment classification (5 categories)
-- ✅ Redundancy guard with conservative suppression rules
-- ✅ Proposal Layer v2 with Related Historical Context
-- ✅ Decision/outcome-aware framing
-- ✅ Graceful degradation on memory unavailability
-
-### Level 5.5 — Self-Improving Engineering Platform
-
-- Memory summaries drive long-horizon evolution signals
-- Strategy reuse patterns inform repair routing improvements
-- Semantic indexing enables contextual similarity queries
-- Memory decay and relevance scoring refine knowledge quality
-
-### Level 6 — Discovery-Driven Engineering (Future Horizon)
-
-- Architecture experimentation informed by accumulated memory
-- Automated hypothesis generation from long-term patterns
-- Controlled experimentation with governance safeguards
-- This level is a vision, not a current priority
-
----
-
-## Success Metrics
-
-| Metric | Target |
-|--------|--------|
-| Pipeline success rate (no manual intervention) | > 80% |
-| Build OK rate | > 90% |
-| Deploy success rate | > 85% |
-| Average retries per initiative | < 2 |
-| Automatic repair success rate | > 70% |
-| Cost per initiative | Tracked & declining |
-| Time from idea to validated repository | < 15 min |
-| Time from idea to deployment | < 20 min |
-| Memory entries captured per initiative | Tracked |
-| Memory retrieval frequency | Tracked |
-
----
-
-## Active Kernel Components
-
-| Component | Status |
-|-----------|--------|
-| 32-stage deterministic pipeline | ✅ |
-| Project Brain (knowledge graph + semantic search) | ✅ |
-| DAG Execution Engine (Kahn's algorithm, 6 workers) | ✅ |
-| AI Efficiency Layer (compressor + cache + router) | ✅ |
-| Smart Context Window (~60-80% token reduction) | ✅ |
-| Runtime Validation (tsc + vite via CI) | ✅ |
-| Autonomous Build Repair + Fix Orchestrator | ✅ |
-| Evidence-Oriented Repair Loop | ✅ |
-| Error Pattern Library | ✅ |
-| Preventive Engineering Layer | ✅ |
-| Adaptive Repair Routing | ✅ |
-| Learning Foundation | ✅ |
-| Learning Agents v1 | ✅ |
-| Meta-Agents v1.2 (4 memory-aware agents) | ✅ |
-| Controlled Proposal Generation | ✅ |
-| Engineering Memory Foundation | ✅ |
-| Governance (gates, SLAs, audit logs) | ✅ |
-| Observability + Cost Tracking | ✅ |
-| Commercial Readiness (plans, billing, usage) | ✅ |
-| Proposal Quality Feedback Loop | ✅ |
-| Advisory Calibration Layer | ✅ |
-
----
-
-## Agent OS v1.0 — Reference Architecture (Frozen)
-
-The Agent OS is fully designed. No expansion needed.
-
-| Plane | Modules | Status |
-|-------|---------|--------|
-| **Core** | Runtime Protocol, Capability Model, Core Types | ✅ Designed |
-| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing | ✅ Designed |
-| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Designed |
-| **Data** | Artifact Store, Memory System, Observability | ✅ Designed |
-| **Ecosystem** | Marketplace & Global Capability Registry | ✅ Designed |
-
----
-
-## Technology Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
-| State | TanStack React Query + React Context |
-| Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
-| AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
-| Git | GitHub API v3 (Tree API for atomic commits) |
-| Deploy | Vercel/Netlify auto-generated configs |
-
----
-
-## Product Positioning
-
-**Present AxionOS as:**
-- An autonomous software engineering platform
-- A governed SaaS / MVP generator
-- A system that transforms ideas into validated repositories
-- A meta-aware platform that analyzes its own performance and generates improvement proposals
-- A system accumulating institutional engineering experience
-
-**Do NOT present as:**
-- A startup factory
-- A global marketplace of agents
-- An abstract agent operating system
-- An AGI system
-- A fully autonomous self-modifying system
-
-> Pipeline contracts: [docs/PIPELINE_CONTRACTS.md](../docs/PIPELINE_CONTRACTS.md) | Agents: [docs/AGENTS.md](../docs/AGENTS.md) | Roadmap: [docs/ROADMAP.md](../docs/ROADMAP.md)
