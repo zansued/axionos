@@ -58,7 +58,6 @@ export default function Dashboard() {
   const { locale } = useI18n();
   const navigate = useNavigate();
   const { showOnboarding } = useOnboarding();
-  const { guidance: dashboardGuidance, whyNowText } = usePageGuidance("dashboard");
   const en = locale === "en-US";
 
   const { data: recentInitiatives = [] } = useQuery({
