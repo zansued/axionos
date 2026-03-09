@@ -54,6 +54,7 @@ export default function Onboarding() {
   return (
     <AppLayout>
       <div className="flex flex-col gap-6 p-6 max-w-4xl mx-auto">
+        <PageIntroCard guidance={getGuidanceForPage("onboarding")!} compact />
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">
             <Rocket className="h-6 w-6 text-primary" />
