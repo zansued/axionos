@@ -23,6 +23,11 @@ import {
   compactSystemArchSummary, compactDataArchSummary, compactApiArchSummary,
   analyzeBottlenecks, estimateTokens,
 } from "../_shared/architecture-subjob/diagnostics.ts";
+import {
+  checkInputBudget, checkOutputGuardrail, checkRegressionSafety,
+  computeOptimizationDelta, buildIntermediateSummary, serializeIntermediateSummary,
+  type OptimizationDelta,
+} from "../_shared/architecture-subjob/optimization.ts";
 
 interface AgentOutput {
   role: string;
@@ -150,10 +155,19 @@ function estimateSubjobInput(
       return { promptChars: p.system.length + p.user.length, contextChars: compactSysContext.length };
     }
     case "architecture.dependencies": {
-      const p = dependencyPlannerPrompt(projectContext, compactSysContext, compactDataContext, compactApiContext);
+      const intermediateSummary = buildIntermediateSummary(projectContext, completedResults["architecture.system"] || null);
+      const dataRes = completedResults["architecture.data"] || {};
+      const apiRes = completedResults["architecture.api"] || {};
+      const enriched = JSON.stringify({
+        ...intermediateSummary,
+        tables: ((dataRes.tables as any[]) || []).slice(0, 5).map((t: any) => t.name),
+        endpoints: ((apiRes.endpoints as any[]) || []).slice(0, 6).map((e: any) => `${e.method} ${e.path}`),
+        edge_functions: ((apiRes.edge_functions as any[]) || []).slice(0, 3).map((f: any) => f.name),
+      });
+      const p = dependencyPlannerPrompt(projectContext, enriched);
       return {
         promptChars: p.system.length + p.user.length,
-        contextChars: compactSysContext.length + compactDataContext.length + compactApiContext.length,
+        contextChars: enriched.length,
       };
     }
     default:
@@ -224,18 +238,25 @@ async function executeSubjob(
       return result;
     }
     case "architecture.dependencies": {
-      // Use COMPACT summaries instead of full JSON to reduce input from ~7k to ~1.5k tokens
-      const compactSys = compactSystemArchSummary(systemResult);
-      const compactData = compactDataArchSummary(completedResults["architecture.data"] || {});
-      const compactApi = compactApiArchSummary(completedResults["architecture.api"] || {});
-      const p = dependencyPlannerPrompt(projectContext, compactSys, compactData, compactApi);
+      // Build minimal intermediate summary instead of forwarding raw artifacts
+      const intermediateSummary = buildIntermediateSummary(projectContext, systemResult);
+      const dataResult = completedResults["architecture.data"] || {};
+      const apiResult = completedResults["architecture.api"] || {};
+      // Enrich summary with core entity/endpoint names
+      const enrichedSummary = {
+        ...intermediateSummary,
+        tables: ((dataResult.tables as any[]) || []).slice(0, 5).map((t: any) => t.name),
+        endpoints: ((apiResult.endpoints as any[]) || []).slice(0, 6).map((e: any) => `${e.method} ${e.path}`),
+        edge_functions: ((apiResult.edge_functions as any[]) || []).slice(0, 3).map((f: any) => f.name),
+      };
+      const p = dependencyPlannerPrompt(projectContext, JSON.stringify(enrichedSummary));
       const result = await runAgent(apiKey, "dependency_planner", p.system, p.user, false, {
         stage: "architecture.dependencies",
         organizationId: executionMeta.organizationId,
         initiativeId: executionMeta.initiativeId,
         abortSignal: executionMeta.abortSignal,
       });
-      result.contextChars = compactSys.length + compactData.length + compactApi.length;
+      result.contextChars = JSON.stringify(enrichedSummary).length;
       return result;
     }
     case "architecture.synthesis": {
@@ -463,8 +484,11 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           const timeoutMs = getAdaptiveTimeoutMs(baseTimeoutMs, promptChars, contextChars, subjob.attempt_number || 1);
           const abortController = new AbortController();
 
+          // Budget check
+          const budgetCheck = checkInputBudget(subjob.subjob_key, promptChars, contextChars);
+          const budgetLabel = budgetCheck.status === "within_budget" ? "✓" : budgetCheck.status === "warning" ? "⚠" : "🔴";
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_config`,
-            `⏱ timeout=${Math.round(timeoutMs/1000)}s, prompt=${Math.ceil(promptChars/1000)}k chars, ctx=${Math.ceil(contextChars/1000)}k chars`
+            `⏱ timeout=${Math.round(timeoutMs/1000)}s prompt=${estimateTokens(promptChars)}t ctx=${estimateTokens(contextChars)}t budget=${budgetLabel}${budgetCheck.status}`
           );
 
           const agentPromise = executeSubjob(
@@ -538,11 +562,29 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           });
           await appendDiagnostic(serviceClient, subjob.id, diag, null, null, promptChars, contextChars);
 
+          // Output guardrail check
+          const guardrail = checkOutputGuardrail(subjob.subjob_key, outputChars);
+          if (guardrail.exceeded) {
+            await pipelineLog(ctx, `subjob_${subjob.subjob_key}_guardrail`, `⚠ Output exceeded cap: ${outputChars}/${guardrail.maxChars} chars`);
+          }
+
+          // Regression safety check
+          const regression = checkRegressionSafety(subjob.subjob_key, agentResult.result);
+          if (!regression.passed) {
+            await pipelineLog(ctx, `subjob_${subjob.subjob_key}_regression`, `⚠ Regression: ${regression.warnings.join("; ")}`);
+          }
+
+          // Optimization telemetry delta
+          const optDelta = computeOptimizationDelta(
+            subjob.subjob_key, null,
+            { promptChars, contextChars, durationMs, outputChars, result: agentResult.result },
+          );
+
           completedResults[subjob.subjob_key] = agentResult.result;
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_complete`,
-            `✓ ${label}: ${agentResult.tokens}t $${agentResult.costUsd.toFixed(4)} ${durationMs}ms [provider=${providerMs}ms parse=${parseMs}ms persist=${persistMs}ms] prompt=${Math.ceil(promptChars/1000)}k out=${Math.ceil(outputChars/1000)}k`
+            `✓ ${label}: ${agentResult.tokens}t $${agentResult.costUsd.toFixed(4)} ${durationMs}ms budget=${optDelta.budgetStatus} regression=${regression.passed ? "ok" : "warn"}`
           );
-          return { key: subjob.subjob_key, success: true };
+          return { key: subjob.subjob_key, success: true, optDelta };
         } catch (err: any) {
           if (timeoutHandle !== null) {
             clearTimeout(timeoutHandle);
@@ -710,9 +752,17 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
       attempt_number: s.attempt_number,
     })));
 
+    // Budget compliance summary
+    const budgetCompliance: Record<string, string> = {};
+    for (const s of subjobs) {
+      if (s.subjob_key === "architecture.synthesis") continue;
+      const bc = checkInputBudget(s.subjob_key, (s as any).prompt_size_chars || 0, (s as any).context_size_chars || 0);
+      budgetCompliance[s.subjob_key] = `${bc.status} (${bc.inputTokens}/${bc.budgetTokens}t)`;
+    }
+
     await pipelineLog(ctx, "pipeline_architecture_complete",
-      `Camada 2 concluída (background): ${totalTokens} tokens, $${totalCost.toFixed(4)}, ${totalDuration}ms`,
-      { tokens: totalTokens, cost_usd: totalCost, duration_ms: totalDuration, bottleneck_summary: bottleneckSummary }
+      `Camada 2 concluída: ${totalTokens}t $${totalCost.toFixed(4)} ${totalDuration}ms`,
+      { tokens: totalTokens, cost_usd: totalCost, duration_ms: totalDuration, bottleneck_summary: bottleneckSummary, budget_compliance: budgetCompliance }
     );
 
     await pipelineLog(ctx, "pipeline_architecture_simulation_queued",
