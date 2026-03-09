@@ -4,6 +4,7 @@ export { NextBestAction } from "./NextBestAction";
 export { ApprovalHint } from "./ApprovalHint";
 export { WhyThisMattersNow } from "./WhyThisMattersNow";
 export { ContextualCopilotDrawer } from "./ContextualCopilotDrawer";
+export { GovernanceMentorDrawer } from "./GovernanceMentorDrawer";
 export { CopilotTrigger } from "./CopilotTrigger";
 export { PageGuidanceShell } from "./PageGuidanceShell";
 export { getGuidanceForPage, getGuidanceForSurface } from "@/lib/guidance/contracts";

@@ -7,8 +7,10 @@
 
 import { PageIntroCard } from "./PageIntroCard";
 import { ContextualCopilotDrawer } from "./ContextualCopilotDrawer";
+import { GovernanceMentorDrawer } from "./GovernanceMentorDrawer";
 import { CopilotTrigger } from "./CopilotTrigger";
 import { useCopilotDrawer } from "@/hooks/useCopilotDrawer";
+import { useGovernanceMentor } from "@/hooks/useGovernanceMentor";
 
 interface PageGuidanceShellProps {
   pageKey: string;
@@ -20,6 +22,7 @@ interface PageGuidanceShellProps {
 
 export function PageGuidanceShell({ pageKey, showIntroCard = true, compact = true }: PageGuidanceShellProps) {
   const { open, openDrawer, closeDrawer, guidance, whyNowText, canonicalRole } = useCopilotDrawer(pageKey);
+  const { isMentorMode, mentorContent } = useGovernanceMentor(pageKey);
 
   if (!guidance) return null;
 
@@ -35,13 +38,21 @@ export function PageGuidanceShell({ pageKey, showIntroCard = true, compact = tru
           </div>
         </div>
       )}
-      <ContextualCopilotDrawer
-        pageKey={pageKey}
-        guidance={guidance}
-        canonicalRole={canonicalRole}
-        open={open}
-        onClose={closeDrawer}
-      />
+      {isMentorMode && mentorContent ? (
+        <GovernanceMentorDrawer
+          content={mentorContent}
+          open={open}
+          onClose={closeDrawer}
+        />
+      ) : (
+        <ContextualCopilotDrawer
+          pageKey={pageKey}
+          guidance={guidance}
+          canonicalRole={canonicalRole}
+          open={open}
+          onClose={closeDrawer}
+        />
+      )}
     </>
   );
 }
