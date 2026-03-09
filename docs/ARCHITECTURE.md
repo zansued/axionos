@@ -3,7 +3,8 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-09
-> **Current state:** Level 6 — Sovereign Institutional Intelligence. 85+ architectural layers active. All blocks (Foundation through V) complete. All 106 sprints implemented.
+> **Current state:** Level 6 — Sovereign Institutional Intelligence. 85+ architectural layers active. All blocks (Foundation through V) complete. All 106 sprints implemented. Block W (107–110) planned.
+> **Next block:** W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
