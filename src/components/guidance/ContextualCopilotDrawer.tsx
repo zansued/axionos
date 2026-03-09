@@ -76,6 +76,12 @@ export function ContextualCopilotDrawer({ pageKey, guidance, canonicalRole, open
   const lang = locale === "pt-BR" ? "pt" : "en";
   const navigate = useNavigate();
 
+  // Derive copilot submode based on role (canonical)
+  const isEndUser = canonicalRole === "end_user";
+  const submodeLabel = isEndUser
+    ? (lang === "pt" ? "Copilot de Produto" : "Product Copilot")
+    : (lang === "pt" ? "Copilot do Workspace" : "Workspace Copilot");
+
   // Resolve copilot content with role fallback
   const copilotData = getCopilotContent(pageKey);
   const roleContent = copilotData?.roleOverrides?.[canonicalRole];
@@ -101,8 +107,8 @@ export function ContextualCopilotDrawer({ pageKey, guidance, canonicalRole, open
   const surfaceLabel = guidance.surface === "product"
     ? (lang === "pt" ? "Superfície de Produto" : "Product Surface")
     : guidance.surface === "workspace"
-    ? (lang === "pt" ? "Governança do Workspace" : "Workspace Governance")
-    : (lang === "pt" ? "Governança da Plataforma" : "Platform Governance");
+    ? (lang === "pt" ? "Superfície de Governança do Workspace" : "Workspace Governance Surface")
+    : (lang === "pt" ? "Superfície de Governança da Plataforma" : "Platform Governance Surface");
 
   return (
     <AnimatePresence>
