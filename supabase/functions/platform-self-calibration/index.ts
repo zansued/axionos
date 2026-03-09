@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
-import { authenticate, AuthContext } from "../_shared/auth.ts";
+import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { interpretCalibrationSignals } from "../_shared/platform-calibration/platform-calibration-signal-interpreter.ts";
 import { generateProposals } from "../_shared/platform-calibration/platform-calibration-proposal-engine.ts";
 import { validateProposal } from "../_shared/platform-calibration/platform-calibration-guardrails.ts";
