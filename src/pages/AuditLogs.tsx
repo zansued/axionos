@@ -204,6 +204,7 @@ export default function AuditLogs() {
   return (
     <AppLayout>
       <div className="space-y-6">
+        {guidance && <PageIntroCard guidance={guidance} whyNow={whyNow?.en} compact />}
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
