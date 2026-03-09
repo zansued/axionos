@@ -100,13 +100,11 @@ AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
 | Sprint 97 | Bounded Autonomous Operations — safe autonomy for repetitive low-risk operations | ✅ |
 | Sprint 98 | Institutional Decision Engine — memory + doctrine + risk → consistent recommendations | ✅ |
 
-### Next Phase: Block U — Adaptive Institutional Ecosystem (Sprints 99–102) — 🔲 Planned
-
-**Thesis:** AxionOS evolves from a Governed Intelligence OS into an Adaptive Institutional Ecosystem — where memory becomes living patrimony, doctrine adapts across contexts, decisions become cross-institutional, and autonomy becomes organizational (with guardrails).
+### Current Phase: Block U — Adaptive Institutional Ecosystem (Sprints 99–102)
 
 | Sprint | Deliverable | Status |
 |--------|-------------|--------|
-| Sprint 99 | Cross-Context Doctrine Adaptation — adapt doctrine by workspace type, profile, context, maturity | 🔲 |
+| Sprint 99 | Cross-Context Doctrine Adaptation — adapt doctrine by workspace type, profile, context, maturity | ✅ |
 | Sprint 100 | Institutional Conflict Resolution Engine — detect/mediate conflicts between policies, doctrines, strategies | 🔲 |
 | Sprint 101 | Federated Intelligence Boundaries — shared intelligence across contexts without breaking isolation | 🔲 |
 | Sprint 102 | Resilience & Continuity Governance — institutional continuity across failure, drift, obsolescence | 🔲 |

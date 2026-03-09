@@ -549,6 +549,39 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Sensitive and structural decisions require explicit human approval.",
     },
   },
+  {
+    key: "doctrine-adaptation",
+    title: { pt: "Adaptação Doutrinária", en: "Doctrine Adaptation" },
+    description: {
+      pt: "Adapte doutrinas operacionais por contexto institucional. Avalie compatibilidade, detecte drift e preserve princípios centrais.",
+      en: "Adapt operational doctrines by institutional context. Evaluate compatibility, detect drift, and preserve core principles.",
+    },
+    audience: { pt: "Operadores e administradores", en: "Operators and administrators" },
+    surface: "workspace",
+    actions: [
+      { pt: "Avaliar compatibilidade doutrinária por contexto", en: "Evaluate doctrine compatibility by context" },
+      { pt: "Visualizar matriz de adaptação", en: "View adaptation matrix" },
+      { pt: "Monitorar eventos de drift doutrinário", en: "Monitor doctrine drift events" },
+      { pt: "Inspecionar explicações de adaptação", en: "Inspect adaptation explanations" },
+    ],
+    whenRelevant: {
+      pt: "Quando o sistema opera em múltiplos contextos institucionais com doutrinas que podem precisar de adaptação.",
+      en: "When the system operates across multiple institutional contexts with doctrines that may need adaptation.",
+    },
+    whenIgnorable: {
+      pt: "Se há apenas um contexto operacional ativo.",
+      en: "If there is only one active operational context.",
+    },
+    nextStep: {
+      pt: "Revisar avaliações conflitantes e resolver eventos de drift abertos.",
+      en: "Review conflicting evaluations and resolve open drift events.",
+    },
+    approvalPosture: "required",
+    approvalHint: {
+      pt: "Adaptações de doutrinas centrais ou imutáveis exigem revisão humana.",
+      en: "Adaptations of core or immutable doctrines require human review.",
+    },
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────
