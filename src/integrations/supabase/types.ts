@@ -7473,6 +7473,60 @@ export type Database = {
           },
         ]
       }
+      continuity_transition_events: {
+        Row: {
+          continuity_impact: string
+          created_at: string
+          event_type: string
+          id: string
+          organization_id: string
+          payload: Json
+          resolved_at: string | null
+          role_id: string | null
+          severity: string
+          transition_summary: string
+        }
+        Insert: {
+          continuity_impact?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          organization_id: string
+          payload?: Json
+          resolved_at?: string | null
+          role_id?: string | null
+          severity?: string
+          transition_summary?: string
+        }
+        Update: {
+          continuity_impact?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          organization_id?: string
+          payload?: Json
+          resolved_at?: string | null
+          role_id?: string | null
+          severity?: string
+          transition_summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "continuity_transition_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "continuity_transition_events_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "critical_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       convergence_candidates: {
         Row: {
           assumptions: Json
@@ -8421,6 +8475,53 @@ export type Database = {
           },
           {
             foreignKeyName: "convergence_rollout_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      critical_roles: {
+        Row: {
+          continuity_tier: string
+          created_at: string
+          criticality_level: string
+          domain: string
+          id: string
+          organization_id: string
+          role_code: string
+          role_name: string
+          role_type: string
+          updated_at: string
+        }
+        Insert: {
+          continuity_tier?: string
+          created_at?: string
+          criticality_level?: string
+          domain?: string
+          id?: string
+          organization_id: string
+          role_code?: string
+          role_name?: string
+          role_type?: string
+          updated_at?: string
+        }
+        Update: {
+          continuity_tier?: string
+          created_at?: string
+          criticality_level?: string
+          domain?: string
+          id?: string
+          organization_id?: string
+          role_code?: string
+          role_name?: string
+          role_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "critical_roles_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -24653,6 +24754,69 @@ export type Database = {
           },
         ]
       }
+      role_continuity_profiles: {
+        Row: {
+          backup_exists: boolean
+          backup_ref: string
+          continuity_notes: string
+          created_at: string
+          current_owner_ref: string
+          current_owner_type: string
+          handoff_maturity_score: number
+          id: string
+          knowledge_concentration_score: number
+          organization_id: string
+          role_id: string
+          succession_readiness_level: string
+          updated_at: string
+        }
+        Insert: {
+          backup_exists?: boolean
+          backup_ref?: string
+          continuity_notes?: string
+          created_at?: string
+          current_owner_ref?: string
+          current_owner_type?: string
+          handoff_maturity_score?: number
+          id?: string
+          knowledge_concentration_score?: number
+          organization_id: string
+          role_id: string
+          succession_readiness_level?: string
+          updated_at?: string
+        }
+        Update: {
+          backup_exists?: boolean
+          backup_ref?: string
+          continuity_notes?: string
+          created_at?: string
+          current_owner_ref?: string
+          current_owner_type?: string
+          handoff_maturity_score?: number
+          id?: string
+          knowledge_concentration_score?: number
+          organization_id?: string
+          role_id?: string
+          succession_readiness_level?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_continuity_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_continuity_profiles_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "critical_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       role_experience_models: {
         Row: {
           assumptions: Json
@@ -25944,6 +26108,173 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      succession_assessments: {
+        Row: {
+          assessment_summary: string
+          concentration_risk_score: number
+          constitution_id: string | null
+          created_at: string
+          domain: string
+          handoff_viability_score: number
+          id: string
+          organization_id: string
+          readiness_score: number
+          strategy_continuity_score: number
+        }
+        Insert: {
+          assessment_summary?: string
+          concentration_risk_score?: number
+          constitution_id?: string | null
+          created_at?: string
+          domain?: string
+          handoff_viability_score?: number
+          id?: string
+          organization_id: string
+          readiness_score?: number
+          strategy_continuity_score?: number
+        }
+        Update: {
+          assessment_summary?: string
+          concentration_risk_score?: number
+          constitution_id?: string | null
+          created_at?: string
+          domain?: string
+          handoff_viability_score?: number
+          id?: string
+          organization_id?: string
+          readiness_score?: number
+          strategy_continuity_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "succession_assessments_constitution_id_fkey"
+            columns: ["constitution_id"]
+            isOneToOne: false
+            referencedRelation: "succession_constitutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "succession_assessments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      succession_constitutions: {
+        Row: {
+          constitution_code: string
+          constitution_name: string
+          continuity_thresholds: Json
+          created_at: string
+          created_by: string
+          id: string
+          organization_id: string
+          scope: string
+          status: Database["public"]["Enums"]["constitution_status"]
+          succession_principles: string
+          updated_at: string
+        }
+        Insert: {
+          constitution_code?: string
+          constitution_name?: string
+          continuity_thresholds?: Json
+          created_at?: string
+          created_by?: string
+          id?: string
+          organization_id: string
+          scope?: string
+          status?: Database["public"]["Enums"]["constitution_status"]
+          succession_principles?: string
+          updated_at?: string
+        }
+        Update: {
+          constitution_code?: string
+          constitution_name?: string
+          continuity_thresholds?: Json
+          created_at?: string
+          created_by?: string
+          id?: string
+          organization_id?: string
+          scope?: string
+          status?: Database["public"]["Enums"]["constitution_status"]
+          succession_principles?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "succession_constitutions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      succession_plans: {
+        Row: {
+          authority_transfer_steps: Json
+          continuity_checks: Json
+          created_at: string
+          handoff_sequence: Json
+          id: string
+          knowledge_transfer_steps: Json
+          organization_id: string
+          plan_code: string
+          role_id: string
+          status: string
+          succession_type: string
+          trigger_conditions: string
+          updated_at: string
+        }
+        Insert: {
+          authority_transfer_steps?: Json
+          continuity_checks?: Json
+          created_at?: string
+          handoff_sequence?: Json
+          id?: string
+          knowledge_transfer_steps?: Json
+          organization_id: string
+          plan_code?: string
+          role_id: string
+          status?: string
+          succession_type?: string
+          trigger_conditions?: string
+          updated_at?: string
+        }
+        Update: {
+          authority_transfer_steps?: Json
+          continuity_checks?: Json
+          created_at?: string
+          handoff_sequence?: Json
+          id?: string
+          knowledge_transfer_steps?: Json
+          organization_id?: string
+          plan_code?: string
+          role_id?: string
+          status?: string
+          succession_type?: string
+          trigger_conditions?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "succession_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "succession_plans_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "critical_roles"
             referencedColumns: ["id"]
           },
         ]
