@@ -729,7 +729,7 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
           total_subtasks: totalSubtasks,
           scaffold_files: scaffoldFiles,
           total_tokens: totalTokens,
-        }, { model: "google/gemini-2.5-flash", costUsd: totalCost, durationMs: prdResult.durationMs + archResult.durationMs + storiesResult.durationMs });
+        }, { model: aiModel, costUsd: totalCost, durationMs: prdResult.durationMs + archResult.durationMs + storiesResult.durationMs });
         await log("pipeline_planning_complete", `Planning completo: ${createdStories.length} stories, ${totalSubtasks} subtasks (${scaffoldFiles} scaffold)`, { totalTokens, cost_usd: totalCost });
 
         return new Response(JSON.stringify({
