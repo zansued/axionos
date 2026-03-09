@@ -95,6 +95,13 @@ Deno.serve(async (req) => {
       const subjects = await listTradeoffSubjects(serviceClient, organization_id, { active: true });
       if (subjects.length === 0) return json({ evaluations: [], events: [], recommendations: [], explanations: [] });
 
+      // Clean previous evaluation data to prevent accumulation
+      await Promise.all([
+        serviceClient.from("tradeoff_evaluations").delete().eq("organization_id", organization_id),
+        serviceClient.from("tradeoff_recommendations").delete().eq("organization_id", organization_id),
+        serviceClient.from("tradeoff_arbitration_events").delete().eq("organization_id", organization_id).is("resolved_at", null),
+      ]);
+
       const evaluations = [];
       const allEvents = [];
       const allRecommendations = [];
