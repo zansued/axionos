@@ -72,6 +72,27 @@ interface Explanation {
   recommendation: string;
 }
 
+function TransferSection({ title, items, icon: Icon }: { title: string; items: unknown[]; icon: React.ElementType }) {
+  if (items.length === 0) return null;
+  return (
+    <div className="rounded-md border border-border bg-muted/30 p-3">
+      <div className="flex items-center gap-2 mb-2">
+        <Icon className="h-3.5 w-3.5 text-primary" />
+        <span className="text-xs font-medium text-foreground">{title}</span>
+        <Badge variant="outline" className="text-[10px] ml-auto">{items.length}</Badge>
+      </div>
+      <ol className="space-y-1">
+        {items.map((item, i) => (
+          <li key={i} className="text-xs text-muted-foreground flex items-start gap-1.5">
+            <span className="font-mono text-primary/70 shrink-0">{i + 1}.</span>
+            <span>{typeof item === "string" ? item : JSON.stringify(item)}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 export default function StrategicSuccession() {
   const { currentOrg } = useOrg();
   const [overview, setOverview] = useState<Overview | null>(null);
