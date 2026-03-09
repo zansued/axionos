@@ -394,30 +394,58 @@ function SessionDetail({
     }
   }, [session, missingRoles, onUpdate, onRefreshAgents, toast]);
 
+  // Start polling for content updates after background generation starts
+  const startPolling = useCallback((field: string, setLoading: (v: boolean) => void) => {
+    if (pollingRef.current) clearInterval(pollingRef.current);
+    pollingRef.current = setInterval(async () => {
+      const { data } = await supabase
+        .from("planning_sessions")
+        .select(field)
+        .eq("id", session.id)
+        .single();
+      if (data) {
+        const value = (data as any)[field];
+        if (value && !value.startsWith("⏳")) {
+          // Generation complete (or errored)
+          clearInterval(pollingRef.current!);
+          pollingRef.current = null;
+          setLoading(false);
+          onUpdate({ [field]: value });
+          onRefreshSessions();
+          if (value.startsWith("❌")) {
+            toast({ variant: "destructive", title: "Erro na geração", description: value });
+          } else {
+            toast({ title: field === "prd_content" ? "PRD gerado com sucesso!" : "Arquitetura gerada com sucesso!" });
+          }
+        }
+      }
+    }, 3000);
+  }, [session.id, onUpdate, onRefreshSessions, toast]);
+
   const handleGeneratePrd = useCallback(() => {
     setGeneratingPrd(true);
-    let content = "";
-    streamAIContent({
+    onUpdate({ prd_content: "⏳ Gerando..." });
+    startBackgroundGeneration({
+      sessionId: session.id,
       title: session.title,
       type: "prd",
-      onDelta: (text) => { content += text; onUpdate({ prd_content: content }); },
-      onDone: () => { setGeneratingPrd(false); toast({ title: "PRD gerado com sucesso!" }); },
+      onStarted: () => startPolling("prd_content", setGeneratingPrd),
       onError: (err) => { setGeneratingPrd(false); toast({ variant: "destructive", title: "Erro ao gerar PRD", description: err }); },
     });
-  }, [session.title, onUpdate, toast]);
+  }, [session.id, session.title, onUpdate, startPolling, toast]);
 
   const handleGenerateArch = useCallback(() => {
     setGeneratingArch(true);
-    let content = "";
-    streamAIContent({
+    onUpdate({ architecture_content: "⏳ Gerando..." });
+    startBackgroundGeneration({
+      sessionId: session.id,
       title: session.title,
       type: "architecture",
       existingPrd: session.prd_content,
-      onDelta: (text) => { content += text; onUpdate({ architecture_content: content }); },
-      onDone: () => { setGeneratingArch(false); toast({ title: "Arquitetura gerada com sucesso!" }); },
+      onStarted: () => startPolling("architecture_content", setGeneratingArch),
       onError: (err) => { setGeneratingArch(false); toast({ variant: "destructive", title: "Erro ao gerar arquitetura", description: err }); },
     });
-  }, [session.title, session.prd_content, onUpdate, toast]);
+  }, [session.id, session.title, session.prd_content, onUpdate, startPolling, toast]);
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={session.id} className="space-y-5">
