@@ -648,6 +648,39 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Transfers across controlled or hard boundaries require review.",
     },
   },
+  {
+    key: "resilience-continuity",
+    title: { pt: "Resiliência & Continuidade", en: "Resilience & Continuity" },
+    description: {
+      pt: "Mapeie fragilidades institucionais, planeje continuidade e governe resiliência operacional.",
+      en: "Map institutional fragilities, plan continuity, and govern operational resilience.",
+    },
+    audience: { pt: "Operadores e administradores", en: "Operators and administrators" },
+    surface: "workspace",
+    actions: [
+      { pt: "Mapear ativos críticos e dependências", en: "Map critical assets and dependencies" },
+      { pt: "Medir resiliência por domínio", en: "Measure resilience by domain" },
+      { pt: "Gerenciar planos de continuidade", en: "Manage continuity plans" },
+      { pt: "Acompanhar incidentes e cobertura", en: "Track incidents and coverage" },
+    ],
+    whenRelevant: {
+      pt: "Quando há necessidade de avaliar fragilidade institucional ou planejar resposta a disrupções.",
+      en: "When institutional fragility assessment or disruption response planning is needed.",
+    },
+    whenIgnorable: {
+      pt: "Se a postura de resiliência é nominal e não há incidentes abertos.",
+      en: "If resilience posture is nominal and no incidents are open.",
+    },
+    nextStep: {
+      pt: "Mapear ativos críticos e definir planos de continuidade.",
+      en: "Map critical assets and define continuity plans.",
+    },
+    approvalPosture: "required",
+    approvalHint: {
+      pt: "Ativação de planos de continuidade para disrupções críticas exige aprovação humana.",
+      en: "Activation of continuity plans for critical disruptions requires human approval.",
+    },
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────
