@@ -1,7 +1,7 @@
 // Layer 2 — Technical Architecture (Subjob Orchestrator)
 // Orchestrates: System → [Data ∥ API] → Dependencies → Synthesis
 // Each agent runs as an isolated subjob with independent persistence and timeout handling.
-// v2: Background processing + per-attempt diagnostics + compact context
+// v3: MVP-scoped prompts + timing breakdown + sequential diagnostic mode
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
