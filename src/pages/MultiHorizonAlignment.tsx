@@ -16,7 +16,7 @@ import {
   ChevronDown, RefreshCw, Info, TrendingUp, Clock, Shield, Plus, Settings,
 } from "lucide-react";
 import { toast } from "sonner";
-import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoreBar, ScoringTransparencyCard } from "@/components/block-w/BlockWShared";
+import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoreBar, ScoringTransparencyCard, CausalModifierCard } from "@/components/block-w/BlockWShared";
 
 // ── Types ──
 interface Overview {
