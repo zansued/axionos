@@ -1,14 +1,16 @@
 # AxionOS — System Evolution Roadmap
 
-> **Vision**: AxionOS is an autonomous software engineering platform that transforms ideas into governed, validated, delivered software.
+> **Vision**: AxionOS is a governed self-improving software factory that transforms ideas into governed, validated, delivered software.
+>
+> **Product promise**: From idea to delivered software.
 >
 > **Current Mode**: Level 5 — Institutional Engineering Memory
 > **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-09):** 94 sprints complete. Block R complete. Block S complete (Sprints 91–94 complete).
+> **Last strategic change (2026-03-09):** 71 sprints complete. Block M complete. Sprint 71 (Governed Extensibility) complete. Block N (Sprints 72–74) planned. Blocks O–S (Sprints 75–94) reserved.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
-> Last updated: 2026-03-08
+> Last updated: 2026-03-09
 
 ## Document Authority
 
