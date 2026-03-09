@@ -99,6 +99,13 @@ Deno.serve(async (req) => {
       const subjects = await listSubjects(serviceClient, organization_id, { active: true });
       if (subjects.length === 0) return json({ evaluations: [], conflicts: [], recommendations: [], explanations: [] });
 
+      // Cleanup previous evaluation data to prevent accumulation
+      await Promise.all([
+        serviceClient.from("horizon_alignment_evaluations").delete().eq("organization_id", organization_id),
+        serviceClient.from("horizon_conflict_events").delete().eq("organization_id", organization_id).is("resolved_at", null),
+        serviceClient.from("multi_horizon_recommendations").delete().eq("organization_id", organization_id).eq("active", true),
+      ]);
+
       const evaluations = [];
       const allConflicts = [];
       const allRecommendations = [];

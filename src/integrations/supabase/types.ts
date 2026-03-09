@@ -14326,7 +14326,7 @@ export type Database = {
       horizon_alignment_evaluations: {
         Row: {
           alignment_score: number
-          constitution_id: string
+          constitution_id: string | null
           created_at: string
           deferred_risk_score: number
           evaluation_summary: string
@@ -14339,7 +14339,7 @@ export type Database = {
         }
         Insert: {
           alignment_score?: number
-          constitution_id: string
+          constitution_id?: string | null
           created_at?: string
           deferred_risk_score?: number
           evaluation_summary?: string
@@ -14352,7 +14352,7 @@ export type Database = {
         }
         Update: {
           alignment_score?: number
-          constitution_id?: string
+          constitution_id?: string | null
           created_at?: string
           deferred_risk_score?: number
           evaluation_summary?: string
