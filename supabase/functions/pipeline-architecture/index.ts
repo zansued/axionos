@@ -349,8 +349,8 @@ async function processArchitectureInBackground(
   apiKey: string,
   dp: Record<string, any>,
   retrySubjobKey?: string,
+  sequentialMode = false,
 ) {
-  try {
     // Clean up any stuck running subjobs
     const cleaned = await cleanupStuckSubjobs(serviceClient, jobId, 120_000);
     if (cleaned > 0) {
