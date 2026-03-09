@@ -55,3 +55,41 @@ export interface GuidanceTooltipData {
   label: { pt: string; en: string };
   description: { pt: string; en: string };
 }
+
+// ─── Copilot Drawer Types ──────────────────────────────────────────────────
+
+export interface CopilotSuggestedAction {
+  label: { pt: string; en: string };
+  /** Route to navigate to, or undefined for non-navigating actions */
+  route?: string;
+  /** Icon name from lucide (resolved at render time) */
+  icon?: string;
+}
+
+export interface CopilotDrawerContent {
+  /** Page key — must match PageGuidanceContract.key */
+  key: string;
+  /** Role-specific overrides (falls back to base guidance if absent) */
+  roleOverrides?: Partial<Record<string, CopilotRoleContent>>;
+  /** Default drawer content (used when no role override matches) */
+  default: CopilotRoleContent;
+}
+
+export interface CopilotRoleContent {
+  /** Expanded summary (richer than PageGuidanceContract.description) */
+  summary?: { pt: string; en: string };
+  /** Contextual "why now" explanation */
+  whyNow?: { pt: string; en: string };
+  /** Primary recommended next action */
+  nextAction: { pt: string; en: string };
+  /** Optional secondary action */
+  secondaryAction?: { pt: string; en: string };
+  /** Reason for the recommendation */
+  nextActionReason?: { pt: string; en: string };
+  /** Risk/approval explanation */
+  approvalExplanation?: { pt: string; en: string };
+  /** What user can safely ignore for now */
+  ignoreForNow?: { pt: string; en: string };
+  /** Suggested action shortcuts */
+  suggestedActions?: CopilotSuggestedAction[];
+}
