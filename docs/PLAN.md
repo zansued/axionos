@@ -32,7 +32,7 @@
 Sprints 1–70 represent the **completed product-ready operating canon** of AxionOS. The internal architecture is mature, coherent, and self-governing. The product experience layer is complete.
 
 The next execution focus is **evidence-governed improvement** (Block N):
-- The internal architecture and product experience foundation are complete
+- The internal architecture and product experience foundation are complete through Sprint 71
 - Future sprints should deepen evidence-based learning, improvement proposal generation, and governed promotion
 - Future sprints should not casually reopen completed canon unless deliberate review requires it
 - Implementation continues one sprint at a time with human review before each
