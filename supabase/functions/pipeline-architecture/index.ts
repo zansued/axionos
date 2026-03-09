@@ -157,8 +157,8 @@ serve(async (req) => {
       subjobs = await getSubjobs(serviceClient, jobId);
     }
 
-    // Clean up any stuck running subjobs (> 60s)
-    const cleaned = await cleanupStuckSubjobs(serviceClient, jobId, 60_000);
+    // Clean up any stuck running subjobs (> 120s to align with increased timeouts)
+    const cleaned = await cleanupStuckSubjobs(serviceClient, jobId, 120_000);
     if (cleaned > 0) {
       await pipelineLog(ctx, "subjobs_timeout_cleanup", `${cleaned} subjobs marcados como timeout`);
     }
