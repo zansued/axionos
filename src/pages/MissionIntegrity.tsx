@@ -63,7 +63,7 @@ export default function MissionIntegrity() {
 
   async function createSubject(values: Record<string, string>) {
     if (!orgId) return;
-    const { error } = await supabase.from("mission_integrity_subjects").insert({
+    const { error } = await supabase.from("mission_integrity_subjects").insert([{
       organization_id: orgId,
       title: values.title,
       subject_code: values.title.toLowerCase().replace(/\s+/g, "_").slice(0, 30),
@@ -72,7 +72,7 @@ export default function MissionIntegrity() {
       summary: values.summary || "",
       active: true,
       subject_ref: {},
-    });
+    }]);
     if (error) toast.error(error.message);
     else { toast.success("Subject created"); queryClient.invalidateQueries({ queryKey: ["mission-integrity-overview"] }); }
   }

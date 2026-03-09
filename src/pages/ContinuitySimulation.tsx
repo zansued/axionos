@@ -69,7 +69,7 @@ export default function ContinuitySimulation() {
 
   async function createSubject(values: Record<string, string>) {
     if (!orgId) return;
-    const { error } = await supabase.from("simulation_subjects").insert({
+    const { error } = await supabase.from("simulation_subjects").insert([{
       organization_id: orgId,
       title: values.title,
       subject_code: values.title.toLowerCase().replace(/\s+/g, "_").slice(0, 30),
@@ -77,7 +77,7 @@ export default function ContinuitySimulation() {
       summary: values.summary || "",
       active: true,
       subject_ref: {},
-    });
+    }]);
     if (error) toast.error(error.message);
     else { toast.success("Subject created"); qc.invalidateQueries({ queryKey: ["continuity-sim-overview"] }); }
   }
