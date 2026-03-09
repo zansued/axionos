@@ -71,6 +71,7 @@ import InstitutionalConflicts from "./pages/InstitutionalConflicts";
 import FederatedBoundaries from "./pages/FederatedBoundaries";
 import ResilienceContinuity from "./pages/ResilienceContinuity";
 import InstitutionalMemoryConstitution from "./pages/InstitutionalMemoryConstitution";
+import SovereignDecisionRights from "./pages/SovereignDecisionRights";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -141,6 +142,7 @@ const App = () => (
                         <Route path="/federated-boundaries"    element={<W><FederatedBoundaries /></W>} />
                         <Route path="/resilience-continuity"   element={<W><ResilienceContinuity /></W>} />
                         <Route path="/memory-constitution"     element={<W><InstitutionalMemoryConstitution /></W>} />
+                        <Route path="/decision-rights"         element={<W><SovereignDecisionRights /></W>} />
                         <Route path="/improvement-ledger"      element={<W><ImprovementLedger /></W>} />
                         <Route path="/improvement-candidates"  element={<W><ImprovementCandidates /></W>} />
                         <Route path="/improvement-benchmarks"  element={<W><ImprovementBenchmarks /></W>} />

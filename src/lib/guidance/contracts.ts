@@ -714,6 +714,39 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Deletion of critical memory or protected precedent requires human review.",
     },
   },
+  {
+    key: "decision-rights",
+    title: { pt: "Direitos de Decisão", en: "Decision Rights" },
+    description: {
+      pt: "Orquestração soberana de direitos de decisão — quem decide o quê, sob quais regras, com qual legitimidade.",
+      en: "Sovereign decision rights orchestration — who decides what, under which rules, with what legitimacy.",
+    },
+    audience: { pt: "Owners e Admins", en: "Owners and Admins" },
+    surface: "workspace",
+    actions: [
+      { pt: "Visualizar direitos de decisão por domínio", en: "View decision rights by domain" },
+      { pt: "Avaliar autoridade de um ator", en: "Evaluate actor authority" },
+      { pt: "Gerenciar delegações", en: "Manage delegations" },
+      { pt: "Monitorar conflitos de autoridade", en: "Monitor authority conflicts" },
+    ],
+    whenRelevant: {
+      pt: "Quando há necessidade de governar quem decide o quê com rastreabilidade e legitimidade.",
+      en: "When decision authority governance with traceability and legitimacy is needed.",
+    },
+    whenIgnorable: {
+      pt: "Se a estrutura de autoridade é simples e sem conflitos.",
+      en: "If authority structure is simple and conflict-free.",
+    },
+    nextStep: {
+      pt: "Definir constituição de direitos e registrar domínios de autoridade.",
+      en: "Define rights constitution and register authority domains.",
+    },
+    approvalPosture: "required",
+    approvalHint: {
+      pt: "Delegação de autoridade e resolução de conflitos requerem revisão humana.",
+      en: "Authority delegation and conflict resolution require human review.",
+    },
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────

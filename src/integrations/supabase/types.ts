@@ -4538,6 +4538,123 @@ export type Database = {
           },
         ]
       }
+      authority_conflict_events: {
+        Row: {
+          conflict_type: string
+          created_at: string
+          domain_id: string | null
+          event_summary: string
+          id: string
+          organization_id: string
+          payload: Json
+          resolved_at: string | null
+          severity: string
+        }
+        Insert: {
+          conflict_type?: string
+          created_at?: string
+          domain_id?: string | null
+          event_summary?: string
+          id?: string
+          organization_id: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+        }
+        Update: {
+          conflict_type?: string
+          created_at?: string
+          domain_id?: string | null
+          event_summary?: string
+          id?: string
+          organization_id?: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "authority_conflict_events_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "decision_authority_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "authority_conflict_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      authority_delegations: {
+        Row: {
+          created_at: string
+          decision_right_id: string | null
+          delegated_from_ref: string
+          delegated_from_type: string
+          delegated_to_ref: string
+          delegated_to_type: string
+          delegation_reason: string
+          delegation_type: string
+          end_at: string | null
+          id: string
+          organization_id: string
+          revocation_status: string
+          start_at: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          decision_right_id?: string | null
+          delegated_from_ref?: string
+          delegated_from_type?: string
+          delegated_to_ref?: string
+          delegated_to_type?: string
+          delegation_reason?: string
+          delegation_type?: string
+          end_at?: string | null
+          id?: string
+          organization_id: string
+          revocation_status?: string
+          start_at?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          decision_right_id?: string | null
+          delegated_from_ref?: string
+          delegated_from_type?: string
+          delegated_to_ref?: string
+          delegated_to_type?: string
+          delegation_reason?: string
+          delegation_type?: string
+          end_at?: string | null
+          id?: string
+          organization_id?: string
+          revocation_status?: string
+          start_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "authority_delegations_decision_right_id_fkey"
+            columns: ["decision_right_id"]
+            isOneToOne: false
+            referencedRelation: "decision_rights"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "authority_delegations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       autonomous_operation_executions: {
         Row: {
           created_at: string
@@ -8604,6 +8721,113 @@ export type Database = {
           },
         ]
       }
+      decision_authority_domains: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string
+          domain_code: string
+          domain_name: string
+          id: string
+          organization_id: string
+          sensitivity_level: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          domain_code?: string
+          domain_name?: string
+          id?: string
+          organization_id: string
+          sensitivity_level?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          domain_code?: string
+          domain_name?: string
+          id?: string
+          organization_id?: string
+          sensitivity_level?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "decision_authority_domains_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      decision_authority_evaluations: {
+        Row: {
+          actor_ref: string
+          actor_type: string
+          authority_basis: Json
+          context_payload: Json
+          created_at: string
+          decision_type: string
+          domain_id: string | null
+          evaluation_result: Database["public"]["Enums"]["decision_evaluation_result"]
+          explanation_summary: string
+          id: string
+          legitimacy_score: number
+          organization_id: string
+          overlap_risk_score: number
+        }
+        Insert: {
+          actor_ref?: string
+          actor_type?: string
+          authority_basis?: Json
+          context_payload?: Json
+          created_at?: string
+          decision_type?: string
+          domain_id?: string | null
+          evaluation_result?: Database["public"]["Enums"]["decision_evaluation_result"]
+          explanation_summary?: string
+          id?: string
+          legitimacy_score?: number
+          organization_id: string
+          overlap_risk_score?: number
+        }
+        Update: {
+          actor_ref?: string
+          actor_type?: string
+          authority_basis?: Json
+          context_payload?: Json
+          created_at?: string
+          decision_type?: string
+          domain_id?: string | null
+          evaluation_result?: Database["public"]["Enums"]["decision_evaluation_result"]
+          explanation_summary?: string
+          id?: string
+          legitimacy_score?: number
+          organization_id?: string
+          overlap_risk_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "decision_authority_evaluations_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "decision_authority_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "decision_authority_evaluations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       decision_explanations: {
         Row: {
           decision_id: string
@@ -8687,6 +8911,141 @@ export type Database = {
           },
           {
             foreignKeyName: "decision_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      decision_rights: {
+        Row: {
+          active: boolean
+          authority_level: Database["public"]["Enums"]["decision_authority_level"]
+          constitution_id: string | null
+          created_at: string
+          decision_code: string
+          decision_rule_text: string
+          decision_type: string
+          domain_id: string | null
+          id: string
+          organization_id: string
+          precedence_rank: number
+          review_required: boolean
+          revocable: boolean
+          scope_ref: string
+          scope_type: string
+          subject_ref: string
+          subject_type: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          authority_level?: Database["public"]["Enums"]["decision_authority_level"]
+          constitution_id?: string | null
+          created_at?: string
+          decision_code?: string
+          decision_rule_text?: string
+          decision_type?: string
+          domain_id?: string | null
+          id?: string
+          organization_id: string
+          precedence_rank?: number
+          review_required?: boolean
+          revocable?: boolean
+          scope_ref?: string
+          scope_type?: string
+          subject_ref?: string
+          subject_type?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          authority_level?: Database["public"]["Enums"]["decision_authority_level"]
+          constitution_id?: string | null
+          created_at?: string
+          decision_code?: string
+          decision_rule_text?: string
+          decision_type?: string
+          domain_id?: string | null
+          id?: string
+          organization_id?: string
+          precedence_rank?: number
+          review_required?: boolean
+          revocable?: boolean
+          scope_ref?: string
+          scope_type?: string
+          subject_ref?: string
+          subject_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "decision_rights_constitution_id_fkey"
+            columns: ["constitution_id"]
+            isOneToOne: false
+            referencedRelation: "decision_rights_constitutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "decision_rights_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "decision_authority_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "decision_rights_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      decision_rights_constitutions: {
+        Row: {
+          authority_principles: string
+          constitution_code: string
+          constitution_name: string
+          created_at: string
+          created_by: string
+          escalation_defaults: Json
+          id: string
+          organization_id: string
+          scope: string
+          status: Database["public"]["Enums"]["constitution_status"]
+          updated_at: string
+        }
+        Insert: {
+          authority_principles?: string
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string
+          escalation_defaults?: Json
+          id?: string
+          organization_id: string
+          scope?: string
+          status?: Database["public"]["Enums"]["constitution_status"]
+          updated_at?: string
+        }
+        Update: {
+          authority_principles?: string
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string
+          escalation_defaults?: Json
+          id?: string
+          organization_id?: string
+          scope?: string
+          status?: Database["public"]["Enums"]["constitution_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "decision_rights_constitutions_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -27318,6 +27677,14 @@ export type Database = {
         | "sequencing"
         | "compliance"
         | "interpretation"
+      constitution_status: "draft" | "active" | "superseded" | "deprecated"
+      decision_authority_level:
+        | "formal"
+        | "delegated"
+        | "temporary"
+        | "emergency"
+        | "advisory"
+        | "prohibited"
       decision_class:
         | "governance_recommendation"
         | "routing_decision_support"
@@ -27327,6 +27694,12 @@ export type Database = {
         | "bounded_autonomy_decision"
         | "promotion_guidance"
         | "delivery_readiness"
+      decision_evaluation_result:
+        | "allowed"
+        | "delegated"
+        | "denied"
+        | "escalated"
+        | "contested"
       decision_status:
         | "draft"
         | "pending"
@@ -27687,6 +28060,15 @@ export const Constants = {
         "compliance",
         "interpretation",
       ],
+      constitution_status: ["draft", "active", "superseded", "deprecated"],
+      decision_authority_level: [
+        "formal",
+        "delegated",
+        "temporary",
+        "emergency",
+        "advisory",
+        "prohibited",
+      ],
       decision_class: [
         "governance_recommendation",
         "routing_decision_support",
@@ -27696,6 +28078,13 @@ export const Constants = {
         "bounded_autonomy_decision",
         "promotion_guidance",
         "delivery_readiness",
+      ],
+      decision_evaluation_result: [
+        "allowed",
+        "delegated",
+        "denied",
+        "escalated",
+        "contested",
       ],
       decision_status: [
         "draft",

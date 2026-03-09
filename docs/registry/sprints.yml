@@ -127,6 +127,6 @@ sprints:
 
   # === BLOCK V — Sovereign Institutional Intelligence ===
   - { sprint: 103, name: "Institutional Memory Constitution",                  status: complete, block: "V", phase: "Sovereign Institutional Intelligence", layer: "Institutional Memory Constitution Layer" }
-  - { sprint: 104, name: "Sovereign Decision Rights Orchestration",            status: planned,  block: "V", phase: "Sovereign Institutional Intelligence", layer: "Sovereign Decision Rights Layer" }
+  - { sprint: 104, name: "Sovereign Decision Rights Orchestration",            status: complete, block: "V", phase: "Sovereign Institutional Intelligence", layer: "Sovereign Decision Rights Layer" }
   - { sprint: 105, name: "Dependency Sovereignty & External Reliance Governance", status: planned, block: "V", phase: "Sovereign Institutional Intelligence", layer: "Dependency Sovereignty Layer" }
   - { sprint: 106, name: "Strategic Succession & Long-Horizon Continuity",     status: planned,  block: "V", phase: "Sovereign Institutional Intelligence", layer: "Strategic Succession Layer" }
