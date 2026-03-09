@@ -69,9 +69,11 @@ AxionOS has completed **106 implementation sprints** spanning the full capabilit
 
 The platform has reached its **Sovereign Institutional Intelligence** milestone. Every block from Foundation through Block V is complete. The internal architecture — governance, intelligence, memory, doctrine synthesis, bounded autonomous operations, institutional decision engine, cross-context adaptation, conflict resolution, federated intelligence, resilience governance, memory constitution, sovereign decision rights, dependency sovereignty, and strategic succession — is mature and operational.
 
-The strategic direction achieved through Sprint 106 is the realization of a **sovereign institutional intelligence for software delivery**:
+**Next Strategic Direction — Block W:**
 
-> **"From idea to delivered software — with sovereign institutional intelligence."**
+Block W (Sprints 107–110) extends AxionOS from sovereign institutional intelligence to **strategic autonomy and civilizational coordination**. The thesis: a system that not only operates, governs, and survives, but begins to coordinate long-horizon strategy across multiple domains, mandates, institutions, and possible futures.
+
+> **"From idea to delivered software — with sovereign institutional intelligence and civilizational strategic coordination."**
 
 Internal sophistication serves the visible product experience. The user-facing journey is clear, legible, and governed. The platform now operates with institutional memory constitution, sovereign decision rights orchestration, dependency sovereignty, and strategic succession & long-horizon continuity.
 
