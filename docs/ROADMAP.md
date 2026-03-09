@@ -4,9 +4,9 @@
 >
 > **Product promise**: From idea to delivered software.
 >
-> **Current Mode**: Level 5 — Institutional Engineering Memory
-> **Current Maturity**: Level 5 ✅ Active
-> **Last strategic change (2026-03-09):** 94 sprints complete. All blocks (Foundation through S) complete. Full canon implemented.
+> **Current Mode**: Level 5.5 — Governed Intelligence OS
+> **Current Maturity**: Level 5.5 ✅ Active
+> **Last strategic change (2026-03-09):** 98 sprints complete. All blocks (Foundation through T) complete. Governed Intelligence OS operational.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -59,23 +59,23 @@
 
 ## Strategic Directive
 
-AxionOS has completed **94 implementation sprints** spanning the full capability arc from deterministic execution through architecture research and governed promotion. The internal architecture is mature, coherent, and self-governing. All planned and reserved blocks have been implemented.
+AxionOS has completed **98 implementation sprints** spanning the full capability arc from deterministic execution through governed intelligence and institutional decision-making. The internal architecture is mature, coherent, and self-governing. All blocks through T (Governed Intelligence OS) are complete.
 
-**Post-Sprint 94 Strategic Position:**
+**Post-Sprint 98 Strategic Position:**
 
-The platform has reached its **full canon implementation**. Every block from Foundation through Block S (Research Sandbox for Architecture Evolution) is complete. The internal architecture — governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, and architecture research — is mature and operational.
+The platform has reached its **Governed Intelligence OS** milestone. Every block from Foundation through Block T is complete. The internal architecture — governance, intelligence, memory, doctrine synthesis, bounded autonomous operations, institutional decision engine, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, and architecture research — is mature and operational.
 
-The strategic direction achieved through Sprint 94 is the **complete realization of the governed self-improving software factory**:
+The strategic direction achieved through Sprint 98 is the realization of a **governed intelligence operating system for software delivery**:
 
-> **"From idea to delivered software."**
+> **"From idea to delivered software — with institutional intelligence."**
 
-Internal sophistication serves the visible product experience. The user-facing journey is clear, legible, and governed. The platform now operates with evidence-governed improvement, advanced multi-agent coordination, a governed capability ecosystem, delivery optimization, distributed runtime, and architecture research capabilities.
+Internal sophistication serves the visible product experience. The user-facing journey is clear, legible, and governed. The platform now operates with institutional memory consolidation, doctrine & playbook synthesis, bounded autonomous operations, and an institutional decision engine.
 
 ---
 
 ## AxionOS Next Level Thesis
 
-With all 94 sprints complete, AxionOS is entering a new maturity phase: **Governed Intelligence & Decision Maturity**.
+With all 98 sprints complete, AxionOS has completed its **Governed Intelligence OS** phase and is entering the next maturity arc: **Adaptive Institutional Ecosystem**.
 
 This means the next level of AxionOS is not simply "more modules" or "more internal complexity." It is the conversion of existing sophistication into four higher-order capabilities:
 - **explain better** — ✅ contextual guidance and copilot systems **implemented** (PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, 4 copilot submodes)
@@ -83,57 +83,61 @@ This means the next level of AxionOS is not simply "more modules" or "more inter
 - **learn better** — ✅ evidence-governed improvement loops **active** (Blocks N through S complete)
 - **coordinate better** — ✅ multi-agent coordination **operational** (debate, working memory, bounded swarm)
 
-**Core Thesis:** AxionOS has evolved from a governed software factory into a governed intelligence operating system for software delivery, decision support, and evidence-based system evolution.
+**Core Thesis:** AxionOS has evolved from a governed software factory into a governed intelligence operating system. The next arc transforms it into an **adaptive institutional ecosystem** — where intelligence, doctrine, and decisions operate across contexts, domains, and organizational boundaries while preserving governance and tenant isolation.
 
-### What has been achieved
+### What has been achieved (Sprints 1–98)
 
-The four pillars of the Next Level Thesis are **implemented**:
+All five pillars of the Governed Intelligence OS are **implemented**:
 
 | Pillar | Status | Key Components |
 |--------|--------|---------------|
-| **Explain Better** | ✅ Active | PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, CopilotTrigger, WhyThisMattersNow, NextBestAction, ApprovalHint, centralized content registries |
-| **Decide Better** | ✅ Active | Role-based experience (useRoleBasedExperience), copilot submodes (product, workspace, governance_mentor, architecture_mentor), approval posture hints |
-| **Learn Better** | ✅ Active | Evidence-governed improvement (Block N), cross-stage learning, predictive error detection, calibration, strategy evolution |
-| **Coordinate Better** | ✅ Active | Role arbitration (Sprint 75), debate & resolution (Sprint 76), shared working memory (Sprint 77), bounded swarm (Sprint 78) |
+| **Explain Better** | ✅ Active | PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, centralized content registries |
+| **Decide Better** | ✅ Active | Institutional Decision Engine, role-based experience, approval posture hints |
+| **Learn Better** | ✅ Active | Evidence-governed improvement, doctrine synthesis, institutional memory consolidation |
+| **Coordinate Better** | ✅ Active | Multi-agent coordination, bounded swarm, debate & resolution |
+| **Operate Autonomously (Bounded)** | ✅ Active | Bounded autonomous operations, autonomy ladder, rollback posture |
 
-### What this phase now focuses on (post-implementation)
+### Next Level Thesis — Adaptive Institutional Ecosystem (Block U)
 
-- deepening copilot intelligence with AI-assisted contextual recommendations
-- refining role-aware guidance quality based on adoption signals
-- improving cross-layer advisory synthesis legibility
-- strengthening the feedback loop between guidance, adoption, and platform intelligence
+AxionOS evolves from a **Governed Intelligence Operating System** into an **Adaptive Institutional Ecosystem**.
 
-### What this phase does NOT prioritize
+The system no longer focuses only on remembering, recommending, coordinating, and deciding. It now focuses on:
+- **governing intelligence across institutions**
+- **preserving coherence across domains**
+- **adapting doctrine across contexts**
+- **resolving conflicts between strategies, capabilities, and organizational realities**
+- **building long-horizon institutional resilience**
 
-- open marketplace expansion beyond current governed pilot
-- premature distributed runtime scale-out
-- autonomous architecture mutation
-- theatrical autonomy without governance
+> From intelligence OS to adaptive institutional ecosystem.
+
+If Sprints 95–98 form the "institutional brain," then 99–102 form the **institutional adaptive metabolism**.
 
 ```mermaid
 flowchart TD
-    subgraph Complete["Implemented (Sprints 1-94)"]
+    subgraph Complete["Implemented (Sprints 1-98)"]
         A[Governed Software Delivery]
         B[Evidence-Governed Improvement]
         C[Multi-Agent Coordination]
         D[Capability Ecosystem]
-        E[Delivery Optimization]
-        F[Distributed Runtime]
-        G[Architecture Research]
+        E[Distributed Runtime]
+        F[Architecture Research]
+        G[Governed Intelligence OS]
     end
-    subgraph NextLevel["Next Level Thesis — ✅ Implemented"]
-        H["Guidance & Copilot ✅"]
-        I["Decision Maturity ✅"]
-        J[Governed Intelligence OS]
+    subgraph NextLevel["Block U — Planned"]
+        H[Cross-Context Doctrine Adaptation]
+        I[Institutional Conflict Resolution]
+        J[Federated Intelligence Boundaries]
+        K[Resilience and Continuity Governance]
     end
     Complete --> NextLevel
+    G --> H
     H --> I
     I --> J
-    style H fill:#16a34a,color:#fff
-    style I fill:#16a34a,color:#fff
+    J --> K
+    style G fill:#16a34a,color:#fff
 ```
 
-**Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy.
+**Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy. Tenant isolation preserved across federated intelligence boundaries.
 
 ---
 
@@ -157,13 +161,17 @@ flowchart TD
    Distributed Runtime →
    Architecture Research ✅
 
-   PLANNED (95–98)
+   COMPLETE (95–98)
    ──────────────────────────────────────────────────────────────────────────────►
-   Block T — Governed Intelligence OS
-   Sprint 95: Institutional Memory Consolidation
-   Sprint 96: Doctrine & Playbook Synthesis
-   Sprint 97: Bounded Autonomous Operations
-   Sprint 98: Institutional Decision Engine
+   Block T — Governed Intelligence OS ✅
+
+   PLANNED (99–102)
+   ──────────────────────────────────────────────────────────────────────────────►
+   Block U — Adaptive Institutional Ecosystem
+   Sprint 99: Cross-Context Doctrine Adaptation
+   Sprint 100: Institutional Conflict Resolution Engine
+   Sprint 101: Federated Intelligence Boundaries
+   Sprint 102: Resilience & Continuity Governance
 ```
 
 ---
@@ -204,20 +212,34 @@ flowchart TD
 | Block R — Distributed Runtime & Scaled Execution | 87–90 | Distributed job control plane, cross-region execution & recovery, tenant-isolated scale runtime, resilient large-scale orchestration |
 | Block S — Research Sandbox for Architecture Evolution | 91–94 | Architecture hypothesis engine, simulated evolution campaigns, cross-tenant pattern synthesis, human-governed architecture promotion |
 
-### Planned: Block T — Governed Intelligence OS (Sprints 95–98)
+### Complete: Block T — Governed Intelligence OS (Sprints 95–98) ✅
 
-> **Thesis:** AxionOS enters a new maturity phase where existing capabilities — coordination, evidence loops, guidance systems, and governance layers — consolidate into an operating system for governed intelligence.
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 95 | Institutional Memory Consolidation | ✅ |
+| Sprint 96 | Doctrine & Playbook Synthesis | ✅ |
+| Sprint 97 | Bounded Autonomous Operations | ✅ |
+| Sprint 98 | Institutional Decision Engine | ✅ |
 
-This block focuses on: institutional memory, doctrine synthesis, decision consistency, bounded autonomous operations, accumulated operational intelligence, and long-horizon system coherence.
+### Planned: Block U — Adaptive Institutional Ecosystem (Sprints 99–102)
+
+> **Thesis:** AxionOS evolves from a Governed Intelligence OS into an Adaptive Institutional Ecosystem. The system begins to govern intelligence across institutions, preserve coherence across domains, adapt doctrine across contexts, resolve conflicts between strategies and organizational realities, and build long-horizon institutional resilience.
+
+**Subtitle:** Cross-context doctrine adaptation, conflict resolution, and resilience orchestration.
 
 | Sprint | Deliverable | Description |
 |--------|-------------|-------------|
-| Sprint 95 | Institutional Memory Consolidation | Consolidate operational and decisional memory into unified, queryable institutional knowledge. Merge convergence memory, engineering memory, agent memory, and platform intelligence into a coherent institutional memory substrate. |
-| Sprint 96 | Doctrine & Playbook Synthesis | Transform accumulated institutional memory into actionable playbooks, doctrine packs, and operational heuristics. Generate reusable decision templates from historical patterns. |
-| Sprint 97 | Bounded Autonomous Operations | Enable safe autonomous execution for repetitive, low-risk, well-understood operations. Governance gates for escalation. All autonomous actions bounded, reversible, and auditable. |
-| Sprint 98 | Institutional Decision Engine | Use institutional memory + doctrine + risk signals + outcome history to recommend and act with greater consistency. Advisory-first with configurable autonomy tiers. Human authority preserved for structural decisions. |
+| Sprint 99 | Cross-Context Doctrine Adaptation | Adapt doctrine/playbooks by workspace type, profile, operational context, and maturity. Doctrine variation model, context-aware applicability, exception handling, adaptive doctrine recommendations. |
+| Sprint 100 | Institutional Conflict Resolution Engine | Detect and mediate conflicts between policies, doctrines, workspace needs, platform rules, capability constraints, and strategic priorities. Conflict classes, resolution strategies, escalation posture, human review ladder. |
+| Sprint 101 | Federated Intelligence Boundaries | Enable shared intelligence across contexts without breaking isolation. Federated synthesis rules, abstraction boundaries, safe cross-context learning, bounded shared doctrine signals. |
+| Sprint 102 | Resilience & Continuity Governance | Govern institutional continuity across failure, drift, policy conflict, degraded autonomy, and doctrine obsolescence. Resilience posture model, doctrine drift detection, continuity playbooks, institutional fallback modes. |
 
-**Governing constraint:** Advisory-first. Governance before autonomy. No autonomous architecture mutation. Bounded autonomy applies only to repetitive, low-risk operations with proven track records. All structural changes require human approval.
+**Governing constraints:**
+- Advisory-first. Governance before autonomy.
+- No autonomous architecture mutation.
+- Tenant isolation preserved across federated intelligence boundaries.
+- No unrestricted self-evolution or centralization that kills local autonomy.
+- Shared intelligence must not become data leakage.
 
 ---
 
@@ -246,7 +268,8 @@ This block focuses on: institutional memory, doctrine synthesis, decision consis
 | Q | Autonomous Delivery Optimization & Outcome Assurance 2.0 | 83–86 | ✅ Complete |
 | R | Advanced Distributed Runtime & Scaled Execution | 87–90 | ✅ Complete |
 | S | Research Sandbox for Architecture Evolution | 91–94 | ✅ Complete |
-| T | Governed Intelligence OS | 95–98 | 🔲 Planned |
+| T | Governed Intelligence OS | 95–98 | ✅ Complete |
+| U | Adaptive Institutional Ecosystem | 99–102 | 🔲 Planned |
 
 ---
 
@@ -271,7 +294,8 @@ This block focuses on: institutional memory, doctrine synthesis, decision consis
 | Delivery Optimization | 83–86 | ✅ Complete | Delivery causality, post-deploy learning, reliability tuning, outcome assurance 2.0 |
 | Distributed Runtime | 87–90 | ✅ Complete | Distributed job control, cross-region recovery, tenant-isolated scale, resilient orchestration |
 | Architecture Research | 91–94 | ✅ Complete | Hypothesis engine, simulated evolution, cross-tenant synthesis, governed promotion |
-| **Governed Intelligence OS** | **95–98** | **🔲 Planned** | Institutional memory consolidation, doctrine synthesis, bounded autonomous ops, institutional decision engine |
+| Governed Intelligence OS | 95–98 | ✅ Complete | Institutional memory consolidation, doctrine synthesis, bounded autonomous ops, institutional decision engine |
+| **Adaptive Institutional Ecosystem** | **99–102** | **🔲 Planned** | Cross-context doctrine adaptation, institutional conflict resolution, federated intelligence boundaries, resilience & continuity governance |
 
 ---
 
@@ -292,19 +316,20 @@ All 77+ architectural layers are operational. The kernel includes the 32-stage d
 | Level 3 | Autonomous Engineering System | ✅ Complete |
 | Level 4 | Self-Learning Software Factory | ✅ Complete |
 | Level 4.5 | Meta-Aware Engineering Platform | ✅ Complete |
-| Level 5 | Institutional Engineering Memory | ✅ Current |
+| Level 5 | Institutional Engineering Memory | ✅ Complete |
+| Level 5.5 | Governed Intelligence OS | ✅ Current |
 
-> **Current position:** Level 5 — Institutional Engineering Memory active.
+> **Current position:** Level 5.5 — Governed Intelligence OS active.
 > **Execution mode:** Sprint-based implementation.
 
 ---
 
 ## Governing Principle
 
-> Ninety-four sprints complete. All blocks (Foundation through S) are complete. Full canon implemented.
-> Internal architecture is mature: governance, intelligence, memory, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, architecture research — all active.
+> Ninety-eight sprints complete. All blocks (Foundation through T) are complete. Governed Intelligence OS operational.
+> Internal architecture is mature: governance, intelligence, memory, doctrine, decision engine, bounded autonomy, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, architecture research — all active.
 > Product experience is mature: user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — all active.
-> The platform delivers on the promise: **from idea to delivered software**.
+> The platform delivers on the promise: **from idea to delivered software — with institutional intelligence**.
 > Internal sophistication serves the product experience — it does not replace it.
-> **Next phase: Governed Intelligence & Decision Maturity** — contextual guidance, copilot systems, decision quality, evidence-governed learning.
-> Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved.
+> **Next phase: Adaptive Institutional Ecosystem** — cross-context doctrine adaptation, institutional conflict resolution, federated intelligence boundaries, resilience & continuity governance.
+> Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved. Tenant isolation preserved across federated boundaries.

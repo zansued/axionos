@@ -1,7 +1,7 @@
 # AxionOS — Execution Plan
 
 > Last updated: 2026-03-07
-> Mode: **Level 5 — Institutional Engineering Memory**
+> Mode: **Level 5.5 — Governed Intelligence OS**
 > Execution: **Sprint-based**
 
 ---
@@ -100,19 +100,31 @@ AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
 | Sprint 97 | Bounded Autonomous Operations — safe autonomy for repetitive low-risk operations | ✅ |
 | Sprint 98 | Institutional Decision Engine — memory + doctrine + risk → consistent recommendations | ✅ |
 
+### Next Phase: Block U — Adaptive Institutional Ecosystem (Sprints 99–102) — 🔲 Planned
+
+**Thesis:** AxionOS evolves from a Governed Intelligence OS into an Adaptive Institutional Ecosystem — where memory becomes living patrimony, doctrine adapts across contexts, decisions become cross-institutional, and autonomy becomes organizational (with guardrails).
+
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 99 | Cross-Context Doctrine Adaptation — adapt doctrine by workspace type, profile, context, maturity | 🔲 |
+| Sprint 100 | Institutional Conflict Resolution Engine — detect/mediate conflicts between policies, doctrines, strategies | 🔲 |
+| Sprint 101 | Federated Intelligence Boundaries — shared intelligence across contexts without breaking isolation | 🔲 |
+| Sprint 102 | Resilience & Continuity Governance — institutional continuity across failure, drift, obsolescence | 🔲 |
+
 ### Future Horizons
 
-### Level 5.5 — Self-Improving Engineering Platform
+### Level 6 — Adaptive Institutional Ecosystem
 
-- Memory summaries drive long-horizon evolution signals
-- Strategy reuse patterns inform repair routing improvements
-- Semantic indexing enables contextual similarity queries
-- Memory decay and relevance scoring refine knowledge quality
+- Cross-context doctrine adaptation
+- Institutional conflict resolution
+- Federated intelligence with tenant isolation
+- Resilience and continuity governance
+- Long-horizon institutional coherence
 
-### Level 6 — Discovery-Driven Engineering (Future Horizon)
+### Level 7 — Discovery-Driven Engineering (Future Horizon)
 
-- Architecture experimentation informed by accumulated memory
-- Automated hypothesis generation from long-term patterns
+- Architecture experimentation informed by accumulated institutional intelligence
+- Automated hypothesis generation from cross-institutional patterns
 - Controlled experimentation with governance safeguards
 - This level is a vision, not a current priority
 

@@ -43,7 +43,7 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 ## Product Thesis
 
-AxionOS is a **governed self-improving software factory** that is moving toward **governed intelligence and decision maturity**.
+AxionOS is a **governed intelligence operating system** evolving toward an **adaptive institutional ecosystem**.
 
 The platform promise remains: **from idea to delivered software**.
 
@@ -77,17 +77,17 @@ The default user-facing journey remains:
 
 ## After Sprint 94 — What Changes Strategically
 
-The platform has completed its **full canon implementation** at Sprint 94, spanning all blocks from Foundation through Research Sandbox for Architecture Evolution.
+The platform has completed its **Governed Intelligence OS** at Sprint 98, spanning all blocks from Foundation through Block T.
 
-The next strategic arc is **Governed Intelligence & Decision Maturity**:
+The next strategic arc is **Adaptive Institutional Ecosystem (Block U)**:
 
-All 94 sprints are complete. The focus shifts from building new internal layers to converting existing sophistication into higher-order capabilities:
-- Contextual guidance and copilot systems
-- Evidence-governed learning
-- Role-aware decision support
-- Decision quality and legibility
+All 98 sprints are complete. The focus shifts from single-context intelligence to cross-context institutional adaptation:
+- Cross-context doctrine adaptation
+- Institutional conflict resolution
+- Federated intelligence boundaries (with tenant isolation)
+- Resilience & continuity governance
 
-Internal sophistication remains critical. The next level deepens it through governed intelligence, not uncontrolled autonomy.
+Internal sophistication remains critical. The next level deepens it through adaptive institutional coherence, not uncontrolled autonomy.
 
 ---
 
@@ -100,7 +100,7 @@ Internal sophistication remains critical. The next level deepens it through gove
 5. Use **AGENTS.md** for internal agent system reference only
 6. Implement future work **sprint by sprint** with human review
 7. Do **not** collapse internal architecture and user-facing journey into the same surface
-8. Do **not** casually reopen completed canon (Sprints 1–94) without deliberate review
+8. Do **not** casually reopen completed canon (Sprints 1–98) without deliberate review
 9. Internal layers are backstage support — the default product surface is the user journey
 
 ---
@@ -117,7 +117,8 @@ Internal sophistication remains critical. The next level deepens it through gove
 
 ### Current Canon Boundaries
 
-- **Sprints 1–94** = canonical complete (full canon — Foundation through Block S)
+- **Sprints 1–98** = canonical complete (full canon — Foundation through Block T)
+- **Sprints 99–102** = planned (Block U — Adaptive Institutional Ecosystem)
 
 ---
 
