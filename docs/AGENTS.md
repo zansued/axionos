@@ -348,7 +348,9 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 **Purpose:** Enable agent and capability sharing across environments.
 
-> **Status:** ❄️ Frozen — not needed for current product proof.
+> **Status:** ❄️ Frozen — still reserved. Ecosystem expansion is not a current priority.
+> The immediate strategic focus is evidence-governed improvement (Block N, active thaw) and routing/arbitration quality (Sprint 75, partial thaw next).
+> Deeper coordination, marketplace, and ecosystem capabilities remain reserved.
 
 - Capability registry with semantic versioning
 - Package management for agent bundles
