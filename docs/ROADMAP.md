@@ -47,12 +47,12 @@
 | **Ecosystem Governance** | Active — capability exposure, trust/admission, simulation, bounded pilot, registry, multi-party |
 | **Institutional Assurance** | Active — outcome assurance, canon integrity, operating completion |
 | **Product Experience** | Active — user journey orchestration, role-based experience, one-click delivery, onboarding, adoption intelligence |
-| **Evidence-Governed Improvement** | Planned — Active Thaw Now — evidence capture, candidate distillation, sandbox benchmarking, promotion governance |
-| **Multi-Agent Coordination** | Reserved — Partial thaw next (Sprint 75 only: routing/arbitration). Deeper coordination still reserved |
-| **Capability Ecosystem** | Reserved — Still reserved |
-| **Delivery Optimization** | Reserved — Still reserved |
-| **Distributed Runtime** | Reserved — Still reserved |
-| **Architecture Research** | Reserved — Still reserved |
+| **Evidence-Governed Improvement** | Active — evidence capture, candidate distillation, sandbox benchmarking, promotion governance |
+| **Multi-Agent Coordination** | Active — role arbitration, debate & resolution, shared working memory, bounded swarm execution |
+| **Capability Ecosystem** | Active — capability packaging, trust/entitlements, partner marketplace, outcome-aware marketplace |
+| **Delivery Optimization** | Active — delivery causality, post-deploy learning, reliability tuning, outcome assurance 2.0 |
+| **Distributed Runtime** | Active — distributed job control, cross-region recovery, tenant-isolated scale, resilient orchestration |
+| **Architecture Research** | Active — hypothesis engine, simulated evolution, cross-tenant synthesis, governed promotion |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
