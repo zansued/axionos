@@ -1600,7 +1600,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
               batch_incomplete: false,
               overall_pass: true,
               skipped: "all_already_approved",
-            }, { model: "google/gemini-2.5-flash", costUsd: 0, durationMs: 0 });
+            }, { model: aiModel, costUsd: 0, durationMs: 0 });
           }
 
           return new Response(JSON.stringify({
