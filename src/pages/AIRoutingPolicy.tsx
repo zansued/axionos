@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { PageIntroCard, getGuidanceForPage } from "@/components/guidance";
+import { PageGuidanceShell } from "@/components/guidance";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
