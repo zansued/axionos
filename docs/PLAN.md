@@ -551,24 +551,7 @@ Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed
 
 ---
 
-## Sprint 72 — Evidence Capture & Improvement Ledger ✅ Complete
-
-Sprint 72 established the canonical evidence capture and improvement ledger layer for AxionOS. The system now captures, normalizes, links, and reviews operational evidence from validations, repairs, rollbacks, deployments, extensions, anomalies, and operator observations. A dedicated operator surface (`/improvement-ledger`) provides KPIs, filtered evidence lists, detail views with linked context, review history, and review controls. All evidence is tenant-isolated and auditable. No autonomous mutation is introduced.
-
-### Key Deliverables
-- `improvement_evidence` — canonical evidence table
-- `improvement_evidence_links` — context linking
-- `improvement_ledgers` — improvement grouping
-- `improvement_review_events` — review audit trail
-- `evidence-management` edge function (ingest, list, detail, link, review, archive, explain, ledger ops)
-- Operator-facing Improvement Ledger dashboard with KPIs, filters, detail drawer, and review controls
-
-### Strategic Meaning
-Sprint 72 begins the Evidence-Governed Improvement Loop (Block N). It provides the durable evidence foundation that future sprints (73–74) will use to generate bounded improvement proposals and track their outcomes.
-
----
-
-## Next Planned — Sprints 73–74: Evidence-Governed Improvement Loop — 📋 PLANNED
+## Next Planned — Block N: Evidence-Governed Improvement Loop (Sprints 72–74) — 📋 PLANNED
 
 > **Strategic direction:** [ROADMAP.md](ROADMAP.md)
 
@@ -576,8 +559,9 @@ Sprint 72 begins the Evidence-Governed Improvement Loop (Block N). It provides t
 
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 73 | TBD — Governed Testing & Promotion | N | 📋 Planned | Governed testing and promotion of improvement candidates |
-| 74 | TBD — Improvement Outcome Tracking | N | 📋 Planned | Outcome tracking and feedback for improvement cycles |
+| 72 | Evidence Capture & Improvement Ledger | N | 📋 Planned | Capture structured operational evidence from validations, repairs, rollbacks, extensions, anomalies, and operator signals |
+| 73 | Improvement Candidate Distillation Engine | N | 📋 Planned | Transform evidence into bounded, reviewable improvement candidates with provenance, recurrence signals, and triage workflow |
+| 74 | Sandbox Benchmarking & Promotion Governance | N | 📋 Planned | Evaluate candidates in sandbox conditions, compare against baseline, support human-governed promotion/rejection/deferral |
 
 **Canon constraints:** No autonomous architecture mutation. Human approval for structural change. Rollback everywhere. Bounded learning and promotion. Tenant isolation preserved.
 
