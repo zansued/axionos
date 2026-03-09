@@ -463,7 +463,7 @@ export default function MultiHorizonAlignment() {
   }
 
   return (
-    <AppLayout title="Multi-Horizon Strategic Alignment" subtitle="Sprint 107 — Evaluate decisions across time horizons">
+    <AppLayout>
       <div className="space-y-6 p-4 md:p-6 max-w-[1400px] mx-auto">
         {/* Page Guidance */}
         <Card className="border-primary/20 bg-primary/5">

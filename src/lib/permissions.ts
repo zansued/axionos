@@ -10,7 +10,7 @@ import {
   Columns3, Search, FileSearch, Sparkles, FlaskConical, GitPullRequestArrow,
   Rss, PackageCheck, ShieldCheck, Package, Shield, Settings, CreditCard, Plug,
   Users, Scale, BrainCircuit, Zap, Store, TrendingUp, Brain, FileText, Gauge,
-  Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route,
+  Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route, Compass,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────

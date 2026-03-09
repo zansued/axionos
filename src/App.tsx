@@ -148,6 +148,7 @@ const App = () => (
                         <Route path="/decision-rights"         element={<W><SovereignDecisionRights /></W>} />
                         <Route path="/dependency-sovereignty"  element={<W><DependencySovereignty /></W>} />
                         <Route path="/strategic-succession"    element={<W><StrategicSuccession /></W>} />
+                        <Route path="/multi-horizon-alignment" element={<W><MultiHorizonAlignment /></W>} />
                         <Route path="/improvement-ledger"      element={<W><ImprovementLedger /></W>} />
                         <Route path="/improvement-candidates"  element={<W><ImprovementCandidates /></W>} />
                         <Route path="/improvement-benchmarks"  element={<W><ImprovementBenchmarks /></W>} />
