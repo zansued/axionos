@@ -17,6 +17,7 @@ import { useI18n } from "@/contexts/I18nContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Lightbulb, Download } from "lucide-react";
+import { PageIntroCard, getGuidanceForPage } from "@/components/guidance";
 import { exportToCSV } from "@/lib/export-utils";
 import {
   DropdownMenu,
