@@ -1,6 +1,7 @@
 /**
  * Block W — Constitution Management UI
  * Create, edit, activate, deprecate constitutions across all 4 Block W sprints.
+ * Hardened: safe activation with supersession, transition validation, re-activate support.
  */
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -13,7 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BookOpen, Plus, Edit2, CheckCircle2, Archive, Shield } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { BookOpen, Plus, Edit2, CheckCircle2, Archive, Shield, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -22,6 +24,13 @@ const STATUS_STYLES: Record<string, string> = {
   active: "bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/30",
   superseded: "bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 border-yellow-500/30",
   deprecated: "bg-destructive/20 text-destructive border-destructive/30",
+};
+
+const VALID_TRANSITIONS: Record<string, string[]> = {
+  draft: ["active", "deprecated"],
+  active: ["superseded", "deprecated"],
+  superseded: ["active", "deprecated"],
+  deprecated: [],
 };
 
 interface ConstitutionField {
@@ -63,6 +72,10 @@ export function BlockWConstitutionManager({
     setValues({});
   }
 
+  function canTransition(from: string, to: string): boolean {
+    return (VALID_TRANSITIONS[from] ?? []).includes(to);
+  }
+
   async function handleCreate() {
     if (!values.constitution_name?.trim()) {
       toast.error("Constitution name is required");
@@ -93,7 +106,7 @@ export function BlockWConstitutionManager({
 
       const { error } = await supabase.from(tableName as any).insert(payload as any);
       if (error) throw error;
-      toast.success("Constitution created");
+      toast.success("Constitution created as draft");
       resetForm();
       setCreateOpen(false);
       onRefresh();
@@ -137,17 +150,39 @@ export function BlockWConstitutionManager({
   }
 
   async function handleStatusChange(id: string, newStatus: string) {
+    const target = constitutions.find((c: any) => c.id === id);
+    if (!target) return;
+
+    // Validate transition
+    if (!canTransition(target.status, newStatus)) {
+      toast.error(`Cannot transition from "${target.status}" to "${newStatus}".`);
+      return;
+    }
+
     try {
-      // If activating, supersede current active
+      // If activating, atomically supersede ALL currently active constitutions for this org
       if (newStatus === "active") {
-        const currentActive = constitutions.find((c: any) => c.status === "active");
-        if (currentActive && currentActive.id !== id) {
-          await supabase.from(tableName as any).update({ status: "superseded", updated_at: new Date().toISOString() } as any).eq("id", currentActive.id);
+        const currentActives = constitutions.filter((c: any) => c.status === "active" && c.id !== id);
+        for (const active of currentActives) {
+          const { error: supersedeErr } = await supabase
+            .from(tableName as any)
+            .update({ status: "superseded", updated_at: new Date().toISOString() } as any)
+            .eq("id", active.id);
+          if (supersedeErr) {
+            toast.error(`Failed to supersede "${active.constitution_name}": ${supersedeErr.message}`);
+            return;
+          }
         }
       }
-      const { error } = await supabase.from(tableName as any).update({ status: newStatus, updated_at: new Date().toISOString() } as any).eq("id", id);
+
+      const { error } = await supabase
+        .from(tableName as any)
+        .update({ status: newStatus, updated_at: new Date().toISOString() } as any)
+        .eq("id", id);
       if (error) throw error;
-      toast.success(`Constitution ${newStatus}`);
+
+      const actionLabel = newStatus === "active" ? "activated" : newStatus === "superseded" ? "superseded" : "deprecated";
+      toast.success(`Constitution ${actionLabel}`);
       onRefresh();
     } catch (err: any) {
       toast.error(err.message || "Failed to change status");
@@ -169,6 +204,7 @@ export function BlockWConstitutionManager({
   }
 
   const active = constitutions.find((c: any) => c.status === "active");
+  const multipleActives = constitutions.filter((c: any) => c.status === "active").length > 1;
 
   return (
     <Card className="border-border/50">
@@ -221,6 +257,16 @@ export function BlockWConstitutionManager({
             Active: <span className="font-medium text-foreground">{active.constitution_name}</span>
           </CardDescription>
         )}
+        {!active && constitutions.length > 0 && (
+          <CardDescription className="flex items-center gap-1.5 mt-1 text-yellow-600 dark:text-yellow-400">
+            ⚠ No active constitution. Activate one to govern evaluations.
+          </CardDescription>
+        )}
+        {multipleActives && (
+          <CardDescription className="flex items-center gap-1.5 mt-1 text-destructive">
+            ⚠ Multiple active constitutions detected. Activate one to resolve.
+          </CardDescription>
+        )}
       </CardHeader>
       <CardContent>
         {loading ? (
@@ -230,7 +276,7 @@ export function BlockWConstitutionManager({
         ) : (
           <div className="space-y-2">
             {constitutions.map((c: any) => (
-              <div key={c.id} className="border border-border/50 rounded-lg p-3 space-y-2">
+              <div key={c.id} className={`border rounded-lg p-3 space-y-2 ${c.status === "active" ? "border-green-500/30 bg-green-500/5" : "border-border/50"}`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">{c.constitution_name}</span>
@@ -242,17 +288,38 @@ export function BlockWConstitutionManager({
                     <Button variant="ghost" size="sm" className="h-7 px-2" onClick={() => openEdit(c)}>
                       <Edit2 className="h-3 w-3" />
                     </Button>
-                    {c.status === "draft" && (
-                      <Button variant="ghost" size="sm" className="h-7 px-2 text-green-600" onClick={() => handleStatusChange(c.id, "active")}>
-                        <CheckCircle2 className="h-3 w-3" />
-                      </Button>
+                    {/* Activate from draft or superseded */}
+                    {canTransition(c.status, "active") && (
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-7 px-2 text-green-600">
+                            <CheckCircle2 className="h-3 w-3" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Activate Constitution</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Activating "{c.constitution_name}" will supersede the currently active constitution (if any). This governs all future evaluations for this module.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleStatusChange(c.id, "active")}>
+                              Activate
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     )}
-                    {c.status === "active" && (
+                    {/* Supersede active */}
+                    {canTransition(c.status, "superseded") && (
                       <Button variant="ghost" size="sm" className="h-7 px-2 text-yellow-600" onClick={() => handleStatusChange(c.id, "superseded")}>
                         <Archive className="h-3 w-3" />
                       </Button>
                     )}
-                    {(c.status === "superseded" || c.status === "draft") && (
+                    {/* Deprecate from draft or superseded */}
+                    {canTransition(c.status, "deprecated") && c.status !== "active" && (
                       <Button variant="ghost" size="sm" className="h-7 px-2 text-destructive" onClick={() => handleStatusChange(c.id, "deprecated")}>
                         <Archive className="h-3 w-3" />
                       </Button>

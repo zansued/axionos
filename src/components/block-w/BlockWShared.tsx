@@ -2,6 +2,7 @@
  * Block W — Shared UI Components
  * Consistent posture badges, severity badges, cross-sprint navigation,
  * admin forms, causal modifier cards, and historical views across Sprints 107–110.
+ * Hardened: enhanced modifier traceability with base/adjusted/final, improved explainability.
  */
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -127,6 +128,8 @@ interface CausalModifierDisplay {
   target_score: string;
   modifier_value: number;
   rationale: string;
+  base_value?: number;
+  final_value?: number;
 }
 
 export function CausalModifierCard({ modifiers, title }: { modifiers: CausalModifierDisplay[]; title?: string }) {
@@ -138,6 +141,14 @@ export function CausalModifierCard({ modifiers, title }: { modifiers: CausalModi
     </Card>
   );
 
+  // Group by target_score for cleaner display
+  const byTarget = new Map<string, CausalModifierDisplay[]>();
+  for (const m of modifiers) {
+    const key = m.target_score;
+    if (!byTarget.has(key)) byTarget.set(key, []);
+    byTarget.get(key)!.push(m);
+  }
+
   return (
     <Card className="border-primary/20 bg-primary/5">
       <CardHeader className="pb-2">
@@ -145,7 +156,9 @@ export function CausalModifierCard({ modifiers, title }: { modifiers: CausalModi
           <Zap className="h-3.5 w-3.5 text-primary" />
           {title || "Causal Cross-Sprint Modifiers"}
         </CardTitle>
-        <CardDescription className="text-xs">These scores were adjusted based on upstream sprint signals. Modifiers are bounded (max ±15% per signal, ±25% total).</CardDescription>
+        <CardDescription className="text-xs">
+          Scores adjusted by upstream sprint signals. Bounded: max ±15% per signal, ±25% total.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
@@ -157,14 +170,37 @@ export function CausalModifierCard({ modifiers, title }: { modifiers: CausalModi
                   <span className="text-xs text-muted-foreground">→</span>
                   <Badge variant="outline" className="text-[9px] px-1.5 py-0">{m.target_score.replace(/_/g, " ")}</Badge>
                 </div>
-                <span className={`font-mono text-xs font-medium ${m.modifier_value > 0 ? "text-destructive" : "text-green-400"}`}>
+                <span className={`font-mono text-xs font-medium ${m.modifier_value > 0 ? "text-destructive" : m.modifier_value < 0 ? "text-green-700 dark:text-green-400" : "text-muted-foreground"}`}>
                   {m.modifier_value > 0 ? "+" : ""}{(m.modifier_value * 100).toFixed(1)}%
                 </span>
               </div>
+              {/* Base → Final traceability when available */}
+              {(m.base_value !== undefined && m.final_value !== undefined) && (
+                <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-mono">
+                  <span>base: {Math.round(m.base_value * 100)}%</span>
+                  <ArrowRight className="h-2.5 w-2.5" />
+                  <span>final: {Math.round(m.final_value * 100)}%</span>
+                </div>
+              )}
               <p className="text-[10px] text-muted-foreground">{m.source_signal}</p>
               <p className="text-[10px] text-muted-foreground/70 italic">{m.rationale}</p>
             </div>
           ))}
+          {/* Aggregate summary */}
+          {modifiers.length > 1 && (
+            <div className="border-t border-border/30 pt-1.5 mt-1">
+              <div className="flex items-center justify-between text-[10px]">
+                <span className="text-muted-foreground font-medium">Total modifier influence:</span>
+                <span className="font-mono font-medium">
+                  {(() => {
+                    const total = modifiers.reduce((s, m) => s + m.modifier_value, 0);
+                    const clamped = Math.max(-0.25, Math.min(0.25, total));
+                    return `${clamped > 0 ? "+" : ""}${(clamped * 100).toFixed(1)}% (${modifiers.length} signals)`;
+                  })()}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
