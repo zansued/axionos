@@ -144,59 +144,23 @@ Sprint 71 introduced the first governed extensibility foundation for AxionOS. Pl
 
 ---
 
-## Sprint 72 — Evidence Capture & Improvement Ledger ✅ Implemented
+## Block N — Evidence-Governed Improvement Loop (Sprints 72–74) — 📋 Planned
 
-Sprint 72 established the canonical evidence capture and improvement ledger layer. The system now captures, normalizes, links, and reviews operational evidence from validations, repairs, rollbacks, deployments, extensions, anomalies, and operator observations. A dedicated operator surface (`/improvement-ledger`) provides structured evidence review.
+> **Status:** Planned — next block for implementation.
 
-**Strategic role:** Sprint 72 begins the Evidence-Governed Improvement Loop. It provides the durable evidence foundation that future sprints will use to generate bounded improvement proposals and track outcomes.
+**Thesis:** AxionOS becomes better over time through evidence-governed learning, not uncontrolled autonomy.
 
----
-
-## Sprint 73 — Improvement Candidate Distillation Engine ✅ Implemented
-
-Sprint 73 introduced the canonical improvement candidate distillation layer. The system now clusters operational evidence into structured, bounded, reviewable improvement candidates with full provenance, pattern detection, explainability, and triage workflow. A dedicated operator surface (`/improvement-candidates`) provides candidate review, triage, and "ready for benchmark" marking.
-
-**Strategic role:** Sprint 73 advances the Evidence-Governed Improvement Loop by transforming raw evidence into actionable (but advisory-only) improvement proposals. Candidates remain bounded and require human review — no autonomous mutation.
+| Sprint | Name | Objective |
+|--------|------|-----------|
+| 72 | Evidence Capture & Improvement Ledger | Capture structured operational evidence from validations, repairs, rollbacks, extension lifecycle, execution anomalies, and operator signals |
+| 73 | Improvement Candidate Distillation Engine | Transform evidence into bounded, reviewable improvement candidates with provenance, recurrence signals, confidence posture, and triage workflow |
+| 74 | Sandbox Benchmarking & Promotion Governance | Evaluate eligible candidates in sandbox conditions, compare against baseline, and support human-governed promotion, rejection, deferment, or archive decisions |
 
 ---
 
-## Sprint 74 — Sandbox Benchmarking & Promotion Governance ✅ Implemented
+## Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔮 Reserved
 
-Sprint 74 completed the Evidence-Governed Improvement Loop by introducing governed sandbox benchmarking and promotion governance. Improvement candidates can now be benchmarked against baselines in controlled sandbox conditions, with structured metric comparison, risk posture assessment, stability signals, and explainable recommendations. Promotion, rejection, deferral, and archival decisions are fully human-reviewed, auditable, and tenant-isolated. A dedicated operator surface (`/improvement-benchmarks`) provides benchmark queue, results, metric comparison, and governance controls.
-
-**Strategic role:** Sprint 74 closes Block N. AxionOS now has a complete evidence-governed improvement loop: evidence capture → candidate distillation → sandbox benchmarking → human-governed promotion. No autonomous mutation behavior was introduced.
-
----
-
-## Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔄 In Progress
-
-> **Status:** In progress — Sprints 75–77 complete, Sprint 78 planned.
-
-**Thesis:** After evidence-governed improvement is established, AxionOS evolves toward more advanced role arbitration, debate, resolution, shared working memory, and bounded multi-agent execution.
-
----
-
-## Sprint 75 — Role Arbitration & Capability Routing 2.0 ✅ Implemented
-
-Sprint 75 established the first upgraded role arbitration and capability routing layer. The system now makes context-aware routing decisions that consider task type, pipeline stage, prior evidence, risk posture, and policy constraints. Each routing decision is explainable — operators can inspect why a specific agent/capability was chosen, what alternatives were considered, and what fallback paths exist. A dedicated operator surface (`/agent-routing`) provides routing decision visibility, candidate comparison, failure pattern concentration, and bad-route flagging.
-
-**Strategic role:** Sprint 75 starts Block O by making agent selection more intelligent and legible without introducing uncontrolled autonomy. Routing decisions remain bounded, auditable, and governance-first.
-
----
-
-## Sprint 76 — Multi-Agent Debate & Resolution Layer ✅ Implemented
-
-Sprint 76 introduced the first canonical multi-agent debate and resolution layer. The system now supports structured, bounded debate sessions where multiple agents can propose alternative positions, challenge assumptions, defend reasoning, and reach governed resolutions. Debates are depth-bounded (max rounds), risk-classified, and support escalation for unresolved conflicts requiring human review. A dedicated operator surface (`/agent-debates`) provides debate queue, active/resolved/escalated views, argument comparison, resolution detail, and governance controls.
-
-**Strategic role:** Sprint 76 deepens Block O by making multi-agent disagreement visible, structured, and governable. No autonomous architecture mutation is introduced.
-
----
-
-## Sprint 77 — Shared Working Memory & Task-State Negotiation ✅ Implemented
-
-Sprint 77 introduced the first canonical shared working memory and task-state negotiation layer. Coordinated agents can now operate against bounded, contextual working memory tied to initiatives and execution contexts. The system supports shared memory entries (observations, assumptions, decisions, constraints), negotiated task-state transitions (proposed → accepted/contested/escalated → resolved), and coordination checkpoints. A dedicated operator surface (`/working-memory`) provides context visibility, blocked/escalated state tracking, checkpoint timelines, and state transition audit trails.
-
-**Strategic role:** Sprint 77 deepens Block O by giving coordinated agents a governed, auditable shared context without introducing uncontrolled global mutation. Tenant isolation and governance invariants remain preserved.
+> **Status:** Reserved — builds on evidence-governed improvement.
 
 ---
 
