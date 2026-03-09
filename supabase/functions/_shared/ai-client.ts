@@ -188,6 +188,7 @@ export async function callAI(
             "Content-Type": "application/json",
           },
           body: JSON.stringify(body),
+          signal: abortSignal,
         });
 
         if (resp.status === 429 || resp.status >= 500) {
