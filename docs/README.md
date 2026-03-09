@@ -24,7 +24,7 @@
 
 If prior chat history is unavailable, follow this sequence to re-establish context:
 
-1. **Read ROADMAP.md first** — understand current maturity, strategic direction, completed canon through Sprint 71, and Block N–S roadmap
+1. **Read ROADMAP.md first** — understand current maturity, strategic direction, completed canon through Sprint 106, and block structure
 2. **Read PLAN.md next** — identify the current/next sprint, execution status, and future canon guidance
 3. **Use ARCHITECTURE.md** for structural context — layers, containers, data flow, product boundary model, role/surface model, forthcoming architectural direction
 4. **Use PIPELINE_CONTRACTS.md** for the visible journey contract — Idea → Discovery → Architecture → Engineering → Deploy
@@ -34,9 +34,8 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
-- Sprints 1–71 are the completed canon — do not casually reopen
-- Block N (72–74) is the next planned block — evidence-governed improvement loop
-- Blocks O–S (75–94) are reserved — do not treat as implemented
+- Sprints 1–106 are the completed canon — do not casually reopen
+- All blocks (Foundation through V) are complete
 - Do not collapse internal architecture and user-facing journey into the same surface
 
 ---
