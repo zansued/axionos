@@ -24,7 +24,7 @@ export default function AdoptionIntelligence() {
         <AppSidebar />
         <SidebarInset className="flex-1">
           <div className="p-6 space-y-6">
-            {guidance && <PageIntroCard guidance={guidance} whyNow={whyNow?.en} compact />}
+            {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
             <div>
               <h1 className="text-2xl font-bold text-foreground">Adoption Intelligence</h1>
               <p className="text-muted-foreground">Customer success signals, journey adoption, and friction analysis.</p>

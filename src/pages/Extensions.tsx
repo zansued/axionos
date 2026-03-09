@@ -134,7 +134,7 @@ export default function Extensions() {
   return (
     <AppLayout>
       <div className="space-y-6">
-        {guidance && <PageIntroCard guidance={guidance} whyNow={whyNow?.en} compact />}
+        {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">

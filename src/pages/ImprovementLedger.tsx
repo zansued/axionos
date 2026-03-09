@@ -141,7 +141,7 @@ export default function ImprovementLedger() {
 
   return (
     <AppLayout>
-      {guidance && <PageIntroCard guidance={guidance} whyNow={whyNow?.en} compact />}
+      {guidance && <PageIntroCard guidance={guidance} whyNow={whyNowText} compact />}
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Improvement Ledger</h1>
