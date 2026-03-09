@@ -114,8 +114,7 @@ Internal sophistication remains critical. The next level deepens it through adap
 
 ### Current Canon Boundaries
 
-- **Sprints 1–98** = canonical complete (full canon — Foundation through Block T)
-- **Sprints 99–102** = planned (Block U — Adaptive Institutional Ecosystem)
+- **Sprints 1–106** = canonical complete (full canon — Foundation through Block V)
 
 ---
 
