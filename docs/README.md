@@ -88,16 +88,16 @@ Internal sophistication remains critical. The next level deepens it through adap
 
 ---
 
-## How To Continue Safely After Sprint 94
+## How To Continue Safely After Sprint 106
 
-1. Read **ROADMAP.md** first for strategic direction and the Next Level Thesis
+1. Read **ROADMAP.md** first for strategic direction
 2. Read **PLAN.md** next for current canon status
 3. Use **ARCHITECTURE.md** for structural context, the product boundary model, and the role/surface model
 4. Use **PIPELINE_CONTRACTS.md** for the user-visible journey contract
 5. Use **AGENTS.md** for internal agent system reference only
 6. Implement future work **sprint by sprint** with human review
 7. Do **not** collapse internal architecture and user-facing journey into the same surface
-8. Do **not** casually reopen completed canon (Sprints 1–98) without deliberate review
+8. Do **not** casually reopen completed canon (Sprints 1–106) without deliberate review
 9. Internal layers are backstage support — the default product surface is the user journey
 
 ---
