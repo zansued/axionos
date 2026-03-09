@@ -13,7 +13,15 @@ import { assessCompromiseRisk } from "../_shared/tradeoff-arbitration/compromise
 import { evaluateReversibility } from "../_shared/tradeoff-arbitration/reversibility-evaluator.ts";
 import { generateArbitrationRecommendations } from "../_shared/tradeoff-arbitration/tradeoff-arbitration-engine.ts";
 import { explainTradeoff } from "../_shared/tradeoff-arbitration/tradeoff-explainer.ts";
-import { extractHorizonSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
+import { extractHorizonSignals, extractSimulationSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
+import {
+  computeHorizonToTradeoffModifiers,
+  computeSimulationToTradeoffModifiers,
+  aggregateModifiers,
+  applyModifier,
+  formatModifierExplanation,
+  type CausalModifier,
+} from "../_shared/block-w-integration/causal-modifiers.ts";
 
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -83,7 +91,7 @@ Deno.serve(async (req) => {
       return json({ subjects });
     }
 
-    // ── EVALUATE ──
+    // ── EVALUATE (with causal modifiers from Sprint 107 + 110) ──
     if (action === "evaluate") {
       const constitution = await resolveActiveConstitution(serviceClient, organization_id);
       let dimensions = await resolveActiveDimensions(serviceClient, organization_id);
@@ -94,9 +102,20 @@ Deno.serve(async (req) => {
       }
 
       const subjects = await listTradeoffSubjects(serviceClient, organization_id, { active: true });
-      if (subjects.length === 0) return json({ evaluations: [], events: [], recommendations: [], explanations: [] });
+      if (subjects.length === 0) return json({ evaluations: [], events: [], recommendations: [], explanations: [], cross_sprint_modifiers: [] });
 
-      // Clean previous evaluation data to prevent accumulation
+      // Fetch cross-sprint signals for causal modifiers
+      const [horizonSignals, simSignals] = await Promise.all([
+        extractHorizonSignals(serviceClient, organization_id),
+        extractSimulationSignals(serviceClient, organization_id),
+      ]);
+      const horizonMods = computeHorizonToTradeoffModifiers(horizonSignals);
+      const simMods = computeSimulationToTradeoffModifiers(simSignals);
+      const allCausalMods: CausalModifier[] = [...horizonMods, ...simMods];
+      const riskModBundle = aggregateModifiers(allCausalMods, "compromise_risk_score");
+      const reversibilityModBundle = aggregateModifiers(allCausalMods, "reversibility_penalty");
+
+      // Clean previous evaluation data
       await Promise.all([
         serviceClient.from("tradeoff_evaluations").delete().eq("organization_id", organization_id),
         serviceClient.from("tradeoff_recommendations").delete().eq("organization_id", organization_id),
@@ -110,14 +129,48 @@ Deno.serve(async (req) => {
 
       for (const subject of subjects) {
         const analysis = analyzeGainSacrifice(subject, dimensions);
-        const risk = assessCompromiseRisk(analysis);
-        const reversibility = evaluateReversibility(analysis);
-        const recommendations = generateArbitrationRecommendations(analysis, risk, reversibility);
-        const explanation = explainTradeoff(analysis, risk, reversibility, recommendations);
+        const baseRisk = assessCompromiseRisk(analysis);
+        const baseReversibility = evaluateReversibility(analysis);
 
-        evaluations.push({ analysis, risk, reversibility });
+        // Apply causal modifiers
+        const adjustedRiskScore = applyModifier(baseRisk.compromise_risk_score, riskModBundle);
+        const adjustedReversibilityScore = applyModifier(baseReversibility.reversibility_score, reversibilityModBundle);
+
+        // Reclassify risk level with adjusted score
+        let adjustedRiskLevel = baseRisk.risk_level;
+        if (adjustedRiskScore >= 0.7) adjustedRiskLevel = "unacceptable";
+        else if (adjustedRiskScore >= 0.5) adjustedRiskLevel = "high";
+        else if (adjustedRiskScore >= 0.3) adjustedRiskLevel = "elevated";
+        else adjustedRiskLevel = "acceptable";
+
+        const adjustedRisk = {
+          ...baseRisk,
+          compromise_risk_score: Math.round(adjustedRiskScore * 10000) / 10000,
+          risk_level: adjustedRiskLevel,
+        };
+        const adjustedReversibility = {
+          ...baseReversibility,
+          reversibility_score: Math.round(adjustedReversibilityScore * 10000) / 10000,
+        };
+
+        const recommendations = generateArbitrationRecommendations(analysis, adjustedRisk, adjustedReversibility);
+        const explanation = explainTradeoff(analysis, adjustedRisk, adjustedReversibility, recommendations);
+
+        const causalNote = allCausalMods.length > 0
+          ? ` [Cross-sprint: risk ${riskModBundle.total_adjustment > 0 ? "+" : ""}${(riskModBundle.total_adjustment * 100).toFixed(1)}%]`
+          : "";
+
+        evaluations.push({ analysis, risk: adjustedRisk, reversibility: adjustedReversibility, baseRisk, baseReversibility });
         allRecommendations.push(...recommendations);
-        allExplanations.push(explanation);
+        allExplanations.push({
+          ...explanation,
+          base_compromise_risk: baseRisk.compromise_risk_score,
+          adjusted_compromise_risk: adjustedRisk.compromise_risk_score,
+          base_reversibility: baseReversibility.reversibility_score,
+          adjusted_reversibility: adjustedReversibility.reversibility_score,
+          cross_sprint_modifiers: allCausalMods,
+          causal_explanation: causalNote,
+        });
 
         // Persist evaluation
         await serviceClient.from("tradeoff_evaluations").insert({
@@ -126,22 +179,22 @@ Deno.serve(async (req) => {
           subject_id: subject.id,
           gain_dimensions: analysis.gains,
           sacrifice_dimensions: analysis.sacrifices,
-          reversibility_score: reversibility.reversibility_score,
-          compromise_risk_score: risk.compromise_risk_score,
-          legitimacy_tension_score: risk.legitimacy_tension_score,
-          arbitration_summary: `Posture: ${analysis.net_posture}, Risk: ${risk.risk_level}`,
+          reversibility_score: adjustedReversibility.reversibility_score,
+          compromise_risk_score: adjustedRisk.compromise_risk_score,
+          legitimacy_tension_score: adjustedRisk.legitimacy_tension_score,
+          arbitration_summary: `Posture: ${analysis.net_posture}, Risk: ${adjustedRiskLevel}${causalNote}`,
         });
 
         // Persist events for high/unacceptable risk
-        if (risk.risk_level === "high" || risk.risk_level === "unacceptable") {
+        if (adjustedRiskLevel === "high" || adjustedRiskLevel === "unacceptable") {
           const event = {
             organization_id,
             subject_id: subject.id,
-            arbitration_type: risk.risk_level === "unacceptable" ? "unacceptable_compromise" : "high_risk_compromise",
-            severity: risk.risk_level,
-            affected_dimensions: risk.corrosion_domains,
-            event_summary: risk.advisory,
-            payload: { risk_factors: risk.risk_factors, net_posture: analysis.net_posture },
+            arbitration_type: adjustedRiskLevel === "unacceptable" ? "unacceptable_compromise" : "high_risk_compromise",
+            severity: adjustedRiskLevel,
+            affected_dimensions: adjustedRisk.corrosion_domains,
+            event_summary: `${adjustedRisk.advisory}${causalNote}`,
+            payload: { risk_factors: adjustedRisk.risk_factors, net_posture: analysis.net_posture, cross_sprint_influence: riskModBundle.total_adjustment },
           };
           await serviceClient.from("tradeoff_arbitration_events").insert(event);
           allEvents.push(event);
@@ -173,10 +226,18 @@ Deno.serve(async (req) => {
           reversibility: e.reversibility.reversibility_label,
           gains: e.analysis.gains.length,
           sacrifices: e.analysis.sacrifices.length,
+          base_risk: e.baseRisk.compromise_risk_score,
+          adjusted_risk: e.risk.compromise_risk_score,
         })),
         events: allEvents,
         recommendations: allRecommendations,
         explanations: allExplanations,
+        cross_sprint_modifiers: {
+          sources: ["Sprint 107 → Sprint 108", "Sprint 110 → Sprint 108"],
+          modifiers: allCausalMods,
+          risk_adjustment: riskModBundle,
+          reversibility_adjustment: reversibilityModBundle,
+        },
       });
     }
 
@@ -225,15 +286,44 @@ Deno.serve(async (req) => {
       const recommendations = generateArbitrationRecommendations(analysis, risk, reversibility);
       const explanation = explainTradeoff(analysis, risk, reversibility, recommendations);
 
-      return json({ explanation, analysis, risk, reversibility, recommendations });
+      // Causal context
+      const [horizonSignals, simSignals] = await Promise.all([
+        extractHorizonSignals(serviceClient, organization_id),
+        extractSimulationSignals(serviceClient, organization_id),
+      ]);
+      const allMods = [
+        ...computeHorizonToTradeoffModifiers(horizonSignals),
+        ...computeSimulationToTradeoffModifiers(simSignals),
+      ];
+
+      return json({
+        explanation,
+        analysis,
+        risk,
+        reversibility,
+        recommendations,
+        cross_sprint_modifiers: allMods,
+        causal_explanation: formatModifierExplanation(allMods),
+      });
     }
 
     // ── CROSS-SPRINT SIGNALS ──
     if (action === "cross_sprint_signals") {
-      const horizonSignals = await extractHorizonSignals(serviceClient, organization_id);
+      const [horizonSignals, simSignals] = await Promise.all([
+        extractHorizonSignals(serviceClient, organization_id),
+        extractSimulationSignals(serviceClient, organization_id),
+      ]);
+      const horizonMods = computeHorizonToTradeoffModifiers(horizonSignals);
+      const simMods = computeSimulationToTradeoffModifiers(simSignals);
+      const allMods = [...horizonMods, ...simMods];
+      const riskBundle = aggregateModifiers(allMods, "compromise_risk_score");
+
       return json({
         horizon_context: horizonSignals,
-        integration_note: "Horizon alignment signals (Sprint 107) provide temporal bias and deferred risk context for tradeoff arbitration.",
+        simulation_context: simSignals,
+        causal_modifiers: allMods,
+        risk_adjustment: riskBundle,
+        integration_note: "Horizon alignment (Sprint 107) and simulation fragility (Sprint 110) causally influence compromise risk and reversibility scores.",
       });
     }
 

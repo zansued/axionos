@@ -10,7 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Shield, AlertTriangle, Activity, HeartPulse, Eye, RefreshCw, PlayCircle, ShieldAlert, Info, Clock } from "lucide-react";
 import { toast } from "sonner";
-import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoreBar, ScoringTransparencyCard } from "@/components/block-w/BlockWShared";
+import { PostureBadge, SeverityBadge, CrossSprintSignalCard, AdminCreateDialog, ScoreBar, ScoringTransparencyCard, CausalModifierCard } from "@/components/block-w/BlockWShared";
 
 async function invokeEngine(orgId: string, action: string) {
   const { data: { session } } = await supabase.auth.getSession();
@@ -292,27 +292,21 @@ export default function MissionIntegrity() {
           {/* Integration */}
           <TabsContent value="integration">
             <div className="space-y-4">
-              <Card className="border-border/50"><CardHeader className="pb-2"><CardTitle className="text-sm">Cross-Sprint Signal Context</CardTitle>
-                <CardDescription className="text-xs">Tradeoff arbitration signals that surface mission-corrosive sacrifices as drift pressure.</CardDescription></CardHeader>
-                <CardContent className="space-y-3">
-                  {signals?.tradeoff_pressure ? (
-                    <CrossSprintSignalCard
-                      title="Tradeoff Pressure (Sprint 108 → 109)"
-                      signals={[
-                        { label: "Avg Compromise Risk", value: signals.tradeoff_pressure.avg_compromise_risk },
-                        { label: "Avg Reversibility", value: signals.tradeoff_pressure.avg_reversibility },
-                        { label: "Hidden Sacrifice", value: signals.tradeoff_pressure.has_hidden_sacrifice ? "Detected" : "No", severity: signals.tradeoff_pressure.has_hidden_sacrifice ? "high" : "low" },
-                        { label: "Unacceptable Compromise", value: signals.tradeoff_pressure.has_unacceptable_compromise ? "Active" : "No", severity: signals.tradeoff_pressure.has_unacceptable_compromise ? "critical" : "low" },
-                        { label: "Mission Dimension Sacrificed", value: signals.tradeoff_pressure.mission_dimension_sacrificed ? "Yes" : "No", severity: signals.tradeoff_pressure.mission_dimension_sacrificed ? "critical" : "low" },
-                      ]}
-                      relatedRoute="/tradeoff-arbitration"
-                      relatedLabel="View Tradeoffs"
-                    />
-                  ) : (
-                    <p className="text-xs text-muted-foreground">No cross-sprint signals available. Run tradeoff evaluations first.</p>
-                  )}
-                  {signals?.integration_note && <p className="text-xs text-muted-foreground italic">{signals.integration_note}</p>}
-                </CardContent></Card>
+              <CausalModifierCard modifiers={signals?.causal_modifiers || []} title="Sprint 108 + 110 → 109: Tradeoff & Simulation Influence" />
+              {signals?.tradeoff_pressure && (
+                <CrossSprintSignalCard
+                  title="Tradeoff Pressure (Sprint 108 → 109)"
+                  signals={[
+                    { label: "Avg Compromise Risk", value: signals.tradeoff_pressure.avg_compromise_risk },
+                    { label: "Avg Reversibility", value: signals.tradeoff_pressure.avg_reversibility },
+                    { label: "Hidden Sacrifice", value: signals.tradeoff_pressure.has_hidden_sacrifice ? "Detected" : "No", severity: signals.tradeoff_pressure.has_hidden_sacrifice ? "high" : "low" },
+                    { label: "Unacceptable Compromise", value: signals.tradeoff_pressure.has_unacceptable_compromise ? "Active" : "No", severity: signals.tradeoff_pressure.has_unacceptable_compromise ? "critical" : "low" },
+                  ]}
+                  relatedRoute="/tradeoff-arbitration"
+                  relatedLabel="View Tradeoffs"
+                />
+              )}
+              {signals?.integration_note && <p className="text-xs text-muted-foreground italic">{signals.integration_note}</p>}
             </div>
           </TabsContent>
         </Tabs>

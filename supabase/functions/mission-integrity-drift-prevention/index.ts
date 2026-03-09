@@ -6,7 +6,15 @@ import { generateCorrections } from "../_shared/mission-integrity/mission-correc
 import { explainMissionIntegrity } from "../_shared/mission-integrity/mission-explainer.ts";
 import { resolveActiveConstitution, extractProtectedCommitments } from "../_shared/mission-integrity/mission-constitution-resolver.ts";
 import { filterActiveSubjects, groupSubjectsByDomain } from "../_shared/mission-integrity/mission-subject-mapper.ts";
-import { extractTradeoffSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
+import { extractTradeoffSignals, extractSimulationSignals } from "../_shared/block-w-integration/cross-sprint-signals.ts";
+import {
+  computeTradeoffToMissionModifiers,
+  computeSimulationToMissionModifiers,
+  aggregateModifiers,
+  applyModifier,
+  formatModifierExplanation,
+  type CausalModifier,
+} from "../_shared/block-w-integration/causal-modifiers.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -56,11 +64,9 @@ Deno.serve(async (req) => {
         const avgAlignment = allEvals.length > 0 ? allEvals.reduce((s: number, e: any) => s + Number(e.alignment_score), 0) / allEvals.length : 0;
         const avgErosion = allEvals.length > 0 ? allEvals.reduce((s: number, e: any) => s + Number(e.erosion_score), 0) / allEvals.length : 0;
 
-        // Resolve active constitution for protected commitments
         const activeConst = resolveActiveConstitution((constitutions || []) as any);
         const protectedCommitments = activeConst ? extractProtectedCommitments(activeConst as any) : [];
 
-        // Compute posture distribution from evaluations
         const postureDistribution: Record<string, number> = {};
         for (const ev of allEvals) {
           const p = (ev as any).posture || "unknown";
@@ -103,7 +109,7 @@ Deno.serve(async (req) => {
         break;
       }
 
-      // ── run_evaluation: the actual computation action ──
+      // ── run_evaluation: with causal modifiers from Sprint 108 + 110 ──
       case "run_evaluation": {
         const [{ data: constitutions }, { data: subjects }] = await Promise.all([
           supabase.from("mission_constitutions").select("*").eq("organization_id", organization_id).limit(100),
@@ -122,11 +128,22 @@ Deno.serve(async (req) => {
           break;
         }
 
+        // Fetch cross-sprint signals for causal modifiers
+        const [tradeoffSignals, simSignals] = await Promise.all([
+          extractTradeoffSignals(supabase, organization_id),
+          extractSimulationSignals(supabase, organization_id),
+        ]);
+        const tradeoffMods = computeTradeoffToMissionModifiers(tradeoffSignals);
+        const simMods = computeSimulationToMissionModifiers(simSignals);
+        const allCausalMods: CausalModifier[] = [...tradeoffMods, ...simMods];
+        const driftModBundle = aggregateModifiers(allCausalMods, "drift_risk_score");
+        const erosionModBundle = aggregateModifiers(allCausalMods, "erosion_score");
+        const erosionWarningBundle = aggregateModifiers(allCausalMods, "erosion_warning");
+
         const protectedCommitments = extractProtectedCommitments(activeConst as any);
         const missionStatement = activeConst.mission_statement || "";
-        const subjectsByDomain = groupSubjectsByDomain(activeSubjects);
 
-        // Cleanup old evaluations, drift events, and recommendations for this org
+        // Cleanup old data
         await Promise.all([
           supabase.from("mission_alignment_evaluations").delete().eq("organization_id", organization_id),
           supabase.from("mission_drift_events").delete().eq("organization_id", organization_id).is("resolved_at", null),
@@ -138,67 +155,73 @@ Deno.serve(async (req) => {
         const correctionInputs: any[] = [];
 
         for (const subject of activeSubjects) {
-          // Compute alignment scores from subject content vs mission
           const scores = computeAlignmentScores(subject.summary || "", missionStatement);
-          const verdict = evaluateAlignmentPosture(scores);
 
-          // Assess normative erosion
+          // Apply causal modifiers to drift and erosion scores
+          const adjustedDrift = applyModifier(scores.drift_risk_score, driftModBundle);
+          const adjustedErosion = applyModifier(scores.erosion_score, erosionModBundle);
+          // Also factor in erosion_warning from simulation
+          const erosionWithWarning = applyModifier(adjustedErosion, erosionWarningBundle);
+
+          const adjustedScores = {
+            ...scores,
+            drift_risk_score: Math.round(adjustedDrift * 10000) / 10000,
+            erosion_score: Math.round(erosionWithWarning * 10000) / 10000,
+          };
+
+          const verdict = evaluateAlignmentPosture(adjustedScores);
+
           const erosionAssessment = assessNormativeErosion({
-            alignment_score: scores.alignment_score,
-            erosion_score: scores.erosion_score,
-            adaptation_score: scores.adaptation_score,
+            alignment_score: adjustedScores.alignment_score,
+            erosion_score: adjustedScores.erosion_score,
+            adaptation_score: adjustedScores.adaptation_score,
             protected_commitments: protectedCommitments,
             subject_summary: subject.summary || "",
           });
+
+          const causalNote = allCausalMods.length > 0
+            ? ` [Cross-sprint: drift ${driftModBundle.total_adjustment > 0 ? "+" : ""}${(driftModBundle.total_adjustment * 100).toFixed(1)}%, erosion ${erosionModBundle.total_adjustment > 0 ? "+" : ""}${(erosionModBundle.total_adjustment * 100).toFixed(1)}%]`
+            : "";
 
           newEvaluations.push({
             organization_id,
             subject_id: subject.id,
             constitution_id: activeConst.id,
-            alignment_score: scores.alignment_score,
-            drift_risk_score: scores.drift_risk_score,
-            erosion_score: scores.erosion_score,
-            adaptation_score: scores.adaptation_score,
+            alignment_score: adjustedScores.alignment_score,
+            drift_risk_score: adjustedScores.drift_risk_score,
+            erosion_score: adjustedScores.erosion_score,
+            adaptation_score: adjustedScores.adaptation_score,
             posture: verdict.posture,
-            evaluation_summary: `${verdict.explanation} ${erosionAssessment.explanation}`,
+            evaluation_summary: `${verdict.explanation} ${erosionAssessment.explanation}${causalNote}`,
           });
 
-          // Generate drift events for non-healthy postures
           if (!verdict.is_healthy) {
             newDriftEvents.push({
               organization_id,
               subject_id: subject.id,
-              drift_type: scores.erosion_score >= 0.4 ? "normative" : scores.drift_risk_score >= 0.5 ? "strategic" : "operational",
+              drift_type: adjustedScores.erosion_score >= 0.4 ? "normative" : adjustedScores.drift_risk_score >= 0.5 ? "strategic" : "operational",
               severity: verdict.posture === "normative_compromise" ? "critical" : verdict.posture === "active_erosion" ? "high" : verdict.posture === "significant_drift" ? "high" : "medium",
-              event_summary: verdict.explanation,
-              payload: { scores, posture: verdict.posture, erosion_type: erosionAssessment.erosion_type, commitments_at_risk: erosionAssessment.commitments_at_risk },
+              event_summary: `${verdict.explanation}${causalNote}`,
+              payload: { scores: adjustedScores, posture: verdict.posture, erosion_type: erosionAssessment.erosion_type, commitments_at_risk: erosionAssessment.commitments_at_risk, cross_sprint_influence: { drift: driftModBundle.total_adjustment, erosion: erosionModBundle.total_adjustment } },
             });
           }
 
-          // Collect correction inputs
           if (verdict.requires_correction) {
             correctionInputs.push({
               subject_id: subject.id,
               posture: verdict.posture,
-              alignment_score: scores.alignment_score,
-              drift_risk_score: scores.drift_risk_score,
-              erosion_score: scores.erosion_score,
+              alignment_score: adjustedScores.alignment_score,
+              drift_risk_score: adjustedScores.drift_risk_score,
+              erosion_score: adjustedScores.erosion_score,
               domain: subject.domain,
             });
           }
         }
 
         // Persist evaluations
-        if (newEvaluations.length > 0) {
-          await supabase.from("mission_alignment_evaluations").insert(newEvaluations);
-        }
+        if (newEvaluations.length > 0) await supabase.from("mission_alignment_evaluations").insert(newEvaluations);
+        if (newDriftEvents.length > 0) await supabase.from("mission_drift_events").insert(newDriftEvents);
 
-        // Persist drift events
-        if (newDriftEvents.length > 0) {
-          await supabase.from("mission_drift_events").insert(newDriftEvents);
-        }
-
-        // Generate and persist corrections
         const corrections = generateCorrections(correctionInputs);
         if (corrections.length > 0) {
           const correctionRows = corrections.map(c => ({
@@ -213,17 +236,16 @@ Deno.serve(async (req) => {
           await supabase.from("mission_correction_recommendations").insert(correctionRows);
         }
 
-        // Detect drift patterns from ALL drift events (including historical resolved ones)
+        // Detect drift patterns
         const { data: allDriftEvents } = await supabase.from("mission_drift_events").select("*").eq("organization_id", organization_id).limit(500);
         const driftPatterns = detectPatterns((allDriftEvents || []) as any);
         const driftDensity = computeDriftDensity((allDriftEvents || []) as any, activeSubjects.length);
 
-        // Compute snapshot scores
+        // Compute snapshot
         const avgAlignment = newEvaluations.length > 0 ? newEvaluations.reduce((s, e) => s + e.alignment_score, 0) / newEvaluations.length : 0;
         const missionHealth = Math.max(0, avgAlignment - driftDensity * 0.5);
         const correctionReadiness = corrections.length > 0 ? Math.min(1, corrections.filter(c => c.correction_priority !== "critical").length / corrections.length) : 1;
 
-        // Generate explanation
         const explanation = explainMissionIntegrity({
           mission_health_score: missionHealth,
           drift_density_score: driftDensity,
@@ -236,7 +258,6 @@ Deno.serve(async (req) => {
           drift_patterns: driftPatterns,
         });
 
-        // Persist snapshot
         await supabase.from("mission_integrity_snapshots").insert({
           organization_id,
           constitution_id: activeConst.id,
@@ -244,7 +265,7 @@ Deno.serve(async (req) => {
           drift_density_score: Math.round(driftDensity * 10000) / 10000,
           correction_readiness_score: Math.round(correctionReadiness * 10000) / 10000,
           snapshot_scope: "full",
-          snapshot_summary: explanation.health_summary,
+          snapshot_summary: `${explanation.health_summary} ${allCausalMods.length > 0 ? `[Cross-sprint modifiers applied: ${allCausalMods.length}]` : ""}`,
         });
 
         result = {
@@ -259,6 +280,12 @@ Deno.serve(async (req) => {
             acc[e.posture] = (acc[e.posture] || 0) + 1;
             return acc;
           }, {}),
+          cross_sprint_modifiers: {
+            sources: ["Sprint 108 → Sprint 109", "Sprint 110 → Sprint 109"],
+            modifiers: allCausalMods,
+            drift_adjustment: driftModBundle,
+            erosion_adjustment: erosionModBundle,
+          },
         };
         break;
       }
@@ -282,7 +309,6 @@ Deno.serve(async (req) => {
       }
 
       case "explain": {
-        // Data-driven explanation
         const [{ data: evals }, { data: driftEvts }, { data: recs }, { data: constitutions }] = await Promise.all([
           supabase.from("mission_alignment_evaluations").select("*").eq("organization_id", organization_id).limit(200),
           supabase.from("mission_drift_events").select("*").eq("organization_id", organization_id).limit(200),
@@ -335,10 +361,23 @@ Deno.serve(async (req) => {
       }
 
       case "cross_sprint_signals": {
-        const tradeoffSignals = await extractTradeoffSignals(supabase, organization_id);
+        const [tradeoffSignals, simSignals] = await Promise.all([
+          extractTradeoffSignals(supabase, organization_id),
+          extractSimulationSignals(supabase, organization_id),
+        ]);
+        const tradeoffMods = computeTradeoffToMissionModifiers(tradeoffSignals);
+        const simMods = computeSimulationToMissionModifiers(simSignals);
+        const allMods = [...tradeoffMods, ...simMods];
+        const driftBundle = aggregateModifiers(allMods, "drift_risk_score");
+        const erosionBundle = aggregateModifiers(allMods, "erosion_score");
+
         result = {
           tradeoff_pressure: tradeoffSignals,
-          integration_note: "Tradeoff arbitration signals (Sprint 108) surface mission-corrosive sacrifices as drift pressure inputs.",
+          simulation_feedback: simSignals,
+          causal_modifiers: allMods,
+          drift_adjustment: driftBundle,
+          erosion_adjustment: erosionBundle,
+          integration_note: "Tradeoff signals (Sprint 108) and simulation feedback (Sprint 110) causally influence drift risk and erosion scores.",
         };
         break;
       }
