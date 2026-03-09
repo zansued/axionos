@@ -15,9 +15,8 @@ import type { InitiativeBrief } from "@/components/initiatives/wizard/types";
 import { SLABreachAlerts } from "@/components/governance/SLABreachAlerts";
 import { useSLABreaches } from "@/hooks/useStageSLA";
 import { useI18n } from "@/contexts/I18nContext";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Lightbulb, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { PageGuidanceShell } from "@/components/guidance";
 import { exportToCSV } from "@/lib/export-utils";
 import {
