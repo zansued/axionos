@@ -117,10 +117,7 @@ Internal sophistication remains critical. The next level deepens it through gove
 
 ### Current Canon Boundaries
 
-- **Sprints 1–71** = canonical complete (first mature operating baseline + Block M + Governed Extensibility)
-- **Sprints 72–74** = planned — active thaw now (Block N: Evidence-Governed Improvement Loop)
-- **Sprint 75** = reserved — partial thaw next (Role Arbitration & Capability Routing 2.0)
-- **Sprints 76–94** = reserved — still reserved (rest of Blocks O–S)
+- **Sprints 1–94** = canonical complete (full canon — Foundation through Block S)
 
 ---
 

@@ -28,19 +28,15 @@
 
 ## Canon Status
 
-All 94 sprints are **complete** in the strategic roadmap, but implementation progresses iteratively. The full canon — from Foundation (Sprint 1) through Research Sandbox for Architecture Evolution (Sprint 94) — defines the long-term system state.
+All 94 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Research Sandbox for Architecture Evolution (Sprint 94) — is implemented and operational.
 
 ### Next Strategic Phase: Governed Intelligence & Decision Maturity
 
-AxionOS has entered a new strategic phase: **Governed Intelligence & Decision Maturity**. This phase prioritizes decision quality, legibility, and evidence-backed evolution over raw autonomy or uncontrolled scale.
-
-- **Immediate priority (Active Thaw):** Block N (Evidence-Governed Improvement Loop, Sprints 72–74).
-- **Next likely priority (Partial Thaw):** Sprint 75 (Role Arbitration & Capability Routing 2.0).
-- **Still reserved:** All deeper future blocks (rest of O, P, Q, R, S) remain reserved and are not active implementation targets.
+AxionOS has entered a new strategic phase: **Governed Intelligence & Decision Maturity**. With all 94 sprints complete, the focus shifts from building new internal layers to converting existing sophistication into higher-order capabilities: contextual guidance, copilot systems, decision quality, and evidence-governed learning.
 
 - No autonomous architecture mutation — all structural changes require human approval.
 - Governance before autonomy remains the governing principle.
-- All 77+ architectural layers mapped to completed blocks are verified.
+- All 77+ architectural layers are active and verified.
 
 ---
 
