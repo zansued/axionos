@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,112 @@ import {
   AlertTriangle, Clock, Loader2, RotateCcw, Lightbulb,
 } from "lucide-react";
 import { useI18n } from "@/contexts/I18nContext";
+
+const STAGE_HINTS: Record<string, { en: string[]; pt: string[] }> = {
+  discovery: {
+    en: [
+      "Understanding your idea and extracting requirements…",
+      "Mapping user needs and business rules…",
+      "Identifying key features and priorities…",
+    ],
+    pt: [
+      "Entendendo sua ideia e extraindo requisitos…",
+      "Mapeando necessidades do usuário e regras de negócio…",
+      "Identificando funcionalidades-chave e prioridades…",
+    ],
+  },
+  architecture: {
+    en: [
+      "Designing the system architecture…",
+      "Modeling the data layer and relationships…",
+      "Defining API contracts and endpoints…",
+      "Mapping dependencies between components…",
+      "Synthesizing the final architecture blueprint…",
+    ],
+    pt: [
+      "Projetando a arquitetura do sistema…",
+      "Modelando camada de dados e relacionamentos…",
+      "Definindo contratos de API e endpoints…",
+      "Mapeando dependências entre componentes…",
+      "Sintetizando o blueprint final da arquitetura…",
+    ],
+  },
+  stories: {
+    en: [
+      "Breaking down features into user stories…",
+      "Defining acceptance criteria for each story…",
+      "Organizing stories by priority and complexity…",
+    ],
+    pt: [
+      "Quebrando funcionalidades em user stories…",
+      "Definindo critérios de aceite para cada story…",
+      "Organizando stories por prioridade e complexidade…",
+    ],
+  },
+  coding: {
+    en: [
+      "Generating code for your application…",
+      "Building components and business logic…",
+      "Writing tests and validations…",
+    ],
+    pt: [
+      "Gerando código da sua aplicação…",
+      "Construindo componentes e lógica de negócio…",
+      "Escrevendo testes e validações…",
+    ],
+  },
+  validation: {
+    en: [
+      "Running build checks and static analysis…",
+      "Validating code quality and structure…",
+      "Checking for errors and inconsistencies…",
+    ],
+    pt: [
+      "Executando verificações de build e análise estática…",
+      "Validando qualidade e estrutura do código…",
+      "Verificando erros e inconsistências…",
+    ],
+  },
+  deploying: {
+    en: [
+      "Preparing deployment artifacts…",
+      "Publishing to the target environment…",
+    ],
+    pt: [
+      "Preparando artefatos de deploy…",
+      "Publicando no ambiente de destino…",
+    ],
+  },
+  _default: {
+    en: [
+      "Processing your initiative…",
+      "Working on the next step…",
+      "Almost there, keep watching…",
+    ],
+    pt: [
+      "Processando sua iniciativa…",
+      "Trabalhando na próxima etapa…",
+      "Quase lá, continue acompanhando…",
+    ],
+  },
+};
+
+function useRotatingHint(stage: string, isActive: boolean, lang: "en" | "pt") {
+  const [index, setIndex] = useState(0);
+
+  const hints = STAGE_HINTS[stage]?.[lang] || STAGE_HINTS._default[lang];
+
+  useEffect(() => {
+    if (!isActive) return;
+    setIndex(0);
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % hints.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [stage, isActive, hints.length]);
+
+  return isActive ? hints[index] : null;
+}
 
 interface InitiativeOutcomeCardProps {
   initiative: any;
