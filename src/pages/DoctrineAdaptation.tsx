@@ -486,6 +486,6 @@ export default function DoctrineAdaptation() {
           </SheetContent>
         </Sheet>
       </div>
-    </PageGuidanceShell>
+    </>
   );
 }

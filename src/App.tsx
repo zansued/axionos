@@ -132,6 +132,7 @@ const App = () => (
                         <Route path="/playbooks"              element={<W><Playbooks /></W>} />
                         <Route path="/bounded-operations"     element={<W><BoundedOperations /></W>} />
                         <Route path="/decision-engine"        element={<W><DecisionEngine /></W>} />
+                        <Route path="/doctrine-adaptation"    element={<W><DoctrineAdaptation /></W>} />
                         <Route path="/improvement-ledger"      element={<W><ImprovementLedger /></W>} />
                         <Route path="/improvement-candidates"  element={<W><ImprovementCandidates /></W>} />
                         <Route path="/improvement-benchmarks"  element={<W><ImprovementBenchmarks /></W>} />
