@@ -652,7 +652,7 @@ supabase/functions/
 | Controlled Ecosystem Activation (K) | 60–62 | ✅ Complete |
 | System Roundness & Operating Completion (L) | 63–65 | ✅ Complete |
 | Product Experience & Delivery Maturity (M) | 66–70 | ✅ Complete |
-| Evidence-Governed Improvement Loop (N) | 71–74 | 📋 Planned |
+| Evidence-Governed Improvement Loop (N) | 72–74 | 📋 Planned |
 | Advanced Multi-Agent Coordination (O) | 75–78 | 🔮 Reserved |
 | Governed Capability Ecosystem (P) | 79–82 | 🔮 Reserved |
 | Delivery Optimization (Q) | 83–86 | 🔮 Reserved |
