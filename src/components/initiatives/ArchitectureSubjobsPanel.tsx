@@ -70,7 +70,7 @@ const SUBJOB_META: Record<string, { label: string; icon: React.ElementType; desc
 const STATUS_CONFIG: Record<string, { color: string; icon: React.ElementType; label: string }> = {
   queued: { color: "bg-muted text-muted-foreground", icon: Clock, label: "Aguardando" },
   running: { color: "bg-warning/20 text-warning", icon: Loader2, label: "Executando" },
-  completed: { color: "bg-accent/20 text-accent", icon: CheckCircle2, label: "Concluído" },
+  completed: { color: "bg-green-500/20 text-green-700 dark:text-green-400", icon: CheckCircle2, label: "Concluído" },
   failed: { color: "bg-destructive/20 text-destructive", icon: XCircle, label: "Falhou" },
   failed_timeout: { color: "bg-destructive/20 text-destructive", icon: AlertTriangle, label: "Timeout" },
   retryable: { color: "bg-warning/20 text-warning", icon: RotateCcw, label: "Retentável" },
