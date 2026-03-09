@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PageIntroCard, getGuidanceForPage } from "@/components/guidance";
+import { PageGuidanceShell } from "@/components/guidance";
 import { InitiativeFilter } from "@/components/InitiativeFilter";
 import { AppLayout } from "@/components/AppLayout";
 import { useOrg } from "@/contexts/OrgContext";
