@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { PageIntroCard } from "@/components/guidance";
-import { usePageGuidance } from "@/hooks/usePageGuidance";
+import { PageGuidanceShell } from "@/components/guidance";
 import { useOrg } from "@/contexts/OrgContext";
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
