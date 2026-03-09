@@ -71,6 +71,7 @@ export const WORKSPACE_FULL_NAV: NavItem[] = [
   { title: "Capabilities",  url: "/capability-registry",      icon: PackageCheck },
   { title: "Cap. Gov.",     url: "/capability-governance",    icon: ShieldCheck },
   { title: "Extensions",    url: "/extensions",               icon: Package },
+  { title: "Horizons",     url: "/multi-horizon-alignment",  icon: Compass },
   { title: "Audit",         url: "/audit",                    icon: Shield },
   { title: "Settings",      url: "/org",                      icon: Settings },
   { title: "Billing",       url: "/billing",                  icon: CreditCard },
