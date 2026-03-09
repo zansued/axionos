@@ -44,6 +44,19 @@ Deno.serve(async (req) => {
       });
     }
 
+    const { data: _member } = await serviceClient.from("organization_members").select("role").eq("organization_id", organization_id).eq("user_id", user.id).single();
+    if (!_member) {
+      return new Response(JSON.stringify({ error: "Not a member of this organization" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (!organization_id) {
+      return new Response(JSON.stringify({ error: "organization_id required" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     let result: unknown;
 
     switch (action) {
