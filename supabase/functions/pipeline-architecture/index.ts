@@ -484,8 +484,11 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
           const timeoutMs = getAdaptiveTimeoutMs(baseTimeoutMs, promptChars, contextChars, subjob.attempt_number || 1);
           const abortController = new AbortController();
 
+          // Budget check
+          const budgetCheck = checkInputBudget(subjob.subjob_key, promptChars, contextChars);
+          const budgetLabel = budgetCheck.status === "within_budget" ? "✓" : budgetCheck.status === "warning" ? "⚠" : "🔴";
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_config`,
-            `⏱ timeout=${Math.round(timeoutMs/1000)}s, prompt=${Math.ceil(promptChars/1000)}k chars, ctx=${Math.ceil(contextChars/1000)}k chars`
+            `⏱ timeout=${Math.round(timeoutMs/1000)}s prompt=${estimateTokens(promptChars)}t ctx=${estimateTokens(contextChars)}t budget=${budgetLabel}${budgetCheck.status}`
           );
 
           const agentPromise = executeSubjob(
