@@ -36,7 +36,7 @@ export default function Initiatives() {
   const { runStage, rollbackToStage, getRunningStage } = usePipeline();
   const { t, locale } = useI18n();
 
-  const hasRunningPipeline = Object.keys(getRunningStage ? {} : {}).length > 0 || selectedId && getRunningStage(selectedId);
+  
 
   const { data: initiatives = [], isLoading } = useQuery({
     queryKey: ["initiatives", currentOrg?.id],
