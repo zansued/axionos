@@ -529,35 +529,80 @@ Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed
 
 ---
 
-## Next Planned — Block N: Evidence-Governed Improvement Loop (Sprints 72–74) — 📋 PLANNED
-
-> **Strategic direction:** [ROADMAP.md](ROADMAP.md)
+## Block N — Evidence-Governed Improvement Loop (Sprints 72–74) — ✅ COMPLETE
 
 **Goal:** Turn captured evidence into bounded improvement proposals, test them under governance, and track outcomes.
 
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 72 | Evidence Capture & Improvement Ledger | N | 📋 Planned | Capture structured operational evidence from validations, repairs, rollbacks, extensions, anomalies, and operator signals |
-| 73 | Improvement Candidate Distillation Engine | N | 📋 Planned | Transform evidence into bounded, reviewable improvement candidates with provenance, recurrence signals, and triage workflow |
-| 74 | Sandbox Benchmarking & Promotion Governance | N | 📋 Planned | Evaluate candidates in sandbox conditions, compare against baseline, support human-governed promotion/rejection/deferral |
-
-**Canon constraints:** No autonomous architecture mutation. Human approval for structural change. Rollback everywhere. Bounded learning and promotion. Tenant isolation preserved.
+| 72 | Evidence Capture & Improvement Ledger | N | ✅ Complete | Structured operational evidence from validations, repairs, rollbacks, extensions, anomalies, and operator signals |
+| 73 | Improvement Candidate Distillation Engine | N | ✅ Complete | Bounded, reviewable improvement candidates with provenance, recurrence signals, and triage workflow |
+| 74 | Sandbox Benchmarking & Promotion Governance | N | ✅ Complete | Sandbox evaluation, baseline comparison, human-governed promotion/rejection/deferral |
 
 ---
 
-## Reserved Future Horizon — Blocks O–S (Sprints 75–94)
+## Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — ✅ COMPLETE
 
-> **Strategic direction:** [ROADMAP.md](ROADMAP.md)
+**Goal:** Deepen agent coordination through arbitration, bounded debate, shared working memory, and bounded swarm execution.
 
-| Block | Sprints | Name | Status |
-|-------|---------|------|--------|
-| O | 75–78 | Advanced Multi-Agent Coordination | 🔮 Reserved |
-| P | 79–82 | Governed Capability Ecosystem & Early Marketplace | 🔮 Reserved |
-| Q | 83–86 | Autonomous Delivery Optimization & Outcome Assurance 2.0 | 🔮 Reserved |
-| R | 87–90 | Advanced Distributed Runtime & Scaled Execution | 🔮 Reserved |
-| S | 91–94 | Research Sandbox for Architecture Evolution | 🔮 Reserved |
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 75 | Role Arbitration & Capability Routing 2.0 | O | ✅ Complete | Context-aware, explainable routing of agents and capabilities |
+| 76 | Multi-Agent Debate & Resolution Layer | O | ✅ Complete | Structured debate, bounded challenge/defend/resolve workflows, governed escalation |
+| 77 | Shared Working Memory & Task-State Negotiation | O | ✅ Complete | Common execution context, checkpoints, negotiated state transitions, durable coordination memory |
+| 78 | Bounded Swarm Execution for Complex Initiatives | O | ✅ Complete | Controlled multi-agent execution campaigns with checkpoints, escalation, abort, and rollback posture |
 
-Reserved blocks are strategic direction only. They will not be promoted to planned without deliberate review.
+---
+
+## Block P — Governed Capability Ecosystem & Early Marketplace (Sprints 79–82) — ✅ COMPLETE
+
+**Goal:** Evolve internal capabilities into a governed ecosystem and early marketplace layer.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 79 | Capability Packaging & Registry UX | P | ✅ Complete | Canonical capability packaging and registry visibility |
+| 80 | Trust, Entitlements & Approval Flows | P | ✅ Complete | Capability access governance, trust posture, entitlement controls, and approval flows |
+| 81 | Creator / Partner Pilot Marketplace | P | ✅ Complete | Tightly governed pilot marketplace for approved partner/creator participation |
+| 82 | Outcome-Aware Capability Marketplace | P | ✅ Complete | Marketplace informed by compatibility, rollback posture, trust, and operational outcome signals |
+
+---
+
+## Block Q — Autonomous Delivery Optimization & Outcome Assurance 2.0 (Sprints 83–86) — ✅ COMPLETE
+
+**Goal:** Advance delivery optimization through causal analysis, post-deploy feedback, reliability tuning, and richer assurance posture.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 83 | Delivery Outcome Causality Layer | Q | ✅ Complete | Understand which factors correlate with better or worse delivery outcomes |
+| 84 | Post-Deploy Learning & Feedback Assimilation | Q | ✅ Complete | Assimilate post-deploy signals into governed delivery learning |
+| 85 | Reliability-Aware Delivery Tuning | Q | ✅ Complete | Bounded tuning recommendations to improve delivery reliability |
+| 86 | Outcome Assurance 2.0 | Q | ✅ Complete | Synthesize causality, feedback, tuning, reliability, and uncertainty into richer delivery assurance |
+
+---
+
+## Block R — Advanced Distributed Runtime & Scaled Execution (Sprints 87–90) — ✅ COMPLETE
+
+**Goal:** Prepare AxionOS for advanced distributed runtime control, regional resilience, and scaled orchestration.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 87 | Distributed Job Control Plane | R | ✅ Complete | Distributed job coordination, priority, retry, pause/resume, abort, and lineage visibility |
+| 88 | Cross-Region Execution & Recovery | R | ✅ Complete | Governed cross-region resilience, recovery, and continuity handling |
+| 89 | Tenant-Isolated Scale Runtime | R | ✅ Complete | Scale posture with strict isolation, fairness, contention visibility, and blast-radius control |
+| 90 | Resilient Large-Scale Orchestration | R | ✅ Complete | Complex orchestration campaigns with bounded failure handling, recovery, and rollback-aware control |
+
+---
+
+## Block S — Research Sandbox for Architecture Evolution (Sprints 91–94) — ✅ COMPLETE
+
+**Goal:** Introduce governed architectural research without autonomous structural mutation.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 91 | Architecture Hypothesis Engine | S | ✅ Complete | Structured architectural hypotheses from evidence, outcome patterns, friction, and research signals |
+| 92 | Simulated Evolution Campaigns | S | ✅ Complete | Test hypotheses in sandbox conditions against baseline |
+| 93 | Cross-Tenant Pattern Synthesis | S | ✅ Complete | Abstract recurring research patterns across bounded contexts without exposing tenant-sensitive detail |
+| 94 | Human-Governed Architecture Promotion | S | ✅ Complete | Promotion dossiers for human review, approve, reject, defer, or archive decisions |
 
 ---
 
