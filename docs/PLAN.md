@@ -6,6 +6,7 @@
 > **Last updated:** 2026-03-09
 > **Canon Status:** 106 sprints complete — all blocks (Foundation through V) implemented
 > **Latest Sprint:** 106 (Strategic Succession & Long-Horizon Continuity) — ✅ Complete
+> **Next Block:** W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
 
 ## Document Authority
 
@@ -30,9 +31,13 @@
 
 All 106 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Sovereign Institutional Intelligence (Sprint 106) — is implemented and operational.
 
+**Next:** Block W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
+
 ### Current Strategic Position
 
 AxionOS has completed all 106 sprints spanning blocks Foundation through V (Sovereign Institutional Intelligence). The platform has achieved **Level 6 — Sovereign Institutional Intelligence**, with 85+ architectural layers active. The internal architecture is mature, coherent, and self-governing across governance, intelligence, memory, doctrine, decision engine, bounded autonomy, calibration, observability, ecosystem controls, adaptive institutional ecosystem, and sovereign institutional intelligence.
+
+Block W (Sprints 107–110) is the next planned evolution, extending the platform from sovereign institutional intelligence to **strategic autonomy and civilizational coordination** — multi-horizon alignment, tradeoff arbitration, mission integrity, and long-horizon continuity simulation.
 
 - No autonomous architecture mutation — all structural changes require human approval.
 - Governance before autonomy remains the governing principle.
@@ -649,6 +654,28 @@ Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed
 
 ---
 
+## Block W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 PLANNED
+
+**Goal:** Extend from sovereign institutional intelligence to strategic autonomy and civilizational coordination — governing multi-horizon alignment, institutional tradeoff arbitration, mission integrity preservation, and long-horizon continuity simulation.
+
+**Architectural prerequisite:** Block V (Sovereign Institutional Intelligence) must be complete. Block W builds on memory constitution, sovereign decision rights, dependency sovereignty, and strategic succession.
+
+**Strategic thesis:** If Block V made AxionOS a sovereign institution, Block W begins to make it a **strategic intelligence for organizational civilization** — aligning horizons, arbitrating sacrifices, maintaining mission integrity, and simulating futures.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 107 | Multi-Horizon Strategic Alignment Engine | W | 🔜 Planned | Coordinate decisions across short, medium, long-term, and institutional continuity horizons. Detect when immediate optimization conflicts with long-term direction. Govern tension between urgency, execution, strategy, legacy, and long horizon. |
+| 108 | Institutional Tradeoff Arbitration System | W | 🔜 Planned | Create explicit, governed mechanisms for arbitrating institutional tradeoffs (speed vs quality, cost vs sovereignty, compliance vs experience). Transform tradeoffs into auditable, explainable governance objects. |
+| 109 | Mission Integrity & Drift Prevention | W | 🔜 Planned | Ensure the system does not become efficient at something that diverges from its core mission. Detect strategic, moral, institutional, and operational drift. Act as a mission integrity compass. |
+| 110 | Civilizational Continuity Simulation Layer | W | 🔜 Planned | Simulate scenarios of rupture, transition, and continuity in long horizons — regulatory change, technology shifts, capacity erosion, organizational transformation. Enable institutional foresight beyond incident-level thinking. |
+
+**Block W logical chain:**
+- Block U answered: how to adapt, resolve conflict, federate, resist
+- Block V answered: how to remember, decide sovereignly, reduce external dependency, survive succession
+- **Block W answers: how to align horizons, arbitrate sacrifices, maintain mission, traverse long futures without losing direction**
+
+---
+
 ## Capability Verification Matrix
 
 | Capability | Status | Sprint | Key Modules |
@@ -844,5 +871,6 @@ Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed
 | Governed Intelligence OS | 4 | 95–98 |
 | Adaptive Institutional Ecosystem | 4 | 99–102 |
 | Sovereign Institutional Intelligence | 4 | 103–106 |
+| Strategic Autonomy & Civilizational Coordination | 4 | 107–110 |
 | Support | 11 | Various |
-| **Total** | **~125** | |
+| **Total** | **~129** | |

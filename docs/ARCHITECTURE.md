@@ -3,7 +3,8 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-09
-> **Current state:** Level 6 — Sovereign Institutional Intelligence. 85+ architectural layers active. All blocks (Foundation through V) complete. All 106 sprints implemented.
+> **Current state:** Level 6 — Sovereign Institutional Intelligence. 85+ architectural layers active. All blocks (Foundation through V) complete. All 106 sprints implemented. Block W (107–110) planned.
+> **Next block:** W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -349,7 +350,9 @@ flowchart TB
 
 ---
 
-## 5. Architectural Direction: Sovereign Institutional Intelligence — ✅ Implemented
+## 5. Architectural Direction
+
+### 5.1 Current — Sovereign Institutional Intelligence — ✅ Implemented
 
 With all 106 sprints complete, 85+ architectural layers active, and the full stack from execution kernel through sovereign institutional intelligence operational, AxionOS has achieved its **Sovereign Institutional Intelligence** thesis.
 
@@ -361,6 +364,24 @@ The seven pillars are implemented:
 - **Operate autonomously (bounded)** — ✅ Bounded autonomous operations, autonomy ladder, rollback posture
 - **Adapt institutionally** — ✅ Cross-context doctrine adaptation, institutional conflict resolution, federated intelligence, resilience governance
 - **Govern sovereignty** — ✅ Memory constitution, sovereign decision rights, dependency sovereignty, strategic succession
+
+### 5.2 Next — Strategic Autonomy & Civilizational Coordination — 🔜 Planned (Block W)
+
+Block W (Sprints 107–110) extends AxionOS from sovereign institutional intelligence to **strategic autonomy and civilizational coordination**. The system transitions from governing itself to coordinating long-horizon strategy across domains, mandates, and possible futures.
+
+**Four new architectural capabilities:**
+
+| Sprint | Capability | Architectural Contribution |
+|--------|-----------|---------------------------|
+| 107 | Multi-Horizon Strategic Alignment Engine | Coordinates decisions across short/medium/long-term and institutional continuity horizons. Detects when immediate optimization sabotages future direction. Governs tension between urgency, execution, strategy, legacy, and long horizon. |
+| 108 | Institutional Tradeoff Arbitration System | Transforms tradeoffs (speed/cost/quality/sovereignty/compliance/risk) into explicit, auditable, explainable governance objects. The system confesses what it sacrifices. |
+| 109 | Mission Integrity & Drift Prevention | Ensures the system does not become efficient at something that diverges from its core mission. Detects strategic, moral, institutional, and operational drift. Mission integrity compass. |
+| 110 | Civilizational Continuity Simulation Layer | Simulates long-horizon scenarios: regulatory change, technology shifts, capacity erosion, organizational transformation. Enables institutional foresight beyond incident-level thinking. |
+
+**Logical chain:**
+- Block U: how to adapt, resolve conflict, federate, resist
+- Block V: how to remember, decide sovereignly, reduce dependency, survive succession
+- **Block W: how to align horizons, arbitrate sacrifices, maintain mission, traverse long futures**
 
 ---
 
@@ -1048,6 +1069,10 @@ With 106 sprints complete, all blocks from Foundation through Sovereign Institut
 #### Block V — Sovereign Institutional Intelligence (Sprints 103–106) — ✅ Complete
 
 **Architectural contribution:** Institutional memory constitution (amendment governance, protection rules, memory sovereignty), sovereign decision rights orchestration (authority delegation, escalation), dependency sovereignty & external reliance governance (substitution readiness, sovereignty posture), strategic succession & long-horizon continuity (knowledge concentration detection, handoff orchestration, transition risk assessment).
+
+#### Block W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
+
+**Architectural contribution (planned):** Multi-horizon strategic alignment engine (short/medium/long-term coordination, urgency vs strategy governance), institutional tradeoff arbitration system (explicit sacrifice tracking, auditable tradeoff objects), mission integrity & drift prevention (telos compass, strategic/moral/operational drift detection), civilizational continuity simulation layer (long-horizon scenario modeling, regulatory/technology/capacity shift foresight).
 
 ### Governing Constraint
 
