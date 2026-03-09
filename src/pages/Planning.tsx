@@ -275,6 +275,7 @@ export default function Planning() {
               onGoBack={() => goBackStep(selectedSession)}
               onDelete={() => deleteMutation.mutate(selectedSession.id)}
               onRefreshAgents={() => queryClient.invalidateQueries({ queryKey: ["agents-active"] })}
+              onRefreshSessions={() => queryClient.invalidateQueries({ queryKey: ["planning-sessions"] })}
             />
           ) : (
             <Card className="border-dashed border-2 border-border flex items-center justify-center min-h-[400px]">
