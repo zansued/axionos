@@ -86,7 +86,7 @@ Internal sophistication serves the visible product experience. The user-facing j
 
 ---
 
-## Completed Canon (Sprints 1–79)
+## Completed Canon (Sprints 1–71)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
