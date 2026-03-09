@@ -68,6 +68,7 @@ import BoundedOperations from "./pages/BoundedOperations";
 import DecisionEngine from "./pages/DecisionEngine";
 import DoctrineAdaptation from "./pages/DoctrineAdaptation";
 import InstitutionalConflicts from "./pages/InstitutionalConflicts";
+import FederatedBoundaries from "./pages/FederatedBoundaries";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
