@@ -9919,6 +9919,281 @@ export type Database = {
           },
         ]
       }
+      dependency_disruption_events: {
+        Row: {
+          continuity_effect: string
+          created_at: string
+          dependency_id: string | null
+          disruption_type: string
+          event_summary: string
+          id: string
+          organization_id: string
+          payload: Json
+          resolved_at: string | null
+          severity: string
+        }
+        Insert: {
+          continuity_effect?: string
+          created_at?: string
+          dependency_id?: string | null
+          disruption_type?: string
+          event_summary?: string
+          id?: string
+          organization_id: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+        }
+        Update: {
+          continuity_effect?: string
+          created_at?: string
+          dependency_id?: string | null
+          disruption_type?: string
+          event_summary?: string
+          id?: string
+          organization_id?: string
+          payload?: Json
+          resolved_at?: string | null
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dependency_disruption_events_dependency_id_fkey"
+            columns: ["dependency_id"]
+            isOneToOne: false
+            referencedRelation: "external_dependencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dependency_disruption_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dependency_exit_paths: {
+        Row: {
+          active: boolean
+          created_at: string
+          dependency_id: string
+          estimated_switch_cost: string
+          exit_type: string
+          feasibility_score: number
+          id: string
+          migration_steps: Json
+          organization_id: string
+          substitute_options: Json
+          timeline_estimate: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          dependency_id: string
+          estimated_switch_cost?: string
+          exit_type?: string
+          feasibility_score?: number
+          id?: string
+          migration_steps?: Json
+          organization_id: string
+          substitute_options?: Json
+          timeline_estimate?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          dependency_id?: string
+          estimated_switch_cost?: string
+          exit_type?: string
+          feasibility_score?: number
+          id?: string
+          migration_steps?: Json
+          organization_id?: string
+          substitute_options?: Json
+          timeline_estimate?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dependency_exit_paths_dependency_id_fkey"
+            columns: ["dependency_id"]
+            isOneToOne: false
+            referencedRelation: "external_dependencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dependency_exit_paths_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dependency_reliance_links: {
+        Row: {
+          autonomy_impact_score: number
+          blast_radius: string
+          continuity_impact_score: number
+          created_at: string
+          dependency_id: string
+          dependent_asset_ref: string
+          dependent_asset_type: string
+          id: string
+          organization_id: string
+          reliance_type: Database["public"]["Enums"]["reliance_type"]
+          updated_at: string
+        }
+        Insert: {
+          autonomy_impact_score?: number
+          blast_radius?: string
+          continuity_impact_score?: number
+          created_at?: string
+          dependency_id: string
+          dependent_asset_ref?: string
+          dependent_asset_type?: string
+          id?: string
+          organization_id: string
+          reliance_type?: Database["public"]["Enums"]["reliance_type"]
+          updated_at?: string
+        }
+        Update: {
+          autonomy_impact_score?: number
+          blast_radius?: string
+          continuity_impact_score?: number
+          created_at?: string
+          dependency_id?: string
+          dependent_asset_ref?: string
+          dependent_asset_type?: string
+          id?: string
+          organization_id?: string
+          reliance_type?: Database["public"]["Enums"]["reliance_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dependency_reliance_links_dependency_id_fkey"
+            columns: ["dependency_id"]
+            isOneToOne: false
+            referencedRelation: "external_dependencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dependency_reliance_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dependency_sovereignty_assessments: {
+        Row: {
+          assessment_summary: string
+          constitution_id: string | null
+          created_at: string
+          domain: string
+          external_reliance_score: number
+          fallback_readiness_score: number
+          id: string
+          lock_in_exposure_score: number
+          organization_id: string
+          sovereignty_score: number
+        }
+        Insert: {
+          assessment_summary?: string
+          constitution_id?: string | null
+          created_at?: string
+          domain?: string
+          external_reliance_score?: number
+          fallback_readiness_score?: number
+          id?: string
+          lock_in_exposure_score?: number
+          organization_id: string
+          sovereignty_score?: number
+        }
+        Update: {
+          assessment_summary?: string
+          constitution_id?: string | null
+          created_at?: string
+          domain?: string
+          external_reliance_score?: number
+          fallback_readiness_score?: number
+          id?: string
+          lock_in_exposure_score?: number
+          organization_id?: string
+          sovereignty_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dependency_sovereignty_assessments_constitution_id_fkey"
+            columns: ["constitution_id"]
+            isOneToOne: false
+            referencedRelation: "dependency_sovereignty_constitutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dependency_sovereignty_assessments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dependency_sovereignty_constitutions: {
+        Row: {
+          constitution_code: string
+          constitution_name: string
+          created_at: string
+          created_by: string
+          id: string
+          organization_id: string
+          risk_thresholds: Json
+          scope: string
+          sovereignty_principles: string
+          status: Database["public"]["Enums"]["constitution_status"]
+          updated_at: string
+        }
+        Insert: {
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          organization_id: string
+          risk_thresholds?: Json
+          scope?: string
+          sovereignty_principles?: string
+          status?: Database["public"]["Enums"]["constitution_status"]
+          updated_at?: string
+        }
+        Update: {
+          constitution_code?: string
+          constitution_name?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          organization_id?: string
+          risk_thresholds?: Json
+          scope?: string
+          sovereignty_principles?: string
+          status?: Database["public"]["Enums"]["constitution_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dependency_sovereignty_constitutions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deploy_assurance_assessments: {
         Row: {
           assessment_status: string
@@ -13442,6 +13717,71 @@ export type Database = {
           },
           {
             foreignKeyName: "external_admission_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_dependencies: {
+        Row: {
+          cost_dependency_score: number
+          created_at: string
+          criticality_level: string
+          dependency_code: string
+          dependency_name: string
+          dependency_type: Database["public"]["Enums"]["dependency_type"]
+          domain: string
+          fallback_exists: boolean
+          fallback_summary: string
+          id: string
+          lock_in_risk_level: string
+          organization_id: string
+          provider_name: string
+          replacement_complexity: string
+          status: Database["public"]["Enums"]["dependency_status"]
+          updated_at: string
+        }
+        Insert: {
+          cost_dependency_score?: number
+          created_at?: string
+          criticality_level?: string
+          dependency_code?: string
+          dependency_name?: string
+          dependency_type?: Database["public"]["Enums"]["dependency_type"]
+          domain?: string
+          fallback_exists?: boolean
+          fallback_summary?: string
+          id?: string
+          lock_in_risk_level?: string
+          organization_id: string
+          provider_name?: string
+          replacement_complexity?: string
+          status?: Database["public"]["Enums"]["dependency_status"]
+          updated_at?: string
+        }
+        Update: {
+          cost_dependency_score?: number
+          created_at?: string
+          criticality_level?: string
+          dependency_code?: string
+          dependency_name?: string
+          dependency_type?: Database["public"]["Enums"]["dependency_type"]
+          domain?: string
+          fallback_exists?: boolean
+          fallback_summary?: string
+          id?: string
+          lock_in_risk_level?: string
+          organization_id?: string
+          provider_name?: string
+          replacement_complexity?: string
+          status?: Database["public"]["Enums"]["dependency_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_dependencies_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -27708,6 +28048,21 @@ export type Database = {
         | "deferred"
         | "escalated"
         | "archived"
+      dependency_status:
+        | "active"
+        | "degraded"
+        | "deprecated"
+        | "blocked"
+        | "review_required"
+      dependency_type:
+        | "api"
+        | "model"
+        | "vendor"
+        | "platform"
+        | "infrastructure"
+        | "operator"
+        | "integration"
+        | "service"
       doctrine_immutability: "strict" | "bounded" | "flexible"
       doctrine_lifecycle:
         | "draft"
@@ -27838,6 +28193,12 @@ export type Database = {
         | "deployed"
       output_type: "code" | "content" | "decision" | "analysis"
       phase_status: "pending" | "in_progress" | "completed"
+      reliance_type:
+        | "critical"
+        | "primary"
+        | "secondary"
+        | "optional"
+        | "emergency_only"
       resolution_path_type:
         | "mediation"
         | "override"
@@ -28095,6 +28456,23 @@ export const Constants = {
         "escalated",
         "archived",
       ],
+      dependency_status: [
+        "active",
+        "degraded",
+        "deprecated",
+        "blocked",
+        "review_required",
+      ],
+      dependency_type: [
+        "api",
+        "model",
+        "vendor",
+        "platform",
+        "infrastructure",
+        "operator",
+        "integration",
+        "service",
+      ],
       doctrine_immutability: ["strict", "bounded", "flexible"],
       doctrine_lifecycle: [
         "draft",
@@ -28232,6 +28610,13 @@ export const Constants = {
       ],
       output_type: ["code", "content", "decision", "analysis"],
       phase_status: ["pending", "in_progress", "completed"],
+      reliance_type: [
+        "critical",
+        "primary",
+        "secondary",
+        "optional",
+        "emergency_only",
+      ],
       resolution_path_type: [
         "mediation",
         "override",

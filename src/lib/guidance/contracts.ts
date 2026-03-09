@@ -747,6 +747,39 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Authority delegation and conflict resolution require human review.",
     },
   },
+  {
+    key: "dependency-sovereignty",
+    title: { pt: "Soberania de Dependências", en: "Dependency Sovereignty" },
+    description: {
+      pt: "Governança de dependências externas — onde a instituição é soberana, parcialmente dependente ou perigosamente cativa.",
+      en: "External dependency governance — where the institution is sovereign, partially dependent, or dangerously captive.",
+    },
+    audience: { pt: "Owners e Admins", en: "Owners and Admins" },
+    surface: "workspace",
+    actions: [
+      { pt: "Mapear dependências externas", en: "Map external dependencies" },
+      { pt: "Avaliar risco de lock-in", en: "Assess lock-in risk" },
+      { pt: "Modelar caminhos de saída", en: "Model exit paths" },
+      { pt: "Monitorar disrupções", en: "Monitor disruptions" },
+    ],
+    whenRelevant: {
+      pt: "Quando é necessário entender e governar a dependência externa da instituição.",
+      en: "When understanding and governing external institutional reliance is needed.",
+    },
+    whenIgnorable: {
+      pt: "Se todas as dependências são opcionais e têm fallback disponível.",
+      en: "If all dependencies are optional with available fallbacks.",
+    },
+    nextStep: {
+      pt: "Inventariar dependências críticas e avaliar postura de soberania.",
+      en: "Inventory critical dependencies and assess sovereignty posture.",
+    },
+    approvalPosture: "recommended",
+    approvalHint: {
+      pt: "Mudanças em dependências críticas devem ser revisadas.",
+      en: "Changes to critical dependencies should be reviewed.",
+    },
+  },
 ];
 
 // ─── Lookup helpers ───────────────────────────────────────────────────────
