@@ -112,59 +112,86 @@ serve(async (req) => {
 
   let jobId: string | null;
   if (existingJobId && retrySubjobKey) {
-    // Retry mode: reuse existing job
     jobId = existingJobId;
     await pipelineLog(ctx, "subjob_retry_start", `Retrying subjob: ${retrySubjobKey}`);
   } else {
-    // Fresh run
     jobId = await createJob(ctx, "architecture", {
       title: initiative.title,
       complexity: initiative.complexity,
       suggested_stack: initiative.suggested_stack,
-      orchestration: "subjob_v1",
+      orchestration: "subjob_v1_bg",
     });
     await updateInitiative(ctx, { stage_status: "architecting" });
-    await pipelineLog(ctx, "pipeline_architecture_start", "Camada 2 — Arquitetura Técnica (orquestração por subjobs)");
+    await pipelineLog(ctx, "pipeline_architecture_start", "Camada 2 — Arquitetura Técnica (background processing)");
   }
 
   if (!jobId) return errorResponse("Failed to create architecture job", 500);
 
-  try {
-    // Get or create subjobs
-    let subjobs = await getSubjobs(serviceClient, jobId);
+  // Create subjobs eagerly so UI can show them immediately
+  let subjobs = await getSubjobs(serviceClient, jobId);
+  if (subjobs.length === 0) {
+    subjobs = await createSubjobs(serviceClient, jobId, ctx.initiativeId, ctx.organizationId);
+    await pipelineLog(ctx, "subjobs_created", `${subjobs.length} subjobs criados para arquitetura`);
+  }
 
-    if (subjobs.length === 0) {
-      subjobs = await createSubjobs(serviceClient, jobId, ctx.initiativeId, ctx.organizationId);
-      await pipelineLog(ctx, "subjobs_created", `${subjobs.length} subjobs criados para arquitetura`);
-    }
-
-    // If retrying a specific subjob, reset it
-    if (retrySubjobKey) {
-      const { resetSubjobForRetry } = await import("../_shared/architecture-subjob/subjob-manager.ts");
-      const targetSubjob = subjobs.find(s => s.subjob_key === retrySubjobKey);
-      if (targetSubjob) {
-        await resetSubjobForRetry(serviceClient, targetSubjob.id);
-        // Also unblock dependents
-        const dependents = subjobs.filter(s =>
-          s.depends_on.includes(retrySubjobKey) &&
-          (s.status === "blocked" || s.status === "failed")
-        );
-        for (const dep of dependents) {
-          await resetSubjobForRetry(serviceClient, dep.id);
-        }
+  // If retrying a specific subjob, reset it
+  if (retrySubjobKey) {
+    const { resetSubjobForRetry } = await import("../_shared/architecture-subjob/subjob-manager.ts");
+    const targetSubjob = subjobs.find(s => s.subjob_key === retrySubjobKey);
+    if (targetSubjob) {
+      await resetSubjobForRetry(serviceClient, targetSubjob.id);
+      const dependents = subjobs.filter(s =>
+        s.depends_on.includes(retrySubjobKey) &&
+        (s.status === "blocked" || s.status === "failed")
+      );
+      for (const dep of dependents) {
+        await resetSubjobForRetry(serviceClient, dep.id);
       }
-      // Re-fetch after reset
-      subjobs = await getSubjobs(serviceClient, jobId);
     }
+  }
 
-    // Clean up any stuck running subjobs (> 120s to align with increased timeouts)
+  // ──── Background processing via EdgeRuntime.waitUntil ────
+  // Return immediately so we don't hold the parallel run slot
+  const backgroundTask = processArchitectureInBackground(
+    jobId, user, initiative, ctx, serviceClient, apiKey, dp, retrySubjobKey
+  );
+
+  // @ts-ignore — EdgeRuntime.waitUntil is available in Deno Deploy / Supabase Edge
+  if (typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) {
+    // @ts-ignore
+    EdgeRuntime.waitUntil(backgroundTask);
+  } else {
+    // Fallback: run inline (dev/test environments)
+    backgroundTask.catch(e => console.error("Background architecture error:", e));
+  }
+
+  return jsonResponse({
+    success: true,
+    message: "Architecture pipeline started in background",
+    job_id: jobId,
+    orchestration: "subjob_v1_bg",
+  });
+});
+
+/** Full architecture orchestration — runs in background */
+async function processArchitectureInBackground(
+  jobId: string,
+  user: { id: string; email?: string },
+  initiative: Record<string, any>,
+  ctx: any,
+  serviceClient: any,
+  apiKey: string,
+  dp: Record<string, any>,
+  retrySubjobKey?: string,
+) {
+  try {
+    // Clean up any stuck running subjobs
     const cleaned = await cleanupStuckSubjobs(serviceClient, jobId, 120_000);
     if (cleaned > 0) {
       await pipelineLog(ctx, "subjobs_timeout_cleanup", `${cleaned} subjobs marcados como timeout`);
     }
 
-    // Re-fetch after cleanup
-    subjobs = await getSubjobs(serviceClient, jobId);
+    let subjobs = await getSubjobs(serviceClient, jobId);
 
     // Brain context
     const brainContext = await generateBrainContext(ctx);
@@ -189,54 +216,36 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
     }
 
     // Execute subjobs in topological waves
-    let maxWaves = 6; // safety limit
+    let maxWaves = 6;
     while (maxWaves-- > 0) {
       subjobs = await getSubjobs(serviceClient, jobId);
 
-      // Refresh completed results
       for (const s of subjobs) {
         if (s.status === "completed" && s.result) {
           completedResults[s.subjob_key] = s.result as Record<string, unknown>;
         }
       }
 
-      // Check termination
       if (areAllComplete(subjobs)) break;
 
       const failed = hasAnyFailed(subjobs);
       if (failed.length > 0) {
-        // Block dependents of failed subjobs
         for (const f of failed) {
           await blockDependents(serviceClient, jobId, f.subjob_key);
         }
-        // Check if synthesis is blocked — if so, we can't finish
         const synthSubjob = subjobs.find(s => s.subjob_key === "architecture.synthesis");
         if (synthSubjob && (synthSubjob.status === "blocked" || synthSubjob.status === "failed" || synthSubjob.status === "failed_timeout")) {
-          // Partial failure — report what completed
           const failedKeys = failed.map(f => f.subjob_key).join(", ");
           await pipelineLog(ctx, "architecture_partial_failure", `Subjobs falharam: ${failedKeys}. Síntese bloqueada.`);
           await updateInitiative(ctx, { stage_status: "architecting" as any });
-          if (jobId) await failJob(ctx, jobId, `Subjobs failed: ${failedKeys}`);
-          return jsonResponse({
-            success: false,
-            partial: true,
-            failed_subjobs: failed.map(f => ({ key: f.subjob_key, error: f.error, status: f.status })),
-            completed_subjobs: Object.keys(completedResults),
-            message: "Architecture stage partially failed. Retry individual subjobs.",
-            job_id: jobId,
-          });
+          await failJob(ctx, jobId, `Subjobs failed: ${failedKeys}`);
+          return;
         }
-        // Some failed but synthesis not yet blocked — wait for ready ones
       }
 
-      // Find ready-to-run subjobs
       const ready = getReadySubjobs(subjobs);
-      if (ready.length === 0) {
-        // Nothing ready and not all complete — deadlock or all failed
-        break;
-      }
+      if (ready.length === 0) break;
 
-      // Execute ready subjobs in parallel
       const execPromises = ready.map(async (subjob) => {
         await markSubjobRunning(serviceClient, subjob.id);
         const def = ARCHITECTURE_SUBJOBS.find(d => d.key === subjob.subjob_key);
@@ -244,57 +253,38 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
         await pipelineLog(ctx, `subjob_${subjob.subjob_key}_start`, `▶ ${label} iniciando...`);
 
         try {
-          // Timeout wrapper
           const timeoutMs = def?.timeoutMs || 45_000;
           const agentPromise = executeSubjob(
-            subjob.subjob_key,
-            apiKey,
-            projectContext,
-            requirementsData,
-            productArchData,
-            completedResults,
+            subjob.subjob_key, apiKey, projectContext,
+            requirementsData, productArchData, completedResults,
           );
-
           const timeoutPromise = new Promise<never>((_, reject) =>
             setTimeout(() => reject(new Error(`Timeout: ${subjob.subjob_key} exceeded ${timeoutMs}ms`)), timeoutMs)
           );
-
           const agentResult = await Promise.race([agentPromise, timeoutPromise]);
 
-          // Persist result immediately
           await completeSubjob(serviceClient, subjob.id, agentResult.result, {
-            model: agentResult.model,
-            tokens: agentResult.tokens,
-            costUsd: agentResult.costUsd,
-            durationMs: agentResult.durationMs,
+            model: agentResult.model, tokens: agentResult.tokens,
+            costUsd: agentResult.costUsd, durationMs: agentResult.durationMs,
           });
 
-          // Persist agent output to agent_outputs table
           if (subjob.subjob_key !== "architecture.synthesis") {
             await serviceClient.from("agent_outputs").insert({
-              organization_id: ctx.organizationId,
-              initiative_id: ctx.initiativeId,
-              type: "analysis",
-              status: "approved",
+              organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
+              type: "analysis", status: "approved",
               summary: `${label}: subjob completed`.slice(0, 200),
               raw_output: { agent: agentResult.role, layer: 2, subjob_key: subjob.subjob_key, ...agentResult.result },
-              model_used: agentResult.model,
-              tokens_used: agentResult.tokens,
-              cost_estimate: agentResult.costUsd,
+              model_used: agentResult.model, tokens_used: agentResult.tokens, cost_estimate: agentResult.costUsd,
             });
           }
 
-          // Update completedResults for next wave
           completedResults[subjob.subjob_key] = agentResult.result;
-
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_complete`,
             `✓ ${label}: ${agentResult.tokens} tokens, $${agentResult.costUsd.toFixed(4)}, ${agentResult.durationMs}ms`
           );
-
           return { key: subjob.subjob_key, success: true };
         } catch (err: any) {
           const isTimeout = err.message?.includes("Timeout");
-          // Auto-retry on first timeout: mark as retryable instead of terminal failure
           if (isTimeout && subjob.attempt_number < (subjob.max_attempts || 3) - 1) {
             const { resetSubjobForRetry } = await import("../_shared/architecture-subjob/subjob-manager.ts");
             await failSubjob(serviceClient, subjob.id, err.message || "Timeout", true);
@@ -302,10 +292,10 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
             await pipelineLog(ctx, `subjob_${subjob.subjob_key}_auto_retry`,
               `⟳ ${label} timeout — auto-retry (attempt ${subjob.attempt_number + 2})`, { is_timeout: true }
             );
-            return { key: subjob.subjob_key, success: false, error: err.message, retrying: true };
+            return { key: subjob.subjob_key, success: false, retrying: true };
           }
           await failSubjob(serviceClient, subjob.id, err.message || "Unknown error", isTimeout);
-          await blockDependents(serviceClient, jobId!, subjob.subjob_key);
+          await blockDependents(serviceClient, jobId, subjob.subjob_key);
           await pipelineLog(ctx, `subjob_${subjob.subjob_key}_failed`,
             `✗ ${label} falhou: ${err.message}`, { is_timeout: isTimeout }
           );
@@ -322,15 +312,8 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
       const failedList = hasAnyFailed(subjobs);
       const failedKeys = failedList.map(f => f.subjob_key).join(", ");
       await updateInitiative(ctx, { stage_status: "architecting" as any });
-      if (jobId) await failJob(ctx, jobId, `Incomplete: failed subjobs: ${failedKeys || "deadlock"}`);
-      return jsonResponse({
-        success: false,
-        partial: true,
-        failed_subjobs: failedList.map(f => ({ key: f.subjob_key, error: f.error, status: f.status })),
-        completed_subjobs: Object.keys(completedResults),
-        message: "Architecture stage incomplete. Retry individual subjobs.",
-        job_id: jobId,
-      });
+      await failJob(ctx, jobId, `Incomplete: failed subjobs: ${failedKeys || "deadlock"}`);
+      return;
     }
 
     // ──── All subjobs complete — write brain + consolidate ────
@@ -339,7 +322,6 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
     const apiResult = completedResults["architecture.api"] || {};
     const depResult = completedResults["architecture.dependencies"] || {};
 
-    // Write to Project Brain
     try {
       const tables = (dataResult.tables as any[]) || [];
       const tableNodeIds: Record<string, string> = {};
@@ -369,7 +351,6 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
       }
     } catch (e) { console.error("Brain write error (architecture):", e); }
 
-    // Consolidate totals from subjobs
     const totalTokens = subjobs.reduce((sum, s) => sum + (s.tokens_used || 0), 0);
     const totalCost = subjobs.reduce((sum, s) => sum + Number(s.cost_usd || 0), 0);
     const totalDuration = subjobs.reduce((sum, s) => sum + (s.duration_ms || 0), 0);
@@ -389,7 +370,7 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
         layer2_agents_used: ["system_architect", "data_architect", "api_architect", "dependency_planner"],
         layer2_total_tokens: totalTokens,
         layer2_total_cost_usd: totalCost,
-        layer2_orchestration: "subjob_v1",
+        layer2_orchestration: "subjob_v1_bg",
       },
     });
 
@@ -420,43 +401,28 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
       }
     }
 
-    if (jobId) await completeJob(ctx, jobId, {
+    await completeJob(ctx, jobId, {
       system_architecture: systemResult,
       data_architecture: dataResult,
       api_architecture: apiResult,
       dependency_graph: depResult,
       total_tokens: totalTokens,
       total_cost_usd: totalCost,
-      orchestration: "subjob_v1",
+      orchestration: "subjob_v1_bg",
     }, { model: "multi-agent", costUsd: totalCost, durationMs: totalDuration });
 
     await pipelineLog(ctx, "pipeline_architecture_complete",
-      `Camada 2 concluída (subjobs): ${totalTokens} tokens, $${totalCost.toFixed(4)}, ${totalDuration}ms`,
+      `Camada 2 concluída (background): ${totalTokens} tokens, $${totalCost.toFixed(4)}, ${totalDuration}ms`,
       { tokens: totalTokens, cost_usd: totalCost, duration_ms: totalDuration }
     );
 
     await pipelineLog(ctx, "pipeline_architecture_simulation_queued",
       "🌀 Architecture Simulation queued as next stage");
 
-    return jsonResponse({
-      success: true,
-      agents_executed: 5,
-      layers_completed: [2],
-      next_stage: "architecture_simulation",
-      total_tokens: totalTokens,
-      total_cost_usd: totalCost,
-      total_duration_ms: totalDuration,
-      orchestration: "subjob_v1",
-      job_id: jobId,
-    });
   } catch (e) {
-    console.error("Architecture orchestrator error:", e);
-    // Cleanup: mark any running subjobs as failed
-    if (jobId) {
-      await cleanupStuckSubjobs(serviceClient, jobId, 0);
-      await failJob(ctx, jobId, e instanceof Error ? e.message : "Unknown error");
-    }
+    console.error("Architecture background error:", e);
+    await cleanupStuckSubjobs(serviceClient, jobId, 0);
+    await failJob(ctx, jobId, e instanceof Error ? e.message : "Unknown error");
     await updateInitiative(ctx, { stage_status: "architecture_ready" });
-    return errorResponse(e instanceof Error ? e.message : "Unknown error");
   }
-});
+}

@@ -87,7 +87,7 @@ export async function enforceUsageLimits(
 
   if (orgInitIds.length > 0) {
     // Auto-cleanup stale running jobs (older than 2 hours)
-    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+    const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
     const chunkSize = 100;
 
     for (let i = 0; i < orgInitIds.length; i += chunkSize) {
