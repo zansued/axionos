@@ -156,6 +156,10 @@ export function InitiativeOutcomeCard({ initiative }: InitiativeOutcomeCardProps
   const outcome = getOutcome(initiative);
   const Icon = outcome.icon;
 
+  const stageKey = (initiative.stage_status || initiative.status || "").replace(/^(pipeline_|stage_)/, "");
+  const isInProgress = outcome.status === "in_progress";
+  const hint = useRotatingHint(stageKey, isInProgress, en ? "en" : "pt");
+
   const content: Record<string, { title: string; description: string; actions?: { label: string; href?: string; variant?: "default" | "outline" }[] }> = {
     deployed: {
       title: en ? "Product deployed successfully" : "Produto deployado com sucesso",
