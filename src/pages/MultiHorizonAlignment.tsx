@@ -508,32 +508,21 @@ export default function MultiHorizonAlignment() {
           {/* INTEGRATION */}
           <TabsContent value="integration">
             <div className="space-y-4">
-              <Card className="border-border/50">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm">Cross-Sprint Signal Context</CardTitle>
-                  <CardDescription className="text-xs">Signals from other Block W sprints that influence horizon alignment evaluation.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {crossSignals?.simulation_feedback ? (
-                    <CrossSprintSignalCard
-                      title="Simulation Feedback (Sprint 110 → 107)"
-                      signals={[
-                        { label: "Avg Survivability", value: crossSignals.simulation_feedback.avg_survivability },
-                        { label: "Avg Identity Preservation", value: crossSignals.simulation_feedback.avg_identity_preservation },
-                        { label: "Worst Future State", value: crossSignals.simulation_feedback.worst_future_state },
-                        { label: "Fragile Subjects", value: crossSignals.simulation_feedback.has_fragile_subjects ? "Yes" : "No", severity: crossSignals.simulation_feedback.has_fragile_subjects ? "high" : "low" },
-                      ]}
-                      relatedRoute="/continuity-simulation"
-                      relatedLabel="View Simulations"
-                    />
-                  ) : (
-                    <p className="text-xs text-muted-foreground">No cross-sprint signals available. Run evaluations in other Block W sprints to generate integration context.</p>
-                  )}
-                  {crossSignals?.integration_note && (
-                    <p className="text-xs text-muted-foreground italic">{crossSignals.integration_note}</p>
-                  )}
-                </CardContent>
-              </Card>
+              <CausalModifierCard modifiers={crossSignals?.causal_modifiers || []} title="Sprint 110 → 107: Simulation Fragility Influence" />
+              {crossSignals?.simulation_feedback && (
+                <CrossSprintSignalCard
+                  title="Simulation Feedback (Sprint 110 → 107)"
+                  signals={[
+                    { label: "Avg Survivability", value: crossSignals.simulation_feedback.avg_survivability },
+                    { label: "Avg Identity Preservation", value: crossSignals.simulation_feedback.avg_identity_preservation },
+                    { label: "Worst Future State", value: crossSignals.simulation_feedback.worst_future_state },
+                    { label: "Fragile Subjects", value: crossSignals.simulation_feedback.has_fragile_subjects ? "Yes" : "No", severity: crossSignals.simulation_feedback.has_fragile_subjects ? "high" : "low" },
+                  ]}
+                  relatedRoute="/continuity-simulation"
+                  relatedLabel="View Simulations"
+                />
+              )}
+              {crossSignals?.integration_note && <p className="text-xs text-muted-foreground italic">{crossSignals.integration_note}</p>}
             </div>
           </TabsContent>
         </Tabs>

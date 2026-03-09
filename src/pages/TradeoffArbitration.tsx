@@ -415,31 +415,21 @@ export default function TradeoffArbitration() {
           {/* INTEGRATION */}
           <TabsContent value="integration">
             <div className="space-y-4">
-              <Card className="border-border/50">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm">Cross-Sprint Signal Context</CardTitle>
-                  <CardDescription className="text-xs">Horizon alignment signals that contextualize tradeoff evaluations.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {crossSignals?.horizon_context ? (
-                    <CrossSprintSignalCard
-                      title="Horizon Context (Sprint 107 → 108)"
-                      signals={[
-                        { label: "Composite Alignment", value: crossSignals.horizon_context.composite_alignment },
-                        { label: "Composite Tension", value: crossSignals.horizon_context.composite_tension },
-                        { label: "Short-term Bias", value: crossSignals.horizon_context.has_short_term_bias ? "Detected" : "No", severity: crossSignals.horizon_context.has_short_term_bias ? "high" : "low" },
-                        { label: "Mission Erosion", value: crossSignals.horizon_context.has_mission_erosion ? "Detected" : "No", severity: crossSignals.horizon_context.has_mission_erosion ? "critical" : "low" },
-                        { label: "Temporal Conflicts", value: crossSignals.horizon_context.has_temporal_conflict ? "Active" : "None", severity: crossSignals.horizon_context.has_temporal_conflict ? "medium" : "low" },
-                      ]}
-                      relatedRoute="/multi-horizon-alignment"
-                      relatedLabel="View Horizons"
-                    />
-                  ) : (
-                    <p className="text-xs text-muted-foreground">No cross-sprint signals available. Run horizon evaluations first.</p>
-                  )}
-                  {crossSignals?.integration_note && <p className="text-xs text-muted-foreground italic">{crossSignals.integration_note}</p>}
-                </CardContent>
-              </Card>
+              <CausalModifierCard modifiers={crossSignals?.causal_modifiers || []} title="Sprint 107 + 110 → 108: Horizon & Simulation Influence" />
+              {crossSignals?.horizon_context && (
+                <CrossSprintSignalCard
+                  title="Horizon Context (Sprint 107 → 108)"
+                  signals={[
+                    { label: "Composite Alignment", value: crossSignals.horizon_context.composite_alignment },
+                    { label: "Composite Tension", value: crossSignals.horizon_context.composite_tension },
+                    { label: "Short-term Bias", value: crossSignals.horizon_context.has_short_term_bias ? "Detected" : "No", severity: crossSignals.horizon_context.has_short_term_bias ? "high" : "low" },
+                    { label: "Mission Erosion", value: crossSignals.horizon_context.has_mission_erosion ? "Detected" : "No", severity: crossSignals.horizon_context.has_mission_erosion ? "critical" : "low" },
+                  ]}
+                  relatedRoute="/multi-horizon-alignment"
+                  relatedLabel="View Horizons"
+                />
+              )}
+              {crossSignals?.integration_note && <p className="text-xs text-muted-foreground italic">{crossSignals.integration_note}</p>}
             </div>
           </TabsContent>
         </Tabs>

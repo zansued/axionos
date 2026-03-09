@@ -275,28 +275,22 @@ export default function ContinuitySimulation() {
           {/* INTEGRATION */}
           <TabsContent value="integration">
             <div className="space-y-4">
-              <Card className="border-border/50"><CardHeader className="pb-2"><CardTitle className="text-sm">Cross-Sprint Signal Context</CardTitle>
-                <CardDescription className="text-xs">Mission integrity signals that inform continuity simulation posture.</CardDescription></CardHeader>
-                <CardContent className="space-y-3">
-                  {signals?.mission_context ? (
-                    <CrossSprintSignalCard
-                      title="Mission Context (Sprint 109 → 110)"
-                      signals={[
-                        { label: "Avg Alignment", value: signals.mission_context.avg_alignment },
-                        { label: "Avg Erosion", value: signals.mission_context.avg_erosion },
-                        { label: "Drift Density", value: signals.mission_context.drift_density },
-                        { label: "Mission Health", value: signals.mission_context.mission_health },
-                        { label: "Active Erosion", value: signals.mission_context.has_active_erosion ? "Detected" : "No", severity: signals.mission_context.has_active_erosion ? "critical" : "low" },
-                        { label: "Recurrent Drift", value: signals.mission_context.has_recurrent_drift ? "Yes" : "No", severity: signals.mission_context.has_recurrent_drift ? "high" : "low" },
-                      ]}
-                      relatedRoute="/mission-integrity"
-                      relatedLabel="View Mission Integrity"
-                    />
-                  ) : (
-                    <p className="text-xs text-muted-foreground">No cross-sprint signals available. Run mission integrity evaluations first.</p>
-                  )}
-                  {signals?.integration_note && <p className="text-xs text-muted-foreground italic">{signals.integration_note}</p>}
-                </CardContent></Card>
+              <CausalModifierCard modifiers={signals?.causal_modifiers || []} title="Sprint 109 → 110: Mission Integrity Influence" />
+              {signals?.mission_context && (
+                <CrossSprintSignalCard
+                  title="Mission Context (Sprint 109 → 110)"
+                  signals={[
+                    { label: "Avg Alignment", value: signals.mission_context.avg_alignment },
+                    { label: "Avg Erosion", value: signals.mission_context.avg_erosion },
+                    { label: "Drift Density", value: signals.mission_context.drift_density },
+                    { label: "Mission Health", value: signals.mission_context.mission_health },
+                    { label: "Active Erosion", value: signals.mission_context.has_active_erosion ? "Detected" : "No", severity: signals.mission_context.has_active_erosion ? "critical" : "low" },
+                  ]}
+                  relatedRoute="/mission-integrity"
+                  relatedLabel="View Mission Integrity"
+                />
+              )}
+              {signals?.integration_note && <p className="text-xs text-muted-foreground italic">{signals.integration_note}</p>}
             </div>
           </TabsContent>
         </Tabs>
