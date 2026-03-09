@@ -625,7 +625,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
-> **Summary:** 71 sprints complete. 54 architectural layers active. Sprint 71 (Governed Extensibility) complete. Block N (Evidence-Governed Improvement Loop, Sprints 72–74) is the next planned block.
+> **Summary:** 94 sprints complete. 77+ architectural layers active. All blocks (Foundation through S) implemented and operational.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
@@ -653,12 +653,12 @@ supabase/functions/
 | System Roundness & Operating Completion (L) | 63–65 | ✅ Complete |
 | Product Experience & Delivery Maturity (M) | 66–70 | ✅ Complete |
 | Governed Extensibility Bridge | 71 | ✅ Complete |
-| Evidence-Governed Improvement Loop (N) | 72–74 | 📋 Planned |
-| Advanced Multi-Agent Coordination (O) | 75–78 | 🔮 Reserved |
-| Governed Capability Ecosystem (P) | 79–82 | 🔮 Reserved |
-| Delivery Optimization (Q) | 83–86 | 🔮 Reserved |
-| Distributed Runtime (R) | 87–90 | 🔮 Reserved |
-| Research Sandbox (S) | 91–94 | 🔮 Reserved |
+| Evidence-Governed Improvement Loop (N) | 72–74 | ✅ Complete |
+| Advanced Multi-Agent Coordination (O) | 75–78 | ✅ Complete |
+| Governed Capability Ecosystem (P) | 79–82 | ✅ Complete |
+| Delivery Optimization & Outcome Assurance 2.0 (Q) | 83–86 | ✅ Complete |
+| Distributed Runtime & Scaled Execution (R) | 87–90 | ✅ Complete |
+| Research Sandbox for Architecture Evolution (S) | 91–94 | ✅ Complete |
 
 ---
 
@@ -902,47 +902,43 @@ AxionOS distinguishes four architectural surface layers:
 
 ---
 
-## 17. Architectural Direction — Post-Block M
+## 17. Architectural Direction — Post-Block S
 
 > **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
 
-With 71 sprints complete, Sprint 71 (Governed Extensibility) delivered, the platform has achieved its first product-ready operating baseline with governed extensibility. 54 architectural layers are active.
+With 94 sprints complete, all blocks from Foundation through Research Sandbox (S) delivered, the platform has achieved full architectural maturity across all planned blocks. 77+ architectural layers are active.
 
-### Completed Canon (Sprints 1–71)
+### Completed Canon (Sprints 1–94)
 
-- ✅ All layers from execution kernel through institutional assurance, canon integrity, product experience, adoption intelligence, and governed extensibility
-- ✅ 54 architectural layers active
-- ✅ First internally coherent operating canon + full product experience maturity + governed extensibility foundation
+- ✅ All layers from execution kernel through institutional assurance, canon integrity, product experience, adoption intelligence, governed extensibility, evidence-governed improvement, advanced multi-agent coordination, governed capability ecosystem, delivery optimization, distributed runtime, and research sandbox
+- ✅ 77+ architectural layers active
+- ✅ Full operating canon with all planned blocks implemented
 
-### Future Architectural Direction
+### Implemented Blocks (N–S)
 
-The following blocks describe **planned and reserved architectural direction**, not implemented architecture. No modules, layers, or APIs exist for these blocks yet.
+#### Block N — Evidence-Governed Improvement Loop (Sprints 72–74) — ✅ Complete
 
-#### Block N — Evidence-Governed Improvement Loop (Sprints 72–74) — 📋 Planned
+**Architectural contribution:** Structured evidence collection from pipeline outcomes, bounded improvement proposal generation, governed testing/promotion, and rollback-safe experimentation. Deepens the existing learning, memory, and calibration layers without mutating kernel structure.
 
-**Architectural intent:** Introduce structured evidence collection from pipeline outcomes, bounded improvement proposal generation, governed testing/promotion, and rollback-safe experimentation. This block deepens the existing learning, memory, and calibration layers without mutating kernel structure.
+#### Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — ✅ Complete
 
-**Expected architectural impact:** New evidence aggregation infrastructure, improvement proposal lifecycle, governed experiment execution. Reuses existing learning, memory, and governance planes.
+**Architectural contribution:** Advanced role arbitration, bounded debate and resolution, shared working memory and task-state negotiation, bounded swarm execution with checkpoints and rollback posture.
 
-#### Block O — Advanced Multi-Agent Coordination (Sprints 75–78) — 🔮 Reserved
+#### Block P — Governed Capability Ecosystem & Early Marketplace (Sprints 79–82) — ✅ Complete
 
-**Architectural intent:** Evolve the Agent OS Execution Plane toward advanced role arbitration, debate patterns, shared working memory, and bounded multi-agent execution. Builds on existing coordination module (v0.8).
+**Architectural contribution:** Capability packaging and registry, trust and entitlement governance, creator/partner pilot marketplace, outcome-aware capability exchange.
 
-#### Block P — Governed Capability Ecosystem & Early Marketplace (Sprints 79–82) — 🔮 Reserved
+#### Block Q — Delivery Optimization & Outcome Assurance 2.0 (Sprints 83–86) — ✅ Complete
 
-**Architectural intent:** Extend the existing Ecosystem Plane from bounded pilot to governed capability exchange. Not a full open marketplace — extends existing trust, admission, sandbox, and registry layers.
+**Architectural contribution:** Delivery outcome causality analysis, post-deploy learning and feedback assimilation, reliability-aware delivery tuning, enriched outcome assurance with uncertainty modeling.
 
-#### Block Q — Delivery Optimization & Outcome Assurance 2.0 (Sprints 83–86) — 🔮 Reserved
+#### Block R — Advanced Distributed Runtime & Scaled Execution (Sprints 87–90) — ✅ Complete
 
-**Architectural intent:** Deepen causal understanding of delivery outcomes, post-deploy learning, and reliability-aware pipeline tuning. Builds on existing outcome assurance (Sprint 63) and adoption intelligence (Sprint 70).
+**Architectural contribution:** Distributed job control plane, cross-region execution and recovery, tenant-isolated scale runtime, resilient large-scale orchestration with bounded failure handling.
 
-#### Block R — Advanced Distributed Runtime & Scaled Execution (Sprints 87–90) — 🔮 Reserved
+#### Block S — Research Sandbox for Architecture Evolution (Sprints 91–94) — ✅ Complete
 
-**Architectural intent:** Evolve the Execution Plane Distributed Runtime (v0.9, currently frozen) toward production-grade job control, cross-region resilience, and tenant-isolated scale.
-
-#### Block S — Research Sandbox for Architecture Evolution (Sprints 91–94) — 🔮 Reserved
-
-**Architectural intent:** Support architecture hypothesis generation and simulated evolution campaigns in sandboxed environments. No autonomous architecture mutation — all promotion is human-governed.
+**Architectural contribution:** Architecture hypothesis engine, simulated evolution campaigns, cross-tenant pattern synthesis, human-governed architecture promotion with dossier-based review.
 
 ### Governing Constraint
 
