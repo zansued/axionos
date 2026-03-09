@@ -238,12 +238,12 @@ flowchart TD
 | Operating Completion | 63–65 | ✅ Complete | Outcome assurance, canon integrity, operating completion |
 | Product Experience | 66–70 | ✅ Complete | Journey orchestration, role-based experience, delivery assurance, onboarding, adoption intelligence |
 | Governed Extensibility | 71 | ✅ Complete | Platform extensions, approval-based activation, compatibility, audit trail |
-| Evidence-Governed Improvement | 72–74 | ✅ Complete | Evidence capture, candidate distillation, sandbox benchmarking, promotion governance |
-| Multi-Agent Coordination | 75–78 | ✅ Complete | Role arbitration, debate/resolution, shared working memory, bounded swarm execution |
-| Governed Capability Ecosystem | 79–82 | ✅ Complete | Capability packaging, trust/entitlements, partner marketplace, outcome-aware marketplace |
-| Delivery Optimization | 83–86 | ✅ Complete | Delivery causality, post-deploy learning, reliability tuning, outcome assurance 2.0 |
-| Distributed Runtime | 87–90 | ✅ Complete | Distributed job control, cross-region recovery, tenant-isolated scale, resilient orchestration |
-| Architecture Research | 91–94 | ✅ Complete | Hypothesis engine, simulated evolution, cross-tenant synthesis, governed promotion |
+| Evidence-Governed Improvement | 72–74 | 🔥 Planned — Active Thaw Now | Evidence capture, candidate distillation, sandbox benchmarking, promotion governance |
+| Multi-Agent Coordination | 75–78 | 🧊 Reserved — Partial Thaw Next (Sprint 75) | Role arbitration, debate/resolution, shared working memory, bounded swarm execution |
+| Governed Capability Ecosystem | 79–82 | ❄️ Still Reserved | Capability packaging, trust/entitlements, partner marketplace, outcome-aware marketplace |
+| Delivery Optimization | 83–86 | ❄️ Still Reserved | Delivery causality, post-deploy learning, reliability tuning, outcome assurance 2.0 |
+| Distributed Runtime | 87–90 | ❄️ Still Reserved | Distributed job control, cross-region recovery, tenant-isolated scale, resilient orchestration |
+| Architecture Research | 91–94 | ❄️ Still Reserved | Hypothesis engine, simulated evolution, cross-tenant synthesis, governed promotion |
 
 ---
 
