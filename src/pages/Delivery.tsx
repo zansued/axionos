@@ -37,7 +37,6 @@ export default function Delivery() {
   const { assessReadiness, explain } = useOneClickDelivery();
   const [detail, setDetail] = useState<any>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
-  const { guidance, whyNowText } = usePageGuidance("deployments");
 
   const items = overview.data ?? [];
   const readyCount = items.filter((i: any) => i.is_ready).length;
