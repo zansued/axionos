@@ -33,6 +33,8 @@ interface AgentOutput {
   rawOutputChars: number;
   promptChars: number;
   contextChars: number;
+  providerMs: number;
+  parseMs: number;
 }
 
 async function runAgent(
@@ -50,6 +52,8 @@ async function runAgent(
   } = {},
 ): Promise<AgentOutput> {
   const promptChars = systemPrompt.length + userPrompt.length;
+
+  const providerStart = Date.now();
   const aiResult = await callAI(
     apiKey,
     systemPrompt,
@@ -63,9 +67,13 @@ async function runAgent(
     false,
     options.abortSignal,
   );
+  const providerMs = Date.now() - providerStart;
 
+  const parseStart = Date.now();
   const rawOutputChars = aiResult.content?.length || 0;
   const result = JSON.parse(aiResult.content);
+  const parseMs = Date.now() - parseStart;
+
   return {
     role,
     model: aiResult.model,
@@ -76,6 +84,8 @@ async function runAgent(
     rawOutputChars,
     promptChars,
     contextChars: 0,
+    providerMs,
+    parseMs,
   };
 }
 
