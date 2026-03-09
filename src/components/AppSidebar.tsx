@@ -65,6 +65,7 @@ const bottomItems = [
   { title: "Promotion", url: "/architecture-promotion", icon: ClipboardCheck },
   { title: "Sim. Sandbox", url: "/research-sandbox", icon: Beaker },
   { title: "Res. Patterns", url: "/research-patterns", icon: Network },
+  { title: "Extensions", url: "/extensions", icon: Package },
   { title: "Meta-Agents", url: "/meta-agents", icon: Brain },
   { title: "Meta-Artifacts", url: "/meta-artifacts", icon: FileText },
   { title: "Calibration", url: "/calibration", icon: Gauge },
