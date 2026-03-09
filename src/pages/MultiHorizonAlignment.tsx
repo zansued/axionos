@@ -438,6 +438,70 @@ export default function MultiHorizonAlignment() {
       setOverview(ov);
       setConflicts(co.conflicts ?? []);
       setRecommendations(re.recommendations ?? []);
+
+      // Load persisted evaluations from DB to survive page refresh
+      const { data: evals } = await supabase
+        .from("horizon_alignment_evaluations")
+        .select("*, strategic_alignment_subjects(title, subject_type, domain), strategic_horizons(horizon_type)")
+        .eq("organization_id", orgId)
+        .order("created_at", { ascending: false })
+        .limit(200);
+      
+      if (evals && evals.length > 0) {
+        // Group by subject to reconstruct explanations
+        const bySubject = new Map<string, typeof evals>();
+        for (const ev of evals) {
+          const sid = ev.subject_id;
+          if (!bySubject.has(sid)) bySubject.set(sid, []);
+          bySubject.get(sid)!.push(ev);
+        }
+
+        const explanations: EvalResult["explanations"] = [];
+        for (const [, group] of bySubject) {
+          const first = group[0];
+          const subjectTitle = (first as any).strategic_alignment_subjects?.title ?? "Unknown";
+          const breakdown = group.map((g: any) => ({
+            horizon_type: g.strategic_horizons?.horizon_type ?? "unknown",
+            alignment: Number(g.alignment_score),
+            tension: Number(g.tension_score),
+            deferred_risk: Number(g.deferred_risk_score),
+            support_level: g.support_level,
+            narrative: `${g.strategic_horizons?.horizon_type ?? "Horizon"}: ${g.support_level} (${Math.round(Number(g.alignment_score) * 100)}%)`,
+          }));
+
+          const compositeAlignment = breakdown.reduce((a, b) => a + b.alignment, 0) / breakdown.length;
+          const compositeTension = breakdown.reduce((a, b) => a + b.tension, 0) / breakdown.length;
+          const posture = first.evaluation_summary?.replace("Posture: ", "") ?? "balanced";
+
+          explanations.push({
+            subject_title: subjectTitle,
+            overall_posture: posture,
+            composite_alignment: compositeAlignment,
+            composite_tension: compositeTension,
+            horizon_breakdown: breakdown,
+            deferred_risk_summary: breakdown.some(b => b.deferred_risk > 0.3)
+              ? `Deferred risk detected in ${breakdown.filter(b => b.deferred_risk > 0.3).map(b => b.horizon_type).join(", ")}.`
+              : "No significant deferred risk.",
+            conflict_summary: (co.conflicts?.length ?? 0) > 0
+              ? `${co.conflicts.length} active conflict(s).`
+              : "No active temporal conflicts detected.",
+            institutional_health_narrative: `Subject "${subjectTitle}" has posture: ${posture.replace(/_/g, " ")}.`,
+          });
+        }
+
+        setEvalResult({
+          evaluated_subjects: bySubject.size,
+          conflicts_detected: co.conflicts?.length ?? 0,
+          recommendations_generated: re.recommendations?.length ?? 0,
+          evaluations: explanations.map(e => ({
+            subject: e.subject_title,
+            posture: e.overall_posture,
+            composite_alignment: e.composite_alignment,
+            composite_tension: e.composite_tension,
+          })),
+          explanations,
+        });
+      }
     } catch (err: any) {
       console.error("Failed to load horizon data:", err);
     } finally {
