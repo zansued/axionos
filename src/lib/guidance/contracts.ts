@@ -747,7 +747,6 @@ export const PLATFORM_GUIDANCE: PageGuidanceContract[] = [
       en: "Authority delegation and conflict resolution require human review.",
     },
   },
-  },
   {
     key: "dependency-sovereignty",
     title: { pt: "Soberania de Dependências", en: "Dependency Sovereignty" },
