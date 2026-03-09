@@ -36,6 +36,8 @@ export default function Initiatives() {
   const { runStage, rollbackToStage, getRunningStage } = usePipeline();
   const { t, locale } = useI18n();
 
+  
+
   const { data: initiatives = [], isLoading } = useQuery({
     queryKey: ["initiatives", currentOrg?.id],
     queryFn: async () => {
@@ -49,7 +51,19 @@ export default function Initiatives() {
       return data;
     },
     enabled: !!currentOrg,
+    refetchInterval: (query) => {
+      // Poll every 5s when any initiative is in a processing state
+      const inits = query.state.data as any[] | undefined;
+      if (!inits) return false;
+      const hasProcessing = inits.some(
+        (i) => i.stage_status && !["draft", "completed", "deployed", "deploy_failed", "ready_to_publish", "published", "repair_failed", "system_evolved", "portfolio_managed"].includes(i.stage_status)
+      );
+      return hasProcessing ? 5000 : false;
+    },
   });
+
+  const selectedInitiative = initiatives.find((i: any) => i.id === selectedId);
+  const selectedIsProcessing = selectedInitiative && selectedInitiative.stage_status && !["draft", "completed", "deployed", "deploy_failed", "ready_to_publish", "published", "repair_failed", "system_evolved", "portfolio_managed"].includes(selectedInitiative.stage_status);
 
   const { data: jobs = [] } = useQuery({
     queryKey: ["initiative-jobs", selectedId],
@@ -64,6 +78,7 @@ export default function Initiatives() {
       return data;
     },
     enabled: !!selectedId,
+    refetchInterval: selectedIsProcessing ? 5000 : false,
   });
 
   const { data: initiativeStories = [] } = useQuery({
