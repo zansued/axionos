@@ -30,6 +30,9 @@ interface AgentOutput {
   costUsd: number;
   durationMs: number;
   result: Record<string, unknown>;
+  rawOutputChars: number;
+  promptChars: number;
+  contextChars: number;
 }
 
 async function runAgent(
@@ -39,9 +42,11 @@ async function runAgent(
   userPrompt: string,
   usePro = false,
 ): Promise<AgentOutput> {
+  const promptChars = systemPrompt.length + userPrompt.length;
   const aiResult = await callAI(apiKey, systemPrompt, userPrompt, true, 3, usePro);
+  const rawOutputChars = aiResult.content?.length || 0;
   const result = JSON.parse(aiResult.content);
-  return { role, model: aiResult.model, tokens: aiResult.tokens, costUsd: aiResult.costUsd, durationMs: aiResult.durationMs, result };
+  return { role, model: aiResult.model, tokens: aiResult.tokens, costUsd: aiResult.costUsd, durationMs: aiResult.durationMs, result, rawOutputChars, promptChars, contextChars: 0 };
 }
 
 /** Execute a single subjob by key, using results from completed dependencies */
