@@ -17739,37 +17739,40 @@ export type Database = {
         Row: {
           adaptation_score: number
           alignment_score: number
-          constitution_id: string
+          constitution_id: string | null
           created_at: string
           drift_risk_score: number
           erosion_score: number
           evaluation_summary: string
           id: string
           organization_id: string
+          posture: string
           subject_id: string
         }
         Insert: {
           adaptation_score?: number
           alignment_score?: number
-          constitution_id: string
+          constitution_id?: string | null
           created_at?: string
           drift_risk_score?: number
           erosion_score?: number
           evaluation_summary?: string
           id?: string
           organization_id: string
+          posture?: string
           subject_id: string
         }
         Update: {
           adaptation_score?: number
           alignment_score?: number
-          constitution_id?: string
+          constitution_id?: string | null
           created_at?: string
           drift_risk_score?: number
           erosion_score?: number
           evaluation_summary?: string
           id?: string
           organization_id?: string
+          posture?: string
           subject_id?: string
         }
         Relationships: [
