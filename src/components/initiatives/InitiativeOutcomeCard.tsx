@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import {
   CheckCircle2, Globe, GitBranch, ExternalLink, Rocket,
   AlertTriangle, Clock, Loader2, RotateCcw, Lightbulb,
@@ -97,6 +98,31 @@ const STAGE_HINTS: Record<string, { en: string[]; pt: string[] }> = {
   },
 };
 
+// Maps stage_status to a user-friendly pipeline step label
+const STAGE_LABELS: Record<string, { en: string; pt: string }> = {
+  discovering: { en: "Discovery", pt: "Descoberta" },
+  discovery_done: { en: "Discovery done", pt: "Descoberta concluída" },
+  architecting: { en: "Architecture", pt: "Arquitetura" },
+  architecture_done: { en: "Architecture done", pt: "Arquitetura concluída" },
+  scoping: { en: "Planning", pt: "Planejamento" },
+  planning: { en: "Planning", pt: "Planejamento" },
+  in_progress: { en: "Engineering", pt: "Engenharia" },
+  engineering: { en: "Engineering", pt: "Engenharia" },
+  coding: { en: "Coding", pt: "Codificação" },
+  validating: { en: "Validation", pt: "Validação" },
+  deploying: { en: "Deploy", pt: "Deploy" },
+  publishing: { en: "Publishing", pt: "Publicação" },
+};
+
+// Pipeline stage ordering for progress estimation
+const STAGE_ORDER = [
+  "draft", "discovering", "discovery_done",
+  "architecting", "architecture_done", "scoping", "planning",
+  "in_progress", "engineering", "coding",
+  "validating", "publishing", "deploying",
+  "ready_to_publish", "published", "deployed", "completed",
+];
+
 function useRotatingHint(stage: string, isActive: boolean, lang: "en" | "pt") {
   const [index, setIndex] = useState(0);
 
@@ -112,6 +138,25 @@ function useRotatingHint(stage: string, isActive: boolean, lang: "en" | "pt") {
   }, [stage, isActive, hints.length]);
 
   return isActive ? hints[index] : null;
+}
+
+function useElapsed(startTime: string | null | undefined, active: boolean) {
+  const [elapsed, setElapsed] = useState("");
+
+  useEffect(() => {
+    if (!active || !startTime) { setElapsed(""); return; }
+    const update = () => {
+      const diff = Math.floor((Date.now() - new Date(startTime).getTime()) / 1000);
+      if (diff < 60) setElapsed(`${diff}s`);
+      else if (diff < 3600) setElapsed(`${Math.floor(diff / 60)}m ${diff % 60}s`);
+      else setElapsed(`${Math.floor(diff / 3600)}h ${Math.floor((diff % 3600) / 60)}m`);
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [startTime, active]);
+
+  return elapsed;
 }
 
 interface InitiativeOutcomeCardProps {
@@ -159,6 +204,23 @@ export function InitiativeOutcomeCard({ initiative }: InitiativeOutcomeCardProps
   const stageKey = (initiative.stage_status || initiative.status || "").replace(/^(pipeline_|stage_)/, "");
   const isInProgress = outcome.status === "in_progress";
   const hint = useRotatingHint(stageKey, isInProgress, en ? "en" : "pt");
+
+  // Compute estimated progress from stage position
+  const stageIdx = STAGE_ORDER.indexOf(stageKey);
+  const progressPct = isInProgress && stageIdx > 0
+    ? Math.min(95, Math.round((stageIdx / (STAGE_ORDER.length - 1)) * 100))
+    : 0;
+
+  // Get a user-friendly label for the current stage
+  const stageLabel = STAGE_LABELS[stageKey];
+  const stageLabelStr = stageLabel ? (en ? stageLabel.en : stageLabel.pt) : null;
+
+  // Elapsed time since last update
+  const elapsed = useElapsed(initiative.updated_at, isInProgress);
+
+  // Latest job info for better context
+  const execProgress = initiative.execution_progress;
+  const hasExecDetail = execProgress && typeof execProgress === "object" && execProgress.total > 0;
 
   const content: Record<string, { title: string; description: string; actions?: { label: string; href?: string; variant?: "default" | "outline" }[] }> = {
     deployed: {
@@ -221,8 +283,34 @@ export function InitiativeOutcomeCard({ initiative }: InitiativeOutcomeCardProps
           </div>
            <div className="flex-1 min-w-0 space-y-2">
               <div>
-                <p className="text-sm font-medium">{info.title}</p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="text-sm font-medium">{info.title}</p>
+                  {isInProgress && stageLabelStr && (
+                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border-primary/20">
+                      {en ? "Stage" : "Etapa"}: {stageLabelStr}
+                    </Badge>
+                  )}
+                  {isInProgress && elapsed && (
+                    <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+                      <Clock className="h-2.5 w-2.5" />{elapsed}
+                    </span>
+                  )}
+                </div>
                 <p className="text-xs text-muted-foreground mt-0.5">{info.description}</p>
+
+                {/* Progress bar for in-progress state */}
+                {isInProgress && progressPct > 0 && (
+                  <div className="mt-2 space-y-1">
+                    <Progress value={progressPct} className="h-1.5" />
+                    <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <span>~{progressPct}% {en ? "estimated" : "estimado"}</span>
+                      {hasExecDetail && (
+                        <span>{execProgress.current}/{execProgress.total} {en ? "tasks" : "tarefas"}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {hint && (
                   <p className="text-xs text-primary/80 mt-1.5 animate-pulse transition-all duration-500" key={hint}>
                     💡 {hint}

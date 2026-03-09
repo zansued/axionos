@@ -62,6 +62,9 @@ export default function Initiatives() {
     },
   });
 
+  const selectedInitiative = initiatives.find((i: any) => i.id === selectedId);
+  const selectedIsProcessing = selectedInitiative && selectedInitiative.stage_status && !["draft", "completed", "deployed", "deploy_failed", "ready_to_publish", "published", "repair_failed", "system_evolved", "portfolio_managed"].includes(selectedInitiative.stage_status);
+
   const { data: jobs = [] } = useQuery({
     queryKey: ["initiative-jobs", selectedId],
     queryFn: async () => {
@@ -75,6 +78,7 @@ export default function Initiatives() {
       return data;
     },
     enabled: !!selectedId,
+    refetchInterval: selectedIsProcessing ? 5000 : false,
   });
 
   const { data: initiativeStories = [] } = useQuery({
