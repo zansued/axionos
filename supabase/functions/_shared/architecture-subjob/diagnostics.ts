@@ -124,7 +124,7 @@ export async function appendDiagnostic(
     .eq("id", subjobId);
 }
 
-// ─── Compact Architecture Summary ───
+// ─── Compact Architecture Summaries ───
 
 /** Generate a minimal structured summary from System Architect output for downstream agents */
 export function compactSystemArchSummary(systemResult: Record<string, unknown>): string {
@@ -145,6 +145,31 @@ export function compactSystemArchSummary(systemResult: Record<string, unknown>):
   };
 
   return JSON.stringify(summary);
+}
+
+/** Compact Data Architect output for dependency planner */
+export function compactDataArchSummary(dataResult: Record<string, unknown>): string {
+  const tables = (dataResult.tables as any[]) || [];
+  const relationships = (dataResult.relationships as any[]) || [];
+  return JSON.stringify({
+    tables: tables.slice(0, 6).map((t: any) => ({
+      name: t.name,
+      columns: (t.columns as any[] || []).map((c: any) => c.name),
+    })),
+    relationships: relationships.slice(0, 6).map((r: any) => `${r.from_table}.${r.from_column} → ${r.to_table}.${r.to_column}`),
+    enums: (dataResult.enums as any[] || []).map((e: any) => e.name),
+  });
+}
+
+/** Compact API Architect output for dependency planner */
+export function compactApiArchSummary(apiResult: Record<string, unknown>): string {
+  const endpoints = (apiResult.endpoints as any[]) || [];
+  const edgeFns = (apiResult.edge_functions as any[]) || [];
+  return JSON.stringify({
+    endpoints: endpoints.slice(0, 8).map((e: any) => `${e.method} ${e.path}`),
+    edge_functions: edgeFns.slice(0, 4).map((f: any) => f.name),
+    realtime: (apiResult.realtime_channels as any[] || []).map((c: any) => c.name),
+  });
 }
 
 // ─── Bottleneck Analysis ───
