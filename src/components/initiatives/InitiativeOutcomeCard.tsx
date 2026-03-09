@@ -22,6 +22,9 @@ type OutcomeInfo = {
 function getOutcome(init: any): OutcomeInfo {
   const stage = init.stage_status || init.status;
 
+  if (["completed", "system_evolved", "portfolio_managed"].includes(stage)) {
+    return { status: "completed", icon: CheckCircle2, color: "text-success", bgColor: "bg-success/5", borderColor: "border-success/30" };
+  }
   if (stage === "deployed" && init.deploy_url) {
     return { status: "deployed", icon: Globe, color: "text-success", bgColor: "bg-success/5", borderColor: "border-success/30" };
   }
