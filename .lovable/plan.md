@@ -1,7 +1,7 @@
 # AxionOS — Execution Plan
 
 > Last updated: 2026-03-07
-> Mode: **Level 5 — Institutional Engineering Memory**
+> Mode: **Level 5.5 — Governed Intelligence OS**
 > Execution: **Sprint-based**
 
 ---
