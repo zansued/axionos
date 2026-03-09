@@ -161,13 +161,17 @@ flowchart TD
    Distributed Runtime →
    Architecture Research ✅
 
-   PLANNED (95–98)
+   COMPLETE (95–98)
    ──────────────────────────────────────────────────────────────────────────────►
-   Block T — Governed Intelligence OS
-   Sprint 95: Institutional Memory Consolidation
-   Sprint 96: Doctrine & Playbook Synthesis
-   Sprint 97: Bounded Autonomous Operations
-   Sprint 98: Institutional Decision Engine
+   Block T — Governed Intelligence OS ✅
+
+   PLANNED (99–102)
+   ──────────────────────────────────────────────────────────────────────────────►
+   Block U — Adaptive Institutional Ecosystem
+   Sprint 99: Cross-Context Doctrine Adaptation
+   Sprint 100: Institutional Conflict Resolution Engine
+   Sprint 101: Federated Intelligence Boundaries
+   Sprint 102: Resilience & Continuity Governance
 ```
 
 ---
