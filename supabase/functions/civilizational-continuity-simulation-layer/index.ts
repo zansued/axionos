@@ -318,6 +318,15 @@ Deno.serve(async (req) => {
         break;
       }
 
+      case "cross_sprint_signals": {
+        const missionSignals = await extractMissionSignals(supabase, organization_id);
+        result = {
+          mission_context: missionSignals,
+          integration_note: "Mission integrity signals (Sprint 109) feed erosion and drift density into continuity simulation posture.",
+        };
+        break;
+      }
+
       default:
         return new Response(JSON.stringify({ error: `Unknown action: ${action}` }), { status: 400, headers: corsHeaders });
     }

@@ -233,6 +233,15 @@ Deno.serve(async (req) => {
       return json({ explanation, risk, conflicts, recommendations });
     }
 
+    // ── CROSS-SPRINT SIGNALS ──
+    if (action === "cross_sprint_signals") {
+      const simSignals = await extractSimulationSignals(serviceClient, organization_id);
+      return json({
+        simulation_feedback: simSignals,
+        integration_note: "Simulation signals (Sprint 110) feed back into horizon alignment to highlight future continuity fragility and identity risk.",
+      });
+    }
+
     return json({ error: `Unknown action: ${action}` }, 400);
   } catch (err) {
     console.error("Multi-Horizon Strategic Alignment Engine error:", err);

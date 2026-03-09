@@ -228,6 +228,15 @@ Deno.serve(async (req) => {
       return json({ explanation, analysis, risk, reversibility, recommendations });
     }
 
+    // ── CROSS-SPRINT SIGNALS ──
+    if (action === "cross_sprint_signals") {
+      const horizonSignals = await extractHorizonSignals(serviceClient, organization_id);
+      return json({
+        horizon_context: horizonSignals,
+        integration_note: "Horizon alignment signals (Sprint 107) provide temporal bias and deferred risk context for tradeoff arbitration.",
+      });
+    }
+
     return json({ error: `Unknown action: ${action}` }, 400);
   } catch (err) {
     console.error("Institutional Tradeoff Arbitration System error:", err);

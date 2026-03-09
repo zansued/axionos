@@ -334,6 +334,15 @@ Deno.serve(async (req) => {
         break;
       }
 
+      case "cross_sprint_signals": {
+        const tradeoffSignals = await extractTradeoffSignals(supabase, organization_id);
+        result = {
+          tradeoff_pressure: tradeoffSignals,
+          integration_note: "Tradeoff arbitration signals (Sprint 108) surface mission-corrosive sacrifices as drift pressure inputs.",
+        };
+        break;
+      }
+
       default:
         return new Response(JSON.stringify({ error: `Unknown action: ${action}` }), { status: 400, headers: corsHeaders });
     }
