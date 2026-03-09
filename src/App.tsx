@@ -73,6 +73,7 @@ import ResilienceContinuity from "./pages/ResilienceContinuity";
 import InstitutionalMemoryConstitution from "./pages/InstitutionalMemoryConstitution";
 import SovereignDecisionRights from "./pages/SovereignDecisionRights";
 import DependencySovereignty from "./pages/DependencySovereignty";
+import StrategicSuccession from "./pages/StrategicSuccession";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
