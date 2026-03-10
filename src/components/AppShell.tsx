@@ -12,12 +12,10 @@
  */
 
 import { ReactNode } from "react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { ContextPanel } from "@/components/ContextPanel";
-import { Button } from "@/components/ui/button";
-import { Search, Bell } from "lucide-react";
-import axionLogo from "@/assets/axion-logo.svg";
+import { Topbar } from "@/components/layout/Topbar";
 
 interface AppShellProps {
   children: ReactNode;
