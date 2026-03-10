@@ -97,6 +97,9 @@ All pillars of the Strategic Coordination OS are **implemented and hardened**:
 | **Adapt Institutionally** | ✅ Active | Cross-context doctrine adaptation, conflict resolution, federated intelligence, resilience governance |
 | **Govern Sovereignty** | ✅ Active | Memory constitution, sovereign decision rights, dependency sovereignty, strategic succession |
 | **Coordinate Strategically** | ✅ Active | Multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation |
+| **Govern Own Evolution** | ✅ Active | Evolution proposal governance, mutation control, self-revision audit, kernel integrity guard |
+| **Govern Implementation Knowledge** | ✅ Active | Canon stewardship, pattern library, failure memory, external knowledge intake |
+| **Deliver with Runtime Sovereignty** | ✅ Active | Runtime feedback mesh, tenant doctrine, outcome-based autonomy, compounding advantage |
 
 **Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy. Tenant isolation preserved across all boundaries.
 
