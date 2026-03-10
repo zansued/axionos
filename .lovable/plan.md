@@ -125,13 +125,13 @@ AxionOS is an **Adaptive Operational Organism** platform (Level 10+):
 
 ### Future Horizons
 
-### Committed Future Arc (Blocks AB–AD, Sprints 127–138)
+### Completed Arc (Blocks AB–AD, Sprints 127–138)
 
 | Block | Sprints | Name | Status |
 |-------|---------|------|--------|
 | AB | 127–130 | Learning Canonization | ✅ Complete |
-| AC | 131–134 | Adaptive Coordination | 🔄 In Progress (131 ✅) |
-| AD | 135–138 | Adaptive Operational Organism | 🔜 Committed |
+| AC | 131–134 | Adaptive Coordination | ✅ Complete |
+| AD | 135–138 | Adaptive Operational Organism | ✅ Complete |
 
 ### Level 11 — Adaptive Runtime Intelligence (Future Horizon)
 
