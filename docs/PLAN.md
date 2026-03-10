@@ -29,9 +29,9 @@
 
 ## Canon Status
 
-All 122 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Runtime Sovereignty & Outcome Compounding (Sprint 122) — is implemented and validated.
+All 126 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Runtime Sovereignty & Outcome Compounding (Sprint 122) and Runtime Proof & Adaptive Governance (Sprints 123–126) — is implemented and validated.
 
-All blocks from Foundation through Z are complete.
+All blocks from Foundation through AA are complete.
 
 ### Current Strategic Position
 
