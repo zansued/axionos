@@ -23518,6 +23518,50 @@ export type Database = {
           },
         ]
       }
+      operational_cycles: {
+        Row: {
+          active_posture: string
+          created_at: string
+          cycle_end: string | null
+          cycle_id: string
+          cycle_metrics: Json
+          cycle_start: string
+          cycle_type: string
+          organization_id: string
+          status: string
+        }
+        Insert: {
+          active_posture?: string
+          created_at?: string
+          cycle_end?: string | null
+          cycle_id?: string
+          cycle_metrics?: Json
+          cycle_start?: string
+          cycle_type?: string
+          organization_id: string
+          status?: string
+        }
+        Update: {
+          active_posture?: string
+          created_at?: string
+          cycle_end?: string | null
+          cycle_id?: string
+          cycle_metrics?: Json
+          cycle_start?: string
+          cycle_type?: string
+          organization_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operational_cycles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       operational_posture_state: {
         Row: {
           activated_at: string
