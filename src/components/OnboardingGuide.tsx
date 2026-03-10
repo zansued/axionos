@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOrg } from "@/contexts/OrgContext";
 import {
@@ -26,6 +27,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const { currentOrg } = useOrg();
   const { locale } = useI18n();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
 
@@ -94,6 +96,8 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   ];
 
   useEffect(() => {
+    // Don't show onboarding on the landing page
+    if (location.pathname === "/") return;
     if (user && currentOrg) {
       const key = `${ONBOARDING_KEY}-${user.id}`;
       const done = localStorage.getItem(key);
@@ -102,7 +106,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         return () => clearTimeout(timer);
       }
     }
-  }, [user, currentOrg]);
+  }, [user, currentOrg, location.pathname]);
 
   const complete = () => {
     if (user) {
