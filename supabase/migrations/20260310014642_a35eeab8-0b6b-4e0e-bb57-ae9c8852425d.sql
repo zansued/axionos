@@ -1,0 +1,1 @@
+UPDATE initiative_jobs SET status = 'failed', error = 'Auto-cleanup: stale running job', completed_at = NOW() WHERE id = '267d6936-b3d2-47f8-8897-b4be250d5495' AND status = 'running';
