@@ -1,4 +1,4 @@
-# AxionOS — Execution Plan
+# AxionOS — Plano de Execução
 
 > **Current Sprint:** 138 (Adaptive Operational Organism Console) — ✅ Complete
 > **Next Sprint:** Post-138 strategic planning
@@ -11,6 +11,7 @@
 AxionOS has completed its Level 10+ milestone. All blocks through AD (Adaptive Operational Organism) are complete. Learning canonization, adaptive coordination, organism memory, multi-loop governance, systemic health monitoring, and unified organism console are operational.
 
 **The focus is now:**
+
 1. Future planning beyond Sprint 138
 2. Consolidation and hardening of all completed blocks
 3. Preserve all governance constraints: no autonomous architecture mutation, rollback everywhere, human approval for structural change
@@ -31,18 +32,18 @@ Every new capability must be governable, auditable, and non-destructive before i
 
 ### Level 3 — Autonomous Engineering System (Sprints 1–10) ✅
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 1 | Initiative Brief — structured idea intake contract | ✅ |
-| Sprint 2 | Simulation Engine — feasibility gate before execution | ✅ |
-| Sprint 3 | Deploy Contract — publish-to-deploy state machine | ✅ |
-| Sprint 4 | Product Observability — initiative lifecycle metrics | ✅ |
-| Sprint 5 | Onboarding & Packaging — user activation and product framing | ✅ |
-| Sprint 6 | Repair Evidence — traceable, evidence-based repair loop | ✅ |
-| Sprint 7 | Error Pattern Library — pattern intelligence and strategy effectiveness | ✅ |
-| Sprint 8 | Prevention Layer — active guardrails from known patterns | ✅ |
-| Sprint 9 | Adaptive Routing — evidence-informed repair strategy selection | ✅ |
-| Sprint 10 | Learning Foundation — learning records, prompt outcomes, aggregation | ✅ |
+| Sprint    | Deliverable                                                             | Status |
+| --------- | ----------------------------------------------------------------------- | ------ |
+| Sprint 1  | Initiative Brief — structured idea intake contract                      | ✅     |
+| Sprint 2  | Simulation Engine — feasibility gate before execution                   | ✅     |
+| Sprint 3  | Deploy Contract — publish-to-deploy state machine                       | ✅     |
+| Sprint 4  | Product Observability — initiative lifecycle metrics                    | ✅     |
+| Sprint 5  | Onboarding & Packaging — user activation and product framing            | ✅     |
+| Sprint 6  | Repair Evidence — traceable, evidence-based repair loop                 | ✅     |
+| Sprint 7  | Error Pattern Library — pattern intelligence and strategy effectiveness | ✅     |
+| Sprint 8  | Prevention Layer — active guardrails from known patterns                | ✅     |
+| Sprint 9  | Adaptive Routing — evidence-informed repair strategy selection          | ✅     |
+| Sprint 10 | Learning Foundation — learning records, prompt outcomes, aggregation    | ✅     |
 
 ### Level 4–6 (Sprints 11–106) ✅
 
@@ -50,48 +51,48 @@ All sprints from Learning Agents v1 through Sovereign Institutional Intelligence
 
 ### Level 7 — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) ✅ Hardened
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 107 | Multi-Horizon Strategic Alignment Engine | ✅ |
-| Sprint 108 | Institutional Tradeoff Arbitration System | ✅ |
-| Sprint 109 | Mission Integrity & Drift Prevention | ✅ |
-| Sprint 110 | Civilizational Continuity Simulation Layer | ✅ |
+| Sprint     | Deliverable                                | Status |
+| ---------- | ------------------------------------------ | ------ |
+| Sprint 107 | Multi-Horizon Strategic Alignment Engine   | ✅     |
+| Sprint 108 | Institutional Tradeoff Arbitration System  | ✅     |
+| Sprint 109 | Mission Integrity & Drift Prevention       | ✅     |
+| Sprint 110 | Civilizational Continuity Simulation Layer | ✅     |
 
 ### Level 8 — Reflexive Governance & Evolution Control (Sprints 111–114) ✅
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 111 | Evolution Proposal Governance Engine | ✅ |
-| Sprint 112 | Architectural Mutation Control Layer | ✅ |
-| Sprint 113 | Reflective Validation & Self-Revision Audit | ✅ |
-| Sprint 114 | Kernel Integrity & Anti-Corrosion Guard | ✅ |
+| Sprint     | Deliverable                                 | Status |
+| ---------- | ------------------------------------------- | ------ |
+| Sprint 111 | Evolution Proposal Governance Engine        | ✅     |
+| Sprint 112 | Architectural Mutation Control Layer        | ✅     |
+| Sprint 113 | Reflective Validation & Self-Revision Audit | ✅     |
+| Sprint 114 | Kernel Integrity & Anti-Corrosion Guard     | ✅     |
 
 ### Level 9 — Implementation Canon & Knowledge Governance (Sprints 115–118) ✅
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 115 | Canon Steward & Knowledge Governance Engine | ✅ |
-| Sprint 116 | Implementation Pattern Library & Retrieval Layer | ✅ |
-| Sprint 117 | Failure Memory & Repair Intelligence Archive | ✅ |
-| Sprint 118 | External Knowledge Intake & Canon Evolution Control | ✅ |
+| Sprint     | Deliverable                                         | Status |
+| ---------- | --------------------------------------------------- | ------ |
+| Sprint 115 | Canon Steward & Knowledge Governance Engine         | ✅     |
+| Sprint 116 | Implementation Pattern Library & Retrieval Layer    | ✅     |
+| Sprint 117 | Failure Memory & Repair Intelligence Archive        | ✅     |
+| Sprint 118 | External Knowledge Intake & Canon Evolution Control | ✅     |
 
 ### Level 10 — Autonomous Delivery Sovereignty (Sprints 119–122) ✅
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 119 | Live Runtime Feedback Mesh | ✅ |
-| Sprint 120 | Tenant Doctrine & Adaptive Operating Profiles v2 | ✅ |
-| Sprint 121 | Outcome-Based Autonomy Engine | ✅ |
-| Sprint 122 | Compounding Advantage & Moat Orchestrator | ✅ |
+| Sprint     | Deliverable                                      | Status |
+| ---------- | ------------------------------------------------ | ------ |
+| Sprint 119 | Live Runtime Feedback Mesh                       | ✅     |
+| Sprint 120 | Tenant Doctrine & Adaptive Operating Profiles v2 | ✅     |
+| Sprint 121 | Outcome-Based Autonomy Engine                    | ✅     |
+| Sprint 122 | Compounding Advantage & Moat Orchestrator        | ✅     |
 
 ### Block AA — Runtime Proof & Adaptive Governance (Sprints 123–126) ✅
 
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 123 | Runtime Execution Validation Harness | ✅ |
-| Sprint 124 | Autonomy Ladder Stabilization | ✅ |
-| Sprint 125 | Tenant-Adaptive Regression Profiles | ✅ |
-| Sprint 126 | Cold Start Explainability Layer | ✅ |
+| Sprint     | Deliverable                          | Status |
+| ---------- | ------------------------------------ | ------ |
+| Sprint 123 | Runtime Execution Validation Harness | ✅     |
+| Sprint 124 | Autonomy Ladder Stabilization        | ✅     |
+| Sprint 125 | Tenant-Adaptive Regression Profiles  | ✅     |
+| Sprint 126 | Cold Start Explainability Layer      | ✅     |
 
 ---
 
@@ -127,11 +128,11 @@ AxionOS is an **Adaptive Operational Organism** platform (Level 10+):
 
 ### Completed Arc (Blocks AB–AD, Sprints 127–138)
 
-| Block | Sprints | Name | Status |
-|-------|---------|------|--------|
-| AB | 127–130 | Learning Canonization | ✅ Complete |
-| AC | 131–134 | Adaptive Coordination | ✅ Complete |
-| AD | 135–138 | Adaptive Operational Organism | ✅ Complete |
+| Block | Sprints | Name                          | Status      |
+| ----- | ------- | ----------------------------- | ----------- |
+| AB    | 127–130 | Learning Canonization         | ✅ Complete |
+| AC    | 131–134 | Adaptive Coordination         | ✅ Complete |
+| AD    | 135–138 | Adaptive Operational Organism | ✅ Complete |
 
 ### Level 11 — Adaptive Runtime Intelligence (Future Horizon)
 
@@ -140,78 +141,78 @@ AxionOS is an **Adaptive Operational Organism** platform (Level 10+):
 - Controlled experimentation with governance safeguards
 - This level is a vision, not a current priority
 
-
 ---
 
 ## Success Metrics
 
-| Metric | Target |
-|--------|--------|
-| Pipeline success rate (no manual intervention) | > 80% |
-| Build OK rate | > 90% |
-| Deploy success rate | > 85% |
-| Average retries per initiative | < 2 |
-| Automatic repair success rate | > 70% |
-| Cost per initiative | Tracked & declining |
-| Time from idea to validated repository | < 15 min |
-| Time from idea to deployment | < 20 min |
-| Memory entries captured per initiative | Tracked |
-| Memory retrieval frequency | Tracked |
+| Metric                                         | Target              |
+| ---------------------------------------------- | ------------------- |
+| Pipeline success rate (no manual intervention) | > 80%               |
+| Build OK rate                                  | > 90%               |
+| Deploy success rate                            | > 85%               |
+| Average retries per initiative                 | < 2                 |
+| Automatic repair success rate                  | > 70%               |
+| Cost per initiative                            | Tracked & declining |
+| Time from idea to validated repository         | < 15 min            |
+| Time from idea to deployment                   | < 20 min            |
+| Memory entries captured per initiative         | Tracked             |
+| Memory retrieval frequency                     | Tracked             |
 
 ---
 
 ## Active Kernel Components
 
-| Component | Status |
-|-----------|--------|
-| 32-stage deterministic pipeline | ✅ |
-| Project Brain (knowledge graph + semantic search) | ✅ |
-| DAG Execution Engine (Kahn's algorithm, 6 workers) | ✅ |
-| AI Efficiency Layer (compressor + cache + router) | ✅ |
-| Smart Context Window (~60-80% token reduction) | ✅ |
-| Runtime Validation (tsc + vite via CI) | ✅ |
-| Autonomous Build Repair + Fix Orchestrator | ✅ |
-| Evidence-Oriented Repair Loop | ✅ |
-| Error Pattern Library | ✅ |
-| Preventive Engineering Layer | ✅ |
-| Adaptive Repair Routing | ✅ |
-| Learning Foundation | ✅ |
-| Learning Agents v1 | ✅ |
-| Meta-Agents v1.2 (4 memory-aware agents) | ✅ |
-| Controlled Proposal Generation | ✅ |
-| Engineering Memory Foundation | ✅ |
-| Governance (gates, SLAs, audit logs) | ✅ |
-| Observability + Cost Tracking | ✅ |
-| Commercial Readiness (plans, billing, usage) | ✅ |
-| Proposal Quality Feedback Loop | ✅ |
-| Advisory Calibration Layer | ✅ |
-| Strategic Coordination (Block W) | ✅ |
-| Reflexive Governance (Block X) | ✅ |
-| Canonical Knowledge (Block Y) | ✅ |
-| Runtime Sovereignty (Block Z) | ✅ |
-| Runtime Proof & Adaptive Governance (Block AA) | ✅ |
-| Learning Canonization (Block AB) | ✅ |
-| Adaptive Coordination (Block AC) | ✅ |
-| Adaptive Operational Organism (Block AD) | ✅ |
+| Component                                          | Status |
+| -------------------------------------------------- | ------ |
+| 32-stage deterministic pipeline                    | ✅     |
+| Project Brain (knowledge graph + semantic search)  | ✅     |
+| DAG Execution Engine (Kahn's algorithm, 6 workers) | ✅     |
+| AI Efficiency Layer (compressor + cache + router)  | ✅     |
+| Smart Context Window (~60-80% token reduction)     | ✅     |
+| Runtime Validation (tsc + vite via CI)             | ✅     |
+| Autonomous Build Repair + Fix Orchestrator         | ✅     |
+| Evidence-Oriented Repair Loop                      | ✅     |
+| Error Pattern Library                              | ✅     |
+| Preventive Engineering Layer                       | ✅     |
+| Adaptive Repair Routing                            | ✅     |
+| Learning Foundation                                | ✅     |
+| Learning Agents v1                                 | ✅     |
+| Meta-Agents v1.2 (4 memory-aware agents)           | ✅     |
+| Controlled Proposal Generation                     | ✅     |
+| Engineering Memory Foundation                      | ✅     |
+| Governance (gates, SLAs, audit logs)               | ✅     |
+| Observability + Cost Tracking                      | ✅     |
+| Commercial Readiness (plans, billing, usage)       | ✅     |
+| Proposal Quality Feedback Loop                     | ✅     |
+| Advisory Calibration Layer                         | ✅     |
+| Strategic Coordination (Block W)                   | ✅     |
+| Reflexive Governance (Block X)                     | ✅     |
+| Canonical Knowledge (Block Y)                      | ✅     |
+| Runtime Sovereignty (Block Z)                      | ✅     |
+| Runtime Proof & Adaptive Governance (Block AA)     | ✅     |
+| Learning Canonization (Block AB)                   | ✅     |
+| Adaptive Coordination (Block AC)                   | ✅     |
+| Adaptive Operational Organism (Block AD)           | ✅     |
 
 ---
 
 ## Technology Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
-| State | TanStack React Query + React Context |
-| Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
+| Layer     | Technology                                                                                                             |
+| --------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Frontend  | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui                                                                |
+| State     | TanStack React Query + React Context                                                                                   |
+| Backend   | Supabase (PostgreSQL, Auth, Edge Functions, RLS)                                                                       |
 | AI Engine | DeepSeek (economy) + OpenAI GPT-5-mini (high-confidence) + GPT-5.4 (premium) + Lovable AI Gateway (fallback transport) |
-| Git | GitHub API v3 (Tree API for atomic commits) |
-| Deploy | Vercel/Netlify auto-generated configs |
+| Git       | GitHub API v3 (Tree API for atomic commits)                                                                            |
+| Deploy    | Vercel/Netlify auto-generated configs                                                                                  |
 
 ---
 
 ## Product Positioning
 
 **Present AxionOS as:**
+
 - An autonomous software engineering platform
 - A governed SaaS / MVP generator
 - A system that transforms ideas into validated repositories
@@ -220,6 +221,7 @@ AxionOS is an **Adaptive Operational Organism** platform (Level 10+):
 - A strategically coordinated platform with multi-horizon alignment
 
 **Do NOT present as:**
+
 - A startup factory
 - A global marketplace of agents
 - An abstract agent operating system
