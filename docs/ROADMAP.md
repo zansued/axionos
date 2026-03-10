@@ -158,6 +158,18 @@ All pillars of the Strategic Coordination OS are **implemented and hardened**:
    COMPLETE (123–126)
    ──────────────────────────────────────────────────────────────────────────────►
    Block AA — Runtime Proof & Adaptive Governance ✅
+
+   COMMITTED (127–130)
+   ──────────────────────────────────────────────────────────────────────────────►
+   Block AB — Learning Canonization 🔜
+
+   COMMITTED (131–134)
+   ──────────────────────────────────────────────────────────────────────────────►
+   Block AC — Adaptive Coordination 🔜
+
+   COMMITTED (135–138)
+   ──────────────────────────────────────────────────────────────────────────────►
+   Block AD — Adaptive Operational Organism 🔜
 ```
 
 ---
