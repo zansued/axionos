@@ -100,8 +100,8 @@ export const PRODUCT_GUIDANCE: PageGuidanceContract[] = [
     key: "initiatives",
     title: { pt: "Iniciativas", en: "Initiatives" },
     description: {
-      pt: "Gerencie suas iniciativas: da ideia ao software entregue, com pipeline governado e aprovação humana.",
-      en: "Manage your initiatives: from idea to delivered software, with governed pipeline and human approval.",
+      pt: "Autonomous Intelligent Infrastructure — gerencie suas iniciativas da ideia ao software entregue.",
+      en: "Autonomous Intelligent Infrastructure — manage your initiatives from idea to delivered software.",
     },
     audience: { pt: "Todos os usuários", en: "All users" },
     surface: "product",

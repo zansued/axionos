@@ -67,7 +67,7 @@ export default function Auth() {
           </h1>
           <p className="mt-2 text-sm text-muted-foreground flex items-center justify-center gap-1">
             <Zap className="h-3 w-3 text-primary" />
-            Governed AI Pipelines
+            Autonomous Intelligent Infrastructure
           </p>
         </div>
 

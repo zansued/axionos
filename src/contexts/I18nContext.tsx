@@ -27,7 +27,7 @@ const translations = {
     "nav.darkMode": "Modo Escuro",
     // Initiatives
     "initiatives.title": "Iniciativas",
-    "initiatives.subtitle": "Da ideia ao software — pipeline governado com aprovação humana",
+    "initiatives.subtitle": "Autonomous Intelligent Infrastructure — da ideia ao software entregue",
     "initiatives.new": "Nova Iniciativa",
     "initiatives.selectPrompt": "Selecione uma iniciativa para ver o pipeline",
     "initiatives.created": "Iniciativa criada!",
@@ -99,7 +99,7 @@ const translations = {
     "nav.darkMode": "Dark Mode",
     // Initiatives
     "initiatives.title": "Initiatives",
-    "initiatives.subtitle": "From idea to software — governed pipeline with human approval",
+    "initiatives.subtitle": "Autonomous Intelligent Infrastructure — from idea to delivered software",
     "initiatives.new": "New Initiative",
     "initiatives.selectPrompt": "Select an initiative to see the pipeline",
     "initiatives.created": "Initiative created!",
