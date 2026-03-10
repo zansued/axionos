@@ -22,20 +22,23 @@ function formatDuration(seconds: number | null): string {
   return `${h}h ${m}m`;
 }
 
-function RateBar({ value, label }: { value: number; label: string }) {
-  const color = value >= 80 ? "bg-success" : value >= 50 ? "bg-warning" : "bg-destructive";
-  return (
-    <div className="space-y-1">
-      <div className="flex items-center justify-between text-[10px]">
-        <span className="text-muted-foreground">{label}</span>
-        <span className="font-semibold">{value}%</span>
+const RateBar = React.forwardRef<HTMLDivElement, { value: number; label: string }>(
+  ({ value, label }, ref) => {
+    const color = value >= 80 ? "bg-success" : value >= 50 ? "bg-warning" : "bg-destructive";
+    return (
+      <div ref={ref} className="space-y-1">
+        <div className="flex items-center justify-between text-[10px]">
+          <span className="text-muted-foreground">{label}</span>
+          <span className="font-semibold">{value}%</span>
+        </div>
+        <div className="h-1.5 rounded-full bg-muted">
+          <div className={`h-full rounded-full transition-all ${color}`} style={{ width: `${Math.min(value, 100)}%` }} />
+        </div>
       </div>
-      <div className="h-1.5 rounded-full bg-muted">
-        <div className={`h-full rounded-full transition-all ${color}`} style={{ width: `${Math.min(value, 100)}%` }} />
-      </div>
-    </div>
-  );
-}
+    );
+  }
+);
+RateBar.displayName = "RateBar";
 
 export function InitiativeObservabilityCard({ initiativeId }: { initiativeId: string }) {
   const { data: metrics, isLoading, refetch } = useInitiativeObservability(initiativeId);
