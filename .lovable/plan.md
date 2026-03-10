@@ -152,20 +152,7 @@ AxionOS governance, orchestration, and explainability maturity are stronger than
 | Commercial Readiness (plans, billing, usage) | ✅ |
 | Proposal Quality Feedback Loop | ✅ |
 | Advisory Calibration Layer | ✅ |
-
----
-
-## Agent OS v1.0 — Reference Architecture (Frozen)
-
-The Agent OS is fully designed. No expansion needed.
-
-| Plane | Modules | Status |
-|-------|---------|--------|
-| **Core** | Runtime Protocol, Capability Model, Core Types | ✅ Designed |
-| **Control** | Selection Engine, Policy Engine, Governance Layer, Adaptive Routing | ✅ Designed |
-| **Execution** | Orchestrator, Coordination, Distributed Runtime, LLM Adapter, Tool Adapter | ✅ Designed |
-| **Data** | Artifact Store, Memory System, Observability | ✅ Designed |
-| **Ecosystem** | Marketplace & Global Capability Registry | ✅ Designed |
+| Strategic Coordination (Block W) | ✅ |
 
 ---
 
@@ -190,12 +177,13 @@ The Agent OS is fully designed. No expansion needed.
 - A system that transforms ideas into validated repositories
 - A meta-aware platform that analyzes its own performance and generates improvement proposals
 - A system accumulating institutional engineering experience
+- A strategically coordinated platform with multi-horizon alignment
 
 **Do NOT present as:**
 - A startup factory
 - A global marketplace of agents
 - An abstract agent operating system
 - An AGI system
-- A fully autonomous self-modifying system
+- A fully autonomous self-modifying system (governance before autonomy)
 
 > Pipeline contracts: [docs/PIPELINE_CONTRACTS.md](../docs/PIPELINE_CONTRACTS.md) | Agents: [docs/AGENTS.md](../docs/AGENTS.md) | Roadmap: [docs/ROADMAP.md](../docs/ROADMAP.md)
