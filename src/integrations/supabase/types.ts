@@ -24111,6 +24111,50 @@ export type Database = {
           },
         ]
       }
+      organism_memory: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          memory_id: string
+          memory_payload: Json
+          memory_scope: string
+          memory_signature: string
+          memory_type: string
+          organization_id: string
+          source_refs: Json
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          memory_id?: string
+          memory_payload?: Json
+          memory_scope?: string
+          memory_signature?: string
+          memory_type?: string
+          organization_id: string
+          source_refs?: Json
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          memory_id?: string
+          memory_payload?: Json
+          memory_scope?: string
+          memory_signature?: string
+          memory_type?: string
+          organization_id?: string
+          source_refs?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organism_memory_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_members: {
         Row: {
           created_at: string
