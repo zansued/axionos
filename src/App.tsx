@@ -102,6 +102,7 @@ import OperationalCyclesDashboard from "./pages/OperationalCyclesDashboard";
 import OperationalLoopsDashboard from "./pages/OperationalLoopsDashboard";
 import SystemHealthDashboard from "./pages/SystemHealthDashboard";
 import OrganismMemoryDashboard from "./pages/OrganismMemoryDashboard";
+import OrganismConsoleDashboard from "./pages/OrganismConsoleDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
