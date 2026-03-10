@@ -6,8 +6,8 @@
 >
 > **Current Mode**: Level 10 — Autonomous Delivery Sovereignty
 > **Current Maturity**: Level 10 ✅ Active
-> **Completed Blocks**: Foundation through Z (Sprints 1–122)
-> **Last strategic change (2026-03-10):** 122 sprints complete. All blocks (Foundation through Z) complete. Block Z (Runtime Sovereignty & Outcome Compounding) operational. Autonomy earned through evidence, bounded by governance, reversible by design.
+> **Completed Blocks**: Foundation through AA (Sprints 1–126)
+> **Last strategic change (2026-03-10):** 126 sprints complete. All blocks (Foundation through AA) complete. Block AA (Runtime Proof & Adaptive Governance) operational. Autonomy earned through evidence, bounded by governance, reversible by design.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
