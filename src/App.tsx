@@ -98,6 +98,7 @@ import CanonReuseImpactDashboard from "./pages/CanonReuseImpactDashboard";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
+import OperationalCyclesDashboard from "./pages/OperationalCyclesDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
