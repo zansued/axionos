@@ -715,10 +715,10 @@ Block W made the system more conscious than self-regulating. The next frontier i
 
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 111 | Evolution Proposal Governance Engine | X | 🔜 Planned | Govern proposals for changing the system itself, distinguishing healthy evolution from unnecessary complexity. Ensure structural changes are justified, bounded, and reversible. |
-| 112 | Architectural Mutation Control Layer | X | 🔜 Planned | Control architectural mutation by evaluating reversibility, blast radius, coupling expansion, and mutation legitimacy. Prevent uncontrolled structural drift. |
-| 113 | Reflective Validation & Self-Revision Audit | X | 🔜 Planned | Audit whether self-corrections and revisions actually improved the system or merely moved the problem elsewhere. Track revision effectiveness over time. |
-| 114 | Kernel Integrity & Anti-Corrosion Guard | X | 🔜 Planned | Protect the kernel against corrosion, bloat, existential drift, and loss of core legibility and governance integrity. Preserve architectural identity. |
+| 111 | Evolution Proposal Governance Engine | X | ✅ Complete | Govern proposals for changing the system itself, distinguishing healthy evolution from unnecessary complexity. Ensure structural changes are justified, bounded, and reversible. |
+| 112 | Architectural Mutation Control Layer | X | ✅ Complete | Control architectural mutation by evaluating reversibility, blast radius, coupling expansion, and mutation legitimacy. Prevent uncontrolled structural drift. |
+| 113 | Reflective Validation & Self-Revision Audit | X | ✅ Complete | Audit whether self-corrections and revisions actually improved the system or merely moved the problem elsewhere. Track revision effectiveness over time. |
+| 114 | Kernel Integrity & Anti-Corrosion Guard | X | ✅ Complete | Protect the kernel against corrosion, bloat, existential drift, and loss of core legibility and governance integrity. Preserve architectural identity. |
 
 **Block X logical chain:**
 - Block U: how to adapt, resolve conflict, federate, resist
