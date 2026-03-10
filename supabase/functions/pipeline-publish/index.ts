@@ -5,6 +5,7 @@ import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
 import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
+import { runDependencyGovernance } from "../_shared/dependency-governance.ts";
 
 /**
  * Camada 6 — Release
@@ -140,6 +141,52 @@ Retorne APENAS JSON:
       console.warn("Pre-flight warnings (non-blocking):", preflight.warnings);
       await pipelineLog(ctx, "release_preflight_warning",
         `Pre-flight warnings: ${preflight.warnings?.join(", ") || preflight.summary}`);
+    }
+
+    // ═══ PHASE 1.5: Dependency Governance Agent ═══
+    await pipelineLog(ctx, "dep_governance_start",
+      "Dependency Governance Agent: verificando e atualizando dependências...");
+
+    try {
+      const pkgEntry = fileEntries.find((f) => f.path === "package.json");
+      if (pkgEntry) {
+        const { updatedContent, report } = await runDependencyGovernance(pkgEntry.content);
+        pkgEntry.content = updatedContent; // apply upgrades in-place before commit
+
+        await pipelineLog(ctx, "dep_governance_result",
+          `${report.summary} | upgrades=${report.upgrades.length} deprecated=${report.deprecated.length} blocked=${report.blocked.length} risk=${report.risk} registry=${report.registry_consulted}`);
+
+        // Persist report for observability
+        if (report.upgrades.length > 0 || report.deprecated.length > 0 || report.blocked.length > 0) {
+          await updateInitiative(ctx, {
+            dep_governance_report: JSON.stringify({
+              upgrades: report.upgrades,
+              deprecated: report.deprecated,
+              blocked: report.blocked,
+              unresolved: report.unresolved,
+              risk: report.risk,
+              registry_consulted: report.registry_consulted,
+            }),
+          } as any);
+        }
+
+        // Block publish only for critical risk (blocked packages indicate compromised deps)
+        if (report.risk === "critical") {
+          throw new Error(
+            `Publicação bloqueada pelo Dependency Governance Agent: pacotes proibidos detectados — ${report.blocked.join(", ")}. ` +
+            `Remova essas dependências do código gerado e tente novamente.`
+          );
+        }
+      } else {
+        await pipelineLog(ctx, "dep_governance_skip", "package.json não encontrado nos artefatos — governança ignorada");
+      }
+    } catch (govErr) {
+      // Re-throw only if it was a deliberate governance block
+      if (govErr instanceof Error && govErr.message.includes("Dependency Governance Agent")) throw govErr;
+      // Otherwise, governance failure is non-blocking — log and continue
+      console.error("[DEP-GOV] Non-fatal error during governance:", govErr);
+      await pipelineLog(ctx, "dep_governance_error",
+        `Dependency Governance Agent encontrou erro não-bloqueante: ${govErr instanceof Error ? govErr.message : String(govErr)}`);
     }
 
     // ═══ PHASE 2: Changelog & Commit Messages (Release Agent) ═══
