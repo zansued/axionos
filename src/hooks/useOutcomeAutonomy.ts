@@ -54,12 +54,19 @@ export function useOutcomeAutonomy() {
     enabled: !!currentOrg,
   });
 
+  const regressionProfileQuery = useQuery({
+    queryKey: PROFILE_KEY,
+    queryFn: () => invoke("get_regression_profile"),
+    enabled: !!currentOrg,
+  });
+
   const invalidateAll = () => {
     qc.invalidateQueries({ queryKey: DOMAINS_KEY });
     qc.invalidateQueries({ queryKey: ADJUSTMENTS_KEY });
     qc.invalidateQueries({ queryKey: BREACHES_KEY });
     qc.invalidateQueries({ queryKey: REGRESSIONS_KEY });
     qc.invalidateQueries({ queryKey: TRANSITIONS_KEY });
+    qc.invalidateQueries({ queryKey: PROFILE_KEY });
   };
 
   const scoreAutonomy = useMutation({
@@ -91,17 +98,25 @@ export function useOutcomeAutonomy() {
     onError: (e: any) => toast({ title: "Error", description: e.message, variant: "destructive" }),
   });
 
+  const setRegressionProfile = useMutation({
+    mutationFn: (params: Record<string, any>) => invoke("set_regression_profile", params),
+    onSuccess: () => { invalidateAll(); toast({ title: "Regression profile updated" }); },
+    onError: (e: any) => toast({ title: "Error", description: e.message, variant: "destructive" }),
+  });
+
   return {
     domains: domainsQuery.data?.domains || [],
     adjustments: adjustmentsQuery.data?.adjustments || [],
     breaches: breachesQuery.data?.breaches || [],
     regressions: regressionsQuery.data?.regressions || [],
     transitionMetrics: transitionMetricsQuery.data || null,
+    regressionProfile: regressionProfileQuery.data || null,
     loadingDomains: domainsQuery.isLoading,
     scoreAutonomy,
     adjustLevel,
     registerBreach,
     downgradeAutonomy,
     explainPosture,
+    setRegressionProfile,
   };
 }
