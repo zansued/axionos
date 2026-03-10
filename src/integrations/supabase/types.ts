@@ -12888,6 +12888,302 @@ export type Database = {
           },
         ]
       }
+      evolution_proposal_decisions: {
+        Row: {
+          conditions: Json | null
+          created_at: string
+          decided_by: string | null
+          decision: string
+          decision_rationale: string | null
+          id: string
+          organization_id: string
+          proposal_id: string
+          risk_accepted: boolean
+        }
+        Insert: {
+          conditions?: Json | null
+          created_at?: string
+          decided_by?: string | null
+          decision?: string
+          decision_rationale?: string | null
+          id?: string
+          organization_id: string
+          proposal_id: string
+          risk_accepted?: boolean
+        }
+        Update: {
+          conditions?: Json | null
+          created_at?: string
+          decided_by?: string | null
+          decision?: string
+          decision_rationale?: string | null
+          id?: string
+          organization_id?: string
+          proposal_id?: string
+          risk_accepted?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evolution_proposal_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evolution_proposal_decisions_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "evolution_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evolution_proposal_evidence: {
+        Row: {
+          created_at: string
+          evidence_payload: Json
+          evidence_source: string
+          evidence_type: string
+          id: string
+          organization_id: string
+          proposal_id: string
+          relevance_score: number
+        }
+        Insert: {
+          created_at?: string
+          evidence_payload?: Json
+          evidence_source?: string
+          evidence_type?: string
+          id?: string
+          organization_id: string
+          proposal_id: string
+          relevance_score?: number
+        }
+        Update: {
+          created_at?: string
+          evidence_payload?: Json
+          evidence_source?: string
+          evidence_type?: string
+          id?: string
+          organization_id?: string
+          proposal_id?: string
+          relevance_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evolution_proposal_evidence_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evolution_proposal_evidence_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "evolution_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evolution_proposal_reviews: {
+        Row: {
+          boundedness_assessment: Json | null
+          created_at: string
+          id: string
+          legitimacy_assessment: Json | null
+          organization_id: string
+          proposal_id: string
+          reversibility_assessment: Json | null
+          review_notes: string | null
+          review_reason_codes: Json | null
+          review_status: string
+          reviewer_ref: Json | null
+        }
+        Insert: {
+          boundedness_assessment?: Json | null
+          created_at?: string
+          id?: string
+          legitimacy_assessment?: Json | null
+          organization_id: string
+          proposal_id: string
+          reversibility_assessment?: Json | null
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Update: {
+          boundedness_assessment?: Json | null
+          created_at?: string
+          id?: string
+          legitimacy_assessment?: Json | null
+          organization_id?: string
+          proposal_id?: string
+          reversibility_assessment?: Json | null
+          review_notes?: string | null
+          review_reason_codes?: Json | null
+          review_status?: string
+          reviewer_ref?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evolution_proposal_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evolution_proposal_reviews_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "evolution_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evolution_proposal_rollout_readiness: {
+        Row: {
+          blockers: Json
+          created_at: string
+          id: string
+          impact_assessment: Json
+          organization_id: string
+          prerequisites_met: boolean
+          proposal_id: string
+          readiness_level: string
+          readiness_score: number
+          rollback_plan_exists: boolean
+          updated_at: string
+        }
+        Insert: {
+          blockers?: Json
+          created_at?: string
+          id?: string
+          impact_assessment?: Json
+          organization_id: string
+          prerequisites_met?: boolean
+          proposal_id: string
+          readiness_level?: string
+          readiness_score?: number
+          rollback_plan_exists?: boolean
+          updated_at?: string
+        }
+        Update: {
+          blockers?: Json
+          created_at?: string
+          id?: string
+          impact_assessment?: Json
+          organization_id?: string
+          prerequisites_met?: boolean
+          proposal_id?: string
+          readiness_level?: string
+          readiness_score?: number
+          rollback_plan_exists?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evolution_proposal_rollout_readiness_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evolution_proposal_rollout_readiness_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "evolution_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evolution_proposals: {
+        Row: {
+          approved_by: string | null
+          boundedness_posture: Database["public"]["Enums"]["boundedness_posture"]
+          complexity_cost: number
+          created_at: string
+          decision_notes: string | null
+          expected_benefit: string
+          id: string
+          justification_summary: string
+          kernel_touch_risk: number
+          legitimacy_score: number
+          mission_alignment_score: number
+          organization_id: string
+          problem_statement: string
+          proposal_type: Database["public"]["Enums"]["evolution_proposal_type"]
+          proposed_by: string
+          reversibility_posture: Database["public"]["Enums"]["reversibility_posture"]
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["evolution_proposal_status"]
+          target_layer: Database["public"]["Enums"]["evolution_target_layer"]
+          target_scope: string
+          triggering_signals: Json
+          updated_at: string
+        }
+        Insert: {
+          approved_by?: string | null
+          boundedness_posture?: Database["public"]["Enums"]["boundedness_posture"]
+          complexity_cost?: number
+          created_at?: string
+          decision_notes?: string | null
+          expected_benefit?: string
+          id?: string
+          justification_summary?: string
+          kernel_touch_risk?: number
+          legitimacy_score?: number
+          mission_alignment_score?: number
+          organization_id: string
+          problem_statement?: string
+          proposal_type?: Database["public"]["Enums"]["evolution_proposal_type"]
+          proposed_by?: string
+          reversibility_posture?: Database["public"]["Enums"]["reversibility_posture"]
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["evolution_proposal_status"]
+          target_layer?: Database["public"]["Enums"]["evolution_target_layer"]
+          target_scope?: string
+          triggering_signals?: Json
+          updated_at?: string
+        }
+        Update: {
+          approved_by?: string | null
+          boundedness_posture?: Database["public"]["Enums"]["boundedness_posture"]
+          complexity_cost?: number
+          created_at?: string
+          decision_notes?: string | null
+          expected_benefit?: string
+          id?: string
+          justification_summary?: string
+          kernel_touch_risk?: number
+          legitimacy_score?: number
+          mission_alignment_score?: number
+          organization_id?: string
+          problem_statement?: string
+          proposal_type?: Database["public"]["Enums"]["evolution_proposal_type"]
+          proposed_by?: string
+          reversibility_posture?: Database["public"]["Enums"]["reversibility_posture"]
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["evolution_proposal_status"]
+          target_layer?: Database["public"]["Enums"]["evolution_target_layer"]
+          target_scope?: string
+          triggering_signals?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evolution_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       execution_policy_decisions: {
         Row: {
           adjustments_applied: Json
@@ -29786,6 +30082,7 @@ export type Database = {
         | "auto_execute_bounded"
         | "requires_approval"
       boundary_type: "hard" | "controlled" | "advisory" | "aggregate_only"
+      boundedness_posture: "strictly_bounded" | "loosely_bounded" | "unbounded"
       confidence_posture: "very_low" | "low" | "moderate" | "high" | "very_high"
       conflict_status:
         | "detected"
@@ -29873,6 +30170,27 @@ export type Database = {
         | "mentor_recommendation_playbook"
       drift_severity: "low" | "medium" | "high" | "critical"
       evaluation_result: "compatible" | "adapted" | "conflicting" | "blocked"
+      evolution_proposal_status:
+        | "draft"
+        | "submitted"
+        | "under_review"
+        | "approved"
+        | "rejected"
+        | "deferred"
+        | "archived"
+      evolution_proposal_type:
+        | "operational_fix"
+        | "tactical_improvement"
+        | "architectural_evolution"
+        | "existential_change"
+      evolution_target_layer:
+        | "execution"
+        | "coordination"
+        | "governance"
+        | "strategic"
+        | "reflexive"
+        | "canonical_knowledge"
+        | "cross_layer"
       initiative_stage_status:
         | "draft"
         | "discovery_ready"
@@ -29993,6 +30311,10 @@ export type Database = {
         | "split_scope"
         | "escalation"
         | "rollback"
+      reversibility_posture:
+        | "fully_reversible"
+        | "partially_reversible"
+        | "irreversible"
       rollback_posture:
         | "not_applicable"
         | "manual_rollback"
@@ -30188,6 +30510,7 @@ export const Constants = {
         "requires_approval",
       ],
       boundary_type: ["hard", "controlled", "advisory", "aggregate_only"],
+      boundedness_posture: ["strictly_bounded", "loosely_bounded", "unbounded"],
       confidence_posture: ["very_low", "low", "moderate", "high", "very_high"],
       conflict_status: [
         "detected",
@@ -30286,6 +30609,30 @@ export const Constants = {
       ],
       drift_severity: ["low", "medium", "high", "critical"],
       evaluation_result: ["compatible", "adapted", "conflicting", "blocked"],
+      evolution_proposal_status: [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "deferred",
+        "archived",
+      ],
+      evolution_proposal_type: [
+        "operational_fix",
+        "tactical_improvement",
+        "architectural_evolution",
+        "existential_change",
+      ],
+      evolution_target_layer: [
+        "execution",
+        "coordination",
+        "governance",
+        "strategic",
+        "reflexive",
+        "canonical_knowledge",
+        "cross_layer",
+      ],
       initiative_stage_status: [
         "draft",
         "discovery_ready",
@@ -30411,6 +30758,11 @@ export const Constants = {
         "split_scope",
         "escalation",
         "rollback",
+      ],
+      reversibility_posture: [
+        "fully_reversible",
+        "partially_reversible",
+        "irreversible",
       ],
       rollback_posture: [
         "not_applicable",
