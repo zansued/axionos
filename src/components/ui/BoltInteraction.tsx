@@ -271,7 +271,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           transition={{ delay: 0.4, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="w-full flex justify-center"
         >
-          <ChatInput onSend={handleSend} onExampleClick={handleSend} />
+          <ChatInput onSend={handleSend} />
         </motion.div>
       </div>
 
