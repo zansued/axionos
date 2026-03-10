@@ -7476,6 +7476,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "canon_pattern_embeddings_canon_entry_id_fkey"
+            columns: ["canon_entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "canon_pattern_embeddings_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
