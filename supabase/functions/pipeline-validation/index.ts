@@ -125,13 +125,12 @@ serve(async (req) => {
   }
 
   return jsonResponse({
-    success: true,
-    processing: "background",
+    status: "processing",
+    job_id: jobId,
     artifact_id: artifact.id,
     already_approved: alreadyApproved,
     remaining_to_validate: remaining,
     total: total,
-    job_id: jobId,
   });
 });
 
