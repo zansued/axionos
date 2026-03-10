@@ -79,6 +79,7 @@ import TradeoffArbitration from "./pages/TradeoffArbitration";
 import MissionIntegrity from "./pages/MissionIntegrity";
 import ContinuitySimulation from "./pages/ContinuitySimulation";
 import EvolutionProposalGovernance from "./pages/EvolutionProposalGovernance";
+import ArchitecturalMutationControl from "./pages/ArchitecturalMutationControl";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
