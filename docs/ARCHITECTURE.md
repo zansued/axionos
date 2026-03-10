@@ -6,7 +6,7 @@
 > **Current state:** Level 10 — Autonomous Delivery Sovereignty. 100+ architectural layers active. All blocks (Foundation through Z) complete. 122 sprints implemented. Block W hardened. Block X (111–114) complete. Block Y (115–118) complete. Block Z (119–122) complete.
 > **Completed blocks:** Foundation through Z (Sprints 1–122)
 > **Next horizon:** Future planning beyond Sprint 122
-> **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
+> **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** #axionos--sprint-ledger
 
 ## Document Authority
 
@@ -1046,7 +1046,7 @@ supabase/functions/
 
 ## 12. Implementation Status
 
-> **Canonical sprint-by-sprint record:** [PLAN.md](PLAN.md)
+> **Canonical sprint-by-sprint record:** #axionos--sprint-ledger
 > **Summary:** 110 sprints complete. 90+ architectural layers active. All blocks (Foundation through W) implemented, validated, and hardened.
 
 | Block | Sprints | Status |
@@ -1475,3 +1475,220 @@ Advisory-first, governance-before-autonomy. No autonomous architecture mutation.
 - **docs/README.md** is the navigation and maintenance guide
 
 > Diagrams in this file use **Mermaid** for GitHub rendering. PlantUML versions are in `docs/diagrams/` for corporate export.
+
+
+# AxionOS — Sprint Ledger
+
+> Sprint-by-sprint implementation record. **Canonical source for sprint status.**
+> Last updated: 2026-03-10 · 138 sprints complete (Blocks Foundation → AD)
+>
+> For architecture detail → [ARCHITECTURE.md](ARCHITECTURE.md)
+> For agent/module specs → [AGENTS.md](AGENTS.md)
+> For pipeline UX contracts → [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md)
+
+## Governing Principles
+
+- No autonomous architecture mutation — all structural changes require human approval
+- Governance before autonomy — autonomy is earned through evidence, bounded, and reversible
+- Learning candidates produce structured proposals only; they cannot modify canon automatically
+- Rollback posture is mandatory for any elevated autonomy class
+
+---
+
+## Sprint Table
+
+| Sprint | Block | Name | Layer | Status |
+|--------|-------|------|-------|--------|
+| 1 | Foundation | Initiative Brief Formalization | Execution Kernel | ✅ |
+| 2 | Foundation | Initiative Simulation Engine | Execution Kernel | ✅ |
+| 3 | Foundation | Deploy Contract Completion | Execution Kernel | ✅ |
+| 4 | Foundation | Product-Level Observability | Execution Kernel (Observability) | ✅ |
+| 5 | Foundation | Onboarding & Product Packaging | Execution Kernel | ✅ |
+| 6 | Foundation | Evidence-Oriented Repair Loop | Execution Kernel (Repair) | ✅ |
+| 7 | Foundation | Error Pattern Library & Learning Foundation | Execution Kernel (Prevention) | ✅ |
+| 8 | Foundation | Preventive Engineering Layer | Execution Kernel (Prevention) | ✅ |
+| 9 | Foundation | Adaptive Repair Routing | Execution Kernel (Routing) | ✅ |
+| 10 | Foundation | Learning Agents Foundation | Execution Kernel (Learning Substrate) | ✅ |
+| 11 | Foundation | Commercial Readiness / Billing | Commercial Readiness Layer | ✅ |
+| 12 | Foundation | Learning Agents v1 (5 engines) | Learning Agents Layer | ✅ |
+| 13 | Foundation | Meta-Agents v1 | Meta-Agent Coordination Layer | ✅ |
+| 14 | Foundation | Controlled Meta-Agent Actions | Proposal Generation Layer | ✅ |
+| 15 | Foundation | Engineering Memory Foundation | Engineering Memory Architecture | ✅ |
+| 16 | Foundation | Memory Retrieval Surfaces | Engineering Memory Architecture | ✅ |
+| 17 | Foundation | Memory Summaries | Engineering Memory Architecture | ✅ |
+| 18 | Foundation | Memory-Aware Meta-Agents | Meta-Agent + Memory | ✅ |
+| 19 | Foundation | Proposal Quality Feedback Loop | Proposal Quality & Calibration Layer | ✅ |
+| 20 | Foundation | Advisory Calibration Layer | Proposal Quality & Calibration Layer | ✅ |
+| 21 | Foundation | Prompt Optimization Engine (A/B testing) | Prompt Optimization Layer | ✅ |
+| 22 | Foundation | Bounded Promotion & Rollback Guard | Prompt Optimization Layer | ✅ |
+| 23 | Foundation | Self-Improving Fix Agents v2 | Repair Intelligence Layer | ✅ |
+| 24 | Foundation | Agent Memory Layer Operationalization | Agent Memory Layer | ✅ |
+| 25 | Foundation | Predictive Error Detection | Predictive Detection Layer | ✅ |
+| 26 | Foundation | Learning Agents v2 (Cross-Stage Policy) | Cross-Stage Learning Layer | ✅ |
+| 27 | Foundation | Execution Policy Intelligence | Execution Governance Layer | ✅ |
+| 28 | Foundation | Execution Mode Portfolio Optimization | Execution Governance Layer | ✅ |
+| 29 | Foundation | Workspace / Tenant Adaptive Policy Tuning | Execution Governance Layer | ✅ |
+| 30 | Foundation | Platform Intelligence Entry | Platform Intelligence Layer | ✅ |
+| 31 | Foundation | Platform Self-Calibration | Platform Calibration Layer | ✅ |
+| 32 | Foundation | Execution Strategy Evolution | Strategy Evolution Layer | ✅ |
+| 33 | Foundation | Strategy Portfolio Governance | Strategy Portfolio Governance Layer | ✅ |
+| 34 | Foundation | Platform Self-Stabilization | Platform Stabilization Layer | ✅ |
+| 35 | Foundation | Autonomous Engineering Advisor | Engineering Advisory Layer | ✅ |
+| 36 | Foundation | Semantic Retrieval & Embedding Memory | Semantic Retrieval Layer | ✅ |
+| 37 | Foundation | Discovery-Driven Architecture Signals | Discovery Architecture Layer | ✅ |
+| 38 | Foundation | Architecture Change Simulation & Governance | Architecture Simulation Layer | ✅ |
+| 39 | Foundation | Architecture Change Planning & Rollout Readiness | Architecture Planning Layer | ✅ |
+| 40 | Foundation | Architecture Rollout Sandbox | Architecture Rollout Sandbox Layer | ✅ |
+| 41 | J | Architecture Rollout Pilot Governance | Architecture Pilot Layer | ✅ |
+| 42 | J | Controlled Architecture Migration Execution | Architecture Migration Layer | ✅ |
+| 43 | J | Architecture Portfolio Governance | Architecture Portfolio Layer | ✅ |
+| 44 | K | Architecture Fitness Functions | Architecture Fitness Layer | ✅ |
+| 45 | K | Autonomous Change Advisory Orchestrator | Change Advisory Orchestration Layer | ✅ |
+| 46 | L | Platform Self-Stabilization v2 | Platform Stabilization v2 Layer | ✅ |
+| 47 | L | Tenant-Aware Architecture Modes | Tenant Architecture Layer | ✅ |
+| 48 | L | Economic Optimization Layer | Economic Optimization Layer | ✅ |
+| 49 | M | Platform Convergence Layer | Platform Convergence Layer | ✅ |
+| 50 | M | Convergence Governance & Promotion Layer | Convergence Governance Layer | ✅ |
+| 51 | M | Institutional Convergence Memory Layer | Convergence Memory Layer | ✅ |
+| 52 | M | Operating Profiles & Policy Packs | Operating Profiles Layer | ✅ |
+| 53 | M | Product Intelligence Entry | Product Intelligence Layer | ✅ |
+| 54 | M | Product Intelligence Operating Layer | Product Intelligence Operations Layer | ✅ |
+| 55 | M | Product Opportunity Portfolio Governance | Product Opportunity Governance Layer | ✅ |
+| 56 | M | Controlled Ecosystem Readiness Layer | Ecosystem Readiness Layer | ✅ |
+| 57 | M | Capability Exposure Governance Layer | Capability Exposure Governance Layer | ✅ |
+| 58 | M | External Trust & Admission Layer | External Trust & Admission Layer | ✅ |
+| 59 | M | Ecosystem Simulation & Sandbox Layer | Ecosystem Simulation Layer | ✅ |
+| 60 | M | Limited Marketplace Pilot Layer | Limited Marketplace Pilot Layer | ✅ |
+| 61 | M | Capability Registry Governance Layer | Capability Registry Governance Layer | ✅ |
+| 62 | M | Multi-Party Policy & Revenue Governance | Multi-Party Policy & Revenue Governance Layer | ✅ |
+| 63 | M | Institutional Outcome Assurance Layer | Institutional Outcome Assurance Layer | ✅ |
+| 64 | M | Canon Integrity & Drift Governance | Canon Integrity & Drift Governance Layer | ✅ |
+| 65 | M | Operating Completion Layer | Operating Completion Layer | ✅ |
+| 66 | M | User Journey Orchestration Layer | User Journey Orchestration Layer | ✅ |
+| 67 | M | Role-Based Experience Layer | Role-Based Experience Layer | ✅ |
+| 68 | M | One-Click Delivery & Deploy Assurance | One-Click Delivery Layer | ✅ |
+| 69 | M | Onboarding, Templates & Vertical Starters | Onboarding & Templates Layer | ✅ |
+| 70 | M | Adoption Intelligence & Customer Success | Adoption Intelligence Layer | ✅ |
+| 71 | — | Governed Extensibility & Developer Experience | Extensibility Foundation Layer | ✅ |
+| 72 | N | Evidence Capture & Improvement Ledger | Evidence Capture Layer | ✅ |
+| 73 | N | Improvement Candidate Distillation Engine | Improvement Candidate Layer | ✅ |
+| 74 | N | Sandbox Benchmarking & Promotion Governance | Sandbox Benchmark Layer | ✅ |
+| 75 | O | Role Arbitration & Capability Routing 2.0 | Capability Routing Layer | ✅ |
+| 76 | O | Multi-Agent Debate & Resolution Layer | Agent Debate Layer | ✅ |
+| 77 | O | Shared Working Memory & Task-State Negotiation | Shared Memory Layer | ✅ |
+| 78 | O | Bounded Swarm Execution | Swarm Execution Layer | ✅ |
+| 79 | P | Capability Packaging & Registry UX | Capability Packaging Layer | ✅ |
+| 80 | P | Trust, Entitlements & Approval Flows | Trust & Entitlement Layer | ✅ |
+| 81 | P | Creator / Partner Pilot Marketplace | Pilot Marketplace Layer | ✅ |
+| 82 | P | Outcome-Aware Capability Marketplace | Outcome Marketplace Layer | ✅ |
+| 83 | Q | Delivery Outcome Causality Layer | Delivery Causality Layer | ✅ |
+| 84 | Q | Post-Deploy Learning & Feedback Assimilation | Post-Deploy Learning Layer | ✅ |
+| 85 | Q | Reliability-Aware Delivery Tuning | Reliability Tuning Layer | ✅ |
+| 86 | Q | Outcome Assurance 2.0 | Outcome Assurance Layer | ✅ |
+| 87 | R | Distributed Job Control Plane | Distributed Control Layer | ✅ |
+| 88 | R | Cross-Region Execution & Recovery | Cross-Region Layer | ✅ |
+| 89 | R | Tenant-Isolated Scale Runtime | Scale Runtime Layer | ✅ |
+| 90 | R | Resilient Large-Scale Orchestration | Resilient Orchestration Layer | ✅ |
+| 91 | S | Architecture Hypothesis Engine | Architecture Hypothesis Layer | ✅ |
+| 92 | S | Simulated Evolution Campaigns | Evolution Campaign Layer | ✅ |
+| 93 | S | Cross-Tenant Pattern Synthesis | Pattern Synthesis Layer | ✅ |
+| 94 | S | Human-Governed Architecture Promotion | Architecture Promotion Layer | ✅ |
+| 95 | T | Institutional Memory Consolidation | Institutional Memory Layer | ✅ |
+| 96 | T | Doctrine & Playbook Synthesis | Doctrine Synthesis Layer | ✅ |
+| 97 | T | Bounded Autonomous Operations | Autonomous Operations Layer | ✅ |
+| 98 | T | Institutional Decision Engine | Decision Engine Layer | ✅ |
+| 99 | U | Cross-Context Doctrine Adaptation | Doctrine Adaptation Layer | ✅ |
+| 100 | U | Institutional Conflict Resolution Engine | Conflict Resolution Layer | ✅ |
+| 101 | U | Federated Intelligence Boundaries | Federated Intelligence Layer | ✅ |
+| 102 | U | Resilience & Continuity Governance | Continuity Governance Layer | ✅ |
+| 103 | V | Institutional Memory Constitution | Memory Constitution Layer | ✅ |
+| 104 | V | Sovereign Decision Rights Orchestration | Sovereign Decision Layer | ✅ |
+| 105 | V | Dependency Sovereignty & External Reliance Governance | Dependency Sovereignty Layer | ✅ |
+| 106 | V | Strategic Succession & Long-Horizon Continuity | Strategic Succession Layer | ✅ |
+| 107 | W | Multi-Horizon Strategic Alignment Engine | Strategic Alignment Layer | ✅ |
+| 108 | W | Institutional Tradeoff Arbitration System | Tradeoff Arbitration Layer | ✅ |
+| 109 | W | Mission Integrity & Drift Prevention | Mission Integrity Layer | ✅ |
+| 110 | W | Civilizational Continuity Simulation Layer | Continuity Simulation Layer | ✅ |
+| 111 | X | Evolution Proposal Governance Engine | Evolution Governance Layer | ✅ |
+| 112 | X | Architectural Mutation Control Layer | Mutation Control Layer | ✅ |
+| 113 | X | Reflective Validation & Self-Revision Audit | Reflective Validation Layer | ✅ |
+| 114 | X | Kernel Integrity & Anti-Corrosion Guard | Kernel Integrity Layer | ✅ |
+| 115 | Y | Canon Steward & Knowledge Governance Engine | Knowledge Governance Layer | ✅ |
+| 116 | Y | Implementation Pattern Library & Retrieval Layer | Pattern Retrieval Layer | ✅ |
+| 117 | Y | Failure Memory & Repair Intelligence Archive | Failure Memory Layer | ✅ |
+| 118 | Y | External Knowledge Intake & Canon Evolution Control | Knowledge Intake Layer | ✅ |
+| 119 | Z | Live Runtime Feedback Mesh | Runtime Feedback Layer | ✅ |
+| 120 | Z | Tenant Doctrine & Adaptive Operating Profiles v2 | Adaptive Profiles Layer | ✅ |
+| 121 | Z | Outcome-Based Autonomy Engine | Autonomy Engine Layer | ✅ |
+| 122 | Z | Compounding Advantage & Moat Orchestrator | Compounding Advantage Layer | ✅ |
+| 123 | AA | Runtime Execution Validation Harness | Runtime Validation Layer | ✅ |
+| 124 | AA | Autonomy Ladder Stabilization | Autonomy Stabilization Layer | ✅ |
+| 125 | AA | Tenant-Adaptive Regression Profiles | Regression Profile Layer | ✅ |
+| 126 | AA | Cold Start Explainability Layer | Cold Start Layer | ✅ |
+| 127 | AB | Learning Extraction Engine | Learning Extraction Layer | ✅ |
+| 128 | AB | Canon Promotion Pipeline | Canon Promotion Layer | ✅ |
+| 129 | AB | Cross-Tenant Pattern Distillation | Cross-Tenant Distillation Layer | ✅ |
+| 130 | AB | Canon Reuse Injection | Canon Reuse Injection Layer | ✅ |
+| 131 | AC | Operational Posture Engine | Operational Posture Layer | ✅ |
+| 132 | AC | Attention Allocation Engine | Attention Allocation Layer | ✅ |
+| 133 | AC | Adaptive Resource Routing | Adaptive Resource Routing Layer | ✅ |
+| 134 | AC | Operational Rhythm & Recovery Cycles | Operational Rhythm Layer | ✅ |
+| 135 | AD | Multi-Loop Governance Orchestrator | Multi-Loop Governance Layer | ✅ |
+| 136 | AD | Systemic Health Model | Systemic Health Model Layer | ✅ |
+| 137 | AD | Organism Memory Layers | Organism Memory Layer | ✅ |
+| 138 | AD | Adaptive Operational Organism Console | Organism Console Layer | ✅ |
+
+---
+
+## Block Summary
+
+| Block | Sprints | Name | Status |
+|-------|---------|------|--------|
+| Foundation | 1–40 | Execution Kernel + Intelligence + Governance + Architecture | ✅ Complete |
+| J | 41–43 | Architecture-Governed | ✅ Complete |
+| K | 44–45 | Architecture-Operating | ✅ Complete |
+| L | 46–48 | Architecture-Scaled | ✅ Complete |
+| M | 49–70 | Platform Convergence → Customer Success | ✅ Complete |
+| — | 71 | Governed Extensibility | ✅ Complete |
+| N | 72–74 | Evidence-Governed Improvement Loop | ✅ Complete |
+| O | 75–78 | Advanced Multi-Agent Coordination | ✅ Complete |
+| P | 79–82 | Governed Capability Ecosystem & Marketplace | ✅ Complete |
+| Q | 83–86 | Autonomous Delivery Optimization & Assurance 2.0 | ✅ Complete |
+| R | 87–90 | Advanced Distributed Runtime & Scaled Execution | ✅ Complete |
+| S | 91–94 | Research Sandbox for Architecture Evolution | ✅ Complete |
+| T | 95–98 | Governed Intelligence OS | ✅ Complete |
+| U | 99–102 | Adaptive Institutional Ecosystem | ✅ Complete |
+| V | 103–106 | Sovereign Institutional Intelligence | ✅ Complete |
+| W | 107–110 | Strategic Autonomy & Civilizational Coordination | ✅ Complete |
+| X | 111–114 | Reflexive Governance & Evolution Control | ✅ Complete |
+| Y | 115–118 | Implementation Canon & Knowledge Governance | ✅ Complete |
+| Z | 119–122 | Runtime Sovereignty & Outcome Compounding | ✅ Complete |
+| AA | 123–126 | Runtime Proof & Adaptive Governance | ✅ Complete |
+| AB | 127–130 | Learning Canonization | ✅ Complete |
+| AC | 131–134 | Adaptive Coordination | ✅ Complete |
+| AD | 135–138 | Adaptive Operational Organism | ✅ Complete |
+
+---
+
+## Edge Function Registry (Summary)
+
+| Category | Functions | Sprints |
+|----------|----------|---------|
+| Foundation (pipeline, validation, publish, repair, learning) | ~100 | 1–70 |
+| Multi-Agent Coordination | 4 | 75–78 |
+| Capability Ecosystem & Marketplace | 4 | 79–82 |
+| Delivery Optimization | 4 | 83–86 |
+| Distributed Runtime | 4 | 87–90 |
+| Architecture Research | 4 | 91–94 |
+| Governed Intelligence OS | 4 | 95–98 |
+| Adaptive Institutional Ecosystem | 4 | 99–102 |
+| Sovereign Institutional Intelligence | 4 | 103–106 |
+| Strategic Autonomy & Civilizational Coordination | 4 | 107–110 |
+| Reflexive Governance & Evolution Control | 4 | 111–114 |
+| Implementation Canon & Knowledge Governance | 4 | 115–118 |
+| Runtime Sovereignty & Outcome Compounding | 4 | 119–122 |
+| Runtime Proof & Adaptive Governance | 4 | 123–126 |
+| Learning Canonization | 4 | 127–130 |
+| Adaptive Coordination | 4 | 131–134 |
+| Adaptive Operational Organism | 4 | 135–138 |
+| **Total** | **~165** | |
