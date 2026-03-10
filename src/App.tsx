@@ -197,6 +197,7 @@ const App = () => (
                         <Route path="/ai-routing-policy"         element={<P><AIRoutingPolicy /></P>} />
                         <Route path="/evolution-governance"      element={<P><EvolutionProposalGovernance /></P>} />
                         <Route path="/mutation-control"          element={<P><ArchitecturalMutationControl /></P>} />
+                        <Route path="/reflective-validation"    element={<P><ReflectiveValidationAudit /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>

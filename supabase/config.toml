@@ -167,3 +167,6 @@ verify_jwt = false
 
 [functions.architectural-mutation-control]
 verify_jwt = false
+
+[functions.reflective-validation-audit]
+verify_jwt = false
