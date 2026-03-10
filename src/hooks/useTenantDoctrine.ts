@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 
 export function useTenantDoctrine() {
-  const { currentOrg } = useOrganization();
+  const { currentOrg } = useOrg();
   const orgId = currentOrg?.id;
 
   const { data: profiles = [], isLoading: loadingProfiles } = useQuery({
