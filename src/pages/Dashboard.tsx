@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { BoltStyleChat } from "@/components/ui/BoltInteraction";
@@ -10,9 +10,9 @@ const IDEA_KEY = "axion_initial_idea";
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [initialMessage, setInitialMessage] = useState("");
+  const [initialMessage, setInitialMessage] = React.useState("");
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (user) {
       const saved = sessionStorage.getItem(IDEA_KEY);
       if (saved) {
@@ -22,7 +22,7 @@ export default function Dashboard() {
     }
   }, [user]);
 
-  // Authenticated users see the operational dashboard
+  // Authenticated → operational dashboard
   if (!loading && user) {
     return (
       <AppLayout>
@@ -31,16 +31,12 @@ export default function Dashboard() {
     );
   }
 
-  const handlePromptSubmit = (
-    prompt: string,
-    _modelId: string,
-    _assets: File[]
-  ) => {
+  // Unauthenticated → landing
+  const handlePromptSubmit = (prompt: string, _modelId: string, _assets: File[]) => {
     if (loading) return;
     if (!user) {
       sessionStorage.setItem(IDEA_KEY, prompt);
       navigate("/auth");
-      return;
     }
   };
 
