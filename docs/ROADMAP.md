@@ -316,51 +316,27 @@ This is exactly why Block X exists: to close the gap between strategic awareness
 
 ## Block Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 Future
 
-### Strategic Rationale
+After AxionOS gains reflexive governance in Block X, the next frontier is governed implementation intelligence.
 
-Even with strong governance and reflexive control (Blocks W and X), the system risks reinventing implementation patterns repeatedly. Quality and consistency improve when implementation agents can consult governed, approved, versioned patterns. Failure knowledge should become reusable institutional memory. External best practices should not enter the system directly without governance.
+Block Y introduces a system-level implementation canon where architectural patterns, implementation templates, repair strategies, and curated external knowledge become reusable institutional memory.
 
-Block Y transforms scattered know-how into governed implementation intelligence. It depends conceptually on Block X because the system should first govern its own evolution before it governs dynamic canon evolution deeply.
+The objective is to reduce architectural reinvention, improve consistency, and transform operational experience into persistent system knowledge.
 
-### Operational Integration Principle
+However, Block Y is not a documentation layer.
 
-> **Block Y is not a passive knowledge repository.**
-> Knowledge only counts as system capability when it is operationally connected to planning, execution, repair, validation, or other runtime flows.
-> A pattern not consumed by agents or functions is documentation, not implementation intelligence.
+Its defining principle is operational integration:
 
-How the canon connects to runtime:
-- **Planning:** Planners consult approved architectures and implementation patterns before generating plans
-- **Execution:** Execution agents retrieve templates, conventions, and approved snippets before generating code
-- **Repair:** Repair loops consult historical failure patterns and successful mitigations before attempting fixes
-- **Validation:** Validators compare generated artifacts against canon-approved practices
-- **Canon updates:** All canon evolution remains governed, versioned, and auditable
+> Knowledge only becomes part of the system when it is retrieved and applied by agents during planning, execution, repair, or validation.
+>
+> Patterns that are not used by runtime processes remain documentation, not system capability.
+
+Block Y therefore focuses on connecting governed knowledge directly to execution flows.
 
 ### Planned Sprints
 
-| Sprint | Name | Objective |
-|--------|------|-----------|
-| 115 | Canon Steward & Knowledge Governance Engine | Govern the implementation canon itself — entries, categories, statuses, confidence, approval, versioning, stewardship, and deprecation. |
-| 116 | Implementation Pattern Library & Retrieval Layer | Create the implementation pattern library and retrieval layer so planning, execution, repair, and validation agents can query approved patterns, templates, conventions, and stack-specific guidance before generating code. |
-| 117 | Failure Memory & Repair Intelligence Archive | Create a failure memory and repair intelligence archive so recurrent errors, root causes, successful fixes, unsuccessful fixes, and mitigation strategies become reusable institutional knowledge. |
-| 118 | External Knowledge Intake & Canon Evolution Control | Create an external knowledge intake and canon evolution control layer so modern practices, official documentation updates, and new patterns can be reviewed, classified, validated, and safely admitted into the canon without letting internet churn directly rewrite system standards. |
+- **Sprint 115** — Canon Steward & Knowledge Governance Engine
+- **Sprint 116** — Implementation Pattern Library & Retrieval Layer
+- **Sprint 117** — Failure Memory & Repair Intelligence Archive
+- **Sprint 118** — External Knowledge Intake & Canon Evolution Control
 
-### Future Agent Roles
-
-| Role | Purpose |
-|------|---------|
-| Canon Steward | Governs canon lifecycle — entry approval, versioning, deprecation, quality enforcement |
-| Pattern Librarian | Curates and indexes implementation patterns for retrieval by execution agents |
-| Failure Archivist | Captures, classifies, and maintains failure/repair knowledge for institutional reuse |
-| External Research Curator | Reviews and validates external knowledge before canon admission |
-| Retrieval Guide | Optimizes pattern retrieval relevance for agent queries at runtime |
-
-These are future governance/knowledge roles. Their purpose is operational enablement — not curation for its own sake.
-
-### Known Future Risks
-
-- Becoming a decorative or bloated wiki
-- Storing knowledge that agents never actually use
-- Accumulating contradictory patterns
-- Letting external trends pollute the canon without validation
-
-**Canonical antidote:** Retrieval must be selective. Entries must be governed. Usage must be visible. Obsolete patterns must be deprecated. Canon quality matters more than canon size.
+This phase transforms scattered know-how into governed implementation intelligence embedded into the pipeline itself.

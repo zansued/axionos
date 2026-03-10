@@ -731,16 +731,40 @@ Block W made the system more conscious than self-regulating. The next frontier i
 
 ---
 
+## Block X → Block Y Strategic Outlook
+
+While Block X focuses on governing how the system evolves and mutates, Block Y focuses on governing what the system knows about implementation.
+
+Operational experience has shown that even with strong governance and orchestration, systems repeatedly reinvent implementation patterns unless guided by stable architectural knowledge.
+
+Block Y addresses this gap by introducing a governed implementation canon that agents can consult before generating, repairing, or validating code.
+
+This canon will include:
+
+- architectural patterns
+- implementation templates
+- code conventions
+- failure memory
+- repair strategies
+- curated external practices
+
+A critical architectural principle of Block Y is that knowledge must be operationally connected to the system.
+
+The canon will not function as a static wiki.
+
+Instead, planning agents, execution agents, repair loops, and validation stages will retrieve canon entries as part of their decision processes.
+
+In AxionOS architecture, knowledge becomes capability only when it participates in runtime behavior.
+
+This phase therefore transforms knowledge from passive documentation into applied system intelligence.
+
+---
+
 ## Block Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 FUTURE
 
-**Goal:** Transform scattered implementation know-how into governed, operationally connected implementation intelligence. Block Y is not a passive wiki. It is a governed knowledge layer where patterns, failure memory, and external best practices are curated, versioned, and consumed by agents at runtime.
+**Goal:** Transform scattered implementation know-how into governed, operationally connected implementation intelligence.
 
 **Architectural prerequisite:** Block X (Reflexive Governance) should be complete conceptually — the system must govern its own evolution before it governs dynamic canon evolution deeply.
-
-**Strategic thesis:** Even with strong governance and reflexive control (Blocks W and X), the system risks reinventing implementation patterns repeatedly. Quality and consistency improve when implementation agents can consult governed, approved, versioned patterns. Failure knowledge should become reusable institutional memory. External best practices should not enter the system directly without governance.
-
-**Operational integration principle:**
-> Knowledge only counts as system capability when it is operationally connected to planning, execution, repair, validation, or other runtime flows. A pattern not consumed by agents or functions is documentation, not implementation intelligence.
 
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
