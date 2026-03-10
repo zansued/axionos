@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { 
-  SendHorizontal, Box, Zap, Bot, BarChart3, ArrowRight
+  SendHorizontal, Box, Zap, Bot, BarChart3, ArrowRight, LogIn
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import axionLogo from '@/assets/axion-logo.svg'
