@@ -4,7 +4,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart3, Zap, Plus, Bot, Eye, Shield, Search } from "lucide-react";
+import { BarChart3, Zap, Plus, Bot, Eye, Radio, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
