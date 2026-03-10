@@ -101,17 +101,30 @@ documents:
       - AGENTS.md for agent references
     update_rule: Update when user-visible pipeline behavior changes.
 
+  - file: docs/VALUE_THESIS.md
+    owns:
+      - category-creation narrative
+      - compounding intelligence thesis
+      - strategic moat definition
+      - value loop model
+    must_not_define:
+      - sprint details (→ PLAN.md)
+      - strategic direction or maturity (→ ROADMAP.md)
+      - architectural content (→ ARCHITECTURE.md)
+    update_rule: Update when the value thesis or category narrative changes.
+
   - file: docs/README.md
     owns:
       - documentation navigation index
       - sprint status taxonomy
       - canon boundaries
+      - current canon note
       - continuation guidance if context is lost
-      - post-65 strategic guidance
       - maintenance protocol
       - normalization rules
     must_not_define:
       - sprint details (→ PLAN.md)
       - strategic narrative (→ ROADMAP.md)
       - architectural content (→ ARCHITECTURE.md)
+      - value thesis detail (→ VALUE_THESIS.md)
     update_rule: Update when document structure, status taxonomy, or canon boundaries change.
