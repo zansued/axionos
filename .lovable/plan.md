@@ -1,7 +1,7 @@
 # AxionOS — Execution Plan
 
-> **Current Sprint:** 130 (Canon Reuse Injection) — ✅ Complete
-> **Next Sprint:** 131 (Operational Posture Engine)
+> **Current Sprint:** 131 (Operational Posture Engine) — ✅ Complete
+> **Next Sprint:** 132 (Attention Allocation Engine)
 > Execution: **Sprint-based**
 
 ---
