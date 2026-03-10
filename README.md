@@ -235,11 +235,11 @@ flowchart TB
 
 | Area | Limitation |
 |------|-----------|
-| **Learning maturity** | Self-learning and institutional memory capabilities are implemented but require sustained production usage to accumulate meaningful data |
-| **Multi-tenant scale** | Distributed runtime architecture is in place but has not been validated under high-concurrency multi-tenant load |
-| **AI provider dependency** | Pipeline execution depends on external LLM providers; availability and cost are bounded but not eliminated |
+| **Learning maturity** | Self-learning engines (Levels 4–5) require accumulated usage data to deliver full optimization — new installations start with baseline behavior |
+| **CI Runtime Validation** | Depends on GitHub Actions and a configured webhook secret (`SYNKRAIOS_WEBHOOK_SECRET`) — projects without this secret will not receive build feedback |
+| **AI non-determinism** | AI responses are non-deterministic — the semantic cache reduces variance but does not eliminate it entirely |
+| **Pipeline execution time** | Varies from 15 to 90+ minutes depending on project complexity and API response times |
 | **Fix swarm autonomy** | Automated repair handles common error patterns well; novel or complex failures may require human intervention |
-| **Canon accumulation** | Evidence-governed improvement loops are operational but the canon is early-stage — effectiveness compounds over time |
 
 ---
 
@@ -262,9 +262,10 @@ flowchart TB
 | Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
 | State | TanStack React Query + React Context |
 | Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
-| AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
+| AI Engine | Configurable: Lovable AI Gateway (Gemini 2.5 Flash/Pro) or OpenAI (gpt-4o-mini) — set via environment variables |
 | Git | GitHub API v3 (Tree API for atomic commits) |
 | Deploy | Vercel/Netlify auto-generated configs |
+| Testing | Vitest (frontend logic) — Edge Function integration tests planned |
 
 ---
 
