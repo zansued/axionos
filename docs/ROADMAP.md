@@ -468,15 +468,27 @@ Block AC introduces adaptive operational coordination — the system allocates a
 
 ---
 
-## Block AD — Adaptive Operational Organism (Sprints 135–138) — 🔜 Committed
+## Block AD — Adaptive Operational Organism (Sprints 135–138) — ✅ Complete
 
 Block AD synthesizes the platform's coordination, learning, governance, and runtime layers into a coherent adaptive organism. The system operates with multi-loop governance, monitors its own systemic health, maintains layered organism memory, and provides an operator console for organism-level visibility.
 
 **Focus areas:**
 - Multi-loop governance orchestration (fast/slow/strategic loops)
 - Systemic health model spanning all operational dimensions
-- Organism-level memory layers (operational, tactical, strategic)
+- Organism-level memory layers (episodic, procedural, doctrinal, strategic)
 - Unified operator console for organism-level observation and control
+
+### Completed Sprints
+
+- **Sprint 135** — Multi-Loop Governance Orchestrator ✅
+- **Sprint 136** — Systemic Health Model ✅
+- **Sprint 137** — Organism Memory Layers ✅
+- **Sprint 138** — Adaptive Operational Organism Console ✅
+
+**Block AD logical chain:**
+- Block AB: how to canonize learning into durable institutional knowledge
+- Block AC: how to coordinate adaptively based on operational reality
+- **Block AD: how to synthesize all subsystems into a coherent adaptive organism with multi-loop governance, systemic health, layered memory, and unified observability**
 
 **Defining principle:** The organism metaphor serves operational coherence, not autonomy expansion. All organism behaviors remain advisory-first, governance-bounded, and human-supervised.
 
