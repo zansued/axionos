@@ -47,11 +47,18 @@ export function useOutcomeAutonomy() {
     enabled: !!currentOrg,
   });
 
+  const transitionMetricsQuery = useQuery({
+    queryKey: TRANSITIONS_KEY,
+    queryFn: () => invoke("transition_metrics"),
+    enabled: !!currentOrg,
+  });
+
   const invalidateAll = () => {
     qc.invalidateQueries({ queryKey: DOMAINS_KEY });
     qc.invalidateQueries({ queryKey: ADJUSTMENTS_KEY });
     qc.invalidateQueries({ queryKey: BREACHES_KEY });
     qc.invalidateQueries({ queryKey: REGRESSIONS_KEY });
+    qc.invalidateQueries({ queryKey: TRANSITIONS_KEY });
   };
 
   const scoreAutonomy = useMutation({
