@@ -6,10 +6,9 @@ import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "
 import { generateBrainContext, recordError, updateNodeStatus, getNodeByPath, markErrorFixed } from "../_shared/brain-helpers.ts";
 
 /**
- * Camada 5 — Verificação com Fix Loop Automático (Background Job Pattern)
+ * Camada 5 — Verificação com Fix Loop Automático (Synchronous, One-at-a-time)
  * 
- * Uses EdgeRuntime.waitUntil() to process in background, returning immediately.
- * Processes ONE artifact per invocation to stay within Edge Function timeout.
+ * Processes ONE artifact per invocation synchronously.
  * Frontend retries automatically until all artifacts are validated.
  *
  * 3 agentes especializados + Fix Loop (max 2 tentativas):
