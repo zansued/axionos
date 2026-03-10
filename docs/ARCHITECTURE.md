@@ -86,19 +86,19 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    UI["Web App / Dashboard"]
-    API["API / Edge Functions Layer"]
+    UI["Web App / Dashboard"]:::human
+    API["API / Edge Functions Layer"]:::core
 
-    Core["Execution Pipeline Core"]
-    OI["Operational Intelligence Engine"]
-    Learn["Learning Engine"]
-    Gov["Execution Governance Engine"]
-    PI["Platform Intelligence Engine"]
-    Calib["Platform Self-Calibration Engine"]
-    Strat["Execution Strategy Evolution Engine"]
+    Core["Execution Pipeline Core"]:::runtime
+    OI["Operational Intelligence Engine"]:::intelligence
+    Learn["Learning Engine"]:::intelligence
+    Gov["Execution Governance Engine"]:::governance
+    PI["Platform Intelligence Engine"]:::intelligence
+    Calib["Platform Self-Calibration Engine"]:::governance
+    Strat["Execution Strategy Evolution Engine"]:::strategic
 
-    Data["Persistence Layer\nSupabase / PostgreSQL"]
-    Ext["External Integration Layer\nGitHub / LLM / Telemetry"]
+    Data["Persistence Layer\nSupabase / PostgreSQL"]:::data
+    Ext["External Integration Layer\nGitHub / LLM / Telemetry"]:::external
 
     UI --> API
 
@@ -133,9 +133,18 @@ flowchart TB
     Calib --> Data
     Strat --> Data
 
-    Ext --> GitHub["GitHub / Code Hosting"]
-    Ext --> Models["LLM Providers"]
-    Ext --> Telemetry["Telemetry / Notifications"]
+    Ext --> GitHub["GitHub / Code Hosting"]:::external
+    Ext --> Models["LLM Providers"]:::external
+    Ext --> Telemetry["Telemetry / Notifications"]:::external
+
+    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:1.5px;
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef strategic fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef external fill:#B2BEC3,stroke:#636E72,color:#111,stroke-width:1.5px;
 ```
 
 **Containers:**
