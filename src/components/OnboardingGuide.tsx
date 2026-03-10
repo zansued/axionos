@@ -29,7 +29,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const { locale } = useI18n();
   const location = useLocation();
   const [open, setOpen] = useState(false);
-  const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
 
   const steps = locale === "en-US" ? [
