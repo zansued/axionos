@@ -273,18 +273,24 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    Selector["Execution Policy Selector"]
-    Portfolio["Policy Portfolio Optimizer"]
-    Tenant["Tenant Adaptive Tuning Engine"]
-    Routing["Policy Routing Layer"]
+    Selector["Execution Policy Selector"]:::governance
+    Portfolio["Policy Portfolio Optimizer"]:::governance
+    Tenant["Tenant Adaptive Tuning Engine"]:::intelligence
+    Routing["Policy Routing Layer"]:::core
 
-    Signals["Learning Signals"] --> Selector
-    Policies["Policy Portfolio"] --> Selector
-    TenantCtx["Tenant / Workspace Context"] --> Tenant
+    Signals["Learning Signals"]:::data --> Selector
+    Policies["Policy Portfolio"]:::data --> Selector
+    TenantCtx["Tenant / Workspace Context"]:::human --> Tenant
 
     Selector --> Tenant
     Tenant --> Routing
     Portfolio --> Routing
+
+    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:1.5px;
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Sub-layers:**
