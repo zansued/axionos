@@ -58,9 +58,9 @@ export default function Auth() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary glow-primary"
+            className="mx-auto mb-4 flex h-20 w-20 items-center justify-center"
           >
-            <Bot className="h-8 w-8 text-primary-foreground" />
+            <img src={axionLogo} alt="AxionOS Logo" className="h-20 w-20" />
           </motion.div>
           <h1 className="font-display text-3xl font-bold tracking-tight">
             <span className="text-gradient">Axion</span>OS
