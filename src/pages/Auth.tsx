@@ -104,6 +104,24 @@ export default function Auth() {
           </motion.p>
         </div>
 
+        {/* Saved idea banner */}
+        {savedIdea && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.4 }}
+            className="mb-4 w-full rounded-xl border border-primary/20 bg-primary/[0.06] px-4 py-3 backdrop-blur-sm"
+          >
+            <div className="flex items-start gap-2.5">
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              <div className="min-w-0">
+                <p className="text-[12px] font-medium text-primary mb-1">Your idea is waiting</p>
+                <p className="text-[13px] text-white/60 leading-snug line-clamp-2">{savedIdea}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
