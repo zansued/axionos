@@ -2,12 +2,15 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
-console.log("[AxionOS] ENV rebuild v2:", {
-  url: import.meta.env.VITE_SUPABASE_URL ? "SET" : "MISSING",
-  key: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ? "SET" : "MISSING",
-  projectId: import.meta.env.VITE_SUPABASE_PROJECT_ID ? "SET" : "MISSING",
-  urlValue: import.meta.env.VITE_SUPABASE_URL?.substring(0, 30),
-});
+// AxionOS env diagnostics — v3
+const supaUrl = import.meta.env.VITE_SUPABASE_URL;
+const supaKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+if (!supaUrl || supaUrl.includes("placeholder")) {
+  console.error("[AxionOS] CRITICAL: Supabase URL not injected. Got:", supaUrl);
+} else {
+  console.log("[AxionOS] Backend connected:", supaUrl.substring(0, 30) + "...");
+}
 
 const root = document.getElementById("root")!;
 
