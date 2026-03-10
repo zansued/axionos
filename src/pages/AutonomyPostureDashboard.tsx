@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
-import { Shield, TrendingDown, AlertTriangle, Activity, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Shield, TrendingDown, AlertTriangle, Activity, Clock, CheckCircle2, XCircle, Gauge } from "lucide-react";
 
 const levelColors: Record<number, string> = {
   0: "bg-muted text-muted-foreground",
