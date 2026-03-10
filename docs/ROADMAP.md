@@ -7,7 +7,8 @@
 > **Current Mode**: Level 7 — Strategic Autonomy & Civilizational Coordination
 > **Current Maturity**: Level 7 ✅ Active
 > **Next Block**: X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
-> **Last strategic change (2026-03-10):** 110 sprints complete. All blocks (Foundation through W) complete and hardened. Strategic Autonomy & Civilizational Coordination operational. Block X motivated by discovered runtime orchestration limitations.
+> **Future Block**: Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 Future
+> **Last strategic change (2026-03-10):** 110 sprints complete. All blocks (Foundation through W) complete and hardened. Strategic Autonomy & Civilizational Coordination operational. Block X motivated by discovered runtime orchestration limitations. Block Y introduced as the next future horizon after Block X.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
@@ -142,6 +143,10 @@ All pillars of the Strategic Coordination OS are **implemented and hardened**:
    PLANNED (111–114)
    ──────────────────────────────────────────────────────────────────────────────►
    Block X — Reflexive Governance & Evolution Control 🔜
+
+   FUTURE (115–118)
+   ──────────────────────────────────────────────────────────────────────────────►
+   Block Y — Implementation Canon & Knowledge Governance 🔮
 ```
 
 ---
@@ -218,6 +223,7 @@ All pillars of the Strategic Coordination OS are **implemented and hardened**:
 | V | Sovereign Institutional Intelligence | 103–106 | ✅ Complete |
 | W | Strategic Autonomy & Civilizational Coordination | 107–110 | ✅ Complete & Hardened |
 | X | Reflexive Governance & Evolution Control | 111–114 | 🔜 Planned |
+| Y | Implementation Canon & Knowledge Governance | 115–118 | 🔮 Future |
 
 ---
 
@@ -247,6 +253,7 @@ All pillars of the Strategic Coordination OS are **implemented and hardened**:
 | Sovereign Institutional Intelligence | 103–106 | ✅ Complete | Memory constitution, sovereign decision rights, dependency sovereignty, strategic succession |
 | Strategic Autonomy & Civilizational Coordination | 107–110 | ✅ Complete & Hardened | Multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation |
 | Reflexive Governance & Evolution Control | 111–114 | 🔜 Planned | Evolution proposal governance, mutation control, self-revision audit, kernel integrity guard |
+| Implementation Canon & Knowledge Governance | 115–118 | 🔮 Future | Canon stewardship, implementation pattern library, failure memory, external knowledge intake |
 
 ---
 
@@ -272,9 +279,11 @@ All 90+ architectural layers are operational. The kernel includes the 32-stage d
 | Level 6 | Sovereign Institutional Intelligence | ✅ Complete |
 | Level 7 | Strategic Autonomy & Civilizational Coordination | ✅ Current |
 | Level 8 | Reflexive Governance & Evolution Control | 🔜 Planned (Block X) |
+| Level 9 | Implementation Canon & Knowledge Governance | 🔮 Future (Block Y) |
 
 > **Current position:** Level 7 — Strategic Autonomy & Civilizational Coordination active.
 > **Next target:** Level 8 — Reflexive Governance & Evolution Control (Block X, Sprints 111–114).
+> **Future target:** Level 9 — Implementation Canon & Knowledge Governance (Block Y, Sprints 115–118).
 > **Execution mode:** Sprint-based implementation.
 
 ---
@@ -298,3 +307,60 @@ This is exactly why Block X exists: to close the gap between strategic awareness
 >
 > **Next evolution:** Block X — Reflexive Governance & Evolution Control (Sprints 111–114).
 > The system transitions from strategic coordination to **reflexive governance** — governing how AxionOS changes itself, detecting corrosion, and protecting kernel integrity.
+>
+> **Future evolution:** Block Y — Implementation Canon & Knowledge Governance (Sprints 115–118).
+> The system gains governed implementation intelligence — curated patterns, failure memory, external knowledge intake — operationally connected to planning, execution, repair, and validation flows.
+> **Principle:** Knowledge only counts as system capability when agents and runtime flows consume it. A pattern not retrieved is documentation, not intelligence.
+
+---
+
+## Block Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 Future
+
+### Strategic Rationale
+
+Even with strong governance and reflexive control (Blocks W and X), the system risks reinventing implementation patterns repeatedly. Quality and consistency improve when implementation agents can consult governed, approved, versioned patterns. Failure knowledge should become reusable institutional memory. External best practices should not enter the system directly without governance.
+
+Block Y transforms scattered know-how into governed implementation intelligence. It depends conceptually on Block X because the system should first govern its own evolution before it governs dynamic canon evolution deeply.
+
+### Operational Integration Principle
+
+> **Block Y is not a passive knowledge repository.**
+> Knowledge only counts as system capability when it is operationally connected to planning, execution, repair, validation, or other runtime flows.
+> A pattern not consumed by agents or functions is documentation, not implementation intelligence.
+
+How the canon connects to runtime:
+- **Planning:** Planners consult approved architectures and implementation patterns before generating plans
+- **Execution:** Execution agents retrieve templates, conventions, and approved snippets before generating code
+- **Repair:** Repair loops consult historical failure patterns and successful mitigations before attempting fixes
+- **Validation:** Validators compare generated artifacts against canon-approved practices
+- **Canon updates:** All canon evolution remains governed, versioned, and auditable
+
+### Planned Sprints
+
+| Sprint | Name | Objective |
+|--------|------|-----------|
+| 115 | Canon Steward & Knowledge Governance Engine | Govern the implementation canon itself — entries, categories, statuses, confidence, approval, versioning, stewardship, and deprecation. |
+| 116 | Implementation Pattern Library & Retrieval Layer | Create the implementation pattern library and retrieval layer so planning, execution, repair, and validation agents can query approved patterns, templates, conventions, and stack-specific guidance before generating code. |
+| 117 | Failure Memory & Repair Intelligence Archive | Create a failure memory and repair intelligence archive so recurrent errors, root causes, successful fixes, unsuccessful fixes, and mitigation strategies become reusable institutional knowledge. |
+| 118 | External Knowledge Intake & Canon Evolution Control | Create an external knowledge intake and canon evolution control layer so modern practices, official documentation updates, and new patterns can be reviewed, classified, validated, and safely admitted into the canon without letting internet churn directly rewrite system standards. |
+
+### Future Agent Roles
+
+| Role | Purpose |
+|------|---------|
+| Canon Steward | Governs canon lifecycle — entry approval, versioning, deprecation, quality enforcement |
+| Pattern Librarian | Curates and indexes implementation patterns for retrieval by execution agents |
+| Failure Archivist | Captures, classifies, and maintains failure/repair knowledge for institutional reuse |
+| External Research Curator | Reviews and validates external knowledge before canon admission |
+| Retrieval Guide | Optimizes pattern retrieval relevance for agent queries at runtime |
+
+These are future governance/knowledge roles. Their purpose is operational enablement — not curation for its own sake.
+
+### Known Future Risks
+
+- Becoming a decorative or bloated wiki
+- Storing knowledge that agents never actually use
+- Accumulating contradictory patterns
+- Letting external trends pollute the canon without validation
+
+**Canonical antidote:** Retrieval must be selective. Entries must be governed. Usage must be visible. Obsolete patterns must be deprecated. Canon quality matters more than canon size.

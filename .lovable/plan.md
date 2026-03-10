@@ -99,9 +99,28 @@ AxionOS governance, orchestration, and explainability maturity are stronger than
 | Sprint 113 | Reflective Validation & Self-Revision Audit — audit whether self-corrections actually improved | 🔲 |
 | Sprint 114 | Kernel Integrity & Anti-Corrosion Guard — protect kernel against corrosion, bloat, drift | 🔲 |
 
+### Block Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 Future
+
+**Thesis:** Transform scattered implementation know-how into governed, operationally connected implementation intelligence. Knowledge only counts as system capability when it is consumed by agents and runtime flows.
+
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 115 | Canon Steward & Knowledge Governance Engine — entry governance, versioning, approval, deprecation | 🔮 |
+| Sprint 116 | Implementation Pattern Library & Retrieval Layer — agent-retrievable patterns, templates, conventions | 🔮 |
+| Sprint 117 | Failure Memory & Repair Intelligence Archive — recurrent errors, root causes, successful mitigations | 🔮 |
+| Sprint 118 | External Knowledge Intake & Canon Evolution Control — external best practices reviewed before admission | 🔮 |
+
 ### Future Horizons
 
-### Level 9 — Adaptive Runtime Intelligence (Future Horizon)
+### Level 9 — Canonical Knowledge & Implementation Intelligence (Future Horizon — Block Y)
+
+- Governed implementation knowledge operationally connected to agents
+- Curated pattern libraries retrievable at planning/execution/repair/validation time
+- Failure memory and repair intelligence as institutional knowledge
+- External knowledge intake with validation gates
+- Knowledge must be consumed by runtime flows to count as system capability
+
+### Level 10 — Adaptive Runtime Intelligence (Further Future Horizon)
 
 - Autonomous execution parameter reconfiguration
 - Runtime self-healing beyond manual intervention

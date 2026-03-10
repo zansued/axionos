@@ -32,3 +32,12 @@ blocks:
 
   # === BLOCK V — Sovereign Institutional Intelligence === COMPLETE
   - { block_id: "V",          block_name: "Sovereign Institutional Intelligence",         sprint_range: "103–106", status: complete, purpose: "Institutional memory constitution, sovereign decision rights, dependency sovereignty, strategic succession & long-horizon continuity" }
+
+  # === BLOCK W — Strategic Autonomy & Civilizational Coordination === COMPLETE & HARDENED
+  - { block_id: "W",          block_name: "Strategic Autonomy & Civilizational Coordination", sprint_range: "107–110", status: complete, purpose: "Multi-horizon strategic alignment, institutional tradeoff arbitration, mission integrity & drift prevention, civilizational continuity simulation" }
+
+  # === BLOCK X — Reflexive Governance & Evolution Control === PLANNED
+  - { block_id: "X",          block_name: "Reflexive Governance & Evolution Control",     sprint_range: "111–114", status: planned, purpose: "Evolution proposal governance, architectural mutation control, self-revision audit, kernel integrity & anti-corrosion guard" }
+
+  # === BLOCK Y — Implementation Canon & Knowledge Governance === FUTURE
+  - { block_id: "Y",          block_name: "Implementation Canon & Knowledge Governance",  sprint_range: "115–118", status: future, purpose: "Canon stewardship & knowledge governance, implementation pattern library & retrieval, failure memory & repair intelligence, external knowledge intake & canon evolution control" }

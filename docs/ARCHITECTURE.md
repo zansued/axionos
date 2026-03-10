@@ -3,8 +3,9 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-10
-> **Current state:** Level 7 — Strategic Autonomy & Civilizational Coordination. 90+ architectural layers active. All blocks (Foundation through W) complete. 110 sprints implemented. Block W hardened and integrated. Block X (111–114) planned.
+> **Current state:** Level 7 — Strategic Autonomy & Civilizational Coordination. 90+ architectural layers active. All blocks (Foundation through W) complete. 110 sprints implemented. Block W hardened and integrated. Block X (111–114) planned. Block Y (115–118) future.
 > **Next block:** X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
+> **Future block:** Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 Future
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -1116,6 +1117,16 @@ With 110 sprints complete, all blocks from Foundation through Strategic Autonomy
 #### Block X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
 
 **Architectural contribution (planned):** Evolution proposal governance engine (govern proposals for changing the system itself), architectural mutation control layer (reversibility, blast radius, coupling expansion, mutation legitimacy), reflective validation & self-revision audit (audit whether self-corrections actually improved the system), kernel integrity & anti-corrosion guard (protect the kernel against corrosion, bloat, existential drift, loss of legibility).
+
+#### Block Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 Future
+
+**Architectural contribution (future):** Governed implementation knowledge layer — canon stewardship engine (entry governance, versioning, approval, deprecation), implementation pattern library with agent-retrievable access, failure memory & repair intelligence archive, external knowledge intake with validation gates and canon evolution control.
+
+**Critical architectural principle:** Block Y is not a passive knowledge repository. Knowledge only counts as system capability when it is operationally connected to planning, execution, repair, validation, or other runtime flows. A pattern not consumed by agents or functions is documentation, not implementation intelligence.
+
+**Future agent roles:** Canon Steward, Pattern Librarian, Failure Archivist, External Research Curator, Retrieval Guide. These are governance/knowledge roles whose purpose is operational enablement — not curation for its own sake.
+
+**Known future risk:** Canon bloat, decorative storage, contradictory patterns, external trend pollution. Antidote: selective retrieval, governed entries, visible usage tracking, aggressive deprecation, quality over quantity.
 
 ### Operational Lessons Learned
 
