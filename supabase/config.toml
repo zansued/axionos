@@ -170,3 +170,6 @@ verify_jwt = false
 
 [functions.reflective-validation-audit]
 verify_jwt = false
+
+[functions.kernel-integrity-guard]
+verify_jwt = false

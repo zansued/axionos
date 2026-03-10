@@ -199,6 +199,7 @@ const App = () => (
                         <Route path="/evolution-governance"      element={<P><EvolutionProposalGovernance /></P>} />
                         <Route path="/mutation-control"          element={<P><ArchitecturalMutationControl /></P>} />
                         <Route path="/reflective-validation"    element={<P><ReflectiveValidationAudit /></P>} />
+                        <Route path="/kernel-integrity"         element={<P><KernelIntegrityGuard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
