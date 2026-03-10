@@ -23562,6 +23562,56 @@ export type Database = {
           },
         ]
       }
+      operational_loops: {
+        Row: {
+          created_at: string
+          domain_id: string
+          last_activity: string
+          loop_health: string
+          loop_id: string
+          loop_metrics: Json
+          loop_priority: number
+          loop_status: string
+          loop_type: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          domain_id?: string
+          last_activity?: string
+          loop_health?: string
+          loop_id?: string
+          loop_metrics?: Json
+          loop_priority?: number
+          loop_status?: string
+          loop_type?: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          domain_id?: string
+          last_activity?: string
+          loop_health?: string
+          loop_id?: string
+          loop_metrics?: Json
+          loop_priority?: number
+          loop_status?: string
+          loop_type?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operational_loops_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       operational_posture_state: {
         Row: {
           activated_at: string

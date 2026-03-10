@@ -99,6 +99,7 @@ import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
 import OperationalCyclesDashboard from "./pages/OperationalCyclesDashboard";
+import OperationalLoopsDashboard from "./pages/OperationalLoopsDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -234,6 +235,7 @@ const App = () => (
                         <Route path="/attention-allocation"    element={<P><AttentionAllocationDashboard /></P>} />
                         <Route path="/adaptive-routing"        element={<P><AdaptiveRoutingDashboard /></P>} />
                         <Route path="/operational-cycles"      element={<P><OperationalCyclesDashboard /></P>} />
+                        <Route path="/operational-loops"       element={<P><OperationalLoopsDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>

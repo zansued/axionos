@@ -11,7 +11,7 @@ import {
   Rss, PackageCheck, ShieldCheck, Package, Shield, Settings, CreditCard, Plug,
   Users, Scale, BrainCircuit, Zap, Store, TrendingUp, Brain, FileText, Gauge,
   Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route, Compass,
-  Library, Bug, PackagePlus, Activity, Fingerprint, ShieldAlert, Crown, Focus, Timer,
+  Library, Bug, PackagePlus, Activity, Fingerprint, ShieldAlert, Crown, Focus, Timer, Repeat,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
@@ -145,6 +145,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Attention", url: "/attention-allocation",   icon: Focus },
   { title: "Adapt. Route", url: "/adaptive-routing",  icon: Route },
   { title: "Cycles", url: "/operational-cycles",    icon: Timer },
+  { title: "Loops", url: "/operational-loops",     icon: Repeat },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
