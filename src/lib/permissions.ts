@@ -131,6 +131,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Canon Gov.",  url: "/canon-governance",           icon: FileText },
   { title: "Patterns",  url: "/pattern-library",            icon: Library },
   { title: "Failure Mem.", url: "/failure-memory",           icon: Bug },
+  { title: "Ext. Knowledge", url: "/external-knowledge",    icon: PackagePlus },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
