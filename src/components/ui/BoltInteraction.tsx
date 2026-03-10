@@ -108,22 +108,22 @@ export function ChatInput({ onSend, placeholder = "O que você quer construir?" 
 export function RayBackground() {
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0">
-      <div className="absolute inset-0 bg-background" />
+      <div className="absolute inset-0 bg-[#0f0f0f]" />
       <div 
         className="absolute left-1/2 -translate-x-1/2 w-[4000px] h-[1800px] sm:w-[6000px]"
         style={{
-          background: `radial-gradient(circle at center 800px, hsl(var(--primary) / 0.8) 0%, hsl(var(--primary) / 0.35) 14%, hsl(var(--primary) / 0.18) 18%, hsl(var(--primary) / 0.08) 22%, hsl(var(--background) / 0.2) 25%)`
+          background: `radial-gradient(circle at center 800px, rgba(20, 136, 252, 0.8) 0%, rgba(20, 136, 252, 0.35) 14%, rgba(20, 136, 252, 0.18) 18%, rgba(20, 136, 252, 0.08) 22%, rgba(17, 17, 20, 0.2) 25%)`
         }}
       />
       <div 
         className="absolute top-[175px] left-1/2 w-[1600px] h-[1600px] sm:top-1/2 sm:w-[3043px] sm:h-[2865px]"
         style={{ transform: 'translate(-50%) rotate(180deg)' }}
       >
-        <div className="absolute w-full h-full rounded-full -mt-[13px]" style={{ background: `radial-gradient(43.89% 25.74% at 50.02% 97.24%, hsl(var(--background)) 0%, hsl(var(--background)) 100%)`, border: '16px solid white', transform: 'rotate(180deg)', zIndex: 5 }} />
-        <div className="absolute w-full h-full rounded-full bg-background -mt-[11px]" style={{ border: '23px solid #b7d7f6', transform: 'rotate(180deg)', zIndex: 4 }} />
-        <div className="absolute w-full h-full rounded-full bg-background -mt-[8px]" style={{ border: '23px solid #8fc1f2', transform: 'rotate(180deg)', zIndex: 3 }} />
-        <div className="absolute w-full h-full rounded-full bg-background -mt-[4px]" style={{ border: '23px solid #64acf6', transform: 'rotate(180deg)', zIndex: 2 }} />
-        <div className="absolute w-full h-full rounded-full bg-background" style={{ border: '20px solid hsl(var(--primary))', boxShadow: '0 -15px 24.8px hsl(var(--primary) / 0.6)', transform: 'rotate(180deg)', zIndex: 1 }} />
+        <div className="absolute w-full h-full rounded-full -mt-[13px]" style={{ background: 'radial-gradient(43.89% 25.74% at 50.02% 97.24%, #111114 0%, #0f0f0f 100%)', border: '16px solid white', transform: 'rotate(180deg)', zIndex: 5 }} />
+        <div className="absolute w-full h-full rounded-full bg-[#0f0f0f] -mt-[11px]" style={{ border: '23px solid #b7d7f6', transform: 'rotate(180deg)', zIndex: 4 }} />
+        <div className="absolute w-full h-full rounded-full bg-[#0f0f0f] -mt-[8px]" style={{ border: '23px solid #8fc1f2', transform: 'rotate(180deg)', zIndex: 3 }} />
+        <div className="absolute w-full h-full rounded-full bg-[#0f0f0f] -mt-[4px]" style={{ border: '23px solid #64acf6', transform: 'rotate(180deg)', zIndex: 2 }} />
+        <div className="absolute w-full h-full rounded-full bg-[#0f0f0f]" style={{ border: '20px solid #1172e2', boxShadow: '0 -15px 24.8px rgba(17, 114, 226, 0.6)', transform: 'rotate(180deg)', zIndex: 1 }} />
       </div>
     </div>
   )
@@ -149,13 +149,11 @@ export function AnnouncementBadge({ text }: { text: string }) {
 
 // MAIN BOLT CHAT COMPONENT
 interface BoltChatProps {
-  announcementText?: string
   placeholder?: string
   onSubmit?: (message: string, modelId: string, assets: File[]) => void
 }
 
 export function BoltStyleChat({
-  announcementText = "AxionOS v11.0",
   placeholder = "O que você quer construir?",
   onSubmit,
 }: BoltChatProps) {
@@ -164,31 +162,26 @@ export function BoltStyleChat({
   }
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-48px)] w-full overflow-hidden bg-background rounded-lg">
+    <div className="relative flex flex-col items-center justify-center h-full w-full overflow-hidden bg-[#0f0f0f]">
       <RayBackground />
 
-      {/* Announcement badge */}
-      <div className="absolute top-10 sm:top-16 z-10">
-        <AnnouncementBadge text={announcementText} />
-      </div>
-
-      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-4xl px-4 mt-12">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-4xl px-4">
         {/* AxionOS Branding */}
         <div className="flex flex-col items-center mb-8">
-          <img src={axionLogo} alt="AxionOS" className="h-16 w-16 mb-4 drop-shadow-[0_0_24px_hsl(var(--primary)/0.4)]" />
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight mb-2 font-display">
-            <span className="text-gradient">Axion</span>OS
+          <img src={axionLogo} alt="AxionOS" className="h-20 w-20 mb-5 drop-shadow-[0_0_30px_rgba(20,136,252,0.5)]" />
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-2 font-display">
+            <span className="bg-gradient-to-b from-[#4da5fc] to-[#1488fc] bg-clip-text text-transparent">Axion</span>OS
           </h1>
-          <p className="text-base sm:text-lg text-muted-foreground font-medium">
+          <p className="text-base sm:text-lg text-[#8a8a8f] font-medium">
             Autonomous Intelligent Infrastructure
           </p>
         </div>
 
         {/* Prompt headline */}
         <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
             O que você vai{' '}
-            <span className="bg-gradient-to-b from-primary via-primary to-foreground bg-clip-text text-transparent italic">
+            <span className="bg-gradient-to-b from-[#4da5fc] via-[#4da5fc] to-white bg-clip-text text-transparent italic">
               construir
             </span>
             {' '}hoje?
