@@ -335,9 +335,8 @@ export function BoltStyleChat({ onSubmit, isGenerating, progress = 0 }: BoltChat
           <img 
             src={axionLogo} 
             alt="AxionOS" 
-            className="h-12 w-12 mb-3 drop-shadow-[0_0_24px_rgba(20,136,252,0.35)]" 
+            className="h-12 w-12 drop-shadow-[0_0_24px_rgba(20,136,252,0.35)]" 
           />
-          <span className="text-[13px] font-semibold text-[#4a4a50] tracking-widest uppercase">AxionOS</span>
         </motion.div>
 
         {/* Headline — AxionOS as primary */}
