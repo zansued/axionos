@@ -114,7 +114,7 @@ Internal sophistication remains critical. The next level deepens it through adap
 
 ### Current Canon Boundaries
 
-- **Sprints 1–106** = canonical complete (full canon — Foundation through Block V)
+- **Sprints 1–138** = canonical complete (full canon — Foundation through Block AD)
 
 ---
 
