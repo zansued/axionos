@@ -119,6 +119,8 @@ Hypothesis generation, simulated evolution campaigns, cross-tenant pattern synth
 
 ## System Architecture
 
+AxionOS is a 32-stage autonomous pipeline implemented as Supabase Edge Functions (Deno runtime). Each stage is independently deployable and fault-isolated.
+
 ### C4 Context
 
 ```mermaid
