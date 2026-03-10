@@ -74,6 +74,7 @@ function RunRow({ run }: { run: any }) {
 export default function RuntimeValidationHarness() {
   const { currentOrg } = useOrg();
   const { data: metrics, isLoading } = useExecutionHarness(currentOrg?.id || null);
+  const { data: coldStart } = useColdStart();
 
   const pct = (v: number) => `${(v * 100).toFixed(1)}%`;
 
