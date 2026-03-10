@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import axionLogo from "@/assets/axion-logo.svg";
+import { Sparkles } from "lucide-react";
 
 export default function Auth() {
   const { signIn, signUp } = useAuth();
@@ -18,6 +19,7 @@ export default function Auth() {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [signupName, setSignupName] = useState("");
+  const savedIdea = sessionStorage.getItem("axion_initial_idea");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
