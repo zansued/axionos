@@ -102,6 +102,7 @@ import OperationalCyclesDashboard from "./pages/OperationalCyclesDashboard";
 import OperationalLoopsDashboard from "./pages/OperationalLoopsDashboard";
 import SystemHealthDashboard from "./pages/SystemHealthDashboard";
 import OrganismMemoryDashboard from "./pages/OrganismMemoryDashboard";
+import OrganismConsoleDashboard from "./pages/OrganismConsoleDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -240,6 +241,7 @@ const App = () => (
                         <Route path="/operational-loops"       element={<P><OperationalLoopsDashboard /></P>} />
                         <Route path="/system-health"           element={<P><SystemHealthDashboard /></P>} />
                         <Route path="/organism-memory"         element={<P><OrganismMemoryDashboard /></P>} />
+                        <Route path="/organism-console"        element={<P><OrganismConsoleDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
