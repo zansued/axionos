@@ -165,6 +165,9 @@ AxionOS is an **Autonomous Delivery Sovereignty** platform (Level 10):
 | Proposal Quality Feedback Loop | ✅ |
 | Advisory Calibration Layer | ✅ |
 | Strategic Coordination (Block W) | ✅ |
+| Reflexive Governance (Block X) | ✅ |
+| Canonical Knowledge (Block Y) | ✅ |
+| Runtime Sovereignty (Block Z) | ✅ |
 
 ---
 
