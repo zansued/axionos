@@ -84,6 +84,15 @@ All sprints from Learning Agents v1 through Sovereign Institutional Intelligence
 | Sprint 121 | Outcome-Based Autonomy Engine | ✅ |
 | Sprint 122 | Compounding Advantage & Moat Orchestrator | ✅ |
 
+### Block AA — Runtime Proof & Adaptive Governance (Sprints 123–126) ✅
+
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 123 | Runtime Execution Validation Harness | ✅ |
+| Sprint 124 | Autonomy Ladder Stabilization | ✅ |
+| Sprint 125 | Tenant-Adaptive Regression Profiles | ✅ |
+| Sprint 126 | Cold Start Explainability Layer | ✅ |
+
 ---
 
 ## Current State
