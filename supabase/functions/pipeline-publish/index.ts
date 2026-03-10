@@ -119,6 +119,23 @@ serve(async (req) => {
 
     if (fileEntries.length === 0) throw new Error("Nenhum arquivo aprovado pronto para publicação");
 
+    // ── Dependency Integrity Check ──
+    const packageJsonEntry = fileEntries.find(f => f.path === "package.json");
+    if (packageJsonEntry) {
+      const { missing } = detectMissingDependencies(fileEntries, packageJsonEntry.content);
+      if (missing.length > 0) {
+        await pipelineLog(ctx, "dependency_integrity_warning",
+          `Dependências ausentes detectadas: ${missing.join(", ")} — aplicando correção automática...`);
+        const fixed = autoFixMissingDependencies(packageJsonEntry.content, missing);
+        packageJsonEntry.content = sanitizePackageJson(fixed);
+        const stillMissing = detectMissingDependencies(fileEntries, packageJsonEntry.content).missing;
+        if (stillMissing.length > 0) {
+          await pipelineLog(ctx, "dependency_integrity_unresolved",
+            `Pacotes sem versão segura conhecida (requer review manual): ${stillMissing.join(", ")}`);
+        }
+      }
+    }
+
     // AI Pre-flight: check for missing critical files, inconsistencies
     const fileManifest = fileEntries.map(f => `${f.path} (${f.type})`).join("\n");
     const preflightResult = await callAI(apiKey,
