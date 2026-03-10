@@ -87,6 +87,7 @@ import PatternLibraryDashboard from "./pages/PatternLibraryDashboard";
 import FailureMemoryDashboard from "./pages/FailureMemoryDashboard";
 import ExternalKnowledgeDashboard from "./pages/ExternalKnowledgeDashboard";
 import RuntimeFeedbackDashboard from "./pages/RuntimeFeedbackDashboard";
+import TenantDoctrineDashboard from "./pages/TenantDoctrineDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -210,6 +211,7 @@ const App = () => (
                         <Route path="/failure-memory"           element={<P><FailureMemoryDashboard /></P>} />
                         <Route path="/external-knowledge"      element={<P><ExternalKnowledgeDashboard /></P>} />
                         <Route path="/runtime-feedback"        element={<P><RuntimeFeedbackDashboard /></P>} />
+                        <Route path="/tenant-doctrine"         element={<P><TenantDoctrineDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
