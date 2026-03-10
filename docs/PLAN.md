@@ -1069,9 +1069,9 @@ The following blocks have been implemented and are operational.
 | Sprint | Capability | Architectural Layer | Status |
 |--------|-----------|-------------------|--------|
 | 131 | Operational Posture Engine | Operational Posture Layer | ✅ Complete |
-| 132 | Attention Allocation Engine | Attention Allocation Layer | 🔜 Committed |
-| 133 | Adaptive Resource Routing | Adaptive Resource Routing Layer | 🔜 Committed |
-| 134 | Operational Rhythm & Recovery Cycles | Operational Rhythm Layer | 🔜 Committed |
+| 132 | Attention Allocation Engine | Attention Allocation Layer | ✅ Complete |
+| 133 | Adaptive Resource Routing | Adaptive Resource Routing Layer | ✅ Complete |
+| 134 | Operational Rhythm & Recovery Cycles | Operational Rhythm Layer | ✅ Complete |
 
 **Key objectives:**
 - Detect and adjust operational posture (normal, surge, recovery, maintenance)
