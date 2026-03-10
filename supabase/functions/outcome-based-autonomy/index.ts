@@ -550,6 +550,55 @@ Deno.serve(async (req) => {
         break;
       }
 
+      // ── Sprint 125: Tenant Regression Profile management ──
+      case "get_regression_profile": {
+        const { data: prof } = await supabase
+          .from("tenant_regression_profiles")
+          .select("*")
+          .eq("organization_id", organizationId)
+          .single();
+
+        result = {
+          profile: prof || null,
+          defaults: DEFAULT_PROFILES,
+          active_type: prof?.profile_type || "balanced",
+        };
+        break;
+      }
+
+      case "set_regression_profile": {
+        const profileType = params.profile_type || "balanced";
+        const defaults = DEFAULT_PROFILES[profileType] || DEFAULT_PROFILES.balanced;
+
+        const row = {
+          organization_id: organizationId,
+          profile_type: profileType,
+          validation_failure_threshold: params.validation_failure_threshold ?? defaults.validation_failure_threshold,
+          rollback_rate_threshold: params.rollback_rate_threshold ?? defaults.rollback_rate_threshold,
+          guardrail_breach_threshold: params.guardrail_breach_threshold ?? defaults.guardrail_breach_threshold,
+          incident_threshold: params.incident_threshold ?? defaults.incident_threshold,
+          evidence_trend_threshold: params.evidence_trend_threshold ?? defaults.evidence_trend_threshold,
+          autonomy_upgrade_modifier: params.autonomy_upgrade_modifier ?? defaults.autonomy_upgrade_modifier,
+          description: params.description || `${profileType} profile`,
+          updated_at: new Date().toISOString(),
+        };
+
+        const { data: existing } = await supabase
+          .from("tenant_regression_profiles")
+          .select("id")
+          .eq("organization_id", organizationId)
+          .single();
+
+        if (existing) {
+          await supabase.from("tenant_regression_profiles").update(row).eq("id", existing.id);
+        } else {
+          await supabase.from("tenant_regression_profiles").insert(row);
+        }
+
+        result = { profile: row };
+        break;
+      }
+
       default:
         throw new Error(`Unknown action: ${action}`);
     }
