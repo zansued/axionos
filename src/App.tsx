@@ -84,6 +84,7 @@ import ReflectiveValidationAudit from "./pages/ReflectiveValidationAudit";
 import KernelIntegrityGuard from "./pages/KernelIntegrityGuard";
 import CanonGovernanceDashboard from "./pages/CanonGovernanceDashboard";
 import PatternLibraryDashboard from "./pages/PatternLibraryDashboard";
+import FailureMemoryDashboard from "./pages/FailureMemoryDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
