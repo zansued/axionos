@@ -5,6 +5,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion'
 import axionLogo from '@/assets/axion-logo.svg'
 import NeuralBackground from './NeuralBackground'
+import { GlowingEffect } from './glowing-effect'
 
 // ── Typing placeholder ───────────────────────────────────────────────────
 const PLACEHOLDERS = [
@@ -94,13 +95,23 @@ function ChatInput({ onSend }: {
         style={{ background: 'radial-gradient(ellipse at center, rgba(20,136,252,0.2) 0%, transparent 70%)' }}
       />
 
-      {/* Main input card — glassmorphism */}
-      <div className="relative rounded-2xl ring-1 ring-white/[0.12] shadow-[0_8px_60px_rgba(0,0,0,0.6)]"
+      {/* Main input card — glassmorphism with glow */}
+      <div className="relative rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.6)]"
         style={{
           background: 'rgba(22, 22, 28, 0.85)',
           backdropFilter: 'blur(24px) saturate(150%)',
         }}
       >
+        <GlowingEffect
+          spread={40}
+          glow
+          disabled={false}
+          proximity={200}
+          inactiveZone={0.4}
+          borderWidth={2}
+          blur={4}
+          movementDuration={1.5}
+        />
         <div className="relative">
           <textarea
             ref={textareaRef}
