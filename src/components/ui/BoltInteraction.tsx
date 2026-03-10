@@ -210,13 +210,13 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
       <RayBackground />
 
 
-      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-4xl px-4">
+      <div className="relative z-10 flex flex-col items-center w-full max-w-4xl px-4" style={{ marginTop: '-6vh' }}>
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, filter: 'blur(16px)', scale: 0.92 }}
           animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center mb-5"
+          className="flex flex-col items-center mb-4"
         >
           <img 
             src={axionLogo} 
@@ -245,23 +245,22 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className="text-[12px] sm:text-[13px] text-white/75 font-medium tracking-[0.25em] uppercase mb-7"
+          className="text-[12px] sm:text-[13px] text-white/75 font-medium tracking-[0.25em] uppercase mb-12"
           style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
-          Autonomous Intelligent Infrastructure
+          Autonomous Intelligent Infrastructure for the AI Era
         </motion.p>
 
         {/* Subheadline */}
-        <motion.div
+        <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.5 }}
-          className="text-center mb-10"
+          className="text-[15px] sm:text-[17px] lg:text-[19px] text-white/70 font-normal mb-10 whitespace-nowrap"
+          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
-          <p className="text-[15px] sm:text-[17px] lg:text-[19px] text-white/70 font-normal leading-relaxed max-w-md mx-auto" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            Describe what you want to build — we orchestrate the rest.
-          </p>
-        </motion.div>
+          Describe what you want to build — we orchestrate the rest.
+        </motion.p>
 
         {/* Prompt box */}
         <motion.div
