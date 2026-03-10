@@ -135,6 +135,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Runtime Mesh", url: "/runtime-feedback",         icon: Activity },
   { title: "Tenant Doc.", url: "/tenant-doctrine",          icon: Fingerprint },
   { title: "Autonomy",  url: "/autonomy-posture",          icon: ShieldAlert },
+  { title: "Advantage", url: "/compounding-advantage",     icon: Crown },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
