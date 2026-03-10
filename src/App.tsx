@@ -97,6 +97,7 @@ import PatternDistillationDashboard from "./pages/PatternDistillationDashboard";
 import CanonReuseImpactDashboard from "./pages/CanonReuseImpactDashboard";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
+import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -230,6 +231,7 @@ const App = () => (
                         <Route path="/canon-reuse"             element={<P><CanonReuseImpactDashboard /></P>} />
                         <Route path="/operational-posture"     element={<P><OperationalPostureDashboard /></P>} />
                         <Route path="/attention-allocation"    element={<P><AttentionAllocationDashboard /></P>} />
+                        <Route path="/adaptive-routing"        element={<P><AdaptiveRoutingDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>

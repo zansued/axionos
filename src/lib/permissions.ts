@@ -143,6 +143,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Reuse",    url: "/canon-reuse",              icon: Zap },
   { title: "Posture",  url: "/operational-posture",      icon: Activity },
   { title: "Attention", url: "/attention-allocation",   icon: Focus },
+  { title: "Adapt. Route", url: "/adaptive-routing",  icon: Route },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
