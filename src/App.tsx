@@ -229,6 +229,7 @@ const App = () => (
                         <Route path="/pattern-distillation"    element={<P><PatternDistillationDashboard /></P>} />
                         <Route path="/canon-reuse"             element={<P><CanonReuseImpactDashboard /></P>} />
                         <Route path="/operational-posture"     element={<P><OperationalPostureDashboard /></P>} />
+                        <Route path="/attention-allocation"    element={<P><AttentionAllocationDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>

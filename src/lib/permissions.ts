@@ -142,6 +142,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Distill.",  url: "/pattern-distillation",     icon: Network },
   { title: "Reuse",    url: "/canon-reuse",              icon: Zap },
   { title: "Posture",  url: "/operational-posture",      icon: Activity },
+  { title: "Attention", url: "/attention-allocation",   icon: Focus },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
