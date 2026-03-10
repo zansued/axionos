@@ -20,6 +20,7 @@ export function useOutcomeAutonomy() {
   const ADJUSTMENTS_KEY = ["autonomy-adjustments", currentOrg?.id];
   const BREACHES_KEY = ["autonomy-breaches", currentOrg?.id];
   const REGRESSIONS_KEY = ["autonomy-regressions", currentOrg?.id];
+  const TRANSITIONS_KEY = ["autonomy-transition-metrics", currentOrg?.id];
 
   const domainsQuery = useQuery({
     queryKey: DOMAINS_KEY,
@@ -46,11 +47,18 @@ export function useOutcomeAutonomy() {
     enabled: !!currentOrg,
   });
 
+  const transitionMetricsQuery = useQuery({
+    queryKey: TRANSITIONS_KEY,
+    queryFn: () => invoke("transition_metrics"),
+    enabled: !!currentOrg,
+  });
+
   const invalidateAll = () => {
     qc.invalidateQueries({ queryKey: DOMAINS_KEY });
     qc.invalidateQueries({ queryKey: ADJUSTMENTS_KEY });
     qc.invalidateQueries({ queryKey: BREACHES_KEY });
     qc.invalidateQueries({ queryKey: REGRESSIONS_KEY });
+    qc.invalidateQueries({ queryKey: TRANSITIONS_KEY });
   };
 
   const scoreAutonomy = useMutation({
@@ -87,6 +95,7 @@ export function useOutcomeAutonomy() {
     adjustments: adjustmentsQuery.data?.adjustments || [],
     breaches: breachesQuery.data?.breaches || [],
     regressions: regressionsQuery.data?.regressions || [],
+    transitionMetrics: transitionMetricsQuery.data || null,
     loadingDomains: domainsQuery.isLoading,
     scoreAutonomy,
     adjustLevel,

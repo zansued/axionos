@@ -5795,6 +5795,119 @@ export type Database = {
           },
         ]
       }
+      autonomy_transition_attempts: {
+        Row: {
+          approved: boolean
+          confidence_score: number | null
+          created_at: string
+          direction: string
+          domain_id: string | null
+          execution_count_at_level: number | null
+          id: string
+          level_from: number
+          level_to: number
+          organization_id: string
+          rejection_reason: string | null
+          rule_applied: string | null
+          time_at_current_level_hours: number | null
+        }
+        Insert: {
+          approved?: boolean
+          confidence_score?: number | null
+          created_at?: string
+          direction?: string
+          domain_id?: string | null
+          execution_count_at_level?: number | null
+          id?: string
+          level_from: number
+          level_to: number
+          organization_id: string
+          rejection_reason?: string | null
+          rule_applied?: string | null
+          time_at_current_level_hours?: number | null
+        }
+        Update: {
+          approved?: boolean
+          confidence_score?: number | null
+          created_at?: string
+          direction?: string
+          domain_id?: string | null
+          execution_count_at_level?: number | null
+          id?: string
+          level_from?: number
+          level_to?: number
+          organization_id?: string
+          rejection_reason?: string | null
+          rule_applied?: string | null
+          time_at_current_level_hours?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomy_transition_attempts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomy_transition_attempts_rule_applied_fkey"
+            columns: ["rule_applied"]
+            isOneToOne: false
+            referencedRelation: "autonomy_transition_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      autonomy_transition_rules: {
+        Row: {
+          confidence_threshold: number
+          created_at: string
+          id: string
+          is_default: boolean
+          level_from: number
+          level_to: number
+          minimum_execution_count: number
+          minimum_time_at_level_hours: number
+          organization_id: string | null
+          tenant_override_allowed: boolean
+          updated_at: string
+        }
+        Insert: {
+          confidence_threshold?: number
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          level_from: number
+          level_to: number
+          minimum_execution_count?: number
+          minimum_time_at_level_hours?: number
+          organization_id?: string | null
+          tenant_override_allowed?: boolean
+          updated_at?: string
+        }
+        Update: {
+          confidence_threshold?: number
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          level_from?: number
+          level_to?: number
+          minimum_execution_count?: number
+          minimum_time_at_level_hours?: number
+          organization_id?: string | null
+          tenant_override_allowed?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomy_transition_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       billing_accounts: {
         Row: {
           billing_email: string | null
