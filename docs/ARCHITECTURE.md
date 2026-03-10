@@ -404,6 +404,14 @@ Block X is not "more features." It is a **meta-governance layer** governing how 
 
 ```
    ═══════════════════════════════════════════════════════════════════
+   TIER 13: CANONICAL KNOWLEDGE & IMPLEMENTATION INTELLIGENCE (Future — Block Y)
+   ═══════════════════════════════════════════════════════════════════
+   Canon Steward & Knowledge Governance Engine      ← Future (Sprint 115)
+   Implementation Pattern Library & Retrieval Layer ← Future (Sprint 116)
+   Failure Memory & Repair Intelligence Archive     ← Future (Sprint 117)
+   External Knowledge Intake & Canon Evolution Ctrl ← Future (Sprint 118)
+
+   ═══════════════════════════════════════════════════════════════════
    TIER 12: REFLEXIVE GOVERNANCE LAYER (Planned — Block X)
    ═══════════════════════════════════════════════════════════════════
    Evolution Proposal Governance Engine             ← Planned (Sprint 111)
@@ -1118,15 +1126,39 @@ With 110 sprints complete, all blocks from Foundation through Strategic Autonomy
 
 **Architectural contribution (planned):** Evolution proposal governance engine (govern proposals for changing the system itself), architectural mutation control layer (reversibility, blast radius, coupling expansion, mutation legitimacy), reflective validation & self-revision audit (audit whether self-corrections actually improved the system), kernel integrity & anti-corrosion guard (protect the kernel against corrosion, bloat, existential drift, loss of legibility).
 
-#### Block Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 Future
+#### Tier 13 — Canonical Knowledge & Implementation Intelligence (Block Y — Future)
 
-**Architectural contribution (future):** Governed implementation knowledge layer — canon stewardship engine (entry governance, versioning, approval, deprecation), implementation pattern library with agent-retrievable access, failure memory & repair intelligence archive, external knowledge intake with validation gates and canon evolution control.
+Block Y introduces the Canonical Knowledge & Implementation Intelligence layer.
 
-**Critical architectural principle:** Block Y is not a passive knowledge repository. Knowledge only counts as system capability when it is operationally connected to planning, execution, repair, validation, or other runtime flows. A pattern not consumed by agents or functions is documentation, not implementation intelligence.
+This layer governs how implementation knowledge is stored, validated, retrieved, and operationally applied across the system.
 
-**Future agent roles:** Canon Steward, Pattern Librarian, Failure Archivist, External Research Curator, Retrieval Guide. These are governance/knowledge roles whose purpose is operational enablement — not curation for its own sake.
+Its purpose is not to accumulate documentation, but to transform implementation knowledge into runtime-connected system capability.
 
-**Known future risk:** Canon bloat, decorative storage, contradictory patterns, external trend pollution. Antidote: selective retrieval, governed entries, visible usage tracking, aggressive deprecation, quality over quantity.
+Block Y enables AxionOS to maintain a governed implementation canon including:
+
+- approved architectural patterns
+- reusable implementation templates
+- curated code snippets
+- stack-specific conventions
+- failure memory and repair strategies
+- validated external knowledge updates
+
+This canon is not passive documentation.
+It is designed to be queried and applied directly by system agents and pipeline stages.
+
+Planning agents consult architectural canon before generating implementation strategies.
+
+Execution agents retrieve approved templates and conventions before producing code.
+
+Repair systems consult historical failure patterns and successful mitigation strategies.
+
+Validation agents compare generated artifacts against canon-approved practices.
+
+In AxionOS, knowledge only counts as system capability when it is operationally connected to runtime behavior.
+
+A pattern not consumed by agents or functions is documentation, not implementation intelligence.
+
+Block Y therefore introduces a governed knowledge system that is applied, versioned, auditable, and operationally integrated.
 
 ### Operational Lessons Learned
 
