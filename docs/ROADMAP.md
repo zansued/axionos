@@ -447,9 +447,9 @@ Block AB transforms operational learning from ephemeral runtime insights into du
 
 ---
 
-## Block AC — Adaptive Coordination (Sprints 131–134) — 🔜 Committed
+## Block AC — Adaptive Coordination (Sprints 131–134) — ✅ Complete
 
-Block AC introduces adaptive operational coordination — the system learns to allocate attention, resources, and operational rhythm based on real conditions rather than static configuration.
+Block AC introduces adaptive operational coordination — the system allocates attention, resources, and operational rhythm based on real conditions rather than static configuration.
 
 **Focus areas:**
 - Operational posture detection and adjustment
@@ -459,12 +459,12 @@ Block AC introduces adaptive operational coordination — the system learns to a
 
 **Defining principle:** Coordination adapts to operational reality, but all adaptations remain bounded, explainable, and reversible. No autonomous structural mutation.
 
-### Committed Sprints
+### Completed Sprints
 
-- **Sprint 131** — Operational Posture Engine
-- **Sprint 132** — Attention Allocation Engine
-- **Sprint 133** — Adaptive Resource Routing
-- **Sprint 134** — Operational Rhythm & Recovery Cycles
+- **Sprint 131** — Operational Posture Engine ✅
+- **Sprint 132** — Attention Allocation Engine ✅
+- **Sprint 133** — Adaptive Resource Routing ✅
+- **Sprint 134** — Operational Rhythm & Recovery Cycles ✅
 
 ---
 
