@@ -166,7 +166,7 @@ Retorne APENAS JSON:
     );
 
     let staticAnalysis: any;
-    try { staticAnalysis = JSON.parse(staticResult.content); }
+    try { staticAnalysis = extractJsonFromResponse(staticResult.content); }
     catch { staticAnalysis = { static_score: 60, issues: [], summary: "Parse failed", imports_valid: true, type_safety_score: 60, complexity_score: 60 }; }
 
     await persistValidationRun(serviceClient, artifact.id, isFirstPass ? "static_analysis" : `static_revalidation_${loop}`, staticAnalysis, staticResult.durationMs);
