@@ -131,7 +131,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border relative">
-      <SidebarContent className="gap-0 justify-start">
+      <SidebarContent className="gap-0">
         {/* ── Brand ── */}
         <SidebarGroup className="pb-0">
           <SidebarGroupContent>
