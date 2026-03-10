@@ -57,7 +57,32 @@ All sprints from Learning Agents v1 through Sovereign Institutional Intelligence
 | Sprint 109 | Mission Integrity & Drift Prevention | ✅ |
 | Sprint 110 | Civilizational Continuity Simulation Layer | ✅ |
 
-**Hardening:** Cross-sprint causal integration, constitution management UI, history/integration tabs, scoring transparency, causal modifier cards.
+### Level 8 — Reflexive Governance & Evolution Control (Sprints 111–114) ✅
+
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 111 | Evolution Proposal Governance Engine | ✅ |
+| Sprint 112 | Architectural Mutation Control Layer | ✅ |
+| Sprint 113 | Reflective Validation & Self-Revision Audit | ✅ |
+| Sprint 114 | Kernel Integrity & Anti-Corrosion Guard | ✅ |
+
+### Level 9 — Implementation Canon & Knowledge Governance (Sprints 115–118) ✅
+
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 115 | Canon Steward & Knowledge Governance Engine | ✅ |
+| Sprint 116 | Implementation Pattern Library & Retrieval Layer | ✅ |
+| Sprint 117 | Failure Memory & Repair Intelligence Archive | ✅ |
+| Sprint 118 | External Knowledge Intake & Canon Evolution Control | ✅ |
+
+### Level 10 — Autonomous Delivery Sovereignty (Sprints 119–122) ✅
+
+| Sprint | Deliverable | Status |
+|--------|-------------|--------|
+| Sprint 119 | Live Runtime Feedback Mesh | ✅ |
+| Sprint 120 | Tenant Doctrine & Adaptive Operating Profiles v2 | ✅ |
+| Sprint 121 | Outcome-Based Autonomy Engine | ✅ |
+| Sprint 122 | Compounding Advantage & Moat Orchestrator | ✅ |
 
 ---
 
