@@ -4,7 +4,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart3, Zap, Plus, Bot, Eye, Shield, Search } from "lucide-react";
+import { BarChart3, Zap, Plus, Bot, Eye, Radio, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -51,9 +51,9 @@ export function QuickActions() {
   const actions = [
     { label: "New Project", icon: Plus, action: () => navigate("/initiatives") },
     { label: "Inspect Agents", icon: Bot, action: () => navigate("/agents") },
+    { label: "Runtime", icon: Radio, action: () => navigate("/runtime") },
     { label: "Observability", icon: Eye, action: () => navigate("/system-health") },
-    { label: "Governance", icon: Shield, action: () => navigate("/autonomy-posture") },
-    { label: "Runtime Logs", icon: Search, action: () => navigate("/observability") },
+    { label: "Intelligence", icon: Sparkles, action: () => navigate("/system-intelligence") },
   ];
 
   return (

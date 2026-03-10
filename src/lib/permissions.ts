@@ -2,14 +2,17 @@
  * permissions.ts
  * Single source of truth for role-based access control.
  * Canonical AxionOS navigation architecture.
+ *
+ * Product philosophy: The user journey is Idea → Deploy → Runtime.
+ * Everything beyond Runtime is autonomous infrastructure (System Intelligence).
  */
 
 import type { LucideIcon } from "lucide-react";
 import {
   LayoutDashboard, FolderKanban, Bot, GitBranch, Eye, Shield,
-  Layers, Settings, HeartPulse, LineChart, Search, Brain,
-  Fingerprint, Scale, Users, Activity, Cpu, Code2,
-  TrendingUp, Rocket,
+  Settings, HeartPulse, LineChart, Search, Brain,
+  Fingerprint, Scale, Users, Activity, Cpu,
+  Radio, Sparkles,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
@@ -40,22 +43,25 @@ export type NavItem = {
   icon: LucideIcon;
 };
 
-// ─── Builder Mode — Product Surface ─────────────────────────────────────────
+// ─── Builder Mode — User Product Layer ──────────────────────────────────────
+// Visible pipeline: Idea → Discovery → Architecture → Engineering → Deploy → Runtime
+// + Observability (monitoring surface) + System Intelligence (advisory) + Governance + Settings
 
 export const BUILDER_NAV: NavItem[] = [
-  { title: "Dashboard",     url: "/",              icon: LayoutDashboard },
-  { title: "Projects",      url: "/initiatives",   icon: FolderKanban },
-  { title: "Agents",        url: "/agents",        icon: Bot },
-  { title: "Pipelines",     url: "/delivery",      icon: GitBranch },
-  { title: "Observability", url: "/system-health",  icon: Eye },
-  { title: "Governance",    url: "/autonomy-posture", icon: Shield },
-  { title: "Modes",         url: "/workspace",     icon: Layers },
-  { title: "Settings",      url: "/org",           icon: Settings },
+  { title: "Dashboard",            url: "/",                    icon: LayoutDashboard },
+  { title: "Projects",             url: "/initiatives",         icon: FolderKanban },
+  { title: "Agents",               url: "/agents",              icon: Bot },
+  { title: "Pipelines",            url: "/delivery",            icon: GitBranch },
+  { title: "Runtime",              url: "/runtime",             icon: Radio },
+  { title: "Observability",        url: "/system-health",       icon: Eye },
+  { title: "System Intelligence",  url: "/system-intelligence", icon: Sparkles },
+  { title: "Governance",           url: "/autonomy-posture",    icon: Shield },
+  { title: "Settings",             url: "/org",                 icon: Settings },
 ];
 
 export const BUILDER_ROUTES = new Set(BUILDER_NAV.map(i => i.url));
 
-// ─── Owner Mode — Governance & Operations ───────────────────────────────────
+// ─── Owner Mode — Autonomous Infrastructure Layer ───────────────────────────
 
 export const OWNER_SYSTEM_INTELLIGENCE: NavItem[] = [
   { title: "System Health",     url: "/system-health",      icon: HeartPulse },
