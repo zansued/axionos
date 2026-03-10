@@ -107,6 +107,8 @@ export const DETERMINISTIC_FILES: Record<string, string> = getDeterministicFiles
 export function getDeterministicFiles(supabaseConnInfo?: { url: string; anonKey: string } | null): Record<string, string> {
   return {
     "vercel.json": DEPLOY_VERCEL_JSON,
+    ".nvmrc": "20.18.0",
+    ".node-version": "20.18.0",
     "public/_redirects": "/* /index.html 200",
     "netlify.toml": '[build]\n  command = "npm run build"\n  publish = "dist"\n\n[[redirects]]\n  from = "/*"\n  to = "/index.html"\n  status = 200',
     "postcss.config.js": `export default {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n};`,
@@ -143,6 +145,7 @@ export function getDeterministicFiles(supabaseConnInfo?: { url: string; anonKey:
     }, null, 2),
     "vite.config.ts": `import { defineConfig } from "vite";\nimport react from "@vitejs/plugin-react-swc";\nimport path from "path";\n\nexport default defineConfig({\n  plugins: [react()],\n  resolve: {\n    alias: {\n      "@": path.resolve(__dirname, "./src"),\n    },\n  },\n});`,
     "index.html": `<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="UTF-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n    <title>App</title>\n  </head>\n  <body>\n    <div id="root"></div>\n    <script type="module" src="./src/main.tsx"></script>\n  </body>\n</html>`,
+    "eslint.config.js": `import js from "@eslint/js";\nimport globals from "globals";\nimport reactHooks from "eslint-plugin-react-hooks";\nimport reactRefresh from "eslint-plugin-react-refresh";\nimport tseslint from "typescript-eslint";\n\nexport default tseslint.config(\n  { ignores: ["dist", "node_modules"] },\n  {\n    extends: [js.configs.recommended, ...tseslint.configs.recommended],\n    files: ["**/*.{ts,tsx}"],\n    languageOptions: {\n      ecmaVersion: 2020,\n      globals: globals.browser,\n    },\n    plugins: {\n      "react-hooks": reactHooks,\n      "react-refresh": reactRefresh,\n    },\n    rules: {\n      ...reactHooks.configs.recommended.rules,\n      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],\n      "@typescript-eslint/no-explicit-any": "warn",\n      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],\n    },\n  }\n);`,
     ".env.example": supabaseConnInfo
       ? `VITE_SUPABASE_URL=${supabaseConnInfo.url}\nVITE_SUPABASE_ANON_KEY=${supabaseConnInfo.anonKey}`
       : `VITE_SUPABASE_URL=https://your-project.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key`,
