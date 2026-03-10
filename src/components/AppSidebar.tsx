@@ -1,6 +1,7 @@
 // AppSidebar – mode-aware navigation with animated SurfaceSwitcher.
 
 import { useState, useMemo } from "react";
+import axionLogo from "@/assets/axion-logo.svg";
 import { useNavigate, useLocation } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
