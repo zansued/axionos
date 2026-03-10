@@ -12,6 +12,7 @@ import {
   Users, Scale, BrainCircuit, Zap, Store, TrendingUp, Brain, FileText, Gauge,
   Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route, Compass,
   Library, Bug, PackagePlus, Activity, Fingerprint, ShieldAlert, Crown, Focus, Timer, Repeat,
+  HeartPulse,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
@@ -146,6 +147,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Adapt. Route", url: "/adaptive-routing",  icon: Route },
   { title: "Cycles", url: "/operational-cycles",    icon: Timer },
   { title: "Loops", url: "/operational-loops",     icon: Repeat },
+  { title: "Sys. Health", url: "/system-health",  icon: HeartPulse },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
