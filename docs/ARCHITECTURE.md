@@ -470,6 +470,196 @@ Block X is not "more features." It is a **meta-governance layer** governing how 
 - Block V: how to remember, decide sovereignly, reduce dependency, survive succession
 - Block W: how to align horizons, arbitrate sacrifices, maintain mission, traverse long futures
 - **Block X: how to govern the system's own evolution, detect corrosion, and protect kernel integrity**
+- **Block Y: how to govern what the system knows about implementation and make that knowledge operational**
+
+### 5.4 Future — Implementation Canon & Knowledge Governance (Block Y)
+
+Block Y introduces the **Canonical Knowledge & Implementation Intelligence** layer.
+
+Its purpose is not to accumulate documentation, but to transform implementation knowledge into runtime-connected system capability.
+
+Block Y governs how implementation knowledge is:
+- stored
+- reviewed
+- approved
+- versioned
+- deprecated
+- retrieved
+- operationally applied
+
+This future layer enables AxionOS to maintain a governed implementation canon including:
+- approved architectural patterns
+- reusable implementation templates
+- curated code snippets
+- stack-specific conventions
+- failure memory and repair strategies
+- validated external knowledge updates
+
+This canon is not a passive wiki. It is designed to be queried and applied directly by planning, execution, repair, and validation flows.
+
+- Planning agents should consult architectural canon before generating implementation strategies.
+- Execution agents should retrieve approved templates and conventions before producing code.
+- Repair systems should consult historical failure patterns and successful mitigations.
+- Validation agents should compare generated artifacts against canon-approved practices.
+
+> **Operational Integration Principle:** In AxionOS, knowledge only counts as system capability when it is operationally connected to runtime behavior. A pattern not consumed by agents or functions is documentation, not implementation intelligence.
+
+Block Y therefore represents applied, governed, versioned, and operationally integrated knowledge.
+
+**Planned scope:**
+
+| Sprint | Capability |
+|--------|-----------|
+| 115 | Canon Steward & Knowledge Governance Engine |
+| 116 | Implementation Pattern Library & Retrieval Layer |
+| 117 | Failure Memory & Repair Intelligence Archive |
+| 118 | External Knowledge Intake & Canon Evolution Control |
+
+**Architectural risk note:** The main risk of Block Y is becoming a decorative or bloated wiki. Its antidote is operational retrieval, governance, deprecation, and selective application rather than passive accumulation.
+
+#### AxionOS Layered Architecture Overview
+
+```mermaid
+flowchart TB
+    U[Human Operator / Builder]:::human
+
+    subgraph T1[Execution Layer]
+        E1[Planning]
+        E2[Execution]
+        E3[Repair]
+        E4[Validation]
+    end
+
+    subgraph T2[Coordination Layer]
+        C1[Pipeline Orchestration]
+        C2[Job / Stage Control]
+        C3[Retries / Batching / Flow Routing]
+    end
+
+    subgraph T3[Governance Layer]
+        G1[Policy & Approval]
+        G2[Auditability]
+        G3[Memory / Sovereignty / Continuity]
+    end
+
+    subgraph T4[Strategic Coordination Layer -- Block W]
+        S1[Multi-Horizon Alignment]
+        S2[Tradeoff Arbitration]
+        S3[Mission Integrity]
+        S4[Continuity Simulation]
+    end
+
+    subgraph T5[Reflexive Governance Layer -- Block X]
+        R1[Evolution Proposal Governance]
+        R2[Architectural Mutation Control]
+        R3[Reflective Validation]
+        R4[Kernel Integrity Guard]
+    end
+
+    subgraph T6[Canonical Knowledge Layer -- Block Y]
+        K1[Canon Stewardship]
+        K2[Pattern Library & Retrieval]
+        K3[Failure Memory]
+        K4[External Knowledge Intake]
+    end
+
+    X1[Models / AI Providers]:::external
+    X2[Databases / Memory / Logs]:::data
+
+    U --> E1
+    E1 --> E2
+    E2 --> E3
+    E3 --> E4
+
+    E1 --> C1
+    E2 --> C1
+    E3 --> C2
+    E4 --> C3
+
+    C1 --> G1
+    C2 --> G2
+    C3 --> G3
+
+    G1 --> S1
+    G2 --> S2
+    G3 --> S3
+    S3 --> S4
+
+    S1 --> R1
+    S2 --> R2
+    S3 --> R3
+    S4 --> R4
+
+    R1 --> K1
+    R2 --> K2
+    R3 --> K3
+    R4 --> K4
+
+    E1 --> X1
+    E2 --> X1
+    E3 --> X1
+    E4 --> X1
+
+    C1 --> X2
+    G2 --> X2
+    S4 --> X2
+    K3 --> X2
+
+    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:1.5px;
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef strategic fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:1.5px;
+    classDef reflexive fill:#FF7675,stroke:#922B21,color:#111,stroke-width:1.5px;
+    classDef canon fill:#6C5CE7,stroke:#2E1A8A,color:#fff,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef external fill:#B2BEC3,stroke:#636E72,color:#111,stroke-width:1.5px;
+
+    class E1,E2,E3,E4,C1,C2,C3 core;
+    class G1,G2,G3 governance;
+    class S1,S2,S3,S4 strategic;
+    class R1,R2,R3,R4 reflexive;
+    class K1,K2,K3,K4 canon;
+    class X2 data;
+    class X1 external;
+```
+
+#### Runtime Knowledge Application Principle
+
+```mermaid
+flowchart LR
+    A[Stored Pattern / Guideline / Template]:::canon
+    B[Canon Governance]:::governance
+    C[Retrieval Layer]:::canon
+    D[Planning Agent]:::core
+    E[Execution Agent]:::core
+    F[Repair Loop]:::runtime
+    G[Validation Layer]:::governance
+    H[Runtime Artifact / Code Output]:::data
+    I[Passive Documentation Only]:::external
+
+    A --> B
+    B --> C
+    C --> D
+    C --> E
+    C --> F
+    C --> G
+
+    D --> H
+    E --> H
+    F --> H
+    G --> H
+
+    A -. if not retrieved .-> I
+
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef canon fill:#6C5CE7,stroke:#2E1A8A,color:#fff,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef external fill:#B2BEC3,stroke:#636E72,color:#111,stroke-width:1.5px;
+```
+
+> A stored pattern becomes implementation intelligence only when it is selected, retrieved, and applied by runtime flows. Without operational use, the canon remains documentation rather than active system capability.
 
 ---
 
