@@ -1035,3 +1035,64 @@ This phase therefore transforms knowledge from passive documentation into applie
 | Runtime Proof & Adaptive Governance | 4 | 123–126 |
 | Support | 11 | Various |
 | **Total** | **~149** | |
+
+---
+
+## Committed Future Arc (Sprints 127–138)
+
+The following blocks are committed for implementation, pending sprint-by-sprint execution and review.
+
+### Block AB — Learning Canonization (Sprints 127–130)
+
+**Goal:** Transform operational learning from ephemeral insights into durable, reusable canonical knowledge that actively improves execution.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 127 | Learning Extraction Engine | Learning Extraction Layer | 🔜 Committed |
+| 128 | Canon Promotion Pipeline | Canon Promotion Layer | 🔜 Committed |
+| 129 | Cross-Tenant Pattern Distillation | Cross-Tenant Distillation Layer | 🔜 Committed |
+| 130 | Canon Reuse Injection | Canon Reuse Injection Layer | 🔜 Committed |
+
+**Key objectives:**
+- Systematically extract validated learnings from execution history
+- Govern promotion of learnings into canonical status with evidence requirements
+- Distill cross-tenant patterns (anonymized, governed) for platform-wide benefit
+- Inject proven canon into planning, repair, and validation flows
+
+---
+
+### Block AC — Adaptive Coordination (Sprints 131–134)
+
+**Goal:** Introduce adaptive operational coordination — the system allocates attention, resources, and rhythm based on real conditions rather than static configuration.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 131 | Operational Posture Engine | Operational Posture Layer | 🔜 Committed |
+| 132 | Attention Allocation Engine | Attention Allocation Layer | 🔜 Committed |
+| 133 | Adaptive Resource Routing | Adaptive Resource Routing Layer | 🔜 Committed |
+| 134 | Operational Rhythm & Recovery Cycles | Operational Rhythm Layer | 🔜 Committed |
+
+**Key objectives:**
+- Detect and adjust operational posture (normal, surge, recovery, maintenance)
+- Dynamically allocate attention across concurrent initiatives based on priority and risk
+- Route computational and agent resources based on demand, capacity, and urgency
+- Self-regulate operational rhythm with recovery cycles to prevent burnout and drift
+
+---
+
+### Block AD — Adaptive Operational Organism (Sprints 135–138)
+
+**Goal:** Synthesize coordination, learning, governance, and runtime into a coherent adaptive organism with multi-loop governance and organism-level observability.
+
+| Sprint | Capability | Architectural Layer | Status |
+|--------|-----------|-------------------|--------|
+| 135 | Multi-Loop Governance Orchestrator | Multi-Loop Governance Layer | 🔜 Committed |
+| 136 | Systemic Health Model | Systemic Health Model Layer | 🔜 Committed |
+| 137 | Organism Memory Layers | Organism Memory Layer | 🔜 Committed |
+| 138 | Adaptive Operational Organism Console | Organism Console Layer | 🔜 Committed |
+
+**Key objectives:**
+- Orchestrate fast (tactical), slow (strategic), and meta (governance) loops
+- Monitor systemic health spanning all operational dimensions holistically
+- Maintain organism-level memory layers (operational, tactical, strategic)
+- Provide unified operator console for organism-level observation and intervention
