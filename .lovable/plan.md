@@ -126,7 +126,7 @@ AxionOS is an **Autonomous Delivery Sovereignty** platform (Level 10):
 
 | Block | Sprints | Name | Status |
 |-------|---------|------|--------|
-| AB | 127–130 | Learning Canonization | 🔄 In Progress (127–128 ✅) |
+| AB | 127–130 | Learning Canonization | 🔄 In Progress (127–129 ✅) |
 | AC | 131–134 | Adaptive Coordination | 🔜 Committed |
 | AD | 135–138 | Adaptive Operational Organism | 🔜 Committed |
 

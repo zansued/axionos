@@ -1051,7 +1051,7 @@ The following blocks are committed for implementation, pending sprint-by-sprint 
 |--------|-----------|-------------------|--------|
 | 127 | Learning Extraction Engine | Learning Extraction Layer | ✅ Complete |
 | 128 | Canon Promotion Pipeline | Canon Promotion Layer | ✅ Complete |
-| 129 | Cross-Tenant Pattern Distillation | Cross-Tenant Distillation Layer | 🔜 Committed |
+| 129 | Cross-Tenant Pattern Distillation | Cross-Tenant Distillation Layer | ✅ Complete |
 | 130 | Canon Reuse Injection | Canon Reuse Injection Layer | 🔜 Committed |
 
 **Key objectives:**
