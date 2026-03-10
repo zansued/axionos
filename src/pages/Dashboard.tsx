@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { BoltStyleChat } from "@/components/ui/BoltInteraction";
-import ChatLoader from "@/components/ui/ChatLoader";
 
 export default function Dashboard() {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -14,9 +13,9 @@ export default function Dashboard() {
           clearInterval(interval);
           return 95;
         }
-        return prev + 5;
+        return prev + Math.random() * 8 + 2;
       });
-    }, 600);
+    }, 800);
     return () => clearInterval(interval);
   }, [isGenerating]);
 
@@ -27,18 +26,16 @@ export default function Dashboard() {
   ) => {
     setIsGenerating(true);
     setLoadingProgress(0);
-    console.log("Iniciando criação (Mock)", { prompt, modelId, assets });
+    console.log("Iniciando criação", { prompt, modelId });
   };
 
   return (
     <div className="h-screen w-screen overflow-hidden">
-      {isGenerating ? (
-        <div className="h-full w-full flex items-center justify-center bg-background">
-          <ChatLoader progress={loadingProgress} />
-        </div>
-      ) : (
-        <BoltStyleChat onSubmit={handlePromptSubmit} />
-      )}
+      <BoltStyleChat 
+        onSubmit={handlePromptSubmit} 
+        isGenerating={isGenerating}
+        progress={Math.round(loadingProgress)}
+      />
     </div>
   );
 }
