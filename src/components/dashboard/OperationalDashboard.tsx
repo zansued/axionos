@@ -27,7 +27,7 @@ export function OperationalDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-display font-semibold tracking-tight">Dashboard</h1>
-          <p className="text-xs text-muted-foreground mt-0.5">System overview and operational intelligence</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Idea → Software Running — AxionOS handles the rest</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-[10px] font-mono">
