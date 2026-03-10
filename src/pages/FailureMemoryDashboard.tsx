@@ -9,7 +9,7 @@ import { useOrg } from "@/contexts/OrgContext";
 import {
   useFailureMemoryEntries, useRepairAttemptRecords, useFalseFixRecords,
   useMitigationPatterns, useExplainFailure, useDetectFalseFixes,
-} from "@/hooks/useRepairIntelligence";
+} from "@/hooks/useFailureMemoryArchive";
 import { AlertTriangle, CheckCircle, XCircle, Shield, Bug, Wrench, TrendingUp, Info } from "lucide-react";
 
 function riskBadge(score: number) {
