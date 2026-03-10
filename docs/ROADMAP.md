@@ -82,7 +82,7 @@ All governance constraints remain active: no autonomous architecture mutation, h
 
 ## AxionOS Maturity Thesis
 
-With all 122 sprints complete, AxionOS has completed its **Autonomous Delivery Sovereignty** phase.
+With all 126 sprints complete, AxionOS has completed its **Autonomous Delivery Sovereignty** phase with runtime evidence hardening.
 
 ### What has been achieved (Sprints 1–122)
 
