@@ -3,8 +3,9 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-10
-> **Current state:** Level 7 — Strategic Autonomy & Civilizational Coordination. 90+ architectural layers active. All blocks (Foundation through W) complete. 110 sprints implemented. Block W hardened and integrated. Block X (111–114) planned.
+> **Current state:** Level 7 — Strategic Autonomy & Civilizational Coordination. 90+ architectural layers active. All blocks (Foundation through W) complete. 110 sprints implemented. Block W hardened and integrated. Block X (111–114) planned. Block Y (115–118) future.
 > **Next block:** X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
+> **Future block:** Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 Future
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
