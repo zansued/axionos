@@ -146,7 +146,7 @@ All pillars of the Strategic Coordination OS are **implemented and hardened**:
 
 ---
 
-## Completed Canon (Sprints 1–106)
+## Completed Canon (Sprints 1–110)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -184,7 +184,7 @@ All pillars of the Strategic Coordination OS are **implemented and hardened**:
 | Block T — Governed Intelligence OS | 95–98 | Institutional memory consolidation, doctrine & playbook synthesis, bounded autonomous operations, institutional decision engine |
 | Block U — Adaptive Institutional Ecosystem | 99–102 | Cross-context doctrine adaptation, institutional conflict resolution, federated intelligence boundaries, resilience & continuity governance |
 | Block V — Sovereign Institutional Intelligence | 103–106 | Institutional memory constitution, sovereign decision rights orchestration, dependency sovereignty & external reliance governance, strategic succession & long-horizon continuity |
-| Block W — Strategic Autonomy & Civilizational Coordination | 107–110 | Multi-horizon strategic alignment, institutional tradeoff arbitration, mission integrity & drift prevention, civilizational continuity simulation |
+| Block W — Strategic Autonomy & Civilizational Coordination | 107–110 | Multi-horizon strategic alignment, institutional tradeoff arbitration, mission integrity & drift prevention, civilizational continuity simulation. Hardened and causally integrated. |
 
 ---
 
