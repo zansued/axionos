@@ -8,7 +8,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Rocket, Search, ShieldCheck, Scale, 
   FlaskConical, Activity, HeartPulse, Brain, Zap, Fingerprint,
-  Users, Settings, Code2, TrendingUp
+  Users, Settings, Code2, TrendingUp, LineChart
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────

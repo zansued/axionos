@@ -1,11 +1,9 @@
-// SurfaceGuard – route-level permission gate for workspace and platform surfaces.
-// Renders AccessDenied (inside AppLayout) when the user's canonical role lacks access.
-
 import { ReactNode } from "react";
 import { useRoleBasedExperience } from "@/hooks/useRoleBasedExperience";
-import { canAccessSurface } from "@/lib/permissions";
+import { canAccessRoute } from "@/lib/permissions";
 import { AccessDenied } from "@/components/AccessDenied";
 import { AppLayout } from "@/components/AppLayout";
+import { useLocation } from "react-router-dom";
 
 interface SurfaceGuardProps {
   surface: "workspace" | "platform";
@@ -14,7 +12,8 @@ interface SurfaceGuardProps {
 
 export function SurfaceGuard({ surface, children }: SurfaceGuardProps) {
   const { canonicalRole } = useRoleBasedExperience();
-  const allowed = canAccessSurface(canonicalRole, surface);
+  const location = useLocation();
+  const allowed = canAccessRoute(canonicalRole, location.pathname);
 
   if (!allowed) {
     return (
