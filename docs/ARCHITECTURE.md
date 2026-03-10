@@ -368,17 +368,17 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    Family["Strategy Family Registry"]
-    Signal["Strategy Signal Interpreter"]
-    Synth["Strategy Variant Synthesizer"]
-    Guard["Strategy Guardrails"]
-    Experiment["Strategy Experiment Runner"]
-    Outcome["Strategy Outcome Tracker"]
-    Promote["Strategy Promotion Rules"]
-    Rollback["Strategy Rollback Engine"]
-    Lineage["Strategy Lineage"]
+    Family["Strategy Family Registry"]:::data
+    Signal["Strategy Signal Interpreter"]:::intelligence
+    Synth["Strategy Variant Synthesizer"]:::strategic
+    Guard["Strategy Guardrails"]:::governance
+    Experiment["Strategy Experiment Runner"]:::runtime
+    Outcome["Strategy Outcome Tracker"]:::data
+    Promote["Strategy Promotion Rules"]:::governance
+    Rollback["Strategy Rollback Engine"]:::governance
+    Lineage["Strategy Lineage"]:::data
 
-    PlatformSignals["Platform Signals"] --> Signal
+    PlatformSignals["Platform Signals"]:::intelligence --> Signal
     Family --> Synth
     Signal --> Synth
     Synth --> Guard
@@ -390,6 +390,12 @@ flowchart TB
     Experiment --> Lineage
     Outcome --> Lineage
     Rollback --> Lineage
+
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef strategic fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Modules:** `execution-strategy/execution-strategy-signal-interpreter.ts`, `execution-strategy-variant-synthesizer.ts`, `execution-strategy-guardrails.ts`, `execution-strategy-experiment-runner.ts`, `execution-strategy-outcome-tracker.ts`, `execution-strategy-promotion-rules.ts`, `execution-strategy-rollback-engine.ts`, `execution-strategy-lineage.ts`
