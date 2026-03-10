@@ -757,18 +757,18 @@ This phase therefore transforms knowledge from passive documentation into applie
 
 ---
 
-## Block Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 FUTURE
+## Block Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — ✅ COMPLETE
 
 **Goal:** Transform scattered implementation know-how into governed, operationally connected implementation intelligence.
 
-**Architectural prerequisite:** Block X (Reflexive Governance) should be complete conceptually — the system must govern its own evolution before it governs dynamic canon evolution deeply.
+**Architectural prerequisite:** Block X (Reflexive Governance) complete — the system governs its own evolution before it governs dynamic canon evolution deeply.
 
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 115 | Canon Steward & Knowledge Governance Engine | Y | 🔮 Future | Govern the implementation canon itself — entries, categories, statuses, confidence, approval, versioning, stewardship, and deprecation. |
-| 116 | Implementation Pattern Library & Retrieval Layer | Y | 🔮 Future | Create the implementation pattern library and retrieval layer so planning, execution, repair, and validation agents can query approved patterns, templates, conventions, and stack-specific guidance before generating code. |
-| 117 | Failure Memory & Repair Intelligence Archive | Y | 🔮 Future | Create a failure memory and repair intelligence archive so recurrent errors, root causes, successful fixes, unsuccessful fixes, and mitigation strategies become reusable institutional knowledge. |
-| 118 | External Knowledge Intake & Canon Evolution Control | Y | 🔮 Future | Create an external knowledge intake and canon evolution control layer so modern practices, official documentation updates, and new patterns can be reviewed, classified, validated, and safely admitted into the canon without letting internet churn directly rewrite system standards. |
+| 115 | Canon Steward & Knowledge Governance Engine | Y | ✅ Complete | Govern the implementation canon itself — entries, categories, statuses, confidence, approval, versioning, stewardship, and deprecation. |
+| 116 | Implementation Pattern Library & Retrieval Layer | Y | ✅ Complete | Create the implementation pattern library and retrieval layer so planning, execution, repair, and validation agents can query approved patterns, templates, conventions, and stack-specific guidance before generating code. |
+| 117 | Failure Memory & Repair Intelligence Archive | Y | ✅ Complete | Create a failure memory and repair intelligence archive so recurrent errors, root causes, successful fixes, unsuccessful fixes, and mitigation strategies become reusable institutional knowledge. |
+| 118 | External Knowledge Intake & Canon Evolution Control | Y | ✅ Complete | Create an external knowledge intake and canon evolution control layer so modern practices, official documentation updates, and new patterns can be reviewed, classified, validated, and safely admitted into the canon without letting internet churn directly rewrite system standards. |
 
 **Block Y logical chain:**
 - Block W: how to coordinate strategically
