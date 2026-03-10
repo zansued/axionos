@@ -106,6 +106,12 @@ import SystemHealthDashboard from "./pages/SystemHealthDashboard";
 import OrganismMemoryDashboard from "./pages/OrganismMemoryDashboard";
 import OrganismConsoleDashboard from "./pages/OrganismConsoleDashboard";
 import NotFound from "./pages/NotFound";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
+import Pipelines from "./pages/Pipelines";
+import Governance from "./pages/Governance";
+import Modes from "./pages/Modes";
+import SettingsPage from "./pages/Settings";
 
 // ─── Blueprint Placeholder Pages ────────────────────────────────────────────
 import {
@@ -262,6 +268,12 @@ const App = () => (
                           <Route path="/squads"        element={<ProtectedRoute><Squads /></ProtectedRoute>} />
                           <Route path="/workspace"     element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
                           <Route path="/planning"      element={<Navigate to="/initiatives" replace />} />
+                          <Route path="/projects"      element={<ProtectedRoute><Projects /></ProtectedRoute>} />
+                          <Route path="/project/:id"   element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
+                          <Route path="/pipelines"     element={<ProtectedRoute><Pipelines /></ProtectedRoute>} />
+                          <Route path="/governance"    element={<ProtectedRoute><Governance /></ProtectedRoute>} />
+                          <Route path="/modes"         element={<ProtectedRoute><Modes /></ProtectedRoute>} />
+                          <Route path="/settings"      element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
 
                           {/* ══════════════════════════════════════════════
                               WORKSPACE SURFACE — tenant_owner+
