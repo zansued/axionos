@@ -46,15 +46,15 @@ These colors are not decorative. They indicate architectural function.
 
 ```mermaid
 flowchart TB
-    Dev["Developer / Operator"]
-    Lead["Engineering / Product Lead"]
+    Dev["Developer / Operator"]:::human
+    Lead["Engineering / Product Lead"]:::human
 
-    Axion["AxionOS\nAdaptive Engineering Platform"]
+    Axion["AxionOS\nAdaptive Engineering Platform"]:::core
 
-    Git["GitHub / Code Hosting"]
-    LLM["LLM Providers / Model APIs"]
-    DB["Supabase / PostgreSQL"]
-    Obs["Observability / Telemetry Stack"]
+    Git["GitHub / Code Hosting"]:::external
+    LLM["LLM Providers / Model APIs"]:::external
+    DB["Supabase / PostgreSQL"]:::data
+    Obs["Observability / Telemetry Stack"]:::external
 
     Dev --> Axion
     Lead --> Axion
@@ -63,6 +63,11 @@ flowchart TB
     Axion --> LLM
     Axion --> DB
     Axion --> Obs
+
+    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:1.5px;
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef external fill:#B2BEC3,stroke:#636E72,color:#111,stroke-width:1.5px;
 ```
 
 **Actors:**
