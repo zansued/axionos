@@ -5,6 +5,7 @@ import App from "./App";
 console.log("[AxionOS] ENV check:", {
   url: import.meta.env.VITE_SUPABASE_URL ? "SET" : "MISSING",
   key: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ? "SET" : "MISSING",
+  urlValue: import.meta.env.VITE_SUPABASE_URL?.substring(0, 30),
 });
 
 const root = document.getElementById("root")!;
