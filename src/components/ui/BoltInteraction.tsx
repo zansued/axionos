@@ -225,15 +225,18 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           />
         </motion.div>
 
-        {/* Headline — AxionOS as primary */}
+        {/* Headline — AxionOS with gradient */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-2"
         >
-          <h1 className="text-4xl sm:text-5xl lg:text-[4rem] font-bold text-white tracking-tight leading-[1.08] font-display">
-            AxionOS
+          <h1 className="text-4xl sm:text-5xl lg:text-[4.5rem] font-bold tracking-tight leading-[1.08] font-display">
+            <span className="bg-gradient-to-r from-[#4da5fc] via-[#6db8ff] to-[#b4d8ff] bg-clip-text text-transparent">
+              Axion
+            </span>
+            <span className="text-white">OS</span>
           </h1>
         </motion.div>
 
@@ -254,13 +257,8 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           transition={{ delay: 0.35, duration: 0.5 }}
           className="text-center mb-10"
         >
-          <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-white/90 leading-snug font-display">
-            Construa sistemas autogovernados.
-          </p>
-          <p className="text-lg sm:text-xl lg:text-2xl font-semibold leading-snug font-display">
-            <span className="bg-gradient-to-r from-[#4da5fc] via-[#6db8ff] to-[#4da5fc] bg-clip-text text-transparent">
-              Em minutos.
-            </span>
+          <p className="text-[15px] sm:text-[17px] lg:text-[19px] text-[#7a7a84] font-medium leading-relaxed max-w-lg mx-auto">
+            Describe the intelligent system you want to orchestrate.
           </p>
         </motion.div>
 
