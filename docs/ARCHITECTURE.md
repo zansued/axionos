@@ -1390,11 +1390,11 @@ With 110 sprints complete, all blocks from Foundation through Strategic Autonomy
 
 **Known maturity backlog (non-blocking):** Dimension/horizon management UI still limited; constitution-aware runtime weight injection still partial; bulk subject operations intentionally out of scope; historical visualization can still be refined.
 
-#### Block X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
+#### Block X — Reflexive Governance & Evolution Control (Sprints 111–114) — ✅ Complete
 
-**Architectural contribution (planned):** Evolution proposal governance engine (govern proposals for changing the system itself), architectural mutation control layer (reversibility, blast radius, coupling expansion, mutation legitimacy), reflective validation & self-revision audit (audit whether self-corrections actually improved the system), kernel integrity & anti-corrosion guard (protect the kernel against corrosion, bloat, existential drift, loss of legibility).
+**Architectural contribution:** Evolution proposal governance engine (govern proposals for changing the system itself), architectural mutation control layer (reversibility, blast radius, coupling expansion, mutation legitimacy), reflective validation & self-revision audit (audit whether self-corrections actually improved the system), kernel integrity & anti-corrosion guard (protect the kernel against corrosion, bloat, existential drift, loss of legibility).
 
-#### Tier 13 — Canonical Knowledge & Implementation Intelligence (Block Y — Future)
+#### Tier 13 — Canonical Knowledge & Implementation Intelligence (Block Y — ✅ Complete)
 
 Block Y introduces the Canonical Knowledge & Implementation Intelligence layer.
 
