@@ -34,8 +34,8 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
-- Sprints 1–106 are the completed canon — do not casually reopen
-- All blocks (Foundation through V) are complete
+- Sprints 1–138 are the completed canon — do not casually reopen
+- All blocks (Foundation through AD) are complete
 - Do not collapse internal architecture and user-facing journey into the same surface
 
 ---
@@ -76,13 +76,14 @@ The default user-facing journey remains:
 
 ## After Sprint 106 — What Changes Strategically
 
-The platform has completed its **Sovereign Institutional Intelligence** at Sprint 106, spanning all blocks from Foundation through Block V.
+The platform has completed its **Adaptive Operational Organism** at Sprint 138, spanning all blocks from Foundation through Block AD.
 
-All 106 sprints are complete. The platform has achieved Level 6 — Sovereign Institutional Intelligence. The focus shifts from building new layers to:
+All 138 sprints are complete. The platform has achieved Level 10+ — Adaptive Operational Organism. The focus shifts from building new layers to:
 - Deepening intelligence quality and advisory precision
 - Strengthening the product experience and adoption feedback loop
 - Hardening institutional governance across distributed and federated contexts
 - Long-horizon institutional resilience and strategic succession maturity
+- Defining the next strategic arc beyond Sprint 138
 
 Internal sophistication remains critical. The next level deepens it through adaptive institutional coherence, not uncontrolled autonomy.
 
@@ -90,14 +91,14 @@ Internal sophistication remains critical. The next level deepens it through adap
 
 ## How To Continue Safely After Sprint 106
 
-1. Read **ROADMAP.md** first for strategic direction
+1. Read **ROADMAP.md** first for strategic direction (138 sprints complete, all blocks through AD)
 2. Read **PLAN.md** next for current canon status
 3. Use **ARCHITECTURE.md** for structural context, the product boundary model, and the role/surface model
 4. Use **PIPELINE_CONTRACTS.md** for the user-visible journey contract
 5. Use **AGENTS.md** for internal agent system reference only
 6. Implement future work **sprint by sprint** with human review
 7. Do **not** collapse internal architecture and user-facing journey into the same surface
-8. Do **not** casually reopen completed canon (Sprints 1–106) without deliberate review
+8. Do **not** casually reopen completed canon (Sprints 1–138) without deliberate review
 9. Internal layers are backstage support — the default product surface is the user journey
 
 ---
@@ -114,7 +115,7 @@ Internal sophistication remains critical. The next level deepens it through adap
 
 ### Current Canon Boundaries
 
-- **Sprints 1–106** = canonical complete (full canon — Foundation through Block V)
+- **Sprints 1–138** = canonical complete (full canon — Foundation through Block AD)
 
 ---
 
