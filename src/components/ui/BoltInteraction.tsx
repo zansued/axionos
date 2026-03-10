@@ -58,9 +58,8 @@ const EXAMPLES = [
 
 
 // ── Chat Input ────────────────────────────────────────────────────────────
-function ChatInput({ onSend, onExampleClick }: {
+function ChatInput({ onSend }: {
   onSend?: (message: string) => void
-  onExampleClick?: (prompt: string) => void
 }) {
   const [message, setMessage] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -145,7 +144,10 @@ function ChatInput({ onSend, onExampleClick }: {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 + i * 0.1, duration: 0.35 }}
-            onClick={() => onExampleClick?.(ex.prompt)}
+            onClick={() => {
+              setMessage(ex.prompt)
+              textareaRef.current?.focus()
+            }}
             className="flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-medium border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/[0.15] text-[#7a7a82] hover:text-white transition-all duration-200 active:scale-95"
           >
             <ex.icon className="size-3.5 opacity-70" />
@@ -269,7 +271,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           transition={{ delay: 0.4, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="w-full flex justify-center"
         >
-          <ChatInput onSend={handleSend} onExampleClick={handleSend} />
+          <ChatInput onSend={handleSend} />
         </motion.div>
       </div>
 
