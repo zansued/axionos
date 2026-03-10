@@ -49,7 +49,11 @@ export default function Dashboard() {
 
   return (
     <div className="h-screen w-screen overflow-hidden">
-      <BoltStyleChat onSubmit={handlePromptSubmit} initialMessage={initialMessage} />
+      <BoltStyleChat
+        onSubmit={handlePromptSubmit}
+        initialMessage={initialMessage}
+        onSignIn={() => navigate("/auth")}
+      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { 
-  SendHorizontal, Box, Zap, Bot, BarChart3, ArrowRight
+  SendHorizontal, Box, Zap, Bot, BarChart3, ArrowRight, LogIn
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import axionLogo from '@/assets/axion-logo.svg'
@@ -220,9 +220,10 @@ function RayBackground() {
 interface BoltChatProps {
   onSubmit?: (message: string, modelId: string, assets: File[]) => void
   initialMessage?: string
+  onSignIn?: () => void
 }
 
-export function BoltStyleChat({ onSubmit, initialMessage }: BoltChatProps) {
+export function BoltStyleChat({ onSubmit, initialMessage, onSignIn }: BoltChatProps) {
   const handleSend = (message: string) => {
     onSubmit?.(message, "auto", [])
   }
@@ -231,6 +232,26 @@ export function BoltStyleChat({ onSubmit, initialMessage }: BoltChatProps) {
     <div className="relative flex flex-col items-center justify-center h-full w-full overflow-hidden bg-[#08080a]">
       <NeuralBackground className="z-0" />
       <RayBackground />
+
+      {/* Sign in button — top right */}
+      {onSignIn && (
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+          onClick={onSignIn}
+          className="absolute top-5 right-6 z-20 flex items-center gap-2 px-4 py-2 rounded-lg text-[13px] font-medium text-white/60 hover:text-white/90 transition-colors"
+          style={{
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            backdropFilter: 'blur(12px)',
+            fontFamily: "'Space Grotesk', sans-serif",
+          }}
+        >
+          <LogIn className="h-3.5 w-3.5" />
+          Sign in
+        </motion.button>
+      )}
 
 
       <div className="relative z-10 flex flex-col items-center w-full max-w-4xl px-4" style={{ marginTop: '-6vh' }}>
