@@ -3,10 +3,10 @@
 > Sprint-by-sprint implementation record mapping capabilities to architectural layers.
 > **This is the canonical source of truth for sprint execution status.**
 >
-> **Last updated:** 2026-03-09
-> **Canon Status:** 106 sprints complete — all blocks (Foundation through V) implemented
-> **Latest Sprint:** 106 (Strategic Succession & Long-Horizon Continuity) — ✅ Complete
-> **Next Block:** W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
+> **Last updated:** 2026-03-10
+> **Canon Status:** 110 sprints complete — all blocks (Foundation through W) implemented and hardened
+> **Latest Sprint:** 110 (Civilizational Continuity Simulation Layer) — ✅ Complete
+> **Next Block:** X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
 
 ## Document Authority
 
@@ -29,19 +29,19 @@
 
 ## Canon Status
 
-All 106 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Sovereign Institutional Intelligence (Sprint 106) — is implemented and operational.
+All 110 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Strategic Autonomy & Civilizational Coordination (Sprint 110) — is implemented, validated, and hardened.
 
-**Next:** Block W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
+**Next:** Block X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
 
 ### Current Strategic Position
 
-AxionOS has completed all 106 sprints spanning blocks Foundation through V (Sovereign Institutional Intelligence). The platform has achieved **Level 6 — Sovereign Institutional Intelligence**, with 85+ architectural layers active. The internal architecture is mature, coherent, and self-governing across governance, intelligence, memory, doctrine, decision engine, bounded autonomy, calibration, observability, ecosystem controls, adaptive institutional ecosystem, and sovereign institutional intelligence.
+AxionOS has completed all 110 sprints spanning blocks Foundation through W (Strategic Autonomy & Civilizational Coordination). The platform has achieved **Level 7 — Strategic Autonomy & Civilizational Coordination**, with 90+ architectural layers active. Block W has undergone hardening and integration passes, with cross-sprint causal signals bounded and inspectable.
 
-Block W (Sprints 107–110) is the next planned evolution, extending the platform from sovereign institutional intelligence to **strategic autonomy and civilizational coordination** — multi-horizon alignment, tradeoff arbitration, mission integrity, and long-horizon continuity simulation.
+Block X (Sprints 111–114) is the next planned evolution, extending the platform from strategic coordination to **reflexive governance and evolution control** — governing the system's own evolution, detecting mutation legitimacy, auditing self-corrections, and protecting kernel integrity.
 
 - No autonomous architecture mutation — all structural changes require human approval.
 - Governance before autonomy remains the governing principle.
-- All 85+ architectural layers are active and verified.
+- All 90+ architectural layers are active and verified.
 
 ---
 
@@ -654,25 +654,78 @@ Sprint 71 acts as a post-Block-M bridge sprint. It does not replace the governed
 
 ---
 
-## Block W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 PLANNED
+## Block W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — ✅ COMPLETE & HARDENED
 
 **Goal:** Extend from sovereign institutional intelligence to strategic autonomy and civilizational coordination — governing multi-horizon alignment, institutional tradeoff arbitration, mission integrity preservation, and long-horizon continuity simulation.
 
 **Architectural prerequisite:** Block V (Sovereign Institutional Intelligence) must be complete. Block W builds on memory constitution, sovereign decision rights, dependency sovereignty, and strategic succession.
 
-**Strategic thesis:** If Block V made AxionOS a sovereign institution, Block W begins to make it a **strategic intelligence for organizational civilization** — aligning horizons, arbitrating sacrifices, maintaining mission integrity, and simulating futures.
+**Strategic thesis:** If Block V made AxionOS a sovereign institution, Block W makes it a **strategic intelligence for organizational civilization** — aligning horizons, arbitrating sacrifices, maintaining mission integrity, and simulating futures.
 
 | Sprint | Name | Block | Status | Objective |
 |--------|------|-------|--------|-----------|
-| 107 | Multi-Horizon Strategic Alignment Engine | W | 🔜 Planned | Coordinate decisions across short, medium, long-term, and institutional continuity horizons. Detect when immediate optimization conflicts with long-term direction. Govern tension between urgency, execution, strategy, legacy, and long horizon. |
-| 108 | Institutional Tradeoff Arbitration System | W | 🔜 Planned | Create explicit, governed mechanisms for arbitrating institutional tradeoffs (speed vs quality, cost vs sovereignty, compliance vs experience). Transform tradeoffs into auditable, explainable governance objects. |
-| 109 | Mission Integrity & Drift Prevention | W | 🔜 Planned | Ensure the system does not become efficient at something that diverges from its core mission. Detect strategic, moral, institutional, and operational drift. Act as a mission integrity compass. |
-| 110 | Civilizational Continuity Simulation Layer | W | 🔜 Planned | Simulate scenarios of rupture, transition, and continuity in long horizons — regulatory change, technology shifts, capacity erosion, organizational transformation. Enable institutional foresight beyond incident-level thinking. |
+| 107 | Multi-Horizon Strategic Alignment Engine | W | ✅ Complete | Coordinate decisions across short, medium, long-term, and institutional continuity horizons. Detect when immediate optimization conflicts with long-term direction. Govern tension between urgency, execution, strategy, legacy, and long horizon. |
+| 108 | Institutional Tradeoff Arbitration System | W | ✅ Complete | Create explicit, governed mechanisms for arbitrating institutional tradeoffs (speed vs quality, cost vs sovereignty, compliance vs experience). Transform tradeoffs into auditable, explainable governance objects. |
+| 109 | Mission Integrity & Drift Prevention | W | ✅ Complete | Ensure the system does not become efficient at something that diverges from its core mission. Detect strategic, moral, institutional, and operational drift. Act as a mission integrity compass. |
+| 110 | Civilizational Continuity Simulation Layer | W | ✅ Complete | Simulate scenarios of rupture, transition, and continuity in long horizons — regulatory change, technology shifts, capacity erosion, organizational transformation. Enable institutional foresight beyond incident-level thinking. |
+
+**Hardening applied:**
+- Cross-sprint causal signal integration (bounded, inspectable, max ±15% per signal / ±25% total via `causal-modifiers.ts`)
+- Constitution management UI with governance lifecycle (draft/active/deprecated) via `BlockWConstitutionManager` and `BlockWSubjectManager`
+- History/integration tabs with trend visualization (Recharts) and snapshot comparison
+- Scoring transparency via `ScoringTransparencyCard` and `CausalModifierCard`
+
+**Known maturity backlog (non-blocking):**
+- Dimension/horizon management UI still limited
+- Constitution-aware runtime weight injection still partial
+- Bulk subject operations intentionally out of scope
+- Historical visualization can still be refined
 
 **Block W logical chain:**
 - Block U answered: how to adapt, resolve conflict, federate, resist
 - Block V answered: how to remember, decide sovereignly, reduce external dependency, survive succession
-- **Block W answers: how to align horizons, arbitrate sacrifices, maintain mission, traverse long futures without losing direction**
+- **Block W answered: how to align horizons, arbitrate sacrifices, maintain mission, traverse long futures without losing direction**
+
+---
+
+## Block W → Block X Transition Note
+
+### What Block W Solved
+Block W made AxionOS strategically aware. The system can now align decisions across horizons, arbitrate institutional tradeoffs, detect mission drift, and simulate long-horizon continuity scenarios. Cross-sprint signals are causally connected in a bounded, inspectable way.
+
+### What Block W Exposed
+The validation/fix loop phase during Block W execution revealed that AxionOS governance and observability layers are significantly stronger than its runtime self-reconfiguration capability:
+
+- Oversized artifact batches (6-8 per request) triggered 30+ sequential AI calls in a single edge function, exceeding the 60-second timeout
+- Jobs remained in `running` state indefinitely, creating orphaned execution slots
+- The system required manual correction to reduce batch sizes (from 8 to 2), auto-cleanup of stale jobs, and frontend retry logic
+- The system could *detect* and *explain* problems but could not *autonomously reconfigure* its own execution parameters in response
+
+### Why Block X Is Now the Next Priority
+Block W made the system more conscious than self-regulating. The next frontier is governance of the system's own evolution, mutation, self-repair, and kernel protection. Block X closes the gap between "the system understands its problems" and "the system safely reconfigures itself in response" — under full governance control.
+
+---
+
+## Block X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 PLANNED
+
+**Goal:** Introduce reflexive governance — the system's ability to govern its own evolution, mutation, self-repair, and kernel protection. Block X is not "more features." It is a meta-governance layer governing how AxionOS changes itself.
+
+**Architectural prerequisite:** Block W (Strategic Autonomy & Civilizational Coordination) must be complete. Block X builds on strategic alignment, mission integrity, and the operational lessons of runtime execution.
+
+**Strategic thesis:** Block W demonstrated that the system can detect, analyze, and explain problems. Block X enables the system to safely propose and govern structural self-correction — distinguishing healthy evolution from unnecessary complexity, detecting corrosion, and protecting kernel integrity.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 111 | Evolution Proposal Governance Engine | X | 🔜 Planned | Govern proposals for changing the system itself, distinguishing healthy evolution from unnecessary complexity. Ensure structural changes are justified, bounded, and reversible. |
+| 112 | Architectural Mutation Control Layer | X | 🔜 Planned | Control architectural mutation by evaluating reversibility, blast radius, coupling expansion, and mutation legitimacy. Prevent uncontrolled structural drift. |
+| 113 | Reflective Validation & Self-Revision Audit | X | 🔜 Planned | Audit whether self-corrections and revisions actually improved the system or merely moved the problem elsewhere. Track revision effectiveness over time. |
+| 114 | Kernel Integrity & Anti-Corrosion Guard | X | 🔜 Planned | Protect the kernel against corrosion, bloat, existential drift, and loss of core legibility and governance integrity. Preserve architectural identity. |
+
+**Block X logical chain:**
+- Block U: how to adapt, resolve conflict, federate, resist
+- Block V: how to remember, decide sovereignly, reduce dependency, survive succession
+- Block W: how to align horizons, arbitrate sacrifices, maintain mission, traverse long futures
+- **Block X: how to govern the system's own evolution, detect corrosion, and protect kernel integrity**
 
 ---
 

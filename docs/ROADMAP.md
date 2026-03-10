@@ -4,20 +4,20 @@
 >
 > **Product promise**: From idea to delivered software.
 >
-> **Current Mode**: Level 6 — Sovereign Institutional Intelligence
-> **Current Maturity**: Level 6 ✅ Active
-> **Next Block**: W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) — 🔜 Planned
-> **Last strategic change (2026-03-09):** 106 sprints complete. All blocks (Foundation through V) complete. Sovereign Institutional Intelligence operational.
+> **Current Mode**: Level 7 — Strategic Autonomy & Civilizational Coordination
+> **Current Maturity**: Level 7 ✅ Active
+> **Next Block**: X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
+> **Last strategic change (2026-03-10):** 110 sprints complete. All blocks (Foundation through W) complete and hardened. Strategic Autonomy & Civilizational Coordination operational. Block X motivated by discovered runtime orchestration limitations.
 >
 > **Sprint details:** [PLAN.md](PLAN.md) · **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
 >
-> Last updated: 2026-03-09
+> Last updated: 2026-03-10
 
 ## Document Authority
 
 | Scope | Rule |
 |-------|------|
-| **Owns** | Current maturity level, strategic direction, implementation horizons, macro capability blocks, post-106 strategic thesis |
+| **Owns** | Current maturity level, strategic direction, implementation horizons, macro capability blocks, post-110 strategic thesis |
 | **Must not define** | Sprint-by-sprint execution ledger (→ PLAN.md), module inventory (→ AGENTS.md), detailed architecture (→ ARCHITECTURE.md), pipeline contracts (→ PIPELINE_CONTRACTS.md) |
 | **Derived from** | PLAN.md for sprint completion status; ARCHITECTURE.md for layer count |
 | **Update rule** | Update when strategic block, maturity, or horizon changes |
@@ -28,8 +28,8 @@
 
 | Dimension | State |
 |-----------|-------|
-| **Platform Stage** | Level 6 — Sovereign Institutional Intelligence |
-| **System State** | 85+ architectural layers active |
+| **Platform Stage** | Level 7 — Strategic Autonomy & Civilizational Coordination |
+| **System State** | 90+ architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -57,35 +57,36 @@
 | **Governed Intelligence OS** | Active — institutional memory consolidation, doctrine synthesis, bounded autonomous operations, institutional decision engine |
 | **Adaptive Institutional Ecosystem** | Active — cross-context doctrine adaptation, conflict resolution, federated intelligence boundaries, resilience & continuity governance |
 | **Sovereign Institutional Intelligence** | Active — memory constitution, sovereign decision rights, dependency sovereignty, strategic succession |
+| **Strategic Coordination** | Active — multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
 
 ## Strategic Directive
 
-AxionOS has completed **106 implementation sprints** spanning the full capability arc from deterministic execution through governed intelligence, institutional decision-making, adaptive institutional ecosystem, and sovereign institutional intelligence. The internal architecture is mature, coherent, and self-governing. All blocks through V (Sovereign Institutional Intelligence) are complete.
+AxionOS has completed **110 implementation sprints** spanning the full capability arc from deterministic execution through governed intelligence, institutional decision-making, adaptive institutional ecosystem, sovereign institutional intelligence, and strategic coordination. The internal architecture is mature, coherent, and self-governing. All blocks through W (Strategic Autonomy & Civilizational Coordination) are complete and hardened.
 
-**Post-Sprint 106 Strategic Position:**
+**Post-Sprint 110 Strategic Position:**
 
-The platform has reached its **Sovereign Institutional Intelligence** milestone. Every block from Foundation through Block V is complete. The internal architecture — governance, intelligence, memory, doctrine synthesis, bounded autonomous operations, institutional decision engine, cross-context adaptation, conflict resolution, federated intelligence, resilience governance, memory constitution, sovereign decision rights, dependency sovereignty, and strategic succession — is mature and operational.
+The platform has reached its **Strategic Autonomy & Civilizational Coordination** milestone. Block W is complete and operationally hardened — cross-sprint causal signals are active and bounded, constitution management UI is operational, and history/integration visualization is functional. The system can now align decisions across horizons, arbitrate institutional tradeoffs, detect mission drift, and simulate long-horizon futures.
 
-**Next Strategic Direction — Block W:**
+However, Block W also exposed a critical structural insight: AxionOS governance and observability are significantly stronger than its runtime self-reconfiguration capability. The validation/fix loop revealed that the system could detect problems but could not autonomously adapt its own execution parameters in response. This gap motivates Block X.
 
-Block W (Sprints 107–110) extends AxionOS from sovereign institutional intelligence to **strategic autonomy and civilizational coordination**. The thesis: a system that not only operates, governs, and survives, but begins to coordinate long-horizon strategy across multiple domains, mandates, institutions, and possible futures.
+**Next Strategic Direction — Block X:**
 
-> **"From idea to delivered software — with sovereign institutional intelligence and civilizational strategic coordination."**
+Block X (Sprints 111–114) introduces **reflexive governance** — the system's ability to govern its own evolution, mutation, self-repair, and kernel protection. The thesis: a system that not only operates, governs, coordinates, and simulates — but reflexively governs *how it changes itself*.
 
-Internal sophistication serves the visible product experience. The user-facing journey is clear, legible, and governed. The platform now operates with institutional memory constitution, sovereign decision rights orchestration, dependency sovereignty, and strategic succession & long-horizon continuity.
+> **"From idea to delivered software — with strategic coordination and reflexive governance over its own evolution."**
 
 ---
 
 ## AxionOS Maturity Thesis
 
-With all 106 sprints complete, AxionOS has completed its **Sovereign Institutional Intelligence** phase.
+With all 110 sprints complete, AxionOS has completed its **Strategic Autonomy & Civilizational Coordination** phase.
 
-### What has been achieved (Sprints 1–106)
+### What has been achieved (Sprints 1–110)
 
-All pillars of the Sovereign Institutional Intelligence OS are **implemented**:
+All pillars of the Strategic Coordination OS are **implemented and hardened**:
 
 | Pillar | Status | Key Components |
 |--------|--------|---------------|
@@ -96,6 +97,7 @@ All pillars of the Sovereign Institutional Intelligence OS are **implemented**:
 | **Operate Autonomously (Bounded)** | ✅ Active | Bounded autonomous operations, autonomy ladder, rollback posture |
 | **Adapt Institutionally** | ✅ Active | Cross-context doctrine adaptation, conflict resolution, federated intelligence, resilience governance |
 | **Govern Sovereignty** | ✅ Active | Memory constitution, sovereign decision rights, dependency sovereignty, strategic succession |
+| **Coordinate Strategically** | ✅ Active | Multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation |
 
 **Rule:** No autonomous architecture mutation. All changes human-approved. Governance before autonomy. Tenant isolation preserved across all boundaries.
 
@@ -133,14 +135,18 @@ All pillars of the Sovereign Institutional Intelligence OS are **implemented**:
    ──────────────────────────────────────────────────────────────────────────────►
    Block V — Sovereign Institutional Intelligence ✅
 
-   PLANNED (107–110)
+   COMPLETE & HARDENED (107–110)
    ──────────────────────────────────────────────────────────────────────────────►
-   Block W — Strategic Autonomy & Civilizational Coordination 🔜
+   Block W — Strategic Autonomy & Civilizational Coordination ✅
+
+   PLANNED (111–114)
+   ──────────────────────────────────────────────────────────────────────────────►
+   Block X — Reflexive Governance & Evolution Control 🔜
 ```
 
 ---
 
-## Completed Canon (Sprints 1–106)
+## Completed Canon (Sprints 1–110)
 
 > **Full sprint-by-sprint record:** [PLAN.md](PLAN.md)
 
@@ -178,7 +184,7 @@ All pillars of the Sovereign Institutional Intelligence OS are **implemented**:
 | Block T — Governed Intelligence OS | 95–98 | Institutional memory consolidation, doctrine & playbook synthesis, bounded autonomous operations, institutional decision engine |
 | Block U — Adaptive Institutional Ecosystem | 99–102 | Cross-context doctrine adaptation, institutional conflict resolution, federated intelligence boundaries, resilience & continuity governance |
 | Block V — Sovereign Institutional Intelligence | 103–106 | Institutional memory constitution, sovereign decision rights orchestration, dependency sovereignty & external reliance governance, strategic succession & long-horizon continuity |
-| Block W — Strategic Autonomy & Civilizational Coordination | 107–110 | Multi-horizon strategic alignment, institutional tradeoff arbitration, mission integrity & drift prevention, civilizational continuity simulation |
+| Block W — Strategic Autonomy & Civilizational Coordination | 107–110 | Multi-horizon strategic alignment, institutional tradeoff arbitration, mission integrity & drift prevention, civilizational continuity simulation. Hardened and causally integrated. |
 
 ---
 
@@ -210,7 +216,8 @@ All pillars of the Sovereign Institutional Intelligence OS are **implemented**:
 | T | Governed Intelligence OS | 95–98 | ✅ Complete |
 | U | Adaptive Institutional Ecosystem | 99–102 | ✅ Complete |
 | V | Sovereign Institutional Intelligence | 103–106 | ✅ Complete |
-| W | Strategic Autonomy & Civilizational Coordination | 107–110 | 🔜 Planned |
+| W | Strategic Autonomy & Civilizational Coordination | 107–110 | ✅ Complete & Hardened |
+| X | Reflexive Governance & Evolution Control | 111–114 | 🔜 Planned |
 
 ---
 
@@ -238,7 +245,8 @@ All pillars of the Sovereign Institutional Intelligence OS are **implemented**:
 | Governed Intelligence OS | 95–98 | ✅ Complete | Institutional memory consolidation, doctrine synthesis, bounded autonomous ops, institutional decision engine |
 | Adaptive Institutional Ecosystem | 99–102 | ✅ Complete | Cross-context doctrine adaptation, institutional conflict resolution, federated intelligence boundaries, resilience & continuity governance |
 | Sovereign Institutional Intelligence | 103–106 | ✅ Complete | Memory constitution, sovereign decision rights, dependency sovereignty, strategic succession |
-| Strategic Autonomy & Civilizational Coordination | 107–110 | 🔜 Planned | Multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation |
+| Strategic Autonomy & Civilizational Coordination | 107–110 | ✅ Complete & Hardened | Multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation |
+| Reflexive Governance & Evolution Control | 111–114 | 🔜 Planned | Evolution proposal governance, mutation control, self-revision audit, kernel integrity guard |
 
 ---
 
@@ -246,7 +254,7 @@ All pillars of the Sovereign Institutional Intelligence OS are **implemented**:
 
 > **Full module inventory:** [AGENTS.md](AGENTS.md) · **Architecture details:** [ARCHITECTURE.md](ARCHITECTURE.md)
 
-All 85+ architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the convergence and governance layers, the institutional memory and operating profiles layers, the product intelligence layers, the ecosystem governance layers, the institutional assurance and canon integrity layers, the user journey orchestration layer, the role-based experience layer, the delivery assurance layer, the onboarding/templates layer, the adoption intelligence layer, the governed extensibility layer, the evidence-governed improvement layers, the multi-agent coordination layers, the governed capability ecosystem layers, the delivery optimization layers, the distributed runtime layers, the architecture research layers, the governed intelligence OS layers (institutional memory consolidation, doctrine synthesis, bounded autonomous operations, institutional decision engine), the adaptive institutional ecosystem layers (cross-context doctrine adaptation, conflict resolution, federated intelligence, resilience governance), and the sovereign institutional intelligence layers (memory constitution, sovereign decision rights, dependency sovereignty, strategic succession).
+All 90+ architectural layers are operational. The kernel includes the 32-stage deterministic pipeline, DAG execution engine, AI efficiency layer, all learning/repair/governance/intelligence/advisory/architecture layers, the economic optimization layer, the convergence and governance layers, the institutional memory and operating profiles layers, the product intelligence layers, the ecosystem governance layers, the institutional assurance and canon integrity layers, the user journey orchestration layer, the role-based experience layer, the delivery assurance layer, the onboarding/templates layer, the adoption intelligence layer, the governed extensibility layer, the evidence-governed improvement layers, the multi-agent coordination layers, the governed capability ecosystem layers, the delivery optimization layers, the distributed runtime layers, the architecture research layers, the governed intelligence OS layers, the adaptive institutional ecosystem layers, the sovereign institutional intelligence layers, and the strategic coordination layers (multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation).
 
 ---
 
@@ -261,23 +269,32 @@ All 85+ architectural layers are operational. The kernel includes the 32-stage d
 | Level 4.5 | Meta-Aware Engineering Platform | ✅ Complete |
 | Level 5 | Institutional Engineering Memory | ✅ Complete |
 | Level 5.5 | Governed Intelligence OS | ✅ Complete |
-| Level 6 | Sovereign Institutional Intelligence | ✅ Current |
-| Level 7 | Strategic Autonomy & Civilizational Coordination | 🔜 Planned (Block W) |
+| Level 6 | Sovereign Institutional Intelligence | ✅ Complete |
+| Level 7 | Strategic Autonomy & Civilizational Coordination | ✅ Current |
+| Level 8 | Reflexive Governance & Evolution Control | 🔜 Planned (Block X) |
 
-> **Current position:** Level 6 — Sovereign Institutional Intelligence active.
-> **Next target:** Level 7 — Strategic Autonomy & Civilizational Coordination (Block W, Sprints 107–110).
+> **Current position:** Level 7 — Strategic Autonomy & Civilizational Coordination active.
+> **Next target:** Level 8 — Reflexive Governance & Evolution Control (Block X, Sprints 111–114).
 > **Execution mode:** Sprint-based implementation.
+
+---
+
+## Reality Check
+
+AxionOS currently has **stronger governance, orchestration, and explainability maturity** than fully autonomous runtime adaptation. The system can detect, analyze, explain, and recommend — but it cannot yet autonomously reconfigure its own execution parameters (batch sizes, timeout budgets, retry postures) in response to runtime conditions.
+
+This is exactly why Block X exists: to close the gap between strategic awareness and runtime self-regulation, under full governance control.
 
 ---
 
 ## Governing Principle
 
-> One hundred and six sprints complete. All blocks (Foundation through V) are complete. Sovereign Institutional Intelligence operational.
-> Internal architecture is mature: governance, intelligence, memory, doctrine, decision engine, bounded autonomy, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, architecture research, adaptive institutional ecosystem, sovereign institutional intelligence — all active.
+> One hundred and ten sprints complete. All blocks (Foundation through W) are complete and hardened. Strategic Autonomy & Civilizational Coordination operational.
+> Internal architecture is mature: governance, intelligence, memory, doctrine, decision engine, bounded autonomy, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, architecture research, adaptive institutional ecosystem, sovereign institutional intelligence, strategic coordination — all active.
 > Product experience is mature: user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — all active.
-> The platform delivers on the promise: **from idea to delivered software — with sovereign institutional intelligence**.
+> The platform delivers on the promise: **from idea to delivered software — with strategic coordination and governed evolution**.
 > Internal sophistication serves the product experience — it does not replace it.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved. Tenant isolation preserved across all boundaries.
 >
-> **Next evolution:** Block W — Strategic Autonomy & Civilizational Coordination (Sprints 107–110).
-> The system transitions from institutional sovereignty to **civilizational strategic coordination** — multi-horizon alignment, tradeoff arbitration, mission integrity, and long-horizon continuity simulation.
+> **Next evolution:** Block X — Reflexive Governance & Evolution Control (Sprints 111–114).
+> The system transitions from strategic coordination to **reflexive governance** — governing how AxionOS changes itself, detecting corrosion, and protecting kernel integrity.
