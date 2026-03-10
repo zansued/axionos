@@ -57,12 +57,6 @@ const EXAMPLES = [
   { icon: BarChart3, label: "Dashboard", prompt: "Crie um dashboard de analytics em tempo real" },
 ]
 
-// ── Generation steps ──────────────────────────────────────────────────────
-const GEN_STEPS = [
-  { icon: Cog, label: "Criando API", delay: 0 },
-  { icon: Database, label: "Configurando banco", delay: 1.2 },
-  { icon: Shield, label: "Criando autenticação", delay: 2.4 },
-]
 
 // ── Chat Input ────────────────────────────────────────────────────────────
 function ChatInput({ onSend, onExampleClick }: {
