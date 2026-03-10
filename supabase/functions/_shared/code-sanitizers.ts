@@ -190,3 +190,104 @@ export function normalizeRole(role: string): string {
   if (VALID_AGENT_ROLES.includes(lower)) return lower;
   return ROLE_ALIASES[lower] || "dev";
 }
+
+/**
+ * Scans all source files for import statements and cross-references
+ * against package.json dependencies. Returns missing packages.
+ */
+export function detectMissingDependencies(
+  files: Array<{ path: string; content: string }>,
+  packageJson: string
+): { missing: string[]; packageJson: object } {
+  let pkg: any = {};
+  try { pkg = JSON.parse(packageJson); } catch { return { missing: [], packageJson: {} }; }
+  const allDeps = {
+    ...(pkg.dependencies || {}),
+    ...(pkg.devDependencies || {}),
+  };
+
+  const importedPackages = new Set<string>();
+  const importRegex = /from\s+['"]([^./][^'"]*)['"]/g;
+  for (const file of files) {
+    if (!file.path.match(/\.(ts|tsx|js|jsx)$/)) continue;
+    let match;
+    while ((match = importRegex.exec(file.content)) !== null) {
+      const pkgName = match[1].startsWith("@")
+        ? match[1].split("/").slice(0, 2).join("/")
+        : match[1].split("/")[0];
+      importedPackages.add(pkgName);
+    }
+  }
+
+  const builtins = new Set([
+    "react", "react-dom", "path", "fs", "os", "crypto", "url",
+    "stream", "buffer", "events", "util", "http", "https",
+    "node:path", "node:fs", "node:os", "node:crypto",
+    "virtual:*", "vite/client",
+  ]);
+
+  const missing: string[] = [];
+  for (const depName of importedPackages) {
+    if (!builtins.has(depName) && !allDeps[depName]) {
+      missing.push(depName);
+    }
+  }
+
+  return { missing, packageJson: pkg };
+}
+
+/** Curated registry of safe versions (React 18 + Vite 5 compatible) */
+const SAFE_VERSIONS: Record<string, string> = {
+  "sonner":                    "^1.7.4",
+  "framer-motion":             "^11.3.0",
+  "zod":                       "^3.23.8",
+  "react-hook-form":           "^7.53.0",
+  "@hookform/resolvers":       "^3.9.0",
+  "date-fns":                  "^3.6.0",
+  "recharts":                  "^2.13.3",
+  "cmdk":                      "^1.0.0",
+  "vaul":                      "^0.9.9",
+  "next-themes":               "^0.3.0",
+  "react-day-picker":          "^8.10.1",
+  "embla-carousel-react":      "^8.3.0",
+  "input-otp":                 "^1.4.1",
+  "react-resizable-panels":    "^2.1.7",
+  "zustand":                   "^4.5.5",
+  "@dnd-kit/core":             "^6.1.0",
+  "@dnd-kit/sortable":         "^8.0.0",
+  "@dnd-kit/utilities":        "^3.2.2",
+  "lucide-react":              "^0.462.0",
+  "class-variance-authority":  "^0.7.1",
+  "clsx":                      "^2.1.1",
+  "tailwind-merge":            "^2.5.4",
+  "tailwindcss-animate":       "^1.0.7",
+  "@supabase/supabase-js":     "^2.98.0",
+  "@tanstack/react-query":     "^5.83.0",
+  "react-router-dom":          "^6.30.0",
+};
+
+/**
+ * Auto-adds missing dependencies to package.json using a curated
+ * safe-version registry. Returns the updated package.json string.
+ */
+export function autoFixMissingDependencies(
+  packageJsonStr: string,
+  missing: string[]
+): string {
+  let pkg: any = {};
+  try { pkg = JSON.parse(packageJsonStr); } catch { return packageJsonStr; }
+  if (!pkg.dependencies) pkg.dependencies = {};
+
+  let anyAdded = false;
+  for (const dep of missing) {
+    const safeVersion = SAFE_VERSIONS[dep];
+    if (safeVersion && !pkg.dependencies[dep]) {
+      pkg.dependencies[dep] = safeVersion;
+      console.log(`[auto-fix] Added missing dependency: ${dep}@${safeVersion}`);
+      anyAdded = true;
+    } else if (!safeVersion) {
+      console.warn(`[auto-fix] Unknown package "${dep}" — skipping auto-add. Manual review needed.`);
+    }
+  }
+  return anyAdded ? JSON.stringify(pkg, null, 2) : packageJsonStr;
+}
