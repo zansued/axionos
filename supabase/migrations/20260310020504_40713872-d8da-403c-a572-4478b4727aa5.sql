@@ -1,0 +1,1 @@
+UPDATE initiative_jobs SET status = 'failed', error = 'Auto-cleanup: stale running validation job - fix for infinite loop on pending_review artifacts', completed_at = NOW() WHERE id = '9e8becfb-cf5f-4503-acd4-d83e3c77ef53' AND status = 'running';

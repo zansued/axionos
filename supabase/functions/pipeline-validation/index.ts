@@ -61,18 +61,22 @@ serve(async (req) => {
     return errorResponse("Nenhum artefato encontrado para validar");
   }
 
-  const artifactsToValidate = artifacts.filter((a: any) => a.status !== "approved");
+  const artifactsToValidate = artifacts.filter((a: any) => a.status !== "approved" && a.status !== "pending_review");
   const total = artifacts.length;
-  const alreadyApproved = total - artifactsToValidate.length;
+  const alreadyApproved = artifacts.filter((a: any) => a.status === "approved").length;
+  const alreadyEscalated = artifacts.filter((a: any) => a.status === "pending_review").length;
 
-  // All already approved → done
+  // All already processed (approved or escalated) → done
   if (artifactsToValidate.length === 0) {
+    const overallPass = alreadyApproved === total;
     await updateInitiative(ctx, { stage_status: "ready_to_publish" });
     if (jobId) await completeJob(ctx, jobId, {
-      artifacts_validated: total, passed: total, failed: 0, fixed: 0,
-      remaining_to_validate: 0, batch_incomplete: false, overall_pass: true, skipped: "all_already_approved",
+      artifacts_validated: total, passed: alreadyApproved, failed: 0, fixed: 0,
+      escalated: alreadyEscalated,
+      remaining_to_validate: 0, batch_incomplete: false, overall_pass: overallPass,
+      skipped: "all_already_processed",
     }, { model: "routed", costUsd: 0, durationMs: 0 });
-    return jsonResponse({ success: true, overall_pass: true, remaining_to_validate: 0, job_id: jobId });
+    return jsonResponse({ success: true, overall_pass: overallPass, remaining_to_validate: 0, job_id: jobId });
   }
 
   // Pick ONE artifact to process
@@ -94,21 +98,25 @@ serve(async (req) => {
 
       const finalArtifacts = artifactsAfter || artifacts;
       const approvedCount = finalArtifacts.filter((a: any) => a.status === "approved").length;
+      const escalatedCount = finalArtifacts.filter((a: any) => a.status === "pending_review").length;
+      const remainingCount = finalArtifacts.length - approvedCount - escalatedCount;
       const overallPass = approvedCount === finalArtifacts.length;
+      const allProcessed = remainingCount === 0;
 
-      await updateInitiative(ctx, { stage_status: overallPass ? "ready_to_publish" : "validating" });
+      await updateInitiative(ctx, { stage_status: allProcessed ? "ready_to_publish" : "validating" });
 
       if (jobId) await completeJob(ctx, jobId, {
         artifacts_validated: finalArtifacts.length,
         processed_artifact: artifact.id,
         passed: approvedCount,
-        remaining_to_validate: finalArtifacts.length - approvedCount,
-        batch_incomplete: !overallPass,
+        escalated: escalatedCount,
+        remaining_to_validate: remainingCount,
+        batch_incomplete: !allProcessed,
         overall_pass: overallPass,
       }, { model: "routed", costUsd: 0, durationMs: 0 });
 
       await pipelineLog(ctx, "pipeline_validation_batch_done",
-        `Validated 1 artifact (${artifact.summary?.slice(0, 40)}). ${approvedCount}/${finalArtifacts.length} approved. ${overallPass ? "ALL DONE ✅" : "More pending..."}`,
+        `Validated 1 artifact (${artifact.summary?.slice(0, 40)}). ${approvedCount}/${finalArtifacts.length} approved, ${escalatedCount} escalated. ${allProcessed ? "ALL PROCESSED ✅" : "More pending..."}`,
       );
     } catch (e: any) {
       console.error("pipeline-validation background error:", e);
