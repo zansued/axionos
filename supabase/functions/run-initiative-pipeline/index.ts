@@ -2345,7 +2345,11 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
               checks.push({ id: "vercel-install", category: "vercel.json", label: "installCommand inclui --include=dev", status: vc.installCommand?.includes("--include=dev") ? "pass" : "warn" });
               checks.push({ id: "vercel-output", category: "vercel.json", label: "outputDirectory = dist", status: vc.outputDirectory === "dist" ? "pass" : "warn", detail: vc.outputDirectory || "não definido" });
               checks.push({ id: "vercel-rewrites", category: "vercel.json", label: "Rewrite SPA configurado", status: vc.rewrites?.length > 0 ? "pass" : "warn" });
-            } catch { checks.push({ id: "vercel-parse", category: "vercel.json", label: "JSON válido", status: "fail" }); }
+            } catch {
+              // vercel.json will be overridden by deterministic content at publish — don't block
+              checks.push({ id: "vercel-parse", category: "vercel.json", label: "JSON válido", status: "warn", detail: "Será substituído pelo conteúdo determinístico no publish" });
+              issues.push("vercel.json had invalid JSON — will be replaced by deterministic override");
+            }
           }
 
           // ---- General checks ----
