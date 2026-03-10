@@ -229,22 +229,53 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
         };
 
         const functionName = getStageFunctionName(stage);
-        const { data: rawResult, error } = await supabase.functions.invoke(functionName, {
-          body: payload,
-        });
 
-        if (error) {
-          let message = error.message || "Erro ao executar pipeline";
-          // Detect timeout / network errors
-          if (message.includes("Failed to send a request") || message.includes("FunctionsFetchError")) {
-            message = "A função excedeu o tempo limite ou falhou na conexão. Tente novamente — a validação agora processa em lotes menores.";
+        // Auto-retry with exponential backoff for timeout/network errors
+        const MAX_RETRIES = 2;
+        let rawResult: any = null;
+        let lastError: any = null;
+
+        for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+          if (attempt > 0) {
+            const delay = Math.min(3000 * attempt, 8000);
+            toast({ title: `🔄 Tentativa ${attempt + 1}/${MAX_RETRIES + 1} — reconectando em ${delay / 1000}s...` });
+            await new Promise((r) => setTimeout(r, delay));
           }
+
+          const { data, error } = await supabase.functions.invoke(functionName, {
+            body: { ...payload, ...(attempt > 0 ? { retry_attempt: attempt } : {}) },
+          });
+
+          if (!error) {
+            rawResult = data;
+            lastError = null;
+            break;
+          }
+
+          const msg = error.message || "";
+          const isTimeout = msg.includes("Failed to send a request") ||
+            msg.includes("FunctionsFetchError") ||
+            msg.includes("AbortError") ||
+            msg.includes("network") ||
+            msg.includes("timeout");
+
+          if (isTimeout && attempt < MAX_RETRIES) {
+            lastError = error;
+            continue; // retry
+          }
+
+          // Non-retryable or last attempt
+          let message = msg || "Erro ao executar pipeline";
           const context = (error as any)?.context;
           if (context && typeof context.json === "function") {
             const errJson = await context.json().catch(() => null);
             if (errJson?.error) message = errJson.error;
           }
           throw new Error(message);
+        }
+
+        if (lastError && !rawResult) {
+          throw new Error("Conexão falhou após múltiplas tentativas. Verifique sua rede e tente novamente.");
         }
 
         // Handle background-processed stages: poll job until completion
