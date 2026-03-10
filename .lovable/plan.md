@@ -122,6 +122,14 @@ AxionOS is an **Autonomous Delivery Sovereignty** platform (Level 10):
 
 ### Future Horizons
 
+### Committed Future Arc (Blocks AB–AD, Sprints 127–138)
+
+| Block | Sprints | Name | Status |
+|-------|---------|------|--------|
+| AB | 127–130 | Learning Canonization | 🔜 Committed |
+| AC | 131–134 | Adaptive Coordination | 🔜 Committed |
+| AD | 135–138 | Adaptive Operational Organism | 🔜 Committed |
+
 ### Level 11 — Adaptive Runtime Intelligence (Future Horizon)
 
 - Autonomous execution parameter reconfiguration

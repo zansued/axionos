@@ -44,3 +44,11 @@ blocks:
 
   # === BLOCK Z — Runtime Sovereignty & Outcome Compounding === COMPLETE
   - { block_id: "Z",          block_name: "Runtime Sovereignty & Outcome Compounding",    sprint_range: "119–122", status: complete, purpose: "Live runtime feedback mesh, tenant doctrine & adaptive operating profiles, outcome-based autonomy engine, compounding advantage & moat orchestrator" }
+
+  # === BLOCK AA — Runtime Proof & Adaptive Governance === COMPLETE
+  - { block_id: "AA",         block_name: "Runtime Proof & Adaptive Governance",          sprint_range: "123–126", status: complete, purpose: "Runtime execution validation harness, autonomy ladder stabilization, tenant-adaptive regression profiles, cold start explainability" }
+
+  # === COMMITTED FUTURE ARC ===
+  - { block_id: "AB",         block_name: "Learning Canonization",                        sprint_range: "127–130", status: committed, purpose: "Learning extraction engine, canon promotion pipeline, cross-tenant pattern distillation, canon reuse injection" }
+  - { block_id: "AC",         block_name: "Adaptive Coordination",                        sprint_range: "131–134", status: committed, purpose: "Operational posture engine, attention allocation engine, adaptive resource routing, operational rhythm & recovery cycles" }
+  - { block_id: "AD",         block_name: "Adaptive Operational Organism",                sprint_range: "135–138", status: committed, purpose: "Multi-loop governance orchestrator, systemic health model, organism memory layers, adaptive operational organism console" }
