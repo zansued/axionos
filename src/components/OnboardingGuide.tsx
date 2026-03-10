@@ -27,6 +27,8 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const { currentOrg } = useOrg();
   const { locale } = useI18n();
+  const location = useLocation();
+  const [open, setOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
 
