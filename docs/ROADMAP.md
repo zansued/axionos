@@ -413,3 +413,66 @@ Block AA converts architectural correctness into runtime evidence. It hardens th
 - **Sprint 124** — Autonomy Ladder Stabilization ✅
 - **Sprint 125** — Tenant-Adaptive Regression Profiles ✅
 - **Sprint 126** — Cold Start Explainability Layer ✅
+
+---
+
+## Block AB — Learning Canonization (Sprints 127–130) — 🔜 Committed
+
+Block AB transforms operational learning from ephemeral runtime insights into durable, reusable canonical knowledge. The system extracts validated patterns from execution history, promotes them through a governed pipeline, distills cross-tenant patterns, and injects proven canon back into execution flows.
+
+**Focus areas:**
+- Systematic extraction of learnings from execution evidence
+- Governed promotion of learnings into canonical status
+- Cross-tenant pattern distillation (anonymized, governed)
+- Automated injection of proven canon into planning and repair flows
+
+**Defining principle:** Learning only becomes canon when it is validated, promoted through governance, and actively reused by execution agents. Ephemeral insights are not canon.
+
+### Committed Sprints
+
+- **Sprint 127** — Learning Extraction Engine
+- **Sprint 128** — Canon Promotion Pipeline
+- **Sprint 129** — Cross-Tenant Pattern Distillation
+- **Sprint 130** — Canon Reuse Injection
+
+---
+
+## Block AC — Adaptive Coordination (Sprints 131–134) — 🔜 Committed
+
+Block AC introduces adaptive operational coordination — the system learns to allocate attention, resources, and operational rhythm based on real conditions rather than static configuration.
+
+**Focus areas:**
+- Operational posture detection and adjustment
+- Dynamic attention allocation across concurrent initiatives
+- Adaptive resource routing based on demand and capacity
+- Self-regulating operational rhythm with recovery cycles
+
+**Defining principle:** Coordination adapts to operational reality, but all adaptations remain bounded, explainable, and reversible. No autonomous structural mutation.
+
+### Committed Sprints
+
+- **Sprint 131** — Operational Posture Engine
+- **Sprint 132** — Attention Allocation Engine
+- **Sprint 133** — Adaptive Resource Routing
+- **Sprint 134** — Operational Rhythm & Recovery Cycles
+
+---
+
+## Block AD — Adaptive Operational Organism (Sprints 135–138) — 🔜 Committed
+
+Block AD synthesizes the platform's coordination, learning, governance, and runtime layers into a coherent adaptive organism. The system operates with multi-loop governance, monitors its own systemic health, maintains layered organism memory, and provides an operator console for organism-level visibility.
+
+**Focus areas:**
+- Multi-loop governance orchestration (fast/slow/strategic loops)
+- Systemic health model spanning all operational dimensions
+- Organism-level memory layers (operational, tactical, strategic)
+- Unified operator console for organism-level observation and control
+
+**Defining principle:** The organism metaphor serves operational coherence, not autonomy expansion. All organism behaviors remain advisory-first, governance-bounded, and human-supervised.
+
+### Committed Sprints
+
+- **Sprint 135** — Multi-Loop Governance Orchestrator
+- **Sprint 136** — Systemic Health Model
+- **Sprint 137** — Organism Memory Layers
+- **Sprint 138** — Adaptive Operational Organism Console
