@@ -219,9 +219,10 @@ function RayBackground() {
 // ── Main Component ────────────────────────────────────────────────────────
 interface BoltChatProps {
   onSubmit?: (message: string, modelId: string, assets: File[]) => void
+  initialMessage?: string
 }
 
-export function BoltStyleChat({ onSubmit }: BoltChatProps) {
+export function BoltStyleChat({ onSubmit, initialMessage }: BoltChatProps) {
   const handleSend = (message: string) => {
     onSubmit?.(message, "auto", [])
   }
