@@ -97,10 +97,9 @@ export default function Auth() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.5 }}
-            className="mt-2 text-[13px] font-semibold tracking-[0.15em] uppercase"
-            style={{ color: '#4a4a52' }}
+            className="mt-2 text-[13px] font-semibold tracking-[0.15em] uppercase text-white"
           >
-            &nbsp;
+            Autonomous Intelligent Infrastructure
           </motion.p>
         </div>
 
