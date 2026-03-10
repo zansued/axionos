@@ -62,7 +62,6 @@ function ChatInput({ onSend, onExampleClick }: {
   onExampleClick?: (prompt: string) => void
 }) {
   const [message, setMessage] = useState('')
-  const [showAttachMenu, setShowAttachMenu] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const typingPlaceholder = useTypingPlaceholder()
 
