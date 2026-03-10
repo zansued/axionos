@@ -134,6 +134,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Ext. Knowledge", url: "/external-knowledge",    icon: PackagePlus },
   { title: "Runtime Mesh", url: "/runtime-feedback",         icon: Activity },
   { title: "Tenant Doc.", url: "/tenant-doctrine",          icon: Fingerprint },
+  { title: "Autonomy",  url: "/autonomy-posture",          icon: ShieldAlert },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
