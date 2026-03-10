@@ -235,11 +235,11 @@ flowchart TB
 
 | Area | Limitation |
 |------|-----------|
-| **Learning maturity** | Self-learning and institutional memory capabilities are implemented but require sustained production usage to accumulate meaningful data |
-| **Multi-tenant scale** | Distributed runtime architecture is in place but has not been validated under high-concurrency multi-tenant load |
-| **AI provider dependency** | Pipeline execution depends on external LLM providers; availability and cost are bounded but not eliminated |
+| **Learning maturity** | Self-learning engines (Levels 4–5) require accumulated usage data to deliver full optimization — new installations start with baseline behavior |
+| **CI Runtime Validation** | Depends on GitHub Actions and a configured webhook secret (`SYNKRAIOS_WEBHOOK_SECRET`) — projects without this secret will not receive build feedback |
+| **AI non-determinism** | AI responses are non-deterministic — the semantic cache reduces variance but does not eliminate it entirely |
+| **Pipeline execution time** | Varies from 15 to 90+ minutes depending on project complexity and API response times |
 | **Fix swarm autonomy** | Automated repair handles common error patterns well; novel or complex failures may require human intervention |
-| **Canon accumulation** | Evidence-governed improvement loops are operational but the canon is early-stage — effectiveness compounds over time |
 
 ---
 
