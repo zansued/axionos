@@ -245,7 +245,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className="text-[12px] sm:text-[13px] text-white/50 font-medium tracking-[0.25em] uppercase mb-7"
+          className="text-[12px] sm:text-[13px] text-white/75 font-medium tracking-[0.25em] uppercase mb-7"
           style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
           Autonomous Intelligent Infrastructure
