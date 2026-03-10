@@ -334,21 +334,26 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    Registry["Calibration Parameter Registry"]
-    Interpreter["Calibration Signal Interpreter"]
-    Proposal["Calibration Proposal Engine"]
-    Guard["Calibration Guardrails"]
-    Runner["Calibration Runner"]
-    Outcome["Calibration Outcome Tracker"]
-    Rollback["Calibration Rollback Engine"]
+    Registry["Calibration Parameter Registry"]:::data
+    Interpreter["Calibration Signal Interpreter"]:::intelligence
+    Proposal["Calibration Proposal Engine"]:::intelligence
+    Guard["Calibration Guardrails"]:::governance
+    Runner["Calibration Runner"]:::runtime
+    Outcome["Calibration Outcome Tracker"]:::data
+    Rollback["Calibration Rollback Engine"]:::governance
 
-    Signals["Platform Intelligence Signals"] --> Interpreter
+    Signals["Platform Intelligence Signals"]:::intelligence --> Interpreter
     Registry --> Proposal
     Interpreter --> Proposal
     Proposal --> Guard
     Guard --> Runner
     Runner --> Outcome
     Outcome --> Rollback
+
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Modules:** `platform-calibration/platform-calibration-signal-interpreter.ts`, `platform-calibration-proposal-engine.ts`, `platform-calibration-guardrails.ts`, `platform-calibration-runner.ts`, `platform-calibration-outcome-tracker.ts`, `platform-calibration-rollback-engine.ts`
