@@ -211,15 +211,20 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    ErrorLib["Error Pattern Library"]
-    RepairTrack["Repair Strategy Tracker"]
-    RepairRouter["Adaptive Repair Router"]
-    Prevention["Prevention Candidate Generator"]
+    ErrorLib["Error Pattern Library"]:::intelligence
+    RepairTrack["Repair Strategy Tracker"]:::data
+    RepairRouter["Adaptive Repair Router"]:::runtime
+    Prevention["Prevention Candidate Generator"]:::governance
 
-    Events["Execution Events"] --> ErrorLib
+    Events["Execution Events"]:::data --> ErrorLib
     ErrorLib --> RepairTrack
     RepairTrack --> RepairRouter
     RepairRouter --> Prevention
+
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Modules:**
