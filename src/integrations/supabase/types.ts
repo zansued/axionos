@@ -5565,6 +5565,79 @@ export type Database = {
           },
         ]
       }
+      canon_change_trials: {
+        Row: {
+          candidate_id: string | null
+          created_at: string
+          ended_at: string | null
+          id: string
+          organization_id: string
+          outcome_metrics: Json
+          outcome_summary: string | null
+          proposal_id: string
+          started_at: string | null
+          status: string
+          success_criteria: string | null
+          trial_duration_days: number
+          trial_scope: string | null
+          updated_at: string
+        }
+        Insert: {
+          candidate_id?: string | null
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          organization_id: string
+          outcome_metrics?: Json
+          outcome_summary?: string | null
+          proposal_id: string
+          started_at?: string | null
+          status?: string
+          success_criteria?: string | null
+          trial_duration_days?: number
+          trial_scope?: string | null
+          updated_at?: string
+        }
+        Update: {
+          candidate_id?: string | null
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          organization_id?: string
+          outcome_metrics?: Json
+          outcome_summary?: string | null
+          proposal_id?: string
+          started_at?: string | null
+          status?: string
+          success_criteria?: string | null
+          trial_duration_days?: number
+          trial_scope?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_change_trials_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "external_knowledge_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_change_trials_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_change_trials_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "canon_evolution_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_confidence_signals: {
         Row: {
           created_at: string
@@ -5653,6 +5726,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "canon_conformance_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_context_bindings: {
+        Row: {
+          auto_inject: boolean
+          binding_target: string
+          binding_type: string
+          canon_entry_id: string
+          conditions: Json
+          created_at: string
+          enabled: boolean
+          id: string
+          organization_id: string
+          priority: number
+          updated_at: string
+        }
+        Insert: {
+          auto_inject?: boolean
+          binding_target: string
+          binding_type?: string
+          canon_entry_id: string
+          conditions?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          organization_id: string
+          priority?: number
+          updated_at?: string
+        }
+        Update: {
+          auto_inject?: boolean
+          binding_target?: string
+          binding_type?: string
+          canon_entry_id?: string
+          conditions?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          organization_id?: string
+          priority?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_context_bindings_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -6052,6 +6175,176 @@ export type Database = {
           },
         ]
       }
+      canon_evolution_audit: {
+        Row: {
+          actor: string | null
+          created_at: string
+          details: Json
+          event_type: string
+          id: string
+          organization_id: string
+          target_id: string | null
+          target_type: string
+        }
+        Insert: {
+          actor?: string | null
+          created_at?: string
+          details?: Json
+          event_type?: string
+          id?: string
+          organization_id: string
+          target_id?: string | null
+          target_type?: string
+        }
+        Update: {
+          actor?: string | null
+          created_at?: string
+          details?: Json
+          event_type?: string
+          id?: string
+          organization_id?: string
+          target_id?: string | null
+          target_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_evolution_audit_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_evolution_proposals: {
+        Row: {
+          candidate_id: string | null
+          created_at: string
+          decision_notes: string | null
+          expected_impact: string | null
+          id: string
+          justification: string | null
+          organization_id: string
+          proposal_type: string
+          proposed_by: string | null
+          reviewed_by: string | null
+          risk_assessment: string | null
+          status: string
+          supersession_plan: string | null
+          target_canon_entry_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          candidate_id?: string | null
+          created_at?: string
+          decision_notes?: string | null
+          expected_impact?: string | null
+          id?: string
+          justification?: string | null
+          organization_id: string
+          proposal_type?: string
+          proposed_by?: string | null
+          reviewed_by?: string | null
+          risk_assessment?: string | null
+          status?: string
+          supersession_plan?: string | null
+          target_canon_entry_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          candidate_id?: string | null
+          created_at?: string
+          decision_notes?: string | null
+          expected_impact?: string | null
+          id?: string
+          justification?: string | null
+          organization_id?: string
+          proposal_type?: string
+          proposed_by?: string | null
+          reviewed_by?: string | null
+          risk_assessment?: string | null
+          status?: string
+          supersession_plan?: string | null
+          target_canon_entry_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_evolution_proposals_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "external_knowledge_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_evolution_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_external_conflicts: {
+        Row: {
+          candidate_id: string
+          conflict_description: string | null
+          conflict_type: string
+          detected_at: string
+          existing_canon_entry_id: string | null
+          id: string
+          organization_id: string
+          resolution_notes: string | null
+          resolution_status: string
+          resolved_at: string | null
+          severity: string
+        }
+        Insert: {
+          candidate_id: string
+          conflict_description?: string | null
+          conflict_type?: string
+          detected_at?: string
+          existing_canon_entry_id?: string | null
+          id?: string
+          organization_id: string
+          resolution_notes?: string | null
+          resolution_status?: string
+          resolved_at?: string | null
+          severity?: string
+        }
+        Update: {
+          candidate_id?: string
+          conflict_description?: string | null
+          conflict_type?: string
+          detected_at?: string
+          existing_canon_entry_id?: string | null
+          id?: string
+          organization_id?: string
+          resolution_notes?: string | null
+          resolution_status?: string
+          resolved_at?: string | null
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_external_conflicts_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "external_knowledge_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_external_conflicts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_integrity_assessments: {
         Row: {
           architecture_canon_alignment_score: number
@@ -6322,6 +6615,302 @@ export type Database = {
           },
         ]
       }
+      canon_pattern_applications: {
+        Row: {
+          application_context: Json
+          applied_by: string
+          canon_entry_id: string
+          cost_impact_score: number | null
+          created_at: string
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          outcome_notes: string | null
+          outcome_status: string
+          pipeline_stage: string | null
+          quality_impact_score: number | null
+        }
+        Insert: {
+          application_context?: Json
+          applied_by?: string
+          canon_entry_id: string
+          cost_impact_score?: number | null
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          outcome_notes?: string | null
+          outcome_status?: string
+          pipeline_stage?: string | null
+          quality_impact_score?: number | null
+        }
+        Update: {
+          application_context?: Json
+          applied_by?: string
+          canon_entry_id?: string
+          cost_impact_score?: number | null
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          outcome_notes?: string | null
+          outcome_status?: string
+          pipeline_stage?: string | null
+          quality_impact_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_pattern_applications_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_pattern_embeddings: {
+        Row: {
+          anti_pattern_links: string[] | null
+          applicability_conditions: Json
+          architecture_scope: string
+          canon_entry_id: string
+          compatibility_flags: Json
+          created_at: string
+          embedding_model: string
+          embedding_vector: string | null
+          framework_tags: string[] | null
+          id: string
+          language_tags: string[] | null
+          organization_id: string
+          problem_type: string
+          quality_level: string
+          stack_tags: string[] | null
+          updated_at: string
+          usage_constraints: Json
+        }
+        Insert: {
+          anti_pattern_links?: string[] | null
+          applicability_conditions?: Json
+          architecture_scope?: string
+          canon_entry_id: string
+          compatibility_flags?: Json
+          created_at?: string
+          embedding_model?: string
+          embedding_vector?: string | null
+          framework_tags?: string[] | null
+          id?: string
+          language_tags?: string[] | null
+          organization_id: string
+          problem_type?: string
+          quality_level?: string
+          stack_tags?: string[] | null
+          updated_at?: string
+          usage_constraints?: Json
+        }
+        Update: {
+          anti_pattern_links?: string[] | null
+          applicability_conditions?: Json
+          architecture_scope?: string
+          canon_entry_id?: string
+          compatibility_flags?: Json
+          created_at?: string
+          embedding_model?: string
+          embedding_vector?: string | null
+          framework_tags?: string[] | null
+          id?: string
+          language_tags?: string[] | null
+          organization_id?: string
+          problem_type?: string
+          quality_level?: string
+          stack_tags?: string[] | null
+          updated_at?: string
+          usage_constraints?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_pattern_embeddings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_promotion_decisions: {
+        Row: {
+          candidate_id: string | null
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision: string
+          decision_reason: string | null
+          id: string
+          organization_id: string
+          promoted_canon_entry_id: string | null
+          proposal_id: string
+          superseded_canon_entry_id: string | null
+          trial_id: string | null
+        }
+        Insert: {
+          candidate_id?: string | null
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision?: string
+          decision_reason?: string | null
+          id?: string
+          organization_id: string
+          promoted_canon_entry_id?: string | null
+          proposal_id: string
+          superseded_canon_entry_id?: string | null
+          trial_id?: string | null
+        }
+        Update: {
+          candidate_id?: string | null
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision?: string
+          decision_reason?: string | null
+          id?: string
+          organization_id?: string
+          promoted_canon_entry_id?: string | null
+          proposal_id?: string
+          superseded_canon_entry_id?: string | null
+          trial_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_promotion_decisions_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "external_knowledge_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_promotion_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_promotion_decisions_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "canon_evolution_proposals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_promotion_decisions_trial_id_fkey"
+            columns: ["trial_id"]
+            isOneToOne: false
+            referencedRelation: "canon_change_trials"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_retrieval_feedback: {
+        Row: {
+          canon_entry_id: string
+          created_at: string
+          feedback_reason: string | null
+          feedback_type: string
+          id: string
+          organization_id: string
+          reviewer_id: string | null
+          usage_event_id: string | null
+        }
+        Insert: {
+          canon_entry_id: string
+          created_at?: string
+          feedback_reason?: string | null
+          feedback_type?: string
+          id?: string
+          organization_id: string
+          reviewer_id?: string | null
+          usage_event_id?: string | null
+        }
+        Update: {
+          canon_entry_id?: string
+          created_at?: string
+          feedback_reason?: string | null
+          feedback_type?: string
+          id?: string
+          organization_id?: string
+          reviewer_id?: string | null
+          usage_event_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_retrieval_feedback_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_retrieval_feedback_usage_event_id_fkey"
+            columns: ["usage_event_id"]
+            isOneToOne: false
+            referencedRelation: "canon_usage_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_retrieval_profiles: {
+        Row: {
+          created_at: string
+          excluded_lifecycle_statuses: string[] | null
+          id: string
+          include_experimental: boolean
+          max_results: number
+          min_confidence: number
+          organization_id: string
+          preferred_language_tags: string[] | null
+          preferred_stack_tags: string[] | null
+          profile_name: string
+          retrieval_scope: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          excluded_lifecycle_statuses?: string[] | null
+          id?: string
+          include_experimental?: boolean
+          max_results?: number
+          min_confidence?: number
+          organization_id: string
+          preferred_language_tags?: string[] | null
+          preferred_stack_tags?: string[] | null
+          profile_name?: string
+          retrieval_scope?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          excluded_lifecycle_statuses?: string[] | null
+          id?: string
+          include_experimental?: boolean
+          max_results?: number
+          min_confidence?: number
+          organization_id?: string
+          preferred_language_tags?: string[] | null
+          preferred_stack_tags?: string[] | null
+          profile_name?: string
+          retrieval_scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_retrieval_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_stewards: {
         Row: {
           assigned_entries_count: number
@@ -6424,6 +7013,56 @@ export type Database = {
             columns: ["successor_entry_id"]
             isOneToOne: false
             referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_usage_events: {
+        Row: {
+          agent_type: string | null
+          canon_entry_id: string
+          created_at: string
+          feedback_signal: string | null
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          pipeline_stage: string | null
+          retrieval_score: number
+          usage_context: string
+          was_applied: boolean
+        }
+        Insert: {
+          agent_type?: string | null
+          canon_entry_id: string
+          created_at?: string
+          feedback_signal?: string | null
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          pipeline_stage?: string | null
+          retrieval_score?: number
+          usage_context?: string
+          was_applied?: boolean
+        }
+        Update: {
+          agent_type?: string | null
+          canon_entry_id?: string
+          created_at?: string
+          feedback_signal?: string | null
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          pipeline_stage?: string | null
+          retrieval_score?: number
+          usage_context?: string
+          was_applied?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_usage_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -15289,6 +15928,203 @@ export type Database = {
           },
         ]
       }
+      external_knowledge_candidates: {
+        Row: {
+          audit_notes: string | null
+          body: string | null
+          claimed_applicability: string | null
+          conflict_with_existing_canon: boolean
+          created_at: string
+          id: string
+          internal_validation_status: string
+          knowledge_type: string
+          novelty_score: number
+          organization_id: string
+          promotion_status: string
+          rejection_reason: string | null
+          source_id: string | null
+          source_reference: string | null
+          source_reliability_score: number
+          source_type: string
+          stack_scope: string | null
+          submitted_by: string | null
+          summary: string | null
+          supersession_effect: string | null
+          title: string
+          trial_status: string
+          updated_at: string
+        }
+        Insert: {
+          audit_notes?: string | null
+          body?: string | null
+          claimed_applicability?: string | null
+          conflict_with_existing_canon?: boolean
+          created_at?: string
+          id?: string
+          internal_validation_status?: string
+          knowledge_type?: string
+          novelty_score?: number
+          organization_id: string
+          promotion_status?: string
+          rejection_reason?: string | null
+          source_id?: string | null
+          source_reference?: string | null
+          source_reliability_score?: number
+          source_type?: string
+          stack_scope?: string | null
+          submitted_by?: string | null
+          summary?: string | null
+          supersession_effect?: string | null
+          title?: string
+          trial_status?: string
+          updated_at?: string
+        }
+        Update: {
+          audit_notes?: string | null
+          body?: string | null
+          claimed_applicability?: string | null
+          conflict_with_existing_canon?: boolean
+          created_at?: string
+          id?: string
+          internal_validation_status?: string
+          knowledge_type?: string
+          novelty_score?: number
+          organization_id?: string
+          promotion_status?: string
+          rejection_reason?: string | null
+          source_id?: string | null
+          source_reference?: string | null
+          source_reliability_score?: number
+          source_type?: string
+          stack_scope?: string | null
+          submitted_by?: string | null
+          summary?: string | null
+          supersession_effect?: string | null
+          title?: string
+          trial_status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_knowledge_candidates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_knowledge_candidates_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "external_knowledge_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_knowledge_reviews: {
+        Row: {
+          candidate_id: string
+          confidence_score: number
+          conflict_details: string | null
+          conflict_detected: boolean
+          created_at: string
+          id: string
+          organization_id: string
+          review_notes: string | null
+          reviewer_id: string | null
+          verdict: string
+        }
+        Insert: {
+          candidate_id: string
+          confidence_score?: number
+          conflict_details?: string | null
+          conflict_detected?: boolean
+          created_at?: string
+          id?: string
+          organization_id: string
+          review_notes?: string | null
+          reviewer_id?: string | null
+          verdict?: string
+        }
+        Update: {
+          candidate_id?: string
+          confidence_score?: number
+          conflict_details?: string | null
+          conflict_detected?: boolean
+          created_at?: string
+          id?: string
+          organization_id?: string
+          review_notes?: string | null
+          reviewer_id?: string | null
+          verdict?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_knowledge_reviews_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "external_knowledge_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_knowledge_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_knowledge_sources: {
+        Row: {
+          created_at: string
+          evaluation_notes: string | null
+          id: string
+          last_evaluated_at: string | null
+          organization_id: string
+          reliability_score: number
+          source_name: string
+          source_type: string
+          source_url: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          evaluation_notes?: string | null
+          id?: string
+          last_evaluated_at?: string | null
+          organization_id: string
+          reliability_score?: number
+          source_name?: string
+          source_type?: string
+          source_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          evaluation_notes?: string | null
+          id?: string
+          last_evaluated_at?: string | null
+          organization_id?: string
+          reliability_score?: number
+          source_name?: string
+          source_type?: string
+          source_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_knowledge_sources_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       external_trust_outcomes: {
         Row: {
           actor_id: string | null
@@ -15405,6 +16241,255 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      failure_context_snapshots: {
+        Row: {
+          agent_type: string | null
+          created_at: string
+          environment_context: Json
+          error_payload: Json
+          failure_memory_id: string
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          pipeline_stage: string | null
+          stack_context: Json
+        }
+        Insert: {
+          agent_type?: string | null
+          created_at?: string
+          environment_context?: Json
+          error_payload?: Json
+          failure_memory_id: string
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          pipeline_stage?: string | null
+          stack_context?: Json
+        }
+        Update: {
+          agent_type?: string | null
+          created_at?: string
+          environment_context?: Json
+          error_payload?: Json
+          failure_memory_id?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          pipeline_stage?: string | null
+          stack_context?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "failure_context_snapshots_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "failure_context_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      failure_memory_entries: {
+        Row: {
+          affected_layers: string[] | null
+          confidence_score: number
+          containment_guidance: string | null
+          created_at: string
+          failed_repairs: Json
+          failure_type: string
+          id: string
+          lifecycle_status: string
+          linked_canon_entries: string[] | null
+          organization_id: string
+          proven_causes: Json
+          recurrence_score: number
+          root_cause_hypothesis: string | null
+          signature: string
+          stack_scope: string
+          successful_repairs: Json
+          symptom_summary: string
+          trigger_conditions: Json
+          updated_at: string
+          validation_requirements: Json
+        }
+        Insert: {
+          affected_layers?: string[] | null
+          confidence_score?: number
+          containment_guidance?: string | null
+          created_at?: string
+          failed_repairs?: Json
+          failure_type?: string
+          id?: string
+          lifecycle_status?: string
+          linked_canon_entries?: string[] | null
+          organization_id: string
+          proven_causes?: Json
+          recurrence_score?: number
+          root_cause_hypothesis?: string | null
+          signature?: string
+          stack_scope?: string
+          successful_repairs?: Json
+          symptom_summary?: string
+          trigger_conditions?: Json
+          updated_at?: string
+          validation_requirements?: Json
+        }
+        Update: {
+          affected_layers?: string[] | null
+          confidence_score?: number
+          containment_guidance?: string | null
+          created_at?: string
+          failed_repairs?: Json
+          failure_type?: string
+          id?: string
+          lifecycle_status?: string
+          linked_canon_entries?: string[] | null
+          organization_id?: string
+          proven_causes?: Json
+          recurrence_score?: number
+          root_cause_hypothesis?: string | null
+          signature?: string
+          stack_scope?: string
+          successful_repairs?: Json
+          symptom_summary?: string
+          trigger_conditions?: Json
+          updated_at?: string
+          validation_requirements?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "failure_memory_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      failure_signatures: {
+        Row: {
+          created_at: string
+          failure_memory_id: string | null
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          normalization_method: string
+          normalized_signature: string
+          occurrence_count: number
+          organization_id: string
+          raw_error: string
+        }
+        Insert: {
+          created_at?: string
+          failure_memory_id?: string | null
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          normalization_method?: string
+          normalized_signature?: string
+          occurrence_count?: number
+          organization_id: string
+          raw_error?: string
+        }
+        Update: {
+          created_at?: string
+          failure_memory_id?: string | null
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          normalization_method?: string
+          normalized_signature?: string
+          occurrence_count?: number
+          organization_id?: string
+          raw_error?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "failure_signatures_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "failure_signatures_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      false_fix_records: {
+        Row: {
+          created_at: string
+          danger_level: string
+          description: string
+          detection_method: string
+          evidence_refs: Json
+          failure_memory_id: string
+          false_fix_type: string
+          id: string
+          organization_id: string
+          recurrence_after_fix: boolean
+          repair_attempt_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          danger_level?: string
+          description?: string
+          detection_method?: string
+          evidence_refs?: Json
+          failure_memory_id: string
+          false_fix_type?: string
+          id?: string
+          organization_id: string
+          recurrence_after_fix?: boolean
+          repair_attempt_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          danger_level?: string
+          description?: string
+          detection_method?: string
+          evidence_refs?: Json
+          failure_memory_id?: string
+          false_fix_type?: string
+          id?: string
+          organization_id?: string
+          recurrence_after_fix?: boolean
+          repair_attempt_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "false_fix_records_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "false_fix_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "false_fix_records_repair_attempt_id_fkey"
+            columns: ["repair_attempt_id"]
+            isOneToOne: false
+            referencedRelation: "repair_attempt_records"
             referencedColumns: ["id"]
           },
         ]
@@ -19635,6 +20720,72 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "mission_integrity_subjects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mitigation_patterns: {
+        Row: {
+          applicability_conditions: Json
+          cautions: string[] | null
+          confidence_score: number
+          created_at: string
+          failure_memory_id: string
+          id: string
+          lifecycle_status: string
+          organization_id: string
+          pattern_description: string
+          pattern_name: string
+          sample_size: number
+          strategy_type: string
+          success_rate: number
+          updated_at: string
+        }
+        Insert: {
+          applicability_conditions?: Json
+          cautions?: string[] | null
+          confidence_score?: number
+          created_at?: string
+          failure_memory_id: string
+          id?: string
+          lifecycle_status?: string
+          organization_id: string
+          pattern_description?: string
+          pattern_name?: string
+          sample_size?: number
+          strategy_type?: string
+          success_rate?: number
+          updated_at?: string
+        }
+        Update: {
+          applicability_conditions?: Json
+          cautions?: string[] | null
+          confidence_score?: number
+          created_at?: string
+          failure_memory_id?: string
+          id?: string
+          lifecycle_status?: string
+          organization_id?: string
+          pattern_description?: string
+          pattern_name?: string
+          sample_size?: number
+          strategy_type?: string
+          success_rate?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mitigation_patterns_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mitigation_patterns_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -26625,6 +27776,69 @@ export type Database = {
           },
         ]
       }
+      repair_attempt_records: {
+        Row: {
+          agent_type: string | null
+          attempt_number: number
+          cost_estimate: number | null
+          created_at: string
+          duration_ms: number | null
+          failure_memory_id: string
+          id: string
+          notes: string | null
+          organization_id: string
+          outcome: string
+          pipeline_stage: string | null
+          repair_payload: Json
+          repair_strategy: string
+        }
+        Insert: {
+          agent_type?: string | null
+          attempt_number?: number
+          cost_estimate?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          failure_memory_id: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          outcome?: string
+          pipeline_stage?: string | null
+          repair_payload?: Json
+          repair_strategy?: string
+        }
+        Update: {
+          agent_type?: string | null
+          attempt_number?: number
+          cost_estimate?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          failure_memory_id?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          outcome?: string
+          pipeline_stage?: string | null
+          repair_payload?: Json
+          repair_strategy?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_attempt_records_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repair_attempt_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       repair_evidence: {
         Row: {
           attempt_number: number
@@ -26715,6 +27929,111 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      repair_intelligence_reviews: {
+        Row: {
+          confidence_adjustment: number | null
+          created_at: string
+          failure_memory_id: string
+          id: string
+          lifecycle_recommendation: string | null
+          organization_id: string
+          review_notes: string | null
+          review_status: string
+          reviewer_id: string | null
+        }
+        Insert: {
+          confidence_adjustment?: number | null
+          created_at?: string
+          failure_memory_id: string
+          id?: string
+          lifecycle_recommendation?: string | null
+          organization_id: string
+          review_notes?: string | null
+          review_status?: string
+          reviewer_id?: string | null
+        }
+        Update: {
+          confidence_adjustment?: number | null
+          created_at?: string
+          failure_memory_id?: string
+          id?: string
+          lifecycle_recommendation?: string | null
+          organization_id?: string
+          review_notes?: string | null
+          review_status?: string
+          reviewer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_intelligence_reviews_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repair_intelligence_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      repair_outcome_links: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          outcome_type: string
+          regression_description: string | null
+          regression_detected: boolean
+          repair_attempt_id: string
+          verification_method: string | null
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          outcome_type?: string
+          regression_description?: string | null
+          regression_detected?: boolean
+          repair_attempt_id: string
+          verification_method?: string | null
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          outcome_type?: string
+          regression_description?: string | null
+          regression_detected?: boolean
+          repair_attempt_id?: string
+          verification_method?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_outcome_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repair_outcome_links_repair_attempt_id_fkey"
+            columns: ["repair_attempt_id"]
+            isOneToOne: false
+            referencedRelation: "repair_attempt_records"
             referencedColumns: ["id"]
           },
         ]

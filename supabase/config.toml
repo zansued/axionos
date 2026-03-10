@@ -176,3 +176,12 @@ verify_jwt = false
 
 [functions.canon-governance]
 verify_jwt = false
+
+[functions.canon-retrieval]
+verify_jwt = false
+
+[functions.repair-intelligence-archive]
+verify_jwt = false
+
+[functions.canon-evolution-control]
+verify_jwt = false
