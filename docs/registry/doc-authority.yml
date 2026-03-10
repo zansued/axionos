@@ -52,3 +52,20 @@ documents:
       - architectural content (→ ARCHITECTURE.md)
       - agent/governance detail (→ GOVERNANCE.md)
     update_rule: Update when document structure, status taxonomy, or canon boundaries change.
+
+  - file: docs/AXION_CONTEXT.md
+    owns:
+      - quick context restoration guide
+      - system identity and nature summary
+      - core engines overview
+      - pipeline principle
+      - agent ontology summary
+      - learning model summary
+      - system invariants (derived from canonical sources)
+      - development principles
+      - long-term vision
+    must_not_define:
+      - detailed architecture (→ ARCHITECTURE.md)
+      - detailed governance/contracts (→ GOVERNANCE.md)
+      - canon boundaries or status taxonomy (→ README.md)
+    update_rule: Update when system identity, engines, or invariants change structurally.
