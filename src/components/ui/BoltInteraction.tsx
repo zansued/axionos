@@ -245,7 +245,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className="text-[12px] sm:text-[13px] text-white/50 font-medium tracking-[0.25em] uppercase mb-7"
+          className="text-[12px] sm:text-[13px] text-white/75 font-medium tracking-[0.25em] uppercase mb-7"
           style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
           Autonomous Intelligent Infrastructure
@@ -258,7 +258,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           transition={{ delay: 0.35, duration: 0.5 }}
           className="text-center mb-10"
         >
-          <p className="text-[15px] sm:text-[17px] lg:text-[19px] text-white/40 font-normal leading-relaxed max-w-md mx-auto" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+          <p className="text-[15px] sm:text-[17px] lg:text-[19px] text-white/70 font-normal leading-relaxed max-w-md mx-auto" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             Describe what you want to build — we orchestrate the rest.
           </p>
         </motion.div>
