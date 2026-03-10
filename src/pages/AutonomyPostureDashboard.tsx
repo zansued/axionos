@@ -74,6 +74,7 @@ export default function AutonomyPostureDashboard() {
           <Tabs defaultValue="domains">
             <TabsList>
               <TabsTrigger value="domains">Domains</TabsTrigger>
+              <TabsTrigger value="transitions">Transitions</TabsTrigger>
               <TabsTrigger value="adjustments">Adjustments</TabsTrigger>
               <TabsTrigger value="breaches">Breaches</TabsTrigger>
               <TabsTrigger value="regressions">Regressions</TabsTrigger>
