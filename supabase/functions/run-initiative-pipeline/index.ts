@@ -2345,7 +2345,11 @@ Retorne APENAS um JSON array de strings, uma mensagem por arquivo na mesma ordem
               checks.push({ id: "vercel-install", category: "vercel.json", label: "installCommand inclui --include=dev", status: vc.installCommand?.includes("--include=dev") ? "pass" : "warn" });
               checks.push({ id: "vercel-output", category: "vercel.json", label: "outputDirectory = dist", status: vc.outputDirectory === "dist" ? "pass" : "warn", detail: vc.outputDirectory || "não definido" });
               checks.push({ id: "vercel-rewrites", category: "vercel.json", label: "Rewrite SPA configurado", status: vc.rewrites?.length > 0 ? "pass" : "warn" });
-            } catch { checks.push({ id: "vercel-parse", category: "vercel.json", label: "JSON válido", status: "fail" }); }
+            } catch {
+              // vercel.json will be overridden by deterministic content at publish — don't block
+              checks.push({ id: "vercel-parse", category: "vercel.json", label: "JSON válido", status: "warn", detail: "Será substituído pelo conteúdo determinístico no publish" });
+              issues.push("vercel.json had invalid JSON — will be replaced by deterministic override");
+            }
           }
 
           // ---- General checks ----
@@ -2581,7 +2585,7 @@ Seja conciso e profissional.`
           repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
           ai_generated: { branch: baseBranch, commit_count: commitMessages.length },
           health_report: healthReport,
-        }, { model: aiModel, costUsd: totalAiCost, durationMs: 0 });
+        }, { model: commitMsgResult.model || "unknown", costUsd: totalAiCost, durationMs: 0 });
 
         await log("pipeline_publish_complete", `Publicação concluída: ${committedFiles.length} arquivos direto na branch ${baseBranch} em ${actualOwner}/${actualRepo}`, {
           branch: baseBranch, ai_tokens: totalAiTokens, repo: `${actualOwner}/${actualRepo}`,

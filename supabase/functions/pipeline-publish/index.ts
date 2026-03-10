@@ -3,7 +3,7 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
+import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, autoFixMissingDependencies } from "../_shared/code-sanitizers.ts";
 import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 import { runDependencyGovernance } from "../_shared/dependency-governance.ts";
 
@@ -52,6 +52,21 @@ serve(async (req) => {
 
   const jobId = await createJob(ctx, "publish", { owner: resolvedOwner, repo: repoSlug, base_branch: resolvedBaseBranch, mode: "release_agent" });
   await pipelineLog(ctx, "pipeline_publish_start", "Release Agent iniciando: Pre-flight → Changelog → Push → Verificação...");
+
+  // Idempotency guard: block if a publish job is already running for this initiative
+  const { data: activePublishJobs } = await serviceClient
+    .from("initiative_jobs")
+    .select("id, created_at")
+    .eq("initiative_id", ctx.initiativeId)
+    .eq("stage", "publish")
+    .eq("status", "running")
+    .gt("created_at", new Date(Date.now() - 30 * 60 * 1000).toISOString());
+  if (activePublishJobs && activePublishJobs.length > 1) {
+    return errorResponse(
+      "Uma publicação já está em andamento para esta initiative. Aguarde a conclusão antes de publicar novamente.",
+      409
+    );
+  }
 
   const ghHeaders = {
     Authorization: `Bearer ${resolvedGithubToken}`,
@@ -104,6 +119,23 @@ serve(async (req) => {
     }
 
     if (fileEntries.length === 0) throw new Error("Nenhum arquivo aprovado pronto para publicação");
+
+    // ── Dependency Integrity Check ──
+    const packageJsonEntry = fileEntries.find(f => f.path === "package.json");
+    if (packageJsonEntry) {
+      const { missing } = detectMissingDependencies(fileEntries, packageJsonEntry.content);
+      if (missing.length > 0) {
+        await pipelineLog(ctx, "dependency_integrity_warning",
+          `Dependências ausentes detectadas: ${missing.join(", ")} — aplicando correção automática...`);
+        const fixed = autoFixMissingDependencies(packageJsonEntry.content, missing);
+        packageJsonEntry.content = sanitizePackageJson(fixed);
+        const stillMissing = detectMissingDependencies(fileEntries, packageJsonEntry.content).missing;
+        if (stillMissing.length > 0) {
+          await pipelineLog(ctx, "dependency_integrity_unresolved",
+            `Pacotes sem versão segura conhecida (requer review manual): ${stillMissing.join(", ")}`);
+        }
+      }
+    }
 
     // AI Pre-flight: check for missing critical files, inconsistencies
     const fileManifest = fileEntries.map(f => `${f.path} (${f.type})`).join("\n");
@@ -463,7 +495,7 @@ Retorne APENAS JSON:
     // Persist deploy metadata on initiative
     await updateInitiative(ctx, {
       repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
-      commit_hash: changelog.version || "1.0.0",
+      commit_hash: newCommit.sha, // SHA real, não a versão semântica
       build_status: preflight.preflight_pass ? "pass" : "fail",
       deploy_status: "published",
     });
