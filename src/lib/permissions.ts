@@ -139,6 +139,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "RT Harness", url: "/runtime-harness",          icon: Activity },
   { title: "Learning",  url: "/learning-signals",          icon: Brain },
   { title: "Canon Evo.", url: "/canon-evolution",          icon: TrendingUp },
+  { title: "Distill.",  url: "/pattern-distillation",     icon: Network },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
