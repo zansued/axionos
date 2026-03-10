@@ -10,82 +10,119 @@
 
 @layer base {
   :root {
-    --background: 0 0% 99%;
-    --foreground: 0 0% 9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 9%;
+    /* ─── AxionOS Design System ─── */
+    /* Light mode kept minimal — dark is canonical */
+    --background: 240 14% 5%;
+    --foreground: 0 0% 94%;
+    --card: 240 12% 9%;
+    --card-foreground: 0 0% 94%;
+    --popover: 240 12% 9%;
+    --popover-foreground: 0 0% 94%;
+    --primary: 198 100% 50%;
+    --primary-foreground: 240 14% 5%;
+    --secondary: 240 12% 12%;
+    --secondary-foreground: 0 0% 94%;
+    --muted: 240 12% 15%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 271 76% 53%;
+    --accent-foreground: 0 0% 94%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 9%;
+    --border: 240 12% 19%;
+    --input: 240 12% 19%;
+    --ring: 198 100% 50%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 45%;
-    --sidebar-primary: 0 0% 9%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 94%;
-    --sidebar-accent-foreground: 0 0% 9%;
-    --sidebar-border: 0 0% 92%;
-    --sidebar-ring: 0 0% 9%;
 
-    --success: 142 71% 45%;
+    /* Sidebar */
+    --sidebar-background: 240 14% 6%;
+    --sidebar-foreground: 240 5% 65%;
+    --sidebar-primary: 198 100% 50%;
+    --sidebar-primary-foreground: 240 14% 5%;
+    --sidebar-accent: 240 12% 12%;
+    --sidebar-accent-foreground: 0 0% 94%;
+    --sidebar-border: 240 12% 14%;
+    --sidebar-ring: 198 100% 50%;
+
+    /* Semantic state */
+    --success: 160 84% 39%;
     --warning: 38 92% 50%;
     --info: 217 91% 60%;
 
-    /* Surface identity tokens */
-    --surface-product: 168 53% 56%;
-    --surface-workspace: 195 74% 55%;
-    --surface-platform: 270 50% 65%;
+    /* ─── AxionOS Brand Palette ─── */
+    --axion-blue: 198 100% 50%;
+    --axion-purple: 271 76% 53%;
+    --axion-cyan: 176 100% 42%;
+    --axion-orange: 35 100% 50%;
+    --axion-magenta: 327 100% 50%;
+
+    /* Surfaces */
+    --surface-deep: 240 14% 5%;
+    --surface-1: 240 12% 9%;
+    --surface-2: 240 12% 12%;
+    --surface-3: 240 12% 15%;
+    --surface-border: 240 12% 19%;
+    --surface-product: 198 100% 50%;
+    --surface-workspace: 271 76% 53%;
+    --surface-platform: 176 100% 42%;
+
+    /* Text hierarchy */
+    --text-primary: 0 0% 94%;
+    --text-secondary: 240 5% 65%;
+    --text-muted: 240 4% 51%;
   }
 
   .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 93%;
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 93%;
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 93%;
-    --primary: 0 0% 93%;
-    --primary-foreground: 0 0% 4%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 93%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 50%;
-    --accent: 0 0% 12%;
-    --accent-foreground: 0 0% 93%;
+    /* Dark mode IS the canonical mode — same values */
+    --background: 240 14% 5%;
+    --foreground: 0 0% 94%;
+    --card: 240 12% 9%;
+    --card-foreground: 0 0% 94%;
+    --popover: 240 12% 9%;
+    --popover-foreground: 0 0% 94%;
+    --primary: 198 100% 50%;
+    --primary-foreground: 240 14% 5%;
+    --secondary: 240 12% 12%;
+    --secondary-foreground: 0 0% 94%;
+    --muted: 240 12% 15%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 271 76% 53%;
+    --accent-foreground: 0 0% 94%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14%;
-    --input: 0 0% 14%;
-    --ring: 0 0% 93%;
-    --sidebar-background: 0 0% 3%;
-    --sidebar-foreground: 0 0% 50%;
-    --sidebar-primary: 0 0% 93%;
-    --sidebar-primary-foreground: 0 0% 4%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 0 0% 93%;
-    --sidebar-border: 0 0% 12%;
-    --sidebar-ring: 0 0% 93%;
+    --border: 240 12% 19%;
+    --input: 240 12% 19%;
+    --ring: 198 100% 50%;
+    --sidebar-background: 240 14% 6%;
+    --sidebar-foreground: 240 5% 65%;
+    --sidebar-primary: 198 100% 50%;
+    --sidebar-primary-foreground: 240 14% 5%;
+    --sidebar-accent: 240 12% 12%;
+    --sidebar-accent-foreground: 0 0% 94%;
+    --sidebar-border: 240 12% 14%;
+    --sidebar-ring: 198 100% 50%;
 
-    --success: 142 71% 45%;
+    --success: 160 84% 39%;
     --warning: 38 92% 50%;
     --info: 217 91% 60%;
 
-    /* Surface identity tokens */
-    --surface-product: 168 53% 56%;
-    --surface-workspace: 195 74% 55%;
-    --surface-platform: 270 50% 65%;
+    --axion-blue: 198 100% 50%;
+    --axion-purple: 271 76% 53%;
+    --axion-cyan: 176 100% 42%;
+    --axion-orange: 35 100% 50%;
+    --axion-magenta: 327 100% 50%;
+
+    --surface-deep: 240 14% 5%;
+    --surface-1: 240 12% 9%;
+    --surface-2: 240 12% 12%;
+    --surface-3: 240 12% 15%;
+    --surface-border: 240 12% 19%;
+    --surface-product: 198 100% 50%;
+    --surface-workspace: 271 76% 53%;
+    --surface-platform: 176 100% 42%;
+
+    --text-primary: 0 0% 94%;
+    --text-secondary: 240 5% 65%;
+    --text-muted: 240 4% 51%;
   }
 }
 
@@ -106,15 +143,34 @@
 
 @layer utilities {
   .glow-primary {
-    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.15);
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.2);
   }
 
   .glow-accent {
-    box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.15);
+    box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.2);
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 20px -5px hsl(var(--axion-cyan) / 0.2);
   }
 
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--foreground)), hsl(var(--muted-foreground)));
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--axion-cyan)));
+  }
+
+  .text-gradient-purple {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--axion-purple)), hsl(var(--axion-magenta)));
+  }
+
+  .surface-elevated {
+    background-color: hsl(var(--surface-2));
+    border: 1px solid hsl(var(--surface-border));
+  }
+
+  .surface-panel {
+    background-color: hsl(var(--surface-1));
+    border: 1px solid hsl(var(--surface-border) / 0.5);
   }
 }

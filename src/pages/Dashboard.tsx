@@ -2,17 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { BoltStyleChat } from "@/components/ui/BoltInteraction";
-import { useToast } from "@/hooks/use-toast";
+import { AppLayout } from "@/components/AppLayout";
+import { OperationalDashboard } from "@/components/dashboard/OperationalDashboard";
 
 const IDEA_KEY = "axion_initial_idea";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const { toast } = useToast();
   const [initialMessage, setInitialMessage] = useState("");
 
-  // After login, recover any saved idea
   useEffect(() => {
     if (user) {
       const saved = sessionStorage.getItem(IDEA_KEY);
@@ -23,9 +22,13 @@ export default function Dashboard() {
     }
   }, [user]);
 
-  // If user is logged in, redirect to initiatives (the real dashboard)
+  // Authenticated users see the operational dashboard
   if (!loading && user) {
-    return <Navigate to="/initiatives" replace />;
+    return (
+      <AppLayout>
+        <OperationalDashboard />
+      </AppLayout>
+    );
   }
 
   const handlePromptSubmit = (
@@ -34,7 +37,6 @@ export default function Dashboard() {
     _assets: File[]
   ) => {
     if (loading) return;
-
     if (!user) {
       sessionStorage.setItem(IDEA_KEY, prompt);
       navigate("/auth");
