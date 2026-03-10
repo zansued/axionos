@@ -188,3 +188,6 @@ verify_jwt = false
 
 [functions.runtime-feedback-mesh]
 verify_jwt = false
+
+[functions.tenant-doctrine-engine]
+verify_jwt = false

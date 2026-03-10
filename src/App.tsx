@@ -211,6 +211,7 @@ const App = () => (
                         <Route path="/failure-memory"           element={<P><FailureMemoryDashboard /></P>} />
                         <Route path="/external-knowledge"      element={<P><ExternalKnowledgeDashboard /></P>} />
                         <Route path="/runtime-feedback"        element={<P><RuntimeFeedbackDashboard /></P>} />
+                        <Route path="/tenant-doctrine"         element={<P><TenantDoctrineDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
