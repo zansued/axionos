@@ -91,7 +91,7 @@ Internal sophistication remains critical. The next level deepens it through adap
 
 ## How To Continue Safely After Sprint 106
 
-1. Read **ROADMAP.md** first for strategic direction
+1. Read **ROADMAP.md** first for strategic direction (138 sprints complete, all blocks through AD)
 2. Read **PLAN.md** next for current canon status
 3. Use **ARCHITECTURE.md** for structural context, the product boundary model, and the role/surface model
 4. Use **PIPELINE_CONTRACTS.md** for the user-visible journey contract
