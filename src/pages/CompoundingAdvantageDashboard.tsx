@@ -1,6 +1,8 @@
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useCompoundingAdvantage } from "@/hooks/useCompoundingAdvantage";
+import { useColdStart } from "@/hooks/useColdStart";
+import { ColdStartBanner } from "@/components/observability/ColdStartBanner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
