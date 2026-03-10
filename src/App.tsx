@@ -219,6 +219,7 @@ const App = () => (
                         <Route path="/autonomy-posture"        element={<P><AutonomyPostureDashboard /></P>} />
                         <Route path="/compounding-advantage"   element={<P><CompoundingAdvantageDashboard /></P>} />
                         <Route path="/runtime-harness"         element={<P><RuntimeValidationHarness /></P>} />
+                        <Route path="/learning-signals"        element={<P><LearningSignalsDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
