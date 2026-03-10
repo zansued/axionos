@@ -130,7 +130,7 @@ function ChatInput({ onSend, onExampleClick }: {
                 : 'none',
             }}
           >
-            <span>Criar projeto</span>
+            <span>Create project</span>
             <ArrowRight className="size-4" />
           </button>
         </div>
