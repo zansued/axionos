@@ -57,6 +57,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
 
   // Track which initiatives already had their CI completion handled
   const handledCIRef = useRef<Set<string>>(new Set());
+  const retryCountRef = useRef<Record<string, number>>({});
 
   // ── Realtime: listen for initiative stage_status changes from webhook ──
   useEffect(() => {
