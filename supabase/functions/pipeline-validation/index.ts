@@ -184,7 +184,7 @@ Retorne APENAS JSON:
     );
 
     let runtimeQA: any;
-    try { runtimeQA = JSON.parse(runtimeResult.content); }
+    try { runtimeQA = extractJsonFromResponse(runtimeResult.content); }
     catch { runtimeQA = { runtime_score: 60, test_scenarios: [], security_issues: [], performance_issues: [], resilience_score: 60, summary: "Parse failed" }; }
 
     await persistValidationRun(serviceClient, artifact.id, isFirstPass ? "runtime_qa" : `runtime_revalidation_${loop}`, runtimeQA, runtimeResult.durationMs);
