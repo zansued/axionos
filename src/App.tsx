@@ -112,6 +112,8 @@ import Pipelines from "./pages/Pipelines";
 import Governance from "./pages/Governance";
 import Modes from "./pages/Modes";
 import SettingsPage from "./pages/Settings";
+import Runtime from "./pages/Runtime";
+import SystemIntelligence from "./pages/SystemIntelligence";
 
 // ─── Blueprint Placeholder Pages ────────────────────────────────────────────
 import {
