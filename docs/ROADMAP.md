@@ -297,9 +297,9 @@ All pillars of the platform are **implemented and operational**:
 | Implementation Canon & Knowledge Governance | 115–118 | ✅ Complete | Canon stewardship, implementation pattern library, failure memory, external knowledge intake |
 | Runtime Sovereignty & Outcome Compounding | 119–122 | ✅ Complete | Runtime feedback mesh, tenant doctrine, outcome-based autonomy, compounding advantage |
 | Runtime Proof & Adaptive Governance | 123–126 | ✅ Complete | Runtime execution validation harness, autonomy ladder stabilization, tenant-adaptive regression profiles, cold start explainability |
-| Learning Canonization | 127–130 | 🔜 Committed | Learning extraction engine, canon promotion pipeline, cross-tenant pattern distillation, canon reuse injection |
-| Adaptive Coordination | 131–134 | 🔜 Committed | Operational posture engine, attention allocation engine, adaptive resource routing, operational rhythm & recovery cycles |
-| Adaptive Operational Organism | 135–138 | 🔜 Committed | Multi-loop governance orchestrator, systemic health model, organism memory layers, adaptive operational organism console |
+| Learning Canonization | 127–130 | ✅ Complete | Learning extraction engine, canon promotion pipeline, cross-tenant pattern distillation, canon reuse injection |
+| Adaptive Coordination | 131–134 | ✅ Complete | Operational posture engine, attention allocation engine, adaptive resource routing, operational rhythm & recovery cycles |
+| Adaptive Operational Organism | 135–138 | ✅ Complete | Multi-loop governance orchestrator, systemic health model, organism memory layers, adaptive operational organism console |
 
 ---
 
