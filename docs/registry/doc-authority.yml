@@ -69,3 +69,18 @@ documents:
       - detailed governance/contracts (→ GOVERNANCE.md)
       - canon boundaries or status taxonomy (→ README.md)
     update_rule: Update when system identity, engines, or invariants change structurally.
+
+  - file: docs/AXION_PRIMER.md
+    owns:
+      - ultra-short system explanation (AI cognitive anchor)
+      - system category definition
+      - core capabilities summary
+      - agent model summary
+      - learning model summary (compact)
+      - system principles summary (compact)
+    must_not_define:
+      - detailed architecture (→ ARCHITECTURE.md)
+      - detailed governance/contracts (→ GOVERNANCE.md)
+      - canon boundaries or status taxonomy (→ README.md)
+      - full engine inventory (→ AXION_CONTEXT.md)
+    update_rule: Update when system identity or core capabilities change.
