@@ -87,7 +87,7 @@ export async function enforceUsageLimits(
 
   if (orgInitIds.length > 0) {
     // Auto-cleanup stale running jobs (older than 2 hours)
-    const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const staleThreshold = new Date(Date.now() - 2 * 60 * 1000).toISOString();
     const chunkSize = 100;
 
     for (let i = 0; i < orgInitIds.length; i += chunkSize) {
@@ -96,10 +96,10 @@ export async function enforceUsageLimits(
       // Cleanup stale jobs first
       await serviceClient
         .from("initiative_jobs")
-        .update({ status: "failed", error: "Auto-cleanup: exceeded max runtime (5min)", completed_at: new Date().toISOString() })
+        .update({ status: "failed", error: "Auto-cleanup: exceeded max runtime (2min)", completed_at: new Date().toISOString() })
         .in("initiative_id", chunk)
         .eq("status", "running")
-        .lt("created_at", fiveMinAgo);
+        .lt("created_at", staleThreshold);
 
       const [deployRes, activeRes] = await Promise.all([
         serviceClient
