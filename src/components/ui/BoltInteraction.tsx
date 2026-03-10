@@ -4,6 +4,7 @@ import {
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import axionLogo from '@/assets/axion-logo.svg'
+import NeuralBackground from './NeuralBackground'
 
 // ── Typing placeholder ───────────────────────────────────────────────────
 const PLACEHOLDERS = [
@@ -207,6 +208,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
 
   return (
     <div className="relative flex flex-col items-center justify-center h-full w-full overflow-hidden bg-[#08080a]">
+      <NeuralBackground className="z-[1]" />
       <RayBackground />
 
 
