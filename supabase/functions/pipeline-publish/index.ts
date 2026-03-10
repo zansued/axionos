@@ -431,7 +431,7 @@ Retorne APENAS JSON:
     // Persist deploy metadata on initiative
     await updateInitiative(ctx, {
       repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
-      commit_hash: changelog.version || "1.0.0",
+      commit_hash: newCommit.sha, // SHA real, não a versão semântica
       build_status: preflight.preflight_pass ? "pass" : "fail",
       deploy_status: "published",
     });
