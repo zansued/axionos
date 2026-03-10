@@ -20,8 +20,8 @@ AxionOS has completed its Level 10 milestone. Block Z (Runtime Sovereignty & Out
 ## Strategic Principle
 
 > **Governance before autonomy.**
-> **Awareness before self-regulation.**
-> **Reflexive governance before structural self-modification.**
+> **Autonomy earned through evidence, bounded, and reversible.**
+> **No autonomous architecture mutation.**
 
 Every new capability must be governable, auditable, and non-destructive before it is expanded. AxionOS does not pursue autonomy for its own sake.
 
