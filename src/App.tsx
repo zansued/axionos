@@ -159,7 +159,7 @@ const App = () => (
                           <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
 
                           {/* ── Product surface (all roles) ── */}
-                          <Route path="/"           element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                          <Route path="/"           element={<Dashboard />} />
                           <Route path="/journey"    element={<ProtectedRoute><Journey /></ProtectedRoute>} />
                           <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
                           <Route path="/initiatives"element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
