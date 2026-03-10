@@ -28,11 +28,11 @@
 
 | Dimension | State |
 |-----------|-------|
-| **Platform Stage** | Level 10 — Autonomous Delivery Sovereignty |
-| **System State** | 100+ architectural layers active |
+| **Platform Stage** | Level 10+ — Adaptive Operational Organism |
+| **System State** | 120+ architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
-| **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
+| **Learning Status** | Active, rule-based, auditable, cross-stage coordinated, canonized |
 | **Meta-Agents Status** | v1.4 active — memory-aware + quality feedback + advisory calibration |
 | **Platform Intelligence** | Active — system-level observability + health model |
 | **Platform Calibration** | Active — bounded threshold tuning + guardrails + rollback |
@@ -62,6 +62,9 @@
 | **Canonical Knowledge** | Active — canon stewardship, pattern library, failure memory, external knowledge intake |
 | **Runtime Sovereignty** | Active — runtime feedback mesh, tenant doctrine, outcome-based autonomy, compounding advantage |
 | **Runtime Proof & Adaptive Governance** | Active — execution validation harness, autonomy stabilization, tenant-adaptive regression, cold-start explainability |
+| **Learning Canonization** | Active — learning extraction, canon promotion pipeline, cross-tenant pattern distillation, canon reuse injection |
+| **Adaptive Coordination** | Active — operational posture engine, attention allocation, adaptive resource routing, operational rhythm & recovery cycles |
+| **Adaptive Operational Organism** | Active — multi-loop governance orchestrator, systemic health model, organism memory layers, organism console |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
