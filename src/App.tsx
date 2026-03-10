@@ -97,6 +97,7 @@ import PatternDistillationDashboard from "./pages/PatternDistillationDashboard";
 import CanonReuseImpactDashboard from "./pages/CanonReuseImpactDashboard";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
+import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
