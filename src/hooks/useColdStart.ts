@@ -53,7 +53,7 @@ export function useColdStart() {
       const adjCount = adjRes.count ?? 0;
       const scoreCount = scoreRes.count ?? 0;
       const uniqueStacks = new Set((stackRes.data ?? []).map((r: any) => r.stack_id)).size;
-      const tenantCreatedAt = currentOrg.created_at || new Date().toISOString();
+      const tenantCreatedAt = (currentOrg as any).created_at || new Date().toISOString();
 
       // Client-side detection mirrors shared logic
       const MIN_EXEC = 20;
