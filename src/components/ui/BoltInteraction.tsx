@@ -8,11 +8,11 @@ import NeuralBackground from './NeuralBackground'
 
 // ── Typing placeholder ───────────────────────────────────────────────────
 const PLACEHOLDERS = [
-  "Crie uma API REST com autenticação JWT e banco PostgreSQL...",
-  "Monte um dashboard de analytics em tempo real...",
-  "Construa um sistema de automação para WhatsApp...",
-  "Crie uma infraestrutura de IA com deploy automático...",
-  "Desenvolva um sistema de pagamentos com Stripe...",
+  "Build a REST API with JWT auth and PostgreSQL...",
+  "Create a real-time analytics dashboard...",
+  "Design an automation system with webhooks and queues...",
+  "Deploy an AI infrastructure with auto-scaling...",
+  "Build a payment system with Stripe integration...",
 ]
 
 function useTypingPlaceholder() {
@@ -50,10 +50,10 @@ function useTypingPlaceholder() {
 
 // ── Example chips ─────────────────────────────────────────────────────────
 const EXAMPLES = [
-  { icon: Box, label: "API REST", prompt: "Crie uma API REST com autenticação JWT e banco PostgreSQL" },
-  { icon: Zap, label: "Automação", prompt: "Crie um sistema de automação com webhooks e filas" },
-  { icon: Bot, label: "Agente IA", prompt: "Crie um agente de IA com memória e tool-calling" },
-  { icon: BarChart3, label: "Dashboard", prompt: "Crie um dashboard de analytics em tempo real" },
+  { icon: Box, label: "REST API", prompt: "Build a REST API with JWT authentication and PostgreSQL" },
+  { icon: Zap, label: "Automation", prompt: "Create an automation system with webhooks and queues" },
+  { icon: Bot, label: "AI Agent", prompt: "Build an AI agent with memory and tool-calling" },
+  { icon: BarChart3, label: "Dashboard", prompt: "Create a real-time analytics dashboard" },
 ]
 
 
@@ -130,7 +130,7 @@ function ChatInput({ onSend, onExampleClick }: {
                 : 'none',
             }}
           >
-            <span>Criar projeto</span>
+            <span>Create project</span>
             <ArrowRight className="size-4" />
           </button>
         </div>
@@ -210,13 +210,13 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
       <RayBackground />
 
 
-      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-4xl px-4">
+      <div className="relative z-10 flex flex-col items-center w-full max-w-4xl px-4" style={{ marginTop: '-6vh' }}>
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, filter: 'blur(16px)', scale: 0.92 }}
           animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center mb-5"
+          className="flex flex-col items-center mb-4"
         >
           <img 
             src={axionLogo} 
@@ -245,23 +245,22 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className="text-[12px] sm:text-[13px] text-white/75 font-medium tracking-[0.25em] uppercase mb-7"
+          className="text-[12px] sm:text-[13px] text-white/75 font-medium tracking-[0.25em] uppercase mb-12"
           style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
-          Autonomous Intelligent Infrastructure
+          Autonomous Intelligent Infrastructure for the AI Era
         </motion.p>
 
         {/* Subheadline */}
-        <motion.div
+        <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.5 }}
-          className="text-center mb-10"
+          className="text-[15px] sm:text-[17px] lg:text-[19px] text-white/70 font-normal mb-10 whitespace-nowrap"
+          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
-          <p className="text-[15px] sm:text-[17px] lg:text-[19px] text-white/70 font-normal leading-relaxed max-w-md mx-auto" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            Describe what you want to build — we orchestrate the rest.
-          </p>
-        </motion.div>
+          Describe what you want to build — we orchestrate the rest.
+        </motion.p>
 
         {/* Prompt box */}
         <motion.div
@@ -279,7 +278,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.5 }}
-        className="absolute bottom-5 z-10 flex items-center gap-3 text-[11px] text-[#2a2a32]"
+        className="absolute bottom-5 z-10 flex items-center gap-3 text-[11px] text-white/20"
       >
         <span>Powered by AI infrastructure</span>
         <span>·</span>
