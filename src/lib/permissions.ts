@@ -128,6 +128,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Refl. Audit", url: "/reflective-validation",     icon: ShieldCheck },
   { title: "Kernel Guard", url: "/kernel-integrity",          icon: Shield },
   { title: "Canon Gov.",  url: "/canon-governance",           icon: FileText },
+  { title: "Patterns",  url: "/pattern-library",            icon: Library },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
