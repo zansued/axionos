@@ -127,6 +127,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Mutation Ctrl",url: "/mutation-control",           icon: Shield },
   { title: "Refl. Audit", url: "/reflective-validation",     icon: ShieldCheck },
   { title: "Kernel Guard", url: "/kernel-integrity",          icon: Shield },
+  { title: "Canon Gov.",  url: "/canon-governance",           icon: FileText },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
