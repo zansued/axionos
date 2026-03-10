@@ -11,7 +11,7 @@ import {
   Rss, PackageCheck, ShieldCheck, Package, Shield, Settings, CreditCard, Plug,
   Users, Scale, BrainCircuit, Zap, Store, TrendingUp, Brain, FileText, Gauge,
   Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route, Compass,
-  Library, Bug, PackagePlus, Activity, Fingerprint, ShieldAlert, Crown,
+  Library, Bug, PackagePlus, Activity, Fingerprint, ShieldAlert, Crown, Activity as ActivityIcon,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
