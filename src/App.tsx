@@ -93,6 +93,7 @@ import CompoundingAdvantageDashboard from "./pages/CompoundingAdvantageDashboard
 import RuntimeValidationHarness from "./pages/RuntimeValidationHarness";
 import LearningSignalsDashboard from "./pages/LearningSignalsDashboard";
 import CanonEvolutionDashboard from "./pages/CanonEvolutionDashboard";
+import PatternDistillationDashboard from "./pages/PatternDistillationDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
