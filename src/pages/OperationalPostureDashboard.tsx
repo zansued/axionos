@@ -40,7 +40,7 @@ export default function OperationalPostureDashboard() {
             </p>
           </div>
           <Button
-            onClick={() => evaluatePosture.mutate()}
+            onClick={() => evaluatePosture.mutate({})}
             disabled={evaluatePosture.isPending}
             variant="outline"
           >
