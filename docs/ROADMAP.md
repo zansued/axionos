@@ -279,9 +279,11 @@ All 90+ architectural layers are operational. The kernel includes the 32-stage d
 | Level 6 | Sovereign Institutional Intelligence | ✅ Complete |
 | Level 7 | Strategic Autonomy & Civilizational Coordination | ✅ Current |
 | Level 8 | Reflexive Governance & Evolution Control | 🔜 Planned (Block X) |
+| Level 9 | Implementation Canon & Knowledge Governance | 🔮 Future (Block Y) |
 
 > **Current position:** Level 7 — Strategic Autonomy & Civilizational Coordination active.
 > **Next target:** Level 8 — Reflexive Governance & Evolution Control (Block X, Sprints 111–114).
+> **Future target:** Level 9 — Implementation Canon & Knowledge Governance (Block Y, Sprints 115–118).
 > **Execution mode:** Sprint-based implementation.
 
 ---
