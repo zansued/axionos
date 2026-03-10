@@ -106,6 +106,12 @@ import SystemHealthDashboard from "./pages/SystemHealthDashboard";
 import OrganismMemoryDashboard from "./pages/OrganismMemoryDashboard";
 import OrganismConsoleDashboard from "./pages/OrganismConsoleDashboard";
 import NotFound from "./pages/NotFound";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
+import Pipelines from "./pages/Pipelines";
+import Governance from "./pages/Governance";
+import Modes from "./pages/Modes";
+import SettingsPage from "./pages/Settings";
 
 // ─── Blueprint Placeholder Pages ────────────────────────────────────────────
 import {
