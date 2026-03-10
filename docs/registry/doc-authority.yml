@@ -2,6 +2,21 @@
 # Defines canonical ownership boundaries for each documentation file.
 # Last updated: 2026-03-10
 
+  - file: docs/CANON_INTELLIGENCE_ENGINE.md
+    owns:
+      - Canon Intelligence Engine architecture
+      - Agent–Contract relationship model
+      - Canon knowledge layer (patterns, strategies, failures, optimizations)
+      - Canon governance workflow (intake, normalization, steward review, approval, publication)
+      - Runtime consultation model
+      - Canon safety and authority limits
+      - Strategic importance of institutional intelligence
+    must_not_define:
+      - Agent OS module inventory (→ GOVERNANCE.md)
+      - system containers or C4 diagrams (→ ARCHITECTURE.md)
+      - sprint execution ledger
+    update_rule: Update when Canon Intelligence Engine architecture, contracts, or governance workflow change.
+
 documents:
 
   - file: docs/ARCHITECTURE.md

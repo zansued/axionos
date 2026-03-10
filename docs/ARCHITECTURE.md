@@ -13,9 +13,16 @@
 | Scope | Rule |
 |-------|------|
 | **Owns** | System architecture, C4 diagrams, capability layers, containers, components, data flow, safety rules, AI efficiency layer, edge function architecture, database schema, technology stack, governing principle |
-| **Must not define** | Sprint-by-sprint execution ledger (→ PLAN.md), full roadmap/strategic narrative (→ ROADMAP.md), detailed Agent OS module specs (→ AGENTS.md), pipeline phase UX contracts (→ PIPELINE_CONTRACTS.md) |
-| **Derived from** | PLAN.md for sprint context in layer descriptions; AGENTS.md for Agent OS summary |
+| **Must not define** | Sprint-by-sprint execution ledger (→ PLAN.md), full roadmap/strategic narrative (→ ROADMAP.md), detailed Agent OS module specs (→ GOVERNANCE.md), Canon Intelligence Engine details (→ CANON_INTELLIGENCE_ENGINE.md) |
+| **Derived from** | PLAN.md for sprint context in layer descriptions; GOVERNANCE.md for Agent OS summary; CANON_INTELLIGENCE_ENGINE.md for Canon subsystem |
 | **Update rule** | Update when system structure or active architectural layers change |
+
+### Core Subsystems
+
+| Subsystem | Reference |
+|-----------|-----------|
+| Agent OS | [GOVERNANCE.md](GOVERNANCE.md) — planes, modules, agent types, contracts |
+| Canon Intelligence Engine | [CANON_INTELLIGENCE_ENGINE.md](CANON_INTELLIGENCE_ENGINE.md) — knowledge layer, Agent–Contract model, canonization workflow |
 
 ---
 
