@@ -58,6 +58,9 @@
 | **Adaptive Institutional Ecosystem** | Active — cross-context doctrine adaptation, conflict resolution, federated intelligence boundaries, resilience & continuity governance |
 | **Sovereign Institutional Intelligence** | Active — memory constitution, sovereign decision rights, dependency sovereignty, strategic succession |
 | **Strategic Coordination** | Active — multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation |
+| **Reflexive Governance** | Active — evolution proposal governance, mutation control, self-revision audit, kernel integrity guard |
+| **Canonical Knowledge** | Active — canon stewardship, pattern library, failure memory, external knowledge intake |
+| **Runtime Sovereignty** | Active — runtime feedback mesh, tenant doctrine, outcome-based autonomy, compounding advantage |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
