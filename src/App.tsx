@@ -85,6 +85,7 @@ import KernelIntegrityGuard from "./pages/KernelIntegrityGuard";
 import CanonGovernanceDashboard from "./pages/CanonGovernanceDashboard";
 import PatternLibraryDashboard from "./pages/PatternLibraryDashboard";
 import FailureMemoryDashboard from "./pages/FailureMemoryDashboard";
+import ExternalKnowledgeDashboard from "./pages/ExternalKnowledgeDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -206,6 +207,7 @@ const App = () => (
                         <Route path="/canon-governance"         element={<P><CanonGovernanceDashboard /></P>} />
                         <Route path="/pattern-library"          element={<P><PatternLibraryDashboard /></P>} />
                         <Route path="/failure-memory"           element={<P><FailureMemoryDashboard /></P>} />
+                        <Route path="/external-knowledge"      element={<P><ExternalKnowledgeDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
