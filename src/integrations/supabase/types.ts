@@ -5355,6 +5355,398 @@ export type Database = {
           },
         ]
       }
+      autonomy_adjustment_events: {
+        Row: {
+          adjusted_by: string
+          adjustment_reason: string
+          adjustment_type: string
+          created_at: string
+          domain_id: string | null
+          evidence_refs: Json
+          id: string
+          new_level: number
+          organization_id: string
+          previous_level: number
+        }
+        Insert: {
+          adjusted_by?: string
+          adjustment_reason?: string
+          adjustment_type?: string
+          created_at?: string
+          domain_id?: string | null
+          evidence_refs?: Json
+          id?: string
+          new_level?: number
+          organization_id: string
+          previous_level?: number
+        }
+        Update: {
+          adjusted_by?: string
+          adjustment_reason?: string
+          adjustment_type?: string
+          created_at?: string
+          domain_id?: string | null
+          evidence_refs?: Json
+          id?: string
+          new_level?: number
+          organization_id?: string
+          previous_level?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomy_adjustment_events_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "autonomy_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomy_adjustment_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      autonomy_domains: {
+        Row: {
+          allowed_action_classes: Json
+          blocked_action_classes: Json
+          created_at: string
+          current_autonomy_level: number
+          description: string
+          doctrine_alignment_score: number
+          domain_name: string
+          evidence_score: number
+          id: string
+          incident_penalty_score: number
+          max_autonomy_level: number
+          organization_id: string
+          reversibility_posture: string
+          rollback_dependence_score: number
+          status: string
+          updated_at: string
+          validation_success_rate: number
+        }
+        Insert: {
+          allowed_action_classes?: Json
+          blocked_action_classes?: Json
+          created_at?: string
+          current_autonomy_level?: number
+          description?: string
+          doctrine_alignment_score?: number
+          domain_name?: string
+          evidence_score?: number
+          id?: string
+          incident_penalty_score?: number
+          max_autonomy_level?: number
+          organization_id: string
+          reversibility_posture?: string
+          rollback_dependence_score?: number
+          status?: string
+          updated_at?: string
+          validation_success_rate?: number
+        }
+        Update: {
+          allowed_action_classes?: Json
+          blocked_action_classes?: Json
+          created_at?: string
+          current_autonomy_level?: number
+          description?: string
+          doctrine_alignment_score?: number
+          domain_name?: string
+          evidence_score?: number
+          id?: string
+          incident_penalty_score?: number
+          max_autonomy_level?: number
+          organization_id?: string
+          reversibility_posture?: string
+          rollback_dependence_score?: number
+          status?: string
+          updated_at?: string
+          validation_success_rate?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomy_domains_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      autonomy_evidence_scores: {
+        Row: {
+          computation_details: Json
+          computed_at: string
+          domain_id: string | null
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          score_type: string
+          score_value: number
+        }
+        Insert: {
+          computation_details?: Json
+          computed_at?: string
+          domain_id?: string | null
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          score_type?: string
+          score_value?: number
+        }
+        Update: {
+          computation_details?: Json
+          computed_at?: string
+          domain_id?: string | null
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          score_type?: string
+          score_value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomy_evidence_scores_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "autonomy_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomy_evidence_scores_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      autonomy_guardrail_breaches: {
+        Row: {
+          action_attempted: string
+          blocked: boolean
+          breach_type: string
+          created_at: string
+          description: string
+          domain_id: string | null
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          severity: string
+        }
+        Insert: {
+          action_attempted?: string
+          blocked?: boolean
+          breach_type?: string
+          created_at?: string
+          description?: string
+          domain_id?: string | null
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          severity?: string
+        }
+        Update: {
+          action_attempted?: string
+          blocked?: boolean
+          breach_type?: string
+          created_at?: string
+          description?: string
+          domain_id?: string | null
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomy_guardrail_breaches_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "autonomy_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomy_guardrail_breaches_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      autonomy_ladders: {
+        Row: {
+          created_at: string
+          domain_id: string | null
+          granted_actions: Json
+          id: string
+          level: number
+          level_name: string
+          max_incident_rate: number
+          min_evidence_score: number
+          organization_id: string
+          requirements: Json
+          restricted_actions: Json
+        }
+        Insert: {
+          created_at?: string
+          domain_id?: string | null
+          granted_actions?: Json
+          id?: string
+          level?: number
+          level_name?: string
+          max_incident_rate?: number
+          min_evidence_score?: number
+          organization_id: string
+          requirements?: Json
+          restricted_actions?: Json
+        }
+        Update: {
+          created_at?: string
+          domain_id?: string | null
+          granted_actions?: Json
+          id?: string
+          level?: number
+          level_name?: string
+          max_incident_rate?: number
+          min_evidence_score?: number
+          organization_id?: string
+          requirements?: Json
+          restricted_actions?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomy_ladders_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "autonomy_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomy_ladders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      autonomy_regression_cases: {
+        Row: {
+          created_at: string
+          domain_id: string | null
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          regression_type: string
+          resolution_notes: string | null
+          resolution_status: string
+          resolved_at: string | null
+          severity: string
+          trigger_event: string
+        }
+        Insert: {
+          created_at?: string
+          domain_id?: string | null
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          regression_type?: string
+          resolution_notes?: string | null
+          resolution_status?: string
+          resolved_at?: string | null
+          severity?: string
+          trigger_event?: string
+        }
+        Update: {
+          created_at?: string
+          domain_id?: string | null
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          regression_type?: string
+          resolution_notes?: string | null
+          resolution_status?: string
+          resolved_at?: string | null
+          severity?: string
+          trigger_event?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomy_regression_cases_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "autonomy_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomy_regression_cases_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      autonomy_review_decisions: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          decision: string
+          domain_id: string | null
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          review_type: string
+          reviewed_by: string | null
+          reviewer_notes: string | null
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          decision?: string
+          domain_id?: string | null
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          review_type?: string
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          decision?: string
+          domain_id?: string | null
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          review_type?: string
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomy_review_decisions_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "autonomy_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "autonomy_review_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       billing_accounts: {
         Row: {
           billing_email: string | null
@@ -5507,6 +5899,53 @@ export type Database = {
           },
           {
             foreignKeyName: "boundary_violation_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bounded_autoapproval_classes: {
+        Row: {
+          action_class: string
+          created_at: string
+          enabled: boolean
+          evidence_refs: Json
+          id: string
+          max_risk_score: number
+          min_autonomy_level: number
+          organization_id: string
+          requires_rollback_posture: boolean
+          updated_at: string
+        }
+        Insert: {
+          action_class?: string
+          created_at?: string
+          enabled?: boolean
+          evidence_refs?: Json
+          id?: string
+          max_risk_score?: number
+          min_autonomy_level?: number
+          organization_id: string
+          requires_rollback_posture?: boolean
+          updated_at?: string
+        }
+        Update: {
+          action_class?: string
+          created_at?: string
+          enabled?: boolean
+          evidence_refs?: Json
+          id?: string
+          max_risk_score?: number
+          min_autonomy_level?: number
+          organization_id?: string
+          requires_rollback_posture?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bounded_autoapproval_classes_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
