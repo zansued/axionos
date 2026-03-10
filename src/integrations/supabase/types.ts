@@ -20490,6 +20490,62 @@ export type Database = {
           },
         ]
       }
+      learning_candidates: {
+        Row: {
+          candidate_scope: string
+          candidate_type: string
+          confidence_score: number
+          created_at: string
+          evidence_count: number
+          first_observed_at: string
+          id: string
+          last_observed_at: string
+          organization_id: string
+          pattern_signature: string
+          recommended_action: string
+          source_domains: Json
+          status: string
+        }
+        Insert: {
+          candidate_scope?: string
+          candidate_type?: string
+          confidence_score?: number
+          created_at?: string
+          evidence_count?: number
+          first_observed_at?: string
+          id?: string
+          last_observed_at?: string
+          organization_id: string
+          pattern_signature?: string
+          recommended_action?: string
+          source_domains?: Json
+          status?: string
+        }
+        Update: {
+          candidate_scope?: string
+          candidate_type?: string
+          confidence_score?: number
+          created_at?: string
+          evidence_count?: number
+          first_observed_at?: string
+          id?: string
+          last_observed_at?: string
+          organization_id?: string
+          pattern_signature?: string
+          recommended_action?: string
+          source_domains?: Json
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_candidates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       learning_recommendations: {
         Row: {
           confidence_score: number
