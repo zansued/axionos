@@ -61,9 +61,10 @@ serve(async (req) => {
     return errorResponse("Nenhum artefato encontrado para validar");
   }
 
-  const artifactsToValidate = artifacts.filter((a: any) => a.status !== "approved");
+  const artifactsToValidate = artifacts.filter((a: any) => a.status !== "approved" && a.status !== "pending_review");
   const total = artifacts.length;
-  const alreadyApproved = total - artifactsToValidate.length;
+  const alreadyApproved = artifacts.filter((a: any) => a.status === "approved").length;
+  const alreadyEscalated = artifacts.filter((a: any) => a.status === "pending_review").length;
 
   // All already approved → done
   if (artifactsToValidate.length === 0) {
