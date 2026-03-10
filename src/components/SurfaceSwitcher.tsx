@@ -1,16 +1,15 @@
-// SurfaceSwitcher – native AxionOS surface pivot with framer-motion animations.
-// Supports Product / Workspace / Platform surfaces with role-aware access.
+// SurfaceSwitcher – native AxionOS mode pivot with framer-motion animations.
+// Supports Builder / Owner modes with role-aware access.
 
 import * as React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
-import { ChevronDown, Rocket, Building2, Shield, Check } from "lucide-react";
+import { ChevronDown, Rocket, Shield, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { CanonicalRole, NavGroups } from "@/lib/permissions";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export type SurfaceId = "product" | "workspace" | "platform";
+export type SurfaceId = "builder" | "owner";
 
 interface Surface {
   id: SurfaceId;
@@ -24,34 +23,27 @@ interface Surface {
 
 const ALL_SURFACES: Surface[] = [
   {
-    id: "product",
-    label: "Product",
+    id: "builder",
+    label: "Builder Mode",
     description: "Build and ship your initiatives",
     icon: Rocket,
-    colorVar: "--surface-product",
+    colorVar: "--surface-product", // mantendo a cor antiga p/ nao quebrar CSS
   },
   {
-    id: "workspace",
-    label: "Workspace",
-    description: "Tenant governance & operations",
-    icon: Building2,
-    colorVar: "--surface-workspace",
-  },
-  {
-    id: "platform",
-    label: "Platform",
-    description: "Global platform administration",
+    id: "owner",
+    label: "Owner Mode",
+    description: "System governance & operations",
     icon: Shield,
-    colorVar: "--surface-platform",
+    colorVar: "--surface-platform", // mantendo a cor antiga
   },
 ];
 
 const ROLE_SURFACE_ACCESS: Record<CanonicalRole, SurfaceId[]> = {
-  end_user: ["product"],
-  operator: ["product", "workspace"],
-  tenant_owner: ["product", "workspace"],
-  platform_reviewer: ["product", "workspace", "platform"],
-  platform_admin: ["product", "workspace", "platform"],
+  end_user: ["builder"],
+  operator: ["builder"],
+  tenant_owner: ["builder", "owner"],
+  platform_reviewer: ["builder", "owner"],
+  platform_admin: ["builder", "owner"],
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -63,9 +55,8 @@ function getAllowedSurfaces(role: CanonicalRole): Surface[] {
 
 export function getSurfaceForRoute(path: string, navGroups: NavGroups): SurfaceId {
   const normalized = path.split("?")[0].split("#")[0];
-  if (navGroups.platform.some((i) => i.url === normalized)) return "platform";
-  if (navGroups.workspace.some((i) => i.url === normalized)) return "workspace";
-  return "product";
+  if (navGroups.owner.some((i) => i.url === normalized)) return "owner";
+  return "builder";
 }
 
 export function getSurfaceMetadata(id: SurfaceId): Surface {
@@ -186,6 +177,7 @@ export function SurfaceSwitcher({
   if (collapsed) {
     return (
       <button
+        type="button"
         onClick={() => setIsOpen((v) => !v)}
         className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-sidebar-accent"
         style={{ backgroundColor: `hsl(var(${selectedSurface.colorVar}) / 0.12)` }}
@@ -203,6 +195,7 @@ export function SurfaceSwitcher({
       <div className="relative" ref={dropdownRef}>
         {/* Trigger */}
         <button
+          type="button"
           onClick={() => setIsOpen((v) => !v)}
           className={cn(
             "flex w-full items-center justify-between rounded-lg border px-3 py-2.5 text-left transition-all",
@@ -248,7 +241,7 @@ export function SurfaceSwitcher({
             >
               <div className="rounded-xl border border-sidebar-border bg-sidebar p-1.5 shadow-xl">
                 <div className="mb-1 px-2 pt-1 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
-                  Switch surface
+                  Switch Mode
                 </div>
                 <div className="space-y-0.5">
                   {allowedSurfaces.map((surface) => {
@@ -256,6 +249,7 @@ export function SurfaceSwitcher({
                     const isHovered = hovered === surface.id;
                     return (
                       <motion.button
+                        type="button"
                         key={surface.id}
                         onClick={() => {
                           onSurfaceChange(surface.id);

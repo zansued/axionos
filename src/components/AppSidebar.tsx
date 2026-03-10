@@ -1,12 +1,11 @@
-// AppSidebar – surface-aware navigation with animated SurfaceSwitcher.
+// AppSidebar – mode-aware navigation with animated SurfaceSwitcher.
 
 import { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { LogOut, Search, Zap } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
-import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useRoleBasedExperience } from "@/hooks/useRoleBasedExperience";
 import {
   SurfaceSwitcher,
@@ -89,7 +88,6 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const { signOut, user } = useAuth();
-  const { setCommandOpen } = useWorkspace();
   const navigate = useNavigate();
   const location = useLocation();
   const { canonicalRole, navGroups } = useRoleBasedExperience();
@@ -109,12 +107,10 @@ export function AppSidebar() {
   // Get nav items for active surface
   const activeNavItems = useMemo(() => {
     switch (activeSurface) {
-      case "platform":
-        return navGroups.platform;
-      case "workspace":
-        return navGroups.workspace;
+      case "owner":
+        return navGroups.owner;
       default:
-        return navGroups.product;
+        return navGroups.builder;
     }
   }, [activeSurface, navGroups]);
 
@@ -126,18 +122,14 @@ export function AppSidebar() {
     setActiveSurface(surface);
     // Navigate to first route of new surface
     const targetNav =
-      surface === "platform"
-        ? navGroups.platform
-        : surface === "workspace"
-        ? navGroups.workspace
-        : navGroups.product;
-    if (targetNav.length > 0) {
+      surface === "owner" ? navGroups.owner : navGroups.builder;
+    if (targetNav?.length > 0) {
       navigate(targetNav[0].url);
     }
   };
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border relative">
       <SidebarContent className="gap-0">
         {/* ── Brand ── */}
         <SidebarGroup className="pb-0">
@@ -157,7 +149,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* ── Surface Switcher ── */}
+        {/* ── Mode Switcher ── */}
         <SidebarGroup className="px-2 pb-2 pt-0">
           <SidebarGroupContent>
             <SurfaceSwitcher
@@ -169,50 +161,10 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* ── Search ── */}
-        {!collapsed ? (
-          <SidebarGroup className="px-2 pb-2 pt-0">
-            <SidebarGroupContent>
-              <button
-                onClick={() => setCommandOpen(true)}
-                className="flex w-full items-center gap-2 rounded-md border border-sidebar-border bg-sidebar-accent/30 px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-sidebar-accent/50"
-              >
-                <Search className="h-3.5 w-3.5" />
-                <span>Search...</span>
-                <kbd className="ml-auto rounded bg-sidebar-accent px-1.5 py-0.5 font-mono text-[10px]">
-                  ⌘K
-                </kbd>
-              </button>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ) : (
-          <SidebarGroup className="px-2 pb-2 pt-0">
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SidebarMenuButton
-                        onClick={() => setCommandOpen(true)}
-                        className="justify-center"
-                      >
-                        <Search className="h-4 w-4" />
-                      </SidebarMenuButton>
-                    </TooltipTrigger>
-                    <TooltipContent side="right" className="text-xs">
-                      Search ⌘K
-                    </TooltipContent>
-                  </Tooltip>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
-
-        <Separator className="mx-2 w-auto" />
+        <Separator className="mx-2 w-auto mb-2" />
 
         {/* ── Navigation ── */}
-        <SidebarGroup className="flex-1 px-2 pt-2">
+        <SidebarGroup className="flex-1 px-2 pt-0">
           {!collapsed && (
             <div className="mb-1.5 px-2">
               <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
@@ -230,7 +182,7 @@ export function AppSidebar() {
                 transition={{ duration: 0.15 }}
               >
                 <SidebarMenu className="space-y-0.5">
-                  {activeNavItems.map((item) => (
+                  {activeNavItems?.map((item) => (
                     <NavItemRow
                       key={item.url}
                       item={item}
@@ -238,34 +190,6 @@ export function AppSidebar() {
                       surfaceColor={surfaceMeta.colorVar}
                     />
                   ))}
-
-                  {/* AutoPilot CTA – only on Product surface */}
-                  {activeSurface === "product" && (
-                    <SidebarMenuItem className="pt-2">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <SidebarMenuButton asChild>
-                            <button
-                              onClick={() => navigate("/journey")}
-                              className="flex w-full items-center gap-2.5 rounded-md border border-surface-product/30 bg-surface-product/10 px-2.5 py-2 text-surface-product transition-colors hover:bg-surface-product/20"
-                            >
-                              <Zap className="h-4 w-4 shrink-0" />
-                              {!collapsed && (
-                                <span className="text-[13px] font-medium">
-                                  AutoPilot
-                                </span>
-                              )}
-                            </button>
-                          </SidebarMenuButton>
-                        </TooltipTrigger>
-                        {collapsed && (
-                          <TooltipContent side="right" className="text-xs">
-                            AutoPilot
-                          </TooltipContent>
-                        )}
-                      </Tooltip>
-                    </SidebarMenuItem>
-                  )}
                 </SidebarMenu>
               </motion.div>
             </AnimatePresence>
@@ -274,7 +198,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       {/* ── Footer ── */}
-      <SidebarFooter className="p-2">
+      <SidebarFooter className="p-2 z-10 bg-sidebar">
         {!collapsed && user && (
           <div className="mb-1 space-y-0.5 px-2">
             <div className="flex items-center gap-2">
