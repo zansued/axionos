@@ -136,6 +136,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Tenant Doc.", url: "/tenant-doctrine",          icon: Fingerprint },
   { title: "Autonomy",  url: "/autonomy-posture",          icon: ShieldAlert },
   { title: "Advantage", url: "/compounding-advantage",     icon: Crown },
+  { title: "RT Harness", url: "/runtime-harness",          icon: Activity },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
