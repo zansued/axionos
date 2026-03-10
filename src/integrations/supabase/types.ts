@@ -7215,6 +7215,63 @@ export type Database = {
           },
         ]
       }
+      canon_learning_records: {
+        Row: {
+          activated_at: string | null
+          approval_status: string
+          candidate_id: string | null
+          confidence_score: number
+          created_at: string
+          deprecated_at: string | null
+          id: string
+          organization_id: string
+          promotion_stage: string
+          review_notes: string | null
+          review_required: boolean
+        }
+        Insert: {
+          activated_at?: string | null
+          approval_status?: string
+          candidate_id?: string | null
+          confidence_score?: number
+          created_at?: string
+          deprecated_at?: string | null
+          id?: string
+          organization_id: string
+          promotion_stage?: string
+          review_notes?: string | null
+          review_required?: boolean
+        }
+        Update: {
+          activated_at?: string | null
+          approval_status?: string
+          candidate_id?: string | null
+          confidence_score?: number
+          created_at?: string
+          deprecated_at?: string | null
+          id?: string
+          organization_id?: string
+          promotion_stage?: string
+          review_notes?: string | null
+          review_required?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_learning_records_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "learning_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_learning_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_pattern_applications: {
         Row: {
           application_context: Json
