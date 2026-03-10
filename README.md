@@ -262,9 +262,10 @@ flowchart TB
 | Frontend | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui |
 | State | TanStack React Query + React Context |
 | Backend | Supabase (PostgreSQL, Auth, Edge Functions, RLS) |
-| AI Engine | Lovable AI Gateway (Gemini 2.5 Flash/Pro) + Efficiency Layer |
+| AI Engine | Configurable: Lovable AI Gateway (Gemini 2.5 Flash/Pro) or OpenAI (gpt-4o-mini) — set via environment variables |
 | Git | GitHub API v3 (Tree API for atomic commits) |
 | Deploy | Vercel/Netlify auto-generated configs |
+| Testing | Vitest (frontend logic) — Edge Function integration tests planned |
 
 ---
 
