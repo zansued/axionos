@@ -234,17 +234,11 @@ function RayBackground() {
 // ── Main Component ────────────────────────────────────────────────────────
 interface BoltChatProps {
   onSubmit?: (message: string, modelId: string, assets: File[]) => void
-  isGenerating?: boolean
-  progress?: number
 }
 
-export function BoltStyleChat({ onSubmit, isGenerating, progress = 0 }: BoltChatProps) {
+export function BoltStyleChat({ onSubmit }: BoltChatProps) {
   const handleSend = (message: string) => {
     onSubmit?.(message, "auto", [])
-  }
-
-  if (isGenerating) {
-    return <GenerationFeedback progress={progress} />
   }
 
   return (
