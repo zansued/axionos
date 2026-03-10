@@ -178,6 +178,7 @@ AxionOS is an **Autonomous Delivery Sovereignty** platform (Level 10):
 | Reflexive Governance (Block X) | ✅ |
 | Canonical Knowledge (Block Y) | ✅ |
 | Runtime Sovereignty (Block Z) | ✅ |
+| Runtime Proof & Adaptive Governance (Block AA) | ✅ |
 
 ---
 
