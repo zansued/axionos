@@ -5514,6 +5514,105 @@ export type Database = {
           },
         ]
       }
+      canon_categories: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          name: string
+          organization_id: string
+          parent_category_id: string | null
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          name: string
+          organization_id: string
+          parent_category_id?: string | null
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          parent_category_id?: string | null
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_categories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_categories_parent_category_id_fkey"
+            columns: ["parent_category_id"]
+            isOneToOne: false
+            referencedRelation: "canon_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_confidence_signals: {
+        Row: {
+          created_at: string
+          description: string
+          entry_id: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          signal_type: string
+          signal_value: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          entry_id: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          signal_type?: string
+          signal_value?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          entry_id?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          signal_type?: string
+          signal_value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_confidence_signals_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_confidence_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_conformance_signals: {
         Row: {
           conformance_score: number
@@ -5557,6 +5656,61 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_deprecations: {
+        Row: {
+          created_at: string
+          deprecated_by: string | null
+          entry_id: string
+          id: string
+          impact_assessment: string
+          organization_id: string
+          reason: string
+          replacement_entry_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          deprecated_by?: string | null
+          entry_id: string
+          id?: string
+          impact_assessment?: string
+          organization_id: string
+          reason?: string
+          replacement_entry_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          deprecated_by?: string | null
+          entry_id?: string
+          id?: string
+          impact_assessment?: string
+          organization_id?: string
+          reason?: string
+          replacement_entry_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_deprecations_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_deprecations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_deprecations_replacement_entry_id_fkey"
+            columns: ["replacement_entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
             referencedColumns: ["id"]
           },
         ]
@@ -5614,6 +5768,283 @@ export type Database = {
           },
           {
             foreignKeyName: "canon_drift_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_entries: {
+        Row: {
+          approval_status: Database["public"]["Enums"]["canon_approval_status"]
+          approved_by: string | null
+          body: string
+          canon_type: Database["public"]["Enums"]["canon_entry_type"]
+          category_id: string | null
+          confidence_score: number
+          created_at: string
+          created_by: string | null
+          current_version: number
+          deprecation_reason: string | null
+          id: string
+          implementation_guidance: string
+          layer_scope: string
+          lifecycle_status: Database["public"]["Enums"]["canon_lifecycle_status"]
+          metadata: Json
+          organization_id: string
+          problem_scope: string
+          reviewed_by: string | null
+          slug: string
+          source_reference: string
+          source_type: string
+          stack_scope: string
+          stewardship_owner: string | null
+          summary: string
+          superseded_by: string | null
+          tags: Json
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approval_status?: Database["public"]["Enums"]["canon_approval_status"]
+          approved_by?: string | null
+          body?: string
+          canon_type?: Database["public"]["Enums"]["canon_entry_type"]
+          category_id?: string | null
+          confidence_score?: number
+          created_at?: string
+          created_by?: string | null
+          current_version?: number
+          deprecation_reason?: string | null
+          id?: string
+          implementation_guidance?: string
+          layer_scope?: string
+          lifecycle_status?: Database["public"]["Enums"]["canon_lifecycle_status"]
+          metadata?: Json
+          organization_id: string
+          problem_scope?: string
+          reviewed_by?: string | null
+          slug: string
+          source_reference?: string
+          source_type?: string
+          stack_scope?: string
+          stewardship_owner?: string | null
+          summary?: string
+          superseded_by?: string | null
+          tags?: Json
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approval_status?: Database["public"]["Enums"]["canon_approval_status"]
+          approved_by?: string | null
+          body?: string
+          canon_type?: Database["public"]["Enums"]["canon_entry_type"]
+          category_id?: string | null
+          confidence_score?: number
+          created_at?: string
+          created_by?: string | null
+          current_version?: number
+          deprecation_reason?: string | null
+          id?: string
+          implementation_guidance?: string
+          layer_scope?: string
+          lifecycle_status?: Database["public"]["Enums"]["canon_lifecycle_status"]
+          metadata?: Json
+          organization_id?: string
+          problem_scope?: string
+          reviewed_by?: string | null
+          slug?: string
+          source_reference?: string
+          source_type?: string
+          stack_scope?: string
+          stewardship_owner?: string | null
+          summary?: string
+          superseded_by?: string | null
+          tags?: Json
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_entries_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "canon_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_entries_superseded_by_fkey"
+            columns: ["superseded_by"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_entry_reviews: {
+        Row: {
+          confidence_assessment: number
+          created_at: string
+          entry_id: string
+          id: string
+          organization_id: string
+          review_notes: string
+          review_type: string
+          reviewer_id: string | null
+          strengths: Json
+          verdict: string
+          weaknesses: Json
+        }
+        Insert: {
+          confidence_assessment?: number
+          created_at?: string
+          entry_id: string
+          id?: string
+          organization_id: string
+          review_notes?: string
+          review_type?: string
+          reviewer_id?: string | null
+          strengths?: Json
+          verdict?: string
+          weaknesses?: Json
+        }
+        Update: {
+          confidence_assessment?: number
+          created_at?: string
+          entry_id?: string
+          id?: string
+          organization_id?: string
+          review_notes?: string
+          review_type?: string
+          reviewer_id?: string | null
+          strengths?: Json
+          verdict?: string
+          weaknesses?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_entry_reviews_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_entry_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_entry_status_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          entry_id: string
+          from_status: string
+          id: string
+          organization_id: string
+          reason: string
+          to_status: string
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          entry_id: string
+          from_status: string
+          id?: string
+          organization_id: string
+          reason?: string
+          to_status: string
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          entry_id?: string
+          from_status?: string
+          id?: string
+          organization_id?: string
+          reason?: string
+          to_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_entry_status_history_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_entry_status_history_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_entry_versions: {
+        Row: {
+          body: string
+          change_description: string
+          changed_by: string | null
+          created_at: string
+          entry_id: string
+          id: string
+          implementation_guidance: string
+          organization_id: string
+          summary: string
+          title: string
+          version_number: number
+        }
+        Insert: {
+          body?: string
+          change_description?: string
+          changed_by?: string | null
+          created_at?: string
+          entry_id: string
+          id?: string
+          implementation_guidance?: string
+          organization_id: string
+          summary?: string
+          title: string
+          version_number?: number
+        }
+        Update: {
+          body?: string
+          change_description?: string
+          changed_by?: string | null
+          created_at?: string
+          entry_id?: string
+          id?: string
+          implementation_guidance?: string
+          organization_id?: string
+          summary?: string
+          title?: string
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_entry_versions_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_entry_versions_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -5887,6 +6318,112 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_stewards: {
+        Row: {
+          assigned_entries_count: number
+          category_id: string | null
+          created_at: string
+          id: string
+          organization_id: string
+          scope: string
+          status: string
+          steward_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_entries_count?: number
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          scope?: string
+          status?: string
+          steward_name?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_entries_count?: number
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          scope?: string
+          status?: string
+          steward_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_stewards_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "canon_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_stewards_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_supersession_links: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          predecessor_entry_id: string
+          reason: string
+          successor_entry_id: string
+          supersession_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          predecessor_entry_id: string
+          reason?: string
+          successor_entry_id: string
+          supersession_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          predecessor_entry_id?: string
+          reason?: string
+          successor_entry_id?: string
+          supersession_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_supersession_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_supersession_links_predecessor_entry_id_fkey"
+            columns: ["predecessor_entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_supersession_links_successor_entry_id_fkey"
+            columns: ["successor_entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
             referencedColumns: ["id"]
           },
         ]
@@ -31169,6 +31706,29 @@ export type Database = {
         | "requires_approval"
       boundary_type: "hard" | "controlled" | "advisory" | "aggregate_only"
       boundedness_posture: "strictly_bounded" | "loosely_bounded" | "unbounded"
+      canon_approval_status:
+        | "pending"
+        | "under_review"
+        | "approved"
+        | "rejected"
+        | "needs_revision"
+      canon_entry_type:
+        | "pattern"
+        | "template"
+        | "anti_pattern"
+        | "architectural_guideline"
+        | "implementation_recipe"
+        | "failure_memory"
+        | "external_knowledge"
+      canon_lifecycle_status:
+        | "draft"
+        | "proposed"
+        | "approved"
+        | "experimental"
+        | "contested"
+        | "deprecated"
+        | "archived"
+        | "superseded"
       confidence_posture: "very_low" | "low" | "moderate" | "high" | "very_high"
       conflict_status:
         | "detected"
@@ -31642,6 +32202,32 @@ export const Constants = {
       ],
       boundary_type: ["hard", "controlled", "advisory", "aggregate_only"],
       boundedness_posture: ["strictly_bounded", "loosely_bounded", "unbounded"],
+      canon_approval_status: [
+        "pending",
+        "under_review",
+        "approved",
+        "rejected",
+        "needs_revision",
+      ],
+      canon_entry_type: [
+        "pattern",
+        "template",
+        "anti_pattern",
+        "architectural_guideline",
+        "implementation_recipe",
+        "failure_memory",
+        "external_knowledge",
+      ],
+      canon_lifecycle_status: [
+        "draft",
+        "proposed",
+        "approved",
+        "experimental",
+        "contested",
+        "deprecated",
+        "archived",
+        "superseded",
+      ],
       confidence_posture: ["very_low", "low", "moderate", "high", "very_high"],
       conflict_status: [
         "detected",

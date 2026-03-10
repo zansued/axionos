@@ -173,3 +173,6 @@ verify_jwt = false
 
 [functions.kernel-integrity-guard]
 verify_jwt = false
+
+[functions.canon-governance]
+verify_jwt = false
