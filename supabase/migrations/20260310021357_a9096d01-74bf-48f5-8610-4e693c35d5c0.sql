@@ -1,0 +1,1 @@
+UPDATE initiative_jobs SET status = 'failed', error = 'Stale running job - background pattern not supported', completed_at = NOW() WHERE id = 'c7d0dbb2-9584-4770-a85f-315006188202' AND status = 'running';
