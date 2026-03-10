@@ -209,17 +209,6 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
     <div className="relative flex flex-col items-center justify-center h-full w-full overflow-hidden bg-[#08080a]">
       <RayBackground />
 
-      {/* Top nav — minimal anchor */}
-      <motion.nav
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.4 }}
-        className="absolute top-0 left-0 right-0 z-20 flex items-center justify-center gap-6 py-4 text-[12px] font-medium text-[#3a3a42] tracking-wide"
-      >
-        <span className="hover:text-[#6a6a70] cursor-pointer transition-colors">Docs</span>
-        <span className="hover:text-[#6a6a70] cursor-pointer transition-colors">Templates</span>
-        <span className="hover:text-[#6a6a70] cursor-pointer transition-colors">Community</span>
-      </motion.nav>
 
       <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-4xl px-4">
         {/* Logo */}
