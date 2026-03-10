@@ -1,6 +1,8 @@
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useOutcomeAutonomy } from "@/hooks/useOutcomeAutonomy";
+import { useColdStart } from "@/hooks/useColdStart";
+import { ColdStartBanner } from "@/components/observability/ColdStartBanner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -29,6 +31,7 @@ const levelNames: Record<number, string> = {
 
 export default function AutonomyPostureDashboard() {
   const { domains, adjustments, breaches, regressions, transitionMetrics, regressionProfile, loadingDomains, setRegressionProfile } = useOutcomeAutonomy();
+  const { data: coldStart } = useColdStart();
 
   return (
     <SidebarProvider>
@@ -39,6 +42,10 @@ export default function AutonomyPostureDashboard() {
             <h1 className="text-2xl font-bold text-foreground">Autonomy Posture</h1>
             <p className="text-muted-foreground text-sm">Evidence-based autonomy levels with bounded reversibility.</p>
           </div>
+
+          {coldStart?.is_cold_start && (
+            <ColdStartBanner label={coldStart.label} summary={coldStart.summary} signals={coldStart.signals} />
+          )}
 
           {/* Summary cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

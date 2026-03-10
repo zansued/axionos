@@ -1,5 +1,7 @@
 import { useOrg } from "@/contexts/OrgContext";
 import { useExecutionHarness } from "@/hooks/useExecutionHarness";
+import { useColdStart } from "@/hooks/useColdStart";
+import { ColdStartBanner } from "@/components/observability/ColdStartBanner";
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -72,6 +74,7 @@ function RunRow({ run }: { run: any }) {
 export default function RuntimeValidationHarness() {
   const { currentOrg } = useOrg();
   const { data: metrics, isLoading } = useExecutionHarness(currentOrg?.id || null);
+  const { data: coldStart } = useColdStart();
 
   const pct = (v: number) => `${(v * 100).toFixed(1)}%`;
 
@@ -89,6 +92,10 @@ export default function RuntimeValidationHarness() {
               Sprint 123 — Controlled execution telemetry and aggregated metrics
             </p>
           </div>
+
+          {coldStart?.is_cold_start && (
+            <ColdStartBanner label={coldStart.label} summary={coldStart.summary} signals={coldStart.signals} />
+          )}
 
           {isLoading ? (
             <div className="flex items-center justify-center py-20">

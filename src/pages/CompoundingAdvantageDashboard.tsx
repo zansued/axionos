@@ -1,6 +1,8 @@
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useCompoundingAdvantage } from "@/hooks/useCompoundingAdvantage";
+import { useColdStart } from "@/hooks/useColdStart";
+import { ColdStartBanner } from "@/components/observability/ColdStartBanner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,6 +18,7 @@ const moatColors: Record<string, string> = {
 
 export default function CompoundingAdvantageDashboard() {
   const { moats, scores, packs, weakZones, loadingMoats } = useCompoundingAdvantage();
+  const { data: coldStart } = useColdStart();
 
   return (
     <SidebarProvider>
@@ -26,6 +29,10 @@ export default function CompoundingAdvantageDashboard() {
             <h1 className="text-2xl font-bold text-foreground">Compounding Advantage</h1>
             <p className="text-muted-foreground text-sm">Identify and operationalize durable capability moats from accumulated learning.</p>
           </div>
+
+          {coldStart?.is_cold_start && (
+            <ColdStartBanner label={coldStart.label} summary={coldStart.summary} signals={coldStart.signals} />
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
