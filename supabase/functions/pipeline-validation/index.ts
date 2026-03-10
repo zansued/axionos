@@ -98,21 +98,25 @@ serve(async (req) => {
 
       const finalArtifacts = artifactsAfter || artifacts;
       const approvedCount = finalArtifacts.filter((a: any) => a.status === "approved").length;
+      const escalatedCount = finalArtifacts.filter((a: any) => a.status === "pending_review").length;
+      const remainingCount = finalArtifacts.length - approvedCount - escalatedCount;
       const overallPass = approvedCount === finalArtifacts.length;
+      const allProcessed = remainingCount === 0;
 
-      await updateInitiative(ctx, { stage_status: overallPass ? "ready_to_publish" : "validating" });
+      await updateInitiative(ctx, { stage_status: allProcessed ? "ready_to_publish" : "validating" });
 
       if (jobId) await completeJob(ctx, jobId, {
         artifacts_validated: finalArtifacts.length,
         processed_artifact: artifact.id,
         passed: approvedCount,
-        remaining_to_validate: finalArtifacts.length - approvedCount,
-        batch_incomplete: !overallPass,
+        escalated: escalatedCount,
+        remaining_to_validate: remainingCount,
+        batch_incomplete: !allProcessed,
         overall_pass: overallPass,
       }, { model: "routed", costUsd: 0, durationMs: 0 });
 
       await pipelineLog(ctx, "pipeline_validation_batch_done",
-        `Validated 1 artifact (${artifact.summary?.slice(0, 40)}). ${approvedCount}/${finalArtifacts.length} approved. ${overallPass ? "ALL DONE ✅" : "More pending..."}`,
+        `Validated 1 artifact (${artifact.summary?.slice(0, 40)}). ${approvedCount}/${finalArtifacts.length} approved, ${escalatedCount} escalated. ${allProcessed ? "ALL PROCESSED ✅" : "More pending..."}`,
       );
     } catch (e: any) {
       console.error("pipeline-validation background error:", e);
