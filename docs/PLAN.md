@@ -1003,5 +1003,8 @@ This phase therefore transforms knowledge from passive documentation into applie
 | Adaptive Institutional Ecosystem | 4 | 99–102 |
 | Sovereign Institutional Intelligence | 4 | 103–106 |
 | Strategic Autonomy & Civilizational Coordination | 4 | 107–110 |
+| Reflexive Governance & Evolution Control | 4 | 111–114 |
+| Implementation Canon & Knowledge Governance | 4 | 115–118 |
+| Runtime Sovereignty & Outcome Compounding | 4 | 119–122 |
 | Support | 11 | Various |
-| **Total** | **~129** | |
+| **Total** | **~145** | |

@@ -119,22 +119,6 @@ AxionOS is an **Autonomous Delivery Sovereignty** platform (Level 10):
 - Controlled experimentation with governance safeguards
 - This level is a vision, not a current priority
 
-### Future Horizons
-
-### Level 9 — Canonical Knowledge & Implementation Intelligence (Future Horizon — Block Y)
-
-- Governed implementation knowledge operationally connected to agents
-- Curated pattern libraries retrievable at planning/execution/repair/validation time
-- Failure memory and repair intelligence as institutional knowledge
-- External knowledge intake with validation gates
-- Knowledge must be consumed by runtime flows to count as system capability
-
-### Level 10 — Adaptive Runtime Intelligence (Further Future Horizon)
-
-- Autonomous execution parameter reconfiguration
-- Runtime self-healing beyond manual intervention
-- Controlled experimentation with governance safeguards
-- This level is a vision, not a current priority
 
 ---
 
