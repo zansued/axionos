@@ -221,6 +221,7 @@ const App = () => (
                         <Route path="/compounding-advantage"   element={<P><CompoundingAdvantageDashboard /></P>} />
                         <Route path="/runtime-harness"         element={<P><RuntimeValidationHarness /></P>} />
                         <Route path="/learning-signals"        element={<P><LearningSignalsDashboard /></P>} />
+                        <Route path="/canon-evolution"         element={<P><CanonEvolutionDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
