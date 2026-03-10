@@ -1768,6 +1768,357 @@ export type Database = {
         }
         Relationships: []
       }
+      architectural_mutation_cases: {
+        Row: {
+          affected_layers: string[]
+          approval_status: Database["public"]["Enums"]["mutation_approval_status"]
+          approved_by: string | null
+          blast_radius_score: number
+          coupling_expansion_score: number
+          created_at: string
+          dependency_footprint: Json
+          description: string
+          drift_risk_score: number
+          evolution_proposal_id: string | null
+          execution_block_reason: string | null
+          forbidden_families_detected: string[]
+          forbidden_family_flag: boolean
+          id: string
+          legitimacy_score: number
+          mutation_type: Database["public"]["Enums"]["mutation_type"]
+          operator_decision: string | null
+          organization_id: string
+          proposed_by: string
+          reviewed_by: string | null
+          rollback_viability_score: number
+          title: string
+          topology_change_flag: boolean
+          updated_at: string
+        }
+        Insert: {
+          affected_layers?: string[]
+          approval_status?: Database["public"]["Enums"]["mutation_approval_status"]
+          approved_by?: string | null
+          blast_radius_score?: number
+          coupling_expansion_score?: number
+          created_at?: string
+          dependency_footprint?: Json
+          description?: string
+          drift_risk_score?: number
+          evolution_proposal_id?: string | null
+          execution_block_reason?: string | null
+          forbidden_families_detected?: string[]
+          forbidden_family_flag?: boolean
+          id?: string
+          legitimacy_score?: number
+          mutation_type?: Database["public"]["Enums"]["mutation_type"]
+          operator_decision?: string | null
+          organization_id: string
+          proposed_by?: string
+          reviewed_by?: string | null
+          rollback_viability_score?: number
+          title?: string
+          topology_change_flag?: boolean
+          updated_at?: string
+        }
+        Update: {
+          affected_layers?: string[]
+          approval_status?: Database["public"]["Enums"]["mutation_approval_status"]
+          approved_by?: string | null
+          blast_radius_score?: number
+          coupling_expansion_score?: number
+          created_at?: string
+          dependency_footprint?: Json
+          description?: string
+          drift_risk_score?: number
+          evolution_proposal_id?: string | null
+          execution_block_reason?: string | null
+          forbidden_families_detected?: string[]
+          forbidden_family_flag?: boolean
+          id?: string
+          legitimacy_score?: number
+          mutation_type?: Database["public"]["Enums"]["mutation_type"]
+          operator_decision?: string | null
+          organization_id?: string
+          proposed_by?: string
+          reviewed_by?: string | null
+          rollback_viability_score?: number
+          title?: string
+          topology_change_flag?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architectural_mutation_cases_evolution_proposal_id_fkey"
+            columns: ["evolution_proposal_id"]
+            isOneToOne: false
+            referencedRelation: "evolution_proposals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architectural_mutation_cases_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architectural_mutation_decisions: {
+        Row: {
+          conditions: Json | null
+          created_at: string
+          decided_by: string | null
+          decision: string
+          decision_rationale: string | null
+          id: string
+          mutation_case_id: string
+          organization_id: string
+          override_reason: string | null
+          risk_accepted: boolean
+        }
+        Insert: {
+          conditions?: Json | null
+          created_at?: string
+          decided_by?: string | null
+          decision?: string
+          decision_rationale?: string | null
+          id?: string
+          mutation_case_id: string
+          organization_id: string
+          override_reason?: string | null
+          risk_accepted?: boolean
+        }
+        Update: {
+          conditions?: Json | null
+          created_at?: string
+          decided_by?: string | null
+          decision?: string
+          decision_rationale?: string | null
+          id?: string
+          mutation_case_id?: string
+          organization_id?: string
+          override_reason?: string | null
+          risk_accepted?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architectural_mutation_decisions_mutation_case_id_fkey"
+            columns: ["mutation_case_id"]
+            isOneToOne: false
+            referencedRelation: "architectural_mutation_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architectural_mutation_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architectural_mutation_dependency_maps: {
+        Row: {
+          coupling_strength: number
+          created_at: string
+          dependency_type: string
+          id: string
+          is_new_dependency: boolean
+          mutation_case_id: string
+          organization_id: string
+          source_component: string
+          target_component: string
+        }
+        Insert: {
+          coupling_strength?: number
+          created_at?: string
+          dependency_type?: string
+          id?: string
+          is_new_dependency?: boolean
+          mutation_case_id: string
+          organization_id: string
+          source_component?: string
+          target_component?: string
+        }
+        Update: {
+          coupling_strength?: number
+          created_at?: string
+          dependency_type?: string
+          id?: string
+          is_new_dependency?: boolean
+          mutation_case_id?: string
+          organization_id?: string
+          source_component?: string
+          target_component?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architectural_mutation_dependency_maps_mutation_case_id_fkey"
+            columns: ["mutation_case_id"]
+            isOneToOne: false
+            referencedRelation: "architectural_mutation_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architectural_mutation_dependency_maps_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architectural_mutation_lineage: {
+        Row: {
+          actor: string
+          created_at: string
+          event_description: string
+          event_type: string
+          id: string
+          mutation_case_id: string
+          organization_id: string
+          snapshot: Json
+        }
+        Insert: {
+          actor?: string
+          created_at?: string
+          event_description?: string
+          event_type?: string
+          id?: string
+          mutation_case_id: string
+          organization_id: string
+          snapshot?: Json
+        }
+        Update: {
+          actor?: string
+          created_at?: string
+          event_description?: string
+          event_type?: string
+          id?: string
+          mutation_case_id?: string
+          organization_id?: string
+          snapshot?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architectural_mutation_lineage_mutation_case_id_fkey"
+            columns: ["mutation_case_id"]
+            isOneToOne: false
+            referencedRelation: "architectural_mutation_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architectural_mutation_lineage_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architectural_mutation_reversibility_checks: {
+        Row: {
+          barrier_reason: string | null
+          check_description: string
+          check_type: string
+          created_at: string
+          id: string
+          mutation_case_id: string
+          organization_id: string
+          passed: boolean
+          rollback_cost_estimate: number
+        }
+        Insert: {
+          barrier_reason?: string | null
+          check_description?: string
+          check_type?: string
+          created_at?: string
+          id?: string
+          mutation_case_id: string
+          organization_id: string
+          passed?: boolean
+          rollback_cost_estimate?: number
+        }
+        Update: {
+          barrier_reason?: string | null
+          check_description?: string
+          check_type?: string
+          created_at?: string
+          id?: string
+          mutation_case_id?: string
+          organization_id?: string
+          passed?: boolean
+          rollback_cost_estimate?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architectural_mutation_reversibility_chec_mutation_case_id_fkey"
+            columns: ["mutation_case_id"]
+            isOneToOne: false
+            referencedRelation: "architectural_mutation_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architectural_mutation_reversibility_check_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      architectural_mutation_risk_factors: {
+        Row: {
+          created_at: string
+          id: string
+          mitigated: boolean
+          mitigation_strategy: string | null
+          mutation_case_id: string
+          organization_id: string
+          risk_category: string
+          risk_description: string
+          severity: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mitigated?: boolean
+          mitigation_strategy?: string | null
+          mutation_case_id: string
+          organization_id: string
+          risk_category?: string
+          risk_description?: string
+          severity?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mitigated?: boolean
+          mitigation_strategy?: string | null
+          mutation_case_id?: string
+          organization_id?: string
+          risk_category?: string
+          risk_description?: string
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architectural_mutation_risk_factors_mutation_case_id_fkey"
+            columns: ["mutation_case_id"]
+            isOneToOne: false
+            referencedRelation: "architectural_mutation_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "architectural_mutation_risk_factors_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architecture_change_agenda_reviews: {
         Row: {
           agenda_id: string
@@ -30279,6 +30630,20 @@ export type Database = {
         | "validating"
         | "publishing"
         | "completed"
+      mutation_approval_status:
+        | "pending_analysis"
+        | "analyzed"
+        | "under_review"
+        | "approved"
+        | "rejected"
+        | "blocked"
+        | "archived"
+      mutation_type:
+        | "parameter_level"
+        | "workflow_level"
+        | "component_level"
+        | "boundary_level"
+        | "architecture_level"
       operation_status:
         | "pending"
         | "evaluating"
@@ -30722,6 +31087,22 @@ export const Constants = {
         "validating",
         "publishing",
         "completed",
+      ],
+      mutation_approval_status: [
+        "pending_analysis",
+        "analyzed",
+        "under_review",
+        "approved",
+        "rejected",
+        "blocked",
+        "archived",
+      ],
+      mutation_type: [
+        "parameter_level",
+        "workflow_level",
+        "component_level",
+        "boundary_level",
+        "architecture_level",
       ],
       operation_status: [
         "pending",

@@ -79,6 +79,7 @@ import TradeoffArbitration from "./pages/TradeoffArbitration";
 import MissionIntegrity from "./pages/MissionIntegrity";
 import ContinuitySimulation from "./pages/ContinuitySimulation";
 import EvolutionProposalGovernance from "./pages/EvolutionProposalGovernance";
+import ArchitecturalMutationControl from "./pages/ArchitecturalMutationControl";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -194,6 +195,7 @@ const App = () => (
                         <Route path="/architecture-promotion"    element={<P><ArchitecturePromotion /></P>} />
                         <Route path="/ai-routing-policy"         element={<P><AIRoutingPolicy /></P>} />
                         <Route path="/evolution-governance"      element={<P><EvolutionProposalGovernance /></P>} />
+                        <Route path="/mutation-control"          element={<P><ArchitecturalMutationControl /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>

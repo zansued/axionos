@@ -124,6 +124,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Promotion",     url: "/architecture-promotion",     icon: ClipboardCheck },
   { title: "AI Routing",    url: "/ai-routing-policy",          icon: Route },
   { title: "Evo. Gov.",    url: "/evolution-governance",       icon: Shield },
+  { title: "Mutation Ctrl",url: "/mutation-control",           icon: Shield },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */

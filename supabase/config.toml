@@ -164,3 +164,6 @@ verify_jwt = false
 
 [functions.evolution-proposal-governance]
 verify_jwt = false
+
+[functions.architectural-mutation-control]
+verify_jwt = false
