@@ -11,7 +11,7 @@
 
 ## What is AxionOS?
 
-AxionOS is an **autonomous software engineering platform** that transforms ideas into governed, validated repositories and live deployments.
+AxionOS is a **governed Operating System for Autonomous Product Creation** that transforms ideas into governed, validated repositories and live deployments — while improving its own ability to do so over time through evidence, learning, and adaptive coordination.
 
 You describe what you want to build. AxionOS executes the full engineering pipeline:
 
