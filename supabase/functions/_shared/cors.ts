@@ -5,6 +5,7 @@
 const FALLBACK_ORIGINS = [
   "https://synkraios.lovable.app",
   "https://id-preview--ccef78df-1438-43ec-94d2-4ad01c14fb3a.lovable.app",
+  "https://ccef78df-1438-43ec-94d2-4ad01c14fb3a.lovableproject.com",
   "https://axionos.com",
   "https://axionos.vercel.app",
 ];
