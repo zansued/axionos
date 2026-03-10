@@ -178,16 +178,16 @@ function RayBackground() {
         }}
       />
 
-      {/* Arc rings only — no opaque fill */}
+      {/* Planet horizon — solid fill + glowing rim */}
       <div 
         className="absolute top-[175px] left-1/2 w-[1600px] h-[1600px] sm:top-1/2 sm:w-[3043px] sm:h-[2865px]"
         style={{ transform: 'translate(-50%) rotate(180deg)' }}
       >
-        <div className="absolute w-full h-full rounded-full -mt-[13px]" style={{ border: '2px solid rgba(255,255,255,0.35)', transform: 'rotate(180deg)', zIndex: 5 }} />
-        <div className="absolute w-full h-full rounded-full -mt-[11px]" style={{ border: '1px solid rgba(183,215,246,0.2)', transform: 'rotate(180deg)', zIndex: 4 }} />
-        <div className="absolute w-full h-full rounded-full -mt-[8px]" style={{ border: '1px solid rgba(143,193,242,0.15)', transform: 'rotate(180deg)', zIndex: 3 }} />
-        <div className="absolute w-full h-full rounded-full -mt-[4px]" style={{ border: '1px solid rgba(100,172,246,0.12)', transform: 'rotate(180deg)', zIndex: 2 }} />
-        <div className="absolute w-full h-full rounded-full" style={{ border: '1px solid rgba(17,114,226,0.25)', boxShadow: '0 -8px 24px rgba(17, 114, 226, 0.15)', transform: 'rotate(180deg)', zIndex: 1 }} />
+        {/* Solid planet body */}
+        <div className="absolute w-full h-full rounded-full" style={{ background: 'radial-gradient(ellipse at 50% 97%, #0c0c10 0%, #08080a 40%, #06060a 100%)', transform: 'rotate(180deg)', zIndex: 0 }} />
+        {/* Atmospheric glow at the rim */}
+        <div className="absolute w-full h-full rounded-full -mt-[2px]" style={{ background: 'transparent', border: '2px solid rgba(255,255,255,0.3)', boxShadow: '0 0 60px 8px rgba(20,136,252,0.12), 0 0 20px 2px rgba(100,180,255,0.08)', transform: 'rotate(180deg)', zIndex: 5 }} />
+        <div className="absolute w-full h-full rounded-full mt-[2px]" style={{ background: 'transparent', border: '1px solid rgba(183,215,246,0.12)', boxShadow: '0 0 40px 4px rgba(20,136,252,0.06)', transform: 'rotate(180deg)', zIndex: 4 }} />
       </div>
     </div>
   )
