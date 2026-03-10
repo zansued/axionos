@@ -4,9 +4,9 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-10
-> **Canon Status:** 127 sprints complete — all blocks (Foundation through AA) + Sprint 127 (Block AB) implemented
-> **Latest Sprint:** 127 (Learning Extraction Engine) — ✅ Complete
-> **Completed Blocks**: Foundation through AA (Sprints 1–126), Block AB in progress (Sprint 127 complete)
+> **Canon Status:** 128 sprints complete — all blocks (Foundation through AA) + Sprints 127–128 (Block AB) implemented
+> **Latest Sprint:** 128 (Canon Promotion Pipeline) — ✅ Complete
+> **Completed Blocks**: Foundation through AA (Sprints 1–126), Block AB in progress (Sprints 127–128 complete)
 
 ## Document Authority
 
@@ -29,13 +29,13 @@
 
 ## Canon Status
 
-127 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Block AA (Sprint 126) — is implemented and validated. Sprint 127 (Learning Extraction Engine) from Block AB is now complete.
+128 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Block AA (Sprint 126) — is implemented and validated. Sprints 127–128 (Learning Extraction Engine + Canon Promotion Pipeline) from Block AB are now complete.
 
 All blocks from Foundation through AA are complete. Block AB (Learning Canonization) is in progress.
 
 ### Current Strategic Position
 
-AxionOS has completed 127 sprints spanning blocks Foundation through AA, plus Sprint 127 from Block AB (Learning Canonization). The platform has achieved **Level 10 — Autonomous Delivery Sovereignty**, with 100+ architectural layers active. Block AB begins the transition from runtime evidence to canonizable learning.
+AxionOS has completed 128 sprints spanning blocks Foundation through AA, plus Sprints 127–128 from Block AB (Learning Canonization). The platform has achieved **Level 10 — Autonomous Delivery Sovereignty**, with 100+ architectural layers active. Block AB converts runtime evidence into governed canonical doctrine.
 
 - No autonomous architecture mutation — all structural changes require human approval.
 - Governance before autonomy remains the governing principle.
@@ -1050,7 +1050,7 @@ The following blocks are committed for implementation, pending sprint-by-sprint 
 | Sprint | Capability | Architectural Layer | Status |
 |--------|-----------|-------------------|--------|
 | 127 | Learning Extraction Engine | Learning Extraction Layer | ✅ Complete |
-| 128 | Canon Promotion Pipeline | Canon Promotion Layer | 🔜 Committed |
+| 128 | Canon Promotion Pipeline | Canon Promotion Layer | ✅ Complete |
 | 129 | Cross-Tenant Pattern Distillation | Cross-Tenant Distillation Layer | 🔜 Committed |
 | 130 | Canon Reuse Injection | Canon Reuse Injection Layer | 🔜 Committed |
 

@@ -138,6 +138,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Advantage", url: "/compounding-advantage",     icon: Crown },
   { title: "RT Harness", url: "/runtime-harness",          icon: Activity },
   { title: "Learning",  url: "/learning-signals",          icon: Brain },
+  { title: "Canon Evo.", url: "/canon-evolution",          icon: TrendingUp },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */

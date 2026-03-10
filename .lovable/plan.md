@@ -1,7 +1,7 @@
 # AxionOS — Execution Plan
 
-> **Current Sprint:** 127 (Learning Extraction Engine) — ✅ Complete
-> **Next Sprint:** 128 (Canon Promotion Pipeline)
+> **Current Sprint:** 128 (Canon Promotion Pipeline) — ✅ Complete
+> **Next Sprint:** 129 (Cross-Tenant Pattern Distillation)
 > Execution: **Sprint-based**
 
 ---
@@ -126,7 +126,7 @@ AxionOS is an **Autonomous Delivery Sovereignty** platform (Level 10):
 
 | Block | Sprints | Name | Status |
 |-------|---------|------|--------|
-| AB | 127–130 | Learning Canonization | 🔜 Committed |
+| AB | 127–130 | Learning Canonization | 🔄 In Progress (127–128 ✅) |
 | AC | 131–134 | Adaptive Coordination | 🔜 Committed |
 | AD | 135–138 | Adaptive Operational Organism | 🔜 Committed |
 
