@@ -112,7 +112,15 @@ AxionOS governance, orchestration, and explainability maturity are stronger than
 
 ### Future Horizons
 
-### Level 9 — Adaptive Runtime Intelligence (Future Horizon)
+### Level 9 — Canonical Knowledge & Implementation Intelligence (Future Horizon — Block Y)
+
+- Governed implementation knowledge operationally connected to agents
+- Curated pattern libraries retrievable at planning/execution/repair/validation time
+- Failure memory and repair intelligence as institutional knowledge
+- External knowledge intake with validation gates
+- Knowledge must be consumed by runtime flows to count as system capability
+
+### Level 10 — Adaptive Runtime Intelligence (Further Future Horizon)
 
 - Autonomous execution parameter reconfiguration
 - Runtime self-healing beyond manual intervention

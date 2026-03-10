@@ -130,3 +130,21 @@ sprints:
   - { sprint: 104, name: "Sovereign Decision Rights Orchestration",            status: complete, block: "V", phase: "Sovereign Institutional Intelligence", layer: "Sovereign Decision Rights Layer" }
   - { sprint: 105, name: "Dependency Sovereignty & External Reliance Governance", status: complete, block: "V", phase: "Sovereign Institutional Intelligence", layer: "Dependency Sovereignty Layer" }
   - { sprint: 106, name: "Strategic Succession & Long-Horizon Continuity",     status: complete, block: "V", phase: "Sovereign Institutional Intelligence", layer: "Strategic Succession Layer" }
+
+  # === BLOCK W — Strategic Autonomy & Civilizational Coordination ===
+  - { sprint: 107, name: "Multi-Horizon Strategic Alignment Engine",              status: complete, block: "W", phase: "Strategic Autonomy & Civilizational Coordination", layer: "Multi-Horizon Alignment Layer" }
+  - { sprint: 108, name: "Institutional Tradeoff Arbitration System",             status: complete, block: "W", phase: "Strategic Autonomy & Civilizational Coordination", layer: "Tradeoff Arbitration Layer" }
+  - { sprint: 109, name: "Mission Integrity & Drift Prevention",                  status: complete, block: "W", phase: "Strategic Autonomy & Civilizational Coordination", layer: "Mission Integrity Layer" }
+  - { sprint: 110, name: "Civilizational Continuity Simulation Layer",             status: complete, block: "W", phase: "Strategic Autonomy & Civilizational Coordination", layer: "Civilizational Continuity Layer" }
+
+  # === BLOCK X — Reflexive Governance & Evolution Control === PLANNED
+  - { sprint: 111, name: "Evolution Proposal Governance Engine",                   status: planned, block: "X", phase: "Reflexive Governance & Evolution Control", layer: "Evolution Proposal Governance Layer" }
+  - { sprint: 112, name: "Architectural Mutation Control Layer",                   status: planned, block: "X", phase: "Reflexive Governance & Evolution Control", layer: "Architectural Mutation Control Layer" }
+  - { sprint: 113, name: "Reflective Validation & Self-Revision Audit",            status: planned, block: "X", phase: "Reflexive Governance & Evolution Control", layer: "Reflective Validation Layer" }
+  - { sprint: 114, name: "Kernel Integrity & Anti-Corrosion Guard",                status: planned, block: "X", phase: "Reflexive Governance & Evolution Control", layer: "Kernel Integrity Layer" }
+
+  # === BLOCK Y — Implementation Canon & Knowledge Governance === FUTURE
+  - { sprint: 115, name: "Canon Steward & Knowledge Governance Engine",            status: future, block: "Y", phase: "Implementation Canon & Knowledge Governance", layer: "Canon Stewardship Layer" }
+  - { sprint: 116, name: "Implementation Pattern Library & Retrieval Layer",       status: future, block: "Y", phase: "Implementation Canon & Knowledge Governance", layer: "Implementation Pattern Library Layer" }
+  - { sprint: 117, name: "Failure Memory & Repair Intelligence Archive",           status: future, block: "Y", phase: "Implementation Canon & Knowledge Governance", layer: "Failure Memory Layer" }
+  - { sprint: 118, name: "External Knowledge Intake & Canon Evolution Control",    status: future, block: "Y", phase: "Implementation Canon & Knowledge Governance", layer: "External Knowledge Intake Layer" }

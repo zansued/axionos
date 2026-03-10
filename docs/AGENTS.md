@@ -1414,6 +1414,25 @@ Agent-driven architecture research may emerge:
 - Cross-tenant pattern synthesis under governed conditions
 - All promotion requires explicit human approval — no autonomous architecture mutation
 
+### Block X — Reflexive Governance & Evolution Control (Planned, Sprints 111–114)
+
+The Agent OS may evolve to support reflexive governance:
+- Evolution proposal governance — agents propose system changes under governed approval
+- Mutation control — agents evaluate reversibility, blast radius, coupling before structural changes
+- Self-revision audit — agents track whether self-corrections actually improved outcomes
+- Kernel integrity — agents monitor for corrosion, bloat, and governance drift
+
+### Block Y — Implementation Canon & Knowledge Governance (Future, Sprints 115–118)
+
+New knowledge-governance agent roles may emerge:
+- **Canon Steward** — governs canon lifecycle (entry approval, versioning, deprecation, quality enforcement)
+- **Pattern Librarian** — curates and indexes implementation patterns for retrieval by execution agents
+- **Failure Archivist** — captures, classifies, and maintains failure/repair knowledge for institutional reuse
+- **External Research Curator** — reviews and validates external knowledge before canon admission
+- **Retrieval Guide** — optimizes pattern retrieval relevance for agent queries at runtime
+
+**Critical principle:** These roles exist for operational enablement. Knowledge only counts as system capability when it is consumed by planning, execution, repair, or validation flows. A pattern not retrieved by agents is documentation, not implementation intelligence.
+
 ### Invariants Across All Future Evolution
 
 The 5-plane, 18-module architecture remains stable. Future agent evolution must:
