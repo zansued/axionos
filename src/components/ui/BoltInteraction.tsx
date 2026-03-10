@@ -260,7 +260,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           className="text-center mb-10"
         >
           <p className="text-[15px] sm:text-[17px] lg:text-[19px] text-[#7a7a84] font-medium leading-relaxed max-w-lg mx-auto">
-            Describe the intelligent system you want to orchestrate.
+            Describe what you want to build — we orchestrate the rest.
           </p>
         </motion.div>
 
