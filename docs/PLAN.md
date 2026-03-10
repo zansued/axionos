@@ -29,17 +29,18 @@
 
 ## Canon Status
 
-All 126 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Runtime Sovereignty & Outcome Compounding (Sprint 122) and Runtime Proof & Adaptive Governance (Sprints 123–126) — is implemented and validated.
+127 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Block AA (Sprint 126) — is implemented and validated. Sprint 127 (Learning Extraction Engine) from Block AB is now complete.
 
-All blocks from Foundation through AA are complete.
+All blocks from Foundation through AA are complete. Block AB (Learning Canonization) is in progress.
 
 ### Current Strategic Position
 
-AxionOS has completed all 126 sprints spanning blocks Foundation through AA (Runtime Proof & Adaptive Governance). The platform has achieved **Level 10 — Autonomous Delivery Sovereignty**, with 100+ architectural layers active. Block AA adds runtime evidence accumulation, transition stabilization, tenant-adaptive regression profiles, and cold-start explainability.
+AxionOS has completed 127 sprints spanning blocks Foundation through AA, plus Sprint 127 from Block AB (Learning Canonization). The platform has achieved **Level 10 — Autonomous Delivery Sovereignty**, with 100+ architectural layers active. Block AB begins the transition from runtime evidence to canonizable learning.
 
 - No autonomous architecture mutation — all structural changes require human approval.
 - Governance before autonomy remains the governing principle.
 - Autonomy is earned through evidence, bounded by governance, and reversible by design.
+- Learning candidates cannot modify canon automatically — they produce structured proposals only.
 - All 100+ architectural layers are active and verified.
 
 ---
