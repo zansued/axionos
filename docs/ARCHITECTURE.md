@@ -171,18 +171,23 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    Orchestrator["Stage Orchestrator"]
-    Runner["Deterministic Pipeline Runner"]
-    Artifact["Artifact Manager"]
-    Validation["Validation Engine"]
-    Publish["Publish Engine"]
-    Events["Execution Event Emitter"]
+    Orchestrator["Stage Orchestrator"]:::core
+    Runner["Deterministic Pipeline Runner"]:::runtime
+    Artifact["Artifact Manager"]:::data
+    Validation["Validation Engine"]:::governance
+    Publish["Publish Engine"]:::core
+    Events["Execution Event Emitter"]:::data
 
     Orchestrator --> Runner
     Runner --> Artifact
     Artifact --> Validation
     Validation --> Publish
     Publish --> Events
+
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Modules:**
