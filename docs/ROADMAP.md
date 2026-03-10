@@ -64,19 +64,19 @@
 
 ## Strategic Directive
 
-AxionOS has completed **106 implementation sprints** spanning the full capability arc from deterministic execution through governed intelligence, institutional decision-making, adaptive institutional ecosystem, and sovereign institutional intelligence. The internal architecture is mature, coherent, and self-governing. All blocks through V (Sovereign Institutional Intelligence) are complete.
+AxionOS has completed **110 implementation sprints** spanning the full capability arc from deterministic execution through governed intelligence, institutional decision-making, adaptive institutional ecosystem, sovereign institutional intelligence, and strategic coordination. The internal architecture is mature, coherent, and self-governing. All blocks through W (Strategic Autonomy & Civilizational Coordination) are complete and hardened.
 
-**Post-Sprint 106 Strategic Position:**
+**Post-Sprint 110 Strategic Position:**
 
-The platform has reached its **Sovereign Institutional Intelligence** milestone. Every block from Foundation through Block V is complete. The internal architecture — governance, intelligence, memory, doctrine synthesis, bounded autonomous operations, institutional decision engine, cross-context adaptation, conflict resolution, federated intelligence, resilience governance, memory constitution, sovereign decision rights, dependency sovereignty, and strategic succession — is mature and operational.
+The platform has reached its **Strategic Autonomy & Civilizational Coordination** milestone. Block W is complete and operationally hardened — cross-sprint causal signals are active and bounded, constitution management UI is operational, and history/integration visualization is functional. The system can now align decisions across horizons, arbitrate institutional tradeoffs, detect mission drift, and simulate long-horizon futures.
 
-**Next Strategic Direction — Block W:**
+However, Block W also exposed a critical structural insight: AxionOS governance and observability are significantly stronger than its runtime self-reconfiguration capability. The validation/fix loop revealed that the system could detect problems but could not autonomously adapt its own execution parameters in response. This gap motivates Block X.
 
-Block W (Sprints 107–110) extends AxionOS from sovereign institutional intelligence to **strategic autonomy and civilizational coordination**. The thesis: a system that not only operates, governs, and survives, but begins to coordinate long-horizon strategy across multiple domains, mandates, institutions, and possible futures.
+**Next Strategic Direction — Block X:**
 
-> **"From idea to delivered software — with sovereign institutional intelligence and civilizational strategic coordination."**
+Block X (Sprints 111–114) introduces **reflexive governance** — the system's ability to govern its own evolution, mutation, self-repair, and kernel protection. The thesis: a system that not only operates, governs, coordinates, and simulates — but reflexively governs *how it changes itself*.
 
-Internal sophistication serves the visible product experience. The user-facing journey is clear, legible, and governed. The platform now operates with institutional memory constitution, sovereign decision rights orchestration, dependency sovereignty, and strategic succession & long-horizon continuity.
+> **"From idea to delivered software — with strategic coordination and reflexive governance over its own evolution."**
 
 ---
 
