@@ -151,7 +151,7 @@ export default function NeuralBackground({
 
   return (
     <div ref={containerRef} className={cn("absolute inset-0 overflow-hidden", className)} style={{ pointerEvents: 'none' }}>
-      <canvas ref={canvasRef} className="block w-full h-full opacity-50" />
+      <canvas ref={canvasRef} className="block w-full h-full opacity-30" />
     </div>
   );
 }

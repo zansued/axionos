@@ -278,7 +278,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.5 }}
-        className="absolute bottom-5 z-10 flex items-center gap-3 text-[11px] text-[#2a2a32]"
+        className="absolute bottom-5 z-10 flex items-center gap-3 text-[11px] text-white/20"
       >
         <span>Powered by AI infrastructure</span>
         <span>·</span>
