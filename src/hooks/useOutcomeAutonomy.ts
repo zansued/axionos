@@ -20,6 +20,7 @@ export function useOutcomeAutonomy() {
   const ADJUSTMENTS_KEY = ["autonomy-adjustments", currentOrg?.id];
   const BREACHES_KEY = ["autonomy-breaches", currentOrg?.id];
   const REGRESSIONS_KEY = ["autonomy-regressions", currentOrg?.id];
+  const TRANSITIONS_KEY = ["autonomy-transition-metrics", currentOrg?.id];
 
   const domainsQuery = useQuery({
     queryKey: DOMAINS_KEY,
