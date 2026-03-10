@@ -93,6 +93,56 @@ export type Database = {
           },
         ]
       }
+      adaptive_routing_profiles: {
+        Row: {
+          adjustments_applied: Json
+          attention_level: string
+          created_at: string
+          domain_id: string
+          organization_id: string
+          posture_state: string
+          profile_id: string
+          publish_threshold_modifier: number
+          repair_priority: string
+          updated_at: string
+          validation_depth: string
+        }
+        Insert: {
+          adjustments_applied?: Json
+          attention_level?: string
+          created_at?: string
+          domain_id?: string
+          organization_id: string
+          posture_state?: string
+          profile_id?: string
+          publish_threshold_modifier?: number
+          repair_priority?: string
+          updated_at?: string
+          validation_depth?: string
+        }
+        Update: {
+          adjustments_applied?: Json
+          attention_level?: string
+          created_at?: string
+          domain_id?: string
+          organization_id?: string
+          posture_state?: string
+          profile_id?: string
+          publish_threshold_modifier?: number
+          repair_priority?: string
+          updated_at?: string
+          validation_depth?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adaptive_routing_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       adoption_friction_clusters: {
         Row: {
           cluster_name: string
