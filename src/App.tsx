@@ -106,7 +106,15 @@ import OrganismMemoryDashboard from "./pages/OrganismMemoryDashboard";
 import OrganismConsoleDashboard from "./pages/OrganismConsoleDashboard";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes — reduces unnecessary refetches
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
