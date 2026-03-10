@@ -1,41 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { BoltStyleChat } from "@/components/ui/BoltInteraction";
 
 export default function Dashboard() {
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [loadingProgress, setLoadingProgress] = useState(0);
-
-  useEffect(() => {
-    if (!isGenerating) return;
-    const interval = setInterval(() => {
-      setLoadingProgress(prev => {
-        if (prev >= 95) {
-          clearInterval(interval);
-          return 95;
-        }
-        return prev + Math.random() * 8 + 2;
-      });
-    }, 800);
-    return () => clearInterval(interval);
-  }, [isGenerating]);
+  const navigate = useNavigate();
 
   const handlePromptSubmit = (
     prompt: string,
-    modelId: string,
-    assets: File[]
+    _modelId: string,
+    _assets: File[]
   ) => {
-    setIsGenerating(true);
-    setLoadingProgress(0);
-    console.log("Iniciando criação", { prompt, modelId });
+    // Save the idea so it can be picked up after login
+    sessionStorage.setItem("axion_initial_idea", prompt);
+    navigate("/auth");
   };
 
   return (
     <div className="h-screen w-screen overflow-hidden">
-      <BoltStyleChat 
-        onSubmit={handlePromptSubmit} 
-        isGenerating={isGenerating}
-        progress={Math.round(loadingProgress)}
-      />
+      <BoltStyleChat onSubmit={handlePromptSubmit} />
     </div>
   );
 }
