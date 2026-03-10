@@ -34,9 +34,11 @@ Everything runs inside a **32-stage deterministic pipeline** with full cost trac
 | Level 1 | Code Generator | ✅ Complete |
 | Level 2 | Software Builder | ✅ Complete |
 | Level 3 | Autonomous Engineering System | ✅ Complete |
-| Level 4 | Self-Learning Software Factory | ✅ Complete |
-| Level 4.5 | Meta-Aware Engineering Platform | ✅ Complete |
-| Level 5 | Institutional Engineering Memory | ✅ Current |
+| Level 4 | Self-Learning Software Factory | 🔄 Operational (requires historical data to reach full potential) |
+| Level 4.5 | Meta-Aware Engineering Platform | 🔄 Operational (requires historical data to reach full potential) |
+| Level 5 | Institutional Engineering Memory | 🔄 Active (memory accumulates over time with usage) |
+
+> ⚠️ Levels 4–5 capabilities are implemented but reach full effectiveness as the system accumulates production data over time.
 
 ---
 
@@ -71,6 +73,8 @@ Prompt compression (60-90% token reduction), semantic cache, and intelligent mod
 
 ### Self-Healing Pipeline
 Runtime validation via real tsc + vite builds. When errors are detected, a fix swarm analyzes logs, generates patches, and submits corrections automatically. Every repair attempt is recorded as structured evidence.
+
+> **Note:** The fix swarm is triggered automatically on CI failure, but human review is recommended for complex repair attempts.
 
 ### Error Pattern Intelligence
 Repair evidence is aggregated into recurring patterns with strategy effectiveness tracking. The system identifies which repair strategies work best per error category and generates prevention rule candidates.
@@ -114,6 +118,8 @@ Hypothesis generation, simulated evolution campaigns, cross-tenant pattern synth
 ---
 
 ## System Architecture
+
+AxionOS is a 32-stage autonomous pipeline implemented as Supabase Edge Functions (Deno runtime). Each stage is independently deployable and fault-isolated.
 
 ### C4 Context
 
@@ -222,6 +228,18 @@ flowchart TB
 - **Technical Founders** — validate ideas rapidly
 - **Micro SaaS Creators** — build and iterate fast
 - **Early-Stage Teams** — multiply engineering capacity
+
+---
+
+## Known Limitations
+
+| Area | Limitation |
+|------|-----------|
+| **Learning maturity** | Self-learning and institutional memory capabilities are implemented but require sustained production usage to accumulate meaningful data |
+| **Multi-tenant scale** | Distributed runtime architecture is in place but has not been validated under high-concurrency multi-tenant load |
+| **AI provider dependency** | Pipeline execution depends on external LLM providers; availability and cost are bounded but not eliminated |
+| **Fix swarm autonomy** | Automated repair handles common error patterns well; novel or complex failures may require human intervention |
+| **Canon accumulation** | Evidence-governed improvement loops are operational but the canon is early-stage — effectiveness compounds over time |
 
 ---
 
