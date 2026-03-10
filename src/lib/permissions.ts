@@ -11,7 +11,7 @@ import {
   Rss, PackageCheck, ShieldCheck, Package, Shield, Settings, CreditCard, Plug,
   Users, Scale, BrainCircuit, Zap, Store, TrendingUp, Brain, FileText, Gauge,
   Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route, Compass,
-  Library, Bug, PackagePlus, Activity, Fingerprint, ShieldAlert, Crown,
+  Library, Bug, PackagePlus, Activity, Fingerprint, ShieldAlert, Crown, Focus,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
@@ -142,6 +142,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Distill.",  url: "/pattern-distillation",     icon: Network },
   { title: "Reuse",    url: "/canon-reuse",              icon: Zap },
   { title: "Posture",  url: "/operational-posture",      icon: Activity },
+  { title: "Attention", url: "/attention-allocation",   icon: Focus },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */

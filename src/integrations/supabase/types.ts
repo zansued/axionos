@@ -4940,6 +4940,47 @@ export type Database = {
           },
         ]
       }
+      attention_allocation_map: {
+        Row: {
+          allocation_id: string
+          attention_reason: string
+          attention_score: number
+          created_at: string
+          domain_id: string
+          organization_id: string
+          signal_sources: Json
+          updated_at: string
+        }
+        Insert: {
+          allocation_id?: string
+          attention_reason?: string
+          attention_score?: number
+          created_at?: string
+          domain_id?: string
+          organization_id: string
+          signal_sources?: Json
+          updated_at?: string
+        }
+        Update: {
+          allocation_id?: string
+          attention_reason?: string
+          attention_score?: number
+          created_at?: string
+          domain_id?: string
+          organization_id?: string
+          signal_sources?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attention_allocation_map_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: string
