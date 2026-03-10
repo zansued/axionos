@@ -52,6 +52,21 @@ serve(async (req) => {
   const jobId = await createJob(ctx, "publish", { owner: resolvedOwner, repo: repoSlug, base_branch: resolvedBaseBranch, mode: "release_agent" });
   await pipelineLog(ctx, "pipeline_publish_start", "Release Agent iniciando: Pre-flight → Changelog → Push → Verificação...");
 
+  // Idempotency guard: block if a publish job is already running for this initiative
+  const { data: activePublishJobs } = await serviceClient
+    .from("initiative_jobs")
+    .select("id, created_at")
+    .eq("initiative_id", ctx.initiativeId)
+    .eq("stage", "publish")
+    .eq("status", "running")
+    .gt("created_at", new Date(Date.now() - 30 * 60 * 1000).toISOString());
+  if (activePublishJobs && activePublishJobs.length > 1) {
+    return errorResponse(
+      "Uma publicação já está em andamento para esta initiative. Aguarde a conclusão antes de publicar novamente.",
+      409
+    );
+  }
+
   const ghHeaders = {
     Authorization: `Bearer ${resolvedGithubToken}`,
     Accept: "application/vnd.github.v3+json",
@@ -416,7 +431,7 @@ Retorne APENAS JSON:
     // Persist deploy metadata on initiative
     await updateInitiative(ctx, {
       repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
-      commit_hash: changelog.version || "1.0.0",
+      commit_hash: newCommit.sha, // SHA real, não a versão semântica
       build_status: preflight.preflight_pass ? "pass" : "fail",
       deploy_status: "published",
     });
