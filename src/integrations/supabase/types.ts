@@ -1768,6 +1768,62 @@ export type Database = {
         }
         Relationships: []
       }
+      architectural_bloat_indicators: {
+        Row: {
+          affected_layer: string
+          bloat_score: number
+          capability_delta: number
+          complexity_delta: number
+          created_at: string
+          description: string
+          evidence_refs: Json
+          id: string
+          indicator_type: string
+          net_value_score: number
+          organization_id: string
+          recommendation: string
+          status: string
+        }
+        Insert: {
+          affected_layer?: string
+          bloat_score?: number
+          capability_delta?: number
+          complexity_delta?: number
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          indicator_type?: string
+          net_value_score?: number
+          organization_id: string
+          recommendation?: string
+          status?: string
+        }
+        Update: {
+          affected_layer?: string
+          bloat_score?: number
+          capability_delta?: number
+          complexity_delta?: number
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          indicator_type?: string
+          net_value_score?: number
+          organization_id?: string
+          recommendation?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "architectural_bloat_indicators_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       architectural_mutation_cases: {
         Row: {
           affected_layers: string[]
@@ -8883,6 +8939,62 @@ export type Database = {
           },
         ]
       }
+      corrosion_signals: {
+        Row: {
+          affected_domain: string
+          corrosion_score: number
+          created_at: string
+          description: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          recurrence_count: number
+          remediation_hint: string
+          severity: Database["public"]["Enums"]["corrosion_severity"]
+          signal_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          affected_domain?: string
+          corrosion_score?: number
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          recurrence_count?: number
+          remediation_hint?: string
+          severity?: Database["public"]["Enums"]["corrosion_severity"]
+          signal_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          affected_domain?: string
+          corrosion_score?: number
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          recurrence_count?: number
+          remediation_hint?: string
+          severity?: Database["public"]["Enums"]["corrosion_severity"]
+          signal_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "corrosion_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       critical_roles: {
         Row: {
           continuity_tier: string
@@ -14053,6 +14165,59 @@ export type Database = {
           },
         ]
       }
+      existential_drift_cases: {
+        Row: {
+          created_at: string
+          description: string
+          drift_score: number
+          drift_type: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          remediation_path: string
+          severity: Database["public"]["Enums"]["corrosion_severity"]
+          status: string
+          updated_at: string
+          violated_principle: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          drift_score?: number
+          drift_type?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          remediation_path?: string
+          severity?: Database["public"]["Enums"]["corrosion_severity"]
+          status?: string
+          updated_at?: string
+          violated_principle?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          drift_score?: number
+          drift_type?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          remediation_path?: string
+          severity?: Database["public"]["Enums"]["corrosion_severity"]
+          status?: string
+          updated_at?: string
+          violated_principle?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "existential_drift_cases_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       extension_activations: {
         Row: {
           activated_at: string | null
@@ -17286,6 +17451,241 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kernel_boundary_rules: {
+        Row: {
+          created_at: string
+          domain_description: string
+          domain_name: string
+          extraordinary_review_required: boolean
+          id: string
+          invariants: Json
+          mutation_allowed: boolean
+          organization_id: string
+          protection_level: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          domain_description?: string
+          domain_name: string
+          extraordinary_review_required?: boolean
+          id?: string
+          invariants?: Json
+          mutation_allowed?: boolean
+          organization_id: string
+          protection_level?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          domain_description?: string
+          domain_name?: string
+          extraordinary_review_required?: boolean
+          id?: string
+          invariants?: Json
+          mutation_allowed?: boolean
+          organization_id?: string
+          protection_level?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kernel_boundary_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kernel_integrity_actions: {
+        Row: {
+          action_type: Database["public"]["Enums"]["kernel_action_type"]
+          created_at: string
+          description: string
+          id: string
+          operator_decision: string | null
+          operator_notes: string | null
+          organization_id: string
+          priority: string
+          review_id: string | null
+          status: string
+          target_domain: string
+          updated_at: string
+          urgency_score: number
+        }
+        Insert: {
+          action_type?: Database["public"]["Enums"]["kernel_action_type"]
+          created_at?: string
+          description?: string
+          id?: string
+          operator_decision?: string | null
+          operator_notes?: string | null
+          organization_id: string
+          priority?: string
+          review_id?: string | null
+          status?: string
+          target_domain?: string
+          updated_at?: string
+          urgency_score?: number
+        }
+        Update: {
+          action_type?: Database["public"]["Enums"]["kernel_action_type"]
+          created_at?: string
+          description?: string
+          id?: string
+          operator_decision?: string | null
+          operator_notes?: string | null
+          organization_id?: string
+          priority?: string
+          review_id?: string | null
+          status?: string
+          target_domain?: string
+          updated_at?: string
+          urgency_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kernel_integrity_actions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kernel_integrity_actions_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "kernel_protection_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kernel_integrity_snapshots: {
+        Row: {
+          architectural_coherence_score: number
+          bloat_score: number
+          corrosion_score: number
+          created_at: string
+          existential_drift_score: number
+          governance_integrity_score: number
+          id: string
+          kernel_identity_version: string
+          legibility_score: number
+          mutation_pressure_score: number
+          organization_id: string
+          overall_health_score: number
+          protected_domains: Json
+          snapshot_metadata: Json
+        }
+        Insert: {
+          architectural_coherence_score?: number
+          bloat_score?: number
+          corrosion_score?: number
+          created_at?: string
+          existential_drift_score?: number
+          governance_integrity_score?: number
+          id?: string
+          kernel_identity_version?: string
+          legibility_score?: number
+          mutation_pressure_score?: number
+          organization_id: string
+          overall_health_score?: number
+          protected_domains?: Json
+          snapshot_metadata?: Json
+        }
+        Update: {
+          architectural_coherence_score?: number
+          bloat_score?: number
+          corrosion_score?: number
+          created_at?: string
+          existential_drift_score?: number
+          governance_integrity_score?: number
+          id?: string
+          kernel_identity_version?: string
+          legibility_score?: number
+          mutation_pressure_score?: number
+          organization_id?: string
+          overall_health_score?: number
+          protected_domains?: Json
+          snapshot_metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kernel_integrity_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kernel_protection_reviews: {
+        Row: {
+          created_at: string
+          findings: Json
+          id: string
+          organization_id: string
+          overall_posture: string
+          recommendations: Json
+          review_notes: string
+          review_scope: string
+          review_type: string
+          reviewer_id: string | null
+          snapshot_id: string | null
+          status: Database["public"]["Enums"]["kernel_review_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          findings?: Json
+          id?: string
+          organization_id: string
+          overall_posture?: string
+          recommendations?: Json
+          review_notes?: string
+          review_scope?: string
+          review_type?: string
+          reviewer_id?: string | null
+          snapshot_id?: string | null
+          status?: Database["public"]["Enums"]["kernel_review_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          findings?: Json
+          id?: string
+          organization_id?: string
+          overall_posture?: string
+          recommendations?: Json
+          review_notes?: string
+          review_scope?: string
+          review_type?: string
+          reviewer_id?: string | null
+          snapshot_id?: string | null
+          status?: Database["public"]["Enums"]["kernel_review_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kernel_protection_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kernel_protection_reviews_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "kernel_integrity_snapshots"
             referencedColumns: ["id"]
           },
         ]
@@ -30787,6 +31187,7 @@ export type Database = {
         | "compliance"
         | "interpretation"
       constitution_status: "draft" | "active" | "superseded" | "deprecated"
+      corrosion_severity: "low" | "moderate" | "high" | "critical"
       decision_authority_level:
         | "formal"
         | "delegated"
@@ -30965,6 +31366,20 @@ export type Database = {
         | "validating"
         | "publishing"
         | "completed"
+      kernel_action_type:
+        | "freeze"
+        | "simplify"
+        | "deprecate"
+        | "consolidate"
+        | "extraordinary_review"
+        | "monitor"
+        | "no_action"
+      kernel_review_status:
+        | "pending"
+        | "under_review"
+        | "reviewed"
+        | "escalated"
+        | "resolved"
       mutation_approval_status:
         | "pending_analysis"
         | "analyzed"
@@ -31247,6 +31662,7 @@ export const Constants = {
         "interpretation",
       ],
       constitution_status: ["draft", "active", "superseded", "deprecated"],
+      corrosion_severity: ["low", "moderate", "high", "critical"],
       decision_authority_level: [
         "formal",
         "delegated",
@@ -31438,6 +31854,22 @@ export const Constants = {
         "validating",
         "publishing",
         "completed",
+      ],
+      kernel_action_type: [
+        "freeze",
+        "simplify",
+        "deprecate",
+        "consolidate",
+        "extraordinary_review",
+        "monitor",
+        "no_action",
+      ],
+      kernel_review_status: [
+        "pending",
+        "under_review",
+        "reviewed",
+        "escalated",
+        "resolved",
       ],
       mutation_approval_status: [
         "pending_analysis",
