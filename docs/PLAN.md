@@ -4,9 +4,9 @@
 > **This is the canonical source of truth for sprint execution status.**
 >
 > **Last updated:** 2026-03-10
-> **Canon Status:** 126 sprints complete — all blocks (Foundation through Z) + Block AA (Sprints 123–126) implemented
-> **Latest Sprint:** 126 (Cold Start Explainability Layer) — ✅ Complete
-> **Completed Blocks**: Foundation through Z (Sprints 1–122), Block AA (Sprints 123–126)
+> **Canon Status:** 127 sprints complete — all blocks (Foundation through AA) + Sprint 127 (Block AB) implemented
+> **Latest Sprint:** 127 (Learning Extraction Engine) — ✅ Complete
+> **Completed Blocks**: Foundation through AA (Sprints 1–126), Block AB in progress (Sprint 127 complete)
 
 ## Document Authority
 
@@ -29,17 +29,18 @@
 
 ## Canon Status
 
-All 126 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Runtime Sovereignty & Outcome Compounding (Sprint 122) and Runtime Proof & Adaptive Governance (Sprints 123–126) — is implemented and validated.
+127 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Block AA (Sprint 126) — is implemented and validated. Sprint 127 (Learning Extraction Engine) from Block AB is now complete.
 
-All blocks from Foundation through AA are complete.
+All blocks from Foundation through AA are complete. Block AB (Learning Canonization) is in progress.
 
 ### Current Strategic Position
 
-AxionOS has completed all 126 sprints spanning blocks Foundation through AA (Runtime Proof & Adaptive Governance). The platform has achieved **Level 10 — Autonomous Delivery Sovereignty**, with 100+ architectural layers active. Block AA adds runtime evidence accumulation, transition stabilization, tenant-adaptive regression profiles, and cold-start explainability.
+AxionOS has completed 127 sprints spanning blocks Foundation through AA, plus Sprint 127 from Block AB (Learning Canonization). The platform has achieved **Level 10 — Autonomous Delivery Sovereignty**, with 100+ architectural layers active. Block AB begins the transition from runtime evidence to canonizable learning.
 
 - No autonomous architecture mutation — all structural changes require human approval.
 - Governance before autonomy remains the governing principle.
 - Autonomy is earned through evidence, bounded by governance, and reversible by design.
+- Learning candidates cannot modify canon automatically — they produce structured proposals only.
 - All 100+ architectural layers are active and verified.
 
 ---
@@ -1048,7 +1049,7 @@ The following blocks are committed for implementation, pending sprint-by-sprint 
 
 | Sprint | Capability | Architectural Layer | Status |
 |--------|-----------|-------------------|--------|
-| 127 | Learning Extraction Engine | Learning Extraction Layer | 🔜 Committed |
+| 127 | Learning Extraction Engine | Learning Extraction Layer | ✅ Complete |
 | 128 | Canon Promotion Pipeline | Canon Promotion Layer | 🔜 Committed |
 | 129 | Cross-Tenant Pattern Distillation | Cross-Tenant Distillation Layer | 🔜 Committed |
 | 130 | Canon Reuse Injection | Canon Reuse Injection Layer | 🔜 Committed |

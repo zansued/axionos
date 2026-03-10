@@ -1,7 +1,7 @@
 # AxionOS — Canonical Sprint Registry
 # Single source of truth for sprint metadata.
 # Detailed descriptions live in PLAN.md. Strategic context in ROADMAP.md.
-# Last updated: 2026-03-09
+# Last updated: 2026-03-10
 
 sprints:
   # === COMPLETE CANON (Sprints 1–94) ===
@@ -162,7 +162,7 @@ sprints:
   - { sprint: 126, name: "Cold Start Explainability Layer",                        status: complete, block: "AA", phase: "Runtime Proof & Adaptive Governance", layer: "Cold Start Explainability Layer" }
 
   # === BLOCK AB — Learning Canonization === COMMITTED
-  - { sprint: 127, name: "Learning Extraction Engine",                             status: committed, block: "AB", phase: "Learning Canonization", layer: "Learning Extraction Layer" }
+  - { sprint: 127, name: "Learning Extraction Engine",                             status: complete, block: "AB", phase: "Learning Canonization", layer: "Learning Extraction Layer" }
   - { sprint: 128, name: "Canon Promotion Pipeline",                               status: committed, block: "AB", phase: "Learning Canonization", layer: "Canon Promotion Layer" }
   - { sprint: 129, name: "Cross-Tenant Pattern Distillation",                      status: committed, block: "AB", phase: "Learning Canonization", layer: "Cross-Tenant Distillation Layer" }
   - { sprint: 130, name: "Canon Reuse Injection",                                  status: committed, block: "AB", phase: "Learning Canonization", layer: "Canon Reuse Injection Layer" }

@@ -137,6 +137,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Autonomy",  url: "/autonomy-posture",          icon: ShieldAlert },
   { title: "Advantage", url: "/compounding-advantage",     icon: Crown },
   { title: "RT Harness", url: "/runtime-harness",          icon: Activity },
+  { title: "Learning",  url: "/learning-signals",          icon: Brain },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
