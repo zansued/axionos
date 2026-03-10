@@ -5660,6 +5660,56 @@ export type Database = {
           },
         ]
       }
+      canon_context_bindings: {
+        Row: {
+          auto_inject: boolean
+          binding_target: string
+          binding_type: string
+          canon_entry_id: string
+          conditions: Json
+          created_at: string
+          enabled: boolean
+          id: string
+          organization_id: string
+          priority: number
+          updated_at: string
+        }
+        Insert: {
+          auto_inject?: boolean
+          binding_target: string
+          binding_type?: string
+          canon_entry_id: string
+          conditions?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          organization_id: string
+          priority?: number
+          updated_at?: string
+        }
+        Update: {
+          auto_inject?: boolean
+          binding_target?: string
+          binding_type?: string
+          canon_entry_id?: string
+          conditions?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          organization_id?: string
+          priority?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_context_bindings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_deprecations: {
         Row: {
           created_at: string
@@ -6322,6 +6372,228 @@ export type Database = {
           },
         ]
       }
+      canon_pattern_applications: {
+        Row: {
+          application_context: Json
+          applied_by: string
+          canon_entry_id: string
+          cost_impact_score: number | null
+          created_at: string
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          outcome_notes: string | null
+          outcome_status: string
+          pipeline_stage: string | null
+          quality_impact_score: number | null
+        }
+        Insert: {
+          application_context?: Json
+          applied_by?: string
+          canon_entry_id: string
+          cost_impact_score?: number | null
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          outcome_notes?: string | null
+          outcome_status?: string
+          pipeline_stage?: string | null
+          quality_impact_score?: number | null
+        }
+        Update: {
+          application_context?: Json
+          applied_by?: string
+          canon_entry_id?: string
+          cost_impact_score?: number | null
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          outcome_notes?: string | null
+          outcome_status?: string
+          pipeline_stage?: string | null
+          quality_impact_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_pattern_applications_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_pattern_embeddings: {
+        Row: {
+          anti_pattern_links: string[] | null
+          applicability_conditions: Json
+          architecture_scope: string
+          canon_entry_id: string
+          compatibility_flags: Json
+          created_at: string
+          embedding_model: string
+          embedding_vector: string | null
+          framework_tags: string[] | null
+          id: string
+          language_tags: string[] | null
+          organization_id: string
+          problem_type: string
+          quality_level: string
+          stack_tags: string[] | null
+          updated_at: string
+          usage_constraints: Json
+        }
+        Insert: {
+          anti_pattern_links?: string[] | null
+          applicability_conditions?: Json
+          architecture_scope?: string
+          canon_entry_id: string
+          compatibility_flags?: Json
+          created_at?: string
+          embedding_model?: string
+          embedding_vector?: string | null
+          framework_tags?: string[] | null
+          id?: string
+          language_tags?: string[] | null
+          organization_id: string
+          problem_type?: string
+          quality_level?: string
+          stack_tags?: string[] | null
+          updated_at?: string
+          usage_constraints?: Json
+        }
+        Update: {
+          anti_pattern_links?: string[] | null
+          applicability_conditions?: Json
+          architecture_scope?: string
+          canon_entry_id?: string
+          compatibility_flags?: Json
+          created_at?: string
+          embedding_model?: string
+          embedding_vector?: string | null
+          framework_tags?: string[] | null
+          id?: string
+          language_tags?: string[] | null
+          organization_id?: string
+          problem_type?: string
+          quality_level?: string
+          stack_tags?: string[] | null
+          updated_at?: string
+          usage_constraints?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_pattern_embeddings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_retrieval_feedback: {
+        Row: {
+          canon_entry_id: string
+          created_at: string
+          feedback_reason: string | null
+          feedback_type: string
+          id: string
+          organization_id: string
+          reviewer_id: string | null
+          usage_event_id: string | null
+        }
+        Insert: {
+          canon_entry_id: string
+          created_at?: string
+          feedback_reason?: string | null
+          feedback_type?: string
+          id?: string
+          organization_id: string
+          reviewer_id?: string | null
+          usage_event_id?: string | null
+        }
+        Update: {
+          canon_entry_id?: string
+          created_at?: string
+          feedback_reason?: string | null
+          feedback_type?: string
+          id?: string
+          organization_id?: string
+          reviewer_id?: string | null
+          usage_event_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_retrieval_feedback_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_retrieval_feedback_usage_event_id_fkey"
+            columns: ["usage_event_id"]
+            isOneToOne: false
+            referencedRelation: "canon_usage_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_retrieval_profiles: {
+        Row: {
+          created_at: string
+          excluded_lifecycle_statuses: string[] | null
+          id: string
+          include_experimental: boolean
+          max_results: number
+          min_confidence: number
+          organization_id: string
+          preferred_language_tags: string[] | null
+          preferred_stack_tags: string[] | null
+          profile_name: string
+          retrieval_scope: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          excluded_lifecycle_statuses?: string[] | null
+          id?: string
+          include_experimental?: boolean
+          max_results?: number
+          min_confidence?: number
+          organization_id: string
+          preferred_language_tags?: string[] | null
+          preferred_stack_tags?: string[] | null
+          profile_name?: string
+          retrieval_scope?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          excluded_lifecycle_statuses?: string[] | null
+          id?: string
+          include_experimental?: boolean
+          max_results?: number
+          min_confidence?: number
+          organization_id?: string
+          preferred_language_tags?: string[] | null
+          preferred_stack_tags?: string[] | null
+          profile_name?: string
+          retrieval_scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_retrieval_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_stewards: {
         Row: {
           assigned_entries_count: number
@@ -6424,6 +6696,56 @@ export type Database = {
             columns: ["successor_entry_id"]
             isOneToOne: false
             referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_usage_events: {
+        Row: {
+          agent_type: string | null
+          canon_entry_id: string
+          created_at: string
+          feedback_signal: string | null
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          pipeline_stage: string | null
+          retrieval_score: number
+          usage_context: string
+          was_applied: boolean
+        }
+        Insert: {
+          agent_type?: string | null
+          canon_entry_id: string
+          created_at?: string
+          feedback_signal?: string | null
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          pipeline_stage?: string | null
+          retrieval_score?: number
+          usage_context?: string
+          was_applied?: boolean
+        }
+        Update: {
+          agent_type?: string | null
+          canon_entry_id?: string
+          created_at?: string
+          feedback_signal?: string | null
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          pipeline_stage?: string | null
+          retrieval_score?: number
+          usage_context?: string
+          was_applied?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_usage_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
