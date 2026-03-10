@@ -130,6 +130,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Kernel Guard", url: "/kernel-integrity",          icon: Shield },
   { title: "Canon Gov.",  url: "/canon-governance",           icon: FileText },
   { title: "Patterns",  url: "/pattern-library",            icon: Library },
+  { title: "Failure Mem.", url: "/failure-memory",           icon: Bug },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
