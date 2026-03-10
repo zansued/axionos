@@ -404,6 +404,14 @@ Block X is not "more features." It is a **meta-governance layer** governing how 
 
 ```
    ═══════════════════════════════════════════════════════════════════
+   TIER 13: CANONICAL KNOWLEDGE & IMPLEMENTATION INTELLIGENCE (Future — Block Y)
+   ═══════════════════════════════════════════════════════════════════
+   Canon Steward & Knowledge Governance Engine      ← Future (Sprint 115)
+   Implementation Pattern Library & Retrieval Layer ← Future (Sprint 116)
+   Failure Memory & Repair Intelligence Archive     ← Future (Sprint 117)
+   External Knowledge Intake & Canon Evolution Ctrl ← Future (Sprint 118)
+
+   ═══════════════════════════════════════════════════════════════════
    TIER 12: REFLEXIVE GOVERNANCE LAYER (Planned — Block X)
    ═══════════════════════════════════════════════════════════════════
    Evolution Proposal Governance Engine             ← Planned (Sprint 111)
