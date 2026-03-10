@@ -426,7 +426,7 @@ Block AA converts architectural correctness into runtime evidence. It hardens th
 
 ---
 
-## Block AB — Learning Canonization (Sprints 127–130) — 🔜 Committed
+## Block AB — Learning Canonization (Sprints 127–130) — ✅ Complete
 
 Block AB transforms operational learning from ephemeral runtime insights into durable, reusable canonical knowledge. The system extracts validated patterns from execution history, promotes them through a governed pipeline, distills cross-tenant patterns, and injects proven canon back into execution flows.
 
@@ -438,12 +438,12 @@ Block AB transforms operational learning from ephemeral runtime insights into du
 
 **Defining principle:** Learning only becomes canon when it is validated, promoted through governance, and actively reused by execution agents. Ephemeral insights are not canon.
 
-### Committed Sprints
+### Completed Sprints
 
-- **Sprint 127** — Learning Extraction Engine
-- **Sprint 128** — Canon Promotion Pipeline
-- **Sprint 129** — Cross-Tenant Pattern Distillation
-- **Sprint 130** — Canon Reuse Injection
+- **Sprint 127** — Learning Extraction Engine ✅
+- **Sprint 128** — Canon Promotion Pipeline ✅
+- **Sprint 129** — Cross-Tenant Pattern Distillation ✅
+- **Sprint 130** — Canon Reuse Injection ✅
 
 ---
 
