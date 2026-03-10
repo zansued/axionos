@@ -63,7 +63,7 @@ const translations = {
     "shortcuts.title": "Atalhos de Teclado",
     "shortcuts.navigation": "Navegação",
     "shortcuts.actions": "Ações",
-    "shortcuts.goToDashboard": "Ir para Dashboard",
+    "shortcuts.goToDashboard": "Ir para Início",
     "shortcuts.goToInitiatives": "Ir para Iniciativas",
     "shortcuts.goToKanban": "Ir para Kanban",
     "shortcuts.goToCode": "Ir para Código",
