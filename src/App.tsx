@@ -225,6 +225,7 @@ const App = () => (
                         <Route path="/learning-signals"        element={<P><LearningSignalsDashboard /></P>} />
                         <Route path="/canon-evolution"         element={<P><CanonEvolutionDashboard /></P>} />
                         <Route path="/pattern-distillation"    element={<P><PatternDistillationDashboard /></P>} />
+                        <Route path="/canon-reuse"             element={<P><CanonReuseImpactDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
