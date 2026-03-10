@@ -161,7 +161,7 @@ export function AppSidebar() {
         <Separator className="mx-2 w-auto mb-2" />
 
         {/* ── Navigation ── */}
-        <SidebarGroup className="flex-1 px-2 pt-0">
+        <SidebarGroup className="px-2 pt-0">
           {!collapsed && (
             <div className="mb-1.5 px-2">
               <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
