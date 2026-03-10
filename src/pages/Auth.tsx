@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { Bot, Zap } from "lucide-react";
+import { Zap } from "lucide-react";
+import axionLogo from "@/assets/axion-logo.svg";
 
 export default function Auth() {
   const { signIn, signUp } = useAuth();
@@ -57,9 +58,9 @@ export default function Auth() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary glow-primary"
+            className="mx-auto mb-4 flex h-20 w-20 items-center justify-center"
           >
-            <Bot className="h-8 w-8 text-primary-foreground" />
+            <img src={axionLogo} alt="AxionOS Logo" className="h-20 w-20" />
           </motion.div>
           <h1 className="font-display text-3xl font-bold tracking-tight">
             <span className="text-gradient">Axion</span>OS
