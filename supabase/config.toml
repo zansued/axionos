@@ -194,3 +194,6 @@ verify_jwt = false
 
 [functions.outcome-based-autonomy]
 verify_jwt = false
+
+[functions.compounding-advantage-engine]
+verify_jwt = false

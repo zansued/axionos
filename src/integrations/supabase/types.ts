@@ -370,6 +370,54 @@ export type Database = {
           },
         ]
       }
+      advantage_lineage_maps: {
+        Row: {
+          contribution_score: number
+          created_at: string
+          id: string
+          lineage_type: string
+          moat_domain_id: string | null
+          organization_id: string | null
+          source_ref: string
+          target_ref: string
+        }
+        Insert: {
+          contribution_score?: number
+          created_at?: string
+          id?: string
+          lineage_type?: string
+          moat_domain_id?: string | null
+          organization_id?: string | null
+          source_ref?: string
+          target_ref?: string
+        }
+        Update: {
+          contribution_score?: number
+          created_at?: string
+          id?: string
+          lineage_type?: string
+          moat_domain_id?: string | null
+          organization_id?: string | null
+          source_ref?: string
+          target_ref?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "advantage_lineage_maps_moat_domain_id_fkey"
+            columns: ["moat_domain_id"]
+            isOneToOne: false
+            referencedRelation: "capability_moat_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "advantage_lineage_maps_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       advisory_calibration_signals: {
         Row: {
           calibration_domain: string
@@ -8251,6 +8299,59 @@ export type Database = {
           },
         ]
       }
+      capability_moat_domains: {
+        Row: {
+          compounding_score: number
+          created_at: string
+          domain_name: string
+          failure_resilience_score: number
+          id: string
+          moat_status: string
+          organization_id: string | null
+          recommended_productization: string
+          reuse_density_score: number
+          review_notes: string | null
+          uniqueness_score: number
+          updated_at: string
+        }
+        Insert: {
+          compounding_score?: number
+          created_at?: string
+          domain_name?: string
+          failure_resilience_score?: number
+          id?: string
+          moat_status?: string
+          organization_id?: string | null
+          recommended_productization?: string
+          reuse_density_score?: number
+          review_notes?: string | null
+          uniqueness_score?: number
+          updated_at?: string
+        }
+        Update: {
+          compounding_score?: number
+          created_at?: string
+          domain_name?: string
+          failure_resilience_score?: number
+          id?: string
+          moat_status?: string
+          organization_id?: string | null
+          recommended_productization?: string
+          reuse_density_score?: number
+          review_notes?: string | null
+          uniqueness_score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capability_moat_domains_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       capability_outcome_postures: {
         Row: {
           audit_metadata: Json
@@ -9016,6 +9117,62 @@ export type Database = {
             columns: ["output_id"]
             isOneToOne: false
             referencedRelation: "agent_outputs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      compounding_advantage_scores: {
+        Row: {
+          autonomy_maturity_score: number
+          compounding_score: number
+          computed_at: string
+          doctrine_stability_score: number
+          domain_scope: string
+          evidence_refs: Json
+          failure_resilience_score: number
+          id: string
+          organization_id: string | null
+          reuse_density_score: number
+          stack_scope: string
+          uniqueness_score: number
+          workflow_scope: string
+        }
+        Insert: {
+          autonomy_maturity_score?: number
+          compounding_score?: number
+          computed_at?: string
+          doctrine_stability_score?: number
+          domain_scope?: string
+          evidence_refs?: Json
+          failure_resilience_score?: number
+          id?: string
+          organization_id?: string | null
+          reuse_density_score?: number
+          stack_scope?: string
+          uniqueness_score?: number
+          workflow_scope?: string
+        }
+        Update: {
+          autonomy_maturity_score?: number
+          compounding_score?: number
+          computed_at?: string
+          doctrine_stability_score?: number
+          domain_scope?: string
+          evidence_refs?: Json
+          failure_resilience_score?: number
+          id?: string
+          organization_id?: string | null
+          reuse_density_score?: number
+          stack_scope?: string
+          uniqueness_score?: number
+          workflow_scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compounding_advantage_scores_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -13444,6 +13601,56 @@ export type Database = {
           },
           {
             foreignKeyName: "doctrine_applicability_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      doctrine_asset_packs: {
+        Row: {
+          autonomy_config: Json
+          canon_entries: Json
+          contents: Json
+          created_at: string
+          doctrine_entries: Json
+          domain_scope: string
+          id: string
+          organization_id: string | null
+          pack_name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          autonomy_config?: Json
+          canon_entries?: Json
+          contents?: Json
+          created_at?: string
+          doctrine_entries?: Json
+          domain_scope?: string
+          id?: string
+          organization_id?: string | null
+          pack_name?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          autonomy_config?: Json
+          canon_entries?: Json
+          contents?: Json
+          created_at?: string
+          doctrine_entries?: Json
+          domain_scope?: string
+          id?: string
+          organization_id?: string | null
+          pack_name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctrine_asset_packs_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -21572,6 +21779,57 @@ export type Database = {
           },
           {
             foreignKeyName: "mitigation_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      moat_review_decisions: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          decision: string
+          evidence_refs: Json
+          id: string
+          moat_domain_id: string | null
+          organization_id: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          decision?: string
+          evidence_refs?: Json
+          id?: string
+          moat_domain_id?: string | null
+          organization_id?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          decision?: string
+          evidence_refs?: Json
+          id?: string
+          moat_domain_id?: string | null
+          organization_id?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moat_review_decisions_moat_domain_id_fkey"
+            columns: ["moat_domain_id"]
+            isOneToOne: false
+            referencedRelation: "capability_moat_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moat_review_decisions_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -30929,6 +31187,44 @@ export type Database = {
           },
         ]
       }
+      stack_strength_profiles: {
+        Row: {
+          computed_at: string
+          evidence_refs: Json
+          id: string
+          maturity_level: number
+          organization_id: string | null
+          stack_layer: string
+          strength_score: number
+        }
+        Insert: {
+          computed_at?: string
+          evidence_refs?: Json
+          id?: string
+          maturity_level?: number
+          organization_id?: string | null
+          stack_layer?: string
+          strength_score?: number
+        }
+        Update: {
+          computed_at?: string
+          evidence_refs?: Json
+          id?: string
+          maturity_level?: number
+          organization_id?: string | null
+          stack_layer?: string
+          strength_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stack_strength_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stage_sla_configs: {
         Row: {
           alert_enabled: boolean
@@ -32237,6 +32533,44 @@ export type Database = {
             columns: ["vertical_starter_id"]
             isOneToOne: false
             referencedRelation: "vertical_starters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_advantage_clusters: {
+        Row: {
+          aggregate_score: number
+          cluster_name: string
+          created_at: string
+          domains: Json
+          id: string
+          organization_id: string
+          tenant_count: number
+        }
+        Insert: {
+          aggregate_score?: number
+          cluster_name?: string
+          created_at?: string
+          domains?: Json
+          id?: string
+          organization_id: string
+          tenant_count?: number
+        }
+        Update: {
+          aggregate_score?: number
+          cluster_name?: string
+          created_at?: string
+          domains?: Json
+          id?: string
+          organization_id?: string
+          tenant_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_advantage_clusters_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -34188,6 +34522,53 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      weak_compounding_zones: {
+        Row: {
+          created_at: string
+          description: string
+          evidence_refs: Json
+          id: string
+          organization_id: string | null
+          recommended_action: string
+          severity: string
+          status: string
+          weakness_type: string
+          zone_name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string | null
+          recommended_action?: string
+          severity?: string
+          status?: string
+          weakness_type?: string
+          zone_name?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string | null
+          recommended_action?: string
+          severity?: string
+          status?: string
+          weakness_type?: string
+          zone_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "weak_compounding_zones_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]

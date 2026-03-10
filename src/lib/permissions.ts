@@ -11,7 +11,7 @@ import {
   Rss, PackageCheck, ShieldCheck, Package, Shield, Settings, CreditCard, Plug,
   Users, Scale, BrainCircuit, Zap, Store, TrendingUp, Brain, FileText, Gauge,
   Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route, Compass,
-  Library, Bug, PackagePlus, Activity, Fingerprint, ShieldAlert,
+  Library, Bug, PackagePlus, Activity, Fingerprint, ShieldAlert, Crown,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
@@ -135,6 +135,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Runtime Mesh", url: "/runtime-feedback",         icon: Activity },
   { title: "Tenant Doc.", url: "/tenant-doctrine",          icon: Fingerprint },
   { title: "Autonomy",  url: "/autonomy-posture",          icon: ShieldAlert },
+  { title: "Advantage", url: "/compounding-advantage",     icon: Crown },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
