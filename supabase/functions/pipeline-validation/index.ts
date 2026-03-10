@@ -78,67 +78,59 @@ serve(async (req) => {
     return jsonResponse({ success: true, overall_pass: overallPass, remaining_to_validate: 0, job_id: jobId });
   }
 
-  // Pick ONE artifact to process
+  // Pick ONE artifact to process synchronously
   const artifact = artifactsToValidate[0];
   const remaining = artifactsToValidate.length - 1;
 
-  // Return immediately, process in background
-  const backgroundTask = (async () => {
-    try {
-      await processOneArtifact(artifact, {
-        user, initiative, ctx, serviceClient, apiKey, safeSubtaskIds,
-      });
+  try {
+    await processOneArtifact(artifact, {
+      user, initiative, ctx, serviceClient, apiKey, safeSubtaskIds,
+    });
 
-      // After processing, check overall status
-      const { data: artifactsAfter } = await serviceClient.from("agent_outputs")
-        .select("id, status")
-        .in("subtask_id", safeSubtaskIds)
-        .eq("organization_id", ctx.organizationId);
+    // After processing, check overall status
+    const { data: artifactsAfter } = await serviceClient.from("agent_outputs")
+      .select("id, status")
+      .in("subtask_id", safeSubtaskIds)
+      .eq("organization_id", ctx.organizationId);
 
-      const finalArtifacts = artifactsAfter || artifacts;
-      const approvedCount = finalArtifacts.filter((a: any) => a.status === "approved").length;
-      const escalatedCount = finalArtifacts.filter((a: any) => a.status === "pending_review").length;
-      const remainingCount = finalArtifacts.length - approvedCount - escalatedCount;
-      const overallPass = approvedCount === finalArtifacts.length;
-      const allProcessed = remainingCount === 0;
+    const finalArtifacts = artifactsAfter || artifacts;
+    const approvedCount = finalArtifacts.filter((a: any) => a.status === "approved").length;
+    const escalatedCount = finalArtifacts.filter((a: any) => a.status === "pending_review").length;
+    const remainingCount = finalArtifacts.length - approvedCount - escalatedCount;
+    const overallPass = approvedCount === finalArtifacts.length;
+    const allProcessed = remainingCount === 0;
 
-      await updateInitiative(ctx, { stage_status: allProcessed ? "ready_to_publish" : "validating" });
+    await updateInitiative(ctx, { stage_status: allProcessed ? "ready_to_publish" : "validating" });
 
-      if (jobId) await completeJob(ctx, jobId, {
-        artifacts_validated: finalArtifacts.length,
-        processed_artifact: artifact.id,
-        passed: approvedCount,
-        escalated: escalatedCount,
-        remaining_to_validate: remainingCount,
-        batch_incomplete: !allProcessed,
-        overall_pass: overallPass,
-      }, { model: "routed", costUsd: 0, durationMs: 0 });
+    if (jobId) await completeJob(ctx, jobId, {
+      artifacts_validated: finalArtifacts.length,
+      processed_artifact: artifact.id,
+      passed: approvedCount,
+      escalated: escalatedCount,
+      remaining_to_validate: remainingCount,
+      batch_incomplete: !allProcessed,
+      overall_pass: overallPass,
+    }, { model: "routed", costUsd: 0, durationMs: 0 });
 
-      await pipelineLog(ctx, "pipeline_validation_batch_done",
-        `Validated 1 artifact (${artifact.summary?.slice(0, 40)}). ${approvedCount}/${finalArtifacts.length} approved, ${escalatedCount} escalated. ${allProcessed ? "ALL PROCESSED ✅" : "More pending..."}`,
-      );
-    } catch (e: any) {
-      console.error("pipeline-validation background error:", e);
-      if (jobId) await failJob(ctx, jobId, e.message || "Background processing error");
-    }
-  })();
+    await pipelineLog(ctx, "pipeline_validation_batch_done",
+      `Validated 1 artifact (${artifact.summary?.slice(0, 40)}). ${approvedCount}/${finalArtifacts.length} approved, ${escalatedCount} escalated. ${allProcessed ? "ALL PROCESSED ✅" : "More pending..."}`,
+    );
 
-  // @ts-ignore EdgeRuntime is available in Supabase Edge Functions
-  if (typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) {
-    // @ts-ignore
-    EdgeRuntime.waitUntil(backgroundTask);
-  } else {
-    await backgroundTask;
+    return jsonResponse({
+      success: true,
+      artifact_id: artifact.id,
+      already_approved: alreadyApproved + approvedCount - artifacts.filter((a: any) => a.status === "approved").length,
+      remaining_to_validate: remainingCount,
+      batch_incomplete: !allProcessed,
+      overall_pass: overallPass,
+      total: finalArtifacts.length,
+      job_id: jobId,
+    });
+  } catch (e: any) {
+    console.error("pipeline-validation error:", e);
+    if (jobId) await failJob(ctx, jobId, e.message || "Validation processing error");
+    return errorResponse(e.message || "Validation processing error", 500);
   }
-
-  return jsonResponse({
-    status: "processing",
-    job_id: jobId,
-    artifact_id: artifact.id,
-    already_approved: alreadyApproved,
-    remaining_to_validate: remaining,
-    total: total,
-  });
 });
 
 // ══════════════════════════════════════════════════
