@@ -24131,6 +24131,50 @@ export type Database = {
           },
         ]
       }
+      pattern_distillation_records: {
+        Row: {
+          created_at: string
+          generalization_score: number
+          global_occurrence_count: number
+          id: string
+          organization_id: string
+          pattern_signature: string
+          recommended_scope: string
+          stack_occurrence_count: number
+          tenant_occurrence_count: number
+        }
+        Insert: {
+          created_at?: string
+          generalization_score?: number
+          global_occurrence_count?: number
+          id?: string
+          organization_id: string
+          pattern_signature?: string
+          recommended_scope?: string
+          stack_occurrence_count?: number
+          tenant_occurrence_count?: number
+        }
+        Update: {
+          created_at?: string
+          generalization_score?: number
+          global_occurrence_count?: number
+          id?: string
+          organization_id?: string
+          pattern_signature?: string
+          recommended_scope?: string
+          stack_occurrence_count?: number
+          tenant_occurrence_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pattern_distillation_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pilot_capability_submissions: {
         Row: {
           affected_surfaces: Json

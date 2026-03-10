@@ -164,7 +164,7 @@ sprints:
   # === BLOCK AB — Learning Canonization === COMMITTED
   - { sprint: 127, name: "Learning Extraction Engine",                             status: complete, block: "AB", phase: "Learning Canonization", layer: "Learning Extraction Layer" }
   - { sprint: 128, name: "Canon Promotion Pipeline",                               status: complete, block: "AB", phase: "Learning Canonization", layer: "Canon Promotion Layer" }
-  - { sprint: 129, name: "Cross-Tenant Pattern Distillation",                      status: committed, block: "AB", phase: "Learning Canonization", layer: "Cross-Tenant Distillation Layer" }
+  - { sprint: 129, name: "Cross-Tenant Pattern Distillation",                      status: complete, block: "AB", phase: "Learning Canonization", layer: "Cross-Tenant Distillation Layer" }
   - { sprint: 130, name: "Canon Reuse Injection",                                  status: committed, block: "AB", phase: "Learning Canonization", layer: "Canon Reuse Injection Layer" }
 
   # === BLOCK AC — Adaptive Coordination === COMMITTED
