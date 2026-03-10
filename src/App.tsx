@@ -90,6 +90,7 @@ import RuntimeFeedbackDashboard from "./pages/RuntimeFeedbackDashboard";
 import TenantDoctrineDashboard from "./pages/TenantDoctrineDashboard";
 import AutonomyPostureDashboard from "./pages/AutonomyPostureDashboard";
 import CompoundingAdvantageDashboard from "./pages/CompoundingAdvantageDashboard";
+import RuntimeValidationHarness from "./pages/RuntimeValidationHarness";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -216,6 +217,7 @@ const App = () => (
                         <Route path="/tenant-doctrine"         element={<P><TenantDoctrineDashboard /></P>} />
                         <Route path="/autonomy-posture"        element={<P><AutonomyPostureDashboard /></P>} />
                         <Route path="/compounding-advantage"   element={<P><CompoundingAdvantageDashboard /></P>} />
+                        <Route path="/runtime-harness"         element={<P><RuntimeValidationHarness /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>

@@ -197,3 +197,6 @@ verify_jwt = false
 
 [functions.compounding-advantage-engine]
 verify_jwt = false
+
+[functions.execution-harness-run]
+verify_jwt = false
