@@ -135,7 +135,7 @@ const translations = {
     "shortcuts.title": "Keyboard Shortcuts",
     "shortcuts.navigation": "Navigation",
     "shortcuts.actions": "Actions",
-    "shortcuts.goToDashboard": "Go to Dashboard",
+    "shortcuts.goToDashboard": "Go to Home",
     "shortcuts.goToInitiatives": "Go to Initiatives",
     "shortcuts.goToKanban": "Go to Kanban",
     "shortcuts.goToCode": "Go to Code",
