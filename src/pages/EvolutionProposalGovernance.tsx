@@ -449,11 +449,11 @@ export default function EvolutionProposalGovernance() {
                 </div>
                 {explanationDialog.legitimacy?.warnings?.length > 0 && (
                   <div className="space-y-1">
-                    <p className="text-xs font-medium text-yellow-500">Avisos</p>
+                    <p className="text-xs font-medium text-warning">Avisos</p>
                     <ul className="text-sm space-y-0.5">
                       {explanationDialog.legitimacy.warnings.map((w: string, i: number) => (
                         <li key={i} className="flex items-center gap-1.5">
-                          <AlertTriangle className="h-3 w-3 text-yellow-500" />
+                          <AlertTriangle className="h-3 w-3 text-warning" />
                           {w}
                         </li>
                       ))}
