@@ -239,19 +239,24 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    PromptOpt["Prompt Optimization Engine"]
-    PromptPR["Prompt Promotion / Rollback"]
-    FixInt["Fix Agents Intelligence"]
-    Memory["Agent Memory Layer"]
-    Predict["Predictive Error Detector"]
-    CrossStage["Cross-Stage Policy Synthesizer"]
+    PromptOpt["Prompt Optimization Engine"]:::intelligence
+    PromptPR["Prompt Promotion / Rollback"]:::governance
+    FixInt["Fix Agents Intelligence"]:::runtime
+    Memory["Agent Memory Layer"]:::data
+    Predict["Predictive Error Detector"]:::intelligence
+    CrossStage["Cross-Stage Policy Synthesizer"]:::governance
 
-    History["Execution History"] --> PromptOpt
+    History["Execution History"]:::data --> PromptOpt
     PromptOpt --> PromptPR
     History --> FixInt
     History --> Memory
     History --> Predict
     History --> CrossStage
+
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Sub-layers:**
