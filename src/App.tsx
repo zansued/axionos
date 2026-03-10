@@ -82,6 +82,7 @@ import EvolutionProposalGovernance from "./pages/EvolutionProposalGovernance";
 import ArchitecturalMutationControl from "./pages/ArchitecturalMutationControl";
 import ReflectiveValidationAudit from "./pages/ReflectiveValidationAudit";
 import KernelIntegrityGuard from "./pages/KernelIntegrityGuard";
+import CanonGovernanceDashboard from "./pages/CanonGovernanceDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
