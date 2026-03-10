@@ -88,6 +88,7 @@ import FailureMemoryDashboard from "./pages/FailureMemoryDashboard";
 import ExternalKnowledgeDashboard from "./pages/ExternalKnowledgeDashboard";
 import RuntimeFeedbackDashboard from "./pages/RuntimeFeedbackDashboard";
 import TenantDoctrineDashboard from "./pages/TenantDoctrineDashboard";
+import AutonomyPostureDashboard from "./pages/AutonomyPostureDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
