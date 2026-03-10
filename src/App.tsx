@@ -235,6 +235,7 @@ const App = () => (
                         <Route path="/attention-allocation"    element={<P><AttentionAllocationDashboard /></P>} />
                         <Route path="/adaptive-routing"        element={<P><AdaptiveRoutingDashboard /></P>} />
                         <Route path="/operational-cycles"      element={<P><OperationalCyclesDashboard /></P>} />
+                        <Route path="/operational-loops"       element={<P><OperationalLoopsDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>

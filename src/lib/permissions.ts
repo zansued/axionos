@@ -145,6 +145,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Attention", url: "/attention-allocation",   icon: Focus },
   { title: "Adapt. Route", url: "/adaptive-routing",  icon: Route },
   { title: "Cycles", url: "/operational-cycles",    icon: Timer },
+  { title: "Loops", url: "/operational-loops",     icon: Repeat },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
