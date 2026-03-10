@@ -68,15 +68,15 @@
 
 ## Strategic Directive
 
-AxionOS has completed **122 implementation sprints** spanning the full capability arc from deterministic execution through governed intelligence, institutional decision-making, adaptive institutional ecosystem, sovereign institutional intelligence, strategic coordination, reflexive governance, canonical knowledge, and runtime sovereignty. The internal architecture is mature, coherent, and self-governing. All blocks through Z (Runtime Sovereignty & Outcome Compounding) are complete.
+AxionOS has completed **126 implementation sprints** spanning the full capability arc from deterministic execution through governed intelligence, institutional decision-making, adaptive institutional ecosystem, sovereign institutional intelligence, strategic coordination, reflexive governance, canonical knowledge, runtime sovereignty, and runtime proof & adaptive governance. The internal architecture is mature, coherent, and self-governing. All blocks through AA (Runtime Proof & Adaptive Governance) are complete.
 
-**Post-Sprint 122 Strategic Position:**
+**Post-Sprint 126 Strategic Position:**
 
-The platform has reached its **Autonomous Delivery Sovereignty** milestone. Block Z is complete — runtime feedback mesh, tenant doctrine, outcome-based autonomy, and compounding advantage are operational. The system can now derive operating profiles from actual behavior, adjust autonomy levels based on evidence, and identify durable operational advantages across stacks and workflows.
+The platform has reached its **Autonomous Delivery Sovereignty** milestone. Block Z is complete — runtime feedback mesh, tenant doctrine, outcome-based autonomy, and compounding advantage are operational. Block AA adds runtime evidence accumulation, autonomy transition stabilization, tenant-adaptive regression profiles, and cold-start explainability to prevent misinterpretation of immature metrics.
 
 All governance constraints remain active: no autonomous architecture mutation, human approval required for structural change, forbidden mutation families protected, tenant isolation and explainability mandatory. Autonomy is earned through evidence, bounded by governance, and reversible by design.
 
-> **"From idea to delivered software — with strategic coordination, reflexive governance, canonical knowledge, and runtime sovereignty."**
+> **"From idea to delivered software — with strategic coordination, reflexive governance, canonical knowledge, runtime sovereignty, and evidence-grounded adaptive governance."**
 
 ---
 
