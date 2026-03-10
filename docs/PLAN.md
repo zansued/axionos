@@ -777,6 +777,36 @@ This phase therefore transforms knowledge from passive documentation into applie
 
 ---
 
+## Block Z — Runtime Sovereignty & Outcome Compounding (Sprints 119–122) — ✅ COMPLETE
+
+**Goal:** Connect live runtime behavior with the system's decision mechanisms, enabling AxionOS to accumulate operational advantage through evidence-governed learning.
+
+**Architectural prerequisite:** Block Y (Implementation Canon) complete — the system must govern what it knows before it governs what it learns from runtime.
+
+**Strategic thesis:** Block Z closes the gap between strategic awareness and runtime self-regulation by introducing runtime sovereignty — evidence-based adaptation of operating posture, bounded autonomy, and compounding advantage detection. This is not unrestricted autonomy. All governance constraints from previous layers remain active.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 119 | Live Runtime Feedback Mesh | Z | ✅ Complete | Create a governed runtime signal layer that connects planning, generation, validation, deployment, runtime outcomes, incidents, and rollback events into a unified outcome lineage model. |
+| 120 | Tenant Doctrine & Adaptive Operating Profiles v2 | Z | ✅ Complete | Derive adaptive operating profiles for each tenant based on observed runtime behavior — doctrine profiling, runtime preference extraction, rollout posture calibration, escalation bias analysis, doctrine divergence detection. |
+| 121 | Outcome-Based Autonomy Engine | Z | ✅ Complete | Implement graduated autonomy levels based on historical evidence — autonomy evidence scoring, autonomy ladder management, bounded autoapproval classes, autonomy regression detection, guardrail breach handling. |
+| 122 | Compounding Advantage & Moat Orchestrator | Z | ✅ Complete | Transform accumulated runtime evidence into measurable system advantage — compounding advantage scoring, moat domain detection, doctrine asset packaging, stack strength analysis, weak compounding zone detection. |
+
+**Block Z logical chain:**
+- Block X: how to govern the system's own evolution
+- Block Y: how to govern implementation knowledge
+- **Block Z: how to convert runtime evidence into adaptive doctrine, bounded autonomy, and durable operational advantage**
+
+**Hard constraints preserved:**
+- No autonomous architecture mutation
+- No bypass of kernel protection or forbidden mutation families
+- All structural evolution requires human approval
+- Autonomy must be reversible and reviewable
+- Rollback posture mandatory for any elevated autonomy class
+- Tenant isolation and explainability mandatory
+
+---
+
 ## Capability Verification Matrix
 
 | Capability | Status | Sprint | Key Modules |
