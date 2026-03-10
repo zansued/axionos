@@ -404,6 +404,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
 
         // Auto-trigger validation after execution completes fully
         if (stage === "execution" && result.success && !result.batch_incomplete) {
+          retryCountRef.current[initiativeId] = 0; // reset on success
           toast({ title: "🔍 Iniciando validação automática dos artefatos..." });
           setTimeout(() => {
             runStage(initiativeId, "validation");
