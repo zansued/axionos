@@ -26743,6 +26743,341 @@ export type Database = {
           },
         ]
       }
+      self_revision_audit_reviews: {
+        Row: {
+          created_at: string
+          displacement_acknowledged: boolean
+          effectiveness_accepted: boolean
+          id: string
+          organization_id: string
+          review_notes: string
+          review_verdict: string
+          reviewer_id: string | null
+          revision_event_id: string
+        }
+        Insert: {
+          created_at?: string
+          displacement_acknowledged?: boolean
+          effectiveness_accepted?: boolean
+          id?: string
+          organization_id: string
+          review_notes?: string
+          review_verdict?: string
+          reviewer_id?: string | null
+          revision_event_id: string
+        }
+        Update: {
+          created_at?: string
+          displacement_acknowledged?: boolean
+          effectiveness_accepted?: boolean
+          id?: string
+          organization_id?: string
+          review_notes?: string
+          review_verdict?: string
+          reviewer_id?: string | null
+          revision_event_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "self_revision_audit_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "self_revision_audit_reviews_revision_event_id_fkey"
+            columns: ["revision_event_id"]
+            isOneToOne: false
+            referencedRelation: "self_revision_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      self_revision_displacement_signals: {
+        Row: {
+          detected_at: string
+          displaced_surface: string
+          displacement_type: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          revision_event_id: string
+          severity: number
+        }
+        Insert: {
+          detected_at?: string
+          displaced_surface?: string
+          displacement_type?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          revision_event_id: string
+          severity?: number
+        }
+        Update: {
+          detected_at?: string
+          displaced_surface?: string
+          displacement_type?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          revision_event_id?: string
+          severity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "self_revision_displacement_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "self_revision_displacement_signals_revision_event_id_fkey"
+            columns: ["revision_event_id"]
+            isOneToOne: false
+            referencedRelation: "self_revision_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      self_revision_effectiveness_scores: {
+        Row: {
+          after_value: number
+          before_value: number
+          created_at: string
+          delta: number
+          dimension: string
+          id: string
+          improvement_flag: boolean
+          organization_id: string
+          revision_event_id: string
+        }
+        Insert: {
+          after_value?: number
+          before_value?: number
+          created_at?: string
+          delta?: number
+          dimension?: string
+          id?: string
+          improvement_flag?: boolean
+          organization_id: string
+          revision_event_id: string
+        }
+        Update: {
+          after_value?: number
+          before_value?: number
+          created_at?: string
+          delta?: number
+          dimension?: string
+          id?: string
+          improvement_flag?: boolean
+          organization_id?: string
+          revision_event_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "self_revision_effectiveness_scores_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "self_revision_effectiveness_scores_revision_event_id_fkey"
+            columns: ["revision_event_id"]
+            isOneToOne: false
+            referencedRelation: "self_revision_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      self_revision_events: {
+        Row: {
+          affected_runtime_surfaces: string[]
+          audit_status: Database["public"]["Enums"]["revision_audit_status"]
+          created_at: string
+          id: string
+          intended_outcome: string
+          linked_evolution_proposal_id: string | null
+          linked_mutation_case_id: string | null
+          observed_outcome: string | null
+          organization_id: string
+          origin_type: Database["public"]["Enums"]["revision_origin_type"]
+          revision_scope: string
+          trigger_evidence: Json
+          updated_at: string
+        }
+        Insert: {
+          affected_runtime_surfaces?: string[]
+          audit_status?: Database["public"]["Enums"]["revision_audit_status"]
+          created_at?: string
+          id?: string
+          intended_outcome?: string
+          linked_evolution_proposal_id?: string | null
+          linked_mutation_case_id?: string | null
+          observed_outcome?: string | null
+          organization_id: string
+          origin_type?: Database["public"]["Enums"]["revision_origin_type"]
+          revision_scope?: string
+          trigger_evidence?: Json
+          updated_at?: string
+        }
+        Update: {
+          affected_runtime_surfaces?: string[]
+          audit_status?: Database["public"]["Enums"]["revision_audit_status"]
+          created_at?: string
+          id?: string
+          intended_outcome?: string
+          linked_evolution_proposal_id?: string | null
+          linked_mutation_case_id?: string | null
+          observed_outcome?: string | null
+          organization_id?: string
+          origin_type?: Database["public"]["Enums"]["revision_origin_type"]
+          revision_scope?: string
+          trigger_evidence?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "self_revision_events_linked_evolution_proposal_id_fkey"
+            columns: ["linked_evolution_proposal_id"]
+            isOneToOne: false
+            referencedRelation: "evolution_proposals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "self_revision_events_linked_mutation_case_id_fkey"
+            columns: ["linked_mutation_case_id"]
+            isOneToOne: false
+            referencedRelation: "architectural_mutation_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "self_revision_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      self_revision_regression_links: {
+        Row: {
+          confidence: number
+          created_at: string
+          evidence_refs: Json
+          id: string
+          linked_revision_event_id: string | null
+          organization_id: string
+          regression_description: string
+          regression_type: string
+          revision_event_id: string
+        }
+        Insert: {
+          confidence?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          linked_revision_event_id?: string | null
+          organization_id: string
+          regression_description?: string
+          regression_type?: string
+          revision_event_id: string
+        }
+        Update: {
+          confidence?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          linked_revision_event_id?: string | null
+          organization_id?: string
+          regression_description?: string
+          regression_type?: string
+          revision_event_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "self_revision_regression_links_linked_revision_event_id_fkey"
+            columns: ["linked_revision_event_id"]
+            isOneToOne: false
+            referencedRelation: "self_revision_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "self_revision_regression_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "self_revision_regression_links_revision_event_id_fkey"
+            columns: ["revision_event_id"]
+            isOneToOne: false
+            referencedRelation: "self_revision_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      self_revision_validation_runs: {
+        Row: {
+          comparison_details: Json
+          confidence_score: number
+          created_at: string
+          displacement_risk_score: number
+          id: string
+          local_improvement_score: number
+          net_effectiveness_score: number
+          organization_id: string
+          rationale: string[]
+          regression_probability: number
+          revision_event_id: string
+        }
+        Insert: {
+          comparison_details?: Json
+          confidence_score?: number
+          created_at?: string
+          displacement_risk_score?: number
+          id?: string
+          local_improvement_score?: number
+          net_effectiveness_score?: number
+          organization_id: string
+          rationale?: string[]
+          regression_probability?: number
+          revision_event_id: string
+        }
+        Update: {
+          comparison_details?: Json
+          confidence_score?: number
+          created_at?: string
+          displacement_risk_score?: number
+          id?: string
+          local_improvement_score?: number
+          net_effectiveness_score?: number
+          organization_id?: string
+          rationale?: string[]
+          regression_probability?: number
+          revision_event_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "self_revision_validation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "self_revision_validation_runs_revision_event_id_fkey"
+            columns: ["revision_event_id"]
+            isOneToOne: false
+            referencedRelation: "self_revision_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       semantic_retrieval_domains: {
         Row: {
           created_at: string | null
@@ -30680,6 +31015,22 @@ export type Database = {
         | "fully_reversible"
         | "partially_reversible"
         | "irreversible"
+      revision_audit_status:
+        | "pending"
+        | "validating"
+        | "validated"
+        | "disputed"
+        | "reviewed"
+        | "closed"
+      revision_origin_type:
+        | "validation_fix_loop"
+        | "calibration_adjustment"
+        | "stabilization_action"
+        | "repair_intervention"
+        | "rollback_event"
+        | "parameter_tuning"
+        | "governance_correction"
+        | "operator_override"
       rollback_posture:
         | "not_applicable"
         | "manual_rollback"
@@ -31144,6 +31495,24 @@ export const Constants = {
         "fully_reversible",
         "partially_reversible",
         "irreversible",
+      ],
+      revision_audit_status: [
+        "pending",
+        "validating",
+        "validated",
+        "disputed",
+        "reviewed",
+        "closed",
+      ],
+      revision_origin_type: [
+        "validation_fix_loop",
+        "calibration_adjustment",
+        "stabilization_action",
+        "repair_intervention",
+        "rollback_event",
+        "parameter_tuning",
+        "governance_correction",
+        "operator_override",
       ],
       rollback_posture: [
         "not_applicable",
