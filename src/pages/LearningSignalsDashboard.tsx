@@ -103,7 +103,9 @@ export default function LearningSignalsDashboard() {
               </Button>
             </div>
 
-            <ColdStartBanner coldStart={coldStart} />
+            {coldStart.data?.is_cold_start && (
+              <ColdStartBanner label={coldStart.data.label} summary={coldStart.data.summary} signals={coldStart.data.signals} />
+            )}
 
             {/* Extraction result toast */}
             {extractionResult && (
