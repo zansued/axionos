@@ -7,6 +7,7 @@
 > **Canon Status:** 110 sprints complete — all blocks (Foundation through W) implemented and hardened
 > **Latest Sprint:** 110 (Civilizational Continuity Simulation Layer) — ✅ Complete
 > **Next Block:** X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
+> **Future Block:** Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 Future
 
 ## Document Authority
 
