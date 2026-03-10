@@ -191,3 +191,6 @@ verify_jwt = false
 
 [functions.tenant-doctrine-engine]
 verify_jwt = false
+
+[functions.outcome-based-autonomy]
+verify_jwt = false
