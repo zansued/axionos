@@ -123,6 +123,102 @@ export default function AutonomyPostureDashboard() {
               </Card>
             </TabsContent>
 
+            {/* Sprint 124: Transition Stabilization Observability */}
+            <TabsContent value="transitions">
+              <div className="space-y-4">
+                {/* Transition KPIs */}
+                {transitionMetrics && (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <Card>
+                      <CardContent className="pt-6">
+                        <p className="text-xs text-muted-foreground">Upgrade Attempts</p>
+                        <p className="text-2xl font-bold">{transitionMetrics.upgrade_attempts ?? 0}</p>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="pt-6">
+                        <p className="text-xs text-muted-foreground">Approved</p>
+                        <p className="text-2xl font-bold text-primary">{transitionMetrics.upgrades_approved ?? 0}</p>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="pt-6">
+                        <p className="text-xs text-muted-foreground">Rejected (Stabilized)</p>
+                        <p className="text-2xl font-bold text-destructive">{transitionMetrics.upgrades_rejected ?? 0}</p>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="pt-6">
+                        <p className="text-xs text-muted-foreground">Approval Rate</p>
+                        <p className="text-2xl font-bold">
+                          {((transitionMetrics.upgrade_approval_rate ?? 0) * 100).toFixed(0)}%
+                        </p>
+                        <Progress value={(transitionMetrics.upgrade_approval_rate ?? 0) * 100} className="h-1.5 mt-2" />
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
+                {/* Recent transition attempts */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      Recent Transition Attempts
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {!transitionMetrics?.recent_attempts?.length ? (
+                      <p className="text-muted-foreground text-sm">No transition attempts recorded yet.</p>
+                    ) : (
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Direction</TableHead>
+                            <TableHead>From</TableHead>
+                            <TableHead>To</TableHead>
+                            <TableHead>Time at Level</TableHead>
+                            <TableHead>Executions</TableHead>
+                            <TableHead>Confidence</TableHead>
+                            <TableHead>Reason</TableHead>
+                            <TableHead>Date</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {transitionMetrics.recent_attempts.map((a: any) => (
+                            <TableRow key={a.id}>
+                              <TableCell>
+                                {a.approved ? (
+                                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                                ) : (
+                                  <XCircle className="h-4 w-4 text-destructive" />
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant={a.direction === "upgrade" ? "default" : "destructive"}>
+                                  {a.direction}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>L{a.level_from}</TableCell>
+                              <TableCell>L{a.level_to}</TableCell>
+                              <TableCell className="text-xs">{a.time_at_current_level_hours ? `${Number(a.time_at_current_level_hours).toFixed(1)}h` : "—"}</TableCell>
+                              <TableCell>{a.execution_count_at_level ?? "—"}</TableCell>
+                              <TableCell>{a.confidence_score ? `${(Number(a.confidence_score) * 100).toFixed(0)}%` : "—"}</TableCell>
+                              <TableCell className="max-w-xs truncate text-xs text-muted-foreground">{a.rejection_reason || "—"}</TableCell>
+                              <TableCell className="text-xs text-muted-foreground">
+                                {new Date(a.created_at).toLocaleDateString()}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
             <TabsContent value="adjustments">
               <Card>
                 <CardContent className="pt-6">

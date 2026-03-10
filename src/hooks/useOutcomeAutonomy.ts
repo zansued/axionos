@@ -95,6 +95,7 @@ export function useOutcomeAutonomy() {
     adjustments: adjustmentsQuery.data?.adjustments || [],
     breaches: breachesQuery.data?.breaches || [],
     regressions: regressionsQuery.data?.regressions || [],
+    transitionMetrics: transitionMetricsQuery.data || null,
     loadingDomains: domainsQuery.isLoading,
     scoreAutonomy,
     adjustLevel,
