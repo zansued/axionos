@@ -92,6 +92,7 @@ import AutonomyPostureDashboard from "./pages/AutonomyPostureDashboard";
 import CompoundingAdvantageDashboard from "./pages/CompoundingAdvantageDashboard";
 import RuntimeValidationHarness from "./pages/RuntimeValidationHarness";
 import LearningSignalsDashboard from "./pages/LearningSignalsDashboard";
+import CanonEvolutionDashboard from "./pages/CanonEvolutionDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
