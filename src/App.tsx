@@ -94,6 +94,7 @@ import RuntimeValidationHarness from "./pages/RuntimeValidationHarness";
 import LearningSignalsDashboard from "./pages/LearningSignalsDashboard";
 import CanonEvolutionDashboard from "./pages/CanonEvolutionDashboard";
 import PatternDistillationDashboard from "./pages/PatternDistillationDashboard";
+import CanonReuseImpactDashboard from "./pages/CanonReuseImpactDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -224,6 +225,7 @@ const App = () => (
                         <Route path="/learning-signals"        element={<P><LearningSignalsDashboard /></P>} />
                         <Route path="/canon-evolution"         element={<P><CanonEvolutionDashboard /></P>} />
                         <Route path="/pattern-distillation"    element={<P><PatternDistillationDashboard /></P>} />
+                        <Route path="/canon-reuse"             element={<P><CanonReuseImpactDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>

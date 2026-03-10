@@ -7568,6 +7568,57 @@ export type Database = {
           },
         ]
       }
+      canon_reuse_registry: {
+        Row: {
+          activation_status: string
+          affected_stage: string
+          canon_record_id: string | null
+          created_at: string
+          id: string
+          last_applied_at: string | null
+          organization_id: string
+          reuse_type: string
+          times_applied: number
+        }
+        Insert: {
+          activation_status?: string
+          affected_stage?: string
+          canon_record_id?: string | null
+          created_at?: string
+          id?: string
+          last_applied_at?: string | null
+          organization_id: string
+          reuse_type?: string
+          times_applied?: number
+        }
+        Update: {
+          activation_status?: string
+          affected_stage?: string
+          canon_record_id?: string | null
+          created_at?: string
+          id?: string
+          last_applied_at?: string | null
+          organization_id?: string
+          reuse_type?: string
+          times_applied?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_reuse_registry_canon_record_id_fkey"
+            columns: ["canon_record_id"]
+            isOneToOne: false
+            referencedRelation: "canon_learning_records"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_reuse_registry_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_stewards: {
         Row: {
           assigned_entries_count: number
