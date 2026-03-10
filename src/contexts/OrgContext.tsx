@@ -80,8 +80,12 @@ export function OrgProvider({ children }: { children: ReactNode }) {
         );
 
         if (rpcErr) {
-          // Might fail if slug already exists (user already has an org but RLS hides it)
           console.error("Failed to create org:", rpcErr);
+          toast({
+            variant: "destructive",
+            title: "Erro ao criar organização",
+            description: "Não foi possível configurar sua conta. Recarregue a página ou entre em contato com o suporte.",
+          });
           setLoading(false);
           return;
         }

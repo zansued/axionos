@@ -128,10 +128,18 @@ Retorne APENAS JSON:
     await persistReview(serviceClient, artifacts[0].id, user.id, "release_preflight", "approved",
       JSON.stringify(preflight));
 
-    if (!preflight.preflight_pass && preflight.risk_level === "high") {
-      // Log warning but don't block — deterministic files and repo defaults cover most critical files
-      console.warn("Pre-flight warnings (non-blocking):", preflight.critical_missing);
-      await pipelineLog(ctx, "release_preflight_warning", `Pre-flight warnings: ${preflight.critical_missing?.join(", ") || preflight.summary}`);
+    if (!preflight.preflight_pass && preflight.risk_level === "high" && (preflight.critical_missing?.length ?? 0) > 0) {
+      await pipelineLog(ctx, "release_preflight_blocked",
+        `Pre-flight bloqueou publicação: ${preflight.critical_missing.join(", ")}`);
+      throw new Error(
+        `Publicação bloqueada pelo pre-flight: arquivos críticos ausentes — ${preflight.critical_missing.join(", ")}. ` +
+        `Execute novamente os estágios de geração de código ou verifique os artefatos aprovados.`
+      );
+    } else if (!preflight.preflight_pass) {
+      // Warnings only — don't block
+      console.warn("Pre-flight warnings (non-blocking):", preflight.warnings);
+      await pipelineLog(ctx, "release_preflight_warning",
+        `Pre-flight warnings: ${preflight.warnings?.join(", ") || preflight.summary}`);
     }
 
     // ═══ PHASE 2: Changelog & Commit Messages (Release Agent) ═══
