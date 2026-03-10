@@ -83,6 +83,7 @@ import ArchitecturalMutationControl from "./pages/ArchitecturalMutationControl";
 import ReflectiveValidationAudit from "./pages/ReflectiveValidationAudit";
 import KernelIntegrityGuard from "./pages/KernelIntegrityGuard";
 import CanonGovernanceDashboard from "./pages/CanonGovernanceDashboard";
+import PatternLibraryDashboard from "./pages/PatternLibraryDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -202,6 +203,7 @@ const App = () => (
                         <Route path="/reflective-validation"    element={<P><ReflectiveValidationAudit /></P>} />
                         <Route path="/kernel-integrity"         element={<P><KernelIntegrityGuard /></P>} />
                         <Route path="/canon-governance"         element={<P><CanonGovernanceDashboard /></P>} />
+                        <Route path="/pattern-library"          element={<P><PatternLibraryDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>

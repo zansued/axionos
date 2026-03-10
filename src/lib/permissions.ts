@@ -11,6 +11,7 @@ import {
   Rss, PackageCheck, ShieldCheck, Package, Shield, Settings, CreditCard, Plug,
   Users, Scale, BrainCircuit, Zap, Store, TrendingUp, Brain, FileText, Gauge,
   Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route, Compass,
+  Library,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
@@ -128,6 +129,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Refl. Audit", url: "/reflective-validation",     icon: ShieldCheck },
   { title: "Kernel Guard", url: "/kernel-integrity",          icon: Shield },
   { title: "Canon Gov.",  url: "/canon-governance",           icon: FileText },
+  { title: "Patterns",  url: "/pattern-library",            icon: Library },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
