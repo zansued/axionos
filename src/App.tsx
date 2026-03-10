@@ -89,6 +89,7 @@ import ExternalKnowledgeDashboard from "./pages/ExternalKnowledgeDashboard";
 import RuntimeFeedbackDashboard from "./pages/RuntimeFeedbackDashboard";
 import TenantDoctrineDashboard from "./pages/TenantDoctrineDashboard";
 import AutonomyPostureDashboard from "./pages/AutonomyPostureDashboard";
+import CompoundingAdvantageDashboard from "./pages/CompoundingAdvantageDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
