@@ -43,6 +43,10 @@ export default function AutonomyPostureDashboard() {
             <p className="text-muted-foreground text-sm">Evidence-based autonomy levels with bounded reversibility.</p>
           </div>
 
+          {coldStart?.is_cold_start && (
+            <ColdStartBanner label={coldStart.label} summary={coldStart.summary} signals={coldStart.signals} />
+          )}
+
           {/* Summary cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>

@@ -93,6 +93,10 @@ export default function RuntimeValidationHarness() {
             </p>
           </div>
 
+          {coldStart?.is_cold_start && (
+            <ColdStartBanner label={coldStart.label} summary={coldStart.summary} signals={coldStart.signals} />
+          )}
+
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />

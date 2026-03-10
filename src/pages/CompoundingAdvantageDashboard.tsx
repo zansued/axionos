@@ -30,6 +30,10 @@ export default function CompoundingAdvantageDashboard() {
             <p className="text-muted-foreground text-sm">Identify and operationalize durable capability moats from accumulated learning.</p>
           </div>
 
+          {coldStart?.is_cold_start && (
+            <ColdStartBanner label={coldStart.label} summary={coldStart.summary} signals={coldStart.signals} />
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
