@@ -2,6 +2,11 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
+console.log("[AxionOS] ENV check:", {
+  url: import.meta.env.VITE_SUPABASE_URL ? "SET" : "MISSING",
+  key: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ? "SET" : "MISSING",
+});
+
 const root = document.getElementById("root")!;
 
 try {
