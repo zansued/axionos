@@ -218,6 +218,16 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       comment?: string,
       publishParams?: { github_token: string; owner: string; repo: string; base_branch: string }
     ) => {
+      // Guard: prevent concurrent stages on the same initiative
+      if (running[initiativeId] && running[initiativeId] !== stage) {
+        console.warn(
+          `[PipelineContext] Blocked duplicate stage "${stage}" — "${running[initiativeId]}" already running for ${initiativeId}`
+        );
+        toast({
+          title: `⚠️ Estágio "${running[initiativeId]}" ainda em execução. Aguarde antes de iniciar "${stage}".`,
+        });
+        return;
+      }
       setRunning((prev) => ({ ...prev, [initiativeId]: stage }));
       try {
         const session = (await supabase.auth.getSession()).data.session;
