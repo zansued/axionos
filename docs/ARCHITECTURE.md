@@ -19,19 +19,42 @@
 
 ---
 
+## Mermaid Diagram Color Canon
+
+To keep the architecture legible across blocks and future documentation updates, AxionOS uses a semantic Mermaid color canon.
+
+These colors are not decorative. They indicate architectural function.
+
+| Function | Color | classDef |
+|----------|-------|----------|
+| Human / operator interaction | warm yellow | `fill:#F6E58D,stroke:#8C6D1F,color:#111` |
+| Core system / platform structure | blue | `fill:#74B9FF,stroke:#1B4F72,color:#111` |
+| Governance / policy / control | purple | `fill:#C56CF0,stroke:#6C3483,color:#111` |
+| Intelligence / analysis / cognition | teal | `fill:#00CEC9,stroke:#117A65,color:#111` |
+| Runtime / execution / repair loops | pink-magenta | `fill:#FD79A8,stroke:#AD1457,color:#111` |
+| Data / memory / persistence | green | `fill:#55EFC4,stroke:#117A65,color:#111` |
+| External systems / providers / connectors | neutral gray | `fill:#B2BEC3,stroke:#636E72,color:#111` |
+| Strategic coordination layers | soft violet | `fill:#D6A2E8,stroke:#7D3C98,color:#111` |
+| Reflexive governance / self-regulation | red | `fill:#FF7675,stroke:#922B21,color:#111` |
+| Canonical knowledge / implementation intelligence | indigo | `fill:#6C5CE7,stroke:#2E1A8A,color:#fff` |
+
+> All future Mermaid diagrams should reuse these semantic colors consistently whenever possible.
+
+---
+
 ## 1. System Context
 
 ```mermaid
 flowchart TB
-    Dev["Developer / Operator"]
-    Lead["Engineering / Product Lead"]
+    Dev["Developer / Operator"]:::human
+    Lead["Engineering / Product Lead"]:::human
 
-    Axion["AxionOS\nAdaptive Engineering Platform"]
+    Axion["AxionOS\nAdaptive Engineering Platform"]:::core
 
-    Git["GitHub / Code Hosting"]
-    LLM["LLM Providers / Model APIs"]
-    DB["Supabase / PostgreSQL"]
-    Obs["Observability / Telemetry Stack"]
+    Git["GitHub / Code Hosting"]:::external
+    LLM["LLM Providers / Model APIs"]:::external
+    DB["Supabase / PostgreSQL"]:::data
+    Obs["Observability / Telemetry Stack"]:::external
 
     Dev --> Axion
     Lead --> Axion
@@ -40,6 +63,11 @@ flowchart TB
     Axion --> LLM
     Axion --> DB
     Axion --> Obs
+
+    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:1.5px;
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef external fill:#B2BEC3,stroke:#636E72,color:#111,stroke-width:1.5px;
 ```
 
 **Actors:**
@@ -58,19 +86,19 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    UI["Web App / Dashboard"]
-    API["API / Edge Functions Layer"]
+    UI["Web App / Dashboard"]:::human
+    API["API / Edge Functions Layer"]:::core
 
-    Core["Execution Pipeline Core"]
-    OI["Operational Intelligence Engine"]
-    Learn["Learning Engine"]
-    Gov["Execution Governance Engine"]
-    PI["Platform Intelligence Engine"]
-    Calib["Platform Self-Calibration Engine"]
-    Strat["Execution Strategy Evolution Engine"]
+    Core["Execution Pipeline Core"]:::runtime
+    OI["Operational Intelligence Engine"]:::intelligence
+    Learn["Learning Engine"]:::intelligence
+    Gov["Execution Governance Engine"]:::governance
+    PI["Platform Intelligence Engine"]:::intelligence
+    Calib["Platform Self-Calibration Engine"]:::governance
+    Strat["Execution Strategy Evolution Engine"]:::strategic
 
-    Data["Persistence Layer\nSupabase / PostgreSQL"]
-    Ext["External Integration Layer\nGitHub / LLM / Telemetry"]
+    Data["Persistence Layer\nSupabase / PostgreSQL"]:::data
+    Ext["External Integration Layer\nGitHub / LLM / Telemetry"]:::external
 
     UI --> API
 
@@ -105,9 +133,18 @@ flowchart TB
     Calib --> Data
     Strat --> Data
 
-    Ext --> GitHub["GitHub / Code Hosting"]
-    Ext --> Models["LLM Providers"]
-    Ext --> Telemetry["Telemetry / Notifications"]
+    Ext --> GitHub["GitHub / Code Hosting"]:::external
+    Ext --> Models["LLM Providers"]:::external
+    Ext --> Telemetry["Telemetry / Notifications"]:::external
+
+    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:1.5px;
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef strategic fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef external fill:#B2BEC3,stroke:#636E72,color:#111,stroke-width:1.5px;
 ```
 
 **Containers:**
@@ -134,18 +171,23 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    Orchestrator["Stage Orchestrator"]
-    Runner["Deterministic Pipeline Runner"]
-    Artifact["Artifact Manager"]
-    Validation["Validation Engine"]
-    Publish["Publish Engine"]
-    Events["Execution Event Emitter"]
+    Orchestrator["Stage Orchestrator"]:::core
+    Runner["Deterministic Pipeline Runner"]:::runtime
+    Artifact["Artifact Manager"]:::data
+    Validation["Validation Engine"]:::governance
+    Publish["Publish Engine"]:::core
+    Events["Execution Event Emitter"]:::data
 
     Orchestrator --> Runner
     Runner --> Artifact
     Artifact --> Validation
     Validation --> Publish
     Publish --> Events
+
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Modules:**
@@ -169,15 +211,20 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    ErrorLib["Error Pattern Library"]
-    RepairTrack["Repair Strategy Tracker"]
-    RepairRouter["Adaptive Repair Router"]
-    Prevention["Prevention Candidate Generator"]
+    ErrorLib["Error Pattern Library"]:::intelligence
+    RepairTrack["Repair Strategy Tracker"]:::data
+    RepairRouter["Adaptive Repair Router"]:::runtime
+    Prevention["Prevention Candidate Generator"]:::governance
 
-    Events["Execution Events"] --> ErrorLib
+    Events["Execution Events"]:::data --> ErrorLib
     ErrorLib --> RepairTrack
     RepairTrack --> RepairRouter
     RepairRouter --> Prevention
+
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Modules:**
@@ -192,19 +239,24 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    PromptOpt["Prompt Optimization Engine"]
-    PromptPR["Prompt Promotion / Rollback"]
-    FixInt["Fix Agents Intelligence"]
-    Memory["Agent Memory Layer"]
-    Predict["Predictive Error Detector"]
-    CrossStage["Cross-Stage Policy Synthesizer"]
+    PromptOpt["Prompt Optimization Engine"]:::intelligence
+    PromptPR["Prompt Promotion / Rollback"]:::governance
+    FixInt["Fix Agents Intelligence"]:::runtime
+    Memory["Agent Memory Layer"]:::data
+    Predict["Predictive Error Detector"]:::intelligence
+    CrossStage["Cross-Stage Policy Synthesizer"]:::governance
 
-    History["Execution History"] --> PromptOpt
+    History["Execution History"]:::data --> PromptOpt
     PromptOpt --> PromptPR
     History --> FixInt
     History --> Memory
     History --> Predict
     History --> CrossStage
+
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Sub-layers:**
@@ -221,18 +273,24 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    Selector["Execution Policy Selector"]
-    Portfolio["Policy Portfolio Optimizer"]
-    Tenant["Tenant Adaptive Tuning Engine"]
-    Routing["Policy Routing Layer"]
+    Selector["Execution Policy Selector"]:::governance
+    Portfolio["Policy Portfolio Optimizer"]:::governance
+    Tenant["Tenant Adaptive Tuning Engine"]:::intelligence
+    Routing["Policy Routing Layer"]:::core
 
-    Signals["Learning Signals"] --> Selector
-    Policies["Policy Portfolio"] --> Selector
-    TenantCtx["Tenant / Workspace Context"] --> Tenant
+    Signals["Learning Signals"]:::data --> Selector
+    Policies["Policy Portfolio"]:::data --> Selector
+    TenantCtx["Tenant / Workspace Context"]:::human --> Tenant
 
     Selector --> Tenant
     Tenant --> Routing
     Portfolio --> Routing
+
+    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:1.5px;
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Sub-layers:**
@@ -247,12 +305,12 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    Aggregator["Platform Behavior Aggregator"]
-    Bottleneck["Bottleneck Detector"]
-    Pattern["Pattern Analyzer"]
-    Insight["Insight Generator"]
-    Reco["Recommendation Engine"]
-    Health["Platform Health Model"]
+    Aggregator["Platform Behavior Aggregator"]:::data
+    Bottleneck["Bottleneck Detector"]:::intelligence
+    Pattern["Pattern Analyzer"]:::intelligence
+    Insight["Insight Generator"]:::intelligence
+    Reco["Recommendation Engine"]:::governance
+    Health["Platform Health Model"]:::data
 
     Aggregator --> Bottleneck
     Aggregator --> Pattern
@@ -260,6 +318,10 @@ flowchart TB
     Pattern --> Insight
     Insight --> Reco
     Insight --> Health
+
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Modules:** `platform-intelligence/platform-behavior-aggregator.ts`, `platform-bottleneck-detector.ts`, `platform-pattern-analyzer.ts`, `platform-insight-generator.ts`, `platform-recommendation-engine.ts`, `platform-health-model.ts`
@@ -272,21 +334,26 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    Registry["Calibration Parameter Registry"]
-    Interpreter["Calibration Signal Interpreter"]
-    Proposal["Calibration Proposal Engine"]
-    Guard["Calibration Guardrails"]
-    Runner["Calibration Runner"]
-    Outcome["Calibration Outcome Tracker"]
-    Rollback["Calibration Rollback Engine"]
+    Registry["Calibration Parameter Registry"]:::data
+    Interpreter["Calibration Signal Interpreter"]:::intelligence
+    Proposal["Calibration Proposal Engine"]:::intelligence
+    Guard["Calibration Guardrails"]:::governance
+    Runner["Calibration Runner"]:::runtime
+    Outcome["Calibration Outcome Tracker"]:::data
+    Rollback["Calibration Rollback Engine"]:::governance
 
-    Signals["Platform Intelligence Signals"] --> Interpreter
+    Signals["Platform Intelligence Signals"]:::intelligence --> Interpreter
     Registry --> Proposal
     Interpreter --> Proposal
     Proposal --> Guard
     Guard --> Runner
     Runner --> Outcome
     Outcome --> Rollback
+
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Modules:** `platform-calibration/platform-calibration-signal-interpreter.ts`, `platform-calibration-proposal-engine.ts`, `platform-calibration-guardrails.ts`, `platform-calibration-runner.ts`, `platform-calibration-outcome-tracker.ts`, `platform-calibration-rollback-engine.ts`
@@ -301,17 +368,17 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    Family["Strategy Family Registry"]
-    Signal["Strategy Signal Interpreter"]
-    Synth["Strategy Variant Synthesizer"]
-    Guard["Strategy Guardrails"]
-    Experiment["Strategy Experiment Runner"]
-    Outcome["Strategy Outcome Tracker"]
-    Promote["Strategy Promotion Rules"]
-    Rollback["Strategy Rollback Engine"]
-    Lineage["Strategy Lineage"]
+    Family["Strategy Family Registry"]:::data
+    Signal["Strategy Signal Interpreter"]:::intelligence
+    Synth["Strategy Variant Synthesizer"]:::strategic
+    Guard["Strategy Guardrails"]:::governance
+    Experiment["Strategy Experiment Runner"]:::runtime
+    Outcome["Strategy Outcome Tracker"]:::data
+    Promote["Strategy Promotion Rules"]:::governance
+    Rollback["Strategy Rollback Engine"]:::governance
+    Lineage["Strategy Lineage"]:::data
 
-    PlatformSignals["Platform Signals"] --> Signal
+    PlatformSignals["Platform Signals"]:::intelligence --> Signal
     Family --> Synth
     Signal --> Synth
     Synth --> Guard
@@ -323,6 +390,12 @@ flowchart TB
     Experiment --> Lineage
     Outcome --> Lineage
     Rollback --> Lineage
+
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef strategic fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Modules:** `execution-strategy/execution-strategy-signal-interpreter.ts`, `execution-strategy-variant-synthesizer.ts`, `execution-strategy-guardrails.ts`, `execution-strategy-experiment-runner.ts`, `execution-strategy-outcome-tracker.ts`, `execution-strategy-promotion-rules.ts`, `execution-strategy-rollback-engine.ts`, `execution-strategy-lineage.ts`
@@ -397,6 +470,196 @@ Block X is not "more features." It is a **meta-governance layer** governing how 
 - Block V: how to remember, decide sovereignly, reduce dependency, survive succession
 - Block W: how to align horizons, arbitrate sacrifices, maintain mission, traverse long futures
 - **Block X: how to govern the system's own evolution, detect corrosion, and protect kernel integrity**
+- **Block Y: how to govern what the system knows about implementation and make that knowledge operational**
+
+### 5.4 Future — Implementation Canon & Knowledge Governance (Block Y)
+
+Block Y introduces the **Canonical Knowledge & Implementation Intelligence** layer.
+
+Its purpose is not to accumulate documentation, but to transform implementation knowledge into runtime-connected system capability.
+
+Block Y governs how implementation knowledge is:
+- stored
+- reviewed
+- approved
+- versioned
+- deprecated
+- retrieved
+- operationally applied
+
+This future layer enables AxionOS to maintain a governed implementation canon including:
+- approved architectural patterns
+- reusable implementation templates
+- curated code snippets
+- stack-specific conventions
+- failure memory and repair strategies
+- validated external knowledge updates
+
+This canon is not a passive wiki. It is designed to be queried and applied directly by planning, execution, repair, and validation flows.
+
+- Planning agents should consult architectural canon before generating implementation strategies.
+- Execution agents should retrieve approved templates and conventions before producing code.
+- Repair systems should consult historical failure patterns and successful mitigations.
+- Validation agents should compare generated artifacts against canon-approved practices.
+
+> **Operational Integration Principle:** In AxionOS, knowledge only counts as system capability when it is operationally connected to runtime behavior. A pattern not consumed by agents or functions is documentation, not implementation intelligence.
+
+Block Y therefore represents applied, governed, versioned, and operationally integrated knowledge.
+
+**Planned scope:**
+
+| Sprint | Capability |
+|--------|-----------|
+| 115 | Canon Steward & Knowledge Governance Engine |
+| 116 | Implementation Pattern Library & Retrieval Layer |
+| 117 | Failure Memory & Repair Intelligence Archive |
+| 118 | External Knowledge Intake & Canon Evolution Control |
+
+**Architectural risk note:** The main risk of Block Y is becoming a decorative or bloated wiki. Its antidote is operational retrieval, governance, deprecation, and selective application rather than passive accumulation.
+
+#### AxionOS Layered Architecture Overview
+
+```mermaid
+flowchart TB
+    U[Human Operator / Builder]:::human
+
+    subgraph T1[Execution Layer]
+        E1[Planning]
+        E2[Execution]
+        E3[Repair]
+        E4[Validation]
+    end
+
+    subgraph T2[Coordination Layer]
+        C1[Pipeline Orchestration]
+        C2[Job / Stage Control]
+        C3[Retries / Batching / Flow Routing]
+    end
+
+    subgraph T3[Governance Layer]
+        G1[Policy & Approval]
+        G2[Auditability]
+        G3[Memory / Sovereignty / Continuity]
+    end
+
+    subgraph T4[Strategic Coordination Layer -- Block W]
+        S1[Multi-Horizon Alignment]
+        S2[Tradeoff Arbitration]
+        S3[Mission Integrity]
+        S4[Continuity Simulation]
+    end
+
+    subgraph T5[Reflexive Governance Layer -- Block X]
+        R1[Evolution Proposal Governance]
+        R2[Architectural Mutation Control]
+        R3[Reflective Validation]
+        R4[Kernel Integrity Guard]
+    end
+
+    subgraph T6[Canonical Knowledge Layer -- Block Y]
+        K1[Canon Stewardship]
+        K2[Pattern Library & Retrieval]
+        K3[Failure Memory]
+        K4[External Knowledge Intake]
+    end
+
+    X1[Models / AI Providers]:::external
+    X2[Databases / Memory / Logs]:::data
+
+    U --> E1
+    E1 --> E2
+    E2 --> E3
+    E3 --> E4
+
+    E1 --> C1
+    E2 --> C1
+    E3 --> C2
+    E4 --> C3
+
+    C1 --> G1
+    C2 --> G2
+    C3 --> G3
+
+    G1 --> S1
+    G2 --> S2
+    G3 --> S3
+    S3 --> S4
+
+    S1 --> R1
+    S2 --> R2
+    S3 --> R3
+    S4 --> R4
+
+    R1 --> K1
+    R2 --> K2
+    R3 --> K3
+    R4 --> K4
+
+    E1 --> X1
+    E2 --> X1
+    E3 --> X1
+    E4 --> X1
+
+    C1 --> X2
+    G2 --> X2
+    S4 --> X2
+    K3 --> X2
+
+    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:1.5px;
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef strategic fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:1.5px;
+    classDef reflexive fill:#FF7675,stroke:#922B21,color:#111,stroke-width:1.5px;
+    classDef canon fill:#6C5CE7,stroke:#2E1A8A,color:#fff,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef external fill:#B2BEC3,stroke:#636E72,color:#111,stroke-width:1.5px;
+
+    class E1,E2,E3,E4,C1,C2,C3 core;
+    class G1,G2,G3 governance;
+    class S1,S2,S3,S4 strategic;
+    class R1,R2,R3,R4 reflexive;
+    class K1,K2,K3,K4 canon;
+    class X2 data;
+    class X1 external;
+```
+
+#### Runtime Knowledge Application Principle
+
+```mermaid
+flowchart LR
+    A[Stored Pattern / Guideline / Template]:::canon
+    B[Canon Governance]:::governance
+    C[Retrieval Layer]:::canon
+    D[Planning Agent]:::core
+    E[Execution Agent]:::core
+    F[Repair Loop]:::runtime
+    G[Validation Layer]:::governance
+    H[Runtime Artifact / Code Output]:::data
+    I[Passive Documentation Only]:::external
+
+    A --> B
+    B --> C
+    C --> D
+    C --> E
+    C --> F
+    C --> G
+
+    D --> H
+    E --> H
+    F --> H
+    G --> H
+
+    A -. if not retrieved .-> I
+
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef canon fill:#6C5CE7,stroke:#2E1A8A,color:#fff,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef external fill:#B2BEC3,stroke:#636E72,color:#111,stroke-width:1.5px;
+```
+
+> A stored pattern becomes implementation intelligence only when it is selected, retrieved, and applied by runtime flows. Without operational use, the canon remains documentation rather than active system capability.
 
 ---
 
@@ -611,15 +874,20 @@ The Agent OS is the runtime architecture governing how agents are selected, exec
 
 ```mermaid
 flowchart LR
-    Pipeline["Pipeline Core\n(execution events)"] --> OI["Operational\nIntelligence"]
-    OI --> Learn["Learning\nEngine"]
-    Learn --> Gov["Execution\nGovernance"]
+    Pipeline["Pipeline Core\n(execution events)"]:::runtime --> OI["Operational\nIntelligence"]:::intelligence
+    OI --> Learn["Learning\nEngine"]:::intelligence
+    Learn --> Gov["Execution\nGovernance"]:::governance
     Gov --> Pipeline
-    Learn --> PI["Platform\nIntelligence"]
-    PI --> Calib["Self-\nCalibration"]
-    PI --> Strat["Strategy\nEvolution"]
+    Learn --> PI["Platform\nIntelligence"]:::intelligence
+    PI --> Calib["Self-\nCalibration"]:::governance
+    PI --> Strat["Strategy\nEvolution"]:::strategic
     Calib --> Pipeline
     Strat --> Pipeline
+
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef strategic fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:1.5px;
 ```
 
 **Flow description:**
