@@ -33092,6 +33092,44 @@ export type Database = {
           },
         ]
       }
+      system_health_metrics: {
+        Row: {
+          created_at: string
+          evaluated_at: string
+          metric_id: string
+          metric_trend: string
+          metric_type: string
+          metric_value: number
+          organization_id: string
+        }
+        Insert: {
+          created_at?: string
+          evaluated_at?: string
+          metric_id?: string
+          metric_trend?: string
+          metric_type?: string
+          metric_value?: number
+          organization_id: string
+        }
+        Update: {
+          created_at?: string
+          evaluated_at?: string
+          metric_id?: string
+          metric_trend?: string
+          metric_type?: string
+          metric_value?: number
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_health_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       template_initialization_rules: {
         Row: {
           created_at: string
