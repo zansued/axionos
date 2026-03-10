@@ -144,7 +144,10 @@ function ChatInput({ onSend }: {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 + i * 0.1, duration: 0.35 }}
-            onClick={() => onExampleClick?.(ex.prompt)}
+            onClick={() => {
+              setMessage(ex.prompt)
+              textareaRef.current?.focus()
+            }}
             className="flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-medium border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/[0.15] text-[#7a7a82] hover:text-white transition-all duration-200 active:scale-95"
           >
             <ex.icon className="size-3.5 opacity-70" />
