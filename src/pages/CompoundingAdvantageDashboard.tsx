@@ -18,6 +18,7 @@ const moatColors: Record<string, string> = {
 
 export default function CompoundingAdvantageDashboard() {
   const { moats, scores, packs, weakZones, loadingMoats } = useCompoundingAdvantage();
+  const { data: coldStart } = useColdStart();
 
   return (
     <SidebarProvider>
