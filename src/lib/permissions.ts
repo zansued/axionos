@@ -1,14 +1,15 @@
 /**
  * permissions.ts
  * Single source of truth for role-based access control.
- * Defines canonical roles, nav groups per surface, and route access helpers.
+ * Canonical AxionOS navigation architecture.
  */
 
 import type { LucideIcon } from "lucide-react";
 import {
-  Rocket, Search, ShieldCheck, Scale, 
-  FlaskConical, Activity, HeartPulse, Brain, Zap, Fingerprint,
-  Users, Settings, Code2, TrendingUp, LineChart
+  LayoutDashboard, FolderKanban, Bot, GitBranch, Eye, Shield,
+  Layers, Settings, HeartPulse, LineChart, Search, Brain,
+  Fingerprint, Scale, Users, Activity, Cpu, Code2,
+  TrendingUp, Rocket,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
@@ -20,7 +21,6 @@ export type CanonicalRole =
   | "platform_reviewer"
   | "platform_admin";
 
-/** Maps org membership role string → CanonicalRole */
 export function deriveCanonicalRole(orgRole: string | null): CanonicalRole {
   switch (orgRole) {
     case "owner":    return "tenant_owner";
@@ -40,40 +40,46 @@ export type NavItem = {
   icon: LucideIcon;
 };
 
-// ─── Builder Mode – Minimal Surface ─────────────────────────────────────────
-// O construtor foca exclusivamente no painel de Chat inicial e seus projetos rodando
+// ─── Builder Mode — Product Surface ─────────────────────────────────────────
 
 export const BUILDER_NAV: NavItem[] = [
-  { title: "AutoPilot",    url: "/",             icon: Rocket },
-  { title: "Initiatives",  url: "/initiatives",  icon: Code2 },
+  { title: "Dashboard",     url: "/",              icon: LayoutDashboard },
+  { title: "Projects",      url: "/initiatives",   icon: FolderKanban },
+  { title: "Agents",        url: "/agents",        icon: Bot },
+  { title: "Pipelines",     url: "/delivery",      icon: GitBranch },
+  { title: "Observability", url: "/system-health",  icon: Eye },
+  { title: "Governance",    url: "/autonomy-posture", icon: Shield },
+  { title: "Modes",         url: "/workspace",     icon: Layers },
+  { title: "Settings",      url: "/org",           icon: Settings },
 ];
 
 export const BUILDER_ROUTES = new Set(BUILDER_NAV.map(i => i.url));
 
-// ─── Owner Mode – The Engine Room ───────────────────────────────────────────
-// Centralizamos tudo o que é administrativo, tático e estratégico do sistema
+// ─── Owner Mode — Governance & Operations ───────────────────────────────────
 
 export const OWNER_SYSTEM_INTELLIGENCE: NavItem[] = [
-  { title: "System Health",  url: "/system-health",  icon: HeartPulse },
-  { title: "Adoption Int.",  url: "/adoption",       icon: LineChart },
-  { title: "Delivery Out.",  url: "/delivery-outcomes", icon: Search },
+  { title: "System Health",     url: "/system-health",      icon: HeartPulse },
+  { title: "Adoption",          url: "/adoption",           icon: LineChart },
+  { title: "Delivery Outcomes", url: "/delivery-outcomes",  icon: Search },
+  { title: "Observability",     url: "/observability",      icon: Activity },
 ];
 
 export const OWNER_INSTITUTIONAL_MEMORY: NavItem[] = [
-  { title: "Pattern Library", url: "/pattern-library", icon: Brain },
-  { title: "Capabilities",    url: "/capability-registry", icon: Fingerprint },
+  { title: "Pattern Library", url: "/pattern-library",      icon: Brain },
+  { title: "Capabilities",   url: "/capability-registry",   icon: Fingerprint },
 ];
 
 export const OWNER_GOVERNANCE: NavItem[] = [
-  { title: "Autonomy Posture",  url: "/autonomy-posture", icon: Scale },
-  { title: "Agent Swarm",       url: "/agents",           icon: Users },
-  { title: "Settings & Billing",url: "/org",              icon: Settings },
+  { title: "Autonomy Posture", url: "/autonomy-posture", icon: Scale },
+  { title: "Agent Swarm",      url: "/swarm-execution",  icon: Users },
+  { title: "Calibration",      url: "/calibration",      icon: Cpu },
+  { title: "Settings",         url: "/org",              icon: Settings },
 ];
 
 export const OWNER_NAV: NavItem[] = [
   ...OWNER_SYSTEM_INTELLIGENCE,
   ...OWNER_INSTITUTIONAL_MEMORY,
-  ...OWNER_GOVERNANCE
+  ...OWNER_GOVERNANCE,
 ];
 
 const OWNER_ROUTES = new Set(OWNER_NAV.map(i => i.url));
@@ -81,8 +87,8 @@ const OWNER_ROUTES = new Set(OWNER_NAV.map(i => i.url));
 // ─── Nav group builder ─────────────────────────────────────────────────────
 
 export type NavGroups = {
-  builder:   NavItem[];
-  owner:     NavItem[];
+  builder: NavItem[];
+  owner:   NavItem[];
 };
 
 export function getNavGroups(role: CanonicalRole): NavGroups {
@@ -99,12 +105,9 @@ export function getNavGroups(role: CanonicalRole): NavGroups {
 
 // ─── Route access helpers ─────────────────────────────────────────────────
 
-/** Check if a role can access a specific route path */
 export function canAccessRoute(role: CanonicalRole, path: string): boolean {
   const normalized = path.split("?")[0].split("#")[0];
-
   if (BUILDER_ROUTES.has(normalized)) return true;
-
   switch (role) {
     case "end_user":
     case "operator":

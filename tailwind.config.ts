@@ -12,7 +12,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Inter", "system-ui", "sans-serif"],
+        display: ["Space Grotesk", "Inter", "system-ui", "sans-serif"],
         body: ["Inter", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
       },
@@ -42,7 +42,19 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        axion: {
+          blue: "hsl(var(--axion-blue))",
+          purple: "hsl(var(--axion-purple))",
+          cyan: "hsl(var(--axion-cyan))",
+          orange: "hsl(var(--axion-orange))",
+          magenta: "hsl(var(--axion-magenta))",
+        },
         surface: {
+          deep: "hsl(var(--surface-deep))",
+          1: "hsl(var(--surface-1))",
+          2: "hsl(var(--surface-2))",
+          3: "hsl(var(--surface-3))",
+          border: "hsl(var(--surface-border))",
           product: "hsl(var(--surface-product))",
           workspace: "hsl(var(--surface-workspace))",
           platform: "hsl(var(--surface-platform))",
