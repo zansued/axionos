@@ -1034,8 +1034,11 @@ This phase therefore transforms knowledge from passive documentation into applie
 | Implementation Canon & Knowledge Governance | 4 | 115–118 |
 | Runtime Sovereignty & Outcome Compounding | 4 | 119–122 |
 | Runtime Proof & Adaptive Governance | 4 | 123–126 |
+| Learning Canonization | 4 | 127–130 |
+| Adaptive Coordination | 4 | 131–134 |
+| Adaptive Operational Organism | 4 | 135–138 |
 | Support | 11 | Various |
-| **Total** | **~149** | |
+| **Total** | **~165** | |
 
 ---
 

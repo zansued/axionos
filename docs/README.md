@@ -98,7 +98,7 @@ Internal sophistication remains critical. The next level deepens it through adap
 5. Use **AGENTS.md** for internal agent system reference only
 6. Implement future work **sprint by sprint** with human review
 7. Do **not** collapse internal architecture and user-facing journey into the same surface
-8. Do **not** casually reopen completed canon (Sprints 1–106) without deliberate review
+8. Do **not** casually reopen completed canon (Sprints 1–138) without deliberate review
 9. Internal layers are backstage support — the default product surface is the user journey
 
 ---

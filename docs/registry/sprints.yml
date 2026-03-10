@@ -167,14 +167,14 @@ sprints:
   - { sprint: 129, name: "Cross-Tenant Pattern Distillation",                      status: complete, block: "AB", phase: "Learning Canonization", layer: "Cross-Tenant Distillation Layer" }
   - { sprint: 130, name: "Canon Reuse Injection",                                  status: complete, block: "AB", phase: "Learning Canonization", layer: "Canon Reuse Injection Layer" }
 
-  # === BLOCK AC — Adaptive Coordination === COMMITTED
+  # === BLOCK AC — Adaptive Coordination === COMPLETE
   - { sprint: 131, name: "Operational Posture Engine",                             status: complete, block: "AC", phase: "Adaptive Coordination", layer: "Operational Posture Layer" }
-  - { sprint: 132, name: "Attention Allocation Engine",                            status: committed, block: "AC", phase: "Adaptive Coordination", layer: "Attention Allocation Layer" }
-  - { sprint: 133, name: "Adaptive Resource Routing",                              status: committed, block: "AC", phase: "Adaptive Coordination", layer: "Adaptive Resource Routing Layer" }
-  - { sprint: 134, name: "Operational Rhythm & Recovery Cycles",                   status: committed, block: "AC", phase: "Adaptive Coordination", layer: "Operational Rhythm Layer" }
+  - { sprint: 132, name: "Attention Allocation Engine",                            status: complete, block: "AC", phase: "Adaptive Coordination", layer: "Attention Allocation Layer" }
+  - { sprint: 133, name: "Adaptive Resource Routing",                              status: complete, block: "AC", phase: "Adaptive Coordination", layer: "Adaptive Resource Routing Layer" }
+  - { sprint: 134, name: "Operational Rhythm & Recovery Cycles",                   status: complete, block: "AC", phase: "Adaptive Coordination", layer: "Operational Rhythm Layer" }
 
-  # === BLOCK AD — Adaptive Operational Organism === COMMITTED
-  - { sprint: 135, name: "Multi-Loop Governance Orchestrator",                     status: committed, block: "AD", phase: "Adaptive Operational Organism", layer: "Multi-Loop Governance Layer" }
-  - { sprint: 136, name: "Systemic Health Model",                                  status: committed, block: "AD", phase: "Adaptive Operational Organism", layer: "Systemic Health Model Layer" }
-  - { sprint: 137, name: "Organism Memory Layers",                                 status: committed, block: "AD", phase: "Adaptive Operational Organism", layer: "Organism Memory Layer" }
-  - { sprint: 138, name: "Adaptive Operational Organism Console",                  status: committed, block: "AD", phase: "Adaptive Operational Organism", layer: "Organism Console Layer" }
+  # === BLOCK AD — Adaptive Operational Organism === COMPLETE
+  - { sprint: 135, name: "Multi-Loop Governance Orchestrator",                     status: complete, block: "AD", phase: "Adaptive Operational Organism", layer: "Multi-Loop Governance Layer" }
+  - { sprint: 136, name: "Systemic Health Model",                                  status: complete, block: "AD", phase: "Adaptive Operational Organism", layer: "Systemic Health Model Layer" }
+  - { sprint: 137, name: "Organism Memory Layers",                                 status: complete, block: "AD", phase: "Adaptive Operational Organism", layer: "Organism Memory Layer" }
+  - { sprint: 138, name: "Adaptive Operational Organism Console",                  status: complete, block: "AD", phase: "Adaptive Operational Organism", layer: "Organism Console Layer" }
