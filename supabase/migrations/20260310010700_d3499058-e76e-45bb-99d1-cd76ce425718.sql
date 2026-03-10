@@ -1,0 +1,1 @@
+UPDATE initiative_jobs SET status = 'failed', error = 'Manual cleanup: stuck validation job (edge timeout)', completed_at = NOW() WHERE id = '258bd41d-3125-4ed3-b006-27b6b2d7132e' AND status = 'running';
