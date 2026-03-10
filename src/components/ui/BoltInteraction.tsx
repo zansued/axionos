@@ -50,10 +50,10 @@ function useTypingPlaceholder() {
 
 // ── Example chips ─────────────────────────────────────────────────────────
 const EXAMPLES = [
-  { icon: Box, label: "API REST", prompt: "Crie uma API REST com autenticação JWT e banco PostgreSQL" },
-  { icon: Zap, label: "Automação", prompt: "Crie um sistema de automação com webhooks e filas" },
-  { icon: Bot, label: "Agente IA", prompt: "Crie um agente de IA com memória e tool-calling" },
-  { icon: BarChart3, label: "Dashboard", prompt: "Crie um dashboard de analytics em tempo real" },
+  { icon: Box, label: "REST API", prompt: "Build a REST API with JWT authentication and PostgreSQL" },
+  { icon: Zap, label: "Automation", prompt: "Create an automation system with webhooks and queues" },
+  { icon: Bot, label: "AI Agent", prompt: "Build an AI agent with memory and tool-calling" },
+  { icon: BarChart3, label: "Dashboard", prompt: "Create a real-time analytics dashboard" },
 ]
 
 
