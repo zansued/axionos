@@ -4,6 +4,7 @@ import {
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import axionLogo from '@/assets/axion-logo.svg'
+import NeuralBackground from './NeuralBackground'
 
 // ── Typing placeholder ───────────────────────────────────────────────────
 const PLACEHOLDERS = [
