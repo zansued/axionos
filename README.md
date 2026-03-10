@@ -11,7 +11,7 @@
 
 ## What is AxionOS?
 
-AxionOS is an **autonomous software engineering platform** that transforms ideas into governed, validated repositories and live deployments.
+AxionOS is a **governed Operating System for Autonomous Product Creation** that transforms ideas into governed, validated repositories and live deployments — while improving its own ability to do so over time through evidence, learning, and adaptive coordination.
 
 You describe what you want to build. AxionOS executes the full engineering pipeline:
 
@@ -55,7 +55,9 @@ Everything runs inside a **32-stage deterministic pipeline** with full cost trac
 | Runtime Sovereignty (Block Z) | 119–122 | ✅ Complete |
 | Runtime Proof & Adaptive Governance (Block AA) | 123–126 | ✅ Complete |
 
-> Full roadmap: [ROADMAP.md](docs/ROADMAP.md) · Sprint ledger: [PLAN.md](docs/PLAN.md)
+> Full roadmap: [ROADMAP.md](docs/ROADMAP.md) · Value thesis: [VALUE_THESIS.md](docs/VALUE_THESIS.md) · Sprint ledger: [PLAN.md](docs/PLAN.md)
+
+> **Canon Note:** Public documentation reflects the stable public architecture line through Sprint 138. Internal roadmap and experimental canon may be ahead of this baseline.
 
 ---
 
