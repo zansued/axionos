@@ -147,6 +147,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Adapt. Route", url: "/adaptive-routing",  icon: Route },
   { title: "Cycles", url: "/operational-cycles",    icon: Timer },
   { title: "Loops", url: "/operational-loops",     icon: Repeat },
+  { title: "Sys. Health", url: "/system-health",  icon: HeartPulse },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
