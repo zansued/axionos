@@ -54,7 +54,7 @@ function ProposalStatusBadge({ status }: { status: string }) {
 }
 
 function KernelRiskIndicator({ risk }: { risk: number }) {
-  const color = risk > 60 ? "text-destructive" : risk > 30 ? "text-yellow-500" : "text-green-500";
+  const color = risk > 60 ? "text-destructive" : risk > 30 ? "text-warning" : "text-primary";
   return (
     <span className={`text-xs font-medium ${color}`}>
       {risk > 60 ? "⚠ Alto" : risk > 30 ? "◐ Moderado" : "● Baixo"} ({risk})
