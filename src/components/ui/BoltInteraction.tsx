@@ -247,7 +247,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className="text-[13px] sm:text-[14px] text-[#4a4a52] font-semibold tracking-[0.2em] uppercase mb-6"
+          className="text-[13px] sm:text-[14px] text-white/80 font-semibold tracking-[0.2em] uppercase mb-6"
         >
           Autonomous Intelligent Infrastructure
         </motion.p>
