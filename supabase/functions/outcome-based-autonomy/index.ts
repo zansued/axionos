@@ -7,6 +7,7 @@ import { computeDowngrade } from "../_shared/outcome-autonomy/autonomy-downgrade
 import { classifyBreach } from "../_shared/outcome-autonomy/guardrail-breach-handler.ts";
 import { explainPosture } from "../_shared/outcome-autonomy/autonomy-explainer.ts";
 import { evaluateTransition, type TransitionRule } from "../_shared/outcome-autonomy/autonomy-transition-stabilizer.ts";
+import { detectAdaptiveRegression, DEFAULT_PROFILES, type TenantRegressionProfile } from "../_shared/outcome-autonomy/tenant-adaptive-regression.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
