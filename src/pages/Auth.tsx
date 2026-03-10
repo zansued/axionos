@@ -100,7 +100,7 @@ export default function Auth() {
             className="mt-2 text-[13px] font-semibold tracking-[0.15em] uppercase"
             style={{ color: '#4a4a52' }}
           >
-            Autonomous Intelligent Infrastructure
+            &nbsp;
           </motion.p>
         </div>
 
