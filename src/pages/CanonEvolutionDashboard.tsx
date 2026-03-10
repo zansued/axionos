@@ -42,7 +42,7 @@ export default function CanonEvolutionDashboard() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Canon Evolution</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Governed promotion pipeline converting learning evidence into canonical operational doctrine.
+            Autonomous Intelligent Infrastructure — converting learning evidence into canonical operational doctrine.
           </p>
         </div>
 

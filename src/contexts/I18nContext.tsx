@@ -99,7 +99,7 @@ const translations = {
     "nav.darkMode": "Dark Mode",
     // Initiatives
     "initiatives.title": "Initiatives",
-    "initiatives.subtitle": "From idea to software — governed pipeline with human approval",
+    "initiatives.subtitle": "Autonomous Intelligent Infrastructure — from idea to delivered software",
     "initiatives.new": "New Initiative",
     "initiatives.selectPrompt": "Select an initiative to see the pipeline",
     "initiatives.created": "Initiative created!",
