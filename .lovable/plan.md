@@ -1,28 +1,29 @@
 # AxionOS — Execution Plan
 
-> Last updated: 2026-03-07
-> Mode: **Level 5.5 — Governed Intelligence OS**
+> Last updated: 2026-03-10
+> Mode: **Level 7 — Strategic Autonomy & Civilizational Coordination**
 > Execution: **Sprint-based**
 
 ---
 
 ## Strategic Directive
 
-AxionOS has completed its Level 4.5 milestone. The execution kernel is stable. The learning layer is active. Meta-agents generate architectural recommendations. Accepted recommendations produce structured engineering proposals via controlled artifact generation. Engineering Memory Foundation is operational.
+AxionOS has completed its Level 7 milestone. Block W (Strategic Autonomy & Civilizational Coordination) is complete and operationally hardened. Cross-sprint causal signals are active and bounded. Constitution management UI is operational.
 
 **The focus is now:**
-1. Activate memory retrieval surfaces across repair, meta-agents, and proposals
-2. Introduce periodic memory synthesis for long-term pattern detection
-3. Enable memory-aware meta-agents for contextual recommendations
-4. Governance before autonomy. Memory before discovery. Contextual intelligence before automated experimentation.
+1. Introduce reflexive governance for the system's own evolution
+2. Control architectural mutation with reversibility and blast radius evaluation
+3. Audit self-corrections and revision effectiveness
+4. Protect kernel integrity against corrosion, bloat, and existential drift
+5. Close the gap between strategic awareness and runtime self-regulation
 
 ---
 
 ## Strategic Principle
 
 > **Governance before autonomy.**
-> **Memory before discovery.**
-> **Contextual intelligence before automated experimentation.**
+> **Awareness before self-regulation.**
+> **Reflexive governance before structural self-modification.**
 
 Every new capability must be governable, auditable, and non-destructive before it is expanded. AxionOS does not pursue autonomy for its own sake.
 
@@ -45,84 +46,65 @@ Every new capability must be governable, auditable, and non-destructive before i
 | Sprint 9 | Adaptive Routing — evidence-informed repair strategy selection | ✅ |
 | Sprint 10 | Learning Foundation — learning records, prompt outcomes, aggregation | ✅ |
 
-### Level 4 — Self-Learning Software Factory (Sprints 11–12) ✅
+### Level 4–6 (Sprints 11–106) ✅
+
+All sprints from Learning Agents v1 through Sovereign Institutional Intelligence are complete. See [docs/PLAN.md](../docs/PLAN.md) for the full sprint-by-sprint record.
+
+### Level 7 — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) ✅ Hardened
 
 | Sprint | Deliverable | Status |
 |--------|-------------|--------|
-| Sprint 11 | Commercial Readiness — plans, billing, workspace isolation, usage enforcement | ✅ |
-| Sprint 12 | Learning Agents v1 — prompt analysis, strategy tracking, prediction, weight adaptation | ✅ |
+| Sprint 107 | Multi-Horizon Strategic Alignment Engine | ✅ |
+| Sprint 108 | Institutional Tradeoff Arbitration System | ✅ |
+| Sprint 109 | Mission Integrity & Drift Prevention | ✅ |
+| Sprint 110 | Civilizational Continuity Simulation Layer | ✅ |
 
-### Level 4.5 — Meta-Aware Engineering Platform (Sprints 13–15) ✅
-
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 13 | Meta-Agents v1 — 4 active meta-agents, recommendation lifecycle, deduplication | ✅ |
-| Sprint 13.5 | Meta-Agent Hardening — safety validation, tenant isolation, mutation protection | ✅ |
-| Sprint 14 | Controlled Proposal Generation — 5 artifact types, review lifecycle, idempotency | ✅ |
-| Sprint 14.5 | Proposal Hardening — content quality, linkage validation, non-mutation proof | ✅ |
-| Sprint 15 | Engineering Memory Foundation — memory tables, capture events, retrieval API, observability | ✅ |
-| Sprint 16 | Memory Retrieval Surfaces — repair, meta-agent, artifact, review retrieval with ranking | ✅ |
-| Sprint 17 | Memory Summaries — 6 summary types, signal strength scoring, generation service, UI | ✅ |
-| Sprint 18 | Memory-Aware Meta-Agents — historical context enrichment, continuity scoring, redundancy guard, proposal layer v2 | ✅ |
-| Sprint 19 | Proposal Quality Feedback Loop — outcome tracking, quality scoring, confidence calibration, memory effectiveness | ✅ |
-| Sprint 20 | Advisory Calibration Layer — 6 calibration domains, deterministic scoring, advisory-only diagnostic signals | ✅ |
+**Hardening:** Cross-sprint causal integration, constitution management UI, history/integration tabs, scoring transparency, causal modifier cards.
 
 ---
 
 ## Current State
 
-AxionOS is an **Institutional Engineering Memory Platform** (Level 5):
+AxionOS is a **Strategic Autonomy & Civilizational Coordination** platform (Level 7):
 
 - **Execution:** Stable 32-stage deterministic pipeline with DAG orchestration, runtime validation, autonomous repair, and preventive engineering.
 - **Learning:** Active rule-based learning with prompt outcome analysis, strategy effectiveness tracking, predictive error detection, and bounded weight adjustment.
-- **Meta-Analysis:** 4 memory-aware meta-agents with historical context enrichment, continuity scoring, redundancy suppression, alignment classification, quality feedback loop, and advisory calibration. Recommendation-only — no system mutation.
+- **Meta-Analysis:** 4 memory-aware meta-agents with historical context enrichment, continuity scoring, redundancy suppression, alignment classification, quality feedback loop, and advisory calibration.
 - **Guidance & Copilot:** ✅ Active — PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, 4 copilot submodes, centralized content registries.
 - **Engineering Memory:** Full stack operational — foundation, retrieval surfaces, summaries, and memory-aware reasoning.
 - **Multi-Agent Coordination:** ✅ Active — role arbitration, debate & resolution, shared working memory, bounded swarm execution.
 - **Ecosystem:** ✅ Active — capability packaging, trust/entitlements, partner marketplace, outcome-aware marketplace.
 - **Distributed Runtime:** ✅ Active — job control, cross-region recovery, tenant-isolated scale, resilient orchestration.
 - **Architecture Research:** ✅ Active — hypothesis engine, simulated evolution, cross-tenant synthesis, governed promotion.
+- **Strategic Coordination:** ✅ Active — multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation.
 - **Commercial:** Product plans, billing, workspace isolation, and usage enforcement active.
 - **Governance:** Full audit trail, stage permissions, SLA enforcement, and review workflows across recommendations and artifacts.
+
+### Reality Check
+
+AxionOS governance, orchestration, and explainability maturity are stronger than its fully autonomous runtime adaptation. The system can detect, analyze, explain, and recommend — but cannot yet autonomously reconfigure its own execution parameters in response to runtime conditions. This gap is the direct motivation for Block X.
 
 ---
 
 ## Next Phase
 
-### Block T — Governed Intelligence OS (Sprints 95–98) — ✅ Complete
+### Block X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
 
-**Thesis:** Consolidate existing capabilities into an operating system for governed intelligence.
-
-| Sprint | Deliverable | Status |
-|--------|-------------|--------|
-| Sprint 95 | Institutional Memory Consolidation — unified queryable institutional knowledge | ✅ |
-| Sprint 96 | Doctrine & Playbook Synthesis — playbooks, doctrine packs, operational heuristics | ✅ |
-| Sprint 97 | Bounded Autonomous Operations — safe autonomy for repetitive low-risk operations | ✅ |
-| Sprint 98 | Institutional Decision Engine — memory + doctrine + risk → consistent recommendations | ✅ |
-
-### Current Phase: Block U — Adaptive Institutional Ecosystem (Sprints 99–102)
+**Thesis:** Close the gap between strategic awareness and runtime self-regulation by governing the system's own evolution.
 
 | Sprint | Deliverable | Status |
 |--------|-------------|--------|
-| Sprint 99 | Cross-Context Doctrine Adaptation — adapt doctrine by workspace type, profile, context, maturity | ✅ |
-| Sprint 100 | Institutional Conflict Resolution Engine — detect/mediate conflicts between policies, doctrines, strategies | ✅ |
-| Sprint 101 | Federated Intelligence Boundaries — shared intelligence across contexts without breaking isolation | 🔲 |
-| Sprint 102 | Resilience & Continuity Governance — institutional continuity across failure, drift, obsolescence | 🔲 |
+| Sprint 111 | Evolution Proposal Governance Engine — govern proposals for changing the system itself | 🔲 |
+| Sprint 112 | Architectural Mutation Control Layer — reversibility, blast radius, coupling, mutation legitimacy | 🔲 |
+| Sprint 113 | Reflective Validation & Self-Revision Audit — audit whether self-corrections actually improved | 🔲 |
+| Sprint 114 | Kernel Integrity & Anti-Corrosion Guard — protect kernel against corrosion, bloat, drift | 🔲 |
 
 ### Future Horizons
 
-### Level 6 — Adaptive Institutional Ecosystem
+### Level 9 — Adaptive Runtime Intelligence (Future Horizon)
 
-- Cross-context doctrine adaptation
-- Institutional conflict resolution
-- Federated intelligence with tenant isolation
-- Resilience and continuity governance
-- Long-horizon institutional coherence
-
-### Level 7 — Discovery-Driven Engineering (Future Horizon)
-
-- Architecture experimentation informed by accumulated institutional intelligence
-- Automated hypothesis generation from cross-institutional patterns
+- Autonomous execution parameter reconfiguration
+- Runtime self-healing beyond manual intervention
 - Controlled experimentation with governance safeguards
 - This level is a vision, not a current priority
 
