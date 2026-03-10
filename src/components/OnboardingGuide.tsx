@@ -96,6 +96,8 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   ];
 
   useEffect(() => {
+    // Don't show onboarding on the landing page
+    if (location.pathname === "/") return;
     if (user && currentOrg) {
       const key = `${ONBOARDING_KEY}-${user.id}`;
       const done = localStorage.getItem(key);
@@ -104,7 +106,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         return () => clearTimeout(timer);
       }
     }
-  }, [user, currentOrg]);
+  }, [user, currentOrg, location.pathname]);
 
   const complete = () => {
     if (user) {
