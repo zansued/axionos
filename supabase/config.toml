@@ -185,3 +185,9 @@ verify_jwt = false
 
 [functions.canon-evolution-control]
 verify_jwt = false
+
+[functions.runtime-feedback-mesh]
+verify_jwt = false
+
+[functions.tenant-doctrine-engine]
+verify_jwt = false

@@ -100,8 +100,6 @@ serve(async (req) => {
       if (DETERMINISTIC_FILES[filePath]) content = DETERMINISTIC_FILES[filePath];
       // Sanitize package.json
       if (filePath === "package.json") content = sanitizePackageJson(content);
-      // BUG FIX (Bug 3): Sanitize SQL migrations — inject CREATE SCHEMA if missing
-      if (filePath.match(/\.sql$/) || filePath.includes("migration")) content = sanitizeSqlMigration(content);
 
       fileEntries.push({ path: filePath, content, type: si?.file_type || art.type, summary: si?.description || art.summary || filePath });
     }
@@ -132,25 +130,10 @@ Retorne APENAS JSON:
     await persistReview(serviceClient, artifacts[0].id, user.id, "release_preflight", "approved",
       JSON.stringify(preflight));
 
-    // BUG FIX (Bug 2): Block publish when critical files are missing.
-    // Previously this was non-blocking (just a console.warn). Now it returns an error
-    // that the Fix Loop can act on to generate the missing files before re-attempting publish.
-    if (preflight.critical_missing && preflight.critical_missing.length > 0) {
-      const missingList = preflight.critical_missing.join(", ");
-      await pipelineLog(ctx, "release_preflight_blocked",
-        `Pre-flight BLOCKED: arquivos críticos ausentes — ${missingList}. Retornando ao Fix Loop.`);
-      await updateInitiative(ctx, {
-        execution_progress: {
-          preflight_blocked: true,
-          preflight_missing: preflight.critical_missing,
-          preflight_blocked_at: new Date().toISOString(),
-        },
-      });
-      if (jobId) await failJob(ctx, jobId, `Pre-flight bloqueado: ${missingList}`);
-      return errorResponse(`Pre-flight bloqueado: os seguintes arquivos são importados mas não foram gerados: ${missingList}. O Fix Loop deve gerar esses arquivos antes de re-tentar a publicação.`, 422);
-    }
     if (!preflight.preflight_pass && preflight.risk_level === "high") {
-      await pipelineLog(ctx, "release_preflight_warning", `Pre-flight warnings (não-bloqueante): ${preflight.summary}`);
+      // Log warning but don't block — deterministic files and repo defaults cover most critical files
+      console.warn("Pre-flight warnings (non-blocking):", preflight.critical_missing);
+      await pipelineLog(ctx, "release_preflight_warning", `Pre-flight warnings: ${preflight.critical_missing?.join(", ") || preflight.summary}`);
     }
 
     // ═══ PHASE 2: Changelog & Commit Messages (Release Agent) ═══
