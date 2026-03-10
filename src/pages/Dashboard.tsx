@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { BoltStyleChat } from "@/components/ui/BoltInteraction";
 import { useToast } from "@/hooks/use-toast";
@@ -23,28 +23,23 @@ export default function Dashboard() {
     }
   }, [user]);
 
+  // If user is logged in, redirect to initiatives (the real dashboard)
+  if (!loading && user) {
+    return <Navigate to="/initiatives" replace />;
+  }
+
   const handlePromptSubmit = (
     prompt: string,
     _modelId: string,
     _assets: File[]
   ) => {
-    // Wait for auth to resolve before deciding
     if (loading) return;
 
     if (!user) {
-      // Not logged in — save idea and redirect to auth
       sessionStorage.setItem(IDEA_KEY, prompt);
       navigate("/auth");
       return;
     }
-
-    // User is logged in — save idea and go to initiatives
-    toast({
-      title: "Project idea saved!",
-      description: "Redirecting to create your initiative...",
-    });
-    sessionStorage.setItem(IDEA_KEY, prompt);
-    navigate("/initiatives");
   };
 
   return (
