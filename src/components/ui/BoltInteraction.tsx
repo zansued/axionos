@@ -157,39 +157,37 @@ function ChatInput({ onSend, onExampleClick }: {
   )
 }
 
-// ── Ray Background (subtler) ──────────────────────────────────────────────
+// ── Ray Background (subtler — transparent fill so shaders show through) ──
 function RayBackground() {
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0">
-      <div className="absolute inset-0 bg-[#08080a]" />
-      
-      {/* Radial blue glow — reduced intensity */}
+    <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-[1]">
+      {/* Radial blue glow */}
       <div 
         className="absolute left-1/2 -translate-x-1/2 w-[4000px] h-[1800px] sm:w-[6000px]"
         style={{
-          background: `radial-gradient(circle at center 800px, rgba(20, 136, 252, 0.35) 0%, rgba(20, 136, 252, 0.14) 14%, rgba(20, 136, 252, 0.06) 18%, rgba(20, 136, 252, 0.02) 22%, transparent 25%)`,
-          filter: 'blur(4px)',
+          background: `radial-gradient(circle at center 800px, rgba(20, 136, 252, 0.30) 0%, rgba(20, 136, 252, 0.12) 14%, rgba(20, 136, 252, 0.05) 18%, rgba(20, 136, 252, 0.015) 22%, transparent 25%)`,
+          filter: 'blur(6px)',
         }}
       />
 
-      {/* Subtle particle/grid texture */}
-      <div className="absolute inset-0 opacity-[0.03]"
+      {/* Subtle grid texture */}
+      <div className="absolute inset-0 opacity-[0.025]"
         style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)`,
           backgroundSize: '40px 40px',
         }}
       />
 
-      {/* Arc — reduced opacity */}
+      {/* Arc rings only — no opaque fill */}
       <div 
         className="absolute top-[175px] left-1/2 w-[1600px] h-[1600px] sm:top-1/2 sm:w-[3043px] sm:h-[2865px]"
         style={{ transform: 'translate(-50%) rotate(180deg)' }}
       >
-        <div className="absolute w-full h-full rounded-full -mt-[13px]" style={{ background: 'radial-gradient(43.89% 25.74% at 50.02% 97.24%, #0a0a0c 0%, #08080a 100%)', border: '10px solid rgba(255,255,255,0.5)', transform: 'rotate(180deg)', zIndex: 5 }} />
-        <div className="absolute w-full h-full rounded-full bg-[#08080a] -mt-[11px]" style={{ border: '14px solid rgba(183,215,246,0.3)', transform: 'rotate(180deg)', zIndex: 4 }} />
-        <div className="absolute w-full h-full rounded-full bg-[#08080a] -mt-[8px]" style={{ border: '14px solid rgba(143,193,242,0.25)', transform: 'rotate(180deg)', zIndex: 3 }} />
-        <div className="absolute w-full h-full rounded-full bg-[#08080a] -mt-[4px]" style={{ border: '14px solid rgba(100,172,246,0.2)', transform: 'rotate(180deg)', zIndex: 2 }} />
-        <div className="absolute w-full h-full rounded-full bg-[#08080a]" style={{ border: '12px solid rgba(17,114,226,0.4)', boxShadow: '0 -10px 16px rgba(17, 114, 226, 0.2)', transform: 'rotate(180deg)', zIndex: 1 }} />
+        <div className="absolute w-full h-full rounded-full -mt-[13px]" style={{ border: '2px solid rgba(255,255,255,0.35)', transform: 'rotate(180deg)', zIndex: 5 }} />
+        <div className="absolute w-full h-full rounded-full -mt-[11px]" style={{ border: '1px solid rgba(183,215,246,0.2)', transform: 'rotate(180deg)', zIndex: 4 }} />
+        <div className="absolute w-full h-full rounded-full -mt-[8px]" style={{ border: '1px solid rgba(143,193,242,0.15)', transform: 'rotate(180deg)', zIndex: 3 }} />
+        <div className="absolute w-full h-full rounded-full -mt-[4px]" style={{ border: '1px solid rgba(100,172,246,0.12)', transform: 'rotate(180deg)', zIndex: 2 }} />
+        <div className="absolute w-full h-full rounded-full" style={{ border: '1px solid rgba(17,114,226,0.25)', boxShadow: '0 -8px 24px rgba(17, 114, 226, 0.15)', transform: 'rotate(180deg)', zIndex: 1 }} />
       </div>
     </div>
   )
