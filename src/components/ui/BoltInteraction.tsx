@@ -59,12 +59,21 @@ const EXAMPLES = [
 
 
 // ── Chat Input ────────────────────────────────────────────────────────────
-function ChatInput({ onSend }: {
+function ChatInput({ onSend, initialMessage }: {
   onSend?: (message: string) => void
+  initialMessage?: string
 }) {
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(initialMessage || '')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const typingPlaceholder = useTypingPlaceholder()
+
+  // Pick up initialMessage when it changes (e.g. after login)
+  useEffect(() => {
+    if (initialMessage && !message) {
+      setMessage(initialMessage)
+      textareaRef.current?.focus()
+    }
+  }, [initialMessage])
 
   useEffect(() => {
     const textarea = textareaRef.current
