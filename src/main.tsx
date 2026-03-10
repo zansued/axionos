@@ -2,9 +2,10 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
-console.log("[AxionOS] ENV check (rebuild):", {
+console.log("[AxionOS] ENV rebuild v2:", {
   url: import.meta.env.VITE_SUPABASE_URL ? "SET" : "MISSING",
   key: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ? "SET" : "MISSING",
+  projectId: import.meta.env.VITE_SUPABASE_PROJECT_ID ? "SET" : "MISSING",
   urlValue: import.meta.env.VITE_SUPABASE_URL?.substring(0, 30),
 });
 
