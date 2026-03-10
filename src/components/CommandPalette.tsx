@@ -42,9 +42,9 @@ export function CommandPalette() {
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
 
-        {/* Product */}
-        <CommandGroup heading="Product">
-          {navGroups.product.map((item) => (
+        {/* Builder */}
+        <CommandGroup heading="Builder">
+          {navGroups.builder.map((item) => (
             <CommandItem
               key={item.url}
               onSelect={() => runCommand(() => navigate(item.url))}
@@ -56,31 +56,12 @@ export function CommandPalette() {
           ))}
         </CommandGroup>
 
-        {/* Workspace */}
-        {navGroups.workspace.length > 0 && (
+        {/* Owner */}
+        {navGroups.owner.length > 0 && (
           <>
             <CommandSeparator />
-            <CommandGroup heading="Workspace">
-              {navGroups.workspace.map((item) => (
-                <CommandItem
-                  key={item.url}
-                  onSelect={() => runCommand(() => navigate(item.url))}
-                  className="gap-2"
-                >
-                  <item.icon className="h-4 w-4 text-muted-foreground" />
-                  <span>{item.title}</span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </>
-        )}
-
-        {/* Platform */}
-        {navGroups.platform.length > 0 && (
-          <>
-            <CommandSeparator />
-            <CommandGroup heading="Platform">
-              {navGroups.platform.map((item) => (
+            <CommandGroup heading="Owner">
+              {navGroups.owner.map((item) => (
                 <CommandItem
                   key={item.url}
                   onSelect={() => runCommand(() => navigate(item.url))}
