@@ -231,6 +231,18 @@ flowchart TB
 
 ---
 
+## Known Limitations
+
+| Area | Limitation |
+|------|-----------|
+| **Learning maturity** | Self-learning and institutional memory capabilities are implemented but require sustained production usage to accumulate meaningful data |
+| **Multi-tenant scale** | Distributed runtime architecture is in place but has not been validated under high-concurrency multi-tenant load |
+| **AI provider dependency** | Pipeline execution depends on external LLM providers; availability and cost are bounded but not eliminated |
+| **Fix swarm autonomy** | Automated repair handles common error patterns well; novel or complex failures may require human intervention |
+| **Canon accumulation** | Evidence-governed improvement loops are operational but the canon is early-stage — effectiveness compounds over time |
+
+---
+
 ## Documentation
 
 | Document | Description |
