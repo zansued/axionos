@@ -190,6 +190,9 @@ AxionOS is an **Adaptive Operational Organism** platform (Level 10+):
 | Canonical Knowledge (Block Y) | ✅ |
 | Runtime Sovereignty (Block Z) | ✅ |
 | Runtime Proof & Adaptive Governance (Block AA) | ✅ |
+| Learning Canonization (Block AB) | ✅ |
+| Adaptive Coordination (Block AC) | ✅ |
+| Adaptive Operational Organism (Block AD) | ✅ |
 
 ---
 
