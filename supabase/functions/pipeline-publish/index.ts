@@ -3,7 +3,9 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { sanitizePackageJson, sanitizeSqlMigration, DETERMINISTIC_FILES, KNOWN_PACKAGES } from "../_shared/code-sanitizers.ts";
+import { sanitizePackageJson, sanitizeSqlMigration, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
+import { resolveCanonicalDeps, validateDependencyGraph, DEPENDENCY_REGISTRY } from "../_shared/dependency-registry.ts";
+import { analyzeDependencyGraph } from "../_shared/dependency-graph-analyzer.ts";
 import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 
 /**
@@ -243,20 +245,22 @@ Retorne APENAS JSON:
     for (const f of criticalFiles) {
       if (DETERMINISTIC_FILES[f]) requiredFiles[f] = DETERMINISTIC_FILES[f];
     }
-    // BUG FIX (Bug 4): Before building the default package.json, scan ALL generated .ts/.tsx files
-    // for external package imports and auto-inject any that are known but missing.
-    // This prevents commits where code imports 'sonner', 'zustand', etc. but package.json doesn't list them.
+    // BUG FIX (Bug 4) + Dependency Governance: Before building the default package.json,
+    // scan ALL generated .ts/.tsx files for external package imports and resolve them
+    // against the CANONICAL DEPENDENCY REGISTRY (exact versions, no ^ or ~).
+    // This eliminates version drift across pipeline runs.
     if (!fileEntries.some(f => f.path === "package.json")) {
-      const defaultDeps: Record<string, string> = {
-        "react": "^18.3.1", "react-dom": "^18.3.1", "react-router-dom": "^6.30.0",
-        "lucide-react": "^0.462.0", "tailwind-merge": "^2.6.0", "clsx": "^2.1.1",
-        "class-variance-authority": "^0.7.1",
-      };
-      const defaultDevDeps: Record<string, string> = {
-        "vite": "^5.4.19", "@vitejs/plugin-react-swc": "^3.11.0", "typescript": "^5.8.3",
-        "tailwindcss": "^3.4.17", "autoprefixer": "^10.4.21", "postcss": "^8.5.6",
-        "@types/react": "^18.3.23", "@types/react-dom": "^18.3.7",
-      };
+      const baseDeps: Record<string, string> = {};
+      const baseDevDeps: Record<string, string> = {};
+      // Seed with non-optional base packages from registry
+      for (const [pkg, entry] of Object.entries(DEPENDENCY_REGISTRY)) {
+        if (["react","react-dom","react-router-dom","lucide-react","tailwind-merge","clsx","class-variance-authority"].includes(pkg)) {
+          baseDeps[pkg] = entry.version;
+        }
+        if (["vite","@vitejs/plugin-react-swc","typescript","tailwindcss","autoprefixer","postcss","@types/react","@types/react-dom"].includes(pkg)) {
+          baseDevDeps[pkg] = entry.version;
+        }
+      }
 
       // Scan all TypeScript/TSX file imports for external package names
       const extImportRegex = /(?:import\s+(?:[\w{}\s,*]+)\s+from\s+["']|import\(\s*["'])([^"'./][^"']*)["']/g;
@@ -266,7 +270,6 @@ Retorne APENAS JSON:
         let m: RegExpExecArray | null;
         extImportRegex.lastIndex = 0;
         while ((m = extImportRegex.exec(f.content)) !== null) {
-          // Extract root package name (handle scoped packages like @radix-ui/react-dialog)
           const raw = m[1];
           const pkgName = raw.startsWith("@")
             ? raw.split("/").slice(0, 2).join("/")
@@ -275,33 +278,101 @@ Retorne APENAS JSON:
         }
       }
 
-      // Auto-inject detected packages that are in KNOWN_PACKAGES but not in default lists
-      let autoInjected = 0;
-      for (const pkg of detectedPackages) {
-        const known = KNOWN_PACKAGES[pkg];
-        if (known && !defaultDeps[pkg] && !defaultDevDeps[pkg]) {
-          if (known.dev) defaultDevDeps[pkg] = known.version;
-          else defaultDeps[pkg] = known.version;
-          autoInjected++;
-          console.log(`[SANITIZE] package.json: auto-injected "${pkg}" = "${known.version}" from import scan`);
-        }
-      }
-      if (autoInjected > 0) {
+      // Resolve detected imports to exact canonical versions
+      const { dependencies, devDependencies, injected, unknown } = resolveCanonicalDeps(
+        detectedPackages, baseDeps, baseDevDeps
+      );
+
+      if (injected.length > 0) {
         await pipelineLog(ctx, "release_package_autoinject",
-          `package.json: ${autoInjected} dependências auto-injetadas do scan de imports (${Array.from(detectedPackages).filter(p => KNOWN_PACKAGES[p]).join(", ")})`);
+          `Dependency registry: ${injected.length} pacotes auto-injetados com versões exatas: ${injected.join(", ")}`);
+      }
+      if (unknown.length > 0) {
+        await pipelineLog(ctx, "release_package_unknown",
+          `Dependency registry: ${unknown.length} pacotes desconhecidos (fora do registry): ${unknown.join(", ")} — verifique se são válidos`);
       }
 
       const defaultPkg = {
         name: repoSlug, version: changelog?.version || "1.0.0", type: "module",
         scripts: { dev: "vite", build: "vite build", preview: "vite preview" },
-        dependencies: defaultDeps,
-        devDependencies: defaultDevDeps,
+        dependencies,
+        devDependencies,
       };
       requiredFiles["package.json"] = sanitizePackageJson(JSON.stringify(defaultPkg, null, 2));
+    } else {
+      // package.json was generated by AI — validate it against the registry for drift
+      const pkgEntry = fileEntries.find(f => f.path === "package.json");
+      if (pkgEntry) {
+        const driftResult = validateDependencyGraph(pkgEntry.content);
+        const driftErrors = driftResult.violations.filter(v => v.severity === "error");
+
+        if (driftErrors.length > 0) {
+          // Auto-correct drift: replace drifted versions with canonical ones
+          try {
+            const pkg = JSON.parse(pkgEntry.content);
+            for (const v of driftErrors) {
+              if (pkg.dependencies?.[v.package])  pkg.dependencies[v.package]  = v.canonicalVersion;
+              if (pkg.devDependencies?.[v.package]) pkg.devDependencies[v.package] = v.canonicalVersion;
+            }
+            pkgEntry.content = sanitizePackageJson(JSON.stringify(pkg, null, 2));
+            await pipelineLog(ctx, "release_drift_corrected",
+              `Dependency drift auto-corrigido: ${driftErrors.map(v => `${v.package} ${v.projectVersion}→${v.canonicalVersion}`).join(", ")}`);
+          } catch { /* ignore correction failure, proceed with original */ }
+        } else if (driftResult.violations.length > 0) {
+          await pipelineLog(ctx, "release_drift_warning",
+            `Dependency drift warning (não-bloqueante): ${driftResult.summary}`);
+        }
+      }
     }
     for (const [reqPath, reqContent] of Object.entries(requiredFiles)) {
       if (!fileEntries.some(f => f.path === reqPath)) {
         fileEntries.push({ path: reqPath, content: reqContent, type: "config", summary: `Ensure ${reqPath}` });
+      }
+    }
+
+    // ═══ Dependency Graph Analysis — Transitive Explosion & Peer Conflict Detection ═══
+    // Runs AFTER all package.json corrections, BEFORE blobs are created.
+    // Uses static footprint data (no npm needed) to detect transitive risks.
+    await pipelineLog(ctx, "release_graph_analysis_start", "Analisando grafo de dependências transitivas...");
+    const resolvedPkg = fileEntries.find(f => f.path === "package.json");
+    if (resolvedPkg) {
+      const graphResult = analyzeDependencyGraph(resolvedPkg.content);
+
+      await pipelineLog(ctx, "release_graph_analysis_complete", graphResult.summary, {
+        total_estimated_nodes: graphResult.totalEstimatedNodes,
+        max_depth: graphResult.maxDepth,
+        risk_score: graphResult.riskScore,
+        risk_level: graphResult.riskLevel,
+        peer_conflicts: graphResult.peerConflicts.length,
+        unknown_packages: graphResult.unknownPackages,
+        high_risk_packages: graphResult.highRiskPackages,
+      });
+
+      // Store risk metadata on initiative for observability dashboard
+      await updateInitiative(ctx, {
+        execution_progress: {
+          dependency_graph: {
+            risk_score: graphResult.riskScore,
+            risk_level: graphResult.riskLevel,
+            total_estimated_nodes: graphResult.totalEstimatedNodes,
+            max_depth: graphResult.maxDepth,
+            peer_conflicts_count: graphResult.peerConflicts.length,
+            unknown_packages: graphResult.unknownPackages,
+            analyzed_at: new Date().toISOString(),
+          },
+        },
+      });
+
+      // Block on peer dependency conflicts — these cause silent runtime failures
+      if (graphResult.shouldBlock && graphResult.peerConflicts.length > 0) {
+        const conflictDesc = graphResult.peerConflicts
+          .map(c => `${c.package} requer ${c.requires}${c.requiredVersion} (declarado: ${c.conflictsWith})`)
+          .join("; ");
+        if (jobId) await failJob(ctx, jobId, `Grafo de dependências bloqueado: ${conflictDesc}`);
+        return errorResponse(
+          `Publish bloqueado por conflito de peer dependencies: ${conflictDesc}. Corrija as versões antes de publicar.`,
+          422
+        );
       }
     }
 
