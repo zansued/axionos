@@ -235,7 +235,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           className="text-center mb-2"
         >
           <h1 className="text-4xl sm:text-5xl lg:text-[4.5rem] font-bold tracking-tight leading-[1.08] font-display">
-            <span className="bg-gradient-to-r from-[#4da5fc] via-[#6db8ff] to-[#b4d8ff] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#b4d8ff] via-[#6db8ff] to-[#1a6fcc] bg-clip-text text-transparent">
               Axion
             </span>
             <span className="text-white">OS</span>
