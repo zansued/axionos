@@ -232,7 +232,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           transition={{ delay: 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-2"
         >
-          <h1 className="text-4xl sm:text-5xl lg:text-[4.5rem] font-bold tracking-tight leading-[1.08] font-display">
+          <h1 className="text-4xl sm:text-5xl lg:text-[4.5rem] font-bold tracking-tight leading-[1.08]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             <span className="bg-gradient-to-r from-[#b4d8ff] via-[#6db8ff] to-[#1a6fcc] bg-clip-text text-transparent">
               Axion
             </span>
@@ -245,7 +245,8 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className="text-[13px] sm:text-[14px] text-white/80 font-semibold tracking-[0.2em] uppercase mb-6"
+          className="text-[12px] sm:text-[13px] text-white/50 font-medium tracking-[0.25em] uppercase mb-7"
+          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
           Autonomous Intelligent Infrastructure
         </motion.p>
@@ -257,7 +258,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           transition={{ delay: 0.35, duration: 0.5 }}
           className="text-center mb-10"
         >
-          <p className="text-[15px] sm:text-[17px] lg:text-[19px] text-[#7a7a84] font-medium leading-relaxed max-w-lg mx-auto">
+          <p className="text-[15px] sm:text-[17px] lg:text-[19px] text-white/40 font-normal leading-relaxed max-w-md mx-auto" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             Describe what you want to build — we orchestrate the rest.
           </p>
         </motion.div>
