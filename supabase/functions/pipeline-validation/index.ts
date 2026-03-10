@@ -18,7 +18,7 @@ import { generateBrainContext, recordError, updateNodeStatus, getNodeByPath, mar
 
 const MAX_FIX_ATTEMPTS = 3;
 const APPROVAL_THRESHOLD = 70;
-const BATCH_SIZE = 6;
+const BATCH_SIZE = 2;
 
 serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-validation");
