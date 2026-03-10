@@ -28,8 +28,8 @@
 
 | Dimension | State |
 |-----------|-------|
-| **Platform Stage** | Level 6 — Sovereign Institutional Intelligence |
-| **System State** | 85+ architectural layers active |
+| **Platform Stage** | Level 7 — Strategic Autonomy & Civilizational Coordination |
+| **System State** | 90+ architectural layers active |
 | **Kernel Status** | Stable and operational |
 | **Commercial Status** | Plans, billing, usage enforcement — hardened |
 | **Learning Status** | Active, rule-based, auditable, cross-stage coordinated |
@@ -57,6 +57,7 @@
 | **Governed Intelligence OS** | Active — institutional memory consolidation, doctrine synthesis, bounded autonomous operations, institutional decision engine |
 | **Adaptive Institutional Ecosystem** | Active — cross-context doctrine adaptation, conflict resolution, federated intelligence boundaries, resilience & continuity governance |
 | **Sovereign Institutional Intelligence** | Active — memory constitution, sovereign decision rights, dependency sovereignty, strategic succession |
+| **Strategic Coordination** | Active — multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation |
 | **Execution Mode** | Sprint-based implementation |
 
 ---
