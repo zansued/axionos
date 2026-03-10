@@ -81,6 +81,7 @@ import ContinuitySimulation from "./pages/ContinuitySimulation";
 import EvolutionProposalGovernance from "./pages/EvolutionProposalGovernance";
 import ArchitecturalMutationControl from "./pages/ArchitecturalMutationControl";
 import ReflectiveValidationAudit from "./pages/ReflectiveValidationAudit";
+import KernelIntegrityGuard from "./pages/KernelIntegrityGuard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -198,6 +199,7 @@ const App = () => (
                         <Route path="/evolution-governance"      element={<P><EvolutionProposalGovernance /></P>} />
                         <Route path="/mutation-control"          element={<P><ArchitecturalMutationControl /></P>} />
                         <Route path="/reflective-validation"    element={<P><ReflectiveValidationAudit /></P>} />
+                        <Route path="/kernel-integrity"         element={<P><KernelIntegrityGuard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
