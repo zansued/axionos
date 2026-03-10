@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { Bot, Zap } from "lucide-react";
+import { Zap } from "lucide-react";
+import axionLogo from "@/assets/axion-logo.svg";
 
 export default function Auth() {
   const { signIn, signUp } = useAuth();
