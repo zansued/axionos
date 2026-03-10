@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import axionLogo from "@/assets/axion-logo.svg";
+import { Sparkles } from "lucide-react";
 
 export default function Auth() {
   const { signIn, signUp } = useAuth();
@@ -18,6 +19,7 @@ export default function Auth() {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [signupName, setSignupName] = useState("");
+  const savedIdea = sessionStorage.getItem("axion_initial_idea");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,6 +103,24 @@ export default function Auth() {
             Autonomous Intelligent Infrastructure
           </motion.p>
         </div>
+
+        {/* Saved idea banner */}
+        {savedIdea && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.4 }}
+            className="mb-4 w-full rounded-xl border border-primary/20 bg-primary/[0.06] px-4 py-3 backdrop-blur-sm"
+          >
+            <div className="flex items-start gap-2.5">
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              <div className="min-w-0">
+                <p className="text-[12px] font-medium text-primary mb-1">Your idea is waiting</p>
+                <p className="text-[13px] text-white/60 leading-snug line-clamp-2">{savedIdea}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}

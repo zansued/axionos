@@ -59,12 +59,21 @@ const EXAMPLES = [
 
 
 // ── Chat Input ────────────────────────────────────────────────────────────
-function ChatInput({ onSend }: {
+function ChatInput({ onSend, initialMessage }: {
   onSend?: (message: string) => void
+  initialMessage?: string
 }) {
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(initialMessage || '')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const typingPlaceholder = useTypingPlaceholder()
+
+  // Pick up initialMessage when it changes (e.g. after login)
+  useEffect(() => {
+    if (initialMessage && !message) {
+      setMessage(initialMessage)
+      textareaRef.current?.focus()
+    }
+  }, [initialMessage])
 
   useEffect(() => {
     const textarea = textareaRef.current
@@ -210,9 +219,10 @@ function RayBackground() {
 // ── Main Component ────────────────────────────────────────────────────────
 interface BoltChatProps {
   onSubmit?: (message: string, modelId: string, assets: File[]) => void
+  initialMessage?: string
 }
 
-export function BoltStyleChat({ onSubmit }: BoltChatProps) {
+export function BoltStyleChat({ onSubmit, initialMessage }: BoltChatProps) {
   const handleSend = (message: string) => {
     onSubmit?.(message, "auto", [])
   }
@@ -282,7 +292,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           transition={{ delay: 0.4, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="w-full flex justify-center"
         >
-          <ChatInput onSend={handleSend} />
+          <ChatInput onSend={handleSend} initialMessage={initialMessage} />
         </motion.div>
       </div>
 
