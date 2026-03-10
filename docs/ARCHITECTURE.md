@@ -3,9 +3,9 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-10
-> **Current state:** Level 7 — Strategic Autonomy & Civilizational Coordination. 90+ architectural layers active. All blocks (Foundation through W) complete. 110 sprints implemented. Block W hardened and integrated. Block X (111–114) planned. Block Y (115–118) future.
-> **Next block:** X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
-> **Future block:** Y — Implementation Canon & Knowledge Governance (Sprints 115–118) — 🔮 Future
+> **Current state:** Level 10 — Autonomous Delivery Sovereignty. 100+ architectural layers active. All blocks (Foundation through Z) complete. 122 sprints implemented. Block W hardened. Block X (111–114) complete. Block Y (115–118) complete. Block Z (119–122) complete.
+> **Completed blocks:** Foundation through Z (Sprints 1–122)
+> **Next horizon:** Future planning beyond Sprint 122
 > **Maturity canonical source:** [ROADMAP.md](ROADMAP.md) · **Sprint details:** [PLAN.md](PLAN.md)
 
 ## Document Authority
@@ -1390,11 +1390,11 @@ With 110 sprints complete, all blocks from Foundation through Strategic Autonomy
 
 **Known maturity backlog (non-blocking):** Dimension/horizon management UI still limited; constitution-aware runtime weight injection still partial; bulk subject operations intentionally out of scope; historical visualization can still be refined.
 
-#### Block X — Reflexive Governance & Evolution Control (Sprints 111–114) — 🔜 Planned
+#### Block X — Reflexive Governance & Evolution Control (Sprints 111–114) — ✅ Complete
 
-**Architectural contribution (planned):** Evolution proposal governance engine (govern proposals for changing the system itself), architectural mutation control layer (reversibility, blast radius, coupling expansion, mutation legitimacy), reflective validation & self-revision audit (audit whether self-corrections actually improved the system), kernel integrity & anti-corrosion guard (protect the kernel against corrosion, bloat, existential drift, loss of legibility).
+**Architectural contribution:** Evolution proposal governance engine (govern proposals for changing the system itself), architectural mutation control layer (reversibility, blast radius, coupling expansion, mutation legitimacy), reflective validation & self-revision audit (audit whether self-corrections actually improved the system), kernel integrity & anti-corrosion guard (protect the kernel against corrosion, bloat, existential drift, loss of legibility).
 
-#### Tier 13 — Canonical Knowledge & Implementation Intelligence (Block Y — Future)
+#### Tier 13 — Canonical Knowledge & Implementation Intelligence (Block Y — ✅ Complete)
 
 Block Y introduces the Canonical Knowledge & Implementation Intelligence layer.
 
@@ -1427,6 +1427,27 @@ In AxionOS, knowledge only counts as system capability when it is operationally 
 A pattern not consumed by agents or functions is documentation, not implementation intelligence.
 
 Block Y therefore introduces a governed knowledge system that is applied, versioned, auditable, and operationally integrated.
+
+#### Tier 14 — Runtime Sovereignty & Outcome Compounding (Block Z — ✅ Complete)
+
+Block Z introduces runtime sovereignty and outcome compounding.
+
+Its purpose is to close the loop between generated software and live operational behavior, transforming runtime evidence into adaptive operating doctrine, bounded autonomy, and compounding system advantage.
+
+This layer does not introduce unrestricted autonomy.
+All governance constraints from previous layers remain active, including human authority over structural change and prohibition of autonomous architecture mutation.
+
+Block Z focuses on four capabilities:
+
+- **Live Runtime Feedback Mesh** — Connects deployment artifacts, runtime events, incidents, and repair outcomes into a unified outcome lineage model.
+
+- **Tenant Doctrine & Adaptive Operating Profiles** — Derives evidence-based operating profiles for each organization based on runtime behavior, rollout patterns, rollback posture, and incident response tendencies.
+
+- **Outcome-Based Autonomy Engine** — Implements graduated autonomy levels based on historical success, rollback behavior, incident frequency, and doctrine alignment.
+
+- **Compounding Advantage Orchestrator** — Detects and consolidates operational strengths that emerge over time across stacks, workflows, and tenant domains.
+
+**Architectural note:** Runtime sovereignty must always remain subordinate to governance layers introduced in Block X and Block Y. Block Z expands operational learning, not structural authority.
 
 ### Operational Lessons Learned
 
