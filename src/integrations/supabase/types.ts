@@ -33398,6 +33398,59 @@ export type Database = {
           },
         ]
       }
+      tenant_regression_profiles: {
+        Row: {
+          autonomy_upgrade_modifier: number
+          created_at: string
+          description: string | null
+          evidence_trend_threshold: number
+          guardrail_breach_threshold: number
+          id: string
+          incident_threshold: number
+          organization_id: string
+          profile_type: string
+          rollback_rate_threshold: number
+          updated_at: string
+          validation_failure_threshold: number
+        }
+        Insert: {
+          autonomy_upgrade_modifier?: number
+          created_at?: string
+          description?: string | null
+          evidence_trend_threshold?: number
+          guardrail_breach_threshold?: number
+          id?: string
+          incident_threshold?: number
+          organization_id: string
+          profile_type?: string
+          rollback_rate_threshold?: number
+          updated_at?: string
+          validation_failure_threshold?: number
+        }
+        Update: {
+          autonomy_upgrade_modifier?: number
+          created_at?: string
+          description?: string | null
+          evidence_trend_threshold?: number
+          guardrail_breach_threshold?: number
+          id?: string
+          incident_threshold?: number
+          organization_id?: string
+          profile_type?: string
+          rollback_rate_threshold?: number
+          updated_at?: string
+          validation_failure_threshold?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_regression_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenant_runtime_contention_events: {
         Row: {
           affected_workloads: number

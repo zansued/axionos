@@ -7,6 +7,7 @@ import { computeDowngrade } from "../_shared/outcome-autonomy/autonomy-downgrade
 import { classifyBreach } from "../_shared/outcome-autonomy/guardrail-breach-handler.ts";
 import { explainPosture } from "../_shared/outcome-autonomy/autonomy-explainer.ts";
 import { evaluateTransition, type TransitionRule } from "../_shared/outcome-autonomy/autonomy-transition-stabilizer.ts";
+import { detectAdaptiveRegression, DEFAULT_PROFILES, type TenantRegressionProfile } from "../_shared/outcome-autonomy/tenant-adaptive-regression.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -416,14 +417,36 @@ Deno.serve(async (req) => {
       }
 
       case "downgrade_autonomy": {
-        const regression = detectRegression({
-          recent_incident_count: params.recent_incident_count ?? 0,
-          recent_rollback_count: params.recent_rollback_count ?? 0,
-          validation_failure_rate: params.validation_failure_rate ?? 0,
-          evidence_score_trend: params.evidence_score_trend ?? 0,
-          guardrail_breach_count: params.guardrail_breach_count ?? 0,
-          window_days: params.window_days ?? 7,
-        });
+        // Sprint 125: Load tenant-adaptive regression profile
+        const { data: tenantProfile } = await supabase
+          .from("tenant_regression_profiles")
+          .select("*")
+          .eq("organization_id", organizationId)
+          .single();
+
+        const profile: TenantRegressionProfile = tenantProfile
+          ? {
+              profile_type: tenantProfile.profile_type as any,
+              validation_failure_threshold: Number(tenantProfile.validation_failure_threshold),
+              rollback_rate_threshold: tenantProfile.rollback_rate_threshold,
+              guardrail_breach_threshold: tenantProfile.guardrail_breach_threshold,
+              incident_threshold: tenantProfile.incident_threshold,
+              evidence_trend_threshold: Number(tenantProfile.evidence_trend_threshold),
+              autonomy_upgrade_modifier: Number(tenantProfile.autonomy_upgrade_modifier),
+            }
+          : DEFAULT_PROFILES.balanced;
+
+        const regression = detectAdaptiveRegression(
+          {
+            recent_incident_count: params.recent_incident_count ?? 0,
+            recent_rollback_count: params.recent_rollback_count ?? 0,
+            validation_failure_rate: params.validation_failure_rate ?? 0,
+            evidence_score_trend: params.evidence_score_trend ?? 0,
+            guardrail_breach_count: params.guardrail_breach_count ?? 0,
+            window_days: params.window_days ?? 7,
+          },
+          profile,
+        );
 
         let downgrade = null;
         if (regression.regression_detected) {
@@ -453,7 +476,7 @@ Deno.serve(async (req) => {
           }
         }
 
-        result = { regression, downgrade };
+        result = { regression, downgrade, profile_applied: profile.profile_type };
         break;
       }
 
@@ -524,6 +547,55 @@ Deno.serve(async (req) => {
           .order("created_at", { ascending: false })
           .limit(50);
         result = { regressions: data || [] };
+        break;
+      }
+
+      // ── Sprint 125: Tenant Regression Profile management ──
+      case "get_regression_profile": {
+        const { data: prof } = await supabase
+          .from("tenant_regression_profiles")
+          .select("*")
+          .eq("organization_id", organizationId)
+          .single();
+
+        result = {
+          profile: prof || null,
+          defaults: DEFAULT_PROFILES,
+          active_type: prof?.profile_type || "balanced",
+        };
+        break;
+      }
+
+      case "set_regression_profile": {
+        const profileType = params.profile_type || "balanced";
+        const defaults = DEFAULT_PROFILES[profileType] || DEFAULT_PROFILES.balanced;
+
+        const row = {
+          organization_id: organizationId,
+          profile_type: profileType,
+          validation_failure_threshold: params.validation_failure_threshold ?? defaults.validation_failure_threshold,
+          rollback_rate_threshold: params.rollback_rate_threshold ?? defaults.rollback_rate_threshold,
+          guardrail_breach_threshold: params.guardrail_breach_threshold ?? defaults.guardrail_breach_threshold,
+          incident_threshold: params.incident_threshold ?? defaults.incident_threshold,
+          evidence_trend_threshold: params.evidence_trend_threshold ?? defaults.evidence_trend_threshold,
+          autonomy_upgrade_modifier: params.autonomy_upgrade_modifier ?? defaults.autonomy_upgrade_modifier,
+          description: params.description || `${profileType} profile`,
+          updated_at: new Date().toISOString(),
+        };
+
+        const { data: existing } = await supabase
+          .from("tenant_regression_profiles")
+          .select("id")
+          .eq("organization_id", organizationId)
+          .single();
+
+        if (existing) {
+          await supabase.from("tenant_regression_profiles").update(row).eq("id", existing.id);
+        } else {
+          await supabase.from("tenant_regression_profiles").insert(row);
+        }
+
+        result = { profile: row };
         break;
       }
 
