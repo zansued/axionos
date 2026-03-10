@@ -168,7 +168,7 @@ sprints:
   - { sprint: 130, name: "Canon Reuse Injection",                                  status: complete, block: "AB", phase: "Learning Canonization", layer: "Canon Reuse Injection Layer" }
 
   # === BLOCK AC — Adaptive Coordination === COMMITTED
-  - { sprint: 131, name: "Operational Posture Engine",                             status: committed, block: "AC", phase: "Adaptive Coordination", layer: "Operational Posture Layer" }
+  - { sprint: 131, name: "Operational Posture Engine",                             status: complete, block: "AC", phase: "Adaptive Coordination", layer: "Operational Posture Layer" }
   - { sprint: 132, name: "Attention Allocation Engine",                            status: committed, block: "AC", phase: "Adaptive Coordination", layer: "Attention Allocation Layer" }
   - { sprint: 133, name: "Adaptive Resource Routing",                              status: committed, block: "AC", phase: "Adaptive Coordination", layer: "Adaptive Resource Routing Layer" }
   - { sprint: 134, name: "Operational Rhythm & Recovery Cycles",                   status: committed, block: "AC", phase: "Adaptive Coordination", layer: "Operational Rhythm Layer" }

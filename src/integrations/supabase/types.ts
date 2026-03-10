@@ -23427,6 +23427,50 @@ export type Database = {
           },
         ]
       }
+      operational_posture_state: {
+        Row: {
+          activated_at: string
+          current_posture: string
+          id: string
+          organization_id: string
+          posture_confidence: number
+          stack_id: string
+          tenant_id: string
+          trigger_signals: Json
+          updated_at: string
+        }
+        Insert: {
+          activated_at?: string
+          current_posture?: string
+          id?: string
+          organization_id: string
+          posture_confidence?: number
+          stack_id?: string
+          tenant_id?: string
+          trigger_signals?: Json
+          updated_at?: string
+        }
+        Update: {
+          activated_at?: string
+          current_posture?: string
+          id?: string
+          organization_id?: string
+          posture_confidence?: number
+          stack_id?: string
+          tenant_id?: string
+          trigger_signals?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operational_posture_state_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orchestration_branches: {
         Row: {
           audit_metadata: Json

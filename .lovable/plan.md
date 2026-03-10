@@ -1,7 +1,7 @@
 # AxionOS — Execution Plan
 
-> **Current Sprint:** 130 (Canon Reuse Injection) — ✅ Complete
-> **Next Sprint:** 131 (Operational Posture Engine)
+> **Current Sprint:** 131 (Operational Posture Engine) — ✅ Complete
+> **Next Sprint:** 132 (Attention Allocation Engine)
 > Execution: **Sprint-based**
 
 ---
@@ -127,7 +127,7 @@ AxionOS is an **Autonomous Delivery Sovereignty** platform (Level 10):
 | Block | Sprints | Name | Status |
 |-------|---------|------|--------|
 | AB | 127–130 | Learning Canonization | ✅ Complete |
-| AC | 131–134 | Adaptive Coordination | 🔜 Committed |
+| AC | 131–134 | Adaptive Coordination | 🔄 In Progress (131 ✅) |
 | AD | 135–138 | Adaptive Operational Organism | 🔜 Committed |
 
 ### Level 11 — Adaptive Runtime Intelligence (Future Horizon)

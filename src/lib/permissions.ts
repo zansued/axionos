@@ -141,6 +141,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Canon Evo.", url: "/canon-evolution",          icon: TrendingUp },
   { title: "Distill.",  url: "/pattern-distillation",     icon: Network },
   { title: "Reuse",    url: "/canon-reuse",              icon: Zap },
+  { title: "Posture",  url: "/operational-posture",      icon: Activity },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */

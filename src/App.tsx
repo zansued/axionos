@@ -95,6 +95,7 @@ import LearningSignalsDashboard from "./pages/LearningSignalsDashboard";
 import CanonEvolutionDashboard from "./pages/CanonEvolutionDashboard";
 import PatternDistillationDashboard from "./pages/PatternDistillationDashboard";
 import CanonReuseImpactDashboard from "./pages/CanonReuseImpactDashboard";
+import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -226,6 +227,7 @@ const App = () => (
                         <Route path="/canon-evolution"         element={<P><CanonEvolutionDashboard /></P>} />
                         <Route path="/pattern-distillation"    element={<P><PatternDistillationDashboard /></P>} />
                         <Route path="/canon-reuse"             element={<P><CanonReuseImpactDashboard /></P>} />
+                        <Route path="/operational-posture"     element={<P><OperationalPostureDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
