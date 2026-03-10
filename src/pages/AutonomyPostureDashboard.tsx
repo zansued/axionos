@@ -28,7 +28,7 @@ const levelNames: Record<number, string> = {
 };
 
 export default function AutonomyPostureDashboard() {
-  const { domains, adjustments, breaches, regressions, transitionMetrics, loadingDomains } = useOutcomeAutonomy();
+  const { domains, adjustments, breaches, regressions, transitionMetrics, regressionProfile, loadingDomains, setRegressionProfile } = useOutcomeAutonomy();
 
   return (
     <SidebarProvider>
