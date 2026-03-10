@@ -58,9 +58,8 @@ const EXAMPLES = [
 
 
 // ── Chat Input ────────────────────────────────────────────────────────────
-function ChatInput({ onSend, onExampleClick }: {
+function ChatInput({ onSend }: {
   onSend?: (message: string) => void
-  onExampleClick?: (prompt: string) => void
 }) {
   const [message, setMessage] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
