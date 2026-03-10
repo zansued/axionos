@@ -215,6 +215,7 @@ const App = () => (
                         <Route path="/runtime-feedback"        element={<P><RuntimeFeedbackDashboard /></P>} />
                         <Route path="/tenant-doctrine"         element={<P><TenantDoctrineDashboard /></P>} />
                         <Route path="/autonomy-posture"        element={<P><AutonomyPostureDashboard /></P>} />
+                        <Route path="/compounding-advantage"   element={<P><CompoundingAdvantageDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
