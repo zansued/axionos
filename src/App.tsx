@@ -86,6 +86,7 @@ import CanonGovernanceDashboard from "./pages/CanonGovernanceDashboard";
 import PatternLibraryDashboard from "./pages/PatternLibraryDashboard";
 import FailureMemoryDashboard from "./pages/FailureMemoryDashboard";
 import ExternalKnowledgeDashboard from "./pages/ExternalKnowledgeDashboard";
+import RuntimeFeedbackDashboard from "./pages/RuntimeFeedbackDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -208,6 +209,7 @@ const App = () => (
                         <Route path="/pattern-library"          element={<P><PatternLibraryDashboard /></P>} />
                         <Route path="/failure-memory"           element={<P><FailureMemoryDashboard /></P>} />
                         <Route path="/external-knowledge"      element={<P><ExternalKnowledgeDashboard /></P>} />
+                        <Route path="/runtime-feedback"        element={<P><RuntimeFeedbackDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>

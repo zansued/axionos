@@ -11,7 +11,7 @@ import {
   Rss, PackageCheck, ShieldCheck, Package, Shield, Settings, CreditCard, Plug,
   Users, Scale, BrainCircuit, Zap, Store, TrendingUp, Brain, FileText, Gauge,
   Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route, Compass,
-  Library, Bug, PackagePlus,
+  Library, Bug, PackagePlus, Activity,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
@@ -132,6 +132,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Patterns",  url: "/pattern-library",            icon: Library },
   { title: "Failure Mem.", url: "/failure-memory",           icon: Bug },
   { title: "Ext. Knowledge", url: "/external-knowledge",    icon: PackagePlus },
+  { title: "Runtime Mesh", url: "/runtime-feedback",         icon: Activity },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */

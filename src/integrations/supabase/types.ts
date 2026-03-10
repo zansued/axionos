@@ -10894,6 +10894,66 @@ export type Database = {
           },
         ]
       }
+      degraded_service_windows: {
+        Row: {
+          affected_surface: string | null
+          created_at: string
+          degradation_type: string
+          duration_minutes: number | null
+          ended_at: string | null
+          id: string
+          linked_deploy_id: string | null
+          linked_incident_id: string | null
+          organization_id: string
+          root_cause: string | null
+          severity: string
+          started_at: string
+        }
+        Insert: {
+          affected_surface?: string | null
+          created_at?: string
+          degradation_type?: string
+          duration_minutes?: number | null
+          ended_at?: string | null
+          id?: string
+          linked_deploy_id?: string | null
+          linked_incident_id?: string | null
+          organization_id: string
+          root_cause?: string | null
+          severity?: string
+          started_at?: string
+        }
+        Update: {
+          affected_surface?: string | null
+          created_at?: string
+          degradation_type?: string
+          duration_minutes?: number | null
+          ended_at?: string | null
+          id?: string
+          linked_deploy_id?: string | null
+          linked_incident_id?: string | null
+          organization_id?: string
+          root_cause?: string | null
+          severity?: string
+          started_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "degraded_service_windows_linked_incident_id_fkey"
+            columns: ["linked_incident_id"]
+            isOneToOne: false
+            referencedRelation: "runtime_incident_signals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "degraded_service_windows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       delivery_assurance_outcomes: {
         Row: {
           assumptions: Json
@@ -11315,6 +11375,64 @@ export type Database = {
             columns: ["outcome_id"]
             isOneToOne: false
             referencedRelation: "delivery_outcome_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_outcome_links: {
+        Row: {
+          confidence: number
+          created_at: string
+          deploy_outcome_id: string | null
+          id: string
+          initiative_id: string | null
+          link_type: string
+          notes: string | null
+          organization_id: string
+          runtime_event_id: string | null
+        }
+        Insert: {
+          confidence?: number
+          created_at?: string
+          deploy_outcome_id?: string | null
+          id?: string
+          initiative_id?: string | null
+          link_type?: string
+          notes?: string | null
+          organization_id: string
+          runtime_event_id?: string | null
+        }
+        Update: {
+          confidence?: number
+          created_at?: string
+          deploy_outcome_id?: string | null
+          id?: string
+          initiative_id?: string | null
+          link_type?: string
+          notes?: string | null
+          organization_id?: string
+          runtime_event_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_outcome_links_deploy_outcome_id_fkey"
+            columns: ["deploy_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "deploy_outcome_records"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_outcome_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_outcome_links_runtime_event_id_fkey"
+            columns: ["runtime_event_id"]
+            isOneToOne: false
+            referencedRelation: "runtime_feedback_events"
             referencedColumns: ["id"]
           },
         ]
@@ -12055,6 +12173,65 @@ export type Database = {
           },
           {
             foreignKeyName: "deploy_assurance_assessments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deploy_outcome_records: {
+        Row: {
+          created_at: string
+          deploy_environment: string
+          deploy_id: string | null
+          deploy_status: string
+          deployed_at: string | null
+          first_error_at: string | null
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          outcome_summary: string | null
+          rollback_at: string | null
+          stability_score: number
+          stability_window_hours: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deploy_environment?: string
+          deploy_id?: string | null
+          deploy_status?: string
+          deployed_at?: string | null
+          first_error_at?: string | null
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          outcome_summary?: string | null
+          rollback_at?: string | null
+          stability_score?: number
+          stability_window_hours?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deploy_environment?: string
+          deploy_id?: string | null
+          deploy_status?: string
+          deployed_at?: string | null
+          first_error_at?: string | null
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          outcome_summary?: string | null
+          rollback_at?: string | null
+          stability_score?: number
+          stability_window_hours?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deploy_outcome_records_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -28928,6 +29105,254 @@ export type Database = {
           },
         ]
       }
+      runtime_feedback_events: {
+        Row: {
+          affected_surface: string | null
+          artifact_id: string | null
+          confidence_score: number
+          created_at: string
+          deploy_id: string | null
+          event_source: string
+          event_type: string
+          execution_id: string | null
+          id: string
+          linked_canon_entry: string | null
+          linked_repair_result: string | null
+          linked_validation_result: string | null
+          metadata: Json
+          observed_behavior: string | null
+          occurred_at: string
+          organization_id: string
+          outcome_classification: string
+          project_id: string | null
+          severity: string
+        }
+        Insert: {
+          affected_surface?: string | null
+          artifact_id?: string | null
+          confidence_score?: number
+          created_at?: string
+          deploy_id?: string | null
+          event_source?: string
+          event_type?: string
+          execution_id?: string | null
+          id?: string
+          linked_canon_entry?: string | null
+          linked_repair_result?: string | null
+          linked_validation_result?: string | null
+          metadata?: Json
+          observed_behavior?: string | null
+          occurred_at?: string
+          organization_id: string
+          outcome_classification?: string
+          project_id?: string | null
+          severity?: string
+        }
+        Update: {
+          affected_surface?: string | null
+          artifact_id?: string | null
+          confidence_score?: number
+          created_at?: string
+          deploy_id?: string | null
+          event_source?: string
+          event_type?: string
+          execution_id?: string | null
+          id?: string
+          linked_canon_entry?: string | null
+          linked_repair_result?: string | null
+          linked_validation_result?: string | null
+          metadata?: Json
+          observed_behavior?: string | null
+          occurred_at?: string
+          organization_id?: string
+          outcome_classification?: string
+          project_id?: string | null
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "runtime_feedback_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      runtime_incident_signals: {
+        Row: {
+          affected_component: string | null
+          created_at: string
+          event_id: string | null
+          id: string
+          incident_type: string
+          linked_deploy_id: string | null
+          organization_id: string
+          resolution_status: string
+          resolved_at: string | null
+          root_cause_hypothesis: string | null
+          severity: string
+          symptom_summary: string | null
+        }
+        Insert: {
+          affected_component?: string | null
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          incident_type?: string
+          linked_deploy_id?: string | null
+          organization_id: string
+          resolution_status?: string
+          resolved_at?: string | null
+          root_cause_hypothesis?: string | null
+          severity?: string
+          symptom_summary?: string | null
+        }
+        Update: {
+          affected_component?: string | null
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          incident_type?: string
+          linked_deploy_id?: string | null
+          organization_id?: string
+          resolution_status?: string
+          resolved_at?: string | null
+          root_cause_hypothesis?: string | null
+          severity?: string
+          symptom_summary?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "runtime_incident_signals_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "runtime_feedback_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "runtime_incident_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      runtime_outcome_lineage: {
+        Row: {
+          correlation_score: number
+          created_at: string
+          event_id: string
+          id: string
+          lineage_type: string
+          notes: string | null
+          organization_id: string
+          source_id: string | null
+          source_type: string
+          target_id: string | null
+          target_type: string
+        }
+        Insert: {
+          correlation_score?: number
+          created_at?: string
+          event_id: string
+          id?: string
+          lineage_type?: string
+          notes?: string | null
+          organization_id: string
+          source_id?: string | null
+          source_type?: string
+          target_id?: string | null
+          target_type?: string
+        }
+        Update: {
+          correlation_score?: number
+          created_at?: string
+          event_id?: string
+          id?: string
+          lineage_type?: string
+          notes?: string | null
+          organization_id?: string
+          source_id?: string | null
+          source_type?: string
+          target_id?: string | null
+          target_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "runtime_outcome_lineage_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "runtime_feedback_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "runtime_outcome_lineage_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      s119_rollback_events: {
+        Row: {
+          created_at: string
+          deploy_id: string | null
+          id: string
+          initiative_id: string | null
+          linked_incident_id: string | null
+          organization_id: string
+          outcome_notes: string | null
+          rollback_reason: string | null
+          rollback_type: string
+          rolled_back_to: string | null
+          triggered_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          deploy_id?: string | null
+          id?: string
+          initiative_id?: string | null
+          linked_incident_id?: string | null
+          organization_id: string
+          outcome_notes?: string | null
+          rollback_reason?: string | null
+          rollback_type?: string
+          rolled_back_to?: string | null
+          triggered_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          deploy_id?: string | null
+          id?: string
+          initiative_id?: string | null
+          linked_incident_id?: string | null
+          organization_id?: string
+          outcome_notes?: string | null
+          rollback_reason?: string | null
+          rollback_type?: string
+          rolled_back_to?: string | null
+          triggered_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "s119_rollback_events_linked_incident_id_fkey"
+            columns: ["linked_incident_id"]
+            isOneToOne: false
+            referencedRelation: "runtime_incident_signals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "s119_rollback_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scenario_simulation_runs: {
         Row: {
           constitution_id: string | null
@@ -32180,6 +32605,62 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "tradeoff_subjects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      usage_health_snapshots: {
+        Row: {
+          created_at: string
+          details: Json
+          error_count: number
+          health_classification: string
+          id: string
+          incident_count: number
+          organization_id: string
+          period_end: string
+          period_start: string
+          rollback_count: number
+          snapshot_period: string
+          stability_score: number
+          total_events: number
+        }
+        Insert: {
+          created_at?: string
+          details?: Json
+          error_count?: number
+          health_classification?: string
+          id?: string
+          incident_count?: number
+          organization_id: string
+          period_end: string
+          period_start: string
+          rollback_count?: number
+          snapshot_period?: string
+          stability_score?: number
+          total_events?: number
+        }
+        Update: {
+          created_at?: string
+          details?: Json
+          error_count?: number
+          health_classification?: string
+          id?: string
+          incident_count?: number
+          organization_id?: string
+          period_end?: string
+          period_start?: string
+          rollback_count?: number
+          snapshot_period?: string
+          stability_score?: number
+          total_events?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_health_snapshots_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
