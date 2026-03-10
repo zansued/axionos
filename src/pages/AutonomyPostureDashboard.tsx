@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Shield, TrendingDown, AlertTriangle, Activity } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Shield, TrendingDown, AlertTriangle, Activity, Clock, CheckCircle2, XCircle } from "lucide-react";
 
 const levelColors: Record<number, string> = {
   0: "bg-muted text-muted-foreground",
