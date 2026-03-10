@@ -476,6 +476,16 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           return; // Don't clear running state
         }
 
+        // Auto-retry validation on timeout — approved artifacts are persisted, so retrying continues with remaining
+        if (stage === "validation" && isTimeout) {
+          toast({ title: "⏳ Validação: timeout. Continuando automaticamente com próximo lote..." });
+          addEvent(initiativeId, stage, `⏳ Timeout — auto-retrying validação em lotes`);
+          setTimeout(() => {
+            runStage(initiativeId, "validation");
+          }, 3000);
+          return; // Don't clear running state
+        }
+
         toast({ variant: "destructive", title: "Erro", description: e.message });
         addEvent(initiativeId, stage, `❌ Erro em ${stage}: ${e.message?.slice(0, 80)}`);
       } finally {

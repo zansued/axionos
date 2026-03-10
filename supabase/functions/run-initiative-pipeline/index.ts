@@ -1582,7 +1582,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
 
         // Batch mode: only process a subset each run to avoid edge runtime timeout
         const artifactsToValidate = artifacts.filter((artifact: any) => artifact.status !== "approved");
-        const VALIDATION_BATCH_SIZE = 8;
+        const VALIDATION_BATCH_SIZE = 2;
         const artifactsBatch = artifactsToValidate.slice(0, VALIDATION_BATCH_SIZE);
 
         if (artifactsToValidate.length === 0) {
