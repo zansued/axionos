@@ -1,6 +1,6 @@
 # AxionOS — Document Authority Registry
 # Defines canonical ownership boundaries for each documentation file.
-# Last updated: 2026-03-09
+# Last updated: 2026-03-10
 
 documents:
 
@@ -19,99 +19,25 @@ documents:
       - product boundary model (internal vs operator vs user-facing)
       - forthcoming architectural direction
     must_not_define:
-      - sprint-by-sprint execution ledger (→ PLAN.md)
-      - full roadmap status or strategic narrative (→ ROADMAP.md)
-      - detailed Agent OS module specifications (→ AGENTS.md)
-      - pipeline phase UX contracts (→ PIPELINE_CONTRACTS.md)
-    derived_from:
-      - PLAN.md for sprint context in layer descriptions
-      - AGENTS.md for Agent OS summary
+      - sprint-by-sprint execution ledger
+      - full roadmap status or strategic narrative
+      - detailed Agent OS module specifications
+      - pipeline phase UX contracts
     update_rule: Update when system structure or active architectural layers change.
 
-  - file: docs/ROADMAP.md
-    owns:
-      - current maturity level
-      - strategic direction and directive
-      - implementation horizons and block sequencing
-      - high-level completed capability arc
-      - committed future arc
-      - reserved horizon
-      - post-65 strategic thesis (product experience & delivery maturity)
-      - round-enough target definition
-      - what comes next at macro level
-    must_not_define:
-      - full sprint-by-sprint execution ledger (→ PLAN.md)
-      - module inventory or contracts (→ AGENTS.md)
-      - detailed architecture explanation (→ ARCHITECTURE.md)
-      - pipeline stage contracts (→ PIPELINE_CONTRACTS.md)
-    derived_from:
-      - PLAN.md for sprint completion status
-      - ARCHITECTURE.md for layer count
-    update_rule: Update when strategic block, maturity, or horizon changes.
-
-  - file: docs/PLAN.md
-    owns:
-      - current sprint and next sprint
-      - sprint-by-sprint implementation record
-      - phase grouping by sprint
-      - sprint completion status
-      - capability verification matrix
-      - shared module and edge function registries
-      - future canon guidance (detail levels)
-      - post-65 execution guidance
-    must_not_define:
-      - deep architecture explanation (→ ARCHITECTURE.md)
-      - long-term strategic narrative (→ ROADMAP.md)
-      - detailed agent/module reference (→ AGENTS.md)
-    derived_from:
-      - ARCHITECTURE.md for layer naming
-    update_rule: Update when a sprint completes or starts.
-
-  - file: docs/AGENTS.md
+  - file: docs/GOVERNANCE.md
     owns:
       - Agent OS 5 planes architecture
-      - 18-module inventory with versions
-      - 5 fundamental agent types
+      - module inventory with versions
+      - fundamental agent types
       - active operational agents and modules
       - supporting engines
       - learning agents, meta-agents, memory layers
       - contracts, safety boundaries, and events per module
+      - governance layer contracts
     must_not_define:
-      - roadmap sequencing or strategic direction (→ ROADMAP.md)
-      - sprint execution ledger (→ PLAN.md)
       - system containers or C4 diagrams (→ ARCHITECTURE.md)
-    derived_from:
-      - PLAN.md for sprint context on module introductions
     update_rule: Update when Agent OS module inventory, contracts, or operational references change.
-
-  - file: docs/PIPELINE_CONTRACTS.md
-    owns:
-      - phase-by-phase product contract (Idea → Discovery → Architecture → Engineering → Deploy)
-      - user-visible stage behavior and journey contract
-      - stage inputs/outputs
-      - control rules and state machines
-      - definition of done by phase
-      - commercial and learning layer contracts
-      - engineering memory pipeline contract
-    must_not_define:
-      - broader roadmap strategy (→ ROADMAP.md)
-      - architecture layer narrative (→ ARCHITECTURE.md)
-      - sprint history unrelated to pipeline UX
-    derived_from:
-      - AGENTS.md for agent references
-    update_rule: Update when user-visible pipeline behavior changes.
-
-  - file: docs/VALUE_THESIS.md
-    owns:
-      - category-creation narrative
-      - compounding intelligence thesis
-      - strategic moat definition
-      - value loop model
-    must_not_define:
-      - sprint details (→ PLAN.md)
-      - strategic direction or maturity (→ ROADMAP.md)
-      - architectural content (→ ARCHITECTURE.md)
-    update_rule: Update when the value thesis or category narrative changes.
 
   - file: docs/README.md
     owns:
@@ -123,8 +49,6 @@ documents:
       - maintenance protocol
       - normalization rules
     must_not_define:
-      - sprint details (→ PLAN.md)
-      - strategic narrative (→ ROADMAP.md)
       - architectural content (→ ARCHITECTURE.md)
-      - value thesis detail (→ VALUE_THESIS.md)
+      - agent/governance detail (→ GOVERNANCE.md)
     update_rule: Update when document structure, status taxonomy, or canon boundaries change.
