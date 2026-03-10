@@ -305,12 +305,12 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    Aggregator["Platform Behavior Aggregator"]
-    Bottleneck["Bottleneck Detector"]
-    Pattern["Pattern Analyzer"]
-    Insight["Insight Generator"]
-    Reco["Recommendation Engine"]
-    Health["Platform Health Model"]
+    Aggregator["Platform Behavior Aggregator"]:::data
+    Bottleneck["Bottleneck Detector"]:::intelligence
+    Pattern["Pattern Analyzer"]:::intelligence
+    Insight["Insight Generator"]:::intelligence
+    Reco["Recommendation Engine"]:::governance
+    Health["Platform Health Model"]:::data
 
     Aggregator --> Bottleneck
     Aggregator --> Pattern
@@ -318,6 +318,10 @@ flowchart TB
     Pattern --> Insight
     Insight --> Reco
     Insight --> Health
+
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
 ```
 
 **Modules:** `platform-intelligence/platform-behavior-aggregator.ts`, `platform-bottleneck-detector.ts`, `platform-pattern-analyzer.ts`, `platform-insight-generator.ts`, `platform-recommendation-engine.ts`, `platform-health-model.ts`
