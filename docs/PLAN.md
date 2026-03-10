@@ -1039,9 +1039,9 @@ This phase therefore transforms knowledge from passive documentation into applie
 
 ---
 
-## Committed Future Arc (Sprints 127–138)
+## Completed Arc (Sprints 127–138)
 
-The following blocks are committed for implementation, pending sprint-by-sprint execution and review.
+The following blocks have been implemented and are operational.
 
 ### Block AB — Learning Canonization (Sprints 127–130)
 
