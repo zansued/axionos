@@ -340,31 +340,44 @@ export function BoltStyleChat({ onSubmit, isGenerating, progress = 0 }: BoltChat
           <span className="text-[13px] font-semibold text-[#4a4a50] tracking-widest uppercase">AxionOS</span>
         </motion.div>
 
-        {/* Headline */}
+        {/* Headline — AxionOS as primary */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-3"
+          className="text-center mb-2"
         >
-          <h1 className="text-3xl sm:text-4xl lg:text-[3.2rem] font-bold text-white tracking-tight leading-[1.12] font-display">
-            Construa sistemas inteligentes.
-            <br />
-            <span className="bg-gradient-to-r from-[#4da5fc] via-[#6db8ff] to-[#4da5fc] bg-clip-text text-transparent">
-              Em minutos.
-            </span>
+          <h1 className="text-4xl sm:text-5xl lg:text-[4rem] font-bold text-white tracking-tight leading-[1.08] font-display">
+            AxionOS
           </h1>
         </motion.div>
 
-        {/* Subheadline */}
+        {/* Descriptor */}
         <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.5 }}
+          className="text-[13px] sm:text-[14px] text-[#4a4a52] font-semibold tracking-[0.2em] uppercase mb-6"
+        >
+          Autonomous Intelligent Infrastructure
+        </motion.p>
+
+        {/* Subheadline */}
+        <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="text-[14px] sm:text-[15px] text-[#55555c] font-medium mb-10 text-center max-w-lg leading-relaxed"
+          transition={{ delay: 0.35, duration: 0.5 }}
+          className="text-center mb-10"
         >
-          Descreva o que você quer criar e o AxionOS monta a infraestrutura automaticamente.
-        </motion.p>
+          <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-white/90 leading-snug font-display">
+            Construa sistemas autogovernados.
+          </p>
+          <p className="text-lg sm:text-xl lg:text-2xl font-semibold leading-snug font-display">
+            <span className="bg-gradient-to-r from-[#4da5fc] via-[#6db8ff] to-[#4da5fc] bg-clip-text text-transparent">
+              Em minutos.
+            </span>
+          </p>
+        </motion.div>
 
         {/* Prompt box */}
         <motion.div
