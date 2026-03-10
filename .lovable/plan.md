@@ -113,6 +113,9 @@ AxionOS is an **Adaptive Operational Organism** platform (Level 10+):
 - **Canonical Knowledge:** ✅ Active — canon stewardship, pattern library, failure memory, external knowledge intake.
 - **Runtime Sovereignty:** ✅ Active — runtime feedback mesh, tenant doctrine, outcome-based autonomy, compounding advantage.
 - **Runtime Proof & Adaptive Governance:** ✅ Active — execution validation harness, autonomy stabilization, tenant-adaptive regression, cold-start explainability.
+- **Learning Canonization:** ✅ Active — learning extraction, canon promotion pipeline, cross-tenant pattern distillation, canon reuse injection.
+- **Adaptive Coordination:** ✅ Active — operational posture engine, attention allocation, adaptive resource routing, operational rhythm & recovery cycles.
+- **Adaptive Operational Organism:** ✅ Active — multi-loop governance orchestrator, systemic health model, organism memory layers, organism console.
 - **Commercial:** Product plans, billing, workspace isolation, and usage enforcement active.
 - **Governance:** Full audit trail, stage permissions, SLA enforcement, and review workflows across recommendations and artifacts.
 
