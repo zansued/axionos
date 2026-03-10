@@ -241,6 +241,7 @@ const App = () => (
                         <Route path="/operational-loops"       element={<P><OperationalLoopsDashboard /></P>} />
                         <Route path="/system-health"           element={<P><SystemHealthDashboard /></P>} />
                         <Route path="/organism-memory"         element={<P><OrganismMemoryDashboard /></P>} />
+                        <Route path="/organism-console"        element={<P><OrganismConsoleDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
