@@ -807,6 +807,32 @@ This phase therefore transforms knowledge from passive documentation into applie
 
 ---
 
+### Block AA — Runtime Proof & Adaptive Governance (Sprints 123–126) ✅ Complete
+
+**Architectural prerequisite:** Block Z (Runtime Sovereignty) complete — autonomy and compounding advantage operational.
+
+**Strategic thesis:** Block AA converts architectural theory into measurable runtime evidence. It hardens the autonomy ladder with temporal discipline, personalizes regression sensitivity per tenant, and prevents operators from misinterpreting immature metrics.
+
+| Sprint | Name | Block | Status | Objective |
+|--------|------|-------|--------|-----------|
+| 123 | Runtime Execution Validation Harness | AA | ✅ Complete | Simulate and record controlled end-to-end executions — structured telemetry capture (validation success, rollback incidence, guardrail breaches, repair effectiveness, publish reliability), aggregation metrics. Read-only measurement, no canon/doctrine mutation. |
+| 124 | Autonomy Ladder Stabilization | AA | ✅ Complete | Introduce temporal discipline into autonomy transitions — minimum time-at-level, minimum execution count, confidence thresholds. Critical downgrades remain immediate. Transition attempts audited. |
+| 125 | Tenant-Adaptive Regression Profiles | AA | ✅ Complete | Per-tenant risk tolerance profiles (conservative/balanced/aggressive) — customizable thresholds for validation failure, rollback rate, guardrail breach sensitivity, autonomy upgrade speed. |
+| 126 | Cold Start Explainability Layer | AA | ✅ Complete | Detect insufficient evidence volume and label metrics accordingly — cold_start, insufficient_history, low_confidence signals. Integrated into Observability dashboards to prevent misinterpretation of immature data. |
+
+**Block AA logical chain:**
+- Block Z: runtime sovereignty and outcome compounding
+- **Block AA: convert architectural correctness into runtime evidence, stabilize autonomy transitions, and explain metric maturity**
+
+**Hard constraints preserved:**
+- Runtime harness is read-only — cannot mutate canon, doctrine, or autonomy directly
+- Autonomy transitions respect temporal and evidence thresholds
+- Regression profiles are advisory and tenant-scoped
+- Cold start detection is informational only
+- Tenant isolation mandatory across all new tables
+
+---
+
 ## Capability Verification Matrix
 
 | Capability | Status | Sprint | Key Modules |
