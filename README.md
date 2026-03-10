@@ -74,6 +74,8 @@ Prompt compression (60-90% token reduction), semantic cache, and intelligent mod
 ### Self-Healing Pipeline
 Runtime validation via real tsc + vite builds. When errors are detected, a fix swarm analyzes logs, generates patches, and submits corrections automatically. Every repair attempt is recorded as structured evidence.
 
+> **Note:** The fix swarm is triggered automatically on CI failure, but human review is recommended for complex repair attempts.
+
 ### Error Pattern Intelligence
 Repair evidence is aggregated into recurring patterns with strategy effectiveness tracking. The system identifies which repair strategies work best per error category and generates prevention rule candidates.
 
