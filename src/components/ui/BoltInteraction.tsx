@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { 
-  Plus, Paperclip, Image as ImageIcon, FileCode,
   SendHorizontal, Box, Zap, Bot, BarChart3, ArrowRight
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -63,7 +62,6 @@ function ChatInput({ onSend, onExampleClick }: {
   onExampleClick?: (prompt: string) => void
 }) {
   const [message, setMessage] = useState('')
-  const [showAttachMenu, setShowAttachMenu] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const typingPlaceholder = useTypingPlaceholder()
 
@@ -115,40 +113,7 @@ function ChatInput({ onSend, onExampleClick }: {
           />
         </div>
 
-        <div className="flex items-center justify-between px-5 pb-5 pt-1">
-          <div className="flex items-center gap-1.5">
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setShowAttachMenu(!showAttachMenu)}
-                className="flex items-center justify-center size-10 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-[#5a5a60] hover:text-white transition-all duration-200 active:scale-95 border border-white/[0.06]"
-              >
-                <Plus className={`size-5 transition-transform duration-200 ${showAttachMenu ? 'rotate-45' : ''}`} />
-              </button>
-
-              {showAttachMenu && (
-                <>
-                  <div className="fixed inset-0 z-40" onClick={() => setShowAttachMenu(false)} />
-                  <div className="absolute bottom-full left-0 mb-2 z-50 bg-[#16161a]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl shadow-black/50 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
-                    <div className="p-1.5 min-w-[190px]">
-                      {[
-                        { icon: <Paperclip className="size-4" />, label: 'Upload arquivo' },
-                        { icon: <ImageIcon className="size-4" />, label: 'Adicionar imagem' },
-                        { icon: <FileCode className="size-4" />, label: 'Importar código' }
-                      ].map((item, i) => (
-                        <button type="button" key={i} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#a0a0a5] hover:bg-white/5 hover:text-white transition-all duration-150">
-                          {item.icon}
-                          <span className="text-sm">{item.label}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div className="flex-1" />
+        <div className="flex items-center justify-end px-5 pb-5 pt-1">
 
           <button
             type="button"
