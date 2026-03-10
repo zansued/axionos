@@ -100,6 +100,7 @@ import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
 import OperationalCyclesDashboard from "./pages/OperationalCyclesDashboard";
 import OperationalLoopsDashboard from "./pages/OperationalLoopsDashboard";
+import SystemHealthDashboard from "./pages/SystemHealthDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
