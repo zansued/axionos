@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface Organization {
   id: string;
@@ -43,6 +44,7 @@ const OrgContext = createContext<OrgContextType | undefined>(undefined);
 
 export function OrgProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [currentOrg, setCurrentOrg] = useState<Organization | null>(null);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
@@ -78,8 +80,12 @@ export function OrgProvider({ children }: { children: ReactNode }) {
         );
 
         if (rpcErr) {
-          // Might fail if slug already exists (user already has an org but RLS hides it)
           console.error("Failed to create org:", rpcErr);
+          toast({
+            variant: "destructive",
+            title: "Erro ao criar organização",
+            description: "Não foi possível configurar sua conta. Recarregue a página ou entre em contato com o suporte.",
+          });
           setLoading(false);
           return;
         }

@@ -57,6 +57,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
 
   // Track which initiatives already had their CI completion handled
   const handledCIRef = useRef<Set<string>>(new Set());
+  const retryCountRef = useRef<Record<string, number>>({});
 
   // ── Realtime: listen for initiative stage_status changes from webhook ──
   useEffect(() => {
@@ -403,6 +404,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
 
         // Auto-trigger validation after execution completes fully
         if (stage === "execution" && result.success && !result.batch_incomplete) {
+          retryCountRef.current[initiativeId] = 0; // reset on success
           toast({ title: "🔍 Iniciando validação automática dos artefatos..." });
           setTimeout(() => {
             runStage(initiativeId, "validation");
@@ -468,8 +470,16 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
         
         // Auto-retry execution on timeout — the orchestrator saves progress so retrying continues from where it stopped
         if (stage === "execution" && isTimeout) {
-          toast({ title: "⏳ Tempo limite atingido. Continuando execução automaticamente em lotes menores..." });
-          addEvent(initiativeId, stage, `⏳ Timeout — auto-retrying execução em lotes`);
+          const retryCount = (retryCountRef.current[initiativeId] || 0) + 1;
+          retryCountRef.current[initiativeId] = retryCount;
+          if (retryCount > 5) {
+            retryCountRef.current[initiativeId] = 0;
+            toast({ variant: "destructive", title: "❌ Limite de retries atingido (5×). Verifique a Edge Function de execução." });
+            addEvent(initiativeId, stage, `❌ Auto-retry abortado após 5 tentativas`);
+            return;
+          }
+          toast({ title: `⏳ Timeout (tentativa ${retryCount}/5). Continuando execução automaticamente...` });
+          addEvent(initiativeId, stage, `⏳ Timeout — auto-retry ${retryCount}/5`);
           setTimeout(() => {
             runStage(initiativeId, "execution");
           }, 3000);

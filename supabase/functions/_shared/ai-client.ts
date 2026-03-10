@@ -96,6 +96,12 @@ export async function callAI(
   const effectiveUrl = routing.primary.url;
   const effectiveKey = routing.primary.key || apiKey;
 
+  if (!effectiveKey) {
+    throw new Error(
+      "AI API key não configurada. Defina LOVABLE_API_KEY ou OPENAI_API_KEY nas variáveis de ambiente do Supabase."
+    );
+  }
+
   let compressedSystem = systemPrompt;
   let compressedUser = userPrompt;
   let compressionRatio = 1;
