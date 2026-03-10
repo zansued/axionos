@@ -275,7 +275,9 @@ const App = () => (
                           <Route path="/pipelines"     element={<ProtectedRoute><Pipelines /></ProtectedRoute>} />
                           <Route path="/governance"    element={<ProtectedRoute><Governance /></ProtectedRoute>} />
                           <Route path="/modes"         element={<ProtectedRoute><Modes /></ProtectedRoute>} />
-                          <Route path="/settings"      element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+                          <Route path="/settings"              element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+                          <Route path="/runtime"               element={<ProtectedRoute><Runtime /></ProtectedRoute>} />
+                          <Route path="/system-intelligence"   element={<ProtectedRoute><SystemIntelligence /></ProtectedRoute>} />
 
                           {/* ══════════════════════════════════════════════
                               WORKSPACE SURFACE — tenant_owner+
