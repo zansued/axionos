@@ -221,6 +221,19 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       try {
         const session = (await supabase.auth.getSession()).data.session;
         if (!session) throw new Error("Não autenticado");
+
+        // Auto-cleanup stale running jobs (>2min) before starting new pipeline
+        const staleThreshold = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+        await supabase
+          .from("initiative_jobs")
+          .update({
+            status: "failed" as any,
+            error: "Auto-cleanup: exceeded max runtime (2min)",
+            completed_at: new Date().toISOString(),
+          })
+          .eq("status", "running")
+          .lt("created_at", staleThreshold);
+
         const payload = {
           initiativeId,
           stage,
