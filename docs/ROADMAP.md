@@ -374,3 +374,24 @@ Block Z introduces runtime sovereignty and outcome compounding. AxionOS transfor
 - **Sprint 122** — Compounding Advantage & Moat Orchestrator ✅
 
 This phase transforms accumulated runtime evidence into measurable, explainable system advantage.
+
+---
+
+## Block AA — Runtime Proof & Adaptive Governance (Sprints 123–126) — ✅ Complete
+
+Block AA converts architectural correctness into runtime evidence. It hardens the autonomy ladder with temporal discipline, personalizes regression sensitivity per tenant, and prevents operators from misinterpreting immature metrics.
+
+**Focus areas:**
+- Runtime execution validation and telemetry
+- Autonomy transition stabilization (temporal + evidence thresholds)
+- Tenant-specific regression profiles (conservative/balanced/aggressive)
+- Cold-start explainability for immature metrics
+
+**Defining principle:** The harness is strictly observational — it measures behavior but cannot mutate canon, doctrine, or autonomy levels directly. Autonomy transitions must earn their way through time, execution count, and confidence. Operators see honest explanations of metric maturity.
+
+### Completed Sprints
+
+- **Sprint 123** — Runtime Execution Validation Harness ✅
+- **Sprint 124** — Autonomy Ladder Stabilization ✅
+- **Sprint 125** — Tenant-Adaptive Regression Profiles ✅
+- **Sprint 126** — Cold Start Explainability Layer ✅
