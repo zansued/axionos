@@ -403,6 +403,26 @@ Block X is not "more features." It is a **meta-governance layer** governing how 
 
 ```
    ═══════════════════════════════════════════════════════════════════
+   TIER 12: REFLEXIVE GOVERNANCE LAYER (Planned — Block X)
+   ═══════════════════════════════════════════════════════════════════
+   Evolution Proposal Governance Engine             ← Planned (Sprint 111)
+   Architectural Mutation Control Layer             ← Planned (Sprint 112)
+   Reflective Validation & Self-Revision Audit      ← Planned (Sprint 113)
+   Kernel Integrity & Anti-Corrosion Guard          ← Planned (Sprint 114)
+
+   ═══════════════════════════════════════════════════════════════════
+   TIER 11: STRATEGIC COORDINATION LAYER (Block W — Hardened)
+   ═══════════════════════════════════════════════════════════════════
+   Multi-Horizon Strategic Alignment Engine         ← Active (Sprint 107)
+   Institutional Tradeoff Arbitration System        ← Active (Sprint 108)
+   Mission Integrity & Drift Prevention             ← Active (Sprint 109)
+   Civilizational Continuity Simulation Layer       ← Active (Sprint 110)
+     Cross-sprint causal signals active and bounded
+     Constitution management UI and history/integration tabs operational
+     Known maturity backlog: dimension/horizon mgmt UI limited,
+       constitution-aware weight injection partial, bulk ops out of scope
+
+   ═══════════════════════════════════════════════════════════════════
    TIER 10: USER-FACING INTELLIGENCE LAYER
    ═══════════════════════════════════════════════════════════════════
    Contextual Guidance & Copilot System            ← Active (Sprints 66-71+)
@@ -487,7 +507,7 @@ Block X is not "more features." It is a **meta-governance layer** governing how 
    Layer 3:  Learning Agents v1                    ← Active (Sprint 12)
    Layer 2:  Commercial Readiness                  ← Active (Sprint 11)
    Layer 1:  Execution Kernel                      ← Active (Sprints 1-10)
-             (Pipeline + Prevention + Routing + Governance + Observability)
+              (Pipeline + Prevention + Routing + Governance + Observability)
 ```
 
 Engineering Memory (Layer 5) is a **cross-layer infrastructure** that captures knowledge from all layers but does not interfere with their operation.
