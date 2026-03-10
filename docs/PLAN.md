@@ -29,13 +29,13 @@
 
 ## Canon Status
 
-130 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Block AB (Sprint 130) — is implemented and validated. Block AB (Learning Canonization) is now complete.
+131 sprints are **complete**. The full canon — from Foundation (Sprint 1) through Block AB (Sprint 130) — is implemented and validated. Sprint 131 (Operational Posture Engine) from Block AC is now complete.
 
-All blocks from Foundation through AB are complete.
+All blocks from Foundation through AB are complete. Block AC (Adaptive Coordination) is in progress.
 
 ### Current Strategic Position
 
-AxionOS has completed 130 sprints spanning blocks Foundation through AB (Learning Canonization). The platform has achieved **Level 10 — Autonomous Delivery Sovereignty**, with 100+ architectural layers active. Block AB is complete — runtime evidence is now extracted, promoted, distilled, and injected as reusable operational guidance.
+AxionOS has completed 131 sprints spanning blocks Foundation through AB, plus Sprint 131 from Block AC (Adaptive Coordination). The platform has achieved **Level 10 — Autonomous Delivery Sovereignty**, with 100+ architectural layers active. Block AC begins adaptive operational coordination — the system interprets its context and adopts strategic postures.
 
 - No autonomous architecture mutation — all structural changes require human approval.
 - Governance before autonomy remains the governing principle.
