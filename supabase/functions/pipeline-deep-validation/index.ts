@@ -276,27 +276,46 @@ function buildImportAnalysisContext(
 
   sections.push(`## Arquivos do projeto (${allPaths.length}):\n${allPaths.join("\n")}`);
 
-  // Extract imports from each file
+  // BUG FIX: Extract imports from the FULL file (not sliced to 5000 chars)
+  // Import lines are short — extracting them from the full file costs almost nothing
+  // but prevents missing lazy imports, dynamic imports, and imports in large files.
   const importRegex = /(?:import\s+(?:[\w{}\s,*]+)\s+from\s+["'])([^"']+)["']/g;
   const dynamicImportRegex = /import\(\s*["']([^"']+)["']\s*\)/g;
 
   const fileImports: string[] = [];
+  // Also build a deterministic cross-reference: imports pointing to local files not in virtualFS
+  const deterministicErrors: string[] = [];
+
   for (const [path, { content }] of Object.entries(virtualFS)) {
     const imports: string[] = [];
     let match;
-    const code = content.slice(0, 5000);
 
+    // Scan FULL content (no .slice here)
     importRegex.lastIndex = 0;
-    while ((match = importRegex.exec(code)) !== null) imports.push(match[1]);
+    while ((match = importRegex.exec(content)) !== null) imports.push(match[1]);
     dynamicImportRegex.lastIndex = 0;
-    while ((match = dynamicImportRegex.exec(code)) !== null) imports.push(match[1]);
+    while ((match = dynamicImportRegex.exec(content)) !== null) imports.push(match[1]);
 
     if (imports.length > 0) {
       fileImports.push(`### ${path}\nImports: ${imports.join(", ")}`);
+
+      // Deterministic check: resolve relative/alias imports against virtualFS (no AI needed)
+      for (const imp of imports) {
+        if (imp.startsWith(".") || imp.startsWith("@/")) {
+          const resolved = resolveImportPath(path, imp, allPaths);
+          if (resolved === null) {
+            deterministicErrors.push(`[DETERMINISTIC] ${path}: import '${imp}' não encontrado no projeto`);
+          }
+        }
+      }
     }
   }
 
   sections.push(`\n## Imports por arquivo:\n${fileImports.join("\n")}`);
+
+  if (deterministicErrors.length > 0) {
+    sections.push(`\n## ⚠️ Erros determinísticos (imports locais ausentes — sem AI):\n${deterministicErrors.join("\n")}`);
+  }
 
   // package.json deps
   if (virtualFS["package.json"]) {
@@ -308,6 +327,54 @@ function buildImportAnalysisContext(
   }
 
   return sections.join("\n");
+}
+
+/**
+ * Resolve a local import path to a virtualFS key.
+ * Returns null if the resolved path doesn't exist in virtualFS.
+ * Returns the resolved path string if found.
+ */
+function resolveImportPath(
+  fromFile: string,
+  importPath: string,
+  allPaths: string[]
+): string | null {
+  // Handle @/ alias → src/
+  const normalized = importPath.startsWith("@/")
+    ? "src/" + importPath.slice(2)
+    : importPath;
+
+  // Compute base directory of the importing file
+  const fromDir = fromFile.includes("/")
+    ? fromFile.split("/").slice(0, -1).join("/")
+    : "";
+
+  // Resolve relative path
+  const parts = (fromDir ? fromDir + "/" + normalized : normalized).split("/");
+  const resolved: string[] = [];
+  for (const p of parts) {
+    if (p === ".") continue;
+    if (p === "..") resolved.pop();
+    else resolved.push(p);
+  }
+  const base = resolved.join("/");
+
+  // Check with common extensions and /index variants
+  const candidates = [
+    base,
+    base + ".ts",
+    base + ".tsx",
+    base + ".js",
+    base + ".jsx",
+    base + "/index.ts",
+    base + "/index.tsx",
+    base + "/index.js",
+  ];
+
+  for (const candidate of candidates) {
+    if (allPaths.includes(candidate)) return candidate;
+  }
+  return null;
 }
 
 function buildTypeAnalysisContext(

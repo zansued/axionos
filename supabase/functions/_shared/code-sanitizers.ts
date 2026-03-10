@@ -150,10 +150,85 @@ export function getDeterministicFiles(supabaseConnInfo?: { url: string; anonKey:
   };
 }
 
+/**
+ * Sanitize a SQL migration file:
+ * 1. Injects CREATE SCHEMA IF NOT EXISTS when tables reference a custom schema
+ * 2. Wraps CREATE TYPE in DO $$ ... $$ block for idempotency (PostgreSQL <14 compat)
+ */
+export function sanitizeSqlMigration(content: string): string {
+  // Detect custom schema name from first qualified reference (schema.table or schema.type)
+  const schemaMatch = content.match(/(?:CREATE\s+(?:TABLE|TYPE|FUNCTION|TRIGGER)\s+IF\s+NOT\s+EXISTS\s+|CREATE\s+(?:TABLE|TYPE|FUNCTION|TRIGGER)\s+)([a-z_][a-z0-9_]*)\./i);
+  const schemaName = schemaMatch?.[1];
+
+  // Only patch if a custom schema (not 'public') is detected
+  if (schemaName && schemaName !== "public") {
+    const schemaDecl = `CREATE SCHEMA IF NOT EXISTS ${schemaName};\n`;
+
+    // Inject schema creation at the top if not already present
+    if (!content.includes(`CREATE SCHEMA IF NOT EXISTS ${schemaName}`)) {
+      content = schemaDecl + content;
+      console.log(`[SANITIZE] sql: injected CREATE SCHEMA IF NOT EXISTS ${schemaName}`);
+    }
+
+    // Replace bare CREATE TYPE ... AS ENUM with DO $$ IF NOT EXISTS $$ block
+    // PostgreSQL doesn't support CREATE TYPE IF NOT EXISTS directly
+    content = content.replace(
+      /CREATE\s+TYPE\s+IF\s+NOT\s+EXISTS\s+([\w.]+)\s+AS\s+ENUM\s*\(([^)]+)\);/gi,
+      (_match, typeName, values) => {
+        return `DO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_type t JOIN pg_namespace n ON t.typnamespace = n.oid WHERE t.typname = '${typeName.split('.').pop()}' AND n.nspname = '${schemaName}') THEN\n    CREATE TYPE ${typeName} AS ENUM (${values});\n  END IF;\nEND $$;`;
+      }
+    );
+  }
+
+  return content;
+}
+
+/**
+ * Canonical map of known npm packages → pinned compatible version.
+ * Used by pipeline-publish to auto-inject missing dependencies detected
+ * from import scanning of generated files.
+ */
+export const KNOWN_PACKAGES: Record<string, { version: string; dev: boolean }> = {
+  // UI
+  "sonner": { version: "^1.7.4", dev: false },
+  "framer-motion": { version: "^12.0.0", dev: false },
+  "next-themes": { version: "^0.3.0", dev: false },
+  "vaul": { version: "^0.9.9", dev: false },
+  "cmdk": { version: "^1.0.0", dev: false },
+  "embla-carousel-react": { version: "^8.0.0", dev: false },
+  "input-otp": { version: "^1.4.0", dev: false },
+  // State & forms
+  "zustand": { version: "^4.5.2", dev: false },
+  "@tanstack/react-query": { version: "^5.12.0", dev: false },
+  "react-hook-form": { version: "^7.50.0", dev: false },
+  "@hookform/resolvers": { version: "^3.10.0", dev: false },
+  "zod": { version: "^3.22.0", dev: false },
+  // Data
+  "date-fns": { version: "^3.6.0", dev: false },
+  "recharts": { version: "^2.10.0", dev: false },
+  // DnD
+  "@dnd-kit/core": { version: "^6.3.1", dev: false },
+  "@dnd-kit/sortable": { version: "^10.0.0", dev: false },
+  "@dnd-kit/utilities": { version: "^3.2.2", dev: false },
+  // Supabase
+  "@supabase/supabase-js": { version: "^2.39.7", dev: false },
+  // Router
+  "react-router-dom": { version: "^6.30.0", dev: false },
+  // Misc
+  "react-resizable-panels": { version: "^2.1.9", dev: false },
+  // Radix (common ones not in base list)
+  "@radix-ui/react-progress": { version: "^1.1.7", dev: false },
+  "@radix-ui/react-slider": { version: "^1.3.5", dev: false },
+  "@radix-ui/react-switch": { version: "^1.2.5", dev: false },
+  "@radix-ui/react-accordion": { version: "^1.2.11", dev: false },
+  "@radix-ui/react-collapsible": { version: "^1.1.11", dev: false },
+};
+
 /** Get post-processors map for generated files */
 export function getPostProcessors(): Record<string, (content: string) => string> {
   return {
     "package.json": sanitizePackageJson,
+    "supabase/migrations/001_initial_schema.sql": sanitizeSqlMigration,
   };
 }
 

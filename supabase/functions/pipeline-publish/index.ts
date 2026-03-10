@@ -3,7 +3,7 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
+import { sanitizePackageJson, sanitizeSqlMigration, DETERMINISTIC_FILES, KNOWN_PACKAGES } from "../_shared/code-sanitizers.ts";
 import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 
 /**
@@ -98,6 +98,8 @@ serve(async (req) => {
       if (DETERMINISTIC_FILES[filePath]) content = DETERMINISTIC_FILES[filePath];
       // Sanitize package.json
       if (filePath === "package.json") content = sanitizePackageJson(content);
+      // BUG FIX (Bug 3): Sanitize SQL migrations — inject CREATE SCHEMA if missing
+      if (filePath.match(/\.sql$/) || filePath.includes("migration")) content = sanitizeSqlMigration(content);
 
       fileEntries.push({ path: filePath, content, type: si?.file_type || art.type, summary: si?.description || art.summary || filePath });
     }
@@ -128,10 +130,25 @@ Retorne APENAS JSON:
     await persistReview(serviceClient, artifacts[0].id, user.id, "release_preflight", "approved",
       JSON.stringify(preflight));
 
+    // BUG FIX (Bug 2): Block publish when critical files are missing.
+    // Previously this was non-blocking (just a console.warn). Now it returns an error
+    // that the Fix Loop can act on to generate the missing files before re-attempting publish.
+    if (preflight.critical_missing && preflight.critical_missing.length > 0) {
+      const missingList = preflight.critical_missing.join(", ");
+      await pipelineLog(ctx, "release_preflight_blocked",
+        `Pre-flight BLOCKED: arquivos críticos ausentes — ${missingList}. Retornando ao Fix Loop.`);
+      await updateInitiative(ctx, {
+        execution_progress: {
+          preflight_blocked: true,
+          preflight_missing: preflight.critical_missing,
+          preflight_blocked_at: new Date().toISOString(),
+        },
+      });
+      if (jobId) await failJob(ctx, jobId, `Pre-flight bloqueado: ${missingList}`);
+      return errorResponse(`Pre-flight bloqueado: os seguintes arquivos são importados mas não foram gerados: ${missingList}. O Fix Loop deve gerar esses arquivos antes de re-tentar a publicação.`, 422);
+    }
     if (!preflight.preflight_pass && preflight.risk_level === "high") {
-      // Log warning but don't block — deterministic files and repo defaults cover most critical files
-      console.warn("Pre-flight warnings (non-blocking):", preflight.critical_missing);
-      await pipelineLog(ctx, "release_preflight_warning", `Pre-flight warnings: ${preflight.critical_missing?.join(", ") || preflight.summary}`);
+      await pipelineLog(ctx, "release_preflight_warning", `Pre-flight warnings (não-bloqueante): ${preflight.summary}`);
     }
 
     // ═══ PHASE 2: Changelog & Commit Messages (Release Agent) ═══
@@ -226,21 +243,59 @@ Retorne APENAS JSON:
     for (const f of criticalFiles) {
       if (DETERMINISTIC_FILES[f]) requiredFiles[f] = DETERMINISTIC_FILES[f];
     }
-    // Generate package.json if not in artifacts
+    // BUG FIX (Bug 4): Before building the default package.json, scan ALL generated .ts/.tsx files
+    // for external package imports and auto-inject any that are known but missing.
+    // This prevents commits where code imports 'sonner', 'zustand', etc. but package.json doesn't list them.
     if (!fileEntries.some(f => f.path === "package.json")) {
+      const defaultDeps: Record<string, string> = {
+        "react": "^18.3.1", "react-dom": "^18.3.1", "react-router-dom": "^6.30.0",
+        "lucide-react": "^0.462.0", "tailwind-merge": "^2.6.0", "clsx": "^2.1.1",
+        "class-variance-authority": "^0.7.1",
+      };
+      const defaultDevDeps: Record<string, string> = {
+        "vite": "^5.4.19", "@vitejs/plugin-react-swc": "^3.11.0", "typescript": "^5.8.3",
+        "tailwindcss": "^3.4.17", "autoprefixer": "^10.4.21", "postcss": "^8.5.6",
+        "@types/react": "^18.3.23", "@types/react-dom": "^18.3.7",
+      };
+
+      // Scan all TypeScript/TSX file imports for external package names
+      const extImportRegex = /(?:import\s+(?:[\w{}\s,*]+)\s+from\s+["']|import\(\s*["'])([^"'./][^"']*)["']/g;
+      const detectedPackages = new Set<string>();
+      for (const f of fileEntries) {
+        if (!f.path.match(/\.(ts|tsx)$/)) continue;
+        let m: RegExpExecArray | null;
+        extImportRegex.lastIndex = 0;
+        while ((m = extImportRegex.exec(f.content)) !== null) {
+          // Extract root package name (handle scoped packages like @radix-ui/react-dialog)
+          const raw = m[1];
+          const pkgName = raw.startsWith("@")
+            ? raw.split("/").slice(0, 2).join("/")
+            : raw.split("/")[0];
+          detectedPackages.add(pkgName);
+        }
+      }
+
+      // Auto-inject detected packages that are in KNOWN_PACKAGES but not in default lists
+      let autoInjected = 0;
+      for (const pkg of detectedPackages) {
+        const known = KNOWN_PACKAGES[pkg];
+        if (known && !defaultDeps[pkg] && !defaultDevDeps[pkg]) {
+          if (known.dev) defaultDevDeps[pkg] = known.version;
+          else defaultDeps[pkg] = known.version;
+          autoInjected++;
+          console.log(`[SANITIZE] package.json: auto-injected "${pkg}" = "${known.version}" from import scan`);
+        }
+      }
+      if (autoInjected > 0) {
+        await pipelineLog(ctx, "release_package_autoinject",
+          `package.json: ${autoInjected} dependências auto-injetadas do scan de imports (${Array.from(detectedPackages).filter(p => KNOWN_PACKAGES[p]).join(", ")})`);
+      }
+
       const defaultPkg = {
         name: repoSlug, version: changelog?.version || "1.0.0", type: "module",
         scripts: { dev: "vite", build: "vite build", preview: "vite preview" },
-        dependencies: {
-          "react": "^18.3.1", "react-dom": "^18.3.1", "react-router-dom": "^6.30.0",
-          "lucide-react": "^0.462.0", "tailwind-merge": "^2.6.0", "clsx": "^2.1.1",
-          "class-variance-authority": "^0.7.1",
-        },
-        devDependencies: {
-          "vite": "^5.4.19", "@vitejs/plugin-react-swc": "^3.11.0", "typescript": "^5.8.3",
-          "tailwindcss": "^3.4.17", "autoprefixer": "^10.4.21", "postcss": "^8.5.6",
-          "@types/react": "^18.3.23", "@types/react-dom": "^18.3.7",
-        },
+        dependencies: defaultDeps,
+        devDependencies: defaultDevDeps,
       };
       requiredFiles["package.json"] = sanitizePackageJson(JSON.stringify(defaultPkg, null, 2));
     }
