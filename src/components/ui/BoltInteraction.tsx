@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { 
   Plus, Paperclip, Image as ImageIcon, FileCode,
-  SendHorizontal, Box, Zap, Bot, BarChart3, ArrowRight,
-  Cog, Database, Shield
+  SendHorizontal, Box, Zap, Bot, BarChart3, ArrowRight
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import axionLogo from '@/assets/axion-logo.svg'
@@ -57,12 +56,6 @@ const EXAMPLES = [
   { icon: BarChart3, label: "Dashboard", prompt: "Crie um dashboard de analytics em tempo real" },
 ]
 
-// ── Generation steps ──────────────────────────────────────────────────────
-const GEN_STEPS = [
-  { icon: Cog, label: "Criando API", delay: 0 },
-  { icon: Database, label: "Configurando banco", delay: 1.2 },
-  { icon: Shield, label: "Criando autenticação", delay: 2.4 },
-]
 
 // ── Chat Input ────────────────────────────────────────────────────────────
 function ChatInput({ onSend, onExampleClick }: {
@@ -236,76 +229,15 @@ function RayBackground() {
   )
 }
 
-// ── Generation Feedback ───────────────────────────────────────────────────
-function GenerationFeedback({ progress }: { progress: number }) {
-  return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-[#08080a]">
-      <RayBackground />
-      <div className="relative z-10 flex flex-col items-center gap-8">
-        <motion.img
-          src={axionLogo}
-          alt="AxionOS"
-          className="h-16 w-16 drop-shadow-[0_0_30px_rgba(20,136,252,0.5)]"
-          animate={{ scale: [1, 1.05, 1] }}
-          transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-        />
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-white mb-2 font-display">Gerando infraestrutura...</h2>
-          <p className="text-sm text-[#5a5a60]">{progress}% concluído</p>
-        </div>
-
-        {/* Progress bar */}
-        <div className="w-64 h-1 rounded-full bg-white/[0.06] overflow-hidden">
-          <motion.div
-            className="h-full rounded-full"
-            style={{ background: 'linear-gradient(90deg, #1488fc, #4da5fc)' }}
-            initial={{ width: '0%' }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.4 }}
-          />
-        </div>
-
-        {/* Step indicators */}
-        <div className="flex flex-col gap-3 mt-2">
-          {GEN_STEPS.map((step, i) => {
-            const active = progress > (i + 1) * 25
-            const current = progress > i * 25 && progress <= (i + 1) * 25
-            return (
-              <motion.div
-                key={step.label}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: step.delay, duration: 0.4 }}
-                className={`flex items-center gap-3 text-sm ${
-                  active ? 'text-[#4da5fc]' : current ? 'text-white' : 'text-[#3a3a40]'
-                }`}
-              >
-                <step.icon className={`size-4 ${current ? 'animate-spin' : ''}`} style={current ? { animationDuration: '2s' } : {}} />
-                <span>{step.label}</span>
-                {active && <span className="text-[10px] text-[#4da5fc]/60">✓</span>}
-              </motion.div>
-            )
-          })}
-        </div>
-      </div>
-    </div>
-  )
-}
 
 // ── Main Component ────────────────────────────────────────────────────────
 interface BoltChatProps {
   onSubmit?: (message: string, modelId: string, assets: File[]) => void
-  isGenerating?: boolean
-  progress?: number
 }
 
-export function BoltStyleChat({ onSubmit, isGenerating, progress = 0 }: BoltChatProps) {
+export function BoltStyleChat({ onSubmit }: BoltChatProps) {
   const handleSend = (message: string) => {
     onSubmit?.(message, "auto", [])
-  }
-
-  if (isGenerating) {
-    return <GenerationFeedback progress={progress} />
   }
 
   return (
