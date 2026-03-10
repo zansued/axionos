@@ -65,7 +65,6 @@ export const OWNER_INSTITUTIONAL_MEMORY: NavItem[] = [
 ];
 
 export const OWNER_GOVERNANCE: NavItem[] = [
-  { title: "Inbox & Decisions", url: "/governance-inbox", icon: ShieldCheck },
   { title: "Autonomy Posture",  url: "/autonomy-posture", icon: Scale },
   { title: "Agent Swarm",       url: "/agents",           icon: Users },
   { title: "Settings & Billing",url: "/org",              icon: Settings },
