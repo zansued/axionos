@@ -51,9 +51,9 @@ export function QuickActions() {
   const actions = [
     { label: "New Project", icon: Plus, action: () => navigate("/initiatives") },
     { label: "Inspect Agents", icon: Bot, action: () => navigate("/agents") },
+    { label: "Runtime", icon: Radio, action: () => navigate("/runtime") },
     { label: "Observability", icon: Eye, action: () => navigate("/system-health") },
-    { label: "Governance", icon: Shield, action: () => navigate("/autonomy-posture") },
-    { label: "Runtime Logs", icon: Search, action: () => navigate("/observability") },
+    { label: "Intelligence", icon: Sparkles, action: () => navigate("/system-intelligence") },
   ];
 
   return (
