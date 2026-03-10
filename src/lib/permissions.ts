@@ -12,6 +12,7 @@ import {
   Users, Scale, BrainCircuit, Zap, Store, TrendingUp, Brain, FileText, Gauge,
   Radio, Server, Globe, Sliders, Beaker, Network, ClipboardCheck, Route, Compass,
   Library, Bug, PackagePlus, Activity, Fingerprint, ShieldAlert, Crown, Focus, Timer, Repeat,
+  HeartPulse,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
