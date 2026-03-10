@@ -5,6 +5,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion'
 import axionLogo from '@/assets/axion-logo.svg'
 import NeuralBackground from './NeuralBackground'
+import { GlowingEffect } from './glowing-effect'
 
 // ── Typing placeholder ───────────────────────────────────────────────────
 const PLACEHOLDERS = [
