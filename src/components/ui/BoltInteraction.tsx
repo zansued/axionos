@@ -8,11 +8,11 @@ import NeuralBackground from './NeuralBackground'
 
 // ── Typing placeholder ───────────────────────────────────────────────────
 const PLACEHOLDERS = [
-  "Crie uma API REST com autenticação JWT e banco PostgreSQL...",
-  "Monte um dashboard de analytics em tempo real...",
-  "Construa um sistema de automação para WhatsApp...",
-  "Crie uma infraestrutura de IA com deploy automático...",
-  "Desenvolva um sistema de pagamentos com Stripe...",
+  "Build a REST API with JWT auth and PostgreSQL...",
+  "Create a real-time analytics dashboard...",
+  "Design an automation system with webhooks and queues...",
+  "Deploy an AI infrastructure with auto-scaling...",
+  "Build a payment system with Stripe integration...",
 ]
 
 function useTypingPlaceholder() {
