@@ -316,14 +316,14 @@ This is exactly why Block X exists: to close the gap between strategic awareness
 
 ## Governing Principle
 
-> One hundred and twenty-two sprints complete. All blocks (Foundation through Z) are complete. Autonomous Delivery Sovereignty operational.
-> Internal architecture is mature: governance, intelligence, memory, doctrine, decision engine, bounded autonomy, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, architecture research, adaptive institutional ecosystem, sovereign institutional intelligence, strategic coordination, reflexive governance, canonical knowledge, runtime sovereignty — all active.
+> One hundred and twenty-six sprints complete. All blocks (Foundation through AA) are complete. Autonomous Delivery Sovereignty operational with runtime evidence hardening.
+> Internal architecture is mature: governance, intelligence, memory, doctrine, decision engine, bounded autonomy, calibration, observability, ecosystem controls, policy engines, orchestration, multi-agent coordination, delivery optimization, distributed runtime, architecture research, adaptive institutional ecosystem, sovereign institutional intelligence, strategic coordination, reflexive governance, canonical knowledge, runtime sovereignty, runtime proof & adaptive governance — all active.
 > Product experience is mature: user journey orchestration, role-based surfaces, one-click delivery, guided onboarding, adoption intelligence — all active.
-> The platform delivers on the promise: **from idea to delivered software — with strategic coordination, reflexive governance, canonical knowledge, and runtime sovereignty**.
+> The platform delivers on the promise: **from idea to delivered software — with strategic coordination, reflexive governance, canonical knowledge, runtime sovereignty, and evidence-grounded adaptive governance**.
 > Internal sophistication serves the product experience — it does not replace it.
 > Rule: governance before autonomy. No autonomous architecture mutation. All changes human-approved. Tenant isolation preserved across all boundaries.
 >
-> **Principle:** Autonomy is earned through evidence, bounded by governance, and reversible by design. Runtime sovereignty does not bypass governance — structural architecture changes remain governed by Block X mechanisms, and implementation knowledge remains governed by Block Y. Block Z strictly converts operational evidence into improved delivery posture.
+> **Principle:** Autonomy is earned through evidence, bounded by governance, and reversible by design. Runtime sovereignty does not bypass governance — structural architecture changes remain governed by Block X mechanisms, and implementation knowledge remains governed by Block Y. Block Z strictly converts operational evidence into improved delivery posture. Block AA hardens this with runtime proof, transition stabilization, adaptive regression sensitivity, and cold-start explainability.
 
 ---
 
