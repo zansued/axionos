@@ -3,7 +3,7 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
+import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, autoFixMissingDependencies } from "../_shared/code-sanitizers.ts";
 import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 
 /**
