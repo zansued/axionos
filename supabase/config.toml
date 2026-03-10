@@ -161,3 +161,6 @@ verify_jwt = false
 
 [functions.institutional-memory]
 verify_jwt = false
+
+[functions.evolution-proposal-governance]
+verify_jwt = false
