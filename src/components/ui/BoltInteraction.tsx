@@ -220,6 +220,7 @@ function RayBackground() {
 interface BoltChatProps {
   onSubmit?: (message: string, modelId: string, assets: File[]) => void
   initialMessage?: string
+  onSignIn?: () => void
 }
 
 export function BoltStyleChat({ onSubmit, initialMessage }: BoltChatProps) {
