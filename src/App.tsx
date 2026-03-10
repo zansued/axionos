@@ -205,6 +205,7 @@ const App = () => (
                         <Route path="/kernel-integrity"         element={<P><KernelIntegrityGuard /></P>} />
                         <Route path="/canon-governance"         element={<P><CanonGovernanceDashboard /></P>} />
                         <Route path="/pattern-library"          element={<P><PatternLibraryDashboard /></P>} />
+                        <Route path="/failure-memory"           element={<P><FailureMemoryDashboard /></P>} />
 
                         <Route path="*" element={<NotFound />} />
                       </Routes>
