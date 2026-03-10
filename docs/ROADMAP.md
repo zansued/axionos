@@ -17,7 +17,7 @@
 
 | Scope | Rule |
 |-------|------|
-| **Owns** | Current maturity level, strategic direction, implementation horizons, macro capability blocks, post-106 strategic thesis |
+| **Owns** | Current maturity level, strategic direction, implementation horizons, macro capability blocks, post-110 strategic thesis |
 | **Must not define** | Sprint-by-sprint execution ledger (→ PLAN.md), module inventory (→ AGENTS.md), detailed architecture (→ ARCHITECTURE.md), pipeline contracts (→ PIPELINE_CONTRACTS.md) |
 | **Derived from** | PLAN.md for sprint completion status; ARCHITECTURE.md for layer count |
 | **Update rule** | Update when strategic block, maturity, or horizon changes |
