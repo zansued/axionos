@@ -179,3 +179,6 @@ verify_jwt = false
 
 [functions.canon-retrieval]
 verify_jwt = false
+
+[functions.repair-intelligence-archive]
+verify_jwt = false

@@ -15731,6 +15731,255 @@ export type Database = {
           },
         ]
       }
+      failure_context_snapshots: {
+        Row: {
+          agent_type: string | null
+          created_at: string
+          environment_context: Json
+          error_payload: Json
+          failure_memory_id: string
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          pipeline_stage: string | null
+          stack_context: Json
+        }
+        Insert: {
+          agent_type?: string | null
+          created_at?: string
+          environment_context?: Json
+          error_payload?: Json
+          failure_memory_id: string
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          pipeline_stage?: string | null
+          stack_context?: Json
+        }
+        Update: {
+          agent_type?: string | null
+          created_at?: string
+          environment_context?: Json
+          error_payload?: Json
+          failure_memory_id?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          pipeline_stage?: string | null
+          stack_context?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "failure_context_snapshots_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "failure_context_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      failure_memory_entries: {
+        Row: {
+          affected_layers: string[] | null
+          confidence_score: number
+          containment_guidance: string | null
+          created_at: string
+          failed_repairs: Json
+          failure_type: string
+          id: string
+          lifecycle_status: string
+          linked_canon_entries: string[] | null
+          organization_id: string
+          proven_causes: Json
+          recurrence_score: number
+          root_cause_hypothesis: string | null
+          signature: string
+          stack_scope: string
+          successful_repairs: Json
+          symptom_summary: string
+          trigger_conditions: Json
+          updated_at: string
+          validation_requirements: Json
+        }
+        Insert: {
+          affected_layers?: string[] | null
+          confidence_score?: number
+          containment_guidance?: string | null
+          created_at?: string
+          failed_repairs?: Json
+          failure_type?: string
+          id?: string
+          lifecycle_status?: string
+          linked_canon_entries?: string[] | null
+          organization_id: string
+          proven_causes?: Json
+          recurrence_score?: number
+          root_cause_hypothesis?: string | null
+          signature?: string
+          stack_scope?: string
+          successful_repairs?: Json
+          symptom_summary?: string
+          trigger_conditions?: Json
+          updated_at?: string
+          validation_requirements?: Json
+        }
+        Update: {
+          affected_layers?: string[] | null
+          confidence_score?: number
+          containment_guidance?: string | null
+          created_at?: string
+          failed_repairs?: Json
+          failure_type?: string
+          id?: string
+          lifecycle_status?: string
+          linked_canon_entries?: string[] | null
+          organization_id?: string
+          proven_causes?: Json
+          recurrence_score?: number
+          root_cause_hypothesis?: string | null
+          signature?: string
+          stack_scope?: string
+          successful_repairs?: Json
+          symptom_summary?: string
+          trigger_conditions?: Json
+          updated_at?: string
+          validation_requirements?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "failure_memory_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      failure_signatures: {
+        Row: {
+          created_at: string
+          failure_memory_id: string | null
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          normalization_method: string
+          normalized_signature: string
+          occurrence_count: number
+          organization_id: string
+          raw_error: string
+        }
+        Insert: {
+          created_at?: string
+          failure_memory_id?: string | null
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          normalization_method?: string
+          normalized_signature?: string
+          occurrence_count?: number
+          organization_id: string
+          raw_error?: string
+        }
+        Update: {
+          created_at?: string
+          failure_memory_id?: string | null
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          normalization_method?: string
+          normalized_signature?: string
+          occurrence_count?: number
+          organization_id?: string
+          raw_error?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "failure_signatures_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "failure_signatures_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      false_fix_records: {
+        Row: {
+          created_at: string
+          danger_level: string
+          description: string
+          detection_method: string
+          evidence_refs: Json
+          failure_memory_id: string
+          false_fix_type: string
+          id: string
+          organization_id: string
+          recurrence_after_fix: boolean
+          repair_attempt_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          danger_level?: string
+          description?: string
+          detection_method?: string
+          evidence_refs?: Json
+          failure_memory_id: string
+          false_fix_type?: string
+          id?: string
+          organization_id: string
+          recurrence_after_fix?: boolean
+          repair_attempt_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          danger_level?: string
+          description?: string
+          detection_method?: string
+          evidence_refs?: Json
+          failure_memory_id?: string
+          false_fix_type?: string
+          id?: string
+          organization_id?: string
+          recurrence_after_fix?: boolean
+          repair_attempt_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "false_fix_records_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "false_fix_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "false_fix_records_repair_attempt_id_fkey"
+            columns: ["repair_attempt_id"]
+            isOneToOne: false
+            referencedRelation: "repair_attempt_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       federated_boundaries: {
         Row: {
           boundary_code: string
@@ -19957,6 +20206,72 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "mission_integrity_subjects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mitigation_patterns: {
+        Row: {
+          applicability_conditions: Json
+          cautions: string[] | null
+          confidence_score: number
+          created_at: string
+          failure_memory_id: string
+          id: string
+          lifecycle_status: string
+          organization_id: string
+          pattern_description: string
+          pattern_name: string
+          sample_size: number
+          strategy_type: string
+          success_rate: number
+          updated_at: string
+        }
+        Insert: {
+          applicability_conditions?: Json
+          cautions?: string[] | null
+          confidence_score?: number
+          created_at?: string
+          failure_memory_id: string
+          id?: string
+          lifecycle_status?: string
+          organization_id: string
+          pattern_description?: string
+          pattern_name?: string
+          sample_size?: number
+          strategy_type?: string
+          success_rate?: number
+          updated_at?: string
+        }
+        Update: {
+          applicability_conditions?: Json
+          cautions?: string[] | null
+          confidence_score?: number
+          created_at?: string
+          failure_memory_id?: string
+          id?: string
+          lifecycle_status?: string
+          organization_id?: string
+          pattern_description?: string
+          pattern_name?: string
+          sample_size?: number
+          strategy_type?: string
+          success_rate?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mitigation_patterns_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mitigation_patterns_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -26947,6 +27262,69 @@ export type Database = {
           },
         ]
       }
+      repair_attempt_records: {
+        Row: {
+          agent_type: string | null
+          attempt_number: number
+          cost_estimate: number | null
+          created_at: string
+          duration_ms: number | null
+          failure_memory_id: string
+          id: string
+          notes: string | null
+          organization_id: string
+          outcome: string
+          pipeline_stage: string | null
+          repair_payload: Json
+          repair_strategy: string
+        }
+        Insert: {
+          agent_type?: string | null
+          attempt_number?: number
+          cost_estimate?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          failure_memory_id: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          outcome?: string
+          pipeline_stage?: string | null
+          repair_payload?: Json
+          repair_strategy?: string
+        }
+        Update: {
+          agent_type?: string | null
+          attempt_number?: number
+          cost_estimate?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          failure_memory_id?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          outcome?: string
+          pipeline_stage?: string | null
+          repair_payload?: Json
+          repair_strategy?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_attempt_records_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repair_attempt_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       repair_evidence: {
         Row: {
           attempt_number: number
@@ -27037,6 +27415,111 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      repair_intelligence_reviews: {
+        Row: {
+          confidence_adjustment: number | null
+          created_at: string
+          failure_memory_id: string
+          id: string
+          lifecycle_recommendation: string | null
+          organization_id: string
+          review_notes: string | null
+          review_status: string
+          reviewer_id: string | null
+        }
+        Insert: {
+          confidence_adjustment?: number | null
+          created_at?: string
+          failure_memory_id: string
+          id?: string
+          lifecycle_recommendation?: string | null
+          organization_id: string
+          review_notes?: string | null
+          review_status?: string
+          reviewer_id?: string | null
+        }
+        Update: {
+          confidence_adjustment?: number | null
+          created_at?: string
+          failure_memory_id?: string
+          id?: string
+          lifecycle_recommendation?: string | null
+          organization_id?: string
+          review_notes?: string | null
+          review_status?: string
+          reviewer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_intelligence_reviews_failure_memory_id_fkey"
+            columns: ["failure_memory_id"]
+            isOneToOne: false
+            referencedRelation: "failure_memory_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repair_intelligence_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      repair_outcome_links: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          outcome_type: string
+          regression_description: string | null
+          regression_detected: boolean
+          repair_attempt_id: string
+          verification_method: string | null
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          outcome_type?: string
+          regression_description?: string | null
+          regression_detected?: boolean
+          repair_attempt_id: string
+          verification_method?: string | null
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          outcome_type?: string
+          regression_description?: string | null
+          regression_detected?: boolean
+          repair_attempt_id?: string
+          verification_method?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_outcome_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repair_outcome_links_repair_attempt_id_fkey"
+            columns: ["repair_attempt_id"]
+            isOneToOne: false
+            referencedRelation: "repair_attempt_records"
             referencedColumns: ["id"]
           },
         ]
