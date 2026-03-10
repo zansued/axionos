@@ -136,11 +136,7 @@ export function AppSidebar() {
         <SidebarGroup className="pb-0">
           <SidebarGroupContent>
             <div className="flex items-center gap-2 px-2 py-3">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary">
-                <span className="text-xs font-bold text-primary-foreground">
-                  Ax
-                </span>
-              </div>
+              <img src={axionLogo} alt="AxionOS" className="h-7 w-7 shrink-0" />
               {!collapsed && (
                 <span className="font-display text-sm font-semibold tracking-tight">
                   Axion<span className="font-normal text-muted-foreground">OS</span>
