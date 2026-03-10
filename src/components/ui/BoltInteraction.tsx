@@ -208,7 +208,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
 
   return (
     <div className="relative flex flex-col items-center justify-center h-full w-full overflow-hidden bg-[#08080a]">
-      <NeuralBackground className="z-[1]" />
+      <NeuralBackground className="z-0" />
       <RayBackground />
 
 
@@ -235,7 +235,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           className="text-center mb-2"
         >
           <h1 className="text-4xl sm:text-5xl lg:text-[4.5rem] font-bold tracking-tight leading-[1.08] font-display">
-            <span className="bg-gradient-to-r from-[#4da5fc] via-[#6db8ff] to-[#b4d8ff] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#b4d8ff] via-[#6db8ff] to-[#1a6fcc] bg-clip-text text-transparent">
               Axion
             </span>
             <span className="text-white">OS</span>
@@ -247,7 +247,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className="text-[13px] sm:text-[14px] text-[#4a4a52] font-semibold tracking-[0.2em] uppercase mb-6"
+          className="text-[13px] sm:text-[14px] text-white/80 font-semibold tracking-[0.2em] uppercase mb-6"
         >
           Autonomous Intelligent Infrastructure
         </motion.p>
@@ -260,7 +260,7 @@ export function BoltStyleChat({ onSubmit }: BoltChatProps) {
           className="text-center mb-10"
         >
           <p className="text-[15px] sm:text-[17px] lg:text-[19px] text-[#7a7a84] font-medium leading-relaxed max-w-lg mx-auto">
-            Describe the intelligent system you want to orchestrate.
+            Describe what you want to build — we orchestrate the rest.
           </p>
         </motion.div>
 
