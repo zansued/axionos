@@ -333,6 +333,107 @@ export default function AutonomyPostureDashboard() {
                 </CardContent>
               </Card>
             </TabsContent>
+
+            {/* Sprint 125: Risk Profile */}
+            <TabsContent value="risk-profile">
+              <div className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Gauge className="h-4 w-4 text-primary" />
+                      Tenant Risk Profile
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">Active Profile:</span>
+                      <Badge variant="default" className="text-sm">
+                        {regressionProfile?.active_type || "balanced"}
+                      </Badge>
+                    </div>
+
+                    <div className="flex gap-2">
+                      {["conservative", "balanced", "aggressive"].map((pt) => (
+                        <Button
+                          key={pt}
+                          size="sm"
+                          variant={regressionProfile?.active_type === pt ? "default" : "outline"}
+                          onClick={() => setRegressionProfile.mutate({ profile_type: pt })}
+                          disabled={setRegressionProfile.isPending}
+                        >
+                          {pt.charAt(0).toUpperCase() + pt.slice(1)}
+                        </Button>
+                      ))}
+                    </div>
+
+                    {regressionProfile?.profile && (
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4">
+                        {[
+                          { label: "Validation Failure Threshold", value: `${(Number(regressionProfile.profile.validation_failure_threshold) * 100).toFixed(0)}%` },
+                          { label: "Rollback Threshold", value: `${regressionProfile.profile.rollback_rate_threshold} per window` },
+                          { label: "Guardrail Breach Threshold", value: `${regressionProfile.profile.guardrail_breach_threshold}` },
+                          { label: "Incident Threshold", value: `${regressionProfile.profile.incident_threshold}` },
+                          { label: "Evidence Trend Threshold", value: `${Number(regressionProfile.profile.evidence_trend_threshold).toFixed(2)}` },
+                          { label: "Autonomy Upgrade Speed", value: `${Number(regressionProfile.profile.autonomy_upgrade_modifier).toFixed(1)}×` },
+                        ].map((item) => (
+                          <Card key={item.label} className="border-border/30">
+                            <CardContent className="pt-4">
+                              <p className="text-[10px] text-muted-foreground">{item.label}</p>
+                              <p className="text-lg font-bold">{item.value}</p>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+
+                    {!regressionProfile?.profile && (
+                      <p className="text-sm text-muted-foreground">
+                        No custom profile set. Using system default (balanced). Select a profile above to customize.
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Profile comparison */}
+                {regressionProfile?.defaults && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-sm">Profile Comparison</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Parameter</TableHead>
+                            <TableHead>Conservative</TableHead>
+                            <TableHead>Balanced</TableHead>
+                            <TableHead>Aggressive</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {[
+                            { key: "validation_failure_threshold", label: "Validation Failure", fmt: (v: number) => `${(v * 100).toFixed(0)}%` },
+                            { key: "rollback_rate_threshold", label: "Rollback Limit", fmt: (v: number) => `${v}` },
+                            { key: "incident_threshold", label: "Incident Limit", fmt: (v: number) => `${v}` },
+                            { key: "guardrail_breach_threshold", label: "Breach Tolerance", fmt: (v: number) => `${v}` },
+                            { key: "autonomy_upgrade_modifier", label: "Upgrade Speed", fmt: (v: number) => `${v}×` },
+                          ].map(({ key, label, fmt }) => (
+                            <TableRow key={key}>
+                              <TableCell className="font-medium text-xs">{label}</TableCell>
+                              {["conservative", "balanced", "aggressive"].map((pt) => (
+                                <TableCell key={pt} className={`text-xs ${regressionProfile?.active_type === pt ? "font-bold text-primary" : ""}`}>
+                                  {fmt((regressionProfile.defaults as any)[pt]?.[key] ?? 0)}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </TabsContent>
           </Tabs>
         </main>
       </div>
