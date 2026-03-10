@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useOrganization } from "@/contexts/OrgContext";
+import { useOrg } from "@/contexts/OrgContext";
 
 export function useTenantDoctrine() {
   const { currentOrg } = useOrganization();
