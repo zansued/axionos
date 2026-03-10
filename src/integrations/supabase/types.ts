@@ -16334,6 +16334,78 @@ export type Database = {
           },
         ]
       }
+      execution_validation_runs: {
+        Row: {
+          created_at: string
+          execution_cost_usd: number
+          execution_duration_ms: number
+          execution_path: string
+          guardrail_breach_attempts: number
+          id: string
+          organization_id: string
+          publish_success: boolean
+          repair_actions: number
+          repair_latency_ms: number | null
+          repair_success: boolean | null
+          rollback_triggered: boolean
+          stack_id: string
+          telemetry: Json
+          tenant_id: string | null
+          validation_success: boolean
+        }
+        Insert: {
+          created_at?: string
+          execution_cost_usd?: number
+          execution_duration_ms?: number
+          execution_path?: string
+          guardrail_breach_attempts?: number
+          id?: string
+          organization_id: string
+          publish_success?: boolean
+          repair_actions?: number
+          repair_latency_ms?: number | null
+          repair_success?: boolean | null
+          rollback_triggered?: boolean
+          stack_id?: string
+          telemetry?: Json
+          tenant_id?: string | null
+          validation_success?: boolean
+        }
+        Update: {
+          created_at?: string
+          execution_cost_usd?: number
+          execution_duration_ms?: number
+          execution_path?: string
+          guardrail_breach_attempts?: number
+          id?: string
+          organization_id?: string
+          publish_success?: boolean
+          repair_actions?: number
+          repair_latency_ms?: number | null
+          repair_success?: boolean | null
+          rollback_triggered?: boolean
+          stack_id?: string
+          telemetry?: Json
+          tenant_id?: string | null
+          validation_success?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_validation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "execution_validation_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       existential_drift_cases: {
         Row: {
           created_at: string
