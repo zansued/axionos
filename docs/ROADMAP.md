@@ -253,6 +253,7 @@ All pillars of the Strategic Coordination OS are **implemented and hardened**:
 | Sovereign Institutional Intelligence | 103–106 | ✅ Complete | Memory constitution, sovereign decision rights, dependency sovereignty, strategic succession |
 | Strategic Autonomy & Civilizational Coordination | 107–110 | ✅ Complete & Hardened | Multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation |
 | Reflexive Governance & Evolution Control | 111–114 | 🔜 Planned | Evolution proposal governance, mutation control, self-revision audit, kernel integrity guard |
+| Implementation Canon & Knowledge Governance | 115–118 | 🔮 Future | Canon stewardship, implementation pattern library, failure memory, external knowledge intake |
 
 ---
 
