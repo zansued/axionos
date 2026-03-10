@@ -85,6 +85,7 @@ import KernelIntegrityGuard from "./pages/KernelIntegrityGuard";
 import CanonGovernanceDashboard from "./pages/CanonGovernanceDashboard";
 import PatternLibraryDashboard from "./pages/PatternLibraryDashboard";
 import FailureMemoryDashboard from "./pages/FailureMemoryDashboard";
+import ExternalKnowledgeDashboard from "./pages/ExternalKnowledgeDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
