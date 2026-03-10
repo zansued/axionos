@@ -12898,6 +12898,66 @@ export type Database = {
           },
         ]
       }
+      doctrine_adjustment_events: {
+        Row: {
+          adjustment_type: string
+          applied_by: string
+          created_at: string
+          delta: number
+          dimension: string
+          evidence_refs: Json
+          id: string
+          new_value: number
+          organization_id: string
+          previous_value: number
+          profile_id: string | null
+          reason: string
+        }
+        Insert: {
+          adjustment_type?: string
+          applied_by?: string
+          created_at?: string
+          delta?: number
+          dimension?: string
+          evidence_refs?: Json
+          id?: string
+          new_value?: number
+          organization_id: string
+          previous_value?: number
+          profile_id?: string | null
+          reason?: string
+        }
+        Update: {
+          adjustment_type?: string
+          applied_by?: string
+          created_at?: string
+          delta?: number
+          dimension?: string
+          evidence_refs?: Json
+          id?: string
+          new_value?: number
+          organization_id?: string
+          previous_value?: number
+          profile_id?: string | null
+          reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctrine_adjustment_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "doctrine_adjustment_events_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_operating_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       doctrine_applicability_rules: {
         Row: {
           condition_payload: Json
@@ -12948,6 +13008,69 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      doctrine_conflict_cases: {
+        Row: {
+          conflict_type: string
+          created_at: string
+          description: string
+          dimension_a: string
+          dimension_b: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          profile_id: string | null
+          resolution_notes: string | null
+          resolution_status: string
+          resolved_at: string | null
+          severity: string
+        }
+        Insert: {
+          conflict_type?: string
+          created_at?: string
+          description?: string
+          dimension_a?: string
+          dimension_b?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          profile_id?: string | null
+          resolution_notes?: string | null
+          resolution_status?: string
+          resolved_at?: string | null
+          severity?: string
+        }
+        Update: {
+          conflict_type?: string
+          created_at?: string
+          description?: string
+          dimension_a?: string
+          dimension_b?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          profile_id?: string | null
+          resolution_notes?: string | null
+          resolution_status?: string
+          resolved_at?: string | null
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctrine_conflict_cases_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "doctrine_conflict_cases_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_operating_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -14697,6 +14820,53 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "error_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      escalation_posture_profiles: {
+        Row: {
+          auto_escalation_threshold: number
+          created_at: string
+          escalation_speed: string
+          evidence_refs: Json
+          human_review_preference: number
+          id: string
+          incident_response_bias: string
+          organization_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          auto_escalation_threshold?: number
+          created_at?: string
+          escalation_speed?: string
+          evidence_refs?: Json
+          human_review_preference?: number
+          id?: string
+          incident_response_bias?: string
+          organization_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          auto_escalation_threshold?: number
+          created_at?: string
+          escalation_speed?: string
+          evidence_refs?: Json
+          human_review_preference?: number
+          id?: string
+          incident_response_bias?: string
+          organization_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escalation_posture_profiles_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -29105,6 +29275,56 @@ export type Database = {
           },
         ]
       }
+      rollout_risk_profiles: {
+        Row: {
+          canary_preference: number
+          created_at: string
+          deploy_frequency_score: number
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          risk_appetite: string
+          rollback_trigger_threshold: number
+          rollout_strategy: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          canary_preference?: number
+          created_at?: string
+          deploy_frequency_score?: number
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          risk_appetite?: string
+          rollback_trigger_threshold?: number
+          rollout_strategy?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          canary_preference?: number
+          created_at?: string
+          deploy_frequency_score?: number
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          risk_appetite?: string
+          rollback_trigger_threshold?: number
+          rollout_strategy?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rollout_risk_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       runtime_feedback_events: {
         Row: {
           affected_surface: string | null
@@ -29289,6 +29509,56 @@ export type Database = {
           },
           {
             foreignKeyName: "runtime_outcome_lineage_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      runtime_preference_patterns: {
+        Row: {
+          confidence: number
+          created_at: string
+          id: string
+          observation_count: number
+          organization_id: string
+          pattern_key: string
+          pattern_type: string
+          preference_vector: Json
+          source_events: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          confidence?: number
+          created_at?: string
+          id?: string
+          observation_count?: number
+          organization_id: string
+          pattern_key?: string
+          pattern_type?: string
+          preference_vector?: Json
+          source_events?: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          confidence?: number
+          created_at?: string
+          id?: string
+          observation_count?: number
+          organization_id?: string
+          pattern_key?: string
+          pattern_type?: string
+          preference_vector?: Json
+          source_events?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "runtime_preference_patterns_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -31793,6 +32063,188 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "tenant_architecture_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_doctrine_reviews: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          findings: Json
+          id: string
+          organization_id: string
+          profile_id: string | null
+          recommendations: Json
+          review_notes: string | null
+          review_status: string
+          review_type: string
+          reviewer_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          findings?: Json
+          id?: string
+          organization_id: string
+          profile_id?: string | null
+          recommendations?: Json
+          review_notes?: string | null
+          review_status?: string
+          review_type?: string
+          reviewer_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          findings?: Json
+          id?: string
+          organization_id?: string
+          profile_id?: string | null
+          recommendations?: Json
+          review_notes?: string | null
+          review_status?: string
+          review_type?: string
+          reviewer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_doctrine_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_doctrine_reviews_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_operating_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_doctrine_signals: {
+        Row: {
+          affected_dimension: string
+          confidence: number
+          created_at: string
+          id: string
+          organization_id: string
+          profile_id: string | null
+          signal_payload: Json
+          signal_source: string
+          signal_type: string
+          strength: number
+        }
+        Insert: {
+          affected_dimension?: string
+          confidence?: number
+          created_at?: string
+          id?: string
+          organization_id: string
+          profile_id?: string | null
+          signal_payload?: Json
+          signal_source?: string
+          signal_type?: string
+          strength?: number
+        }
+        Update: {
+          affected_dimension?: string
+          confidence?: number
+          created_at?: string
+          id?: string
+          organization_id?: string
+          profile_id?: string | null
+          signal_payload?: Json
+          signal_source?: string
+          signal_type?: string
+          strength?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_doctrine_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_doctrine_signals_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_operating_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_operating_profiles: {
+        Row: {
+          approved_at: string | null
+          autonomy_tolerance_score: number
+          created_at: string
+          declared_profile: Json
+          divergence_score: number
+          doctrine_mode: string
+          evidence_confidence: number
+          id: string
+          incident_escalation_bias: number
+          observed_profile: Json
+          organization_id: string
+          profile_status: string
+          reviewed_by: string | null
+          risk_tolerance_score: number
+          rollback_preference_score: number
+          rollout_cadence_score: number
+          updated_at: string
+          validation_strictness_score: number
+        }
+        Insert: {
+          approved_at?: string | null
+          autonomy_tolerance_score?: number
+          created_at?: string
+          declared_profile?: Json
+          divergence_score?: number
+          doctrine_mode?: string
+          evidence_confidence?: number
+          id?: string
+          incident_escalation_bias?: number
+          observed_profile?: Json
+          organization_id: string
+          profile_status?: string
+          reviewed_by?: string | null
+          risk_tolerance_score?: number
+          rollback_preference_score?: number
+          rollout_cadence_score?: number
+          updated_at?: string
+          validation_strictness_score?: number
+        }
+        Update: {
+          approved_at?: string | null
+          autonomy_tolerance_score?: number
+          created_at?: string
+          declared_profile?: Json
+          divergence_score?: number
+          doctrine_mode?: string
+          evidence_confidence?: number
+          id?: string
+          incident_escalation_bias?: number
+          observed_profile?: Json
+          organization_id?: string
+          profile_status?: string
+          reviewed_by?: string | null
+          risk_tolerance_score?: number
+          rollback_preference_score?: number
+          rollout_cadence_score?: number
+          updated_at?: string
+          validation_strictness_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_operating_profiles_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
