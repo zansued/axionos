@@ -1009,7 +1009,7 @@ supabase/functions/
 ### System Maturity
 
 > **Canonical maturity table:** [ROADMAP.md](ROADMAP.md)
-> **Current:** Level 6 — Sovereign Institutional Intelligence ✅
+> **Current:** Level 7 — Strategic Autonomy & Civilizational Coordination ✅
 
 ---
 
