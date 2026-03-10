@@ -148,6 +148,7 @@ export const PLATFORM_FULL_NAV: NavItem[] = [
   { title: "Cycles", url: "/operational-cycles",    icon: Timer },
   { title: "Loops", url: "/operational-loops",     icon: Repeat },
   { title: "Sys. Health", url: "/system-health",  icon: HeartPulse },
+  { title: "Org. Memory", url: "/organism-memory", icon: Brain },
 ];
 
 /** Reviewer subset: Observability, Hypotheses, Sim. Sandbox, Res. Patterns, Promotion */
