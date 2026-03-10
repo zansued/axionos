@@ -345,13 +345,13 @@ export default function EvolutionProposalGovernance() {
           </Card>
           <Card>
             <CardContent className="pt-4">
-              <p className="text-2xl font-bold text-yellow-500">{proposals.filter((p: any) => p.status === "under_review").length}</p>
+              <p className="text-2xl font-bold text-warning">{proposals.filter((p: any) => p.status === "under_review").length}</p>
               <p className="text-xs text-muted-foreground">Em Revisão</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4">
-              <p className="text-2xl font-bold text-green-500">{proposals.filter((p: any) => p.status === "approved").length}</p>
+              <p className="text-2xl font-bold text-primary">{proposals.filter((p: any) => p.status === "approved").length}</p>
               <p className="text-xs text-muted-foreground">Aprovadas</p>
             </CardContent>
           </Card>
