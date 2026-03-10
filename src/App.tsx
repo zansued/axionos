@@ -83,6 +83,7 @@ import ArchitecturalMutationControl from "./pages/ArchitecturalMutationControl";
 import ReflectiveValidationAudit from "./pages/ReflectiveValidationAudit";
 import KernelIntegrityGuard from "./pages/KernelIntegrityGuard";
 import CanonGovernanceDashboard from "./pages/CanonGovernanceDashboard";
+import PatternLibraryDashboard from "./pages/PatternLibraryDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
