@@ -1,5 +1,7 @@
 import { useOrg } from "@/contexts/OrgContext";
 import { useExecutionHarness } from "@/hooks/useExecutionHarness";
+import { useColdStart } from "@/hooks/useColdStart";
+import { ColdStartBanner } from "@/components/observability/ColdStartBanner";
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
