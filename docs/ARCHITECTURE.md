@@ -684,15 +684,20 @@ The Agent OS is the runtime architecture governing how agents are selected, exec
 
 ```mermaid
 flowchart LR
-    Pipeline["Pipeline Core\n(execution events)"] --> OI["Operational\nIntelligence"]
-    OI --> Learn["Learning\nEngine"]
-    Learn --> Gov["Execution\nGovernance"]
+    Pipeline["Pipeline Core\n(execution events)"]:::runtime --> OI["Operational\nIntelligence"]:::intelligence
+    OI --> Learn["Learning\nEngine"]:::intelligence
+    Learn --> Gov["Execution\nGovernance"]:::governance
     Gov --> Pipeline
-    Learn --> PI["Platform\nIntelligence"]
-    PI --> Calib["Self-\nCalibration"]
-    PI --> Strat["Strategy\nEvolution"]
+    Learn --> PI["Platform\nIntelligence"]:::intelligence
+    PI --> Calib["Self-\nCalibration"]:::governance
+    PI --> Strat["Strategy\nEvolution"]:::strategic
     Calib --> Pipeline
     Strat --> Pipeline
+
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef strategic fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:1.5px;
 ```
 
 **Flow description:**
