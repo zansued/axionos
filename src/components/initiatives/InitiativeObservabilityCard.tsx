@@ -169,7 +169,6 @@ export function InitiativeObservabilityCard({ initiativeId }: { initiativeId: st
   );
 }
 
-import React from "react";
 
 const MetricTile = React.forwardRef<HTMLDivElement, { icon: any; label: string; value: string }>(
   ({ icon: Icon, label, value }, ref) => {
