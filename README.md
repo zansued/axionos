@@ -52,6 +52,8 @@ Everything runs inside a **32-stage deterministic pipeline** with full cost trac
 | Delivery Optimization (Block Q) | 83–86 | ✅ Complete |
 | Distributed Runtime (Block R) | 87–90 | ✅ Complete |
 | Research Sandbox (Block S) | 91–94 | ✅ Complete |
+| Runtime Sovereignty (Block Z) | 119–122 | ✅ Complete |
+| Runtime Proof & Adaptive Governance (Block AA) | 123–126 | ✅ Complete |
 
 > Full roadmap: [ROADMAP.md](docs/ROADMAP.md) · Sprint ledger: [PLAN.md](docs/PLAN.md)
 
