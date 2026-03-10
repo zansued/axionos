@@ -11,6 +11,7 @@
 |----------|-----------|---------|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System structure | C4 diagrams, capability layers, containers, components, data flow, safety rules, product boundary model |
 | [GOVERNANCE.md](GOVERNANCE.md) | Agent OS & governance reference | 5 planes, module inventory, agent types, contracts, safety boundaries, events |
+| [AXION_CONTEXT.md](AXION_CONTEXT.md) | Quick context restore | System identity, engines, invariants, sprint canon, development principles |
 | [registry/doc-authority.yml](registry/doc-authority.yml) | Doc ownership | Authority boundaries per document |
 
 ---
