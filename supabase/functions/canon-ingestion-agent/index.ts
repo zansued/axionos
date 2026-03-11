@@ -41,16 +41,27 @@ serve(async (req) => {
           .single();
         if (srcErr || !source) return json({ error: "Source not found" }, 404);
 
-        // 2. Create sync run
+        // 2. Update source to "queued"
+        await supabase.from("canon_sources").update({
+          ingestion_lifecycle_state: "queued",
+          updated_at: new Date().toISOString(),
+        }).eq("id", source_id);
+
+        // 3. Create sync run
         const { data: syncRun, error: syncErr } = await supabase
           .from("canon_source_sync_runs")
           .insert({
             organization_id,
             source_id,
             sync_status: "in_progress",
+            lifecycle_state: "queued",
             candidates_found: 0,
             candidates_accepted: 0,
             candidates_rejected: 0,
+            documents_fetched: 0,
+            chunks_created: 0,
+            candidates_promoted: 0,
+            duplicates_skipped: 0,
             sync_notes: "",
             started_at: new Date().toISOString(),
             triggered_by: "canon-ingestion-agent",
@@ -60,8 +71,11 @@ serve(async (req) => {
         if (syncErr) throw syncErr;
 
         try {
-          // 3. Crawl with Firecrawl
+          // 4. Crawl with Firecrawl — update lifecycle to "fetched"
           console.log(`Scraping source: ${source.source_url}`);
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "fetched" }).eq("id", source_id);
+          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "fetched" }).eq("id", syncRun.id);
+
           const scrapeResp = await fetch(`${FIRECRAWL_URL}/v1/scrape`, {
             method: "POST",
             headers: {
@@ -79,19 +93,26 @@ serve(async (req) => {
           const scrapeData = await scrapeResp.json();
           if (!scrapeResp.ok) {
             console.error("Firecrawl error:", scrapeData);
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, `Firecrawl error: ${scrapeData.error || scrapeResp.status}`);
+            await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
+            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 0, 0, 0, `Firecrawl error: ${scrapeData.error || scrapeResp.status}`, "failed");
             return json({ error: "Crawl failed", details: scrapeData.error }, 502);
           }
 
           const markdown = scrapeData.data?.markdown || scrapeData.markdown || "";
+
+          // Update to "parsed" 
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "parsed" }).eq("id", source_id);
+          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "parsed", documents_fetched: 1 }).eq("id", syncRun.id);
+
           if (!markdown || markdown.length < 100) {
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, "Insufficient content extracted");
+            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 0, 0, "Insufficient content extracted", "parsed");
             return json({ success: true, candidates_created: 0, message: "Insufficient content" });
           }
 
-          // 4. Truncate to ~12k chars for LLM context
+          // 5. Truncate to ~12k chars for LLM context ("chunked" state)
           const truncated = markdown.slice(0, 12000);
-
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "chunked" }).eq("id", source_id);
+          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "chunked", chunks_created: 1 }).eq("id", syncRun.id);
           // 5. Extract patterns via LLM
           console.log("Extracting patterns via LLM...");
           const llmResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -162,17 +183,22 @@ Return ONLY a valid JSON array, no other text.`,
           if (!llmResp.ok) {
             const errText = await llmResp.text();
             console.error("LLM error:", llmResp.status, errText);
+            await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
             if (llmResp.status === 429) {
-              await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, "Rate limited by AI gateway");
+              await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "Rate limited by AI gateway", "failed");
               return json({ error: "Rate limited, please try again later" }, 429);
             }
             if (llmResp.status === 402) {
-              await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, "AI credits exhausted");
+              await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "AI credits exhausted", "failed");
               return json({ error: "AI credits exhausted" }, 402);
             }
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, `LLM error: ${llmResp.status}`);
+            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, `LLM error: ${llmResp.status}`, "failed");
             return json({ error: "Pattern extraction failed" }, 502);
           }
+
+          // Update to "classified"
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "classified" }).eq("id", source_id);
+          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "classified" }).eq("id", syncRun.id);
 
           const llmData = await llmResp.json();
           let patterns: any[] = [];
@@ -189,7 +215,7 @@ Return ONLY a valid JSON array, no other text.`,
           }
 
           if (patterns.length === 0) {
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, "No patterns extracted");
+            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "No patterns extracted", "classified");
             return json({ success: true, candidates_created: 0, message: "No patterns extracted" });
           }
 
@@ -244,9 +270,10 @@ Return ONLY a valid JSON array, no other text.`,
             }
           }
 
-          // 8. Complete sync run
-          await completeSyncRun(supabase, syncRun.id, source_id, patterns.length, accepted, rejected,
-            `Extracted ${patterns.length} patterns, ${accepted} new candidates created, ${rejected} duplicates skipped`);
+          // 8. Complete sync run — lifecycle → "candidate_generated"
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "candidate_generated" }).eq("id", source_id);
+          await completeSyncRun(supabase, syncRun.id, source_id, patterns.length, accepted, rejected, 1, 1, rejected,
+            `Extracted ${patterns.length} patterns, ${accepted} new candidates created, ${rejected} duplicates skipped`, "candidate_generated");
 
           return json({
             success: true,
@@ -258,7 +285,8 @@ Return ONLY a valid JSON array, no other text.`,
 
         } catch (innerErr) {
           console.error("Ingestion error:", innerErr);
-          await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, `Error: ${innerErr.message}`);
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
+          await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 0, 0, 0, `Error: ${innerErr.message}`, "failed");
           throw innerErr;
         }
       }
@@ -327,6 +355,7 @@ Return ONLY a valid JSON array, no other text.`,
               ...src,
               trust_level: "unknown",
               ingestion_status: "pending",
+              ingestion_lifecycle_state: "discovered",
               sync_policy: "manual",
               approved_categories: [],
               source_notes: `Auto-seeded by Canon Ingestion Agent`,
@@ -351,13 +380,19 @@ Return ONLY a valid JSON array, no other text.`,
 
 async function completeSyncRun(
   supabase: any, runId: string, sourceId: string,
-  found: number, accepted: number, rejected: number, notes: string
+  found: number, accepted: number, rejected: number,
+  docsFetched: number, chunksCreated: number, dupsSkipped: number,
+  notes: string, lifecycleState: string = "candidate_generated"
 ) {
   await supabase.from("canon_source_sync_runs").update({
     sync_status: found > 0 ? "completed" : "completed_empty",
+    lifecycle_state: lifecycleState,
     candidates_found: found,
     candidates_accepted: accepted,
     candidates_rejected: rejected,
+    documents_fetched: docsFetched,
+    chunks_created: chunksCreated,
+    duplicates_skipped: dupsSkipped,
     sync_notes: notes,
     completed_at: new Date().toISOString(),
   }).eq("id", runId);

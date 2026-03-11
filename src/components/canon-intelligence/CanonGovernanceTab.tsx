@@ -1,8 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Shield, ClipboardCheck, AlertTriangle, Archive, GitBranch } from "lucide-react";
+import { Shield, ClipboardCheck, AlertTriangle, Archive, GitBranch, ArrowUpCircle, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCanonPipeline } from "@/hooks/useCanonPipeline";
+import { useState } from "react";
 
 interface CanonGovernanceTabProps {
   library: any[];
@@ -26,10 +29,19 @@ const SEVERITY_BADGE: Record<string, string> = {
 };
 
 export function CanonGovernanceTab({ library, reviews, conflicts, supersessions, candidates }: CanonGovernanceTabProps) {
+  const { promoteCandidateToCanon, promoting } = useCanonPipeline();
+  const [promotingId, setPromotingId] = useState<string | null>(null);
   const pendingReviews = reviews.filter((r: any) => r.verdict === "pending");
   const deprecatedEntries = library.filter((e: any) => e.lifecycle_status === "deprecated" || e.lifecycle_status === "archived");
   const openConflicts = conflicts.filter((c: any) => c.resolution_status !== "resolved");
   const pendingCandidates = candidates.filter((c: any) => c.promotion_status === "pending");
+  const approvedCandidates = candidates.filter((c: any) => c.internal_validation_status === "approved" && c.promotion_status === "pending");
+
+  const handlePromote = async (id: string) => {
+    setPromotingId(id);
+    await promoteCandidateToCanon(id);
+    setPromotingId(null);
+  };
 
   return (
     <div className="space-y-5">
@@ -38,7 +50,9 @@ export function CanonGovernanceTab({ library, reviews, conflicts, supersessions,
         <GovMetric value={pendingReviews.length} label="Pending Reviews" warn={pendingReviews.length > 0} />
         <GovMetric value={openConflicts.length} label="Open Conflicts" warn={openConflicts.length > 0} />
         <GovMetric value={pendingCandidates.length} label="Source Candidates" />
+        <GovMetric value={approvedCandidates.length} label="Ready to Promote" accent />
         <GovMetric value={deprecatedEntries.length} label="Deprecated" />
+        <GovMetric value={supersessions.length} label="Supersessions" />
         <GovMetric value={supersessions.length} label="Supersessions" />
       </div>
 
@@ -180,11 +194,11 @@ export function CanonGovernanceTab({ library, reviews, conflicts, supersessions,
   );
 }
 
-function GovMetric({ value, label, warn }: { value: number; label: string; warn?: boolean }) {
+function GovMetric({ value, label, warn, accent }: { value: number; label: string; warn?: boolean; accent?: boolean }) {
   return (
     <Card className="border-border/30 bg-card/50">
       <CardContent className="pt-3 pb-2 text-center">
-        <p className={`text-lg font-bold ${warn ? "text-amber-400" : "text-foreground"}`}>{value}</p>
+        <p className={`text-lg font-bold ${warn ? "text-amber-400" : accent ? "text-primary" : "text-foreground"}`}>{value}</p>
         <p className="text-[9px] text-muted-foreground uppercase tracking-wider">{label}</p>
       </CardContent>
     </Card>
