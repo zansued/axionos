@@ -1,5 +1,4 @@
-import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppShell } from "@/components/AppShell";
 import { useOutcomeAutonomy } from "@/hooks/useOutcomeAutonomy";
 import { useColdStart } from "@/hooks/useColdStart";
 import { ColdStartBanner } from "@/components/observability/ColdStartBanner";
