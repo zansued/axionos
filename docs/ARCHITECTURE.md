@@ -159,7 +159,7 @@ flowchart TB
 | Container | Technology | Responsibility |
 |-----------|-----------|----------------|
 | Web App / Dashboard | React 18 + Vite + Tailwind + shadcn/ui | User interaction, observability views, governance UI |
-| API / Edge Functions | Supabase Edge Functions (Deno) | All backend logic, ~77 functions |
+| API / Edge Functions | Supabase Edge Functions (Deno) | All backend logic, ~200+ functions |
 | Execution Pipeline Core | Edge Functions + shared modules | 32-stage deterministic pipeline |
 | Operational Intelligence | Shared modules | Error patterns, repair routing, prevention |
 | Learning Engine | Shared modules | Prompt optimization, agent memory, prediction |
