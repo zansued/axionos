@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { OrgProvider } from "@/contexts/OrgContext";
 import { PipelineProvider } from "@/contexts/PipelineContext";
@@ -11,9 +11,11 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { OnboardingProvider } from "@/components/OnboardingGuide";
 import { I18nProvider } from "@/contexts/I18nContext";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
+import { ModeProvider } from "@/contexts/ModeContext";
 import { CommandPalette } from "@/components/CommandPalette";
 import { KeyboardShortcutsManager } from "@/components/KeyboardShortcutsManager";
 import { SurfaceGuard } from "@/components/SurfaceGuard";
+import { useEffect } from "react";
 
 // ─── Existing Page Imports ──────────────────────────────────────────────────
 import Auth from "./pages/Auth";
@@ -180,7 +182,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AuthRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   if (loading) return null;
-  if (user) return <Navigate to="/initiatives" replace />;
+  if (user) return <Navigate to="/builder/initiatives" replace />;
   return <>{children}</>;
 }
 
@@ -191,6 +193,16 @@ const W = ({ children }: { children: React.ReactNode }) => (
 const P = ({ children }: { children: React.ReactNode }) => (
   <ProtectedRoute><SurfaceGuard surface="platform">{children}</SurfaceGuard></ProtectedRoute>
 );
+
+// ─── Legacy Route Redirect (logs deprecation) ──────────────────────────────
+
+function LegacyRedirect({ to }: { to: string }) {
+  const location = useLocation();
+  useEffect(() => {
+    console.warn(`[AxionOS] Deprecated route accessed: ${location.pathname} → redirecting to ${to}`);
+  }, [location.pathname, to]);
+  return <Navigate to={to} replace />;
+}
 
 // ─── App ────────────────────────────────────────────────────────────────────
 
@@ -207,181 +219,321 @@ const App = () => (
                 <OrgProvider>
                   <PipelineProvider>
                     <WorkspaceProvider>
-                      <OnboardingProvider>
-                        <CommandPalette />
-                        <KeyboardShortcutsManager />
-                        <Routes>
-                          {/* ══════════════════════════════════════════════
-                              AUTH
-                              ══════════════════════════════════════════════ */}
-                          <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+                      <ModeProvider>
+                        <OnboardingProvider>
+                          <CommandPalette />
+                          <KeyboardShortcutsManager />
+                          <Routes>
+                            {/* ══════════════════════════════════════════════
+                                AUTH & LANDING
+                                ══════════════════════════════════════════════ */}
+                            <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+                            <Route path="/" element={<Dashboard />} />
 
-                          {/* ══════════════════════════════════════════════
-                              DASHBOARD (public landing / authenticated dashboard)
-                              ══════════════════════════════════════════════ */}
-                          <Route path="/" element={<Dashboard />} />
+                            {/* ══════════════════════════════════════════════
+                                BUILDER MODE — /builder/*
+                                ══════════════════════════════════════════════ */}
 
-                          {/* ══════════════════════════════════════════════
-                              PRODUCT SURFACE — All authenticated users
-                              ══════════════════════════════════════════════ */}
+                            {/* Dashboard */}
+                            <Route path="/builder/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
 
-                          {/* Projects */}
-                          <Route path="/initiatives"     element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
-                          <Route path="/stories"         element={<ProtectedRoute><Stories /></ProtectedRoute>} />
-                          <Route path="/kanban"          element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
-                          <Route path="/code"            element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
-                          <Route path="/artifacts"       element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
-                          <Route path="/runtime-status"  element={<ProtectedRoute><RuntimeStatusPage /></ProtectedRoute>} />
+                            {/* Projects */}
+                            <Route path="/builder/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
+                            <Route path="/builder/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
+                            <Route path="/builder/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
+                            <Route path="/builder/code" element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
+                            <Route path="/builder/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
+                            <Route path="/builder/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
+                            <Route path="/builder/project/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
 
-                          {/* Pipelines */}
-                          <Route path="/delivery"              element={<ProtectedRoute><Delivery /></ProtectedRoute>} />
-                          <Route path="/pipeline-detail"       element={<ProtectedRoute><PipelineDetailPage /></ProtectedRoute>} />
-                          <Route path="/execution-history"     element={<ProtectedRoute><ExecutionHistoryPage /></ProtectedRoute>} />
-                          <Route path="/repair-loop"           element={<ProtectedRoute><RepairLoopPage /></ProtectedRoute>} />
-                          <Route path="/preflight-validation"  element={<ProtectedRoute><PreflightValidationPage /></ProtectedRoute>} />
-                          <Route path="/publish-queue"         element={<ProtectedRoute><PublishQueuePage /></ProtectedRoute>} />
+                            {/* Agents */}
+                            <Route path="/builder/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
+                            <Route path="/builder/agent-detail" element={<ProtectedRoute><AgentDetailPage /></ProtectedRoute>} />
+                            <Route path="/builder/agent-performance" element={<ProtectedRoute><AgentPerformancePage /></ProtectedRoute>} />
+                            <Route path="/builder/agent-memory" element={<ProtectedRoute><AgentMemoryPage /></ProtectedRoute>} />
+                            <Route path="/builder/agent-policies" element={<ProtectedRoute><AgentPoliciesPage /></ProtectedRoute>} />
 
-                          {/* Observability */}
-                          <Route path="/errors-alerts"         element={<ProtectedRoute><ErrorsAlertsPage /></ProtectedRoute>} />
-                          <Route path="/validation-analytics"  element={<ProtectedRoute><ValidationAnalyticsPage /></ProtectedRoute>} />
-                          <Route path="/throughput-metrics"    element={<ProtectedRoute><ThroughputMetricsPage /></ProtectedRoute>} />
-                          <Route path="/logs-explorer"         element={<ProtectedRoute><LogsExplorerPage /></ProtectedRoute>} />
+                            {/* Pipelines */}
+                            <Route path="/builder/delivery" element={<ProtectedRoute><Delivery /></ProtectedRoute>} />
+                            <Route path="/builder/pipelines" element={<ProtectedRoute><Pipelines /></ProtectedRoute>} />
+                            <Route path="/builder/pipeline-detail" element={<ProtectedRoute><PipelineDetailPage /></ProtectedRoute>} />
+                            <Route path="/builder/execution-history" element={<ProtectedRoute><ExecutionHistoryPage /></ProtectedRoute>} />
+                            <Route path="/builder/repair-loop" element={<ProtectedRoute><RepairLoopPage /></ProtectedRoute>} />
+                            <Route path="/builder/preflight-validation" element={<ProtectedRoute><PreflightValidationPage /></ProtectedRoute>} />
+                            <Route path="/builder/publish-queue" element={<ProtectedRoute><PublishQueuePage /></ProtectedRoute>} />
 
-                          {/* Governance */}
-                          <Route path="/governance-overview"   element={<ProtectedRoute><GovernanceOverviewPage /></ProtectedRoute>} />
-                          <Route path="/pending-approvals"     element={<ProtectedRoute><PendingApprovalsPage /></ProtectedRoute>} />
-                          <Route path="/policy-controls"       element={<ProtectedRoute><PolicyControlsPage /></ProtectedRoute>} />
+                            {/* Runtime */}
+                            <Route path="/builder/runtime" element={<ProtectedRoute><Runtime /></ProtectedRoute>} />
+                            <Route path="/builder/runtime-status" element={<ProtectedRoute><RuntimeStatusPage /></ProtectedRoute>} />
 
-                          {/* Agents (blueprint sub-pages) */}
-                          <Route path="/agent-detail"          element={<ProtectedRoute><AgentDetailPage /></ProtectedRoute>} />
-                          <Route path="/agent-performance"     element={<ProtectedRoute><AgentPerformancePage /></ProtectedRoute>} />
-                          <Route path="/agent-memory"          element={<ProtectedRoute><AgentMemoryPage /></ProtectedRoute>} />
-                          <Route path="/agent-policies"        element={<ProtectedRoute><AgentPoliciesPage /></ProtectedRoute>} />
+                            {/* Execution Observability */}
+                            <Route path="/builder/execution-observability" element={<ProtectedRoute><SystemHealthDashboard /></ProtectedRoute>} />
+                            <Route path="/builder/errors-alerts" element={<ProtectedRoute><ErrorsAlertsPage /></ProtectedRoute>} />
+                            <Route path="/builder/validation-analytics" element={<ProtectedRoute><ValidationAnalyticsPage /></ProtectedRoute>} />
+                            <Route path="/builder/throughput-metrics" element={<ProtectedRoute><ThroughputMetricsPage /></ProtectedRoute>} />
+                            <Route path="/builder/logs-explorer" element={<ProtectedRoute><LogsExplorerPage /></ProtectedRoute>} />
 
-                          {/* Modes */}
-                          <Route path="/modes"                 element={<ProtectedRoute><ModesOverviewPage /></ProtectedRoute>} />
-                          <Route path="/surface-modes"         element={<ProtectedRoute><SurfaceModesPage /></ProtectedRoute>} />
-                          <Route path="/strategy-modes"        element={<ProtectedRoute><StrategyModesPage /></ProtectedRoute>} />
-                          <Route path="/runtime-modes"         element={<ProtectedRoute><RuntimeModesPage /></ProtectedRoute>} />
+                            {/* System Intelligence */}
+                            <Route path="/builder/system-intelligence" element={<ProtectedRoute><SystemIntelligence /></ProtectedRoute>} />
 
-                          {/* Settings */}
-                          <Route path="/user-settings"         element={<ProtectedRoute><UserSettingsPage /></ProtectedRoute>} />
-                          <Route path="/roles-access"          element={<ProtectedRoute><RolesAccessPage /></ProtectedRoute>} />
-                          <Route path="/api-integrations"      element={<ProtectedRoute><ApiIntegrationsPage /></ProtectedRoute>} />
-                          <Route path="/environment-controls"  element={<ProtectedRoute><EnvironmentControlsPage /></ProtectedRoute>} />
+                            {/* Governance */}
+                            <Route path="/builder/governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
+                            <Route path="/builder/governance-overview" element={<ProtectedRoute><GovernanceOverviewPage /></ProtectedRoute>} />
+                            <Route path="/builder/pending-approvals" element={<ProtectedRoute><PendingApprovalsPage /></ProtectedRoute>} />
+                            <Route path="/builder/policy-controls" element={<ProtectedRoute><PolicyControlsPage /></ProtectedRoute>} />
 
-                          {/* Other product routes */}
-                          <Route path="/journey"       element={<ProtectedRoute><Journey /></ProtectedRoute>} />
-                          <Route path="/onboarding"    element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-                          <Route path="/squads"        element={<ProtectedRoute><Squads /></ProtectedRoute>} />
-                          <Route path="/workspace"     element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
-                          <Route path="/planning"      element={<Navigate to="/initiatives" replace />} />
-                          <Route path="/projects"      element={<ProtectedRoute><Projects /></ProtectedRoute>} />
-                          <Route path="/project/:id"   element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
-                          <Route path="/pipelines"     element={<ProtectedRoute><Pipelines /></ProtectedRoute>} />
-                          <Route path="/governance"    element={<ProtectedRoute><Governance /></ProtectedRoute>} />
-                          <Route path="/modes"         element={<ProtectedRoute><Modes /></ProtectedRoute>} />
-                          <Route path="/settings"              element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
-                          <Route path="/runtime"               element={<ProtectedRoute><Runtime /></ProtectedRoute>} />
-                          <Route path="/system-intelligence"   element={<ProtectedRoute><SystemIntelligence /></ProtectedRoute>} />
+                            {/* Settings */}
+                            <Route path="/builder/settings" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
+                            <Route path="/builder/user-settings" element={<ProtectedRoute><UserSettingsPage /></ProtectedRoute>} />
+                            <Route path="/builder/roles-access" element={<ProtectedRoute><RolesAccessPage /></ProtectedRoute>} />
+                            <Route path="/builder/api-integrations" element={<ProtectedRoute><ApiIntegrationsPage /></ProtectedRoute>} />
+                            <Route path="/builder/environment-controls" element={<ProtectedRoute><EnvironmentControlsPage /></ProtectedRoute>} />
 
-                          {/* ══════════════════════════════════════════════
-                              WORKSPACE SURFACE — tenant_owner+
-                              ══════════════════════════════════════════════ */}
-                          <Route path="/adoption"                 element={<W><AdoptionIntelligence /></W>} />
-                          <Route path="/intelligence-memory"      element={<W><IntelligenceMemory /></W>} />
-                          <Route path="/playbooks"                element={<W><Playbooks /></W>} />
-                          <Route path="/bounded-operations"       element={<W><BoundedOperations /></W>} />
-                          <Route path="/decision-engine"          element={<W><DecisionEngine /></W>} />
-                          <Route path="/doctrine-adaptation"      element={<W><DoctrineAdaptation /></W>} />
-                          <Route path="/institutional-conflicts"  element={<W><InstitutionalConflicts /></W>} />
-                          <Route path="/federated-boundaries"     element={<W><FederatedBoundaries /></W>} />
-                          <Route path="/resilience-continuity"    element={<W><ResilienceContinuity /></W>} />
-                          <Route path="/memory-constitution"      element={<W><InstitutionalMemoryConstitution /></W>} />
-                          <Route path="/decision-rights"          element={<W><SovereignDecisionRights /></W>} />
-                          <Route path="/dependency-sovereignty"   element={<W><DependencySovereignty /></W>} />
-                          <Route path="/strategic-succession"     element={<W><StrategicSuccession /></W>} />
-                          <Route path="/multi-horizon-alignment"  element={<W><MultiHorizonAlignment /></W>} />
-                          <Route path="/tradeoff-arbitration"     element={<W><TradeoffArbitration /></W>} />
-                          <Route path="/mission-integrity"        element={<W><MissionIntegrity /></W>} />
-                          <Route path="/continuity-simulation"    element={<W><ContinuitySimulation /></W>} />
-                          <Route path="/improvement-ledger"       element={<W><ImprovementLedger /></W>} />
-                          <Route path="/improvement-candidates"   element={<W><ImprovementCandidates /></W>} />
-                          <Route path="/improvement-benchmarks"   element={<W><ImprovementBenchmarks /></W>} />
-                          <Route path="/capability-registry"      element={<W><CapabilityRegistry /></W>} />
-                          <Route path="/capability-governance"    element={<W><CapabilityGovernance /></W>} />
-                          <Route path="/delivery-outcomes"        element={<W><DeliveryOutcomes /></W>} />
-                          <Route path="/post-deploy-feedback"     element={<W><PostDeployFeedback /></W>} />
-                          <Route path="/extensions"               element={<W><Extensions /></W>} />
-                          <Route path="/audit"                    element={<W><AuditLogs /></W>} />
-                          <Route path="/connections"              element={<W><Connections /></W>} />
-                          <Route path="/billing"                  element={<W><Billing /></W>} />
-                          <Route path="/org"                      element={<W><OrgSettings /></W>} />
+                            {/* Other builder routes */}
+                            <Route path="/builder/journey" element={<ProtectedRoute><Journey /></ProtectedRoute>} />
+                            <Route path="/builder/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+                            <Route path="/builder/squads" element={<ProtectedRoute><Squads /></ProtectedRoute>} />
+                            <Route path="/builder/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
 
-                          {/* ══════════════════════════════════════════════
-                              PLATFORM SURFACE — platform_reviewer+
-                              ══════════════════════════════════════════════ */}
-                          <Route path="/agents"                    element={<P><Agents /></P>} />
-                          <Route path="/agent-routing"             element={<P><AgentRouting /></P>} />
-                          <Route path="/agent-debates"             element={<P><AgentDebates /></P>} />
-                          <Route path="/working-memory"            element={<P><WorkingMemory /></P>} />
-                          <Route path="/swarm-execution"           element={<P><SwarmExecution /></P>} />
-                          <Route path="/pilot-marketplace"         element={<P><PilotMarketplace /></P>} />
-                          <Route path="/marketplace-outcomes"      element={<P><MarketplaceOutcomes /></P>} />
-                          <Route path="/meta-agents"               element={<P><MetaAgents /></P>} />
-                          <Route path="/meta-artifacts"            element={<P><MetaArtifacts /></P>} />
-                          <Route path="/calibration"               element={<P><Calibration /></P>} />
-                          <Route path="/prompt-optimization"       element={<P><PromptOptimization /></P>} />
-                          <Route path="/observability"             element={<P><Observability /></P>} />
-                          <Route path="/distributed-jobs"          element={<P><DistributedJobs /></P>} />
-                          <Route path="/cross-region-recovery"     element={<P><CrossRegionRecovery /></P>} />
-                          <Route path="/tenant-runtime"            element={<P><TenantRuntime /></P>} />
-                          <Route path="/large-scale-orchestration" element={<P><LargeScaleOrchestration /></P>} />
-                          <Route path="/delivery-tuning"           element={<P><DeliveryTuning /></P>} />
-                          <Route path="/outcome-assurance"         element={<P><OutcomeAssurance /></P>} />
-                          <Route path="/architecture-hypotheses"   element={<P><ArchitectureHypotheses /></P>} />
-                          <Route path="/research-sandbox"          element={<P><ResearchSandbox /></P>} />
-                          <Route path="/research-patterns"         element={<P><ResearchPatterns /></P>} />
-                          <Route path="/architecture-promotion"    element={<P><ArchitecturePromotion /></P>} />
-                          <Route path="/ai-routing-policy"         element={<P><AIRoutingPolicy /></P>} />
-                          <Route path="/evolution-governance"      element={<P><EvolutionProposalGovernance /></P>} />
-                          <Route path="/mutation-control"          element={<P><ArchitecturalMutationControl /></P>} />
-                          <Route path="/reflective-validation"     element={<P><ReflectiveValidationAudit /></P>} />
-                          <Route path="/kernel-integrity"          element={<P><KernelIntegrityGuard /></P>} />
-                          <Route path="/canon-governance"          element={<P><CanonGovernanceDashboard /></P>} />
-                          <Route path="/pattern-library"           element={<P><PatternLibraryDashboard /></P>} />
-                          <Route path="/failure-memory"            element={<P><FailureMemoryDashboard /></P>} />
-                          <Route path="/external-knowledge"        element={<P><ExternalKnowledgeDashboard /></P>} />
-                          <Route path="/runtime-feedback"          element={<P><RuntimeFeedbackDashboard /></P>} />
-                          <Route path="/tenant-doctrine"           element={<P><TenantDoctrineDashboard /></P>} />
-                          <Route path="/autonomy-posture"          element={<P><AutonomyPostureDashboard /></P>} />
-                          <Route path="/compounding-advantage"     element={<P><CompoundingAdvantageDashboard /></P>} />
-                          <Route path="/runtime-harness"           element={<P><RuntimeValidationHarness /></P>} />
-                          <Route path="/learning-signals"          element={<P><LearningSignalsDashboard /></P>} />
-                          <Route path="/canon-evolution"           element={<P><CanonEvolutionDashboard /></P>} />
-                          <Route path="/pattern-distillation"      element={<P><PatternDistillationDashboard /></P>} />
-                          <Route path="/canon-reuse"               element={<P><CanonReuseImpactDashboard /></P>} />
-                          <Route path="/canon-intelligence"        element={<P><CanonIntelligenceDashboard /></P>} />
-                          <Route path="/security-intelligence"     element={<P><SecurityIntelligenceDashboard /></P>} />
-                          <Route path="/red-team-simulation"       element={<P><RedTeamSimulationDashboard /></P>} />
-                          <Route path="/blue-team-defense"        element={<P><BlueTeamDefenseDashboard /></P>} />
-                          <Route path="/purple-learning"          element={<P><PurpleLearningDashboard /></P>} />
-                          <Route path="/security-war-room"        element={<P><SecurityWarRoom /></P>} />
-                          <Route path="/operational-posture"       element={<P><OperationalPostureDashboard /></P>} />
-                          <Route path="/attention-allocation"      element={<P><AttentionAllocationDashboard /></P>} />
-                          <Route path="/adaptive-routing"          element={<P><AdaptiveRoutingDashboard /></P>} />
-                          <Route path="/operational-cycles"        element={<P><OperationalCyclesDashboard /></P>} />
-                          <Route path="/operational-loops"         element={<P><OperationalLoopsDashboard /></P>} />
-                          <Route path="/system-health"             element={<P><SystemHealthDashboard /></P>} />
-                          <Route path="/organism-memory"           element={<P><OrganismMemoryDashboard /></P>} />
-                          <Route path="/organism-console"          element={<P><OrganismConsoleDashboard /></P>} />
+                            {/* Modes */}
+                            <Route path="/builder/modes" element={<ProtectedRoute><ModesOverviewPage /></ProtectedRoute>} />
+                            <Route path="/builder/surface-modes" element={<ProtectedRoute><SurfaceModesPage /></ProtectedRoute>} />
+                            <Route path="/builder/strategy-modes" element={<ProtectedRoute><StrategyModesPage /></ProtectedRoute>} />
+                            <Route path="/builder/runtime-modes" element={<ProtectedRoute><RuntimeModesPage /></ProtectedRoute>} />
 
-                          {/* ══════════════════════════════════════════════
-                              CATCH-ALL
-                              ══════════════════════════════════════════════ */}
-                          <Route path="*" element={<NotFound />} />
-                        </Routes>
-                      </OnboardingProvider>
+                            {/* ══════════════════════════════════════════════
+                                OWNER MODE — /owner/*
+                                ══════════════════════════════════════════════ */}
+
+                            {/* System Intelligence */}
+                            <Route path="/owner/system-health" element={<P><SystemHealthDashboard /></P>} />
+                            <Route path="/owner/adoption" element={<W><AdoptionIntelligence /></W>} />
+                            <Route path="/owner/delivery-outcomes" element={<W><DeliveryOutcomes /></W>} />
+                            <Route path="/owner/platform-observability" element={<P><Observability /></P>} />
+
+                            {/* Institutional Memory */}
+                            <Route path="/owner/pattern-library" element={<P><PatternLibraryDashboard /></P>} />
+                            <Route path="/owner/canon-intelligence" element={<P><CanonIntelligenceDashboard /></P>} />
+                            <Route path="/owner/security-war-room" element={<P><SecurityWarRoom /></P>} />
+                            <Route path="/owner/security-intelligence" element={<P><SecurityIntelligenceDashboard /></P>} />
+                            <Route path="/owner/red-team-simulation" element={<P><RedTeamSimulationDashboard /></P>} />
+                            <Route path="/owner/blue-team-defense" element={<P><BlueTeamDefenseDashboard /></P>} />
+                            <Route path="/owner/purple-learning" element={<P><PurpleLearningDashboard /></P>} />
+                            <Route path="/owner/capabilities" element={<W><CapabilityRegistry /></W>} />
+
+                            {/* Governance */}
+                            <Route path="/owner/autonomy-posture" element={<P><AutonomyPostureDashboard /></P>} />
+                            <Route path="/owner/agent-swarm" element={<P><SwarmExecution /></P>} />
+                            <Route path="/owner/calibration" element={<P><Calibration /></P>} />
+                            <Route path="/owner/settings" element={<W><OrgSettings /></W>} />
+
+                            {/* Additional owner pages (not in main nav but accessible) */}
+                            <Route path="/owner/intelligence-memory" element={<W><IntelligenceMemory /></W>} />
+                            <Route path="/owner/playbooks" element={<W><Playbooks /></W>} />
+                            <Route path="/owner/bounded-operations" element={<W><BoundedOperations /></W>} />
+                            <Route path="/owner/decision-engine" element={<W><DecisionEngine /></W>} />
+                            <Route path="/owner/doctrine-adaptation" element={<W><DoctrineAdaptation /></W>} />
+                            <Route path="/owner/institutional-conflicts" element={<W><InstitutionalConflicts /></W>} />
+                            <Route path="/owner/federated-boundaries" element={<W><FederatedBoundaries /></W>} />
+                            <Route path="/owner/resilience-continuity" element={<W><ResilienceContinuity /></W>} />
+                            <Route path="/owner/memory-constitution" element={<W><InstitutionalMemoryConstitution /></W>} />
+                            <Route path="/owner/decision-rights" element={<W><SovereignDecisionRights /></W>} />
+                            <Route path="/owner/dependency-sovereignty" element={<W><DependencySovereignty /></W>} />
+                            <Route path="/owner/strategic-succession" element={<W><StrategicSuccession /></W>} />
+                            <Route path="/owner/multi-horizon-alignment" element={<W><MultiHorizonAlignment /></W>} />
+                            <Route path="/owner/tradeoff-arbitration" element={<W><TradeoffArbitration /></W>} />
+                            <Route path="/owner/mission-integrity" element={<W><MissionIntegrity /></W>} />
+                            <Route path="/owner/continuity-simulation" element={<W><ContinuitySimulation /></W>} />
+                            <Route path="/owner/improvement-ledger" element={<W><ImprovementLedger /></W>} />
+                            <Route path="/owner/improvement-candidates" element={<W><ImprovementCandidates /></W>} />
+                            <Route path="/owner/improvement-benchmarks" element={<W><ImprovementBenchmarks /></W>} />
+                            <Route path="/owner/capability-governance" element={<W><CapabilityGovernance /></W>} />
+                            <Route path="/owner/post-deploy-feedback" element={<W><PostDeployFeedback /></W>} />
+                            <Route path="/owner/extensions" element={<W><Extensions /></W>} />
+                            <Route path="/owner/audit" element={<W><AuditLogs /></W>} />
+                            <Route path="/owner/connections" element={<W><Connections /></W>} />
+                            <Route path="/owner/billing" element={<W><Billing /></W>} />
+                            <Route path="/owner/agent-routing" element={<P><AgentRouting /></P>} />
+                            <Route path="/owner/agent-debates" element={<P><AgentDebates /></P>} />
+                            <Route path="/owner/working-memory" element={<P><WorkingMemory /></P>} />
+                            <Route path="/owner/pilot-marketplace" element={<P><PilotMarketplace /></P>} />
+                            <Route path="/owner/marketplace-outcomes" element={<P><MarketplaceOutcomes /></P>} />
+                            <Route path="/owner/meta-agents" element={<P><MetaAgents /></P>} />
+                            <Route path="/owner/meta-artifacts" element={<P><MetaArtifacts /></P>} />
+                            <Route path="/owner/prompt-optimization" element={<P><PromptOptimization /></P>} />
+                            <Route path="/owner/distributed-jobs" element={<P><DistributedJobs /></P>} />
+                            <Route path="/owner/cross-region-recovery" element={<P><CrossRegionRecovery /></P>} />
+                            <Route path="/owner/tenant-runtime" element={<P><TenantRuntime /></P>} />
+                            <Route path="/owner/large-scale-orchestration" element={<P><LargeScaleOrchestration /></P>} />
+                            <Route path="/owner/delivery-tuning" element={<P><DeliveryTuning /></P>} />
+                            <Route path="/owner/outcome-assurance" element={<P><OutcomeAssurance /></P>} />
+                            <Route path="/owner/architecture-hypotheses" element={<P><ArchitectureHypotheses /></P>} />
+                            <Route path="/owner/research-sandbox" element={<P><ResearchSandbox /></P>} />
+                            <Route path="/owner/research-patterns" element={<P><ResearchPatterns /></P>} />
+                            <Route path="/owner/architecture-promotion" element={<P><ArchitecturePromotion /></P>} />
+                            <Route path="/owner/ai-routing-policy" element={<P><AIRoutingPolicy /></P>} />
+                            <Route path="/owner/evolution-governance" element={<P><EvolutionProposalGovernance /></P>} />
+                            <Route path="/owner/mutation-control" element={<P><ArchitecturalMutationControl /></P>} />
+                            <Route path="/owner/reflective-validation" element={<P><ReflectiveValidationAudit /></P>} />
+                            <Route path="/owner/kernel-integrity" element={<P><KernelIntegrityGuard /></P>} />
+                            <Route path="/owner/canon-governance" element={<P><CanonGovernanceDashboard /></P>} />
+                            <Route path="/owner/failure-memory" element={<P><FailureMemoryDashboard /></P>} />
+                            <Route path="/owner/external-knowledge" element={<P><ExternalKnowledgeDashboard /></P>} />
+                            <Route path="/owner/runtime-feedback" element={<P><RuntimeFeedbackDashboard /></P>} />
+                            <Route path="/owner/tenant-doctrine" element={<P><TenantDoctrineDashboard /></P>} />
+                            <Route path="/owner/compounding-advantage" element={<P><CompoundingAdvantageDashboard /></P>} />
+                            <Route path="/owner/runtime-harness" element={<P><RuntimeValidationHarness /></P>} />
+                            <Route path="/owner/learning-signals" element={<P><LearningSignalsDashboard /></P>} />
+                            <Route path="/owner/canon-evolution" element={<P><CanonEvolutionDashboard /></P>} />
+                            <Route path="/owner/pattern-distillation" element={<P><PatternDistillationDashboard /></P>} />
+                            <Route path="/owner/canon-reuse" element={<P><CanonReuseImpactDashboard /></P>} />
+                            <Route path="/owner/operational-posture" element={<P><OperationalPostureDashboard /></P>} />
+                            <Route path="/owner/attention-allocation" element={<P><AttentionAllocationDashboard /></P>} />
+                            <Route path="/owner/adaptive-routing" element={<P><AdaptiveRoutingDashboard /></P>} />
+                            <Route path="/owner/operational-cycles" element={<P><OperationalCyclesDashboard /></P>} />
+                            <Route path="/owner/operational-loops" element={<P><OperationalLoopsDashboard /></P>} />
+                            <Route path="/owner/organism-memory" element={<P><OrganismMemoryDashboard /></P>} />
+                            <Route path="/owner/organism-console" element={<P><OrganismConsoleDashboard /></P>} />
+
+                            {/* ══════════════════════════════════════════════
+                                LEGACY REDIRECTS (deprecated — log usage)
+                                ══════════════════════════════════════════════ */}
+                            <Route path="/initiatives" element={<LegacyRedirect to="/builder/initiatives" />} />
+                            <Route path="/stories" element={<LegacyRedirect to="/builder/stories" />} />
+                            <Route path="/kanban" element={<LegacyRedirect to="/builder/kanban" />} />
+                            <Route path="/code" element={<LegacyRedirect to="/builder/code" />} />
+                            <Route path="/artifacts" element={<LegacyRedirect to="/builder/artifacts" />} />
+                            <Route path="/projects" element={<LegacyRedirect to="/builder/projects" />} />
+                            <Route path="/project/:id" element={<LegacyRedirect to="/builder/projects" />} />
+                            <Route path="/agents" element={<LegacyRedirect to="/builder/agents" />} />
+                            <Route path="/delivery" element={<LegacyRedirect to="/builder/delivery" />} />
+                            <Route path="/pipelines" element={<LegacyRedirect to="/builder/pipelines" />} />
+                            <Route path="/runtime" element={<LegacyRedirect to="/builder/runtime" />} />
+                            <Route path="/runtime-status" element={<LegacyRedirect to="/builder/runtime-status" />} />
+                            <Route path="/system-health" element={<LegacyRedirect to="/builder/execution-observability" />} />
+                            <Route path="/system-intelligence" element={<LegacyRedirect to="/builder/system-intelligence" />} />
+                            <Route path="/governance" element={<LegacyRedirect to="/builder/governance" />} />
+                            <Route path="/org" element={<LegacyRedirect to="/builder/settings" />} />
+                            <Route path="/settings" element={<LegacyRedirect to="/builder/settings" />} />
+                            <Route path="/squads" element={<LegacyRedirect to="/builder/squads" />} />
+                            <Route path="/workspace" element={<LegacyRedirect to="/builder/workspace" />} />
+                            <Route path="/journey" element={<LegacyRedirect to="/builder/journey" />} />
+                            <Route path="/onboarding" element={<LegacyRedirect to="/builder/onboarding" />} />
+                            <Route path="/planning" element={<LegacyRedirect to="/builder/initiatives" />} />
+                            <Route path="/pipeline-detail" element={<LegacyRedirect to="/builder/pipeline-detail" />} />
+                            <Route path="/execution-history" element={<LegacyRedirect to="/builder/execution-history" />} />
+                            <Route path="/repair-loop" element={<LegacyRedirect to="/builder/repair-loop" />} />
+                            <Route path="/preflight-validation" element={<LegacyRedirect to="/builder/preflight-validation" />} />
+                            <Route path="/publish-queue" element={<LegacyRedirect to="/builder/publish-queue" />} />
+                            <Route path="/errors-alerts" element={<LegacyRedirect to="/builder/errors-alerts" />} />
+                            <Route path="/validation-analytics" element={<LegacyRedirect to="/builder/validation-analytics" />} />
+                            <Route path="/throughput-metrics" element={<LegacyRedirect to="/builder/throughput-metrics" />} />
+                            <Route path="/logs-explorer" element={<LegacyRedirect to="/builder/logs-explorer" />} />
+                            <Route path="/governance-overview" element={<LegacyRedirect to="/builder/governance-overview" />} />
+                            <Route path="/pending-approvals" element={<LegacyRedirect to="/builder/pending-approvals" />} />
+                            <Route path="/policy-controls" element={<LegacyRedirect to="/builder/policy-controls" />} />
+                            <Route path="/agent-detail" element={<LegacyRedirect to="/builder/agent-detail" />} />
+                            <Route path="/agent-performance" element={<LegacyRedirect to="/builder/agent-performance" />} />
+                            <Route path="/agent-memory" element={<LegacyRedirect to="/builder/agent-memory" />} />
+                            <Route path="/agent-policies" element={<LegacyRedirect to="/builder/agent-policies" />} />
+                            <Route path="/modes" element={<LegacyRedirect to="/builder/modes" />} />
+                            <Route path="/surface-modes" element={<LegacyRedirect to="/builder/surface-modes" />} />
+                            <Route path="/strategy-modes" element={<LegacyRedirect to="/builder/strategy-modes" />} />
+                            <Route path="/runtime-modes" element={<LegacyRedirect to="/builder/runtime-modes" />} />
+                            <Route path="/user-settings" element={<LegacyRedirect to="/builder/user-settings" />} />
+                            <Route path="/roles-access" element={<LegacyRedirect to="/builder/roles-access" />} />
+                            <Route path="/api-integrations" element={<LegacyRedirect to="/builder/api-integrations" />} />
+                            <Route path="/environment-controls" element={<LegacyRedirect to="/builder/environment-controls" />} />
+
+                            {/* Owner legacy redirects */}
+                            <Route path="/observability" element={<LegacyRedirect to="/owner/platform-observability" />} />
+                            <Route path="/adoption" element={<LegacyRedirect to="/owner/adoption" />} />
+                            <Route path="/delivery-outcomes" element={<LegacyRedirect to="/owner/delivery-outcomes" />} />
+                            <Route path="/pattern-library" element={<LegacyRedirect to="/owner/pattern-library" />} />
+                            <Route path="/canon-intelligence" element={<LegacyRedirect to="/owner/canon-intelligence" />} />
+                            <Route path="/security-war-room" element={<LegacyRedirect to="/owner/security-war-room" />} />
+                            <Route path="/security-intelligence" element={<LegacyRedirect to="/owner/security-intelligence" />} />
+                            <Route path="/red-team-simulation" element={<LegacyRedirect to="/owner/red-team-simulation" />} />
+                            <Route path="/blue-team-defense" element={<LegacyRedirect to="/owner/blue-team-defense" />} />
+                            <Route path="/purple-learning" element={<LegacyRedirect to="/owner/purple-learning" />} />
+                            <Route path="/capability-registry" element={<LegacyRedirect to="/owner/capabilities" />} />
+                            <Route path="/autonomy-posture" element={<LegacyRedirect to="/owner/autonomy-posture" />} />
+                            <Route path="/swarm-execution" element={<LegacyRedirect to="/owner/agent-swarm" />} />
+                            <Route path="/calibration" element={<LegacyRedirect to="/owner/calibration" />} />
+                            <Route path="/intelligence-memory" element={<LegacyRedirect to="/owner/intelligence-memory" />} />
+                            <Route path="/playbooks" element={<LegacyRedirect to="/owner/playbooks" />} />
+                            <Route path="/bounded-operations" element={<LegacyRedirect to="/owner/bounded-operations" />} />
+                            <Route path="/decision-engine" element={<LegacyRedirect to="/owner/decision-engine" />} />
+                            <Route path="/doctrine-adaptation" element={<LegacyRedirect to="/owner/doctrine-adaptation" />} />
+                            <Route path="/institutional-conflicts" element={<LegacyRedirect to="/owner/institutional-conflicts" />} />
+                            <Route path="/federated-boundaries" element={<LegacyRedirect to="/owner/federated-boundaries" />} />
+                            <Route path="/resilience-continuity" element={<LegacyRedirect to="/owner/resilience-continuity" />} />
+                            <Route path="/memory-constitution" element={<LegacyRedirect to="/owner/memory-constitution" />} />
+                            <Route path="/decision-rights" element={<LegacyRedirect to="/owner/decision-rights" />} />
+                            <Route path="/dependency-sovereignty" element={<LegacyRedirect to="/owner/dependency-sovereignty" />} />
+                            <Route path="/strategic-succession" element={<LegacyRedirect to="/owner/strategic-succession" />} />
+                            <Route path="/multi-horizon-alignment" element={<LegacyRedirect to="/owner/multi-horizon-alignment" />} />
+                            <Route path="/tradeoff-arbitration" element={<LegacyRedirect to="/owner/tradeoff-arbitration" />} />
+                            <Route path="/mission-integrity" element={<LegacyRedirect to="/owner/mission-integrity" />} />
+                            <Route path="/continuity-simulation" element={<LegacyRedirect to="/owner/continuity-simulation" />} />
+                            <Route path="/improvement-ledger" element={<LegacyRedirect to="/owner/improvement-ledger" />} />
+                            <Route path="/improvement-candidates" element={<LegacyRedirect to="/owner/improvement-candidates" />} />
+                            <Route path="/improvement-benchmarks" element={<LegacyRedirect to="/owner/improvement-benchmarks" />} />
+                            <Route path="/capability-governance" element={<LegacyRedirect to="/owner/capability-governance" />} />
+                            <Route path="/post-deploy-feedback" element={<LegacyRedirect to="/owner/post-deploy-feedback" />} />
+                            <Route path="/extensions" element={<LegacyRedirect to="/owner/extensions" />} />
+                            <Route path="/audit" element={<LegacyRedirect to="/owner/audit" />} />
+                            <Route path="/connections" element={<LegacyRedirect to="/owner/connections" />} />
+                            <Route path="/billing" element={<LegacyRedirect to="/owner/billing" />} />
+                            <Route path="/agent-routing" element={<LegacyRedirect to="/owner/agent-routing" />} />
+                            <Route path="/agent-debates" element={<LegacyRedirect to="/owner/agent-debates" />} />
+                            <Route path="/working-memory" element={<LegacyRedirect to="/owner/working-memory" />} />
+                            <Route path="/pilot-marketplace" element={<LegacyRedirect to="/owner/pilot-marketplace" />} />
+                            <Route path="/marketplace-outcomes" element={<LegacyRedirect to="/owner/marketplace-outcomes" />} />
+                            <Route path="/meta-agents" element={<LegacyRedirect to="/owner/meta-agents" />} />
+                            <Route path="/meta-artifacts" element={<LegacyRedirect to="/owner/meta-artifacts" />} />
+                            <Route path="/prompt-optimization" element={<LegacyRedirect to="/owner/prompt-optimization" />} />
+                            <Route path="/distributed-jobs" element={<LegacyRedirect to="/owner/distributed-jobs" />} />
+                            <Route path="/cross-region-recovery" element={<LegacyRedirect to="/owner/cross-region-recovery" />} />
+                            <Route path="/tenant-runtime" element={<LegacyRedirect to="/owner/tenant-runtime" />} />
+                            <Route path="/large-scale-orchestration" element={<LegacyRedirect to="/owner/large-scale-orchestration" />} />
+                            <Route path="/delivery-tuning" element={<LegacyRedirect to="/owner/delivery-tuning" />} />
+                            <Route path="/outcome-assurance" element={<LegacyRedirect to="/owner/outcome-assurance" />} />
+                            <Route path="/architecture-hypotheses" element={<LegacyRedirect to="/owner/architecture-hypotheses" />} />
+                            <Route path="/research-sandbox" element={<LegacyRedirect to="/owner/research-sandbox" />} />
+                            <Route path="/research-patterns" element={<LegacyRedirect to="/owner/research-patterns" />} />
+                            <Route path="/architecture-promotion" element={<LegacyRedirect to="/owner/architecture-promotion" />} />
+                            <Route path="/ai-routing-policy" element={<LegacyRedirect to="/owner/ai-routing-policy" />} />
+                            <Route path="/evolution-governance" element={<LegacyRedirect to="/owner/evolution-governance" />} />
+                            <Route path="/mutation-control" element={<LegacyRedirect to="/owner/mutation-control" />} />
+                            <Route path="/reflective-validation" element={<LegacyRedirect to="/owner/reflective-validation" />} />
+                            <Route path="/kernel-integrity" element={<LegacyRedirect to="/owner/kernel-integrity" />} />
+                            <Route path="/canon-governance" element={<LegacyRedirect to="/owner/canon-governance" />} />
+                            <Route path="/failure-memory" element={<LegacyRedirect to="/owner/failure-memory" />} />
+                            <Route path="/external-knowledge" element={<LegacyRedirect to="/owner/external-knowledge" />} />
+                            <Route path="/runtime-feedback" element={<LegacyRedirect to="/owner/runtime-feedback" />} />
+                            <Route path="/tenant-doctrine" element={<LegacyRedirect to="/owner/tenant-doctrine" />} />
+                            <Route path="/compounding-advantage" element={<LegacyRedirect to="/owner/compounding-advantage" />} />
+                            <Route path="/runtime-harness" element={<LegacyRedirect to="/owner/runtime-harness" />} />
+                            <Route path="/learning-signals" element={<LegacyRedirect to="/owner/learning-signals" />} />
+                            <Route path="/canon-evolution" element={<LegacyRedirect to="/owner/canon-evolution" />} />
+                            <Route path="/pattern-distillation" element={<LegacyRedirect to="/owner/pattern-distillation" />} />
+                            <Route path="/canon-reuse" element={<LegacyRedirect to="/owner/canon-reuse" />} />
+                            <Route path="/operational-posture" element={<LegacyRedirect to="/owner/operational-posture" />} />
+                            <Route path="/attention-allocation" element={<LegacyRedirect to="/owner/attention-allocation" />} />
+                            <Route path="/adaptive-routing" element={<LegacyRedirect to="/owner/adaptive-routing" />} />
+                            <Route path="/operational-cycles" element={<LegacyRedirect to="/owner/operational-cycles" />} />
+                            <Route path="/operational-loops" element={<LegacyRedirect to="/owner/operational-loops" />} />
+                            <Route path="/organism-memory" element={<LegacyRedirect to="/owner/organism-memory" />} />
+                            <Route path="/organism-console" element={<LegacyRedirect to="/owner/organism-console" />} />
+
+                            {/* ══════════════════════════════════════════════
+                                CATCH-ALL
+                                ══════════════════════════════════════════════ */}
+                            <Route path="*" element={<NotFound />} />
+                          </Routes>
+                        </OnboardingProvider>
+                      </ModeProvider>
                     </WorkspaceProvider>
                   </PipelineProvider>
                 </OrgProvider>
