@@ -320,8 +320,8 @@ const PLATFORM_COPILOT: CopilotDrawerContent[] = [
         en: "If everything is running normally with no alerts, observability can be checked periodically.",
       },
       suggestedActions: [
-        { label: { pt: "Roteamento IA", en: "AI Routing" }, route: "/agent-routing", icon: "Route" },
-        { label: { pt: "Auditoria", en: "Audit" }, route: "/audit", icon: "Shield" },
+        { label: { pt: "Roteamento IA", en: "AI Routing" }, route: "/owner/agent-routing", icon: "Route" },
+        { label: { pt: "Auditoria", en: "Audit" }, route: "/owner/audit", icon: "Shield" },
       ],
     },
   },
