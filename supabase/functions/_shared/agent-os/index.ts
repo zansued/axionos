@@ -642,3 +642,16 @@ export type {
   DispatchConstraint,
   DispatchDecisionInput,
 } from "./decision-contract.ts";
+
+// Action Engine Domain Model (Sprint 143 / AE-01)
+export type {
+  ActionTriggerType,
+  ActionTrigger,
+  ActionIntent,
+  ActionExecutionMode,
+  ActionStatus,
+  ActionRecord,
+  ActionConstraint,
+  ActionOutcomeStatus,
+  ActionOutcome,
+} from "./action-engine-types.ts";
