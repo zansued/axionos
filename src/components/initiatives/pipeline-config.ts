@@ -426,16 +426,12 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       return [
         { stage: "publish", label: "🚀 Publicar no GitHub", description: "Gera release, changelog e push para o repositório.", type: "publish", variant: "primary" },
         { stage: "validation", label: "🔍 Re-executar Validação Completa", description: "Roda novamente: Fix Loop → Deep Static → Drift → Runtime.", type: "run" },
-        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "published":
       return [
-        { stage: "deploy_vercel", label: "🚀 Deploy no Vercel", description: "Inicia o deploy automático para Vercel.", type: "run", variant: "primary" },
-        { stage: "observability", label: "👁️ Iniciar Observability", type: "run" },
-        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
+        { stage: "deploy_vercel", label: "🚀 Deploy", description: "Inicia o deploy automático.", type: "run", variant: "primary" },
         { stage: "publish", label: "Re-publicar no GitHub", type: "publish" },
-        { stage: "approve", label: "Marcar como Concluído", type: "approve" },
       ];
     case "deploying":
       return [
