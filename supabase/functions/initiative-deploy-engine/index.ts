@@ -33,12 +33,7 @@ serve(async (req) => {
   const deployTarget = body.deploy_target || initiative.deploy_target || "vercel";
   const initiativeId = ctx.initiativeId;
 
-  const job = await createJob(serviceClient, {
-    initiativeId,
-    userId: ctx.userId,
-    stage: "deploy",
-    inputs: { deploy_target: deployTarget },
-  });
+  const jobId = await createJob(ctx, "deploy", { deploy_target: deployTarget });
 
   try {
     // ── Step 1: Verify initiative is ready for deployment ──
