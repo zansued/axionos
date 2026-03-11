@@ -748,3 +748,16 @@ export type {
   OutcomeAuditEvent,
   ActionOutcomeSummary,
 } from "./action-outcome-integration.ts";
+
+// Action Engine — Self-Healing Recovery Hooks (Sprint 152 / AE-09)
+export { RecoveryHookManager } from "./action-recovery-hooks.ts";
+export type {
+  RecoveryType,
+  RecoveryHookStatus,
+  RecoveryHook,
+  RecoverySignalType,
+  RecoverySignal,
+  RecoveryAuditEvent,
+  RecoveryEvaluationResult,
+  RecoverySafeguardConfig,
+} from "./action-recovery-hooks.ts";
