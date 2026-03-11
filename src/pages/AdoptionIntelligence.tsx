@@ -16,11 +16,8 @@ export default function AdoptionIntelligence() {
   const atRiskCount = items.filter((i: any) => i.signal_label === "At Risk").length;
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <SidebarInset className="flex-1">
-          <div className="p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
             <PageGuidanceShell pageKey="adoption" />
             <div>
               <h1 className="text-2xl font-bold text-foreground">Adoption Intelligence</h1>
