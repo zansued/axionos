@@ -49,21 +49,34 @@ These layers must **never** be collapsed into a single interface.
 
 ---
 
+## System Cognitive Model
+
+AxionOS should be understood as a **governed cognitive-operational system**. It does not merely execute tasks — it perceives, evaluates, constrains, formalizes, orchestrates, and learns.
+
+The system's cognition follows a strict layered model where each layer has a defined role and cannot assume the role of another. This prevents the system from degenerating into unstructured agent behavior.
+
+**Core cognitive principle:**
+> The system knows before it evaluates, evaluates before it constrains, constrains before it formalizes, formalizes before it orchestrates, and orchestrates before it acts.
+
+This cognitive model is what distinguishes AxionOS from conventional agent frameworks that allow unrestricted agent improvisation.
+
+---
+
 ## Operational Decision Chain
 
 AxionOS follows a strict six-layer decision and execution chain. All operational behavior respects this flow:
 
 ```
 Canon / Library           -- informs
-   |
+   ↓
 Readiness / Events / Metrics  -- evaluates
-   |
+   ↓
 Policy / Governance       -- constrains
-   |
+   ↓
 Action Engine             -- formalizes
-   |
+   ↓
 AgentOS Orchestrator      -- orchestrates
-   |
+   ↓
 Agent Executor / Human    -- acts
 ```
 
@@ -78,6 +91,56 @@ Agent Executor / Human    -- acts
 No layer may assume the responsibilities of another. Canon never triggers actions. Policy never executes. The Action Engine never runs agents directly. This separation prevents the system from degenerating into unstructured agent chaos.
 
 For full details, see **[ARCHITECTURE.md](ARCHITECTURE.md) — Section 4B: Operational Decision Chain**.
+
+---
+
+## Subsystem Roles
+
+| Subsystem | Role |
+|-----------|------|
+| **Canon** | Validated institutional knowledge — patterns, strategies, rules, playbooks. The system's long-term memory. |
+| **Pattern Library** | Reusable implementation patterns extracted from execution evidence. Queried by agents at runtime. |
+| **Readiness** | Deterministic evaluation of system state. Produces blockers, warnings, and readiness scores. |
+| **Metrics** | Quantitative signals with source, confidence, and timestamp. Foundation for state evaluation. |
+| **Events** | System-generated signals from pipeline execution, agent activity, and runtime behavior. |
+| **Policy** | Governance rules that constrain what actions are permitted and under what conditions. |
+| **Governance** | Structural approval workflows, mutation review, and compliance enforcement. |
+| **Action Engine** | Formalizes triggers into intents, applies policy, and produces auditable action records. |
+| **AgentOS** | Orchestrates agent selection, context assembly, knowledge injection, and task dispatch. |
+| **Executors** | Final execution layer — agents, humans, or external systems that perform the action. |
+| **Learning Loop** | Collects execution evidence, extracts patterns, promotes to canon, and feeds improvement. |
+
+---
+
+## Decision Logic
+
+The canonical decision logic of AxionOS follows this sequence:
+
+1. **Knowledge informs** — Canon and Pattern Library provide validated operational knowledge to all downstream layers
+2. **Signals evaluate** — Metrics, Events, and Readiness transform system state into auditable signals
+3. **Policy constrains** — Governance rules determine whether an action is permitted and under what execution mode
+4. **Actions are formalized** — The Action Engine maps triggers to intents, applies policy, and creates action records
+5. **Orchestration coordinates execution** — AgentOS selects agents, assembles context, injects knowledge, and dispatches tasks
+6. **Execution returns evidence** — Executors produce results that are captured as execution evidence
+7. **Evidence feeds learning** — Evidence is analyzed, patterns are extracted, and validated knowledge is promoted back into Canon
+
+This creates a **closed feedback loop** where every execution improves future executions.
+
+---
+
+## Why This Separation Exists
+
+The layered separation of the Operational Decision Chain exists to prevent four critical failure modes:
+
+1. **UI-driven decision making** — The UI surfaces should display state, not drive operational decisions. Decisions must flow through the canonical chain.
+
+2. **Agent improvisation without policy** — Agents must operate under governance constraints. Without policy evaluation, agents can produce unpredictable, ungoverned behavior.
+
+3. **Knowledge layers executing actions** — Canon and Pattern Library exist to inform, not to act. If knowledge layers trigger actions directly, the system loses auditability and predictability.
+
+4. **Governance being bypassed** — Every important action must pass through policy evaluation. Bypassing governance creates ungoverned state mutations that cannot be audited or rolled back.
+
+Systems with agents but without architectural boundaries tend to evolve from **distributed intelligence** into **distributed chaos** rapidly. The Operational Decision Chain is AxionOS's primary defense against this degradation.
 
 ---
 
@@ -180,6 +243,7 @@ To understand the system fully:
 1. Read **[README.md](README.md)** — platform thesis, canon boundaries, and invariants
 2. Read **[ARCHITECTURE.md](ARCHITECTURE.md)** — structural architecture, layers, containers, data flow
 3. Read **[GOVERNANCE.md](GOVERNANCE.md)** — Agent OS modules, contracts, and governance reference
+4. Read **[diagrams/system-brain-map.md](diagrams/system-brain-map.md)** — canonical visual brain map
 
 `AXION_CONTEXT.md` exists only to **restore understanding quickly**.
 
