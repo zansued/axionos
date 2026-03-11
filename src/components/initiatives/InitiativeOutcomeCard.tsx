@@ -183,6 +183,17 @@ function getOutcome(init: any): OutcomeInfo {
   if (["completed", "system_evolved", "portfolio_managed"].includes(stage)) {
     return { status: "completed", icon: CheckCircle2, color: "text-success", bgColor: "bg-success/5", borderColor: "border-success/30" };
   }
+  if (["runtime_active", "observing_product", "product_observed",
+       "analyzing_product_metrics", "product_metrics_analyzed",
+       "analyzing_user_behavior", "user_behavior_analyzed",
+       "optimizing_growth", "growth_optimized",
+       "learning_system", "system_learned",
+       "evolving_product", "product_evolved",
+       "evolving_architecture", "architecture_evolved",
+       "managing_portfolio", "portfolio_managed",
+       "evolving_system", "system_evolved"].includes(stage)) {
+    return { status: "runtime", icon: Globe, color: "text-success", bgColor: "bg-success/5", borderColor: "border-success/30" };
+  }
   if (stage === "deployed" && init.deploy_url) {
     return { status: "deployed", icon: Globe, color: "text-success", bgColor: "bg-success/5", borderColor: "border-success/30" };
   }
