@@ -130,16 +130,8 @@ export const MACRO_STAGES = [
   { key: "publish", label: "Publicação (GitHub)", icon: GitBranch },
   { key: "deploy", label: "Deploy", icon: Globe },
 
-  // Growth & Evolution Layer
-  { key: "observability", label: "Observability", icon: Eye },
-  { key: "product_analytics", label: "Product Analytics", icon: Activity },
-  { key: "user_behavior", label: "User Behavior", icon: Users },
-  { key: "growth_optimization", label: "Growth Optimization", icon: TrendingUp },
-  { key: "adaptive_learning", label: "Learning", icon: GraduationCap },
-  { key: "product_evolution", label: "Product Evolution", icon: Repeat },
-  { key: "architecture_evolution", label: "Architecture Evolution", icon: Layers },
-  { key: "portfolio_management", label: "Portfolio Manager", icon: FolderKanban },
-  { key: "system_evolution", label: "System Evolution", icon: Settings2 },
+  // Runtime (final visible stage)
+  { key: "runtime", label: "Runtime", icon: Monitor },
   { key: "done", label: "Concluído", icon: CheckCircle2 },
 ];
 
