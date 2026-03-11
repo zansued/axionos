@@ -322,10 +322,10 @@ export default function ApprovalQueue() {
                   {/* Consequences */}
                   <Section title="What happens if…">
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="rounded-md border border-emerald-500/20 bg-emerald-500/5 p-2.5">
+                      <div className="rounded-md border border-primary/20 bg-primary/5 p-2.5">
                         <div className="flex items-center gap-1.5 mb-1">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-                          <span className="text-xs font-medium text-emerald-500">Approved</span>
+                          <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+                          <span className="text-xs font-medium text-primary">Approved</span>
                         </div>
                         <p className="text-[11px] text-muted-foreground">
                           Action proceeds to dispatch and execution via the governed pipeline.
