@@ -6623,6 +6623,8 @@ export type Database = {
           knowledge_type: string
           novelty_score: number
           organization_id: string | null
+          promoted_at: string | null
+          promoted_entry_id: string | null
           promotion_decision_reason: string
           promotion_status: string
           reviewed_by: string | null
@@ -6646,6 +6648,8 @@ export type Database = {
           knowledge_type?: string
           novelty_score?: number
           organization_id?: string | null
+          promoted_at?: string | null
+          promoted_entry_id?: string | null
           promotion_decision_reason?: string
           promotion_status?: string
           reviewed_by?: string | null
@@ -6669,6 +6673,8 @@ export type Database = {
           knowledge_type?: string
           novelty_score?: number
           organization_id?: string | null
+          promoted_at?: string | null
+          promoted_entry_id?: string | null
           promotion_decision_reason?: string
           promotion_status?: string
           reviewed_by?: string | null
@@ -6688,6 +6694,13 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_candidate_entries_promoted_entry_id_fkey"
+            columns: ["promoted_entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
             referencedColumns: ["id"]
           },
           {
@@ -7196,7 +7209,9 @@ export type Database = {
           problem_scope: string
           reviewed_by: string | null
           slug: string
+          source_candidate_id: string | null
           source_reference: string
+          source_sync_run_id: string | null
           source_type: string
           stack_scope: string
           stewardship_owner: string | null
@@ -7233,7 +7248,9 @@ export type Database = {
           problem_scope?: string
           reviewed_by?: string | null
           slug: string
+          source_candidate_id?: string | null
           source_reference?: string
+          source_sync_run_id?: string | null
           source_type?: string
           stack_scope?: string
           stewardship_owner?: string | null
@@ -7270,7 +7287,9 @@ export type Database = {
           problem_scope?: string
           reviewed_by?: string | null
           slug?: string
+          source_candidate_id?: string | null
           source_reference?: string
+          source_sync_run_id?: string | null
           source_type?: string
           stack_scope?: string
           stewardship_owner?: string | null
@@ -7296,6 +7315,13 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_entries_source_candidate_id_fkey"
+            columns: ["source_candidate_id"]
+            isOneToOne: false
+            referencedRelation: "canon_candidate_entries"
             referencedColumns: ["id"]
           },
           {
@@ -8936,10 +8962,15 @@ export type Database = {
         Row: {
           candidates_accepted: number
           candidates_found: number
+          candidates_promoted: number
           candidates_rejected: number
+          chunks_created: number
           completed_at: string | null
           created_at: string
+          documents_fetched: number
+          duplicates_skipped: number
           id: string
+          lifecycle_state: string
           organization_id: string | null
           source_id: string | null
           started_at: string
@@ -8950,10 +8981,15 @@ export type Database = {
         Insert: {
           candidates_accepted?: number
           candidates_found?: number
+          candidates_promoted?: number
           candidates_rejected?: number
+          chunks_created?: number
           completed_at?: string | null
           created_at?: string
+          documents_fetched?: number
+          duplicates_skipped?: number
           id?: string
+          lifecycle_state?: string
           organization_id?: string | null
           source_id?: string | null
           started_at?: string
@@ -8964,10 +9000,15 @@ export type Database = {
         Update: {
           candidates_accepted?: number
           candidates_found?: number
+          candidates_promoted?: number
           candidates_rejected?: number
+          chunks_created?: number
           completed_at?: string | null
           created_at?: string
+          documents_fetched?: number
+          duplicates_skipped?: number
           id?: string
+          lifecycle_state?: string
           organization_id?: string | null
           source_id?: string | null
           started_at?: string
@@ -9064,6 +9105,7 @@ export type Database = {
           domain_id: string | null
           domain_scope: string
           id: string
+          ingestion_lifecycle_state: string
           ingestion_status: string
           last_synced_at: string | null
           organization_id: string | null
@@ -9085,6 +9127,7 @@ export type Database = {
           domain_id?: string | null
           domain_scope?: string
           id?: string
+          ingestion_lifecycle_state?: string
           ingestion_status?: string
           last_synced_at?: string | null
           organization_id?: string | null
@@ -9106,6 +9149,7 @@ export type Database = {
           domain_id?: string | null
           domain_scope?: string
           id?: string
+          ingestion_lifecycle_state?: string
           ingestion_status?: string
           last_synced_at?: string | null
           organization_id?: string | null
