@@ -58,14 +58,9 @@ export default function LearningSignalsDashboard() {
 
   if (!currentOrg) {
     return (
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full">
-          <AppSidebar />
-          <main className="flex-1 p-6">
-            <p className="text-muted-foreground">Select an organization.</p>
-          </main>
-        </div>
-      </SidebarProvider>
+      <AppShell>
+        <p className="text-muted-foreground">Select an organization.</p>
+      </AppShell>
     );
   }
 
