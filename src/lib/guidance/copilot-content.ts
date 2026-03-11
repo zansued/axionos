@@ -230,8 +230,8 @@ const WORKSPACE_COPILOT: CopilotDrawerContent[] = [
         en: "If there are no candidates pending review, no action is needed.",
       },
       suggestedActions: [
-        { label: { pt: "Evidências", en: "Evidence" }, route: "/improvement-ledger", icon: "FileSearch" },
-        { label: { pt: "Benchmarks", en: "Benchmarks" }, route: "/improvement-benchmarks", icon: "FlaskConical" },
+        { label: { pt: "Evidências", en: "Evidence" }, route: "/owner/improvement-ledger", icon: "FileSearch" },
+        { label: { pt: "Benchmarks", en: "Benchmarks" }, route: "/owner/improvement-benchmarks", icon: "FlaskConical" },
       ],
     },
   },
