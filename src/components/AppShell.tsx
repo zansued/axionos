@@ -26,23 +26,19 @@ interface AppShellProps {
 export function AppShell({ children, compactTopBar = false }: AppShellProps) {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar />
-        <div className="flex-1 flex min-w-0">
-          <div className="flex-1 flex flex-col min-w-0">
-            {/* ── Sticky Top Bar ── */}
-            <Topbar compact={compactTopBar} />
+      <AppSidebar />
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* ── Sticky Top Bar ── */}
+        <Topbar compact={compactTopBar} />
 
-            {/* ── Main Content Area ── */}
-            <main className="flex-1 overflow-auto p-4 md:p-6">
-              {children}
-            </main>
-          </div>
-
-          {/* ── Optional Right Context Panel ── */}
-          <ContextPanel />
-        </div>
+        {/* ── Main Content Area ── */}
+        <main className="flex-1 overflow-auto p-3 md:p-5">
+          {children}
+        </main>
       </div>
+
+      {/* ── Optional Right Context Panel ── */}
+      <ContextPanel />
     </SidebarProvider>
   );
 }
