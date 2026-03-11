@@ -12,7 +12,7 @@ import {
   LayoutDashboard, FolderKanban, Bot, GitBranch, Eye, Shield,
   Settings, HeartPulse, LineChart, Search, Brain,
   Fingerprint, Scale, Users, Activity, Cpu,
-  Radio, Sparkles, Database,
+  Radio, Sparkles, Database, ShieldAlert,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
