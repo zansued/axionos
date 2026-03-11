@@ -1478,11 +1478,10 @@ Advisory-first, governance-before-autonomy. No autonomous architecture mutation.
 # AxionOS — Sprint Ledger
 
 > Sprint-by-sprint implementation record. **Canonical source for sprint status.**
-> Last updated: 2026-03-10 · 138 sprints complete (Blocks Foundation → AD)
+> Last updated: 2026-03-11 · 138 sprints complete (Blocks Foundation through AD)
 >
 > For architecture detail → [ARCHITECTURE.md](ARCHITECTURE.md)
-> For agent/module specs → [AGENTS.md](AGENTS.md)
-> For pipeline UX contracts → [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md)
+> For agent/module specs → [GOVERNANCE.md](GOVERNANCE.md)
 
 ## Governing Principles
 
