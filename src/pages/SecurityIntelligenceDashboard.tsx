@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ShieldAlert, Map, Target, Flame, Network, FileWarning } from "lucide-react";
+import { ShieldAlert, MapIcon, Target, Flame, Network, FileWarning } from "lucide-react";
 import { useSecurityIntelligence } from "@/hooks/useSecurityIntelligence";
 
 export default function SecurityIntelligenceDashboard() {
