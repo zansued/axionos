@@ -76,7 +76,7 @@ export default function Delivery() {
           <SummaryCard label="Deployed" value={deployedCount} icon={Rocket} color="text-primary" />
         </div>
 
-        <Tabs defaultValue="overview">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
             <TabsTrigger value="overview" className="text-xs gap-1"><Eye className="h-3 w-3" /> Overview</TabsTrigger>
             <TabsTrigger value="detail" className="text-xs gap-1"><Gauge className="h-3 w-3" /> Detail</TabsTrigger>
