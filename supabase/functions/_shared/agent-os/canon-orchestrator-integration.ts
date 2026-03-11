@@ -1,10 +1,12 @@
 /**
- * Canon–Orchestrator Integration — Sprint 122
+ * Canon–Orchestrator Integration — Sprint 122 / Sprint 139
  *
  * Connects the Canon / Pattern Library to the AgentOS Orchestrator.
  * Before agent dispatch, retrieves relevant canon knowledge based on
  * stage, initiative context, stack, and problem type, then injects
  * it into the execution context.
+ *
+ * Sprint 139: Replaced stub retrieveCanonKnowledge with real DB-backed retrieval.
  *
  * Architectural rule:
  *   Canon informs → Orchestrator consumes → Agents receive knowledge.
@@ -58,6 +60,25 @@ const STAGE_CANON_PROFILES: Record<string, StageCanonProfile> = {
   },
 };
 
+// ── Knowledge Packet ──
+
+export interface CanonKnowledgePacket {
+  canon_entry_id: string;
+  title: string;
+  category: string;
+  practice_type: string;
+  summary: string;
+  guidance: string;
+  confidence: number;
+  approval_status: string;
+  match_reason: string;
+  suggested_use: string;
+  source_reference: string;
+  stack_scope: string;
+  tags: unknown;
+  anti_pattern_flag: boolean;
+}
+
 // ── Canon Retrieval Result ──
 
 export interface CanonRetrievalRequest {
@@ -65,6 +86,7 @@ export interface CanonRetrievalRequest {
   query: RetrievalQuery;
   filters: ReturnType<typeof buildRetrievalFilters>;
   canon_context: CanonContext;
+  organization_id?: string;
   timestamp: string;
 }
 
@@ -75,7 +97,9 @@ export interface CanonRetrievalResult {
   categories_used: string[];
   confidence_scores: number[];
   knowledge_context: Record<string, unknown>;
+  knowledge_packets: CanonKnowledgePacket[];
   retrieval_request: CanonRetrievalRequest;
+  retrieval_type: "db_query" | "fallback_empty" | "error";
   error?: string;
 }
 
@@ -87,6 +111,7 @@ export interface CanonTraceRecord {
   categories_used: string[];
   average_confidence: number;
   stage: string;
+  retrieval_type: string;
   timestamp: string;
   error?: string;
 }
@@ -107,6 +132,7 @@ export function buildCanonRetrievalRequest(
   const language = (contextData.language as string) || undefined;
   const problemType = (contextData.problem_type as string) || undefined;
   const tags = (contextData.tags as string[]) || [];
+  const organizationId = (contextData.organization_id as string) || undefined;
 
   // Build retrieval query
   const query: RetrievalQuery = {
@@ -136,53 +162,287 @@ export function buildCanonRetrievalRequest(
     query,
     filters,
     canon_context: canonContext,
+    organization_id: organizationId,
     timestamp: new Date().toISOString(),
   };
 }
 
+// ── Supabase Client Type (minimal interface for edge functions) ──
+
+interface SupabaseQueryClient {
+  from(table: string): {
+    select(columns: string): {
+      eq(column: string, value: unknown): any;
+      neq(column: string, value: unknown): any;
+      in(column: string, values: unknown[]): any;
+      gte(column: string, value: unknown): any;
+      order(column: string, options: { ascending: boolean }): any;
+      limit(count: number): any;
+    };
+  };
+}
+
 /**
- * Simulate canon retrieval (will be replaced by real DB query in AE sprints).
- * Returns available canon knowledge for the given request.
+ * Sprint 139 — Real Canon Knowledge Retrieval
  *
- * IMPORTANT: This is a safe-fallback implementation. If retrieval fails,
- * it returns an empty result so execution can continue.
+ * Queries canon_entries from the database using the retrieval request
+ * built by the integration layer. Applies ranking by confidence,
+ * filters by lifecycle/approval status, and returns structured
+ * knowledge packets for agent context injection.
+ *
+ * Safe fallback: if retrieval fails or no client provided, returns
+ * empty result with metadata so execution continues.
  */
 export async function retrieveCanonKnowledge(
   request: CanonRetrievalRequest,
+  supabaseClient?: SupabaseQueryClient,
 ): Promise<CanonRetrievalResult> {
-  try {
-    // In production, this would query the canon_entries and pattern_library tables
-    // using the filters and canon_context from the request.
-    // For now, return a structured empty result that signals "no canon available yet"
-    // but preserves the full retrieval request for traceability.
+  const emptyResult = (type: "fallback_empty" | "error", error?: string): CanonRetrievalResult => ({
+    success: type !== "error",
+    entries_retrieved: 0,
+    pattern_ids: [],
+    categories_used: request.canon_context.required_practice_types,
+    confidence_scores: [],
+    knowledge_context: {
+      canon_available: false,
+      retrieval_posture: request.canon_context.fallback_posture,
+      stage: request.stage,
+      domains_queried: request.canon_context.required_domains,
+      practice_types_queried: request.canon_context.required_practice_types,
+    },
+    knowledge_packets: [],
+    retrieval_request: request,
+    retrieval_type: type,
+    error,
+  });
 
-    return {
-      success: true,
-      entries_retrieved: 0,
-      pattern_ids: [],
-      categories_used: request.canon_context.required_practice_types,
-      confidence_scores: [],
-      knowledge_context: {
-        canon_available: false,
-        retrieval_posture: request.canon_context.fallback_posture,
-        stage: request.stage,
-        domains_queried: request.canon_context.required_domains,
-        practice_types_queried: request.canon_context.required_practice_types,
-      },
-      retrieval_request: request,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      entries_retrieved: 0,
-      pattern_ids: [],
-      categories_used: [],
-      confidence_scores: [],
-      knowledge_context: {},
-      retrieval_request: request,
-      error: error instanceof Error ? error.message : String(error),
-    };
+  // ── Guard: no client → graceful fallback ──
+  if (!supabaseClient) {
+    console.warn("[Canon Retrieval] No supabaseClient provided — falling back to empty retrieval");
+    return emptyResult("fallback_empty", "no_supabase_client");
   }
+
+  // ── Guard: no organization_id → cannot scope query ──
+  if (!request.organization_id) {
+    console.warn("[Canon Retrieval] No organization_id in request — falling back to empty retrieval");
+    return emptyResult("fallback_empty", "no_organization_id");
+  }
+
+  try {
+    // ── Build query against canon_entries ──
+    const practiceTypes = request.canon_context.required_practice_types;
+    const confidenceThreshold = request.canon_context.confidence_threshold;
+    const maxEntries = request.canon_context.max_entries;
+
+    let query = supabaseClient
+      .from("canon_entries")
+      .select("id, title, summary, body, practice_type, canon_type, stack_scope, layer_scope, problem_scope, confidence_score, approval_status, lifecycle_status, implementation_guidance, structured_guidance, source_reference, tags, anti_pattern_flag, applicability_scope, topic, subtopic, code_snippet")
+      .eq("organization_id", request.organization_id)
+      .neq("lifecycle_status", "deprecated")
+      .neq("lifecycle_status", "superseded")
+      .gte("confidence_score", confidenceThreshold);
+
+    // Filter by practice types if available
+    if (practiceTypes.length > 0) {
+      query = query.in("practice_type", practiceTypes);
+    }
+
+    // Filter by stack scope if provided in the request
+    if (request.query.stack) {
+      query = query.eq("stack_scope", request.query.stack);
+    }
+
+    // Filter by topic if provided
+    if (request.query.topic) {
+      query = query.eq("topic", request.query.topic);
+    }
+
+    // Order by confidence (best first), limit results
+    query = query
+      .order("confidence_score", { ascending: false })
+      .limit(maxEntries);
+
+    const { data: entries, error: dbError } = await query;
+
+    if (dbError) {
+      console.error("[Canon Retrieval] DB query error:", dbError.message);
+      return emptyResult("error", `db_error: ${dbError.message}`);
+    }
+
+    if (!entries || entries.length === 0) {
+      // ── Broaden: retry without stack/topic filters ──
+      let broadQuery = supabaseClient
+        .from("canon_entries")
+        .select("id, title, summary, body, practice_type, canon_type, stack_scope, layer_scope, problem_scope, confidence_score, approval_status, lifecycle_status, implementation_guidance, structured_guidance, source_reference, tags, anti_pattern_flag, applicability_scope, topic, subtopic, code_snippet")
+        .eq("organization_id", request.organization_id)
+        .neq("lifecycle_status", "deprecated")
+        .neq("lifecycle_status", "superseded")
+        .gte("confidence_score", confidenceThreshold);
+
+      if (practiceTypes.length > 0) {
+        broadQuery = broadQuery.in("practice_type", practiceTypes);
+      }
+
+      broadQuery = broadQuery
+        .order("confidence_score", { ascending: false })
+        .limit(maxEntries);
+
+      const { data: broadEntries, error: broadError } = await broadQuery;
+
+      if (broadError || !broadEntries || broadEntries.length === 0) {
+        console.log(`[Canon Retrieval] No entries found for stage=${request.stage}, org=${request.organization_id}`);
+        return emptyResult("fallback_empty");
+      }
+
+      return buildRetrievalResultFromEntries(broadEntries, request, "broad_match");
+    }
+
+    return buildRetrievalResultFromEntries(entries, request, "precise_match");
+  } catch (error) {
+    console.error("[Canon Retrieval] Unexpected error:", error instanceof Error ? error.message : String(error));
+    return emptyResult("error", error instanceof Error ? error.message : String(error));
+  }
+}
+
+/**
+ * Transform raw DB rows into a structured CanonRetrievalResult with knowledge packets.
+ */
+function buildRetrievalResultFromEntries(
+  entries: Record<string, any>[],
+  request: CanonRetrievalRequest,
+  matchType: string,
+): CanonRetrievalResult {
+  // ── Rank entries ──
+  const ranked = entries
+    .map((entry) => ({
+      entry,
+      score: computeEntryRelevance(entry, request),
+    }))
+    .sort((a, b) => b.score - a.score);
+
+  // ── Build knowledge packets ──
+  const packets: CanonKnowledgePacket[] = ranked.map(({ entry, score }) => ({
+    canon_entry_id: entry.id,
+    title: entry.title,
+    category: entry.canon_type || entry.practice_type,
+    practice_type: entry.practice_type,
+    summary: entry.summary,
+    guidance: entry.implementation_guidance || entry.body?.substring(0, 500) || "",
+    confidence: entry.confidence_score,
+    approval_status: entry.approval_status,
+    match_reason: buildMatchReason(entry, request, matchType),
+    suggested_use: buildSuggestedUse(entry, request.stage),
+    source_reference: entry.source_reference || "",
+    stack_scope: entry.stack_scope || "",
+    tags: entry.tags || [],
+    anti_pattern_flag: entry.anti_pattern_flag || false,
+  }));
+
+  const patternIds = packets.map((p) => p.canon_entry_id);
+  const categories = [...new Set(packets.map((p) => p.practice_type))];
+  const confidenceScores = packets.map((p) => p.confidence);
+
+  console.log(
+    `[Canon Retrieval] SUCCESS: stage=${request.stage}, entries=${packets.length}, ` +
+    `categories=[${categories.join(",")}], match=${matchType}, ` +
+    `avg_confidence=${confidenceScores.length > 0 ? (confidenceScores.reduce((a, b) => a + b, 0) / confidenceScores.length).toFixed(2) : 0}`
+  );
+
+  return {
+    success: true,
+    entries_retrieved: packets.length,
+    pattern_ids: patternIds,
+    categories_used: categories,
+    confidence_scores: confidenceScores,
+    knowledge_context: {
+      canon_available: true,
+      retrieval_posture: "knowledge_enriched",
+      stage: request.stage,
+      domains_queried: request.canon_context.required_domains,
+      practice_types_queried: request.canon_context.required_practice_types,
+      match_type: matchType,
+      packets_summary: packets.map((p) => ({
+        id: p.canon_entry_id,
+        title: p.title,
+        practice_type: p.practice_type,
+        confidence: p.confidence,
+        anti_pattern: p.anti_pattern_flag,
+      })),
+    },
+    knowledge_packets: packets,
+    retrieval_request: request,
+    retrieval_type: "db_query",
+  };
+}
+
+/**
+ * Compute relevance score for a canon entry relative to the retrieval request.
+ * Higher = more relevant.
+ */
+function computeEntryRelevance(entry: Record<string, any>, request: CanonRetrievalRequest): number {
+  let score = entry.confidence_score || 0;
+
+  // Boost: approved entries
+  if (entry.approval_status === "approved") score += 0.15;
+  else if (entry.approval_status === "experimental") score += 0.05;
+
+  // Boost: practice type match
+  if (request.canon_context.required_practice_types.includes(entry.practice_type)) {
+    score += 0.1;
+  }
+
+  // Boost: stack match
+  if (request.query.stack && entry.stack_scope === request.query.stack) {
+    score += 0.1;
+  }
+
+  // Boost: topic match
+  if (request.query.topic && entry.topic === request.query.topic) {
+    score += 0.1;
+  }
+
+  // Penalty: anti-patterns get lower priority unless validation stage
+  if (entry.anti_pattern_flag && request.stage !== "validation") {
+    score -= 0.1;
+  }
+
+  return Math.round(Math.min(score, 1.0) * 100) / 100;
+}
+
+/**
+ * Build a human-readable match reason.
+ */
+function buildMatchReason(entry: Record<string, any>, request: CanonRetrievalRequest, matchType: string): string {
+  const reasons: string[] = [];
+  if (request.canon_context.required_practice_types.includes(entry.practice_type)) {
+    reasons.push(`practice_type=${entry.practice_type}`);
+  }
+  if (request.query.stack && entry.stack_scope === request.query.stack) {
+    reasons.push(`stack=${entry.stack_scope}`);
+  }
+  if (request.query.topic && entry.topic === request.query.topic) {
+    reasons.push(`topic=${entry.topic}`);
+  }
+  if (entry.approval_status === "approved") {
+    reasons.push("approved");
+  }
+  if (reasons.length === 0) reasons.push(matchType);
+  return reasons.join(", ");
+}
+
+/**
+ * Suggest how the agent should use this entry based on stage.
+ */
+function buildSuggestedUse(entry: Record<string, any>, stage: string): string {
+  if (entry.anti_pattern_flag) return "Avoid this pattern — use as a negative reference";
+  const stageHints: Record<string, string> = {
+    perception: "Use as research guidance or discovery heuristic",
+    design: "Apply as architectural reference or structural template",
+    build: "Use as implementation pattern or code convention",
+    validation: "Apply as validation rule or quality checklist item",
+    evolution: "Use as recovery pattern or troubleshooting guide",
+  };
+  return stageHints[stage] || "Use as general implementation guidance";
 }
 
 /**
@@ -202,6 +462,9 @@ export function injectCanonIntoWorkInput(
       canon_pattern_ids: result.pattern_ids,
       canon_retrieval_success: result.success,
       canon_categories_used: result.categories_used,
+      canon_retrieval_type: result.retrieval_type,
+      // Sprint 139: inject full knowledge packets for agent consumption
+      canon_knowledge_packets: result.knowledge_packets,
     },
   };
 }
@@ -225,6 +488,7 @@ export function buildCanonTraceRecord(
     categories_used: result.categories_used,
     average_confidence: avgConfidence,
     stage,
+    retrieval_type: result.retrieval_type,
     timestamp: new Date().toISOString(),
     error: result.error,
   };
