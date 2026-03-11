@@ -102,6 +102,7 @@ import SecurityIntelligenceDashboard from "./pages/SecurityIntelligenceDashboard
 import RedTeamSimulationDashboard from "./pages/RedTeamSimulationDashboard";
 import BlueTeamDefenseDashboard from "./pages/BlueTeamDefenseDashboard";
 import PurpleLearningDashboard from "./pages/PurpleLearningDashboard";
+import SecurityWarRoom from "./pages/SecurityWarRoom";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
@@ -365,6 +366,7 @@ const App = () => (
                           <Route path="/red-team-simulation"       element={<P><RedTeamSimulationDashboard /></P>} />
                           <Route path="/blue-team-defense"        element={<P><BlueTeamDefenseDashboard /></P>} />
                           <Route path="/purple-learning"          element={<P><PurpleLearningDashboard /></P>} />
+                          <Route path="/security-war-room"        element={<P><SecurityWarRoom /></P>} />
                           <Route path="/operational-posture"       element={<P><OperationalPostureDashboard /></P>} />
                           <Route path="/attention-allocation"      element={<P><AttentionAllocationDashboard /></P>} />
                           <Route path="/adaptive-routing"          element={<P><AdaptiveRoutingDashboard /></P>} />
