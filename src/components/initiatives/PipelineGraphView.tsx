@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   CheckCircle2, Loader2, RotateCcw, ArrowRight,
-  Lightbulb, Search, Brain, Layers, Cpu, Rocket, TrendingUp,
+  Lightbulb, Search, Brain, Layers, Cpu, Rocket, TrendingUp, Radio,
 } from "lucide-react";
 import { MACRO_STAGES } from "./pipeline-config";
 import type { LucideIcon } from "lucide-react";
