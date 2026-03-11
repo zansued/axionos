@@ -231,7 +231,7 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Revisar detalhes da extensão", en: "Review extension details" }, route: "/extensions", icon: "Puzzle" },
+      { label: { pt: "Revisar detalhes da extensão", en: "Review extension details" }, route: "/owner/extensions", icon: "Puzzle" },
       { label: { pt: "Verificar postura de rollback", en: "Check rollback posture" }, icon: "RotateCcw" },
       { label: { pt: "Inspecionar auditoria", en: "Inspect audit" }, route: "/audit", icon: "FileText" },
     ],
