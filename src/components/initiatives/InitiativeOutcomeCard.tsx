@@ -111,7 +111,12 @@ const STAGE_LABELS: Record<string, { en: string; pt: string }> = {
   coding: { en: "Coding", pt: "Codificação" },
   validating: { en: "Validation", pt: "Validação" },
   deploying: { en: "Deploy", pt: "Deploy" },
-  publishing: { en: "Publishing", pt: "Publicação" },
+  deployed: { en: "Deployed", pt: "Implantado" },
+  runtime_active: { en: "Runtime Active", pt: "Runtime Ativo" },
+  observing_product: { en: "Runtime Active", pt: "Runtime Ativo" },
+  product_observed: { en: "Runtime Active", pt: "Runtime Ativo" },
+  optimizing_growth: { en: "Runtime Active", pt: "Runtime Ativo" },
+  growth_optimized: { en: "Runtime Active", pt: "Runtime Ativo" },
 };
 
 // Pipeline stage ordering for progress estimation
@@ -120,7 +125,8 @@ const STAGE_ORDER = [
   "architecting", "architecture_done", "scoping", "planning",
   "in_progress", "engineering", "coding",
   "validating", "publishing", "deploying",
-  "ready_to_publish", "published", "deployed", "completed",
+  "ready_to_publish", "published", "deployed",
+  "runtime_active", "completed",
 ];
 
 function useRotatingHint(stage: string, isActive: boolean, lang: "en" | "pt") {
