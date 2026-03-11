@@ -431,6 +431,137 @@ flowchart TB
 
 ---
 
+## 4B. Operational Decision Chain
+
+> **Canonical Rule:** This is the official decision and execution flow of AxionOS. All operational behavior must respect this chain.
+
+```mermaid
+flowchart TD
+    Canon["Canon / Library"]:::canon
+    Signals["Readiness / Events / Metrics"]:::data
+    Policy["Policy / Governance"]:::governance
+    AE["Action Engine"]:::runtime
+    AgentOS["AgentOS Orchestrator"]:::core
+    Executor["Agent Executor / Human Approval"]:::human
+
+    Canon --> Signals
+    Signals --> Policy
+    Policy --> AE
+    AE --> AgentOS
+    AgentOS --> Executor
+
+    classDef canon fill:#6C5CE7,stroke:#2E1A8A,color:#fff,stroke-width:1.5px;
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
+    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
+    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:1.5px;
+```
+
+**Canonical Responsibility Rule:**
+
+| Layer | Role |
+|-------|------|
+| **Canon** | informs |
+| **Readiness** | evaluates |
+| **Policy** | constrains |
+| **Action Engine** | formalizes |
+| **AgentOS** | orchestrates |
+| **Executors** | act |
+
+### 4B.1 Layer Responsibilities
+
+#### Canon / Library
+
+Provides validated operational knowledge. Includes canon entries, patterns, templates, conventions, rules, and playbooks. Canon does not execute actions and does not make operational decisions. Its function is to supply applicable knowledge for agents and system decisions.
+
+**Key files:** `src/lib/canon/`, `supabase/functions/_shared/canon-*/`, `supabase/functions/canon-*/`
+
+#### Readiness / Events / Metrics
+
+Transforms system state into auditable signals. Includes metrics with source and confidence, system events, readiness evaluations, blockers, and warnings. This layer does not execute actions and does not make decisions. Its function is to describe the state of the system.
+
+**Key files:** `src/lib/metrics/`, `src/lib/readiness/`
+
+#### Policy / Governance
+
+Determines operational permissions and limits. Evaluates risk, environment, compliance, approval requirements, and governance rules. This layer does not execute actions. Its function is to decide whether an action can happen and under what conditions.
+
+**Key files:** `supabase/functions/_shared/agent-os/policy-engine.ts`, `supabase/functions/_shared/agent-os/governance.ts`, `supabase/functions/_shared/execution-policy/`
+
+#### Action Engine (AE)
+
+Transforms signals and evaluations into formal, traceable actions. Interprets triggers, maps triggers to intents, applies policy decisions, creates action records, and routes actions to execution. The AE does not directly execute agents. Its function is to formalize actions within the system.
+
+**Key concepts:**
+- **Action Trigger** — an event or signal that initiates the action pipeline
+- **Action Intent** — a formal declaration of what the system wants to do
+- **Execution Mode** — `auto | approval_required | manual_only | blocked`
+- **Action Record** — an auditable record of the formalized action
+- **Action Outcome** — the result of execution, feeding back into the learning loop
+
+**Status:** Planned (not yet implemented). Domain-specific action engines exist for stabilization and predictive error prevention, but no central Action Engine exists yet.
+
+#### AgentOS Orchestrator
+
+Coordinates execution of formalized actions. Selects agents, assembles execution context, consults Canon/Library for knowledge injection, dispatches tasks, and tracks outcomes. Its function is to orchestrate operational execution.
+
+**Key files:** `supabase/functions/_shared/agent-os/orchestrator.ts`, `supabase/functions/_shared/agent-os/registry.ts`, `supabase/functions/_shared/agent-os/selection.ts`
+
+#### Agent Executor / Human Approval
+
+The final execution layer. Can be automatic agents, human operators, or external systems. Its function is to perform the action in the real world.
+
+### 4B.2 Responsibility Boundaries
+
+These rules **must not** be violated:
+
+1. **Canon / Library** never triggers actions directly
+2. **Readiness / Metrics** never executes actions
+3. **Policy** does not execute actions — it only constrains them
+4. **Action Engine** does not execute agents directly — it formalizes and routes
+5. **AgentOS** must not bypass Action Engine in governed flows
+6. **Every important action must be traceable** — with context and justification
+7. **No layer may assume the responsibilities of another layer**
+
+### 4B.3 AE — Action Engine Block
+
+The Action Engine is the architectural layer responsible for formalizing actions within AxionOS. It connects knowledge (Canon), state evaluation (Readiness/Metrics), and governance (Policy) with the agent execution system (AgentOS).
+
+**AE Block Roadmap:**
+
+| Sprint | Capability |
+|--------|-----------|
+| AE-01 | Action Domain Model — Trigger, Intent, ActionRecord, ActionOutcome types |
+| AE-02 | Trigger Intake Layer — event/signal capture and normalization |
+| AE-03 | Trigger to Intent Mapping — declarative rules engine |
+| AE-04 | Policy-Aware Action Resolution — intent + policy = execution mode |
+| AE-05 | Action Registry and Audit Trail — immutable action log |
+| AE-06 | AgentOS Dispatch Contract — formal handoff from AE to Orchestrator |
+| AE-07 | Human Approval Hooks — approval queue and resolution flow |
+| AE-08 | Initial Operational Flows — first end-to-end governed actions |
+| AE-09 | Action Center Integration — UI surface for action visibility |
+| AE-10 | Recovery and Reversibility Hooks — rollback and escalation paths |
+
+### 4B.4 System Maturity Phases
+
+| Phase | Name | Status |
+|-------|------|--------|
+| Phase 1 | UI Scaffolding — Component structure, layout, navigation shells | Complete |
+| Phase 2 | Navigation Contract — Role-based routing, surface separation | Complete |
+| Phase 3 | Metrics and Data Integrity — Metric contract with source, confidence, updatedAt | Complete |
+| Phase 4 | Readiness Engine — Deterministic readiness evaluation with named blockers | Complete |
+| Phase 5 | Canon and Library Operationalization — Ingestion lifecycle, candidate pipeline, retrieval contract | Complete |
+| Phase 6 | AgentOS Decision Contract — Policy engine, selection engine, capability model (contracts exist, not fully connected) | Partial |
+| Phase 7 | Action Engine — Trigger/Intent/ActionRecord formalization | Planned |
+| Phase 8 | Governance and Approval Flow — Approval queue, human-in-the-loop execution | Planned |
+| Phase 9 | Self-Healing and Recovery — Autonomous error recovery with governance | Planned |
+| Phase 10 | Learning Feedback Loop — Execution outcomes feed Canon and strategy evolution | Planned |
+
+**Current system phase: Phase 5 complete, Phase 6 partial. Next target: Phase 7 (Action Engine).**
+
+---
+
 ## 5. Architectural Direction
 
 ### 5.1 Current — Adaptive Operational Organism — ✅ Level 10+ Complete

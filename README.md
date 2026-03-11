@@ -46,21 +46,30 @@ The system's moat emerges from accumulated runtime evidence, canonized learning,
 
 ## Maturity & Roadmap
 
-**Current Mode:** Level 10+ — Adaptive Operational Organism / 138 Sprints Complete
+**Current Mode:** Level 10+ — Adaptive Operational Organism / 146 Sprints Complete
 
 | Level | Name | Status |
 |-------|------|--------|
-| Level 1-3 | Code Generator to Autonomous Engineering | ✅ Complete |
-| Level 4-5 | Self-Learning Factory & M-Aware Platform | 🔄 Operational (needs data) |
-| Level 6-10 | Sovereign, Strategic & Autonomous OS | ✅ Complete (Sprints 1-138) |
+| Level 1-3 | Code Generator to Autonomous Engineering | Complete |
+| Level 4-5 | Self-Learning Factory & M-Aware Platform | Operational (needs data) |
+| Level 6-10 | Sovereign, Strategic & Autonomous OS | Complete (Sprints 1-146) |
+
+**Operational Maturity Phases:**
+
+| Phase | Status |
+|-------|--------|
+| Phase 1-5 | UI, Navigation, Metrics, Readiness, Canon — Complete |
+| Phase 6 | AgentOS Decision Contract — Partial |
+| Phase 7 | Action Engine — Planned (next) |
+| Phase 8-10 | Governance Flow, Self-Healing, Learning Loop — Planned |
 
 **Roadmap History (Completed Blocks):**
-- **Foundation ➔ M:** Pipeline, Extensibility, Product Experience (Sprints 1-70)
-- **N ➔ R:** Evidence-Governed Improvement, Multi-Agent Swarms, Delivery Optimization, Distributed Runtime (Sprints 72-90)
-- **S ➔ Y:** Architecture Research, Governed Intelligence OS, Sovereign Intelligence, Reflexive Governance, Canon Governance (Sprints 91-118)
-- **Z ➔ AD:** Runtime Sovereignty, Runtime Proof, Learning Canonization, Adaptive Coordination, Adaptive Operational Organism (Sprints 119-138)
+- **Foundation - M:** Pipeline, Extensibility, Product Experience (Sprints 1-70)
+- **N - R:** Evidence-Governed Improvement, Multi-Agent Swarms, Delivery Optimization, Distributed Runtime (Sprints 72-90)
+- **S - Y:** Architecture Research, Governed Intelligence OS, Sovereign Intelligence, Reflexive Governance, Canon Governance (Sprints 91-118)
+- **Z - AD:** Runtime Sovereignty, Runtime Proof, Learning Canonization, Adaptive Coordination, Adaptive Operational Organism (Sprints 119-146)
 
-*(For deep architectural breakdown of these blocks, see `docs/ARCHITECTURE.md` - Anexo Histórico)*
+*(For deep architectural breakdown, see `docs/ARCHITECTURE.md`)*
 
 ---
 
@@ -81,6 +90,14 @@ The system's moat emerges from accumulated runtime evidence, canonized learning,
 
 AxionOS runs atop Supabase Edge Functions in a Deno runtime. Each of the 32 pipeline stages is deployed independently. The platform comprises 200+ Edge Functions and 100+ architectural layers.
 
+**Operational Decision Chain:**
+
+```
+Canon / Library → Readiness / Metrics → Policy / Governance → Action Engine → AgentOS → Executor
+```
+
+> Canon informs. Readiness evaluates. Policy constrains. Action Engine formalizes. AgentOS orchestrates. Executors act.
+
 ```mermaid
 flowchart TB
     Dev["Developer / Operator"]
@@ -100,8 +117,8 @@ flowchart TB
 ```
 
 > **Full Architecture & Agents Guide:**
-> - [**Architecture & Ledger**](docs/ARCHITECTURE.md): System architecture, 32-stage pipeline, component diagrams, and full sprint execution ledger.
-> - [**Governance & Agents**](docs/GOVERNANCE.md): Agent Operating System (14 modules, 5 planes), pipeline contracts, safety boundaries, and agentic UX states.
+> - [**Architecture & Ledger**](docs/ARCHITECTURE.md): System architecture, operational decision chain, C4 diagrams, and sprint ledger.
+> - [**Governance & Agents**](docs/GOVERNANCE.md): Agent Operating System, pipeline contracts, safety boundaries.
 
 ---
 
