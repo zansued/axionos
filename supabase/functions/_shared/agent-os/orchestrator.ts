@@ -36,6 +36,15 @@ import {
   type CanonConsumptionTrace,
 } from "./canon-orchestrator-integration.ts";
 
+// Sprint 141 — Canon application scoring
+import {
+  scoreCanonApplication,
+  buildCanonApplicationStageSummary,
+  type CanonApplicationScore,
+  type CanonApplicationStageSummary,
+  type ExecutionOutcomeSignals,
+} from "./canon-application-scoring.ts";
+
 // Sprint 140 — Policy enforcement
 import {
   evaluatePolicy,
