@@ -198,7 +198,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       error_intelligence: "error-intelligence",
       build_repair: "autonomous-build-repair",
       deploy_vercel: "initiative-deploy-engine",
-      // v3 Growth & Evolution Layer
+      // Background Intelligence (runs autonomously after Runtime)
       observability: "observability-engine",
       product_analytics: "product-analytics-engine",
       user_behavior_analysis: "user-behavior-analyzer",
