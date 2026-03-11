@@ -626,7 +626,22 @@ export type {
   CanonConsumptionTrace,
 } from "./canon-orchestrator-integration.ts";
 
-// Readiness–Orchestrator Integration (Sprint 141)
+// Canon Application Scoring (Sprint 141)
+export {
+  scoreCanonApplication,
+  buildCanonApplicationStageSummary,
+} from "./canon-application-scoring.ts";
+export type {
+  ApplicationQualityLevel,
+  SuccessCorrelation,
+  CanonApplicationUsageMode,
+  CanonApplicationScore,
+  ScoringFactor,
+  CanonApplicationStageSummary,
+  LearningSignalType,
+  CanonLearningSignal,
+  ExecutionOutcomeSignals,
+} from "./canon-application-scoring.ts";
 export {
   evaluateReadiness,
   buildReadinessTraceRecord,

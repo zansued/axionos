@@ -360,6 +360,37 @@ export class AgentOS {
 
       const failed = stageFailed || validationFailed;
 
+      // ── Sprint 141: Canon Application Quality Scoring ──
+      const outcomeSignals: ExecutionOutcomeSignals = {
+        execution_succeeded: !failed,
+        retries_needed: rollbackCount,
+        repair_triggered: currentStage === "evolution",
+        stage_passed_cleanly: !failed && rollbackCount === 0,
+        anti_pattern_violated: false, // determined by agent logs in future
+        error_count: failed ? 1 : 0,
+      };
+
+      const canonPackets = (enrichedInput.context?.canon_knowledge_packets as CanonKnowledgePacket[]) || [];
+      const applicationScores: CanonApplicationScore[] = consumptionReports.map((report) =>
+        scoreCanonApplication(
+          report.agent_id || "unknown",
+          currentStage,
+          runId,
+          report,
+          canonPackets,
+          outcomeSignals,
+          (input.context?.initiative_id as string) || undefined,
+        ),
+      );
+
+      const applicationSummary = buildCanonApplicationStageSummary(
+        runId,
+        currentStage,
+        applicationScores,
+        canonPackets,
+        consumptionTrace,
+      );
+
       this.emit(state, "stage.completed", {
         runId,
         stage: currentStage,
@@ -369,6 +400,15 @@ export class AgentOS {
         readiness_trace: readinessTrace,
         policy_trace: policyTrace,
         approval_request: approvalRequest,
+        canon_application_summary: {
+          quality_score: applicationSummary.application_quality_score,
+          correlation: applicationSummary.aggregated_correlation,
+          used: applicationSummary.canon_used_count,
+          applied: applicationSummary.canon_applied_count,
+          ignored: applicationSummary.canon_ignored_count,
+          learning_signals_count: applicationSummary.learning_signals.length,
+          quality_distribution: applicationSummary.quality_distribution,
+        },
       });
 
       // ── Transition ──
