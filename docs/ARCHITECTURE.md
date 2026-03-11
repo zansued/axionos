@@ -1465,10 +1465,10 @@ Advisory-first, governance-before-autonomy. No autonomous architecture mutation.
 ## Architecture / Documentation Boundaries
 
 - **ARCHITECTURE.md** (this file) defines system structure — containers, components, layers, data flow, safety rules
-- **ROADMAP.md** defines strategic direction — maturity, horizons, what comes next; this file references maturity from there
-- **PLAN.md** defines sprint execution — canonical sprint-by-sprint ledger; this file references sprint blocks from there
-- **AGENTS.md** defines Agent OS module reference — planes, modules, contracts, events; this file summarizes Agent OS but defers to AGENTS.md for full specs
-- **PIPELINE_CONTRACTS.md** defines product-level pipeline UX — phase behavior, inputs/outputs, control rules; this file defines pipeline stages architecturally but defers to PIPELINE_CONTRACTS.md for user-visible contracts
+- **GOVERNANCE.md** defines Agent OS module reference — planes, modules, contracts, events; this file summarizes Agent OS but defers to GOVERNANCE.md for full specs
+- **CANON_INTELLIGENCE_ENGINE.md** defines the Canon Intelligence Engine architecture — Agent–Contract model, canonization workflow
+- **AXION_CONTEXT.md** provides quick context restoration for humans
+- **AXION_PRIMER.md** provides ultra-short cognitive anchor for AI
 - **docs/registry/** contains lightweight canonical metadata (sprints.yml, doc-authority.yml)
 - **docs/README.md** is the navigation and maintenance guide
 
