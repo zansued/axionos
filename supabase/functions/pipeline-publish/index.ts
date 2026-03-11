@@ -172,6 +172,19 @@ Retorne APENAS JSON:
     try { preflight = JSON.parse(preflightResult.content); }
     catch { preflight = { preflight_pass: true, critical_missing: [], warnings: [], ready_files_count: fileEntries.length, summary: "OK", risk_level: "low" }; }
 
+    // Deterministic override: remove false positives — files that ARE present in fileEntries
+    if (Array.isArray(preflight.critical_missing)) {
+      preflight.critical_missing = preflight.critical_missing.filter(
+        (f: string) => !existingPaths.has(f)
+      );
+      // If all critical files resolved, upgrade to pass
+      if (preflight.critical_missing.length === 0 && !preflight.preflight_pass) {
+        preflight.preflight_pass = true;
+        preflight.risk_level = preflight.warnings?.length > 0 ? "medium" : "low";
+        preflight.summary = (preflight.summary || "") + " [auto-resolved: scaffold files present]";
+      }
+    }
+
     await persistReview(serviceClient, artifacts[0].id, user.id, "release_preflight", "approved",
       JSON.stringify(preflight));
 
