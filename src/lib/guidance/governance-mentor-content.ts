@@ -267,8 +267,8 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Comparar com período anterior", en: "Compare with previous period" }, route: "/benchmarks", icon: "GitCompare" },
-      { label: { pt: "Ver candidatos associados", en: "View associated candidates" }, route: "/candidates", icon: "ListChecks" },
+      { label: { pt: "Comparar com período anterior", en: "Compare with previous period" }, route: "/owner/improvement-benchmarks", icon: "GitCompare" },
+      { label: { pt: "Ver candidatos associados", en: "View associated candidates" }, route: "/owner/improvement-candidates", icon: "ListChecks" },
     ],
   },
 
