@@ -90,6 +90,14 @@ The system's moat emerges from accumulated runtime evidence, canonized learning,
 
 AxionOS runs atop Supabase Edge Functions in a Deno runtime. Each of the 32 pipeline stages is deployed independently. The platform comprises 200+ Edge Functions and 100+ architectural layers.
 
+**Operational Decision Chain:**
+
+```
+Canon / Library → Readiness / Metrics → Policy / Governance → Action Engine → AgentOS → Executor
+```
+
+> Canon informs. Readiness evaluates. Policy constrains. Action Engine formalizes. AgentOS orchestrates. Executors act.
+
 ```mermaid
 flowchart TB
     Dev["Developer / Operator"]
@@ -109,8 +117,8 @@ flowchart TB
 ```
 
 > **Full Architecture & Agents Guide:**
-> - [**Architecture & Ledger**](docs/ARCHITECTURE.md): System architecture, 32-stage pipeline, component diagrams, and full sprint execution ledger.
-> - [**Governance & Agents**](docs/GOVERNANCE.md): Agent Operating System (14 modules, 5 planes), pipeline contracts, safety boundaries, and agentic UX states.
+> - [**Architecture & Ledger**](docs/ARCHITECTURE.md): System architecture, operational decision chain, C4 diagrams, and sprint ledger.
+> - [**Governance & Agents**](docs/GOVERNANCE.md): Agent Operating System, pipeline contracts, safety boundaries.
 
 ---
 
