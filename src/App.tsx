@@ -182,7 +182,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AuthRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   if (loading) return null;
-  if (user) return <Navigate to="/builder/initiatives" replace />;
+  if (user) return <Navigate to="/builder/projects" replace />;
   return <>{children}</>;
 }
 
@@ -238,13 +238,13 @@ const App = () => (
                             <Route path="/builder/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
 
                             {/* Projects */}
-                            <Route path="/builder/initiatives" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
+                            <Route path="/builder/projects" element={<ProtectedRoute><Initiatives /></ProtectedRoute>} />
                             <Route path="/builder/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
                             <Route path="/builder/kanban" element={<ProtectedRoute><Kanban /></ProtectedRoute>} />
                             <Route path="/builder/code" element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
                             <Route path="/builder/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
                             <Route path="/builder/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
-                            <Route path="/builder/project/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
+                            <Route path="/builder/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
 
                             {/* Agents */}
                             <Route path="/builder/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
@@ -254,7 +254,7 @@ const App = () => (
                             <Route path="/builder/agent-policies" element={<ProtectedRoute><AgentPoliciesPage /></ProtectedRoute>} />
 
                             {/* Pipelines */}
-                            <Route path="/builder/delivery" element={<ProtectedRoute><Delivery /></ProtectedRoute>} />
+                            <Route path="/builder/pipelines" element={<ProtectedRoute><Delivery /></ProtectedRoute>} />
                             <Route path="/builder/pipelines" element={<ProtectedRoute><Pipelines /></ProtectedRoute>} />
                             <Route path="/builder/pipeline-detail" element={<ProtectedRoute><PipelineDetailPage /></ProtectedRoute>} />
                             <Route path="/builder/execution-history" element={<ProtectedRoute><ExecutionHistoryPage /></ProtectedRoute>} />
@@ -277,7 +277,7 @@ const App = () => (
                             <Route path="/builder/system-intelligence" element={<ProtectedRoute><SystemIntelligence /></ProtectedRoute>} />
 
                             {/* Governance */}
-                            <Route path="/builder/governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
+                            <Route path="/builder/delivery-governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
                             <Route path="/builder/governance-overview" element={<ProtectedRoute><GovernanceOverviewPage /></ProtectedRoute>} />
                             <Route path="/builder/pending-approvals" element={<ProtectedRoute><PendingApprovalsPage /></ProtectedRoute>} />
                             <Route path="/builder/policy-controls" element={<ProtectedRoute><PolicyControlsPage /></ProtectedRoute>} />
@@ -398,28 +398,33 @@ const App = () => (
                             {/* ══════════════════════════════════════════════
                                 LEGACY REDIRECTS (deprecated — log usage)
                                 ══════════════════════════════════════════════ */}
-                            <Route path="/initiatives" element={<LegacyRedirect to="/builder/initiatives" />} />
-                            <Route path="/stories" element={<LegacyRedirect to="/builder/stories" />} />
-                            <Route path="/kanban" element={<LegacyRedirect to="/builder/kanban" />} />
-                            <Route path="/code" element={<LegacyRedirect to="/builder/code" />} />
-                            <Route path="/artifacts" element={<LegacyRedirect to="/builder/artifacts" />} />
+                            {/* Internal renames */}
+                            <Route path="/builder/initiatives" element={<LegacyRedirect to="/builder/projects" />} />
+                            <Route path="/builder/delivery" element={<LegacyRedirect to="/builder/pipelines" />} />
+                            <Route path="/builder/governance" element={<LegacyRedirect to="/builder/delivery-governance" />} />
+                            <Route path="/builder/project/:id" element={<LegacyRedirect to="/builder/projects" />} />
+                            <Route path="/initiatives" element={<LegacyRedirect to="/builder/projects" />} />
+                            <Route path="/stories" element={<LegacyRedirect to="/builder/projects" />} />
+                            <Route path="/kanban" element={<LegacyRedirect to="/builder/projects" />} />
+                            <Route path="/code" element={<LegacyRedirect to="/builder/projects" />} />
+                            <Route path="/artifacts" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/projects" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/project/:id" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/agents" element={<LegacyRedirect to="/builder/agents" />} />
-                            <Route path="/delivery" element={<LegacyRedirect to="/builder/delivery" />} />
+                            <Route path="/delivery" element={<LegacyRedirect to="/builder/pipelines" />} />
                             <Route path="/pipelines" element={<LegacyRedirect to="/builder/pipelines" />} />
                             <Route path="/runtime" element={<LegacyRedirect to="/builder/runtime" />} />
                             <Route path="/runtime-status" element={<LegacyRedirect to="/builder/runtime-status" />} />
                             <Route path="/system-health" element={<LegacyRedirect to="/builder/execution-observability" />} />
                             <Route path="/system-intelligence" element={<LegacyRedirect to="/builder/system-intelligence" />} />
-                            <Route path="/governance" element={<LegacyRedirect to="/builder/governance" />} />
+                            <Route path="/governance" element={<LegacyRedirect to="/builder/delivery-governance" />} />
                             <Route path="/org" element={<LegacyRedirect to="/builder/settings" />} />
                             <Route path="/settings" element={<LegacyRedirect to="/builder/settings" />} />
                             <Route path="/squads" element={<LegacyRedirect to="/builder/squads" />} />
                             <Route path="/workspace" element={<LegacyRedirect to="/builder/workspace" />} />
                             <Route path="/journey" element={<LegacyRedirect to="/builder/journey" />} />
                             <Route path="/onboarding" element={<LegacyRedirect to="/builder/onboarding" />} />
-                            <Route path="/planning" element={<LegacyRedirect to="/builder/initiatives" />} />
+                            <Route path="/planning" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/pipeline-detail" element={<LegacyRedirect to="/builder/pipeline-detail" />} />
                             <Route path="/execution-history" element={<LegacyRedirect to="/builder/execution-history" />} />
                             <Route path="/repair-loop" element={<LegacyRedirect to="/builder/repair-loop" />} />

@@ -36,8 +36,8 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If all your initiatives are progressing normally, no urgent action is needed here.",
       },
       suggestedActions: [
-        { label: { pt: "Criar iniciativa", en: "Create initiative" }, route: "/builder/initiatives", icon: "Lightbulb" },
-        { label: { pt: "Ver jornada", en: "View journey" }, route: "/builder/journey", icon: "Map" },
+        { label: { pt: "Criar iniciativa", en: "Create initiative" }, route: "/builder/projects", icon: "Lightbulb" },
+        { label: { pt: "Ver jornada", en: "View journey" }, route: "/builder/dashboard", icon: "Map" },
       ],
     },
   },
@@ -65,7 +65,7 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If your initiative is in a mid-stage with everything progressing normally, you can check back later.",
       },
       suggestedActions: [
-        { label: { pt: "Ver iniciativas", en: "View initiatives" }, route: "/builder/initiatives", icon: "Layers" },
+        { label: { pt: "Ver projetos", en: "View projects" }, route: "/builder/projects", icon: "Layers" },
       ],
     },
   },
@@ -117,9 +117,9 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If you have no new ideas and all initiatives are up to date, no action is needed now.",
       },
       suggestedActions: [
-        { label: { pt: "Nova iniciativa", en: "New initiative" }, route: "/builder/initiatives", icon: "Lightbulb" },
-        { label: { pt: "Ver jornada", en: "View journey" }, route: "/builder/journey", icon: "Map" },
-        { label: { pt: "Deployments", en: "Deployments" }, route: "/builder/delivery", icon: "Rocket" },
+        { label: { pt: "Novo projeto", en: "New project" }, route: "/builder/projects", icon: "Lightbulb" },
+        { label: { pt: "Ver jornada", en: "View journey" }, route: "/builder/dashboard", icon: "Map" },
+        { label: { pt: "Pipelines", en: "Pipelines" }, route: "/builder/pipelines", icon: "Rocket" },
       ],
     },
   },
@@ -139,7 +139,7 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If no initiative has reached the deploy stage, this area will be empty for now.",
       },
       suggestedActions: [
-        { label: { pt: "Iniciativas", en: "Initiatives" }, route: "/builder/initiatives", icon: "Layers" },
+        { label: { pt: "Projetos", en: "Projects" }, route: "/builder/projects", icon: "Layers" },
       ],
     },
   },
