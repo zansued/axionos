@@ -6,6 +6,7 @@ This directory contains PlantUML source files for the AxionOS C4 architecture di
 
 | File | Diagram |
 |------|---------|
+| `system-brain-map.md` | **Canonical System Brain Map** — full architectural map with Mermaid |
 | `c4-context.puml` | C4 Context — actors and external systems |
 | `c4-containers.puml` | C4 Containers — internal engines and data flows |
 | `c4-component-pipeline-core.puml` | Execution Pipeline Core components |

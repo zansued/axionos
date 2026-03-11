@@ -560,6 +560,14 @@ The Action Engine is the architectural layer responsible for formalizing actions
 
 **Current system phase: Phase 5 complete, Phase 6 partial. Next target: Phase 7 (Action Engine).**
 
+### 4B.5 System Brain Map
+
+For a comprehensive visual map of all subsystems and their relationships, see:
+
+> **[System Brain Map](diagrams/system-brain-map.md)** — canonical architectural brain map showing surfaces, knowledge, signals, policy, action engine, orchestration, execution, runtime, and learning loop.
+
+This diagram is the canonical visual reference for developers, AI coding agents, and system operators.
+
 ---
 
 ## 5. Architectural Direction
