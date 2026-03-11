@@ -47,7 +47,7 @@
   --topbar-bg: hsl(var(--card) / 0.3);
 
   /* ─── Sidebar ─── */
-  --sidebar-width: 240px;
+  --sidebar-width: 216px;
   --sidebar-collapsed-width: 48px;
 
   /* ─── Modal / Dialog ─── */
