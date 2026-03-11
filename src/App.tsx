@@ -17,6 +17,7 @@ import { KeyboardShortcutsManager } from "@/components/KeyboardShortcutsManager"
 import { SurfaceGuard } from "@/components/SurfaceGuard";
 import { useEffect } from "react";
 
+import ApprovalQueue from "./pages/ApprovalQueue";
 // ─── Existing Page Imports ──────────────────────────────────────────────────
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
