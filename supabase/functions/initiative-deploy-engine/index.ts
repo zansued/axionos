@@ -132,7 +132,7 @@ serve(async (req) => {
     pipelineLog(ctx, "deploy", `Deploy failed: ${errorMsg}`);
 
     // Persist failure state
-    await updateInitiative(serviceClient, initiativeId, {
+    await updateInitiative(ctx, {
       stage_status: "deploy_failed",
       deploy_status: "deploy_failed",
       deploy_error_code: "DEPLOY_ENGINE_ERROR",
@@ -140,7 +140,7 @@ serve(async (req) => {
       last_deploy_check_at: new Date().toISOString(),
     });
 
-    await failJob(serviceClient, job.id, errorMsg);
+    await failJob(ctx, jobId!, errorMsg);
     return errorResponse(errorMsg, 500);
   }
 });
