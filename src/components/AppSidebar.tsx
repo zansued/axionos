@@ -128,6 +128,8 @@ export function AppSidebar() {
     const targetNav = surface === "owner" ? navGroups.owner : navGroups.builder;
     if (targetNav?.length > 0) {
       navigate(targetNav[0].url);
+    } else {
+      navigate(surface === "owner" ? "/owner/system-health" : "/builder/dashboard");
     }
   };
 
