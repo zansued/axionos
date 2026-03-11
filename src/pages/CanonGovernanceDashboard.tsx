@@ -36,10 +36,8 @@ export default function CanonGovernanceDashboard() {
   }, {});
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <div className="p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2">
               <BookOpen className="h-6 w-6 text-primary" />
