@@ -104,6 +104,167 @@ export type Database = {
           },
         ]
       }
+      action_audit_events: {
+        Row: {
+          action_id: string
+          actor_id: string | null
+          actor_type: string | null
+          created_at: string
+          event_type: string
+          execution_id: string | null
+          executor_type: string | null
+          id: string
+          new_status: string | null
+          organization_id: string
+          previous_status: string | null
+          reason: string | null
+        }
+        Insert: {
+          action_id: string
+          actor_id?: string | null
+          actor_type?: string | null
+          created_at?: string
+          event_type?: string
+          execution_id?: string | null
+          executor_type?: string | null
+          id?: string
+          new_status?: string | null
+          organization_id: string
+          previous_status?: string | null
+          reason?: string | null
+        }
+        Update: {
+          action_id?: string
+          actor_id?: string | null
+          actor_type?: string | null
+          created_at?: string
+          event_type?: string
+          execution_id?: string | null
+          executor_type?: string | null
+          id?: string
+          new_status?: string | null
+          organization_id?: string
+          previous_status?: string | null
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "action_audit_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      action_registry_entries: {
+        Row: {
+          action_id: string
+          approval_id: string | null
+          approved_by: string | null
+          completed_at: string | null
+          constraints: Json | null
+          created_at: string
+          description: string | null
+          dispatch_decision_id: string | null
+          execution_mode: string
+          id: string
+          initiative_id: string | null
+          intent_id: string
+          organization_id: string
+          outcome_errors: Json | null
+          outcome_status: string | null
+          outcome_summary: string | null
+          policy_decision_id: string | null
+          reason: string | null
+          recovery_hook_id: string | null
+          recovery_type: string | null
+          requires_approval: boolean | null
+          risk_level: string | null
+          rollback_available: boolean | null
+          stage: string | null
+          status: string
+          trigger_id: string
+          trigger_type: string
+          updated_at: string
+        }
+        Insert: {
+          action_id: string
+          approval_id?: string | null
+          approved_by?: string | null
+          completed_at?: string | null
+          constraints?: Json | null
+          created_at?: string
+          description?: string | null
+          dispatch_decision_id?: string | null
+          execution_mode?: string
+          id?: string
+          initiative_id?: string | null
+          intent_id: string
+          organization_id: string
+          outcome_errors?: Json | null
+          outcome_status?: string | null
+          outcome_summary?: string | null
+          policy_decision_id?: string | null
+          reason?: string | null
+          recovery_hook_id?: string | null
+          recovery_type?: string | null
+          requires_approval?: boolean | null
+          risk_level?: string | null
+          rollback_available?: boolean | null
+          stage?: string | null
+          status?: string
+          trigger_id?: string
+          trigger_type?: string
+          updated_at?: string
+        }
+        Update: {
+          action_id?: string
+          approval_id?: string | null
+          approved_by?: string | null
+          completed_at?: string | null
+          constraints?: Json | null
+          created_at?: string
+          description?: string | null
+          dispatch_decision_id?: string | null
+          execution_mode?: string
+          id?: string
+          initiative_id?: string | null
+          intent_id?: string
+          organization_id?: string
+          outcome_errors?: Json | null
+          outcome_status?: string | null
+          outcome_summary?: string | null
+          policy_decision_id?: string | null
+          reason?: string | null
+          recovery_hook_id?: string | null
+          recovery_type?: string | null
+          requires_approval?: boolean | null
+          risk_level?: string | null
+          rollback_available?: boolean | null
+          stage?: string | null
+          status?: string
+          trigger_id?: string
+          trigger_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "action_registry_entries_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "action_registry_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       active_prevention_rules: {
         Row: {
           action_config: Json

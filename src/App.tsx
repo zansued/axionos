@@ -18,6 +18,7 @@ import { SurfaceGuard } from "@/components/SurfaceGuard";
 import { useEffect } from "react";
 
 import ApprovalQueue from "./pages/ApprovalQueue";
+import ActionCenter from "./pages/ActionCenter";
 // ─── Existing Page Imports ──────────────────────────────────────────────────
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
@@ -282,6 +283,7 @@ const App = () => (
                             <Route path="/builder/governance-overview" element={<ProtectedRoute><GovernanceOverviewPage /></ProtectedRoute>} />
                             <Route path="/builder/pending-approvals" element={<ProtectedRoute><ApprovalQueue /></ProtectedRoute>} />
                             <Route path="/builder/policy-controls" element={<ProtectedRoute><PolicyControlsPage /></ProtectedRoute>} />
+                            <Route path="/builder/action-center" element={<ProtectedRoute><ActionCenter /></ProtectedRoute>} />
 
                             {/* Settings */}
                             <Route path="/builder/settings" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
@@ -323,6 +325,7 @@ const App = () => (
                             <Route path="/owner/capabilities" element={<W><CapabilityRegistry /></W>} />
 
                             {/* Governance */}
+                            <Route path="/owner/action-center" element={<W><ActionCenter /></W>} />
                             <Route path="/owner/autonomy-posture" element={<P><AutonomyPostureDashboard /></P>} />
                             <Route path="/owner/agent-swarm" element={<P><SwarmExecution /></P>} />
                             <Route path="/owner/calibration" element={<P><Calibration /></P>} />
