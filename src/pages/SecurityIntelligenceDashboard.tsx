@@ -84,7 +84,7 @@ export default function SecurityIntelligenceDashboard() {
 
 function SurfaceMapTab({ surfaces, canonicalSurfaces, loading }: { surfaces: any[]; canonicalSurfaces: any[]; loading: boolean }) {
   const allSurfaces = surfaces.length > 0 ? surfaces : canonicalSurfaces;
-  const layers = new Map<string, any[]>();
+  const layers = new globalThis.Map<string, any[]>();
   allSurfaces.forEach((s: any) => {
     const l = s.owning_layer || "unknown";
     layers.set(l, [...(layers.get(l) || []), s]);
