@@ -37,7 +37,7 @@ export default function Delivery() {
   const { assessReadiness, explain } = useOneClickDelivery();
   const [detail, setDetail] = useState<any>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
-
+  const [activeTab, setActiveTab] = useState("overview");
   const items = overview.data ?? [];
   const readyCount = items.filter((i: any) => i.is_ready).length;
   const blockedCount = items.filter((i: any) => i.blocker_count > 0).length;
