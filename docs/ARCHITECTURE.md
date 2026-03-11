@@ -531,6 +531,34 @@ flowchart TB
         K4[External Knowledge Intake]
     end
 
+    subgraph T7[Runtime Sovereignty Layer -- Block Z-AA]
+        Z1[Runtime Feedback Mesh]
+        Z2[Tenant Doctrine & Profiles]
+        Z3[Outcome-Based Autonomy]
+        Z4[Compounding Advantage]
+    end
+
+    subgraph T8[Learning Canonization Layer -- Block AB]
+        AB1[Learning Extraction]
+        AB2[Canon Promotion Pipeline]
+        AB3[Cross-Tenant Distillation]
+        AB4[Canon Reuse Injection]
+    end
+
+    subgraph T9[Adaptive Coordination Layer -- Block AC]
+        AC1[Operational Posture]
+        AC2[Attention Allocation]
+        AC3[Adaptive Resource Routing]
+        AC4[Operational Rhythm]
+    end
+
+    subgraph T10[Organism Layer -- Block AD]
+        AD1[Multi-Loop Governance]
+        AD2[Systemic Health Model]
+        AD3[Organism Memory]
+        AD4[Organism Console]
+    end
+
     X1[Models / AI Providers]:::external
     X2[Databases / Memory / Logs]:::data
 
@@ -563,6 +591,25 @@ flowchart TB
     R3 --> K3
     R4 --> K4
 
+    K1 --> Z1
+    K2 --> Z2
+    K3 --> Z3
+    K4 --> Z4
+
+    Z1 --> AB1
+    Z3 --> AB2
+    Z4 --> AB3
+
+    AB1 --> AC1
+    AB2 --> AC2
+    AB3 --> AC3
+    AB4 --> AC4
+
+    AC1 --> AD1
+    AC2 --> AD2
+    AC3 --> AD3
+    AC4 --> AD4
+
     E1 --> X1
     E2 --> X1
     E3 --> X1
@@ -572,6 +619,8 @@ flowchart TB
     G2 --> X2
     S4 --> X2
     K3 --> X2
+    Z1 --> X2
+    AD3 --> X2
 
     classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:1.5px;
     classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
@@ -579,14 +628,20 @@ flowchart TB
     classDef strategic fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:1.5px;
     classDef reflexive fill:#FF7675,stroke:#922B21,color:#111,stroke-width:1.5px;
     classDef canon fill:#6C5CE7,stroke:#2E1A8A,color:#fff,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
     classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
     classDef external fill:#B2BEC3,stroke:#636E72,color:#111,stroke-width:1.5px;
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
 
     class E1,E2,E3,E4,C1,C2,C3 core;
     class G1,G2,G3 governance;
     class S1,S2,S3,S4 strategic;
     class R1,R2,R3,R4 reflexive;
     class K1,K2,K3,K4 canon;
+    class Z1,Z2,Z3,Z4 runtime;
+    class AB1,AB2,AB3,AB4 intelligence;
+    class AC1,AC2,AC3,AC4 intelligence;
+    class AD1,AD2,AD3,AD4 runtime;
     class X2 data;
     class X1 external;
 ```
