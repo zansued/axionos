@@ -465,6 +465,151 @@ export default function CanonIntelligenceDashboard() {
                 </CardContent>
               </Card>
             </TabsContent>
+
+            {/* Retrieval Console */}
+            <TabsContent value="retrieval">
+              <Card className="border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Retrieval Console</CardTitle>
+                  <CardDescription>Agent retrieval sessions — canon queries at runtime</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {runtime.sessions.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-8 text-center">No retrieval sessions yet. Sessions are created when agents consult canon during execution.</p>
+                  ) : (
+                    <ScrollArea className="h-[420px]">
+                      <div className="space-y-2">
+                        {runtime.sessions.map((s: any) => (
+                          <div key={s.id} className="p-3 rounded-lg border border-border/30 bg-muted/10 hover:bg-muted/20 transition-colors">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className={`text-[10px] ${s.session_status === "completed" ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" : "bg-blue-500/20 text-blue-400 border-blue-500/30"}`}>{s.session_status}</Badge>
+                                <span className="text-xs font-medium">{s.agent_type}</span>
+                              </div>
+                              <span className="text-[10px] text-muted-foreground/50">{new Date(s.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">{s.retrieval_reason || s.task_type || "No description"}</p>
+                            <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground/70">
+                              <span>Retrieved: {s.entries_retrieved}</span>
+                              <span>Applied: {s.entries_applied}</span>
+                              {s.duration_ms && <span>{s.duration_ms}ms</span>}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Applications View */}
+            <TabsContent value="applications">
+              <Card className="border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Runtime Applications</CardTitle>
+                  <CardDescription>Canon entries applied by agents during execution</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {runtime.applications.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-8 text-center">No runtime applications recorded yet.</p>
+                  ) : (
+                    <ScrollArea className="h-[420px]">
+                      <div className="space-y-2">
+                        {runtime.applications.map((a: any) => (
+                          <div key={a.id} className="p-3 rounded-lg border border-border/30 bg-muted/10">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-[10px]">{a.application_type}</Badge>
+                                <span className="text-xs font-medium">{a.agent_type}</span>
+                              </div>
+                              <Badge variant="outline" className={`text-[10px] ${a.outcome_status === "applied" ? "bg-emerald-500/20 text-emerald-400" : "bg-muted text-muted-foreground"}`}>{a.outcome_status}</Badge>
+                            </div>
+                            <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground/70">
+                              <span>Confidence: {a.confidence_at_application}%</span>
+                              <span>{new Date(a.created_at).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Runtime Analytics */}
+            <TabsContent value="runtime-analytics">
+              <Card className="border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Runtime Usage Analytics</CardTitle>
+                  <CardDescription>Canon retrieval and application metrics</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="p-4 rounded-lg border border-border/30 bg-muted/10 text-center">
+                      <p className="text-2xl font-bold">{runtime.analytics.totalSessions}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Total Sessions</p>
+                    </div>
+                    <div className="p-4 rounded-lg border border-border/30 bg-muted/10 text-center">
+                      <p className="text-2xl font-bold text-emerald-400">{runtime.analytics.completedSessions}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Completed</p>
+                    </div>
+                    <div className="p-4 rounded-lg border border-border/30 bg-muted/10 text-center">
+                      <p className="text-2xl font-bold">{runtime.analytics.avgRetrieved}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Avg Retrieved</p>
+                    </div>
+                    <div className="p-4 rounded-lg border border-border/30 bg-muted/10 text-center">
+                      <p className="text-2xl font-bold">{runtime.analytics.avgApplied}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Avg Applied</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div className="p-4 rounded-lg border border-border/30 bg-muted/10 text-center">
+                      <p className="text-2xl font-bold text-primary">{runtime.analytics.totalApplications}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Total Applications</p>
+                    </div>
+                    <div className="p-4 rounded-lg border border-border/30 bg-muted/10 text-center">
+                      <p className="text-2xl font-bold">{runtime.analytics.totalFeedback}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Feedback Entries</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Feedback */}
+            <TabsContent value="feedback">
+              <Card className="border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Retrieval Feedback</CardTitle>
+                  <CardDescription>Agent and human feedback on canon retrieval quality</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {runtime.feedback.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-8 text-center">No feedback submitted yet.</p>
+                  ) : (
+                    <ScrollArea className="h-[420px]">
+                      <div className="space-y-2">
+                        {runtime.feedback.map((f: any) => (
+                          <div key={f.id} className="p-3 rounded-lg border border-border/30 bg-muted/10">
+                            <div className="flex items-center justify-between">
+                              <Badge variant="outline" className="text-[10px]">{f.feedback_type}</Badge>
+                              <span className="text-xs font-medium">{f.feedback_score}/100</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">{f.feedback_notes || "No notes"}</p>
+                            <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground/70">
+                              <span>By: {f.submitted_by}</span>
+                              <span>{new Date(f.created_at).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
           </Tabs>
         </div>
       </SidebarInset>
