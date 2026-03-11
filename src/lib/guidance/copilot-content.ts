@@ -36,8 +36,8 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If all your initiatives are progressing normally, no urgent action is needed here.",
       },
       suggestedActions: [
-        { label: { pt: "Criar iniciativa", en: "Create initiative" }, route: "/builder/initiatives", icon: "Lightbulb" },
-        { label: { pt: "Ver jornada", en: "View journey" }, route: "/builder/journey", icon: "Map" },
+        { label: { pt: "Criar iniciativa", en: "Create initiative" }, route: "/builder/projects", icon: "Lightbulb" },
+        { label: { pt: "Ver jornada", en: "View journey" }, route: "/builder/dashboard", icon: "Map" },
       ],
     },
   },
