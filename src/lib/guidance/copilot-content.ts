@@ -279,7 +279,7 @@ const WORKSPACE_COPILOT: CopilotDrawerContent[] = [
         en: "If current capabilities meet your needs, no need to install extensions now.",
       },
       suggestedActions: [
-        { label: { pt: "Governança de Capacidades", en: "Capability Governance" }, route: "/capability-governance", icon: "Shield" },
+        { label: { pt: "Governança de Capacidades", en: "Capability Governance" }, route: "/owner/capability-governance", icon: "Shield" },
       ],
     },
     roleOverrides: {
