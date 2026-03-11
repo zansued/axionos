@@ -13,7 +13,7 @@ const LAYER_GROUPS: Record<string, number[]> = {
   codegen: [17, 18, 19],
   execution: [20, 21, 22],
   validation: [23, 24, 25],
-  growth: [26, 27, 28, 29, 30, 31, 32, 33, 34],
+  runtime: [27, 28],
 };
 
 function getLayerForIndex(idx: number): string {
