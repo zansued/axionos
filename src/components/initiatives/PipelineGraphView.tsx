@@ -26,8 +26,8 @@ const PHASE_GROUPS: PhaseGroup[] = [
   { id: "discovery", label: "Discovery", icon: Search, fromMacro: 1, toMacro: 4 },
   { id: "architecture", label: "Architecture", icon: Brain, fromMacro: 5, toMacro: 8 },
   { id: "engineering", label: "Engineering", icon: Layers, fromMacro: 9, toMacro: 19 },
-  { id: "deploy", label: "Deploy", icon: Rocket, fromMacro: 20, toMacro: 25 },
-  { id: "growth", label: "Growth", icon: TrendingUp, fromMacro: 26, toMacro: 35 },
+  { id: "deploy", label: "Deploy", icon: Rocket, fromMacro: 20, toMacro: 26 },
+  { id: "runtime", label: "Runtime", icon: Radio, fromMacro: 27, toMacro: 28 },
 ];
 
 /* ── Helpers ── */
