@@ -37,7 +37,7 @@ export default function Delivery() {
   const { assessReadiness, explain } = useOneClickDelivery();
   const [detail, setDetail] = useState<any>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
-
+  const [activeTab, setActiveTab] = useState("overview");
   const items = overview.data ?? [];
   const readyCount = items.filter((i: any) => i.is_ready).length;
   const blockedCount = items.filter((i: any) => i.blocker_count > 0).length;
@@ -45,6 +45,7 @@ export default function Delivery() {
 
   const loadDetail = async (id: string) => {
     setSelectedId(id);
+    setActiveTab("detail");
     setLoadingDetail(true);
     try {
       const data = await explain(id);
@@ -75,7 +76,7 @@ export default function Delivery() {
           <SummaryCard label="Deployed" value={deployedCount} icon={Rocket} color="text-primary" />
         </div>
 
-        <Tabs defaultValue="overview">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
             <TabsTrigger value="overview" className="text-xs gap-1"><Eye className="h-3 w-3" /> Overview</TabsTrigger>
             <TabsTrigger value="detail" className="text-xs gap-1"><Gauge className="h-3 w-3" /> Detail</TabsTrigger>
