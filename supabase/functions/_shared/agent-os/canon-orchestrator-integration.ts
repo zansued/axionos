@@ -493,6 +493,205 @@ export function buildCanonTraceRecord(
     error: result.error,
   };
 }
+// ── Canon Consumption Contract — Sprint 140 ──
+
+export type CanonUsageMode = "none" | "referenced" | "applied" | "rejected" | "ignored" | "malformed";
+
+export interface CanonConsumptionReport {
+  canon_context_available: boolean;
+  canon_packet_ids_available: string[];
+  canon_packet_ids_used: string[];
+  canon_categories_used: string[];
+  canon_usage_mode: CanonUsageMode;
+  canon_usage_explanation: string;
+  agent_id?: string;
+  stage?: string;
+}
+
+export interface CanonConsumptionTrace {
+  stage: string;
+  run_id: string;
+  total_packets_available: number;
+  total_packets_used: number;
+  total_packets_ignored: number;
+  usage_rate: number; // 0..1
+  agent_reports: CanonConsumptionReport[];
+  aggregated_usage_mode: CanonUsageMode;
+  timestamp: string;
+}
+
+/**
+ * Extract canon consumption from an agent's WorkResult.
+ * Agents report usage via result.metrics with canon_* keys.
+ * If no explicit report, consumption is "ignored" (packets available but not acknowledged).
+ */
+export function extractCanonConsumption(
+  agentId: string,
+  stage: string,
+  availablePacketIds: string[],
+  agentMetrics?: Record<string, number>,
+  agentLogs?: string[],
+): CanonConsumptionReport {
+  const available = availablePacketIds.length > 0;
+
+  if (!available) {
+    return {
+      canon_context_available: false,
+      canon_packet_ids_available: [],
+      canon_packet_ids_used: [],
+      canon_categories_used: [],
+      canon_usage_mode: "none",
+      canon_usage_explanation: "No canon packets were available for this execution",
+      agent_id: agentId,
+      stage,
+    };
+  }
+
+  // Agents signal usage via metrics: canon_packets_used = N, canon_usage_mode = 1/2/3
+  // and via logs containing "[canon:used:<id>]" markers
+  const usedIds: string[] = [];
+  const categoriesUsed: string[] = [];
+  let usageMode: CanonUsageMode = "ignored";
+  let explanation = "Canon packets were available but agent did not report usage";
+
+  // Check metrics for explicit canon consumption signal
+  if (agentMetrics) {
+    const reportedMode = agentMetrics["canon_usage_mode"];
+    if (reportedMode === 1) usageMode = "referenced";
+    else if (reportedMode === 2) usageMode = "applied";
+    else if (reportedMode === 3) usageMode = "rejected";
+
+    const packetsUsed = agentMetrics["canon_packets_used"] || 0;
+    if (packetsUsed > 0 && usageMode === "ignored") {
+      usageMode = "referenced";
+    }
+  }
+
+  // Parse logs for canon usage markers: [canon:used:<entry_id>] or [canon:applied:<entry_id>]
+  if (agentLogs) {
+    for (const log of agentLogs) {
+      const usedMatch = log.match(/\[canon:(used|applied|referenced):([^\]]+)\]/g);
+      if (usedMatch) {
+        for (const m of usedMatch) {
+          const parts = m.replace("[", "").replace("]", "").split(":");
+          if (parts[2] && availablePacketIds.includes(parts[2])) {
+            usedIds.push(parts[2]);
+            if (parts[1] === "applied" && usageMode !== "applied") usageMode = "applied";
+            else if (parts[1] === "referenced" && usageMode === "ignored") usageMode = "referenced";
+          }
+        }
+      }
+      // Check for category markers: [canon:category:<cat>]
+      const catMatch = log.match(/\[canon:category:([^\]]+)\]/g);
+      if (catMatch) {
+        for (const cm of catMatch) {
+          const cat = cm.replace("[canon:category:", "").replace("]", "");
+          if (cat && !categoriesUsed.includes(cat)) categoriesUsed.push(cat);
+        }
+      }
+    }
+  }
+
+  // If agent used packets, update explanation
+  if (usedIds.length > 0) {
+    explanation = `Agent ${usageMode} ${usedIds.length} of ${availablePacketIds.length} canon packets`;
+  } else if (usageMode === "rejected") {
+    explanation = "Agent explicitly rejected available canon packets";
+  } else if (usageMode === "referenced") {
+    explanation = "Agent referenced canon context without specifying packet IDs";
+  }
+
+  return {
+    canon_context_available: true,
+    canon_packet_ids_available: availablePacketIds,
+    canon_packet_ids_used: [...new Set(usedIds)],
+    canon_categories_used: categoriesUsed,
+    canon_usage_mode: usageMode,
+    canon_usage_explanation: explanation,
+    agent_id: agentId,
+    stage,
+  };
+}
+
+/**
+ * Build an aggregated consumption trace for a full stage execution.
+ */
+export function buildCanonConsumptionTrace(
+  runId: string,
+  stage: string,
+  reports: CanonConsumptionReport[],
+  availablePacketIds: string[],
+): CanonConsumptionTrace {
+  const allUsedIds = [...new Set(reports.flatMap((r) => r.canon_packet_ids_used))];
+  const ignoredCount = availablePacketIds.length - allUsedIds.length;
+  const usageRate = availablePacketIds.length > 0
+    ? allUsedIds.length / availablePacketIds.length
+    : 0;
+
+  // Aggregate usage mode across agents
+  let aggregated: CanonUsageMode = "none";
+  if (availablePacketIds.length === 0) {
+    aggregated = "none";
+  } else if (reports.some((r) => r.canon_usage_mode === "applied")) {
+    aggregated = "applied";
+  } else if (reports.some((r) => r.canon_usage_mode === "referenced")) {
+    aggregated = "referenced";
+  } else if (reports.some((r) => r.canon_usage_mode === "rejected")) {
+    aggregated = "rejected";
+  } else {
+    aggregated = "ignored";
+  }
+
+  return {
+    stage,
+    run_id: runId,
+    total_packets_available: availablePacketIds.length,
+    total_packets_used: allUsedIds.length,
+    total_packets_ignored: Math.max(0, ignoredCount),
+    usage_rate: Math.round(usageRate * 100) / 100,
+    agent_reports: reports,
+    aggregated_usage_mode: aggregated,
+    timestamp: new Date().toISOString(),
+  };
+}
+
+/**
+ * Format canon knowledge packets for agent-friendly injection.
+ * Returns a structured, clearly labeled block that agents can parse.
+ */
+export function formatCanonForAgentContext(
+  packets: CanonKnowledgePacket[],
+): Record<string, unknown> {
+  if (!packets || packets.length === 0) {
+    return {
+      canon_available: false,
+      canon_instruction: "No canon knowledge available for this execution.",
+      packets: [],
+    };
+  }
+
+  return {
+    canon_available: true,
+    canon_instruction:
+      "The following canon knowledge packets are available for your task. " +
+      "If you use any packet, signal it in your logs with [canon:used:<canon_entry_id>] " +
+      "or [canon:applied:<canon_entry_id>]. If you reject a packet, note why.",
+    canon_packet_count: packets.length,
+    packets: packets.map((p) => ({
+      id: p.canon_entry_id,
+      title: p.title,
+      category: p.category,
+      practice_type: p.practice_type,
+      summary: p.summary,
+      guidance: p.guidance,
+      confidence: p.confidence,
+      suggested_use: p.suggested_use,
+      source: p.source_reference,
+      is_anti_pattern: p.anti_pattern_flag,
+      stack: p.stack_scope,
+    })),
+  };
+}
 
 // ── Helpers ──
 
