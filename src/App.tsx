@@ -406,7 +406,7 @@ const App = () => (
                             <Route path="/projects" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/project/:id" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/agents" element={<LegacyRedirect to="/builder/agents" />} />
-                            <Route path="/delivery" element={<LegacyRedirect to="/builder/delivery" />} />
+                            <Route path="/delivery" element={<LegacyRedirect to="/builder/pipelines" />} />
                             <Route path="/pipelines" element={<LegacyRedirect to="/builder/pipelines" />} />
                             <Route path="/runtime" element={<LegacyRedirect to="/builder/runtime" />} />
                             <Route path="/runtime-status" element={<LegacyRedirect to="/builder/runtime-status" />} />
