@@ -400,8 +400,8 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "planned":
       return [
-        { stage: "execution", label: "Iniciar Execução (Agent Swarm)", type: "run" },
-        { stage: "approve", label: "Aprovar Planning", type: "approve" },
+        { stage: "approve", label: "✅ Aprovar Planning → Iniciar Execução", description: "Aprova o planejamento e inicia automaticamente a execução via Agent Swarm.", type: "approve", variant: "primary" },
+        { stage: "planning", label: "Re-executar Planning", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "in_progress":
