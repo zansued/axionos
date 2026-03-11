@@ -6053,6 +6053,413 @@ export type Database = {
           },
         ]
       }
+      blue_team_alerts: {
+        Row: {
+          acknowledged: boolean
+          acknowledged_by: string | null
+          alert_type: string
+          created_at: string
+          description: string
+          detection_category: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          severity: string
+          target_surface: string
+        }
+        Insert: {
+          acknowledged?: boolean
+          acknowledged_by?: string | null
+          alert_type?: string
+          created_at?: string
+          description?: string
+          detection_category?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          severity?: string
+          target_surface?: string
+        }
+        Update: {
+          acknowledged?: boolean
+          acknowledged_by?: string | null
+          alert_type?: string
+          created_at?: string
+          description?: string
+          detection_category?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          severity?: string
+          target_surface?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blue_team_alerts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blue_team_containment_events: {
+        Row: {
+          applied: boolean
+          applied_at: string | null
+          containment_type: string
+          created_at: string
+          description: string
+          id: string
+          incident_id: string | null
+          organization_id: string
+          released_at: string | null
+          rollback_available: boolean
+          scope: string
+        }
+        Insert: {
+          applied?: boolean
+          applied_at?: string | null
+          containment_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          incident_id?: string | null
+          organization_id: string
+          released_at?: string | null
+          rollback_available?: boolean
+          scope?: string
+        }
+        Update: {
+          applied?: boolean
+          applied_at?: string | null
+          containment_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          incident_id?: string | null
+          organization_id?: string
+          released_at?: string | null
+          rollback_available?: boolean
+          scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blue_team_containment_events_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "blue_team_incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blue_team_containment_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blue_team_incidents: {
+        Row: {
+          anomaly_summary: string
+          containment_applied: boolean
+          created_at: string
+          detection_source: string
+          id: string
+          incident_type: string
+          organization_id: string
+          recovery_status: string
+          related_alert_id: string | null
+          related_red_team_run: string | null
+          response_status: string
+          reviewed_by: string | null
+          rollback_recommended: boolean
+          severity: string
+          target_surface: string
+          updated_at: string
+        }
+        Insert: {
+          anomaly_summary?: string
+          containment_applied?: boolean
+          created_at?: string
+          detection_source?: string
+          id?: string
+          incident_type?: string
+          organization_id: string
+          recovery_status?: string
+          related_alert_id?: string | null
+          related_red_team_run?: string | null
+          response_status?: string
+          reviewed_by?: string | null
+          rollback_recommended?: boolean
+          severity?: string
+          target_surface?: string
+          updated_at?: string
+        }
+        Update: {
+          anomaly_summary?: string
+          containment_applied?: boolean
+          created_at?: string
+          detection_source?: string
+          id?: string
+          incident_type?: string
+          organization_id?: string
+          recovery_status?: string
+          related_alert_id?: string | null
+          related_red_team_run?: string | null
+          response_status?: string
+          reviewed_by?: string | null
+          rollback_recommended?: boolean
+          severity?: string
+          target_surface?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blue_team_incidents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blue_team_incidents_related_alert_id_fkey"
+            columns: ["related_alert_id"]
+            isOneToOne: false
+            referencedRelation: "blue_team_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blue_team_incidents_related_red_team_run_fkey"
+            columns: ["related_red_team_run"]
+            isOneToOne: false
+            referencedRelation: "red_team_simulation_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blue_team_outcome_records: {
+        Row: {
+          created_at: string
+          id: string
+          incident_id: string | null
+          lessons_learned: string
+          organization_id: string
+          outcome_type: string
+          purple_followup_created: boolean
+          resolution_summary: string
+          time_to_contain_ms: number | null
+          time_to_detect_ms: number | null
+          time_to_recover_ms: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          incident_id?: string | null
+          lessons_learned?: string
+          organization_id: string
+          outcome_type?: string
+          purple_followup_created?: boolean
+          resolution_summary?: string
+          time_to_contain_ms?: number | null
+          time_to_detect_ms?: number | null
+          time_to_recover_ms?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          incident_id?: string | null
+          lessons_learned?: string
+          organization_id?: string
+          outcome_type?: string
+          purple_followup_created?: boolean
+          resolution_summary?: string
+          time_to_contain_ms?: number | null
+          time_to_detect_ms?: number | null
+          time_to_recover_ms?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blue_team_outcome_records_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "blue_team_incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blue_team_outcome_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blue_team_recovery_flows: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          incident_id: string | null
+          integrity_verified: boolean
+          organization_id: string
+          recovery_status: string
+          recovery_type: string
+          rollback_executed: boolean
+          steps: Json
+          target_surface: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          incident_id?: string | null
+          integrity_verified?: boolean
+          organization_id: string
+          recovery_status?: string
+          recovery_type?: string
+          rollback_executed?: boolean
+          steps?: Json
+          target_surface?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          incident_id?: string | null
+          integrity_verified?: boolean
+          organization_id?: string
+          recovery_status?: string
+          recovery_type?: string
+          rollback_executed?: boolean
+          steps?: Json
+          target_surface?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blue_team_recovery_flows_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "blue_team_incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blue_team_recovery_flows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blue_team_response_actions: {
+        Row: {
+          action_type: string
+          created_at: string
+          description: string
+          executed_at: string | null
+          executed_by: string | null
+          id: string
+          incident_id: string | null
+          organization_id: string
+          outcome_notes: string
+          priority: string
+          status: string
+        }
+        Insert: {
+          action_type?: string
+          created_at?: string
+          description?: string
+          executed_at?: string | null
+          executed_by?: string | null
+          id?: string
+          incident_id?: string | null
+          organization_id: string
+          outcome_notes?: string
+          priority?: string
+          status?: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          description?: string
+          executed_at?: string | null
+          executed_by?: string | null
+          id?: string
+          incident_id?: string | null
+          organization_id?: string
+          outcome_notes?: string
+          priority?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blue_team_response_actions_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "blue_team_incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blue_team_response_actions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blue_team_runbooks: {
+        Row: {
+          created_at: string
+          detection_category: string
+          escalation_path: Json
+          id: string
+          organization_id: string
+          response_actions: Json
+          runbook_name: string
+          severity_threshold: string
+          status: string
+          steps: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          detection_category?: string
+          escalation_path?: Json
+          id?: string
+          organization_id: string
+          response_actions?: Json
+          runbook_name?: string
+          severity_threshold?: string
+          status?: string
+          steps?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          detection_category?: string
+          escalation_path?: Json
+          id?: string
+          organization_id?: string
+          response_actions?: Json
+          runbook_name?: string
+          severity_threshold?: string
+          status?: string
+          steps?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blue_team_runbooks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       boundary_transfer_policies: {
         Row: {
           active: boolean
