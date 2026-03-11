@@ -59,6 +59,9 @@ serve(async (req) => {
     architecture_evolved: { field: "approved_at_planning", nextStatus: "system_evolved" },
     portfolio_managed: { field: "approved_at_planning", nextStatus: "system_evolved" },
     system_evolved: { field: "approved_at_planning", nextStatus: "completed" },
+    // Post-deploy / runtime stages
+    deployed: { field: "approved_at_planning", nextStatus: "observability_ready" },
+    in_progress: { field: "approved_at_planning", nextStatus: "in_progress" },
   };
 
   const approval = approvalMap[currentStatus];

@@ -492,6 +492,13 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
             squad_ready: { fn: "squad_formation", label: "👥 Squad Formation" },
             planning_ready: { fn: "planning", label: "📋 Planning" },
             in_progress: { fn: "execution", label: "⚡ Execução" },
+            // Post-deploy / runtime chain
+            observability_ready: { fn: "observability", label: "📡 System Observability" },
+            analytics_ready: { fn: "product_analytics", label: "📊 Product Analytics" },
+            behavior_analyzed: { fn: "user_behavior_analysis", label: "🧠 User Behavior Analysis" },
+            growth_optimized: { fn: "growth_optimization", label: "🚀 Growth Optimization" },
+            product_evolved: { fn: "product_evolution", label: "🔄 Product Evolution" },
+            architecture_evolved: { fn: "architecture_evolution", label: "🏗️ Architecture Evolution" },
           };
           const next = autoContinueMap[result.new_status];
           if (next) {
