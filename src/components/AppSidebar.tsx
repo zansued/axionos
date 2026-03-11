@@ -1,9 +1,9 @@
-// AppSidebar – framer-motion sidebar with hover-to-expand, mode switcher, and role-aware nav.
+// AppSidebar – framer-motion sidebar with click-to-toggle, mode switcher, and role-aware nav.
 
 import { useState, useMemo } from "react";
 import axionLogo from "@/assets/axion-logo.svg";
 import { useNavigate, useLocation } from "react-router-dom";
-import { LogOut } from "lucide-react";
+import { LogOut, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
