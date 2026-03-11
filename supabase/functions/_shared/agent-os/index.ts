@@ -605,12 +605,15 @@ export type {
   ApprovalRequest as PolicyApprovalRequest,
 } from "./policy-orchestrator-integration.ts";
 
-// Canon–Orchestrator Integration (Sprint 122)
+// Canon–Orchestrator Integration (Sprint 122 + Sprint 140)
 export {
   buildCanonRetrievalRequest,
   retrieveCanonKnowledge,
   injectCanonIntoWorkInput,
   buildCanonTraceRecord,
+  extractCanonConsumption,
+  buildCanonConsumptionTrace,
+  formatCanonForAgentContext,
 } from "./canon-orchestrator-integration.ts";
 export type {
   CanonRetrievalRequest,
@@ -618,6 +621,9 @@ export type {
   CanonTraceRecord,
   CanonKnowledgePacket,
   StageCanonProfile,
+  CanonUsageMode,
+  CanonConsumptionReport,
+  CanonConsumptionTrace,
 } from "./canon-orchestrator-integration.ts";
 
 // Readiness–Orchestrator Integration (Sprint 141)

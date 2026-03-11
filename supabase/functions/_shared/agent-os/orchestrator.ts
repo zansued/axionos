@@ -29,7 +29,11 @@ import {
   retrieveCanonKnowledge,
   injectCanonIntoWorkInput,
   buildCanonTraceRecord,
+  extractCanonConsumption,
+  buildCanonConsumptionTrace,
   type CanonTraceRecord,
+  type CanonConsumptionReport,
+  type CanonConsumptionTrace,
 } from "./canon-orchestrator-integration.ts";
 
 // Sprint 140 — Policy enforcement
@@ -295,14 +299,37 @@ export class AgentOS {
       });
 
       // ── Execute agents (with enriched input + decision trace) ──
-      const stageFailed = await this.executeAgents(
+      const availablePacketIds = (enrichedInput.context?.canon_pattern_ids as string[]) || [];
+
+      const { failed: stageFailed, consumptionReports } = await this.executeAgentsWithCanon(
         selected,
         state,
         enrichedInput,
         runId,
         currentStage,
         memory,
+        availablePacketIds,
       );
+
+      // ── Sprint 140: Build Canon consumption trace ──
+      const consumptionTrace = buildCanonConsumptionTrace(
+        runId,
+        currentStage,
+        consumptionReports,
+        availablePacketIds,
+      );
+
+      this.emit(state, "stage.completed", {
+        runId,
+        stage: currentStage,
+        canon_consumption: {
+          usage_mode: consumptionTrace.aggregated_usage_mode,
+          packets_available: consumptionTrace.total_packets_available,
+          packets_used: consumptionTrace.total_packets_used,
+          packets_ignored: consumptionTrace.total_packets_ignored,
+          usage_rate: consumptionTrace.usage_rate,
+        },
+      });
 
       // ── Validation scoring ──
       let validationFailed = false;
@@ -367,17 +394,19 @@ export class AgentOS {
     return state;
   }
 
-  // ── Internal: execute all agents for a stage ──
+  // ── Internal: execute all agents for a stage (with Canon consumption tracking) ──
 
-  private async executeAgents(
+  private async executeAgentsWithCanon(
     agents: AgentDefinition[],
     state: RunState,
     input: WorkInput,
     runId: string,
     stage: StageName,
     memory: RuntimeMemory,
-  ): Promise<boolean> {
+    availablePacketIds: string[],
+  ): Promise<{ failed: boolean; consumptionReports: CanonConsumptionReport[] }> {
     let failed = false;
+    const consumptionReports: CanonConsumptionReport[] = [];
 
     for (const agent of agents) {
       this.emit(state, "agent.started", {
@@ -415,6 +444,16 @@ export class AgentOS {
           }
         }
 
+        // Sprint 140: Extract Canon consumption from agent result
+        const consumption = extractCanonConsumption(
+          agent.id,
+          stage,
+          availablePacketIds,
+          result.metrics,
+          result.logs,
+        );
+        consumptionReports.push(consumption);
+
         this.emit(state, "agent.completed", {
           runId,
           stage,
@@ -422,6 +461,11 @@ export class AgentOS {
           status: result.status,
           summary: result.summary,
           metrics: result.metrics,
+          canon_consumption: {
+            usage_mode: consumption.canon_usage_mode,
+            packets_used: consumption.canon_packet_ids_used.length,
+            packets_available: consumption.canon_packet_ids_available.length,
+          },
         });
 
         if (result.status === "failed" || result.status === "blocked") {
@@ -429,6 +473,17 @@ export class AgentOS {
         }
       } catch (error) {
         failed = true;
+        // Record consumption as "none" for failed agents
+        consumptionReports.push({
+          canon_context_available: availablePacketIds.length > 0,
+          canon_packet_ids_available: availablePacketIds,
+          canon_packet_ids_used: [],
+          canon_categories_used: [],
+          canon_usage_mode: "none",
+          canon_usage_explanation: `Agent ${agent.id} failed — canon consumption not evaluated`,
+          agent_id: agent.id,
+          stage,
+        });
         this.emit(state, "agent.failed", {
           runId,
           stage,
@@ -438,7 +493,7 @@ export class AgentOS {
       }
     }
 
-    return failed;
+    return { failed, consumptionReports };
   }
 
   // ── Internal: emit event ──
