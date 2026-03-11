@@ -50,7 +50,9 @@ export function CanonGovernanceTab({ library, reviews, conflicts, supersessions,
         <GovMetric value={pendingReviews.length} label="Pending Reviews" warn={pendingReviews.length > 0} />
         <GovMetric value={openConflicts.length} label="Open Conflicts" warn={openConflicts.length > 0} />
         <GovMetric value={pendingCandidates.length} label="Source Candidates" />
+        <GovMetric value={approvedCandidates.length} label="Ready to Promote" accent />
         <GovMetric value={deprecatedEntries.length} label="Deprecated" />
+        <GovMetric value={supersessions.length} label="Supersessions" />
         <GovMetric value={supersessions.length} label="Supersessions" />
       </div>
 
