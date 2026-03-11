@@ -30537,6 +30537,482 @@ export type Database = {
           },
         ]
       }
+      red_team_boundary_breaches: {
+        Row: {
+          breach_type: string
+          confirmed: boolean
+          created_at: string
+          description: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          remediation_hint: string
+          run_id: string | null
+          severity: string
+          target_boundary: string
+        }
+        Insert: {
+          breach_type?: string
+          confirmed?: boolean
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          remediation_hint?: string
+          run_id?: string | null
+          severity?: string
+          target_boundary?: string
+        }
+        Update: {
+          breach_type?: string
+          confirmed?: boolean
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          remediation_hint?: string
+          run_id?: string | null
+          severity?: string
+          target_boundary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "red_team_boundary_breaches_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "red_team_boundary_breaches_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "red_team_simulation_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      red_team_exercises: {
+        Row: {
+          breach_detected: boolean
+          created_at: string
+          exercise_name: string
+          finding_count: number
+          fragility_score: number
+          id: string
+          organization_id: string
+          reviewed_by: string | null
+          sandbox_mode: boolean
+          scenario_type: string
+          severity_summary: string
+          simulation_scope: string
+          status: string
+          target_surface: string
+          threat_domain: string
+          updated_at: string
+        }
+        Insert: {
+          breach_detected?: boolean
+          created_at?: string
+          exercise_name?: string
+          finding_count?: number
+          fragility_score?: number
+          id?: string
+          organization_id: string
+          reviewed_by?: string | null
+          sandbox_mode?: boolean
+          scenario_type?: string
+          severity_summary?: string
+          simulation_scope?: string
+          status?: string
+          target_surface?: string
+          threat_domain?: string
+          updated_at?: string
+        }
+        Update: {
+          breach_detected?: boolean
+          created_at?: string
+          exercise_name?: string
+          finding_count?: number
+          fragility_score?: number
+          id?: string
+          organization_id?: string
+          reviewed_by?: string | null
+          sandbox_mode?: boolean
+          scenario_type?: string
+          severity_summary?: string
+          simulation_scope?: string
+          status?: string
+          target_surface?: string
+          threat_domain?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "red_team_exercises_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      red_team_findings: {
+        Row: {
+          affected_surface: string
+          blue_team_action: string
+          created_at: string
+          description: string
+          exercise_id: string | null
+          finding_type: string
+          id: string
+          organization_id: string
+          purple_team_action: string
+          recommended_followup: string
+          run_id: string | null
+          severity: string
+          status: string
+          threat_domain: string
+          title: string
+          updated_at: string
+          what_failed: string
+          what_resisted: string
+          what_was_fragile: string
+        }
+        Insert: {
+          affected_surface?: string
+          blue_team_action?: string
+          created_at?: string
+          description?: string
+          exercise_id?: string | null
+          finding_type?: string
+          id?: string
+          organization_id: string
+          purple_team_action?: string
+          recommended_followup?: string
+          run_id?: string | null
+          severity?: string
+          status?: string
+          threat_domain?: string
+          title?: string
+          updated_at?: string
+          what_failed?: string
+          what_resisted?: string
+          what_was_fragile?: string
+        }
+        Update: {
+          affected_surface?: string
+          blue_team_action?: string
+          created_at?: string
+          description?: string
+          exercise_id?: string | null
+          finding_type?: string
+          id?: string
+          organization_id?: string
+          purple_team_action?: string
+          recommended_followup?: string
+          run_id?: string | null
+          severity?: string
+          status?: string
+          threat_domain?: string
+          title?: string
+          updated_at?: string
+          what_failed?: string
+          what_resisted?: string
+          what_was_fragile?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "red_team_findings_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "red_team_exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "red_team_findings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "red_team_findings_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "red_team_simulation_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      red_team_fragility_signals: {
+        Row: {
+          created_at: string
+          description: string
+          evidence_refs: Json
+          fragility_score: number
+          id: string
+          organization_id: string
+          recommended_action: string
+          run_id: string | null
+          signal_type: string
+          target_surface: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          fragility_score?: number
+          id?: string
+          organization_id: string
+          recommended_action?: string
+          run_id?: string | null
+          signal_type?: string
+          target_surface?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          fragility_score?: number
+          id?: string
+          organization_id?: string
+          recommended_action?: string
+          run_id?: string | null
+          signal_type?: string
+          target_surface?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "red_team_fragility_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "red_team_fragility_signals_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "red_team_simulation_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      red_team_review_queue: {
+        Row: {
+          created_at: string
+          exercise_id: string | null
+          finding_id: string | null
+          id: string
+          organization_id: string
+          priority: string
+          review_notes: string
+          review_type: string
+          reviewed_at: string | null
+          reviewer_id: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          exercise_id?: string | null
+          finding_id?: string | null
+          id?: string
+          organization_id: string
+          priority?: string
+          review_notes?: string
+          review_type?: string
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          exercise_id?: string | null
+          finding_id?: string | null
+          id?: string
+          organization_id?: string
+          priority?: string
+          review_notes?: string
+          review_type?: string
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "red_team_review_queue_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "red_team_exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "red_team_review_queue_finding_id_fkey"
+            columns: ["finding_id"]
+            isOneToOne: false
+            referencedRelation: "red_team_findings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "red_team_review_queue_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      red_team_scenarios: {
+        Row: {
+          created_at: string
+          description: string
+          exercise_id: string | null
+          expected_outcome: string
+          id: string
+          organization_id: string
+          preconditions: Json
+          sandbox_only: boolean
+          scenario_name: string
+          scenario_type: string
+          severity: string
+          status: string
+          target_surface: string
+          threat_domain: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          exercise_id?: string | null
+          expected_outcome?: string
+          id?: string
+          organization_id: string
+          preconditions?: Json
+          sandbox_only?: boolean
+          scenario_name?: string
+          scenario_type?: string
+          severity?: string
+          status?: string
+          target_surface?: string
+          threat_domain?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          exercise_id?: string | null
+          expected_outcome?: string
+          id?: string
+          organization_id?: string
+          preconditions?: Json
+          sandbox_only?: boolean
+          scenario_name?: string
+          scenario_type?: string
+          severity?: string
+          status?: string
+          target_surface?: string
+          threat_domain?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "red_team_scenarios_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "red_team_exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "red_team_scenarios_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      red_team_simulation_runs: {
+        Row: {
+          breach_detected: boolean
+          completed_at: string | null
+          created_at: string
+          duration_ms: number | null
+          exercise_id: string | null
+          failed_count: number
+          fragile_count: number
+          id: string
+          organization_id: string
+          resisted_count: number
+          result_summary: string
+          run_label: string
+          run_log: Json
+          sandbox_mode: boolean
+          scenario_id: string | null
+          started_at: string
+          status: string
+        }
+        Insert: {
+          breach_detected?: boolean
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          exercise_id?: string | null
+          failed_count?: number
+          fragile_count?: number
+          id?: string
+          organization_id: string
+          resisted_count?: number
+          result_summary?: string
+          run_label?: string
+          run_log?: Json
+          sandbox_mode?: boolean
+          scenario_id?: string | null
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          breach_detected?: boolean
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          exercise_id?: string | null
+          failed_count?: number
+          fragile_count?: number
+          id?: string
+          organization_id?: string
+          resisted_count?: number
+          result_summary?: string
+          run_label?: string
+          run_log?: Json
+          sandbox_mode?: boolean
+          scenario_id?: string | null
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "red_team_simulation_runs_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "red_team_exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "red_team_simulation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "red_team_simulation_runs_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "red_team_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       region_execution_postures: {
         Row: {
           audit_metadata: Json
