@@ -12,13 +12,13 @@ import {
   SurfaceSwitcher,
   getSurfaceForRoute,
   getSurfaceMetadata,
-  type SurfaceId,
-} from "@/components/SurfaceSwitcher";
+  type SurfaceId } from
+"@/components/SurfaceSwitcher";
 import {
   CANONICAL_ROLE_LABELS,
   CANONICAL_ROLE_BADGE_STYLES,
-  type NavItem,
-} from "@/lib/permissions";
+  type NavItem } from
+"@/lib/permissions";
 import {
   Sidebar,
   SidebarContent,
@@ -28,28 +28,28 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarFooter,
-  useSidebar,
-} from "@/components/ui/sidebar";
+  useSidebar } from
+"@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  TooltipTrigger } from
+"@/components/ui/tooltip";
 
 // ─── NavItemRow ──────────────────────────────────────────────────────────────
 
 function NavItemRow({
   item,
   collapsed,
-  surfaceColor,
-}: {
-  item: NavItem;
-  collapsed: boolean;
-  surfaceColor: string;
-}) {
+  surfaceColor
+
+
+
+
+}: {item: NavItem;collapsed: boolean;surfaceColor: string;}) {
   return (
     <SidebarMenuItem>
       <Tooltip>
@@ -61,26 +61,26 @@ function NavItemRow({
               className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
               activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
               style={
-                {
-                  "--surface-active": `hsl(var(${surfaceColor}) / 0.15)`,
-                } as React.CSSProperties
-              }
-            >
+              {
+                "--surface-active": `hsl(var(${surfaceColor}) / 0.15)`
+              } as React.CSSProperties
+              }>
+              
               <item.icon className="h-4 w-4 shrink-0 opacity-70" />
-              {!collapsed && (
-                <span className="text-[13px]">{item.title}</span>
-              )}
+              {!collapsed &&
+              <span className="text-[13px]">{item.title}</span>
+              }
             </NavLink>
           </SidebarMenuButton>
         </TooltipTrigger>
-        {collapsed && (
-          <TooltipContent side="right" className="text-xs">
+        {collapsed &&
+        <TooltipContent side="right" className="text-xs">
             {item.title}
           </TooltipContent>
-        )}
+        }
       </Tooltip>
-    </SidebarMenuItem>
-  );
+    </SidebarMenuItem>);
+
 }
 
 // ─── AppSidebar ──────────────────────────────────────────────────────────────
@@ -123,7 +123,7 @@ export function AppSidebar() {
     setActiveSurface(surface);
     // Navigate to first route of new surface
     const targetNav =
-      surface === "owner" ? navGroups.owner : navGroups.builder;
+    surface === "owner" ? navGroups.owner : navGroups.builder;
     if (targetNav?.length > 0) {
       navigate(targetNav[0].url);
     }
@@ -133,17 +133,17 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r border-sidebar-border relative">
       <SidebarContent className="gap-0 justify-between">
         {/* ── Top: brand + switcher + nav ── */}
-        <div className="flex flex-col gap-0">
+        <div className="gap-0 flex flex-col">
           {/* ── Brand ── */}
           <SidebarGroup className="pb-0">
             <SidebarGroupContent>
               <div className="flex items-center gap-2 px-2 py-3">
                 <img src={axionLogo} alt="AxionOS" className="h-7 w-7 shrink-0" />
-                {!collapsed && (
-                  <span className="font-display text-sm font-semibold tracking-tight">
+                {!collapsed &&
+                <span className="font-display text-sm font-semibold tracking-tight">
                     Axion<span className="font-normal text-muted-foreground">OS</span>
                   </span>
-                )}
+                }
               </div>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -155,8 +155,8 @@ export function AppSidebar() {
                 role={canonicalRole}
                 activeSurface={activeSurface}
                 onSurfaceChange={handleSurfaceChange}
-                collapsed={collapsed}
-              />
+                collapsed={collapsed} />
+              
             </SidebarGroupContent>
           </SidebarGroup>
 
@@ -164,13 +164,13 @@ export function AppSidebar() {
 
           {/* ── Navigation ── */}
           <SidebarGroup className="px-2 pt-0">
-            {!collapsed && (
-              <div className="mb-1.5 px-2">
+            {!collapsed &&
+            <div className="mb-1.5 px-2">
                 <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
                   {surfaceMeta.label}
                 </p>
               </div>
-            )}
+            }
             <SidebarGroupContent>
               <AnimatePresence mode="wait">
                 <motion.div
@@ -178,17 +178,17 @@ export function AppSidebar() {
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.15 }}
-                >
+                  transition={{ duration: 0.15 }}>
+                  
                   <SidebarMenu className="space-y-0.5">
-                    {activeNavItems?.map((item) => (
-                      <NavItemRow
-                        key={item.url}
-                        item={item}
-                        collapsed={collapsed}
-                        surfaceColor={surfaceMeta.colorVar}
-                      />
-                    ))}
+                    {activeNavItems?.map((item) =>
+                    <NavItemRow
+                      key={item.url}
+                      item={item}
+                      collapsed={collapsed}
+                      surfaceColor={surfaceMeta.colorVar} />
+
+                    )}
                   </SidebarMenu>
                 </motion.div>
               </AnimatePresence>
@@ -198,32 +198,32 @@ export function AppSidebar() {
 
         {/* ── Footer — pinned to bottom via justify-between ── */}
         <div className="p-2 border-t border-sidebar-border/50">
-          {!collapsed && user && (
-            <div className="mb-1 space-y-0.5 px-2">
+          {!collapsed && user &&
+          <div className="mb-1 space-y-0.5 px-2">
               <div className="flex items-center gap-2">
                 <p className="flex-1 truncate text-[11px] text-muted-foreground">
                   {user.email}
                 </p>
                 <Badge
-                  variant="outline"
-                  className={`px-1.5 py-0 text-[9px] ${roleBadgeClass}`}
-                >
+                variant="outline"
+                className={`px-1.5 py-0 text-[9px] ${roleBadgeClass}`}>
+                
                   {roleBadgeLabel}
                 </Badge>
               </div>
             </div>
-          )}
+          }
           <Button
             variant="ghost"
             size="sm"
             className="w-full justify-start text-muted-foreground hover:text-destructive"
-            onClick={signOut}
-          >
+            onClick={signOut}>
+            
             <LogOut className="mr-2 h-4 w-4 shrink-0" />
             {!collapsed && <span className="text-sm">Sign Out</span>}
           </Button>
         </div>
       </SidebarContent>
-    </Sidebar>
-  );
+    </Sidebar>);
+
 }
