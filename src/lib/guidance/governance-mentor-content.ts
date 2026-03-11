@@ -56,9 +56,9 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Inspecionar decisões recentes", en: "Inspect recent decisions" }, route: "/routing", icon: "Search" },
-      { label: { pt: "Abrir benchmarks", en: "Open benchmarks" }, route: "/benchmarks", icon: "BarChart3" },
-      { label: { pt: "Revisar trilha de auditoria", en: "Review audit trail" }, route: "/audit", icon: "FileText" },
+      { label: { pt: "Inspecionar decisões recentes", en: "Inspect recent decisions" }, route: "/owner/agent-routing", icon: "Search" },
+      { label: { pt: "Abrir benchmarks", en: "Open benchmarks" }, route: "/owner/improvement-benchmarks", icon: "BarChart3" },
+      { label: { pt: "Revisar trilha de auditoria", en: "Review audit trail" }, route: "/owner/audit", icon: "FileText" },
     ],
   },
 
