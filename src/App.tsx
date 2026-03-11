@@ -283,6 +283,7 @@ const App = () => (
                             <Route path="/builder/governance-overview" element={<ProtectedRoute><GovernanceOverviewPage /></ProtectedRoute>} />
                             <Route path="/builder/pending-approvals" element={<ProtectedRoute><ApprovalQueue /></ProtectedRoute>} />
                             <Route path="/builder/policy-controls" element={<ProtectedRoute><PolicyControlsPage /></ProtectedRoute>} />
+                            <Route path="/builder/action-center" element={<ProtectedRoute><ActionCenter /></ProtectedRoute>} />
 
                             {/* Settings */}
                             <Route path="/builder/settings" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
