@@ -39,7 +39,7 @@ export default function SecurityIntelligenceDashboard() {
           {/* Tabs */}
           <Tabs defaultValue="surfaces" className="space-y-4">
             <TabsList className="bg-muted/20 border border-border/20 flex-wrap h-auto gap-0.5 p-1">
-              <TabsTrigger value="surfaces" className="text-xs gap-1.5"><Map className="h-3.5 w-3.5" />Surface Map</TabsTrigger>
+              <TabsTrigger value="surfaces" className="text-xs gap-1.5"><MapIcon className="h-3.5 w-3.5" />Surface Map</TabsTrigger>
               <TabsTrigger value="threats" className="text-xs gap-1.5"><Target className="h-3.5 w-3.5" />Threat Domains</TabsTrigger>
               <TabsTrigger value="exposure" className="text-xs gap-1.5"><Flame className="h-3.5 w-3.5" />Exposure Heatmap</TabsTrigger>
               <TabsTrigger value="boundaries" className="text-xs gap-1.5"><Network className="h-3.5 w-3.5" />Boundary Explorer</TabsTrigger>
