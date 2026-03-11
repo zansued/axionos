@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { PageGuidanceShell } from "@/components/guidance";
 import { useOrg } from "@/contexts/OrgContext";
-import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -64,11 +63,8 @@ export default function ImprovementBenchmarks() {
   const reviewBacklog = mockBenchmarks.filter(b => b.status === "completed" && b.risk_posture !== "high").length;
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <SidebarInset className="flex-1">
-          <div className="p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
             <PageGuidanceShell pageKey="benchmarks" />
             <div>
               <h1 className="text-2xl font-bold text-foreground">Sandbox Benchmarking & Promotion</h1>
@@ -244,8 +240,7 @@ export default function ImprovementBenchmarks() {
               )}
             </SheetContent>
           </Sheet>
-        </SidebarInset>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

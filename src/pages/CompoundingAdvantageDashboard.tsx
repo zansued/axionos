@@ -1,5 +1,4 @@
-import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppShell } from "@/components/AppShell";
 import { useCompoundingAdvantage } from "@/hooks/useCompoundingAdvantage";
 import { useColdStart } from "@/hooks/useColdStart";
 import { ColdStartBanner } from "@/components/observability/ColdStartBanner";
@@ -21,10 +20,8 @@ export default function CompoundingAdvantageDashboard() {
   const { data: coldStart } = useColdStart();
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Compounding Advantage</h1>
             <p className="text-muted-foreground text-sm">Identify and operationalize durable capability moats from accumulated learning.</p>
@@ -213,8 +210,7 @@ export default function CompoundingAdvantageDashboard() {
               </Card>
             </TabsContent>
           </Tabs>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

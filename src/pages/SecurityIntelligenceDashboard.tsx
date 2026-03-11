@@ -1,5 +1,4 @@
-import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,10 +10,8 @@ export default function SecurityIntelligenceDashboard() {
   const { overview, canonicalSurfaces, threatClassification, exposureScores, loading } = useSecurityIntelligence();
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <div className="p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
           {/* Header */}
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2.5 font-['Space_Grotesk']">
@@ -74,9 +71,8 @@ export default function SecurityIntelligenceDashboard() {
               <ContractRiskTab contracts={overview.contracts} reviews={overview.reviews} />
             </TabsContent>
           </Tabs>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </AppShell>
   );
 }
 

@@ -1,5 +1,4 @@
-import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppShell } from "@/components/AppShell";
 import { useOutcomeAutonomy } from "@/hooks/useOutcomeAutonomy";
 import { useColdStart } from "@/hooks/useColdStart";
 import { ColdStartBanner } from "@/components/observability/ColdStartBanner";
@@ -34,10 +33,8 @@ export default function AutonomyPostureDashboard() {
   const { data: coldStart } = useColdStart();
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Autonomy Posture</h1>
             <p className="text-muted-foreground text-sm">Evidence-based autonomy levels with bounded reversibility.</p>
@@ -442,8 +439,7 @@ export default function AutonomyPostureDashboard() {
               </div>
             </TabsContent>
           </Tabs>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

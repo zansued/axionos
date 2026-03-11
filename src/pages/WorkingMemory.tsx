@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
+import { AppShell } from "@/components/AppShell";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -70,10 +69,8 @@ export default function WorkingMemory() {
   const listForTab = tab === "active" ? active : tab === "blocked" ? blocked : tab === "escalated" ? escalated : resolved;
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-auto">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Working Memory & Task-State</h1>
             <p className="text-sm text-muted-foreground">Shared coordination contexts, checkpoints, and negotiated task-state transitions.</p>
@@ -133,9 +130,8 @@ export default function WorkingMemory() {
           </Tabs>
 
           <ContextDetailDrawer contextId={selectedId} onClose={() => setSelectedId(null)} />
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
 

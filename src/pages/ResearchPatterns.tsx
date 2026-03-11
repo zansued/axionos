@@ -9,8 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { Network, Eye, AlertTriangle, ShieldCheck } from "lucide-react";
-import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppShell } from "@/components/AppShell";
 
 function invoke(orgId: string, action: string, params: Record<string, any> = {}) {
   return supabase.functions.invoke("research-patterns", {
@@ -123,10 +122,8 @@ export default function ResearchPatterns() {
   };
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-auto">
+    <AppShell>
+      <div className="space-y-6">
           {/* Header */}
           <div>
             <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
@@ -356,8 +353,7 @@ export default function ResearchPatterns() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

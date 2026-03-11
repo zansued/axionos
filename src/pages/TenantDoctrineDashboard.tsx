@@ -1,5 +1,4 @@
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
+import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -12,10 +11,8 @@ export default function TenantDoctrineDashboard() {
   const { activeProfile, profiles, signals, conflicts, adjustments, reviews, isLoading } = useTenantDoctrine();
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <div className="p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold">Tenant Doctrine & Operating Profiles</h1>
             <p className="text-sm text-muted-foreground">Evidence-based operating posture derived from runtime behavior.</p>
@@ -187,9 +184,8 @@ export default function TenantDoctrineDashboard() {
               </Tabs>
             </>
           )}
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </AppShell>
   );
 }
 

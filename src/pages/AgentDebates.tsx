@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
+import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -76,10 +75,8 @@ export default function AgentDebates() {
   const listForTab = tab === "active" ? active : tab === "resolved" ? resolved : tab === "escalated" ? escalated : closed;
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-auto">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Multi-Agent Debates</h1>
             <p className="text-sm text-muted-foreground">Structured debate sessions, argument comparison, and governed resolution.</p>
@@ -147,9 +144,8 @@ export default function AgentDebates() {
 
           {/* Detail drawer */}
           <DebateDetailDrawer sessionId={selectedId} onClose={() => setSelectedId(null)} />
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
 

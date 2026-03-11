@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { AppSidebar } from "@/components/AppSidebar";
+import { AppShell } from "@/components/AppShell";
 import { PageGuidanceShell } from "@/components/guidance";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -53,11 +52,8 @@ export default function AgentRouting() {
   const fallbackRate = Math.round((mockDecisions.filter(d => d.fallback_count === 0).length / total) * 100);
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <SidebarInset className="flex-1">
-          <div className="p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
             <PageGuidanceShell pageKey="routing" />
             <div>
               <h1 className="text-2xl font-bold text-foreground">Agent Routing & Arbitration</h1>
@@ -247,8 +243,7 @@ export default function AgentRouting() {
               )}
             </SheetContent>
           </Sheet>
-        </SidebarInset>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

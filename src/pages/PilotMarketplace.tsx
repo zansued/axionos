@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
+import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -59,10 +58,8 @@ export default function PilotMarketplace() {
   ];
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-auto">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Pilot Marketplace</h1>
             <p className="text-sm text-muted-foreground">Governed creator/partner pilot marketplace for curated capability submissions.</p>
@@ -187,8 +184,7 @@ export default function PilotMarketplace() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

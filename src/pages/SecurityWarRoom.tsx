@@ -1,5 +1,4 @@
-import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -516,11 +515,9 @@ function SecurityCanonTab() {
 
 export default function SecurityWarRoom() {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <ScrollArea className="h-[calc(100vh-1rem)]">
-          <div className="p-6 space-y-6 max-w-[1400px] mx-auto">
+    <AppShell>
+      <ScrollArea className="h-[calc(100vh-5rem)]">
+        <div className="space-y-6 max-w-[1400px] mx-auto">
             {/* ═══ Header ═══ */}
             <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
               <div className="flex items-center gap-3">
@@ -596,9 +593,8 @@ export default function SecurityWarRoom() {
                 <ContractBoundaryViewer />
               </TabsContent>
             </Tabs>
-          </div>
-        </ScrollArea>
-      </SidebarInset>
-    </SidebarProvider>
+        </div>
+      </ScrollArea>
+    </AppShell>
   );
 }

@@ -1,5 +1,4 @@
-import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -47,10 +46,8 @@ export default function OrganismConsoleDashboard() {
   const loopPriorities = met?.loop_priorities || [];
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold">Organism Console</h1>
             <p className="text-sm text-muted-foreground">
@@ -256,8 +253,7 @@ export default function OrganismConsoleDashboard() {
               </CardContent>
             </Card>
           )}
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
