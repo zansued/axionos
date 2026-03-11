@@ -46,10 +46,8 @@ export default function OrganismConsoleDashboard() {
   const loopPriorities = met?.loop_priorities || [];
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold">Organism Console</h1>
             <p className="text-sm text-muted-foreground">
