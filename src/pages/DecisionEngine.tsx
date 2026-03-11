@@ -565,7 +565,7 @@ export default function DecisionEngine() {
           </p>
         </div>
 
-        <PageGuidanceShell pageKey="decision-engine" compact />
+        
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">

@@ -497,7 +497,7 @@ export default function BoundedOperations() {
           </p>
         </div>
 
-        <PageGuidanceShell pageKey="bounded-operations" compact />
+        
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">

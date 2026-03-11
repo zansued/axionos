@@ -559,7 +559,7 @@ export default function Playbooks() {
           </div>
         </div>
 
-        <PageGuidanceShell pageKey="playbooks" compact />
+        
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">

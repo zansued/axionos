@@ -533,7 +533,7 @@ export default function IntelligenceMemory() {
   return (
     <AppLayout>
       <div className="p-6 space-y-6 max-w-7xl mx-auto">
-        <PageGuidanceShell pageKey="intelligence-memory" />
+        
 
         {/* Header */}
         <div className="flex items-center justify-between">

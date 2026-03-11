@@ -201,8 +201,6 @@ export default function Artifacts() {
   return (
     <AppLayout>
       <div className="space-y-6">
-        {/* Contextual Guidance */}
-        <PageGuidanceShell pageKey="deployments" />
 
         <div className="flex items-center justify-between">
           <div>
