@@ -78,10 +78,8 @@ export default function RuntimeValidationHarness() {
   const pct = (v: number) => `${(v * 100).toFixed(1)}%`;
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-y-auto">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-display font-bold text-foreground flex items-center gap-2">
               <Activity className="h-6 w-6 text-primary" />
