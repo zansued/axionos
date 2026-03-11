@@ -280,7 +280,7 @@ const App = () => (
                             {/* Governance */}
                             <Route path="/builder/delivery-governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
                             <Route path="/builder/governance-overview" element={<ProtectedRoute><GovernanceOverviewPage /></ProtectedRoute>} />
-                            <Route path="/builder/pending-approvals" element={<ProtectedRoute><PendingApprovalsPage /></ProtectedRoute>} />
+                            <Route path="/builder/pending-approvals" element={<ProtectedRoute><ApprovalQueue /></ProtectedRoute>} />
                             <Route path="/builder/policy-controls" element={<ProtectedRoute><PolicyControlsPage /></ProtectedRoute>} />
 
                             {/* Settings */}
