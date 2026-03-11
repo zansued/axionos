@@ -27,7 +27,7 @@ export default function Auth() {
   // If somehow the user lands here already authenticated, clear stale session
   useEffect(() => {
     if (user) {
-      navigate("/initiatives", { replace: true });
+      navigate("/builder/initiatives", { replace: true });
     }
   }, [user, navigate]);
 

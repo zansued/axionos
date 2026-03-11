@@ -48,7 +48,7 @@ export default function Onboarding() {
 
   const handleLaunch = () => {
     // Navigate to initiatives with pre-filled data
-    navigate("/initiatives", { state: { ideaText, template: selectedTemplate, vertical: selectedVertical } });
+    navigate("/builder/initiatives", { state: { ideaText, template: selectedTemplate, vertical: selectedVertical } });
   };
 
   return (

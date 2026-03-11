@@ -49,11 +49,11 @@ export function ObservabilityMini() {
 export function QuickActions() {
   const navigate = useNavigate();
   const actions = [
-    { label: "New Project", icon: Plus, action: () => navigate("/initiatives") },
-    { label: "Inspect Agents", icon: Bot, action: () => navigate("/agents") },
-    { label: "Runtime", icon: Radio, action: () => navigate("/runtime") },
-    { label: "Observability", icon: Eye, action: () => navigate("/system-health") },
-    { label: "Intelligence", icon: Sparkles, action: () => navigate("/system-intelligence") },
+    { label: "New Project", icon: Plus, action: () => navigate("/builder/initiatives") },
+    { label: "Inspect Agents", icon: Bot, action: () => navigate("/builder/agents") },
+    { label: "Runtime", icon: Radio, action: () => navigate("/builder/runtime") },
+    { label: "Observability", icon: Eye, action: () => navigate("/builder/execution-observability") },
+    { label: "Intelligence", icon: Sparkles, action: () => navigate("/builder/system-intelligence") },
   ];
 
   return (
