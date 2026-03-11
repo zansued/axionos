@@ -71,10 +71,8 @@ export default function PostDeployFeedback() {
   ];
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-auto">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Post-Deploy Feedback</h1>
             <p className="text-sm text-muted-foreground">Assimilate post-deploy operational signals into governed learning and delivery optimization.</p>
