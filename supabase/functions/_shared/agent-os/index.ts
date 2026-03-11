@@ -695,3 +695,12 @@ export type {
   ActionDispatchPolicyState,
   ActionDispatchResult,
 } from "./action-dispatch.ts";
+
+// Action Engine — Human Approval Hooks (Sprint 148 / AE-06)
+export { ApprovalManager } from "./action-approval.ts";
+export type {
+  ApprovalLifecycleStatus,
+  ActionApprovalRequest,
+  ApprovalDecisionInput,
+  ApprovalDecisionResult,
+} from "./action-approval.ts";
