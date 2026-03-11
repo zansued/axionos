@@ -370,7 +370,7 @@ const PLATFORM_COPILOT: CopilotDrawerContent[] = [
         en: "If there are no ongoing investigations or audits, the trail can be queried on demand.",
       },
       suggestedActions: [
-        { label: { pt: "Observabilidade", en: "Observability" }, route: "/observability", icon: "Activity" },
+        { label: { pt: "Observabilidade", en: "Observability" }, route: "/owner/platform-observability", icon: "Activity" },
       ],
     },
   },
