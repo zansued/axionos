@@ -33,12 +33,10 @@ export default function ReflectiveValidationAudit() {
     : 0;
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6">
-          <div className="flex items-center gap-2">
-            <SidebarTrigger />
+    <AppShell>
+      <div className="space-y-6">
+        <div>
+          <div>
             <div>
               <h1 className="text-2xl font-bold text-foreground">Reflective Validation & Self-Revision Audit</h1>
               <p className="text-sm text-muted-foreground">
