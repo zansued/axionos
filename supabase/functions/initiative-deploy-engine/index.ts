@@ -33,12 +33,7 @@ serve(async (req) => {
   const deployTarget = body.deploy_target || initiative.deploy_target || "vercel";
   const initiativeId = ctx.initiativeId;
 
-  const job = await createJob(serviceClient, {
-    initiativeId,
-    userId: ctx.userId,
-    stage: "deploy",
-    inputs: { deploy_target: deployTarget },
-  });
+  const jobId = await createJob(ctx, "deploy", { deploy_target: deployTarget });
 
   try {
     // ── Step 1: Verify initiative is ready for deployment ──
@@ -66,7 +61,7 @@ serve(async (req) => {
     pipelineLog(ctx, "deploy", `Starting deploy to ${deployTarget} from ${repoUrl}`);
 
     // ── Step 2: Transition to deploying ──
-    await updateInitiative(serviceClient, initiativeId, {
+    await updateInitiative(ctx, {
       stage_status: "deploying",
       deploy_status: "deploying",
       deploy_target: deployTarget,
@@ -98,7 +93,7 @@ serve(async (req) => {
     const finalStatus: DeployStatus = errorCode ? "deploy_failed" : "deployed";
     const now = new Date().toISOString();
 
-    await updateInitiative(serviceClient, initiativeId, {
+    await updateInitiative(ctx, {
       stage_status: finalStatus,
       deploy_status: finalStatus,
       deploy_url: deployUrl,
@@ -120,7 +115,7 @@ serve(async (req) => {
       error_message: errorMessage,
     };
 
-    await completeJob(serviceClient, job.id, {
+    await completeJob(ctx, jobId!, {
       deploy_target: deployTarget,
       deploy_status: finalStatus,
       deploy_url: deployUrl,
@@ -137,7 +132,7 @@ serve(async (req) => {
     pipelineLog(ctx, "deploy", `Deploy failed: ${errorMsg}`);
 
     // Persist failure state
-    await updateInitiative(serviceClient, initiativeId, {
+    await updateInitiative(ctx, {
       stage_status: "deploy_failed",
       deploy_status: "deploy_failed",
       deploy_error_code: "DEPLOY_ENGINE_ERROR",
@@ -145,7 +140,7 @@ serve(async (req) => {
       last_deploy_check_at: new Date().toISOString(),
     });
 
-    await failJob(serviceClient, job.id, errorMsg);
+    await failJob(ctx, jobId!, errorMsg);
     return errorResponse(errorMsg, 500);
   }
 });
