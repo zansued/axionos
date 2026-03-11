@@ -67,11 +67,8 @@ export default function LearningSignalsDashboard() {
   const highConfidence = candidates.filter((c) => c.confidence_score >= 0.7);
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <main className="flex-1 overflow-auto">
-          <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <AppShell>
+      <div className="space-y-6 max-w-7xl mx-auto">
             {/* Header */}
             <div className="flex items-center justify-between">
               <div>
