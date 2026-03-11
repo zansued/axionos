@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   CheckCircle2, Loader2, RotateCcw, ArrowRight,
-  Lightbulb, Search, Brain, Layers, Cpu, Rocket, TrendingUp,
+  Lightbulb, Search, Brain, Layers, Cpu, Rocket, TrendingUp, Radio,
 } from "lucide-react";
 import { MACRO_STAGES } from "./pipeline-config";
 import type { LucideIcon } from "lucide-react";
@@ -26,8 +26,8 @@ const PHASE_GROUPS: PhaseGroup[] = [
   { id: "discovery", label: "Discovery", icon: Search, fromMacro: 1, toMacro: 4 },
   { id: "architecture", label: "Architecture", icon: Brain, fromMacro: 5, toMacro: 8 },
   { id: "engineering", label: "Engineering", icon: Layers, fromMacro: 9, toMacro: 19 },
-  { id: "deploy", label: "Deploy", icon: Rocket, fromMacro: 20, toMacro: 25 },
-  { id: "growth", label: "Growth", icon: TrendingUp, fromMacro: 26, toMacro: 35 },
+  { id: "deploy", label: "Deploy", icon: Rocket, fromMacro: 20, toMacro: 26 },
+  { id: "runtime", label: "Runtime", icon: Radio, fromMacro: 27, toMacro: 28 },
 ];
 
 /* ── Helpers ── */
@@ -80,7 +80,7 @@ export default function PipelineGraphView({
                 className={`
                   relative flex flex-col items-center gap-1 px-3 py-2 rounded-lg border cursor-pointer
                   transition-colors duration-200 min-w-[72px]
-                  ${status === "completed" && group.id === "growth"
+                  ${status === "completed" && group.id === "runtime"
                     ? "border-primary/60 bg-primary/20 text-primary ring-1 ring-primary/40"
                     : status === "completed"
                     ? "border-success/40 bg-success/10 text-success"

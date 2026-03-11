@@ -79,25 +79,8 @@ export const PIPELINE_STEPS = [
   { key: "deployed", label: "Deployed ✓", icon: Globe, color: "text-success", bg: "bg-success/10" },
   { key: "deploy_failed", label: "Deploy Failed", icon: Globe, color: "text-destructive", bg: "bg-destructive/10" },
 
-  // ── Growth & Evolution Layer (Stages 24-32) ──
-  { key: "observing_product", label: "Observability ▶", icon: Eye, color: "text-warning", bg: "bg-warning/10" },
-  { key: "product_observed", label: "Observability ✓", icon: Eye, color: "text-accent", bg: "bg-accent/10" },
-  { key: "analyzing_product_metrics", label: "Product Analytics ▶", icon: Activity, color: "text-warning", bg: "bg-warning/10" },
-  { key: "product_metrics_analyzed", label: "Product Analytics ✓", icon: Activity, color: "text-accent", bg: "bg-accent/10" },
-  { key: "analyzing_user_behavior", label: "User Behavior ▶", icon: Users, color: "text-warning", bg: "bg-warning/10" },
-  { key: "user_behavior_analyzed", label: "User Behavior ✓", icon: Users, color: "text-accent", bg: "bg-accent/10" },
-  { key: "optimizing_growth", label: "Growth Optimization ▶", icon: TrendingUp, color: "text-warning", bg: "bg-warning/10" },
-  { key: "growth_optimized", label: "Growth Optimized ✓", icon: TrendingUp, color: "text-accent", bg: "bg-accent/10" },
-  { key: "learning_system", label: "Learning ▶", icon: GraduationCap, color: "text-warning", bg: "bg-warning/10" },
-  { key: "system_learned", label: "Learning ✓", icon: GraduationCap, color: "text-accent", bg: "bg-accent/10" },
-  { key: "evolving_product", label: "Product Evolution ▶", icon: Repeat, color: "text-warning", bg: "bg-warning/10" },
-  { key: "product_evolved", label: "Product Evolved ✓", icon: Repeat, color: "text-accent", bg: "bg-accent/10" },
-  { key: "evolving_architecture", label: "Architecture Evolution ▶", icon: Layers, color: "text-warning", bg: "bg-warning/10" },
-  { key: "architecture_evolved", label: "Architecture Evolved ✓", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
-  { key: "managing_portfolio", label: "Portfolio Manager ▶", icon: FolderKanban, color: "text-warning", bg: "bg-warning/10" },
-  { key: "portfolio_managed", label: "Portfolio Managed ✓", icon: FolderKanban, color: "text-accent", bg: "bg-accent/10" },
-  { key: "evolving_system", label: "System Evolution ▶", icon: Settings2, color: "text-warning", bg: "bg-warning/10" },
-  { key: "system_evolved", label: "System Evolved ✓", icon: Settings2, color: "text-accent", bg: "bg-accent/10" },
+  // ── Runtime (final visible stage) ──
+  { key: "runtime_active", label: "Runtime Active", icon: Monitor, color: "text-success", bg: "bg-success/10" },
 
   // ── Final ──
   { key: "completed", label: "Concluído", icon: CheckCircle2, color: "text-success", bg: "bg-success/10" },
@@ -147,16 +130,8 @@ export const MACRO_STAGES = [
   { key: "publish", label: "Publicação (GitHub)", icon: GitBranch },
   { key: "deploy", label: "Deploy", icon: Globe },
 
-  // Growth & Evolution Layer
-  { key: "observability", label: "Observability", icon: Eye },
-  { key: "product_analytics", label: "Product Analytics", icon: Activity },
-  { key: "user_behavior", label: "User Behavior", icon: Users },
-  { key: "growth_optimization", label: "Growth Optimization", icon: TrendingUp },
-  { key: "adaptive_learning", label: "Learning", icon: GraduationCap },
-  { key: "product_evolution", label: "Product Evolution", icon: Repeat },
-  { key: "architecture_evolution", label: "Architecture Evolution", icon: Layers },
-  { key: "portfolio_management", label: "Portfolio Manager", icon: FolderKanban },
-  { key: "system_evolution", label: "System Evolution", icon: Settings2 },
+  // Runtime (final visible stage)
+  { key: "runtime", label: "Runtime", icon: Monitor },
   { key: "done", label: "Concluído", icon: CheckCircle2 },
 ];
 
@@ -206,17 +181,17 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["ready_to_publish", "published"].includes(s)) return 25;
   if (["deploying", "deployed", "deploy_failed"].includes(s)) return 26;
 
-  // Growth & Evolution Layer (shifted +1 for deploy)
-  if (["observing_product", "product_observed"].includes(s)) return 27;
-  if (["analyzing_product_metrics", "product_metrics_analyzed"].includes(s)) return 28;
-  if (["analyzing_user_behavior", "user_behavior_analyzed"].includes(s)) return 29;
-  if (["optimizing_growth", "growth_optimized"].includes(s)) return 30;
-  if (["learning_system", "system_learned"].includes(s)) return 31;
-  if (["evolving_product", "product_evolved"].includes(s)) return 32;
-  if (["evolving_architecture", "architecture_evolved"].includes(s)) return 33;
-  if (["managing_portfolio", "portfolio_managed"].includes(s)) return 34;
-  if (["evolving_system", "system_evolved"].includes(s)) return 35;
-  if (["completed"].includes(s)) return 36;
+  // Runtime (final visible stage — background intelligence runs autonomously)
+  if (["runtime_active", "observing_product", "product_observed",
+       "analyzing_product_metrics", "product_metrics_analyzed",
+       "analyzing_user_behavior", "user_behavior_analyzed",
+       "optimizing_growth", "growth_optimized",
+       "learning_system", "system_learned",
+       "evolving_product", "product_evolved",
+       "evolving_architecture", "architecture_evolved",
+       "managing_portfolio", "portfolio_managed",
+       "evolving_system", "system_evolved"].includes(s)) return 27;
+  if (["completed"].includes(s)) return 28;
   return 0;
 }
 
@@ -451,16 +426,12 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       return [
         { stage: "publish", label: "🚀 Publicar no GitHub", description: "Gera release, changelog e push para o repositório.", type: "publish", variant: "primary" },
         { stage: "validation", label: "🔍 Re-executar Validação Completa", description: "Roda novamente: Fix Loop → Deep Static → Drift → Runtime.", type: "run" },
-        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "published":
       return [
-        { stage: "deploy_vercel", label: "🚀 Deploy no Vercel", description: "Inicia o deploy automático para Vercel.", type: "run", variant: "primary" },
-        { stage: "observability", label: "👁️ Iniciar Observability", type: "run" },
-        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
+        { stage: "deploy_vercel", label: "🚀 Deploy", description: "Inicia o deploy automático.", type: "run", variant: "primary" },
         { stage: "publish", label: "Re-publicar no GitHub", type: "publish" },
-        { stage: "approve", label: "Marcar como Concluído", type: "approve" },
       ];
     case "deploying":
       return [
@@ -468,82 +439,35 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "deployed":
       return [
-        { stage: "observability", label: "👁️ Iniciar Observability", type: "run" },
-        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
+        { stage: "approve", label: "✅ Entrar em Runtime", description: "O software está implantado. Entrar em modo Runtime — inteligência autônoma continua em background.", type: "approve", variant: "primary" },
         { stage: "deploy_vercel", label: "🔄 Re-deploy", type: "run" },
+      ];
+    case "runtime_active":
+      return [
         { stage: "approve", label: "✅ Marcar como Concluído", type: "approve" },
+        { stage: "deploy_vercel", label: "🔄 Re-deploy", type: "run" },
       ];
-    case "deploy_failed":
-      return [
-        { stage: "deploy_vercel", label: "🔧 Retry Deploy", description: "Tenta o deploy novamente.", type: "run", variant: "primary" },
-        { stage: "publish", label: "Re-publicar no GitHub", type: "publish" },
-        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
-      ];
-
-    // ── Growth & Evolution Layer ──
+    // Background intelligence stages — all map to Runtime in the visible pipeline
     case "observing_product":
-      return [{ stage: "observability", label: "Re-executar Observability", type: "run" }];
     case "product_observed":
-      return [
-        { stage: "product_analytics", label: "📊 Product Analytics", type: "run" },
-        { stage: "observability", label: "Re-executar Observability", type: "run" },
-      ];
     case "analyzing_product_metrics":
-      return [{ stage: "product_analytics", label: "Re-executar Analytics", type: "run" }];
     case "product_metrics_analyzed":
-      return [
-        { stage: "user_behavior_analysis", label: "👤 User Behavior Analysis", type: "run" },
-        { stage: "product_analytics", label: "Re-executar Analytics", type: "run" },
-      ];
     case "analyzing_user_behavior":
-      return [{ stage: "user_behavior_analysis", label: "Re-executar Behavior Analysis", type: "run" }];
     case "user_behavior_analyzed":
-      return [
-        { stage: "growth_optimization", label: "📈 Growth Optimization", type: "run" },
-        { stage: "user_behavior_analysis", label: "Re-executar Analysis", type: "run" },
-      ];
     case "optimizing_growth":
-      return [{ stage: "growth_optimization", label: "Re-executar Growth Optimization", type: "run" }];
     case "growth_optimized":
-      return [
-        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
-        { stage: "growth_optimization", label: "Re-executar Growth", type: "run" },
-      ];
     case "learning_system":
-      return [{ stage: "adaptive_learning", label: "Re-executar Learning", type: "run" }];
     case "system_learned":
-      return [
-        { stage: "product_evolution", label: "🔄 Product Evolution", type: "run" },
-        { stage: "adaptive_learning", label: "Re-executar Learning", type: "run" },
-        { stage: "approve", label: "✅ Aprovar → Concluir", type: "approve" },
-      ];
     case "evolving_product":
-      return [{ stage: "product_evolution", label: "Re-executar Product Evolution", type: "run" }];
     case "product_evolved":
-      return [
-        { stage: "architecture_evolution", label: "🏛️ Architecture Evolution", type: "run" },
-        { stage: "product_evolution", label: "Re-executar Evolution", type: "run" },
-      ];
     case "evolving_architecture":
-      return [{ stage: "architecture_evolution", label: "Re-executar Architecture Evolution", type: "run" }];
     case "architecture_evolved":
-      return [
-        { stage: "portfolio_management", label: "📁 Portfolio Manager", type: "run" },
-        { stage: "architecture_evolution", label: "Re-executar Evolution", type: "run" },
-      ];
     case "managing_portfolio":
-      return [{ stage: "portfolio_management", label: "Re-executar Portfolio Manager", type: "run" }];
     case "portfolio_managed":
-      return [
-        { stage: "system_evolution", label: "⚙️ System Evolution", type: "run" },
-        { stage: "portfolio_management", label: "Re-executar Portfolio", type: "run" },
-      ];
     case "evolving_system":
-      return [{ stage: "system_evolution", label: "Re-executar System Evolution", type: "run" }];
     case "system_evolved":
       return [
-        { stage: "approve", label: "✅ Ciclo Completo → Concluir", type: "approve" },
-        { stage: "system_evolution", label: "Re-executar System Evolution", type: "run" },
+        { stage: "approve", label: "✅ Marcar como Concluído", type: "approve" },
       ];
 
     default:

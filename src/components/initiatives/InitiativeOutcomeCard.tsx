@@ -111,7 +111,12 @@ const STAGE_LABELS: Record<string, { en: string; pt: string }> = {
   coding: { en: "Coding", pt: "Codificação" },
   validating: { en: "Validation", pt: "Validação" },
   deploying: { en: "Deploy", pt: "Deploy" },
-  publishing: { en: "Publishing", pt: "Publicação" },
+  deployed: { en: "Deployed", pt: "Implantado" },
+  runtime_active: { en: "Runtime Active", pt: "Runtime Ativo" },
+  observing_product: { en: "Runtime Active", pt: "Runtime Ativo" },
+  product_observed: { en: "Runtime Active", pt: "Runtime Ativo" },
+  optimizing_growth: { en: "Runtime Active", pt: "Runtime Ativo" },
+  growth_optimized: { en: "Runtime Active", pt: "Runtime Ativo" },
 };
 
 // Pipeline stage ordering for progress estimation
@@ -120,7 +125,8 @@ const STAGE_ORDER = [
   "architecting", "architecture_done", "scoping", "planning",
   "in_progress", "engineering", "coding",
   "validating", "publishing", "deploying",
-  "ready_to_publish", "published", "deployed", "completed",
+  "ready_to_publish", "published", "deployed",
+  "runtime_active", "completed",
 ];
 
 function useRotatingHint(stage: string, isActive: boolean, lang: "en" | "pt") {
@@ -176,6 +182,17 @@ function getOutcome(init: any): OutcomeInfo {
 
   if (["completed", "system_evolved", "portfolio_managed"].includes(stage)) {
     return { status: "completed", icon: CheckCircle2, color: "text-success", bgColor: "bg-success/5", borderColor: "border-success/30" };
+  }
+  if (["runtime_active", "observing_product", "product_observed",
+       "analyzing_product_metrics", "product_metrics_analyzed",
+       "analyzing_user_behavior", "user_behavior_analyzed",
+       "optimizing_growth", "growth_optimized",
+       "learning_system", "system_learned",
+       "evolving_product", "product_evolved",
+       "evolving_architecture", "architecture_evolved",
+       "managing_portfolio", "portfolio_managed",
+       "evolving_system", "system_evolved"].includes(stage)) {
+    return { status: "runtime", icon: Globe, color: "text-success", bgColor: "bg-success/5", borderColor: "border-success/30" };
   }
   if (stage === "deployed" && init.deploy_url) {
     return { status: "deployed", icon: Globe, color: "text-success", bgColor: "bg-success/5", borderColor: "border-success/30" };
@@ -269,6 +286,16 @@ export function InitiativeOutcomeCard({ initiative }: InitiativeOutcomeCardProps
       description: en
         ? "This initiative has been fully processed and completed successfully."
         : "Esta iniciativa foi totalmente processada e concluída com sucesso.",
+    },
+    runtime: {
+      title: en ? "Runtime Active — Software Running" : "Runtime Ativo — Software Rodando",
+      description: en
+        ? "Your software is deployed and running. System intelligence continues improving it in the background."
+        : "Seu software está implantado e rodando. A inteligência do sistema continua melhorando em background.",
+      actions: [
+        ...(initiative.deploy_url ? [{ label: en ? "Open App" : "Abrir App", href: initiative.deploy_url }] : []),
+        ...(initiative.repo_url ? [{ label: en ? "View Repository" : "Ver Repositório", href: initiative.repo_url, variant: "outline" as const }] : []),
+      ],
     },
   };
 
