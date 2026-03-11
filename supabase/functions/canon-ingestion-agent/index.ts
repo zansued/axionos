@@ -62,7 +62,7 @@ serve(async (req) => {
         try {
           // 3. Crawl with Firecrawl
           console.log(`Scraping source: ${source.source_url}`);
-          const scrapeResp = await fetch("https://api.firecrawl.dev/v1/scrape", {
+          const scrapeResp = await fetch(`${FIRECRAWL_URL}/v1/scrape`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
