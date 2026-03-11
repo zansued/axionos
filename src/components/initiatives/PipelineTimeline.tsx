@@ -13,8 +13,7 @@ const LAYER_RANGES: { label: string; from: number; to: number }[] = [
   { label: "Code Generation", from: 17, to: 19 },
   { label: "Squad & Execution", from: 20, to: 22 },
   { label: "Validation & Publish", from: 23, to: 25 },
-  { label: "Growth & Evolution", from: 26, to: 34 },
-  { label: "Finalização", from: 35, to: 35 },
+  { label: "Runtime", from: 27, to: 28 },
 ];
 
 function getLayerLabel(index: number): string {

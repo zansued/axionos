@@ -121,7 +121,7 @@ export default function RadialOrbitalTimeline({
       codegen: "Code Generation",
       execution: "Squad & Execution",
       validation: "Validation & Publish",
-      growth: "Growth & Evolution",
+      runtime: "Runtime",
     };
     return labels[layer] || "";
   };
