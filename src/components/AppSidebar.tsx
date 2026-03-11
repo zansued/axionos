@@ -236,7 +236,13 @@ export function AppSidebar() {
               onClick={signOut}
             >
               <LogOut className="mr-2 h-4 w-4 shrink-0" />
-              {!collapsed && <span className="text-sm">Sign Out</span>}
+              <motion.span
+                animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : "auto" }}
+                transition={{ duration: 0.2 }}
+                className="text-sm whitespace-nowrap overflow-hidden"
+              >
+                Sign Out
+              </motion.span>
             </Button>
           </div>
         </SidebarContent>
