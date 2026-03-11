@@ -419,7 +419,7 @@ const App = () => (
                             <Route path="/workspace" element={<LegacyRedirect to="/builder/workspace" />} />
                             <Route path="/journey" element={<LegacyRedirect to="/builder/journey" />} />
                             <Route path="/onboarding" element={<LegacyRedirect to="/builder/onboarding" />} />
-                            <Route path="/planning" element={<LegacyRedirect to="/builder/initiatives" />} />
+                            <Route path="/planning" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/pipeline-detail" element={<LegacyRedirect to="/builder/pipeline-detail" />} />
                             <Route path="/execution-history" element={<LegacyRedirect to="/builder/execution-history" />} />
                             <Route path="/repair-loop" element={<LegacyRedirect to="/builder/repair-loop" />} />
