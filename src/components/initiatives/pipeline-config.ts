@@ -79,25 +79,8 @@ export const PIPELINE_STEPS = [
   { key: "deployed", label: "Deployed ✓", icon: Globe, color: "text-success", bg: "bg-success/10" },
   { key: "deploy_failed", label: "Deploy Failed", icon: Globe, color: "text-destructive", bg: "bg-destructive/10" },
 
-  // ── Growth & Evolution Layer (Stages 24-32) ──
-  { key: "observing_product", label: "Observability ▶", icon: Eye, color: "text-warning", bg: "bg-warning/10" },
-  { key: "product_observed", label: "Observability ✓", icon: Eye, color: "text-accent", bg: "bg-accent/10" },
-  { key: "analyzing_product_metrics", label: "Product Analytics ▶", icon: Activity, color: "text-warning", bg: "bg-warning/10" },
-  { key: "product_metrics_analyzed", label: "Product Analytics ✓", icon: Activity, color: "text-accent", bg: "bg-accent/10" },
-  { key: "analyzing_user_behavior", label: "User Behavior ▶", icon: Users, color: "text-warning", bg: "bg-warning/10" },
-  { key: "user_behavior_analyzed", label: "User Behavior ✓", icon: Users, color: "text-accent", bg: "bg-accent/10" },
-  { key: "optimizing_growth", label: "Growth Optimization ▶", icon: TrendingUp, color: "text-warning", bg: "bg-warning/10" },
-  { key: "growth_optimized", label: "Growth Optimized ✓", icon: TrendingUp, color: "text-accent", bg: "bg-accent/10" },
-  { key: "learning_system", label: "Learning ▶", icon: GraduationCap, color: "text-warning", bg: "bg-warning/10" },
-  { key: "system_learned", label: "Learning ✓", icon: GraduationCap, color: "text-accent", bg: "bg-accent/10" },
-  { key: "evolving_product", label: "Product Evolution ▶", icon: Repeat, color: "text-warning", bg: "bg-warning/10" },
-  { key: "product_evolved", label: "Product Evolved ✓", icon: Repeat, color: "text-accent", bg: "bg-accent/10" },
-  { key: "evolving_architecture", label: "Architecture Evolution ▶", icon: Layers, color: "text-warning", bg: "bg-warning/10" },
-  { key: "architecture_evolved", label: "Architecture Evolved ✓", icon: Layers, color: "text-accent", bg: "bg-accent/10" },
-  { key: "managing_portfolio", label: "Portfolio Manager ▶", icon: FolderKanban, color: "text-warning", bg: "bg-warning/10" },
-  { key: "portfolio_managed", label: "Portfolio Managed ✓", icon: FolderKanban, color: "text-accent", bg: "bg-accent/10" },
-  { key: "evolving_system", label: "System Evolution ▶", icon: Settings2, color: "text-warning", bg: "bg-warning/10" },
-  { key: "system_evolved", label: "System Evolved ✓", icon: Settings2, color: "text-accent", bg: "bg-accent/10" },
+  // ── Runtime (final visible stage) ──
+  { key: "runtime_active", label: "Runtime Active", icon: Monitor, color: "text-success", bg: "bg-success/10" },
 
   // ── Final ──
   { key: "completed", label: "Concluído", icon: CheckCircle2, color: "text-success", bg: "bg-success/10" },
