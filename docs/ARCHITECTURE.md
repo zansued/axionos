@@ -794,7 +794,7 @@ Engineering Memory (Layer 5) is a **cross-layer infrastructure** that captures k
 
 The Agent OS is the runtime architecture governing how agents are selected, executed, governed and coordinated. It consists of 18 modules organized into 5 architectural planes.
 
-> **Full specification:** [AGENTS.md](AGENTS.md) — canonical reference for planes, modules, agent types, contracts, safety boundaries, and events.
+> **Full specification:** [GOVERNANCE.md](GOVERNANCE.md) — canonical reference for planes, modules, agent types, contracts, safety boundaries, and events.
 
 | Plane | Status | Key Modules |
 |-------|--------|-------------|
