@@ -120,6 +120,20 @@ serve(async (req) => {
 
     if (fileEntries.length === 0) throw new Error("Nenhum arquivo aprovado pronto para publicação");
 
+    // ── Auto-inject deterministic scaffold files BEFORE pre-flight ──
+    const existingPaths = new Set(fileEntries.map(f => f.path));
+    const SCAFFOLD_FILES = [
+      "index.html", "vite.config.ts", "tsconfig.json", "tsconfig.node.json",
+      "tsconfig.app.json", "postcss.config.js", "tailwind.config.js", "vercel.json",
+      ".nvmrc", ".node-version", "eslint.config.js", "public/_redirects", "netlify.toml",
+    ];
+    for (const sp of SCAFFOLD_FILES) {
+      if (!existingPaths.has(sp) && DETERMINISTIC_FILES[sp]) {
+        fileEntries.push({ path: sp, content: DETERMINISTIC_FILES[sp], type: "scaffold", summary: `Auto-injected: ${sp}` });
+        existingPaths.add(sp);
+      }
+    }
+
     // ── Dependency Integrity Check ──
     const packageJsonEntry = fileEntries.find(f => f.path === "package.json");
     if (packageJsonEntry) {
