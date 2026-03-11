@@ -616,6 +616,7 @@ export type {
   CanonRetrievalRequest,
   CanonRetrievalResult,
   CanonTraceRecord,
+  CanonKnowledgePacket,
   StageCanonProfile,
 } from "./canon-orchestrator-integration.ts";
 

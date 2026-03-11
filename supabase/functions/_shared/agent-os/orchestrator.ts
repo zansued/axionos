@@ -61,6 +61,8 @@ export interface OrchestratorOptions {
   policies: StagePolicy[];
   eventBus?: EventBus;
   maxRollbacks?: number;
+  /** Sprint 139: Supabase client for real Canon retrieval */
+  supabaseClient?: unknown;
 }
 
 export class AgentOS {
@@ -68,12 +70,14 @@ export class AgentOS {
   private policies: StagePolicy[];
   private eventBus: EventBus;
   private maxRollbacks: number;
+  private supabaseClient?: unknown;
 
   constructor(options: OrchestratorOptions) {
     this.registry = options.registry;
     this.policies = options.policies;
     this.eventBus = options.eventBus ?? new EventBus();
     this.maxRollbacks = options.maxRollbacks ?? 3;
+    this.supabaseClient = options.supabaseClient;
   }
 
   async run(input: WorkInput): Promise<RunState> {
@@ -111,7 +115,7 @@ export class AgentOS {
 
       try {
         const canonRequest = buildCanonRetrievalRequest(currentStage, input);
-        const canonResult = await retrieveCanonKnowledge(canonRequest);
+        const canonResult = await retrieveCanonKnowledge(canonRequest, this.supabaseClient as any);
         enrichedInput = injectCanonIntoWorkInput(enrichedInput, canonResult);
         canonTrace = buildCanonTraceRecord(currentStage, canonResult);
 
