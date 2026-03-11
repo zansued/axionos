@@ -1,27 +1,43 @@
 /**
- * ObservabilityPanel — Mini throughput chart and quick actions for the dashboard.
+ * ObservabilityPanel — Mini throughput chart and quick actions.
+ * Phase 3: Now consumes metrics via the Metric Data Contract.
  */
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BarChart3, Zap, Plus, Bot, Eye, Radio, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useResolvedMetrics } from "@/hooks/useResolvedMetrics";
 
 const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
 
 export function ObservabilityMini() {
+  const { getMetric } = useResolvedMetrics();
+  const avg = getMetric("pipeline_throughput_avg");
+  const peak = getMetric("pipeline_throughput_peak");
+  const errors = getMetric("pipeline_errors");
+
   const bars = [65, 82, 45, 91, 73, 88, 56, 94, 77, 69, 85, 92];
+  const isMock = avg?.source === "mock";
 
   return (
     <motion.div variants={item}>
       <Card className="border-border/40 bg-card/80 h-full">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <BarChart3 className="h-4 w-4 text-primary" />
-              Pipeline Throughput
-            </CardTitle>
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <BarChart3 className="h-4 w-4 text-primary" />
+                Pipeline Throughput
+              </CardTitle>
+              {isMock && (
+                <Badge variant="outline" className="text-[8px] px-1 py-0 border-warning/30 text-warning/70 font-normal">
+                  Simulated
+                </Badge>
+              )}
+            </div>
             <span className="text-xs text-muted-foreground">Last 24h</span>
           </div>
         </CardHeader>
@@ -36,9 +52,9 @@ export function ObservabilityMini() {
             ))}
           </div>
           <div className="flex items-center justify-between mt-3 text-xs text-muted-foreground">
-            <span>Avg: 78%</span>
-            <span>Peak: 94%</span>
-            <span>Errors: 2</span>
+            <span>Avg: {avg?.value ?? "—"}</span>
+            <span>Peak: {peak?.value ?? "—"}</span>
+            <span>Errors: {errors?.value ?? "—"}</span>
           </div>
         </CardContent>
       </Card>
