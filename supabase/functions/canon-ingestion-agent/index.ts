@@ -18,8 +18,10 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
-    if (!FIRECRAWL_API_KEY) return json({ error: "FIRECRAWL_API_KEY not configured" }, 500);
+    // Prefer self-hosted Firecrawl, fall back to managed connector
+    const FIRECRAWL_URL = Deno.env.get("FIRECRAWL_SELF_HOSTED_URL") || "https://api.firecrawl.dev";
+    const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_SELF_HOSTED_KEY") || Deno.env.get("FIRECRAWL_API_KEY");
+    if (!FIRECRAWL_API_KEY) return json({ error: "FIRECRAWL API KEY not configured" }, 500);
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) return json({ error: "LOVABLE_API_KEY not configured" }, 500);
@@ -60,7 +62,7 @@ serve(async (req) => {
         try {
           // 3. Crawl with Firecrawl
           console.log(`Scraping source: ${source.source_url}`);
-          const scrapeResp = await fetch("https://api.firecrawl.dev/v1/scrape", {
+          const scrapeResp = await fetch(`${FIRECRAWL_URL}/v1/scrape`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
