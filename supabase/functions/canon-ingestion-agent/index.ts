@@ -270,9 +270,10 @@ Return ONLY a valid JSON array, no other text.`,
             }
           }
 
-          // 8. Complete sync run
-          await completeSyncRun(supabase, syncRun.id, source_id, patterns.length, accepted, rejected,
-            `Extracted ${patterns.length} patterns, ${accepted} new candidates created, ${rejected} duplicates skipped`);
+          // 8. Complete sync run — lifecycle → "candidate_generated"
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "candidate_generated" }).eq("id", source_id);
+          await completeSyncRun(supabase, syncRun.id, source_id, patterns.length, accepted, rejected, 1, 1, rejected,
+            `Extracted ${patterns.length} patterns, ${accepted} new candidates created, ${rejected} duplicates skipped`, "candidate_generated");
 
           return json({
             success: true,
@@ -284,7 +285,8 @@ Return ONLY a valid JSON array, no other text.`,
 
         } catch (innerErr) {
           console.error("Ingestion error:", innerErr);
-          await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, `Error: ${innerErr.message}`);
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
+          await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 0, 0, 0, `Error: ${innerErr.message}`, "failed");
           throw innerErr;
         }
       }
