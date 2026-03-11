@@ -49,6 +49,38 @@ These layers must **never** be collapsed into a single interface.
 
 ---
 
+## Operational Decision Chain
+
+AxionOS follows a strict six-layer decision and execution chain. All operational behavior respects this flow:
+
+```
+Canon / Library           -- informs
+   |
+Readiness / Events / Metrics  -- evaluates
+   |
+Policy / Governance       -- constrains
+   |
+Action Engine             -- formalizes
+   |
+AgentOS Orchestrator      -- orchestrates
+   |
+Agent Executor / Human    -- acts
+```
+
+**Canonical Rule:**
+- Canon informs
+- Readiness evaluates
+- Policy constrains
+- Action Engine formalizes
+- AgentOS orchestrates
+- Executors act
+
+No layer may assume the responsibilities of another. Canon never triggers actions. Policy never executes. The Action Engine never runs agents directly. This separation prevents the system from degenerating into unstructured agent chaos.
+
+For full details, see **[ARCHITECTURE.md](ARCHITECTURE.md) — Section 4B: Operational Decision Chain**.
+
+---
+
 ## Core Engines
 
 AxionOS is powered by multiple coordinated engines:
