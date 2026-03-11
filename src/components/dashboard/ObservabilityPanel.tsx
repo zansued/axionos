@@ -49,7 +49,7 @@ export function ObservabilityMini() {
 export function QuickActions() {
   const navigate = useNavigate();
   const actions = [
-    { label: "New Project", icon: Plus, action: () => navigate("/builder/initiatives") },
+    { label: "New Project", icon: Plus, action: () => navigate("/builder/projects") },
     { label: "Inspect Agents", icon: Bot, action: () => navigate("/builder/agents") },
     { label: "Runtime", icon: Radio, action: () => navigate("/builder/runtime") },
     { label: "Observability", icon: Eye, action: () => navigate("/builder/execution-observability") },

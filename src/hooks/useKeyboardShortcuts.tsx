@@ -19,7 +19,7 @@ export function useKeyboardShortcuts() {
 
   const shortcuts: Shortcut[] = [
     { keys: ["g", "d"], label: "shortcuts.goToDashboard", category: "navigation", action: () => navigate("/builder/dashboard") },
-    { keys: ["g", "i"], label: "shortcuts.goToInitiatives", category: "navigation", action: () => navigate("/builder/initiatives") },
+    { keys: ["g", "i"], label: "shortcuts.goToInitiatives", category: "navigation", action: () => navigate("/builder/projects") },
     { keys: ["g", "k"], label: "shortcuts.goToKanban", category: "navigation", action: () => navigate("/builder/kanban") },
     { keys: ["g", "c"], label: "shortcuts.goToCode", category: "navigation", action: () => navigate("/builder/code") },
     { keys: ["t"], label: "shortcuts.toggleTheme", category: "actions", action: () => setTheme(theme === "dark" ? "light" : "dark") },
