@@ -14,7 +14,7 @@
 
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
-import { PageGuidanceShell } from "@/components/guidance";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -497,7 +497,7 @@ export default function BoundedOperations() {
           </p>
         </div>
 
-        <PageGuidanceShell pageKey="bounded-operations" compact />
+        
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">

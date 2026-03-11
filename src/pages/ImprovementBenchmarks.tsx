@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { PageGuidanceShell } from "@/components/guidance";
+
 import { useOrg } from "@/contexts/OrgContext";
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -65,7 +65,7 @@ export default function ImprovementBenchmarks() {
   return (
     <AppShell>
       <div className="space-y-6">
-            <PageGuidanceShell pageKey="benchmarks" />
+            
             <div>
               <h1 className="text-2xl font-bold text-foreground">Sandbox Benchmarking & Promotion</h1>
               <p className="text-sm text-muted-foreground mt-1">Governed benchmarking of improvement candidates with human-reviewed promotion decisions.</p>

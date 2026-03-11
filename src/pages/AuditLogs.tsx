@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
-import { PageGuidanceShell } from "@/components/guidance";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { useOrg } from "@/contexts/OrgContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -202,7 +202,7 @@ export default function AuditLogs() {
   return (
     <AppLayout>
       <div className="space-y-6">
-        <PageGuidanceShell pageKey="audit" />
+        
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>

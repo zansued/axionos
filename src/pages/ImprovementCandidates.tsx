@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
-import { PageGuidanceShell } from "@/components/guidance";
+
 import { useOrg } from "@/contexts/OrgContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -166,7 +166,7 @@ export default function ImprovementCandidates() {
 
   return (
     <AppLayout>
-      <PageGuidanceShell pageKey="candidates" />
+      
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Improvement Candidates</h1>

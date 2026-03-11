@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
-import { PageGuidanceShell } from "@/components/guidance";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -56,7 +56,7 @@ export default function Delivery() {
   return (
     <AppLayout>
       <div className="p-6 space-y-6 max-w-7xl mx-auto">
-        <PageGuidanceShell pageKey="deployments" />
+        
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">

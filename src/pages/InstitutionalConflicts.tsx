@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { PageGuidanceShell } from "@/components/guidance/PageGuidanceShell";
+
 import {
   Scale,
   AlertTriangle,
@@ -152,7 +152,7 @@ export default function InstitutionalConflicts() {
 
   return (
     <>
-      <PageGuidanceShell pageKey="institutional-conflicts" />
+      
       <div className="min-h-screen bg-background p-6 space-y-6">
         <div className="flex items-center gap-3">
           <Scale className="h-7 w-7 text-primary" />

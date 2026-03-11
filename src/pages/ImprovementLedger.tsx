@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
-import { PageGuidanceShell } from "@/components/guidance";
+
 import { useOrg } from "@/contexts/OrgContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -139,7 +139,7 @@ export default function ImprovementLedger() {
 
   return (
     <AppLayout>
-      <PageGuidanceShell pageKey="evidence" />
+      
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Improvement Ledger</h1>

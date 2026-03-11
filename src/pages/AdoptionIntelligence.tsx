@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, AlertTriangle, CheckCircle2, Users, BarChart3, Target } from "lucide-react";
-import { PageGuidanceShell } from "@/components/guidance";
+
 
 export default function AdoptionIntelligence() {
   const { overview } = useAdoptionIntelligence();
@@ -18,7 +18,7 @@ export default function AdoptionIntelligence() {
   return (
     <AppShell>
       <div className="space-y-6">
-            <PageGuidanceShell pageKey="adoption" />
+            
             <div>
               <h1 className="text-2xl font-bold text-foreground">Adoption Intelligence</h1>
               <p className="text-muted-foreground">Customer success signals, journey adoption, and friction analysis.</p>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
-import { PageGuidanceShell } from "@/components/guidance";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -54,7 +54,7 @@ export default function AgentRouting() {
   return (
     <AppShell>
       <div className="space-y-6">
-            <PageGuidanceShell pageKey="routing" />
+            
             <div>
               <h1 className="text-2xl font-bold text-foreground">Agent Routing & Arbitration</h1>
               <p className="text-sm text-muted-foreground mt-1">Context-aware capability routing decisions with explainability, fallback paths, and governance audit.</p>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
-import { PageGuidanceShell } from "@/components/guidance";
+
 import { useOrg } from "@/contexts/OrgContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -132,7 +132,7 @@ export default function Extensions() {
   return (
     <AppLayout>
       <div className="space-y-6">
-        <PageGuidanceShell pageKey="extensions" />
+        
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">

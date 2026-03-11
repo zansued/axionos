@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { PageGuidanceShell } from "@/components/guidance";
+
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { AppShell } from "@/components/AppShell";
@@ -62,7 +62,7 @@ export default function CapabilityGovernance() {
   return (
     <AppShell>
       <div className="space-y-6">
-          <PageGuidanceShell pageKey="capability-governance" />
+          
           <div>
             <h1 className="text-2xl font-bold text-foreground">Capability Governance</h1>
             <p className="text-sm text-muted-foreground">Trust postures, entitlements, and approval flows for governed capability access.</p>
