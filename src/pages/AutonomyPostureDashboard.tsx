@@ -33,10 +33,8 @@ export default function AutonomyPostureDashboard() {
   const { data: coldStart } = useColdStart();
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Autonomy Posture</h1>
             <p className="text-muted-foreground text-sm">Evidence-based autonomy levels with bounded reversibility.</p>
