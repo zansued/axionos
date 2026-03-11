@@ -185,8 +185,8 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Ver painel de performance", en: "View performance panel" }, route: "/observability", icon: "Activity" },
-      { label: { pt: "Inspecionar padrões de erro", en: "Inspect error patterns" }, route: "/observability", icon: "AlertTriangle" },
+      { label: { pt: "Ver painel de performance", en: "View performance panel" }, route: "/owner/platform-observability", icon: "Activity" },
+      { label: { pt: "Inspecionar padrões de erro", en: "Inspect error patterns" }, route: "/owner/platform-observability", icon: "AlertTriangle" },
     ],
   },
 
