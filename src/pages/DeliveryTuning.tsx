@@ -73,10 +73,8 @@ export default function DeliveryTuning() {
   ];
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-auto">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Reliability-Aware Delivery Tuning</h1>
             <p className="text-sm text-muted-foreground">Bounded tuning recommendations based on observed delivery outcomes, regressions, and risk posture.</p>
