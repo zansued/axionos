@@ -63,11 +63,8 @@ export default function ImprovementBenchmarks() {
   const reviewBacklog = mockBenchmarks.filter(b => b.status === "completed" && b.risk_posture !== "high").length;
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <SidebarInset className="flex-1">
-          <div className="p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
             <PageGuidanceShell pageKey="benchmarks" />
             <div>
               <h1 className="text-2xl font-bold text-foreground">Sandbox Benchmarking & Promotion</h1>
