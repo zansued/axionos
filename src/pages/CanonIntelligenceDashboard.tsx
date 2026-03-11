@@ -15,6 +15,7 @@ import { RetrievalExplorerTab } from "@/components/canon-intelligence/RetrievalE
 import { CanonGraphTab } from "@/components/canon-intelligence/CanonGraphTab";
 import { CanonGovernanceTab } from "@/components/canon-intelligence/CanonGovernanceTab";
 import { OperationalLearningTab } from "@/components/canon-intelligence/OperationalLearningTab";
+import { CanonIngestionPanel } from "@/components/canon-intelligence/CanonIngestionPanel";
 
 export default function CanonIntelligenceDashboard() {
   const intel = useCanonIntelligence();
