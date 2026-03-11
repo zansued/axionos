@@ -130,9 +130,8 @@ export default function WorkingMemory() {
           </Tabs>
 
           <ContextDetailDrawer contextId={selectedId} onClose={() => setSelectedId(null)} />
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
 

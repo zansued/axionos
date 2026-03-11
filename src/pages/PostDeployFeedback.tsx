@@ -173,8 +173,7 @@ export default function PostDeployFeedback() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

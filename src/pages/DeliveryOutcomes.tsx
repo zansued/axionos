@@ -200,8 +200,7 @@ export default function DeliveryOutcomes() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

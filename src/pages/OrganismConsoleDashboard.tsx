@@ -253,8 +253,7 @@ export default function OrganismConsoleDashboard() {
               </CardContent>
             </Card>
           )}
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

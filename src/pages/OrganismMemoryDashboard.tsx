@@ -116,8 +116,7 @@ export default function OrganismMemoryDashboard() {
               )}
             </CardContent>
           </Card>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

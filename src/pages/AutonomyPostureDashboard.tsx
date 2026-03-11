@@ -439,8 +439,7 @@ export default function AutonomyPostureDashboard() {
               </div>
             </TabsContent>
           </Tabs>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

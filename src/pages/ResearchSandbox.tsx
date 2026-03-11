@@ -319,8 +319,7 @@ export default function ResearchSandbox() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

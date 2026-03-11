@@ -210,8 +210,7 @@ export default function CompoundingAdvantageDashboard() {
               </Card>
             </TabsContent>
           </Tabs>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

@@ -243,8 +243,7 @@ export default function SwarmExecution() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

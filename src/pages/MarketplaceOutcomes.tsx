@@ -148,8 +148,7 @@ export default function MarketplaceOutcomes() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

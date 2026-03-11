@@ -184,8 +184,7 @@ export default function PilotMarketplace() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

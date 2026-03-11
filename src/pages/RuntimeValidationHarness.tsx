@@ -179,8 +179,7 @@ export default function RuntimeValidationHarness() {
               </Card>
             </>
           )}
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

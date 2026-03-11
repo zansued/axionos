@@ -353,8 +353,7 @@ export default function ResearchPatterns() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

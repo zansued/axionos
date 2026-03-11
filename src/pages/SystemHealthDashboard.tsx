@@ -110,8 +110,7 @@ export default function SystemHealthDashboard() {
               </CardContent>
             </Card>
           )}
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

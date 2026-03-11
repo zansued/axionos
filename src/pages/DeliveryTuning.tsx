@@ -176,8 +176,7 @@ export default function DeliveryTuning() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
