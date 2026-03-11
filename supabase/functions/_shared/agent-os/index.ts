@@ -684,3 +684,14 @@ export type {
   ActionAuditEntry,
   ActionRegistryQuery,
 } from "./action-registry.ts";
+
+// Action Engine — Action-to-AgentOS Dispatch (Sprint 147 / AE-05)
+export {
+  buildActionDispatchRequest,
+  isDispatchRequest,
+} from "./action-dispatch.ts";
+export type {
+  ActionDispatchRequest,
+  ActionDispatchPolicyState,
+  ActionDispatchResult,
+} from "./action-dispatch.ts";
