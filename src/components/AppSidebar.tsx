@@ -140,17 +140,18 @@ export function AppSidebar() {
             {/* ── Brand ── */}
             <SidebarGroup className="pb-0">
               <SidebarGroupContent>
-                <div className="flex items-center gap-2 px-2 py-3">
+                <div className="flex items-center gap-2 px-2 py-3 overflow-hidden">
                   <img src={axionLogo} alt="AxionOS" className="h-7 w-7 shrink-0" />
-                  {!collapsed && (
-                    <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="font-display text-sm font-semibold tracking-tight whitespace-nowrap"
-                    >
-                      Axion<span className="font-normal text-muted-foreground">OS</span>
-                    </motion.span>
-                  )}
+                  <motion.span
+                    animate={{
+                      opacity: collapsed ? 0 : 1,
+                      width: collapsed ? 0 : "auto",
+                    }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    className="font-display text-sm font-semibold tracking-tight whitespace-nowrap overflow-hidden"
+                  >
+                    Axion<span className="font-normal text-muted-foreground">OS</span>
+                  </motion.span>
                 </div>
               </SidebarGroupContent>
             </SidebarGroup>
