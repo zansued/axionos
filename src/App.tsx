@@ -17,6 +17,7 @@ import { KeyboardShortcutsManager } from "@/components/KeyboardShortcutsManager"
 import { SurfaceGuard } from "@/components/SurfaceGuard";
 import { useEffect } from "react";
 
+import ApprovalQueue from "./pages/ApprovalQueue";
 // ─── Existing Page Imports ──────────────────────────────────────────────────
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
@@ -279,7 +280,7 @@ const App = () => (
                             {/* Governance */}
                             <Route path="/builder/delivery-governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
                             <Route path="/builder/governance-overview" element={<ProtectedRoute><GovernanceOverviewPage /></ProtectedRoute>} />
-                            <Route path="/builder/pending-approvals" element={<ProtectedRoute><PendingApprovalsPage /></ProtectedRoute>} />
+                            <Route path="/builder/pending-approvals" element={<ProtectedRoute><ApprovalQueue /></ProtectedRoute>} />
                             <Route path="/builder/policy-controls" element={<ProtectedRoute><PolicyControlsPage /></ProtectedRoute>} />
 
                             {/* Settings */}
