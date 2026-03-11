@@ -194,7 +194,7 @@ export function CanonGovernanceTab({ library, reviews, conflicts, supersessions,
   );
 }
 
-function GovMetric({ value, label, warn }: { value: number; label: string; warn?: boolean }) {
+function GovMetric({ value, label, warn, accent }: { value: number; label: string; warn?: boolean; accent?: boolean }) {
   return (
     <Card className="border-border/30 bg-card/50">
       <CardContent className="pt-3 pb-2 text-center">
