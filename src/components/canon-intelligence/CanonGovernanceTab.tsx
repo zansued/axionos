@@ -29,10 +29,19 @@ const SEVERITY_BADGE: Record<string, string> = {
 };
 
 export function CanonGovernanceTab({ library, reviews, conflicts, supersessions, candidates }: CanonGovernanceTabProps) {
+  const { promoteCandidateToCanon, promoting } = useCanonPipeline();
+  const [promotingId, setPromotingId] = useState<string | null>(null);
   const pendingReviews = reviews.filter((r: any) => r.verdict === "pending");
   const deprecatedEntries = library.filter((e: any) => e.lifecycle_status === "deprecated" || e.lifecycle_status === "archived");
   const openConflicts = conflicts.filter((c: any) => c.resolution_status !== "resolved");
   const pendingCandidates = candidates.filter((c: any) => c.promotion_status === "pending");
+  const approvedCandidates = candidates.filter((c: any) => c.internal_validation_status === "approved" && c.promotion_status === "pending");
+
+  const handlePromote = async (id: string) => {
+    setPromotingId(id);
+    await promoteCandidateToCanon(id);
+    setPromotingId(null);
+  };
 
   return (
     <div className="space-y-5">
