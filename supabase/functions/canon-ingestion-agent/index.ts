@@ -71,8 +71,11 @@ serve(async (req) => {
         if (syncErr) throw syncErr;
 
         try {
-          // 3. Crawl with Firecrawl
+          // 4. Crawl with Firecrawl — update lifecycle to "fetched"
           console.log(`Scraping source: ${source.source_url}`);
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "fetched" }).eq("id", source_id);
+          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "fetched" }).eq("id", syncRun.id);
+
           const scrapeResp = await fetch(`${FIRECRAWL_URL}/v1/scrape`, {
             method: "POST",
             headers: {
@@ -90,13 +93,19 @@ serve(async (req) => {
           const scrapeData = await scrapeResp.json();
           if (!scrapeResp.ok) {
             console.error("Firecrawl error:", scrapeData);
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, `Firecrawl error: ${scrapeData.error || scrapeResp.status}`);
+            await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
+            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 0, 0, 0, `Firecrawl error: ${scrapeData.error || scrapeResp.status}`, "failed");
             return json({ error: "Crawl failed", details: scrapeData.error }, 502);
           }
 
           const markdown = scrapeData.data?.markdown || scrapeData.markdown || "";
+
+          // Update to "parsed" 
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "parsed" }).eq("id", source_id);
+          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "parsed", documents_fetched: 1 }).eq("id", syncRun.id);
+
           if (!markdown || markdown.length < 100) {
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, "Insufficient content extracted");
+            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 0, 0, "Insufficient content extracted", "parsed");
             return json({ success: true, candidates_created: 0, message: "Insufficient content" });
           }
 
