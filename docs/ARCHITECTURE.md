@@ -433,71 +433,32 @@ flowchart TB
 
 ## 5. Architectural Direction
 
-### 5.1 Current — Strategic Autonomy & Civilizational Coordination — ✅ Implemented & Hardened
+### 5.1 Current — Adaptive Operational Organism — ✅ Level 10+ Complete
 
-With all 110 sprints complete, 90+ architectural layers active, and the full stack from execution kernel through strategic coordination operational, AxionOS has achieved its **Strategic Autonomy & Civilizational Coordination** thesis.
+With all 138 sprints complete, 100+ architectural layers active, and the full stack from execution kernel through adaptive operational organism operational, AxionOS has achieved **Level 10+ maturity**.
 
-The eight pillars are implemented:
+All blocks from Foundation through AD are implemented and hardened. The system now operates as a governed adaptive organism with the following capabilities fully active:
+
 - **Explain better** — ✅ PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, CopilotTrigger, 4 copilot submodes, centralized content registries
 - **Decide better** — ✅ Institutional Decision Engine, sovereign decision rights, role-aware experience, approval posture hints
-- **Learn better** — ✅ Evidence-governed improvement loops, cross-stage learning, predictive detection, calibration
-- **Coordinate better** — ✅ Multi-agent coordination (debate, working memory, bounded swarm)
-- **Operate autonomously (bounded)** — ✅ Bounded autonomous operations, autonomy ladder, rollback posture
+- **Learn better** — ✅ Evidence-governed improvement loops, cross-stage learning, predictive detection, calibration, learning canonization
+- **Coordinate better** — ✅ Multi-agent coordination (debate, working memory, bounded swarm), adaptive coordination, attention allocation
+- **Operate autonomously (bounded)** — ✅ Bounded autonomous operations, autonomy ladder, rollback posture, outcome-based autonomy
 - **Adapt institutionally** — ✅ Cross-context doctrine adaptation, institutional conflict resolution, federated intelligence, resilience governance
 - **Govern sovereignty** — ✅ Memory constitution, sovereign decision rights, dependency sovereignty, strategic succession
 - **Coordinate strategically** — ✅ Multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation
+- **Govern evolution** — ✅ Evolution proposal governance, architectural mutation control, reflective validation, kernel integrity guard
+- **Canonize knowledge** — ✅ Canon stewardship, pattern library & retrieval, failure memory, external knowledge intake
+- **Runtime sovereignty** — ✅ Live runtime feedback mesh, tenant doctrine, outcome-based autonomy, compounding advantage
+- **Organism-level awareness** — ✅ Multi-loop governance, systemic health model, organism memory, organism console
 
 ### 5.2 Reality Check — System Maturity Assessment
 
-AxionOS is no longer a concept. It has real, operational layers for execution, governance, memory, sovereignty, strategic coordination, and partial self-observation. However, it remains under active construction.
+AxionOS is no longer a concept. It has real, operational layers for execution, governance, memory, sovereignty, strategic coordination, reflexive governance, canonical knowledge, runtime sovereignty, and organism-level self-observation. However, it remains under active refinement.
 
-**Strongest in:** Governance, orchestration, explainability, strategic control, tenant isolation, advisory intelligence, audit and lineage.
+**Strongest in:** Governance, orchestration, explainability, strategic control, tenant isolation, advisory intelligence, audit and lineage, canonical knowledge governance, reflexive self-regulation.
 
-**Still maturing in:** Fully autonomous runtime self-regulation, end-to-end delivery reliability under edge-case conditions, adaptive batch sizing, and runtime self-reconfiguration without manual intervention.
-
-**Key operational lesson (discovered during Block W):** The validation/fix loop phase revealed that AxionOS governance and observability layers are significantly stronger than its runtime self-reconfiguration capability. Oversized batches and excessive sequential AI calls within single edge functions caused timeout and orphan-job behavior. The system required manual correction to reduce batch sizes and harden execution paths. This gap between *strategic awareness* and *runtime adaptation* is the direct motivation for Block X.
-
-### 5.3 Next — Reflexive Governance & Evolution Control — 🔜 Planned (Block X)
-
-Block X (Sprints 111–114) introduces **reflexive governance** — the system's ability to govern its own evolution, mutation, self-repair, and kernel protection. Block W made the system strategically aware. Block X closes the gap between "the system understands its problems" and "the system safely reconfigures itself in response."
-
-Block X is not "more features." It is a **meta-governance layer** governing how AxionOS changes itself.
-
-**Four new architectural capabilities:**
-
-| Sprint | Capability | Architectural Contribution |
-|--------|-----------|---------------------------|
-| 111 | Evolution Proposal Governance Engine | Govern proposals for changing the system itself, distinguishing healthy evolution from unnecessary complexity. Ensures structural changes are justified, bounded, and reversible. |
-| 112 | Architectural Mutation Control Layer | Control architectural mutation by evaluating reversibility, blast radius, coupling expansion, and mutation legitimacy. Prevents uncontrolled structural drift. |
-| 113 | Reflective Validation & Self-Revision Audit | Audit whether self-corrections and revisions actually improved the system or merely moved the problem elsewhere. Tracks revision effectiveness over time. |
-| 114 | Kernel Integrity & Anti-Corrosion Guard | Protect the kernel against corrosion, bloat, existential drift, and loss of core legibility and governance integrity. Preserves architectural identity. |
-
-**Logical chain:**
-- Block U: how to adapt, resolve conflict, federate, resist
-- Block V: how to remember, decide sovereignly, reduce dependency, survive succession
-- Block W: how to align horizons, arbitrate sacrifices, maintain mission, traverse long futures
-- **Block X: how to govern the system's own evolution, detect corrosion, and protect kernel integrity**
-- **Block Y: how to govern what the system knows about implementation and make that knowledge operational**
-
-### 5.4 Future — Implementation Canon & Knowledge Governance (Block Y)
-
-Block Y introduces the **Canonical Knowledge & Implementation Intelligence** layer.
-
-Its purpose is not to accumulate documentation, but to transform implementation knowledge into runtime-connected system capability.
-
-Block Y governs how implementation knowledge is:
-- stored
-- reviewed
-- approved
-- versioned
-- deprecated
-- retrieved
-- operationally applied
-
-This future layer enables AxionOS to maintain a governed implementation canon including:
-- approved architectural patterns
-- reusable implementation templates
-- curated code snippets
+**Still maturing in:** End-to-end delivery reliability under edge-case conditions, runtime self-reconfiguration quality, adoption feedback loops, and cross-tenant intelligence precision.
 - stack-specific conventions
 - failure memory and repair strategies
 - validated external knowledge updates
