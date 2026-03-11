@@ -244,7 +244,7 @@ const App = () => (
                             <Route path="/builder/code" element={<ProtectedRoute><CodeExplorer /></ProtectedRoute>} />
                             <Route path="/builder/artifacts" element={<ProtectedRoute><Artifacts /></ProtectedRoute>} />
                             <Route path="/builder/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
-                            <Route path="/builder/project/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
+                            <Route path="/builder/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
 
                             {/* Agents */}
                             <Route path="/builder/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
