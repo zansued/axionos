@@ -233,10 +233,8 @@ export default function ArchitecturePromotion() {
   ];
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <SidebarInset className="flex-1">
+    <AppShell>
+      <div className="space-y-6">
           <main className="p-6 space-y-6">
             <div className="flex items-start justify-between gap-4">
               <div>
