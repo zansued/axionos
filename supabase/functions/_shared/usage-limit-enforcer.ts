@@ -43,7 +43,7 @@ export async function enforceUsageLimits(
     max_initiatives_per_month: 20,
     max_tokens_per_month: 2000000,
     max_deployments_per_month: 10,
-    max_parallel_runs: 4,
+    max_parallel_runs: 8,
   };
 
   const limits = {
