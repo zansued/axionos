@@ -399,10 +399,10 @@ const App = () => (
                                 LEGACY REDIRECTS (deprecated — log usage)
                                 ══════════════════════════════════════════════ */}
                             <Route path="/initiatives" element={<LegacyRedirect to="/builder/projects" />} />
-                            <Route path="/stories" element={<LegacyRedirect to="/builder/stories" />} />
-                            <Route path="/kanban" element={<LegacyRedirect to="/builder/kanban" />} />
-                            <Route path="/code" element={<LegacyRedirect to="/builder/code" />} />
-                            <Route path="/artifacts" element={<LegacyRedirect to="/builder/artifacts" />} />
+                            <Route path="/stories" element={<LegacyRedirect to="/builder/projects" />} />
+                            <Route path="/kanban" element={<LegacyRedirect to="/builder/projects" />} />
+                            <Route path="/code" element={<LegacyRedirect to="/builder/projects" />} />
+                            <Route path="/artifacts" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/projects" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/project/:id" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/agents" element={<LegacyRedirect to="/builder/agents" />} />
