@@ -17,7 +17,7 @@ import { useSLABreaches } from "@/hooks/useStageSLA";
 import { useI18n } from "@/contexts/I18nContext";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { PageGuidanceShell } from "@/components/guidance";
+
 import { exportToCSV } from "@/lib/export-utils";
 import {
   DropdownMenu,
