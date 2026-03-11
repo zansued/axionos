@@ -4,6 +4,7 @@
 //
 // Sprint 122: Canon retrieval integrated before agent dispatch.
 // Sprint 140: Policy enforcement integrated before agent dispatch.
+// Sprint 141: Readiness gate integrated before policy evaluation.
 //
 // Operational Decision Chain enforced:
 //   Canon informs → Readiness evaluates → Policy constrains →
