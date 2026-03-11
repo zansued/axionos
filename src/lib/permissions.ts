@@ -71,8 +71,9 @@ export const OWNER_SYSTEM_INTELLIGENCE: NavItem[] = [
 ];
 
 export const OWNER_INSTITUTIONAL_MEMORY: NavItem[] = [
-  { title: "Pattern Library", url: "/pattern-library",      icon: Brain },
-  { title: "Capabilities",   url: "/capability-registry",   icon: Fingerprint },
+  { title: "Pattern Library",      url: "/pattern-library",      icon: Brain },
+  { title: "Canon Intelligence",   url: "/canon-intelligence",   icon: Database },
+  { title: "Capabilities",         url: "/capability-registry",  icon: Fingerprint },
 ];
 
 export const OWNER_GOVERNANCE: NavItem[] = [
