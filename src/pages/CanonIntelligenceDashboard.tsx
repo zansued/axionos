@@ -129,6 +129,14 @@ export default function CanonIntelligenceDashboard() {
                 loading={learning.loading}
               />
             </TabsContent>
+
+            <TabsContent value="ingestion">
+              <CanonIngestionPanel
+                sources={intel.sources}
+                syncRuns={intel.syncRuns}
+                onRefresh={() => { intel.refetch(); stewardship.refetch(); }}
+              />
+            </TabsContent>
           </Tabs>
       </div>
     </AppShell>
