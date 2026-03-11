@@ -143,7 +143,7 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Filtrar por severidade", en: "Filter by severity" }, route: "/audit", icon: "Filter" },
+      { label: { pt: "Filtrar por severidade", en: "Filter by severity" }, route: "/owner/audit", icon: "Filter" },
       { label: { pt: "Exportar relatório", en: "Export report" }, icon: "Download" },
     ],
   },
