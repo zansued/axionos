@@ -10,8 +10,8 @@
 | Scope | Rule |
 |-------|------|
 | **Owns** | Agent OS 5 planes, 18-module inventory, 5 agent types, operational agents, supporting engines, learning agents, meta-agents, memory layers, contracts, safety boundaries, events |
-| **Must not define** | Roadmap sequencing (→ ROADMAP.md), sprint execution ledger (→ PLAN.md), system containers/C4 diagrams (→ ARCHITECTURE.md), Canon Intelligence Engine architecture (→ CANON_INTELLIGENCE_ENGINE.md) |
-| **Derived from** | PLAN.md for sprint context on module introductions; CANON_INTELLIGENCE_ENGINE.md for Canon knowledge layer integration |
+| **Must not define** | System containers/C4 diagrams (→ ARCHITECTURE.md), Canon Intelligence Engine architecture (→ CANON_INTELLIGENCE_ENGINE.md) |
+| **Derived from** | CANON_INTELLIGENCE_ENGINE.md for Canon knowledge layer integration |
 | **Update rule** | Update when Agent OS module inventory, contracts, or operational references change |
 
 ### Related Subsystems
