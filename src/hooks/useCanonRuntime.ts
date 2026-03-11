@@ -9,14 +9,14 @@ export function useCanonRuntime() {
   const sessions = useQuery({
     queryKey: ["canon-retrieval-sessions", orgId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("canon_retrieval_sessions")
+      const { data, error } = await (supabase
+        .from("canon_retrieval_sessions" as any)
         .select("*")
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false })
-        .limit(50);
+        .limit(50) as any);
       if (error) throw error;
-      return data;
+      return (data || []) as any[];
     },
     enabled: !!orgId,
   });
@@ -24,14 +24,14 @@ export function useCanonRuntime() {
   const applications = useQuery({
     queryKey: ["canon-runtime-applications", orgId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("canon_runtime_applications")
+      const { data, error } = await (supabase
+        .from("canon_runtime_applications" as any)
         .select("*")
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false })
-        .limit(100);
+        .limit(100) as any);
       if (error) throw error;
-      return data;
+      return (data || []) as any[];
     },
     enabled: !!orgId,
   });
@@ -39,36 +39,38 @@ export function useCanonRuntime() {
   const feedback = useQuery({
     queryKey: ["canon-retrieval-feedback", orgId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("canon_retrieval_feedback")
+      const { data, error } = await (supabase
+        .from("canon_retrieval_feedback" as any)
         .select("*")
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false })
-        .limit(50);
+        .limit(50) as any);
       if (error) throw error;
-      return data;
+      return (data || []) as any[];
     },
     enabled: !!orgId,
   });
 
-  // Compute analytics
+  const sessionData = sessions.data || [];
+  const appData = applications.data || [];
+
   const analytics = {
-    totalSessions: sessions.data?.length || 0,
-    activeSessions: sessions.data?.filter((s: any) => s.session_status === "active").length || 0,
-    completedSessions: sessions.data?.filter((s: any) => s.session_status === "completed").length || 0,
-    totalApplications: applications.data?.length || 0,
-    totalFeedback: feedback.data?.length || 0,
-    avgRetrieved: sessions.data?.length
-      ? Math.round(sessions.data.reduce((sum: number, s: any) => sum + (s.entries_retrieved || 0), 0) / sessions.data.length)
+    totalSessions: sessionData.length,
+    activeSessions: sessionData.filter((s: any) => s.session_status === "active").length,
+    completedSessions: sessionData.filter((s: any) => s.session_status === "completed").length,
+    totalApplications: appData.length,
+    totalFeedback: (feedback.data || []).length,
+    avgRetrieved: sessionData.length
+      ? Math.round(sessionData.reduce((sum: number, s: any) => sum + (s.entries_retrieved || 0), 0) / sessionData.length)
       : 0,
-    avgApplied: sessions.data?.length
-      ? Math.round(sessions.data.reduce((sum: number, s: any) => sum + (s.entries_applied || 0), 0) / sessions.data.length)
+    avgApplied: sessionData.length
+      ? Math.round(sessionData.reduce((sum: number, s: any) => sum + (s.entries_applied || 0), 0) / sessionData.length)
       : 0,
   };
 
   return {
-    sessions: sessions.data || [],
-    applications: applications.data || [],
+    sessions: sessionData,
+    applications: appData,
     feedback: feedback.data || [],
     analytics,
     loading: sessions.isLoading,
