@@ -12,7 +12,7 @@ import { ObservabilityMini, QuickActions } from "./ObservabilityPanel";
 
 const container = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.04 } },
+  show: { opacity: 1, transition: { staggerChildren: 0.04 } }
 };
 
 export function OperationalDashboard() {
@@ -21,12 +21,12 @@ export function OperationalDashboard() {
       variants={container}
       initial="hidden"
       animate="show"
-      className="space-y-4 max-w-[1600px]"
-    >
+      className="space-y-4 max-w-[1600px]">
+      
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-display font-semibold tracking-tight">Dashboard</h1>
+          <h1 className="text-xl font-display font-semibold tracking-tight py-[10px]">Dashboard</h1>
           <p className="text-xs text-muted-foreground mt-0.5">Idea → Software Running — AxionOS handles the rest</p>
         </div>
         <div className="flex items-center gap-2">
@@ -53,6 +53,6 @@ export function OperationalDashboard() {
           <QuickActions />
         </div>
       </div>
-    </motion.div>
-  );
+    </motion.div>);
+
 }
