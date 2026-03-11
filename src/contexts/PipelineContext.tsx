@@ -361,7 +361,11 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           discovery: "Descoberta inteligente concluída ✅",
           squad_formation: `Squad formado com ${result.agents?.length || 0} agentes ✅`,
           planning: `Planejamento concluído: 3 agentes, ${result.stories?.length || result.stories_created || 0} stories, ${result.total_subtasks || 0} subtasks ✅`,
-          approve: "Stage aprovado ✅",
+          approve: result.new_status === "completed"
+            ? "🏁 Iniciativa concluída com sucesso!"
+            : result.new_status
+              ? `Stage avançou: ${result.previous_status || "?"} → ${result.new_status} ✅`
+              : "Stage aprovado ✅",
           reject: "Ajustes solicitados — pipeline retornou ao estágio anterior ⟲",
           execution: `Implementação concluída: ${result.code_files || 0} arquivos (Code Architect → Developer → Integration) ✅`,
           validation: result.batch_incomplete
