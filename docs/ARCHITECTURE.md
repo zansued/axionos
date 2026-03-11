@@ -1331,17 +1331,16 @@ AxionOS distinguishes four architectural surface layers:
 
 ---
 
-## 17. Architectural Direction — Post-Block W
+## 17. Architectural Direction — Post-Block AD
 
-> **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
+With 138 sprints complete, all blocks from Foundation through Adaptive Operational Organism (AD) delivered and hardened, the platform has achieved Level 10+ maturity. 100+ architectural layers are active.
 
-With 110 sprints complete, all blocks from Foundation through Strategic Autonomy & Civilizational Coordination (W) delivered and hardened, the platform has achieved full strategic coordination maturity. 90+ architectural layers are active.
+### Completed Canon (Sprints 1–138)
 
-### Completed Canon (Sprints 1–110)
-
-- ✅ All layers from execution kernel through strategic autonomy & civilizational coordination
-- ✅ 90+ architectural layers active
+- ✅ All layers from execution kernel through adaptive operational organism
+- ✅ 100+ architectural layers active
 - ✅ Full operating canon with all planned blocks implemented and hardened
+- ✅ 200+ Edge Functions deployed
 
 ### Implemented Blocks (N–W)
 
