@@ -49,6 +49,13 @@ import {
   type ReadinessTraceRecord,
 } from "./readiness-orchestrator-integration.ts";
 
+// Sprint 142 — Decision Contract
+import {
+  buildDispatchDecision,
+  validateDecision,
+  type DispatchDecision,
+} from "./decision-contract.ts";
+
 export interface OrchestratorOptions {
   registry: AgentRegistry;
   policies: StagePolicy[];
@@ -234,7 +241,7 @@ export class AgentOS {
       }
 
       // ────────────────────────────────────────────────────
-      // Agent Selection & Dispatch
+      // Agent Selection & Dispatch (via Decision Contract)
       // ────────────────────────────────────────────────────
       const candidates = this.registry.findForStage(currentStage, enrichedInput);
 
@@ -247,7 +254,43 @@ export class AgentOS {
         throw new Error(`[AgentOS] No agents for stage: ${currentStage}`);
       }
 
-      // ── Execute agents (with enriched input) ──
+      // Sprint 142: Build formal dispatch decision
+      const decision = buildDispatchDecision({
+        run_id: runId,
+        initiative_id: (input.context?.initiative_id as string) || undefined,
+        stage: currentStage,
+        selected_agents: selected,
+        canon_trace: canonTrace,
+        readiness_trace: readinessTrace,
+        policy_result: policyResult,
+        approval_request: approvalRequest,
+        input: enrichedInput,
+      });
+
+      const decisionError = validateDecision(decision);
+      if (decisionError) {
+        state.status = "failed";
+        this.emit(state, "run.completed", {
+          runId,
+          status: "failed",
+          reason: `invalid_decision: ${decisionError}`,
+        });
+        return state;
+      }
+
+      this.emit(state, "stage.started", {
+        runId,
+        stage: currentStage,
+        dispatch_decision: {
+          decision_id: decision.decision_id,
+          execution_mode: decision.execution_mode,
+          agents: decision.selected_agents.map((a) => a.agent_id),
+          constraints_count: decision.constraints.length,
+          rationale: decision.rationale,
+        },
+      });
+
+      // ── Execute agents (with enriched input + decision trace) ──
       const stageFailed = await this.executeAgents(
         selected,
         state,
