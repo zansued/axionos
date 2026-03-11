@@ -255,7 +255,7 @@ const WORKSPACE_COPILOT: CopilotDrawerContent[] = [
         en: "If execution volume is still low, meaningful benchmarks are still forming.",
       },
       suggestedActions: [
-        { label: { pt: "Candidatos", en: "Candidates" }, route: "/improvement-candidates", icon: "Sparkles" },
+        { label: { pt: "Candidatos", en: "Candidates" }, route: "/owner/improvement-candidates", icon: "Sparkles" },
       ],
     },
   },
