@@ -205,8 +205,8 @@ const WORKSPACE_COPILOT: CopilotDrawerContent[] = [
         en: "If you're early in product setup, evidence will still be scarce.",
       },
       suggestedActions: [
-        { label: { pt: "Candidatos", en: "Candidates" }, route: "/improvement-candidates", icon: "Sparkles" },
-        { label: { pt: "Benchmarks", en: "Benchmarks" }, route: "/improvement-benchmarks", icon: "FlaskConical" },
+        { label: { pt: "Candidatos", en: "Candidates" }, route: "/owner/improvement-candidates", icon: "Sparkles" },
+        { label: { pt: "Benchmarks", en: "Benchmarks" }, route: "/owner/improvement-benchmarks", icon: "FlaskConical" },
       ],
     },
   },
