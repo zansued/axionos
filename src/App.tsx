@@ -398,7 +398,7 @@ const App = () => (
                             {/* ══════════════════════════════════════════════
                                 LEGACY REDIRECTS (deprecated — log usage)
                                 ══════════════════════════════════════════════ */}
-                            <Route path="/initiatives" element={<LegacyRedirect to="/builder/initiatives" />} />
+                            <Route path="/initiatives" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/stories" element={<LegacyRedirect to="/builder/stories" />} />
                             <Route path="/kanban" element={<LegacyRedirect to="/builder/kanban" />} />
                             <Route path="/code" element={<LegacyRedirect to="/builder/code" />} />
