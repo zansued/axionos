@@ -90,7 +90,7 @@ function NavItemRow({
 // ─── AppSidebar ──────────────────────────────────────────────────────────────
 
 export function AppSidebar() {
-  const { open } = useSidebar();
+  const { open, setOpen } = useSidebar();
   const collapsed = !open;
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
