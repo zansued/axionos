@@ -6205,6 +6205,93 @@ export type Database = {
           },
         ]
       }
+      canon_candidate_entries: {
+        Row: {
+          body: string
+          conflict_with_existing_canon: boolean
+          created_at: string
+          domain_scope: string
+          id: string
+          internal_validation_status: string
+          knowledge_type: string
+          novelty_score: number
+          organization_id: string | null
+          promotion_decision_reason: string
+          promotion_status: string
+          reviewed_by: string | null
+          source_id: string | null
+          source_reference: string
+          source_reliability_score: number
+          source_type: string
+          submitted_by: string
+          summary: string
+          title: string
+          trial_status: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string
+          conflict_with_existing_canon?: boolean
+          created_at?: string
+          domain_scope?: string
+          id?: string
+          internal_validation_status?: string
+          knowledge_type?: string
+          novelty_score?: number
+          organization_id?: string | null
+          promotion_decision_reason?: string
+          promotion_status?: string
+          reviewed_by?: string | null
+          source_id?: string | null
+          source_reference?: string
+          source_reliability_score?: number
+          source_type?: string
+          submitted_by?: string
+          summary?: string
+          title?: string
+          trial_status?: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          conflict_with_existing_canon?: boolean
+          created_at?: string
+          domain_scope?: string
+          id?: string
+          internal_validation_status?: string
+          knowledge_type?: string
+          novelty_score?: number
+          organization_id?: string | null
+          promotion_decision_reason?: string
+          promotion_status?: string
+          reviewed_by?: string | null
+          source_id?: string | null
+          source_reference?: string
+          source_reliability_score?: number
+          source_type?: string
+          submitted_by?: string
+          summary?: string
+          title?: string
+          trial_status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_candidate_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_candidate_entries_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "canon_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_categories: {
         Row: {
           created_at: string
@@ -7710,6 +7797,350 @@ export type Database = {
           },
           {
             foreignKeyName: "canon_reuse_registry_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_source_categories: {
+        Row: {
+          category_key: string
+          category_label: string
+          created_at: string
+          description: string
+          id: string
+          organization_id: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          category_key?: string
+          category_label?: string
+          created_at?: string
+          description?: string
+          id?: string
+          organization_id?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          category_key?: string
+          category_label?: string
+          created_at?: string
+          description?: string
+          id?: string
+          organization_id?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_source_categories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_source_domains: {
+        Row: {
+          created_at: string
+          description: string
+          domain_key: string
+          domain_label: string
+          id: string
+          organization_id: string | null
+          scope: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          domain_key?: string
+          domain_label?: string
+          id?: string
+          organization_id?: string | null
+          scope?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          domain_key?: string
+          domain_label?: string
+          id?: string
+          organization_id?: string | null
+          scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_source_domains_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_source_policies: {
+        Row: {
+          created_at: string
+          description: string
+          enabled: boolean
+          enforcement_level: string
+          id: string
+          organization_id: string | null
+          policy_rule: Json
+          policy_type: string
+          source_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          enabled?: boolean
+          enforcement_level?: string
+          id?: string
+          organization_id?: string | null
+          policy_rule?: Json
+          policy_type?: string
+          source_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          enabled?: boolean
+          enforcement_level?: string
+          id?: string
+          organization_id?: string | null
+          policy_rule?: Json
+          policy_type?: string
+          source_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_source_policies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_source_policies_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "canon_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_source_sync_runs: {
+        Row: {
+          candidates_accepted: number
+          candidates_found: number
+          candidates_rejected: number
+          completed_at: string | null
+          created_at: string
+          id: string
+          organization_id: string | null
+          source_id: string | null
+          started_at: string
+          sync_notes: string
+          sync_status: string
+          triggered_by: string
+        }
+        Insert: {
+          candidates_accepted?: number
+          candidates_found?: number
+          candidates_rejected?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          source_id?: string | null
+          started_at?: string
+          sync_notes?: string
+          sync_status?: string
+          triggered_by?: string
+        }
+        Update: {
+          candidates_accepted?: number
+          candidates_found?: number
+          candidates_rejected?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          source_id?: string | null
+          started_at?: string
+          sync_notes?: string
+          sync_status?: string
+          triggered_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_source_sync_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_source_sync_runs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "canon_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_source_trust_profiles: {
+        Row: {
+          allowed_ingestion_scope: string
+          created_at: string
+          evaluated_by: string | null
+          evaluation_notes: string
+          id: string
+          last_evaluated_at: string | null
+          organization_id: string | null
+          promotable: boolean
+          review_posture: string
+          source_id: string | null
+          trust_score: number
+          trust_tier: string
+          updated_at: string
+        }
+        Insert: {
+          allowed_ingestion_scope?: string
+          created_at?: string
+          evaluated_by?: string | null
+          evaluation_notes?: string
+          id?: string
+          last_evaluated_at?: string | null
+          organization_id?: string | null
+          promotable?: boolean
+          review_posture?: string
+          source_id?: string | null
+          trust_score?: number
+          trust_tier?: string
+          updated_at?: string
+        }
+        Update: {
+          allowed_ingestion_scope?: string
+          created_at?: string
+          evaluated_by?: string | null
+          evaluation_notes?: string
+          id?: string
+          last_evaluated_at?: string | null
+          organization_id?: string | null
+          promotable?: boolean
+          review_posture?: string
+          source_id?: string | null
+          trust_score?: number
+          trust_tier?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_source_trust_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_source_trust_profiles_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "canon_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_sources: {
+        Row: {
+          approved_categories: Json
+          category_id: string | null
+          created_at: string
+          created_by: string
+          domain_id: string | null
+          domain_scope: string
+          id: string
+          ingestion_status: string
+          last_synced_at: string | null
+          organization_id: string | null
+          reviewed_by: string | null
+          source_name: string
+          source_notes: string
+          source_type: string
+          source_url: string
+          status: string
+          sync_policy: string
+          trust_level: string
+          updated_at: string
+        }
+        Insert: {
+          approved_categories?: Json
+          category_id?: string | null
+          created_at?: string
+          created_by?: string
+          domain_id?: string | null
+          domain_scope?: string
+          id?: string
+          ingestion_status?: string
+          last_synced_at?: string | null
+          organization_id?: string | null
+          reviewed_by?: string | null
+          source_name?: string
+          source_notes?: string
+          source_type?: string
+          source_url?: string
+          status?: string
+          sync_policy?: string
+          trust_level?: string
+          updated_at?: string
+        }
+        Update: {
+          approved_categories?: Json
+          category_id?: string | null
+          created_at?: string
+          created_by?: string
+          domain_id?: string | null
+          domain_scope?: string
+          id?: string
+          ingestion_status?: string
+          last_synced_at?: string | null
+          organization_id?: string | null
+          reviewed_by?: string | null
+          source_name?: string
+          source_notes?: string
+          source_type?: string
+          source_url?: string
+          status?: string
+          sync_policy?: string
+          trust_level?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_sources_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "canon_source_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_sources_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "canon_source_domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_sources_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
