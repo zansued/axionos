@@ -109,9 +109,10 @@ serve(async (req) => {
             return json({ success: true, candidates_created: 0, message: "Insufficient content" });
           }
 
-          // 4. Truncate to ~12k chars for LLM context
+          // 5. Truncate to ~12k chars for LLM context ("chunked" state)
           const truncated = markdown.slice(0, 12000);
-
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "chunked" }).eq("id", source_id);
+          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "chunked", chunks_created: 1 }).eq("id", syncRun.id);
           // 5. Extract patterns via LLM
           console.log("Extracting patterns via LLM...");
           const llmResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
