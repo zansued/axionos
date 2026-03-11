@@ -143,6 +143,10 @@ export default function CanonIntelligenceDashboard() {
               <TabsTrigger value="candidates" className="text-xs"><FileInput className="h-3.5 w-3.5 mr-1" />Candidates</TabsTrigger>
               <TabsTrigger value="syncs" className="text-xs"><RefreshCw className="h-3.5 w-3.5 mr-1" />Syncs</TabsTrigger>
               <TabsTrigger value="domains" className="text-xs"><Layers className="h-3.5 w-3.5 mr-1" />Domains</TabsTrigger>
+              <TabsTrigger value="retrieval" className="text-xs"><Search className="h-3.5 w-3.5 mr-1" />Retrieval</TabsTrigger>
+              <TabsTrigger value="applications" className="text-xs"><Zap className="h-3.5 w-3.5 mr-1" />Applications</TabsTrigger>
+              <TabsTrigger value="runtime-analytics" className="text-xs"><Activity className="h-3.5 w-3.5 mr-1" />Analytics</TabsTrigger>
+              <TabsTrigger value="feedback" className="text-xs"><MessageSquare className="h-3.5 w-3.5 mr-1" />Feedback</TabsTrigger>
             </TabsList>
 
             {/* Canon Library */}
