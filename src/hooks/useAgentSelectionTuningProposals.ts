@@ -11,7 +11,7 @@ interface AgentSelectionTuningProposalSummary {
 
 export function useAgentSelectionTuningGenerate(organizationId: string) {
   return useMutation({
-    mutationFn: async (lookbackHours = 24) => {
+    mutationFn: async (lookbackHours: number = 24) => {
       const { data, error } = await supabase.functions.invoke("agent-selection-tuning-hooks", {
         body: { action: "generate", organization_id: organizationId, lookback_hours: lookbackHours },
       });

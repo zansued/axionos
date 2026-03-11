@@ -1779,6 +1779,101 @@ export type Database = {
           },
         ]
       }
+      agent_selection_tuning_proposals: {
+        Row: {
+          aggregation_count: number
+          aggregation_key: string | null
+          confidence: number
+          created_at: string
+          environment_scope: string | null
+          evidence_summary: string
+          id: string
+          initiative_ids: Json
+          metadata: Json
+          organization_id: string
+          proposal_type: string
+          proposed_by_actor_type: string
+          rationale: string
+          recommendation: string
+          related_action_ids: Json
+          related_agent_decision_ids: Json
+          related_learning_signal_ids: Json
+          related_outcome_ids: Json
+          review_status: string
+          severity: string
+          target_action_type_scope: string | null
+          target_agent_id: string | null
+          target_capability_scope: string | null
+          target_selection_scope: string
+          target_stage_scope: string | null
+          updated_at: string
+        }
+        Insert: {
+          aggregation_count?: number
+          aggregation_key?: string | null
+          confidence?: number
+          created_at?: string
+          environment_scope?: string | null
+          evidence_summary?: string
+          id?: string
+          initiative_ids?: Json
+          metadata?: Json
+          organization_id: string
+          proposal_type?: string
+          proposed_by_actor_type?: string
+          rationale?: string
+          recommendation?: string
+          related_action_ids?: Json
+          related_agent_decision_ids?: Json
+          related_learning_signal_ids?: Json
+          related_outcome_ids?: Json
+          review_status?: string
+          severity?: string
+          target_action_type_scope?: string | null
+          target_agent_id?: string | null
+          target_capability_scope?: string | null
+          target_selection_scope?: string
+          target_stage_scope?: string | null
+          updated_at?: string
+        }
+        Update: {
+          aggregation_count?: number
+          aggregation_key?: string | null
+          confidence?: number
+          created_at?: string
+          environment_scope?: string | null
+          evidence_summary?: string
+          id?: string
+          initiative_ids?: Json
+          metadata?: Json
+          organization_id?: string
+          proposal_type?: string
+          proposed_by_actor_type?: string
+          rationale?: string
+          recommendation?: string
+          related_action_ids?: Json
+          related_agent_decision_ids?: Json
+          related_learning_signal_ids?: Json
+          related_outcome_ids?: Json
+          review_status?: string
+          severity?: string
+          target_action_type_scope?: string | null
+          target_agent_id?: string | null
+          target_capability_scope?: string | null
+          target_selection_scope?: string
+          target_stage_scope?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_selection_tuning_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_task_state_transitions: {
         Row: {
           context_id: string
