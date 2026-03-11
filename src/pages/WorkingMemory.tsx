@@ -69,10 +69,8 @@ export default function WorkingMemory() {
   const listForTab = tab === "active" ? active : tab === "blocked" ? blocked : tab === "escalated" ? escalated : resolved;
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-auto">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Working Memory & Task-State</h1>
             <p className="text-sm text-muted-foreground">Shared coordination contexts, checkpoints, and negotiated task-state transitions.</p>
