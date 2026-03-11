@@ -75,7 +75,7 @@ export function PageIntroCard({ guidance, whyNow, compact }: PageIntroCardProps)
         transition={{ duration: 0.2 }}
       >
         <Card className={`border-l-4 ${surfaceBorder} bg-card/80 backdrop-blur-sm`}>
-          <CardContent className={compact ? "py-3 px-4" : "py-4 px-5"}>
+          <CardContent className={compact ? "py-4 px-5" : "py-5 px-6"}>
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0 space-y-2">
                 {/* Header */}
