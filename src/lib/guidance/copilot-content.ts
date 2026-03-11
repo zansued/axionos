@@ -89,7 +89,7 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If you've already completed onboarding, go directly to Dashboard or Initiatives.",
       },
       suggestedActions: [
-        { label: { pt: "Ir ao Início", en: "Go to Home" }, route: "/", icon: "BarChart3" },
+        { label: { pt: "Ir ao Início", en: "Go to Home" }, route: "/builder/dashboard", icon: "BarChart3" },
       ],
     },
   },
