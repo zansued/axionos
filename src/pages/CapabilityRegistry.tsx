@@ -242,8 +242,7 @@ export default function CapabilityRegistry() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
