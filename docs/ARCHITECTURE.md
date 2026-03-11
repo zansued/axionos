@@ -2,7 +2,7 @@
 
 > Technical architecture of the autonomous software engineering system.
 >
-> **Last updated:** 2026-03-10
+> **Last updated:** 2026-03-11
 > **Current state:** Level 10+ — Adaptive Operational Organism. 100+ architectural layers active. All blocks (Foundation through AD) complete. 138 sprints implemented.
 > **Completed blocks:** Foundation through AD (Sprints 1–138)
 > **Next horizon:** Future planning beyond Sprint 138
@@ -13,8 +13,8 @@
 | Scope | Rule |
 |-------|------|
 | **Owns** | System architecture, C4 diagrams, capability layers, containers, components, data flow, safety rules, AI efficiency layer, edge function architecture, database schema, technology stack, governing principle |
-| **Must not define** | Sprint-by-sprint execution ledger (→ PLAN.md), full roadmap/strategic narrative (→ ROADMAP.md), detailed Agent OS module specs (→ GOVERNANCE.md), Canon Intelligence Engine details (→ CANON_INTELLIGENCE_ENGINE.md) |
-| **Derived from** | PLAN.md for sprint context in layer descriptions; GOVERNANCE.md for Agent OS summary; CANON_INTELLIGENCE_ENGINE.md for Canon subsystem |
+| **Must not define** | Full Agent OS module specs (→ GOVERNANCE.md), Canon Intelligence Engine details (→ CANON_INTELLIGENCE_ENGINE.md) |
+| **Derived from** | GOVERNANCE.md for Agent OS summary; CANON_INTELLIGENCE_ENGINE.md for Canon subsystem |
 | **Update rule** | Update when system structure or active architectural layers change |
 
 ### Core Subsystems
@@ -159,7 +159,7 @@ flowchart TB
 | Container | Technology | Responsibility |
 |-----------|-----------|----------------|
 | Web App / Dashboard | React 18 + Vite + Tailwind + shadcn/ui | User interaction, observability views, governance UI |
-| API / Edge Functions | Supabase Edge Functions (Deno) | All backend logic, ~77 functions |
+| API / Edge Functions | Supabase Edge Functions (Deno) | All backend logic, ~200+ functions |
 | Execution Pipeline Core | Edge Functions + shared modules | 32-stage deterministic pipeline |
 | Operational Intelligence | Shared modules | Error patterns, repair routing, prevention |
 | Learning Engine | Shared modules | Prompt optimization, agent memory, prediction |
@@ -433,71 +433,32 @@ flowchart TB
 
 ## 5. Architectural Direction
 
-### 5.1 Current — Strategic Autonomy & Civilizational Coordination — ✅ Implemented & Hardened
+### 5.1 Current — Adaptive Operational Organism — ✅ Level 10+ Complete
 
-With all 110 sprints complete, 90+ architectural layers active, and the full stack from execution kernel through strategic coordination operational, AxionOS has achieved its **Strategic Autonomy & Civilizational Coordination** thesis.
+With all 138 sprints complete, 100+ architectural layers active, and the full stack from execution kernel through adaptive operational organism operational, AxionOS has achieved **Level 10+ maturity**.
 
-The eight pillars are implemented:
+All blocks from Foundation through AD are implemented and hardened. The system now operates as a governed adaptive organism with the following capabilities fully active:
+
 - **Explain better** — ✅ PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, CopilotTrigger, 4 copilot submodes, centralized content registries
 - **Decide better** — ✅ Institutional Decision Engine, sovereign decision rights, role-aware experience, approval posture hints
-- **Learn better** — ✅ Evidence-governed improvement loops, cross-stage learning, predictive detection, calibration
-- **Coordinate better** — ✅ Multi-agent coordination (debate, working memory, bounded swarm)
-- **Operate autonomously (bounded)** — ✅ Bounded autonomous operations, autonomy ladder, rollback posture
+- **Learn better** — ✅ Evidence-governed improvement loops, cross-stage learning, predictive detection, calibration, learning canonization
+- **Coordinate better** — ✅ Multi-agent coordination (debate, working memory, bounded swarm), adaptive coordination, attention allocation
+- **Operate autonomously (bounded)** — ✅ Bounded autonomous operations, autonomy ladder, rollback posture, outcome-based autonomy
 - **Adapt institutionally** — ✅ Cross-context doctrine adaptation, institutional conflict resolution, federated intelligence, resilience governance
 - **Govern sovereignty** — ✅ Memory constitution, sovereign decision rights, dependency sovereignty, strategic succession
 - **Coordinate strategically** — ✅ Multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation
+- **Govern evolution** — ✅ Evolution proposal governance, architectural mutation control, reflective validation, kernel integrity guard
+- **Canonize knowledge** — ✅ Canon stewardship, pattern library & retrieval, failure memory, external knowledge intake
+- **Runtime sovereignty** — ✅ Live runtime feedback mesh, tenant doctrine, outcome-based autonomy, compounding advantage
+- **Organism-level awareness** — ✅ Multi-loop governance, systemic health model, organism memory, organism console
 
 ### 5.2 Reality Check — System Maturity Assessment
 
-AxionOS is no longer a concept. It has real, operational layers for execution, governance, memory, sovereignty, strategic coordination, and partial self-observation. However, it remains under active construction.
+AxionOS is no longer a concept. It has real, operational layers for execution, governance, memory, sovereignty, strategic coordination, reflexive governance, canonical knowledge, runtime sovereignty, and organism-level self-observation. However, it remains under active refinement.
 
-**Strongest in:** Governance, orchestration, explainability, strategic control, tenant isolation, advisory intelligence, audit and lineage.
+**Strongest in:** Governance, orchestration, explainability, strategic control, tenant isolation, advisory intelligence, audit and lineage, canonical knowledge governance, reflexive self-regulation.
 
-**Still maturing in:** Fully autonomous runtime self-regulation, end-to-end delivery reliability under edge-case conditions, adaptive batch sizing, and runtime self-reconfiguration without manual intervention.
-
-**Key operational lesson (discovered during Block W):** The validation/fix loop phase revealed that AxionOS governance and observability layers are significantly stronger than its runtime self-reconfiguration capability. Oversized batches and excessive sequential AI calls within single edge functions caused timeout and orphan-job behavior. The system required manual correction to reduce batch sizes and harden execution paths. This gap between *strategic awareness* and *runtime adaptation* is the direct motivation for Block X.
-
-### 5.3 Next — Reflexive Governance & Evolution Control — 🔜 Planned (Block X)
-
-Block X (Sprints 111–114) introduces **reflexive governance** — the system's ability to govern its own evolution, mutation, self-repair, and kernel protection. Block W made the system strategically aware. Block X closes the gap between "the system understands its problems" and "the system safely reconfigures itself in response."
-
-Block X is not "more features." It is a **meta-governance layer** governing how AxionOS changes itself.
-
-**Four new architectural capabilities:**
-
-| Sprint | Capability | Architectural Contribution |
-|--------|-----------|---------------------------|
-| 111 | Evolution Proposal Governance Engine | Govern proposals for changing the system itself, distinguishing healthy evolution from unnecessary complexity. Ensures structural changes are justified, bounded, and reversible. |
-| 112 | Architectural Mutation Control Layer | Control architectural mutation by evaluating reversibility, blast radius, coupling expansion, and mutation legitimacy. Prevents uncontrolled structural drift. |
-| 113 | Reflective Validation & Self-Revision Audit | Audit whether self-corrections and revisions actually improved the system or merely moved the problem elsewhere. Tracks revision effectiveness over time. |
-| 114 | Kernel Integrity & Anti-Corrosion Guard | Protect the kernel against corrosion, bloat, existential drift, and loss of core legibility and governance integrity. Preserves architectural identity. |
-
-**Logical chain:**
-- Block U: how to adapt, resolve conflict, federate, resist
-- Block V: how to remember, decide sovereignly, reduce dependency, survive succession
-- Block W: how to align horizons, arbitrate sacrifices, maintain mission, traverse long futures
-- **Block X: how to govern the system's own evolution, detect corrosion, and protect kernel integrity**
-- **Block Y: how to govern what the system knows about implementation and make that knowledge operational**
-
-### 5.4 Future — Implementation Canon & Knowledge Governance (Block Y)
-
-Block Y introduces the **Canonical Knowledge & Implementation Intelligence** layer.
-
-Its purpose is not to accumulate documentation, but to transform implementation knowledge into runtime-connected system capability.
-
-Block Y governs how implementation knowledge is:
-- stored
-- reviewed
-- approved
-- versioned
-- deprecated
-- retrieved
-- operationally applied
-
-This future layer enables AxionOS to maintain a governed implementation canon including:
-- approved architectural patterns
-- reusable implementation templates
-- curated code snippets
+**Still maturing in:** End-to-end delivery reliability under edge-case conditions, runtime self-reconfiguration quality, adoption feedback loops, and cross-tenant intelligence precision.
 - stack-specific conventions
 - failure memory and repair strategies
 - validated external knowledge updates
@@ -570,6 +531,34 @@ flowchart TB
         K4[External Knowledge Intake]
     end
 
+    subgraph T7[Runtime Sovereignty Layer -- Block Z-AA]
+        Z1[Runtime Feedback Mesh]
+        Z2[Tenant Doctrine & Profiles]
+        Z3[Outcome-Based Autonomy]
+        Z4[Compounding Advantage]
+    end
+
+    subgraph T8[Learning Canonization Layer -- Block AB]
+        AB1[Learning Extraction]
+        AB2[Canon Promotion Pipeline]
+        AB3[Cross-Tenant Distillation]
+        AB4[Canon Reuse Injection]
+    end
+
+    subgraph T9[Adaptive Coordination Layer -- Block AC]
+        AC1[Operational Posture]
+        AC2[Attention Allocation]
+        AC3[Adaptive Resource Routing]
+        AC4[Operational Rhythm]
+    end
+
+    subgraph T10[Organism Layer -- Block AD]
+        AD1[Multi-Loop Governance]
+        AD2[Systemic Health Model]
+        AD3[Organism Memory]
+        AD4[Organism Console]
+    end
+
     X1[Models / AI Providers]:::external
     X2[Databases / Memory / Logs]:::data
 
@@ -602,6 +591,25 @@ flowchart TB
     R3 --> K3
     R4 --> K4
 
+    K1 --> Z1
+    K2 --> Z2
+    K3 --> Z3
+    K4 --> Z4
+
+    Z1 --> AB1
+    Z3 --> AB2
+    Z4 --> AB3
+
+    AB1 --> AC1
+    AB2 --> AC2
+    AB3 --> AC3
+    AB4 --> AC4
+
+    AC1 --> AD1
+    AC2 --> AD2
+    AC3 --> AD3
+    AC4 --> AD4
+
     E1 --> X1
     E2 --> X1
     E3 --> X1
@@ -611,6 +619,8 @@ flowchart TB
     G2 --> X2
     S4 --> X2
     K3 --> X2
+    Z1 --> X2
+    AD3 --> X2
 
     classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:1.5px;
     classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
@@ -618,14 +628,20 @@ flowchart TB
     classDef strategic fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:1.5px;
     classDef reflexive fill:#FF7675,stroke:#922B21,color:#111,stroke-width:1.5px;
     classDef canon fill:#6C5CE7,stroke:#2E1A8A,color:#fff,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
     classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:1.5px;
     classDef external fill:#B2BEC3,stroke:#636E72,color:#111,stroke-width:1.5px;
+    classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
 
     class E1,E2,E3,E4,C1,C2,C3 core;
     class G1,G2,G3 governance;
     class S1,S2,S3,S4 strategic;
     class R1,R2,R3,R4 reflexive;
     class K1,K2,K3,K4 canon;
+    class Z1,Z2,Z3,Z4 runtime;
+    class AB1,AB2,AB3,AB4 intelligence;
+    class AC1,AC2,AC3,AC4 intelligence;
+    class AD1,AD2,AD3,AD4 runtime;
     class X2 data;
     class X1 external;
 ```
@@ -674,23 +690,59 @@ flowchart LR
 
 ```
    ═══════════════════════════════════════════════════════════════════
-   TIER 13: CANONICAL KNOWLEDGE & IMPLEMENTATION INTELLIGENCE (Future — Block Y)
+   TIER 17: ADAPTIVE OPERATIONAL ORGANISM (Block AD — Complete)
    ═══════════════════════════════════════════════════════════════════
-   Canon Steward & Knowledge Governance Engine      ← Future (Sprint 115)
-   Implementation Pattern Library & Retrieval Layer ← Future (Sprint 116)
-   Failure Memory & Repair Intelligence Archive     ← Future (Sprint 117)
-   External Knowledge Intake & Canon Evolution Ctrl ← Future (Sprint 118)
+   Multi-Loop Governance Orchestrator               ← Active (Sprint 135)
+   Systemic Health Model                            ← Active (Sprint 136)
+   Organism Memory Layers                           ← Active (Sprint 137)
+   Adaptive Operational Organism Console            ← Active (Sprint 138)
 
    ═══════════════════════════════════════════════════════════════════
-   TIER 12: REFLEXIVE GOVERNANCE LAYER (Planned — Block X)
+   TIER 16: ADAPTIVE COORDINATION (Block AC — Complete)
    ═══════════════════════════════════════════════════════════════════
-   Evolution Proposal Governance Engine             ← Planned (Sprint 111)
-   Architectural Mutation Control Layer             ← Planned (Sprint 112)
-   Reflective Validation & Self-Revision Audit      ← Planned (Sprint 113)
-   Kernel Integrity & Anti-Corrosion Guard          ← Planned (Sprint 114)
+   Operational Posture Engine                       ← Active (Sprint 131)
+   Attention Allocation Engine                      ← Active (Sprint 132)
+   Adaptive Resource Routing                        ← Active (Sprint 133)
+   Operational Rhythm & Recovery Cycles             ← Active (Sprint 134)
 
    ═══════════════════════════════════════════════════════════════════
-   TIER 11: STRATEGIC COORDINATION LAYER (Block W — Hardened)
+   TIER 15: LEARNING CANONIZATION (Block AB — Complete)
+   ═══════════════════════════════════════════════════════════════════
+   Learning Extraction Engine                       ← Active (Sprint 127)
+   Canon Promotion Pipeline                         ← Active (Sprint 128)
+   Cross-Tenant Pattern Distillation                ← Active (Sprint 129)
+   Canon Reuse Injection                            ← Active (Sprint 130)
+
+   ═══════════════════════════════════════════════════════════════════
+   TIER 14: RUNTIME SOVEREIGNTY & OUTCOME COMPOUNDING (Block Z-AA — Complete)
+   ═══════════════════════════════════════════════════════════════════
+   Live Runtime Feedback Mesh                       ← Active (Sprint 119)
+   Tenant Doctrine & Adaptive Operating Profiles v2 ← Active (Sprint 120)
+   Outcome-Based Autonomy Engine                    ← Active (Sprint 121)
+   Compounding Advantage & Moat Orchestrator        ← Active (Sprint 122)
+   Runtime Execution Validation Harness             ← Active (Sprint 123)
+   Autonomy Ladder Stabilization                    ← Active (Sprint 124)
+   Tenant-Adaptive Regression Profiles              ← Active (Sprint 125)
+   Cold Start Explainability Layer                  ← Active (Sprint 126)
+
+   ═══════════════════════════════════════════════════════════════════
+   TIER 13: CANONICAL KNOWLEDGE & IMPLEMENTATION INTELLIGENCE (Block Y — Complete)
+   ═══════════════════════════════════════════════════════════════════
+   Canon Steward & Knowledge Governance Engine      ← Active (Sprint 115)
+   Implementation Pattern Library & Retrieval Layer ← Active (Sprint 116)
+   Failure Memory & Repair Intelligence Archive     ← Active (Sprint 117)
+   External Knowledge Intake & Canon Evolution Ctrl ← Active (Sprint 118)
+
+   ═══════════════════════════════════════════════════════════════════
+   TIER 12: REFLEXIVE GOVERNANCE LAYER (Block X — Complete)
+   ═══════════════════════════════════════════════════════════════════
+   Evolution Proposal Governance Engine             ← Active (Sprint 111)
+   Architectural Mutation Control Layer             ← Active (Sprint 112)
+   Reflective Validation & Self-Revision Audit      ← Active (Sprint 113)
+   Kernel Integrity & Anti-Corrosion Guard          ← Active (Sprint 114)
+
+   ═══════════════════════════════════════════════════════════════════
+   TIER 11: STRATEGIC COORDINATION LAYER (Block W — Complete)
    ═══════════════════════════════════════════════════════════════════
    Multi-Horizon Strategic Alignment Engine         ← Active (Sprint 107)
    Institutional Tradeoff Arbitration System        ← Active (Sprint 108)
@@ -797,7 +849,7 @@ Engineering Memory (Layer 5) is a **cross-layer infrastructure** that captures k
 
 The Agent OS is the runtime architecture governing how agents are selected, executed, governed and coordinated. It consists of 18 modules organized into 5 architectural planes.
 
-> **Full specification:** [AGENTS.md](AGENTS.md) — canonical reference for planes, modules, agent types, contracts, safety boundaries, and events.
+> **Full specification:** [GOVERNANCE.md](GOVERNANCE.md) — canonical reference for planes, modules, agent types, contracts, safety boundaries, and events.
 
 | Plane | Status | Key Modules |
 |-------|--------|-------------|
@@ -1054,7 +1106,7 @@ supabase/functions/
 ## 12. Implementation Status
 
 > **Canonical sprint-by-sprint record:** #axionos--sprint-ledger
-> **Summary:** 110 sprints complete. 90+ architectural layers active. All blocks (Foundation through W) implemented, validated, and hardened.
+> **Summary:** 138 sprints complete. 100+ architectural layers active. All blocks (Foundation through AD) implemented, validated, and hardened.
 
 | Block | Sprints | Status |
 |-------|---------|--------|
@@ -1066,21 +1118,10 @@ supabase/functions/
 | Strategy Evolution & Governance | 32–33 | ✅ Complete |
 | Platform Stabilization & Advisory | 34–37 | ✅ Complete |
 | Architecture Intelligence | 38–40 | ✅ Complete |
-| Architecture-Governed | 41–43 | ✅ Complete |
-| Architecture-Operating | 44–45 | ✅ Complete |
-| Architecture-Scaled | 46–48 | ✅ Complete |
-| Platform Convergence | 49 | ✅ Complete |
-| Convergence Governance | 50 | ✅ Complete |
-| Institutional Convergence Memory | 51 | ✅ Complete |
-| Operating Profiles & Policy Packs | 52 | ✅ Complete |
-| Product Intelligence Entry | 53 | ✅ Complete |
-| Product Intelligence Operations | 54 | ✅ Complete |
-| Product Opportunity Portfolio Governance | 55 | ✅ Complete |
-| Controlled Ecosystem Readiness | 56 | ✅ Complete |
-| Trusted Ecosystem Foundation (J) | 57–59 | ✅ Complete |
-| Controlled Ecosystem Activation (K) | 60–62 | ✅ Complete |
-| System Roundness & Operating Completion (L) | 63–65 | ✅ Complete |
-| Product Experience & Delivery Maturity (M) | 66–70 | ✅ Complete |
+| Architecture-Governed (J) | 41–43 | ✅ Complete |
+| Architecture-Operating (K) | 44–45 | ✅ Complete |
+| Architecture-Scaled (L) | 46–48 | ✅ Complete |
+| Platform Convergence (M) | 49–70 | ✅ Complete |
 | Governed Extensibility Bridge | 71 | ✅ Complete |
 | Evidence-Governed Improvement Loop (N) | 72–74 | ✅ Complete |
 | Advanced Multi-Agent Coordination (O) | 75–78 | ✅ Complete |
@@ -1091,7 +1132,14 @@ supabase/functions/
 | Governed Intelligence OS (T) | 95–98 | ✅ Complete |
 | Adaptive Institutional Ecosystem (U) | 99–102 | ✅ Complete |
 | Sovereign Institutional Intelligence (V) | 103–106 | ✅ Complete |
-| Strategic Autonomy & Civilizational Coordination (W) | 107–110 | ✅ Complete & Hardened |
+| Strategic Autonomy & Civilizational Coordination (W) | 107–110 | ✅ Complete |
+| Reflexive Governance & Evolution Control (X) | 111–114 | ✅ Complete |
+| Implementation Canon & Knowledge Governance (Y) | 115–118 | ✅ Complete |
+| Runtime Sovereignty & Outcome Compounding (Z) | 119–122 | ✅ Complete |
+| Runtime Proof & Adaptive Governance (AA) | 123–126 | ✅ Complete |
+| Learning Canonization (AB) | 127–130 | ✅ Complete |
+| Adaptive Coordination (AC) | 131–134 | ✅ Complete |
+| Adaptive Operational Organism (AD) | 135–138 | ✅ Complete |
 
 ---
 
@@ -1292,8 +1340,7 @@ supabase/functions/
 
 ### System Maturity
 
-> **Canonical maturity table:** [ROADMAP.md](ROADMAP.md)
-> **Current:** Level 7 — Strategic Autonomy & Civilizational Coordination ✅
+> **Current:** Level 10+ — Adaptive Operational Organism ✅ (138 sprints complete)
 
 ---
 
@@ -1339,17 +1386,16 @@ AxionOS distinguishes four architectural surface layers:
 
 ---
 
-## 17. Architectural Direction — Post-Block W
+## 17. Architectural Direction — Post-Block AD
 
-> **Canonical strategic narrative:** [ROADMAP.md](ROADMAP.md)
+With 138 sprints complete, all blocks from Foundation through Adaptive Operational Organism (AD) delivered and hardened, the platform has achieved Level 10+ maturity. 100+ architectural layers are active.
 
-With 110 sprints complete, all blocks from Foundation through Strategic Autonomy & Civilizational Coordination (W) delivered and hardened, the platform has achieved full strategic coordination maturity. 90+ architectural layers are active.
+### Completed Canon (Sprints 1–138)
 
-### Completed Canon (Sprints 1–110)
-
-- ✅ All layers from execution kernel through strategic autonomy & civilizational coordination
-- ✅ 90+ architectural layers active
+- ✅ All layers from execution kernel through adaptive operational organism
+- ✅ 100+ architectural layers active
 - ✅ Full operating canon with all planned blocks implemented and hardened
+- ✅ 200+ Edge Functions deployed
 
 ### Implemented Blocks (N–W)
 
@@ -1474,10 +1520,10 @@ Advisory-first, governance-before-autonomy. No autonomous architecture mutation.
 ## Architecture / Documentation Boundaries
 
 - **ARCHITECTURE.md** (this file) defines system structure — containers, components, layers, data flow, safety rules
-- **ROADMAP.md** defines strategic direction — maturity, horizons, what comes next; this file references maturity from there
-- **PLAN.md** defines sprint execution — canonical sprint-by-sprint ledger; this file references sprint blocks from there
-- **AGENTS.md** defines Agent OS module reference — planes, modules, contracts, events; this file summarizes Agent OS but defers to AGENTS.md for full specs
-- **PIPELINE_CONTRACTS.md** defines product-level pipeline UX — phase behavior, inputs/outputs, control rules; this file defines pipeline stages architecturally but defers to PIPELINE_CONTRACTS.md for user-visible contracts
+- **GOVERNANCE.md** defines Agent OS module reference — planes, modules, contracts, events; this file summarizes Agent OS but defers to GOVERNANCE.md for full specs
+- **CANON_INTELLIGENCE_ENGINE.md** defines the Canon Intelligence Engine architecture — Agent–Contract model, canonization workflow
+- **AXION_CONTEXT.md** provides quick context restoration for humans
+- **AXION_PRIMER.md** provides ultra-short cognitive anchor for AI
 - **docs/registry/** contains lightweight canonical metadata (sprints.yml, doc-authority.yml)
 - **docs/README.md** is the navigation and maintenance guide
 
@@ -1487,11 +1533,10 @@ Advisory-first, governance-before-autonomy. No autonomous architecture mutation.
 # AxionOS — Sprint Ledger
 
 > Sprint-by-sprint implementation record. **Canonical source for sprint status.**
-> Last updated: 2026-03-10 · 138 sprints complete (Blocks Foundation → AD)
+> Last updated: 2026-03-11 · 138 sprints complete (Blocks Foundation through AD)
 >
 > For architecture detail → [ARCHITECTURE.md](ARCHITECTURE.md)
-> For agent/module specs → [AGENTS.md](AGENTS.md)
-> For pipeline UX contracts → [PIPELINE_CONTRACTS.md](PIPELINE_CONTRACTS.md)
+> For agent/module specs → [GOVERNANCE.md](GOVERNANCE.md)
 
 ## Governing Principles
 

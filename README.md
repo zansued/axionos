@@ -79,7 +79,7 @@ The system's moat emerges from accumulated runtime evidence, canonized learning,
 
 ## System Architecture
 
-AxionOS runs atop Supabase Edge Functions in a Deno runtime. Each of the 32 pipeline stages is deployed independently.
+AxionOS runs atop Supabase Edge Functions in a Deno runtime. Each of the 32 pipeline stages is deployed independently. The platform comprises 200+ Edge Functions and 100+ architectural layers.
 
 ```mermaid
 flowchart TB

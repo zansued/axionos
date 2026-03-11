@@ -33,6 +33,5 @@ plantuml docs/diagrams/*.puml
 
 These diagrams must stay synchronized with:
 - `docs/ARCHITECTURE.md` (Mermaid versions for GitHub)
-- `docs/ROADMAP.md`
-- `docs/PLAN.md`
-- `docs/AGENTS.md`
+- `docs/GOVERNANCE.md`
+- `docs/CANON_INTELLIGENCE_ENGINE.md`
