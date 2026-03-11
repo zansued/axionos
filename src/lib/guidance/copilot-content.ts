@@ -139,7 +139,7 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If no initiative has reached the deploy stage, this area will be empty for now.",
       },
       suggestedActions: [
-        { label: { pt: "Iniciativas", en: "Initiatives" }, route: "/initiatives", icon: "Layers" },
+        { label: { pt: "Iniciativas", en: "Initiatives" }, route: "/builder/initiatives", icon: "Layers" },
       ],
     },
   },
