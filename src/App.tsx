@@ -277,7 +277,7 @@ const App = () => (
                             <Route path="/builder/system-intelligence" element={<ProtectedRoute><SystemIntelligence /></ProtectedRoute>} />
 
                             {/* Governance */}
-                            <Route path="/builder/governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
+                            <Route path="/builder/delivery-governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
                             <Route path="/builder/governance-overview" element={<ProtectedRoute><GovernanceOverviewPage /></ProtectedRoute>} />
                             <Route path="/builder/pending-approvals" element={<ProtectedRoute><PendingApprovalsPage /></ProtectedRoute>} />
                             <Route path="/builder/policy-controls" element={<ProtectedRoute><PolicyControlsPage /></ProtectedRoute>} />
