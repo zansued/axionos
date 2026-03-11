@@ -287,6 +287,16 @@ export function InitiativeOutcomeCard({ initiative }: InitiativeOutcomeCardProps
         ? "This initiative has been fully processed and completed successfully."
         : "Esta iniciativa foi totalmente processada e concluída com sucesso.",
     },
+    runtime: {
+      title: en ? "Runtime Active — Software Running" : "Runtime Ativo — Software Rodando",
+      description: en
+        ? "Your software is deployed and running. System intelligence continues improving it in the background."
+        : "Seu software está implantado e rodando. A inteligência do sistema continua melhorando em background.",
+      actions: [
+        ...(initiative.deploy_url ? [{ label: en ? "Open App" : "Abrir App", href: initiative.deploy_url }] : []),
+        ...(initiative.repo_url ? [{ label: en ? "View Repository" : "Ver Repositório", href: initiative.repo_url, variant: "outline" as const }] : []),
+      ],
+    },
   };
 
   const info = content[outcome.status] || content.in_progress;
