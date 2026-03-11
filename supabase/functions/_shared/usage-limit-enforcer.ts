@@ -86,8 +86,8 @@ export async function enforceUsageLimits(
   let parallelRunCount = 0;
 
   if (orgInitIds.length > 0) {
-    // Auto-cleanup stale running jobs (older than 2 hours)
-    const staleThreshold = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+    // Auto-cleanup stale running jobs (older than 10 minutes — covers edge function timeouts)
+    const staleThreshold = new Date(Date.now() - 10 * 60 * 1000).toISOString();
     const chunkSize = 100;
 
     for (let i = 0; i < orgInitIds.length; i += chunkSize) {
