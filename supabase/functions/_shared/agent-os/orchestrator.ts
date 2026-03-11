@@ -115,7 +115,7 @@ export class AgentOS {
 
       try {
         const canonRequest = buildCanonRetrievalRequest(currentStage, input);
-        const canonResult = await retrieveCanonKnowledge(canonRequest);
+        const canonResult = await retrieveCanonKnowledge(canonRequest, this.supabaseClient as any);
         enrichedInput = injectCanonIntoWorkInput(enrichedInput, canonResult);
         canonTrace = buildCanonTraceRecord(currentStage, canonResult);
 
