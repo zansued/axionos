@@ -35,6 +35,7 @@ import { RepairRoutingCard } from "./RepairRoutingCard";
 import { ArchitectureSubjobsPanel } from "./ArchitectureSubjobsPanel";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 import PipelineGraphView from "./PipelineGraphView";
+import { ReadinessPanel } from "./ReadinessPanel";
 
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -437,6 +438,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
           </CardContent>
         </Card>
       )}
+
+      {/* Readiness Evaluation (Phase 4) */}
+      <ReadinessPanel initiative={initiative} />
 
       {/* Architecture Subjobs Panel */}
       <ArchitectureSubjobsPanel
