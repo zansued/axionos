@@ -313,57 +313,63 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       return [{ stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" }];
     case "dependencies_analyzed":
       return [
-        { stage: "supabase_schema_bootstrap", label: "🗄️ Schema Bootstrap", type: "run" },
+        { stage: "approve", label: "✅ Aprovar → Continuar Pipeline", description: "Aprova dependências e avança automaticamente para Schema Bootstrap.", type: "approve", variant: "primary" },
+        { stage: "supabase_schema_bootstrap", label: "🗄️ Schema Bootstrap (manual)", type: "run" },
         { stage: "ecosystem_drift", label: "🌐 Ecosystem Drift Analysis", type: "run" },
-        { stage: "approve", label: "Aprovar Dependencies", type: "approve" },
         { stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "bootstrapping_schema":
-      return [{ stage: "supabase_schema_bootstrap", label: "Re-executar Schema Bootstrap", type: "run" }];
+      return [{ stage: "supabase_schema_bootstrap", label: "▶ Iniciar Schema Bootstrap", type: "run" }];
     case "schema_bootstrapped":
       return [
-        { stage: "supabase_provisioning", label: "🗄️ DB Provisioning", type: "run" },
+        { stage: "approve", label: "✅ Aprovar → Continuar Pipeline", description: "Aprova schema e avança automaticamente para DB Provisioning.", type: "approve", variant: "primary" },
+        { stage: "supabase_provisioning", label: "🗄️ DB Provisioning (manual)", type: "run" },
         { stage: "supabase_schema_bootstrap", label: "Re-executar Schema Bootstrap", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "provisioning_db":
-      return [{ stage: "supabase_provisioning", label: "Re-executar Provisioning", type: "run" }];
+      return [{ stage: "supabase_provisioning", label: "▶ Iniciar Provisioning", type: "run" }];
     case "db_provisioned":
       return [
-        { stage: "domain_model_analysis", label: "🧠 Domain Model Analysis", type: "run" },
+        { stage: "approve", label: "✅ Aprovar → Continuar Pipeline", description: "Aprova DB e avança automaticamente para Domain Analysis.", type: "approve", variant: "primary" },
+        { stage: "domain_model_analysis", label: "🧠 Domain Analysis (manual)", type: "run" },
         { stage: "supabase_provisioning", label: "Re-executar Provisioning", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "analyzing_domain":
-      return [{ stage: "domain_model_analysis", label: "Re-executar Domain Analysis", type: "run" }];
+      return [{ stage: "domain_model_analysis", label: "▶ Iniciando Domain Analysis", type: "run" }];
     case "domain_analyzed":
       return [
-        { stage: "data_model_generation", label: "🗄️ Data Model Generation", type: "run" },
+        { stage: "approve", label: "✅ Aprovar → Continuar Pipeline", description: "Aprova domain e avança automaticamente para Data Model.", type: "approve", variant: "primary" },
+        { stage: "data_model_generation", label: "🗄️ Data Model (manual)", type: "run" },
         { stage: "domain_model_analysis", label: "Re-executar Domain Analysis", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "generating_data_model":
-      return [{ stage: "data_model_generation", label: "Re-executar Data Model", type: "run" }];
+      return [{ stage: "data_model_generation", label: "▶ Iniciando Data Model", type: "run" }];
     case "data_model_generated":
       return [
-        { stage: "business_logic_synthesis", label: "⚙️ Business Logic Synthesis", type: "run" },
+        { stage: "approve", label: "✅ Aprovar → Continuar Pipeline", description: "Aprova data model e avança automaticamente para Business Logic.", type: "approve", variant: "primary" },
+        { stage: "business_logic_synthesis", label: "⚙️ Business Logic (manual)", type: "run" },
         { stage: "data_model_generation", label: "Re-executar Data Model", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "synthesizing_logic":
-      return [{ stage: "business_logic_synthesis", label: "Re-executar Business Logic", type: "run" }];
+      return [{ stage: "business_logic_synthesis", label: "▶ Iniciando Business Logic", type: "run" }];
     case "logic_synthesized":
       return [
-        { stage: "api_generation", label: "🔌 API Generation", type: "run" },
+        { stage: "approve", label: "✅ Aprovar → Continuar Pipeline", description: "Aprova lógica e avança automaticamente para API Generation.", type: "approve", variant: "primary" },
+        { stage: "api_generation", label: "🔌 API Generation (manual)", type: "run" },
         { stage: "business_logic_synthesis", label: "Re-executar Business Logic", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "generating_api":
-      return [{ stage: "api_generation", label: "Re-executar API Generation", type: "run" }];
+      return [{ stage: "api_generation", label: "▶ Iniciando API Generation", type: "run" }];
     case "api_generated":
       return [
-        { stage: "ui_generation", label: "🖥️ UI Generation", type: "run" },
+        { stage: "approve", label: "✅ Aprovar → Continuar Pipeline", description: "Aprova API e avança automaticamente para UI Generation.", type: "approve", variant: "primary" },
+        { stage: "ui_generation", label: "🖥️ UI Generation (manual)", type: "run" },
         { stage: "api_generation", label: "Re-executar API Generation", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
