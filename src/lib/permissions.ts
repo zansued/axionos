@@ -76,6 +76,7 @@ export const OWNER_INSTITUTIONAL_MEMORY: NavItem[] = [
   { title: "Security Intelligence",   url: "/security-intelligence",   icon: ShieldAlert },
   { title: "Red Team Simulation",    url: "/red-team-simulation",     icon: Shield },
   { title: "Blue Team Defense",     url: "/blue-team-defense",       icon: ShieldCheck },
+  { title: "Purple Learning",       url: "/purple-learning",         icon: Sparkles },
   { title: "Capabilities",            url: "/capability-registry",     icon: Fingerprint },
 ];
 
