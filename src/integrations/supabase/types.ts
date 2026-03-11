@@ -6292,6 +6292,94 @@ export type Database = {
           },
         ]
       }
+      canon_candidate_lineage: {
+        Row: {
+          candidate_id: string
+          contribution_weight: number
+          created_at: string
+          id: string
+          lineage_type: string
+          organization_id: string | null
+          source_ref: string
+          source_table: string
+        }
+        Insert: {
+          candidate_id: string
+          contribution_weight?: number
+          created_at?: string
+          id?: string
+          lineage_type?: string
+          organization_id?: string | null
+          source_ref?: string
+          source_table?: string
+        }
+        Update: {
+          candidate_id?: string
+          contribution_weight?: number
+          created_at?: string
+          id?: string
+          lineage_type?: string
+          organization_id?: string | null
+          source_ref?: string
+          source_table?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_candidate_lineage_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_candidate_reviews: {
+        Row: {
+          candidate_id: string
+          confidence_assessment: number
+          created_at: string
+          id: string
+          organization_id: string | null
+          review_notes: string
+          reviewer: string
+          strengths: Json
+          verdict: string
+          weaknesses: Json
+        }
+        Insert: {
+          candidate_id: string
+          confidence_assessment?: number
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          review_notes?: string
+          reviewer?: string
+          strengths?: Json
+          verdict?: string
+          weaknesses?: Json
+        }
+        Update: {
+          candidate_id?: string
+          confidence_assessment?: number
+          created_at?: string
+          id?: string
+          organization_id?: string | null
+          review_notes?: string
+          reviewer?: string
+          strengths?: Json
+          verdict?: string
+          weaknesses?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_candidate_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_categories: {
         Row: {
           created_at: string
@@ -7316,6 +7404,62 @@ export type Database = {
           },
         ]
       }
+      canon_failure_patterns: {
+        Row: {
+          affected_stages: Json
+          created_at: string
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          learning_candidate_id: string | null
+          occurrence_count: number
+          organization_id: string | null
+          pattern_description: string
+          pattern_signature: string
+          severity: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          affected_stages?: Json
+          created_at?: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          learning_candidate_id?: string | null
+          occurrence_count?: number
+          organization_id?: string | null
+          pattern_description?: string
+          pattern_signature?: string
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          affected_stages?: Json
+          created_at?: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          learning_candidate_id?: string | null
+          occurrence_count?: number
+          organization_id?: string | null
+          pattern_description?: string
+          pattern_signature?: string
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_failure_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_integrity_assessments: {
         Row: {
           architecture_canon_alignment_score: number
@@ -7586,6 +7730,83 @@ export type Database = {
           },
         ]
       }
+      canon_learning_candidates: {
+        Row: {
+          candidate_source: string
+          confidence_score: number
+          created_at: string
+          id: string
+          noise_suppressed: boolean
+          organization_id: string | null
+          promoted_to_entry_id: string | null
+          proposed_domain: string
+          proposed_practice_type: string
+          proposed_stack_scope: string
+          review_notes: string | null
+          review_status: string
+          reviewed_by: string | null
+          signal_count: number
+          source_refs: Json
+          source_type: string
+          summary: string
+          suppression_reason: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          candidate_source?: string
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          noise_suppressed?: boolean
+          organization_id?: string | null
+          promoted_to_entry_id?: string | null
+          proposed_domain?: string
+          proposed_practice_type?: string
+          proposed_stack_scope?: string
+          review_notes?: string | null
+          review_status?: string
+          reviewed_by?: string | null
+          signal_count?: number
+          source_refs?: Json
+          source_type?: string
+          summary?: string
+          suppression_reason?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          candidate_source?: string
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          noise_suppressed?: boolean
+          organization_id?: string | null
+          promoted_to_entry_id?: string | null
+          proposed_domain?: string
+          proposed_practice_type?: string
+          proposed_stack_scope?: string
+          review_notes?: string | null
+          review_status?: string
+          reviewed_by?: string | null
+          signal_count?: number
+          source_refs?: Json
+          source_type?: string
+          summary?: string
+          suppression_reason?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_learning_candidates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_learning_records: {
         Row: {
           activated_at: string | null
@@ -7636,6 +7857,68 @@ export type Database = {
           },
           {
             foreignKeyName: "canon_learning_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_learning_signals: {
+        Row: {
+          cluster_id: string | null
+          clustered: boolean
+          confidence: number
+          created_at: string
+          error_signature: string | null
+          id: string
+          initiative_id: string | null
+          metadata: Json
+          organization_id: string | null
+          outcome: string
+          outcome_success: boolean
+          signal_source: string
+          signal_type: string
+          stage_name: string
+          strategy_used: string | null
+        }
+        Insert: {
+          cluster_id?: string | null
+          clustered?: boolean
+          confidence?: number
+          created_at?: string
+          error_signature?: string | null
+          id?: string
+          initiative_id?: string | null
+          metadata?: Json
+          organization_id?: string | null
+          outcome?: string
+          outcome_success?: boolean
+          signal_source?: string
+          signal_type?: string
+          stage_name?: string
+          strategy_used?: string | null
+        }
+        Update: {
+          cluster_id?: string | null
+          clustered?: boolean
+          confidence?: number
+          created_at?: string
+          error_signature?: string | null
+          id?: string
+          initiative_id?: string | null
+          metadata?: Json
+          organization_id?: string | null
+          outcome?: string
+          outcome_success?: boolean
+          signal_source?: string
+          signal_type?: string
+          stage_name?: string
+          strategy_used?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_learning_signals_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -7841,6 +8124,62 @@ export type Database = {
             columns: ["trial_id"]
             isOneToOne: false
             referencedRelation: "canon_change_trials"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_refactor_patterns: {
+        Row: {
+          affected_domains: Json
+          created_at: string
+          id: string
+          learning_candidate_id: string | null
+          occurrence_count: number
+          organization_id: string | null
+          pattern_description: string
+          pattern_name: string
+          refactor_type: string
+          representative_refs: Json
+          status: string
+          success_rate: number
+          updated_at: string
+        }
+        Insert: {
+          affected_domains?: Json
+          created_at?: string
+          id?: string
+          learning_candidate_id?: string | null
+          occurrence_count?: number
+          organization_id?: string | null
+          pattern_description?: string
+          pattern_name?: string
+          refactor_type?: string
+          representative_refs?: Json
+          status?: string
+          success_rate?: number
+          updated_at?: string
+        }
+        Update: {
+          affected_domains?: Json
+          created_at?: string
+          id?: string
+          learning_candidate_id?: string | null
+          occurrence_count?: number
+          organization_id?: string | null
+          pattern_description?: string
+          pattern_name?: string
+          refactor_type?: string
+          representative_refs?: Json
+          status?: string
+          success_rate?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_refactor_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -8451,6 +8790,62 @@ export type Database = {
           },
         ]
       }
+      canon_success_patterns: {
+        Row: {
+          applicable_domains: Json
+          contributing_factors: Json
+          created_at: string
+          id: string
+          learning_candidate_id: string | null
+          occurrence_count: number
+          organization_id: string | null
+          pattern_description: string
+          pattern_name: string
+          status: string
+          success_rate: number
+          success_type: string
+          updated_at: string
+        }
+        Insert: {
+          applicable_domains?: Json
+          contributing_factors?: Json
+          created_at?: string
+          id?: string
+          learning_candidate_id?: string | null
+          occurrence_count?: number
+          organization_id?: string | null
+          pattern_description?: string
+          pattern_name?: string
+          status?: string
+          success_rate?: number
+          success_type?: string
+          updated_at?: string
+        }
+        Update: {
+          applicable_domains?: Json
+          contributing_factors?: Json
+          created_at?: string
+          id?: string
+          learning_candidate_id?: string | null
+          occurrence_count?: number
+          organization_id?: string | null
+          pattern_description?: string
+          pattern_name?: string
+          status?: string
+          success_rate?: number
+          success_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_success_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_supersession_links: {
         Row: {
           created_at: string
@@ -8546,6 +8941,62 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "canon_usage_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_validation_patterns: {
+        Row: {
+          affected_stages: Json
+          created_at: string
+          failure_rate: number
+          id: string
+          learning_candidate_id: string | null
+          occurrence_count: number
+          organization_id: string | null
+          pattern_description: string
+          pattern_name: string
+          recommended_action: string
+          status: string
+          updated_at: string
+          validation_type: string
+        }
+        Insert: {
+          affected_stages?: Json
+          created_at?: string
+          failure_rate?: number
+          id?: string
+          learning_candidate_id?: string | null
+          occurrence_count?: number
+          organization_id?: string | null
+          pattern_description?: string
+          pattern_name?: string
+          recommended_action?: string
+          status?: string
+          updated_at?: string
+          validation_type?: string
+        }
+        Update: {
+          affected_stages?: Json
+          created_at?: string
+          failure_rate?: number
+          id?: string
+          learning_candidate_id?: string | null
+          occurrence_count?: number
+          organization_id?: string | null
+          pattern_description?: string
+          pattern_name?: string
+          recommended_action?: string
+          status?: string
+          updated_at?: string
+          validation_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_validation_patterns_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
