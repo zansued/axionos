@@ -1,12 +1,12 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
 
-const MAX_RETRIES = 5;
-const RETRY_DELAY = 800;
+const MAX_RETRIES = 8;
+const RETRY_DELAY = 1000;
 
 function envReady() {
   const url = import.meta.env.VITE_SUPABASE_URL;
-  return url && !url.includes("placeholder");
+  return typeof url === "string" && url.length > 10 && !url.includes("placeholder");
 }
 
 async function boot(attempt = 0) {
@@ -19,7 +19,7 @@ async function boot(attempt = 0) {
   }
 
   if (!envReady()) {
-    console.error("[AxionOS] CRITICAL: Supabase URL not injected after retries.");
+    console.error("[AxionOS] CRITICAL: Supabase URL not injected after retries. Value:", import.meta.env.VITE_SUPABASE_URL);
     root.innerHTML = `<div style="padding:2rem;color:#f87171;font-family:monospace;background:#0a0a0a;min-height:100vh;display:flex;align-items:center;justify-content:center"><div><h2>Environment loading...</h2><p>Please refresh the page.</p><button onclick="location.reload()" style="margin-top:1rem;padding:0.5rem 1rem;background:#1488fc;color:white;border:none;border-radius:6px;cursor:pointer">Refresh</button></div></div>`;
     return;
   }
