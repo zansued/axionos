@@ -182,7 +182,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AuthRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   if (loading) return null;
-  if (user) return <Navigate to="/builder/initiatives" replace />;
+  if (user) return <Navigate to="/builder/projects" replace />;
   return <>{children}</>;
 }
 
