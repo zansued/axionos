@@ -41,6 +41,14 @@ import {
   type ApprovalRequest,
 } from "./policy-orchestrator-integration.ts";
 
+// Sprint 141 — Readiness gate
+import {
+  evaluateReadiness,
+  buildReadinessTraceRecord,
+  type ReadinessGateResult,
+  type ReadinessTraceRecord,
+} from "./readiness-orchestrator-integration.ts";
+
 export interface OrchestratorOptions {
   registry: AgentRegistry;
   policies: StagePolicy[];
