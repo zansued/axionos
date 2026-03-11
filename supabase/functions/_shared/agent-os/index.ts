@@ -630,3 +630,15 @@ export type {
   ReadinessCheck as OrchestratorReadinessCheck,
   ReadinessCheckStatus,
 } from "./readiness-orchestrator-integration.ts";
+
+// Decision Contract (Sprint 142)
+export {
+  buildDispatchDecision,
+  validateDecision,
+} from "./decision-contract.ts";
+export type {
+  DispatchDecision,
+  SelectedAgentRef,
+  DispatchConstraint,
+  DispatchDecisionInput,
+} from "./decision-contract.ts";
