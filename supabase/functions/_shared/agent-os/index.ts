@@ -667,3 +667,13 @@ export type {
   TriggerMappingRule,
   TriggerIntakeResult,
 } from "./action-trigger-intake.ts";
+
+// Action Engine — Policy-Aware Resolution (Sprint 145 / AE-03)
+export {
+  resolveAction,
+} from "./action-resolution.ts";
+export type {
+  ActionResolutionInput,
+  ActionResolutionResult,
+  ActionResolutionTrace,
+} from "./action-resolution.ts";
