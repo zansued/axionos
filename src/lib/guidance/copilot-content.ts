@@ -394,8 +394,8 @@ const PLATFORM_COPILOT: CopilotDrawerContent[] = [
         en: "If current governance policies are working adequately, adjustments can wait.",
       },
       suggestedActions: [
-        { label: { pt: "Extensões", en: "Extensions" }, route: "/extensions", icon: "Package" },
-        { label: { pt: "Roteamento", en: "Routing" }, route: "/agent-routing", icon: "Route" },
+        { label: { pt: "Extensões", en: "Extensions" }, route: "/owner/extensions", icon: "Package" },
+        { label: { pt: "Roteamento", en: "Routing" }, route: "/owner/agent-routing", icon: "Route" },
       ],
     },
   },
