@@ -18,7 +18,7 @@ export default function AdoptionIntelligence() {
   return (
     <AppShell>
       <div className="space-y-6">
-            <PageGuidanceShell pageKey="adoption" />
+            
             <div>
               <h1 className="text-2xl font-bold text-foreground">Adoption Intelligence</h1>
               <p className="text-muted-foreground">Customer success signals, journey adoption, and friction analysis.</p>

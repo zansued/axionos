@@ -56,7 +56,7 @@ export default function Delivery() {
   return (
     <AppLayout>
       <div className="p-6 space-y-6 max-w-7xl mx-auto">
-        <PageGuidanceShell pageKey="deployments" />
+        
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">

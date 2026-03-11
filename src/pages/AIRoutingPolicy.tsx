@@ -87,9 +87,6 @@ export default function AIRoutingPolicy() {
           </p>
         </div>
 
-        {/* Contextual Guidance */}
-        <PageGuidanceShell pageKey="routing" />
-
         {/* Tier Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {(Object.entries(TIER_CONFIG) as [RoutingTier, typeof TIER_CONFIG["economy"]][]).map(([tier, cfg]) => {

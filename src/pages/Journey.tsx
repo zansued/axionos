@@ -151,9 +151,6 @@ export default function UserJourneyDashboard() {
           </Button>
         </div>
 
-        {/* Contextual Guidance */}
-        <PageGuidanceShell pageKey="journey" />
-
         {/* Overview Stats */}
         <div className="grid gap-3 grid-cols-2 md:grid-cols-5">
           <Card><CardContent className="p-3 text-center">

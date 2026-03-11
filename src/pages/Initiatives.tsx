@@ -239,9 +239,6 @@ export default function Initiatives() {
           </div>
         </div>
 
-        {/* Contextual Guidance */}
-        <PageGuidanceShell pageKey="initiatives" />
-
         {breaches.length > 0 && (
           <SLABreachAlerts breaches={breaches} onNavigate={(id) => setSelectedId(id)} />
         )}
