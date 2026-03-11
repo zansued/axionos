@@ -183,17 +183,22 @@ Return ONLY a valid JSON array, no other text.`,
           if (!llmResp.ok) {
             const errText = await llmResp.text();
             console.error("LLM error:", llmResp.status, errText);
+            await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
             if (llmResp.status === 429) {
-              await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, "Rate limited by AI gateway");
+              await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "Rate limited by AI gateway", "failed");
               return json({ error: "Rate limited, please try again later" }, 429);
             }
             if (llmResp.status === 402) {
-              await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, "AI credits exhausted");
+              await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "AI credits exhausted", "failed");
               return json({ error: "AI credits exhausted" }, 402);
             }
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, `LLM error: ${llmResp.status}`);
+            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, `LLM error: ${llmResp.status}`, "failed");
             return json({ error: "Pattern extraction failed" }, 502);
           }
+
+          // Update to "classified"
+          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "classified" }).eq("id", source_id);
+          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "classified" }).eq("id", syncRun.id);
 
           const llmData = await llmResp.json();
           let patterns: any[] = [];
@@ -210,7 +215,7 @@ Return ONLY a valid JSON array, no other text.`,
           }
 
           if (patterns.length === 0) {
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, "No patterns extracted");
+            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "No patterns extracted", "classified");
             return json({ success: true, candidates_created: 0, message: "No patterns extracted" });
           }
 
