@@ -57,10 +57,8 @@ export default function MarketplaceOutcomes() {
   ];
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-auto">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Marketplace Outcomes</h1>
             <p className="text-sm text-muted-foreground">Outcome-aware capability marketplace — governed standing, health, and risk posture.</p>
