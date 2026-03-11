@@ -43,7 +43,7 @@ export async function enforceUsageLimits(
     max_initiatives_per_month: 20,
     max_tokens_per_month: 2000000,
     max_deployments_per_month: 10,
-    max_parallel_runs: 4,
+    max_parallel_runs: 8,
   };
 
   const limits = {
@@ -86,8 +86,8 @@ export async function enforceUsageLimits(
   let parallelRunCount = 0;
 
   if (orgInitIds.length > 0) {
-    // Auto-cleanup stale running jobs (older than 2 hours)
-    const staleThreshold = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+    // Auto-cleanup stale running jobs (older than 10 minutes — covers edge function timeouts)
+    const staleThreshold = new Date(Date.now() - 10 * 60 * 1000).toISOString();
     const chunkSize = 100;
 
     for (let i = 0; i < orgInitIds.length; i += chunkSize) {
@@ -96,7 +96,7 @@ export async function enforceUsageLimits(
       // Cleanup stale jobs first
       await serviceClient
         .from("initiative_jobs")
-        .update({ status: "failed", error: "Auto-cleanup: exceeded max runtime (2min)", completed_at: new Date().toISOString() })
+        .update({ status: "failed", error: "Auto-cleanup: exceeded max runtime (10min)", completed_at: new Date().toISOString() })
         .in("initiative_id", chunk)
         .eq("status", "running")
         .lt("created_at", staleThreshold);

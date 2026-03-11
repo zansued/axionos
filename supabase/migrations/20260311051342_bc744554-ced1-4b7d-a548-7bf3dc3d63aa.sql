@@ -1,0 +1,1 @@
+UPDATE initiative_jobs SET status = 'failed', error = 'Cleanup: stale running job cleared', completed_at = NOW() WHERE status = 'running' AND created_at < NOW() - INTERVAL '2 minutes';
