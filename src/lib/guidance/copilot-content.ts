@@ -168,8 +168,8 @@ const WORKSPACE_COPILOT: CopilotDrawerContent[] = [
         en: "If the current focus is on pipeline execution rather than post-delivery, you can ignore this for now.",
       },
       suggestedActions: [
-        { label: { pt: "Evidências", en: "Evidence" }, route: "/improvement-ledger", icon: "FileSearch" },
-        { label: { pt: "Candidatos", en: "Candidates" }, route: "/improvement-candidates", icon: "Sparkles" },
+        { label: { pt: "Evidências", en: "Evidence" }, route: "/owner/improvement-ledger", icon: "FileSearch" },
+        { label: { pt: "Candidatos", en: "Candidates" }, route: "/owner/improvement-candidates", icon: "Sparkles" },
       ],
     },
     roleOverrides: {
