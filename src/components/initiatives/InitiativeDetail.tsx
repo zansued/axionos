@@ -439,6 +439,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
         </Card>
       )}
 
+      {/* Readiness Evaluation (Phase 4) */}
+      <ReadinessPanel initiative={initiative} />
+
       {/* Architecture Subjobs Panel */}
       <ArchitectureSubjobsPanel
         initiativeId={initiative.id}
