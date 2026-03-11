@@ -99,6 +99,7 @@ import PatternDistillationDashboard from "./pages/PatternDistillationDashboard";
 import CanonReuseImpactDashboard from "./pages/CanonReuseImpactDashboard";
 import CanonIntelligenceDashboard from "./pages/CanonIntelligenceDashboard";
 import SecurityIntelligenceDashboard from "./pages/SecurityIntelligenceDashboard";
+import RedTeamSimulationDashboard from "./pages/RedTeamSimulationDashboard";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
@@ -359,6 +360,7 @@ const App = () => (
                           <Route path="/canon-reuse"               element={<P><CanonReuseImpactDashboard /></P>} />
                           <Route path="/canon-intelligence"        element={<P><CanonIntelligenceDashboard /></P>} />
                           <Route path="/security-intelligence"     element={<P><SecurityIntelligenceDashboard /></P>} />
+                          <Route path="/red-team-simulation"       element={<P><RedTeamSimulationDashboard /></P>} />
                           <Route path="/operational-posture"       element={<P><OperationalPostureDashboard /></P>} />
                           <Route path="/attention-allocation"      element={<P><AttentionAllocationDashboard /></P>} />
                           <Route path="/adaptive-routing"          element={<P><AdaptiveRoutingDashboard /></P>} />
