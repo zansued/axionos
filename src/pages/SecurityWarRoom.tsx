@@ -515,11 +515,9 @@ function SecurityCanonTab() {
 
 export default function SecurityWarRoom() {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <ScrollArea className="h-[calc(100vh-1rem)]">
-          <div className="p-6 space-y-6 max-w-[1400px] mx-auto">
+    <AppShell>
+      <ScrollArea className="h-[calc(100vh-5rem)]">
+        <div className="space-y-6 max-w-[1400px] mx-auto">
             {/* ═══ Header ═══ */}
             <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
               <div className="flex items-center gap-3">
