@@ -28050,6 +28050,95 @@ export type Database = {
           },
         ]
       }
+      policy_tuning_proposals: {
+        Row: {
+          aggregation_count: number
+          aggregation_key: string | null
+          confidence: number
+          created_at: string
+          evidence_summary: string
+          id: string
+          initiative_ids: Json
+          metadata: Json
+          organization_id: string
+          proposal_type: string
+          proposed_by_actor_type: string
+          rationale: string
+          recommendation: string
+          related_action_ids: Json
+          related_approval_request_ids: Json
+          related_learning_signal_ids: Json
+          related_outcome_ids: Json
+          related_policy_decision_ids: Json
+          review_status: string
+          severity: string
+          stage_scope: string
+          target_policy_object_id: string | null
+          target_policy_scope: string
+          updated_at: string
+        }
+        Insert: {
+          aggregation_count?: number
+          aggregation_key?: string | null
+          confidence?: number
+          created_at?: string
+          evidence_summary?: string
+          id?: string
+          initiative_ids?: Json
+          metadata?: Json
+          organization_id: string
+          proposal_type?: string
+          proposed_by_actor_type?: string
+          rationale?: string
+          recommendation?: string
+          related_action_ids?: Json
+          related_approval_request_ids?: Json
+          related_learning_signal_ids?: Json
+          related_outcome_ids?: Json
+          related_policy_decision_ids?: Json
+          review_status?: string
+          severity?: string
+          stage_scope?: string
+          target_policy_object_id?: string | null
+          target_policy_scope?: string
+          updated_at?: string
+        }
+        Update: {
+          aggregation_count?: number
+          aggregation_key?: string | null
+          confidence?: number
+          created_at?: string
+          evidence_summary?: string
+          id?: string
+          initiative_ids?: Json
+          metadata?: Json
+          organization_id?: string
+          proposal_type?: string
+          proposed_by_actor_type?: string
+          rationale?: string
+          recommendation?: string
+          related_action_ids?: Json
+          related_approval_request_ids?: Json
+          related_learning_signal_ids?: Json
+          related_outcome_ids?: Json
+          related_policy_decision_ids?: Json
+          review_status?: string
+          severity?: string
+          stage_scope?: string
+          target_policy_object_id?: string | null
+          target_policy_scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_tuning_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       post_deploy_feedback_clusters: {
         Row: {
           cluster_label: string
