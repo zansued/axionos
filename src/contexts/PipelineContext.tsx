@@ -552,7 +552,7 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
       validation: "in_progress",
       build_repair: "validating",
       publish: "ready_to_publish",
-      // v3 Growth & Evolution
+      // Background Intelligence (autonomous — all map to Runtime in visible pipeline)
       observability: "published",
       product_analytics: "product_observed",
       user_behavior: "product_metrics_analyzed",
