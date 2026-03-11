@@ -61,7 +61,7 @@ export function SidebarProvider({
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   animate?: boolean;
 }) {
-  const [openState, setOpenState] = React.useState(false);
+  const [openState, setOpenState] = React.useState(true);
   const isMobile = useIsMobileSidebar();
 
   const open = openProp !== undefined ? openProp : openState;
@@ -111,7 +111,7 @@ function DesktopSidebar({
   children: React.ReactNode;
   className?: string;
 }) {
-  const { open, setOpen, animate } = useSidebar();
+  const { open, animate } = useSidebar();
 
   return (
     <motion.div
@@ -123,8 +123,6 @@ function DesktopSidebar({
         width: animate ? (open ? SIDEBAR_WIDTH_EXPANDED : SIDEBAR_WIDTH_COLLAPSED) : SIDEBAR_WIDTH_EXPANDED,
       }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
       style={{ position: "sticky", top: 0 }}
     >
       {children}
