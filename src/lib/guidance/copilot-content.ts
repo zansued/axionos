@@ -65,7 +65,7 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If your initiative is in a mid-stage with everything progressing normally, you can check back later.",
       },
       suggestedActions: [
-        { label: { pt: "Ver iniciativas", en: "View initiatives" }, route: "/initiatives", icon: "Layers" },
+        { label: { pt: "Ver iniciativas", en: "View initiatives" }, route: "/builder/initiatives", icon: "Layers" },
       ],
     },
   },
