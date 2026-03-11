@@ -62,18 +62,23 @@ serve(async (req) => {
     // Post-deploy / runtime stages
     deployed: { field: "approved_at_planning", nextStatus: "observability_ready" },
     in_progress: { field: "approved_at_planning", nextStatus: "in_progress" },
+    // Runtime-phase: "Marcar como Concluído" should complete the initiative
+    runtime_active: { field: "approved_at_planning", nextStatus: "completed" },
+    observing_product: { field: "approved_at_planning", nextStatus: "completed" },
+    product_observed: { field: "approved_at_planning", nextStatus: "completed" },
+    analyzing_product_metrics: { field: "approved_at_planning", nextStatus: "completed" },
+    product_metrics_analyzed: { field: "approved_at_planning", nextStatus: "completed" },
+    analyzing_user_behavior: { field: "approved_at_planning", nextStatus: "completed" },
+    user_behavior_analyzed: { field: "approved_at_planning", nextStatus: "completed" },
+    optimizing_growth: { field: "approved_at_planning", nextStatus: "completed" },
+    learning_system: { field: "approved_at_planning", nextStatus: "completed" },
+    system_learned: { field: "approved_at_planning", nextStatus: "completed" },
+    managing_portfolio: { field: "approved_at_planning", nextStatus: "completed" },
   };
 
   const approval = approvalMap[currentStatus];
   if (!approval) {
-    const terminalStates = ["completed", "archived",
-      // Runtime-phase background intelligence states (no approval needed)
-      "runtime_active", "observing_product", "product_observed",
-      "analyzing_product_metrics", "product_metrics_analyzed",
-      "analyzing_user_behavior", "user_behavior_analyzed",
-      "optimizing_growth", "learning_system", "system_learned",
-      "managing_portfolio",
-    ];
+    const terminalStates = ["completed", "archived"];
     if (terminalStates.includes(currentStatus)) {
       return jsonResponse({ success: true, new_status: currentStatus, message: "Already approved/advanced" });
     }
