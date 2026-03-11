@@ -22842,6 +22842,99 @@ export type Database = {
           },
         ]
       }
+      learning_signals: {
+        Row: {
+          aggregation_count: number | null
+          aggregation_key: string | null
+          confidence: number
+          created_at: string
+          explanation: string | null
+          id: string
+          initiative_id: string | null
+          metadata: Json | null
+          organization_id: string
+          related_action_id: string | null
+          related_agent_id: string | null
+          related_canon_entry_ids: string[] | null
+          related_outcome_id: string | null
+          related_policy_decision_id: string | null
+          related_recovery_hook_id: string | null
+          routing_target: string | null
+          severity: string
+          signal_type: string
+          source_id: string | null
+          source_type: string
+          stage: string | null
+          summary: string
+          updated_at: string
+        }
+        Insert: {
+          aggregation_count?: number | null
+          aggregation_key?: string | null
+          confidence?: number
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          initiative_id?: string | null
+          metadata?: Json | null
+          organization_id: string
+          related_action_id?: string | null
+          related_agent_id?: string | null
+          related_canon_entry_ids?: string[] | null
+          related_outcome_id?: string | null
+          related_policy_decision_id?: string | null
+          related_recovery_hook_id?: string | null
+          routing_target?: string | null
+          severity?: string
+          signal_type?: string
+          source_id?: string | null
+          source_type?: string
+          stage?: string | null
+          summary?: string
+          updated_at?: string
+        }
+        Update: {
+          aggregation_count?: number | null
+          aggregation_key?: string | null
+          confidence?: number
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          initiative_id?: string | null
+          metadata?: Json | null
+          organization_id?: string
+          related_action_id?: string | null
+          related_agent_id?: string | null
+          related_canon_entry_ids?: string[] | null
+          related_outcome_id?: string | null
+          related_policy_decision_id?: string | null
+          related_recovery_hook_id?: string | null
+          routing_target?: string | null
+          severity?: string
+          signal_type?: string
+          source_id?: string | null
+          source_type?: string
+          stage?: string | null
+          summary?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_signals_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "learning_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketplace_pilot_capabilities: {
         Row: {
           capability_domain: string
