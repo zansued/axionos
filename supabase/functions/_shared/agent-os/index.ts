@@ -655,3 +655,15 @@ export type {
   ActionOutcomeStatus,
   ActionOutcome,
 } from "./action-engine-types.ts";
+
+// Action Engine — Trigger Intake & Mapping (Sprint 144 / AE-02)
+export {
+  processTrigger,
+  createTrigger,
+  DEFAULT_TRIGGER_MAPPING_RULES,
+} from "./action-trigger-intake.ts";
+export type {
+  TriggerSource,
+  TriggerMappingRule,
+  TriggerIntakeResult,
+} from "./action-trigger-intake.ts";
