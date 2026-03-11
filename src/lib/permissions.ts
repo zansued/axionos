@@ -12,7 +12,7 @@ import {
   LayoutDashboard, FolderKanban, Bot, GitBranch, Eye, Shield,
   Settings, HeartPulse, LineChart, Search, Brain,
   Fingerprint, Scale, Users, Activity, Cpu,
-  Radio, Sparkles, Database,
+  Radio, Sparkles, Database, ShieldAlert,
 } from "lucide-react";
 
 // ─── Canonical role types ──────────────────────────────────────────────────
@@ -71,9 +71,10 @@ export const OWNER_SYSTEM_INTELLIGENCE: NavItem[] = [
 ];
 
 export const OWNER_INSTITUTIONAL_MEMORY: NavItem[] = [
-  { title: "Pattern Library",      url: "/pattern-library",      icon: Brain },
-  { title: "Canon Intelligence",   url: "/canon-intelligence",   icon: Database },
-  { title: "Capabilities",         url: "/capability-registry",  icon: Fingerprint },
+  { title: "Pattern Library",         url: "/pattern-library",         icon: Brain },
+  { title: "Canon Intelligence",      url: "/canon-intelligence",      icon: Database },
+  { title: "Security Intelligence",   url: "/security-intelligence",   icon: ShieldAlert },
+  { title: "Capabilities",            url: "/capability-registry",     icon: Fingerprint },
 ];
 
 export const OWNER_GOVERNANCE: NavItem[] = [

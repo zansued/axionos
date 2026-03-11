@@ -11206,6 +11206,68 @@ export type Database = {
           },
         ]
       }
+      contract_risk_profiles: {
+        Row: {
+          agent_type: string
+          contract_type: string
+          created_at: string
+          deployment_risk: number
+          governance_boundary_score: number
+          id: string
+          mitigations: Json
+          organization_id: string
+          permission_sensitivity: number
+          review_status: string
+          risk_score: number
+          tenant_boundary_score: number
+          threat_domains: string[]
+          updated_at: string
+          validation_bypass_risk: number
+        }
+        Insert: {
+          agent_type?: string
+          contract_type?: string
+          created_at?: string
+          deployment_risk?: number
+          governance_boundary_score?: number
+          id?: string
+          mitigations?: Json
+          organization_id: string
+          permission_sensitivity?: number
+          review_status?: string
+          risk_score?: number
+          tenant_boundary_score?: number
+          threat_domains?: string[]
+          updated_at?: string
+          validation_bypass_risk?: number
+        }
+        Update: {
+          agent_type?: string
+          contract_type?: string
+          created_at?: string
+          deployment_risk?: number
+          governance_boundary_score?: number
+          id?: string
+          mitigations?: Json
+          organization_id?: string
+          permission_sensitivity?: number
+          review_status?: string
+          risk_score?: number
+          tenant_boundary_score?: number
+          threat_domains?: string[]
+          updated_at?: string
+          validation_bypass_risk?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_risk_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       convergence_candidates: {
         Row: {
           assumptions: Json
@@ -17905,6 +17967,73 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exposure_scores: {
+        Row: {
+          assessment_notes: string
+          blast_radius: number
+          composite_risk: number
+          created_at: string
+          exposure_type: string
+          id: string
+          organization_id: string
+          rollback_impact: number
+          score: number
+          surface_id: string | null
+          tenant_impact: number
+          threat_domain_id: string | null
+        }
+        Insert: {
+          assessment_notes?: string
+          blast_radius?: number
+          composite_risk?: number
+          created_at?: string
+          exposure_type?: string
+          id?: string
+          organization_id: string
+          rollback_impact?: number
+          score?: number
+          surface_id?: string | null
+          tenant_impact?: number
+          threat_domain_id?: string | null
+        }
+        Update: {
+          assessment_notes?: string
+          blast_radius?: number
+          composite_risk?: number
+          created_at?: string
+          exposure_type?: string
+          id?: string
+          organization_id?: string
+          rollback_impact?: number
+          score?: number
+          surface_id?: string | null
+          tenant_impact?: number
+          threat_domain_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exposure_scores_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exposure_scores_surface_id_fkey"
+            columns: ["surface_id"]
+            isOneToOne: false
+            referencedRelation: "security_surfaces"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exposure_scores_threat_domain_id_fkey"
+            columns: ["threat_domain_id"]
+            isOneToOne: false
+            referencedRelation: "threat_domains"
             referencedColumns: ["id"]
           },
         ]
@@ -32067,6 +32196,59 @@ export type Database = {
           },
         ]
       }
+      runtime_security_boundaries: {
+        Row: {
+          action_type: string
+          agent_type: string | null
+          boundary_layer: string
+          boundary_name: string
+          created_at: string
+          description: string
+          governance_gate_required: boolean
+          id: string
+          organization_id: string
+          risk_level: string
+          rollback_available: boolean
+          updated_at: string
+        }
+        Insert: {
+          action_type?: string
+          agent_type?: string | null
+          boundary_layer?: string
+          boundary_name?: string
+          created_at?: string
+          description?: string
+          governance_gate_required?: boolean
+          id?: string
+          organization_id: string
+          risk_level?: string
+          rollback_available?: boolean
+          updated_at?: string
+        }
+        Update: {
+          action_type?: string
+          agent_type?: string | null
+          boundary_layer?: string
+          boundary_name?: string
+          created_at?: string
+          description?: string
+          governance_gate_required?: boolean
+          id?: string
+          organization_id?: string
+          risk_level?: string
+          rollback_available?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "runtime_security_boundaries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       s119_rollback_events: {
         Row: {
           created_at: string
@@ -32191,6 +32373,172 @@ export type Database = {
             columns: ["subject_id"]
             isOneToOne: false
             referencedRelation: "simulation_subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_surface_domains: {
+        Row: {
+          avg_exposure_score: number
+          created_at: string
+          description: string
+          domain_category: string
+          domain_name: string
+          id: string
+          organization_id: string
+          severity: string
+          surface_count: number
+          updated_at: string
+        }
+        Insert: {
+          avg_exposure_score?: number
+          created_at?: string
+          description?: string
+          domain_category?: string
+          domain_name?: string
+          id?: string
+          organization_id: string
+          severity?: string
+          surface_count?: number
+          updated_at?: string
+        }
+        Update: {
+          avg_exposure_score?: number
+          created_at?: string
+          description?: string
+          domain_category?: string
+          domain_name?: string
+          id?: string
+          organization_id?: string
+          severity?: string
+          surface_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_surface_domains_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_surface_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          review_notes: string
+          review_type: string
+          reviewer_id: string | null
+          risk_assessment: Json
+          surface_id: string | null
+          verdict: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          review_notes?: string
+          review_type?: string
+          reviewer_id?: string | null
+          risk_assessment?: Json
+          surface_id?: string | null
+          verdict?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          review_notes?: string
+          review_type?: string
+          reviewer_id?: string | null
+          risk_assessment?: Json
+          surface_id?: string | null
+          verdict?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_surface_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_surface_reviews_surface_id_fkey"
+            columns: ["surface_id"]
+            isOneToOne: false
+            referencedRelation: "security_surfaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_surfaces: {
+        Row: {
+          blast_radius_estimate: number
+          created_at: string
+          description: string
+          evidence_refs: Json
+          exposure_score: number
+          id: string
+          organization_id: string
+          owning_layer: string
+          related_agent_type: string | null
+          related_contract_type: string | null
+          review_status: string
+          rollback_sensitivity: number
+          surface_name: string
+          surface_type: string
+          tenant_sensitivity: number
+          threat_domain: string
+          updated_at: string
+        }
+        Insert: {
+          blast_radius_estimate?: number
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          exposure_score?: number
+          id?: string
+          organization_id: string
+          owning_layer?: string
+          related_agent_type?: string | null
+          related_contract_type?: string | null
+          review_status?: string
+          rollback_sensitivity?: number
+          surface_name?: string
+          surface_type?: string
+          tenant_sensitivity?: number
+          threat_domain?: string
+          updated_at?: string
+        }
+        Update: {
+          blast_radius_estimate?: number
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          exposure_score?: number
+          id?: string
+          organization_id?: string
+          owning_layer?: string
+          related_agent_type?: string | null
+          related_contract_type?: string | null
+          review_status?: string
+          rollback_sensitivity?: number
+          surface_name?: string
+          surface_type?: string
+          tenant_sensitivity?: number
+          threat_domain?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_surfaces_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -34685,6 +35033,59 @@ export type Database = {
           },
         ]
       }
+      tenant_boundary_surfaces: {
+        Row: {
+          affected_tables: string[]
+          boundary_name: string
+          boundary_type: string
+          created_at: string
+          cross_tenant_risk: number
+          data_sensitivity: string
+          id: string
+          isolation_strength: number
+          organization_id: string
+          review_status: string
+          rls_coverage: number
+          updated_at: string
+        }
+        Insert: {
+          affected_tables?: string[]
+          boundary_name?: string
+          boundary_type?: string
+          created_at?: string
+          cross_tenant_risk?: number
+          data_sensitivity?: string
+          id?: string
+          isolation_strength?: number
+          organization_id: string
+          review_status?: string
+          rls_coverage?: number
+          updated_at?: string
+        }
+        Update: {
+          affected_tables?: string[]
+          boundary_name?: string
+          boundary_type?: string
+          created_at?: string
+          cross_tenant_risk?: number
+          data_sensitivity?: string
+          id?: string
+          isolation_strength?: number
+          organization_id?: string
+          review_status?: string
+          rls_coverage?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_boundary_surfaces_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenant_doctrine_reviews: {
         Row: {
           completed_at: string | null
@@ -35409,6 +35810,65 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      threat_domains: {
+        Row: {
+          affected_agent_types: string[]
+          affected_layers: string[]
+          created_at: string
+          description: string
+          evidence_refs: Json
+          id: string
+          impact_score: number
+          likelihood_score: number
+          mitigation_posture: string
+          organization_id: string
+          severity: string
+          threat_name: string
+          threat_type: string
+          updated_at: string
+        }
+        Insert: {
+          affected_agent_types?: string[]
+          affected_layers?: string[]
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          impact_score?: number
+          likelihood_score?: number
+          mitigation_posture?: string
+          organization_id: string
+          severity?: string
+          threat_name?: string
+          threat_type?: string
+          updated_at?: string
+        }
+        Update: {
+          affected_agent_types?: string[]
+          affected_layers?: string[]
+          created_at?: string
+          description?: string
+          evidence_refs?: Json
+          id?: string
+          impact_score?: number
+          likelihood_score?: number
+          mitigation_posture?: string
+          organization_id?: string
+          severity?: string
+          threat_name?: string
+          threat_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "threat_domains_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
