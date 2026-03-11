@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Database, Globe, ShieldCheck, FileInput, RefreshCw, Layers, BookOpen, AlertTriangle, GitBranch, ClipboardCheck, Zap, Activity, MessageSquare, Search } from "lucide-react";
+import { Database, Globe, ShieldCheck, FileInput, RefreshCw, Layers, BookOpen, AlertTriangle, GitBranch, ClipboardCheck, Zap, Activity, MessageSquare, Search, Brain, TrendingUp, XCircle, Wrench, CheckCircle } from "lucide-react";
 import { useCanonIntelligence } from "@/hooks/useCanonIntelligence";
 import { useCanonStewardship } from "@/hooks/useCanonStewardship";
 import { useCanonRuntime } from "@/hooks/useCanonRuntime";
+import { useCanonLearning } from "@/hooks/useCanonLearning";
 
 const TRUST_BADGE: Record<string, string> = {
   trusted: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
@@ -67,15 +68,25 @@ const PRACTICE_LABELS: Record<string, string> = {
   migration_note: "Migration Note",
 };
 
+const SEVERITY_BADGE: Record<string, string> = {
+  info: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  low: "bg-muted text-muted-foreground",
+  medium: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+  high: "bg-destructive/20 text-destructive border-destructive/30",
+  critical: "bg-red-600/20 text-red-400 border-red-600/30",
+};
+
 export default function CanonIntelligenceDashboard() {
   const { sources, trustProfiles, candidates, syncRuns, domains, loading } = useCanonIntelligence();
   const stewardship = useCanonStewardship();
   const runtime = useCanonRuntime();
+  const learning = useCanonLearning();
 
   const pendingCandidates = candidates.filter((c: any) => c.promotion_status === "pending");
   const trustedSources = trustProfiles.filter((t: any) => t.trust_tier === "trusted" || t.trust_tier === "verified");
   const openConflicts = stewardship.conflicts.filter((c: any) => c.resolution_status === "open");
   const approvedEntries = stewardship.library.filter((e: any) => e.lifecycle_status === "approved");
+  const pendingLearning = learning.candidates.filter((c: any) => c.review_status === "pending");
 
   return (
     <SidebarProvider>
@@ -88,12 +99,12 @@ export default function CanonIntelligenceDashboard() {
               Canon Intelligence
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Source governance, stewardship workflow, and canonical knowledge management
+              Source governance, stewardship, runtime retrieval, and operational learning
             </p>
           </div>
 
           {/* Summary Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
             <Card className="border-border/50 bg-card/50">
               <CardContent className="pt-4 pb-3">
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Sources</p>
@@ -126,8 +137,20 @@ export default function CanonIntelligenceDashboard() {
             </Card>
             <Card className="border-border/50 bg-card/50">
               <CardContent className="pt-4 pb-3">
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Runtime Sessions</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Sessions</p>
                 <p className="text-xl font-bold mt-1 text-primary">{runtime.analytics.totalSessions}</p>
+              </CardContent>
+            </Card>
+            <Card className="border-border/50 bg-card/50">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Signals</p>
+                <p className="text-xl font-bold mt-1">{learning.signals.length}</p>
+              </CardContent>
+            </Card>
+            <Card className="border-border/50 bg-card/50">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Learning Queue</p>
+                <p className="text-xl font-bold mt-1 text-primary">{pendingLearning.length}</p>
               </CardContent>
             </Card>
           </div>
@@ -147,9 +170,14 @@ export default function CanonIntelligenceDashboard() {
               <TabsTrigger value="applications" className="text-xs"><Zap className="h-3.5 w-3.5 mr-1" />Applications</TabsTrigger>
               <TabsTrigger value="runtime-analytics" className="text-xs"><Activity className="h-3.5 w-3.5 mr-1" />Analytics</TabsTrigger>
               <TabsTrigger value="feedback" className="text-xs"><MessageSquare className="h-3.5 w-3.5 mr-1" />Feedback</TabsTrigger>
+              <TabsTrigger value="learning" className="text-xs"><Brain className="h-3.5 w-3.5 mr-1" />Learning</TabsTrigger>
+              <TabsTrigger value="signals" className="text-xs"><TrendingUp className="h-3.5 w-3.5 mr-1" />Signals</TabsTrigger>
+              <TabsTrigger value="failure-patterns" className="text-xs"><XCircle className="h-3.5 w-3.5 mr-1" />Failures</TabsTrigger>
+              <TabsTrigger value="refactor-patterns" className="text-xs"><Wrench className="h-3.5 w-3.5 mr-1" />Refactors</TabsTrigger>
+              <TabsTrigger value="evolution-queue" className="text-xs"><CheckCircle className="h-3.5 w-3.5 mr-1" />Evolution</TabsTrigger>
             </TabsList>
 
-            {/* Canon Library */}
+            {/* ═══ Canon Library ═══ */}
             <TabsContent value="library">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -190,7 +218,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Review Queue */}
+            {/* ═══ Review Queue ═══ */}
             <TabsContent value="review">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -225,7 +253,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Conflicts */}
+            {/* ═══ Conflicts ═══ */}
             <TabsContent value="conflicts">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -263,7 +291,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Supersession */}
+            {/* ═══ Supersession ═══ */}
             <TabsContent value="supersession">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -272,7 +300,7 @@ export default function CanonIntelligenceDashboard() {
                 </CardHeader>
                 <CardContent>
                   {stewardship.supersessions.length === 0 ? (
-                    <p className="text-sm text-muted-foreground py-8 text-center">No supersessions recorded. Entries maintain lineage when one replaces another.</p>
+                    <p className="text-sm text-muted-foreground py-8 text-center">No supersessions recorded.</p>
                   ) : (
                     <ScrollArea className="h-[420px]">
                       <div className="space-y-2">
@@ -294,7 +322,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Sources */}
+            {/* ═══ Sources ═══ */}
             <TabsContent value="sources">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -331,7 +359,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Trust */}
+            {/* ═══ Trust ═══ */}
             <TabsContent value="trust">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -366,7 +394,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Candidates */}
+            {/* ═══ Candidates ═══ */}
             <TabsContent value="candidates">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -403,7 +431,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Syncs */}
+            {/* ═══ Syncs ═══ */}
             <TabsContent value="syncs">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -439,7 +467,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Domains */}
+            {/* ═══ Domains ═══ */}
             <TabsContent value="domains">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -466,7 +494,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Retrieval Console */}
+            {/* ═══ Retrieval Console ═══ */}
             <TabsContent value="retrieval">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -475,7 +503,7 @@ export default function CanonIntelligenceDashboard() {
                 </CardHeader>
                 <CardContent>
                   {runtime.sessions.length === 0 ? (
-                    <p className="text-sm text-muted-foreground py-8 text-center">No retrieval sessions yet. Sessions are created when agents consult canon during execution.</p>
+                    <p className="text-sm text-muted-foreground py-8 text-center">No retrieval sessions yet.</p>
                   ) : (
                     <ScrollArea className="h-[420px]">
                       <div className="space-y-2">
@@ -503,7 +531,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Applications View */}
+            {/* ═══ Applications ═══ */}
             <TabsContent value="applications">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -538,7 +566,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Runtime Analytics */}
+            {/* ═══ Runtime Analytics ═══ */}
             <TabsContent value="runtime-analytics">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -578,7 +606,7 @@ export default function CanonIntelligenceDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Feedback */}
+            {/* ═══ Feedback ═══ */}
             <TabsContent value="feedback">
               <Card className="border-border/50">
                 <CardHeader className="pb-3">
@@ -607,6 +635,224 @@ export default function CanonIntelligenceDashboard() {
                       </div>
                     </ScrollArea>
                   )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* ═══ Operational Learning ═══ */}
+            <TabsContent value="learning">
+              <Card className="border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Operational Learning Candidates</CardTitle>
+                  <CardDescription>Knowledge candidates generated from operational evidence — advisory only, never direct canon insertion</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {learning.loading ? (
+                    <p className="text-sm text-muted-foreground">Loading...</p>
+                  ) : learning.candidates.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-8 text-center">No learning candidates generated yet. Candidates emerge from recurring operational patterns.</p>
+                  ) : (
+                    <ScrollArea className="h-[420px]">
+                      <div className="space-y-2">
+                        {learning.candidates.map((c: any) => (
+                          <div key={c.id} className="p-3 rounded-lg border border-border/30 bg-muted/10 hover:bg-muted/20 transition-colors">
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm font-medium truncate flex-1">{c.title}</p>
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <Badge variant="outline" className={`text-[10px] ${STATUS_BADGE[c.review_status] || STATUS_BADGE.pending}`}>{c.review_status}</Badge>
+                                <Badge variant="outline" className="text-[10px]">{c.source_type}</Badge>
+                                {c.noise_suppressed && <Badge variant="outline" className="text-[10px] bg-muted text-muted-foreground">Suppressed</Badge>}
+                              </div>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{c.summary}</p>
+                            <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground/70">
+                              <span>Signals: {c.signal_count}</span>
+                              <span>Confidence: {c.confidence_score}%</span>
+                              <span>Practice: {PRACTICE_LABELS[c.proposed_practice_type] || c.proposed_practice_type}</span>
+                              <span>Domain: {c.proposed_domain}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* ═══ Candidate Signals ═══ */}
+            <TabsContent value="signals">
+              <Card className="border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Operational Signals</CardTitle>
+                  <CardDescription>Raw operational signals collected from runtime execution</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {learning.signals.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-8 text-center">No signals captured yet. Signals are generated from repair loops, validation failures, and execution outcomes.</p>
+                  ) : (
+                    <ScrollArea className="h-[420px]">
+                      <div className="space-y-2">
+                        {learning.signals.map((s: any) => (
+                          <div key={s.id} className="p-3 rounded-lg border border-border/30 bg-muted/10">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-[10px]">{s.signal_type}</Badge>
+                                <Badge variant="outline" className={`text-[10px] ${s.outcome_success ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" : "bg-destructive/20 text-destructive border-destructive/30"}`}>
+                                  {s.outcome_success ? "Success" : "Failure"}
+                                </Badge>
+                              </div>
+                              <span className="text-[10px] text-muted-foreground/50">{new Date(s.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">{s.outcome || "No outcome description"}</p>
+                            <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground/70">
+                              <span>Stage: {s.stage_name}</span>
+                              <span>Confidence: {s.confidence}%</span>
+                              {s.error_signature && <span>Sig: {s.error_signature}</span>}
+                              {s.clustered && <span className="text-primary">Clustered</span>}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* ═══ Failure Patterns ═══ */}
+            <TabsContent value="failure-patterns">
+              <Card className="border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Failure Patterns</CardTitle>
+                  <CardDescription>Recurring failure patterns detected from operational signals</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {learning.failurePatterns.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-8 text-center">No failure patterns detected yet.</p>
+                  ) : (
+                    <ScrollArea className="h-[420px]">
+                      <div className="space-y-2">
+                        {learning.failurePatterns.map((p: any) => (
+                          <div key={p.id} className="p-3 rounded-lg border border-border/30 bg-muted/10">
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm font-medium truncate flex-1">{p.pattern_signature}</p>
+                              <Badge variant="outline" className={`text-[10px] ${SEVERITY_BADGE[p.severity] || SEVERITY_BADGE.medium}`}>{p.severity}</Badge>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">{p.pattern_description}</p>
+                            <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground/70">
+                              <span>Occurrences: {p.occurrence_count}</span>
+                              <span>Status: {p.status}</span>
+                              <span>First: {new Date(p.first_seen_at).toLocaleDateString()}</span>
+                              <span>Last: {new Date(p.last_seen_at).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* ═══ Refactor Learnings ═══ */}
+            <TabsContent value="refactor-patterns">
+              <Card className="border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Refactor Learnings</CardTitle>
+                  <CardDescription>Successful refactor patterns and success patterns worth codifying</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {/* Refactor Patterns */}
+                    <div>
+                      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Refactor Patterns</h3>
+                      {learning.refactorPatterns.length === 0 ? (
+                        <p className="text-sm text-muted-foreground py-4 text-center">No refactor patterns detected yet.</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {learning.refactorPatterns.map((p: any) => (
+                            <div key={p.id} className="p-3 rounded-lg border border-border/30 bg-muted/10">
+                              <div className="flex items-center justify-between">
+                                <p className="text-sm font-medium truncate flex-1">{p.pattern_name}</p>
+                                <Badge variant="outline" className="text-[10px]">{p.refactor_type}</Badge>
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">{p.pattern_description}</p>
+                              <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground/70">
+                                <span>Success: {p.success_rate}%</span>
+                                <span>Count: {p.occurrence_count}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {/* Success Patterns */}
+                    <div>
+                      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Success Patterns</h3>
+                      {learning.successPatterns.length === 0 ? (
+                        <p className="text-sm text-muted-foreground py-4 text-center">No success patterns detected yet.</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {learning.successPatterns.map((p: any) => (
+                            <div key={p.id} className="p-3 rounded-lg border border-border/30 bg-muted/10">
+                              <div className="flex items-center justify-between">
+                                <p className="text-sm font-medium truncate flex-1">{p.pattern_name}</p>
+                                <Badge variant="outline" className="text-[10px] bg-emerald-500/20 text-emerald-400 border-emerald-500/30">{p.success_type}</Badge>
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">{p.pattern_description}</p>
+                              <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground/70">
+                                <span>Success: {p.success_rate}%</span>
+                                <span>Count: {p.occurrence_count}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* ═══ Canon Evolution Queue ═══ */}
+            <TabsContent value="evolution-queue">
+              <Card className="border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Canon Evolution Queue</CardTitle>
+                  <CardDescription>Learning candidates ready for steward review and potential canon promotion</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {(() => {
+                    const reviewable = learning.candidates.filter((c: any) => c.review_status === "pending" && !c.noise_suppressed && c.confidence_score >= 30);
+                    return reviewable.length === 0 ? (
+                      <p className="text-sm text-muted-foreground py-8 text-center">No candidates ready for evolution review. Candidates must pass noise filtering and meet minimum confidence.</p>
+                    ) : (
+                      <ScrollArea className="h-[420px]">
+                        <div className="space-y-2">
+                          {reviewable.map((c: any) => (
+                            <div key={c.id} className="p-3 rounded-lg border border-border/30 bg-muted/10 hover:bg-muted/20 transition-colors">
+                              <div className="flex items-center justify-between">
+                                <p className="text-sm font-medium truncate flex-1">{c.title}</p>
+                                <div className="flex items-center gap-1.5 shrink-0">
+                                  <Badge variant="outline" className={`text-[10px] ${c.confidence_score >= 70 ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" : c.confidence_score >= 40 ? "bg-amber-500/20 text-amber-400 border-amber-500/30" : "bg-muted text-muted-foreground"}`}>
+                                    {c.confidence_score >= 70 ? "Recommend Review" : c.confidence_score >= 40 ? "Observe" : "Defer"}
+                                  </Badge>
+                                </div>
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{c.summary}</p>
+                              <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground/70">
+                                <span>Signals: {c.signal_count}</span>
+                                <span>Confidence: {c.confidence_score}%</span>
+                                <span>Source: {c.source_type}</span>
+                                <span>Domain: {c.proposed_domain}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </ScrollArea>
+                    );
+                  })()}
                 </CardContent>
               </Card>
             </TabsContent>
