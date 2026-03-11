@@ -37,7 +37,6 @@ export default function ReflectiveValidationAudit() {
       <div className="space-y-6">
         <div>
           <div>
-            <div>
               <h1 className="text-2xl font-bold text-foreground">Reflective Validation & Self-Revision Audit</h1>
               <p className="text-sm text-muted-foreground">
                 Audit whether self-corrections actually improve the system or merely displace problems.
