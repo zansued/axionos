@@ -61,7 +61,7 @@ export function SidebarProvider({
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   animate?: boolean;
 }) {
-  const [openState, setOpenState] = React.useState(false);
+  const [openState, setOpenState] = React.useState(true);
   const isMobile = useIsMobileSidebar();
 
   const open = openProp !== undefined ? openProp : openState;
