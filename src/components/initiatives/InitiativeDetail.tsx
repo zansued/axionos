@@ -582,7 +582,89 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
         </Card>
       )}
 
-      {/* Repair Evidence */}
+      {/* Runtime Intelligence Card */}
+      {getMacroStageIndex(stageStatus) >= 27 && stageStatus !== "completed" && (
+        <Card className="border-success/30 bg-success/5">
+          <CardContent className="p-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-lg bg-success/20 flex items-center justify-center">
+                  <Cpu className="h-4 w-4 text-success animate-pulse" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Runtime Intelligence</p>
+                  <p className="text-xs text-muted-foreground">Inteligência autônoma operando em background</p>
+                </div>
+              </div>
+              <Badge variant="default" className="bg-success/20 text-success border-success/30">
+                Ativo
+              </Badge>
+            </div>
+            {(() => {
+              const runtimeStages = [
+                { key: "observability_ready", label: "System Observability", icon: "📡" },
+                { key: "observing_product", label: "Observando Produto", icon: "📡", active: true },
+                { key: "product_observed", label: "Produto Observado", icon: "📡" },
+                { key: "analytics_ready", label: "Product Analytics", icon: "📊" },
+                { key: "analyzing_product_metrics", label: "Analisando Métricas", icon: "📊", active: true },
+                { key: "product_metrics_analyzed", label: "Métricas Analisadas", icon: "📊" },
+                { key: "behavior_analyzed", label: "User Behavior Analysis", icon: "🧠" },
+                { key: "analyzing_user_behavior", label: "Analisando Comportamento", icon: "🧠", active: true },
+                { key: "user_behavior_analyzed", label: "Comportamento Analisado", icon: "🧠" },
+                { key: "optimizing_growth", label: "Otimizando Growth", icon: "🚀", active: true },
+                { key: "growth_optimized", label: "Growth Otimizado", icon: "🚀" },
+                { key: "evolving_product", label: "Evoluindo Produto", icon: "🔄", active: true },
+                { key: "product_evolved", label: "Produto Evoluído", icon: "🔄" },
+                { key: "evolving_architecture", label: "Evoluindo Arquitetura", icon: "🏗️", active: true },
+                { key: "architecture_evolved", label: "Arquitetura Evoluída", icon: "🏗️" },
+                { key: "managing_portfolio", label: "Gerenciando Portfólio", icon: "📁", active: true },
+                { key: "portfolio_managed", label: "Portfólio Gerenciado", icon: "📁" },
+                { key: "evolving_system", label: "Evoluindo Sistema", icon: "⚡", active: true },
+                { key: "system_evolved", label: "Sistema Evoluído", icon: "⚡" },
+              ];
+              const currentIdx = runtimeStages.findIndex(s => s.key === stageStatus);
+              const visiblePhases = [
+                { label: "Observability", icon: "📡", keys: ["observability_ready", "observing_product", "product_observed"] },
+                { label: "Analytics", icon: "📊", keys: ["analytics_ready", "analyzing_product_metrics", "product_metrics_analyzed"] },
+                { label: "Behavior", icon: "🧠", keys: ["behavior_analyzed", "analyzing_user_behavior", "user_behavior_analyzed"] },
+                { label: "Growth", icon: "🚀", keys: ["optimizing_growth", "growth_optimized"] },
+                { label: "Product Evolution", icon: "🔄", keys: ["evolving_product", "product_evolved"] },
+                { label: "Arch Evolution", icon: "🏗️", keys: ["evolving_architecture", "architecture_evolved"] },
+                { label: "System Evolution", icon: "⚡", keys: ["evolving_system", "system_evolved"] },
+              ];
+              return (
+                <div className="space-y-2">
+                  <p className="text-xs text-muted-foreground">
+                    Estágio atual: <span className="text-foreground font-medium">{runtimeStages.find(s => s.key === stageStatus)?.label || stageStatus}</span>
+                  </p>
+                  <div className="grid grid-cols-7 gap-1">
+                    {visiblePhases.map((phase) => {
+                      const phaseCurrentIdx = runtimeStages.findIndex(s => s.key === stageStatus);
+                      const phaseFirstIdx = runtimeStages.findIndex(s => phase.keys.includes(s.key));
+                      const phaseLastIdx = runtimeStages.length - 1 - [...runtimeStages].reverse().findIndex(s => phase.keys.includes(s.key));
+                      const isCurrent = phase.keys.includes(stageStatus);
+                      const isDone = phaseLastIdx < phaseCurrentIdx && phaseFirstIdx >= 0;
+                      const isPending = phaseFirstIdx > phaseCurrentIdx;
+                      return (
+                        <div key={phase.label} className={`text-center p-1.5 rounded-md border text-[10px] ${
+                          isCurrent ? "border-success/50 bg-success/10 text-success" :
+                          isDone ? "border-border/30 bg-muted/30 text-muted-foreground" :
+                          "border-border/20 bg-background/50 text-muted-foreground/50"
+                        }`}>
+                          <span className="block text-sm">{phase.icon}</span>
+                          <span className="block mt-0.5 leading-tight">{phase.label}</span>
+                          {isCurrent && <Loader2 className="h-2.5 w-2.5 animate-spin mx-auto mt-0.5 text-success" />}
+                          {isDone && <CheckCircle2 className="h-2.5 w-2.5 mx-auto mt-0.5 text-muted-foreground" />}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
+          </CardContent>
+        </Card>
+      )}
       <RepairEvidenceCard initiativeId={initiative.id} />
 
       {/* Repair Routing */}
