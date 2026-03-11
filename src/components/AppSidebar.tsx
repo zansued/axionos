@@ -137,21 +137,40 @@ export function AppSidebar() {
         <SidebarContent className="justify-between">
           {/* ── Top: brand + switcher + nav ── */}
           <div className="flex flex-col gap-0">
-            {/* ── Brand ── */}
+            {/* ── Brand + Toggle ── */}
             <SidebarGroup className="pb-0">
               <SidebarGroupContent>
-                <div className="flex items-center gap-2 px-2 py-3 overflow-hidden">
-                  <img src={axionLogo} alt="AxionOS" className="h-7 w-7 shrink-0" />
-                  <motion.span
-                    animate={{
-                      opacity: collapsed ? 0 : 1,
-                      width: collapsed ? 0 : "auto",
-                    }}
-                    transition={{ duration: 0.2, ease: "easeInOut" }}
-                    className="font-display text-sm font-semibold tracking-tight whitespace-nowrap overflow-hidden"
+                <div className="flex items-center justify-between px-2 py-3 overflow-hidden">
+                  <button
+                    onClick={() => setOpen(!open)}
+                    className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                    aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
                   >
-                    Axion<span className="font-normal text-muted-foreground">OS</span>
-                  </motion.span>
+                    <img src={axionLogo} alt="AxionOS" className="h-7 w-7 shrink-0" />
+                    <motion.span
+                      animate={{
+                        opacity: collapsed ? 0 : 1,
+                        width: collapsed ? 0 : "auto",
+                      }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                      className="font-display text-sm font-semibold tracking-tight whitespace-nowrap overflow-hidden"
+                    >
+                      Axion<span className="font-normal text-muted-foreground">OS</span>
+                    </motion.span>
+                  </button>
+                  <motion.div
+                    animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : "auto" }}
+                    transition={{ duration: 0.15 }}
+                    className="overflow-hidden"
+                  >
+                    <button
+                      onClick={() => setOpen(false)}
+                      className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/50 transition-colors"
+                      aria-label="Collapse sidebar"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+                  </motion.div>
                 </div>
               </SidebarGroupContent>
             </SidebarGroup>
