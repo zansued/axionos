@@ -8491,6 +8491,104 @@ export type Database = {
           },
         ]
       }
+      canon_learning_evolution_proposals: {
+        Row: {
+          aggregation_count: number
+          aggregation_key: string | null
+          confidence: number
+          created_at: string
+          evidence_summary: string
+          id: string
+          initiative_ids: string[] | null
+          metadata: Json | null
+          organization_id: string
+          proposal_type: string
+          proposed_by_actor_type: string
+          rationale: string
+          recommendation: string
+          related_canon_entry_ids: string[] | null
+          related_learning_signal_ids: string[] | null
+          related_pattern_ids: string[] | null
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
+          routing_priority: string | null
+          routing_target: string | null
+          severity: string
+          stage_scope: string | null
+          target_id: string | null
+          target_type: string
+          updated_at: string
+        }
+        Insert: {
+          aggregation_count?: number
+          aggregation_key?: string | null
+          confidence?: number
+          created_at?: string
+          evidence_summary?: string
+          id?: string
+          initiative_ids?: string[] | null
+          metadata?: Json | null
+          organization_id: string
+          proposal_type?: string
+          proposed_by_actor_type?: string
+          rationale?: string
+          recommendation?: string
+          related_canon_entry_ids?: string[] | null
+          related_learning_signal_ids?: string[] | null
+          related_pattern_ids?: string[] | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          routing_priority?: string | null
+          routing_target?: string | null
+          severity?: string
+          stage_scope?: string | null
+          target_id?: string | null
+          target_type?: string
+          updated_at?: string
+        }
+        Update: {
+          aggregation_count?: number
+          aggregation_key?: string | null
+          confidence?: number
+          created_at?: string
+          evidence_summary?: string
+          id?: string
+          initiative_ids?: string[] | null
+          metadata?: Json | null
+          organization_id?: string
+          proposal_type?: string
+          proposed_by_actor_type?: string
+          rationale?: string
+          recommendation?: string
+          related_canon_entry_ids?: string[] | null
+          related_learning_signal_ids?: string[] | null
+          related_pattern_ids?: string[] | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          routing_priority?: string | null
+          routing_target?: string | null
+          severity?: string
+          stage_scope?: string | null
+          target_id?: string | null
+          target_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_learning_evolution_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_learning_records: {
         Row: {
           activated_at: string | null
