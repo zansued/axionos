@@ -70,6 +70,7 @@ const PRACTICE_LABELS: Record<string, string> = {
 export default function CanonIntelligenceDashboard() {
   const { sources, trustProfiles, candidates, syncRuns, domains, loading } = useCanonIntelligence();
   const stewardship = useCanonStewardship();
+  const runtime = useCanonRuntime();
 
   const pendingCandidates = candidates.filter((c: any) => c.promotion_status === "pending");
   const trustedSources = trustProfiles.filter((t: any) => t.trust_tier === "trusted" || t.trust_tier === "verified");
