@@ -155,6 +155,119 @@ serve(async (req) => {
         return json(data);
       }
 
+      // ── Promote Candidate to Canon Entry ──
+      case "promote_to_canon": {
+        const { candidate_id, approved_by } = payload;
+        if (!candidate_id) return json({ error: "candidate_id required" }, 400);
+
+        // Fetch candidate
+        const { data: candidate, error: cErr } = await supabase
+          .from("canon_candidate_entries")
+          .select("*")
+          .eq("id", candidate_id)
+          .eq("organization_id", organization_id)
+          .single();
+        if (cErr || !candidate) return json({ error: "Candidate not found" }, 404);
+
+        if (candidate.promotion_status === "promoted") {
+          return json({ error: "Candidate already promoted", existing_entry_id: candidate.promoted_entry_id }, 409);
+        }
+
+        // Build canon entry from candidate
+        const slug = candidate.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "")
+          .slice(0, 80);
+
+        const canonEntry = {
+          organization_id,
+          title: candidate.title,
+          slug: `${slug}-${Date.now()}`,
+          canon_type: candidate.knowledge_type === "anti_pattern" ? "anti_pattern" : "pattern",
+          practice_type: candidate.knowledge_type || "pattern",
+          lifecycle_status: "active",
+          approval_status: "approved",
+          confidence_score: Math.min((candidate.source_reliability_score || 50) / 100, 1),
+          summary: candidate.summary || "",
+          body: candidate.body || "",
+          implementation_guidance: "",
+          stack_scope: candidate.domain_scope || "general",
+          layer_scope: "general",
+          problem_scope: "general",
+          topic: candidate.domain_scope || "general",
+          subtopic: candidate.knowledge_type || "pattern",
+          tags: [],
+          source_reference: candidate.source_reference || "",
+          source_type: candidate.source_type || "external_documentation",
+          source_candidate_id: candidate.id,
+          approved_by: approved_by || "system",
+          created_by: candidate.submitted_by || "canon-intake",
+          metadata: {},
+          structured_guidance: {},
+        };
+
+        const { data: entry, error: insertErr } = await supabase
+          .from("canon_entries")
+          .insert(canonEntry)
+          .select()
+          .single();
+        if (insertErr) throw insertErr;
+
+        // Update candidate
+        await supabase.from("canon_candidate_entries").update({
+          promotion_status: "promoted",
+          promoted_entry_id: entry.id,
+          promoted_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }).eq("id", candidate_id);
+
+        // Update source lifecycle if exists
+        if (candidate.source_id) {
+          await supabase.from("canon_sources").update({
+            ingestion_lifecycle_state: "canon_promoted",
+            updated_at: new Date().toISOString(),
+          }).eq("id", candidate.source_id);
+        }
+
+        return json({ success: true, entry });
+      }
+
+      // ── Batch Promote All Approved Candidates ──
+      case "batch_promote": {
+        const { data: approved, error: aErr } = await supabase
+          .from("canon_candidate_entries")
+          .select("id")
+          .eq("organization_id", organization_id)
+          .eq("internal_validation_status", "approved")
+          .eq("promotion_status", "pending");
+        if (aErr) throw aErr;
+
+        let promoted = 0;
+        for (const cand of (approved || [])) {
+          try {
+            const resp = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/canon-intake`, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                action: "promote_to_canon",
+                organization_id,
+                payload: { candidate_id: cand.id, approved_by: "batch_promote" },
+              }),
+            });
+            const result = await resp.json();
+            if (result.success) promoted++;
+          } catch (e) {
+            console.error("Batch promote error for", cand.id, e);
+          }
+        }
+
+        return json({ success: true, promoted, total_eligible: (approved || []).length });
+      }
+
       // ── Explainer ──
       case "explain": {
         const info = explainCanonIntake();
