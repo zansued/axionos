@@ -362,6 +362,7 @@ const App = () => (
                           <Route path="/canon-intelligence"        element={<P><CanonIntelligenceDashboard /></P>} />
                           <Route path="/security-intelligence"     element={<P><SecurityIntelligenceDashboard /></P>} />
                           <Route path="/red-team-simulation"       element={<P><RedTeamSimulationDashboard /></P>} />
+                          <Route path="/blue-team-defense"        element={<P><BlueTeamDefenseDashboard /></P>} />
                           <Route path="/operational-posture"       element={<P><OperationalPostureDashboard /></P>} />
                           <Route path="/attention-allocation"      element={<P><AttentionAllocationDashboard /></P>} />
                           <Route path="/adaptive-routing"          element={<P><AdaptiveRoutingDashboard /></P>} />
