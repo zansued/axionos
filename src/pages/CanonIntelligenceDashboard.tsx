@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Database, Globe, ShieldCheck, FileInput, RefreshCw, Layers, BookOpen, AlertTriangle, GitBranch, ClipboardCheck } from "lucide-react";
+import { Database, Globe, ShieldCheck, FileInput, RefreshCw, Layers, BookOpen, AlertTriangle, GitBranch, ClipboardCheck, Zap, Activity, MessageSquare, Search } from "lucide-react";
 import { useCanonIntelligence } from "@/hooks/useCanonIntelligence";
 import { useCanonStewardship } from "@/hooks/useCanonStewardship";
+import { useCanonRuntime } from "@/hooks/useCanonRuntime";
 
 const TRUST_BADGE: Record<string, string> = {
   trusted: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
