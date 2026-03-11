@@ -36,8 +36,8 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If all your initiatives are progressing normally, no urgent action is needed here.",
       },
       suggestedActions: [
-        { label: { pt: "Criar iniciativa", en: "Create initiative" }, route: "/initiatives", icon: "Lightbulb" },
-        { label: { pt: "Ver jornada", en: "View journey" }, route: "/journey", icon: "Map" },
+        { label: { pt: "Criar iniciativa", en: "Create initiative" }, route: "/builder/initiatives", icon: "Lightbulb" },
+        { label: { pt: "Ver jornada", en: "View journey" }, route: "/builder/journey", icon: "Map" },
       ],
     },
   },
@@ -65,7 +65,7 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If your initiative is in a mid-stage with everything progressing normally, you can check back later.",
       },
       suggestedActions: [
-        { label: { pt: "Ver iniciativas", en: "View initiatives" }, route: "/initiatives", icon: "Layers" },
+        { label: { pt: "Ver iniciativas", en: "View initiatives" }, route: "/builder/initiatives", icon: "Layers" },
       ],
     },
   },
@@ -89,7 +89,7 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If you've already completed onboarding, go directly to Dashboard or Initiatives.",
       },
       suggestedActions: [
-        { label: { pt: "Ir ao Início", en: "Go to Home" }, route: "/", icon: "BarChart3" },
+        { label: { pt: "Ir ao Início", en: "Go to Home" }, route: "/builder/dashboard", icon: "BarChart3" },
       ],
     },
   },
@@ -117,9 +117,9 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If you have no new ideas and all initiatives are up to date, no action is needed now.",
       },
       suggestedActions: [
-        { label: { pt: "Nova iniciativa", en: "New initiative" }, route: "/initiatives", icon: "Lightbulb" },
-        { label: { pt: "Ver jornada", en: "View journey" }, route: "/journey", icon: "Map" },
-        { label: { pt: "Deployments", en: "Deployments" }, route: "/delivery", icon: "Rocket" },
+        { label: { pt: "Nova iniciativa", en: "New initiative" }, route: "/builder/initiatives", icon: "Lightbulb" },
+        { label: { pt: "Ver jornada", en: "View journey" }, route: "/builder/journey", icon: "Map" },
+        { label: { pt: "Deployments", en: "Deployments" }, route: "/builder/delivery", icon: "Rocket" },
       ],
     },
   },
@@ -139,7 +139,7 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If no initiative has reached the deploy stage, this area will be empty for now.",
       },
       suggestedActions: [
-        { label: { pt: "Iniciativas", en: "Initiatives" }, route: "/initiatives", icon: "Layers" },
+        { label: { pt: "Iniciativas", en: "Initiatives" }, route: "/builder/initiatives", icon: "Layers" },
       ],
     },
   },
@@ -168,8 +168,8 @@ const WORKSPACE_COPILOT: CopilotDrawerContent[] = [
         en: "If the current focus is on pipeline execution rather than post-delivery, you can ignore this for now.",
       },
       suggestedActions: [
-        { label: { pt: "Evidências", en: "Evidence" }, route: "/improvement-ledger", icon: "FileSearch" },
-        { label: { pt: "Candidatos", en: "Candidates" }, route: "/improvement-candidates", icon: "Sparkles" },
+        { label: { pt: "Evidências", en: "Evidence" }, route: "/owner/improvement-ledger", icon: "FileSearch" },
+        { label: { pt: "Candidatos", en: "Candidates" }, route: "/owner/improvement-candidates", icon: "Sparkles" },
       ],
     },
     roleOverrides: {
@@ -205,8 +205,8 @@ const WORKSPACE_COPILOT: CopilotDrawerContent[] = [
         en: "If you're early in product setup, evidence will still be scarce.",
       },
       suggestedActions: [
-        { label: { pt: "Candidatos", en: "Candidates" }, route: "/improvement-candidates", icon: "Sparkles" },
-        { label: { pt: "Benchmarks", en: "Benchmarks" }, route: "/improvement-benchmarks", icon: "FlaskConical" },
+        { label: { pt: "Candidatos", en: "Candidates" }, route: "/owner/improvement-candidates", icon: "Sparkles" },
+        { label: { pt: "Benchmarks", en: "Benchmarks" }, route: "/owner/improvement-benchmarks", icon: "FlaskConical" },
       ],
     },
   },
@@ -230,8 +230,8 @@ const WORKSPACE_COPILOT: CopilotDrawerContent[] = [
         en: "If there are no candidates pending review, no action is needed.",
       },
       suggestedActions: [
-        { label: { pt: "Evidências", en: "Evidence" }, route: "/improvement-ledger", icon: "FileSearch" },
-        { label: { pt: "Benchmarks", en: "Benchmarks" }, route: "/improvement-benchmarks", icon: "FlaskConical" },
+        { label: { pt: "Evidências", en: "Evidence" }, route: "/owner/improvement-ledger", icon: "FileSearch" },
+        { label: { pt: "Benchmarks", en: "Benchmarks" }, route: "/owner/improvement-benchmarks", icon: "FlaskConical" },
       ],
     },
   },
@@ -255,7 +255,7 @@ const WORKSPACE_COPILOT: CopilotDrawerContent[] = [
         en: "If execution volume is still low, meaningful benchmarks are still forming.",
       },
       suggestedActions: [
-        { label: { pt: "Candidatos", en: "Candidates" }, route: "/improvement-candidates", icon: "Sparkles" },
+        { label: { pt: "Candidatos", en: "Candidates" }, route: "/owner/improvement-candidates", icon: "Sparkles" },
       ],
     },
   },
@@ -279,7 +279,7 @@ const WORKSPACE_COPILOT: CopilotDrawerContent[] = [
         en: "If current capabilities meet your needs, no need to install extensions now.",
       },
       suggestedActions: [
-        { label: { pt: "Governança de Capacidades", en: "Capability Governance" }, route: "/capability-governance", icon: "Shield" },
+        { label: { pt: "Governança de Capacidades", en: "Capability Governance" }, route: "/owner/capability-governance", icon: "Shield" },
       ],
     },
     roleOverrides: {
@@ -320,8 +320,8 @@ const PLATFORM_COPILOT: CopilotDrawerContent[] = [
         en: "If everything is running normally with no alerts, observability can be checked periodically.",
       },
       suggestedActions: [
-        { label: { pt: "Roteamento IA", en: "AI Routing" }, route: "/agent-routing", icon: "Route" },
-        { label: { pt: "Auditoria", en: "Audit" }, route: "/audit", icon: "Shield" },
+        { label: { pt: "Roteamento IA", en: "AI Routing" }, route: "/owner/agent-routing", icon: "Route" },
+        { label: { pt: "Auditoria", en: "Audit" }, route: "/owner/audit", icon: "Shield" },
       ],
     },
   },
@@ -349,8 +349,8 @@ const PLATFORM_COPILOT: CopilotDrawerContent[] = [
         en: "If routing is working normally without cost anomalies, no adjustment is needed now.",
       },
       suggestedActions: [
-        { label: { pt: "Observabilidade", en: "Observability" }, route: "/observability", icon: "Activity" },
-        { label: { pt: "Governança", en: "Governance" }, route: "/capability-governance", icon: "Shield" },
+        { label: { pt: "Observabilidade", en: "Observability" }, route: "/owner/platform-observability", icon: "Activity" },
+        { label: { pt: "Governança", en: "Governance" }, route: "/owner/capability-governance", icon: "Shield" },
       ],
     },
   },
@@ -370,7 +370,7 @@ const PLATFORM_COPILOT: CopilotDrawerContent[] = [
         en: "If there are no ongoing investigations or audits, the trail can be queried on demand.",
       },
       suggestedActions: [
-        { label: { pt: "Observabilidade", en: "Observability" }, route: "/observability", icon: "Activity" },
+        { label: { pt: "Observabilidade", en: "Observability" }, route: "/owner/platform-observability", icon: "Activity" },
       ],
     },
   },
@@ -394,8 +394,8 @@ const PLATFORM_COPILOT: CopilotDrawerContent[] = [
         en: "If current governance policies are working adequately, adjustments can wait.",
       },
       suggestedActions: [
-        { label: { pt: "Extensões", en: "Extensions" }, route: "/extensions", icon: "Package" },
-        { label: { pt: "Roteamento", en: "Routing" }, route: "/agent-routing", icon: "Route" },
+        { label: { pt: "Extensões", en: "Extensions" }, route: "/owner/extensions", icon: "Package" },
+        { label: { pt: "Roteamento", en: "Routing" }, route: "/owner/agent-routing", icon: "Route" },
       ],
     },
   },

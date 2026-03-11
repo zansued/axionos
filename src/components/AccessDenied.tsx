@@ -134,7 +134,7 @@ export function AccessDenied({ surface }: AccessDeniedProps) {
         transition={{ duration: 0.3, delay: 0.3 }}
       >
         <Button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/builder/dashboard")}
           variant="outline"
           size="sm"
           className="gap-2"

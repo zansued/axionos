@@ -56,9 +56,9 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Inspecionar decisões recentes", en: "Inspect recent decisions" }, route: "/routing", icon: "Search" },
-      { label: { pt: "Abrir benchmarks", en: "Open benchmarks" }, route: "/benchmarks", icon: "BarChart3" },
-      { label: { pt: "Revisar trilha de auditoria", en: "Review audit trail" }, route: "/audit", icon: "FileText" },
+      { label: { pt: "Inspecionar decisões recentes", en: "Inspect recent decisions" }, route: "/owner/agent-routing", icon: "Search" },
+      { label: { pt: "Abrir benchmarks", en: "Open benchmarks" }, route: "/owner/improvement-benchmarks", icon: "BarChart3" },
+      { label: { pt: "Revisar trilha de auditoria", en: "Review audit trail" }, route: "/owner/audit", icon: "FileText" },
     ],
   },
 
@@ -107,9 +107,9 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Ver detalhes da capability", en: "View capability details" }, route: "/capability-governance", icon: "Shield" },
-      { label: { pt: "Solicitar mais evidência", en: "Request more evidence" }, route: "/evidence", icon: "FileSearch" },
-      { label: { pt: "Enviar para benchmark", en: "Send to benchmark" }, route: "/benchmarks", icon: "BarChart3" },
+      { label: { pt: "Ver detalhes da capability", en: "View capability details" }, route: "/owner/capability-governance", icon: "Shield" },
+      { label: { pt: "Solicitar mais evidência", en: "Request more evidence" }, route: "/owner/improvement-ledger", icon: "FileSearch" },
+      { label: { pt: "Enviar para benchmark", en: "Send to benchmark" }, route: "/owner/improvement-benchmarks", icon: "BarChart3" },
     ],
   },
 
@@ -143,7 +143,7 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Filtrar por severidade", en: "Filter by severity" }, route: "/audit", icon: "Filter" },
+      { label: { pt: "Filtrar por severidade", en: "Filter by severity" }, route: "/owner/audit", icon: "Filter" },
       { label: { pt: "Exportar relatório", en: "Export report" }, icon: "Download" },
     ],
   },
@@ -185,8 +185,8 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Ver painel de performance", en: "View performance panel" }, route: "/observability", icon: "Activity" },
-      { label: { pt: "Inspecionar padrões de erro", en: "Inspect error patterns" }, route: "/observability", icon: "AlertTriangle" },
+      { label: { pt: "Ver painel de performance", en: "View performance panel" }, route: "/owner/platform-observability", icon: "Activity" },
+      { label: { pt: "Inspecionar padrões de erro", en: "Inspect error patterns" }, route: "/owner/platform-observability", icon: "AlertTriangle" },
     ],
   },
 
@@ -231,9 +231,9 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Revisar detalhes da extensão", en: "Review extension details" }, route: "/extensions", icon: "Puzzle" },
+      { label: { pt: "Revisar detalhes da extensão", en: "Review extension details" }, route: "/owner/extensions", icon: "Puzzle" },
       { label: { pt: "Verificar postura de rollback", en: "Check rollback posture" }, icon: "RotateCcw" },
-      { label: { pt: "Inspecionar auditoria", en: "Inspect audit" }, route: "/audit", icon: "FileText" },
+      { label: { pt: "Inspecionar auditoria", en: "Inspect audit" }, route: "/owner/audit", icon: "FileText" },
     ],
   },
 
@@ -267,8 +267,8 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Comparar com período anterior", en: "Compare with previous period" }, route: "/benchmarks", icon: "GitCompare" },
-      { label: { pt: "Ver candidatos associados", en: "View associated candidates" }, route: "/candidates", icon: "ListChecks" },
+      { label: { pt: "Comparar com período anterior", en: "Compare with previous period" }, route: "/owner/improvement-benchmarks", icon: "GitCompare" },
+      { label: { pt: "Ver candidatos associados", en: "View associated candidates" }, route: "/owner/improvement-candidates", icon: "ListChecks" },
     ],
   },
 
@@ -306,9 +306,9 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Ordenar por evidência", en: "Sort by evidence" }, route: "/candidates", icon: "ArrowUpDown" },
-      { label: { pt: "Enviar fracos para benchmark", en: "Send weak ones to benchmark" }, route: "/benchmarks", icon: "BarChart3" },
-      { label: { pt: "Revisar evidência associada", en: "Review associated evidence" }, route: "/evidence", icon: "FileSearch" },
+      { label: { pt: "Ordenar por evidência", en: "Sort by evidence" }, route: "/owner/improvement-candidates", icon: "ArrowUpDown" },
+      { label: { pt: "Enviar fracos para benchmark", en: "Send weak ones to benchmark" }, route: "/owner/improvement-benchmarks", icon: "BarChart3" },
+      { label: { pt: "Revisar evidência associada", en: "Review associated evidence" }, route: "/owner/improvement-ledger", icon: "FileSearch" },
     ],
   },
 };
