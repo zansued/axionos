@@ -3,7 +3,7 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Canonical source for planes, modules, agent types, contracts, safety boundaries, and events.
 >
-> Last updated: 2026-03-08
+> Last updated: 2026-03-11
 
 ## Document Authority
 
