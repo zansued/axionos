@@ -349,8 +349,8 @@ const PLATFORM_COPILOT: CopilotDrawerContent[] = [
         en: "If routing is working normally without cost anomalies, no adjustment is needed now.",
       },
       suggestedActions: [
-        { label: { pt: "Observabilidade", en: "Observability" }, route: "/observability", icon: "Activity" },
-        { label: { pt: "Governança", en: "Governance" }, route: "/capability-governance", icon: "Shield" },
+        { label: { pt: "Observabilidade", en: "Observability" }, route: "/owner/platform-observability", icon: "Activity" },
+        { label: { pt: "Governança", en: "Governance" }, route: "/owner/capability-governance", icon: "Shield" },
       ],
     },
   },
