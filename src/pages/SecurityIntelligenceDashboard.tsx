@@ -93,7 +93,7 @@ function SurfaceMapTab({ surfaces, canonicalSurfaces, loading }: { surfaces: any
   return (
     <Card className="border-border/40 bg-card/60">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base flex items-center gap-2"><Map className="h-4 w-4 text-primary" />Security Surface Map</CardTitle>
+        <CardTitle className="text-base flex items-center gap-2"><MapIcon className="h-4 w-4 text-primary" />Security Surface Map</CardTitle>
         <CardDescription>All mapped security surfaces organized by owning layer</CardDescription>
       </CardHeader>
       <CardContent>
