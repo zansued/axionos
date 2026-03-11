@@ -1,10 +1,7 @@
 /**
  * permissions.ts
  * Single source of truth for role-based access control.
- * Canonical AxionOS navigation architecture.
- *
- * Product philosophy: The user journey is Idea → Deploy → Runtime.
- * Everything beyond Runtime is autonomous infrastructure (System Intelligence).
+ * Derives navigation from the centralized route registry (routes.ts).
  *
  * Route namespaces:
  *   /builder/* — Builder Mode (product delivery)
@@ -13,11 +10,13 @@
 
 import type { LucideIcon } from "lucide-react";
 import {
-  LayoutDashboard, FolderKanban, Bot, GitBranch, Eye, Shield,
-  Settings, HeartPulse, LineChart, Search, Brain,
-  Fingerprint, Scale, Users, Activity, Cpu,
-  Radio, Sparkles, Database, ShieldAlert, ShieldCheck,
-} from "lucide-react";
+  getSidebarRoutes,
+  toNavItems,
+  type NavItem,
+} from "@/lib/routes";
+
+// Re-export NavItem for consumers
+export type { NavItem };
 
 // ─── Canonical role types ──────────────────────────────────────────────────
 
@@ -39,66 +38,10 @@ export function deriveCanonicalRole(orgRole: string | null): CanonicalRole {
   }
 }
 
-// ─── Nav item type ─────────────────────────────────────────────────────────
+// ─── Nav items derived from route registry ─────────────────────────────────
 
-export type NavItem = {
-  title: string;
-  url: string;
-  icon: LucideIcon;
-};
-
-// ─── Builder Mode — User Product Layer ──────────────────────────────────────
-// Visible pipeline: Idea → Discovery → Architecture → Engineering → Deploy → Runtime
-// + Execution Observability + System Intelligence + Governance + Settings
-
-export const BUILDER_NAV: NavItem[] = [
-  { title: "Dashboard",                url: "/builder/dashboard",                icon: LayoutDashboard },
-  { title: "Projects",                 url: "/builder/initiatives",              icon: FolderKanban },
-  { title: "Agents",                   url: "/builder/agents",                   icon: Bot },
-  { title: "Pipelines",               url: "/builder/delivery",                 icon: GitBranch },
-  { title: "Runtime",                  url: "/builder/runtime",                  icon: Radio },
-  { title: "Execution Observability",  url: "/builder/execution-observability",  icon: Eye },
-  { title: "System Intelligence",      url: "/builder/system-intelligence",      icon: Sparkles },
-  { title: "Governance",               url: "/builder/governance",               icon: Shield },
-  { title: "Settings",                 url: "/builder/settings",                 icon: Settings },
-];
-
-export const BUILDER_ROUTES = new Set(BUILDER_NAV.map(i => i.url));
-
-// ─── Owner Mode — Autonomous Infrastructure Layer ───────────────────────────
-
-export const OWNER_SYSTEM_INTELLIGENCE: NavItem[] = [
-  { title: "System Health",         url: "/owner/system-health",          icon: HeartPulse },
-  { title: "Adoption",              url: "/owner/adoption",               icon: LineChart },
-  { title: "Delivery Outcomes",     url: "/owner/delivery-outcomes",      icon: Search },
-  { title: "Platform Observability", url: "/owner/platform-observability", icon: Activity },
-];
-
-export const OWNER_INSTITUTIONAL_MEMORY: NavItem[] = [
-  { title: "Pattern Library",       url: "/owner/pattern-library",        icon: Brain },
-  { title: "Canon Intelligence",    url: "/owner/canon-intelligence",     icon: Database },
-  { title: "Security War Room",     url: "/owner/security-war-room",      icon: ShieldAlert },
-  { title: "Security Intelligence", url: "/owner/security-intelligence",  icon: Shield },
-  { title: "Red Team Simulation",   url: "/owner/red-team-simulation",    icon: Shield },
-  { title: "Blue Team Defense",     url: "/owner/blue-team-defense",      icon: ShieldCheck },
-  { title: "Purple Learning",       url: "/owner/purple-learning",        icon: Sparkles },
-  { title: "Capabilities",          url: "/owner/capabilities",           icon: Fingerprint },
-];
-
-export const OWNER_GOVERNANCE: NavItem[] = [
-  { title: "Autonomy Posture", url: "/owner/autonomy-posture", icon: Scale },
-  { title: "Agent Swarm",      url: "/owner/agent-swarm",      icon: Users },
-  { title: "Calibration",      url: "/owner/calibration",      icon: Cpu },
-  { title: "Settings",         url: "/owner/settings",         icon: Settings },
-];
-
-export const OWNER_NAV: NavItem[] = [
-  ...OWNER_SYSTEM_INTELLIGENCE,
-  ...OWNER_INSTITUTIONAL_MEMORY,
-  ...OWNER_GOVERNANCE,
-];
-
-const OWNER_ROUTES = new Set(OWNER_NAV.map(i => i.url));
+export const BUILDER_NAV: NavItem[] = toNavItems(getSidebarRoutes("builder"));
+export const OWNER_NAV: NavItem[] = toNavItems(getSidebarRoutes("owner"));
 
 // ─── Nav group builder ─────────────────────────────────────────────────────
 
@@ -123,9 +66,7 @@ export function getNavGroups(role: CanonicalRole): NavGroups {
 
 export function canAccessRoute(role: CanonicalRole, path: string): boolean {
   const normalized = path.split("?")[0].split("#")[0];
-  // All builder routes accessible to all authenticated users
   if (normalized.startsWith("/builder")) return true;
-  // Owner routes require tenant_owner+
   if (normalized.startsWith("/owner")) {
     switch (role) {
       case "tenant_owner":
@@ -136,7 +77,6 @@ export function canAccessRoute(role: CanonicalRole, path: string): boolean {
         return false;
     }
   }
-  // Legacy routes — allow (redirects handle them)
   return true;
 }
 
