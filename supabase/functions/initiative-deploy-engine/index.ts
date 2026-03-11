@@ -115,7 +115,7 @@ serve(async (req) => {
       error_message: errorMessage,
     };
 
-    await completeJob(serviceClient, job.id, {
+    await completeJob(ctx, jobId!, {
       deploy_target: deployTarget,
       deploy_status: finalStatus,
       deploy_url: deployUrl,
