@@ -117,9 +117,9 @@ const PRODUCT_COPILOT: CopilotDrawerContent[] = [
         en: "If you have no new ideas and all initiatives are up to date, no action is needed now.",
       },
       suggestedActions: [
-        { label: { pt: "Nova iniciativa", en: "New initiative" }, route: "/builder/initiatives", icon: "Lightbulb" },
-        { label: { pt: "Ver jornada", en: "View journey" }, route: "/builder/journey", icon: "Map" },
-        { label: { pt: "Deployments", en: "Deployments" }, route: "/builder/delivery", icon: "Rocket" },
+        { label: { pt: "Novo projeto", en: "New project" }, route: "/builder/projects", icon: "Lightbulb" },
+        { label: { pt: "Ver jornada", en: "View journey" }, route: "/builder/dashboard", icon: "Map" },
+        { label: { pt: "Pipelines", en: "Pipelines" }, route: "/builder/pipelines", icon: "Rocket" },
       ],
     },
   },
