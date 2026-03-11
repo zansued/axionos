@@ -182,7 +182,8 @@ export function getMacroStageIndex(stageStatus: string): number {
   if (["deploying", "deployed", "deploy_failed"].includes(s)) return 26;
 
   // Runtime (final visible stage — background intelligence runs autonomously)
-  if (["runtime_active", "observing_product", "product_observed",
+  if (["runtime_active", "observability_ready", "analytics_ready", "behavior_analyzed",
+       "observing_product", "product_observed",
        "analyzing_product_metrics", "product_metrics_analyzed",
        "analyzing_user_behavior", "user_behavior_analyzed",
        "optimizing_growth", "growth_optimized",
