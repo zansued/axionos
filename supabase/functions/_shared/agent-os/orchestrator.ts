@@ -49,6 +49,13 @@ import {
   type ReadinessTraceRecord,
 } from "./readiness-orchestrator-integration.ts";
 
+// Sprint 142 — Decision Contract
+import {
+  buildDispatchDecision,
+  validateDecision,
+  type DispatchDecision,
+} from "./decision-contract.ts";
+
 export interface OrchestratorOptions {
   registry: AgentRegistry;
   policies: StagePolicy[];
