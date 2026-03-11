@@ -704,3 +704,11 @@ export type {
   ApprovalDecisionInput,
   ApprovalDecisionResult,
 } from "./action-approval.ts";
+
+// Action Engine — Operational Flows (Sprint 149 / AE-07)
+export { OperationalFlowExecutor, OPERATIONAL_FLOWS } from "./action-flows.ts";
+export type {
+  OperationalFlowResult,
+  OperationalFlowTrace,
+  OperationalFlowDef,
+} from "./action-flows.ts";
