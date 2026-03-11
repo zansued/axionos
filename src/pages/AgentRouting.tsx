@@ -159,7 +159,6 @@ export default function AgentRouting() {
                 </Card>
               </TabsContent>
             </Tabs>
-          </div>
 
           {/* Detail Drawer */}
           <Sheet open={!!selectedDecision} onOpenChange={() => setSelectedDecision(null)}>

@@ -163,7 +163,6 @@ export default function ImprovementBenchmarks() {
                 ))}
               </TabsContent>
             </Tabs>
-          </div>
 
           {/* Detail Drawer */}
           <Sheet open={!!selectedBenchmark} onOpenChange={() => setSelectedBenchmark(null)}>
