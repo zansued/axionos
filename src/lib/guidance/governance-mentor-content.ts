@@ -306,9 +306,9 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Ordenar por evidência", en: "Sort by evidence" }, route: "/candidates", icon: "ArrowUpDown" },
-      { label: { pt: "Enviar fracos para benchmark", en: "Send weak ones to benchmark" }, route: "/benchmarks", icon: "BarChart3" },
-      { label: { pt: "Revisar evidência associada", en: "Review associated evidence" }, route: "/evidence", icon: "FileSearch" },
+      { label: { pt: "Ordenar por evidência", en: "Sort by evidence" }, route: "/owner/improvement-candidates", icon: "ArrowUpDown" },
+      { label: { pt: "Enviar fracos para benchmark", en: "Send weak ones to benchmark" }, route: "/owner/improvement-benchmarks", icon: "BarChart3" },
+      { label: { pt: "Revisar evidência associada", en: "Review associated evidence" }, route: "/owner/improvement-ledger", icon: "FileSearch" },
     ],
   },
 };
