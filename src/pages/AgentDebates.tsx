@@ -75,10 +75,8 @@ export default function AgentDebates() {
   const listForTab = tab === "active" ? active : tab === "resolved" ? resolved : tab === "escalated" ? escalated : closed;
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-auto">
+    <AppShell>
+      <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Multi-Agent Debates</h1>
             <p className="text-sm text-muted-foreground">Structured debate sessions, argument comparison, and governed resolution.</p>
