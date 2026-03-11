@@ -72,6 +72,7 @@ export default function CanonIntelligenceDashboard() {
               <TabsTrigger value="graph" className="text-xs gap-1.5"><GitBranch className="h-3.5 w-3.5" />Canon Graph</TabsTrigger>
               <TabsTrigger value="governance" className="text-xs gap-1.5"><Shield className="h-3.5 w-3.5" />Governance</TabsTrigger>
               <TabsTrigger value="learning" className="text-xs gap-1.5"><Brain className="h-3.5 w-3.5" />Operational Learning</TabsTrigger>
+              <TabsTrigger value="ingestion" className="text-xs gap-1.5"><Download className="h-3.5 w-3.5" />Ingestion Agent</TabsTrigger>
             </TabsList>
 
             <TabsContent value="library">
