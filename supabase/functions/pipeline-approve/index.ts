@@ -66,7 +66,14 @@ serve(async (req) => {
 
   const approval = approvalMap[currentStatus];
   if (!approval) {
-    const terminalStates = ["completed", "archived"];
+    const terminalStates = ["completed", "archived",
+      // Runtime-phase background intelligence states (no approval needed)
+      "runtime_active", "observing_product", "product_observed",
+      "analyzing_product_metrics", "product_metrics_analyzed",
+      "analyzing_user_behavior", "user_behavior_analyzed",
+      "optimizing_growth", "learning_system", "system_learned",
+      "managing_portfolio",
+    ];
     if (terminalStates.includes(currentStatus)) {
       return jsonResponse({ success: true, new_status: currentStatus, message: "Already approved/advanced" });
     }
