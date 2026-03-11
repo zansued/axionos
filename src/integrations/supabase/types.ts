@@ -30944,6 +30944,64 @@ export type Database = {
           },
         ]
       }
+      purple_learning_reviews: {
+        Row: {
+          candidate_id: string | null
+          created_at: string
+          decision: string
+          id: string
+          organization_id: string
+          promoted_to_pattern_id: string | null
+          review_notes: string
+          review_type: string
+          reviewer_id: string | null
+        }
+        Insert: {
+          candidate_id?: string | null
+          created_at?: string
+          decision?: string
+          id?: string
+          organization_id: string
+          promoted_to_pattern_id?: string | null
+          review_notes?: string
+          review_type?: string
+          reviewer_id?: string | null
+        }
+        Update: {
+          candidate_id?: string | null
+          created_at?: string
+          decision?: string
+          id?: string
+          organization_id?: string
+          promoted_to_pattern_id?: string | null
+          review_notes?: string
+          review_type?: string
+          reviewer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purple_learning_reviews_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "security_canon_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purple_learning_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purple_learning_reviews_promoted_to_pattern_id_fkey"
+            columns: ["promoted_to_pattern_id"]
+            isOneToOne: false
+            referencedRelation: "security_pattern_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       red_team_boundary_breaches: {
         Row: {
           breach_type: string
@@ -33260,6 +33318,314 @@ export type Database = {
           },
         ]
       }
+      secure_development_checklists: {
+        Row: {
+          checklist_name: string
+          created_at: string
+          domain: string
+          id: string
+          items: Json
+          organization_id: string
+          severity_if_skipped: string
+          status: string
+          target_agent_type: string
+          updated_at: string
+        }
+        Insert: {
+          checklist_name?: string
+          created_at?: string
+          domain?: string
+          id?: string
+          items?: Json
+          organization_id: string
+          severity_if_skipped?: string
+          status?: string
+          target_agent_type?: string
+          updated_at?: string
+        }
+        Update: {
+          checklist_name?: string
+          created_at?: string
+          domain?: string
+          id?: string
+          items?: Json
+          organization_id?: string
+          severity_if_skipped?: string
+          status?: string
+          target_agent_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "secure_development_checklists_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_anti_patterns: {
+        Row: {
+          alternative_guidance: string
+          anti_pattern_name: string
+          confidence_score: number
+          created_at: string
+          description: string
+          detection_hint: string
+          domain: string
+          id: string
+          organization_id: string
+          severity: string
+          source_incident_id: string | null
+          status: string
+          why_dangerous: string
+        }
+        Insert: {
+          alternative_guidance?: string
+          anti_pattern_name?: string
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          detection_hint?: string
+          domain?: string
+          id?: string
+          organization_id: string
+          severity?: string
+          source_incident_id?: string | null
+          status?: string
+          why_dangerous?: string
+        }
+        Update: {
+          alternative_guidance?: string
+          anti_pattern_name?: string
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          detection_hint?: string
+          domain?: string
+          id?: string
+          organization_id?: string
+          severity?: string
+          source_incident_id?: string | null
+          status?: string
+          why_dangerous?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_anti_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_anti_patterns_source_incident_id_fkey"
+            columns: ["source_incident_id"]
+            isOneToOne: false
+            referencedRelation: "blue_team_incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_canon_candidates: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          domain: string
+          example: string | null
+          guidance: string
+          id: string
+          organization_id: string
+          pattern_type: string
+          source_incident_id: string | null
+          source_red_team_run: string | null
+          stack: string | null
+          status: string
+          summary: string
+          superseded_by: string | null
+          updated_at: string
+          when_not_to_use: string
+          when_to_use: string
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          domain?: string
+          example?: string | null
+          guidance?: string
+          id?: string
+          organization_id: string
+          pattern_type?: string
+          source_incident_id?: string | null
+          source_red_team_run?: string | null
+          stack?: string | null
+          status?: string
+          summary?: string
+          superseded_by?: string | null
+          updated_at?: string
+          when_not_to_use?: string
+          when_to_use?: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          domain?: string
+          example?: string | null
+          guidance?: string
+          id?: string
+          organization_id?: string
+          pattern_type?: string
+          source_incident_id?: string | null
+          source_red_team_run?: string | null
+          stack?: string | null
+          status?: string
+          summary?: string
+          superseded_by?: string | null
+          updated_at?: string
+          when_not_to_use?: string
+          when_to_use?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_canon_candidates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_canon_candidates_source_incident_id_fkey"
+            columns: ["source_incident_id"]
+            isOneToOne: false
+            referencedRelation: "blue_team_incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_canon_candidates_source_red_team_run_fkey"
+            columns: ["source_red_team_run"]
+            isOneToOne: false
+            referencedRelation: "red_team_simulation_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_canon_lineage: {
+        Row: {
+          created_at: string
+          id: string
+          lineage_description: string
+          organization_id: string
+          pattern_id: string | null
+          source_ref: string
+          source_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lineage_description?: string
+          organization_id: string
+          pattern_id?: string | null
+          source_ref?: string
+          source_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lineage_description?: string
+          organization_id?: string
+          pattern_id?: string | null
+          source_ref?: string
+          source_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_canon_lineage_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_canon_lineage_pattern_id_fkey"
+            columns: ["pattern_id"]
+            isOneToOne: false
+            referencedRelation: "security_pattern_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_pattern_entries: {
+        Row: {
+          agent_types: string[]
+          confidence_score: number
+          created_at: string
+          domain: string
+          example: string | null
+          guidance: string
+          id: string
+          organization_id: string
+          pattern_type: string
+          stack: string | null
+          status: string
+          summary: string
+          superseded_by: string | null
+          title: string
+          updated_at: string
+          usage_count: number
+          when_not_to_use: string
+          when_to_use: string
+        }
+        Insert: {
+          agent_types?: string[]
+          confidence_score?: number
+          created_at?: string
+          domain?: string
+          example?: string | null
+          guidance?: string
+          id?: string
+          organization_id: string
+          pattern_type?: string
+          stack?: string | null
+          status?: string
+          summary?: string
+          superseded_by?: string | null
+          title?: string
+          updated_at?: string
+          usage_count?: number
+          when_not_to_use?: string
+          when_to_use?: string
+        }
+        Update: {
+          agent_types?: string[]
+          confidence_score?: number
+          created_at?: string
+          domain?: string
+          example?: string | null
+          guidance?: string
+          id?: string
+          organization_id?: string
+          pattern_type?: string
+          stack?: string | null
+          status?: string
+          summary?: string
+          superseded_by?: string | null
+          title?: string
+          updated_at?: string
+          usage_count?: number
+          when_not_to_use?: string
+          when_to_use?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_pattern_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       security_surface_domains: {
         Row: {
           avg_exposure_score: number
@@ -33419,6 +33785,59 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "security_surfaces_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_validation_rules: {
+        Row: {
+          condition_description: string
+          confidence_score: number
+          created_at: string
+          domain: string
+          expected_outcome: string
+          failure_action: string
+          id: string
+          organization_id: string
+          rule_name: string
+          rule_type: string
+          status: string
+          target_agent_type: string
+        }
+        Insert: {
+          condition_description?: string
+          confidence_score?: number
+          created_at?: string
+          domain?: string
+          expected_outcome?: string
+          failure_action?: string
+          id?: string
+          organization_id: string
+          rule_name?: string
+          rule_type?: string
+          status?: string
+          target_agent_type?: string
+        }
+        Update: {
+          condition_description?: string
+          confidence_score?: number
+          created_at?: string
+          domain?: string
+          expected_outcome?: string
+          failure_action?: string
+          id?: string
+          organization_id?: string
+          rule_name?: string
+          rule_type?: string
+          status?: string
+          target_agent_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_validation_rules_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
