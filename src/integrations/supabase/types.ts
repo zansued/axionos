@@ -14,6 +14,96 @@ export type Database = {
   }
   public: {
     Tables: {
+      action_approval_requests: {
+        Row: {
+          action_id: string
+          approval_scope: string | null
+          constraints_summary: Json | null
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_notes: string | null
+          execution_mode: string
+          expires_at: string | null
+          explanation: string | null
+          id: string
+          initiative_id: string | null
+          intent_id: string
+          organization_id: string
+          policy_rules: Json | null
+          reason: string
+          requested_by: string | null
+          risk_level: string
+          stage: string | null
+          status: string
+          trigger_type: string
+          updated_at: string
+        }
+        Insert: {
+          action_id: string
+          approval_scope?: string | null
+          constraints_summary?: Json | null
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          execution_mode?: string
+          expires_at?: string | null
+          explanation?: string | null
+          id?: string
+          initiative_id?: string | null
+          intent_id: string
+          organization_id: string
+          policy_rules?: Json | null
+          reason?: string
+          requested_by?: string | null
+          risk_level?: string
+          stage?: string | null
+          status?: string
+          trigger_type?: string
+          updated_at?: string
+        }
+        Update: {
+          action_id?: string
+          approval_scope?: string | null
+          constraints_summary?: Json | null
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          execution_mode?: string
+          expires_at?: string | null
+          explanation?: string | null
+          id?: string
+          initiative_id?: string | null
+          intent_id?: string
+          organization_id?: string
+          policy_rules?: Json | null
+          reason?: string
+          requested_by?: string | null
+          risk_level?: string
+          stage?: string | null
+          status?: string
+          trigger_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "action_approval_requests_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "action_approval_requests_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       active_prevention_rules: {
         Row: {
           action_config: Json
