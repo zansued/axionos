@@ -86,10 +86,8 @@ export default function ResearchSandbox() {
   const allCampaigns = campaigns.data?.campaigns || [];
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <main className="flex-1 p-6 space-y-6 overflow-auto">
+    <AppShell>
+      <div className="space-y-6">
           {/* Header */}
           <div>
             <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
