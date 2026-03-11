@@ -107,9 +107,9 @@ const MENTOR_CONTENT: Record<string, GovernanceMentorContent> = {
       },
     ],
     suggestedActions: [
-      { label: { pt: "Ver detalhes da capability", en: "View capability details" }, route: "/capability-governance", icon: "Shield" },
-      { label: { pt: "Solicitar mais evidência", en: "Request more evidence" }, route: "/evidence", icon: "FileSearch" },
-      { label: { pt: "Enviar para benchmark", en: "Send to benchmark" }, route: "/benchmarks", icon: "BarChart3" },
+      { label: { pt: "Ver detalhes da capability", en: "View capability details" }, route: "/owner/capability-governance", icon: "Shield" },
+      { label: { pt: "Solicitar mais evidência", en: "Request more evidence" }, route: "/owner/improvement-ledger", icon: "FileSearch" },
+      { label: { pt: "Enviar para benchmark", en: "Send to benchmark" }, route: "/owner/improvement-benchmarks", icon: "BarChart3" },
     ],
   },
 
