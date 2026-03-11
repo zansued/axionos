@@ -642,6 +642,8 @@ export type {
   CanonLearningSignal,
   ExecutionOutcomeSignals,
 } from "./canon-application-scoring.ts";
+
+// Readiness–Orchestrator Integration (Sprint 141)
 export {
   evaluateReadiness,
   buildReadinessTraceRecord,
