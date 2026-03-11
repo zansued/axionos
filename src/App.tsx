@@ -102,6 +102,7 @@ import SecurityIntelligenceDashboard from "./pages/SecurityIntelligenceDashboard
 import RedTeamSimulationDashboard from "./pages/RedTeamSimulationDashboard";
 import BlueTeamDefenseDashboard from "./pages/BlueTeamDefenseDashboard";
 import PurpleLearningDashboard from "./pages/PurpleLearningDashboard";
+import SecurityWarRoom from "./pages/SecurityWarRoom";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
