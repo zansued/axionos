@@ -53,9 +53,9 @@ function getAllowedSurfaces(role: CanonicalRole): Surface[] {
   return ALL_SURFACES.filter((s) => allowedIds.includes(s.id));
 }
 
-export function getSurfaceForRoute(path: string, navGroups: NavGroups): SurfaceId {
+export function getSurfaceForRoute(path: string, _navGroups: NavGroups): SurfaceId {
   const normalized = path.split("?")[0].split("#")[0];
-  if (navGroups.owner.some((i) => i.url === normalized)) return "owner";
+  if (normalized.startsWith("/owner")) return "owner";
   return "builder";
 }
 
