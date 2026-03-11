@@ -29,7 +29,11 @@ import {
   retrieveCanonKnowledge,
   injectCanonIntoWorkInput,
   buildCanonTraceRecord,
+  extractCanonConsumption,
+  buildCanonConsumptionTrace,
   type CanonTraceRecord,
+  type CanonConsumptionReport,
+  type CanonConsumptionTrace,
 } from "./canon-orchestrator-integration.ts";
 
 // Sprint 140 — Policy enforcement
