@@ -254,7 +254,7 @@ const App = () => (
                             <Route path="/builder/agent-policies" element={<ProtectedRoute><AgentPoliciesPage /></ProtectedRoute>} />
 
                             {/* Pipelines */}
-                            <Route path="/builder/delivery" element={<ProtectedRoute><Delivery /></ProtectedRoute>} />
+                            <Route path="/builder/pipelines" element={<ProtectedRoute><Delivery /></ProtectedRoute>} />
                             <Route path="/builder/pipelines" element={<ProtectedRoute><Pipelines /></ProtectedRoute>} />
                             <Route path="/builder/pipeline-detail" element={<ProtectedRoute><PipelineDetailPage /></ProtectedRoute>} />
                             <Route path="/builder/execution-history" element={<ProtectedRoute><ExecutionHistoryPage /></ProtectedRoute>} />
