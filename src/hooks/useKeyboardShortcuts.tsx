@@ -18,10 +18,10 @@ export function useKeyboardShortcuts() {
   const [showHelp, setShowHelp] = useState(false);
 
   const shortcuts: Shortcut[] = [
-    { keys: ["g", "d"], label: "shortcuts.goToDashboard", category: "navigation", action: () => navigate("/") },
-    { keys: ["g", "i"], label: "shortcuts.goToInitiatives", category: "navigation", action: () => navigate("/initiatives") },
-    { keys: ["g", "k"], label: "shortcuts.goToKanban", category: "navigation", action: () => navigate("/kanban") },
-    { keys: ["g", "c"], label: "shortcuts.goToCode", category: "navigation", action: () => navigate("/code") },
+    { keys: ["g", "d"], label: "shortcuts.goToDashboard", category: "navigation", action: () => navigate("/builder/dashboard") },
+    { keys: ["g", "i"], label: "shortcuts.goToInitiatives", category: "navigation", action: () => navigate("/builder/initiatives") },
+    { keys: ["g", "k"], label: "shortcuts.goToKanban", category: "navigation", action: () => navigate("/builder/kanban") },
+    { keys: ["g", "c"], label: "shortcuts.goToCode", category: "navigation", action: () => navigate("/builder/code") },
     { keys: ["t"], label: "shortcuts.toggleTheme", category: "actions", action: () => setTheme(theme === "dark" ? "light" : "dark") },
     { keys: ["?"], label: "shortcuts.showShortcuts", category: "actions", action: () => setShowHelp(true) },
   ];
