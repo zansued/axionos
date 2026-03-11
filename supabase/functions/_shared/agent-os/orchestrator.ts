@@ -299,14 +299,37 @@ export class AgentOS {
       });
 
       // ── Execute agents (with enriched input + decision trace) ──
-      const stageFailed = await this.executeAgents(
+      const availablePacketIds = (enrichedInput.context?.canon_pattern_ids as string[]) || [];
+
+      const { failed: stageFailed, consumptionReports } = await this.executeAgentsWithCanon(
         selected,
         state,
         enrichedInput,
         runId,
         currentStage,
         memory,
+        availablePacketIds,
       );
+
+      // ── Sprint 140: Build Canon consumption trace ──
+      const consumptionTrace = buildCanonConsumptionTrace(
+        runId,
+        currentStage,
+        consumptionReports,
+        availablePacketIds,
+      );
+
+      this.emit(state, "stage.completed", {
+        runId,
+        stage: currentStage,
+        canon_consumption: {
+          usage_mode: consumptionTrace.aggregated_usage_mode,
+          packets_available: consumptionTrace.total_packets_available,
+          packets_used: consumptionTrace.total_packets_used,
+          packets_ignored: consumptionTrace.total_packets_ignored,
+          usage_rate: consumptionTrace.usage_rate,
+        },
+      });
 
       // ── Validation scoring ──
       let validationFailed = false;
