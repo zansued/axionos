@@ -31672,6 +31672,101 @@ export type Database = {
           },
         ]
       }
+      readiness_tuning_proposals: {
+        Row: {
+          aggregation_count: number
+          aggregation_key: string | null
+          confidence: number
+          created_at: string
+          environment_scope: string | null
+          evidence_summary: string
+          id: string
+          initiative_ids: Json
+          metadata: Json
+          organization_id: string
+          proposal_type: string
+          proposed_by_actor_type: string
+          rationale: string
+          recommendation: string
+          related_action_ids: Json
+          related_learning_signal_ids: Json
+          related_outcome_ids: Json
+          related_readiness_result_ids: Json
+          related_recovery_hook_ids: Json
+          review_status: string
+          severity: string
+          target_readiness_check_id: string | null
+          target_rule_scope: string
+          target_stage_scope: string | null
+          target_threshold_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          aggregation_count?: number
+          aggregation_key?: string | null
+          confidence?: number
+          created_at?: string
+          environment_scope?: string | null
+          evidence_summary?: string
+          id?: string
+          initiative_ids?: Json
+          metadata?: Json
+          organization_id: string
+          proposal_type?: string
+          proposed_by_actor_type?: string
+          rationale?: string
+          recommendation?: string
+          related_action_ids?: Json
+          related_learning_signal_ids?: Json
+          related_outcome_ids?: Json
+          related_readiness_result_ids?: Json
+          related_recovery_hook_ids?: Json
+          review_status?: string
+          severity?: string
+          target_readiness_check_id?: string | null
+          target_rule_scope?: string
+          target_stage_scope?: string | null
+          target_threshold_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          aggregation_count?: number
+          aggregation_key?: string | null
+          confidence?: number
+          created_at?: string
+          environment_scope?: string | null
+          evidence_summary?: string
+          id?: string
+          initiative_ids?: Json
+          metadata?: Json
+          organization_id?: string
+          proposal_type?: string
+          proposed_by_actor_type?: string
+          rationale?: string
+          recommendation?: string
+          related_action_ids?: Json
+          related_learning_signal_ids?: Json
+          related_outcome_ids?: Json
+          related_readiness_result_ids?: Json
+          related_recovery_hook_ids?: Json
+          review_status?: string
+          severity?: string
+          target_readiness_check_id?: string | null
+          target_rule_scope?: string
+          target_stage_scope?: string | null
+          target_threshold_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "readiness_tuning_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       red_team_boundary_breaches: {
         Row: {
           breach_type: string
