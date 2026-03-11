@@ -677,3 +677,10 @@ export type {
   ActionResolutionResult,
   ActionResolutionTrace,
 } from "./action-resolution.ts";
+
+// Action Engine — Action Registry (Sprint 146 / AE-04)
+export { ActionRegistry } from "./action-registry.ts";
+export type {
+  ActionAuditEntry,
+  ActionRegistryQuery,
+} from "./action-registry.ts";
