@@ -618,3 +618,15 @@ export type {
   CanonTraceRecord,
   StageCanonProfile,
 } from "./canon-orchestrator-integration.ts";
+
+// Readiness–Orchestrator Integration (Sprint 141)
+export {
+  evaluateReadiness,
+  buildReadinessTraceRecord,
+} from "./readiness-orchestrator-integration.ts";
+export type {
+  ReadinessGateResult,
+  ReadinessTraceRecord,
+  ReadinessCheck as OrchestratorReadinessCheck,
+  ReadinessCheckStatus,
+} from "./readiness-orchestrator-integration.ts";
