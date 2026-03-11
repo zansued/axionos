@@ -1285,8 +1285,7 @@ supabase/functions/
 
 ### System Maturity
 
-> **Canonical maturity table:** [ROADMAP.md](ROADMAP.md)
-> **Current:** Level 7 — Strategic Autonomy & Civilizational Coordination ✅
+> **Current:** Level 10+ — Adaptive Operational Organism ✅ (138 sprints complete)
 
 ---
 
