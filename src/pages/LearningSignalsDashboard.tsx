@@ -2,8 +2,7 @@ import { useOrg } from "@/contexts/OrgContext";
 import { useLearningExtraction } from "@/hooks/useLearningExtraction";
 import { useColdStart } from "@/hooks/useColdStart";
 import { ColdStartBanner } from "@/components/observability/ColdStartBanner";
-import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -59,25 +58,17 @@ export default function LearningSignalsDashboard() {
 
   if (!currentOrg) {
     return (
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full">
-          <AppSidebar />
-          <main className="flex-1 p-6">
-            <p className="text-muted-foreground">Select an organization.</p>
-          </main>
-        </div>
-      </SidebarProvider>
+      <AppShell>
+        <p className="text-muted-foreground">Select an organization.</p>
+      </AppShell>
     );
   }
 
   const highConfidence = candidates.filter((c) => c.confidence_score >= 0.7);
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <main className="flex-1 overflow-auto">
-          <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <AppShell>
+      <div className="space-y-6 max-w-7xl mx-auto">
             {/* Header */}
             <div className="flex items-center justify-between">
               <div>
@@ -302,9 +293,7 @@ export default function LearningSignalsDashboard() {
                 )}
               </TabsContent>
             </Tabs>
-          </div>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
