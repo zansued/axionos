@@ -198,7 +198,7 @@ function GovMetric({ value, label, warn, accent }: { value: number; label: strin
   return (
     <Card className="border-border/30 bg-card/50">
       <CardContent className="pt-3 pb-2 text-center">
-        <p className={`text-lg font-bold ${warn ? "text-amber-400" : "text-foreground"}`}>{value}</p>
+        <p className={`text-lg font-bold ${warn ? "text-amber-400" : accent ? "text-primary" : "text-foreground"}`}>{value}</p>
         <p className="text-[9px] text-muted-foreground uppercase tracking-wider">{label}</p>
       </CardContent>
     </Card>
