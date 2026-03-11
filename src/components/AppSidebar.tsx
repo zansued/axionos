@@ -56,7 +56,7 @@ function NavItemRow({
           <NavLink
             to={item.url}
             end={item.url === "/"}
-            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground overflow-hidden"
             activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
             style={
               {
@@ -65,15 +65,16 @@ function NavItemRow({
             }
           >
             <item.icon className="h-4 w-4 shrink-0 opacity-70" />
-            {!collapsed && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-[13px] whitespace-nowrap"
-              >
-                {item.title}
-              </motion.span>
-            )}
+            <motion.span
+              animate={{
+                opacity: collapsed ? 0 : 1,
+                width: collapsed ? 0 : "auto",
+              }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="text-[13px] whitespace-nowrap overflow-hidden"
+            >
+              {item.title}
+            </motion.span>
           </NavLink>
         </TooltipTrigger>
         {collapsed && (
