@@ -588,3 +588,33 @@ export {
   DEFAULT_AUTONOMY_LIMIT,
   DEFAULT_GOVERNANCE_CONFIG,
 } from "./governance.ts";
+
+// Policy Enforcer (Sprint 140)
+export { PolicyEnforcer } from "./policy-enforcer.ts";
+
+// Policy–Orchestrator Integration (Sprint 140)
+export {
+  evaluatePolicy,
+  buildPolicyContext,
+  createApprovalRequest,
+} from "./policy-orchestrator-integration.ts";
+export type {
+  ExecutionMode,
+  PolicyEnforcementResult,
+  PolicyTraceRecord,
+  ApprovalRequest as PolicyApprovalRequest,
+} from "./policy-orchestrator-integration.ts";
+
+// Canon–Orchestrator Integration (Sprint 122)
+export {
+  buildCanonRetrievalRequest,
+  retrieveCanonKnowledge,
+  injectCanonIntoWorkInput,
+  buildCanonTraceRecord,
+} from "./canon-orchestrator-integration.ts";
+export type {
+  CanonRetrievalRequest,
+  CanonRetrievalResult,
+  CanonTraceRecord,
+  StageCanonProfile,
+} from "./canon-orchestrator-integration.ts";
