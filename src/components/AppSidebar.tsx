@@ -172,13 +172,15 @@ export function AppSidebar() {
 
             {/* ── Navigation ── */}
             <SidebarGroup className="px-2 pt-0">
-              {!collapsed && (
-                <div className="mb-1.5 px-2">
-                  <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
-                    {surfaceMeta.label}
-                  </p>
-                </div>
-              )}
+              <motion.div
+                animate={{ opacity: collapsed ? 0 : 1, height: collapsed ? 0 : "auto" }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden mb-1.5 px-2"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50 whitespace-nowrap">
+                  {surfaceMeta.label}
+                </p>
+              </motion.div>
               <SidebarGroupContent>
                 <AnimatePresence mode="wait">
                   <motion.div
