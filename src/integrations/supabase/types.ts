@@ -7845,6 +7845,62 @@ export type Database = {
           },
         ]
       }
+      canon_retrieval_contexts: {
+        Row: {
+          confidence_threshold: number
+          context_label: string
+          context_type: string
+          created_at: string
+          enabled: boolean
+          fallback_posture: string
+          id: string
+          max_entries: number
+          optional_domains: Json
+          organization_id: string
+          required_domains: Json
+          required_practice_types: Json
+          updated_at: string
+        }
+        Insert: {
+          confidence_threshold?: number
+          context_label?: string
+          context_type?: string
+          created_at?: string
+          enabled?: boolean
+          fallback_posture?: string
+          id?: string
+          max_entries?: number
+          optional_domains?: Json
+          organization_id: string
+          required_domains?: Json
+          required_practice_types?: Json
+          updated_at?: string
+        }
+        Update: {
+          confidence_threshold?: number
+          context_label?: string
+          context_type?: string
+          created_at?: string
+          enabled?: boolean
+          fallback_posture?: string
+          id?: string
+          max_entries?: number
+          optional_domains?: Json
+          organization_id?: string
+          required_domains?: Json
+          required_practice_types?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_retrieval_contexts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_retrieval_feedback: {
         Row: {
           canon_entry_id: string
