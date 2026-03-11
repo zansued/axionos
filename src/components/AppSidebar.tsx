@@ -131,96 +131,99 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border relative">
-      <SidebarContent className="gap-0 justify-start">
-        {/* ── Brand ── */}
-        <SidebarGroup className="pb-0">
-          <SidebarGroupContent>
-            <div className="flex items-center gap-2 px-2 py-3">
-              <img src={axionLogo} alt="AxionOS" className="h-7 w-7 shrink-0" />
-              {!collapsed && (
-                <span className="font-display text-sm font-semibold tracking-tight">
-                  Axion<span className="font-normal text-muted-foreground">OS</span>
-                </span>
-              )}
-            </div>
-          </SidebarGroupContent>
-        </SidebarGroup>
+      <SidebarContent className="gap-0 justify-between">
+        {/* ── Top: brand + switcher + nav ── */}
+        <div className="flex flex-col gap-0">
+          {/* ── Brand ── */}
+          <SidebarGroup className="pb-0">
+            <SidebarGroupContent>
+              <div className="flex items-center gap-2 px-2 py-3">
+                <img src={axionLogo} alt="AxionOS" className="h-7 w-7 shrink-0" />
+                {!collapsed && (
+                  <span className="font-display text-sm font-semibold tracking-tight">
+                    Axion<span className="font-normal text-muted-foreground">OS</span>
+                  </span>
+                )}
+              </div>
+            </SidebarGroupContent>
+          </SidebarGroup>
 
-        {/* ── Mode Switcher ── */}
-        <SidebarGroup className="px-2 pb-2 pt-0">
-          <SidebarGroupContent>
-            <SurfaceSwitcher
-              role={canonicalRole}
-              activeSurface={activeSurface}
-              onSurfaceChange={handleSurfaceChange}
-              collapsed={collapsed}
-            />
-          </SidebarGroupContent>
-        </SidebarGroup>
+          {/* ── Mode Switcher ── */}
+          <SidebarGroup className="px-2 pb-2 pt-0">
+            <SidebarGroupContent>
+              <SurfaceSwitcher
+                role={canonicalRole}
+                activeSurface={activeSurface}
+                onSurfaceChange={handleSurfaceChange}
+                collapsed={collapsed}
+              />
+            </SidebarGroupContent>
+          </SidebarGroup>
 
-        <Separator className="mx-2 w-auto mb-2" />
+          <Separator className="mx-2 w-auto mb-2" />
 
-        {/* ── Navigation ── */}
-        <SidebarGroup className="px-2 pt-0">
-          {!collapsed && (
-            <div className="mb-1.5 px-2">
-              <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
-                {surfaceMeta.label}
-              </p>
+          {/* ── Navigation ── */}
+          <SidebarGroup className="px-2 pt-0">
+            {!collapsed && (
+              <div className="mb-1.5 px-2">
+                <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
+                  {surfaceMeta.label}
+                </p>
+              </div>
+            )}
+            <SidebarGroupContent>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeSurface}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <SidebarMenu className="space-y-0.5">
+                    {activeNavItems?.map((item) => (
+                      <NavItemRow
+                        key={item.url}
+                        item={item}
+                        collapsed={collapsed}
+                        surfaceColor={surfaceMeta.colorVar}
+                      />
+                    ))}
+                  </SidebarMenu>
+                </motion.div>
+              </AnimatePresence>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </div>
+
+        {/* ── Footer — pinned to bottom via justify-between ── */}
+        <div className="p-2 border-t border-sidebar-border/50">
+          {!collapsed && user && (
+            <div className="mb-1 space-y-0.5 px-2">
+              <div className="flex items-center gap-2">
+                <p className="flex-1 truncate text-[11px] text-muted-foreground">
+                  {user.email}
+                </p>
+                <Badge
+                  variant="outline"
+                  className={`px-1.5 py-0 text-[9px] ${roleBadgeClass}`}
+                >
+                  {roleBadgeLabel}
+                </Badge>
+              </div>
             </div>
           )}
-          <SidebarGroupContent>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeSurface}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.15 }}
-              >
-                <SidebarMenu className="space-y-0.5">
-                  {activeNavItems?.map((item) => (
-                    <NavItemRow
-                      key={item.url}
-                      item={item}
-                      collapsed={collapsed}
-                      surfaceColor={surfaceMeta.colorVar}
-                    />
-                  ))}
-                </SidebarMenu>
-              </motion.div>
-            </AnimatePresence>
-          </SidebarGroupContent>
-        </SidebarGroup>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start text-muted-foreground hover:text-destructive"
+            onClick={signOut}
+          >
+            <LogOut className="mr-2 h-4 w-4 shrink-0" />
+            {!collapsed && <span className="text-sm">Sign Out</span>}
+          </Button>
+        </div>
       </SidebarContent>
-
-      {/* ── Footer ── */}
-      <SidebarFooter className="p-2 z-10 bg-sidebar">
-        {!collapsed && user && (
-          <div className="mb-1 space-y-0.5 px-2">
-            <div className="flex items-center gap-2">
-              <p className="flex-1 truncate text-[11px] text-muted-foreground">
-                {user.email}
-              </p>
-              <Badge
-                variant="outline"
-                className={`px-1.5 py-0 text-[9px] ${roleBadgeClass}`}
-              >
-                {roleBadgeLabel}
-              </Badge>
-            </div>
-          </div>
-        )}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start text-muted-foreground hover:text-destructive"
-          onClick={signOut}
-        >
-          <LogOut className="mr-2 h-4 w-4 shrink-0" />
-          {!collapsed && <span className="text-sm">Sign Out</span>}
-        </Button>
-      </SidebarFooter>
     </Sidebar>
   );
 }
