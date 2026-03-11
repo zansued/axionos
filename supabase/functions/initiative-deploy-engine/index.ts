@@ -93,7 +93,7 @@ serve(async (req) => {
     const finalStatus: DeployStatus = errorCode ? "deploy_failed" : "deployed";
     const now = new Date().toISOString();
 
-    await updateInitiative(serviceClient, initiativeId, {
+    await updateInitiative(ctx, {
       stage_status: finalStatus,
       deploy_status: finalStatus,
       deploy_url: deployUrl,
