@@ -9,8 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { Network, Eye, AlertTriangle, ShieldCheck } from "lucide-react";
-import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppShell } from "@/components/AppShell";
 
 function invoke(orgId: string, action: string, params: Record<string, any> = {}) {
   return supabase.functions.invoke("research-patterns", {
