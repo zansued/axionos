@@ -63,7 +63,7 @@ serve(async (req) => {
 
   const approval = approvalMap[currentStatus];
   if (!approval) {
-    const terminalStates = ["published", "completed", "archived", "in_progress"];
+    const terminalStates = ["published", "completed", "archived", "in_progress", "deployed"];
     if (terminalStates.includes(currentStatus)) {
       return jsonResponse({ success: true, new_status: currentStatus, message: "Already approved/advanced" });
     }
