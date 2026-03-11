@@ -1,6 +1,13 @@
 // Agent OS — Orchestrator (Kernel)
 // Runs the cognitive pipeline: intake → perception → design → build → validation → evolution → done
 // Handles stage transitions, agent dispatch, validation scoring, and rollback.
+//
+// Sprint 122: Canon retrieval integrated before agent dispatch.
+// Sprint 140: Policy enforcement integrated before agent dispatch.
+//
+// Operational Decision Chain enforced:
+//   Canon informs → Readiness evaluates → Policy constrains →
+//   Action Engine formalizes → AgentOS orchestrates → Executors act
 
 import type {
   AgentDefinition,
@@ -14,6 +21,24 @@ import { EventBus } from "./event-bus.ts";
 import { RuntimeMemory } from "./memory.ts";
 import { scoreArtifacts, averageScore } from "./scoring.ts";
 import { cryptoRandomId, nowIso } from "./utils.ts";
+
+// Sprint 122 — Canon integration
+import {
+  buildCanonRetrievalRequest,
+  retrieveCanonKnowledge,
+  injectCanonIntoWorkInput,
+  buildCanonTraceRecord,
+  type CanonTraceRecord,
+} from "./canon-orchestrator-integration.ts";
+
+// Sprint 140 — Policy enforcement
+import {
+  evaluatePolicy,
+  createApprovalRequest,
+  type PolicyEnforcementResult,
+  type PolicyTraceRecord,
+  type ApprovalRequest,
+} from "./policy-orchestrator-integration.ts";
 
 export interface OrchestratorOptions {
   registry: AgentRegistry;
@@ -62,11 +87,108 @@ export class AgentOS {
       state.stage = currentStage;
       this.emit(state, "stage.started", { runId, stage: currentStage });
 
-      // ── Select agents ──
-      const candidates = this.registry.findForStage(currentStage, {
-        ...input,
-        artifacts: state.artifacts,
+      // ────────────────────────────────────────────────────
+      // Sprint 122: Canon Retrieval (Canon informs)
+      // ────────────────────────────────────────────────────
+      let enrichedInput = { ...input, artifacts: state.artifacts };
+      let canonTrace: CanonTraceRecord | null = null;
+
+      try {
+        const canonRequest = buildCanonRetrievalRequest(currentStage, input);
+        const canonResult = await retrieveCanonKnowledge(canonRequest);
+        enrichedInput = injectCanonIntoWorkInput(enrichedInput, canonResult);
+        canonTrace = buildCanonTraceRecord(currentStage, canonResult);
+
+        this.emit(state, "stage.started", {
+          runId,
+          stage: currentStage,
+          canon_retrieval: {
+            attempted: true,
+            success: canonResult.success,
+            entries_retrieved: canonResult.entries_retrieved,
+            categories_used: canonResult.categories_used,
+          },
+        });
+      } catch {
+        // Safe fallback: Canon retrieval failure must not block execution
+        canonTrace = {
+          canon_retrieval_attempted: true,
+          canon_retrieval_success: false,
+          entries_retrieved: 0,
+          pattern_ids_used: [],
+          categories_used: [],
+          average_confidence: 0,
+          stage: currentStage,
+          timestamp: nowIso(),
+          error: "Canon retrieval failed — continuing without canon context",
+        };
+
+        this.emit(state, "stage.started", {
+          runId,
+          stage: currentStage,
+          canon_retrieval: { attempted: true, success: false, error: "retrieval_failed" },
+        });
+      }
+
+      // ────────────────────────────────────────────────────
+      // Sprint 140: Policy Enforcement (Policy constrains)
+      // ────────────────────────────────────────────────────
+      const policyResult = evaluatePolicy(runId, currentStage, enrichedInput);
+      const policyTrace: PolicyTraceRecord = policyResult.trace;
+
+      this.emit(state, "stage.started", {
+        runId,
+        stage: currentStage,
+        policy_enforcement: {
+          execution_mode: policyResult.execution_mode,
+          verdict: policyResult.decision.verdict,
+          rules_triggered: policyTrace.rules_triggered,
+          risk_level: policyTrace.risk_level,
+          allowed: policyResult.allowed,
+        },
       });
+
+      // Enforce execution mode
+      if (policyResult.execution_mode === "blocked") {
+        state.status = "failed";
+        this.emit(state, "run.completed", {
+          runId,
+          status: "failed",
+          reason: "policy_blocked",
+          policy_trace: policyTrace,
+          canon_trace: canonTrace,
+        });
+        return state;
+      }
+
+      if (policyResult.execution_mode === "manual_only") {
+        state.status = "blocked";
+        this.emit(state, "stage.completed", {
+          runId,
+          stage: currentStage,
+          failed: true,
+          reason: "manual_only — dispatch stopped",
+          policy_trace: policyTrace,
+        });
+        return state;
+      }
+
+      let approvalRequest: ApprovalRequest | null = null;
+      if (policyResult.execution_mode === "approval_required") {
+        approvalRequest = createApprovalRequest(runId, currentStage, policyResult);
+        this.emit(state, "stage.started", {
+          runId,
+          stage: currentStage,
+          approval_request: approvalRequest,
+        });
+        // In a real system, this would pause and wait for approval.
+        // For now, we log the request and continue (approval placeholder).
+      }
+
+      // ────────────────────────────────────────────────────
+      // Agent Selection & Dispatch
+      // ────────────────────────────────────────────────────
+      const candidates = this.registry.findForStage(currentStage, enrichedInput);
 
       const selected = candidates.filter((a) =>
         policy.requiredTypes.includes(a.type),
@@ -77,11 +199,11 @@ export class AgentOS {
         throw new Error(`[AgentOS] No agents for stage: ${currentStage}`);
       }
 
-      // ── Execute agents ──
+      // ── Execute agents (with enriched input) ──
       const stageFailed = await this.executeAgents(
         selected,
         state,
-        input,
+        enrichedInput,
         runId,
         currentStage,
         memory,
@@ -112,6 +234,9 @@ export class AgentOS {
         stage: currentStage,
         failed,
         artifacts: state.artifacts.length,
+        canon_trace: canonTrace,
+        policy_trace: policyTrace,
+        approval_request: approvalRequest,
       });
 
       // ── Transition ──
