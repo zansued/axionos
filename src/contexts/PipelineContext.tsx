@@ -475,6 +475,33 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           }, 1500);
           return;
         }
+
+        // Auto-continuation after approve: chain into the next runnable stage
+        if (stage === "approve" && result.success && result.new_status) {
+          const autoContinueMap: Record<string, { fn: string; label: string }> = {
+            bootstrapping_schema: { fn: "supabase_schema_bootstrap", label: "🗄️ Schema Bootstrap" },
+            provisioning_db: { fn: "supabase_provisioning", label: "🗄️ DB Provisioning" },
+            analyzing_domain: { fn: "domain_model_analysis", label: "🧠 Domain Analysis" },
+            generating_data_model: { fn: "data_model_generation", label: "🗄️ Data Model Generation" },
+            synthesizing_logic: { fn: "business_logic_synthesis", label: "⚙️ Business Logic Synthesis" },
+            generating_api: { fn: "api_generation", label: "🔌 API Generation" },
+            generating_ui: { fn: "ui_generation", label: "🖥️ UI Generation" },
+            simulating_modules: { fn: "module_graph_simulation", label: "🔗 Module Graph Simulation" },
+            analyzing_dependencies: { fn: "dependency_intelligence", label: "📦 Dependency Intelligence" },
+            architecture_ready: { fn: "architecture", label: "🏗️ Arquitetura" },
+            squad_ready: { fn: "squad_formation", label: "👥 Squad Formation" },
+            planning_ready: { fn: "planning", label: "📋 Planning" },
+            in_progress: { fn: "execution", label: "⚡ Execução" },
+          };
+          const next = autoContinueMap[result.new_status];
+          if (next) {
+            toast({ title: `${next.label} — iniciando automaticamente...` });
+            setTimeout(() => {
+              runStage(initiativeId, next.fn);
+            }, 1500);
+            return;
+          }
+        }
       } catch (e: any) {
         const isTimeout = e.message?.includes("tempo limite") || e.message?.includes("Failed to send") || e.message?.includes("FunctionsFetchError") || e.message?.includes("AbortError");
         
