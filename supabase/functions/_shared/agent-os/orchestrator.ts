@@ -394,17 +394,19 @@ export class AgentOS {
     return state;
   }
 
-  // ── Internal: execute all agents for a stage ──
+  // ── Internal: execute all agents for a stage (with Canon consumption tracking) ──
 
-  private async executeAgents(
+  private async executeAgentsWithCanon(
     agents: AgentDefinition[],
     state: RunState,
     input: WorkInput,
     runId: string,
     stage: StageName,
     memory: RuntimeMemory,
-  ): Promise<boolean> {
+    availablePacketIds: string[],
+  ): Promise<{ failed: boolean; consumptionReports: CanonConsumptionReport[] }> {
     let failed = false;
+    const consumptionReports: CanonConsumptionReport[] = [];
 
     for (const agent of agents) {
       this.emit(state, "agent.started", {
@@ -442,6 +444,16 @@ export class AgentOS {
           }
         }
 
+        // Sprint 140: Extract Canon consumption from agent result
+        const consumption = extractCanonConsumption(
+          agent.id,
+          stage,
+          availablePacketIds,
+          result.metrics,
+          result.logs,
+        );
+        consumptionReports.push(consumption);
+
         this.emit(state, "agent.completed", {
           runId,
           stage,
@@ -449,6 +461,11 @@ export class AgentOS {
           status: result.status,
           summary: result.summary,
           metrics: result.metrics,
+          canon_consumption: {
+            usage_mode: consumption.canon_usage_mode,
+            packets_used: consumption.canon_packet_ids_used.length,
+            packets_available: consumption.canon_packet_ids_available.length,
+          },
         });
 
         if (result.status === "failed" || result.status === "blocked") {
@@ -456,6 +473,17 @@ export class AgentOS {
         }
       } catch (error) {
         failed = true;
+        // Record consumption as "none" for failed agents
+        consumptionReports.push({
+          canon_context_available: availablePacketIds.length > 0,
+          canon_packet_ids_available: availablePacketIds,
+          canon_packet_ids_used: [],
+          canon_categories_used: [],
+          canon_usage_mode: "none",
+          canon_usage_explanation: `Agent ${agent.id} failed — canon consumption not evaluated`,
+          agent_id: agent.id,
+          stage,
+        });
         this.emit(state, "agent.failed", {
           runId,
           stage,
@@ -465,7 +493,7 @@ export class AgentOS {
       }
     }
 
-    return failed;
+    return { failed, consumptionReports };
   }
 
   // ── Internal: emit event ──
