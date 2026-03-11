@@ -34,6 +34,7 @@ import {
   type CanonTraceRecord,
   type CanonConsumptionReport,
   type CanonConsumptionTrace,
+  type CanonKnowledgePacket,
 } from "./canon-orchestrator-integration.ts";
 
 // Sprint 141 — Canon application scoring
