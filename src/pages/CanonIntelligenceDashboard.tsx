@@ -35,10 +35,8 @@ export default function CanonIntelligenceDashboard() {
   const topAgent = [...agentCounts.entries()].sort((a, b) => b[1] - a[1])[0];
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <div className="p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
           {/* Header */}
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2.5 font-['Space_Grotesk']">
