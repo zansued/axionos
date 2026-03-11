@@ -1,4 +1,4 @@
-// AppSidebar – mode-aware navigation with animated SurfaceSwitcher.
+// AppSidebar – framer-motion sidebar with hover-to-expand, mode switcher, and role-aware nav.
 
 import { useState, useMemo } from "react";
 import axionLogo from "@/assets/axion-logo.svg";
@@ -12,82 +12,85 @@ import {
   SurfaceSwitcher,
   getSurfaceForRoute,
   getSurfaceMetadata,
-  type SurfaceId } from
-"@/components/SurfaceSwitcher";
+  type SurfaceId,
+} from "@/components/SurfaceSwitcher";
 import {
   CANONICAL_ROLE_LABELS,
   CANONICAL_ROLE_BADGE_STYLES,
-  type NavItem } from
-"@/lib/permissions";
+  type NavItem,
+} from "@/lib/permissions";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
-  SidebarFooter,
-  useSidebar } from
-"@/components/ui/sidebar";
+  useSidebar,
+} from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
+  TooltipProvider,
   TooltipContent,
-  TooltipTrigger } from
-"@/components/ui/tooltip";
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // ─── NavItemRow ──────────────────────────────────────────────────────────────
 
 function NavItemRow({
   item,
   collapsed,
-  surfaceColor
-
-
-
-
-}: {item: NavItem;collapsed: boolean;surfaceColor: string;}) {
+  surfaceColor,
+}: {
+  item: NavItem;
+  collapsed: boolean;
+  surfaceColor: string;
+}) {
   return (
     <SidebarMenuItem>
       <Tooltip>
         <TooltipTrigger asChild>
-          <SidebarMenuButton asChild>
-            <NavLink
-              to={item.url}
-              end={item.url === "/"}
-              className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
-              activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-              style={
+          <NavLink
+            to={item.url}
+            end={item.url === "/"}
+            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+            activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+            style={
               {
-                "--surface-active": `hsl(var(${surfaceColor}) / 0.15)`
+                "--surface-active": `hsl(var(${surfaceColor}) / 0.15)`,
               } as React.CSSProperties
-              }>
-              
-              <item.icon className="h-4 w-4 shrink-0 opacity-70" />
-              {!collapsed &&
-              <span className="text-[13px]">{item.title}</span>
-              }
-            </NavLink>
-          </SidebarMenuButton>
+            }
+          >
+            <item.icon className="h-4 w-4 shrink-0 opacity-70" />
+            {!collapsed && (
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-[13px] whitespace-nowrap"
+              >
+                {item.title}
+              </motion.span>
+            )}
+          </NavLink>
         </TooltipTrigger>
-        {collapsed &&
-        <TooltipContent side="right" className="text-xs">
+        {collapsed && (
+          <TooltipContent side="right" className="text-xs">
             {item.title}
           </TooltipContent>
-        }
+        )}
       </Tooltip>
-    </SidebarMenuItem>);
-
+    </SidebarMenuItem>
+  );
 }
 
 // ─── AppSidebar ──────────────────────────────────────────────────────────────
 
 export function AppSidebar() {
-  const { state } = useSidebar();
-  const collapsed = state === "collapsed";
+  const { open } = useSidebar();
+  const collapsed = !open;
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -121,109 +124,113 @@ export function AppSidebar() {
 
   const handleSurfaceChange = (surface: SurfaceId) => {
     setActiveSurface(surface);
-    // Navigate to first route of new surface
-    const targetNav =
-    surface === "owner" ? navGroups.owner : navGroups.builder;
+    const targetNav = surface === "owner" ? navGroups.owner : navGroups.builder;
     if (targetNav?.length > 0) {
       navigate(targetNav[0].url);
     }
   };
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar-border relative">
-      <SidebarContent className="gap-0 justify-between">
-        {/* ── Top: brand + switcher + nav ── */}
-        <div className="gap-0 flex flex-col">
-          {/* ── Brand ── */}
-          <SidebarGroup className="pb-0">
-            <SidebarGroupContent>
-              <div className="flex items-center gap-2 px-2 py-3">
-                <img src={axionLogo} alt="AxionOS" className="h-7 w-7 shrink-0" />
-                {!collapsed &&
-                <span className="font-display text-sm font-semibold tracking-tight">
-                    Axion<span className="font-normal text-muted-foreground">OS</span>
-                  </span>
-                }
+    <TooltipProvider delayDuration={0}>
+      <Sidebar className="border-r border-sidebar-border">
+        <SidebarContent className="justify-between">
+          {/* ── Top: brand + switcher + nav ── */}
+          <div className="flex flex-col gap-0">
+            {/* ── Brand ── */}
+            <SidebarGroup className="pb-0">
+              <SidebarGroupContent>
+                <div className="flex items-center gap-2 px-2 py-3">
+                  <img src={axionLogo} alt="AxionOS" className="h-7 w-7 shrink-0" />
+                  {!collapsed && (
+                    <motion.span
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="font-display text-sm font-semibold tracking-tight whitespace-nowrap"
+                    >
+                      Axion<span className="font-normal text-muted-foreground">OS</span>
+                    </motion.span>
+                  )}
+                </div>
+              </SidebarGroupContent>
+            </SidebarGroup>
+
+            {/* ── Mode Switcher ── */}
+            <SidebarGroup className="px-2 pb-2 pt-0">
+              <SidebarGroupContent>
+                <SurfaceSwitcher
+                  role={canonicalRole}
+                  activeSurface={activeSurface}
+                  onSurfaceChange={handleSurfaceChange}
+                  collapsed={collapsed}
+                />
+              </SidebarGroupContent>
+            </SidebarGroup>
+
+            <Separator className="mx-2 w-auto mb-2" />
+
+            {/* ── Navigation ── */}
+            <SidebarGroup className="px-2 pt-0">
+              {!collapsed && (
+                <div className="mb-1.5 px-2">
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
+                    {surfaceMeta.label}
+                  </p>
+                </div>
+              )}
+              <SidebarGroupContent>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeSurface}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <SidebarMenu className="space-y-0.5">
+                      {activeNavItems?.map((item) => (
+                        <NavItemRow
+                          key={item.url}
+                          item={item}
+                          collapsed={collapsed}
+                          surfaceColor={surfaceMeta.colorVar}
+                        />
+                      ))}
+                    </SidebarMenu>
+                  </motion.div>
+                </AnimatePresence>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </div>
+
+          {/* ── Footer ── */}
+          <div className="p-2 border-t border-sidebar-border/50">
+            {!collapsed && user && (
+              <div className="mb-1 space-y-0.5 px-2">
+                <div className="flex items-center gap-2">
+                  <p className="flex-1 truncate text-[11px] text-muted-foreground">
+                    {user.email}
+                  </p>
+                  <Badge
+                    variant="outline"
+                    className={`px-1.5 py-0 text-[9px] ${roleBadgeClass}`}
+                  >
+                    {roleBadgeLabel}
+                  </Badge>
+                </div>
               </div>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          {/* ── Mode Switcher ── */}
-          <SidebarGroup className="px-2 pb-2 pt-0">
-            <SidebarGroupContent>
-              <SurfaceSwitcher
-                role={canonicalRole}
-                activeSurface={activeSurface}
-                onSurfaceChange={handleSurfaceChange}
-                collapsed={collapsed} />
-              
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          <Separator className="mx-2 w-auto mb-2" />
-
-          {/* ── Navigation ── */}
-          <SidebarGroup className="px-2 pt-0">
-            {!collapsed &&
-            <div className="mb-1.5 px-2">
-                <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
-                  {surfaceMeta.label}
-                </p>
-              </div>
-            }
-            <SidebarGroupContent>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeSurface}
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.15 }}>
-                  
-                  <SidebarMenu className="space-y-0.5">
-                    {activeNavItems?.map((item) =>
-                    <NavItemRow
-                      key={item.url}
-                      item={item}
-                      collapsed={collapsed}
-                      surfaceColor={surfaceMeta.colorVar} />
-
-                    )}
-                  </SidebarMenu>
-                </motion.div>
-              </AnimatePresence>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </div>
-
-        {/* ── Footer — pinned to bottom via justify-between ── */}
-        <div className="p-2 border-t border-sidebar-border/50">
-          {!collapsed && user &&
-          <div className="mb-1 space-y-0.5 px-2">
-              <div className="flex items-center gap-2">
-                <p className="flex-1 truncate text-[11px] text-muted-foreground">
-                  {user.email}
-                </p>
-                <Badge
-                variant="outline"
-                className={`px-1.5 py-0 text-[9px] ${roleBadgeClass}`}>
-                
-                  {roleBadgeLabel}
-                </Badge>
-              </div>
-            </div>
-          }
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start text-muted-foreground hover:text-destructive"
-            onClick={signOut}>
-            
-            <LogOut className="mr-2 h-4 w-4 shrink-0" />
-            {!collapsed && <span className="text-sm">Sign Out</span>}
-          </Button>
-        </div>
-      </SidebarContent>
-    </Sidebar>);
-
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-muted-foreground hover:text-destructive"
+              onClick={signOut}
+            >
+              <LogOut className="mr-2 h-4 w-4 shrink-0" />
+              {!collapsed && <span className="text-sm">Sign Out</span>}
+            </Button>
+          </div>
+        </SidebarContent>
+      </Sidebar>
+    </TooltipProvider>
+  );
 }

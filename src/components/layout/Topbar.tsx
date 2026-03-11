@@ -1,6 +1,5 @@
 /**
  * Topbar — Sticky top bar with branding, search, and notifications.
- * Extracted from AppShell for modularity.
  */
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -15,7 +14,7 @@ interface TopbarProps {
 export function Topbar({ compact = false }: TopbarProps) {
   return (
     <header className="h-11 flex items-center border-b border-border/50 px-3 shrink-0 bg-card/30 backdrop-blur-sm sticky top-0 z-30">
-      <SidebarTrigger className="mr-3" />
+      <SidebarTrigger className="mr-3 md:hidden" />
 
       <div className="flex items-center gap-2 mr-auto">
         <img src={axionLogo} alt="AxionOS" className="h-4 w-4 opacity-40" />
