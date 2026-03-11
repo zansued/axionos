@@ -140,6 +140,45 @@ export class AgentOS {
       }
 
       // ────────────────────────────────────────────────────
+      // Sprint 141: Readiness Gate (Readiness evaluates)
+      // ────────────────────────────────────────────────────
+      const readinessResult = evaluateReadiness(currentStage, enrichedInput);
+      const readinessTrace = buildReadinessTraceRecord(readinessResult);
+
+      this.emit(state, "stage.started", {
+        runId,
+        stage: currentStage,
+        readiness_gate: {
+          readiness_score: readinessResult.readiness_score,
+          can_proceed: readinessResult.can_proceed,
+          blocker_count: readinessResult.blockers.length,
+          warning_count: readinessResult.warnings.length,
+          blocker_keys: readinessResult.blockers.map((b) => b.key),
+        },
+      });
+
+      // Gate: block stage if required checks fail
+      if (!readinessResult.can_proceed) {
+        state.status = "blocked";
+        this.emit(state, "stage.completed", {
+          runId,
+          stage: currentStage,
+          failed: true,
+          reason: "readiness_blocked",
+          readiness_trace: readinessTrace,
+          canon_trace: canonTrace,
+          blockers: readinessResult.blockers.map((b) => ({
+            key: b.key,
+            label: b.label,
+            explanation: b.explanation,
+            action: b.action,
+          })),
+          next_required_action: readinessResult.next_required_action,
+        });
+        return state;
+      }
+
+      // ────────────────────────────────────────────────────
       // Sprint 140: Policy Enforcement (Policy constrains)
       // ────────────────────────────────────────────────────
       const policyResult = evaluatePolicy(runId, currentStage, enrichedInput);
