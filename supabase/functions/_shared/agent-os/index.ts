@@ -736,3 +736,15 @@ export type {
   OperationalFlowTrace,
   OperationalFlowDef,
 } from "./action-flows.ts";
+
+// Action Engine — Outcome Integration (Sprint 151 / AE-08)
+export { OutcomeIntegrationManager } from "./action-outcome-integration.ts";
+export type {
+  ExecutionResultInput,
+  OutcomeIntegrationStatus,
+  OutcomeIntegrationResult,
+  OutcomeSignalType,
+  OutcomeSignal,
+  OutcomeAuditEvent,
+  ActionOutcomeSummary,
+} from "./action-outcome-integration.ts";
