@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +13,8 @@ import axionLogo from "@/assets/axion-logo.svg";
 import { Sparkles } from "lucide-react";
 
 export default function Auth() {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [loginEmail, setLoginEmail] = useState("");
@@ -21,13 +24,28 @@ export default function Auth() {
   const [signupName, setSignupName] = useState("");
   const savedIdea = sessionStorage.getItem("axion_initial_idea");
 
+  // If somehow the user lands here already authenticated, clear stale session
+  useEffect(() => {
+    if (user) {
+      navigate("/initiatives", { replace: true });
+    }
+  }, [user, navigate]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
+      // Clear any stale session before attempting login
+      await supabase.auth.signOut();
       await signIn(loginEmail, loginPassword);
     } catch (error: any) {
-      toast({ variant: "destructive", title: "Erro no login", description: error.message });
+      const msg = error?.message || "";
+      const description = msg.includes("Failed to fetch") || msg.includes("NetworkError")
+        ? "Erro de conexão. Verifique sua internet e tente novamente."
+        : msg.includes("Invalid login")
+        ? "Email ou senha incorretos."
+        : msg;
+      toast({ variant: "destructive", title: "Erro no login", description });
     } finally {
       setLoading(false);
     }
