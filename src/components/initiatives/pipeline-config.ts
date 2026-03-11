@@ -443,82 +443,35 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       ];
     case "deployed":
       return [
-        { stage: "observability", label: "👁️ Iniciar Observability", type: "run" },
-        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
+        { stage: "approve", label: "✅ Entrar em Runtime", description: "O software está implantado. Entrar em modo Runtime — inteligência autônoma continua em background.", type: "approve", variant: "primary" },
         { stage: "deploy_vercel", label: "🔄 Re-deploy", type: "run" },
+      ];
+    case "runtime_active":
+      return [
         { stage: "approve", label: "✅ Marcar como Concluído", type: "approve" },
+        { stage: "deploy_vercel", label: "🔄 Re-deploy", type: "run" },
       ];
-    case "deploy_failed":
-      return [
-        { stage: "deploy_vercel", label: "🔧 Retry Deploy", description: "Tenta o deploy novamente.", type: "run", variant: "primary" },
-        { stage: "publish", label: "Re-publicar no GitHub", type: "publish" },
-        { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
-      ];
-
-    // ── Growth & Evolution Layer ──
+    // Background intelligence stages — all map to Runtime in the visible pipeline
     case "observing_product":
-      return [{ stage: "observability", label: "Re-executar Observability", type: "run" }];
     case "product_observed":
-      return [
-        { stage: "product_analytics", label: "📊 Product Analytics", type: "run" },
-        { stage: "observability", label: "Re-executar Observability", type: "run" },
-      ];
     case "analyzing_product_metrics":
-      return [{ stage: "product_analytics", label: "Re-executar Analytics", type: "run" }];
     case "product_metrics_analyzed":
-      return [
-        { stage: "user_behavior_analysis", label: "👤 User Behavior Analysis", type: "run" },
-        { stage: "product_analytics", label: "Re-executar Analytics", type: "run" },
-      ];
     case "analyzing_user_behavior":
-      return [{ stage: "user_behavior_analysis", label: "Re-executar Behavior Analysis", type: "run" }];
     case "user_behavior_analyzed":
-      return [
-        { stage: "growth_optimization", label: "📈 Growth Optimization", type: "run" },
-        { stage: "user_behavior_analysis", label: "Re-executar Analysis", type: "run" },
-      ];
     case "optimizing_growth":
-      return [{ stage: "growth_optimization", label: "Re-executar Growth Optimization", type: "run" }];
     case "growth_optimized":
-      return [
-        { stage: "adaptive_learning", label: "🎓 Adaptive Learning", type: "run" },
-        { stage: "growth_optimization", label: "Re-executar Growth", type: "run" },
-      ];
     case "learning_system":
-      return [{ stage: "adaptive_learning", label: "Re-executar Learning", type: "run" }];
     case "system_learned":
-      return [
-        { stage: "product_evolution", label: "🔄 Product Evolution", type: "run" },
-        { stage: "adaptive_learning", label: "Re-executar Learning", type: "run" },
-        { stage: "approve", label: "✅ Aprovar → Concluir", type: "approve" },
-      ];
     case "evolving_product":
-      return [{ stage: "product_evolution", label: "Re-executar Product Evolution", type: "run" }];
     case "product_evolved":
-      return [
-        { stage: "architecture_evolution", label: "🏛️ Architecture Evolution", type: "run" },
-        { stage: "product_evolution", label: "Re-executar Evolution", type: "run" },
-      ];
     case "evolving_architecture":
-      return [{ stage: "architecture_evolution", label: "Re-executar Architecture Evolution", type: "run" }];
     case "architecture_evolved":
-      return [
-        { stage: "portfolio_management", label: "📁 Portfolio Manager", type: "run" },
-        { stage: "architecture_evolution", label: "Re-executar Evolution", type: "run" },
-      ];
     case "managing_portfolio":
-      return [{ stage: "portfolio_management", label: "Re-executar Portfolio Manager", type: "run" }];
     case "portfolio_managed":
-      return [
-        { stage: "system_evolution", label: "⚙️ System Evolution", type: "run" },
-        { stage: "portfolio_management", label: "Re-executar Portfolio", type: "run" },
-      ];
     case "evolving_system":
-      return [{ stage: "system_evolution", label: "Re-executar System Evolution", type: "run" }];
     case "system_evolved":
       return [
-        { stage: "approve", label: "✅ Ciclo Completo → Concluir", type: "approve" },
-        { stage: "system_evolution", label: "Re-executar System Evolution", type: "run" },
+        { stage: "approve", label: "✅ Marcar como Concluído", type: "approve" },
       ];
 
     default:
