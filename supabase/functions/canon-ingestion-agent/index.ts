@@ -380,13 +380,19 @@ Return ONLY a valid JSON array, no other text.`,
 
 async function completeSyncRun(
   supabase: any, runId: string, sourceId: string,
-  found: number, accepted: number, rejected: number, notes: string
+  found: number, accepted: number, rejected: number,
+  docsFetched: number, chunksCreated: number, dupsSkipped: number,
+  notes: string, lifecycleState: string = "candidate_generated"
 ) {
   await supabase.from("canon_source_sync_runs").update({
     sync_status: found > 0 ? "completed" : "completed_empty",
+    lifecycle_state: lifecycleState,
     candidates_found: found,
     candidates_accepted: accepted,
     candidates_rejected: rejected,
+    documents_fetched: docsFetched,
+    chunks_created: chunksCreated,
+    duplicates_skipped: dupsSkipped,
     sync_notes: notes,
     completed_at: new Date().toISOString(),
   }).eq("id", runId);
