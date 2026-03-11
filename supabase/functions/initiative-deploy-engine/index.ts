@@ -61,7 +61,7 @@ serve(async (req) => {
     pipelineLog(ctx, "deploy", `Starting deploy to ${deployTarget} from ${repoUrl}`);
 
     // ── Step 2: Transition to deploying ──
-    await updateInitiative(serviceClient, initiativeId, {
+    await updateInitiative(ctx, {
       stage_status: "deploying",
       deploy_status: "deploying",
       deploy_target: deployTarget,
