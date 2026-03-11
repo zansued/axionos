@@ -97,6 +97,7 @@ import LearningSignalsDashboard from "./pages/LearningSignalsDashboard";
 import CanonEvolutionDashboard from "./pages/CanonEvolutionDashboard";
 import PatternDistillationDashboard from "./pages/PatternDistillationDashboard";
 import CanonReuseImpactDashboard from "./pages/CanonReuseImpactDashboard";
+import CanonIntelligenceDashboard from "./pages/CanonIntelligenceDashboard";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
