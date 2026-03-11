@@ -188,13 +188,103 @@ Retorne APENAS JSON:
     await persistReview(serviceClient, artifacts[0].id, user.id, "release_preflight", "approved",
       JSON.stringify(preflight));
 
-    if (!preflight.preflight_pass && preflight.risk_level === "high" && (preflight.critical_missing?.length ?? 0) > 0) {
-      await pipelineLog(ctx, "release_preflight_blocked",
-        `Pre-flight bloqueou publicação: ${preflight.critical_missing.join(", ")}`);
-      throw new Error(
-        `Publicação bloqueada pelo pre-flight: arquivos críticos ausentes — ${preflight.critical_missing.join(", ")}. ` +
-        `Execute novamente os estágios de geração de código ou verifique os artefatos aprovados.`
+    if (!preflight.preflight_pass && (preflight.critical_missing?.length ?? 0) > 0) {
+      // ═══ PATCH REPAIR AGENT: Generate missing files instead of blocking ═══
+      await pipelineLog(ctx, "patch_repair_start",
+        `Patch Repair Agent: gerando ${preflight.critical_missing.length} arquivo(s) ausente(s): ${preflight.critical_missing.join(", ")}`);
+
+      const existingFilesList = fileEntries.map(f => `${f.path}`).join(", ");
+      const pkgContent = fileEntries.find(f => f.path === "package.json")?.content || "{}";
+
+      for (const missingFile of preflight.critical_missing) {
+        try {
+          // Check if we have a deterministic version first
+          if (DETERMINISTIC_FILES[missingFile]) {
+            fileEntries.push({
+              path: missingFile,
+              content: DETERMINISTIC_FILES[missingFile],
+              type: "patch_repair",
+              summary: `Patch Repair Agent: ${missingFile} (deterministic)`
+            });
+            existingPaths.add(missingFile);
+            await pipelineLog(ctx, "patch_repair_deterministic",
+              `Patch Repair Agent: ${missingFile} gerado via template determinístico`);
+            continue;
+          }
+
+          // AI-generated repair for non-deterministic files
+          const patchResult = await callAI(apiKey,
+            `Você é o "Patch Repair Agent". Um arquivo crítico está faltando no projeto e precisa ser gerado.
+O projeto é: ${initiative.title}
+Stack: React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui
+Arquivos existentes no projeto: ${existingFilesList}
+package.json atual: ${pkgContent.slice(0, 2000)}
+
+Gere o conteúdo COMPLETO e funcional para o arquivo: ${missingFile}
+
+REGRAS:
+- O arquivo deve ser compatível com os demais arquivos do projeto
+- Use imports corretos baseados nos arquivos existentes
+- Para src/main.tsx: deve importar React, ReactDOM, App, e montar no root
+- Para src/App.tsx: deve importar React Router e as rotas do projeto
+- Para index.html: deve ter div#root e script src=/src/main.tsx
+- NÃO inclua comentários explicativos, apenas código funcional
+
+Retorne APENAS JSON:
+{"file_path": "${missingFile}", "content": "...", "description": "..."}`,
+            `Projeto: ${initiative.title}\nDescrição: ${initiative.description || "N/A"}`,
+            true
+          );
+          totalTokens += patchResult.tokens;
+          totalCost += patchResult.costUsd;
+
+          let patchData: any;
+          try { patchData = JSON.parse(patchResult.content); }
+          catch {
+            // Try extracting content directly
+            patchData = { file_path: missingFile, content: patchResult.content, description: `Generated ${missingFile}` };
+          }
+
+          if (patchData?.content && patchData.content.length > 10) {
+            fileEntries.push({
+              path: missingFile,
+              content: patchData.content,
+              type: "patch_repair",
+              summary: `Patch Repair Agent: ${patchData.description || missingFile}`
+            });
+            existingPaths.add(missingFile);
+            await pipelineLog(ctx, "patch_repair_generated",
+              `Patch Repair Agent: ${missingFile} gerado via IA (${patchResult.tokens} tokens)`);
+          } else {
+            await pipelineLog(ctx, "patch_repair_failed",
+              `Patch Repair Agent: falha ao gerar ${missingFile} — conteúdo insuficiente`);
+          }
+        } catch (patchErr) {
+          console.error(`[PATCH-REPAIR] Failed to generate ${missingFile}:`, patchErr);
+          await pipelineLog(ctx, "patch_repair_error",
+            `Patch Repair Agent: erro ao gerar ${missingFile}: ${patchErr instanceof Error ? patchErr.message : String(patchErr)}`);
+        }
+      }
+
+      // Re-evaluate after patch repair
+      const stillMissingAfterPatch = preflight.critical_missing.filter(
+        (f: string) => !existingPaths.has(f)
       );
+
+      if (stillMissingAfterPatch.length > 0) {
+        await pipelineLog(ctx, "patch_repair_incomplete",
+          `Patch Repair Agent: ${stillMissingAfterPatch.length} arquivo(s) ainda ausente(s) após reparo: ${stillMissingAfterPatch.join(", ")}`);
+        // Only block if risk is truly high AND files are still missing after repair attempt
+        if (preflight.risk_level === "high") {
+          throw new Error(
+            `Publicação bloqueada após tentativa de reparo: arquivos ainda ausentes — ${stillMissingAfterPatch.join(", ")}. ` +
+            `Execute novamente os estágios de geração de código.`
+          );
+        }
+      } else {
+        await pipelineLog(ctx, "patch_repair_complete",
+          `Patch Repair Agent: todos os ${preflight.critical_missing.length} arquivo(s) ausente(s) foram gerados com sucesso`);
+      }
     } else if (!preflight.preflight_pass) {
       // Warnings only — don't block
       console.warn("Pre-flight warnings (non-blocking):", preflight.warnings);
