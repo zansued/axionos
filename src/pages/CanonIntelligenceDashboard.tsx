@@ -93,7 +93,7 @@ export default function CanonIntelligenceDashboard() {
           </div>
 
           {/* Summary Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
             <Card className="border-border/50 bg-card/50">
               <CardContent className="pt-4 pb-3">
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Sources</p>
@@ -120,8 +120,14 @@ export default function CanonIntelligenceDashboard() {
             </Card>
             <Card className="border-border/50 bg-card/50">
               <CardContent className="pt-4 pb-3">
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Open Conflicts</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Conflicts</p>
                 <p className="text-xl font-bold mt-1 text-amber-400">{openConflicts.length}</p>
+              </CardContent>
+            </Card>
+            <Card className="border-border/50 bg-card/50">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Runtime Sessions</p>
+                <p className="text-xl font-bold mt-1 text-primary">{runtime.analytics.totalSessions}</p>
               </CardContent>
             </Card>
           </div>
