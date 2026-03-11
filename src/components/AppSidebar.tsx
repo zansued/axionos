@@ -208,21 +208,27 @@ export function AppSidebar() {
 
           {/* ── Footer ── */}
           <div className="p-2 border-t border-sidebar-border/50">
-            {!collapsed && user && (
-              <div className="mb-1 space-y-0.5 px-2">
-                <div className="flex items-center gap-2">
-                  <p className="flex-1 truncate text-[11px] text-muted-foreground">
-                    {user.email}
-                  </p>
-                  <Badge
-                    variant="outline"
-                    className={`px-1.5 py-0 text-[9px] ${roleBadgeClass}`}
-                  >
-                    {roleBadgeLabel}
-                  </Badge>
+            <motion.div
+              animate={{ opacity: collapsed ? 0 : 1, height: collapsed ? 0 : "auto" }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              {user && (
+                <div className="mb-1 space-y-0.5 px-2">
+                  <div className="flex items-center gap-2">
+                    <p className="flex-1 truncate text-[11px] text-muted-foreground whitespace-nowrap">
+                      {user.email}
+                    </p>
+                    <Badge
+                      variant="outline"
+                      className={`px-1.5 py-0 text-[9px] shrink-0 ${roleBadgeClass}`}
+                    >
+                      {roleBadgeLabel}
+                    </Badge>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </motion.div>
             <Button
               variant="ghost"
               size="sm"
