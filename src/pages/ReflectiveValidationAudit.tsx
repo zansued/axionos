@@ -271,8 +271,7 @@ export default function ReflectiveValidationAudit() {
               )}
             </DialogContent>
           </Dialog>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

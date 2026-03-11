@@ -199,9 +199,8 @@ export default function OutcomeAssurance() {
               )}
             </SheetContent>
           </Sheet>
-        </SidebarInset>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
 

@@ -71,9 +71,8 @@ export default function SecurityIntelligenceDashboard() {
               <ContractRiskTab contracts={overview.contracts} reviews={overview.reviews} />
             </TabsContent>
           </Tabs>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </AppShell>
   );
 }
 

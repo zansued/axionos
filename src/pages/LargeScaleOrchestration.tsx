@@ -307,11 +307,8 @@ function OrchestrationContent() {
 
 export default function LargeScaleOrchestration() {
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar />
-        <OrchestrationContent />
-      </div>
-    </SidebarProvider>
+    <AppShell>
+      <OrchestrationContent />
+    </AppShell>
   );
 }

@@ -240,8 +240,7 @@ export default function ImprovementBenchmarks() {
               )}
             </SheetContent>
           </Sheet>
-        </SidebarInset>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

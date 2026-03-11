@@ -204,9 +204,8 @@ export default function DistributedJobs() {
               )}
             </SheetContent>
           </Sheet>
-        </SidebarInset>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
 

@@ -184,9 +184,8 @@ export default function TenantDoctrineDashboard() {
               </Tabs>
             </>
           )}
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </AppShell>
   );
 }
 

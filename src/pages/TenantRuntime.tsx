@@ -271,11 +271,8 @@ function TenantRuntimeContent() {
 
 export default function TenantRuntime() {
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar />
-        <TenantRuntimeContent />
-      </div>
-    </SidebarProvider>
+    <AppShell>
+      <TenantRuntimeContent />
+    </AppShell>
   );
 }

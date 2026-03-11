@@ -562,8 +562,7 @@ export default function ArchitecturePromotion() {
               </SheetContent>
             </Sheet>
           </main>
-        </SidebarInset>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

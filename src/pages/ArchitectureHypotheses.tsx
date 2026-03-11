@@ -219,11 +219,8 @@ function HypothesesContent() {
 
 export default function ArchitectureHypotheses() {
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar />
-        <HypothesesContent />
-      </div>
-    </SidebarProvider>
+    <AppShell>
+      <HypothesesContent />
+    </AppShell>
   );
 }

@@ -195,8 +195,7 @@ export default function CanonGovernanceDashboard() {
               </Card>
             </TabsContent>
           </Tabs>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </AppShell>
   );
 }

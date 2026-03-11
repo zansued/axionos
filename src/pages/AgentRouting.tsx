@@ -243,8 +243,7 @@ export default function AgentRouting() {
               )}
             </SheetContent>
           </Sheet>
-        </SidebarInset>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

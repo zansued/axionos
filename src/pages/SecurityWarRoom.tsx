@@ -593,9 +593,8 @@ export default function SecurityWarRoom() {
                 <ContractBoundaryViewer />
               </TabsContent>
             </Tabs>
-          </div>
-        </ScrollArea>
-      </SidebarInset>
-    </SidebarProvider>
+        </div>
+      </ScrollArea>
+    </AppShell>
   );
 }

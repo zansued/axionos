@@ -187,9 +187,8 @@ export default function CrossRegionRecovery() {
               )}
             </SheetContent>
           </Sheet>
-        </SidebarInset>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
 

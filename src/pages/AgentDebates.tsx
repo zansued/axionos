@@ -144,9 +144,8 @@ export default function AgentDebates() {
 
           {/* Detail drawer */}
           <DebateDetailDrawer sessionId={selectedId} onClose={() => setSelectedId(null)} />
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
 

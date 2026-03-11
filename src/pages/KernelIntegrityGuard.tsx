@@ -294,8 +294,7 @@ export default function KernelIntegrityGuard() {
               </Card>
             </TabsContent>
           </Tabs>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </AppShell>
   );
 }

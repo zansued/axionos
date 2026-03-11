@@ -158,9 +158,7 @@ export default function AdoptionIntelligence() {
                 </Card>
               </TabsContent>
             </Tabs>
-          </div>
-        </SidebarInset>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

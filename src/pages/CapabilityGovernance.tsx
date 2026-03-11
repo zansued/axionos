@@ -185,8 +185,7 @@ export default function CapabilityGovernance() {
               )}
             </SheetContent>
           </Sheet>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }

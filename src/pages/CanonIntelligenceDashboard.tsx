@@ -128,9 +128,8 @@ export default function CanonIntelligenceDashboard() {
               />
             </TabsContent>
           </Tabs>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </AppShell>
   );
 }
 
