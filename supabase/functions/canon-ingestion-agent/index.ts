@@ -41,16 +41,27 @@ serve(async (req) => {
           .single();
         if (srcErr || !source) return json({ error: "Source not found" }, 404);
 
-        // 2. Create sync run
+        // 2. Update source to "queued"
+        await supabase.from("canon_sources").update({
+          ingestion_lifecycle_state: "queued",
+          updated_at: new Date().toISOString(),
+        }).eq("id", source_id);
+
+        // 3. Create sync run
         const { data: syncRun, error: syncErr } = await supabase
           .from("canon_source_sync_runs")
           .insert({
             organization_id,
             source_id,
             sync_status: "in_progress",
+            lifecycle_state: "queued",
             candidates_found: 0,
             candidates_accepted: 0,
             candidates_rejected: 0,
+            documents_fetched: 0,
+            chunks_created: 0,
+            candidates_promoted: 0,
+            duplicates_skipped: 0,
             sync_notes: "",
             started_at: new Date().toISOString(),
             triggered_by: "canon-ingestion-agent",
