@@ -293,9 +293,7 @@ export default function LearningSignalsDashboard() {
                 )}
               </TabsContent>
             </Tabs>
-          </div>
-        </main>
       </div>
-    </SidebarProvider>
+    </AppShell>
   );
 }
