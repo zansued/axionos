@@ -45,6 +45,7 @@ export default function Delivery() {
 
   const loadDetail = async (id: string) => {
     setSelectedId(id);
+    setActiveTab("detail");
     setLoadingDetail(true);
     try {
       const data = await explain(id);
