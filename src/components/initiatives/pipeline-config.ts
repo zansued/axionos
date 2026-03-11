@@ -320,7 +320,7 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
     case "bootstrapping_schema":
-      return [{ stage: "supabase_schema_bootstrap", label: "Re-executar Schema Bootstrap", type: "run" }];
+      return [{ stage: "supabase_schema_bootstrap", label: "▶ Iniciar Schema Bootstrap", type: "run" }];
     case "schema_bootstrapped":
       return [
         { stage: "supabase_provisioning", label: "🗄️ DB Provisioning", type: "run" },
