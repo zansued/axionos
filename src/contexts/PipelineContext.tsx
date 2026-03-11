@@ -380,11 +380,11 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           build_repair: result.success
             ? `Build Repair: attempt ${result.attempt || 1}, ${result.patches_applied || 0} patches, commit ${(result.commit_sha || "").slice(0, 7)} ✅`
             : `Build Repair: attempt ${result.attempt || 1} falhou — ${result.message || "erro"} ❌`,
-          // v3 Growth & Evolution Layer
-          observability: `Observability: ${result.metrics_collected || 0} métricas coletadas ✅`,
-          product_analytics: `Product Analytics: ${result.users_tracked || 0} usuários, ${result.events_analyzed || 0} eventos ✅`,
-          user_behavior_analysis: `User Behavior: ${result.patterns_detected || 0} padrões, ${result.friction_points || 0} pontos de fricção ✅`,
-          growth_optimization: `Growth: ${result.optimizations_suggested || 0} otimizações sugeridas ✅`,
+          // Background Intelligence (autonomous)
+          observability: `System Intelligence: ${result.metrics_collected || 0} métricas coletadas ✅`,
+          product_analytics: `System Intelligence: ${result.users_tracked || 0} usuários, ${result.events_analyzed || 0} eventos ✅`,
+          user_behavior_analysis: `System Intelligence: ${result.patterns_detected || 0} padrões detectados ✅`,
+          growth_optimization: `System Intelligence: ${result.optimizations_suggested || 0} otimizações sugeridas ✅`,
           product_evolution: `Product Evolution: ${result.features_added || 0} features, ${result.modules_removed || 0} removidos ✅`,
           architecture_evolution: `Architecture Evolution: ${result.patterns_learned || 0} padrões aprendidos ✅`,
           portfolio_management: `Portfolio: ${result.products_managed || 0} produtos gerenciados ✅`,
