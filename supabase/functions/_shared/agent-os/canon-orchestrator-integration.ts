@@ -453,6 +453,9 @@ export function injectCanonIntoWorkInput(
   input: WorkInput,
   result: CanonRetrievalResult,
 ): WorkInput {
+  // Sprint 140: Use formatted, agent-friendly canon context
+  const agentFriendlyCanon = formatCanonForAgentContext(result.knowledge_packets);
+
   return {
     ...input,
     context: {
@@ -465,6 +468,8 @@ export function injectCanonIntoWorkInput(
       canon_retrieval_type: result.retrieval_type,
       // Sprint 139: inject full knowledge packets for agent consumption
       canon_knowledge_packets: result.knowledge_packets,
+      // Sprint 140: structured, clearly labeled canon for agent use
+      canon_agent_context: agentFriendlyCanon,
     },
   };
 }
