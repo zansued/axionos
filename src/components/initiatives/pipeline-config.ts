@@ -313,9 +313,9 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
       return [{ stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" }];
     case "dependencies_analyzed":
       return [
-        { stage: "supabase_schema_bootstrap", label: "🗄️ Schema Bootstrap", type: "run" },
+        { stage: "approve", label: "✅ Aprovar → Continuar Pipeline", description: "Aprova dependências e avança automaticamente para Schema Bootstrap.", type: "approve", variant: "primary" },
+        { stage: "supabase_schema_bootstrap", label: "🗄️ Schema Bootstrap (manual)", type: "run" },
         { stage: "ecosystem_drift", label: "🌐 Ecosystem Drift Analysis", type: "run" },
-        { stage: "approve", label: "Aprovar Dependencies", type: "approve" },
         { stage: "dependency_intelligence", label: "Re-executar Dep Intelligence", type: "run" },
         { stage: "reject", label: "Solicitar Ajustes", type: "reject" },
       ];
