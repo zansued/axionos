@@ -283,6 +283,7 @@ export class AgentOS {
         failed,
         artifacts: state.artifacts.length,
         canon_trace: canonTrace,
+        readiness_trace: readinessTrace,
         policy_trace: policyTrace,
         approval_request: approvalRequest,
       });
