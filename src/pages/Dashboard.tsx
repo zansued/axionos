@@ -74,7 +74,7 @@ function LandingPage() {
 
       {/* Radial glow above planet */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 w-[4000px] h-[1800px] pointer-events-none"
+        className="absolute left-1/2 -translate-x-1/2 w-[4000px] h-[1800px] pointer-events-none z-[3]"
         style={{
           bottom: 0,
           background:
