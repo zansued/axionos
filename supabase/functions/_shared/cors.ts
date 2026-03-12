@@ -28,8 +28,10 @@ export function getCorsHeaders(req: Request): Record<string, string> {
   const origin = resolveOrigin(req.headers.get("Origin"));
   return {
     "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers":
       "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+    "Access-Control-Max-Age": "86400",
     "Vary": "Origin",
   };
 }
@@ -38,8 +40,10 @@ export function getCorsHeaders(req: Request): Record<string, string> {
 // It will be used as a fallback where req is not available
 export const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Max-Age": "86400",
 };
 
 /** Standard JSON response with dynamic CORS headers */
@@ -59,7 +63,7 @@ export function errorResponse(message: string, status = 500, req?: Request): Res
 /** Handle OPTIONS preflight */
 export function handleCors(req: Request): Response | null {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: getCorsHeaders(req) });
+    return new Response("ok", { status: 200, headers: getCorsHeaders(req) });
   }
   return null;
 }
