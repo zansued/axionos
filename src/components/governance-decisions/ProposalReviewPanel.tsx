@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { GovernanceProposal, ProposalSource, RiskLevel } from "@/hooks/useGovernanceDecisionsData";
@@ -10,9 +9,20 @@ import { useGovernanceDecisionAction } from "@/hooks/useGovernanceDecisionsData"
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import {
-  CheckCircle2, XCircle, Clock, PenLine, ChevronDown, Shield, AlertTriangle,
-  ArrowRight, FileText, Activity, Zap, RotateCcw, Scale,
+  ChevronDown, Shield, AlertTriangle,
+  ArrowRight, FileText, Activity, Zap, RotateCcw,
 } from "lucide-react";
+import {
+  type WorkflowState,
+  type WorkflowAuditEntry,
+  type GovernanceRole,
+  getDefaultApprovalMode,
+  STATE_DEFINITIONS,
+} from "@/lib/governance-workflow-state-machine";
+import { WorkflowStateTimeline } from "./WorkflowStateTimeline";
+import { TransitionActionPanel } from "./TransitionActionPanel";
+import { GovernanceAuditTimeline } from "./GovernanceAuditTimeline";
+import { BlockingConditionsPanel } from "./BlockingConditionsPanel";
 
 interface Props {
   proposal: GovernanceProposal;
@@ -33,32 +43,88 @@ const sourceLabels: Record<ProposalSource, string> = {
   readiness_tuning: "Readiness Tuning",
 };
 
+/** Map DecisionStatus → WorkflowState */
+function toWorkflowState(status: string): WorkflowState {
+  const map: Record<string, WorkflowState> = {
+    pending_review: "pending_triage",
+    in_review: "in_review",
+    awaiting_evidence: "awaiting_evidence",
+    needs_revision: "needs_revision",
+    approved: "approved",
+    rejected: "rejected",
+    deferred: "deferred",
+  };
+  return map[status] || "draft";
+}
+
 export function ProposalReviewPanel({ proposal, onClose }: Props) {
-  const [rationale, setRationale] = useState("");
-  const [activeAction, setActiveAction] = useState<string | null>(null);
   const { toast } = useToast();
   const decisionAction = useGovernanceDecisionAction();
 
-  const handleDecision = async (action: "approve" | "reject" | "defer" | "request_revision") => {
-    if (!rationale.trim()) {
-      toast({ title: "Rationale required", description: "Provide a decision rationale before proceeding.", variant: "destructive" });
-      return;
-    }
-    setActiveAction(action);
-    try {
-      await decisionAction.mutateAsync({
-        proposalId: proposal.id,
-        source: proposal.source,
-        action,
-        rationale,
+  // Workflow state
+  const workflowState = toWorkflowState(proposal.status);
+  const approvalMode = getDefaultApprovalMode(proposal.source, proposal.severity);
+  const actorRole: GovernanceRole = "senior_reviewer"; // Simulated for now
+
+  // Local audit trail (would come from DB in production)
+  const [auditTrail, setAuditTrail] = useState<WorkflowAuditEntry[]>(() => {
+    const entries: WorkflowAuditEntry[] = [];
+    if (proposal.createdAt) {
+      entries.push({
+        id: `${proposal.id}-genesis`,
+        timestamp: proposal.createdAt,
+        actor: proposal.owner,
+        actorRole: "governance_operator",
+        fromState: "draft",
+        toState: "pending_triage",
+        auditEvent: "proposal_submitted_to_triage",
+        notes: "Proposal auto-generated from operational evidence.",
+        metadata: {},
       });
-      toast({ title: "Decision recorded", description: `Proposal ${action === "approve" ? "approved" : action === "reject" ? "rejected" : action === "defer" ? "deferred" : "sent for revision"}.` });
-      setRationale("");
-      onClose();
-    } catch (e: any) {
-      toast({ title: "Error", description: e.message, variant: "destructive" });
-    } finally {
-      setActiveAction(null);
+    }
+    return entries;
+  });
+
+  const handleWorkflowTransition = async (toState: WorkflowState, metadata: Record<string, string>) => {
+    // Map workflow state back to decision action
+    const actionMap: Record<string, "approve" | "reject" | "defer" | "request_revision"> = {
+      approved: "approve",
+      rejected: "reject",
+      deferred: "defer",
+      needs_revision: "request_revision",
+    };
+
+    const dbAction = actionMap[toState];
+
+    // Add audit entry locally
+    const newEntry: WorkflowAuditEntry = {
+      id: `${proposal.id}-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      actor: "Current Operator",
+      actorRole,
+      fromState: workflowState,
+      toState,
+      auditEvent: `transition_${workflowState}_to_${toState}`,
+      notes: metadata.decision_rationale || metadata.revision_reason || metadata.defer_reason || metadata.escalation_reason || metadata.evidence_summary || metadata.revision_summary || metadata.reopen_reason || metadata.closure_reason || "",
+      metadata,
+    };
+    setAuditTrail((prev) => [...prev, newEntry]);
+
+    // Persist to DB if this is a terminal decision action
+    if (dbAction) {
+      try {
+        await decisionAction.mutateAsync({
+          proposalId: proposal.id,
+          source: proposal.source,
+          action: dbAction,
+          rationale: metadata.decision_rationale || metadata.rejection_reason || metadata.defer_reason || metadata.revision_reason || "Transition recorded",
+        });
+        toast({ title: "Transition recorded", description: `${STATE_DEFINITIONS[workflowState].label} → ${STATE_DEFINITIONS[toState].label}` });
+      } catch (e: any) {
+        toast({ title: "Error", description: e.message, variant: "destructive" });
+      }
+    } else {
+      toast({ title: "Transition recorded", description: `${STATE_DEFINITIONS[workflowState].label} → ${STATE_DEFINITIONS[toState].label}` });
     }
   };
 
@@ -72,6 +138,9 @@ export function ProposalReviewPanel({ proposal, onClose }: Props) {
           <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="outline" className="text-[10px]">{sourceLabels[proposal.source]}</Badge>
             <Badge variant="outline" className={`text-[10px] ${riskColors[proposal.severity]}`}>{proposal.severity} risk</Badge>
+            <Badge variant="outline" className="text-[10px] font-medium">
+              {STATE_DEFINITIONS[workflowState].label}
+            </Badge>
           </div>
           <h2 className="text-lg font-semibold text-foreground leading-tight">{proposal.title}</h2>
           <p className="text-xs text-muted-foreground">
@@ -81,12 +150,17 @@ export function ProposalReviewPanel({ proposal, onClose }: Props) {
         <Button variant="ghost" size="sm" onClick={onClose} className="text-xs shrink-0">Close</Button>
       </div>
 
+      {/* Workflow State Timeline */}
+      <WorkflowStateTimeline currentState={workflowState} auditTrail={auditTrail} />
+
       {/* Tabbed Content */}
       <Tabs defaultValue="summary" className="space-y-3">
         <TabsList className="bg-secondary/40 h-8 p-0.5">
           <TabsTrigger value="summary" className="text-[11px] h-7">Summary</TabsTrigger>
           <TabsTrigger value="evidence" className="text-[11px] h-7">Evidence</TabsTrigger>
           <TabsTrigger value="risk" className="text-[11px] h-7">Risk & Impact</TabsTrigger>
+          <TabsTrigger value="actions" className="text-[11px] h-7">Actions</TabsTrigger>
+          <TabsTrigger value="audit" className="text-[11px] h-7">Audit Trail</TabsTrigger>
           <TabsTrigger value="handoff" className="text-[11px] h-7">Handoff</TabsTrigger>
         </TabsList>
 
@@ -119,7 +193,6 @@ export function ProposalReviewPanel({ proposal, onClose }: Props) {
             </CardContent>
           </Card>
 
-          {/* Confidence */}
           <div className="grid grid-cols-2 gap-3">
             <Card className="border-border/30">
               <CardContent className="p-3">
@@ -215,6 +288,16 @@ export function ProposalReviewPanel({ proposal, onClose }: Props) {
             </CardContent>
           </Card>
 
+          {/* Blocking Conditions */}
+          <BlockingConditionsPanel
+            currentState={workflowState}
+            evidenceCompleteness={proposal.evidenceCompleteness}
+            hasAssignee={!!proposal.reviewer}
+            approvalCount={0}
+            requiredApprovalMode={approvalMode}
+            actorRole={actorRole}
+          />
+
           {/* Approval Requirements */}
           <Card className="border-border/30">
             <CardHeader className="pb-2 pt-4 px-4">
@@ -224,8 +307,8 @@ export function ProposalReviewPanel({ proposal, onClose }: Props) {
               {proposal.approvalRequirements.map((req, i) => (
                 <div key={i} className="flex items-center gap-2">
                   {req.met
-                    ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                    : <XCircle className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    ? <span className="h-3.5 w-3.5 text-emerald-500 shrink-0">✓</span>
+                    : <span className="h-3.5 w-3.5 text-muted-foreground shrink-0">○</span>
                   }
                   <span className="text-xs">{req.label}</span>
                   <span className="text-[10px] text-muted-foreground ml-auto">{req.detail}</span>
@@ -233,6 +316,25 @@ export function ProposalReviewPanel({ proposal, onClose }: Props) {
               ))}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Actions (Workflow Transitions) */}
+        <TabsContent value="actions" className="space-y-3">
+          <TransitionActionPanel
+            currentState={workflowState}
+            evidenceCompleteness={proposal.evidenceCompleteness}
+            hasAssignee={!!proposal.reviewer}
+            approvalCount={0}
+            requiredApprovalMode={approvalMode}
+            actorRole={actorRole}
+            onTransition={handleWorkflowTransition}
+            isLoading={decisionAction.isPending}
+          />
+        </TabsContent>
+
+        {/* Audit Trail */}
+        <TabsContent value="audit" className="space-y-3">
+          <GovernanceAuditTimeline auditTrail={auditTrail} />
         </TabsContent>
 
         {/* Handoff */}
@@ -272,62 +374,6 @@ export function ProposalReviewPanel({ proposal, onClose }: Props) {
           )}
         </TabsContent>
       </Tabs>
-
-      {/* Decision Action Panel */}
-      <Card className="border-border/30 sticky bottom-0">
-        <CardHeader className="pb-2 pt-4 px-4">
-          <CardTitle className="text-sm flex items-center gap-1.5"><Scale className="h-3.5 w-3.5" /> Decision</CardTitle>
-        </CardHeader>
-        <CardContent className="px-4 pb-4 space-y-3">
-          <Textarea
-            placeholder="Decision rationale (required)..."
-            value={rationale}
-            onChange={e => setRationale(e.target.value)}
-            className="text-sm min-h-[60px] bg-secondary/20 border-border/30"
-          />
-          <div className="grid grid-cols-2 gap-2">
-            <Button
-              size="sm"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
-              onClick={() => handleDecision("approve")}
-              disabled={decisionAction.isPending}
-            >
-              <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
-              {activeAction === "approve" ? "Approving…" : "Approve"}
-            </Button>
-            <Button
-              size="sm"
-              variant="destructive"
-              className="text-xs"
-              onClick={() => handleDecision("reject")}
-              disabled={decisionAction.isPending}
-            >
-              <XCircle className="h-3.5 w-3.5 mr-1" />
-              {activeAction === "reject" ? "Rejecting…" : "Reject"}
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="text-xs"
-              onClick={() => handleDecision("defer")}
-              disabled={decisionAction.isPending}
-            >
-              <Clock className="h-3.5 w-3.5 mr-1" />
-              {activeAction === "defer" ? "Deferring…" : "Defer"}
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="text-xs"
-              onClick={() => handleDecision("request_revision")}
-              disabled={decisionAction.isPending}
-            >
-              <PenLine className="h-3.5 w-3.5 mr-1" />
-              {activeAction === "request_revision" ? "Sending…" : "Request Revision"}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

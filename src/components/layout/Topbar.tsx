@@ -7,7 +7,8 @@ import { useLocation, Link } from "react-router-dom";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Search, Bell, ChevronRight, Zap } from "lucide-react";
-import { getRouteEntry, getBreadcrumbs } from "@/lib/routes";`nimport { AxionPromptDrawer } from "@/components/ui/AxionPromptDrawer";
+import { getRouteEntry, getBreadcrumbs } from "@/lib/routes";
+import { AxionPromptDrawer } from "@/components/ui/AxionPromptDrawer";
 
 interface TopbarProps {
   compact?: boolean;
@@ -55,7 +56,11 @@ export function Topbar({ compact = false }: TopbarProps) {
         )}
       </div>
 
-      <div className="flex items-center gap-2 mr-2 border-r border-border/50 pr-2">`n        <AxionPromptDrawer />`n      </div>`n`n      <div className="flex items-center gap-0.5">
+      <div className="flex items-center gap-2 mr-2 border-r border-border/50 pr-2">
+        <AxionPromptDrawer />
+      </div>
+
+      <div className="flex items-center gap-0.5">
         <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
           <Search className="h-3.5 w-3.5" />
         </Button>
