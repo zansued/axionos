@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import {
+import { AppLayout } from "@/components/AppLayout";
   usePoisoningOverview,
   usePoisoningAssessments,
   useQuarantinedCandidates,
