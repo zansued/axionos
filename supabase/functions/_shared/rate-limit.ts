@@ -7,9 +7,14 @@ const FUNCTION_LIMITS: Record<string, number> = {
   "analyze-artifact": 120,
   "rework-artifact": 60,
   "canon-learning": 600,
+  "canon-learning-read": 2400,
+  "canon-learning-write": 240,
   "purple-learning": 600,
+  "purple-learning-read": 2400,
+  "purple-learning-write": 240,
   "canon-ingestion-agent": 120,
   "canon-promotion-pipeline": 120,
+  "deep-repo-absorber-engine": 90,
 };
 
 /**

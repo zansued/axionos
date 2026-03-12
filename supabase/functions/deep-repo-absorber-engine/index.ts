@@ -18,12 +18,96 @@ const REPO_ABSORBER_SCHEMA: Schema = {
   initiativeId: { type: "uuid", required: false },
 };
 
+const GITHUB_MAX_RETRIES = 4;
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function encodeGitHubPath(path: string): string {
+  return path.split("/").map(encodeURIComponent).join("/");
+}
+
+function parseRetryAfterMs(retryAfter: string | null): number | null {
+  if (!retryAfter) return null;
+
+  const asSeconds = Number(retryAfter);
+  if (!Number.isNaN(asSeconds) && asSeconds >= 0) return asSeconds * 1000;
+
+  const asDate = new Date(retryAfter).getTime();
+  if (!Number.isNaN(asDate)) {
+    const delta = asDate - Date.now();
+    return delta > 0 ? delta : 0;
+  }
+
+  return null;
+}
+
+async function fetchGitHubWithRetry(url: string, ghHeaders: Record<string, string>) {
+  let lastStatus = 0;
+  let lastMessage = "Unknown GitHub error";
+
+  for (let attempt = 0; attempt <= GITHUB_MAX_RETRIES; attempt++) {
+    const resp = await fetch(url, { headers: ghHeaders });
+    if (resp.ok) return resp;
+
+    lastStatus = resp.status;
+    const rateLimited = resp.status === 429 || (resp.status === 403 && resp.headers.get("x-ratelimit-remaining") === "0");
+    const transientError = resp.status >= 500 && resp.status <= 599;
+
+    if ((rateLimited || transientError) && attempt < GITHUB_MAX_RETRIES) {
+      const retryAfterMs = parseRetryAfterMs(resp.headers.get("retry-after"));
+      const exponentialBackoff = Math.min(1000 * (2 ** attempt), 12000);
+      const jitter = Math.floor(Math.random() * 400);
+      await sleep((retryAfterMs ?? exponentialBackoff) + jitter);
+      continue;
+    }
+
+    lastMessage = (await resp.text()).slice(0, 300);
+    break;
+  }
+
+  throw new Error(`GitHub request failed (${lastStatus}): ${lastMessage}`);
+}
+
+async function fetchGitHubJson(url: string, ghHeaders: Record<string, string>) {
+  const resp = await fetchGitHubWithRetry(url, ghHeaders);
+  return resp.json();
+}
+
+async function listRepoPathsFallback(ghHeaders: Record<string, string>, owner: string, repo: string, branch: string): Promise<string[]> {
+  try {
+    const rootUrl = `${GITHUB_API}/repos/${owner}/${repo}/contents?ref=${encodeURIComponent(branch)}`;
+    const rootData = await fetchGitHubJson(rootUrl, ghHeaders);
+    if (!Array.isArray(rootData)) return [];
+
+    const paths: string[] = [];
+    const directories = rootData.filter((item: any) => item?.type === "dir").slice(0, 8);
+
+    for (const item of rootData) {
+      if (item?.type === "file" && item.path) paths.push(item.path);
+    }
+
+    for (const dir of directories) {
+      const nestedUrl = `${GITHUB_API}/repos/${owner}/${repo}/contents/${encodeGitHubPath(dir.path)}?ref=${encodeURIComponent(branch)}`;
+      const nestedData = await fetchGitHubJson(nestedUrl, ghHeaders);
+      if (!Array.isArray(nestedData)) continue;
+
+      for (const entry of nestedData) {
+        if (entry?.type === "file" && entry.path) paths.push(entry.path);
+      }
+    }
+
+    return Array.from(new Set(paths)).slice(0, 250);
+  } catch (error) {
+    console.warn("[DeepRepoAbsorber] Fallback path listing failed:", error);
+    return [];
+  }
+}
+
 async function getGitHubFileContent(ghHeaders: Record<string, string>, owner: string, repo: string, branch: string, path: string) {
   try {
-    const resp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, { headers: ghHeaders });
-    if (!resp.ok) return null;
-    const data = await resp.json();
-    return data.content ? atob(data.content.replace(/\n/g, "")) : null;
+    const url = `${GITHUB_API}/repos/${owner}/${repo}/contents/${encodeGitHubPath(path)}?ref=${encodeURIComponent(branch)}`;
+    const data = await fetchGitHubJson(url, ghHeaders);
+    return data?.content ? atob(data.content.replace(/\n/g, "")) : null;
   } catch {
     return null;
   }
@@ -72,8 +156,13 @@ serve(async (req) => {
 
     console.log(`[DeepRepoAbsorber] User ${user.id} initiating absorption of ${repoUrl} for org ${orgId}`);
 
-    // Parse GitHub URL
-    const urlParts = repoUrl.replace("https://github.com/", "").replace(/\/$/, "").split("/");
+    const normalizedRepoUrl = repoUrl
+      .trim()
+      .replace(/\.git$/, "")
+      .replace(/\/$/, "")
+      .split("?")[0];
+
+    const urlParts = normalizedRepoUrl.replace("https://github.com/", "").split("/");
     const owner = urlParts[0];
     const repo = urlParts[1];
 
@@ -92,15 +181,34 @@ serve(async (req) => {
     }
 
     // 1. Surface Mapping
-    const repoInfo = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, { headers: ghHeaders }).then(r => r.json());
-    const defaultBranch = repoInfo.default_branch || "main";
+    const repoInfo = await fetchGitHubJson(`${GITHUB_API}/repos/${owner}/${repo}`, ghHeaders);
+    const defaultBranch = repoInfo?.default_branch || "main";
 
-    const treeResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/trees/${defaultBranch}?recursive=1`, { headers: ghHeaders });
-    const treeData = await treeResp.json();
+    const treeUrl = `${GITHUB_API}/repos/${owner}/${repo}/git/trees/${encodeURIComponent(defaultBranch)}?recursive=1`;
+    let filePaths: string[] = [];
 
-    if (!treeData.tree) return errorResponse("Failed to fetch repository tree", 500, req);
+    try {
+      const treeData = await fetchGitHubJson(treeUrl, ghHeaders);
+      if (Array.isArray(treeData?.tree)) {
+        filePaths = treeData.tree
+          .filter((t: any) => t?.type === "blob" && typeof t.path === "string")
+          .map((t: any) => t.path);
+      }
+    } catch (treeError) {
+      console.warn("[DeepRepoAbsorber] Tree API unavailable, trying fallback listing:", treeError);
+    }
 
-    const filePaths = treeData.tree.filter((t: any) => t.type === "blob").map((t: any) => t.path);
+    if (!filePaths.length) {
+      filePaths = await listRepoPathsFallback(ghHeaders, owner, repo, defaultBranch);
+    }
+
+    if (!filePaths.length) {
+      return errorResponse(
+        "Failed to fetch repository tree. Verify repository visibility and GitHub token permissions.",
+        502,
+        req,
+      );
+    }
 
     // 2. Identify Entry Points
     const criticalFiles = [
