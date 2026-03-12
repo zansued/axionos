@@ -156,6 +156,14 @@ function LandingPage() {
           className="w-full max-w-[680px]"
         >
           <div className="relative rounded-2xl bg-card ring-1 ring-border shadow-[0_2px_24px_rgba(0,0,0,0.4)]">
+            <GlowingEffect
+              spread={40}
+              glow
+              disabled={false}
+              proximity={64}
+              inactiveZone={0.01}
+              borderWidth={2}
+            />
             <textarea
               ref={textareaRef}
               value={message}
