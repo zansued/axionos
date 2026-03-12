@@ -28,6 +28,7 @@ import { CIFixSwarmStatus } from "./CIFixSwarmStatus";
 import { ArchitecturalDriftStatus } from "./ArchitecturalDriftStatus";
 import { RuntimeValidationStatus } from "./RuntimeValidationStatus";
 import { ProjectBrainPanel } from "@/components/brain/ProjectBrainPanel";
+import { DeployErrorParser } from "./DeployErrorParser";
 import { InitiativeObservabilityCard } from "./InitiativeObservabilityCard";
 import { InitiativeOutcomeCard } from "./InitiativeOutcomeCard";
 import { RepairEvidenceCard } from "./RepairEvidenceCard";
