@@ -380,6 +380,42 @@ export default function ActionCenter() {
                     {selected.approved_by && <DetailRow label="Approved By" value={selected.approved_by} />}
                   </Section>
 
+                  {/* Cross-navigation: go to Approval Queue */}
+                  {(selected.requires_approval || selected.status === "waiting_approval" || selected.approval_id) && (
+                    <Section title="Related Approval">
+                      <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 p-2.5">
+                        <div className="space-y-0.5">
+                          <p className="text-xs font-medium text-foreground">
+                            {selected.status === "waiting_approval"
+                              ? "Awaiting human decision"
+                              : selected.status === "approved"
+                                ? "Approved by operator"
+                                : selected.status === "rejected"
+                                  ? "Rejected by operator"
+                                  : selected.status === "expired"
+                                    ? "Approval window expired"
+                                    : "Approval required"}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground">
+                            View full approval context and decision history
+                          </p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="gap-1.5 text-xs shrink-0"
+                          onClick={() => {
+                            setSelectedId(null);
+                            navigate(`/owner/pending-approvals?action_id=${selected.action_id}`);
+                          }}
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          Approval Queue
+                        </Button>
+                      </div>
+                    </Section>
+                  )}
+
                   {/* Constraints */}
                   {Array.isArray(selected.constraints) && selected.constraints.length > 0 && (
                     <Section title="Constraints">
