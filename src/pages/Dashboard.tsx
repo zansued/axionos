@@ -6,6 +6,7 @@ import { OperationalDashboard } from "@/components/dashboard/OperationalDashboar
 import { ArrowRight, Settings, Zap, Bot, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
 import axionLogo from "@/assets/axion-logo.svg";
+import { GlowingEffect } from "@/components/ui/GlowingEffect";
 import NeuralBackground from "@/components/ui/NeuralBackground";
 
 const IDEA_KEY = "axion_initial_idea";
