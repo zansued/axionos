@@ -118,7 +118,19 @@ serve(async (req) => {
         });
 
       } else {
-        // Mark as success
+        
+      // 5. NEURAL FEEDBACK (Sprint 148 - Learning Velocity Boost)
+      await supabaseClient.functions.invoke("neural-feedback-loop", {
+        body: {
+          signalType: "execution_success",
+          outcome: `Applied ${filePatches.length} file patches to GitHub successfully.`,
+          payload: { files: filePatches.map(p => p.path), commitSha },
+          orgId: orgId,
+          initiativeId: queuedActions[0].initiative_id
+        }
+      });
+
+      // Mark as success
         await supabaseClient.from("action_registry_entries").update({ 
           status: "completed", outcome_status: "success", completed_at: new Date().toISOString() 
         }).in("id", actionIds);
@@ -135,4 +147,5 @@ serve(async (req) => {
     return errorResponse(err.message, 500, req);
   }
 });
+
 

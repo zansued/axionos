@@ -1,9 +1,9 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";`nimport { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Play, RefreshCw, Zap, Globe, CheckCircle2, XCircle, Clock, ArrowUpCircle } from "lucide-react";
+import { Loader2, Play, RefreshCw, Zap, Globe, CheckCircle2, XCircle, Clock, ArrowUpCircle, DatabaseZap } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { useToast } from "@/hooks/use-toast";
@@ -43,6 +43,8 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
   const [ingesting, setIngesting] = useState<string | null>(null);
   const [seeding, setSeeding] = useState(false);
   const [ingestingAll, setIngestingAll] = useState(false);
+  const [repoUrl, setRepoUrl] = useState("");
+  const [absorbingRepo, setAbsorbingRepo] = useState(false);
   const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
 
   const seedSources = async () => {
@@ -79,6 +81,27 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
       toast({ title: "Ingestion Failed", description: err.message, variant: "destructive" });
     } finally {
       setIngesting(null);
+    }
+  };
+
+  const absorbRepo = async () => {
+    if (!currentOrg?.id || !repoUrl) return;
+    setAbsorbingRepo(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("deep-repo-absorber-engine", {
+        body: { orgId: currentOrg.id, repoUrl: repoUrl },
+      });
+      if (error) throw error;
+      toast({
+        title: "Repository Absorbed",
+        description: `Extracted ${data.patterns_extracted} canonical patterns from ${data.architecture}.`,
+      });
+      setRepoUrl("");
+      onRefresh();
+    } catch (err: any) {
+      toast({ title: "Absorption Failed", description: err.message, variant: "destructive" });
+    } finally {
+      setAbsorbingRepo(false);
     }
   };
 
@@ -260,3 +283,4 @@ function MiniStat({ label, value, accent }: { label: string; value: number; acce
     </Card>
   );
 }
+

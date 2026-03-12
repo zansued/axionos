@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+﻿import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -40,7 +40,7 @@ function json(data: unknown, status = 200) {
   });
 }
 
-// ── Health Evaluation ──────────────────────────────────────────────────
+// â”€â”€ Health Evaluation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 interface MetricCalc {
   type: string;
@@ -50,7 +50,7 @@ interface MetricCalc {
 
 async function evaluateHealth(supabase: any, orgId: string) {
   // Gather signals from existing tables
-  const [execRes, loopsRes, cyclesRes, routingRes, prevMetrics] =
+  const [execRes, loopsRes, cyclesRes, routingRes, candidatesRes, rulesRes, prevMetrics] =
     await Promise.all([
       supabase
         .from("agent_outputs")
@@ -74,6 +74,16 @@ async function evaluateHealth(supabase: any, orgId: string) {
         .eq("organization_id", orgId)
         .limit(20),
       supabase
+        .from("learning_candidates")
+        .select("id")
+        .eq("organization_id", orgId)
+        .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+      supabase
+        .from("project_prevention_rules")
+        .select("id")
+        .eq("organization_id", orgId)
+        .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+      supabase
         .from("system_health_metrics")
         .select("*")
         .eq("organization_id", orgId)
@@ -87,16 +97,16 @@ async function evaluateHealth(supabase: any, orgId: string) {
   const routing = routingRes.data || [];
   const prev = prevMetrics.data || [];
 
-  // ── Compute metrics ──────────────────────────────────────────────
+  // â”€â”€ Compute metrics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const totalOutputs = outputs.length;
   const successOutputs = outputs.filter(
     (o: any) => o.status === "approved" || o.status === "published"
   ).length;
 
-  // 1. Resilience — execution success rate
+  // 1. Resilience â€” execution success rate
   const resilience = totalOutputs > 0 ? successOutputs / totalOutputs : 0.8;
 
-  // 2. Coherence — loop health average
+  // 2. Coherence â€” loop health average
   const loopHealthValues = loops.map((l: any) => {
     const h = l.loop_health;
     if (h === "healthy") return 1;
@@ -110,13 +120,19 @@ async function evaluateHealth(supabase: any, orgId: string) {
         loopHealthValues.length
       : 0.7;
 
-  // 3. Learning velocity — based on recent cycle activity
+  
+  // 3. Learning velocity â€” based on cycle activity + real knowledge distillation
   const recentCycles = cycles.filter(
     (c: any) => c.cycle_type === "exploration_window"
-  );
-  const learningVelocity = Math.min(1, recentCycles.length * 0.2 + 0.3);
+  ).length;
+  const recentCandidates = (candidatesRes.data || []).length;
+  const recentRules = (rulesRes.data || []).length;
+  
+  // Base 0.3 + cycles (up to 0.2) + candidates (up to 0.3) + rules (up to 0.2)
+  const learningVelocity = Math.min(1, 0.3 + (recentCycles * 0.1) + (recentCandidates * 0.05) + (recentRules * 0.1));
 
-  // 4. Governance integrity — based on routing profile discipline
+
+  // 4. Governance integrity â€” based on routing profile discipline
   const governanceIntegrity =
     routing.length > 0
       ? Math.min(
@@ -130,7 +146,7 @@ async function evaluateHealth(supabase: any, orgId: string) {
         )
       : 0.7;
 
-  // 5. Operator trust — stable posture signals
+  // 5. Operator trust â€” stable posture signals
   const stableLoops = loops.filter(
     (l: any) => l.loop_status === "active" && l.loop_health === "healthy"
   ).length;
@@ -139,7 +155,7 @@ async function evaluateHealth(supabase: any, orgId: string) {
     loops.length > 0 ? stableLoops / loops.length + 0.2 : 0.6
   );
 
-  // 6. Compounding strength — improvement over previous metrics
+  // 6. Compounding strength â€” improvement over previous metrics
   const prevScores = prev
     .filter((m: any) => m.metric_type === "resilience")
     .map((m: any) => Number(m.metric_value));
@@ -259,7 +275,7 @@ async function getTrend(supabase: any, orgId: string) {
   return { trend_data: byType };
 }
 
-// ── Helpers ────────────────────────────────────────────────────────────
+// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function round(n: number) {
   return Math.round(n * 1000) / 1000;
@@ -285,3 +301,4 @@ function gradeFromScore(score: number): string {
   if (score >= 0.4) return "D";
   return "F";
 }
+
