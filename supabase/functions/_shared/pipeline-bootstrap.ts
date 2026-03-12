@@ -3,7 +3,7 @@
 
 import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { checkRateLimit } from "./rate-limit.ts";
-import { corsHeaders, handleCors, jsonResponse, errorResponse } from "./cors.ts";
+import { corsHeaders, handleCors, jsonResponse, errorResponse, notFoundOrForbiddenResponse } from "./cors.ts";
 import { PipelineContext } from "./pipeline-helpers.ts";
 import { enforceUsageLimits } from "./usage-limit-enforcer.ts";
 
@@ -82,7 +82,20 @@ export async function bootstrapPipeline(
     .eq("id", initiativeId)
     .single();
   if (initErr || !initiative) {
-    return errorResponse("Initiative not found", 404);
+    // Sprint 199: Generic error to prevent cross-tenant existence inference
+    return notFoundOrForbiddenResponse("Initiative");
+  }
+
+  // Sprint 199: Validate user is a member of the initiative's organization
+  const { data: membership } = await serviceClient
+    .from("organization_members")
+    .select("role")
+    .eq("organization_id", initiative.organization_id)
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!membership) {
+    // Same generic error — do not reveal initiative exists in another org
+    return notFoundOrForbiddenResponse("Initiative");
   }
 
   // Build context

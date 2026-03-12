@@ -47,13 +47,15 @@ export async function resolveAndValidateOrg(
     .eq("user_id", userId);
 
   if (error || !memberships || memberships.length === 0) {
-    return { orgId: null, error: "User is not a member of any organization" };
+    // Sprint 199: Generic error — do not reveal whether user has no memberships
+    return { orgId: null, error: "Organization access denied" };
   }
 
   if (payloadOrgId) {
     const match = memberships.find((m: any) => m.organization_id === payloadOrgId);
     if (!match) {
-      return { orgId: null, error: "Not a member of the specified organization" };
+      // Sprint 199: Same generic error — do not reveal whether org exists
+      return { orgId: null, error: "Organization access denied" };
     }
     return { orgId: payloadOrgId, error: null };
   }

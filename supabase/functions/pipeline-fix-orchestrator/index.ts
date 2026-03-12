@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { handleCors, jsonResponse, errorResponse, notFoundOrForbiddenResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { getNodeByPath, getNodeDependencies, getNodeDependents, generateBrainContext, recordError, upsertPreventionRule } from "../_shared/brain-helpers.ts";
@@ -60,13 +60,13 @@ serve(async (req) => {
       .eq("id", initiative_id)
       .maybeSingle();
     if (!initiativeRecord) {
-      return errorResponse("Initiative not found", 404);
+      return notFoundOrForbiddenResponse("Initiative");
     }
 
     const organization_id = initiativeRecord.organization_id;
     // If payload provided org, validate it matches
     if (payloadOrgId && payloadOrgId !== organization_id) {
-      return errorResponse("Organization mismatch", 403);
+      return notFoundOrForbiddenResponse("Initiative");
     }
 
     const ctx: PipelineContext = {
