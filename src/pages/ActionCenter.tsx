@@ -29,8 +29,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Activity, Clock, CheckCircle2, XCircle, AlertTriangle, ShieldAlert,
   ShieldCheck, Loader2, Inbox, Zap, Pause, Play, RotateCcw,
-  ArrowUpCircle, Timer, Ban, Eye,
+  ArrowUpCircle, Timer, Ban, Eye, GitBranch, BookOpen, Shield, FlaskConical,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 // ── Types ──
 
