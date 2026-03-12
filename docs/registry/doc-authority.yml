@@ -1,60 +1,112 @@
 # AxionOS — Document Authority Registry
 # Defines canonical ownership boundaries for each documentation file.
-# Last updated: 2026-03-10
+# Last updated: 2026-03-12 (Sprint 163)
 
-  - file: docs/CANON_INTELLIGENCE_ENGINE.md
-    owns:
-      - Canon Intelligence Engine architecture
-      - Agent–Contract relationship model
-      - Canon knowledge layer (patterns, strategies, failures, optimizations)
-      - Canon governance workflow (intake, normalization, steward review, approval, publication)
-      - Runtime consultation model
-      - Canon safety and authority limits
-      - Strategic importance of institutional intelligence
-    must_not_define:
-      - Agent OS module inventory (→ GOVERNANCE.md)
-      - system containers or C4 diagrams (→ ARCHITECTURE.md)
-      - sprint execution ledger
-    update_rule: Update when Canon Intelligence Engine architecture, contracts, or governance workflow change.
+# ─── Canonical Trio Governance ───────────────────────────────────────────────
+# The three core documents form the "Canonical Trio" of AxionOS documentation.
+# Each has an exclusive semantic territory. Overlap is allowed only as
+# summary or reference — never as redefinition.
+#
+# AXION_CONTEXT.md  = Quick re-entry. Operational understanding. "What is this system?"
+# ARCHITECTURE.md   = Structural reference. Blocks, layers, stack, boundaries. "How is it built?"
+# GOVERNANCE.md     = Agent OS planes, modules, contracts, safety limits. "How does it govern itself?"
+#
+# Enforcement rules:
+#   1. If a concept has ONE canonical owner, other docs may summarize but must not redefine.
+#   2. ARCHITECTURE.md may list engine/block names with one-line summaries, but must not
+#      define their internal contracts or module specs (that belongs to GOVERNANCE.md).
+#   3. GOVERNANCE.md must not introduce C4 containers, deployment topology, or stack decisions.
+#   4. AXION_CONTEXT.md must remain a fast-read document (<10 min). It summarizes, never defines.
+#   5. Sprint-level detail lives exclusively in registry/sprints.yml and registry/blocks.yml.
+#   6. If in doubt about territory: the document that OWNS the concept is the one that
+#      defines behavior, contracts, or constraints. Others may only point to it.
+# ─────────────────────────────────────────────────────────────────────────────
 
 documents:
 
   - file: docs/ARCHITECTURE.md
+    role: Structural reference — system architecture, layers, boundaries, stack
     owns:
       - system architecture (C4 containers, components, diagrams)
       - capability layers and tier map
       - architectural principles
       - data flow between layers
       - safety architecture
-      - AI efficiency layer
+      - AI efficiency layer and routing policy
       - edge function architecture
       - database schema overview
       - technology stack
-      - governing principle
       - product boundary model (internal vs operator vs user-facing)
-      - forthcoming architectural direction
+      - architectural block inventory (names + one-line summaries only)
+      - Builder Mode vs Owner Mode structural separation
+      - Operational Decision Chain (structural view)
     must_not_define:
-      - sprint-by-sprint execution ledger
+      - sprint-by-sprint execution ledger (-> registry/sprints.yml)
       - full roadmap status or strategic narrative
-      - detailed Agent OS module specifications
+      - full Agent OS module specs, contracts, or safety limits (-> GOVERNANCE.md)
       - pipeline phase UX contracts
-    update_rule: Update when system structure or active architectural layers change.
+      - engine internal behavior or contract details (-> GOVERNANCE.md)
+    update_rule: Update when system structure, active layers, or architectural blocks change.
 
   - file: docs/GOVERNANCE.md
+    role: Agent OS governance — planes, modules, contracts, safety boundaries
     owns:
       - Agent OS 5 planes architecture
       - module inventory with versions
-      - fundamental agent types
+      - fundamental agent types and their contracts
       - active operational agents and modules
-      - supporting engines
+      - supporting engines (internal specs)
       - learning agents, meta-agents, memory layers
       - contracts, safety boundaries, and events per module
       - governance layer contracts
+      - Action Engine governance contracts
+      - Approval flow contracts
+      - Recovery and rollback governance
+      - Decision Rights and authority model
     must_not_define:
-      - system containers or C4 diagrams (→ ARCHITECTURE.md)
-    update_rule: Update when Agent OS module inventory, contracts, or operational references change.
+      - system containers or C4 diagrams (-> ARCHITECTURE.md)
+      - technology stack or deployment topology (-> ARCHITECTURE.md)
+      - sprint execution detail (-> registry/sprints.yml)
+    update_rule: Update when Agent OS module inventory, contracts, or governance boundaries change.
+
+  - file: docs/AXION_CONTEXT.md
+    role: Quick context restoration — operational understanding for humans and AI
+    owns:
+      - quick context restoration guide
+      - system identity and nature summary
+      - core engines overview (summary level)
+      - pipeline principle
+      - agent ontology summary
+      - Operational Decision Chain (narrative view)
+      - learning model summary
+      - system invariants (derived from canonical sources)
+      - development principles
+      - long-term vision
+    must_not_define:
+      - detailed architecture or C4 diagrams (-> ARCHITECTURE.md)
+      - detailed governance contracts or module specs (-> GOVERNANCE.md)
+      - canon boundaries or status taxonomy (-> README.md)
+      - engine internals or contract definitions (-> GOVERNANCE.md)
+    update_rule: Update when system identity, engines, or invariants change structurally.
+
+  - file: docs/AXION_PRIMER.md
+    role: AI cognitive anchor — ultra-short system explanation (~2 min read)
+    owns:
+      - ultra-short system explanation
+      - system category definition
+      - core capabilities summary
+      - agent model summary (compact)
+      - learning model summary (compact)
+      - system principles summary (compact)
+    must_not_define:
+      - detailed architecture (-> ARCHITECTURE.md)
+      - detailed governance/contracts (-> GOVERNANCE.md)
+      - canon boundaries or status taxonomy (-> README.md)
+      - full engine inventory (-> AXION_CONTEXT.md)
+    update_rule: Update when system identity or core capabilities change.
 
   - file: docs/README.md
+    role: Documentation navigation index and maintenance protocol
     owns:
       - documentation navigation index
       - sprint status taxonomy
@@ -64,38 +116,40 @@ documents:
       - maintenance protocol
       - normalization rules
     must_not_define:
-      - architectural content (→ ARCHITECTURE.md)
-      - agent/governance detail (→ GOVERNANCE.md)
+      - architectural content (-> ARCHITECTURE.md)
+      - agent/governance detail (-> GOVERNANCE.md)
     update_rule: Update when document structure, status taxonomy, or canon boundaries change.
 
-  - file: docs/AXION_CONTEXT.md
+  - file: docs/CANON_INTELLIGENCE_ENGINE.md
+    role: Canon Intelligence Engine deep reference
     owns:
-      - quick context restoration guide
-      - system identity and nature summary
-      - core engines overview
-      - pipeline principle
-      - agent ontology summary
-      - learning model summary
-      - system invariants (derived from canonical sources)
-      - development principles
-      - long-term vision
+      - Canon Intelligence Engine architecture
+      - Agent-Contract relationship model
+      - Canon knowledge layer (patterns, strategies, failures, optimizations)
+      - Canon governance workflow (intake, normalization, steward review, approval, publication)
+      - Runtime consultation model
+      - Canon safety and authority limits
+      - Strategic importance of institutional intelligence
     must_not_define:
-      - detailed architecture (→ ARCHITECTURE.md)
-      - detailed governance/contracts (→ GOVERNANCE.md)
-      - canon boundaries or status taxonomy (→ README.md)
-    update_rule: Update when system identity, engines, or invariants change structurally.
+      - Agent OS module inventory (-> GOVERNANCE.md)
+      - system containers or C4 diagrams (-> ARCHITECTURE.md)
+      - sprint execution ledger (-> registry/sprints.yml)
+    update_rule: Update when Canon Intelligence Engine architecture, contracts, or governance workflow change.
 
-  - file: docs/AXION_PRIMER.md
+  - file: docs/registry/sprints.yml
+    role: Canonical sprint execution ledger
     owns:
-      - ultra-short system explanation (AI cognitive anchor)
-      - system category definition
-      - core capabilities summary
-      - agent model summary
-      - learning model summary (compact)
-      - system principles summary (compact)
+      - sprint IDs, titles, status, and block assignments
     must_not_define:
-      - detailed architecture (→ ARCHITECTURE.md)
-      - detailed governance/contracts (→ GOVERNANCE.md)
-      - canon boundaries or status taxonomy (→ README.md)
-      - full engine inventory (→ AXION_CONTEXT.md)
-    update_rule: Update when system identity or core capabilities change.
+      - architectural descriptions (-> ARCHITECTURE.md)
+      - governance contracts (-> GOVERNANCE.md)
+    update_rule: Update at the end of each sprint.
+
+  - file: docs/registry/blocks.yml
+    role: Canonical block definitions
+    owns:
+      - block IDs, titles, sprint ranges, and status
+    must_not_define:
+      - architectural details (-> ARCHITECTURE.md)
+      - governance contracts (-> GOVERNANCE.md)
+    update_rule: Update when new blocks are defined or existing blocks change status.
