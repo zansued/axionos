@@ -513,7 +513,7 @@ This block introduces **governed knowledge renewal**: the ability to detect agin
 
 ## 10. Implementation Status
 
-> **181 sprints complete.** All blocks Foundation through AK implemented.
+> **183 sprints complete.** All blocks Foundation through AL implemented.
 > **Sprint-by-sprint record:** `docs/registry/sprints.yml`
 
 | Block | Sprints | Name | Status |
