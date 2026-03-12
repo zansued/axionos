@@ -132,11 +132,14 @@ The Axion Action Engine is the formalization layer between governance evaluation
 - Transforms triggers (events, signals, user prompts) into formal ActionIntents
 - Applies policy-aware resolution using the **strictest-wins** principle (Blocked > Manual > Approval > Auto)
 - Produces auditable ActionRecords with full lineage
-- Supports human approval hooks with TTL-based expiration
+- Supports human approval hooks with TTL-based expiration and automated expiration scheduling
 - Uses Axion-style XML artifacts (`<axionArtifact>`, `<axionAction>`) for structured output
 - Routes formalized actions to the AgentOS AIOS Round Robin Scheduler
+- Enforces a **formal domain state machine** (14 states, 24 transitions) with explicit guards, allowed actors, side effects, and audit event types per transition
+- Provides cross-surface navigation between Action Center and Approval Queue
+- Supports governed recovery simulation with audit trail
 
-**Status:** Implemented and operational (Sprints 139–142).
+**Status:** Implemented and operational (Sprints 139–142, hardened in Block AI: Sprints 164–169).
 
 ---
 

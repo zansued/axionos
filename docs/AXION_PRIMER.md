@@ -93,8 +93,9 @@ AxionOS can:
 - Detect patterns in execution failures
 - Improve operational strategies over time
 - Maintain governance and rollback safety
-- Formalize actions through governed Action Engine
+- Formalize actions through governed Action Engine with formal state machine lifecycle
 - Track governance decisions through full lifecycle (proposal → review → handoff → application)
+- Enforce action domain transitions with explicit guards, audit events, and role-based access
 
 ---
 
