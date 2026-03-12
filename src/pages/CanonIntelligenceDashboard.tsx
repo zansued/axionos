@@ -151,6 +151,10 @@ export default function CanonIntelligenceDashboard() {
             <TabsContent value="lineage">
               <KnowledgeLineageTab />
             </TabsContent>
+
+            <TabsContent value="renewal">
+              <KnowledgeRenewalTab />
+            </TabsContent>
           </Tabs>
       </div>
     </AppShell>
