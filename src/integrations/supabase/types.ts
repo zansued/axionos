@@ -22891,47 +22891,99 @@ export type Database = {
           candidate_type: string
           confidence_score: number
           created_at: string
+          evaluation_notes: string | null
+          evaluation_score: number | null
+          evaluation_status: string | null
           evidence_count: number
           first_observed_at: string
           id: string
+          initiative_id: string | null
           last_observed_at: string
           organization_id: string
           pattern_signature: string
+          payload: Json | null
+          promoted_entry_id: string | null
+          proposed_practice_type: string | null
           recommended_action: string
+          review_status: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          signal_count: number | null
           source_domains: Json
+          source_type: string | null
           status: string
+          summary: string | null
+          title: string | null
+          updated_at: string | null
         }
         Insert: {
           candidate_scope?: string
           candidate_type?: string
           confidence_score?: number
           created_at?: string
+          evaluation_notes?: string | null
+          evaluation_score?: number | null
+          evaluation_status?: string | null
           evidence_count?: number
           first_observed_at?: string
           id?: string
+          initiative_id?: string | null
           last_observed_at?: string
           organization_id: string
           pattern_signature?: string
+          payload?: Json | null
+          promoted_entry_id?: string | null
+          proposed_practice_type?: string | null
           recommended_action?: string
+          review_status?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          signal_count?: number | null
           source_domains?: Json
+          source_type?: string | null
           status?: string
+          summary?: string | null
+          title?: string | null
+          updated_at?: string | null
         }
         Update: {
           candidate_scope?: string
           candidate_type?: string
           confidence_score?: number
           created_at?: string
+          evaluation_notes?: string | null
+          evaluation_score?: number | null
+          evaluation_status?: string | null
           evidence_count?: number
           first_observed_at?: string
           id?: string
+          initiative_id?: string | null
           last_observed_at?: string
           organization_id?: string
           pattern_signature?: string
+          payload?: Json | null
+          promoted_entry_id?: string | null
+          proposed_practice_type?: string | null
           recommended_action?: string
+          review_status?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          signal_count?: number | null
           source_domains?: Json
+          source_type?: string | null
           status?: string
+          summary?: string | null
+          title?: string | null
+          updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "learning_candidates_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "learning_candidates_organization_id_fkey"
             columns: ["organization_id"]
@@ -25844,6 +25896,54 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "operational_cycles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operational_learning_signals: {
+        Row: {
+          created_at: string
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          outcome: string | null
+          outcome_success: boolean | null
+          payload: Json | null
+          signal_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          outcome?: string | null
+          outcome_success?: boolean | null
+          payload?: Json | null
+          signal_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          outcome?: string | null
+          outcome_success?: boolean | null
+          payload?: Json | null
+          signal_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operational_learning_signals_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operational_learning_signals_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"

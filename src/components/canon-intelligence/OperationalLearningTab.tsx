@@ -1,8 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain, TrendingUp, XCircle, Wrench, CheckCircle, Lightbulb } from "lucide-react";
+import { Brain, TrendingUp, XCircle, Wrench, CheckCircle, Lightbulb, Loader2, Sparkles } from "lucide-react";
+import { useCanonCandidateReview } from "@/hooks/useCanonCandidateReview";
 
 const PRACTICE_LABELS: Record<string, string> = {
   best_practice: "Best Practice",
@@ -43,17 +45,32 @@ export function OperationalLearningTab({
 }: OperationalLearningTabProps) {
   const pendingCandidates = candidates.filter((c: any) => c.review_status === "pending" && !c.noise_suppressed);
   const evolutionReady = pendingCandidates.filter((c: any) => c.confidence_score >= 30);
+  const review = useCanonCandidateReview();
 
   return (
     <div className="space-y-5">
-      {/* Summary metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-        <LearnMetric value={signals.length} label="Signals" icon={<TrendingUp className="h-3 w-3" />} />
-        <LearnMetric value={candidates.length} label="Candidates" icon={<Brain className="h-3 w-3" />} />
-        <LearnMetric value={failurePatterns.length} label="Failure Patterns" icon={<XCircle className="h-3 w-3" />} warn />
-        <LearnMetric value={refactorPatterns.length} label="Refactors" icon={<Wrench className="h-3 w-3" />} />
-        <LearnMetric value={successPatterns.length} label="Successes" icon={<CheckCircle className="h-3 w-3" />} success />
-        <LearnMetric value={evolutionReady.length} label="Evolution Queue" icon={<Lightbulb className="h-3 w-3" />} accent />
+      {/* Summary metrics + Review Action */}
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 flex-1">
+          <LearnMetric value={signals.length} label="Signals" icon={<TrendingUp className="h-3 w-3" />} />
+          <LearnMetric value={candidates.length} label="Candidates" icon={<Brain className="h-3 w-3" />} />
+          <LearnMetric value={failurePatterns.length} label="Failure Patterns" icon={<XCircle className="h-3 w-3" />} warn />
+          <LearnMetric value={refactorPatterns.length} label="Refactors" icon={<Wrench className="h-3 w-3" />} />
+          <LearnMetric value={successPatterns.length} label="Successes" icon={<CheckCircle className="h-3 w-3" />} success />
+          <LearnMetric value={review.status?.ready_to_promote || evolutionReady.length} label="Ready to Promote" icon={<Lightbulb className="h-3 w-3" />} accent />
+        </div>
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => review.runFullCycle.mutate()}
+          disabled={review.runFullCycle.isPending}
+          className="border-primary/30"
+        >
+          {review.runFullCycle.isPending
+            ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+            : <Sparkles className="h-3.5 w-3.5 mr-1.5" />}
+          Review & Promote
+        </Button>
       </div>
 
       <Tabs defaultValue="evolution" className="space-y-3">
