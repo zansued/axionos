@@ -411,7 +411,13 @@ const App = () => (
                             {/* Internal renames */}
                             <Route path="/builder/initiatives" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/builder/delivery" element={<LegacyRedirect to="/builder/pipelines" />} />
-                            <Route path="/builder/governance" element={<LegacyRedirect to="/builder/delivery-governance" />} />
+                            <Route path="/builder/governance" element={<LegacyRedirect to="/owner/delivery-governance" />} />
+                            <Route path="/builder/delivery-governance" element={<LegacyRedirect to="/owner/delivery-governance" />} />
+                            <Route path="/builder/governance-overview" element={<LegacyRedirect to="/owner/governance-overview" />} />
+                            <Route path="/builder/pending-approvals" element={<LegacyRedirect to="/owner/pending-approvals" />} />
+                            <Route path="/builder/policy-controls" element={<LegacyRedirect to="/owner/policy-controls" />} />
+                            <Route path="/builder/action-center" element={<LegacyRedirect to="/owner/action-center" />} />
+                            <Route path="/builder/system-intelligence" element={<LegacyRedirect to="/owner/system-intelligence" />} />
                             <Route path="/builder/project/:id" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/initiatives" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/stories" element={<LegacyRedirect to="/builder/projects" />} />
