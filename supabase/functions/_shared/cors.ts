@@ -63,7 +63,7 @@ export function errorResponse(message: string, status = 500, req?: Request): Res
 /** Handle OPTIONS preflight */
 export function handleCors(req: Request): Response | null {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: getCorsHeaders(req) });
+    return new Response("ok", { status: 200, headers: getCorsHeaders(req) });
   }
   return null;
 }
