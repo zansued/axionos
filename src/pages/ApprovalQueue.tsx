@@ -127,6 +127,24 @@ export default function ApprovalQueue() {
       return (data || []) as ApprovalRequest[];
     },
   });
+  // ── Auto-select from URL param (cross-navigation from Action Center) ──
+  useEffect(() => {
+    const actionIdParam = searchParams.get("action_id");
+    if (actionIdParam && requests.length > 0) {
+      const match = requests.find((r) => r.action_id === actionIdParam);
+      if (match) {
+        setSelectedId(match.id);
+        // Switch to the appropriate tab
+        if (match.status === "waiting_approval" || match.status === "pending") setTab("waiting");
+        else if (match.status === "approved") setTab("approved");
+        else if (match.status === "rejected") setTab("rejected");
+        else if (match.status === "expired") setTab("expired");
+        else setTab("all");
+      }
+      // Clear the param to avoid re-triggering
+      setSearchParams({}, { replace: true });
+    }
+  }, [requests, searchParams, setSearchParams]);
 
   // ── Filter by tab ──
 
