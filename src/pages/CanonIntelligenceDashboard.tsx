@@ -1,7 +1,7 @@
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Database, BookOpen, Search, Activity, Zap, Eye, GitBranch, Shield, Brain, Download, Scale } from "lucide-react";
+import { Database, BookOpen, Search, Activity, Zap, Eye, GitBranch, Shield, Brain, Download, Scale, Route } from "lucide-react";
 import { useCanonIntelligence } from "@/hooks/useCanonIntelligence";
 import { useCanonStewardship } from "@/hooks/useCanonStewardship";
 import { useCanonRuntime } from "@/hooks/useCanonRuntime";
