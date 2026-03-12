@@ -17,7 +17,7 @@ import {
   LayoutDashboard, FolderKanban, Bot, GitBranch, Radio, Eye,
   Sparkles, Shield, Settings, HeartPulse, LineChart, Search,
   Brain, Fingerprint, Scale, Users, Activity, Cpu, Database,
-  ShieldAlert, ShieldCheck,
+  ShieldAlert, ShieldCheck, Crosshair,
 } from "lucide-react";
 
 // ─── Types ─────────────────────────────────────────────────────────────────

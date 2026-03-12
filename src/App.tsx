@@ -406,6 +406,7 @@ const App = () => (
                             <Route path="/owner/governance-insights" element={<P><GovernanceInsights /></P>} />
                             <Route path="/owner/governance-decisions" element={<P><GovernanceDecisions /></P>} />
                             <Route path="/owner/governance-handoff" element={<P><GovernanceExecutionHandoff /></P>} />
+                            <Route path="/owner/governance-application-tracking" element={<P><GovernanceChangeApplicationTracking /></P>} />
 
                             {/* ══════════════════════════════════════════════
                                 LEGACY REDIRECTS (deprecated — log usage)
