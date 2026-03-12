@@ -220,18 +220,33 @@ export function useGovernanceDecisionsData(filters?: DecisionFilters) {
     queryKey: ["governance-decisions", orgId, filters],
     enabled: !!orgId,
     queryFn: async () => {
-      const [canonRes, policyRes, agentSelRes, readinessRes] = await Promise.all([
+      const [canonRes, policyRes, agentSelRes, readinessRes, renewalBridgeRes] = await Promise.all([
         supabase.from("canon_evolution_proposals" as any).select("*").eq("organization_id", orgId!).order("created_at", { ascending: false }).limit(300),
         supabase.from("policy_tuning_proposals" as any).select("*").eq("organization_id", orgId!).order("created_at", { ascending: false }).limit(300),
         supabase.from("agent_selection_tuning_proposals").select("*").eq("organization_id", orgId!).order("created_at", { ascending: false }).limit(300),
         supabase.from("readiness_tuning_proposals" as any).select("*").eq("organization_id", orgId!).order("created_at", { ascending: false }).limit(300),
+        supabase.from("renewal_governance_bridge" as any).select("*").eq("organization_id", orgId!).in("bridge_status", ["bridge_eligible", "awaiting_governance_review", "governance_approved", "governance_rejected"]).order("created_at", { ascending: false }).limit(200),
       ]);
+
+      // Map renewal bridge records to governance proposal shape
+      const renewalProposals = ((renewalBridgeRes.data as any[]) || []).map((b: any) => ({
+        ...b,
+        proposal_type: b.governance_action_type,
+        recommendation: b.recommended_governance_action?.replace(/_/g, " "),
+        rationale: b.rationale,
+        severity: b.urgency === "high" ? "high" : b.urgency === "medium" ? "medium" : "low",
+        confidence: b.confidence_after ?? 0.5,
+        review_status: b.bridge_status === "bridge_eligible" ? "proposed" : b.bridge_status === "governance_approved" ? "accepted" : b.bridge_status === "governance_rejected" ? "rejected" : "under_review",
+        evidence_summary: `Renewal outcome: ${b.renewal_outcome}. Confidence: ${b.confidence_before} → ${b.confidence_after}.`,
+        proposed_by_actor_type: "knowledge_renewal_engine",
+      }));
 
       const allProposals: GovernanceProposal[] = [
         ...((canonRes.data as any[]) || []).map(p => buildProposal(p, "canon_evolution")),
         ...((policyRes.data as any[]) || []).map(p => buildProposal(p, "policy_tuning")),
         ...((agentSelRes.data as any[]) || []).map(p => buildProposal(p, "agent_selection_tuning")),
         ...((readinessRes.data as any[]) || []).map(p => buildProposal(p, "readiness_tuning")),
+        ...renewalProposals.map((p: any) => buildProposal(p, "knowledge_renewal")),
       ];
 
       // Apply filters
