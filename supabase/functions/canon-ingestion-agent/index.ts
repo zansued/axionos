@@ -3,6 +3,17 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticateWithRateLimit } from "../_shared/auth.ts";
 import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
+import {
+  validateSchema, validationErrorResponse, logValidationFailure,
+  COMMON_ACTIONS, COMMON_FIELDS,
+  type Schema,
+} from "../_shared/input-validation.ts";
+
+const INGESTION_SCHEMA: Schema = {
+  action: COMMON_FIELDS.action(COMMON_ACTIONS.CANON_INGESTION),
+  organization_id: COMMON_FIELDS.organization_id,
+  source_id: { type: "uuid", required: false },
+};
 
 serve(async (req) => {
   const corsRes = handleCors(req);
@@ -21,7 +32,19 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) return errorResponse("LOVABLE_API_KEY not configured", 500, req);
 
-    const { action, organization_id: payloadOrgId, source_id } = await req.json();
+    let body: Record<string, unknown>;
+    try { body = await req.json(); } catch { return errorResponse("Invalid JSON body", 400, req); }
+
+    // Validate input schema
+    const validation = validateSchema(body, INGESTION_SCHEMA);
+    if (!validation.valid) {
+      await logValidationFailure(serviceClient, { actor_id: user.id, function_name: "canon-ingestion-agent", errors: validation.errors });
+      return validationErrorResponse(validation.errors, req);
+    }
+
+    const action = body.action as string;
+    const payloadOrgId = body.organization_id as string | undefined;
+    const source_id = body.source_id as string | undefined;
 
     // 2. Resolve & validate org
     const { orgId, error: orgError } = await resolveAndValidateOrg(
