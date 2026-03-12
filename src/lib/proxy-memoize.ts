@@ -9,7 +9,7 @@
  * Inspired by proxy-memoize patterns for high-performance React selectors.
  */
 
-type AnyObject = Record<string, unknown>;
+type AnyObject = Record<string, any>;
 
 interface TrackedAccess {
   /** Top-level keys accessed during computation */
