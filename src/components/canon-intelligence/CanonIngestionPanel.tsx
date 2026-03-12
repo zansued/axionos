@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Play, RefreshCw, Zap, Globe, CheckCircle2, XCircle, Clock, ArrowUpCircle, DatabaseZap } from "lucide-react";
+import { Loader2, Play, RefreshCw, Zap, Globe, CheckCircle2, XCircle, Clock, ArrowUpCircle, DatabaseZap, Bot } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { useToast } from "@/hooks/use-toast";
