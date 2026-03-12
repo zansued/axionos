@@ -520,6 +520,7 @@ All self-improvement proposals must pass through governance review. No opaque se
 | AH | 155-163 | Governance Decision Lifecycle | Complete |
 | AI | 164-171 | Repository Intelligence & Institutional Learning | Complete |
 | AJ | 172-179 | Self-Improving Architecture Engine | Complete |
+| AK | 180-181 | Knowledge Provenance & Trust-Weighted Intelligence | Complete |
 
 ---
 
