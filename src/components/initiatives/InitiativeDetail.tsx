@@ -548,16 +548,12 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                 </a>
               </div>
             )}
-            {/* Error details */}
+            {/* Error details — Pretty Error Parser */}
             {(initiative.deploy_error_code || initiative.deploy_error_message) && stageStatus === "deploy_failed" && (
-              <div className="rounded-md border border-destructive/30 bg-destructive/5 p-2.5 space-y-1">
-                {initiative.deploy_error_code && (
-                  <p className="text-xs font-mono text-destructive font-semibold">{initiative.deploy_error_code}</p>
-                )}
-                {initiative.deploy_error_message && (
-                  <p className="text-xs text-destructive/80">{initiative.deploy_error_message}</p>
-                )}
-              </div>
+              <DeployErrorParser
+                errorCode={initiative.deploy_error_code}
+                errorMessage={initiative.deploy_error_message}
+              />
             )}
             {/* Health + timestamps */}
             <div className="flex items-center gap-3 flex-wrap">
