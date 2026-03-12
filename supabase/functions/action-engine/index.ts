@@ -1,7 +1,9 @@
-﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.1";
 import { getCorsHeaders, handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 const SYSTEM_PROMPT = `
 You are AxionOS Action Engine, an elite autonomous product creator.
@@ -24,15 +26,23 @@ serve(async (req) => {
   if (corsRes) return corsRes;
 
   try {
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
+    // Auth hardening — Sprint 196
+    const authResult = await authenticateWithRateLimit(req, "action-engine");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabaseClient } = authResult;
 
     const body = await req.json();
-    const { prompt, orgId, initiativeId, stage = "execution" } = body;
+    const { prompt, orgId: payloadOrgId, initiativeId, stage = "execution" } = body;
 
     if (!prompt) return errorResponse("Prompt is required", 400, req);
+
+    const { orgId, error: orgError } = await resolveAndValidateOrg(supabaseClient, user.id, payloadOrgId);
+    if (orgError || !orgId) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabaseClient, {
+      organization_id: orgId, actor_id: user.id,
+      function_name: "action-engine", action: "execute",
+    });
 
     // 1. Call AI with Efficiency Layer
     const aiResult = await callAI(

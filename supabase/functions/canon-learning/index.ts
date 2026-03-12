@@ -1,23 +1,30 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { corsHeaders } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: "No authorization" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-    }
+    // Auth hardening — Sprint 196
+    const authResult = await authenticateWithRateLimit(req, "canon-learning");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: sc } = authResult;
 
-    const sc = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const body = await req.json();
-    const { action, organizationId } = body;
+    const { action, organizationId: payloadOrgId } = body;
 
-    if (!organizationId) {
-      return new Response(JSON.stringify({ error: "organizationId required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    const { orgId: organizationId, error: orgError } = await resolveAndValidateOrg(sc, user.id, payloadOrgId);
+    if (orgError || !organizationId) {
+      return new Response(JSON.stringify({ error: orgError || "Organization access denied" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
+
+    await logSecurityAudit(sc, {
+      organization_id: organizationId, actor_id: user.id,
+      function_name: "canon-learning", action: action || "unknown",
+    });
 
     let result: any = null;
 

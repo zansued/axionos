@@ -282,20 +282,29 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    // Auth hardening — Sprint 196
+    const { authenticateWithRateLimit } = await import("../_shared/auth.ts");
+    const { logSecurityAudit, resolveAndValidateOrg } = await import("../_shared/security-audit.ts");
+
+    const authResult = await authenticateWithRateLimit(req, "learning-extraction-engine");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
     const body: ExtractionInput = await req.json();
-    const { organization_id, action, lookback_days = 30, status_filter } = body;
+    const { organization_id: payloadOrgId, action, lookback_days = 30, status_filter } = body;
 
-    if (!organization_id) {
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) {
       return new Response(
-        JSON.stringify({ error: "organization_id required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: orgError || "Organization access denied" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "learning-extraction-engine", action: action || "unknown",
+    });
 
     switch (action) {
       /* ------------------------------------------------------------ */

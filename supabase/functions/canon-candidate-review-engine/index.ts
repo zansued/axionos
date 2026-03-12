@@ -1,6 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI, getAIConfig } from "../_shared/ai-client.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 /**
  * Canon Candidate Review Engine — Sprint 164
@@ -23,13 +25,21 @@ Deno.serve(async (req: Request) => {
   if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
+    // Auth hardening — Sprint 196
+    const authResult = await authenticateWithRateLimit(req, "canon-candidate-review-engine");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
-    const { action, organization_id, ...params } = await req.json();
-    if (!organization_id) return errorResponse("organization_id required", 400, req);
+    const body = await req.json();
+    const { action, organization_id: payloadOrgId, ...params } = body;
+
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "canon-candidate-review-engine", action: action || "unknown",
+    });
 
     const config = getAIConfig();
 
