@@ -65,11 +65,11 @@ function LandingPage() {
         className="absolute left-1/2 w-[1600px] h-[1600px] sm:w-[3043px] sm:h-[2865px] pointer-events-none z-[2]"
         style={{ bottom: "-2500px", transform: "translateX(-50%)" }}
       >
-        <div className="absolute w-full h-full rounded-full" style={{ background: "radial-gradient(43.89% 25.74% at 50.02% 2.76%, hsl(var(--surface-deep)) 0%, hsl(var(--background)) 100%)", border: "16px solid white", zIndex: 5 }} />
-        <div className="absolute w-full h-full rounded-full bg-background mt-[2px]" style={{ border: "23px solid #b7d7f6", zIndex: 4 }} />
-        <div className="absolute w-full h-full rounded-full bg-background mt-[5px]" style={{ border: "23px solid #8fc1f2", zIndex: 3 }} />
-        <div className="absolute w-full h-full rounded-full bg-background mt-[9px]" style={{ border: "23px solid #64acf6", zIndex: 2 }} />
-        <div className="absolute w-full h-full rounded-full bg-background mt-[13px]" style={{ border: "20px solid #1172e2", boxShadow: "0 15px 24.8px rgba(17, 114, 226, 0.6)", zIndex: 1 }} />
+        <div className="absolute w-full h-full rounded-full" style={{ background: "radial-gradient(43.89% 25.74% at 50.02% 2.76%, hsl(var(--surface-deep)) 0%, hsl(var(--background)) 100%)", border: "2px solid rgba(255,255,255,0.9)", boxShadow: "0 0 40px 8px rgba(255,255,255,0.25), 0 0 80px 20px rgba(20, 136, 252, 0.3)", zIndex: 5 }} />
+        <div className="absolute w-full h-full rounded-full bg-background mt-[2px]" style={{ border: "12px solid #b7d7f6", zIndex: 4 }} />
+        <div className="absolute w-full h-full rounded-full bg-background mt-[4px]" style={{ border: "12px solid #8fc1f2", zIndex: 3 }} />
+        <div className="absolute w-full h-full rounded-full bg-background mt-[6px]" style={{ border: "12px solid #64acf6", zIndex: 2 }} />
+        <div className="absolute w-full h-full rounded-full bg-background mt-[8px]" style={{ border: "10px solid #1172e2", boxShadow: "0 0 30px 10px rgba(17, 114, 226, 0.5)", zIndex: 1 }} />
       </div>
 
       {/* Radial glow above planet */}
