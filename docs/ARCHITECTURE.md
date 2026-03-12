@@ -3,8 +3,8 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-12
-> **Current state:** Level 13 -- Knowledge Provenance & Trust-Weighted Intelligence. 181 sprints complete. All blocks (Foundation through AK).
-> **Completed blocks:** Foundation through AK (Sprints 1--181)
+> **Current state:** Level 14 -- Knowledge Renewal & Revalidation. 183 sprints complete. All blocks (Foundation through AL).
+> **Completed blocks:** Foundation through AL (Sprints 1--183)
 > **Sprint details:** See `docs/registry/sprints.yml`
 
 ## Document Authority
