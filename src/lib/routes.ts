@@ -17,7 +17,7 @@ import {
   LayoutDashboard, FolderKanban, Bot, GitBranch, Radio, Eye,
   Sparkles, Shield, Settings, HeartPulse, LineChart, Search,
   Brain, Fingerprint, Scale, Users, Activity, Cpu, Database,
-  ShieldAlert, ShieldCheck,
+  ShieldAlert, ShieldCheck, Crosshair,
 } from "lucide-react";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -316,13 +316,24 @@ export const OWNER_ROUTES: RouteEntry[] = [
     sidebar: true,
   },
   {
+    path: "/owner/governance-application-tracking",
+    title: "Change Application Tracking",
+    description: "Downstream application lifecycle for governance-approved changes",
+    icon: Crosshair,
+    mode: "owner",
+    group: "Governance",
+    order: 15,
+    sidebar: true,
+    pageKey: "governance-application-tracking",
+  },
+  {
     path: "/owner/settings",
     title: "Settings",
     description: "Platform settings",
     icon: Settings,
     mode: "owner",
     group: "Governance",
-    order: 15,
+    order: 16,
     sidebar: true,
   },
 ];

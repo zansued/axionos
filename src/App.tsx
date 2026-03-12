@@ -124,6 +124,7 @@ import Governance from "./pages/Governance";
 import GovernanceInsights from "./pages/GovernanceInsights";
 import GovernanceDecisions from "./pages/GovernanceDecisions";
 import GovernanceExecutionHandoff from "./pages/GovernanceExecutionHandoff";
+import GovernanceChangeApplicationTracking from "./pages/GovernanceChangeApplicationTracking";
 import Modes from "./pages/Modes";
 import SettingsPage from "./pages/Settings";
 import Runtime from "./pages/Runtime";
@@ -405,6 +406,7 @@ const App = () => (
                             <Route path="/owner/governance-insights" element={<P><GovernanceInsights /></P>} />
                             <Route path="/owner/governance-decisions" element={<P><GovernanceDecisions /></P>} />
                             <Route path="/owner/governance-handoff" element={<P><GovernanceExecutionHandoff /></P>} />
+                            <Route path="/owner/governance-application-tracking" element={<P><GovernanceChangeApplicationTracking /></P>} />
 
                             {/* ══════════════════════════════════════════════
                                 LEGACY REDIRECTS (deprecated — log usage)
