@@ -23103,6 +23103,265 @@ export type Database = {
           },
         ]
       }
+      knowledge_renewal_history: {
+        Row: {
+          actor_id: string | null
+          confidence_after: number | null
+          confidence_before: number | null
+          created_at: string
+          event_type: string
+          evidence_refs: Json
+          explanation: string
+          id: string
+          organization_id: string
+          outcome: string | null
+          renewal_mode: string | null
+          target_entry_id: string
+          target_type: string
+        }
+        Insert: {
+          actor_id?: string | null
+          confidence_after?: number | null
+          confidence_before?: number | null
+          created_at?: string
+          event_type?: string
+          evidence_refs?: Json
+          explanation?: string
+          id?: string
+          organization_id: string
+          outcome?: string | null
+          renewal_mode?: string | null
+          target_entry_id: string
+          target_type?: string
+        }
+        Update: {
+          actor_id?: string | null
+          confidence_after?: number | null
+          confidence_before?: number | null
+          created_at?: string
+          event_type?: string
+          evidence_refs?: Json
+          explanation?: string
+          id?: string
+          organization_id?: string
+          outcome?: string | null
+          renewal_mode?: string | null
+          target_entry_id?: string
+          target_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_renewal_history_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_renewal_proposals: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_notes: string | null
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          proposal_type: string
+          rationale: string
+          recommended_action: string
+          status: string
+          target_entry_id: string
+          updated_at: string
+          urgency: string
+          workflow_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          proposal_type?: string
+          rationale?: string
+          recommended_action?: string
+          status?: string
+          target_entry_id: string
+          updated_at?: string
+          urgency?: string
+          workflow_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          proposal_type?: string
+          rationale?: string
+          recommended_action?: string
+          status?: string
+          target_entry_id?: string
+          updated_at?: string
+          urgency?: string
+          workflow_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_renewal_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_renewal_proposals_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_revalidation_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_renewal_triggers: {
+        Row: {
+          created_at: string
+          evidence_refs: Json
+          id: string
+          organization_id: string
+          reason: string
+          resolution_notes: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          strength: number
+          target_entry_id: string
+          target_type: string
+          trigger_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id: string
+          reason?: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          strength?: number
+          target_entry_id: string
+          target_type?: string
+          trigger_type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          organization_id?: string
+          reason?: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          strength?: number
+          target_entry_id?: string
+          target_type?: string
+          trigger_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_renewal_triggers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_revalidation_workflows: {
+        Row: {
+          confidence_after: number | null
+          confidence_before: number | null
+          created_at: string
+          evidence_summary: Json
+          explanation: string
+          id: string
+          organization_id: string
+          outcome: string | null
+          renewal_mode: string
+          revalidation_steps: Json
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          target_entry_id: string
+          target_type: string
+          trigger_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          confidence_after?: number | null
+          confidence_before?: number | null
+          created_at?: string
+          evidence_summary?: Json
+          explanation?: string
+          id?: string
+          organization_id: string
+          outcome?: string | null
+          renewal_mode?: string
+          revalidation_steps?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          target_entry_id: string
+          target_type?: string
+          trigger_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          confidence_after?: number | null
+          confidence_before?: number | null
+          created_at?: string
+          evidence_summary?: Json
+          explanation?: string
+          id?: string
+          organization_id?: string
+          outcome?: string | null
+          renewal_mode?: string
+          revalidation_steps?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          target_entry_id?: string
+          target_type?: string
+          trigger_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_revalidation_workflows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_revalidation_workflows_trigger_id_fkey"
+            columns: ["trigger_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_renewal_triggers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       learning_candidates: {
         Row: {
           candidate_scope: string
