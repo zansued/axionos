@@ -218,3 +218,4 @@ sprints:
   - { sprint: 166, name: "Approval Expiration & Governance Timers",                status: complete, block: "AI", phase: "Execution Path Governance", layer: "Approval Lifecycle Layer" }
   - { sprint: 167, name: "Action Center ↔ Approval Queue Navigation",             status: complete, block: "AI", phase: "Execution Path Governance", layer: "Operator Navigation Layer" }
   - { sprint: 168, name: "Recovery Invocation Verification & Safe Routing",        status: complete, block: "AI", phase: "Execution Path Governance", layer: "Recovery Governance Layer" }
+  - { sprint: 169, name: "Action Domain State Machine Formalization",               status: complete, block: "AI", phase: "Execution Path Governance", layer: "Domain State Machine Layer" }

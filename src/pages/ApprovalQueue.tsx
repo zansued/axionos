@@ -48,7 +48,10 @@ import {
   Filter,
   ExternalLink,
 } from "lucide-react";
-
+import {
+  validateTransition,
+  type ActionState,
+} from "@/lib/action-domain-state-machine";
 // ── Types ──
 
 interface ApprovalRequest {
@@ -169,6 +172,13 @@ export default function ApprovalQueue() {
       const now = new Date().toISOString();
       const request = requests.find((r) => r.id === id);
 
+      // Validate transition via state machine
+      const targetActionState: ActionState = decision === "approved" ? "approved" : "rejected";
+      const validation = validateTransition("waiting_approval", targetActionState, "human");
+      if (!validation.valid) {
+        throw new Error(validation.error || "Invalid state transition");
+      }
+
       // 1. Update approval request
       const { error } = await supabase
         .from("action_approval_requests")
@@ -180,31 +190,32 @@ export default function ApprovalQueue() {
           updated_at: now,
         })
         .eq("id", id)
-        .eq("organization_id", orgId!);
+        .eq("organization_id", orgId!)
+        .eq("status", "waiting_approval"); // guard: only from waiting_approval
       if (error) throw error;
 
       // 2. Propagate decision to the action registry entry
       if (request?.action_id) {
-        const actionStatus = decision === "approved" ? "approved" : "rejected";
         await supabase
           .from("action_registry_entries")
           .update({
-            status: actionStatus,
+            status: targetActionState,
             approved_by: decision === "approved" ? user?.id : null,
             updated_at: now,
           })
           .eq("action_id", request.action_id)
-          .eq("organization_id", orgId!);
+          .eq("organization_id", orgId!)
+          .eq("status", "waiting_approval"); // guard: only transition from waiting_approval
 
-        // 3. Write audit trail event
+        // 3. Write audit trail event (using state machine audit event type)
         await supabase
           .from("action_audit_events")
           .insert({
             action_id: request.action_id,
             organization_id: orgId!,
-            event_type: `approval_${decision}`,
+            event_type: validation.transition!.auditEventType,
             previous_status: "waiting_approval",
-            new_status: actionStatus,
+            new_status: targetActionState,
             reason: decisionNotes || `Human ${decision} via Approval Queue`,
             actor_type: "human",
             actor_id: user?.id,

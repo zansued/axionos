@@ -31,10 +31,20 @@ import {
   Activity, Clock, CheckCircle2, XCircle, AlertTriangle, ShieldAlert,
   ShieldCheck, Loader2, Inbox, Zap, Pause, Play, RotateCcw,
   ArrowUpCircle, Timer, Ban, Eye, GitBranch, BookOpen, Shield, FlaskConical,
-  ExternalLink,
+  ExternalLink, ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import {
+  ACTION_STATES,
+  STATE_CATEGORIES,
+  getTransitionsForActor,
+  isRecoveryEligible,
+  isTerminalState,
+  validateTransition,
+  type ActionState,
+  type TransitionDefinition,
+} from "@/lib/action-domain-state-machine";
 
 // ── Types ──
 
@@ -210,22 +220,22 @@ export default function ActionCenter() {
     },
   });
 
-  // ── Counts ──
+  // ── Counts (driven by state machine categories) ──
   const counts = {
-    active: actions.filter((a) => ["pending", "queued", "executing", "dispatched", "waiting_approval"].includes(a.status)).length,
+    active: actions.filter((a) => STATE_CATEGORIES.active.includes(a.status as ActionState)).length,
     waiting: actions.filter((a) => a.status === "waiting_approval").length,
-    blocked: actions.filter((a) => a.status === "blocked" || a.status === "rejected").length,
+    blocked: actions.filter((a) => STATE_CATEGORIES.blocked.includes(a.status as ActionState)).length,
     failed: actions.filter((a) => a.status === "failed" || a.status === "escalated").length,
-    completed: actions.filter((a) => a.status === "completed").length,
+    completed: actions.filter((a) => STATE_CATEGORIES.completed.includes(a.status as ActionState)).length,
     recovery: actions.filter((a) => !!a.recovery_hook_id).length,
   };
 
-  // ── Filter ──
+  // ── Filter (driven by state machine categories) ──
   const filtered = actions.filter((a) => {
-    if (tab === "active") return ["pending", "queued", "executing", "dispatched", "waiting_approval", "approved"].includes(a.status);
-    if (tab === "blocked") return a.status === "blocked" || a.status === "rejected" || a.status === "escalated";
+    if (tab === "active") return STATE_CATEGORIES.active.includes(a.status as ActionState);
+    if (tab === "blocked") return STATE_CATEGORIES.blocked.includes(a.status as ActionState);
     if (tab === "failed") return a.status === "failed";
-    if (tab === "completed") return a.status === "completed" || a.status === "rolled_back";
+    if (tab === "completed") return STATE_CATEGORIES.completed.includes(a.status as ActionState);
     if (tab === "recovery") return !!a.recovery_hook_id;
     return true;
   }).filter((a) => {
@@ -401,7 +411,63 @@ export default function ActionCenter() {
                     {selected.approved_by && <DetailRow label="Approved By" value={selected.approved_by} />}
                   </Section>
 
-                  {/* Cross-navigation: go to Approval Queue */}
+                  {/* State Machine — Valid Transitions */}
+                  {(() => {
+                    const currentState = selected.status as ActionState;
+                    const stateDef = ACTION_STATES[currentState];
+                    const humanTransitions = getTransitionsForActor(currentState, "human");
+                    const systemTransitions = getTransitionsForActor(currentState, "system");
+                    return (
+                      <Section title="Lifecycle State">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-[10px]">
+                              {stateDef?.category || "unknown"}
+                            </Badge>
+                            {stateDef?.isTerminal && (
+                              <Badge variant="outline" className="text-[10px] text-muted-foreground">Terminal</Badge>
+                            )}
+                            {stateDef?.isBlocking && (
+                              <Badge variant="outline" className="text-[10px] text-warning">Blocking</Badge>
+                            )}
+                            {stateDef?.recoveryEligible && (
+                              <Badge variant="outline" className="text-[10px] text-info">Recovery Eligible</Badge>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-muted-foreground">{stateDef?.description}</p>
+                          {humanTransitions.length > 0 && (
+                            <div className="space-y-1">
+                              <p className="text-[10px] font-medium text-foreground">Operator actions available:</p>
+                              {humanTransitions.map((t) => (
+                                <div key={`${t.from}-${t.to}`} className="flex items-center gap-1.5 text-[11px]">
+                                  <ArrowRight className="h-3 w-3 text-primary shrink-0" />
+                                  <span className="text-foreground font-medium">{t.label}</span>
+                                  <span className="text-muted-foreground">→ {ACTION_STATES[t.to]?.label}</span>
+                                  {t.guards.length > 0 && (
+                                    <span className="text-muted-foreground/60 text-[9px] ml-1">({t.guards[0]})</span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {systemTransitions.length > 0 && (
+                            <div className="space-y-1">
+                              <p className="text-[10px] font-medium text-muted-foreground">System transitions:</p>
+                              {systemTransitions.map((t) => (
+                                <div key={`${t.from}-${t.to}`} className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                                  <ArrowRight className="h-2.5 w-2.5 shrink-0" />
+                                  <span>{t.label} → {ACTION_STATES[t.to]?.label}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {humanTransitions.length === 0 && systemTransitions.length === 0 && (
+                            <p className="text-[10px] text-muted-foreground/60">No further transitions available (terminal state).</p>
+                          )}
+                        </div>
+                      </Section>
+                    );
+                  })()}
                   {(selected.requires_approval || selected.status === "waiting_approval" || selected.approval_id) && (
                     <Section title="Related Approval">
                       <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 p-2.5">
@@ -479,8 +545,8 @@ export default function ActionCenter() {
                     </Section>
                   )}
 
-                  {/* Simulate Recovery for failed/blocked actions without recovery hook */}
-                  {!selected.recovery_hook_id && (selected.status === "failed" || selected.status === "blocked" || selected.status === "rolled_back") && (
+                  {/* Simulate Recovery for recovery-eligible states (state machine driven) */}
+                  {!selected.recovery_hook_id && isRecoveryEligible(selected.status as ActionState) && (
                     <Section title="Recovery Options">
                       <p className="text-xs text-muted-foreground mb-2">
                         Run an architecture simulation before applying a rollback.
