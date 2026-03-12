@@ -31,7 +31,8 @@ Deno.serve(async (req) => {
 
     switch (action) {
       case "route_task": {
-        const { organization_id, workspace_id, initiative_id, task_context, pipeline_stage, task_type, candidate_agents } = body;
+        const { workspace_id, initiative_id, task_context, pipeline_stage, task_type, candidate_agents } = body;
+        const organization_id = orgId;
 
         // Score each candidate based on suitability, risk, evidence
         const scored = (candidate_agents || []).map((c: any) => {
