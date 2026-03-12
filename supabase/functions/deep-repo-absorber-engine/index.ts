@@ -180,8 +180,27 @@ serve(async (req) => {
       ghHeaders["Authorization"] = `Bearer ${gitConns[0].github_token}`;
     }
 
-    // 1. Surface Mapping
-    const repoInfo = await fetchGitHubJson(`${GITHUB_API}/repos/${owner}/${repo}`, ghHeaders);
+    // 1. Surface Mapping — verify repo access before proceeding
+    const hasToken = !!ghHeaders["Authorization"];
+    let repoInfo: any;
+    try {
+      repoInfo = await fetchGitHubJson(`${GITHUB_API}/repos/${owner}/${repo}`, ghHeaders);
+    } catch (repoErr: any) {
+      const is404 = repoErr?.message?.includes("(404)");
+      if (is404 && !hasToken) {
+        return errorResponse(
+          `Repository "${owner}/${repo}" not found. This may be a private repo — please configure a GitHub connection with access to this repository in your organization settings.`,
+          404, req
+        );
+      }
+      if (is404) {
+        return errorResponse(
+          `Repository "${owner}/${repo}" not found or your GitHub token does not have access. Verify the URL and token permissions.`,
+          404, req
+        );
+      }
+      throw repoErr;
+    }
     const defaultBranch = repoInfo?.default_branch || "main";
 
     const treeUrl = `${GITHUB_API}/repos/${owner}/${repo}/git/trees/${encodeURIComponent(defaultBranch)}?recursive=1`;
