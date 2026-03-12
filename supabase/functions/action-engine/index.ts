@@ -88,20 +88,28 @@ serve(async (req) => {
         const intentId = crypto.randomUUID();
         const triggerId = crypto.randomUUID();
 
+        // Guard: organization_id must be a valid UUID — "global" is not valid
+        if (!orgId || orgId === "global") {
+          console.warn("[ActionEngine] Skipping action — missing valid organization_id (UUID required)");
+          return null;
+        }
+
+        const isShell = action.type === "shell";
+
         const { data, error } = await supabaseClient
           .from("action_registry_entries")
           .insert({
             action_id: actionId,
             intent_id: intentId,
             trigger_id: triggerId,
-            organization_id: orgId || "global",
+            organization_id: orgId,
             trigger_type: `bolt_${action.type}`,
-            initiative_id: initiativeId,
+            initiative_id: initiativeId || null,
             stage: stage,
-            execution_mode: "auto",
-            status: "queued",
-            risk_level: action.type === "shell" ? "high" : "low",
-            requires_approval: action.type === "shell",
+            execution_mode: isShell ? "approval_required" : "auto",
+            status: isShell ? "pending" : "queued",
+            risk_level: isShell ? "high" : "low",
+            requires_approval: isShell,
             rollback_available: action.type === "file",
             description,
             reason: "Axion Action Engine artifact formalization",
@@ -110,8 +118,8 @@ serve(async (req) => {
               artifactTitle: action.artifactTitle,
               type: action.type,
               filePath: action.filePath,
-              content: action.content
-            }
+              content: action.content,
+            },
           })
           .select()
           .single();
