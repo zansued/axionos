@@ -274,6 +274,17 @@ export const OWNER_ROUTES: RouteEntry[] = [
   },
   // Governance
   {
+    path: "/owner/delivery-governance",
+    title: "Delivery Governance",
+    description: "Pipeline governance & approvals",
+    icon: Shield,
+    mode: "owner",
+    group: "Governance",
+    order: 11.5,
+    sidebar: true,
+    pageKey: "governance",
+  },
+  {
     path: "/owner/autonomy-posture",
     title: "Autonomy Posture",
     description: "Autonomy governance controls",

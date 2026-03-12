@@ -280,15 +280,7 @@ const App = () => (
                             <Route path="/builder/throughput-metrics" element={<ProtectedRoute><ThroughputMetricsPage /></ProtectedRoute>} />
                             <Route path="/builder/logs-explorer" element={<ProtectedRoute><LogsExplorerPage /></ProtectedRoute>} />
 
-                            {/* System Intelligence */}
-                            <Route path="/builder/system-intelligence" element={<ProtectedRoute><SystemIntelligence /></ProtectedRoute>} />
-
-                            {/* Governance */}
-                            <Route path="/builder/delivery-governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
-                            <Route path="/builder/governance-overview" element={<ProtectedRoute><GovernanceOverviewPage /></ProtectedRoute>} />
-                            <Route path="/builder/pending-approvals" element={<ProtectedRoute><ApprovalQueue /></ProtectedRoute>} />
-                            <Route path="/builder/policy-controls" element={<ProtectedRoute><PolicyControlsPage /></ProtectedRoute>} />
-                            <Route path="/builder/action-center" element={<ProtectedRoute><ActionCenter /></ProtectedRoute>} />
+                            {/* Builder governance sub-pages redirect to owner */}
 
                             {/* Settings */}
                             <Route path="/builder/settings" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
