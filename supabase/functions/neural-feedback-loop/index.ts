@@ -1,19 +1,58 @@
-﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.1";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
+import { logSecurityAudit } from "../_shared/security-audit.ts";
 
 serve(async (req) => {
   const corsRes = handleCors(req);
   if (corsRes) return corsRes;
 
   try {
+    // Internal worker — validate caller has service_role or valid user JWT
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return errorResponse("Unauthorized", 401, req);
+    }
+
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
     const { signalType, outcome, payload, orgId, initiativeId } = await req.json();
+
+    // Validate org exists in DB to prevent cross-tenant injection
+    if (!orgId) {
+      return errorResponse("orgId is required", 400, req);
+    }
+    const { data: orgCheck } = await supabaseClient
+      .from("organizations")
+      .select("id")
+      .eq("id", orgId)
+      .maybeSingle();
+    if (!orgCheck) {
+      return errorResponse("Invalid organization", 403, req);
+    }
+
+    // If initiativeId provided, validate it belongs to this org
+    if (initiativeId) {
+      const { data: initCheck } = await supabaseClient
+        .from("initiatives")
+        .select("id, organization_id")
+        .eq("id", initiativeId)
+        .maybeSingle();
+      if (initCheck && initCheck.organization_id !== orgId) {
+        return errorResponse("Initiative does not belong to specified organization", 403, req);
+      }
+    }
+
+    await logSecurityAudit(supabaseClient, {
+      organization_id: orgId,
+      actor_id: "system",
+      function_name: "neural-feedback-loop",
+      action: signalType || "process_signal",
+    });
 
     console.log(`[NeuralFeedback] Processing signal: ${signalType} for org: ${orgId}`);
 

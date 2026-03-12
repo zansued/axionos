@@ -38,6 +38,33 @@ serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
   );
 
+  // Sprint 198: Validate user has org access via initiative ownership
+  const { data: initiative } = await serviceClient
+    .from("initiatives")
+    .select("id, organization_id")
+    .eq("id", initiativeId)
+    .maybeSingle();
+  if (!initiative) {
+    return errorResponse("Initiative not found", 404);
+  }
+
+  const { data: membership } = await serviceClient
+    .from("organization_members")
+    .select("role")
+    .eq("organization_id", initiative.organization_id)
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!membership) {
+    return errorResponse("Access denied", 403);
+  }
+
+  await logSecurityAudit(serviceClient, {
+    organization_id: initiative.organization_id,
+    actor_id: user.id,
+    function_name: "architecture-subjob-retry",
+    action: `retry_subjob_${subjobKey}`,
+  });
+
   const { data: subjob, error: subjobErr } = await serviceClient
     .from("pipeline_subjobs")
     .select("id, status, attempt_number, max_attempts")
