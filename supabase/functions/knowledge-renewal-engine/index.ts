@@ -17,6 +17,35 @@ import {
   type RenewalTrigger,
 } from "../_shared/canon-renewal/knowledge-renewal-engine.ts";
 
+// ─── Renewal-to-Governance Mapping ───
+
+const GOVERNANCE_ACTION_MAP: Record<string, { governanceAction: string; requiresBridge: boolean }> = {
+  deprecate_entry: { governanceAction: "deprecate_canon_entry", requiresBridge: true },
+  supersede_with_stronger: { governanceAction: "supersede_knowledge_object", requiresBridge: true },
+  restore_confidence: { governanceAction: "approve_confidence_restoration", requiresBridge: true },
+  reopen_governance_review: { governanceAction: "governance_review_required", requiresBridge: true },
+  refresh_source_evidence: { governanceAction: "refresh_source_evidence", requiresBridge: false },
+  rerun_distillation: { governanceAction: "rerun_distillation", requiresBridge: false },
+};
+
+const OUTCOME_BRIDGE_ELIGIBILITY: Record<string, boolean> = {
+  confidence_reduced: true,
+  needs_human_review: true,
+  superseded: true,
+  deprecated: true,
+  confidence_restored: false,  // auto-resolved unless high-impact
+  renewed: false,
+  revalidated: false,
+};
+
+function isBridgeEligible(outcome: string, proposalType: string, strength: number): boolean {
+  const mapping = GOVERNANCE_ACTION_MAP[proposalType];
+  if (mapping?.requiresBridge) return true;
+  if (OUTCOME_BRIDGE_ELIGIBILITY[outcome]) return true;
+  if (strength > 0.8) return true;
+  return false;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -38,7 +67,6 @@ Deno.serve(async (req) => {
     const { action, organizationId } = body;
     if (!organizationId) throw new Error("organizationId required");
 
-    // Verify org membership
     const { data: membership } = await sc
       .from("organization_members")
       .select("id")
@@ -50,50 +78,55 @@ Deno.serve(async (req) => {
     let result: any;
 
     switch (action) {
-      case "scan_triggers": {
+      case "scan_triggers":
         result = await scanTriggers(sc, organizationId);
         break;
-      }
-      case "create_trigger": {
+      case "create_trigger":
         result = await createTrigger(sc, organizationId, body);
         break;
-      }
-      case "start_revalidation": {
+      case "start_revalidation":
         result = await startRevalidation(sc, organizationId, body);
         break;
-      }
-      case "assess_confidence_recovery": {
+      case "assess_confidence_recovery":
         result = assessConfidenceRecovery(body.input as ConfidenceRecoveryInput);
         break;
-      }
-      case "generate_proposal": {
+      case "generate_proposal":
         result = await generateProposal(sc, organizationId, body);
         break;
-      }
-      case "list_triggers": {
+      case "list_triggers":
         result = await listTriggers(sc, organizationId, body.status);
         break;
-      }
-      case "list_workflows": {
+      case "list_workflows":
         result = await listWorkflows(sc, organizationId, body.status);
         break;
-      }
-      case "list_proposals": {
+      case "list_proposals":
         result = await listProposals(sc, organizationId, body.status);
         break;
-      }
-      case "list_history": {
+      case "list_history":
         result = await listHistory(sc, organizationId, body.limit);
         break;
-      }
-      case "decide_proposal": {
+      case "decide_proposal":
         result = await decideProposal(sc, organizationId, body, user.id);
         break;
-      }
-      case "complete_workflow": {
+      case "complete_workflow":
         result = await completeWorkflow(sc, organizationId, body, user.id);
         break;
-      }
+      // ── Sprint 185: Bridge actions ──
+      case "create_bridge":
+        result = await createBridge(sc, organizationId, body, user.id);
+        break;
+      case "list_bridges":
+        result = await listBridges(sc, organizationId, body.status);
+        break;
+      case "decide_bridge":
+        result = await decideBridge(sc, organizationId, body, user.id);
+        break;
+      case "back_propagate":
+        result = await backPropagate(sc, organizationId, body, user.id);
+        break;
+      case "list_bridge_events":
+        result = await listBridgeEvents(sc, organizationId, body.bridgeId);
+        break;
       default:
         throw new Error(`Unknown action: ${action}`);
     }
@@ -109,10 +142,9 @@ Deno.serve(async (req) => {
   }
 });
 
-// ─── Actions ───
+// ─── Original Actions ───
 
 async function scanTriggers(sc: any, orgId: string) {
-  // Fetch canon entries with their metrics
   const { data: entries } = await sc
     .from("canon_entries")
     .select("id, confidence_score, created_at, updated_at")
@@ -133,7 +165,7 @@ async function scanTriggers(sc: any, orgId: string) {
       entry_id: entry.id,
       confidence_score: entry.confidence_score || 0.5,
       age_days: Math.round(ageDays),
-      recent_usage_count: 0, // would need canon usage tracking
+      recent_usage_count: 0,
       negative_feedback_count: 0,
       positive_feedback_count: 0,
       source_reliability_score: 50,
@@ -146,7 +178,6 @@ async function scanTriggers(sc: any, orgId: string) {
     allTriggers.push(...triggers);
   }
 
-  // Persist new triggers
   if (allTriggers.length > 0) {
     const rows = allTriggers.map((t) => ({
       organization_id: orgId,
@@ -210,7 +241,6 @@ async function startRevalidation(sc: any, orgId: string, body: any) {
 
   if (error) throw error;
 
-  // Update trigger status
   await sc.from("knowledge_renewal_triggers")
     .update({ status: "in_progress" })
     .eq("id", triggerId);
@@ -240,7 +270,6 @@ async function completeWorkflow(sc: any, orgId: string, body: any, userId: strin
     evidenceStrength || 0.5,
   );
 
-  // Update workflow
   await sc.from("knowledge_revalidation_workflows").update({
     status: "completed",
     outcome,
@@ -252,7 +281,6 @@ async function completeWorkflow(sc: any, orgId: string, body: any, userId: strin
     updated_at: new Date().toISOString(),
   }).eq("id", workflowId);
 
-  // Resolve trigger
   if (wf.trigger_id) {
     await sc.from("knowledge_renewal_triggers").update({
       status: "resolved",
@@ -262,7 +290,6 @@ async function completeWorkflow(sc: any, orgId: string, body: any, userId: strin
     }).eq("id", wf.trigger_id);
   }
 
-  // Record history
   await sc.from("knowledge_renewal_history").insert({
     organization_id: orgId,
     target_entry_id: wf.target_entry_id,
@@ -276,6 +303,11 @@ async function completeWorkflow(sc: any, orgId: string, body: any, userId: strin
     actor_id: userId,
     evidence_refs: evidenceSummary?.refs || [],
   });
+
+  // Sprint 185: Auto-create bridge if outcome is governance-eligible
+  if (OUTCOME_BRIDGE_ELIGIBILITY[outcome]) {
+    await autoCreateBridge(sc, orgId, wf, outcome, confBefore, confAfter, userId);
+  }
 
   return { outcome, confidence_before: confBefore, confidence_after: confAfter };
 }
@@ -308,14 +340,24 @@ async function generateProposal(sc: any, orgId: string, body: any) {
   }).select().single();
 
   if (error) throw error;
+
+  // Sprint 185: Check if this proposal should bridge to governance
+  if (data && isBridgeEligible(workflowOutcome || "", proposal.proposal_type, trigger.strength || 0)) {
+    await autoCreateBridgeFromProposal(sc, orgId, data, trigger, body.workflowId, userId_placeholder);
+  }
+
   return { proposal: data };
 }
+
+// Placeholder — generateProposal doesn't have userId; bridge creation from proposal
+// handled via create_bridge action or auto in completeWorkflow
+const userId_placeholder = "system";
 
 async function decideProposal(sc: any, orgId: string, body: any, userId: string) {
   const { proposalId, decision, notes } = body;
 
   const { error } = await sc.from("knowledge_renewal_proposals").update({
-    status: decision, // "approved" | "rejected" | "deferred"
+    status: decision,
     decided_by: userId,
     decided_at: new Date().toISOString(),
     decision_notes: notes || "",
@@ -324,7 +366,6 @@ async function decideProposal(sc: any, orgId: string, body: any, userId: string)
 
   if (error) throw error;
 
-  // Record in history
   const { data: proposal } = await sc.from("knowledge_renewal_proposals")
     .select("*").eq("id", proposalId).single();
 
@@ -371,4 +412,261 @@ async function listHistory(sc: any, orgId: string, limit?: number) {
     .order("created_at", { ascending: false })
     .limit(limit || 50);
   return { history: data || [] };
+}
+
+// ─── Sprint 185: Bridge Actions ───
+
+async function autoCreateBridge(
+  sc: any, orgId: string, workflow: any,
+  outcome: string, confBefore: number, confAfter: number, userId: string
+) {
+  const mapping = GOVERNANCE_ACTION_MAP[outcome] || { governanceAction: "governance_review_required", requiresBridge: true };
+
+  const { data: bridge } = await sc.from("renewal_governance_bridge").insert({
+    organization_id: orgId,
+    renewal_workflow_id: workflow.id,
+    renewal_trigger_id: workflow.trigger_id,
+    target_entry_id: workflow.target_entry_id,
+    target_type: workflow.target_type || "canon_entry",
+    renewal_outcome: outcome,
+    governance_action_type: mapping.governanceAction,
+    bridge_status: "bridge_eligible",
+    confidence_before: confBefore,
+    confidence_after: confAfter,
+    urgency: confAfter < 0.2 ? "high" : confAfter < 0.4 ? "medium" : "low",
+    rationale: `Revalidation outcome '${outcome}' requires governance review. Confidence: ${confBefore} → ${confAfter}.`,
+    evidence_refs: workflow.evidence_summary?.refs || [],
+    recommended_governance_action: mapping.governanceAction,
+  }).select().single();
+
+  if (bridge) {
+    await sc.from("renewal_governance_bridge_events").insert({
+      organization_id: orgId,
+      bridge_id: bridge.id,
+      event_type: "bridge_created",
+      actor_id: userId,
+      details: { outcome, confidence_before: confBefore, confidence_after: confAfter, workflow_id: workflow.id },
+    });
+
+    await sc.from("knowledge_renewal_history").insert({
+      organization_id: orgId,
+      target_entry_id: workflow.target_entry_id,
+      target_type: workflow.target_type || "canon_entry",
+      event_type: "bridge_created",
+      explanation: `Governance bridge created for outcome '${outcome}'.`,
+      actor_id: userId,
+      evidence_refs: [],
+    });
+  }
+
+  return bridge;
+}
+
+async function autoCreateBridgeFromProposal(
+  sc: any, orgId: string, proposal: any, trigger: any, workflowId: string | null, actorId: string
+) {
+  const mapping = GOVERNANCE_ACTION_MAP[proposal.proposal_type] || { governanceAction: proposal.proposal_type, requiresBridge: true };
+
+  const { data: bridge } = await sc.from("renewal_governance_bridge").insert({
+    organization_id: orgId,
+    renewal_proposal_id: proposal.id,
+    renewal_workflow_id: workflowId,
+    renewal_trigger_id: trigger.id,
+    target_entry_id: proposal.target_entry_id,
+    target_type: trigger.target_type || "canon_entry",
+    renewal_outcome: proposal.proposal_type,
+    governance_action_type: mapping.governanceAction,
+    bridge_status: "bridge_eligible",
+    confidence_before: null,
+    confidence_after: null,
+    urgency: proposal.urgency,
+    rationale: proposal.rationale,
+    evidence_refs: proposal.evidence_refs || [],
+    recommended_governance_action: mapping.governanceAction,
+  }).select().single();
+
+  if (bridge) {
+    await sc.from("renewal_governance_bridge_events").insert({
+      organization_id: orgId,
+      bridge_id: bridge.id,
+      event_type: "bridge_created_from_proposal",
+      actor_id: actorId,
+      details: { proposal_id: proposal.id, proposal_type: proposal.proposal_type },
+    });
+  }
+
+  return bridge;
+}
+
+async function createBridge(sc: any, orgId: string, body: any, userId: string) {
+  const { proposalId, triggerId, workflowId, targetEntryId, targetType, renewalOutcome, governanceActionType, urgency, rationale, evidenceRefs, confidenceBefore, confidenceAfter } = body;
+
+  const mapping = GOVERNANCE_ACTION_MAP[governanceActionType] || { governanceAction: governanceActionType, requiresBridge: true };
+
+  const { data, error } = await sc.from("renewal_governance_bridge").insert({
+    organization_id: orgId,
+    renewal_proposal_id: proposalId || null,
+    renewal_workflow_id: workflowId || null,
+    renewal_trigger_id: triggerId || null,
+    target_entry_id: targetEntryId,
+    target_type: targetType || "canon_entry",
+    renewal_outcome: renewalOutcome,
+    governance_action_type: mapping.governanceAction,
+    bridge_status: "bridge_eligible",
+    confidence_before: confidenceBefore,
+    confidence_after: confidenceAfter,
+    urgency: urgency || "medium",
+    rationale: rationale || "",
+    evidence_refs: evidenceRefs || [],
+    recommended_governance_action: mapping.governanceAction,
+  }).select().single();
+
+  if (error) throw error;
+
+  await sc.from("renewal_governance_bridge_events").insert({
+    organization_id: orgId,
+    bridge_id: data.id,
+    event_type: "bridge_created_manually",
+    actor_id: userId,
+    details: { rationale },
+  });
+
+  return { bridge: data };
+}
+
+async function listBridges(sc: any, orgId: string, status?: string) {
+  let q = sc.from("renewal_governance_bridge").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(100);
+  if (status) q = q.eq("bridge_status", status);
+  const { data } = await q;
+  return { bridges: data || [] };
+}
+
+async function decideBridge(sc: any, orgId: string, body: any, userId: string) {
+  const { bridgeId, decision, notes } = body;
+
+  const statusMap: Record<string, string> = {
+    approve: "governance_approved",
+    reject: "governance_rejected",
+    defer: "awaiting_governance_review",
+  };
+
+  const newStatus = statusMap[decision] || "governance_decided";
+
+  const { error } = await sc.from("renewal_governance_bridge").update({
+    bridge_status: newStatus,
+    governance_decision: decision,
+    governance_decision_notes: notes || "",
+    governance_decided_by: userId,
+    governance_decided_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  }).eq("id", bridgeId).eq("organization_id", orgId);
+
+  if (error) throw error;
+
+  await sc.from("renewal_governance_bridge_events").insert({
+    organization_id: orgId,
+    bridge_id: bridgeId,
+    event_type: `governance_${decision}`,
+    actor_id: userId,
+    details: { decision, notes },
+  });
+
+  // Record in renewal history
+  const { data: bridge } = await sc.from("renewal_governance_bridge").select("*").eq("id", bridgeId).single();
+  if (bridge) {
+    await sc.from("knowledge_renewal_history").insert({
+      organization_id: orgId,
+      target_entry_id: bridge.target_entry_id,
+      target_type: bridge.target_type,
+      event_type: `governance_bridge_${decision}`,
+      explanation: `Governance ${decision} for renewal bridge. Action: ${bridge.governance_action_type}. ${notes || ""}`,
+      actor_id: userId,
+      evidence_refs: bridge.evidence_refs || [],
+    });
+  }
+
+  return { success: true, status: newStatus };
+}
+
+async function backPropagate(sc: any, orgId: string, body: any, userId: string) {
+  const { bridgeId } = body;
+
+  const { data: bridge } = await sc.from("renewal_governance_bridge")
+    .select("*").eq("id", bridgeId).eq("organization_id", orgId).single();
+
+  if (!bridge) throw new Error("Bridge not found");
+  if (bridge.bridge_status !== "governance_approved") {
+    throw new Error("Can only back-propagate approved bridges");
+  }
+
+  let propagationResult: any = { applied: false };
+
+  // Apply governance outcome back to the knowledge layer
+  switch (bridge.governance_action_type) {
+    case "deprecate_canon_entry": {
+      await sc.from("canon_entries")
+        .update({ lifecycle_status: "deprecated", updated_at: new Date().toISOString() })
+        .eq("id", bridge.target_entry_id)
+        .eq("organization_id", orgId);
+      propagationResult = { applied: true, action: "deprecated", target: bridge.target_entry_id };
+      break;
+    }
+    case "approve_confidence_restoration": {
+      if (bridge.confidence_after != null) {
+        await sc.from("canon_entries")
+          .update({ confidence_score: bridge.confidence_after, updated_at: new Date().toISOString() })
+          .eq("id", bridge.target_entry_id)
+          .eq("organization_id", orgId);
+        propagationResult = { applied: true, action: "confidence_restored", confidence: bridge.confidence_after };
+      }
+      break;
+    }
+    case "supersede_knowledge_object": {
+      await sc.from("canon_entries")
+        .update({ lifecycle_status: "superseded", updated_at: new Date().toISOString() })
+        .eq("id", bridge.target_entry_id)
+        .eq("organization_id", orgId);
+      propagationResult = { applied: true, action: "superseded", target: bridge.target_entry_id };
+      break;
+    }
+    default: {
+      propagationResult = { applied: false, reason: `No auto-propagation for action: ${bridge.governance_action_type}` };
+    }
+  }
+
+  const bpStatus = propagationResult.applied ? "applied" : "skipped";
+
+  await sc.from("renewal_governance_bridge").update({
+    back_propagation_status: bpStatus,
+    back_propagation_result: propagationResult,
+    back_propagated_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  }).eq("id", bridgeId);
+
+  await sc.from("renewal_governance_bridge_events").insert({
+    organization_id: orgId,
+    bridge_id: bridgeId,
+    event_type: "back_propagated",
+    actor_id: userId,
+    details: propagationResult,
+  });
+
+  await sc.from("knowledge_renewal_history").insert({
+    organization_id: orgId,
+    target_entry_id: bridge.target_entry_id,
+    target_type: bridge.target_type,
+    event_type: "governance_back_propagated",
+    explanation: `Governance decision applied: ${bridge.governance_action_type}. Result: ${JSON.stringify(propagationResult)}.`,
+    actor_id: userId,
+    evidence_refs: bridge.evidence_refs || [],
+  });
+
+  return { success: true, propagation: propagationResult };
+}
+
+async function listBridgeEvents(sc: any, orgId: string, bridgeId?: string) {
+  let q = sc.from("renewal_governance_bridge_events").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
+  if (bridgeId) q = q.eq("bridge_id", bridgeId);
+  const { data } = await q;
+  return { events: data || [] };
 }

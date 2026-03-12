@@ -21,6 +21,7 @@ export function useKnowledgeRenewal() {
     workflows: ["renewal-workflows", currentOrg?.id],
     proposals: ["renewal-proposals", currentOrg?.id],
     history: ["renewal-history", currentOrg?.id],
+    bridges: ["renewal-bridges", currentOrg?.id],
   };
 
   const invalidateAll = () => {
@@ -48,6 +49,12 @@ export function useKnowledgeRenewal() {
   const historyQuery = useQuery({
     queryKey: KEYS.history,
     queryFn: () => invoke("list_history"),
+    enabled: !!currentOrg,
+  });
+
+  const bridgesQuery = useQuery({
+    queryKey: KEYS.bridges,
+    queryFn: () => invoke("list_bridges"),
     enabled: !!currentOrg,
   });
 
@@ -92,16 +99,40 @@ export function useKnowledgeRenewal() {
     onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
   });
 
+  // Sprint 185: Bridge mutations
+  const createBridge = useMutation({
+    mutationFn: (params: Record<string, any>) => invoke("create_bridge", params),
+    onSuccess: () => { invalidateAll(); toast({ title: "Bridge de governança criado" }); },
+    onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
+  });
+
+  const decideBridge = useMutation({
+    mutationFn: (params: { bridgeId: string; decision: string; notes?: string }) =>
+      invoke("decide_bridge", params),
+    onSuccess: () => { invalidateAll(); toast({ title: "Decisão de bridge registrada" }); },
+    onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
+  });
+
+  const backPropagate = useMutation({
+    mutationFn: (params: { bridgeId: string }) => invoke("back_propagate", params),
+    onSuccess: () => { invalidateAll(); toast({ title: "Decisão propagada ao conhecimento" }); },
+    onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
+  });
+
   return {
     triggers: triggersQuery.data?.triggers || [],
     workflows: workflowsQuery.data?.workflows || [],
     proposals: proposalsQuery.data?.proposals || [],
     history: historyQuery.data?.history || [],
+    bridges: bridgesQuery.data?.bridges || [],
     loading: triggersQuery.isLoading,
     scanTriggers,
     startRevalidation,
     completeWorkflow,
     generateProposal,
     decideProposal,
+    createBridge,
+    decideBridge,
+    backPropagate,
   };
 }
