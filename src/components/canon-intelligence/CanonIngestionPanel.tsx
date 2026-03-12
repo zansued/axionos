@@ -178,6 +178,12 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
           {ingestingAll ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Zap className="h-3.5 w-3.5 mr-1.5" />}
           Ingest All Sources
         </Button>
+        {stats && stats.pendingCandidates > 0 && (
+          <Button size="sm" variant="secondary" onClick={runReviewPipeline} disabled={reviewingPipeline}>
+            {reviewingPipeline ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Bot className="h-3.5 w-3.5 mr-1.5" />}
+            Review & Promote ({stats.pendingCandidates} pending)
+          </Button>
+        )}
         {stats && stats.approvedCandidates > 0 && (
           <Button size="sm" variant="default" onClick={batchPromoteApproved} disabled={promoting}>
             {promoting ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <ArrowUpCircle className="h-3.5 w-3.5 mr-1.5" />}
