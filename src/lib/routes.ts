@@ -222,6 +222,17 @@ export const OWNER_ROUTES: RouteEntry[] = [
     pageKey: "knowledge-health",
   },
   {
+    path: "/owner/knowledge-portfolio",
+    title: "Knowledge Portfolio",
+    description: "Portfolio optimization, redundancy & coverage analysis",
+    icon: BarChart3,
+    mode: "owner",
+    group: "Institutional Memory",
+    order: 5.6,
+    sidebar: true,
+    pageKey: "knowledge-portfolio",
+  },
+  {
     path: "/owner/security-war-room",
     title: "Security War Room",
     description: "Active security operations",
