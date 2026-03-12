@@ -507,6 +507,7 @@ This block introduces **governed knowledge renewal**: the ability to detect agin
 | 22 | Repository Intelligence & Institutional Learning | AI | 164-171 |
 | 23 | Self-Improving Architecture Engine | AJ | 172-179 |
 | 24 | Knowledge Provenance & Trust-Weighted Intelligence | AK | 180-181 |
+| 25 | Knowledge Renewal & Revalidation Engine | AL | 182-183 |
 
 ---
 
