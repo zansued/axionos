@@ -3,6 +3,9 @@ import { computeDoctrineProfile, computeDivergence } from '../_shared/tenant-doc
 import { detectDivergence } from '../_shared/tenant-doctrine/doctrine-divergence-detector.ts';
 import { applyAdjustments } from '../_shared/tenant-doctrine/operating-profile-adjuster.ts';
 import { explainDoctrine } from '../_shared/tenant-doctrine/tenant-doctrine-explainer.ts';
+import { handleCors, errorResponse } from '../_shared/cors.ts';
+import { authenticateWithRateLimit } from '../_shared/auth.ts';
+import { logSecurityAudit, resolveAndValidateOrg } from '../_shared/security-audit.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -10,16 +13,29 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
-
-  const supabaseUrl = Deno.env.get('SUPABASE_URL');
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-  if (!supabaseUrl || !serviceRoleKey) return json({ error: 'Server configuration error' }, 500);
-
-  const sb = createClient(supabaseUrl, serviceRoleKey);
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const { action, params } = await req.json();
+    // Auth hardening — Sprint 197
+    const authResult = await authenticateWithRateLimit(req, 'tenant-doctrine-engine');
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: sb } = authResult;
+
+    const { action, params: rawParams } = await req.json();
+    const payloadOrgId = rawParams?.organization_id;
+
+    const { orgId, error: orgError } = await resolveAndValidateOrg(sb, user.id, payloadOrgId);
+    if (orgError || !orgId) return errorResponse(orgError || 'Organization access denied', 403, req);
+
+    // Inject validated org
+    const params = { ...rawParams, organization_id: orgId };
+
+    await logSecurityAudit(sb, {
+      organization_id: orgId, actor_id: user.id,
+      function_name: 'tenant-doctrine-engine', action: action || 'unknown',
+    });
+
     switch (action) {
       case 'compute_profile': return await handleComputeProfile(sb, params);
       case 'compare_declared_vs_observed': return await handleCompare(sb, params);

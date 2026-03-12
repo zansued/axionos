@@ -7,6 +7,9 @@ import { validateEvolutionTransition } from "../_shared/canon-evolution/canon-ev
 import { buildTrial } from "../_shared/canon-evolution/canon-trial-manager.ts";
 import { evaluatePromotion } from "../_shared/canon-evolution/promotion-decision-engine.ts";
 import { explainCanonChange, explainCanonEvolutionProcess } from "../_shared/canon-evolution/external-knowledge-explainer.ts";
+import { handleCors, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,14 +17,25 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
-    const { action, organizationId, ...params } = await req.json();
+    // Auth hardening — Sprint 197
+    const authResult = await authenticateWithRateLimit(req, "canon-evolution-control");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
+
+    const { action, organizationId: payloadOrgId, ...params } = await req.json();
+
+    const { orgId: organizationId, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organizationId) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabase, {
+      organization_id: organizationId, actor_id: user.id,
+      function_name: "canon-evolution-control", action: action || "unknown",
+    });
+
     const json = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
     switch (action) {

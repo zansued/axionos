@@ -64,19 +64,26 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    // Auth hardening — Sprint 197
+    const authResult = await authenticateWithRateLimit(req, "institutional-memory");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
     const body: RequestBody = await req.json();
-    const { action, organization_id, workspace_id, memory_id, filters, consolidation_input, review_input } = body;
+    const { action, organization_id: payloadOrgId, workspace_id, memory_id, filters, consolidation_input, review_input } = body;
 
-    if (!organization_id) {
-      return new Response(JSON.stringify({ error: "organization_id required" }), {
-        status: 400,
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) {
+      return new Response(JSON.stringify({ error: orgError || "Organization access denied" }), {
+        status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "institutional-memory", action: action || "unknown",
+    });
 
     // ─── LIST MEMORIES ────────────────────────────────────────────────
     if (action === "list") {

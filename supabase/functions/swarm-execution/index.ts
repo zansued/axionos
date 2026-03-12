@@ -1,4 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { handleCors, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -7,16 +10,27 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS")
-    return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    // Auth hardening — Sprint 197
+    const authResult = await authenticateWithRateLimit(req, "swarm-execution");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
-    const { action, ...params } = await req.json();
+    const body = await req.json();
+    const { action, organization_id: payloadOrgId, ...params } = body;
+
+    const { orgId, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId || params.organization_id);
+    if (orgError || !orgId) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    params.organization_id = orgId;
+
+    await logSecurityAudit(supabase, {
+      organization_id: orgId, actor_id: user.id,
+      function_name: "swarm-execution", action: action || "unknown",
+    });
 
     switch (action) {
       case "create_swarm_campaign": return await createCampaign(supabase, params);
