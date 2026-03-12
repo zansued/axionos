@@ -329,7 +329,7 @@ Return ONLY valid JSON:
               slug: `${slug}-${Date.now()}-${promoted}`,
               canon_type: mapKnowledgeType(candidate.knowledge_type),
               practice_type: candidate.pattern_classification || candidate.knowledge_type || "pattern",
-              lifecycle_status: "active",
+              lifecycle_status: "approved",
               approval_status: "approved",
               confidence_score: Math.min((candidate.evaluation_score || candidate.source_reliability_score || 50) / 100, 1),
               summary: candidate.summary || "",
