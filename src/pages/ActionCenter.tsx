@@ -519,14 +519,21 @@ function ActionRow({ action, isSelected, onSelect }: { action: ActionEntry; isSe
           {action.requires_approval && <Badge variant="outline" className="text-[10px] text-warning border-warning/20">Approval</Badge>}
         </div>
         <p className="text-xs text-foreground mt-0.5 truncate">{action.description || action.reason || action.action_id}</p>
-      </div>
-      <div className="text-right shrink-0">
-        <p className="text-[10px] text-muted-foreground">{fmtDateShort(action.created_at)}</p>
-        {action.outcome_status && (
-          <Badge variant="outline" className={`text-[9px] mt-0.5 ${action.outcome_status === "success" ? "text-primary" : "text-destructive"}`}>
-            {action.outcome_status}
-          </Badge>
-        )}
+        {/* Decision Path mini-indicator */}
+        <div className="flex items-center gap-1 mt-0.5">
+          <BookOpen className="h-2.5 w-2.5 text-primary/60" />
+          <span className="text-[9px] text-muted-foreground">Canon</span>
+          <span className="text-[9px] text-muted-foreground/40">→</span>
+          <Shield className="h-2.5 w-2.5 text-warning/60" />
+          <span className="text-[9px] text-muted-foreground">{MODE_CFG[action.execution_mode] || action.execution_mode}</span>
+          {action.policy_decision_id && (
+            <>
+              <span className="text-[9px] text-muted-foreground/40">→</span>
+              <GitBranch className="h-2.5 w-2.5 text-info/60" />
+              <span className="text-[9px] text-muted-foreground">Policy</span>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
