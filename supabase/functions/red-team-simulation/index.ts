@@ -4,84 +4,101 @@ import { validateSandbox, getDefaultSandboxConfig } from "../_shared/red-team/ad
 import { computeFragilityScore } from "../_shared/red-team/fragility-scorer.ts";
 import { detectBreach } from "../_shared/red-team/breach-detector.ts";
 import { explainSimulation } from "../_shared/red-team/simulation-explainer.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
+    // 1. Authenticate + rate limit
+    const authResult = await authenticateWithRateLimit(req, "red-team-simulation");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient } = authResult;
 
-    const { action, ...params } = await req.json();
+    const body = await req.json();
+    const { action, ...params } = body;
+
+    // 2. Resolve & validate org
+    const { orgId, error: orgError } = await resolveAndValidateOrg(
+      serviceClient, user.id, params.organization_id
+    );
+    if (orgError || !orgId) {
+      return errorResponse(orgError || "Organization access denied", 403, req);
+    }
+
+    // 3. Audit
+    await logSecurityAudit(serviceClient, {
+      organization_id: orgId,
+      actor_id: user.id,
+      function_name: "red-team-simulation",
+      action,
+      context: { params_keys: Object.keys(params) },
+    });
 
     switch (action) {
       case "list_exercises": {
-        const { data, error } = await supabase
+        const { data, error } = await serviceClient
           .from("red_team_exercises")
           .select("*")
+          .eq("organization_id", orgId)
           .order("created_at", { ascending: false })
           .limit(50);
         if (error) throw error;
-        return new Response(JSON.stringify({ exercises: data }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        return jsonResponse({ exercises: data }, 200, req);
       }
 
       case "list_scenarios": {
-        const { data, error } = await supabase
+        const { data, error } = await serviceClient
           .from("red_team_scenarios")
           .select("*")
+          .eq("organization_id", orgId)
           .order("created_at", { ascending: false })
           .limit(100);
         if (error) throw error;
-        return new Response(JSON.stringify({ scenarios: data }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        return jsonResponse({ scenarios: data }, 200, req);
       }
 
       case "list_runs": {
-        const { data, error } = await supabase
+        const { data, error } = await serviceClient
           .from("red_team_simulation_runs")
           .select("*")
+          .eq("organization_id", orgId)
           .order("created_at", { ascending: false })
           .limit(50);
         if (error) throw error;
-        return new Response(JSON.stringify({ runs: data }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        return jsonResponse({ runs: data }, 200, req);
       }
 
       case "list_findings": {
-        const { data, error } = await supabase
+        const { data, error } = await serviceClient
           .from("red_team_findings")
           .select("*")
+          .eq("organization_id", orgId)
           .order("created_at", { ascending: false })
           .limit(100);
         if (error) throw error;
-        return new Response(JSON.stringify({ findings: data }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        return jsonResponse({ findings: data }, 200, req);
       }
 
       case "list_reviews": {
-        const { data, error } = await supabase
+        const { data, error } = await serviceClient
           .from("red_team_review_queue")
           .select("*")
+          .eq("organization_id", orgId)
           .order("created_at", { ascending: false })
           .limit(50);
         if (error) throw error;
-        return new Response(JSON.stringify({ reviews: data }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        return jsonResponse({ reviews: data }, 200, req);
       }
 
       case "run_simulation": {
         const sandboxConfig = getDefaultSandboxConfig();
         const validation = validateSandbox(sandboxConfig);
         if (!validation.permitted) {
-          return new Response(JSON.stringify({ error: "Sandbox validation failed", violations: validation.violations }), {
-            status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
+          return jsonResponse({ error: "Sandbox validation failed", violations: validation.violations }, 400, req);
         }
 
         const scenarioResult = runScenario({
@@ -118,41 +135,48 @@ Deno.serve(async (req) => {
           fragility_score: fragilityResult.score,
         });
 
-        return new Response(JSON.stringify({
+        await logSecurityAudit(serviceClient, {
+          organization_id: orgId,
+          actor_id: user.id,
+          function_name: "red-team-simulation",
+          action: "simulation_executed",
+          context: {
+            scenario_type: params.scenario_type,
+            breach_detected: breachResult.breach_detected,
+            fragility_score: fragilityResult.score,
+          },
+        });
+
+        return jsonResponse({
           scenario_result: scenarioResult,
           fragility: fragilityResult,
           breach: breachResult,
           explanation,
           sandbox_validation: validation,
-        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }, 200, req);
       }
 
       case "overview": {
         const [exercises, runs, findings, reviews] = await Promise.all([
-          supabase.from("red_team_exercises").select("*", { count: "exact", head: true }),
-          supabase.from("red_team_simulation_runs").select("*", { count: "exact", head: true }),
-          supabase.from("red_team_findings").select("*", { count: "exact", head: true }),
-          supabase.from("red_team_review_queue").select("*", { count: "exact", head: true }).eq("status", "pending"),
+          serviceClient.from("red_team_exercises").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+          serviceClient.from("red_team_simulation_runs").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+          serviceClient.from("red_team_findings").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+          serviceClient.from("red_team_review_queue").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("status", "pending"),
         ]);
 
-        return new Response(JSON.stringify({
+        return jsonResponse({
           total_exercises: exercises.count ?? 0,
           total_runs: runs.count ?? 0,
           total_findings: findings.count ?? 0,
           pending_reviews: reviews.count ?? 0,
-        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }, 200, req);
       }
 
       default:
-        return new Response(JSON.stringify({ error: `Unknown action: ${action}` }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return jsonResponse({ error: `Unknown action: ${action}` }, 400, req);
     }
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    console.error("[red-team-simulation] Error:", err);
+    return errorResponse(err.message, 500, req);
   }
 });

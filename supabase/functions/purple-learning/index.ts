@@ -4,74 +4,94 @@ import { buildPattern } from "../_shared/purple-learning/security-pattern-builde
 import { detectAntiPatterns } from "../_shared/purple-learning/security-anti-pattern-detector.ts";
 import { generateSecureDevFeedback } from "../_shared/purple-learning/secure-dev-feedback-engine.ts";
 import { explainSecurityCanon } from "../_shared/purple-learning/security-canon-explainer.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
-    const { action, ...params } = await req.json();
-    const json = (data: unknown) => new Response(JSON.stringify(data), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    // 1. Authenticate + rate limit
+    const authResult = await authenticateWithRateLimit(req, "purple-learning");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient } = authResult;
+
+    const body = await req.json();
+    const { action, ...params } = body;
+
+    // 2. Resolve & validate org
+    const { orgId, error: orgError } = await resolveAndValidateOrg(
+      serviceClient, user.id, params.organization_id
+    );
+    if (orgError || !orgId) {
+      return errorResponse(orgError || "Organization access denied", 403, req);
+    }
+
+    // 3. Audit
+    await logSecurityAudit(serviceClient, {
+      organization_id: orgId,
+      actor_id: user.id,
+      function_name: "purple-learning",
+      action,
+      context: { params_keys: Object.keys(params) },
+    });
 
     switch (action) {
       case "overview": {
         const [candidates, patterns, antiPatterns, checklists, rules, reviews] = await Promise.all([
-          supabase.from("security_canon_candidates").select("*", { count: "exact", head: true }),
-          supabase.from("security_pattern_entries").select("*", { count: "exact", head: true }),
-          supabase.from("security_anti_patterns").select("*", { count: "exact", head: true }),
-          supabase.from("secure_development_checklists").select("*", { count: "exact", head: true }),
-          supabase.from("security_validation_rules").select("*", { count: "exact", head: true }),
-          supabase.from("purple_learning_reviews").select("*", { count: "exact", head: true }).eq("decision", "pending"),
+          serviceClient.from("security_canon_candidates").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+          serviceClient.from("security_pattern_entries").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+          serviceClient.from("security_anti_patterns").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+          serviceClient.from("secure_development_checklists").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+          serviceClient.from("security_validation_rules").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+          serviceClient.from("purple_learning_reviews").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("decision", "pending"),
         ]);
-        return json({
+        return jsonResponse({
           total_candidates: candidates.count ?? 0,
           total_patterns: patterns.count ?? 0,
           total_anti_patterns: antiPatterns.count ?? 0,
           total_checklists: checklists.count ?? 0,
           total_rules: rules.count ?? 0,
           pending_reviews: reviews.count ?? 0,
-        });
+        }, 200, req);
       }
 
       case "list_candidates": {
-        const { data, error } = await supabase.from("security_canon_candidates").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("security_canon_candidates").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ candidates: data });
+        return jsonResponse({ candidates: data }, 200, req);
       }
 
       case "list_patterns": {
-        const { data, error } = await supabase.from("security_pattern_entries").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("security_pattern_entries").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ patterns: data });
+        return jsonResponse({ patterns: data }, 200, req);
       }
 
       case "list_anti_patterns": {
-        const { data, error } = await supabase.from("security_anti_patterns").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("security_anti_patterns").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ anti_patterns: data });
+        return jsonResponse({ anti_patterns: data }, 200, req);
       }
 
       case "list_checklists": {
-        const { data, error } = await supabase.from("secure_development_checklists").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("secure_development_checklists").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ checklists: data });
+        return jsonResponse({ checklists: data }, 200, req);
       }
 
       case "list_rules": {
-        const { data, error } = await supabase.from("security_validation_rules").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("security_validation_rules").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ rules: data });
+        return jsonResponse({ rules: data }, 200, req);
       }
 
       case "list_reviews": {
-        const { data, error } = await supabase.from("purple_learning_reviews").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("purple_learning_reviews").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ reviews: data });
+        return jsonResponse({ reviews: data }, 200, req);
       }
 
       case "synthesize": {
@@ -92,7 +112,16 @@ Deno.serve(async (req) => {
           incident_type: params.incident_type ?? "contract_anomaly",
           severity: params.severity ?? "medium",
         });
-        return json({ candidates, patterns, anti_patterns: antiPatterns });
+
+        await logSecurityAudit(serviceClient, {
+          organization_id: orgId,
+          actor_id: user.id,
+          function_name: "purple-learning",
+          action: "synthesis_executed",
+          context: { candidates_count: candidates.length, anti_patterns_count: antiPatterns.length },
+        });
+
+        return jsonResponse({ candidates, patterns, anti_patterns: antiPatterns }, 200, req);
       }
 
       case "get_secure_dev_feedback": {
@@ -101,7 +130,7 @@ Deno.serve(async (req) => {
           task_domain: params.task_domain ?? "general",
           stack: params.stack,
         });
-        return json({ feedback });
+        return jsonResponse({ feedback }, 200, req);
       }
 
       case "explain_pattern": {
@@ -113,13 +142,14 @@ Deno.serve(async (req) => {
           confidence_score: params.confidence_score ?? 0,
           status: params.status ?? "active",
         });
-        return json({ explanation });
+        return jsonResponse({ explanation }, 200, req);
       }
 
       default:
-        return json({ error: `Unknown action: ${action}` });
+        return jsonResponse({ error: `Unknown action: ${action}` }, 400, req);
     }
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    console.error("[purple-learning] Error:", err);
+    return errorResponse(err.message, 500, req);
   }
 });

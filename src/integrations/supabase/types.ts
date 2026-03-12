@@ -35861,6 +35861,47 @@ export type Database = {
           },
         ]
       }
+      security_audit_events: {
+        Row: {
+          action: string
+          actor_id: string
+          context: Json | null
+          created_at: string
+          function_name: string
+          id: string
+          organization_id: string
+          outcome: string
+        }
+        Insert: {
+          action: string
+          actor_id: string
+          context?: Json | null
+          created_at?: string
+          function_name: string
+          id?: string
+          organization_id: string
+          outcome?: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          context?: Json | null
+          created_at?: string
+          function_name?: string
+          id?: string
+          organization_id?: string
+          outcome?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_audit_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       security_canon_candidates: {
         Row: {
           confidence_score: number
