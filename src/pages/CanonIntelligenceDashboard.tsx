@@ -78,6 +78,7 @@ export default function CanonIntelligenceDashboard() {
               <TabsTrigger value="ingestion" className="text-xs gap-1.5"><Download className="h-3.5 w-3.5" />Ingestion Agent</TabsTrigger>
               <TabsTrigger value="trust" className="text-xs gap-1.5"><Scale className="h-3.5 w-3.5" />Repo Trust</TabsTrigger>
               <TabsTrigger value="lineage" className="text-xs gap-1.5"><Route className="h-3.5 w-3.5" />Lineage</TabsTrigger>
+              <TabsTrigger value="renewal" className="text-xs gap-1.5"><HeartPulse className="h-3.5 w-3.5" />Renewal</TabsTrigger>
             </TabsList>
 
             <TabsContent value="library">
