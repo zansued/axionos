@@ -165,7 +165,7 @@ function applyDefaults(raw: Record<string, unknown>, ideaText: string): Record<s
       : typeof raw.target_audience === "string"
         ? [raw.target_audience]
         : ["General users"],
-    product_type: ["saas", "marketplace", "mobile_app", "internal_tool", "ai_product", "api_product"].includes(raw.product_type as string)
+    product_type: ["saas", "marketplace", "mobile_app", "internal_tool", "ai_product", "api_product", "backend_api"].includes(raw.product_type as string)
       ? raw.product_type
       : "saas",
     core_features: Array.isArray(raw.core_features)

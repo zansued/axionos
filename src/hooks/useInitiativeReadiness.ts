@@ -102,7 +102,7 @@ export function useInitiativeReadiness(initiative: InitiativeRow | null | undefi
       ...counts,
     };
 
-    return evaluateInitiativeReadiness(input);
+    return selectReadiness(input);
   }, [initiative, counts]);
 
   return result;

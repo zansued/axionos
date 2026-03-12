@@ -18,8 +18,8 @@ Return a JSON object with this EXACT structure (no markdown, no explanation — 
   "core_features": ["array of 4-8 core features as strings"],
   "integrations": ["array of relevant integrations: auth, database, payments, email, analytics, storage, external_api"],
   "tech_preferences": {
-    "frontend": "suggested frontend framework or null",
-    "backend": "suggested backend approach or null",
+    "frontend": "suggested frontend framework (react, vue, svelte, astro) or null",
+    "backend": "suggested backend framework (hono, elysia, fastapi, express, fastify, nestjs) or null",
     "database": "suggested database or null",
     "deployment": "suggested deployment strategy or null"
   },

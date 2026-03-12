@@ -54,7 +54,7 @@ export interface TechPreferences {
   deployment?: string;
 }
 
-const PRODUCT_TYPES: ProductType[] = ["saas", "marketplace", "mobile_app", "internal_tool", "ai_product", "api_product"];
+const PRODUCT_TYPES: ProductType[] = ["saas", "marketplace", "mobile_app", "internal_tool", "ai_product", "api_product", "backend_api"];
 const DEPLOYMENT_TARGETS: DeploymentTarget[] = ["vercel", "netlify", "aws", "cloudflare", "docker", "unknown"];
 const COMPLEXITY_ESTIMATES: ComplexityEstimate[] = ["simple", "moderate", "complex"];
 const GENERATION_DEPTHS: GenerationDepth[] = ["mvp", "production", "enterprise"];
