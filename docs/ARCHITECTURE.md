@@ -3,8 +3,8 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-12
-> **Current state:** Level 12 -- Self-Improving Governed Intelligence. 179 sprints complete. All blocks (Foundation through AJ).
-> **Completed blocks:** Foundation through AJ (Sprints 1--179)
+> **Current state:** Level 13 -- Knowledge Provenance & Trust-Weighted Intelligence. 181 sprints complete. All blocks (Foundation through AK).
+> **Completed blocks:** Foundation through AK (Sprints 1--181)
 > **Sprint details:** See `docs/registry/sprints.yml`
 
 ## Document Authority
@@ -430,6 +430,19 @@ This block transforms the Canon Hub into a **living institutional knowledge syst
 
 This block introduces **distilled intelligence and architecture self-improvement** capabilities. The system learns to distill knowledge, optimize token usage, extract architecture heuristics, propose improvements to itself, and maintain governance over self-evolution.
 
+## 8d. Block AK — Knowledge Provenance & Trust-Weighted Intelligence (Sprints 180–181)
+
+This block introduces **source trust scoring and full knowledge lineage traceability**. The system can now distinguish high-quality sources from weak ones, weight patterns accordingly, and provide complete provenance trails for every piece of institutional knowledge.
+
+| Sprint | Name |
+|--------|------|
+| 180 | Repo Trust Score & Pattern Weighting Engine |
+| 181 | Source Provenance & Knowledge Lineage Surface |
+
+**Sprint 180 — Repo Trust Score & Pattern Weighting Engine** introduces composite trust scores for each analyzed repository (across 10 dimensions: activity recency, structural clarity, test presence, documentation quality, historical promotion success, etc.) and a pattern weighting formula that combines source trust, execution reinforcement, recurrence bonuses, and penalties for weak sources or shallow duplication. Canon confidence scores are recalibrated based on source quality rather than extraction-time AI assessment alone.
+
+**Sprint 181 — Source Provenance & Knowledge Lineage Surface** provides full traceability through three new data structures: `knowledge_lineage_events` (lifecycle audit trail), `knowledge_provenance_links` (directed source-target relationships with weight contributions), and `knowledge_confidence_breakdowns` (mathematical decomposition of confidence scores). The Lineage tab in the Canon Intelligence Hub exposes timeline, provenance navigation, confidence explanation, and integrity alerts that detect epistemological inconsistencies (e.g., high confidence with weak evidence).
+
 | Sprint | Capability |
 |--------|-----------|
 | 172 | Canon Distillation Engine |
@@ -480,12 +493,13 @@ All self-improvement proposals must pass through governance review. No opaque se
 | 21 | Governance Decision Lifecycle | AH | 155-163 |
 | 22 | Repository Intelligence & Institutional Learning | AI | 164-171 |
 | 23 | Self-Improving Architecture Engine | AJ | 172-179 |
+| 24 | Knowledge Provenance & Trust-Weighted Intelligence | AK | 180-181 |
 
 ---
 
 ## 10. Implementation Status
 
-> **179 sprints complete.** All blocks Foundation through AJ implemented.
+> **181 sprints complete.** All blocks Foundation through AK implemented.
 > **Sprint-by-sprint record:** `docs/registry/sprints.yml`
 
 | Block | Sprints | Name | Status |
@@ -519,6 +533,7 @@ All self-improvement proposals must pass through governance review. No opaque se
 | AH | 155-163 | Governance Decision Lifecycle | Complete |
 | AI | 164-171 | Repository Intelligence & Institutional Learning | Complete |
 | AJ | 172-179 | Self-Improving Architecture Engine | Complete |
+| AK | 180-181 | Knowledge Provenance & Trust-Weighted Intelligence | Complete |
 
 ---
 
