@@ -3,7 +3,7 @@
 
 import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { checkRateLimit } from "./rate-limit.ts";
-import { corsHeaders, handleCors, jsonResponse, errorResponse } from "./cors.ts";
+import { corsHeaders, handleCors, jsonResponse, errorResponse, notFoundOrForbiddenResponse } from "./cors.ts";
 import { PipelineContext } from "./pipeline-helpers.ts";
 import { enforceUsageLimits } from "./usage-limit-enforcer.ts";
 
