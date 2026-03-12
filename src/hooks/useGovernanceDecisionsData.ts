@@ -17,7 +17,8 @@ export type ProposalSource =
   | "canon_evolution"
   | "policy_tuning"
   | "agent_selection_tuning"
-  | "readiness_tuning";
+  | "readiness_tuning"
+  | "knowledge_renewal";
 
 export type RiskLevel = "low" | "medium" | "high" | "critical";
 
@@ -133,8 +134,8 @@ function inferAssessment(p: any, source: ProposalSource): ProposalAssessment {
     operationalRisk: sev,
     governanceRisk: isHighRisk ? "high" : "medium",
     stabilityRisk: conf < 0.4 ? "high" : conf < 0.7 ? "medium" : "low",
-    reversibility: source === "canon_evolution" ? "partial" : "full",
-    blastRadius: source === "policy_tuning" ? "cross_system" : source === "canon_evolution" ? "subsystem" : "local",
+    reversibility: source === "canon_evolution" || source === "knowledge_renewal" ? "partial" : "full",
+    blastRadius: source === "policy_tuning" ? "cross_system" : (source === "canon_evolution" || source === "knowledge_renewal") ? "subsystem" : "local",
     humanOversightRequired: isHighRisk || conf < 0.5,
   };
 }
@@ -160,6 +161,11 @@ function inferHandoff(source: ProposalSource): HandoffPreview {
       targetWorkflow: "Readiness Rules Pipeline",
       targetDescription: "Send readiness threshold updates to readiness engine workflow",
       steps: ["Validate readiness rule changes", "Submit to readiness governance", "Update readiness engine configuration"],
+    },
+    knowledge_renewal: {
+      targetWorkflow: "Knowledge Renewal Bridge",
+      targetDescription: "Bridge renewal outcome to governance decision workflow",
+      steps: ["Validate renewal evidence", "Review governance bridge proposal", "Apply back-propagation if approved"],
     },
   };
   return map[source];
@@ -214,18 +220,33 @@ export function useGovernanceDecisionsData(filters?: DecisionFilters) {
     queryKey: ["governance-decisions", orgId, filters],
     enabled: !!orgId,
     queryFn: async () => {
-      const [canonRes, policyRes, agentSelRes, readinessRes] = await Promise.all([
+      const [canonRes, policyRes, agentSelRes, readinessRes, renewalBridgeRes] = await Promise.all([
         supabase.from("canon_evolution_proposals" as any).select("*").eq("organization_id", orgId!).order("created_at", { ascending: false }).limit(300),
         supabase.from("policy_tuning_proposals" as any).select("*").eq("organization_id", orgId!).order("created_at", { ascending: false }).limit(300),
         supabase.from("agent_selection_tuning_proposals").select("*").eq("organization_id", orgId!).order("created_at", { ascending: false }).limit(300),
         supabase.from("readiness_tuning_proposals" as any).select("*").eq("organization_id", orgId!).order("created_at", { ascending: false }).limit(300),
+        supabase.from("renewal_governance_bridge" as any).select("*").eq("organization_id", orgId!).in("bridge_status", ["bridge_eligible", "awaiting_governance_review", "governance_approved", "governance_rejected"]).order("created_at", { ascending: false }).limit(200),
       ]);
+
+      // Map renewal bridge records to governance proposal shape
+      const renewalProposals = ((renewalBridgeRes.data as any[]) || []).map((b: any) => ({
+        ...b,
+        proposal_type: b.governance_action_type,
+        recommendation: b.recommended_governance_action?.replace(/_/g, " "),
+        rationale: b.rationale,
+        severity: b.urgency === "high" ? "high" : b.urgency === "medium" ? "medium" : "low",
+        confidence: b.confidence_after ?? 0.5,
+        review_status: b.bridge_status === "bridge_eligible" ? "proposed" : b.bridge_status === "governance_approved" ? "accepted" : b.bridge_status === "governance_rejected" ? "rejected" : "under_review",
+        evidence_summary: `Renewal outcome: ${b.renewal_outcome}. Confidence: ${b.confidence_before} → ${b.confidence_after}.`,
+        proposed_by_actor_type: "knowledge_renewal_engine",
+      }));
 
       const allProposals: GovernanceProposal[] = [
         ...((canonRes.data as any[]) || []).map(p => buildProposal(p, "canon_evolution")),
         ...((policyRes.data as any[]) || []).map(p => buildProposal(p, "policy_tuning")),
         ...((agentSelRes.data as any[]) || []).map(p => buildProposal(p, "agent_selection_tuning")),
         ...((readinessRes.data as any[]) || []).map(p => buildProposal(p, "readiness_tuning")),
+        ...renewalProposals.map((p: any) => buildProposal(p, "knowledge_renewal")),
       ];
 
       // Apply filters
@@ -293,20 +314,43 @@ export function useGovernanceDecisionAction() {
         request_revision: "proposed",
       };
 
+      const bridgeStatusMap: Record<string, string> = {
+        approve: "governance_approved",
+        reject: "governance_rejected",
+        defer: "awaiting_governance_review",
+        request_revision: "bridge_eligible",
+      };
+
       const tableName = {
         canon_evolution: "canon_evolution_proposals",
         policy_tuning: "policy_tuning_proposals",
         agent_selection_tuning: "agent_selection_tuning_proposals",
         readiness_tuning: "readiness_tuning_proposals",
+        knowledge_renewal: "renewal_governance_bridge",
       }[params.source];
 
-      const { error } = await supabase
-        .from(tableName as any)
-        .update({ review_status: statusMap[params.action], updated_at: new Date().toISOString() } as any)
-        .eq("id", params.proposalId)
-        .eq("organization_id", currentOrg?.id!);
+      if (params.source === "knowledge_renewal") {
+        const { error } = await supabase
+          .from(tableName as any)
+          .update({
+            bridge_status: bridgeStatusMap[params.action],
+            governance_decision: params.action,
+            governance_decision_notes: params.notes || params.rationale || "",
+            governance_decided_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          } as any)
+          .eq("id", params.proposalId)
+          .eq("organization_id", currentOrg?.id!);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from(tableName as any)
+          .update({ review_status: statusMap[params.action], updated_at: new Date().toISOString() } as any)
+          .eq("id", params.proposalId)
+          .eq("organization_id", currentOrg?.id!);
+        if (error) throw error;
+      }
 
-      if (error) throw error;
       return { success: true };
     },
     onSuccess: () => {

@@ -1,6 +1,6 @@
 import { AppShell } from "@/components/AppShell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { HeartPulse, ListChecks, TrendingUp, BarChart3, Settings, Activity } from "lucide-react";
+import { HeartPulse, ListChecks, TrendingUp, BarChart3, Settings, Activity, GitBranch } from "lucide-react";
 import { useKnowledgeRenewal } from "@/hooks/useKnowledgeRenewal";
 import { KnowledgeHealthCards } from "@/components/knowledge-health/KnowledgeHealthCards";
 import { RenewalQueueTable } from "@/components/knowledge-health/RenewalQueueTable";
@@ -8,6 +8,7 @@ import { ConfidenceTimeline } from "@/components/knowledge-health/ConfidenceTime
 import { HealthBreakdown } from "@/components/knowledge-health/HealthBreakdown";
 import { AutomationControls } from "@/components/knowledge-health/AutomationControls";
 import { ThroughputMetrics } from "@/components/knowledge-health/ThroughputMetrics";
+import { GovernanceBridgePanel } from "@/components/knowledge-health/GovernanceBridgePanel";
 import { Button } from "@/components/ui/button";
 
 export default function KnowledgeHealthDashboard() {
@@ -23,7 +24,7 @@ export default function KnowledgeHealthDashboard() {
               Knowledge Health Dashboard
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Monitor institutional knowledge health, renewal pipelines, and confidence recovery
+              Monitor institutional knowledge health, renewal pipelines, and governance bridge
             </p>
           </div>
           <Button
@@ -46,6 +47,7 @@ export default function KnowledgeHealthDashboard() {
         <Tabs defaultValue="queue" className="space-y-4">
           <TabsList className="bg-muted/20 border border-border/20 flex-wrap h-auto gap-0.5 p-1">
             <TabsTrigger value="queue" className="text-xs gap-1.5"><ListChecks className="h-3.5 w-3.5" />Renewal Queue</TabsTrigger>
+            <TabsTrigger value="bridge" className="text-xs gap-1.5"><GitBranch className="h-3.5 w-3.5" />Governance Bridge</TabsTrigger>
             <TabsTrigger value="timeline" className="text-xs gap-1.5"><TrendingUp className="h-3.5 w-3.5" />Confidence Timeline</TabsTrigger>
             <TabsTrigger value="breakdown" className="text-xs gap-1.5"><BarChart3 className="h-3.5 w-3.5" />Health Breakdown</TabsTrigger>
             <TabsTrigger value="throughput" className="text-xs gap-1.5"><Activity className="h-3.5 w-3.5" />Throughput</TabsTrigger>
@@ -58,6 +60,16 @@ export default function KnowledgeHealthDashboard() {
               workflows={renewal.workflows}
               proposals={renewal.proposals}
               onStartRevalidation={(triggerId, mode) => renewal.startRevalidation.mutate({ triggerId, mode })}
+            />
+          </TabsContent>
+
+          <TabsContent value="bridge">
+            <GovernanceBridgePanel
+              bridges={renewal.bridges}
+              onDecide={(bridgeId, decision, notes) => renewal.decideBridge.mutate({ bridgeId, decision, notes })}
+              onBackPropagate={(bridgeId) => renewal.backPropagate.mutate({ bridgeId })}
+              deciding={renewal.decideBridge.isPending}
+              propagating={renewal.backPropagate.isPending}
             />
           </TabsContent>
 
