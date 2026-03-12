@@ -6966,12 +6966,20 @@ export type Database = {
           body: string
           conflict_with_existing_canon: boolean
           created_at: string
+          domain_classification: string | null
           domain_scope: string
+          duplication_score: number | null
+          evaluation_notes: string | null
+          evaluation_score: number | null
+          evaluation_status: string | null
           id: string
           internal_validation_status: string
           knowledge_type: string
+          merge_group_key: string | null
+          merged_with_id: string | null
           novelty_score: number
           organization_id: string | null
+          pattern_classification: string | null
           promoted_at: string | null
           promoted_entry_id: string | null
           promotion_decision_reason: string
@@ -6991,12 +6999,20 @@ export type Database = {
           body?: string
           conflict_with_existing_canon?: boolean
           created_at?: string
+          domain_classification?: string | null
           domain_scope?: string
+          duplication_score?: number | null
+          evaluation_notes?: string | null
+          evaluation_score?: number | null
+          evaluation_status?: string | null
           id?: string
           internal_validation_status?: string
           knowledge_type?: string
+          merge_group_key?: string | null
+          merged_with_id?: string | null
           novelty_score?: number
           organization_id?: string | null
+          pattern_classification?: string | null
           promoted_at?: string | null
           promoted_entry_id?: string | null
           promotion_decision_reason?: string
@@ -7016,12 +7032,20 @@ export type Database = {
           body?: string
           conflict_with_existing_canon?: boolean
           created_at?: string
+          domain_classification?: string | null
           domain_scope?: string
+          duplication_score?: number | null
+          evaluation_notes?: string | null
+          evaluation_score?: number | null
+          evaluation_status?: string | null
           id?: string
           internal_validation_status?: string
           knowledge_type?: string
+          merge_group_key?: string | null
+          merged_with_id?: string | null
           novelty_score?: number
           organization_id?: string | null
+          pattern_classification?: string | null
           promoted_at?: string | null
           promoted_entry_id?: string | null
           promotion_decision_reason?: string
@@ -7038,6 +7062,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "canon_candidate_entries_merged_with_id_fkey"
+            columns: ["merged_with_id"]
+            isOneToOne: false
+            referencedRelation: "canon_candidate_entries"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "canon_candidate_entries_organization_id_fkey"
             columns: ["organization_id"]

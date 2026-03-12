@@ -222,3 +222,4 @@ sprints:
 
   # === BLOCK AJ — Canon Pipeline Operationalization === IN PROGRESS
   - { sprint: 170, name: "Canon Review Engine & Pipeline Completion",               status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Canon Review & Promotion Layer" }
+  - { sprint: 171, name: "Canon Evolution Engine — Institutional Knowledge Metabolism", status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Canon Evolution & Dedup Layer" }

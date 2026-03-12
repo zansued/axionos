@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Play, RefreshCw, Zap, Globe, CheckCircle2, XCircle, Clock, ArrowUpCircle, DatabaseZap, Bot } from "lucide-react";
+import { Loader2, Play, RefreshCw, Zap, Globe, CheckCircle2, XCircle, Clock, ArrowUpCircle, DatabaseZap, Bot, Sparkles, GitMerge, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { useToast } from "@/hooks/use-toast";
 import { useCanonPipeline } from "@/hooks/useCanonPipeline";
+import { useCanonEvolutionEngine } from "@/hooks/useCanonEvolutionEngine";
 import { INGESTION_LIFECYCLE_LABELS } from "@/lib/canon/canon-types";
 import type { IngestionLifecycleState } from "@/lib/canon/canon-types";
 
@@ -48,6 +49,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
   const [absorbingRepo, setAbsorbingRepo] = useState(false);
   const [reviewingPipeline, setReviewingPipeline] = useState(false);
   const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
+  const evolution = useCanonEvolutionEngine();
 
   const runReviewPipeline = async () => {
     if (!currentOrg?.id) return;
@@ -190,6 +192,29 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
             Promote {stats.approvedCandidates} to Canon
           </Button>
         )}
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => evolution.runFullPipeline.mutate()}
+          disabled={evolution.runFullPipeline.isPending}
+          className="border-primary/30"
+        >
+          {evolution.runFullPipeline.isPending
+            ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+            : <Sparkles className="h-3.5 w-3.5 mr-1.5" />}
+          Evolution Pipeline
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => evolution.processBacklog.mutate()}
+          disabled={evolution.processBacklog.isPending}
+        >
+          {evolution.processBacklog.isPending
+            ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+            : <TrendingUp className="h-3.5 w-3.5 mr-1.5" />}
+          Process Backlog
+        </Button>
         <Button size="sm" variant="ghost" onClick={onRefresh}>
           <RefreshCw className="h-3.5 w-3.5 mr-1.5" />Refresh
         </Button>
