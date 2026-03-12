@@ -1,8 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain, TrendingUp, XCircle, Wrench, CheckCircle, Lightbulb } from "lucide-react";
+import { Brain, TrendingUp, XCircle, Wrench, CheckCircle, Lightbulb, Loader2, Sparkles } from "lucide-react";
+import { useCanonCandidateReview } from "@/hooks/useCanonCandidateReview";
 
 const PRACTICE_LABELS: Record<string, string> = {
   best_practice: "Best Practice",
