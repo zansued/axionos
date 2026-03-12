@@ -175,6 +175,7 @@ export type Database = {
           outcome_errors: Json | null
           outcome_status: string | null
           outcome_summary: string | null
+          payload: Json | null
           policy_decision_id: string | null
           reason: string | null
           recovery_hook_id: string | null
@@ -205,6 +206,7 @@ export type Database = {
           outcome_errors?: Json | null
           outcome_status?: string | null
           outcome_summary?: string | null
+          payload?: Json | null
           policy_decision_id?: string | null
           reason?: string | null
           recovery_hook_id?: string | null
@@ -235,6 +237,7 @@ export type Database = {
           outcome_errors?: Json | null
           outcome_status?: string | null
           outcome_summary?: string | null
+          payload?: Json | null
           policy_decision_id?: string | null
           reason?: string | null
           recovery_hook_id?: string | null
