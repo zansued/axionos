@@ -23053,6 +23053,191 @@ export type Database = {
           },
         ]
       }
+      knowledge_optimization_proposals: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_notes: string | null
+          evidence_summary: Json | null
+          id: string
+          organization_id: string
+          priority: string
+          proposal_type: string
+          reason: string
+          snapshot_id: string | null
+          status: string
+          target_object_ids: Json | null
+          target_scope: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          evidence_summary?: Json | null
+          id?: string
+          organization_id: string
+          priority?: string
+          proposal_type?: string
+          reason?: string
+          snapshot_id?: string | null
+          status?: string
+          target_object_ids?: Json | null
+          target_scope?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          evidence_summary?: Json | null
+          id?: string
+          organization_id?: string
+          priority?: string
+          proposal_type?: string
+          reason?: string
+          snapshot_id?: string | null
+          status?: string
+          target_object_ids?: Json | null
+          target_scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_optimization_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_optimization_proposals_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_portfolio_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_portfolio_segments: {
+        Row: {
+          avg_confidence: number | null
+          coverage_score: number | null
+          created_at: string
+          health_score: number | null
+          id: string
+          notes: string | null
+          object_count: number | null
+          organization_id: string
+          redundancy_score: number | null
+          segment_key: string
+          segment_type: string
+          snapshot_id: string | null
+          stale_count: number | null
+          usage_score: number | null
+        }
+        Insert: {
+          avg_confidence?: number | null
+          coverage_score?: number | null
+          created_at?: string
+          health_score?: number | null
+          id?: string
+          notes?: string | null
+          object_count?: number | null
+          organization_id: string
+          redundancy_score?: number | null
+          segment_key?: string
+          segment_type?: string
+          snapshot_id?: string | null
+          stale_count?: number | null
+          usage_score?: number | null
+        }
+        Update: {
+          avg_confidence?: number | null
+          coverage_score?: number | null
+          created_at?: string
+          health_score?: number | null
+          id?: string
+          notes?: string | null
+          object_count?: number | null
+          organization_id?: string
+          redundancy_score?: number | null
+          segment_key?: string
+          segment_type?: string
+          snapshot_id?: string | null
+          stale_count?: number | null
+          usage_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_portfolio_segments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_portfolio_segments_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_portfolio_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_portfolio_snapshots: {
+        Row: {
+          balance_score: number | null
+          coverage_score: number | null
+          created_at: string
+          id: string
+          organization_id: string
+          portfolio_score: number | null
+          redundancy_score: number | null
+          source_diversity_score: number | null
+          stale_ratio: number | null
+          summary: Json | null
+          total_objects: number | null
+        }
+        Insert: {
+          balance_score?: number | null
+          coverage_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          portfolio_score?: number | null
+          redundancy_score?: number | null
+          source_diversity_score?: number | null
+          stale_ratio?: number | null
+          summary?: Json | null
+          total_objects?: number | null
+        }
+        Update: {
+          balance_score?: number | null
+          coverage_score?: number | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          portfolio_score?: number | null
+          redundancy_score?: number | null
+          source_diversity_score?: number | null
+          stale_ratio?: number | null
+          summary?: Json | null
+          total_objects?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_portfolio_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       knowledge_provenance_links: {
         Row: {
           confidence_contribution: number

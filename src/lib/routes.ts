@@ -17,7 +17,7 @@ import {
   LayoutDashboard, FolderKanban, Bot, GitBranch, Radio, Eye,
   Sparkles, Shield, Settings, HeartPulse, LineChart, Search,
   Brain, Fingerprint, Scale, Users, Activity, Cpu, Database,
-  ShieldAlert, ShieldCheck, Crosshair,
+  ShieldAlert, ShieldCheck, Crosshair, BarChart3,
 } from "lucide-react";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -220,6 +220,17 @@ export const OWNER_ROUTES: RouteEntry[] = [
     order: 5.5,
     sidebar: true,
     pageKey: "knowledge-health",
+  },
+  {
+    path: "/owner/knowledge-portfolio",
+    title: "Knowledge Portfolio",
+    description: "Portfolio optimization, redundancy & coverage analysis",
+    icon: BarChart3,
+    mode: "owner",
+    group: "Institutional Memory",
+    order: 5.6,
+    sidebar: true,
+    pageKey: "knowledge-portfolio",
   },
   {
     path: "/owner/security-war-room",
