@@ -223,14 +223,14 @@ function LandingPage() {
           transition={{ duration: 0.6, delay: 0.45 }}
           className="flex flex-wrap items-center justify-center gap-2 mt-6"
         >
-          {QUICK_IDEAS.map((idea) => (
+          {Object.keys(QUICK_IDEAS).map((category) => (
             <button
-              key={idea.label}
-              onClick={() => handleQuickIdea(idea.label)}
+              key={category}
+              onClick={() => handleQuickIdea(category)}
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border border-border bg-card/50 hover:bg-card text-muted-foreground hover:text-foreground transition-all duration-200 active:scale-95"
             >
-              {idea.icon}
-              <span>{idea.label}</span>
+              {QUICK_IDEA_ICONS[category]}
+              <span>{category}</span>
             </button>
           ))}
         </motion.div>
