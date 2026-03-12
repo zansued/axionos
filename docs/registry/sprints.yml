@@ -211,3 +211,6 @@ sprints:
   - { sprint: 161, name: "Governance Decision Surface",                            status: complete, block: "AH", phase: "Governance Surfaces", layer: "Governance Decision Surface Layer" }
   - { sprint: 162, name: "Governance Execution Handoff Surface",                   status: complete, block: "AH", phase: "Governance Surfaces", layer: "Execution Handoff Layer" }
   - { sprint: 163, name: "Governance Change Application Tracking Surface",         status: complete, block: "AH", phase: "Governance Surfaces", layer: "Application Tracking Layer" }
+
+  # === BLOCK AI — Governed Execution Path === IN PROGRESS
+  - { sprint: 164, name: "Governed Execution Path Consolidation",                  status: complete, block: "AI", phase: "Execution Path Governance", layer: "Execution Worker Governance Layer" }
