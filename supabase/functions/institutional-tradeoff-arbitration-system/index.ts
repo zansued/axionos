@@ -1,4 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { handleCors, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -27,23 +30,24 @@ function json(data: unknown, status = 200) {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const authHeader = req.headers.get("Authorization") ?? "";
+    // Auth hardening — Sprint 197
+    const authResult = await authenticateWithRateLimit(req, "institutional-tradeoff-arbitration-system");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient } = authResult;
 
-    const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
-      global: { headers: { Authorization: authHeader } },
+    const { action, organization_id: payloadOrgId, ...params } = await req.json();
+
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(serviceClient, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(serviceClient, {
+      organization_id, actor_id: user.id,
+      function_name: "institutional-tradeoff-arbitration-system", action: action || "unknown",
     });
-    const serviceClient = createClient(supabaseUrl, serviceKey);
-
-    const { data: { user } } = await userClient.auth.getUser();
-    if (!user) return json({ error: "Unauthorized" }, 401);
-
-    const { action, organization_id, ...params } = await req.json();
-    if (!organization_id) return json({ error: "organization_id required" }, 400);
 
     // ── OVERVIEW ──
     if (action === "overview") {
