@@ -162,6 +162,11 @@ function inferHandoff(source: ProposalSource): HandoffPreview {
       targetDescription: "Send readiness threshold updates to readiness engine workflow",
       steps: ["Validate readiness rule changes", "Submit to readiness governance", "Update readiness engine configuration"],
     },
+    knowledge_renewal: {
+      targetWorkflow: "Knowledge Renewal Bridge",
+      targetDescription: "Bridge renewal outcome to governance decision workflow",
+      steps: ["Validate renewal evidence", "Review governance bridge proposal", "Apply back-propagation if approved"],
+    },
   };
   return map[source];
 }
