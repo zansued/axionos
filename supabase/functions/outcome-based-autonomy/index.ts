@@ -8,6 +8,9 @@ import { classifyBreach } from "../_shared/outcome-autonomy/guardrail-breach-han
 import { explainPosture } from "../_shared/outcome-autonomy/autonomy-explainer.ts";
 import { evaluateTransition, type TransitionRule } from "../_shared/outcome-autonomy/autonomy-transition-stabilizer.ts";
 import { detectAdaptiveRegression, DEFAULT_PROFILES, type TenantRegressionProfile } from "../_shared/outcome-autonomy/tenant-adaptive-regression.ts";
+import { handleCors, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -15,16 +18,24 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
+    // Auth hardening — Sprint 197
+    const authResult = await authenticateWithRateLimit(req, "outcome-based-autonomy");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
-    const { action, organizationId, ...params } = await req.json();
-    if (!organizationId) throw new Error("organizationId required");
+    const { action, organizationId: payloadOrgId, ...params } = await req.json();
+
+    const { orgId: organizationId, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organizationId) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabase, {
+      organization_id: organizationId, actor_id: user.id,
+      function_name: "outcome-based-autonomy", action: action || "unknown",
+    });
 
     let result: unknown;
 

@@ -1,10 +1,12 @@
-// Execution Policy Engine — AxionOS Sprint 27
-// Edge function for execution policy intelligence APIs.
+// Execution Policy Engine — AxionOS Sprint 27 (Auth hardened Sprint 197)
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { classifyExecutionContext } from "../_shared/execution-policy/execution-context-classifier.ts";
 import { selectExecutionPolicy } from "../_shared/execution-policy/execution-policy-selector.ts";
 import { computeFeedbackAction } from "../_shared/execution-policy/execution-policy-feedback.ts";
+import { handleCors, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,47 +14,25 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Missing authorization" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const serviceClient = createClient(supabaseUrl, supabaseKey);
-
-    const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: { user } } = await userClient.auth.getUser();
-    if (!user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    // Auth hardening — Sprint 197
+    const authResult = await authenticateWithRateLimit(req, "execution-policy-engine");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient } = authResult;
 
     const body = await req.json();
-    const { action, organization_id } = body;
+    const { action, organization_id: payloadOrgId } = body;
 
-    if (!organization_id) {
-      return new Response(JSON.stringify({ error: "organization_id required" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(serviceClient, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
 
-    const { data: _member } = await serviceClient.from("organization_members").select("role").eq("organization_id", organization_id).eq("user_id", user.id).single();
-    if (!_member) {
-      return new Response(JSON.stringify({ error: "Not a member of this organization" }), {
-        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    await logSecurityAudit(serviceClient, {
+      organization_id, actor_id: user.id,
+      function_name: "execution-policy-engine", action: action || "unknown",
+    });
 
     let result: unknown;
 
