@@ -314,6 +314,13 @@ export function useGovernanceDecisionAction() {
         request_revision: "proposed",
       };
 
+      const bridgeStatusMap: Record<string, string> = {
+        approve: "governance_approved",
+        reject: "governance_rejected",
+        defer: "awaiting_governance_review",
+        request_revision: "bridge_eligible",
+      };
+
       const tableName = {
         canon_evolution: "canon_evolution_proposals",
         policy_tuning: "policy_tuning_proposals",
@@ -322,13 +329,28 @@ export function useGovernanceDecisionAction() {
         knowledge_renewal: "renewal_governance_bridge",
       }[params.source];
 
-      const { error } = await supabase
-        .from(tableName as any)
-        .update({ review_status: statusMap[params.action], updated_at: new Date().toISOString() } as any)
-        .eq("id", params.proposalId)
-        .eq("organization_id", currentOrg?.id!);
+      if (params.source === "knowledge_renewal") {
+        const { error } = await supabase
+          .from(tableName as any)
+          .update({
+            bridge_status: bridgeStatusMap[params.action],
+            governance_decision: params.action,
+            governance_decision_notes: params.notes || params.rationale || "",
+            governance_decided_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          } as any)
+          .eq("id", params.proposalId)
+          .eq("organization_id", currentOrg?.id!);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from(tableName as any)
+          .update({ review_status: statusMap[params.action], updated_at: new Date().toISOString() } as any)
+          .eq("id", params.proposalId)
+          .eq("organization_id", currentOrg?.id!);
+        if (error) throw error;
+      }
 
-      if (error) throw error;
       return { success: true };
     },
     onSuccess: () => {
