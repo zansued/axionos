@@ -123,6 +123,7 @@ export default function ActionCenter() {
   const orgId = currentOrg?.id;
   const qc = useQueryClient();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [tab, setTab] = useState("active");
   const [selectedId, setSelectedId] = useState<string | null>(null);
