@@ -46,6 +46,7 @@ import {
   Loader2,
   Inbox,
   Filter,
+  ExternalLink,
 } from "lucide-react";
 
 // ── Types ──
