@@ -154,13 +154,19 @@ export class ActionRegistry {
   countByStatus(): Record<ActionStatus, number> {
     const counts: Record<string, number> = {
       pending: 0,
+      queued: 0,
+      waiting_approval: 0,
       approved: 0,
+      dispatched: 0,
       executing: 0,
       completed: 0,
       failed: 0,
       rejected: 0,
       cancelled: 0,
       blocked: 0,
+      escalated: 0,
+      rolled_back: 0,
+      expired: 0,
     };
     for (const a of this.actions.values()) {
       counts[a.status] = (counts[a.status] || 0) + 1;

@@ -61,7 +61,7 @@ export function AxionPromptDrawer() {
               <div className="p-1.5 rounded-lg bg-primary/10 border border-primary/20">
                 <Sparkles className="h-4 w-4 text-primary" />
               </div>
-              <SheetTitle className="text-xl font-display">Axion Axion Action Engine</SheetTitle>
+              <SheetTitle className="text-xl font-display">Axion Action Engine</SheetTitle>
             </div>
             <p className="text-sm text-muted-foreground">Describe what you want to build or modify in the system.</p>
           </SheetHeader>
