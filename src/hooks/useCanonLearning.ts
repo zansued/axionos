@@ -26,13 +26,13 @@ export function useCanonLearning() {
     reviews: ["canon-candidate-reviews", currentOrg?.id],
   };
 
-  const candidatesQ = useQuery({ queryKey: KEYS.candidates, queryFn: () => invoke("list_candidates"), enabled: !!currentOrg, refetchInterval: 30000 });
-  const signalsQ = useQuery({ queryKey: KEYS.signals, queryFn: () => invoke("list_signals"), enabled: !!currentOrg, refetchInterval: 30000 });
-  const failureQ = useQuery({ queryKey: KEYS.failurePatterns, queryFn: () => invoke("list_failure_patterns"), enabled: !!currentOrg, refetchInterval: 30000 });
-  const refactorQ = useQuery({ queryKey: KEYS.refactorPatterns, queryFn: () => invoke("list_refactor_patterns"), enabled: !!currentOrg, refetchInterval: 30000 });
-  const successQ = useQuery({ queryKey: KEYS.successPatterns, queryFn: () => invoke("list_success_patterns"), enabled: !!currentOrg, refetchInterval: 30000 });
-  const validationQ = useQuery({ queryKey: KEYS.validationPatterns, queryFn: () => invoke("list_validation_patterns"), enabled: !!currentOrg, refetchInterval: 30000 });
-  const reviewsQ = useQuery({ queryKey: KEYS.reviews, queryFn: () => invoke("list_reviews"), enabled: !!currentOrg, refetchInterval: 30000 });
+  const candidatesQ = useQuery({ queryKey: KEYS.candidates, queryFn: () => invoke("list_candidates"), enabled: !!currentOrg, refetchInterval: 120000 });
+  const signalsQ = useQuery({ queryKey: KEYS.signals, queryFn: () => invoke("list_signals"), enabled: !!currentOrg, refetchInterval: 120000 });
+  const failureQ = useQuery({ queryKey: KEYS.failurePatterns, queryFn: () => invoke("list_failure_patterns"), enabled: !!currentOrg, refetchInterval: 120000 });
+  const refactorQ = useQuery({ queryKey: KEYS.refactorPatterns, queryFn: () => invoke("list_refactor_patterns"), enabled: !!currentOrg, refetchInterval: 120000 });
+  const successQ = useQuery({ queryKey: KEYS.successPatterns, queryFn: () => invoke("list_success_patterns"), enabled: !!currentOrg, refetchInterval: 120000 });
+  const validationQ = useQuery({ queryKey: KEYS.validationPatterns, queryFn: () => invoke("list_validation_patterns"), enabled: !!currentOrg, refetchInterval: 120000 });
+  const reviewsQ = useQuery({ queryKey: KEYS.reviews, queryFn: () => invoke("list_reviews"), enabled: !!currentOrg, refetchInterval: 120000 });
 
   const invalidateAll = () => Object.values(KEYS).forEach(k => qc.invalidateQueries({ queryKey: k }));
 
