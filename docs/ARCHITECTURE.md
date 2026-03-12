@@ -464,6 +464,19 @@ Source (repos, execution) → Candidate → Evaluation → Merge/Deduplication
 
 All self-improvement proposals must pass through governance review. No opaque self-mutation.
 
+## 8e. Block AL — Knowledge Renewal & Revalidation Engine (Sprints 182–183)
+
+This block introduces **governed knowledge renewal**: the ability to detect aging, decaying, or weakening knowledge and revalidate, refresh, or supersede it through an auditable workflow.
+
+| Sprint | Name |
+|--------|------|
+| 182 | Knowledge Quality & Decay Assessment |
+| 183 | Knowledge Renewal & Revalidation Engine |
+
+**Sprint 182 — Knowledge Quality & Decay Assessment** introduced decay detection, aging signals, and quality scoring infrastructure for canon entries, laying the foundation for renewal decisions.
+
+**Sprint 183 — Knowledge Renewal & Revalidation Engine** implements a full renewal pipeline with 8 trigger types (stale_knowledge, confidence_decay, runtime_mismatch, superseded_signal, negative_feedback_accumulation, low_recent_usage, lineage_weakening, distillation_stale), 4 renewal modes (light revalidation, source refresh, redistillation, competitive revalidation), 7 revalidation outcomes, governed confidence recovery (evidence-backed only), and renewal proposals that route to governance when automated resolution is insufficient. All renewals are recorded in an auditable history with before/after confidence and full evidence trails.
+
 ---
 
 ## 9. Capability Tiers (Summary)
