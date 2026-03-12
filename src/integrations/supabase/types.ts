@@ -8965,6 +8965,77 @@ export type Database = {
           },
         ]
       }
+      canon_poisoning_assessments: {
+        Row: {
+          candidate_id: string | null
+          candidate_title: string | null
+          created_at: string
+          id: string
+          organization_id: string
+          poisoning_risk_level: string
+          poisoning_risk_score: number
+          poisoning_signals: Json
+          quarantine_status: string
+          requires_security_review: boolean
+          review_notes: string | null
+          review_outcome: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          risk_reason_summary: string
+          source_id: string | null
+          source_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          candidate_id?: string | null
+          candidate_title?: string | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          poisoning_risk_level?: string
+          poisoning_risk_score?: number
+          poisoning_signals?: Json
+          quarantine_status?: string
+          requires_security_review?: boolean
+          review_notes?: string | null
+          review_outcome?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk_reason_summary?: string
+          source_id?: string | null
+          source_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          candidate_id?: string | null
+          candidate_title?: string | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          poisoning_risk_level?: string
+          poisoning_risk_score?: number
+          poisoning_signals?: Json
+          quarantine_status?: string
+          requires_security_review?: boolean
+          review_notes?: string | null
+          review_outcome?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk_reason_summary?: string
+          source_id?: string | null
+          source_name?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_poisoning_assessments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_promotion_decisions: {
         Row: {
           candidate_id: string | null
@@ -9296,6 +9367,66 @@ export type Database = {
           },
           {
             foreignKeyName: "canon_reuse_registry_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_security_signals: {
+        Row: {
+          assessment_id: string | null
+          candidate_id: string | null
+          created_at: string
+          description: string
+          evidence: Json
+          id: string
+          organization_id: string
+          resolved: boolean
+          resolved_at: string | null
+          severity: string
+          signal_type: string
+          source_id: string | null
+        }
+        Insert: {
+          assessment_id?: string | null
+          candidate_id?: string | null
+          created_at?: string
+          description?: string
+          evidence?: Json
+          id?: string
+          organization_id: string
+          resolved?: boolean
+          resolved_at?: string | null
+          severity?: string
+          signal_type?: string
+          source_id?: string | null
+        }
+        Update: {
+          assessment_id?: string | null
+          candidate_id?: string | null
+          created_at?: string
+          description?: string
+          evidence?: Json
+          id?: string
+          organization_id?: string
+          resolved?: boolean
+          resolved_at?: string | null
+          severity?: string
+          signal_type?: string
+          source_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_security_signals_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "canon_poisoning_assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_security_signals_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"

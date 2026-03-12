@@ -277,6 +277,17 @@ export const OWNER_ROUTES: RouteEntry[] = [
     pageKey: "knowledge-acquisition-roi",
   },
   {
+    path: "/owner/canon-poisoning-prevention",
+    title: "Poisoning Prevention",
+    description: "Detect, quarantine, and review suspicious knowledge before canon promotion",
+    icon: ShieldAlert,
+    mode: "owner",
+    group: "Institutional Memory",
+    order: 5.95,
+    sidebar: true,
+    pageKey: "canon-poisoning-prevention",
+  },
+  {
     path: "/owner/security-war-room",
     title: "Security War Room",
     description: "Active security operations",
