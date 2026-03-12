@@ -22932,6 +22932,177 @@ export type Database = {
           },
         ]
       }
+      knowledge_confidence_breakdowns: {
+        Row: {
+          base_confidence: number
+          computed_at: string
+          created_at: string
+          execution_reinforcement: number
+          explanation: string
+          factors: Json
+          final_confidence: number
+          id: string
+          knowledge_object_id: string
+          knowledge_object_type: string
+          merge_support: number
+          negative_signal_penalty: number
+          organization_id: string
+          recurrence_contribution: number
+          repo_trust_contribution: number
+          updated_at: string
+        }
+        Insert: {
+          base_confidence?: number
+          computed_at?: string
+          created_at?: string
+          execution_reinforcement?: number
+          explanation?: string
+          factors?: Json
+          final_confidence?: number
+          id?: string
+          knowledge_object_id: string
+          knowledge_object_type?: string
+          merge_support?: number
+          negative_signal_penalty?: number
+          organization_id: string
+          recurrence_contribution?: number
+          repo_trust_contribution?: number
+          updated_at?: string
+        }
+        Update: {
+          base_confidence?: number
+          computed_at?: string
+          created_at?: string
+          execution_reinforcement?: number
+          explanation?: string
+          factors?: Json
+          final_confidence?: number
+          id?: string
+          knowledge_object_id?: string
+          knowledge_object_type?: string
+          merge_support?: number
+          negative_signal_penalty?: number
+          organization_id?: string
+          recurrence_contribution?: number
+          repo_trust_contribution?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_confidence_breakdowns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_lineage_events: {
+        Row: {
+          actor: string
+          created_at: string
+          event_type: string
+          id: string
+          knowledge_object_id: string
+          knowledge_object_type: string
+          organization_id: string
+          payload: Json
+          related_object_id: string | null
+          related_object_type: string | null
+          source_id: string | null
+          source_type: string | null
+          summary: string
+        }
+        Insert: {
+          actor?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          knowledge_object_id: string
+          knowledge_object_type?: string
+          organization_id: string
+          payload?: Json
+          related_object_id?: string | null
+          related_object_type?: string | null
+          source_id?: string | null
+          source_type?: string | null
+          summary?: string
+        }
+        Update: {
+          actor?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          knowledge_object_id?: string
+          knowledge_object_type?: string
+          organization_id?: string
+          payload?: Json
+          related_object_id?: string | null
+          related_object_type?: string | null
+          source_id?: string | null
+          source_type?: string | null
+          summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_lineage_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_provenance_links: {
+        Row: {
+          confidence_contribution: number
+          created_at: string
+          id: string
+          link_type: string
+          metadata: Json
+          organization_id: string
+          source_object_id: string
+          source_object_type: string
+          target_object_id: string
+          target_object_type: string
+          weight: number
+        }
+        Insert: {
+          confidence_contribution?: number
+          created_at?: string
+          id?: string
+          link_type?: string
+          metadata?: Json
+          organization_id: string
+          source_object_id: string
+          source_object_type?: string
+          target_object_id: string
+          target_object_type?: string
+          weight?: number
+        }
+        Update: {
+          confidence_contribution?: number
+          created_at?: string
+          id?: string
+          link_type?: string
+          metadata?: Json
+          organization_id?: string
+          source_object_id?: string
+          source_object_type?: string
+          target_object_id?: string
+          target_object_type?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_provenance_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       learning_candidates: {
         Row: {
           candidate_scope: string
