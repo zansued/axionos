@@ -326,8 +326,10 @@ Future work focuses on improving:
 | Phase 6 | AgentOS Decision Contract | Complete |
 | Phase 7 | Action Engine | Complete (Sprints 139–142) |
 | Phase 8 | Governance and Approval Flow | Complete (Sprints 155–163) |
-| Phase 9 | Governed Execution Path | Complete (Sprints 164–169) |
-| Phase 10 | Canon Pipeline Operationalization | Complete (Sprints 170–179) |
+| Phase 9 | Governed Execution Path | Complete (Sprints 139–142) |
+| Phase 10 | Canon Pipeline Operationalization | Complete (Sprints 155–163) |
+| Phase 11 | Repository Intelligence & Institutional Learning | Complete (Sprints 164–171) |
+| Phase 12 | Self-Improving Architecture Engine | Complete (Sprints 172–179) |
 
 ---
 

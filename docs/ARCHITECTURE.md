@@ -3,7 +3,7 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-12
-> **Current state:** Level 10+ -- Adaptive Operational Organism. 179 sprints complete. All blocks (Foundation through AJ).
+> **Current state:** Level 12 -- Self-Improving Governed Intelligence. 179 sprints complete. All blocks (Foundation through AJ).
 > **Completed blocks:** Foundation through AJ (Sprints 1--179)
 > **Sprint details:** See `docs/registry/sprints.yml`
 
