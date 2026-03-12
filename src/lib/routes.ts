@@ -123,7 +123,7 @@ export const BUILDER_ROUTES: RouteEntry[] = [
     icon: Settings,
     mode: "builder",
     group: "System",
-    order: 8,
+    order: 6,
     sidebar: true,
   },
 ];
