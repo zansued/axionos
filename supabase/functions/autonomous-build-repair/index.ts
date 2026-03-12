@@ -798,6 +798,74 @@ ${brainContext.slice(0, 2000)}`,
   } catch (e) {
     console.error("autonomous-build-repair error:", e);
     if (jobId) await failJob(ctx, jobId, e instanceof Error ? e.message : "Unknown error");
+
+    // ── Self-Healing: Canon Retrieval + Architecture Promotion (Phase 8) ──
+    try {
+      const errorMsg = e instanceof Error ? e.message : "Unknown error";
+      const errorCategory = errors?.[0]?.category || "unknown";
+
+      // 1. Extract error pattern
+      const errorPattern = {
+        error_type: errorCategory,
+        message: errorMsg,
+        stage: "build_repair",
+        attempt,
+        errors_found: errors?.length || 0,
+      };
+
+      // 2. Query Canon for analogous solutions
+      const { data: canonEntries } = await serviceClient
+        .from("canon_entries")
+        .select("id, title, entry_type, content, domains, confidence_score")
+        .eq("organization_id", ctx.organizationId)
+        .eq("lifecycle_status", "approved")
+        .or(`entry_type.eq.pattern,entry_type.eq.anti_pattern,entry_type.eq.guide`)
+        .order("confidence_score", { ascending: false })
+        .limit(5);
+
+      const canonContext = (canonEntries || []).map((ce: any) => ({
+        canon_id: ce.id,
+        title: ce.title,
+        type: ce.entry_type,
+        confidence: ce.confidence_score,
+      }));
+
+      // 3. Propose architecture promotion if repair failed with high-severity errors
+      if (attempt >= MAX_ATTEMPTS - 1 && canonEntries && canonEntries.length > 0) {
+        await serviceClient.from("architecture_simulation_proposals").insert({
+          organization_id: ctx.organizationId,
+          initiative_id: ctx.initiativeId,
+          proposal_type: "self_healing_promotion",
+          title: `Architecture repair proposal from failed build repair (attempt ${attempt})`,
+          description: `Build repair exhausted ${attempt} attempts. Error: ${errorMsg}. Canon entries consulted: ${canonContext.map((c: any) => c.title).join(", ")}`,
+          impact_assessment: {
+            error_pattern: errorPattern,
+            canon_entries_consulted: canonContext,
+            repair_attempts_exhausted: attempt,
+            requires_structural_change: true,
+          },
+          status: "proposed",
+          risk_posture: "medium",
+        }).then(() => {
+          console.log("[Self-Healing] Architecture promotion proposal created");
+        }).catch((promErr: any) => {
+          console.warn("[Self-Healing] Failed to create promotion proposal:", promErr.message);
+        });
+      }
+
+      // 4. Record self-healing evidence
+      await serviceClient.from("action_audit_events").insert({
+        organization_id: ctx.organizationId,
+        action_id: `repair-${ctx.initiativeId}-${attempt}`,
+        event_type: "self_healing.canon_consulted",
+        reason: `Repair failed. Canon entries consulted: ${canonContext.length}. Promotion proposed: ${attempt >= MAX_ATTEMPTS - 1}`,
+        actor_type: "system",
+      }).catch(() => {});
+
+    } catch (selfHealErr) {
+      console.warn("[Self-Healing] Canon retrieval fallback failed:", selfHealErr);
+    }
+
     await updateInitiative(ctx, { stage_status: "validating" }); // rollback
     return errorResponse(e instanceof Error ? e.message : "Unknown error");
   }

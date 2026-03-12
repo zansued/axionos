@@ -267,3 +267,148 @@ async function explainSwarmState(sb: any, p: any) {
     rollback_posture: c?.rollback_posture,
   });
 }
+
+/**
+ * Parallel Wave Scheduling — AE-08
+ * Enables validation agents to begin analyzing artifacts in real-time
+ * while build agents are still producing code, reducing total pipeline latency.
+ * 
+ * Waves:
+ *   Wave 0: Build agents (primary producers)
+ *   Wave 1: Validation agents (start as soon as first build artifact appears)
+ *   Wave 2: Evolution/synthesis agents (after validation checkpoints)
+ */
+async function parallelWaveSchedule(sb: any, p: any) {
+  const { campaign_id, organization_id, initiative_id } = p;
+  if (!campaign_id || !organization_id) {
+    return json({ error: "campaign_id and organization_id required" }, 400);
+  }
+
+  // Fetch campaign and branches
+  const [campRes, branchRes, agentRes] = await Promise.all([
+    sb.from("swarm_execution_campaigns").select("*").eq("id", campaign_id).single(),
+    sb.from("swarm_execution_branches").select("*").eq("campaign_id", campaign_id).order("created_at"),
+    sb.from("swarm_execution_agents").select("*").eq("campaign_id", campaign_id),
+  ]);
+
+  const campaign = campRes.data;
+  if (!campaign) return json({ error: "Campaign not found" }, 404);
+
+  const branches = branchRes.data || [];
+  const agents = agentRes.data || [];
+
+  // Classify branches into waves by agent role and branch type
+  const buildBranches = branches.filter((b: any) =>
+    b.branch_type === "build" || b.branch_label?.toLowerCase().includes("build")
+  );
+  const validationBranches = branches.filter((b: any) =>
+    b.branch_type === "validation" || b.branch_label?.toLowerCase().includes("valid")
+  );
+  const otherBranches = branches.filter((b: any) =>
+    !buildBranches.includes(b) && !validationBranches.includes(b)
+  );
+
+  // Wave 0: Ensure build branches are running
+  const wave0Ids: string[] = [];
+  for (const b of buildBranches) {
+    if (b.status === "pending") {
+      await sb.from("swarm_execution_branches")
+        .update({ status: "running", updated_at: new Date().toISOString() })
+        .eq("id", b.id);
+      wave0Ids.push(b.id);
+    } else if (b.status === "running") {
+      wave0Ids.push(b.id);
+    }
+  }
+
+  // Wave 1: Start validation branches if ANY build branch has produced artifacts
+  const wave1Ids: string[] = [];
+  const buildWithArtifacts = buildBranches.filter((b: any) =>
+    b.status === "completed" || (b.result_artifacts && Object.keys(b.result_artifacts).length > 0)
+  );
+
+  if (buildWithArtifacts.length > 0) {
+    for (const b of validationBranches) {
+      if (b.status === "pending") {
+        await sb.from("swarm_execution_branches")
+          .update({
+            status: "running",
+            updated_at: new Date().toISOString(),
+            branch_plan: {
+              ...(b.branch_plan || {}),
+              parallel_wave: 1,
+              partial_validation: true,
+              source_build_branches: buildWithArtifacts.map((bb: any) => bb.id),
+            },
+          })
+          .eq("id", b.id);
+        wave1Ids.push(b.id);
+      }
+    }
+  }
+
+  // Wave 2: Start remaining branches if all build completed and some validation done
+  const wave2Ids: string[] = [];
+  const allBuildDone = buildBranches.every((b: any) => b.status === "completed");
+  const someValidationDone = validationBranches.some((b: any) => b.status === "completed");
+
+  if (allBuildDone && someValidationDone) {
+    for (const b of otherBranches) {
+      if (b.status === "pending") {
+        await sb.from("swarm_execution_branches")
+          .update({
+            status: "running",
+            updated_at: new Date().toISOString(),
+            branch_plan: { ...(b.branch_plan || {}), parallel_wave: 2 },
+          })
+          .eq("id", b.id);
+        wave2Ids.push(b.id);
+      }
+    }
+  }
+
+  // Create synchronization checkpoint
+  const checkpointLabel = `wave-sync-${Date.now()}`;
+  await sb.from("swarm_execution_checkpoints").insert({
+    campaign_id,
+    organization_id,
+    checkpoint_label: checkpointLabel,
+    checkpoint_type: "wave_synchronization",
+    snapshot: {
+      wave_0: { branch_ids: wave0Ids, type: "build" },
+      wave_1: { branch_ids: wave1Ids, type: "validation", triggered_by: buildWithArtifacts.length + " build artifacts" },
+      wave_2: { branch_ids: wave2Ids, type: "synthesis", all_build_done: allBuildDone, some_validation_done: someValidationDone },
+    },
+    branches_required: [...wave0Ids, ...wave1Ids],
+    branches_completed: buildWithArtifacts.map((b: any) => b.id),
+    status: wave1Ids.length > 0 ? "active" : "pending",
+  });
+
+  // Emit scheduling event
+  await sb.from("swarm_execution_events").insert({
+    campaign_id,
+    organization_id,
+    event_type: "wave.scheduled",
+    event_payload: {
+      wave_0_count: wave0Ids.length,
+      wave_1_count: wave1Ids.length,
+      wave_2_count: wave2Ids.length,
+      build_with_artifacts: buildWithArtifacts.length,
+      total_branches: branches.length,
+      latency_reduction: wave1Ids.length > 0 ? "validation_started_early" : "waiting_for_build_artifacts",
+    },
+  });
+
+  return json({
+    scheduled: true,
+    waves: {
+      wave_0_build: { started: wave0Ids.length, branch_ids: wave0Ids },
+      wave_1_validation: { started: wave1Ids.length, branch_ids: wave1Ids, partial: true },
+      wave_2_synthesis: { started: wave2Ids.length, branch_ids: wave2Ids },
+    },
+    checkpoint: checkpointLabel,
+    latency_optimization: wave1Ids.length > 0
+      ? "Validation agents started analyzing partial build artifacts — pipeline latency reduced"
+      : "Waiting for build agents to produce first artifacts before starting validation",
+  });
+}
