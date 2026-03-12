@@ -1,0 +1,1 @@
+ALTER TABLE public.action_registry_entries ADD COLUMN IF NOT EXISTS payload jsonb DEFAULT '{}'::jsonb;

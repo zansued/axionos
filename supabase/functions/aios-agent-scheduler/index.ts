@@ -67,20 +67,38 @@ serve(async (req) => {
     // Instead of persistent threads (Python), we use a persistent DB Queue
     // for fairness and fault-tolerance (AxionOS Multi-Agent Coordination).
     
-    // Step 4.1: Enqueue the task in action_registry_entries
+    // Step 4.1: Guard — organization_id must be a valid UUID
+    const schedulerOrgId = payload.organization_id;
+    if (!schedulerOrgId || schedulerOrgId === "global") {
+      return new Response(
+        JSON.stringify({ error: "organization_id (valid UUID) is required for AIOS scheduling" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    // Step 4.2: Enqueue the task in action_registry_entries
+    const schedulerActionId = crypto.randomUUID();
+    const schedulerIntentId = crypto.randomUUID();
+
     const { data: actionRecord, error: enqueueError } = await supabaseClient
       .from("action_registry_entries")
       .insert({
-        organization_id: payload.organization_id || "global", // Scoped by Tenant
+        action_id: schedulerActionId,
+        intent_id: schedulerIntentId,
+        trigger_id: `aios-rr-${Date.now()}`,
+        organization_id: schedulerOrgId,
         trigger_type: `aios_${syscall_type}_syscall`,
-        initiative_id,
+        initiative_id: initiative_id || null,
         stage: "execution",
         execution_mode: "auto",
-        status: "queued", // Initial RR state
+        status: "queued",
         risk_level: priority === "critical" ? "critical" : "low",
         description: `AIOS Scaled ${syscall_type} syscall for agent.`,
         reason: "Round Robin fair scheduling",
-        constraints: [`time_slice:${DEFAULT_TIME_SLICE}ms`, `batch_size:${MAX_BATCH_SIZE}`],
+        constraints: [
+          { source: "system", key: "time_slice", description: `${DEFAULT_TIME_SLICE}ms time slice` },
+          { source: "system", key: "batch_size", description: `Max batch size: ${MAX_BATCH_SIZE}` },
+        ],
       })
       .select()
       .single();
