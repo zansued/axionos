@@ -193,5 +193,6 @@ export default function CanonPoisoningPreventionDashboard() {
         </CardContent>
       </Card>
     </div>
+    </AppLayout>
   );
 }
