@@ -11556,6 +11556,53 @@ export type Database = {
           },
         ]
       }
+      confidence_recalibration_log: {
+        Row: {
+          created_at: string
+          factors: Json
+          id: string
+          new_confidence: number
+          organization_id: string
+          previous_confidence: number
+          recalibrated_by: string
+          recalibration_reason: string
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          created_at?: string
+          factors?: Json
+          id?: string
+          new_confidence?: number
+          organization_id: string
+          previous_confidence?: number
+          recalibrated_by?: string
+          recalibration_reason?: string
+          target_id: string
+          target_type?: string
+        }
+        Update: {
+          created_at?: string
+          factors?: Json
+          id?: string
+          new_confidence?: number
+          organization_id?: string
+          previous_confidence?: number
+          recalibrated_by?: string
+          recalibration_reason?: string
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "confidence_recalibration_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conflict_evidence_records: {
         Row: {
           conflict_id: string
@@ -26888,6 +26935,83 @@ export type Database = {
           },
         ]
       }
+      pattern_weight_factors: {
+        Row: {
+          computation_notes: string
+          created_at: string
+          distinct_source_count: number
+          duplication_noise_penalty: number
+          execution_reinforcement: number
+          id: string
+          last_recalibrated_at: string | null
+          neural_feedback_bonus: number
+          organization_id: string
+          pattern_weight: number
+          recalibration_count: number
+          recurrence_bonus: number
+          source_refs: Json
+          source_support: number
+          source_trust: number
+          target_id: string
+          target_type: string
+          trusted_source_count: number
+          updated_at: string
+          weak_source_penalty: number
+        }
+        Insert: {
+          computation_notes?: string
+          created_at?: string
+          distinct_source_count?: number
+          duplication_noise_penalty?: number
+          execution_reinforcement?: number
+          id?: string
+          last_recalibrated_at?: string | null
+          neural_feedback_bonus?: number
+          organization_id: string
+          pattern_weight?: number
+          recalibration_count?: number
+          recurrence_bonus?: number
+          source_refs?: Json
+          source_support?: number
+          source_trust?: number
+          target_id: string
+          target_type?: string
+          trusted_source_count?: number
+          updated_at?: string
+          weak_source_penalty?: number
+        }
+        Update: {
+          computation_notes?: string
+          created_at?: string
+          distinct_source_count?: number
+          duplication_noise_penalty?: number
+          execution_reinforcement?: number
+          id?: string
+          last_recalibrated_at?: string | null
+          neural_feedback_bonus?: number
+          organization_id?: string
+          pattern_weight?: number
+          recalibration_count?: number
+          recurrence_bonus?: number
+          source_refs?: Json
+          source_support?: number
+          source_trust?: number
+          target_id?: string
+          target_type?: string
+          trusted_source_count?: number
+          updated_at?: string
+          weak_source_penalty?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pattern_weight_factors_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pilot_capability_submissions: {
         Row: {
           affected_surfaces: Json
@@ -33139,6 +33263,84 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      repo_trust_scores: {
+        Row: {
+          created_at: string
+          evaluated_by: string
+          evaluation_notes: string
+          evaluation_version: string
+          id: string
+          last_evaluated_at: string | null
+          organization_id: string
+          patterns_extracted: number
+          patterns_promoted: number
+          patterns_rejected: number
+          promotion_success_rate: number
+          source_id: string | null
+          source_name: string
+          source_url: string
+          trust_factors: Json
+          trust_score: number
+          trust_tier: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          evaluated_by?: string
+          evaluation_notes?: string
+          evaluation_version?: string
+          id?: string
+          last_evaluated_at?: string | null
+          organization_id: string
+          patterns_extracted?: number
+          patterns_promoted?: number
+          patterns_rejected?: number
+          promotion_success_rate?: number
+          source_id?: string | null
+          source_name?: string
+          source_url?: string
+          trust_factors?: Json
+          trust_score?: number
+          trust_tier?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          evaluated_by?: string
+          evaluation_notes?: string
+          evaluation_version?: string
+          id?: string
+          last_evaluated_at?: string | null
+          organization_id?: string
+          patterns_extracted?: number
+          patterns_promoted?: number
+          patterns_rejected?: number
+          promotion_success_rate?: number
+          source_id?: string | null
+          source_name?: string
+          source_url?: string
+          trust_factors?: Json
+          trust_score?: number
+          trust_tier?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repo_trust_scores_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repo_trust_scores_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "canon_sources"
             referencedColumns: ["id"]
           },
         ]

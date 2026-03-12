@@ -1,7 +1,7 @@
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Database, BookOpen, Search, Activity, Zap, Eye, GitBranch, Shield, Brain, Download } from "lucide-react";
+import { Database, BookOpen, Search, Activity, Zap, Eye, GitBranch, Shield, Brain, Download, Scale } from "lucide-react";
 import { useCanonIntelligence } from "@/hooks/useCanonIntelligence";
 import { useCanonStewardship } from "@/hooks/useCanonStewardship";
 import { useCanonRuntime } from "@/hooks/useCanonRuntime";
@@ -16,6 +16,7 @@ import { CanonGraphTab } from "@/components/canon-intelligence/CanonGraphTab";
 import { CanonGovernanceTab } from "@/components/canon-intelligence/CanonGovernanceTab";
 import { OperationalLearningTab } from "@/components/canon-intelligence/OperationalLearningTab";
 import { CanonIngestionPanel } from "@/components/canon-intelligence/CanonIngestionPanel";
+import { RepoTrustTab } from "@/components/canon-intelligence/RepoTrustTab";
 
 export default function CanonIntelligenceDashboard() {
   const intel = useCanonIntelligence();
@@ -73,6 +74,7 @@ export default function CanonIntelligenceDashboard() {
               <TabsTrigger value="governance" className="text-xs gap-1.5"><Shield className="h-3.5 w-3.5" />Governance</TabsTrigger>
               <TabsTrigger value="learning" className="text-xs gap-1.5"><Brain className="h-3.5 w-3.5" />Operational Learning</TabsTrigger>
               <TabsTrigger value="ingestion" className="text-xs gap-1.5"><Download className="h-3.5 w-3.5" />Ingestion Agent</TabsTrigger>
+              <TabsTrigger value="trust" className="text-xs gap-1.5"><Scale className="h-3.5 w-3.5" />Repo Trust</TabsTrigger>
             </TabsList>
 
             <TabsContent value="library">
@@ -136,6 +138,10 @@ export default function CanonIntelligenceDashboard() {
                 syncRuns={intel.syncRuns}
                 onRefresh={() => { intel.refetch(); stewardship.refetch(); }}
               />
+            </TabsContent>
+
+            <TabsContent value="trust">
+              <RepoTrustTab />
             </TabsContent>
           </Tabs>
       </div>
