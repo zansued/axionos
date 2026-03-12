@@ -1,7 +1,7 @@
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Database, BookOpen, Search, Activity, Zap, Eye, GitBranch, Shield, Brain, Download, Scale } from "lucide-react";
+import { Database, BookOpen, Search, Activity, Zap, Eye, GitBranch, Shield, Brain, Download, Scale, Route } from "lucide-react";
 import { useCanonIntelligence } from "@/hooks/useCanonIntelligence";
 import { useCanonStewardship } from "@/hooks/useCanonStewardship";
 import { useCanonRuntime } from "@/hooks/useCanonRuntime";
@@ -17,6 +17,7 @@ import { CanonGovernanceTab } from "@/components/canon-intelligence/CanonGoverna
 import { OperationalLearningTab } from "@/components/canon-intelligence/OperationalLearningTab";
 import { CanonIngestionPanel } from "@/components/canon-intelligence/CanonIngestionPanel";
 import { RepoTrustTab } from "@/components/canon-intelligence/RepoTrustTab";
+import { KnowledgeLineageTab } from "@/components/canon-intelligence/KnowledgeLineageTab";
 
 export default function CanonIntelligenceDashboard() {
   const intel = useCanonIntelligence();
@@ -75,6 +76,7 @@ export default function CanonIntelligenceDashboard() {
               <TabsTrigger value="learning" className="text-xs gap-1.5"><Brain className="h-3.5 w-3.5" />Operational Learning</TabsTrigger>
               <TabsTrigger value="ingestion" className="text-xs gap-1.5"><Download className="h-3.5 w-3.5" />Ingestion Agent</TabsTrigger>
               <TabsTrigger value="trust" className="text-xs gap-1.5"><Scale className="h-3.5 w-3.5" />Repo Trust</TabsTrigger>
+              <TabsTrigger value="lineage" className="text-xs gap-1.5"><Route className="h-3.5 w-3.5" />Lineage</TabsTrigger>
             </TabsList>
 
             <TabsContent value="library">
@@ -142,6 +144,10 @@ export default function CanonIntelligenceDashboard() {
 
             <TabsContent value="trust">
               <RepoTrustTab />
+            </TabsContent>
+
+            <TabsContent value="lineage">
+              <KnowledgeLineageTab />
             </TabsContent>
           </Tabs>
       </div>
