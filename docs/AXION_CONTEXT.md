@@ -333,6 +333,7 @@ Future work focuses on improving:
 | Phase 11 | Repository Intelligence & Institutional Learning | Complete (Sprints 164–171) |
 | Phase 12 | Self-Improving Architecture Engine | Complete (Sprints 172–179) |
 | Phase 13 | Knowledge Provenance & Trust-Weighted Intelligence | Complete (Sprints 180–181) |
+| Phase 14 | Knowledge Renewal & Revalidation | Complete (Sprints 182–183) |
 
 ---
 

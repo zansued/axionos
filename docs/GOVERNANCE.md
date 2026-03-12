@@ -474,6 +474,32 @@ These alerts surface in the Canon Intelligence Hub, ensuring governance oversigh
 
 ---
 
+## 28. Knowledge Renewal & Revalidation Governance (Block AL)
+
+Block AL introduces governance over knowledge renewal, ensuring that aging or decaying knowledge is systematically revalidated rather than silently degrading.
+
+### 28.1 Renewal Trigger Governance
+
+Renewal triggers are detected from 8 dimensions: staleness, confidence decay, runtime mismatch, supersession signals, negative feedback, low usage, lineage weakening, and distillation staleness. Each trigger carries a strength score and evidence references — no trigger fires without explainable cause.
+
+### 28.2 Revalidation Workflow Governance
+
+Revalidation follows structured workflows with explicit steps, modes (light, source refresh, redistillation, competitive), and outcomes. No revalidation bypasses the step-by-step evidence trail. Workflows that cannot resolve automatically escalate to governance via renewal proposals.
+
+### 28.3 Confidence Recovery Governance
+
+Confidence can only increase when supported by: trusted new evidence, renewed recurrence, successful runtime usage, improved distillation fidelity, and reinforcement signals. Recovery is capped, factor-by-factor, and fully explainable. No opaque confidence restoration.
+
+### 28.4 Renewal Proposals
+
+When automated revalidation is insufficient, the engine generates proposals for governance review: refresh source evidence, re-run distillation, restore confidence, supersede with stronger pattern, or reopen governance review. Proposals carry urgency, rationale, and evidence — they never silently mutate sensitive knowledge.
+
+### 28.5 Renewal Auditability
+
+All renewal events are recorded with before/after confidence, evidence, actor, mode, and outcome. The renewal history provides full visibility into knowledge lifecycle health.
+
+---
+
 ## Documentation Boundaries
 
 | File | Scope |
