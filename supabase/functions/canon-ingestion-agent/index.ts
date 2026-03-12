@@ -1,57 +1,67 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
-const json = (data: unknown, status = 200) =>
-  new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    // 1. Authenticate + rate limit
+    const authResult = await authenticateWithRateLimit(req, "canon-ingestion-agent");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient } = authResult;
 
-    // Prefer self-hosted Firecrawl, fall back to managed connector
     const FIRECRAWL_URL = Deno.env.get("FIRECRAWL_SELF_HOSTED_URL") || "https://api.firecrawl.dev";
     const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_SELF_HOSTED_KEY") || Deno.env.get("FIRECRAWL_API_KEY");
-    if (!FIRECRAWL_API_KEY) return json({ error: "FIRECRAWL API KEY not configured" }, 500);
+    if (!FIRECRAWL_API_KEY) return errorResponse("FIRECRAWL API KEY not configured", 500, req);
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) return json({ error: "LOVABLE_API_KEY not configured" }, 500);
+    if (!LOVABLE_API_KEY) return errorResponse("LOVABLE_API_KEY not configured", 500, req);
 
-    const { action, organization_id, source_id } = await req.json();
+    const { action, organization_id: payloadOrgId, source_id } = await req.json();
+
+    // 2. Resolve & validate org
+    const { orgId, error: orgError } = await resolveAndValidateOrg(
+      serviceClient, user.id, payloadOrgId
+    );
+    if (orgError || !orgId) {
+      return errorResponse(orgError || "Organization access denied", 403, req);
+    }
+
+    // 3. Audit
+    await logSecurityAudit(serviceClient, {
+      organization_id: orgId,
+      actor_id: user.id,
+      function_name: "canon-ingestion-agent",
+      action,
+      context: { source_id },
+    });
 
     switch (action) {
-      // ── Run ingestion for a single source ──
       case "ingest_source": {
-        if (!source_id || !organization_id) return json({ error: "source_id and organization_id required" }, 400);
+        if (!source_id) return errorResponse("source_id required", 400, req);
 
-        // 1. Fetch source
-        const { data: source, error: srcErr } = await supabase
+        // Verify source belongs to org
+        const { data: source, error: srcErr } = await serviceClient
           .from("canon_sources")
           .select("*")
           .eq("id", source_id)
+          .eq("organization_id", orgId)
           .single();
-        if (srcErr || !source) return json({ error: "Source not found" }, 404);
+        if (srcErr || !source) return errorResponse("Source not found in your organization", 404, req);
 
-        // 2. Update source to "queued"
-        await supabase.from("canon_sources").update({
+        await serviceClient.from("canon_sources").update({
           ingestion_lifecycle_state: "queued",
           updated_at: new Date().toISOString(),
         }).eq("id", source_id);
 
-        // 3. Create sync run
-        const { data: syncRun, error: syncErr } = await supabase
+        const { data: syncRun, error: syncErr } = await serviceClient
           .from("canon_source_sync_runs")
           .insert({
-            organization_id,
+            organization_id: orgId,
             source_id,
             sync_status: "in_progress",
             lifecycle_state: "queued",
@@ -64,17 +74,16 @@ serve(async (req) => {
             duplicates_skipped: 0,
             sync_notes: "",
             started_at: new Date().toISOString(),
-            triggered_by: "canon-ingestion-agent",
+            triggered_by: user.id,
           })
           .select()
           .single();
         if (syncErr) throw syncErr;
 
         try {
-          // 4. Crawl with Firecrawl — update lifecycle to "fetched"
           console.log(`Scraping source: ${source.source_url}`);
-          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "fetched" }).eq("id", source_id);
-          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "fetched" }).eq("id", syncRun.id);
+          await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "fetched" }).eq("id", source_id);
+          await serviceClient.from("canon_source_sync_runs").update({ lifecycle_state: "fetched" }).eq("id", syncRun.id);
 
           const scrapeResp = await fetch(`${FIRECRAWL_URL}/v1/scrape`, {
             method: "POST",
@@ -93,27 +102,25 @@ serve(async (req) => {
           const scrapeData = await scrapeResp.json();
           if (!scrapeResp.ok) {
             console.error("Firecrawl error:", scrapeData);
-            await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 0, 0, 0, `Firecrawl error: ${scrapeData.error || scrapeResp.status}`, "failed");
-            return json({ error: "Crawl failed", details: scrapeData.error }, 502);
+            await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
+            await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 0, 0, 0, `Firecrawl error: ${scrapeData.error || scrapeResp.status}`, "failed");
+            return errorResponse("Crawl failed", 502, req);
           }
 
           const markdown = scrapeData.data?.markdown || scrapeData.markdown || "";
 
-          // Update to "parsed" 
-          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "parsed" }).eq("id", source_id);
-          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "parsed", documents_fetched: 1 }).eq("id", syncRun.id);
+          await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "parsed" }).eq("id", source_id);
+          await serviceClient.from("canon_source_sync_runs").update({ lifecycle_state: "parsed", documents_fetched: 1 }).eq("id", syncRun.id);
 
           if (!markdown || markdown.length < 100) {
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 0, 0, "Insufficient content extracted", "parsed");
-            return json({ success: true, candidates_created: 0, message: "Insufficient content" });
+            await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 1, 0, 0, "Insufficient content extracted", "parsed");
+            return jsonResponse({ success: true, candidates_created: 0, message: "Insufficient content" }, 200, req);
           }
 
-          // 5. Truncate to ~12k chars for LLM context ("chunked" state)
           const truncated = markdown.slice(0, 12000);
-          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "chunked" }).eq("id", source_id);
-          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "chunked", chunks_created: 1 }).eq("id", syncRun.id);
-          // 5. Extract patterns via LLM
+          await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "chunked" }).eq("id", source_id);
+          await serviceClient.from("canon_source_sync_runs").update({ lifecycle_state: "chunked", chunks_created: 1 }).eq("id", syncRun.id);
+
           console.log("Extracting patterns via LLM...");
           const llmResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
             method: "POST",
@@ -183,27 +190,25 @@ Return ONLY a valid JSON array, no other text.`,
           if (!llmResp.ok) {
             const errText = await llmResp.text();
             console.error("LLM error:", llmResp.status, errText);
-            await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
+            await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
             if (llmResp.status === 429) {
-              await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "Rate limited by AI gateway", "failed");
-              return json({ error: "Rate limited, please try again later" }, 429);
+              await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "Rate limited by AI gateway", "failed");
+              return errorResponse("Rate limited, please try again later", 429, req);
             }
             if (llmResp.status === 402) {
-              await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "AI credits exhausted", "failed");
-              return json({ error: "AI credits exhausted" }, 402);
+              await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "AI credits exhausted", "failed");
+              return errorResponse("AI credits exhausted", 402, req);
             }
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, `LLM error: ${llmResp.status}`, "failed");
-            return json({ error: "Pattern extraction failed" }, 502);
+            await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, `LLM error: ${llmResp.status}`, "failed");
+            return errorResponse("Pattern extraction failed", 502, req);
           }
 
-          // Update to "classified"
-          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "classified" }).eq("id", source_id);
-          await supabase.from("canon_source_sync_runs").update({ lifecycle_state: "classified" }).eq("id", syncRun.id);
+          await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "classified" }).eq("id", source_id);
+          await serviceClient.from("canon_source_sync_runs").update({ lifecycle_state: "classified" }).eq("id", syncRun.id);
 
           const llmData = await llmResp.json();
           let patterns: any[] = [];
 
-          // Parse tool call response
           const toolCall = llmData.choices?.[0]?.message?.tool_calls?.[0];
           if (toolCall?.function?.arguments) {
             try {
@@ -215,36 +220,33 @@ Return ONLY a valid JSON array, no other text.`,
           }
 
           if (patterns.length === 0) {
-            await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "No patterns extracted", "classified");
-            return json({ success: true, candidates_created: 0, message: "No patterns extracted" });
+            await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "No patterns extracted", "classified");
+            return jsonResponse({ success: true, candidates_created: 0, message: "No patterns extracted" }, 200, req);
           }
 
-          // 6. Deduplicate against existing candidates
-          const { data: existingCandidates } = await supabase
+          // Deduplicate (scoped by org)
+          const { data: existingCandidates } = await serviceClient
             .from("canon_candidate_entries")
             .select("title")
-            .eq("organization_id", organization_id);
+            .eq("organization_id", orgId);
 
           const existingTitles = new Set((existingCandidates || []).map((c: any) => c.title.toLowerCase().trim()));
 
           const newPatterns = patterns.filter((p: any) => {
             const normalized = p.title.toLowerCase().trim();
-            // Simple dedup: exact title match
             if (existingTitles.has(normalized)) return false;
-            // Substring overlap check
             for (const existing of existingTitles) {
               if (existing.includes(normalized) || normalized.includes(existing)) return false;
             }
             return true;
           });
 
-          // 7. Insert candidates
           let accepted = 0;
           const rejected = patterns.length - newPatterns.length;
 
           for (const p of newPatterns) {
-            const { error: insertErr } = await supabase.from("canon_candidate_entries").insert({
-              organization_id,
+            const { error: insertErr } = await serviceClient.from("canon_candidate_entries").insert({
+              organization_id: orgId,
               source_id,
               title: p.title,
               summary: p.summary,
@@ -260,7 +262,7 @@ Return ONLY a valid JSON array, no other text.`,
               trial_status: "none",
               promotion_status: "pending",
               promotion_decision_reason: "",
-              submitted_by: "canon-ingestion-agent",
+              submitted_by: user.id,
             });
             if (!insertErr) {
               accepted++;
@@ -270,66 +272,67 @@ Return ONLY a valid JSON array, no other text.`,
             }
           }
 
-          // 8. Complete sync run — lifecycle → "candidate_generated"
-          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "candidate_generated" }).eq("id", source_id);
-          await completeSyncRun(supabase, syncRun.id, source_id, patterns.length, accepted, rejected, 1, 1, rejected,
+          await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "candidate_generated" }).eq("id", source_id);
+          await completeSyncRun(serviceClient, syncRun.id, source_id, patterns.length, accepted, rejected, 1, 1, rejected,
             `Extracted ${patterns.length} patterns, ${accepted} new candidates created, ${rejected} duplicates skipped`, "candidate_generated");
 
-          return json({
+          await logSecurityAudit(serviceClient, {
+            organization_id: orgId,
+            actor_id: user.id,
+            function_name: "canon-ingestion-agent",
+            action: "ingestion_completed",
+            context: { source_id, candidates_found: patterns.length, candidates_created: accepted },
+          });
+
+          return jsonResponse({
             success: true,
             candidates_found: patterns.length,
             candidates_created: accepted,
             duplicates_skipped: rejected,
             sync_run_id: syncRun.id,
-          });
+          }, 200, req);
 
         } catch (innerErr) {
           console.error("Ingestion error:", innerErr);
-          await supabase.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
-          await completeSyncRun(supabase, syncRun.id, source_id, 0, 0, 0, 0, 0, 0, `Error: ${innerErr.message}`, "failed");
+          await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
+          await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 0, 0, 0, `Error: ${innerErr.message}`, "failed");
           throw innerErr;
         }
       }
 
-      // ── Run ingestion for all enabled sources ──
       case "ingest_all": {
-        if (!organization_id) return json({ error: "organization_id required" }, 400);
-
-        const { data: sources, error: srcErr } = await supabase
+        const { data: sources, error: srcErr } = await serviceClient
           .from("canon_sources")
           .select("id, source_name")
-          .eq("organization_id", organization_id)
+          .eq("organization_id", orgId)
           .eq("status", "active");
         if (srcErr) throw srcErr;
 
+        // For ingest_all, call self with service-role but pass the user's auth header
+        const authHeader = req.headers.get("Authorization") || "";
         const results: any[] = [];
         for (const src of (sources || [])) {
           try {
-            // Call self recursively for each source with delay
             const resp = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/canon-ingestion-agent`, {
               method: "POST",
               headers: {
-                Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+                Authorization: authHeader,
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ action: "ingest_source", organization_id, source_id: src.id }),
+              body: JSON.stringify({ action: "ingest_source", organization_id: orgId, source_id: src.id }),
             });
             const result = await resp.json();
             results.push({ source: src.source_name, ...result });
-            // Rate limit: wait 3s between sources
             await new Promise((r) => setTimeout(r, 3000));
           } catch (err) {
             results.push({ source: src.source_name, error: err.message });
           }
         }
 
-        return json({ success: true, results });
+        return jsonResponse({ success: true, results }, 200, req);
       }
 
-      // ── Seed default sources ──
       case "seed_sources": {
-        if (!organization_id) return json({ error: "organization_id required" }, 400);
-
         const defaultSources = [
           { source_name: "React Documentation", source_type: "official_framework_docs", source_url: "https://react.dev/learn", domain_scope: "frontend" },
           { source_name: "Next.js Documentation", source_type: "official_framework_docs", source_url: "https://nextjs.org/docs", domain_scope: "frontend" },
@@ -341,17 +344,16 @@ Return ONLY a valid JSON array, no other text.`,
 
         const inserted: any[] = [];
         for (const src of defaultSources) {
-          // Check if already exists
-          const { data: existing } = await supabase
+          const { data: existing } = await serviceClient
             .from("canon_sources")
             .select("id")
-            .eq("organization_id", organization_id)
+            .eq("organization_id", orgId)
             .eq("source_url", src.source_url)
             .maybeSingle();
 
           if (!existing) {
-            const { data, error } = await supabase.from("canon_sources").insert({
-              organization_id,
+            const { data, error } = await serviceClient.from("canon_sources").insert({
+              organization_id: orgId,
               ...src,
               trust_level: "unknown",
               ingestion_status: "pending",
@@ -359,22 +361,22 @@ Return ONLY a valid JSON array, no other text.`,
               sync_policy: "manual",
               approved_categories: [],
               source_notes: `Auto-seeded by Canon Ingestion Agent`,
-              created_by: "canon-ingestion-agent",
+              created_by: user.id,
               status: "active",
             }).select().single();
             if (!error && data) inserted.push(data);
           }
         }
 
-        return json({ success: true, sources_created: inserted.length, sources: inserted });
+        return jsonResponse({ success: true, sources_created: inserted.length, sources: inserted }, 200, req);
       }
 
       default:
-        return json({ error: `Unknown action: ${action}` }, 400);
+        return errorResponse(`Unknown action: ${action}`, 400, req);
     }
   } catch (err) {
     console.error("Canon ingestion agent error:", err);
-    return json({ error: err.message }, 500);
+    return errorResponse(err.message, 500, req);
   }
 });
 

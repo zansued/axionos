@@ -5,73 +5,90 @@ import { getPlaybookActions } from "../_shared/blue-team/response-playbook-engin
 import { planContainment } from "../_shared/blue-team/containment-controller.ts";
 import { assessRecoveryPosture } from "../_shared/blue-team/recovery-posture-assessor.ts";
 import { explainIncident } from "../_shared/blue-team/incident-explainer.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    // 1. Authenticate + rate limit
+    const authResult = await authenticateWithRateLimit(req, "blue-team-defense");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient } = authResult;
+
+    const body = await req.json();
+    const { action, ...params } = body;
+
+    // 2. Resolve & validate org
+    const { orgId, error: orgError } = await resolveAndValidateOrg(
+      serviceClient, user.id, params.organization_id
     );
-    const { action, ...params } = await req.json();
-    const json = (data: unknown) => new Response(JSON.stringify(data), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    if (orgError || !orgId) {
+      return errorResponse(orgError || "Organization access denied", 403, req);
+    }
+
+    // 3. Audit
+    await logSecurityAudit(serviceClient, {
+      organization_id: orgId,
+      actor_id: user.id,
+      function_name: "blue-team-defense",
+      action,
+      context: { params_keys: Object.keys(params) },
+    });
 
     switch (action) {
       case "overview": {
         const [alerts, incidents, actions, reviews] = await Promise.all([
-          supabase.from("blue_team_alerts").select("*", { count: "exact", head: true }),
-          supabase.from("blue_team_incidents").select("*", { count: "exact", head: true }),
-          supabase.from("blue_team_response_actions").select("*", { count: "exact", head: true }).eq("status", "pending"),
-          supabase.from("blue_team_incidents").select("*", { count: "exact", head: true }).eq("response_status", "open"),
+          serviceClient.from("blue_team_alerts").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+          serviceClient.from("blue_team_incidents").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+          serviceClient.from("blue_team_response_actions").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("status", "pending"),
+          serviceClient.from("blue_team_incidents").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("response_status", "open"),
         ]);
-        return json({ total_alerts: alerts.count ?? 0, total_incidents: incidents.count ?? 0, pending_actions: actions.count ?? 0, open_incidents: reviews.count ?? 0 });
+        return jsonResponse({ total_alerts: alerts.count ?? 0, total_incidents: incidents.count ?? 0, pending_actions: actions.count ?? 0, open_incidents: reviews.count ?? 0 }, 200, req);
       }
 
       case "list_alerts": {
-        const { data, error } = await supabase.from("blue_team_alerts").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("blue_team_alerts").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ alerts: data });
+        return jsonResponse({ alerts: data }, 200, req);
       }
 
       case "list_incidents": {
-        const { data, error } = await supabase.from("blue_team_incidents").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("blue_team_incidents").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ incidents: data });
+        return jsonResponse({ incidents: data }, 200, req);
       }
 
       case "list_response_actions": {
-        const { data, error } = await supabase.from("blue_team_response_actions").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("blue_team_response_actions").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ actions: data });
+        return jsonResponse({ actions: data }, 200, req);
       }
 
       case "list_containment": {
-        const { data, error } = await supabase.from("blue_team_containment_events").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("blue_team_containment_events").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ containment: data });
+        return jsonResponse({ containment: data }, 200, req);
       }
 
       case "list_recovery": {
-        const { data, error } = await supabase.from("blue_team_recovery_flows").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("blue_team_recovery_flows").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ recovery: data });
+        return jsonResponse({ recovery: data }, 200, req);
       }
 
       case "list_runbooks": {
-        const { data, error } = await supabase.from("blue_team_runbooks").select("*").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await serviceClient.from("blue_team_runbooks").select("*").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50);
         if (error) throw error;
-        return json({ runbooks: data });
+        return jsonResponse({ runbooks: data }, 200, req);
       }
 
       case "detect_signal": {
         const result = detect({ signal_type: params.signal_type ?? "contract_anomaly", target_surface: params.target_surface ?? "general", evidence: params.evidence ?? {} });
-        return json({ detection: result, categories: DETECTION_CATEGORIES });
+        return jsonResponse({ detection: result, categories: DETECTION_CATEGORIES }, 200, req);
       }
 
       case "assess_incident": {
@@ -82,13 +99,23 @@ Deno.serve(async (req) => {
           incident_type: params.incident_type ?? "contract_anomaly", severity: params.severity ?? "medium", target_surface: params.target_surface ?? "general",
           anomaly_summary: params.anomaly_summary ?? "", containment_applied: false, rollback_recommended: false, response_actions: playbook,
         });
-        return json({ playbook, containment, recovery, explanation });
+
+        await logSecurityAudit(serviceClient, {
+          organization_id: orgId,
+          actor_id: user.id,
+          function_name: "blue-team-defense",
+          action: "incident_assessed",
+          context: { incident_type: params.incident_type, severity: params.severity },
+        });
+
+        return jsonResponse({ playbook, containment, recovery, explanation }, 200, req);
       }
 
       default:
-        return json({ error: `Unknown action: ${action}` });
+        return jsonResponse({ error: `Unknown action: ${action}` }, 400, req);
     }
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    console.error("[blue-team-defense] Error:", err);
+    return errorResponse(err.message, 500, req);
   }
 });
