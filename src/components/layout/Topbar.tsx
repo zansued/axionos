@@ -7,7 +7,8 @@ import { useLocation, Link } from "react-router-dom";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Search, Bell, ChevronRight, Zap } from "lucide-react";
-import { getRouteEntry, getBreadcrumbs } from "@/lib/routes";`nimport { BoltPromptDrawer } from "@/components/ui/BoltPromptDrawer";
+import { getRouteEntry, getBreadcrumbs } from "@/lib/routes";
+import { BoltPromptDrawer } from "@/components/ui/BoltPromptDrawer";
 
 interface TopbarProps {
   compact?: boolean;
