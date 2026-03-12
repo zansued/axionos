@@ -480,12 +480,13 @@ All self-improvement proposals must pass through governance review. No opaque se
 | 21 | Governance Decision Lifecycle | AH | 155-163 |
 | 22 | Repository Intelligence & Institutional Learning | AI | 164-171 |
 | 23 | Self-Improving Architecture Engine | AJ | 172-179 |
+| 24 | Knowledge Provenance & Trust-Weighted Intelligence | AK | 180-181 |
 
 ---
 
 ## 10. Implementation Status
 
-> **179 sprints complete.** All blocks Foundation through AJ implemented.
+> **181 sprints complete.** All blocks Foundation through AK implemented.
 > **Sprint-by-sprint record:** `docs/registry/sprints.yml`
 
 | Block | Sprints | Name | Status |
