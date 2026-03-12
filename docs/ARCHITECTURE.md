@@ -278,8 +278,10 @@ Key concepts:
 | Phase 6 | AgentOS Decision Contract | Complete |
 | Phase 7 | Action Engine | Complete |
 | Phase 8 | Governance and Approval Flow | Complete |
-| Phase 9 | Self-Healing and Recovery | In Progress |
-| Phase 10 | Learning Feedback Loop | In Progress |
+| Phase 9 | Governed Execution Path | Complete |
+| Phase 10 | Canon Pipeline Operationalization | Complete |
+| Phase 11 | Repository Intelligence & Institutional Learning | Complete |
+| Phase 12 | Self-Improving Architecture Engine | Complete |
 
 ### System Brain Map
 
