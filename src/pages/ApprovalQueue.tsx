@@ -48,7 +48,10 @@ import {
   Filter,
   ExternalLink,
 } from "lucide-react";
-
+import {
+  validateTransition,
+  type ActionState,
+} from "@/lib/action-domain-state-machine";
 // ── Types ──
 
 interface ApprovalRequest {
