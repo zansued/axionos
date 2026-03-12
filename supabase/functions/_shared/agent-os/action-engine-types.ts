@@ -80,12 +80,19 @@ export type ActionExecutionMode =
 
 export type ActionStatus =
   | "pending"
+  | "queued"
+  | "waiting_approval"
   | "approved"
+  | "dispatched"
   | "executing"
   | "completed"
   | "failed"
   | "rejected"
-  | "cancelled";
+  | "cancelled"
+  | "blocked"
+  | "escalated"
+  | "rolled_back"
+  | "expired";
 
 export interface ActionRecord {
   /** Unique action id */

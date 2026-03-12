@@ -19,13 +19,20 @@ import { nowIso } from "./utils.ts";
 // ── Status Transition Rules ──
 
 const VALID_TRANSITIONS: Record<ActionStatus, ActionStatus[]> = {
-  pending: ["approved", "executing", "rejected", "cancelled", "blocked"],
-  approved: ["executing", "cancelled"],
-  executing: ["completed", "failed"],
-  completed: [],
-  failed: [],
+  pending: ["queued", "waiting_approval", "approved", "executing", "rejected", "cancelled", "blocked"],
+  queued: ["waiting_approval", "dispatched", "executing", "cancelled", "blocked"],
+  waiting_approval: ["approved", "rejected", "expired", "cancelled"],
+  approved: ["dispatched", "executing", "cancelled"],
+  dispatched: ["executing", "failed", "cancelled"],
+  executing: ["completed", "failed", "escalated"],
+  completed: ["rolled_back"],
+  failed: ["rolled_back", "queued"],
   rejected: [],
   cancelled: [],
+  blocked: ["pending", "cancelled"],
+  escalated: ["executing", "blocked", "cancelled", "rolled_back"],
+  rolled_back: [],
+  expired: [],
 };
 
 // ── Audit Entry ──
@@ -147,13 +154,19 @@ export class ActionRegistry {
   countByStatus(): Record<ActionStatus, number> {
     const counts: Record<string, number> = {
       pending: 0,
+      queued: 0,
+      waiting_approval: 0,
       approved: 0,
+      dispatched: 0,
       executing: 0,
       completed: 0,
       failed: 0,
       rejected: 0,
       cancelled: 0,
       blocked: 0,
+      escalated: 0,
+      rolled_back: 0,
+      expired: 0,
     };
     for (const a of this.actions.values()) {
       counts[a.status] = (counts[a.status] || 0) + 1;

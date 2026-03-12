@@ -84,9 +84,16 @@ serve(async (req) => {
           ? `Create/Update file: ${action.filePath}`
           : `Execute shell command: ${action.content.substring(0, 50)}...`;
 
+        const actionId = crypto.randomUUID();
+        const intentId = crypto.randomUUID();
+        const triggerId = crypto.randomUUID();
+
         const { data, error } = await supabaseClient
           .from("action_registry_entries")
           .insert({
+            action_id: actionId,
+            intent_id: intentId,
+            trigger_id: triggerId,
             organization_id: orgId || "global",
             trigger_type: `bolt_${action.type}`,
             initiative_id: initiativeId,
@@ -94,8 +101,10 @@ serve(async (req) => {
             execution_mode: "auto",
             status: "queued",
             risk_level: action.type === "shell" ? "high" : "low",
+            requires_approval: action.type === "shell",
+            rollback_available: action.type === "file",
             description,
-            reason: "Axion-style artifact formalization",
+            reason: "Axion Action Engine artifact formalization",
             payload: {
               artifactId: action.artifactId,
               artifactTitle: action.artifactTitle,

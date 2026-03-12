@@ -144,22 +144,55 @@ export default function ApprovalQueue() {
 
   const decideMutation = useMutation({
     mutationFn: async ({ id, decision }: { id: string; decision: "approved" | "rejected" }) => {
+      const now = new Date().toISOString();
+      const request = requests.find((r) => r.id === id);
+
+      // 1. Update approval request
       const { error } = await supabase
         .from("action_approval_requests")
         .update({
           status: decision,
           decided_by: user?.id,
           decision_notes: decisionNotes || null,
-          decided_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          decided_at: now,
+          updated_at: now,
         })
         .eq("id", id)
         .eq("organization_id", orgId!);
       if (error) throw error;
+
+      // 2. Propagate decision to the action registry entry
+      if (request?.action_id) {
+        const actionStatus = decision === "approved" ? "approved" : "rejected";
+        await supabase
+          .from("action_registry_entries")
+          .update({
+            status: actionStatus,
+            approved_by: decision === "approved" ? user?.id : null,
+            updated_at: now,
+          })
+          .eq("action_id", request.action_id)
+          .eq("organization_id", orgId!);
+
+        // 3. Write audit trail event
+        await supabase
+          .from("action_audit_events")
+          .insert({
+            action_id: request.action_id,
+            organization_id: orgId!,
+            event_type: `approval_${decision}`,
+            previous_status: "waiting_approval",
+            new_status: actionStatus,
+            reason: decisionNotes || `Human ${decision} via Approval Queue`,
+            actor_type: "human",
+            actor_id: user?.id,
+          });
+      }
     },
     onSuccess: (_data, vars) => {
       toast({ title: `Request ${vars.decision}`, description: `Approval request has been ${vars.decision}.` });
       qc.invalidateQueries({ queryKey: ["approval-queue"] });
+      qc.invalidateQueries({ queryKey: ["action-center"] });
       setSelectedId(null);
       setDecisionNotes("");
     },
