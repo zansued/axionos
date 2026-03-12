@@ -306,6 +306,7 @@ const App = () => (
                                 ══════════════════════════════════════════════ */}
 
                             {/* System Intelligence */}
+                            <Route path="/owner/system-intelligence" element={<P><SystemIntelligence /></P>} />
                             <Route path="/owner/system-health" element={<P><SystemHealthDashboard /></P>} />
                             <Route path="/owner/adoption" element={<W><AdoptionIntelligence /></W>} />
                             <Route path="/owner/delivery-outcomes" element={<W><DeliveryOutcomes /></W>} />
