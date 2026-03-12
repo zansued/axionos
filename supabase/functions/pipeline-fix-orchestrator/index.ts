@@ -60,7 +60,7 @@ serve(async (req) => {
       .eq("id", initiative_id)
       .maybeSingle();
     if (!initiativeRecord) {
-      return errorResponse("Initiative not found", 404);
+      return notFoundOrForbiddenResponse("Initiative");
     }
 
     const organization_id = initiativeRecord.organization_id;
