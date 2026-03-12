@@ -446,6 +446,34 @@ Self-improvement proposals are treated as governance changes — they follow the
 
 ---
 
+## 27. Knowledge Provenance & Trust Governance (Block AK)
+
+Block AK introduces governance over source trust and knowledge lineage, ensuring that the system's institutional knowledge is not just accumulated but epistemologically sound.
+
+### 27.1 Source Trust Governance
+
+Each repository analyzed by the absorption engine receives a composite trust score across 10 dimensions (activity, structure, tests, documentation, historical promotion success, etc.). Trust scores weight pattern candidates and canon entries — patterns from high-trust sources gain more influence; patterns from weak sources are penalized. Trust scores are recalculated periodically and are fully auditable.
+
+### 27.2 Pattern Weighting Governance
+
+Pattern weight is computed as a governed formula combining source trust, execution reinforcement, recurrence bonuses, and penalties for duplication noise or weak provenance. The formula is transparent and auditable — operators can inspect why any pattern has its current weight.
+
+### 27.3 Knowledge Lineage Governance
+
+Every knowledge object (candidate, canon entry, distilled skill) carries a full lineage trail: creation, review, merge, promotion, distillation, runtime usage, and reinforcement events. Provenance links map directed relationships between objects with weight contributions. This ensures the system can explain not just *what* it knows, but *why* it trusts that knowledge.
+
+### 27.4 Epistemological Integrity
+
+The lineage engine performs integrity checks that detect inconsistencies:
+- High confidence with weak evidence
+- Merged patterns with conflicting source quality
+- Canon entries without sufficient lineage
+- Distillations without promotion references
+
+These alerts surface in the Canon Intelligence Hub, ensuring governance oversight of knowledge quality.
+
+---
+
 ## Documentation Boundaries
 
 | File | Scope |

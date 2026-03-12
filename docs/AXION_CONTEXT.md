@@ -331,6 +331,7 @@ Future work focuses on improving:
 | Phase 10 | Canon Pipeline Operationalization | Complete (Sprints 155–163) |
 | Phase 11 | Repository Intelligence & Institutional Learning | Complete (Sprints 164–171) |
 | Phase 12 | Self-Improving Architecture Engine | Complete (Sprints 172–179) |
+| Phase 13 | Knowledge Provenance & Trust-Weighted Intelligence | Complete (Sprints 180–181) |
 
 ---
 
