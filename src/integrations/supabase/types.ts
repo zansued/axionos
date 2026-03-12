@@ -23223,6 +23223,112 @@ export type Database = {
           },
         ]
       }
+      knowledge_acquisition_roi_snapshots: {
+        Row: {
+          acquisition_mode: string
+          candidates_generated: number
+          canon_promoted: number
+          confidence_gain: number
+          cost_efficiency_score: number
+          coverage_gap_reduction: number
+          created_at: string
+          downstream_value_score: number
+          evidence_summary: Json | null
+          expected_vs_actual_value: number
+          id: string
+          job_id: string | null
+          low_value_flag: boolean
+          low_value_reasons: Json | null
+          noise_ratio: number
+          organization_id: string
+          plan_id: string | null
+          promotion_yield: number
+          roi_score: number
+          runtime_usage_count: number
+          runtime_usefulness_score: number
+          skills_generated: number
+          source_ref: string
+          source_type: string
+          total_cost: number
+        }
+        Insert: {
+          acquisition_mode?: string
+          candidates_generated?: number
+          canon_promoted?: number
+          confidence_gain?: number
+          cost_efficiency_score?: number
+          coverage_gap_reduction?: number
+          created_at?: string
+          downstream_value_score?: number
+          evidence_summary?: Json | null
+          expected_vs_actual_value?: number
+          id?: string
+          job_id?: string | null
+          low_value_flag?: boolean
+          low_value_reasons?: Json | null
+          noise_ratio?: number
+          organization_id: string
+          plan_id?: string | null
+          promotion_yield?: number
+          roi_score?: number
+          runtime_usage_count?: number
+          runtime_usefulness_score?: number
+          skills_generated?: number
+          source_ref?: string
+          source_type?: string
+          total_cost?: number
+        }
+        Update: {
+          acquisition_mode?: string
+          candidates_generated?: number
+          canon_promoted?: number
+          confidence_gain?: number
+          cost_efficiency_score?: number
+          coverage_gap_reduction?: number
+          created_at?: string
+          downstream_value_score?: number
+          evidence_summary?: Json | null
+          expected_vs_actual_value?: number
+          id?: string
+          job_id?: string | null
+          low_value_flag?: boolean
+          low_value_reasons?: Json | null
+          noise_ratio?: number
+          organization_id?: string
+          plan_id?: string | null
+          promotion_yield?: number
+          roi_score?: number
+          runtime_usage_count?: number
+          runtime_usefulness_score?: number
+          skills_generated?: number
+          source_ref?: string
+          source_type?: string
+          total_cost?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_acquisition_roi_snapshots_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_acquisition_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_acquisition_roi_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_acquisition_roi_snapshots_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_acquisition_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       knowledge_confidence_breakdowns: {
         Row: {
           base_confidence: number
