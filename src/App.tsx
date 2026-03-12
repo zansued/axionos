@@ -121,6 +121,7 @@ import ProjectDetail from "./pages/ProjectDetail";
 import Pipelines from "./pages/Pipelines";
 import Governance from "./pages/Governance";
 import GovernanceInsights from "./pages/GovernanceInsights";
+import GovernanceDecisions from "./pages/GovernanceDecisions";
 import Modes from "./pages/Modes";
 import SettingsPage from "./pages/Settings";
 import Runtime from "./pages/Runtime";
@@ -400,6 +401,7 @@ const App = () => (
                             <Route path="/owner/organism-memory" element={<P><OrganismMemoryDashboard /></P>} />
                             <Route path="/owner/organism-console" element={<P><OrganismConsoleDashboard /></P>} />
                             <Route path="/owner/governance-insights" element={<P><GovernanceInsights /></P>} />
+                            <Route path="/owner/governance-decisions" element={<P><GovernanceDecisions /></P>} />
 
                             {/* ══════════════════════════════════════════════
                                 LEGACY REDIRECTS (deprecated — log usage)
