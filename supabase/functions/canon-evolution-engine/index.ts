@@ -377,34 +377,40 @@ Return ONLY valid JSON:
             }).eq("id", candidate.id);
 
             // Create version record
-            await supabase.from("canon_entry_versions").insert({
-              entry_id: entry.id,
-              organization_id,
-              version_number: 1,
-              title: entry.title,
-              summary: entry.summary,
-              body: entry.body,
-              implementation_guidance: "",
-              change_description: "Promoted from candidate by Canon Evolution Engine",
-              changed_by: "canon-evolution-engine",
-            }).catch(() => {});
+            try {
+              await supabase.from("canon_entry_versions").insert({
+                entry_id: entry.id,
+                organization_id,
+                version_number: 1,
+                title: entry.title,
+                summary: entry.summary,
+                body: entry.body,
+                implementation_guidance: "",
+                change_description: "Promoted from candidate by Canon Evolution Engine",
+                changed_by: "canon-evolution-engine",
+              });
+            } catch (_) {}
 
             // Create audit trail
-            await supabase.from("canon_entry_status_history").insert({
-              entry_id: entry.id,
-              organization_id,
-              from_status: "none",
-              to_status: "active",
-              reason: `Auto-promoted by Canon Evolution Engine. Evaluation score: ${candidate.evaluation_score || 'N/A'}. ${candidate.evaluation_notes || ''}`,
-              changed_by: "canon-evolution-engine",
-            }).catch(() => {});
+            try {
+              await supabase.from("canon_entry_status_history").insert({
+                entry_id: entry.id,
+                organization_id,
+                from_status: "none",
+                to_status: "approved",
+                reason: `Auto-promoted by Canon Evolution Engine. Evaluation score: ${candidate.evaluation_score || 'N/A'}. ${candidate.evaluation_notes || ''}`,
+                changed_by: "canon-evolution-engine",
+              });
+            } catch (_) {}
 
             // Update source lifecycle if linked
             if (candidate.source_id) {
-              await supabase.from("canon_sources").update({
-                ingestion_lifecycle_state: "canon_promoted",
-                updated_at: new Date().toISOString(),
-              }).eq("id", candidate.source_id).catch(() => {});
+              try {
+                await supabase.from("canon_sources").update({
+                  ingestion_lifecycle_state: "canon_promoted",
+                  updated_at: new Date().toISOString(),
+                }).eq("id", candidate.source_id);
+              } catch (_) {}
             }
 
             promoted++;
