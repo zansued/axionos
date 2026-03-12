@@ -51,7 +51,7 @@ function LandingPage() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden bg-background">
       {/* Neural particle background */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-0">
         <NeuralBackground
           color="hsl(198, 100%, 50%)"
           trailOpacity={0.08}
@@ -74,7 +74,7 @@ function LandingPage() {
 
       {/* Radial glow above planet */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 w-[4000px] h-[1800px] pointer-events-none"
+        className="absolute left-1/2 -translate-x-1/2 w-[4000px] h-[1800px] pointer-events-none z-[3]"
         style={{
           bottom: 0,
           background:
