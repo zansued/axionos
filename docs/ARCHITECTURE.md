@@ -357,33 +357,99 @@ GROWTH & EVOLUTION (Stages 24-32)
 
 ---
 
-## 8. Data Flow Between Layers
+## 8. Three Intelligence Layers
+
+AxionOS operates as a **governed adaptive system** with three intelligence layers:
 
 ```mermaid
-flowchart LR
-    Pipeline["Pipeline Core"]:::runtime --> OI["Operational\nIntelligence"]:::intelligence
-    OI --> Learn["Learning\nEngine"]:::intelligence
-    Learn --> Gov["Execution\nGovernance"]:::governance
-    Gov --> Pipeline
-    Learn --> PI["Platform\nIntelligence"]:::intelligence
-    PI --> Calib["Self-\nCalibration"]:::governance
-    PI --> Strat["Strategy\nEvolution"]:::strategic
-    Calib --> Pipeline
-    Strat --> Pipeline
+flowchart TB
+    subgraph Operational["Operational Layer"]
+        AE2["Action Engine"]:::runtime
+        AgOS["AgentOS"]:::core
+        Exec["Execution Workers"]:::runtime
+    end
 
-    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    subgraph Knowledge["Knowledge Layer"]
+        Canon2["Canon"]:::canon
+        CIH["Canon Intelligence Hub"]:::intelligence
+        PL["Pattern Library"]:::intelligence
+        CG["Canon Graph"]:::intelligence
+    end
+
+    subgraph Learning["Learning Layer"]
+        RA["Repository Absorption"]:::intelligence
+        NFL["Neural Feedback Loop"]:::intelligence
+        CEE["Canon Evolution Engine"]:::intelligence
+        SIAE["Self-Improving\nArchitecture Engine"]:::strategic
+    end
+
+    Knowledge --> Operational
+    Learning --> Knowledge
+    Operational -->|evidence| Learning
+
+    classDef canon fill:#6C5CE7,stroke:#2E1A8A,color:#fff,stroke-width:1.5px;
     classDef intelligence fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:1.5px;
-    classDef governance fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:1.5px;
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:1.5px;
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:1.5px;
     classDef strategic fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:1.5px;
 ```
 
-1. **Pipeline Core** emits execution events
-2. **Operational Intelligence** extracts patterns, tracks repair strategies
-3. **Learning Engine** optimizes prompts, builds memory, predicts errors
-4. **Execution Governance** selects policies based on learning signals
-5. **Platform Intelligence** aggregates system-level behavior
-6. **Self-Calibration** proposes bounded threshold adjustments
-7. **Strategy Evolution** synthesizes and experiments with strategy variants
+| Layer | Components | Role |
+|-------|-----------|------|
+| **Operational** | Action Engine, AgentOS, Execution Workers | Formalizes, orchestrates, and executes governed actions |
+| **Knowledge** | Canon, Canon Intelligence Hub, Pattern Library, Canon Graph | Stores, indexes, and serves validated institutional knowledge |
+| **Learning** | Repository Absorption, Neural Feedback Loop, Canon Evolution Engine, Self-Improving Architecture Engine | Absorbs knowledge, extracts patterns, distills intelligence, proposes governed self-improvement |
+
+### Data Flow
+
+1. **Operational Layer** emits execution evidence
+2. **Learning Layer** absorbs evidence, extracts patterns, distills knowledge
+3. **Knowledge Layer** receives promoted knowledge, serves it to operations
+4. The cycle repeats — creating a **governed closed-loop intelligence metabolism**
+
+---
+
+## 8b. Block AI — Repository Intelligence & Institutional Learning (Sprints 164–171)
+
+This block transforms the Canon Hub into a **living institutional knowledge system** capable of absorbing engineering knowledge from repositories and execution outcomes.
+
+| Sprint | Capability |
+|--------|-----------|
+| 164 | Canon Candidate Review Engine |
+| 165 | Pattern Deduplication & Merge Intelligence |
+| 166 | Canon Promotion Workflow |
+| 167 | Retrieval Activation & Canon Indexing |
+| 168 | Repository Skill Distillation Engine |
+| 169 | Repo-to-Canon Intelligence Graph |
+| 170 | Agent Skill Injection Runtime |
+| 171 | Institutional Learning Governance Surface |
+
+---
+
+## 8c. Block AJ — Self-Improving Architecture Engine (Sprints 172–179)
+
+This block introduces **distilled intelligence and architecture self-improvement** capabilities. The system learns to distill knowledge, optimize token usage, extract architecture heuristics, propose improvements to itself, and maintain governance over self-evolution.
+
+| Sprint | Capability |
+|--------|-----------|
+| 172 | Canon Distillation Engine |
+| 173 | Skill Distillation & Micro-Skill Injection |
+| 174 | Token Budgeting & Context Selection Engine |
+| 175 | Retrieval Compression & Multi-Layer Memory |
+| 176 | Architecture Heuristics Learning Engine |
+| 177 | Self-Improvement Proposal Engine |
+| 178 | Runtime Learning Efficiency Dashboard |
+| 179 | Self-Improving Architecture Governance Surface |
+
+### Knowledge Metabolism Pipeline
+
+```
+Source (repos, execution) → Candidate → Evaluation → Merge/Deduplication
+→ Canon Promotion → Distilled Knowledge → Runtime Injection
+→ Execution Feedback → Learning Signals → Architecture Improvement Proposals
+```
+
+All self-improvement proposals must pass through governance review. No opaque self-mutation.
 
 ---
 
