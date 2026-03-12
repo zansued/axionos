@@ -399,6 +399,7 @@ const App = () => (
                             <Route path="/owner/operational-loops" element={<P><OperationalLoopsDashboard /></P>} />
                             <Route path="/owner/organism-memory" element={<P><OrganismMemoryDashboard /></P>} />
                             <Route path="/owner/organism-console" element={<P><OrganismConsoleDashboard /></P>} />
+                            <Route path="/owner/governance-insights" element={<P><GovernanceInsights /></P>} />
 
                             {/* ══════════════════════════════════════════════
                                 LEGACY REDIRECTS (deprecated — log usage)
