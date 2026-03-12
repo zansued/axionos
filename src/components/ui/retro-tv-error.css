@@ -1,0 +1,428 @@
+/* ═══════════════════════════════════════════
+   Retro TV 404 Error Component
+   ═══════════════════════════════════════════ */
+
+.retro-tv-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ── Main container ── */
+.retro-main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Antenna ── */
+.retro-antenna {
+  position: relative;
+  width: 140px;
+  height: 100px;
+}
+
+.retro-antenna_shadow {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 10px;
+  background: radial-gradient(ellipse, hsl(var(--muted-foreground) / 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.retro-a1 {
+  position: absolute;
+  bottom: 10px;
+  left: 30px;
+  width: 4px;
+  height: 80px;
+  background: hsl(var(--muted-foreground) / 0.6);
+  transform: rotate(-30deg);
+  transform-origin: bottom center;
+  border-radius: 2px;
+}
+
+.retro-a1d {
+  position: absolute;
+  top: -2px;
+  left: 28px;
+  width: 10px;
+  height: 10px;
+  background: hsl(var(--primary));
+  border-radius: 50%;
+  transform: rotate(-30deg);
+  animation: retro-blink 1.5s ease-in-out infinite;
+}
+
+.retro-a2 {
+  position: absolute;
+  bottom: 10px;
+  right: 30px;
+  width: 4px;
+  height: 80px;
+  background: hsl(var(--muted-foreground) / 0.6);
+  transform: rotate(30deg);
+  transform-origin: bottom center;
+  border-radius: 2px;
+}
+
+.retro-a2d {
+  position: absolute;
+  top: -2px;
+  right: 28px;
+  width: 10px;
+  height: 10px;
+  background: hsl(var(--primary));
+  border-radius: 50%;
+  transform: rotate(30deg);
+  animation: retro-blink 1.5s ease-in-out infinite 0.3s;
+}
+
+.retro-a_base {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 14px;
+  background: hsl(var(--muted-foreground) / 0.5);
+  border-radius: 4px 4px 0 0;
+}
+
+/* ── TV Body ── */
+.retro-tv {
+  position: relative;
+  width: 280px;
+  height: 220px;
+  background: hsl(var(--card));
+  border: 2px solid hsl(var(--border));
+  border-radius: 18px;
+  box-shadow:
+    0 8px 32px hsl(var(--primary) / 0.1),
+    inset 0 1px 0 hsl(var(--card) / 0.8);
+  overflow: hidden;
+}
+
+.retro-cruve {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  opacity: 0.15;
+}
+
+.retro-curve_svg {
+  width: 40px;
+  height: 40px;
+  fill: hsl(var(--foreground));
+}
+
+/* ── Screen ── */
+.retro-display_div {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 175px;
+  height: 140px;
+}
+
+.retro-screen_out {
+  width: 100%;
+  height: 100%;
+  background: hsl(var(--muted));
+  border-radius: 10px;
+  border: 2px solid hsl(var(--border));
+  overflow: hidden;
+}
+
+.retro-screen_out1 {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.retro-screen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    hsl(var(--primary) / 0.05) 0%,
+    hsl(var(--primary) / 0.15) 50%,
+    hsl(var(--primary) / 0.05) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: retro-flicker 0.15s infinite;
+}
+
+.retro-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    hsl(var(--primary) / 0.03) 2px,
+    hsl(var(--primary) / 0.03) 4px
+  );
+  pointer-events: none;
+}
+
+.retro-screen::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(
+    0deg,
+    transparent 0%,
+    hsl(var(--primary) / 0.08) 50%,
+    transparent 100%
+  );
+  animation: retro-scanline 4s linear infinite;
+}
+
+.retro-screenM {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: retro-glitch 3s ease-in-out infinite;
+}
+
+.retro-notfound_text {
+  font-family: 'Space Grotesk', 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: hsl(var(--primary));
+  text-shadow: 0 0 8px hsl(var(--primary) / 0.5);
+}
+
+/* ── Side Details ── */
+.retro-lines {
+  position: absolute;
+  top: 20px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 55px;
+}
+
+.retro-line1,
+.retro-line2,
+.retro-line3 {
+  width: 100%;
+  height: 3px;
+  background: hsl(var(--border));
+  border-radius: 2px;
+}
+
+.retro-line2 {
+  width: 80%;
+}
+
+.retro-line3 {
+  width: 60%;
+}
+
+/* ── Buttons ── */
+.retro-buttons_div {
+  position: absolute;
+  bottom: 16px;
+  right: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.retro-b1 {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: hsl(var(--muted));
+  border: 2px solid hsl(var(--border));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retro-b1:hover {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 8px hsl(var(--primary) / 0.3);
+}
+
+.retro-b1 > div {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  animation: retro-blink 2s ease-in-out infinite;
+}
+
+.retro-b2 {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: hsl(var(--muted));
+  border: 2px solid hsl(var(--border));
+}
+
+/* ── Speakers ── */
+.retro-speakers {
+  position: absolute;
+  bottom: 55px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.retro-g1 {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.retro-g11,
+.retro-g12,
+.retro-g13 {
+  width: 40px;
+  height: 2px;
+  background: hsl(var(--border));
+  border-radius: 1px;
+}
+
+.retro-g {
+  width: 40px;
+  height: 2px;
+  background: hsl(var(--border));
+  border-radius: 1px;
+  margin-top: 2px;
+}
+
+/* ── Base/Stand ── */
+.retro-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.retro-base1 {
+  width: 160px;
+  height: 8px;
+  background: hsl(var(--muted-foreground) / 0.4);
+  border-radius: 0 0 6px 6px;
+}
+
+.retro-base2 {
+  width: 60px;
+  height: 14px;
+  background: hsl(var(--muted-foreground) / 0.3);
+}
+
+.retro-base3 {
+  width: 120px;
+  height: 6px;
+  background: hsl(var(--muted-foreground) / 0.25);
+  border-radius: 0 0 4px 4px;
+}
+
+/* ── 404 Text ── */
+.retro-text_404 {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.retro-text_404_digit {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 4.5rem;
+  font-weight: 800;
+  color: hsl(var(--primary));
+  text-shadow:
+    0 0 20px hsl(var(--primary) / 0.4),
+    0 0 40px hsl(var(--primary) / 0.2);
+  animation: retro-float 3s ease-in-out infinite;
+  line-height: 1;
+}
+
+.retro-text_4041 {
+  animation-delay: 0s;
+}
+
+.retro-text_4042 {
+  animation-delay: 0.2s;
+}
+
+.retro-text_4043 {
+  animation-delay: 0.4s;
+}
+
+/* ── Animations ── */
+@keyframes retro-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes retro-flicker {
+  0% { opacity: 0.97; }
+  50% { opacity: 1; }
+  100% { opacity: 0.98; }
+}
+
+@keyframes retro-scanline {
+  0% { top: -50%; }
+  100% { top: 150%; }
+}
+
+@keyframes retro-glitch {
+  0%, 90%, 100% { opacity: 0; transform: translate(0); }
+  92% { opacity: 0.8; transform: translate(-2px, 1px); }
+  94% { opacity: 0; }
+  96% { opacity: 0.6; transform: translate(2px, -1px); }
+  98% { opacity: 0; }
+}
+
+@keyframes retro-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ── Responsive ── */
+@media (min-width: 640px) {
+  .retro-tv {
+    width: 360px;
+    height: 280px;
+  }
+  .retro-display_div {
+    width: 225px;
+    height: 190px;
+  }
+  .retro-text_404_digit {
+    font-size: 6rem;
+  }
+  .retro-antenna {
+    width: 180px;
+    height: 120px;
+  }
+}
