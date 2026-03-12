@@ -335,6 +335,7 @@ const App = () => (
                             <Route path="/owner/blue-team-defense" element={<P><BlueTeamDefenseDashboard /></P>} />
                             <Route path="/owner/purple-learning" element={<P><PurpleLearningDashboard /></P>} />
                             <Route path="/owner/canon-poisoning-prevention" element={<P><CanonPoisoningPreventionDashboard /></P>} />
+                            <Route path="/owner/security-monitoring" element={<P><SecurityMonitoringDashboard /></P>} />
                             <Route path="/owner/capabilities" element={<W><CapabilityRegistry /></W>} />
 
                             {/* Governance */}
