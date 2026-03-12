@@ -34,8 +34,6 @@ Deno.serve(async (req: Request) => {
 
     const config = getAIConfig();
 
-    const config = getAIConfig();
-
     switch (action) {
       // ═══════════════════════════════════════════════════
       // 1. EVALUATE — Score candidates with AI
