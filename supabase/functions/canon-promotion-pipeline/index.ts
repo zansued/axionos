@@ -172,6 +172,65 @@ Deno.serve(async (req: Request) => {
         });
       }
 
+      // ── Poisoning Gate Check (Sprint 193) ──
+      if (record.candidate_id) {
+        // Check quarantine status on original candidate
+        const { data: candidate } = await supabase
+          .from("learning_candidates")
+          .select("review_status")
+          .eq("id", record.candidate_id)
+          .single();
+        if (candidate?.review_status === "quarantined") {
+          return new Response(JSON.stringify({
+            error: "Promotion blocked: candidate is quarantined. Requires security review before promotion.",
+            gate: "poisoning_quarantine",
+          }), { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
+
+        // Check poisoning risk assessment
+        const { data: assessment } = await supabase
+          .from("canon_poisoning_assessments")
+          .select("poisoning_risk_score, poisoning_risk_level, quarantine_status")
+          .eq("candidate_id", record.candidate_id)
+          .eq("organization_id", orgId)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (assessment) {
+          if (assessment.quarantine_status === "quarantined") {
+            return new Response(JSON.stringify({
+              error: "Promotion blocked: poisoning assessment indicates quarantine.",
+              gate: "poisoning_assessment",
+              risk_score: assessment.poisoning_risk_score,
+            }), { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+          }
+          if (assessment.poisoning_risk_score > PROMOTION_MAX_RISK_SCORE) {
+            return new Response(JSON.stringify({
+              error: `Promotion blocked: poisoning risk score (${assessment.poisoning_risk_score}) exceeds threshold (${PROMOTION_MAX_RISK_SCORE}).`,
+              gate: "poisoning_risk_threshold",
+              risk_score: assessment.poisoning_risk_score,
+            }), { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+          }
+        }
+
+        // Check unresolved security signals
+        const { count: unresolvedSignals } = await supabase
+          .from("canon_security_signals")
+          .select("*", { count: "exact", head: true })
+          .eq("candidate_id", record.candidate_id)
+          .eq("organization_id", orgId)
+          .eq("resolved", false);
+
+        if ((unresolvedSignals ?? 0) > 0) {
+          return new Response(JSON.stringify({
+            error: `Promotion blocked: ${unresolvedSignals} unresolved security signal(s).`,
+            gate: "unresolved_signals",
+          }), { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
+      }
+      // ── End Poisoning Gate ──
+
       const { data: updated, error: uErr } = await supabase
         .from("canon_learning_records")
         .update({
