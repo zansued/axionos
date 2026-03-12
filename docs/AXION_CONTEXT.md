@@ -293,15 +293,15 @@ These invariants act as the **physical laws** of the platform.
 
 - **Sprints 1–179** represent the canonical development arc of the platform
 - **Blocks Foundation through AJ** are complete
-- The system has reached **Level 10+ maturity: Adaptive Operational Organism**
+- The system has reached **Level 12 maturity: Self-Improving Governed Intelligence**
 - **200+ Edge Functions** deployed across all pipeline stages and intelligence engines
 - **Key milestones post-138:**
   - Sprint 139–142: Axion Action Engine (AE Block)
   - Sprint 143–146: Security Surface (AF Block)
   - Sprint 147–154: Adoption Intelligence, Landing Page, Builder/Owner Mode (AG Block)
   - Sprint 155–163: Governance Decision Lifecycle — Surfaces, Handoff, Tracking (AH Block)
-  - Sprint 164–169: Governed Execution Path — Schema alignment, approval timers, recovery governance (AI Block)
-  - Sprint 170–179: Canon Pipeline Operationalization — Review engine, evolution engine, deduplication, promotion workflow, retrieval activation, skill distillation, intelligence graph, agent injection, learning governance surface (AJ Block)
+  - Sprint 164–171: Repository Intelligence & Institutional Learning — Canon candidate review, deduplication, promotion, retrieval, skill distillation, intelligence graph, agent injection, learning governance (AI Block)
+  - Sprint 172–179: Self-Improving Architecture Engine — Canon distillation, micro-skills, token budgeting, multi-layer memory, architecture heuristics, self-improvement proposals, efficiency dashboard, self-improvement governance (AJ Block)
 
 Future work focuses on improving:
 
