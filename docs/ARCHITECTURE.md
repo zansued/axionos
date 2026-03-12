@@ -3,8 +3,8 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-12
-> **Current state:** Level 14 -- Knowledge Renewal & Revalidation. 183 sprints complete. All blocks (Foundation through AL).
-> **Completed blocks:** Foundation through AL (Sprints 1--183)
+> **Current state:** Level 15 -- Knowledge Health Dashboard & Renewal Automation. 184 sprints complete. All blocks (Foundation through AM).
+> **Completed blocks:** Foundation through AM (Sprints 1--184)
 > **Sprint details:** See `docs/registry/sprints.yml`
 
 ## Document Authority
