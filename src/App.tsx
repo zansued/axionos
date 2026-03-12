@@ -120,6 +120,7 @@ import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Pipelines from "./pages/Pipelines";
 import Governance from "./pages/Governance";
+import GovernanceInsights from "./pages/GovernanceInsights";
 import Modes from "./pages/Modes";
 import SettingsPage from "./pages/Settings";
 import Runtime from "./pages/Runtime";
