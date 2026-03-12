@@ -432,8 +432,8 @@ const App = () => (
                             <Route path="/runtime" element={<LegacyRedirect to="/builder/runtime" />} />
                             <Route path="/runtime-status" element={<LegacyRedirect to="/builder/runtime-status" />} />
                             <Route path="/system-health" element={<LegacyRedirect to="/builder/execution-observability" />} />
-                            <Route path="/system-intelligence" element={<LegacyRedirect to="/builder/system-intelligence" />} />
-                            <Route path="/governance" element={<LegacyRedirect to="/builder/delivery-governance" />} />
+                            <Route path="/system-intelligence" element={<LegacyRedirect to="/owner/system-intelligence" />} />
+                            <Route path="/governance" element={<LegacyRedirect to="/owner/delivery-governance" />} />
                             <Route path="/org" element={<LegacyRedirect to="/builder/settings" />} />
                             <Route path="/settings" element={<LegacyRedirect to="/builder/settings" />} />
                             <Route path="/squads" element={<LegacyRedirect to="/builder/squads" />} />
