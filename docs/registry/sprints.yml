@@ -214,3 +214,4 @@ sprints:
 
   # === BLOCK AI — Governed Execution Path === IN PROGRESS
   - { sprint: 164, name: "Governed Execution Path Consolidation",                  status: complete, block: "AI", phase: "Execution Path Governance", layer: "Execution Worker Governance Layer" }
+  - { sprint: 165, name: "Action Schema & Persistence Alignment",                  status: complete, block: "AI", phase: "Execution Path Governance", layer: "Schema Alignment Layer" }
