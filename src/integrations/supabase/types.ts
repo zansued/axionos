@@ -33147,6 +33147,170 @@ export type Database = {
           },
         ]
       }
+      renewal_governance_bridge: {
+        Row: {
+          back_propagated_at: string | null
+          back_propagation_result: Json | null
+          back_propagation_status: string
+          bridge_status: string
+          confidence_after: number | null
+          confidence_before: number | null
+          created_at: string
+          evidence_refs: Json
+          governance_action_type: string
+          governance_decided_at: string | null
+          governance_decided_by: string | null
+          governance_decision: string | null
+          governance_decision_notes: string | null
+          governance_proposal_id: string | null
+          governance_proposal_source: string | null
+          id: string
+          organization_id: string
+          rationale: string
+          recommended_governance_action: string
+          renewal_outcome: string
+          renewal_proposal_id: string | null
+          renewal_trigger_id: string | null
+          renewal_workflow_id: string | null
+          target_entry_id: string
+          target_type: string
+          updated_at: string
+          urgency: string
+        }
+        Insert: {
+          back_propagated_at?: string | null
+          back_propagation_result?: Json | null
+          back_propagation_status?: string
+          bridge_status?: string
+          confidence_after?: number | null
+          confidence_before?: number | null
+          created_at?: string
+          evidence_refs?: Json
+          governance_action_type?: string
+          governance_decided_at?: string | null
+          governance_decided_by?: string | null
+          governance_decision?: string | null
+          governance_decision_notes?: string | null
+          governance_proposal_id?: string | null
+          governance_proposal_source?: string | null
+          id?: string
+          organization_id: string
+          rationale?: string
+          recommended_governance_action?: string
+          renewal_outcome?: string
+          renewal_proposal_id?: string | null
+          renewal_trigger_id?: string | null
+          renewal_workflow_id?: string | null
+          target_entry_id: string
+          target_type?: string
+          updated_at?: string
+          urgency?: string
+        }
+        Update: {
+          back_propagated_at?: string | null
+          back_propagation_result?: Json | null
+          back_propagation_status?: string
+          bridge_status?: string
+          confidence_after?: number | null
+          confidence_before?: number | null
+          created_at?: string
+          evidence_refs?: Json
+          governance_action_type?: string
+          governance_decided_at?: string | null
+          governance_decided_by?: string | null
+          governance_decision?: string | null
+          governance_decision_notes?: string | null
+          governance_proposal_id?: string | null
+          governance_proposal_source?: string | null
+          id?: string
+          organization_id?: string
+          rationale?: string
+          recommended_governance_action?: string
+          renewal_outcome?: string
+          renewal_proposal_id?: string | null
+          renewal_trigger_id?: string | null
+          renewal_workflow_id?: string | null
+          target_entry_id?: string
+          target_type?: string
+          updated_at?: string
+          urgency?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "renewal_governance_bridge_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "renewal_governance_bridge_renewal_proposal_id_fkey"
+            columns: ["renewal_proposal_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_renewal_proposals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "renewal_governance_bridge_renewal_trigger_id_fkey"
+            columns: ["renewal_trigger_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_renewal_triggers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "renewal_governance_bridge_renewal_workflow_id_fkey"
+            columns: ["renewal_workflow_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_revalidation_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      renewal_governance_bridge_events: {
+        Row: {
+          actor_id: string | null
+          bridge_id: string
+          created_at: string
+          details: Json
+          event_type: string
+          id: string
+          organization_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          bridge_id: string
+          created_at?: string
+          details?: Json
+          event_type?: string
+          id?: string
+          organization_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          bridge_id?: string
+          created_at?: string
+          details?: Json
+          event_type?: string
+          id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "renewal_governance_bridge_events_bridge_id_fkey"
+            columns: ["bridge_id"]
+            isOneToOne: false
+            referencedRelation: "renewal_governance_bridge"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "renewal_governance_bridge_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       repair_attempt_records: {
         Row: {
           agent_type: string | null
