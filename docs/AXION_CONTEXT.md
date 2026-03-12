@@ -234,15 +234,42 @@ Agents operate under governance rules and **cannot modify system architecture au
 
 ## Learning Model
 
-System learning follows a bounded cycle:
+System learning follows a **complete knowledge metabolism pipeline**:
 
-1. Observation
-2. Evidence collection
-3. Analysis
-4. Recommendation
-5. Human-approved adjustment
+1. **Repository Analysis** — Absorb engineering knowledge from codebases and execution history
+2. **Execution Signals** — Capture outcomes, errors, successes, and patterns from runtime
+3. **Learning Candidates** — Generate candidate knowledge entries from signals and analysis
+4. **Candidate Evaluation** — Score candidates by confidence, evidence strength, and domain fit
+5. **Pattern Deduplication** — Merge overlapping or redundant candidates intelligently
+6. **Canon Promotion** — Promote validated candidates into the canonical knowledge base
+7. **Distilled Knowledge** — Compress canon entries into efficient cues and micro-skills
+8. **Skill Injection** — Inject distilled knowledge into agent context at runtime
+9. **Execution Feedback** — Measure impact of injected knowledge on execution quality
+10. **Architecture Heuristics** — Extract architectural rules from success/failure patterns
+11. **Self-Improvement Proposals** — Generate governed proposals for system self-improvement
 
-All learning is **advisory-first**. The system never mutates its own architecture without governance review.
+All learning is **advisory-first and governance-constrained**. The system never mutates its own architecture without governance review. Self-improvement proposals must pass through the Governance Decision Surface.
+
+---
+
+## Knowledge Metabolism
+
+AxionOS operates as a **knowledge metabolism system** — it ingests, digests, distills, and applies knowledge in a continuous governed cycle:
+
+```
+source → candidate → evaluation → merge/deduplication → canon promotion
+→ distilled knowledge → runtime injection → execution feedback
+→ learning signals → architecture improvement proposals → governance review
+```
+
+Each stage has explicit ownership:
+- **Ingestion**: Repository Absorption Engine, Execution Evidence Collectors
+- **Processing**: Learning Candidates Pipeline, Pattern Deduplication
+- **Promotion**: Canon Promotion Workflow (governance-gated)
+- **Distillation**: Canon Distillation Engine, Skill Distillation Engine
+- **Application**: Agent Skill Injection Runtime, Token Budget Engine
+- **Feedback**: Neural Feedback Loop, Runtime Learning Efficiency Dashboard
+- **Evolution**: Self-Improvement Proposal Engine (governance-gated)
 
 ---
 
@@ -266,15 +293,15 @@ These invariants act as the **physical laws** of the platform.
 
 - **Sprints 1–179** represent the canonical development arc of the platform
 - **Blocks Foundation through AJ** are complete
-- The system has reached **Level 10+ maturity: Adaptive Operational Organism**
+- The system has reached **Level 12 maturity: Self-Improving Governed Intelligence**
 - **200+ Edge Functions** deployed across all pipeline stages and intelligence engines
 - **Key milestones post-138:**
   - Sprint 139–142: Axion Action Engine (AE Block)
   - Sprint 143–146: Security Surface (AF Block)
   - Sprint 147–154: Adoption Intelligence, Landing Page, Builder/Owner Mode (AG Block)
   - Sprint 155–163: Governance Decision Lifecycle — Surfaces, Handoff, Tracking (AH Block)
-  - Sprint 164–169: Governed Execution Path — Schema alignment, approval timers, recovery governance (AI Block)
-  - Sprint 170–179: Canon Pipeline Operationalization — Review engine, evolution engine, deduplication, promotion workflow, retrieval activation, skill distillation, intelligence graph, agent injection, learning governance surface (AJ Block)
+  - Sprint 164–171: Repository Intelligence & Institutional Learning — Canon candidate review, deduplication, promotion, retrieval, skill distillation, intelligence graph, agent injection, learning governance (AI Block)
+  - Sprint 172–179: Self-Improving Architecture Engine — Canon distillation, micro-skills, token budgeting, multi-layer memory, architecture heuristics, self-improvement proposals, efficiency dashboard, self-improvement governance (AJ Block)
 
 Future work focuses on improving:
 
@@ -299,8 +326,10 @@ Future work focuses on improving:
 | Phase 6 | AgentOS Decision Contract | Complete |
 | Phase 7 | Action Engine | Complete (Sprints 139–142) |
 | Phase 8 | Governance and Approval Flow | Complete (Sprints 155–163) |
-| Phase 9 | Governed Execution Path | Complete (Sprints 164–169) |
-| Phase 10 | Canon Pipeline Operationalization | Complete (Sprints 170–179) |
+| Phase 9 | Governed Execution Path | Complete (Sprints 139–142) |
+| Phase 10 | Canon Pipeline Operationalization | Complete (Sprints 155–163) |
+| Phase 11 | Repository Intelligence & Institutional Learning | Complete (Sprints 164–171) |
+| Phase 12 | Self-Improving Architecture Engine | Complete (Sprints 172–179) |
 
 ---
 

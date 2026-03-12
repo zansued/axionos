@@ -4,7 +4,7 @@
 > Canonical source for planes, modules, agent types, contracts, safety boundaries, and events.
 >
 > Last updated: 2026-03-12
-> 169 sprints complete (Blocks Foundation through AI)
+> 179 sprints complete (Blocks Foundation through AJ)
 
 ## Document Authority
 
@@ -411,11 +411,46 @@ All modules share these invariants:
 
 ---
 
+---
+
+## 26. Governance of Self-Improvement (Blocks AI–AJ)
+
+AxionOS governs its own evolution through four governance domains introduced in Blocks AI and AJ:
+
+### 26.1 Canon Evolution Governance
+
+Canon entries follow a governed lifecycle: candidate → evaluation → deduplication → promotion → active → deprecated. All promotions require evidence and human review. Deprecated entries are never injected into agents.
+
+### 26.2 Skill Distillation Governance
+
+Distilled skills (micro-skills, compressed canon cues) are tracked with provenance. Injection into agent context is bounded by token budgets and relevance scores. Ineffective skills are flagged for review and deprecation.
+
+### 26.3 Architecture Heuristics Governance
+
+Architecture heuristics (preferred patterns, unsafe combinations, readiness boosters) are extracted from operational evidence. Each heuristic carries a confidence score, support evidence count, and domain fit. Heuristics are advisory — they inform Discovery, Planning, and AgentOS but never enforce autonomously.
+
+### 26.4 Self-Improvement Proposal Governance
+
+The Self-Improvement Proposal Engine generates structured proposals for system evolution:
+- **Canon Tuning** — adjust canon entry weights and retrieval priorities
+- **Skill Injection Tuning** — modify skill injection defaults and budgets
+- **Retrieval Policy Tuning** — refine retrieval depth and compression settings
+- **Architecture Pattern Preference** — promote or deprecate architecture patterns
+- **Token Policy Tuning** — adjust token budget allocations
+
+**All self-improvement proposals must pass through the Governance Decision Surface.** No proposal is applied automatically. The canonical rule applies:
+
+> Canon informs → Readiness evaluates → Policy constrains → Action Engine formalizes → AgentOS orchestrates → Executors act
+
+Self-improvement proposals are treated as governance changes — they follow the full Decision Workflow (13 states), Execution Handoff (8 states), and Change Application Tracking lifecycle.
+
+---
+
 ## Documentation Boundaries
 
 | File | Scope |
 |------|-------|
-| **GOVERNANCE.md** (this file) | Agent OS modules, contracts, safety boundaries, events |
-| **ARCHITECTURE.md** | System structure, containers, layers, data flow |
+| **GOVERNANCE.md** (this file) | Agent OS modules, contracts, safety boundaries, events, self-improvement governance |
+| **ARCHITECTURE.md** | System structure, containers, layers, data flow, intelligence layers |
 | **CANON_INTELLIGENCE_ENGINE.md** | Canon Intelligence Engine architecture |
 | **docs/registry/sprints.yml** | Sprint-by-sprint implementation record |
