@@ -43,8 +43,8 @@ export default function CanonPoisoningPreventionDashboard() {
   };
 
   return (
+    <AppLayout>
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Canon Poisoning Prevention</h1>
           <p className="text-sm text-muted-foreground">Detect, score, quarantine, and review suspicious knowledge before it enters canon.</p>
