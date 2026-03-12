@@ -220,22 +220,22 @@ export default function ActionCenter() {
     },
   });
 
-  // ── Counts ──
+  // ── Counts (driven by state machine categories) ──
   const counts = {
-    active: actions.filter((a) => ["pending", "queued", "executing", "dispatched", "waiting_approval"].includes(a.status)).length,
+    active: actions.filter((a) => STATE_CATEGORIES.active.includes(a.status as ActionState)).length,
     waiting: actions.filter((a) => a.status === "waiting_approval").length,
-    blocked: actions.filter((a) => a.status === "blocked" || a.status === "rejected").length,
+    blocked: actions.filter((a) => STATE_CATEGORIES.blocked.includes(a.status as ActionState)).length,
     failed: actions.filter((a) => a.status === "failed" || a.status === "escalated").length,
-    completed: actions.filter((a) => a.status === "completed").length,
+    completed: actions.filter((a) => STATE_CATEGORIES.completed.includes(a.status as ActionState)).length,
     recovery: actions.filter((a) => !!a.recovery_hook_id).length,
   };
 
-  // ── Filter ──
+  // ── Filter (driven by state machine categories) ──
   const filtered = actions.filter((a) => {
-    if (tab === "active") return ["pending", "queued", "executing", "dispatched", "waiting_approval", "approved"].includes(a.status);
-    if (tab === "blocked") return a.status === "blocked" || a.status === "rejected" || a.status === "escalated";
+    if (tab === "active") return STATE_CATEGORIES.active.includes(a.status as ActionState);
+    if (tab === "blocked") return STATE_CATEGORIES.blocked.includes(a.status as ActionState);
     if (tab === "failed") return a.status === "failed";
-    if (tab === "completed") return a.status === "completed" || a.status === "rolled_back";
+    if (tab === "completed") return STATE_CATEGORIES.completed.includes(a.status as ActionState);
     if (tab === "recovery") return !!a.recovery_hook_id;
     return true;
   }).filter((a) => {
