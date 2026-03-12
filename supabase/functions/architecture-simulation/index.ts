@@ -270,8 +270,165 @@ serve(async (req) => {
       return jsonResponse({ success: true, new_status: result.new_outcome_status });
     }
 
+    // ─── RECOVER ACTION (Action Center recovery simulation) ───
+    if (action === "recover_action") {
+      const { action_id, trigger_type, stage, risk_level, initiative_id, simulation_context } = body;
+
+      if (!action_id) return errorResponse("action_id required for recovery simulation", 400);
+
+      // 1. Write audit: simulation initiated
+      await sc.from("action_audit_events").insert({
+        action_id,
+        organization_id,
+        event_type: "recovery_simulation_initiated",
+        new_status: "simulating",
+        reason: `Recovery simulation requested. trigger=${trigger_type || "unknown"}, stage=${stage || "unknown"}, risk=${risk_level || "unknown"}`,
+        actor_type: "human",
+        actor_id: user.id,
+        executor_type: "architecture_simulation",
+      });
+
+      // 2. Create a recovery-specific proposal
+      const proposalPayload = {
+        source: "action_center_recovery",
+        action_id,
+        trigger_type: trigger_type || "unknown",
+        stage: stage || "unknown",
+        risk_level: risk_level || "medium",
+        ...(simulation_context || {}),
+      };
+
+      const { data: proposal, error: propErr } = await sc.from("architecture_change_proposals").insert({
+        organization_id,
+        initiative_id: initiative_id || null,
+        proposal_type: "recovery",
+        target_scope: stage || "execution",
+        target_entities: { action_id, trigger_type },
+        proposal_payload: proposalPayload,
+        safety_class: risk_level === "critical" || risk_level === "high" ? "critical" : "standard",
+        confidence_score: 0.5,
+        priority_score: risk_level === "critical" ? 1.0 : risk_level === "high" ? 0.8 : 0.5,
+        status: "draft",
+        source_recommendation_id: null,
+      }).select().single();
+
+      if (propErr) {
+        console.error("[recover_action] Proposal creation error:", propErr);
+        return errorResponse(`Failed to create recovery proposal: ${propErr.message}`, 500);
+      }
+
+      // 3. Run simulation on the proposal
+      const { data: scopeProfiles } = await sc.from("architecture_simulation_scope_profiles").select("*")
+        .eq("organization_id", organization_id).limit(1);
+      const defaultScope = (scopeProfiles || [])[0];
+
+      const guardrailResult = evaluateGuardrails({
+        proposal_type: "recovery",
+        target_scope: stage || "execution",
+        target_entities: { action_id, trigger_type },
+        proposal_payload: proposalPayload,
+        safety_class: proposal.safety_class,
+        scope_profile: defaultScope ? {
+          forbidden_entities: (defaultScope.forbidden_entities as any[]) || [],
+          max_scope_breadth: defaultScope.max_scope_breadth || undefined,
+          simulation_mode: defaultScope.simulation_mode,
+        } : undefined,
+      });
+
+      if (!guardrailResult.allowed) {
+        // Audit: guardrail blocked
+        await sc.from("action_audit_events").insert({
+          action_id,
+          organization_id,
+          event_type: "recovery_simulation_blocked",
+          reason: `Guardrail blocked recovery simulation: ${guardrailResult.reasons?.join("; ") || "policy violation"}`,
+          actor_type: "system",
+          executor_type: "architecture_simulation",
+        });
+
+        await sc.from("architecture_change_proposals")
+          .update({ status: "rejected" }).eq("id", proposal.id);
+
+        return jsonResponse({
+          success: false,
+          reason: "Recovery simulation blocked by guardrails",
+          guardrail_reasons: guardrailResult.reasons || [],
+          proposal_id: proposal.id,
+        });
+      }
+
+      const simResult = simulateArchitectureImpact({
+        proposal_type: "recovery",
+        target_scope: stage || "execution",
+        target_entities: { action_id, trigger_type },
+        proposal_payload: proposalPayload,
+        confidence_score: 0.5,
+      });
+
+      const boundaryResult = analyzeArchitectureBoundaries({
+        proposal_type: "recovery",
+        target_scope: stage || "execution",
+        target_entities: { action_id, trigger_type },
+        proposal_payload: proposalPayload,
+      });
+
+      const allRiskFlags = [
+        ...simResult.risk_flags,
+        ...boundaryResult.issues.filter((i: any) => i.severity === "high").map((i: any) => i.description),
+      ];
+
+      const { data: outcome, error: outErr } = await sc.from("architecture_simulation_outcomes").insert({
+        organization_id,
+        proposal_id: proposal.id,
+        scope_profile_id: defaultScope?.id || proposal.id,
+        affected_layers: simResult.affected_layers,
+        expected_benefits: simResult.expected_benefits,
+        expected_tradeoffs: simResult.expected_tradeoffs,
+        risk_flags: allRiskFlags,
+        confidence_score: simResult.confidence_score,
+        simulation_summary: {
+          ...simResult.simulation_summary,
+          boundary_health: boundaryResult.boundary_health_score,
+          boundary_issues: boundaryResult.issues.length,
+          isolation_intact: boundaryResult.isolation_intact,
+          recovery_source: "action_center",
+          source_action_id: action_id,
+        },
+        status: "generated",
+      }).select().single();
+
+      if (outErr) {
+        console.error("[recover_action] Outcome insert error:", outErr);
+        return errorResponse(`Simulation outcome failed: ${outErr.message}`, 500);
+      }
+
+      await sc.from("architecture_change_proposals")
+        .update({ status: "simulated" }).eq("id", proposal.id);
+
+      // 4. Write audit: simulation completed
+      await sc.from("action_audit_events").insert({
+        action_id,
+        organization_id,
+        event_type: "recovery_simulation_completed",
+        reason: `Recovery simulation completed. ${simResult.affected_layers.length} layers affected, confidence=${simResult.confidence_score}, risks=${allRiskFlags.length}`,
+        actor_type: "system",
+        executor_type: "architecture_simulation",
+      });
+
+      return jsonResponse({
+        success: true,
+        proposal_id: proposal.id,
+        outcome_id: outcome.id,
+        affected_layers: simResult.affected_layers,
+        risk_flags: allRiskFlags,
+        confidence_score: simResult.confidence_score,
+        boundary_health: boundaryResult.boundary_health_score,
+        simulations_created: 1,
+      });
+    }
+
     return errorResponse(
-      "Invalid action. Must be: overview, proposals, scope_profiles, outcomes, reviews, explain, recompute, link_recommendation, review_simulation, accept_simulation, reject_simulation, dismiss_simulation",
+      "Invalid action. Must be: overview, proposals, scope_profiles, outcomes, reviews, explain, recompute, recover_action, link_recommendation, review_simulation, accept_simulation, reject_simulation, dismiss_simulation",
       400
     );
   } catch (e) {
