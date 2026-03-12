@@ -406,6 +406,35 @@ export default function ActionCenter() {
                     <Section title="Recovery">
                       <DetailRow label="Recovery Hook" value={selected.recovery_hook_id} />
                       {selected.recovery_type && <DetailRow label="Recovery Type" value={selected.recovery_type} />}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2 gap-1.5 text-xs"
+                        disabled={simulateRecovery.isPending}
+                        onClick={() => simulateRecovery.mutate(selected)}
+                      >
+                        <FlaskConical className="h-3.5 w-3.5" />
+                        {simulateRecovery.isPending ? "Simulating…" : "Simulate Recovery"}
+                      </Button>
+                    </Section>
+                  )}
+
+                  {/* Simulate Recovery for failed/blocked actions without recovery hook */}
+                  {!selected.recovery_hook_id && (selected.status === "failed" || selected.status === "blocked" || selected.status === "rolled_back") && (
+                    <Section title="Recovery Options">
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Run an architecture simulation before applying a rollback.
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 text-xs"
+                        disabled={simulateRecovery.isPending}
+                        onClick={() => simulateRecovery.mutate(selected)}
+                      >
+                        <FlaskConical className="h-3.5 w-3.5" />
+                        {simulateRecovery.isPending ? "Simulating…" : "Simulate Recovery"}
+                      </Button>
                     </Section>
                   )}
 
