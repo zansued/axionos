@@ -17,7 +17,8 @@ export type ProposalSource =
   | "canon_evolution"
   | "policy_tuning"
   | "agent_selection_tuning"
-  | "readiness_tuning";
+  | "readiness_tuning"
+  | "knowledge_renewal";
 
 export type RiskLevel = "low" | "medium" | "high" | "critical";
 
