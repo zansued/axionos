@@ -174,6 +174,19 @@ export default function ActionCenter() {
     },
   });
 
+  // ── Auto-select from URL param (cross-navigation from Approval Queue) ──
+  useEffect(() => {
+    const actionIdParam = searchParams.get("action_id");
+    if (actionIdParam && actions.length > 0) {
+      const match = actions.find((a) => a.action_id === actionIdParam);
+      if (match) {
+        setSelectedId(match.id);
+        setTab("all");
+      }
+      setSearchParams({}, { replace: true });
+    }
+  }, [actions, searchParams, setSearchParams]);
+
   // ── Fetch audit for selected ──
   const selected = actions.find((a) => a.id === selectedId) || null;
   const { data: auditEvents = [] } = useQuery({
