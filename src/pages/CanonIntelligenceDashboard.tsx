@@ -74,6 +74,7 @@ export default function CanonIntelligenceDashboard() {
               <TabsTrigger value="governance" className="text-xs gap-1.5"><Shield className="h-3.5 w-3.5" />Governance</TabsTrigger>
               <TabsTrigger value="learning" className="text-xs gap-1.5"><Brain className="h-3.5 w-3.5" />Operational Learning</TabsTrigger>
               <TabsTrigger value="ingestion" className="text-xs gap-1.5"><Download className="h-3.5 w-3.5" />Ingestion Agent</TabsTrigger>
+              <TabsTrigger value="trust" className="text-xs gap-1.5"><Scale className="h-3.5 w-3.5" />Repo Trust</TabsTrigger>
             </TabsList>
 
             <TabsContent value="library">
