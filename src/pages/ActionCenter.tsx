@@ -130,20 +130,23 @@ export default function ActionCenter() {
   const [stageFilter, setStageFilter] = useState("all");
   const [riskFilter, setRiskFilter] = useState("all");
 
-  // Simulate recovery mutation
+  // Simulate recovery mutation — uses governed recover_action path
   const simulateRecovery = useMutation({
     mutationFn: async (actionEntry: ActionEntry) => {
       const { data, error } = await supabase.functions.invoke("architecture-simulation", {
         body: {
-          action: "recompute",
+          action: "recover_action",
           organization_id: orgId,
+          action_id: actionEntry.action_id,
           initiative_id: actionEntry.initiative_id,
+          trigger_type: actionEntry.trigger_type,
+          stage: actionEntry.stage,
+          risk_level: actionEntry.risk_level,
           simulation_context: {
             source: "action_center_recovery",
-            action_id: actionEntry.action_id,
-            trigger_type: actionEntry.trigger_type,
-            stage: actionEntry.stage,
-            risk_level: actionEntry.risk_level,
+            description: actionEntry.description,
+            outcome_status: actionEntry.outcome_status,
+            outcome_summary: actionEntry.outcome_summary,
           },
         },
       });
@@ -151,7 +154,11 @@ export default function ActionCenter() {
       return data;
     },
     onSuccess: (d) => {
-      toast.success(`Recovery simulation complete: ${d?.simulations_created || 0} scenarios generated`);
+      if (d?.success) {
+        toast.success(`Recovery simulation complete: ${d.simulations_created} scenario(s), confidence=${(d.confidence_score * 100).toFixed(0)}%`);
+      } else {
+        toast.warning(`Recovery blocked: ${d?.reason || "unknown"}`);
+      }
       qc.invalidateQueries({ queryKey: ["action-center"] });
     },
     onError: () => toast.error("Recovery simulation failed"),
