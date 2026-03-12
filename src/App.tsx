@@ -280,15 +280,7 @@ const App = () => (
                             <Route path="/builder/throughput-metrics" element={<ProtectedRoute><ThroughputMetricsPage /></ProtectedRoute>} />
                             <Route path="/builder/logs-explorer" element={<ProtectedRoute><LogsExplorerPage /></ProtectedRoute>} />
 
-                            {/* System Intelligence */}
-                            <Route path="/builder/system-intelligence" element={<ProtectedRoute><SystemIntelligence /></ProtectedRoute>} />
-
-                            {/* Governance */}
-                            <Route path="/builder/delivery-governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
-                            <Route path="/builder/governance-overview" element={<ProtectedRoute><GovernanceOverviewPage /></ProtectedRoute>} />
-                            <Route path="/builder/pending-approvals" element={<ProtectedRoute><ApprovalQueue /></ProtectedRoute>} />
-                            <Route path="/builder/policy-controls" element={<ProtectedRoute><PolicyControlsPage /></ProtectedRoute>} />
-                            <Route path="/builder/action-center" element={<ProtectedRoute><ActionCenter /></ProtectedRoute>} />
+                            {/* Builder governance sub-pages redirect to owner */}
 
                             {/* Settings */}
                             <Route path="/builder/settings" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
@@ -314,6 +306,7 @@ const App = () => (
                                 ══════════════════════════════════════════════ */}
 
                             {/* System Intelligence */}
+                            <Route path="/owner/system-intelligence" element={<P><SystemIntelligence /></P>} />
                             <Route path="/owner/system-health" element={<P><SystemHealthDashboard /></P>} />
                             <Route path="/owner/adoption" element={<W><AdoptionIntelligence /></W>} />
                             <Route path="/owner/delivery-outcomes" element={<W><DeliveryOutcomes /></W>} />
@@ -330,6 +323,10 @@ const App = () => (
                             <Route path="/owner/capabilities" element={<W><CapabilityRegistry /></W>} />
 
                             {/* Governance */}
+                            <Route path="/owner/delivery-governance" element={<W><Governance /></W>} />
+                            <Route path="/owner/governance-overview" element={<W><GovernanceOverviewPage /></W>} />
+                            <Route path="/owner/pending-approvals" element={<W><ApprovalQueue /></W>} />
+                            <Route path="/owner/policy-controls" element={<W><PolicyControlsPage /></W>} />
                             <Route path="/owner/action-center" element={<W><ActionCenter /></W>} />
                             <Route path="/owner/autonomy-posture" element={<P><AutonomyPostureDashboard /></P>} />
                             <Route path="/owner/agent-swarm" element={<P><SwarmExecution /></P>} />
@@ -414,7 +411,13 @@ const App = () => (
                             {/* Internal renames */}
                             <Route path="/builder/initiatives" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/builder/delivery" element={<LegacyRedirect to="/builder/pipelines" />} />
-                            <Route path="/builder/governance" element={<LegacyRedirect to="/builder/delivery-governance" />} />
+                            <Route path="/builder/governance" element={<LegacyRedirect to="/owner/delivery-governance" />} />
+                            <Route path="/builder/delivery-governance" element={<LegacyRedirect to="/owner/delivery-governance" />} />
+                            <Route path="/builder/governance-overview" element={<LegacyRedirect to="/owner/governance-overview" />} />
+                            <Route path="/builder/pending-approvals" element={<LegacyRedirect to="/owner/pending-approvals" />} />
+                            <Route path="/builder/policy-controls" element={<LegacyRedirect to="/owner/policy-controls" />} />
+                            <Route path="/builder/action-center" element={<LegacyRedirect to="/owner/action-center" />} />
+                            <Route path="/builder/system-intelligence" element={<LegacyRedirect to="/owner/system-intelligence" />} />
                             <Route path="/builder/project/:id" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/initiatives" element={<LegacyRedirect to="/builder/projects" />} />
                             <Route path="/stories" element={<LegacyRedirect to="/builder/projects" />} />
@@ -429,8 +432,8 @@ const App = () => (
                             <Route path="/runtime" element={<LegacyRedirect to="/builder/runtime" />} />
                             <Route path="/runtime-status" element={<LegacyRedirect to="/builder/runtime-status" />} />
                             <Route path="/system-health" element={<LegacyRedirect to="/builder/execution-observability" />} />
-                            <Route path="/system-intelligence" element={<LegacyRedirect to="/builder/system-intelligence" />} />
-                            <Route path="/governance" element={<LegacyRedirect to="/builder/delivery-governance" />} />
+                            <Route path="/system-intelligence" element={<LegacyRedirect to="/owner/system-intelligence" />} />
+                            <Route path="/governance" element={<LegacyRedirect to="/owner/delivery-governance" />} />
                             <Route path="/org" element={<LegacyRedirect to="/builder/settings" />} />
                             <Route path="/settings" element={<LegacyRedirect to="/builder/settings" />} />
                             <Route path="/squads" element={<LegacyRedirect to="/builder/squads" />} />

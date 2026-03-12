@@ -117,35 +117,13 @@ export const BUILDER_ROUTES: RouteEntry[] = [
     pageKey: "observability",
   },
   {
-    path: "/builder/system-intelligence",
-    title: "System Intelligence",
-    description: "AI-powered system insights",
-    icon: Sparkles,
-    mode: "builder",
-    group: "Intelligence",
-    order: 6,
-    sidebar: true,
-    pageKey: "system-intelligence",
-  },
-  {
-    path: "/builder/delivery-governance",
-    title: "Delivery Governance",
-    description: "Pipeline governance & approvals",
-    icon: Shield,
-    mode: "builder",
-    group: "Governance",
-    order: 7,
-    sidebar: true,
-    pageKey: "governance",
-  },
-  {
     path: "/builder/settings",
     title: "Settings",
     description: "Builder workspace settings",
     icon: Settings,
     mode: "builder",
     group: "System",
-    order: 8,
+    order: 6,
     sidebar: true,
   },
 ];
@@ -154,6 +132,17 @@ export const BUILDER_ROUTES: RouteEntry[] = [
 
 export const OWNER_ROUTES: RouteEntry[] = [
   // System Intelligence
+  {
+    path: "/owner/system-intelligence",
+    title: "System Intelligence",
+    description: "AI-powered system insights",
+    icon: Sparkles,
+    mode: "owner",
+    group: "System Intelligence",
+    order: -1,
+    sidebar: true,
+    pageKey: "system-intelligence",
+  },
   {
     path: "/owner/system-health",
     title: "System Health",
@@ -284,6 +273,17 @@ export const OWNER_ROUTES: RouteEntry[] = [
     sidebar: true,
   },
   // Governance
+  {
+    path: "/owner/delivery-governance",
+    title: "Delivery Governance",
+    description: "Pipeline governance & approvals",
+    icon: Shield,
+    mode: "owner",
+    group: "Governance",
+    order: 11.5,
+    sidebar: true,
+    pageKey: "governance",
+  },
   {
     path: "/owner/autonomy-posture",
     title: "Autonomy Posture",
@@ -434,8 +434,8 @@ export const LEGACY_REDIRECTS: Record<string, string> = {
   "/runtime": "/builder/runtime",
   "/runtime-status": "/builder/runtime",
   "/system-health": "/builder/execution-observability",
-  "/system-intelligence": "/builder/system-intelligence",
-  "/governance": "/builder/delivery-governance",
+  "/system-intelligence": "/owner/system-intelligence",
+  "/governance": "/owner/delivery-governance",
   "/org": "/builder/settings",
   "/settings": "/builder/settings",
   "/squads": "/builder/projects",
