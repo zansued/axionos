@@ -58,7 +58,7 @@ serve(async (req) => {
       .limit(5);
 
     if (!queuedActions || queuedActions.length === 0) {
-      return jsonResponse({ message: "No pending Bolt actions." }, 200, req);
+      return jsonResponse({ message: "No pending Axion Actions." }, 200, req);
     }
 
     // Mark as executing
@@ -126,7 +126,7 @@ serve(async (req) => {
     }
 
     return jsonResponse({
-      message: `Processed ${queuedActions.length} Bolt actions.`,
+      message: `Processed ${queuedActions.length} Axion Actions.`,
       auto_healed: false // true if simulateError was triggered
     }, 200, req);
 
@@ -135,3 +135,4 @@ serve(async (req) => {
     return errorResponse(err.message, 500, req);
   }
 });
+

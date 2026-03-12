@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+﻿import React, { useState, useRef, useEffect } from 'react'
 import { 
   SendHorizontal, Box, Zap, Bot, BarChart3, ArrowRight, LogIn
 } from 'lucide-react'
@@ -7,7 +7,7 @@ import axionLogo from '@/assets/axion-logo.svg'
 import NeuralBackground from './NeuralBackground'
 import { GlowingEffect } from './glowing-effect'
 
-// ── Typing placeholder ───────────────────────────────────────────────────
+// â”€â”€ Typing placeholder â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const PLACEHOLDERS = [
   "Build a REST API with JWT auth and PostgreSQL...",
   "Create a real-time analytics dashboard...",
@@ -49,7 +49,7 @@ function useTypingPlaceholder() {
   return text
 }
 
-// ── Example chips ─────────────────────────────────────────────────────────
+// â”€â”€ Example chips â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const EXAMPLES = [
   { icon: Box, label: "REST API", prompt: "Build a REST API with JWT authentication and PostgreSQL" },
   { icon: Zap, label: "Automation", prompt: "Create an automation system with webhooks and queues" },
@@ -58,7 +58,7 @@ const EXAMPLES = [
 ]
 
 
-// ── Chat Input ────────────────────────────────────────────────────────────
+// â”€â”€ Chat Input â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function ChatInput({ onSend, initialMessage }: {
   onSend?: (message: string) => void
   initialMessage?: string
@@ -104,7 +104,7 @@ function ChatInput({ onSend, initialMessage }: {
         style={{ background: 'radial-gradient(ellipse at center, rgba(20,136,252,0.2) 0%, transparent 70%)' }}
       />
 
-      {/* Main input card — glassmorphism with glow */}
+      {/* Main input card â€” glassmorphism with glow */}
       <div className="relative rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.6)]"
         style={{
           background: 'rgba(22, 22, 28, 0.85)',
@@ -179,7 +179,7 @@ function ChatInput({ onSend, initialMessage }: {
   )
 }
 
-// ── Ray Background (subtler — transparent fill so shaders show through) ──
+// â”€â”€ Ray Background (subtler â€” transparent fill so shaders show through) â”€â”€
 function RayBackground() {
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-[1]">
@@ -200,7 +200,7 @@ function RayBackground() {
         }}
       />
 
-      {/* Planet horizon — solid fill + glowing rim */}
+      {/* Planet horizon â€” solid fill + glowing rim */}
       <div 
         className="absolute top-[175px] left-1/2 w-[1600px] h-[1600px] sm:top-1/2 sm:w-[3043px] sm:h-[2865px]"
         style={{ transform: 'translate(-50%) rotate(180deg)' }}
@@ -216,14 +216,14 @@ function RayBackground() {
 }
 
 
-// ── Main Component ────────────────────────────────────────────────────────
+// â”€â”€ Main Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 interface BoltChatProps {
   onSubmit?: (message: string, modelId: string, assets: File[]) => void
   initialMessage?: string
   onSignIn?: () => void
 }
 
-export function BoltStyleChat({ onSubmit, initialMessage, onSignIn }: BoltChatProps) {
+export function AxionActionChat({ onSubmit, initialMessage, onSignIn }: BoltChatProps) {
   const handleSend = (message: string) => {
     onSubmit?.(message, "auto", [])
   }
@@ -233,7 +233,7 @@ export function BoltStyleChat({ onSubmit, initialMessage, onSignIn }: BoltChatPr
       <NeuralBackground className="z-0" />
       <RayBackground />
 
-      {/* Sign in button — top right */}
+      {/* Sign in button â€” top right */}
       {onSignIn && (
         <motion.button
           initial={{ opacity: 0 }}
@@ -269,7 +269,7 @@ export function BoltStyleChat({ onSubmit, initialMessage, onSignIn }: BoltChatPr
           />
         </motion.div>
 
-        {/* Headline — AxionOS with gradient */}
+        {/* Headline â€” AxionOS with gradient */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -303,7 +303,7 @@ export function BoltStyleChat({ onSubmit, initialMessage, onSignIn }: BoltChatPr
           className="text-[15px] sm:text-[17px] lg:text-[19px] text-white/70 font-normal mb-10 whitespace-nowrap"
           style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
-          Describe what you want to build — we orchestrate the rest.
+          Describe what you want to build â€” we orchestrate the rest.
         </motion.p>
 
         {/* Prompt box */}
@@ -325,9 +325,10 @@ export function BoltStyleChat({ onSubmit, initialMessage, onSignIn }: BoltChatPr
         className="absolute bottom-5 z-10 flex items-center gap-3 text-[11px] text-white/20"
       >
         <span>Powered by AI infrastructure</span>
-        <span>·</span>
+        <span>Â·</span>
         <span>Built with AxionOS</span>
       </motion.div>
     </div>
   )
 }
+

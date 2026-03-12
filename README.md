@@ -1,9 +1,9 @@
-<p align="center">
+﻿<p align="center">
   <h1 align="center">AxionOS</h1>
   <p align="center"><strong>Governed Autonomous Product Creation</strong></p>
   <p align="center">
-    Submit an idea → receive a validated, deployable repository.<br/>
-    Architecture, code, validation, repair, and delivery — autonomously.
+    Submit an idea â†’ receive a validated, deployable repository.<br/>
+    Architecture, code, validation, repair, and delivery â€” autonomously.
   </p>
 </p>
 
@@ -11,7 +11,7 @@
 
 ## What is AxionOS?
 
-AxionOS is a **governed Operating System for Autonomous Product Creation** that transforms ideas into governed, validated repositories and live deployments — while improving its own ability to do so over time through evidence, learning, and adaptive coordination.
+AxionOS is a **governed Operating System for Autonomous Product Creation** that transforms ideas into governed, validated repositories and live deployments â€” while improving its own ability to do so over time through evidence, learning, and adaptive coordination.
 
 AxionOS creates a new category: **Governed Autonomous Product Creation**. It is not merely a workflow engine or AI code generator. Operations build institutional memory.
 
@@ -23,7 +23,7 @@ You describe what you want to build. AxionOS executes the full engineering pipel
 | **Discovery** | Market analysis, opportunity validation, revenue strategy, PRD |
 | **Architecture** | System design, simulation, preventive validation, scaffold |
 | **Engineering** | Domain modeling, code generation (DB, API, UI), agent swarm execution |
-| **Deploy** | Fix Loop → Deep Static → Runtime Validation → Build Repair → Publish |
+| **Deploy** | Fix Loop â†’ Deep Static â†’ Runtime Validation â†’ Build Repair â†’ Publish |
 
 Everything runs inside a **32-stage deterministic pipeline** with full cost tracking and observability.
 
@@ -32,7 +32,7 @@ Everything runs inside a **32-stage deterministic pipeline** with full cost trac
 ## Value Thesis & Strategic Moat
 
 In AxionOS, execution is not terminal. The core sequence is:
-`Execution → Evidence → Structured Learning → Governed Canon → Reusable Guidance → Better Execution`
+`Execution â†’ Evidence â†’ Structured Learning â†’ Governed Canon â†’ Reusable Guidance â†’ Better Execution`
 
 The system's moat emerges from accumulated runtime evidence, canonized learning, adaptive coordination logic, operational memory, and institutional governance. These assets compound with every governed execution and cannot be replicated without equivalent history and runtime.
 
@@ -46,28 +46,28 @@ The system's moat emerges from accumulated runtime evidence, canonized learning,
 
 ## Maturity & Roadmap
 
-**Current Mode:** Level 10+ — Adaptive Operational Organism / 146 Sprints Complete
+**Current Mode:** Level 10+ â€” Adaptive Operational Organism / 147 Sprints Complete
 
 | Level | Name | Status |
 |-------|------|--------|
 | Level 1-3 | Code Generator to Autonomous Engineering | Complete |
 | Level 4-5 | Self-Learning Factory & M-Aware Platform | Operational (needs data) |
-| Level 6-10 | Sovereign, Strategic & Autonomous OS | Complete (Sprints 1-146) |
+| Level 6-10 | Sovereign, Strategic & Autonomous OS | Complete (Sprints 1-147) |
 
 **Operational Maturity Phases:**
 
 | Phase | Status |
 |-------|--------|
-| Phase 1-5 | UI, Navigation, Metrics, Readiness, Canon — Complete |
-| Phase 6 | AgentOS Decision Contract — Partial |
-| Phase 7 | Action Engine — Planned (next) |
-| Phase 8-10 | Governance Flow, Self-Healing, Learning Loop — Planned |
+| Phase 1-5 | UI, Navigation, Metrics, Readiness, Canon â€” Complete |
+| Phase 6 | AgentOS Decision Contract â€” Partial |
+| Phase 7 | Action Engine â€” Planned (next) |
+| Phase 8-10 | Governance Flow, Self-Healing, Learning Loop â€” Planned |
 
 **Roadmap History (Completed Blocks):**
 - **Foundation - M:** Pipeline, Extensibility, Product Experience (Sprints 1-70)
 - **N - R:** Evidence-Governed Improvement, Multi-Agent Swarms, Delivery Optimization, Distributed Runtime (Sprints 72-90)
 - **S - Y:** Architecture Research, Governed Intelligence OS, Sovereign Intelligence, Reflexive Governance, Canon Governance (Sprints 91-118)
-- **Z - AD:** Runtime Sovereignty, Runtime Proof, Learning Canonization, Adaptive Coordination, Adaptive Operational Organism (Sprints 119-146)
+- **Z - AD:** Runtime Sovereignty, Runtime Proof, Learning Canonization, Adaptive Coordination, Adaptive Operational Organism (Sprints 119-147)
 
 *(For deep architectural breakdown, see `docs/ARCHITECTURE.md`)*
 
@@ -93,7 +93,7 @@ AxionOS runs atop Supabase Edge Functions in a Deno runtime. Each of the 32 pipe
 **Operational Decision Chain:**
 
 ```
-Canon / Library → Readiness / Metrics → Policy / Governance → Action Engine → AgentOS → Executor
+Canon / Library â†’ Readiness / Metrics â†’ Policy / Governance â†’ Action Engine â†’ AgentOS â†’ Executor
 ```
 
 > Canon informs. Readiness evaluates. Policy constrains. Action Engine formalizes. AgentOS orchestrates. Executors act.
@@ -124,10 +124,10 @@ flowchart TB
 
 ## For Whom
 
-- **Indie Hackers** — launch MVPs in hours
-- **Technical Founders** — validate ideas rapidly
-- **Micro SaaS Creators** — build and iterate fast
-- **Early-Stage Teams** — multiply engineering capacity
+- **Indie Hackers** â€” launch MVPs in hours
+- **Technical Founders** â€” validate ideas rapidly
+- **Micro SaaS Creators** â€” build and iterate fast
+- **Early-Stage Teams** â€” multiply engineering capacity
 
 ---
 
@@ -154,3 +154,5 @@ MIT License
 > AxionOS was built for that reality.
 >
 > **So that a single builder can operate with the power of an entire engineering team.**
+
+

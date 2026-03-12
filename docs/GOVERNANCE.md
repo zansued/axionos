@@ -1,4 +1,4 @@
-# AxionOS — Agent OS Reference
+﻿# AxionOS â€” Agent OS Reference
 
 > Consolidated reference for the Agent Operating System architecture.
 > Canonical source for planes, modules, agent types, contracts, safety boundaries, and events.
@@ -10,7 +10,7 @@
 | Scope | Rule |
 |-------|------|
 | **Owns** | Agent OS 5 planes, 18-module inventory, 5 agent types, operational agents, supporting engines, learning agents, meta-agents, memory layers, contracts, safety boundaries, events |
-| **Must not define** | System containers/C4 diagrams (→ ARCHITECTURE.md), Canon Intelligence Engine architecture (→ CANON_INTELLIGENCE_ENGINE.md) |
+| **Must not define** | System containers/C4 diagrams (â†’ ARCHITECTURE.md), Canon Intelligence Engine architecture (â†’ CANON_INTELLIGENCE_ENGINE.md) |
 | **Derived from** | CANON_INTELLIGENCE_ENGINE.md for Canon knowledge layer integration |
 | **Update rule** | Update when Agent OS module inventory, contracts, or operational references change |
 
@@ -18,7 +18,7 @@
 
 | Subsystem | Reference |
 |-----------|-----------|
-| Canon Intelligence Engine | [CANON_INTELLIGENCE_ENGINE.md](CANON_INTELLIGENCE_ENGINE.md) — Canon knowledge layer, Agent–Contract relationship model, canonization governance workflow |
+| Canon Intelligence Engine | [CANON_INTELLIGENCE_ENGINE.md](CANON_INTELLIGENCE_ENGINE.md) â€” Canon knowledge layer, Agentâ€“Contract relationship model, canonization governance workflow |
 
 ---
 
@@ -113,37 +113,37 @@ Agent Specialization = Mode + Tools + Memory + Contract
 These are the currently implemented and operational components of the AxionOS agent system.
 
 ### Pipeline Orchestration
-- **DAG Execution Engine** — Kahn's algorithm, wave computation, 6 concurrent workers
-- **Pipeline Orchestrator** — 32-stage deterministic pipeline coordination
-- **Pipeline Bootstrap** — Lifecycle initialization with usage enforcement integration
+- **DAG Execution Engine** â€” Kahn's algorithm, wave computation, 6 concurrent workers
+- **Pipeline Orchestrator** â€” 32-stage deterministic pipeline coordination
+- **Pipeline Bootstrap** â€” Lifecycle initialization with usage enforcement integration
 
 ### Validation Agents
-- **Fix Loop Agent** — AI-powered code correction (3 iterations)
-- **Deep Static Analyzer** — Import/reference/type consistency validation
-- **Drift Detector** — Architecture-to-code conformance checking
-- **Runtime Validator** — Real tsc + vite build via GitHub Actions CI
+- **Fix Loop Agent** â€” AI-powered code correction (3 iterations)
+- **Deep Static Analyzer** â€” Import/reference/type consistency validation
+- **Drift Detector** â€” Architecture-to-code conformance checking
+- **Runtime Validator** â€” Real tsc + vite build via GitHub Actions CI
 
 ### Repair Agents
-- **Autonomous Build Repair** — Self-healing from CI error logs
-- **Fix Orchestrator** — Multi-iteration repair coordination with auto-PR
-- **Repair Router** — Evidence-based strategy selection
-- **Repair Policy Engine** — Memory-aware, policy-driven repair strategy selection with bounded adjustments (Sprint 23)
-- **Retry Path Intelligence** — Contextual retry action computation to reduce unproductive loops (Sprint 23)
+- **Autonomous Build Repair** â€” Self-healing from CI error logs
+- **Fix Orchestrator** â€” Multi-iteration repair coordination with auto-PR
+- **Repair Router** â€” Evidence-based strategy selection
+- **Repair Policy Engine** â€” Memory-aware, policy-driven repair strategy selection with bounded adjustments (Sprint 23)
+- **Retry Path Intelligence** â€” Contextual retry action computation to reduce unproductive loops (Sprint 23)
 
 ### Prevention Agents
-- **Preventive Validator** — Pre-generation guard against known failure patterns
-- **Prevention Rule Engine** — Active rule management and enforcement
-- **Error Pattern Library** — Pattern extraction and indexing
+- **Preventive Validator** â€” Pre-generation guard against known failure patterns
+- **Prevention Rule Engine** â€” Active rule management and enforcement
+- **Error Pattern Library** â€” Pattern extraction and indexing
 
 ### Governance
-- **Gate Permissions** — Per-role stage access control
-- **SLA Enforcement** — Per-stage timing constraints
-- **Audit Logger** — Complete event ledger for all system actions
+- **Gate Permissions** â€” Per-role stage access control
+- **SLA Enforcement** â€” Per-stage timing constraints
+- **Audit Logger** â€” Complete event ledger for all system actions
 
 ### Observability
-- **Observability Engine** — Telemetry aggregation and reporting
-- **Initiative Observability** — Per-initiative metrics (success rate, cost, MTTR)
-- **Cost Tracker** — Per-model, per-stage, per-initiative cost tracking
+- **Observability Engine** â€” Telemetry aggregation and reporting
+- **Initiative Observability** â€” Per-initiative metrics (success rate, cost, MTTR)
+- **Cost Tracker** â€” Per-model, per-stage, per-initiative cost tracking
 
 ---
 
@@ -165,12 +165,12 @@ These modules provide infrastructure and efficiency services consumed by operati
 
 ---
 
-## 6. Learning Agents v1 (Sprint 12) — Active
+## 6. Learning Agents v1 (Sprint 12) â€” Active
 
 Learning Agents v1 introduces five intelligence modules that observe execution data and generate auditable improvement recommendations. These agents follow the chain:
 
 ```
-Observation → Evidence → Analysis → Recommendation → Human-safe Adjustment
+Observation â†’ Evidence â†’ Analysis â†’ Recommendation â†’ Human-safe Adjustment
 ```
 
 ### 6.1 Prompt Outcome Analyzer
@@ -207,7 +207,7 @@ Observation → Evidence → Analysis → Recommendation → Human-safe Adjustme
 | **File** | `supabase/functions/repair-learning-engine/index.ts` |
 | **Inputs** | `repair_routing_log`, `repair_evidence`, `strategy_effectiveness_metrics` |
 | **Outputs** | `repair_strategy_weights` (current_weight, previous_weight, adjustment_reason) |
-| **Formula** | `new_weight = previous_weight + success_factor − failure_penalty` |
+| **Formula** | `new_weight = previous_weight + success_factor âˆ’ failure_penalty` |
 | **Safety** | Weight changes are bounded (min/max), reversible, and logged. Cannot modify routing formula. |
 
 ### 6.5 Learning Recommendation Engine
@@ -246,42 +246,42 @@ All learning actions generate `LEARNING_UPDATE` events in `audit_logs`.
 
 ---
 
-## 7. Core Plane — Identity & Contracts
+## 7. Core Plane â€” Identity & Contracts
 
 **Purpose:** Define what agents are, what they can do and how they communicate.
 
 ### Key Contracts
 
-- `AgentIdentity` / `AgentProfile` — Who the agent is
-- `CapabilityDeclaration` / `CapabilityCatalog` — What it can do
-- `AgentTask` / `AgentResponse` — How tasks are defined and results returned
-- `ArtifactEnvelope` / `ArtifactKind` — How outputs are packaged
-- `ValidationReport` — How quality is assessed
-- `RetryPolicy` / `RollbackPolicy` — How failures are handled
+- `AgentIdentity` / `AgentProfile` â€” Who the agent is
+- `CapabilityDeclaration` / `CapabilityCatalog` â€” What it can do
+- `AgentTask` / `AgentResponse` â€” How tasks are defined and results returned
+- `ArtifactEnvelope` / `ArtifactKind` â€” How outputs are packaged
+- `ValidationReport` â€” How quality is assessed
+- `RetryPolicy` / `RollbackPolicy` â€” How failures are handled
 
 ### Capability Model
 
 Agents declare capabilities with:
-- **Domain** — what area (frontend, backend, database, architecture)
-- **Proficiency** — numeric score (0.0 - 1.0)
-- **Evidence** — historical execution data backing the score
-- **Evolution** — capabilities improve over time via feedback
+- **Domain** â€” what area (frontend, backend, database, architecture)
+- **Proficiency** â€” numeric score (0.0 - 1.0)
+- **Evidence** â€” historical execution data backing the score
+- **Evolution** â€” capabilities improve over time via feedback
 
-Selection uses multi-dimensional scoring: capability match × trust level × cost efficiency × historical performance.
+Selection uses multi-dimensional scoring: capability match Ã— trust level Ã— cost efficiency Ã— historical performance.
 
 ---
 
-## 8. Control Plane — Decisions & Governance
+## 8. Control Plane â€” Decisions & Governance
 
 **Purpose:** Decide which agent runs, under what rules, with what trust level.
 
 ### Selection Engine
 - Multi-criteria ranking: capability score, trust tier, cost, latency
-- Supports exploration strategies (ε-greedy, UCB, Thompson sampling)
+- Supports exploration strategies (Îµ-greedy, UCB, Thompson sampling)
 - Override management for manual agent assignment
 
 ### Policy Engine
-- 6 trust tiers: `untrusted` → `provisional` → `standard` → `trusted` → `expert` → `autonomous`
+- 6 trust tiers: `untrusted` â†’ `provisional` â†’ `standard` â†’ `trusted` â†’ `expert` â†’ `autonomous`
 - Each tier defines: max autonomy level, allowed actions, approval requirements
 - Policies can be stage-specific or organization-wide
 
@@ -298,7 +298,7 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 9. Execution Plane — Orchestration & Work
+## 9. Execution Plane â€” Orchestration & Work
 
 **Purpose:** Execute agent tasks, coordinate multi-agent workflows, distribute work.
 
@@ -309,10 +309,10 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 - Time-budget management with auto-continuation
 
 ### Coordination Patterns
-- **Debate** — Multiple agents propose, evaluate, converge
-- **Consensus** — Voting-based agreement
-- **Planner-Executor** — One agent plans, others execute
-- **Pipeline** — Sequential handoff between specialists
+- **Debate** â€” Multiple agents propose, evaluate, converge
+- **Consensus** â€” Voting-based agreement
+- **Planner-Executor** â€” One agent plans, others execute
+- **Pipeline** â€” Sequential handoff between specialists
 
 ### Distributed Runtime
 - Worker registration and health monitoring
@@ -320,19 +320,19 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 - Failure detection and automatic reassignment
 
 ### Adapters
-- **LLM Adapter** — Provider-agnostic LLM invocation with prompt compression, caching, model routing
-- **Tool Adapter** — External tool execution with sandboxing, timeout, retry
+- **LLM Adapter** â€” Provider-agnostic LLM invocation with prompt compression, caching, model routing
+- **Tool Adapter** â€” External tool execution with sandboxing, timeout, retry
 
 ---
 
-## 10. Data Plane — State & Knowledge
+## 10. Data Plane â€” State & Knowledge
 
 **Purpose:** Persist artifacts, memory, telemetry and audit records.
 
 ### Artifact Store
 - Immutable versioning with content-hash deduplication (SHA-256)
-- Lineage DAG — full provenance tracking from input to output
-- Run Artifact Manifest — reconstructs complete reasoning chain
+- Lineage DAG â€” full provenance tracking from input to output
+- Run Artifact Manifest â€” reconstructs complete reasoning chain
 - Kinds: `code`, `config`, `schema`, `document`, `model`, `test`, `report`
 
 ### Memory System
@@ -350,11 +350,11 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 11. Ecosystem Plane — Discovery & Distribution
+## 11. Ecosystem Plane â€” Discovery & Distribution
 
 **Purpose:** Enable agent and capability sharing across environments.
 
-> **Status:** ✅ Active — Governed capability ecosystem operational (Block P, Sprints 79–82).
+> **Status:** âœ… Active â€” Governed capability ecosystem operational (Block P, Sprints 79â€“82).
 > Capability packaging, trust/entitlements, partner marketplace pilot, and outcome-aware capability exchange are implemented.
 
 - Capability registry with semantic versioning
@@ -364,28 +364,28 @@ Selection uses multi-dimensional scoring: capability match × trust level × cos
 
 ---
 
-## 12. Meta-Agents — Active (Sprints 13–20)
+## 12. Meta-Agents â€” Active (Sprints 13â€“20)
 
-> **Status:** ✅ Active — 4 memory-aware meta-agents with quality feedback and advisory calibration
-> **Maturity:** v1.4 — Quality feedback loop + advisory calibration layer
-> **Target:** Level 5 — Institutional Engineering Memory
+> **Status:** âœ… Active â€” 4 memory-aware meta-agents with quality feedback and advisory calibration
+> **Maturity:** v1.4 â€” Quality feedback loop + advisory calibration layer
+> **Target:** Level 5 â€” Institutional Engineering Memory
 
 Meta-Agents are higher-order agents that operate above the normal execution and learning agents. They analyze system behavior with historical engineering context, design new agent roles, adjust orchestration strategies, recommend workflow changes, and optimize system architecture. They do **not** execute pipeline tasks directly.
 
 ### Memory-Aware Capabilities (Sprint 18)
 
 Each meta-agent receives historical context via `meta-agent-memory-context.ts`:
-- `related_memory_entries` — Ranked memory entries by type relevance
-- `related_summaries` — Relevant memory summaries
-- `related_decisions` — Prior accepted/rejected/deferred decisions
-- `related_outcomes` — Prior implementation outcomes
-- `historical_context_score` — Deterministic 0-1 score
+- `related_memory_entries` â€” Ranked memory entries by type relevance
+- `related_summaries` â€” Relevant memory summaries
+- `related_decisions` â€” Prior accepted/rejected/deferred decisions
+- `related_outcomes` â€” Prior implementation outcomes
+- `historical_context_score` â€” Deterministic 0-1 score
 
 Recommendations include structured historical signals:
-- `historical_alignment` — reinforces_prior_direction | extends_prior_direction | reopens_unresolved_issue | diverges_from_prior_direction | historically_novel
-- `decision_history_signal` — Prior decision context
-- `outcome_history_signal` — Prior outcome context
-- `historical_novelty_flag` — Whether recommendation is historically novel
+- `historical_alignment` â€” reinforces_prior_direction | extends_prior_direction | reopens_unresolved_issue | diverges_from_prior_direction | historically_novel
+- `decision_history_signal` â€” Prior decision context
+- `outcome_history_signal` â€” Prior outcome context
+- `historical_novelty_flag` â€” Whether recommendation is historically novel
 
 Redundancy guard (`historical-redundancy-guard.ts`) suppresses or downgrades:
 - Repeatedly rejected recommendations without new evidence
@@ -474,7 +474,7 @@ Meta-Agents **may only**:
 ### Meta-Agent Interaction Flow
 
 ```
-Observability → Learning Agents → Meta-Agents → Recommendations → Human Review → Controlled Implementation
+Observability â†’ Learning Agents â†’ Meta-Agents â†’ Recommendations â†’ Human Review â†’ Controlled Implementation
 ```
 
 Meta-Agents do not bypass human oversight at any point.
@@ -486,13 +486,13 @@ Meta-Agents do not bypass human oversight at any point.
 **Purpose:** Track the quality and usefulness of recommendations and artifacts over time to enable evidence-based calibration.
 
 **Tables:**
-- `proposal_quality_feedback` — Tracks acceptance, implementation, and outcome signals per recommendation/artifact
-- `proposal_quality_summaries` — Periodic summaries of proposal quality patterns
+- `proposal_quality_feedback` â€” Tracks acceptance, implementation, and outcome signals per recommendation/artifact
+- `proposal_quality_summaries` â€” Periodic summaries of proposal quality patterns
 
 **Key modules:**
-- `proposal-quality-scoring.ts` — Deterministic quality scoring based on acceptance, implementation, and outcome signals
-- `proposal-quality-feedback-service.ts` — Feedback collection and aggregation
-- `proposal-quality-summary-service.ts` — Periodic quality summary generation
+- `proposal-quality-scoring.ts` â€” Deterministic quality scoring based on acceptance, implementation, and outcome signals
+- `proposal-quality-feedback-service.ts` â€” Feedback collection and aggregation
+- `proposal-quality-summary-service.ts` â€” Periodic quality summary generation
 
 **Metrics tracked:**
 - Recommendation acceptance rate per meta-agent type
@@ -507,7 +507,7 @@ Meta-Agents do not bypass human oversight at any point.
 
 ### 12.7 Advisory Calibration Layer (Sprint 20)
 
-**Purpose:** Produce structured, explainable calibration signals that diagnose how AxionOS advisory intelligence should be tuned — without applying tuning automatically.
+**Purpose:** Produce structured, explainable calibration signals that diagnose how AxionOS advisory intelligence should be tuned â€” without applying tuning automatically.
 
 **Calibration Domains:**
 
@@ -523,19 +523,19 @@ Meta-Agents do not bypass human oversight at any point.
 **Signal Types:** `UNDERPERFORMING_META_AGENT`, `HIGH_VALUE_META_AGENT`, `LOW_USEFULNESS_ARTIFACT_TYPE`, `HIGH_USEFULNESS_ARTIFACT_TYPE`, `HISTORICAL_CONTEXT_OVERWEIGHTED`, `HISTORICAL_CONTEXT_UNDERUSED`, `REDUNDANCY_GUARD_TOO_STRICT`, `REDUNDANCY_GUARD_TOO_WEAK`, `NOVEL_SIGNALS_UNDERSCORED`, `NOVEL_SIGNALS_OVERPROMOTED`, `LOW_FOLLOW_THROUGH_PATTERN`, `HIGH_FOLLOW_THROUGH_PATTERN`
 
 **Key modules:**
-- `calibration/types.ts` — Calibration taxonomy (domains, signal types)
-- `calibration/scoring.ts` — Deterministic scoring (signal_strength, confidence_score, risk_of_overcorrection)
-- `calibration/analysis-service.ts` — Analysis functions per domain
-- `advisory-calibration-engine/index.ts` — Edge function exposing calibration API
+- `calibration/types.ts` â€” Calibration taxonomy (domains, signal types)
+- `calibration/scoring.ts` â€” Deterministic scoring (signal_strength, confidence_score, risk_of_overcorrection)
+- `calibration/analysis-service.ts` â€” Analysis functions per domain
+- `advisory-calibration-engine/index.ts` â€” Edge function exposing calibration API
 
 **Tables:**
-- `advisory_calibration_signals` — Individual calibration signals with evidence refs
-- `advisory_calibration_summaries` — Periodic calibration summary reports
+- `advisory_calibration_signals` â€” Individual calibration signals with evidence refs
+- `advisory_calibration_summaries` â€” Periodic calibration summary reports
 
 **Each signal includes:**
-- `signal_strength` (0-1) — Magnitude of the calibration concern
-- `confidence_score` (0-1) — Reliability based on sample size and consistency
-- `risk_of_overcorrection` (0-1) — Risk that acting on this signal could overcorrect
+- `signal_strength` (0-1) â€” Magnitude of the calibration concern
+- `confidence_score` (0-1) â€” Reliability based on sample size and consistency
+- `risk_of_overcorrection` (0-1) â€” Risk that acting on this signal could overcorrect
 
 **Safety:** Calibration signals are **advisory only** and do not automatically tune the system. No auto-adjustment of meta-agent scoring, redundancy guard thresholds, historical weighting, or proposal generation behavior.
 
@@ -573,29 +573,29 @@ Meta-Agents do not bypass human oversight at any point.
 
 ```
 supabase/functions/_shared/agent-os/
-├── index.ts                    # Barrel exports
-├── types.ts                    # Core types
-├── protocol.ts                 # Runtime protocol
-├── capabilities.ts             # Capability model
-├── selection.ts                # Selection engine
-├── policy-engine.ts            # Policy engine
-├── governance.ts               # Governance layer
-├── adaptive-routing.ts         # Adaptive routing
-├── orchestrator.ts             # Orchestrator
-├── registry.ts                 # Agent registry
-├── event-bus.ts                # Event bus
-├── coordination.ts             # Multi-agent coordination
-├── distributed-runtime.ts      # Distributed runtime
-├── llm-adapter.ts              # LLM adapter
-├── tool-adapter.ts             # Tool adapter
-├── artifact-store.ts           # Artifact store
-├── memory-system.ts            # Memory system
-├── memory.ts                   # Legacy memory (v0.1)
-├── observability.ts            # Observability
-├── marketplace.ts              # Marketplace (frozen)
-├── utils.ts                    # Shared utilities
-├── scoring.ts                  # Scoring functions
-└── policies.ts                 # Default policies
+â”œâ”€â”€ index.ts                    # Barrel exports
+â”œâ”€â”€ types.ts                    # Core types
+â”œâ”€â”€ protocol.ts                 # Runtime protocol
+â”œâ”€â”€ capabilities.ts             # Capability model
+â”œâ”€â”€ selection.ts                # Selection engine
+â”œâ”€â”€ policy-engine.ts            # Policy engine
+â”œâ”€â”€ governance.ts               # Governance layer
+â”œâ”€â”€ adaptive-routing.ts         # Adaptive routing
+â”œâ”€â”€ orchestrator.ts             # Orchestrator
+â”œâ”€â”€ registry.ts                 # Agent registry
+â”œâ”€â”€ event-bus.ts                # Event bus
+â”œâ”€â”€ coordination.ts             # Multi-agent coordination
+â”œâ”€â”€ distributed-runtime.ts      # Distributed runtime
+â”œâ”€â”€ llm-adapter.ts              # LLM adapter
+â”œâ”€â”€ tool-adapter.ts             # Tool adapter
+â”œâ”€â”€ artifact-store.ts           # Artifact store
+â”œâ”€â”€ memory-system.ts            # Memory system
+â”œâ”€â”€ memory.ts                   # Legacy memory (v0.1)
+â”œâ”€â”€ observability.ts            # Observability
+â”œâ”€â”€ marketplace.ts              # Marketplace (frozen)
+â”œâ”€â”€ utils.ts                    # Shared utilities
+â”œâ”€â”€ scoring.ts                  # Scoring functions
+â””â”€â”€ policies.ts                 # Default policies
 ```
 
 ---
@@ -603,31 +603,31 @@ supabase/functions/_shared/agent-os/
 ## 15. Implementation Status
 
 > **Canonical sprint-by-sprint record:** [PLAN.md](../PLAN.md)
-> **All 18 core Agent OS modules:** ✅ Designed with full TypeScript contracts
-> **Key operational systems:** Orchestrator + DAG Engine, Memory System, Governance, Observability, Learning Agents, Meta-Agents, Engineering Memory, Prompt Optimization, Agent Memory, Predictive Error Detection, Semantic Retrieval — all operational.
+> **All 18 core Agent OS modules:** âœ… Designed with full TypeScript contracts
+> **Key operational systems:** Orchestrator + DAG Engine, Memory System, Governance, Observability, Learning Agents, Meta-Agents, Engineering Memory, Prompt Optimization, Agent Memory, Predictive Error Detection, Semantic Retrieval â€” all operational.
 > **Frozen:** Marketplace, advanced distributed runtime.
 
 ---
 
-## 16. Engineering Memory Interaction (Active — Sprints 15–18)
+## 16. Engineering Memory Interaction (Active â€” Sprints 15â€“18)
 
-> **Status:** ✅ Active — Full stack operational
+> **Status:** âœ… Active â€” Full stack operational
 
 ### Overview
 
-Engineering Memory is a cross-layer knowledge infrastructure that agents use to retrieve past engineering experience. Agents do **not** write directly to memory — capture is event-driven from layer outputs. Agents **read** memory to inform decisions.
+Engineering Memory is a cross-layer knowledge infrastructure that agents use to retrieve past engineering experience. Agents do **not** write directly to memory â€” capture is event-driven from layer outputs. Agents **read** memory to inform decisions.
 
 ### Agent Retrieval Use Cases
 
 | Agent Class | Retrieval Context | Memory Types Used | Status |
 |-------------|-------------------|-------------------|--------|
-| **Build Agents** | During repair attempts | Error Memory, Strategy Memory | ✅ Active |
-| **Validation Agents** | During preventive checks | Error Memory, Execution Memory | ✅ Active |
-| **Architecture Agents** | During planning | Design Memory, Outcome Memory | ✅ Active |
-| **Meta-Agents** | During recommendation generation | All memory types + summaries | ✅ Active (Sprint 18) |
-| **Proposal Generators** | During artifact generation | Design Memory, Decision Memory | ✅ Active (Sprint 18) |
+| **Build Agents** | During repair attempts | Error Memory, Strategy Memory | âœ… Active |
+| **Validation Agents** | During preventive checks | Error Memory, Execution Memory | âœ… Active |
+| **Architecture Agents** | During planning | Design Memory, Outcome Memory | âœ… Active |
+| **Meta-Agents** | During recommendation generation | All memory types + summaries | âœ… Active (Sprint 18) |
+| **Proposal Generators** | During artifact generation | Design Memory, Decision Memory | âœ… Active (Sprint 18) |
 
-### Memory-Aware Reasoning (Active — Sprint 18)
+### Memory-Aware Reasoning (Active â€” Sprint 18)
 
 1. **Meta-Agent Analysis:** Each meta-agent queries relevant memory entries, summaries, prior decisions, and outcomes via `meta-agent-memory-context.ts`.
 2. **Historical Continuity:** `historical-continuity-scoring.ts` computes support/conflict/context scores to measure alignment with prior history.
@@ -646,9 +646,9 @@ Engineering Memory is a cross-layer knowledge infrastructure that agents use to 
 
 ---
 
-## 17. Agent Memory Layer (Active — Sprint 24)
+## 17. Agent Memory Layer (Active â€” Sprint 24)
 
-> **Status:** ✅ Active — Per-agent operational memory
+> **Status:** âœ… Active â€” Per-agent operational memory
 
 ### Overview
 
@@ -665,12 +665,12 @@ The Agent Memory Layer provides persistent, per-agent memory profiles and struct
 
 ### Memory Types
 
-- `execution_pattern` — Successful execution context patterns
-- `repair_pattern` — Effective repair paths
-- `validation_pattern` — Validation failure/success patterns
-- `review_pattern` — Human review corrections
-- `failure_pattern` — Recurring failure contexts
-- `success_pattern` — Repeated success patterns
+- `execution_pattern` â€” Successful execution context patterns
+- `repair_pattern` â€” Effective repair paths
+- `validation_pattern` â€” Validation failure/success patterns
+- `review_pattern` â€” Human review corrections
+- `failure_pattern` â€” Recurring failure contexts
+- `success_pattern` â€” Repeated success patterns
 
 ### Safety Boundaries
 
@@ -682,17 +682,17 @@ The Agent Memory Layer provides persistent, per-agent memory profiles and struct
 
 ### Events
 
-- `agent_memory_retrieved` — Memory fetched for agent context
-- `agent_memory_injected` — Memory block assembled and injected
-- `agent_memory_written` — New memory record written
-- `agent_memory_profile_updated` — Profile created or updated
-- `agent_memory_deprecated` — Stale memory deprecated
+- `agent_memory_retrieved` â€” Memory fetched for agent context
+- `agent_memory_injected` â€” Memory block assembled and injected
+- `agent_memory_written` â€” New memory record written
+- `agent_memory_profile_updated` â€” Profile created or updated
+- `agent_memory_deprecated` â€” Stale memory deprecated
 
 ---
 
-## 18. Predictive Error Detection (Active — Sprint 25)
+## 18. Predictive Error Detection (Active â€” Sprint 25)
 
-> **Status:** ✅ Active — Runtime predictive prevention
+> **Status:** âœ… Active â€” Runtime predictive prevention
 
 ### Overview
 
@@ -710,19 +710,19 @@ Predictive Error Detection operationalizes historical error patterns and learnin
 
 ### Risk Bands
 
-- `low` (0–0.35) — Proceed normally
-- `moderate` (0.35–0.6) — Proceed with guard
-- `high` (0.6–0.8) — Recommend review or apply bounded actions
-- `critical` (0.8–1.0) — Pause for review (advisory)
+- `low` (0â€“0.35) â€” Proceed normally
+- `moderate` (0.35â€“0.6) â€” Proceed with guard
+- `high` (0.6â€“0.8) â€” Recommend review or apply bounded actions
+- `critical` (0.8â€“1.0) â€” Pause for review (advisory)
 
 ### Preventive Action Types
 
-- `strategy_fallback` — Switch to safer strategy
-- `prompt_fallback` — Fall back to known-good prompt variant
-- `extra_validation` — Add validation before proceeding
-- `extra_context` — Retrieve additional context
-- `human_review` — Recommend human review (advisory only)
-- `pause_execution` — Pause pipeline (advisory only)
+- `strategy_fallback` â€” Switch to safer strategy
+- `prompt_fallback` â€” Fall back to known-good prompt variant
+- `extra_validation` â€” Add validation before proceeding
+- `extra_context` â€” Retrieve additional context
+- `human_review` â€” Recommend human review (advisory only)
+- `pause_execution` â€” Pause pipeline (advisory only)
 
 ### Safety Boundaries
 
@@ -735,19 +735,19 @@ Predictive Error Detection operationalizes historical error patterns and learnin
 
 ### Events
 
-- `predictive_risk_assessed` — Risk scored for context
-- `predictive_checkpoint_evaluated` — Checkpoint decision made
-- `preventive_action_recommended` — Action recommended
-- `preventive_action_applied` — Action applied
-- `predictive_outcome_recorded` — Outcome tracked
-- `predictive_false_positive_flagged` — False positive detected
-- `predictive_false_negative_flagged` — False negative detected
+- `predictive_risk_assessed` â€” Risk scored for context
+- `predictive_checkpoint_evaluated` â€” Checkpoint decision made
+- `preventive_action_recommended` â€” Action recommended
+- `preventive_action_applied` â€” Action applied
+- `predictive_outcome_recorded` â€” Outcome tracked
+- `predictive_false_positive_flagged` â€” False positive detected
+- `predictive_false_negative_flagged` â€” False negative detected
 
 ---
 
-## 19. Learning Agents v2 — Cross-Stage Policy Synthesis (Active — Sprint 26)
+## 19. Learning Agents v2 â€” Cross-Stage Policy Synthesis (Active â€” Sprint 26)
 
-> **Status:** ✅ Active — Cross-stage coordinated learning
+> **Status:** âœ… Active â€” Cross-stage coordinated learning
 
 ### Overview
 
@@ -764,21 +764,21 @@ Learning Agents v2 extends learning from local stage optimization to system-leve
 
 ### Relationship Types
 
-- `failure_propagation` — Failure in stage A causes downstream failure in stage B
-- `success_dependency` — Success in stage A improves outcomes in stage B
-- `retry_correlation` — Retries in stage A correlate with retries in stage B
-- `cost_amplification` — Cost in stage A amplifies cost in stage B
-- `validation_cascade` — Validation failure cascades across stages
-- `repair_influence` — Repair in stage A influences repair needs in stage B
+- `failure_propagation` â€” Failure in stage A causes downstream failure in stage B
+- `success_dependency` â€” Success in stage A improves outcomes in stage B
+- `retry_correlation` â€” Retries in stage A correlate with retries in stage B
+- `cost_amplification` â€” Cost in stage A amplifies cost in stage B
+- `validation_cascade` â€” Validation failure cascades across stages
+- `repair_influence` â€” Repair in stage A influences repair needs in stage B
 
 ### Policy Types
 
-- `prompt_coordination` — Coordinate prompt variants across stages
-- `strategy_coordination` — Coordinate repair/execution strategies
-- `validation_guard` — Add validation guards between stages
-- `repair_preemption` — Preempt repair needs based on upstream signals
-- `context_enrichment` — Inject upstream context into downstream agents
-- `review_escalation` — Escalate review for risky stage chains
+- `prompt_coordination` â€” Coordinate prompt variants across stages
+- `strategy_coordination` â€” Coordinate repair/execution strategies
+- `validation_guard` â€” Add validation guards between stages
+- `repair_preemption` â€” Preempt repair needs based on upstream signals
+- `context_enrichment` â€” Inject upstream context into downstream agents
+- `review_escalation` â€” Escalate review for risky stage chains
 
 ### Safety Boundaries
 
@@ -791,18 +791,18 @@ Learning Agents v2 extends learning from local stage optimization to system-leve
 
 ### Events
 
-- `cross_stage_pattern_detected` — Pattern identified in learning graph
-- `cross_stage_policy_synthesized` — Policy candidate created
-- `cross_stage_policy_activated` — Policy promoted to active
-- `cross_stage_policy_applied` — Policy applied at runtime
-- `cross_stage_policy_outcome_recorded` — Outcome tracked
-- `cross_stage_policy_deprecated` — Policy deprecated
+- `cross_stage_pattern_detected` â€” Pattern identified in learning graph
+- `cross_stage_policy_synthesized` â€” Policy candidate created
+- `cross_stage_policy_activated` â€” Policy promoted to active
+- `cross_stage_policy_applied` â€” Policy applied at runtime
+- `cross_stage_policy_outcome_recorded` â€” Outcome tracked
+- `cross_stage_policy_deprecated` â€” Policy deprecated
 
 ---
 
-## 20. Execution Policy Intelligence (Active — Sprint 27)
+## 20. Execution Policy Intelligence (Active â€” Sprint 27)
 
-> **Status:** ✅ Active — Bounded global execution policy selection
+> **Status:** âœ… Active â€” Bounded global execution policy selection
 
 ### Overview
 
@@ -820,14 +820,14 @@ Execution Policy Intelligence classifies execution context and selects bounded o
 
 ### Policy Modes
 
-- `balanced_default` — Standard operating mode
-- `high_quality` — Increased validation and deploy hardening
-- `cost_optimized` — Reduced validation, minimal context
-- `rapid_iteration` — Speed-first with lower guardrails
-- `risk_sensitive` — Maximum safety parameters
-- `deploy_hardened` — Zero experimentation, maximum deploy safety
-- `repair_conservative` — Conservative repair with fewer retries
-- `validation_heavy` — Maximum validation sensitivity
+- `balanced_default` â€” Standard operating mode
+- `high_quality` â€” Increased validation and deploy hardening
+- `cost_optimized` â€” Reduced validation, minimal context
+- `rapid_iteration` â€” Speed-first with lower guardrails
+- `risk_sensitive` â€” Maximum safety parameters
+- `deploy_hardened` â€” Zero experimentation, maximum deploy safety
+- `repair_conservative` â€” Conservative repair with fewer retries
+- `validation_heavy` â€” Maximum validation sensitivity
 
 ### Safety Boundaries
 
@@ -840,18 +840,18 @@ Execution Policy Intelligence classifies execution context and selects bounded o
 
 ### Events
 
-- `execution_context_classified` — Context classified into policy mode
-- `execution_policy_selected` — Policy selected for execution
-- `execution_policy_applied` — Policy applied at checkpoint
-- `execution_policy_adjustment_applied` — Adjustments applied at runtime
-- `execution_policy_outcome_recorded` — Outcome tracked
-- `execution_policy_deprecated` — Policy deprecated
+- `execution_context_classified` â€” Context classified into policy mode
+- `execution_policy_selected` â€” Policy selected for execution
+- `execution_policy_applied` â€” Policy applied at checkpoint
+- `execution_policy_adjustment_applied` â€” Adjustments applied at runtime
+- `execution_policy_outcome_recorded` â€” Outcome tracked
+- `execution_policy_deprecated` â€” Policy deprecated
 
 ---
 
-## 21. Execution Mode Portfolio Optimization (Active — Sprint 28)
+## 21. Execution Mode Portfolio Optimization (Active â€” Sprint 28)
 
-> **Status:** ✅ Active — Bounded portfolio optimization for execution policies
+> **Status:** âœ… Active â€” Bounded portfolio optimization for execution policies
 
 ### Overview
 
@@ -868,20 +868,20 @@ Execution Mode Portfolio Optimization manages the set of available execution pol
 
 ### Lifecycle Statuses
 
-- `candidate` — New entry, pending evaluation
-- `active` — Performing well, available for selection
-- `watch` — Under observation due to concerning signals
-- `limited` — Restricted to narrow contexts
-- `deprecated` — Excluded from selection
+- `candidate` â€” New entry, pending evaluation
+- `active` â€” Performing well, available for selection
+- `watch` â€” Under observation due to concerning signals
+- `limited` â€” Restricted to narrow contexts
+- `deprecated` â€” Excluded from selection
 
 ### Recommendation Types
 
-- `promote` — Promote policy for a context class
-- `limit` — Limit policy to specific flows
-- `deprecate` — Deprecate due to harmful spillover
-- `split` — Split broad policy into narrower scoped policies
-- `merge` — Merge similar policies
-- `reprioritize` — Adjust portfolio rank
+- `promote` â€” Promote policy for a context class
+- `limit` â€” Limit policy to specific flows
+- `deprecate` â€” Deprecate due to harmful spillover
+- `split` â€” Split broad policy into narrower scoped policies
+- `merge` â€” Merge similar policies
+- `reprioritize` â€” Adjust portfolio rank
 
 ### Safety Boundaries
 
@@ -893,18 +893,18 @@ Execution Mode Portfolio Optimization manages the set of available execution pol
 
 ### Events
 
-- `execution_policy_portfolio_recomputed` — Portfolio evaluated and ranked
-- `execution_policy_rank_updated` — Policy rank changed
-- `execution_policy_lifecycle_changed` — Lifecycle status transitioned
-- `execution_policy_conflict_detected` — Conflict identified
-- `execution_policy_portfolio_recommendation_created` — Recommendation generated
-- `execution_policy_portfolio_recommendation_reviewed` — Recommendation accepted/rejected
+- `execution_policy_portfolio_recomputed` â€” Portfolio evaluated and ranked
+- `execution_policy_rank_updated` â€” Policy rank changed
+- `execution_policy_lifecycle_changed` â€” Lifecycle status transitioned
+- `execution_policy_conflict_detected` â€” Conflict identified
+- `execution_policy_portfolio_recommendation_created` â€” Recommendation generated
+- `execution_policy_portfolio_recommendation_reviewed` â€” Recommendation accepted/rejected
 
 ---
 
-## 22. Workspace / Tenant Adaptive Policy Tuning (Active — Sprint 29)
+## 22. Workspace / Tenant Adaptive Policy Tuning (Active â€” Sprint 29)
 
-> **Status:** ✅ Active — Bounded tenant/workspace policy adaptation
+> **Status:** âœ… Active â€” Bounded tenant/workspace policy adaptation
 
 ### Overview
 
@@ -921,22 +921,22 @@ Workspace / Tenant Adaptive Policy Tuning allows AxionOS to specialize global ex
 
 ### Preference Scopes
 
-- `organization` — Organization-wide preference
-- `workspace` — Workspace-specific preference (takes precedence)
+- `organization` â€” Organization-wide preference
+- `workspace` â€” Workspace-specific preference (takes precedence)
 
 ### Applied Modes
 
-- `global_default` — No tenant tuning applied
-- `tenant_tuned` — Organization preference applied
-- `workspace_tuned` — Workspace preference applied
+- `global_default` â€” No tenant tuning applied
+- `tenant_tuned` â€” Organization preference applied
+- `workspace_tuned` â€” Workspace preference applied
 
 ### Drift Signal Types
 
-- `harmful_drift` — Local tuning producing harmful outcomes
-- `stale_profile` — Preference not updated in 30+ days
-- `overfit_local` — High confidence with insufficient sample
-- `divergence_from_global` — Local performance significantly below global
-- `low_sample_tuning` — Active tuning with too few outcomes
+- `harmful_drift` â€” Local tuning producing harmful outcomes
+- `stale_profile` â€” Preference not updated in 30+ days
+- `overfit_local` â€” High confidence with insufficient sample
+- `divergence_from_global` â€” Local performance significantly below global
+- `low_sample_tuning` â€” Active tuning with too few outcomes
 
 ### Safety Boundaries
 
@@ -950,19 +950,19 @@ Workspace / Tenant Adaptive Policy Tuning allows AxionOS to specialize global ex
 
 ### Events
 
-- `tenant_policy_profile_activated` — Preference profile activated
-- `tenant_policy_tuning_computed` — Tuning recomputed for tenant
-- `tenant_policy_selected` — Policy selected with tenant context
-- `tenant_policy_locally_tuned` — Local tuning applied
-- `tenant_policy_drift_detected` — Drift signal detected
-- `tenant_policy_recommendation_created` — Recommendation generated
-- `tenant_policy_profile_deprecated` — Preference deprecated
+- `tenant_policy_profile_activated` â€” Preference profile activated
+- `tenant_policy_tuning_computed` â€” Tuning recomputed for tenant
+- `tenant_policy_selected` â€” Policy selected with tenant context
+- `tenant_policy_locally_tuned` â€” Local tuning applied
+- `tenant_policy_drift_detected` â€” Drift signal detected
+- `tenant_policy_recommendation_created` â€” Recommendation generated
+- `tenant_policy_profile_deprecated` â€” Preference deprecated
 
 ---
 
-## 23. Platform Intelligence Entry (Active — Sprint 30)
+## 23. Platform Intelligence Entry (Active â€” Sprint 30)
 
-> **Status:** ✅ Active — System-level advisory intelligence
+> **Status:** âœ… Active â€” System-level advisory intelligence
 
 ### Overview
 
@@ -981,12 +981,12 @@ Platform Intelligence observes and reasons about system-level behavior across al
 
 ### Health Indices
 
-- `reliability_index` — 1 - failure_rate
-- `execution_stability_index` — Penalized by retry rate and bottleneck count
-- `repair_burden_index` — Repair rate across executions
-- `cost_efficiency_index` — Normalized cost per execution
-- `deploy_success_index` — Deploy success rate
-- `policy_effectiveness_index` — Weighted policy success rate
+- `reliability_index` â€” 1 - failure_rate
+- `execution_stability_index` â€” Penalized by retry rate and bottleneck count
+- `repair_burden_index` â€” Repair rate across executions
+- `cost_efficiency_index` â€” Normalized cost per execution
+- `deploy_success_index` â€” Deploy success rate
+- `policy_effectiveness_index` â€” Weighted policy success rate
 
 ### Safety Boundaries
 
@@ -998,18 +998,18 @@ Platform Intelligence observes and reasons about system-level behavior across al
 
 ### Events
 
-- `platform_intelligence_recomputed` — Full recomputation completed
-- `platform_bottleneck_detected` — Bottleneck identified
-- `platform_pattern_detected` — Cross-platform pattern detected
-- `platform_insight_generated` — Insight created
-- `platform_recommendation_created` — Recommendation generated
-- `platform_recommendation_reviewed` — Recommendation accepted/rejected
+- `platform_intelligence_recomputed` â€” Full recomputation completed
+- `platform_bottleneck_detected` â€” Bottleneck identified
+- `platform_pattern_detected` â€” Cross-platform pattern detected
+- `platform_insight_generated` â€” Insight created
+- `platform_recommendation_created` â€” Recommendation generated
+- `platform_recommendation_reviewed` â€” Recommendation accepted/rejected
 
 ---
 
-## 24. Platform Self-Calibration (Active — Sprint 31)
+## 24. Platform Self-Calibration (Active â€” Sprint 31)
 
-> **Status:** ✅ Active — Bounded operational threshold calibration
+> **Status:** âœ… Active â€” Bounded operational threshold calibration
 
 ### Overview
 
@@ -1028,15 +1028,15 @@ Platform Self-Calibration allows AxionOS to safely adjust operational thresholds
 
 ### Calibration Modes
 
-- `manual_only` — Proposals are advisory, require explicit human approval
-- `bounded_auto` — Eligible for auto-application within safe envelopes (requires sufficient confidence)
+- `manual_only` â€” Proposals are advisory, require explicit human approval
+- `bounded_auto` â€” Eligible for auto-application within safe envelopes (requires sufficient confidence)
 
 ### Parameter Statuses
 
-- `active` — Available for calibration
-- `watch` — Under observation, calibration allowed with warnings
-- `frozen` — Cannot be changed
-- `deprecated` — Cannot be reactivated
+- `active` â€” Available for calibration
+- `watch` â€” Under observation, calibration allowed with warnings
+- `frozen` â€” Cannot be changed
+- `deprecated` â€” Cannot be reactivated
 
 ### Forbidden Parameter Families
 
@@ -1059,18 +1059,18 @@ These families can never be calibrated:
 
 ### Events
 
-- `platform_calibration_signal_detected` — Calibration opportunity identified
-- `platform_calibration_proposal_created` — Proposal generated
-- `platform_calibration_reviewed` — Proposal reviewed
-- `platform_calibration_applied` — Calibration applied
-- `platform_calibration_outcome_recorded` — Outcome tracked
-- `platform_calibration_rolled_back` — Calibration rolled back
+- `platform_calibration_signal_detected` â€” Calibration opportunity identified
+- `platform_calibration_proposal_created` â€” Proposal generated
+- `platform_calibration_reviewed` â€” Proposal reviewed
+- `platform_calibration_applied` â€” Calibration applied
+- `platform_calibration_outcome_recorded` â€” Outcome tracked
+- `platform_calibration_rolled_back` â€” Calibration rolled back
 
 ---
 
-## 25. Execution Strategy Evolution (Active — Sprint 32)
+## 25. Execution Strategy Evolution (Active â€” Sprint 32)
 
-> **Status:** ✅ Active — Bounded strategy variant experimentation
+> **Status:** âœ… Active â€” Bounded strategy variant experimentation
 
 ### Overview
 
@@ -1091,14 +1091,14 @@ Execution Strategy Evolution enables AxionOS to propose, test, and evaluate impr
 
 ### Strategy Families
 
-- `repair_escalation_sequencing` — Repair strategy ordering
-- `retry_switching_heuristics` — Retry switching logic
-- `validation_intensity_ladders` — Validation sensitivity levels
-- `predictive_checkpoint_ordering` — Predictive checkpoint sequencing
-- `review_escalation_timing` — Review escalation timing
-- `deploy_hardening_sequencing` — Deploy hardening steps
-- `context_enrichment_sequencing` — Context enrichment ordering
-- `strategy_fallback_ladders` — Strategy fallback chains
+- `repair_escalation_sequencing` â€” Repair strategy ordering
+- `retry_switching_heuristics` â€” Retry switching logic
+- `validation_intensity_ladders` â€” Validation sensitivity levels
+- `predictive_checkpoint_ordering` â€” Predictive checkpoint sequencing
+- `review_escalation_timing` â€” Review escalation timing
+- `deploy_hardening_sequencing` â€” Deploy hardening steps
+- `context_enrichment_sequencing` â€” Context enrichment ordering
+- `strategy_fallback_ladders` â€” Strategy fallback chains
 
 ### Safety Boundaries
 
@@ -1112,19 +1112,19 @@ Execution Strategy Evolution enables AxionOS to propose, test, and evaluate impr
 
 ### Events
 
-- `execution_strategy_opportunity_detected` — Evolution opportunity identified
-- `execution_strategy_variant_created` — Variant proposed
-- `execution_strategy_variant_reviewed` — Variant approved/rejected
-- `execution_strategy_experiment_started` — Experiment launched
-- `execution_strategy_outcome_recorded` — Outcome tracked
-- `execution_strategy_variant_promoted` — Variant promoted to baseline
-- `execution_strategy_variant_rolled_back` — Variant rolled back
+- `execution_strategy_opportunity_detected` â€” Evolution opportunity identified
+- `execution_strategy_variant_created` â€” Variant proposed
+- `execution_strategy_variant_reviewed` â€” Variant approved/rejected
+- `execution_strategy_experiment_started` â€” Experiment launched
+- `execution_strategy_outcome_recorded` â€” Outcome tracked
+- `execution_strategy_variant_promoted` â€” Variant promoted to baseline
+- `execution_strategy_variant_rolled_back` â€” Variant rolled back
 
 ---
 
-## 27. Semantic Retrieval & Embedding Memory Expansion (Active — Sprint 36)
+## 27. Semantic Retrieval & Embedding Memory Expansion (Active â€” Sprint 36)
 
-> **Status:** ✅ Active — Unified semantic retrieval across all intelligence layers
+> **Status:** âœ… Active â€” Unified semantic retrieval across all intelligence layers
 
 ### Overview
 
@@ -1146,18 +1146,18 @@ Semantic Retrieval provides a unified engine for embedding-backed contextual evi
 
 ### Retrieval Domains
 
-- `engineering_memory` — Engineering memory entries
-- `agent_memory` — Agent memory records
-- `repair_history` — Error patterns and repair evidence
-- `platform_insights` — Platform intelligence signals
-- `strategy_variants` — Strategy evolution evidence
-- `execution_policies` — Execution policy profiles
-- `engineering_advisory` — Advisory recommendations
-- `platform_calibration` — Calibration parameters
-- `stabilization_actions` — Stabilization history
-- `cross_stage_policies` — Cross-stage policy profiles
-- `predictive_signals` — Predictive error signals
-- `strategy_portfolio` — Strategy portfolio evidence
+- `engineering_memory` â€” Engineering memory entries
+- `agent_memory` â€” Agent memory records
+- `repair_history` â€” Error patterns and repair evidence
+- `platform_insights` â€” Platform intelligence signals
+- `strategy_variants` â€” Strategy evolution evidence
+- `execution_policies` â€” Execution policy profiles
+- `engineering_advisory` â€” Advisory recommendations
+- `platform_calibration` â€” Calibration parameters
+- `stabilization_actions` â€” Stabilization history
+- `cross_stage_policies` â€” Cross-stage policy profiles
+- `predictive_signals` â€” Predictive error signals
+- `strategy_portfolio` â€” Strategy portfolio evidence
 
 ### Safety Boundaries
 
@@ -1166,23 +1166,23 @@ Semantic Retrieval provides a unified engine for embedding-backed contextual evi
 - Cannot bypass tenant isolation (organization_id required)
 - Falls back to structured retrieval when embeddings unavailable
 - All sessions persisted with full audit lineage
-- Advisory-first — retrieval informs but never commands
+- Advisory-first â€” retrieval informs but never commands
 
 ### Events
 
-- `semantic_retrieval_requested` — Retrieval session initiated
-- `semantic_retrieval_completed` — Evidence pack returned
-- `semantic_retrieval_feedback_recorded` — Usefulness feedback logged
-- `semantic_index_rebuild_started` — Index rebuild triggered
-- `semantic_index_rebuild_completed` — Index rebuild finished
-- `semantic_index_frozen` — Index frozen for protection
-- `semantic_retrieval_guardrail_blocked` — Guardrail prevented unsafe retrieval
+- `semantic_retrieval_requested` â€” Retrieval session initiated
+- `semantic_retrieval_completed` â€” Evidence pack returned
+- `semantic_retrieval_feedback_recorded` â€” Usefulness feedback logged
+- `semantic_index_rebuild_started` â€” Index rebuild triggered
+- `semantic_index_rebuild_completed` â€” Index rebuild finished
+- `semantic_index_frozen` â€” Index frozen for protection
+- `semantic_retrieval_guardrail_blocked` â€” Guardrail prevented unsafe retrieval
 
 ---
 
-## 28. Discovery-Driven Architecture Signals (Active — Sprint 37)
+## 28. Discovery-Driven Architecture Signals (Active â€” Sprint 37)
 
-> **Status:** ✅ Active — External/product signal correlation with architecture recommendations
+> **Status:** âœ… Active â€” External/product signal correlation with architecture recommendations
 
 ### Overview
 
@@ -1205,16 +1205,16 @@ Discovery-Driven Architecture Signals detect external and product-facing pressur
 
 ### Events
 
-- `discovery_signal_detected` — External/product signal detected
-- `discovery_signal_correlated` — Signal correlated with internal evidence
-- `discovery_recommendation_created` — Architecture recommendation generated
-- `discovery_recommendation_reviewed` — Recommendation reviewed
+- `discovery_signal_detected` â€” External/product signal detected
+- `discovery_signal_correlated` â€” Signal correlated with internal evidence
+- `discovery_recommendation_created` â€” Architecture recommendation generated
+- `discovery_recommendation_reviewed` â€” Recommendation reviewed
 
 ---
 
-## 29. Architecture Change Simulation & Governance (Active — Sprint 38)
+## 29. Architecture Change Simulation & Governance (Active â€” Sprint 38)
 
-> **Status:** ✅ Active — Bounded simulation of architectural changes
+> **Status:** âœ… Active â€” Bounded simulation of architectural changes
 
 ### Overview
 
@@ -1241,19 +1241,19 @@ Architecture Change Simulation evaluates proposed architectural changes through 
 
 ### Events
 
-- `architecture_change_proposal_created` — Proposal registered
-- `architecture_simulation_started` — Simulation initiated
-- `architecture_simulation_completed` — Simulation completed
-- `architecture_simulation_guardrail_blocked` — Guardrail blocked proposal
-- `architecture_simulation_reviewed` — Simulation reviewed
-- `architecture_simulation_accepted` — Simulation accepted
-- `architecture_simulation_rejected` — Simulation rejected
+- `architecture_change_proposal_created` â€” Proposal registered
+- `architecture_simulation_started` â€” Simulation initiated
+- `architecture_simulation_completed` â€” Simulation completed
+- `architecture_simulation_guardrail_blocked` â€” Guardrail blocked proposal
+- `architecture_simulation_reviewed` â€” Simulation reviewed
+- `architecture_simulation_accepted` â€” Simulation accepted
+- `architecture_simulation_rejected` â€” Simulation rejected
 
 ---
 
-## 30. Architecture Change Planning & Rollout Readiness (Active — Sprint 39)
+## 30. Architecture Change Planning & Rollout Readiness (Active â€” Sprint 39)
 
-> **Status:** ✅ Active — Governed implementation plans with blast radius and rollback
+> **Status:** âœ… Active â€” Governed implementation plans with blast radius and rollback
 
 ### Overview
 
@@ -1281,21 +1281,21 @@ Architecture Change Planning converts accepted simulation outcomes into structur
 
 ### Events
 
-- `architecture_change_plan_created` — Plan created from accepted simulation
-- `architecture_dependency_graph_generated` — Dependency graph generated
-- `architecture_rollout_readiness_scored` — Readiness score computed
-- `architecture_validation_blueprint_generated` — Validation blueprint created
-- `architecture_rollback_blueprint_generated` — Rollback blueprint created
-- `architecture_change_plan_reviewed` — Plan reviewed
-- `architecture_change_plan_ready` — Plan marked rollout-ready
-- `architecture_change_plan_blocked` — Plan blocked
-- `architecture_change_plan_rejected` — Plan rejected
+- `architecture_change_plan_created` â€” Plan created from accepted simulation
+- `architecture_dependency_graph_generated` â€” Dependency graph generated
+- `architecture_rollout_readiness_scored` â€” Readiness score computed
+- `architecture_validation_blueprint_generated` â€” Validation blueprint created
+- `architecture_rollback_blueprint_generated` â€” Rollback blueprint created
+- `architecture_change_plan_reviewed` â€” Plan reviewed
+- `architecture_change_plan_ready` â€” Plan marked rollout-ready
+- `architecture_change_plan_blocked` â€” Plan blocked
+- `architecture_change_plan_rejected` â€” Plan rejected
 
 ---
 
-## 31. Architecture Rollout Sandbox & Controlled Migration Readiness (Active — Sprint 40)
+## 31. Architecture Rollout Sandbox & Controlled Migration Readiness (Active â€” Sprint 40)
 
-> **Status:** ✅ Active — Bounded rehearsal of approved architecture plans
+> **Status:** âœ… Active â€” Bounded rehearsal of approved architecture plans
 
 ### Overview
 
@@ -1315,9 +1315,9 @@ Architecture Rollout Sandbox allows approved architecture change plans to be reh
 
 ### Rehearsal Modes
 
-- `dry_run` — Simulate without any side effects
-- `staged_preview` — Preview staged migration steps
-- `shadow_readiness` — Shadow readiness assessment (highest fidelity)
+- `dry_run` â€” Simulate without any side effects
+- `staged_preview` â€” Preview staged migration steps
+- `shadow_readiness` â€” Shadow readiness assessment (highest fidelity)
 
 ### Safety Boundaries
 
@@ -1330,16 +1330,16 @@ Architecture Rollout Sandbox allows approved architecture change plans to be reh
 
 ### Events
 
-- `architecture_rollout_sandbox_created` — Sandbox created
-- `architecture_migration_sequence_rehearsed` — Migration sequence rehearsed
-- `architecture_rollout_fragility_detected` — Fragility detected
-- `architecture_migration_readiness_scored` — Readiness scored
-- `architecture_rollback_viability_rehearsed` — Rollback viability rehearsed
-- `architecture_rollout_sandbox_guardrail_blocked` — Guardrail blocked rehearsal
-- `architecture_rollout_sandbox_reviewed` — Sandbox reviewed
-- `architecture_rollout_sandbox_migration_ready` — Sandbox marked migration-ready
-- `architecture_rollout_sandbox_blocked` — Sandbox blocked
-- `architecture_rollout_sandbox_rejected` — Sandbox rejected
+- `architecture_rollout_sandbox_created` â€” Sandbox created
+- `architecture_migration_sequence_rehearsed` â€” Migration sequence rehearsed
+- `architecture_rollout_fragility_detected` â€” Fragility detected
+- `architecture_migration_readiness_scored` â€” Readiness scored
+- `architecture_rollback_viability_rehearsed` â€” Rollback viability rehearsed
+- `architecture_rollout_sandbox_guardrail_blocked` â€” Guardrail blocked rehearsal
+- `architecture_rollout_sandbox_reviewed` â€” Sandbox reviewed
+- `architecture_rollout_sandbox_migration_ready` â€” Sandbox marked migration-ready
+- `architecture_rollout_sandbox_blocked` â€” Sandbox blocked
+- `architecture_rollout_sandbox_rejected` â€” Sandbox rejected
 
 ---
 
@@ -1351,11 +1351,11 @@ Architecture Rollout Sandbox allows approved architecture change plans to be reh
 
 ---
 
-## 33. Future Strategic Arc — Agent OS Implications
+## 33. Future Strategic Arc â€” Agent OS Implications
 
 > **Status:** No Agent OS plane expansion is planned or required.
 
-Sprints 51–65 have been completed, reusing existing Agent OS planes:
+Sprints 51â€“65 have been completed, reusing existing Agent OS planes:
 
 | Completed Capability | Existing Planes/Modules Used |
 |---------------------|------------------------------|
@@ -1381,13 +1381,13 @@ The 5-plane, 18-module architecture remains stable and sufficient for future wor
 
 ---
 
-## Post-70 Strategic Note — Agent Evolution Roadmap
+## Post-70 Strategic Note â€” Agent Evolution Roadmap
 
-Block M (Product Experience & Delivery Maturity, Sprints 66–70) is complete. It reused the existing Agent OS foundation without new plane expansion.
+Block M (Product Experience & Delivery Maturity, Sprints 66â€“70) is complete. It reused the existing Agent OS foundation without new plane expansion.
 
 The following describes **how agents may evolve** in future blocks. None of this is implemented unless explicitly noted.
 
-### Block N — Evidence-Governed Improvement Loop (Planned, Sprints 71–74)
+### Block N â€” Evidence-Governed Improvement Loop (Planned, Sprints 71â€“74)
 
 Agents may gain evidence-aware improvement capabilities:
 - Structured evidence collection from agent execution outcomes
@@ -1397,7 +1397,7 @@ Agents may gain evidence-aware improvement capabilities:
 
 This reuses existing Learning Engine, Memory System, and Governance Layer infrastructure.
 
-### Block O — Advanced Multi-Agent Coordination (Reserved, Sprints 75–78)
+### Block O â€” Advanced Multi-Agent Coordination (Reserved, Sprints 75â€“78)
 
 The Agent OS Execution Plane may evolve:
 - Advanced role arbitration beyond current selection engine
@@ -1405,37 +1405,37 @@ The Agent OS Execution Plane may evolve:
 - Shared working memory for multi-agent collaboration
 - Bounded multi-agent execution with governance oversight
 
-### Block P — Governed Capability Ecosystem (Reserved, Sprints 79–82)
+### Block P â€” Governed Capability Ecosystem (Reserved, Sprints 79â€“82)
 
 Agents may participate in a governed capability exchange:
 - Agent capability publishing and discovery through the Ecosystem Plane
 - Governed admission, trust scoring, and sandbox testing for external agents
-- This extends the existing bounded pilot (Sprint 60) — not a full open marketplace
+- This extends the existing bounded pilot (Sprint 60) â€” not a full open marketplace
 
-### Block S — Research Sandbox for Architecture Evolution (Reserved, Sprints 91–94)
+### Block S â€” Research Sandbox for Architecture Evolution (Reserved, Sprints 91â€“94)
 
 Agent-driven architecture research may emerge:
 - Architecture hypothesis generation by meta-agents
 - Simulated evolution campaigns in sandboxed environments
 - Cross-tenant pattern synthesis under governed conditions
-- All promotion requires explicit human approval — no autonomous architecture mutation
+- All promotion requires explicit human approval â€” no autonomous architecture mutation
 
-### Block X — Reflexive Governance & Evolution Control (Planned, Sprints 111–114)
+### Block X â€” Reflexive Governance & Evolution Control (Planned, Sprints 111â€“114)
 
 The Agent OS may evolve to support reflexive governance:
-- Evolution proposal governance — agents propose system changes under governed approval
-- Mutation control — agents evaluate reversibility, blast radius, coupling before structural changes
-- Self-revision audit — agents track whether self-corrections actually improved outcomes
-- Kernel integrity — agents monitor for corrosion, bloat, and governance drift
+- Evolution proposal governance â€” agents propose system changes under governed approval
+- Mutation control â€” agents evaluate reversibility, blast radius, coupling before structural changes
+- Self-revision audit â€” agents track whether self-corrections actually improved outcomes
+- Kernel integrity â€” agents monitor for corrosion, bloat, and governance drift
 
-### Block Y — Implementation Canon & Knowledge Governance (Future, Sprints 115–118)
+### Block Y â€” Implementation Canon & Knowledge Governance (Future, Sprints 115â€“118)
 
 New knowledge-governance agent roles may emerge:
-- **Canon Steward** — governs canon lifecycle (entry approval, versioning, deprecation, quality enforcement)
-- **Pattern Librarian** — curates and indexes implementation patterns for retrieval by execution agents
-- **Failure Archivist** — captures, classifies, and maintains failure/repair knowledge for institutional reuse
-- **External Research Curator** — reviews and validates external knowledge before canon admission
-- **Retrieval Guide** — optimizes pattern retrieval relevance for agent queries at runtime
+- **Canon Steward** â€” governs canon lifecycle (entry approval, versioning, deprecation, quality enforcement)
+- **Pattern Librarian** â€” curates and indexes implementation patterns for retrieval by execution agents
+- **Failure Archivist** â€” captures, classifies, and maintains failure/repair knowledge for institutional reuse
+- **External Research Curator** â€” reviews and validates external knowledge before canon admission
+- **Retrieval Guide** â€” optimizes pattern retrieval relevance for agent queries at runtime
 
 **Critical principle:** These roles exist for operational enablement. Knowledge only counts as system capability when it is consumed by planning, execution, repair, or validation flows. A pattern not retrieved by agents is documentation, not implementation intelligence.
 
@@ -1450,7 +1450,7 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 - Never allow agents to mutate pipeline topology, governance rules, billing, or safety constraints
 
 
-# AxionOS — Pipeline Product Contracts
+# AxionOS â€” Pipeline Product Contracts
 
 > **This document represents the user-visible journey contract of AxionOS.**
 >
@@ -1463,31 +1463,31 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 >
 > Last updated: 2026-03-08
 >
-> **Note:** This document is the canonical user-visible pipeline contract. Internal governance, policy, ecosystem, and intelligence layers operate behind the scenes to ensure quality, safety, and auditability — but they do not change the user-facing journey contract unless a direct UX impact is required. Post-65 work (Block M: Product Experience & Delivery Maturity) increasingly optimizes clarity, approvals, transitions, delivery visibility, and deployment legibility. Sprint 67 introduced role-based surface separation. Sprint 68 introduced governed one-click delivery with deploy assurance, blocker detection, rollback posture, and output visibility. Sprint 69 introduced guided onboarding, reusable templates, and domain-specific vertical starters. Sprint 70 introduced adoption intelligence and customer success loops — measuring real adoption, friction patterns, template effectiveness, and delivery-adoption correlation to close the feedback loop. Block M is now complete.
+> **Note:** This document is the canonical user-visible pipeline contract. Internal governance, policy, ecosystem, and intelligence layers operate behind the scenes to ensure quality, safety, and auditability â€” but they do not change the user-facing journey contract unless a direct UX impact is required. Post-65 work (Block M: Product Experience & Delivery Maturity) increasingly optimizes clarity, approvals, transitions, delivery visibility, and deployment legibility. Sprint 67 introduced role-based surface separation. Sprint 68 introduced governed one-click delivery with deploy assurance, blocker detection, rollback posture, and output visibility. Sprint 69 introduced guided onboarding, reusable templates, and domain-specific vertical starters. Sprint 70 introduced adoption intelligence and customer success loops â€” measuring real adoption, friction patterns, template effectiveness, and delivery-adoption correlation to close the feedback loop. Block M is now complete.
 
 ## Document Authority
 
 | Scope | Rule |
 |-------|------|
-| **Owns** | Phase-by-phase product contract (Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software), user-visible stage behavior, inputs/outputs, control rules, state machines, definition of done, commercial/learning layer contracts, engineering memory pipeline contract |
-| **Must not define** | Broader roadmap strategy (→ ROADMAP.md), architecture layer narrative (→ ARCHITECTURE.md), sprint history unrelated to pipeline UX |
+| **Owns** | Phase-by-phase product contract (Idea â†’ Discovery â†’ Architecture â†’ Engineering â†’ Validation â†’ Deploy â†’ Delivered Software), user-visible stage behavior, inputs/outputs, control rules, state machines, definition of done, commercial/learning layer contracts, engineering memory pipeline contract |
+| **Must not define** | Broader roadmap strategy (â†’ ROADMAP.md), architecture layer narrative (â†’ ARCHITECTURE.md), sprint history unrelated to pipeline UX |
 | **Derived from** | AGENTS.md for agent references |
 | **Update rule** | Update when user-visible pipeline behavior changes |
 
 ---
 
-## Visão Geral do Ciclo
+## VisÃ£o Geral do Ciclo
 
 ```
-  Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software
-    │         │            │              │            │          │          │
-    │         │            │              │            │          │          └─ Software acessível, URL publicada, handoff completo
-    │         │            │              │            │          └─ Repositório publicado e deploy executado
-    │         │            │              │            └─ Código validado, reparado, build OK
-    │         │            │              └─ Código gerado: schema, lógica, API, UI
-    │         │            └─ Plano técnico completo com simulação
-    │         └─ Oportunidade validada com mercado e estratégia
-    └─ Captura da ideia bruta do usuário
+  Idea â†’ Discovery â†’ Architecture â†’ Engineering â†’ Validation â†’ Deploy â†’ Delivered Software
+    â”‚         â”‚            â”‚              â”‚            â”‚          â”‚          â”‚
+    â”‚         â”‚            â”‚              â”‚            â”‚          â”‚          â””â”€ Software acessÃ­vel, URL publicada, handoff completo
+    â”‚         â”‚            â”‚              â”‚            â”‚          â””â”€ RepositÃ³rio publicado e deploy executado
+    â”‚         â”‚            â”‚              â”‚            â””â”€ CÃ³digo validado, reparado, build OK
+    â”‚         â”‚            â”‚              â””â”€ CÃ³digo gerado: schema, lÃ³gica, API, UI
+    â”‚         â”‚            â””â”€ Plano tÃ©cnico completo com simulaÃ§Ã£o
+    â”‚         â””â”€ Oportunidade validada com mercado e estratÃ©gia
+    â””â”€ Captura da ideia bruta do usuÃ¡rio
 ```
 
 ---
@@ -1498,33 +1498,33 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 
 | Campo | Valor |
 |-------|-------|
-| **Objetivo** | Capturar a ideia do usuário e transformá-la em um brief estruturado |
+| **Objetivo** | Capturar a ideia do usuÃ¡rio e transformÃ¡-la em um brief estruturado |
 | **Input esperado** | Texto livre descrevendo a ideia (+ opcionais: tipo de produto, mercado alvo, problema) |
-| **Output gerado** | `initiative` criada com título, descrição, tipo, mercado, URL de referência |
-| **Critérios de sucesso** | Iniciativa criada no banco com `stage_status = draft` |
-| **Possíveis falhas** | Ideia vaga demais (sem contexto suficiente para Discovery) |
-| **Ação do usuário** | "Iniciar Opportunity Discovery" ou "Pular para Compreensão" |
+| **Output gerado** | `initiative` criada com tÃ­tulo, descriÃ§Ã£o, tipo, mercado, URL de referÃªncia |
+| **CritÃ©rios de sucesso** | Iniciativa criada no banco com `stage_status = draft` |
+| **PossÃ­veis falhas** | Ideia vaga demais (sem contexto suficiente para Discovery) |
+| **AÃ§Ã£o do usuÃ¡rio** | "Iniciar Opportunity Discovery" ou "Pular para CompreensÃ£o" |
 
 ### Artefatos
 
-| Artefato | Tipo | Descrição |
+| Artefato | Tipo | DescriÃ§Ã£o |
 |----------|------|-----------|
-| Initiative Record | DB | Registro da iniciativa com metadados de negócio |
-| AI Blueprint (opcional) | JSON | Análise inicial gerada por IA com escopo, mercado e competidores |
+| Initiative Record | DB | Registro da iniciativa com metadados de negÃ³cio |
+| AI Blueprint (opcional) | JSON | AnÃ¡lise inicial gerada por IA com escopo, mercado e competidores |
 
 ### Regras de Controle
 
-| Condição | Ação disponível |
+| CondiÃ§Ã£o | AÃ§Ã£o disponÃ­vel |
 |----------|----------------|
-| `stage_status = draft` | Iniciar Discovery (ação primária) |
-| Ideia tem URL de referência | Blueprint inclui scraping da referência |
-| Sempre | Usuário pode editar título/descrição antes de avançar |
+| `stage_status = draft` | Iniciar Discovery (aÃ§Ã£o primÃ¡ria) |
+| Ideia tem URL de referÃªncia | Blueprint inclui scraping da referÃªncia |
+| Sempre | UsuÃ¡rio pode editar tÃ­tulo/descriÃ§Ã£o antes de avanÃ§ar |
 
 ### Definition of Done
 
-✅ Iniciativa existe no banco com título e descrição
-✅ Usuário pode visualizar e editar antes de prosseguir
-✅ Pelo menos um caminho de avanço disponível
+âœ… Iniciativa existe no banco com tÃ­tulo e descriÃ§Ã£o
+âœ… UsuÃ¡rio pode visualizar e editar antes de prosseguir
+âœ… Pelo menos um caminho de avanÃ§o disponÃ­vel
 
 ---
 
@@ -1534,26 +1534,26 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 
 | Campo | Valor |
 |-------|-------|
-| **Objetivo** | Validar a oportunidade de negócio e refinar a ideia com inteligência de mercado |
+| **Objetivo** | Validar a oportunidade de negÃ³cio e refinar a ideia com inteligÃªncia de mercado |
 | **Input esperado** | Iniciativa com ideia bruta + metadados opcionais |
-| **Output gerado** | Blueprint refinado: oportunidade, mercado, validação, estratégia de receita, PRD, arquitetura inicial |
-| **Critérios de sucesso** | Todas as sub-etapas concluídas com artefatos gerados |
-| **Possíveis falhas** | Timeout de IA, mercado não identificável, viabilidade muito baixa |
-| **Ação do usuário** | Aprovar Discovery → avançar para Architecture |
+| **Output gerado** | Blueprint refinado: oportunidade, mercado, validaÃ§Ã£o, estratÃ©gia de receita, PRD, arquitetura inicial |
+| **CritÃ©rios de sucesso** | Todas as sub-etapas concluÃ­das com artefatos gerados |
+| **PossÃ­veis falhas** | Timeout de IA, mercado nÃ£o identificÃ¡vel, viabilidade muito baixa |
+| **AÃ§Ã£o do usuÃ¡rio** | Aprovar Discovery â†’ avanÃ§ar para Architecture |
 
-### Sub-etapas (sequenciais, automáticas após a primeira)
+### Sub-etapas (sequenciais, automÃ¡ticas apÃ³s a primeira)
 
 | # | Sub-etapa | Edge Function | Output |
 |---|-----------|---------------|--------|
-| S02 | Opportunity Discovery | `opportunity-discovery-engine` | Score de oportunidade, TAM, análise competitiva |
+| S02 | Opportunity Discovery | `opportunity-discovery-engine` | Score de oportunidade, TAM, anÃ¡lise competitiva |
 | S03 | Market Signal Analysis | `market-signal-analyzer` | Viability index, timing, TAM/SAM/SOM |
-| S04 | Product Validation | `product-validation-engine` | Análise 7 dimensões, go/no-go, personas |
-| S05 | Revenue Strategy | `revenue-strategy-engine` | Modelo de precificação, tiers, projeções MRR/ARR |
-| S06 | Compreensão (4 agentes) | `pipeline-comprehension` | PRD, requisitos, análise de mercado consolidada |
+| S04 | Product Validation | `product-validation-engine` | AnÃ¡lise 7 dimensÃµes, go/no-go, personas |
+| S05 | Revenue Strategy | `revenue-strategy-engine` | Modelo de precificaÃ§Ã£o, tiers, projeÃ§Ãµes MRR/ARR |
+| S06 | CompreensÃ£o (4 agentes) | `pipeline-comprehension` | PRD, requisitos, anÃ¡lise de mercado consolidada |
 
 ### Artefatos
 
-| Artefato | Origem | Persistência |
+| Artefato | Origem | PersistÃªncia |
 |----------|--------|-------------|
 | `opportunity_score.json` | S02 | `initiative_jobs.outputs` |
 | `market_signals.json` | S03 | `initiative_jobs.outputs` |
@@ -1565,20 +1565,20 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 
 ### Regras de Controle
 
-| Condição | Ação |
+| CondiÃ§Ã£o | AÃ§Ã£o |
 |----------|------|
-| Sub-etapa concluída com sucesso | Próxima sub-etapa inicia automaticamente |
-| Sub-etapa falhou | Mostrar qual falhou + botão "Re-executar" |
-| Todas sub-etapas concluídas | Mostrar "Aprovar Discovery" (ação primária) |
-| Usuário desaprova | "Solicitar Ajustes" → volta ao estágio anterior |
+| Sub-etapa concluÃ­da com sucesso | PrÃ³xima sub-etapa inicia automaticamente |
+| Sub-etapa falhou | Mostrar qual falhou + botÃ£o "Re-executar" |
+| Todas sub-etapas concluÃ­das | Mostrar "Aprovar Discovery" (aÃ§Ã£o primÃ¡ria) |
+| UsuÃ¡rio desaprova | "Solicitar Ajustes" â†’ volta ao estÃ¡gio anterior |
 | Viabilidade muito baixa (S04) | Sugerir "Descartar Oportunidade" |
 
-### Transição para Architecture
+### TransiÃ§Ã£o para Architecture
 
-✅ Todas as 5 sub-etapas com outputs válidos
-✅ Usuário aprovou explicitamente
-✅ `initiatives.approved_at_discovery` preenchido
-✅ Status avança para `architecture_ready`
+âœ… Todas as 5 sub-etapas com outputs vÃ¡lidos
+âœ… UsuÃ¡rio aprovou explicitamente
+âœ… `initiatives.approved_at_discovery` preenchido
+âœ… Status avanÃ§a para `architecture_ready`
 
 ---
 
@@ -1588,30 +1588,30 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 
 | Campo | Valor |
 |-------|-------|
-| **Objetivo** | Criar o plano técnico completo: arquitetura, simulação, validação preventiva, scaffold |
-| **Input esperado** | PRD, requisitos, análise de mercado (outputs de Discovery) |
-| **Output gerado** | Arquitetura validada, schema DB, scaffold de projeto, grafo de dependências |
-| **Critérios de sucesso** | Arquitetura simulada e validada sem riscos críticos |
-| **Possíveis falhas** | Dependências circulares, conflitos de pacotes, componentes desconectados |
-| **Ação do usuário** | Aprovar em pontos-chave (pós-compreensão, pós-dependencies) |
+| **Objetivo** | Criar o plano tÃ©cnico completo: arquitetura, simulaÃ§Ã£o, validaÃ§Ã£o preventiva, scaffold |
+| **Input esperado** | PRD, requisitos, anÃ¡lise de mercado (outputs de Discovery) |
+| **Output gerado** | Arquitetura validada, schema DB, scaffold de projeto, grafo de dependÃªncias |
+| **CritÃ©rios de sucesso** | Arquitetura simulada e validada sem riscos crÃ­ticos |
+| **PossÃ­veis falhas** | DependÃªncias circulares, conflitos de pacotes, componentes desconectados |
+| **AÃ§Ã£o do usuÃ¡rio** | Aprovar em pontos-chave (pÃ³s-compreensÃ£o, pÃ³s-dependencies) |
 
 ### Sub-etapas
 
 | # | Sub-etapa | Edge Function | Output |
 |---|-----------|---------------|--------|
 | S07 | Arquitetura (4 agentes) | `pipeline-architecture` | `architecture_content`, stack, componentes |
-| S08 | Simulação de Arquitetura | `pipeline-architecture-simulation` | Grafo dirigido, detecção de problemas, auto-reparo |
-| S09 | Validação Preventiva | `pipeline-preventive-validation` | Auditoria contra padrões de falha históricos |
-| S10 | Bootstrap Intelligence | `project-bootstrap-intelligence` | Plano de bootstrap com verificações |
+| S08 | SimulaÃ§Ã£o de Arquitetura | `pipeline-architecture-simulation` | Grafo dirigido, detecÃ§Ã£o de problemas, auto-reparo |
+| S09 | ValidaÃ§Ã£o Preventiva | `pipeline-preventive-validation` | Auditoria contra padrÃµes de falha histÃ³ricos |
+| S10 | Bootstrap Intelligence | `project-bootstrap-intelligence` | Plano de bootstrap com verificaÃ§Ãµes |
 | S11 | Foundation Scaffold | `pipeline-foundation-scaffold` | Estrutura inicial de arquivos e configs |
-| S12 | Module Graph Simulation | `pipeline-module-graph-simulation` | Grafo de módulos com resolução de dependências |
-| S13 | Dependency Intelligence | `pipeline-dependency-intelligence` | Análise de compatibilidade de packages |
+| S12 | Module Graph Simulation | `pipeline-module-graph-simulation` | Grafo de mÃ³dulos com resoluÃ§Ã£o de dependÃªncias |
+| S13 | Dependency Intelligence | `pipeline-dependency-intelligence` | AnÃ¡lise de compatibilidade de packages |
 
-### Transição para Engineering
+### TransiÃ§Ã£o para Engineering
 
-✅ Dependency Intelligence concluído com sucesso
-✅ Nenhum conflito crítico de dependências
-✅ Status avança para `bootstrapping_schema`
+âœ… Dependency Intelligence concluÃ­do com sucesso
+âœ… Nenhum conflito crÃ­tico de dependÃªncias
+âœ… Status avanÃ§a para `bootstrapping_schema`
 
 ---
 
@@ -1621,33 +1621,33 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 
 | Campo | Valor |
 |-------|-------|
-| **Objetivo** | Gerar todo o código do produto: schema, modelos, lógica, API, UI |
-| **Input esperado** | Arquitetura validada, scaffold, grafo de dependências |
-| **Output gerado** | Código completo: DB schema, domain models, business logic, API, UI |
-| **Critérios de sucesso** | Todos os arquivos gerados e associados a subtasks |
-| **Possíveis falhas** | Timeout de IA, schema inválido, lógica inconsistente |
-| **Ação do usuário** | Cada sub-etapa avança automaticamente; aprovação no final |
+| **Objetivo** | Gerar todo o cÃ³digo do produto: schema, modelos, lÃ³gica, API, UI |
+| **Input esperado** | Arquitetura validada, scaffold, grafo de dependÃªncias |
+| **Output gerado** | CÃ³digo completo: DB schema, domain models, business logic, API, UI |
+| **CritÃ©rios de sucesso** | Todos os arquivos gerados e associados a subtasks |
+| **PossÃ­veis falhas** | Timeout de IA, schema invÃ¡lido, lÃ³gica inconsistente |
+| **AÃ§Ã£o do usuÃ¡rio** | Cada sub-etapa avanÃ§a automaticamente; aprovaÃ§Ã£o no final |
 
 ### Sub-etapas
 
 | # | Sub-etapa | Edge Function | Output |
 |---|-----------|---------------|--------|
-| S14 | Schema Bootstrap | `supabase-schema-bootstrap` | SQL de criação de tabelas |
-| S15 | DB Provisioning | `supabase-provisioning-engine` | Execução do schema no banco |
-| S16 | Domain Analysis | `ai-domain-model-analyzer` | Entidades, relações, atributos |
+| S14 | Schema Bootstrap | `supabase-schema-bootstrap` | SQL de criaÃ§Ã£o de tabelas |
+| S15 | DB Provisioning | `supabase-provisioning-engine` | ExecuÃ§Ã£o do schema no banco |
+| S16 | Domain Analysis | `ai-domain-model-analyzer` | Entidades, relaÃ§Ãµes, atributos |
 | S17 | Data Model Generation | `supabase-data-model-generator` | Tabelas, FK, indexes, RLS |
-| S18 | Business Logic Synthesis | `ai-business-logic-synthesizer` | Serviços, workflows, validações |
+| S18 | Business Logic Synthesis | `ai-business-logic-synthesizer` | ServiÃ§os, workflows, validaÃ§Ãµes |
 | S19 | API Generation | `autonomous-api-generator` | REST/RPC endpoints, webhooks |
-| S20 | UI Generation | `autonomous-ui-generator` | Páginas, componentes, hooks, navegação |
+| S20 | UI Generation | `autonomous-ui-generator` | PÃ¡ginas, componentes, hooks, navegaÃ§Ã£o |
 | S21 | Squad Formation | `pipeline-squad` | Squad de agentes com roles |
 | S22 | Planning | `generate-planning-content` | Stories, phases, subtasks com DAG |
-| S23 | Execution (Agent Swarm) | `pipeline-execution-orchestrator` | Código gerado em paralelo (6 workers) |
+| S23 | Execution (Agent Swarm) | `pipeline-execution-orchestrator` | CÃ³digo gerado em paralelo (6 workers) |
 
-### Transição para Deploy
+### TransiÃ§Ã£o para Deploy
 
-✅ Todas as subtasks executadas
-✅ Arquivos de código gerados e persistidos
-✅ Status avança para `validating`
+âœ… Todas as subtasks executadas
+âœ… Arquivos de cÃ³digo gerados e persistidos
+âœ… Status avanÃ§a para `validating`
 
 ---
 
@@ -1657,54 +1657,54 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 
 | Campo | Valor |
 |-------|-------|
-| **Objetivo** | Validar o código gerado, reparar erros automaticamente, garantir conformidade com arquitetura |
-| **Input esperado** | Código gerado (story_subtasks com outputs) |
-| **Output gerado** | Código validado, build OK, conformidade verificada |
-| **Critérios de sucesso** | Build passa (tsc + vite), análise estática OK, drift detection OK |
-| **Possíveis falhas** | Erros de TypeScript, build failure, drift arquitetural |
-| **Ação do usuário** | Um clique: "Iniciar Validação Completa" → tudo roda automaticamente |
+| **Objetivo** | Validar o cÃ³digo gerado, reparar erros automaticamente, garantir conformidade com arquitetura |
+| **Input esperado** | CÃ³digo gerado (story_subtasks com outputs) |
+| **Output gerado** | CÃ³digo validado, build OK, conformidade verificada |
+| **CritÃ©rios de sucesso** | Build passa (tsc + vite), anÃ¡lise estÃ¡tica OK, drift detection OK |
+| **PossÃ­veis falhas** | Erros de TypeScript, build failure, drift arquitetural |
+| **AÃ§Ã£o do usuÃ¡rio** | Um clique: "Iniciar ValidaÃ§Ã£o Completa" â†’ tudo roda automaticamente |
 
-### Sub-etapas (sequenciais, totalmente automáticas)
+### Sub-etapas (sequenciais, totalmente automÃ¡ticas)
 
 | # | Sub-etapa | Edge Function | O que faz |
 |---|-----------|---------------|-----------|
-| 1 | Fix Loop (AI) | `pipeline-validation` | IA corrige erros até 3 iterações |
-| 2 | Deep Static Analysis | `pipeline-deep-validation` | Imports, referências, consistência |
+| 1 | Fix Loop (AI) | `pipeline-validation` | IA corrige erros atÃ© 3 iteraÃ§Ãµes |
+| 2 | Deep Static Analysis | `pipeline-deep-validation` | Imports, referÃªncias, consistÃªncia |
 | 3 | Drift Detection | `pipeline-drift-detection` | Conformidade com arquitetura planejada |
 | 4 | Runtime Validation | `pipeline-runtime-validation` | tsc + vite build real via CI |
 | 5 | Build Repair (se falhar) | `autonomous-build-repair` | Auto-reparo com patches e retry |
 
-### Transição para Deploy
+### TransiÃ§Ã£o para Deploy
 
-✅ Build passa no CI (tsc + vite)
-✅ Análise estática e drift detection OK
-✅ Status avança para `ready_to_publish`
+âœ… Build passa no CI (tsc + vite)
+âœ… AnÃ¡lise estÃ¡tica e drift detection OK
+âœ… Status avanÃ§a para `ready_to_publish`
 
 ---
 
-## Fase 6: Deploy → Delivered Software
+## Fase 6: Deploy â†’ Delivered Software
 
 ### Contrato de Produto
 
 | Campo | Valor |
 |-------|-------|
-| **Objetivo** | Publicar no repositório Git, executar deploy, e entregar software acessível |
-| **Input esperado** | Código validado (build OK) |
-| **Output gerado** | Repositório Git publicado + deploy em produção + URLs acessíveis |
-| **Critérios de sucesso** | Código publicado, deploy acessível, handoff completo |
-| **Possíveis falhas** | Token Git inválido, deploy failure |
-| **Ação do usuário** | Um clique: "Deploy" (governado — respeita gates de validação e aprovação) |
+| **Objetivo** | Publicar no repositÃ³rio Git, executar deploy, e entregar software acessÃ­vel |
+| **Input esperado** | CÃ³digo validado (build OK) |
+| **Output gerado** | RepositÃ³rio Git publicado + deploy em produÃ§Ã£o + URLs acessÃ­veis |
+| **CritÃ©rios de sucesso** | CÃ³digo publicado, deploy acessÃ­vel, handoff completo |
+| **PossÃ­veis falhas** | Token Git invÃ¡lido, deploy failure |
+| **AÃ§Ã£o do usuÃ¡rio** | Um clique: "Deploy" (governado â€” respeita gates de validaÃ§Ã£o e aprovaÃ§Ã£o) |
 
 ### Deploy State Machine
 
 ```
   ready_to_publish
-       │
-       ▼
-  published ──────► deploying
-                        │
-                   ┌────┴────┐
-                   ▼         ▼
+       â”‚
+       â–¼
+  published â”€â”€â”€â”€â”€â”€â–º deploying
+                        â”‚
+                   â”Œâ”€â”€â”€â”€â”´â”€â”€â”€â”€â”
+                   â–¼         â–¼
               deployed   deploy_failed
 ```
 
@@ -1712,88 +1712,88 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 
 | # | Sub-etapa | Edge Function | O que faz |
 |---|-----------|---------------|-----------|
-| 1 | Publicação | `pipeline-publish` | Atomic commits via Tree API |
+| 1 | PublicaÃ§Ã£o | `pipeline-publish` | Atomic commits via Tree API |
 | 2 | Deploy | `pipeline-deploy` | Deploy para Vercel/Netlify |
 
-### Outputs Visíveis ao Usuário
+### Outputs VisÃ­veis ao UsuÃ¡rio
 
-| Output | Descrição |
+| Output | DescriÃ§Ã£o |
 |--------|-----------|
-| `repo_url` | URL do repositório Git publicado |
-| `deploy_url` | URL do deploy acessível e verificado |
-| `preview_url` | URL de preview (quando disponível) |
-| Deploy timestamp | Data/hora do último deploy |
-| Rollback posture | Indicação se rollback está disponível |
+| `repo_url` | URL do repositÃ³rio Git publicado |
+| `deploy_url` | URL do deploy acessÃ­vel e verificado |
+| `preview_url` | URL de preview (quando disponÃ­vel) |
+| Deploy timestamp | Data/hora do Ãºltimo deploy |
+| Rollback posture | IndicaÃ§Ã£o se rollback estÃ¡ disponÃ­vel |
 
 ### Definition of Done da Iniciativa
 
-✅ Build passa no CI (tsc + vite)
-✅ Código publicado no repositório Git
-✅ `repo_url` disponível na interface
-✅ Deploy executado com sucesso
-✅ `deploy_url` acessível e verificado
-✅ Todos os artefatos rastreáveis no pipeline
-✅ Custos registrados por estágio
+âœ… Build passa no CI (tsc + vite)
+âœ… CÃ³digo publicado no repositÃ³rio Git
+âœ… `repo_url` disponÃ­vel na interface
+âœ… Deploy executado com sucesso
+âœ… `deploy_url` acessÃ­vel e verificado
+âœ… Todos os artefatos rastreÃ¡veis no pipeline
+âœ… Custos registrados por estÃ¡gio
 
 ---
 
-## Fase 7: Growth (Secundária)
+## Fase 7: Growth (SecundÃ¡ria)
 
-> **Status:** Implementada mas secundária para o produto-prova atual.
-> O foco é fechar o ciclo Idea → Deploy primeiro.
+> **Status:** Implementada mas secundÃ¡ria para o produto-prova atual.
+> O foco Ã© fechar o ciclo Idea â†’ Deploy primeiro.
 
-| Sub-etapa | Propósito |
+| Sub-etapa | PropÃ³sito |
 |-----------|-----------|
 | Observability | Health score do sistema gerado |
-| Product Analytics | Funis AARRR, métricas de uso |
-| User Behavior | Fricção, drop-off, retenção |
+| Product Analytics | Funis AARRR, mÃ©tricas de uso |
+| User Behavior | FricÃ§Ã£o, drop-off, retenÃ§Ã£o |
 | Growth Optimization | Experimentos prioritizados (ICE score) |
-| Adaptive Learning | Regras de prevenção aprendidas |
+| Adaptive Learning | Regras de prevenÃ§Ã£o aprendidas |
 | Product Evolution | Roadmap de features baseado em dados |
-| Architecture Evolution | Evolução técnica do sistema |
-| Portfolio Manager | Gestão multi-produto |
+| Architecture Evolution | EvoluÃ§Ã£o tÃ©cnica do sistema |
+| Portfolio Manager | GestÃ£o multi-produto |
 | System Evolution | Meta-learning da plataforma |
 
 ---
 
 ## Contratos da Camada Comercial (Sprint 11)
 
-### Contrato: Verificação de Limites de Uso
+### Contrato: VerificaÃ§Ã£o de Limites de Uso
 
-**Ponto de aplicação:** Entrada do pipeline (`pipeline-bootstrap.ts`, `run-initiative-pipeline`)
+**Ponto de aplicaÃ§Ã£o:** Entrada do pipeline (`pipeline-bootstrap.ts`, `run-initiative-pipeline`)
 
 | Campo | Valor |
 |-------|-------|
 | **Input** | `organization_id`, tipo de limite a verificar |
 | **Output (sucesso)** | Pipeline prossegue normalmente |
 | **Output (bloqueio)** | HTTP 402, `{ error: "USAGE_LIMIT_EXCEEDED", limit_type, current_value, max_value }` |
-| **Persistência** | `audit_logs` com ação `usage_limit_blocked` |
+| **PersistÃªncia** | `audit_logs` com aÃ§Ã£o `usage_limit_blocked` |
 
 ### Limites verificados
 
 | Limite | Fonte | Tipo |
 |--------|-------|------|
-| `max_initiatives_per_month` | `product_plans` | Contagem de iniciativas no período |
+| `max_initiatives_per_month` | `product_plans` | Contagem de iniciativas no perÃ­odo |
 | `max_tokens_per_month` | `product_plans` | Soma de tokens usados |
 | `max_deploys_per_month` | `product_plans` | Contagem de deploys com status `"success"` |
 | `max_parallel_runs` | `product_plans` | Jobs com status `running` no momento |
 
-### Contrato: Cálculo de Custo
+### Contrato: CÃ¡lculo de Custo
 
 | Campo | Valor |
 |-------|-------|
 | **Input** | `organization_id` |
 | **Output** | `{ total_cost_usd, stage_breakdown[], model_breakdown[], estimated_monthly_cost }` |
-| **Fonte de verdade** | `initiative_jobs.cost_usd` (não duplica com tokens) |
-| **Isolamento** | Filtra jobs apenas de iniciativas da organização solicitante |
+| **Fonte de verdade** | `initiative_jobs.cost_usd` (nÃ£o duplica com tokens) |
+| **Isolamento** | Filtra jobs apenas de iniciativas da organizaÃ§Ã£o solicitante |
 
 ### Contrato: Dados de Workspace
 
 | Campo | Valor |
 |-------|-------|
 | **Regra** | Todas as consultas agregadas devem filtrar por `organization_id` |
-| **Proibição** | Consultas sem filtro de organização são proibidas |
-| **Verificação** | Jobs são agregados via IDs de iniciativas da organização |
+| **ProibiÃ§Ã£o** | Consultas sem filtro de organizaÃ§Ã£o sÃ£o proibidas |
+| **VerificaÃ§Ã£o** | Jobs sÃ£o agregados via IDs de iniciativas da organizaÃ§Ã£o |
 
 ---
 
@@ -1805,7 +1805,7 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 |-------|-------|
 | **Gerado por** | `prompt-outcome-analyzer` |
 | **Schema** | `{ stage_name, prompt_signature, runs_count, success_rate, average_quality_score, average_cost, retry_rate }` |
-| **Frequência** | Sob demanda (invocação explícita) |
+| **FrequÃªncia** | Sob demanda (invocaÃ§Ã£o explÃ­cita) |
 | **Isolamento** | Filtrado por `organization_id` |
 
 ### Contrato: Strategy Effectiveness Metrics
@@ -1832,7 +1832,7 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 | **Gerado por** | `learning-recommendation-engine` |
 | **Schema** | `{ recommendation_type, target_component, description, confidence_score, supporting_evidence[], metrics_summary, expected_improvement }` |
 | **Tipos** | `PROMPT_OPTIMIZATION`, `STRATEGY_RANKING_ADJUSTMENT`, `NEW_PREVENTION_RULE`, `PIPELINE_CONFIGURATION_HINT` |
-| **Status** | Criadas como `pending`. Requerem revisão humana. |
+| **Status** | Criadas como `pending`. Requerem revisÃ£o humana. |
 | **Isolamento** | Filtrado por `organization_id` |
 
 ### Contrato: Repair Strategy Weights
@@ -1841,123 +1841,123 @@ The 5-plane, 18-module architecture remains stable. Future agent evolution must:
 |-------|-------|
 | **Gerado por** | `repair-learning-engine` |
 | **Schema** | `{ strategy_name, stage_name, current_weight, previous_weight, adjustment_reason, adjusted_at }` |
-| **Fórmula** | `new_weight = previous_weight + success_factor − failure_penalty` |
-| **Limites** | Pesos limitados a intervalo seguro, reversíveis |
+| **FÃ³rmula** | `new_weight = previous_weight + success_factor âˆ’ failure_penalty` |
+| **Limites** | Pesos limitados a intervalo seguro, reversÃ­veis |
 | **Auditoria** | Cada ajuste gera evento `LEARNING_UPDATE` em `audit_logs` |
 | **Isolamento** | Filtrado por `organization_id` |
 
 ---
 
-## Princípios de Segurança de Contratos
+## PrincÃ­pios de SeguranÃ§a de Contratos
 
 ### Estabilidade
 
-- Contratos de stage IO devem permanecer estáveis
-- Mudanças em contratos requerem versionamento explícito
-- Learning não pode alterar a forma (shape) de contratos existentes
-- Meta-Agents não podem modificar contratos diretamente
+- Contratos de stage IO devem permanecer estÃ¡veis
+- MudanÃ§as em contratos requerem versionamento explÃ­cito
+- Learning nÃ£o pode alterar a forma (shape) de contratos existentes
+- Meta-Agents nÃ£o podem modificar contratos diretamente
 
 ### Isolamento
 
-- Camadas comerciais consomem dados de observabilidade, não duplicam o kernel
-- Acesso cross-tenant a contratos é **proibido**
+- Camadas comerciais consomem dados de observabilidade, nÃ£o duplicam o kernel
+- Acesso cross-tenant a contratos Ã© **proibido**
 - Todas as consultas agregadas devem incluir filtro `organization_id`
-- Meta-Agents têm acesso somente leitura a dados de observabilidade e learning
+- Meta-Agents tÃªm acesso somente leitura a dados de observabilidade e learning
 
-### Separação de Responsabilidades
+### SeparaÃ§Ã£o de Responsabilidades
 
-- Learning gera recomendações, não executa mudanças automaticamente
-- Commercial verifica limites, não modifica comportamento do pipeline
-- O kernel processa estágios, não conhece billing ou learning
-- Meta-Agents geram recomendações de alto nível, não mutam o sistema
+- Learning gera recomendaÃ§Ãµes, nÃ£o executa mudanÃ§as automaticamente
+- Commercial verifica limites, nÃ£o modifica comportamento do pipeline
+- O kernel processa estÃ¡gios, nÃ£o conhece billing ou learning
+- Meta-Agents geram recomendaÃ§Ãµes de alto nÃ­vel, nÃ£o mutam o sistema
 
 ### Auditabilidade
 
-- Toda decisão de learning é registrada em `audit_logs`
-- Todo bloqueio de uso é registrado em `audit_logs`
-- Eventos rastreáveis: `LEARNING_UPDATE`, `USAGE_LIMIT_EXCEEDED`, `PIPELINE_EXECUTION`, `REPAIR_APPLIED`
-- Meta-Agent recommendations são rastreáveis via `meta_agent_recommendations` table
+- Toda decisÃ£o de learning Ã© registrada em `audit_logs`
+- Todo bloqueio de uso Ã© registrado em `audit_logs`
+- Eventos rastreÃ¡veis: `LEARNING_UPDATE`, `USAGE_LIMIT_EXCEEDED`, `PIPELINE_EXECUTION`, `REPAIR_APPLIED`
+- Meta-Agent recommendations sÃ£o rastreÃ¡veis via `meta_agent_recommendations` table
 
 ---
 
-## Interação com Meta-Agents (Active — Sprints 13+)
+## InteraÃ§Ã£o com Meta-Agents (Active â€” Sprints 13+)
 
-> **Status:** ✅ Active — Meta-Agents v1.4 operational (Sprints 13–20)
+> **Status:** âœ… Active â€” Meta-Agents v1.4 operational (Sprints 13â€“20)
 
 Meta-Agents interact with the pipeline **only** through read access:
 
-| Fonte | Tipo de Acesso | Propósito |
+| Fonte | Tipo de Acesso | PropÃ³sito |
 |-------|---------------|-----------|
-| `initiative_observability` | Leitura | Métricas de estágio, durações, distribuição de falhas |
-| `prompt_strategy_metrics` | Leitura | Tendências de performance de prompts |
-| `strategy_effectiveness_metrics` | Leitura | Efetividade de estratégias de reparo |
-| `predictive_error_patterns` | Leitura | Previsões de falhas |
-| `learning_recommendations` | Leitura | Recomendações existentes |
-| `repair_evidence` | Leitura | Histórico de resultados de reparo |
-| `audit_logs` | Leitura | Histórico de eventos do sistema |
+| `initiative_observability` | Leitura | MÃ©tricas de estÃ¡gio, duraÃ§Ãµes, distribuiÃ§Ã£o de falhas |
+| `prompt_strategy_metrics` | Leitura | TendÃªncias de performance de prompts |
+| `strategy_effectiveness_metrics` | Leitura | Efetividade de estratÃ©gias de reparo |
+| `predictive_error_patterns` | Leitura | PrevisÃµes de falhas |
+| `learning_recommendations` | Leitura | RecomendaÃ§Ãµes existentes |
+| `repair_evidence` | Leitura | HistÃ³rico de resultados de reparo |
+| `audit_logs` | Leitura | HistÃ³rico de eventos do sistema |
 
-**Meta-Agents não modificam contratos de pipeline diretamente.** Suas saídas são recomendações estruturadas que passam por revisão humana antes de qualquer implementação.
-
----
-
-## Padrão de Visualização de Artefatos
-
-Cada artefato no sistema segue este padrão:
-
-1. **Nomeado** — nome claro que indica o conteúdo
-2. **Clicável** — abre detalhes/conteúdo no Context Panel
-3. **Origem clara** — mostra qual agente/estágio gerou
-4. **Rastreável** — ligado a decisões (`project_decisions`), erros (`project_errors`) e regras de prevenção (`project_prevention_rules`)
-5. **Versionado** — hash de conteúdo para deduplicação
-
-### Centro de Evidência (Project Brain)
-
-O Project Brain serve como centro de evidência visual:
-- Grafo de dependências (DAG) interativo
-- Nós tipados (file, domain_model, data_model, business_logic, api_spec, ui_structure)
-- Arestas com relações semânticas (depends_on, imports, renders_component, calls_service, stores_entity)
-- Busca semântica por embeddings (pgvector 768-dim)
+**Meta-Agents nÃ£o modificam contratos de pipeline diretamente.** Suas saÃ­das sÃ£o recomendaÃ§Ãµes estruturadas que passam por revisÃ£o humana antes de qualquer implementaÃ§Ã£o.
 
 ---
 
-## Princípios de Controle
+## PadrÃ£o de VisualizaÃ§Ã£o de Artefatos
+
+Cada artefato no sistema segue este padrÃ£o:
+
+1. **Nomeado** â€” nome claro que indica o conteÃºdo
+2. **ClicÃ¡vel** â€” abre detalhes/conteÃºdo no Context Panel
+3. **Origem clara** â€” mostra qual agente/estÃ¡gio gerou
+4. **RastreÃ¡vel** â€” ligado a decisÃµes (`project_decisions`), erros (`project_errors`) e regras de prevenÃ§Ã£o (`project_prevention_rules`)
+5. **Versionado** â€” hash de conteÃºdo para deduplicaÃ§Ã£o
+
+### Centro de EvidÃªncia (Project Brain)
+
+O Project Brain serve como centro de evidÃªncia visual:
+- Grafo de dependÃªncias (DAG) interativo
+- NÃ³s tipados (file, domain_model, data_model, business_logic, api_spec, ui_structure)
+- Arestas com relaÃ§Ãµes semÃ¢nticas (depends_on, imports, renders_component, calls_service, stores_entity)
+- Busca semÃ¢ntica por embeddings (pgvector 768-dim)
+
+---
+
+## PrincÃ­pios de Controle
 
 ### Quando aparece "Aprovar"
-- Após conclusão de uma fase completa (Discovery, Architecture, UI, Squad, Planning)
-- Sempre com botão primário destacado
+- ApÃ³s conclusÃ£o de uma fase completa (Discovery, Architecture, UI, Squad, Planning)
+- Sempre com botÃ£o primÃ¡rio destacado
 
 ### Quando aparece "Re-executar"
 - Quando uma sub-etapa falhou
-- Sempre disponível como ação secundária em estágios concluídos
+- Sempre disponÃ­vel como aÃ§Ã£o secundÃ¡ria em estÃ¡gios concluÃ­dos
 
-### Quando bloqueia avanço
-- Sub-etapa obrigatória não concluída
-- Erro crítico sem reparo automático
+### Quando bloqueia avanÃ§o
+- Sub-etapa obrigatÃ³ria nÃ£o concluÃ­da
+- Erro crÃ­tico sem reparo automÃ¡tico
 - **Limite de uso excedido** (HTTP 402, `USAGE_LIMIT_EXCEEDED`)
 
-### Quando permite avanço parcial
+### Quando permite avanÃ§o parcial
 - Sub-etapas opcionais (ex: Adaptive Learning pode ser pulado)
-- Aprovação manual override em casos de urgência
+- AprovaÃ§Ã£o manual override em casos de urgÃªncia
 
 ---
 
-## Métricas de Sucesso do Pipeline
+## MÃ©tricas de Sucesso do Pipeline
 
-| Métrica | Target |
+| MÃ©trica | Target |
 |---------|--------|
-| Taxa de sucesso sem intervenção manual | > 80% |
+| Taxa de sucesso sem intervenÃ§Ã£o manual | > 80% |
 | Taxa de build OK na primeira tentativa | > 90% |
-| Retries médios por iniciativa | < 2 |
-| Taxa de reparo automático com sucesso | > 70% |
+| Retries mÃ©dios por iniciativa | < 2 |
+| Taxa de reparo automÃ¡tico com sucesso | > 70% |
 | Custo por iniciativa | Rastreado e declinante |
-| Tempo ideia → software entregue | < 15 min |
-| Clareza do progresso para o usuário | Feedback visual claro |
+| Tempo ideia â†’ software entregue | < 15 min |
+| Clareza do progresso para o usuÃ¡rio | Feedback visual claro |
 
 ---
 
-## Engineering Memory — Pipeline Contract (Active)
+## Engineering Memory â€” Pipeline Contract (Active)
 
-> **Status:** ✅ Implemented — Sprints 15–18 (Foundation, Retrieval, Summaries, Memory-Aware Meta-Agents)
+> **Status:** âœ… Implemented â€” Sprints 15â€“18 (Foundation, Retrieval, Summaries, Memory-Aware Meta-Agents)
 
 ### Interaction Model
 
@@ -1965,7 +1965,7 @@ Engineering Memory is **read-only** from the pipeline's perspective:
 
 - The pipeline **emits events** that trigger memory capture (by the memory layer, not the pipeline itself)
 - Pipeline stages **query** memory for contextual information (repair strategies, past failures)
-- Pipeline execution **never depends** on memory availability — graceful degradation is enforced
+- Pipeline execution **never depends** on memory availability â€” graceful degradation is enforced
 
 ### Safety Rules
 
@@ -1988,7 +1988,7 @@ Memory provides **optional enrichment** to pipeline stages:
 - **Meta-Agents:** Query all memory types + summaries for recommendation generation (Sprint 18)
 - **Semantic Retrieval:** Unified embedding-backed retrieval across all domains (Sprint 36)
 
-Memory enrichment is always **additive** — it enhances decisions but never gates them.
+Memory enrichment is always **additive** â€” it enhances decisions but never gates them.
 
 ---
 
@@ -1996,29 +1996,31 @@ Memory enrichment is always **additive** — it enhances decisions but never gat
 
 > **Status:** The following describes how **future planned and reserved blocks** may affect the visible pipeline. None of this is implemented unless explicitly noted. The canonical roadmap is in [ROADMAP.md](ROADMAP.md).
 
-### Block N — Evidence-Governed Improvement Loop (Planned, Sprints 71–74)
+### Block N â€” Evidence-Governed Improvement Loop (Planned, Sprints 71â€“74)
 
 Block N may improve the **quality and learning loops behind the pipeline** without changing the visible journey contract:
 - Pipeline outcomes feed structured evidence collection
 - Repair, validation, and delivery patterns are aggregated for bounded improvement proposals
 - Improvement candidates are tested and promoted under governance
-- The user-facing journey (Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software) remains unchanged
+- The user-facing journey (Idea â†’ Discovery â†’ Architecture â†’ Engineering â†’ Validation â†’ Deploy â†’ Delivered Software) remains unchanged
 
 **Pipeline impact:** Internal quality improvement. No new user-visible stages or approval gates.
 
-### Blocks O–S — Reserved Future Direction (Sprints 75–94)
+### Blocks Oâ€“S â€” Reserved Future Direction (Sprints 75â€“94)
 
 Later blocks may affect the pipeline in these ways:
-- **Block O (Advanced Multi-Agent Coordination):** May improve agent coordination during Engineering and Validation phases — internal optimization, not journey-visible
-- **Block P (Governed Capability Ecosystem):** May allow extensions to enrich pipeline stages — any visible impact must be legible and bounded
-- **Block Q (Delivery Optimization):** May improve deploy confidence, post-deploy learning, and delivery reliability — visible as better outcomes, not more complexity
-- **Block R (Distributed Runtime):** May improve execution scale and resilience — transparent to the user journey
-- **Block S (Research Sandbox):** Architecture evolution research — sandboxed, no direct pipeline impact
+- **Block O (Advanced Multi-Agent Coordination):** May improve agent coordination during Engineering and Validation phases â€” internal optimization, not journey-visible
+- **Block P (Governed Capability Ecosystem):** May allow extensions to enrich pipeline stages â€” any visible impact must be legible and bounded
+- **Block Q (Delivery Optimization):** May improve deploy confidence, post-deploy learning, and delivery reliability â€” visible as better outcomes, not more complexity
+- **Block R (Distributed Runtime):** May improve execution scale and resilience â€” transparent to the user journey
+- **Block S (Research Sandbox):** Architecture evolution research â€” sandboxed, no direct pipeline impact
 
 ### Pipeline Stability Guarantee
 
 The default user-facing journey remains:
 
-> **Idea → Discovery → Architecture → Engineering → Validation → Deploy → Delivered Software**
+> **Idea â†’ Discovery â†’ Architecture â†’ Engineering â†’ Validation â†’ Deploy â†’ Delivered Software**
 
 Future blocks may deepen the intelligence, coordination, and reliability behind each stage, but the visible pipeline contract is stable. Internal complexity must not leak into the default user journey.
+
+

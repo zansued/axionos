@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
-export function BoltPromptDrawer() {
+export function AxionPromptDrawer() {
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,11 +31,11 @@ export function BoltPromptDrawer() {
 
       if (error) throw error;
 
-      toast.success(`Bolt Action Engine: ${data.actions_count} actions formalized in the pipeline.`);
+      toast.success(`Axion Action Engine: ${data.actions_count} actions formalized in the pipeline.`);
       setPrompt("");
       setOpen(false);
     } catch (err) {
-      console.error("Bolt Action Error:", err);
+      console.error("Axion Action Error:", err);
       toast.error("Failed to formalize actions: " + err.message);
     } finally {
       setLoading(false);
@@ -51,7 +51,7 @@ export function BoltPromptDrawer() {
           className="gap-2 border-primary/30 hover:border-primary/60 bg-primary/5 hover:bg-primary/10 transition-all"
         >
           <Zap className="h-4 w-4 text-primary animate-pulse" />
-          <span className="hidden sm:inline">Bolt Action</span>
+          <span className="hidden sm:inline">Axion Action</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="bottom" className="h-[40vh] sm:h-[30vh] bg-background/95 backdrop-blur-xl border-t-primary/20">
@@ -61,7 +61,7 @@ export function BoltPromptDrawer() {
               <div className="p-1.5 rounded-lg bg-primary/10 border border-primary/20">
                 <Sparkles className="h-4 w-4 text-primary" />
               </div>
-              <SheetTitle className="text-xl font-display">Axion Bolt Action Engine</SheetTitle>
+              <SheetTitle className="text-xl font-display">Axion Axion Action Engine</SheetTitle>
             </div>
             <p className="text-sm text-muted-foreground">Describe what you want to build or modify in the system.</p>
           </SheetHeader>
@@ -100,3 +100,4 @@ export function BoltPromptDrawer() {
     </Sheet>
   );
 }
+

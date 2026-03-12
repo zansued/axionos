@@ -7,12 +7,12 @@ const SYSTEM_PROMPT = `
 You are AxionOS Action Engine, an elite autonomous product creator.
 Your goal is to transform user ideas into governed, executable actions.
 
-## Protocolo de Geração (Bolt-Style)
+## Protocolo de Geração (Axion-style)
 Sempre que precisar criar ou modificar arquivos/infraestrutura, use a estrutura de artefatos:
 
-1. Use <boltArtifact id="project-id" title="Project Title"> para encapsular as mudanças.
-2. Use <boltAction type="file" filePath="path/to/file.ts"> para conteúdo de arquivos. Forneça o conteúdo INTEGRAL, sem placeholders.
-3. Use <boltAction type="shell"> para comandos de terminal (ex: npm install, npx shadcn-ui add).
+1. Use <axionArtifact id="project-id" title="Project Title"> para encapsular as mudanças.
+2. Use <axionAction type="file" filePath="path/to/file.ts"> para conteúdo de arquivos. Forneça o conteúdo INTEGRAL, sem placeholders.
+3. Use <axionAction type="shell"> para comandos de terminal (ex: npm install, npx shadcn-ui add).
 
 ## Governança AxionOS
 Suas ações serão processadas pelo Agendador AIOS (Round Robin). 
@@ -49,18 +49,18 @@ serve(async (req) => {
 
     const content = aiResult.content;
 
-    // 2. Parse Bolt-Style Artifacts using Regex
+    // 2. Parse Axion-style Artifacts using Regex
     const actions: any[] = [];
     
-    // Extract boltArtifacts
-    const artifactRegex = /<boltArtifact\s+id="([^"]+)"\s+title="([^"]+)">([\s\S]*?)<\/boltArtifact>/g;
+    // Extract axionArtifacts
+    const artifactRegex = /<axionArtifact\s+id="([^"]+)"\s+title="([^"]+)">([\s\S]*?)<\/axionArtifact>/g;
     let artifactMatch;
 
     while ((artifactMatch = artifactRegex.exec(content)) !== null) {
       const [_, artifactId, title, artifactBody] = artifactMatch;
       
-      // Extract boltActions within artifact
-      const actionRegex = /<boltAction\s+type="([^"]+)"(?:\s+filePath="([^"]+)")?>([\s\S]*?)<\/boltAction>/g;
+      // Extract axionActions within artifact
+      const actionRegex = /<axionAction\s+type="([^"]+)"(?:\s+filePath="([^"]+)")?>([\s\S]*?)<\/axionAction>/g;
       let actionMatch;
 
       while ((actionMatch = actionRegex.exec(artifactBody)) !== null) {
@@ -95,7 +95,7 @@ serve(async (req) => {
             status: "queued",
             risk_level: action.type === "shell" ? "high" : "low",
             description,
-            reason: "Bolt-style artifact formalization",
+            reason: "Axion-style artifact formalization",
             payload: {
               artifactId: action.artifactId,
               artifactTitle: action.artifactTitle,
@@ -113,7 +113,7 @@ serve(async (req) => {
     );
 
     return jsonResponse({
-      message: "Actions formalized via Bolt-AIOS Bridge",
+      message: "Actions formalized via Axion-AIOS Bridge",
       ai_response: content,
       actions_count: actions.length,
       formalized_ids: formalizedActions.map(a => a?.id).filter(Boolean),
@@ -125,3 +125,4 @@ serve(async (req) => {
     return errorResponse(error.message, 500, req);
   }
 });
+
