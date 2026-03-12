@@ -178,3 +178,36 @@ sprints:
   - { sprint: 136, name: "Systemic Health Model",                                  status: complete, block: "AD", phase: "Adaptive Operational Organism", layer: "Systemic Health Model Layer" }
   - { sprint: 137, name: "Organism Memory Layers",                                 status: complete, block: "AD", phase: "Adaptive Operational Organism", layer: "Organism Memory Layer" }
   - { sprint: 138, name: "Adaptive Operational Organism Console",                  status: complete, block: "AD", phase: "Adaptive Operational Organism", layer: "Organism Console Layer" }
+
+  # === BLOCK AE — Axion Action Engine === COMPLETE
+  - { sprint: 139, name: "Action Domain Model & Trigger Intake",                   status: complete, block: "AE", phase: "Action Engine Foundation", layer: "Action Domain Model Layer" }
+  - { sprint: 140, name: "Intent Mapping & Policy-Aware Resolution",               status: complete, block: "AE", phase: "Action Engine Foundation", layer: "Action Resolution Layer" }
+  - { sprint: 141, name: "Action Registry, Audit & Dispatch Contract",             status: complete, block: "AE", phase: "Action Engine Foundation", layer: "Action Registry Layer" }
+  - { sprint: 142, name: "Human Approval Hooks & Operational Flows",               status: complete, block: "AE", phase: "Action Engine Foundation", layer: "Action Approval Layer" }
+
+  # === BLOCK AF — Security Surface === COMPLETE
+  - { sprint: 143, name: "Threat Domain Mapping & Classification",                 status: complete, block: "AF", phase: "Security Surface", layer: "Threat Domain Layer" }
+  - { sprint: 144, name: "Security Surface Mapping & Exposure Scoring",            status: complete, block: "AF", phase: "Security Surface", layer: "Security Surface Mapping Layer" }
+  - { sprint: 145, name: "Agent & Contract Risk Profiles",                         status: complete, block: "AF", phase: "Security Surface", layer: "Risk Profile Layer" }
+  - { sprint: 146, name: "Security War Room & Operational Dashboard",              status: complete, block: "AF", phase: "Security Surface", layer: "Security War Room Layer" }
+
+  # === BLOCK AG — Adoption Intelligence & Product Experience === COMPLETE
+  - { sprint: 147, name: "Adoption Intelligence Models & Milestones",              status: complete, block: "AG", phase: "Adoption Intelligence", layer: "Adoption Intelligence Layer" }
+  - { sprint: 148, name: "Adoption Friction Detection & Clustering",               status: complete, block: "AG", phase: "Adoption Intelligence", layer: "Friction Detection Layer" }
+  - { sprint: 149, name: "Adoption Outcome Tracking & Accuracy",                   status: complete, block: "AG", phase: "Adoption Intelligence", layer: "Outcome Tracking Layer" }
+  - { sprint: 150, name: "User Journey Orchestration & Model Manager",             status: complete, block: "AG", phase: "Adoption Intelligence", layer: "Journey Orchestration Layer" }
+  - { sprint: 151, name: "Landing Page & Idea Capture Experience",                 status: complete, block: "AG", phase: "Product Experience", layer: "Landing Page Layer" }
+  - { sprint: 152, name: "Axion Prompt Drawer & Action Engine UI",                 status: complete, block: "AG", phase: "Product Experience", layer: "Prompt Drawer Layer" }
+  - { sprint: 153, name: "Builder/Owner Mode Separation",                          status: complete, block: "AG", phase: "Product Experience", layer: "Mode Separation Layer" }
+  - { sprint: 154, name: "Navigation & Route Architecture Refinement",             status: complete, block: "AG", phase: "Product Experience", layer: "Navigation Architecture Layer" }
+
+  # === BLOCK AH — Governance Decision Lifecycle === COMPLETE
+  - { sprint: 155, name: "Governance Review Workflow & State Machine",             status: complete, block: "AH", phase: "Governance Decision Lifecycle", layer: "Governance Workflow Layer" }
+  - { sprint: 156, name: "Governance Proposal Types & Evidence Integration",       status: complete, block: "AH", phase: "Governance Decision Lifecycle", layer: "Proposal Types Layer" }
+  - { sprint: 157, name: "Governance Review Surface & Decision UI",                status: complete, block: "AH", phase: "Governance Decision Lifecycle", layer: "Governance Review Surface Layer" }
+  - { sprint: 158, name: "Governance Decision Formalization & Audit",              status: complete, block: "AH", phase: "Governance Decision Lifecycle", layer: "Decision Formalization Layer" }
+  - { sprint: 159, name: "Governance Insights Surface",                            status: complete, block: "AH", phase: "Governance Surfaces", layer: "Governance Insights Layer" }
+  - { sprint: 160, name: "Governance Insights Surface",                            status: complete, block: "AH", phase: "Governance Surfaces", layer: "Governance Insights Layer" }
+  - { sprint: 161, name: "Governance Decision Surface",                            status: complete, block: "AH", phase: "Governance Surfaces", layer: "Governance Decision Surface Layer" }
+  - { sprint: 162, name: "Governance Execution Handoff Surface",                   status: complete, block: "AH", phase: "Governance Surfaces", layer: "Execution Handoff Layer" }
+  - { sprint: 163, name: "Governance Change Application Tracking Surface",         status: complete, block: "AH", phase: "Governance Surfaces", layer: "Application Tracking Layer" }

@@ -2,7 +2,7 @@
 
 > **Purpose:** Ultra-short explanation of the AxionOS system — cognitive anchor for AI.
 > **Reading time:** ~2 minutes.
-> **Last Updated:** 2026-03-10
+> **Last Updated:** 2026-03-12
 
 ---
 
@@ -36,6 +36,7 @@ It is designed to operate as a platform that orchestrates the entire lifecycle o
 - AI agents
 - Learning loops
 - Governance mechanisms
+- Action Engine (Axion-style XML formalization)
 
 This combination forms an **adaptive operational organism**.
 
@@ -48,17 +49,43 @@ AxionOS separates responsibilities into **four distinct surfaces**:
 | # | Surface | Role |
 |---|---------|------|
 | 1 | **Internal System Architecture** | Core engines that execute pipelines, learning, and intelligence functions |
-| 2 | **Advanced Operator Surface** | Workspace for monitoring, reviewing evidence, and supervising system evolution |
+| 2 | **Advanced Operator Surface (Owner Mode)** | Workspace for monitoring, reviewing evidence, governance decisions, and supervising system evolution |
 | 3 | **Platform Governance Surface** | Control layer responsible for safety rules, mutation boundaries, and policy enforcement |
-| 4 | **User Product Surface** | The user interface where people move through the idea → deploy journey |
+| 4 | **User Product Surface (Builder Mode)** | The user interface where people move through the idea → deploy journey |
 
 These layers must remain **separate** to maintain clarity and safety.
 
 ---
 
+## Workspace Modes
+
+| Mode | Purpose |
+|------|---------|
+| **Builder Mode** | Tactical engineering — Dashboard, Projects, Agents, Pipelines, Runtime, Observability |
+| **Owner Mode** | Strategic governance — System Intelligence, Canon Intelligence, Governance Decisions, Insights, Handoff, Application Tracking, Security |
+
+---
+
+## Operational Decision Chain
+
+All operational behavior follows this strict chain:
+
+```
+Canon / Library           → informs
+Readiness / Events        → evaluates
+Policy / Governance       → constrains
+Axion Action Engine       → formalizes (XML artifacts)
+AgentOS Orchestrator      → orchestrates
+Agent Executor / Human    → acts
+```
+
+No layer may assume the responsibilities of another.
+
+---
+
 ## Core Capabilities
 
-AxionOS can theoretically:
+AxionOS can:
 
 - Turn product ideas into working software
 - Coordinate multiple specialized AI agents
@@ -66,8 +93,8 @@ AxionOS can theoretically:
 - Detect patterns in execution failures
 - Improve operational strategies over time
 - Maintain governance and rollback safety
-
-The system aims to make software production **structured, measurable, and continuously improvable**.
+- Formalize actions through governed Action Engine
+- Track governance decisions through full lifecycle (proposal → review → handoff → application)
 
 ---
 
@@ -117,9 +144,15 @@ These rules ensure the system **evolves safely**.
 
 ## Development Status
 
-The canonical architecture currently includes development through **Sprint 138**.
+The canonical architecture currently includes development through **Sprint 163**.
 
 The platform has reached the stage called: **Adaptive Operational Organism**.
+
+163 sprints complete across blocks Foundation through AH. Key recent additions:
+- Axion Action Engine (Sprints 139–142)
+- Security Surface (Sprints 143–146)
+- Governance Decision Lifecycle (Sprints 155–163)
+- Builder/Owner Mode Separation
 
 Future development focuses on improving intelligence quality, governance maturity, and product usability rather than adding uncontrolled complexity.
 

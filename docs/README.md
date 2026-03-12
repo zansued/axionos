@@ -1,7 +1,7 @@
 # AxionOS — Documentation Index
 
 > Single navigation point for all AxionOS documentation.
-> Last updated: 2026-03-10
+> Last updated: 2026-03-12
 
 ---
 
@@ -12,6 +12,7 @@
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System structure | C4 diagrams, capability layers, containers, components, data flow, safety rules, product boundary model |
 | [GOVERNANCE.md](GOVERNANCE.md) | Agent OS & governance reference | 5 planes, module inventory, agent types, contracts, safety boundaries, events |
 | [CANON_INTELLIGENCE_ENGINE.md](CANON_INTELLIGENCE_ENGINE.md) | Canon Intelligence Engine | Agent–Contract model, Canon knowledge layer, canonization workflow, runtime consultation |
+| [UI_BLUEPRINT.md](UI_BLUEPRINT.md) | Interface architecture | Screen map, design system, navigation flows, UX rules |
 | [AXION_CONTEXT.md](AXION_CONTEXT.md) | Quick context restore | System identity, engines, invariants, sprint canon, development principles |
 | [AXION_PRIMER.md](AXION_PRIMER.md) | AI cognitive anchor | Ultra-short system explanation (~2 min read) |
 | [registry/doc-authority.yml](registry/doc-authority.yml) | Doc ownership | Authority boundaries per document |
@@ -30,8 +31,8 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
-- Sprints 1–138 are the completed canon — do not casually reopen
-- All blocks (Foundation through AD) are complete
+- Sprints 1–163 are the completed canon — do not casually reopen
+- All blocks (Foundation through AH) are complete
 - Do not collapse internal architecture and user-facing journey into the same surface
 
 ---
@@ -49,7 +50,7 @@ The default user-facing journey remains:
 
 ## Current Canon Note
 
-> Public documentation reflects the **stable public architecture line** through Sprint 138 (all blocks Foundation through AD).
+> Public documentation reflects the **stable architecture line** through Sprint 163 (all blocks Foundation through AH).
 >
 > Internal roadmap and experimental canon may be ahead of this baseline.
 > This notice exists to preserve credibility — not to obscure progress.
@@ -61,9 +62,23 @@ The default user-facing journey remains:
 | # | Layer | Description |
 |---|-------|-------------|
 | 1 | **Internal System Architecture** | Engines, governance, intelligence, memory, calibration, evidence loops, benchmarking, sovereign institutional intelligence |
-| 2 | **Advanced Operator Surface** | Workspace governance, evidence review, candidates, benchmarks, delivery outcomes, audit |
+| 2 | **Advanced Operator Surface (Owner Mode)** | System intelligence, governance insights, governance decisions, execution handoff, application tracking, security, canon intelligence |
 | 3 | **Platform Governance Surface** | Routing, debates, working memory, swarm, marketplace, meta-agents, calibration, observability |
-| 4 | **User-Facing Product Surface** | Dashboard, Journey, Onboarding, Initiatives, Stories, Code, Deployments, AutoPilot |
+| 4 | **User-Facing Product Surface (Builder Mode)** | Dashboard, Projects, Agents, Pipelines, Runtime, Execution Observability, Settings |
+
+---
+
+## Workspace Mode Separation
+
+AxionOS separates its interface into two operational modes:
+
+| Mode | Path | Purpose |
+|------|------|---------|
+| **Builder Mode** | `/builder/*` | Tactical engineering focused on product delivery — Dashboard, Projects, Agents, Pipelines, Runtime, Observability |
+| **Owner Mode** | `/owner/*` | Strategic platform governance — System Intelligence, Canon Intelligence, Governance Decisions, Insights, Handoff, Application Tracking, Security |
+
+Builder Mode is for building and shipping software.
+Owner Mode is for governing the platform's intelligence and evolution.
 
 ---
 
@@ -79,29 +94,51 @@ The default user-facing journey remains:
 
 ---
 
-## After Sprint 138 — What Changes Strategically
+## Key Capabilities Added After Sprint 138
 
-The platform has completed its **Adaptive Operational Organism** at Sprint 138, spanning all blocks from Foundation through Block AD.
+| Sprint Range | Block | Capability |
+|-------------|-------|-----------|
+| 139–142 | AE | Action Engine — trigger intake, intent mapping, policy-aware resolution, registry, audit, dispatch, approval hooks, operational flows, Action Center UI, recovery hooks |
+| 143–146 | AF | Security Surface — threat domain mapping, security surface mapping, agent/contract risk profiles, Security War Room |
+| 147–150 | AG | Adoption Intelligence & User Journey — adoption models, friction detection, outcome tracking, user journey orchestration |
+| 151–154 | AG | Landing Page, Axion Prompt Drawer, Builder/Owner Mode separation |
+| 155–158 | AH | Governance Review Workflow — decision state machine, governance review surface, proposal lifecycle |
+| 159–163 | AH | Governance Surfaces — Insights, Decision Surface, Execution Handoff, Change Application Tracking |
 
-All 138 sprints are complete. The platform has achieved Level 10+ — Adaptive Operational Organism. The focus shifts from building new layers to:
-- Deepening intelligence quality and advisory precision
-- Strengthening the product experience and adoption feedback loop
-- Hardening institutional governance across distributed and federated contexts
-- Long-horizon institutional resilience and strategic succession maturity
-- Defining the next strategic arc beyond Sprint 138
+### Axion Action Engine
 
-Internal sophistication remains critical. The next level deepens it through adaptive institutional coherence, not uncontrolled autonomy.
+The Axion Action Engine is now **implemented and operational**. It formalizes triggers into governed ActionRecords using Axion-style XML artifacts (`<axionArtifact>`, `<axionAction>`), applies policy-aware resolution with the strictest-wins principle (Blocked > Manual > Approval > Auto), and integrates with the AIOS Round Robin Scheduler for dispatch.
 
 ---
 
-## How To Continue Safely After Sprint 138
+## After Sprint 163 — Current Strategic State
+
+The platform has completed 163 sprints across all blocks from Foundation through AH. The system operates as a governed adaptive organism with:
+
+- ✅ Full Axion Action Engine with governed execution pipeline
+- ✅ Governance decision lifecycle (proposal → review → handoff → application tracking)
+- ✅ Security surface with threat domain mapping and risk profiles
+- ✅ Builder/Owner Mode separation for clear workspace boundaries
+- ✅ Adoption intelligence and user journey orchestration
+- ✅ 200+ Edge Functions deployed
+
+The focus shifts to:
+- Deepening intelligence quality and advisory precision
+- Strengthening the product experience and adoption feedback loop
+- Hardening institutional governance across distributed and federated contexts
+- Connecting the Action Engine to real downstream execution
+- Improving end-to-end delivery reliability
+
+---
+
+## How To Continue Safely After Sprint 163
 
 1. Read **this README** for canon boundaries and invariants
 2. Use **ARCHITECTURE.md** for structural context, the product boundary model, and the role/surface model
 3. Use **GOVERNANCE.md** for Agent OS modules, contracts, and governance reference
 4. Implement future work **sprint by sprint** with human review
 5. Do **not** collapse internal architecture and user-facing journey into the same surface
-6. Do **not** casually reopen completed canon (Sprints 1–138) without deliberate review
+6. Do **not** casually reopen completed canon (Sprints 1–163) without deliberate review
 7. Internal layers are backstage support — the default product surface is the user journey
 
 ---
@@ -118,7 +155,7 @@ Internal sophistication remains critical. The next level deepens it through adap
 
 ### Current Canon Boundaries
 
-- **Sprints 1–138** = canonical complete (full canon — Foundation through Block AD)
+- **Sprints 1–163** = canonical complete (Foundation through Block AH)
 
 ---
 

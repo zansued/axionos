@@ -52,3 +52,15 @@ blocks:
   - { block_id: "AB",         block_name: "Learning Canonization",                        sprint_range: "127–130", status: complete, purpose: "Learning extraction engine, canon promotion pipeline, cross-tenant pattern distillation, canon reuse injection" }
   - { block_id: "AC",         block_name: "Adaptive Coordination",                        sprint_range: "131–134", status: complete, purpose: "Operational posture engine, attention allocation engine, adaptive resource routing, operational rhythm & recovery cycles" }
   - { block_id: "AD",         block_name: "Adaptive Operational Organism",                sprint_range: "135–138", status: complete, purpose: "Multi-loop governance orchestrator, systemic health model, organism memory layers, adaptive operational organism console" }
+
+  # === BLOCK AE — Axion Action Engine === COMPLETE
+  - { block_id: "AE",         block_name: "Axion Action Engine",                          sprint_range: "139–142", status: complete, purpose: "Action domain model, trigger intake, intent mapping, policy-aware resolution, action registry, audit trail, AgentOS dispatch contract, human approval hooks, operational flows, Action Center UI, recovery hooks" }
+
+  # === BLOCK AF — Security Surface === COMPLETE
+  - { block_id: "AF",         block_name: "Security Surface",                             sprint_range: "143–146", status: complete, purpose: "Threat domain mapping, security surface mapping, agent/contract risk profiles, Security War Room" }
+
+  # === BLOCK AG — Adoption Intelligence & Product Experience === COMPLETE
+  - { block_id: "AG",         block_name: "Adoption Intelligence & Product Experience",   sprint_range: "147–154", status: complete, purpose: "Adoption intelligence models, friction detection, outcome tracking, user journey orchestration, landing page, Axion prompt drawer, Builder/Owner mode separation, navigation architecture" }
+
+  # === BLOCK AH — Governance Decision Lifecycle === COMPLETE
+  - { block_id: "AH",         block_name: "Governance Decision Lifecycle",                sprint_range: "155–163", status: complete, purpose: "Governance review workflow, decision state machine, proposal types, governance review surface, decision formalization, governance insights, governance decision surface, execution handoff, change application tracking" }
