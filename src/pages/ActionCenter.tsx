@@ -535,6 +535,14 @@ function ActionRow({ action, isSelected, onSelect }: { action: ActionEntry; isSe
           )}
         </div>
       </div>
+      <div className="text-right shrink-0">
+        <p className="text-[10px] text-muted-foreground">{fmtDateShort(action.created_at)}</p>
+        {action.outcome_status && (
+          <Badge variant="outline" className={`text-[9px] mt-0.5 ${action.outcome_status === "success" ? "text-primary" : "text-destructive"}`}>
+            {action.outcome_status}
+          </Badge>
+        )}
+      </div>
     </div>
   );
 }
