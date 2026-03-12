@@ -299,8 +299,8 @@ Future work focuses on improving:
 | Phase 6 | AgentOS Decision Contract | Complete |
 | Phase 7 | Action Engine | Complete (Sprints 139–142) |
 | Phase 8 | Governance and Approval Flow | Complete (Sprints 155–163) |
-| Phase 9 | Self-Healing and Recovery | Partial (auto-repair exists, full governed recovery in progress) |
-| Phase 10 | Learning Feedback Loop | Partial (learning engines exist, full closed-loop in progress) |
+| Phase 9 | Governed Execution Path | Complete (Sprints 164–169) |
+| Phase 10 | Canon Pipeline Operationalization | Complete (Sprints 170–179) |
 
 ---
 
