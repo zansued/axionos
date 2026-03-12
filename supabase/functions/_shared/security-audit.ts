@@ -47,7 +47,8 @@ export async function resolveAndValidateOrg(
     .eq("user_id", userId);
 
   if (error || !memberships || memberships.length === 0) {
-    return { orgId: null, error: "User is not a member of any organization" };
+    // Sprint 199: Generic error — do not reveal whether user has no memberships
+    return { orgId: null, error: "Organization access denied" };
   }
 
   if (payloadOrgId) {
