@@ -22970,6 +22970,138 @@ export type Database = {
           },
         ]
       }
+      knowledge_acquisition_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          job_id: string
+          message: string
+          metadata: Json | null
+          organization_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          job_id: string
+          message?: string
+          metadata?: Json | null
+          organization_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          job_id?: string
+          message?: string
+          metadata?: Json | null
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_acquisition_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_acquisition_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_acquisition_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_acquisition_jobs: {
+        Row: {
+          actual_cost: number | null
+          budget_status: string
+          candidates_generated: number | null
+          completed_at: string | null
+          created_at: string
+          estimated_cost: number
+          execution_metadata: Json | null
+          execution_mode: string
+          fail_reason: string | null
+          id: string
+          items_absorbed: number | null
+          max_retries: number
+          organization_id: string
+          plan_id: string | null
+          priority: string
+          retry_count: number
+          source_ref: string
+          source_type: string
+          started_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          actual_cost?: number | null
+          budget_status?: string
+          candidates_generated?: number | null
+          completed_at?: string | null
+          created_at?: string
+          estimated_cost?: number
+          execution_metadata?: Json | null
+          execution_mode?: string
+          fail_reason?: string | null
+          id?: string
+          items_absorbed?: number | null
+          max_retries?: number
+          organization_id: string
+          plan_id?: string | null
+          priority?: string
+          retry_count?: number
+          source_ref?: string
+          source_type?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          actual_cost?: number | null
+          budget_status?: string
+          candidates_generated?: number | null
+          completed_at?: string | null
+          created_at?: string
+          estimated_cost?: number
+          execution_metadata?: Json | null
+          execution_mode?: string
+          fail_reason?: string | null
+          id?: string
+          items_absorbed?: number | null
+          max_retries?: number
+          organization_id?: string
+          plan_id?: string | null
+          priority?: string
+          retry_count?: number
+          source_ref?: string
+          source_type?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_acquisition_jobs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_acquisition_jobs_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_acquisition_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       knowledge_acquisition_opportunities: {
         Row: {
           created_at: string
