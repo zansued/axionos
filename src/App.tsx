@@ -323,6 +323,10 @@ const App = () => (
                             <Route path="/owner/capabilities" element={<W><CapabilityRegistry /></W>} />
 
                             {/* Governance */}
+                            <Route path="/owner/delivery-governance" element={<W><Governance /></W>} />
+                            <Route path="/owner/governance-overview" element={<W><GovernanceOverviewPage /></W>} />
+                            <Route path="/owner/pending-approvals" element={<W><ApprovalQueue /></W>} />
+                            <Route path="/owner/policy-controls" element={<W><PolicyControlsPage /></W>} />
                             <Route path="/owner/action-center" element={<W><ActionCenter /></W>} />
                             <Route path="/owner/autonomy-posture" element={<P><AutonomyPostureDashboard /></P>} />
                             <Route path="/owner/agent-swarm" element={<P><SwarmExecution /></P>} />
