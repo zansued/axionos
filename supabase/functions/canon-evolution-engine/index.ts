@@ -631,17 +631,20 @@ function levenshteinSimilarity(a: string, b: string): number {
 }
 
 function mapKnowledgeType(kt: string): string {
+  // Valid enum: pattern, template, anti_pattern, architectural_guideline, implementation_recipe, failure_memory, external_knowledge
   const map: Record<string, string> = {
     pattern: "pattern",
     anti_pattern: "anti_pattern",
-    best_practice: "best_practice",
+    best_practice: "pattern",
     architectural_guideline: "architectural_guideline",
     implementation_recipe: "implementation_recipe",
     template: "template",
-    methodology: "methodology",
-    convention: "convention",
-    operational_guideline: "operational_guideline",
-    architecture_pattern: "pattern",
+    methodology: "pattern",
+    convention: "pattern",
+    operational_guideline: "pattern",
+    architecture_pattern: "architectural_guideline",
+    failure_memory: "failure_memory",
+    external_knowledge: "external_knowledge",
   };
   return map[kt] || "pattern";
 }
