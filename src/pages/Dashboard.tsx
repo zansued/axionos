@@ -11,12 +11,39 @@ import NeuralBackground from "@/components/ui/NeuralBackground";
 
 const IDEA_KEY = "axion_initial_idea";
 
-const QUICK_IDEAS = [
-  { icon: <Settings className="size-4" />, label: "REST API" },
-  { icon: <Zap className="size-4" />, label: "Automation" },
-  { icon: <Bot className="size-4" />, label: "AI Agent" },
-  { icon: <BarChart3 className="size-4" />, label: "Dashboard" },
-];
+const QUICK_IDEAS: Record<string, string[]> = {
+  "REST API": [
+    "Build a REST API for user management with JWT auth",
+    "Create a CRUD API for inventory tracking with rate limiting",
+    "Design a webhook-driven REST API for payment processing",
+    "Build a multi-tenant REST API with role-based access control",
+  ],
+  "Automation": [
+    "Automate deployment pipeline with rollback on failure",
+    "Build a workflow that syncs CRM data every hour",
+    "Create an event-driven pipeline that processes incoming orders",
+    "Automate infrastructure scaling based on traffic patterns",
+  ],
+  "AI Agent": [
+    "Build an AI agent that triages customer support tickets",
+    "Create an autonomous code review agent with safety guardrails",
+    "Design a multi-step research agent that summarizes findings",
+    "Build an AI agent that monitors logs and suggests fixes",
+  ],
+  "Dashboard": [
+    "Create a real-time analytics dashboard for SaaS metrics",
+    "Build a DevOps monitoring dashboard with alert management",
+    "Design an executive dashboard with KPIs and trend analysis",
+    "Create a fleet management dashboard with live GPS tracking",
+  ],
+};
+
+const QUICK_IDEA_ICONS: Record<string, React.ReactNode> = {
+  "REST API": <Settings className="size-4" />,
+  "Automation": <Zap className="size-4" />,
+  "AI Agent": <Bot className="size-4" />,
+  "Dashboard": <BarChart3 className="size-4" />,
+};
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -44,8 +71,10 @@ function LandingPage() {
     }
   };
 
-  const handleQuickIdea = (label: string) => {
-    setMessage(label);
+  const handleQuickIdea = (category: string) => {
+    const ideas = QUICK_IDEAS[category];
+    const randomIdea = ideas[Math.floor(Math.random() * ideas.length)];
+    setMessage(randomIdea);
     textareaRef.current?.focus();
   };
 
