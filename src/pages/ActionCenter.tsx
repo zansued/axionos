@@ -122,6 +122,7 @@ export default function ActionCenter() {
   const { currentOrg } = useOrg();
   const orgId = currentOrg?.id;
   const qc = useQueryClient();
+  const navigate = useNavigate();
 
   const [tab, setTab] = useState("active");
   const [selectedId, setSelectedId] = useState<string | null>(null);
