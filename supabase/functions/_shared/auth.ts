@@ -74,6 +74,7 @@ export async function requireOrgMembership(
     .eq("user_id", userId)
     .single();
   if (!data) {
-    return errorResponse("Not a member of this organization", 403);
+    // Sprint 199: Generic error to prevent org existence inference
+    return errorResponse("Organization access denied", 403);
   }
 }
