@@ -6,6 +6,10 @@ const DEFAULT_MAX_REQUESTS_PER_HOUR = 30;
 const FUNCTION_LIMITS: Record<string, number> = {
   "analyze-artifact": 120,
   "rework-artifact": 60,
+  "canon-learning": 600,
+  "purple-learning": 600,
+  "canon-ingestion-agent": 120,
+  "canon-promotion-pipeline": 120,
 };
 
 /**
