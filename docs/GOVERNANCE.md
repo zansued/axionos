@@ -4,7 +4,7 @@
 > Canonical source for planes, modules, agent types, contracts, safety boundaries, and events.
 >
 > Last updated: 2026-03-12
-> 163 sprints complete (Blocks Foundation through AH)
+> 169 sprints complete (Blocks Foundation through AI)
 
 ## Document Authority
 
