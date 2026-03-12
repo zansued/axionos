@@ -139,6 +139,10 @@ export default function CanonIntelligenceDashboard() {
                 onRefresh={() => { intel.refetch(); stewardship.refetch(); }}
               />
             </TabsContent>
+
+            <TabsContent value="trust">
+              <RepoTrustTab />
+            </TabsContent>
           </Tabs>
       </div>
     </AppShell>
