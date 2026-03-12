@@ -6,6 +6,7 @@ import { OperationalDashboard } from "@/components/dashboard/OperationalDashboar
 import { ArrowRight, Settings, Zap, Bot, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
 import axionLogo from "@/assets/axion-logo.svg";
+import { GlowingEffect } from "@/components/ui/GlowingEffect";
 import NeuralBackground from "@/components/ui/NeuralBackground";
 
 const IDEA_KEY = "axion_initial_idea";
@@ -155,6 +156,14 @@ function LandingPage() {
           className="w-full max-w-[680px]"
         >
           <div className="relative rounded-2xl bg-card ring-1 ring-border shadow-[0_2px_24px_rgba(0,0,0,0.4)]">
+            <GlowingEffect
+              spread={40}
+              glow
+              disabled={false}
+              proximity={64}
+              inactiveZone={0.01}
+              borderWidth={2}
+            />
             <textarea
               ref={textareaRef}
               value={message}
