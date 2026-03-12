@@ -124,6 +124,7 @@ import Governance from "./pages/Governance";
 import GovernanceInsights from "./pages/GovernanceInsights";
 import GovernanceDecisions from "./pages/GovernanceDecisions";
 import GovernanceExecutionHandoff from "./pages/GovernanceExecutionHandoff";
+import GovernanceChangeApplicationTracking from "./pages/GovernanceChangeApplicationTracking";
 import Modes from "./pages/Modes";
 import SettingsPage from "./pages/Settings";
 import Runtime from "./pages/Runtime";
