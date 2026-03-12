@@ -181,15 +181,34 @@ serve(async (req) => {
     }
 
     // 1. Surface Mapping
-    const repoInfo = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, { headers: ghHeaders }).then(r => r.json());
-    const defaultBranch = repoInfo.default_branch || "main";
+    const repoInfo = await fetchGitHubJson(`${GITHUB_API}/repos/${owner}/${repo}`, ghHeaders);
+    const defaultBranch = repoInfo?.default_branch || "main";
 
-    const treeResp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/trees/${defaultBranch}?recursive=1`, { headers: ghHeaders });
-    const treeData = await treeResp.json();
+    const treeUrl = `${GITHUB_API}/repos/${owner}/${repo}/git/trees/${encodeURIComponent(defaultBranch)}?recursive=1`;
+    let filePaths: string[] = [];
 
-    if (!treeData.tree) return errorResponse("Failed to fetch repository tree", 500, req);
+    try {
+      const treeData = await fetchGitHubJson(treeUrl, ghHeaders);
+      if (Array.isArray(treeData?.tree)) {
+        filePaths = treeData.tree
+          .filter((t: any) => t?.type === "blob" && typeof t.path === "string")
+          .map((t: any) => t.path);
+      }
+    } catch (treeError) {
+      console.warn("[DeepRepoAbsorber] Tree API unavailable, trying fallback listing:", treeError);
+    }
 
-    const filePaths = treeData.tree.filter((t: any) => t.type === "blob").map((t: any) => t.path);
+    if (!filePaths.length) {
+      filePaths = await listRepoPathsFallback(ghHeaders, owner, repo, defaultBranch);
+    }
+
+    if (!filePaths.length) {
+      return errorResponse(
+        "Failed to fetch repository tree. Verify repository visibility and GitHub token permissions.",
+        502,
+        req,
+      );
+    }
 
     // 2. Identify Entry Points
     const criticalFiles = [
