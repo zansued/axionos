@@ -121,6 +121,7 @@ import ProjectDetail from "./pages/ProjectDetail";
 import Pipelines from "./pages/Pipelines";
 import Governance from "./pages/Governance";
 import GovernanceInsights from "./pages/GovernanceInsights";
+import GovernanceDecisions from "./pages/GovernanceDecisions";
 import Modes from "./pages/Modes";
 import SettingsPage from "./pages/Settings";
 import Runtime from "./pages/Runtime";
