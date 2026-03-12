@@ -119,11 +119,39 @@ const MODE_CFG: Record<string, string> = {
 export default function ActionCenter() {
   const { currentOrg } = useOrg();
   const orgId = currentOrg?.id;
+  const qc = useQueryClient();
 
   const [tab, setTab] = useState("active");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [stageFilter, setStageFilter] = useState("all");
   const [riskFilter, setRiskFilter] = useState("all");
+
+  // Simulate recovery mutation
+  const simulateRecovery = useMutation({
+    mutationFn: async (actionEntry: ActionEntry) => {
+      const { data, error } = await supabase.functions.invoke("architecture-simulation", {
+        body: {
+          action: "recompute",
+          organization_id: orgId,
+          initiative_id: actionEntry.initiative_id,
+          simulation_context: {
+            source: "action_center_recovery",
+            action_id: actionEntry.action_id,
+            trigger_type: actionEntry.trigger_type,
+            stage: actionEntry.stage,
+            risk_level: actionEntry.risk_level,
+          },
+        },
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (d) => {
+      toast.success(`Recovery simulation complete: ${d?.simulations_created || 0} scenarios generated`);
+      qc.invalidateQueries({ queryKey: ["action-center"] });
+    },
+    onError: () => toast.error("Recovery simulation failed"),
+  });
 
   // ── Fetch actions ──
   const { data: actions = [], isLoading } = useQuery({
