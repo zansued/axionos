@@ -62,8 +62,8 @@ function LandingPage() {
 
       {/* Planet / Sun-rise effect — concentric rings at bottom */}
       <div
-        className="absolute left-1/2 w-[1600px] h-[1600px] sm:w-[3043px] sm:h-[2865px] pointer-events-none"
-        style={{ bottom: "-1400px", transform: "translateX(-50%)" }}
+        className="absolute left-1/2 w-[1600px] h-[1600px] sm:w-[3043px] sm:h-[2865px] pointer-events-none z-[2]"
+        style={{ bottom: "-1250px", transform: "translateX(-50%)" }}
       >
         <div className="absolute w-full h-full rounded-full" style={{ background: "radial-gradient(43.89% 25.74% at 50.02% 2.76%, hsl(var(--surface-deep)) 0%, hsl(var(--background)) 100%)", border: "16px solid white", zIndex: 5 }} />
         <div className="absolute w-full h-full rounded-full bg-background mt-[2px]" style={{ border: "23px solid #b7d7f6", zIndex: 4 }} />
