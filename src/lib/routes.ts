@@ -211,6 +211,17 @@ export const OWNER_ROUTES: RouteEntry[] = [
     pageKey: "canon-intelligence",
   },
   {
+    path: "/owner/knowledge-health",
+    title: "Knowledge Health",
+    description: "Renewal, revalidation & confidence recovery",
+    icon: HeartPulse,
+    mode: "owner",
+    group: "Institutional Memory",
+    order: 5.5,
+    sidebar: true,
+    pageKey: "knowledge-health",
+  },
+  {
     path: "/owner/security-war-room",
     title: "Security War Room",
     description: "Active security operations",
