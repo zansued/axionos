@@ -311,12 +311,40 @@ export default function ActionCenter() {
                     {selected.initiative_id && <DetailRow label="Initiative" value={selected.initiative_id} />}
                   </Section>
 
-                  {/* Policy */}
+                  {/* Decision Path — Canon + Policy lineage */}
+                  <Section title="Decision Path">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-xs">
+                        <BookOpen className="h-3.5 w-3.5 text-primary shrink-0" />
+                        <span className="text-muted-foreground">Canon informed:</span>
+                        <span className="text-foreground font-medium">{selected.stage} stage context</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        <Shield className="h-3.5 w-3.5 text-warning shrink-0" />
+                        <span className="text-muted-foreground">Policy constrained:</span>
+                        <span className="text-foreground font-medium">{MODE_CFG[selected.execution_mode] || selected.execution_mode}</span>
+                      </div>
+                      {selected.policy_decision_id && (
+                        <div className="flex items-center gap-2 text-xs">
+                          <GitBranch className="h-3.5 w-3.5 text-info shrink-0" />
+                          <span className="text-muted-foreground">Policy Decision:</span>
+                          <span className="text-foreground font-mono text-[10px] truncate max-w-[180px]">{selected.policy_decision_id}</span>
+                        </div>
+                      )}
+                      {selected.dispatch_decision_id && (
+                        <div className="flex items-center gap-2 text-xs">
+                          <Zap className="h-3.5 w-3.5 text-info shrink-0" />
+                          <span className="text-muted-foreground">Dispatch:</span>
+                          <span className="text-foreground font-mono text-[10px] truncate max-w-[180px]">{selected.dispatch_decision_id}</span>
+                        </div>
+                      )}
+                    </div>
+                  </Section>
+
+                  {/* Policy & Governance */}
                   <Section title="Policy & Governance">
                     <DetailRow label="Execution Mode" value={MODE_CFG[selected.execution_mode] || selected.execution_mode} />
                     <DetailRow label="Risk Level" value={selected.risk_level} />
-                    {selected.policy_decision_id && <DetailRow label="Policy Decision" value={selected.policy_decision_id} />}
-                    {selected.dispatch_decision_id && <DetailRow label="Dispatch Decision" value={selected.dispatch_decision_id} />}
                     {selected.approval_id && <DetailRow label="Approval ID" value={selected.approval_id} />}
                     {selected.approved_by && <DetailRow label="Approved By" value={selected.approved_by} />}
                   </Section>
