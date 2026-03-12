@@ -156,8 +156,13 @@ serve(async (req) => {
 
     console.log(`[DeepRepoAbsorber] User ${user.id} initiating absorption of ${repoUrl} for org ${orgId}`);
 
-    // Parse GitHub URL
-    const urlParts = repoUrl.replace("https://github.com/", "").replace(/\/$/, "").split("/");
+    const normalizedRepoUrl = repoUrl
+      .trim()
+      .replace(/\.git$/, "")
+      .replace(/\/$/, "")
+      .split("?")[0];
+
+    const urlParts = normalizedRepoUrl.replace("https://github.com/", "").split("/");
     const owner = urlParts[0];
     const repo = urlParts[1];
 
