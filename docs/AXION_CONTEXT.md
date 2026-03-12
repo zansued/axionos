@@ -234,15 +234,42 @@ Agents operate under governance rules and **cannot modify system architecture au
 
 ## Learning Model
 
-System learning follows a bounded cycle:
+System learning follows a **complete knowledge metabolism pipeline**:
 
-1. Observation
-2. Evidence collection
-3. Analysis
-4. Recommendation
-5. Human-approved adjustment
+1. **Repository Analysis** — Absorb engineering knowledge from codebases and execution history
+2. **Execution Signals** — Capture outcomes, errors, successes, and patterns from runtime
+3. **Learning Candidates** — Generate candidate knowledge entries from signals and analysis
+4. **Candidate Evaluation** — Score candidates by confidence, evidence strength, and domain fit
+5. **Pattern Deduplication** — Merge overlapping or redundant candidates intelligently
+6. **Canon Promotion** — Promote validated candidates into the canonical knowledge base
+7. **Distilled Knowledge** — Compress canon entries into efficient cues and micro-skills
+8. **Skill Injection** — Inject distilled knowledge into agent context at runtime
+9. **Execution Feedback** — Measure impact of injected knowledge on execution quality
+10. **Architecture Heuristics** — Extract architectural rules from success/failure patterns
+11. **Self-Improvement Proposals** — Generate governed proposals for system self-improvement
 
-All learning is **advisory-first**. The system never mutates its own architecture without governance review.
+All learning is **advisory-first and governance-constrained**. The system never mutates its own architecture without governance review. Self-improvement proposals must pass through the Governance Decision Surface.
+
+---
+
+## Knowledge Metabolism
+
+AxionOS operates as a **knowledge metabolism system** — it ingests, digests, distills, and applies knowledge in a continuous governed cycle:
+
+```
+source → candidate → evaluation → merge/deduplication → canon promotion
+→ distilled knowledge → runtime injection → execution feedback
+→ learning signals → architecture improvement proposals → governance review
+```
+
+Each stage has explicit ownership:
+- **Ingestion**: Repository Absorption Engine, Execution Evidence Collectors
+- **Processing**: Learning Candidates Pipeline, Pattern Deduplication
+- **Promotion**: Canon Promotion Workflow (governance-gated)
+- **Distillation**: Canon Distillation Engine, Skill Distillation Engine
+- **Application**: Agent Skill Injection Runtime, Token Budget Engine
+- **Feedback**: Neural Feedback Loop, Runtime Learning Efficiency Dashboard
+- **Evolution**: Self-Improvement Proposal Engine (governance-gated)
 
 ---
 
