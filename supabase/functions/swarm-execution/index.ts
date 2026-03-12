@@ -31,6 +31,7 @@ Deno.serve(async (req) => {
       case "list_swarm_campaigns": return await listCampaigns(supabase, params);
       case "swarm_campaign_detail": return await campaignDetail(supabase, params);
       case "explain_swarm_state": return await explainSwarmState(supabase, params);
+      case "parallel_wave_schedule": return await parallelWaveSchedule(supabase, params);
       default: return json({ error: `Unknown action: ${action}` }, 400);
     }
   } catch (e) {

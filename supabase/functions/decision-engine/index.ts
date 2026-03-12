@@ -156,6 +156,90 @@ serve(async (req: Request) => {
       return json({ explanation });
     }
 
+    // ─── GENERATE_FROM_METRIC_DEVIATION ──────────────────────────────
+    if (action === "generate_from_metric_deviation") {
+      const { metric_key, current_value, baseline_value, deviation_pct, stage, initiative_id } = body;
+      if (!metric_key || deviation_pct === undefined) throw new Error("metric_key and deviation_pct required");
+
+      // Classify deviation severity
+      const absDev = Math.abs(deviation_pct);
+      let severity: string;
+      let suggestedMode: string;
+      let triggerType: string;
+
+      if (absDev >= 50) {
+        severity = "critical"; suggestedMode = "approval_required"; triggerType = "runtime_degraded";
+      } else if (absDev >= 30) {
+        severity = "high"; suggestedMode = "approval_required"; triggerType = "runtime_degraded";
+      } else if (absDev >= 15) {
+        severity = "medium"; suggestedMode = "auto"; triggerType = "policy_violation";
+      } else {
+        severity = "low"; suggestedMode = "auto"; triggerType = "readiness_complete";
+      }
+
+      const intentId = `intent-metric-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const actionId = `action-metric-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+      // Build ActionIntent record
+      const description = `Metric deviation detected: ${metric_key} deviated ${deviation_pct.toFixed(1)}% from baseline (${baseline_value} → ${current_value})`;
+
+      // Query active policy rules for constraints
+      const { data: policyRules } = await supabase
+        .from("active_prevention_rules")
+        .select("id, rule_type, description, action_type, pipeline_stage")
+        .eq("organization_id", organization_id)
+        .eq("enabled", true)
+        .eq("pipeline_stage", stage || "validation")
+        .limit(10);
+
+      const constraints = (policyRules || []).map((r: any) => ({
+        source: "policy",
+        key: r.rule_type,
+        description: r.description,
+      }));
+
+      // Insert into action_registry_entries with policy-derived constraints
+      const { data: actionEntry, error: aeError } = await supabase
+        .from("action_registry_entries")
+        .insert({
+          organization_id,
+          action_id: actionId,
+          intent_id: intentId,
+          trigger_id: `trigger-metric-${metric_key}`,
+          trigger_type: triggerType,
+          initiative_id: initiative_id || null,
+          stage: stage || "validation",
+          execution_mode: suggestedMode,
+          status: suggestedMode === "approval_required" ? "pending" : "pending",
+          risk_level: severity,
+          description,
+          reason: `Metric ${metric_key} exceeded deviation threshold (${deviation_pct.toFixed(1)}%)`,
+          requires_approval: suggestedMode === "approval_required",
+          constraints,
+        })
+        .select()
+        .single();
+
+      if (aeError) throw aeError;
+
+      // Emit audit event
+      await supabase.from("action_audit_events").insert({
+        organization_id,
+        action_id: actionId,
+        event_type: "action.created_from_metric_deviation",
+        new_status: "pending",
+        reason: description,
+        actor_type: "system",
+      });
+
+      return json({
+        action: actionEntry,
+        intent_id: intentId,
+        metric_deviation: { metric_key, current_value, baseline_value, deviation_pct, severity },
+        constraints_applied: constraints.length,
+      });
+    }
+
     // ─── GENERATE ─────────────────────────────────────────────────────
     if (action === "generate") {
       const input = body.generation_input;
