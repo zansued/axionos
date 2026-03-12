@@ -234,7 +234,7 @@ const App = () => (
                                 AUTH & LANDING
                                 ══════════════════════════════════════════════ */}
                             <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-                            <Route path="/" element={<Navigate to="/builder/dashboard" replace />} />
+                            <Route path="/" element={<Dashboard />} />
 
                             {/* ══════════════════════════════════════════════
                                 BUILDER MODE — /builder/*
