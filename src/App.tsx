@@ -114,6 +114,7 @@ import KnowledgeDemandForecastDashboard from "./pages/KnowledgeDemandForecastDas
 import KnowledgeAcquisitionDashboard from "./pages/KnowledgeAcquisitionDashboard";
 import KnowledgeAcquisitionExecutionDashboard from "./pages/KnowledgeAcquisitionExecutionDashboard";
 import KnowledgeAcquisitionRoiDashboard from "./pages/KnowledgeAcquisitionRoiDashboard";
+import CanonPoisoningPreventionDashboard from "./pages/CanonPoisoningPreventionDashboard";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
