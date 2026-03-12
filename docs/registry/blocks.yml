@@ -64,3 +64,6 @@ blocks:
 
   # === BLOCK AH — Governance Decision Lifecycle === COMPLETE
   - { block_id: "AH",         block_name: "Governance Decision Lifecycle",                sprint_range: "155–163", status: complete, purpose: "Governance review workflow, decision state machine, proposal types, governance review surface, decision formalization, governance insights, governance decision surface, execution handoff, change application tracking" }
+
+  # === BLOCK AI — Governed Execution Path === IN PROGRESS
+  - { block_id: "AI",         block_name: "Governed Execution Path",                      sprint_range: "164–",    status: active,   purpose: "Execution worker governance gates, audit trail enforcement, elimination of ungoverned fast paths, governed dispatch consolidation" }
