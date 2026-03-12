@@ -34,6 +34,7 @@ const sourceLabels: Record<ProposalSource, string> = {
   policy_tuning: "Policy",
   agent_selection_tuning: "Agent Selection",
   readiness_tuning: "Readiness",
+  knowledge_renewal: "Knowledge Renewal",
 };
 
 const riskColors: Record<RiskLevel, string> = {

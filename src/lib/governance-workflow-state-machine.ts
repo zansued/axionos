@@ -624,7 +624,7 @@ export interface WorkflowAuditEntry {
 
 // ── Proposal Workflow Enrichment ────────────────────────────────────────────
 
-export type ProposalSourceType = "canon_evolution" | "policy_tuning" | "agent_selection_tuning" | "readiness_tuning";
+export type ProposalSourceType = "canon_evolution" | "policy_tuning" | "agent_selection_tuning" | "readiness_tuning" | "knowledge_renewal";
 
 export function getDefaultReviewerRoles(source: ProposalSourceType): GovernanceRole[] {
   const map: Record<ProposalSourceType, GovernanceRole[]> = {
@@ -632,6 +632,7 @@ export function getDefaultReviewerRoles(source: ProposalSourceType): GovernanceR
     policy_tuning: ["policy_owner", "senior_reviewer"],
     agent_selection_tuning: ["orchestrator_owner", "reviewer"],
     readiness_tuning: ["readiness_owner", "reviewer"],
+    knowledge_renewal: ["canon_owner", "reviewer", "senior_reviewer"],
   };
   return map[source];
 }

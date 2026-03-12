@@ -41,6 +41,7 @@ const sourceLabels: Record<ProposalSource, string> = {
   policy_tuning: "Policy Tuning",
   agent_selection_tuning: "Agent Selection Tuning",
   readiness_tuning: "Readiness Tuning",
+  knowledge_renewal: "Knowledge Renewal",
 };
 
 /** Map DecisionStatus → WorkflowState */
