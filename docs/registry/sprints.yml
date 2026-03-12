@@ -216,3 +216,4 @@ sprints:
   - { sprint: 164, name: "Governed Execution Path Consolidation",                  status: complete, block: "AI", phase: "Execution Path Governance", layer: "Execution Worker Governance Layer" }
   - { sprint: 165, name: "Action Schema & Persistence Alignment",                  status: complete, block: "AI", phase: "Execution Path Governance", layer: "Schema Alignment Layer" }
   - { sprint: 166, name: "Approval Expiration & Governance Timers",                status: complete, block: "AI", phase: "Execution Path Governance", layer: "Approval Lifecycle Layer" }
+  - { sprint: 167, name: "Action Center ↔ Approval Queue Navigation",             status: complete, block: "AI", phase: "Execution Path Governance", layer: "Operator Navigation Layer" }

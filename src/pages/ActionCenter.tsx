@@ -8,8 +8,9 @@
  * Access: operator, tenant_owner, platform_reviewer, platform_admin
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
@@ -30,6 +31,7 @@ import {
   Activity, Clock, CheckCircle2, XCircle, AlertTriangle, ShieldAlert,
   ShieldCheck, Loader2, Inbox, Zap, Pause, Play, RotateCcw,
   ArrowUpCircle, Timer, Ban, Eye, GitBranch, BookOpen, Shield, FlaskConical,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -120,6 +122,8 @@ export default function ActionCenter() {
   const { currentOrg } = useOrg();
   const orgId = currentOrg?.id;
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [tab, setTab] = useState("active");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -169,6 +173,19 @@ export default function ActionCenter() {
       return (data || []) as ActionEntry[];
     },
   });
+
+  // ── Auto-select from URL param (cross-navigation from Approval Queue) ──
+  useEffect(() => {
+    const actionIdParam = searchParams.get("action_id");
+    if (actionIdParam && actions.length > 0) {
+      const match = actions.find((a) => a.action_id === actionIdParam);
+      if (match) {
+        setSelectedId(match.id);
+        setTab("all");
+      }
+      setSearchParams({}, { replace: true });
+    }
+  }, [actions, searchParams, setSearchParams]);
 
   // ── Fetch audit for selected ──
   const selected = actions.find((a) => a.id === selectedId) || null;
@@ -376,6 +393,42 @@ export default function ActionCenter() {
                     {selected.approval_id && <DetailRow label="Approval ID" value={selected.approval_id} />}
                     {selected.approved_by && <DetailRow label="Approved By" value={selected.approved_by} />}
                   </Section>
+
+                  {/* Cross-navigation: go to Approval Queue */}
+                  {(selected.requires_approval || selected.status === "waiting_approval" || selected.approval_id) && (
+                    <Section title="Related Approval">
+                      <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 p-2.5">
+                        <div className="space-y-0.5">
+                          <p className="text-xs font-medium text-foreground">
+                            {selected.status === "waiting_approval"
+                              ? "Awaiting human decision"
+                              : selected.status === "approved"
+                                ? "Approved by operator"
+                                : selected.status === "rejected"
+                                  ? "Rejected by operator"
+                                  : selected.status === "expired"
+                                    ? "Approval window expired"
+                                    : "Approval required"}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground">
+                            View full approval context and decision history
+                          </p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="gap-1.5 text-xs shrink-0"
+                          onClick={() => {
+                            setSelectedId(null);
+                            navigate(`/owner/pending-approvals?action_id=${selected.action_id}`);
+                          }}
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          Approval Queue
+                        </Button>
+                      </div>
+                    </Section>
+                  )}
 
                   {/* Constraints */}
                   {Array.isArray(selected.constraints) && selected.constraints.length > 0 && (

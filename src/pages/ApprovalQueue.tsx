@@ -8,8 +8,9 @@
  * Access: operator, tenant_owner, platform_reviewer, platform_admin
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
@@ -45,6 +46,7 @@ import {
   Loader2,
   Inbox,
   Filter,
+  ExternalLink,
 } from "lucide-react";
 
 // ── Types ──
@@ -100,6 +102,8 @@ export default function ApprovalQueue() {
   const { user } = useAuth();
   const { toast } = useToast();
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const orgId = currentOrg?.id;
 
   const [tab, setTab] = useState("waiting");
@@ -123,6 +127,24 @@ export default function ApprovalQueue() {
       return (data || []) as ApprovalRequest[];
     },
   });
+  // ── Auto-select from URL param (cross-navigation from Action Center) ──
+  useEffect(() => {
+    const actionIdParam = searchParams.get("action_id");
+    if (actionIdParam && requests.length > 0) {
+      const match = requests.find((r) => r.action_id === actionIdParam);
+      if (match) {
+        setSelectedId(match.id);
+        // Switch to the appropriate tab
+        if (match.status === "waiting_approval" || match.status === "pending") setTab("waiting");
+        else if (match.status === "approved") setTab("approved");
+        else if (match.status === "rejected") setTab("rejected");
+        else if (match.status === "expired") setTab("expired");
+        else setTab("all");
+      }
+      // Clear the param to avoid re-triggering
+      setSearchParams({}, { replace: true });
+    }
+  }, [requests, searchParams, setSearchParams]);
 
   // ── Filter by tab ──
 
@@ -332,6 +354,32 @@ export default function ApprovalQueue() {
                     {selected.initiative_id && (
                       <DetailRow label="Initiative" value={selected.initiative_id} />
                     )}
+                  </Section>
+
+                  {/* Cross-navigation: go to Action Center */}
+                  <Section title="Related Action">
+                    <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 p-2.5">
+                      <div className="space-y-0.5">
+                        <p className="text-xs font-medium text-foreground">
+                          View full action lifecycle, audit trail, and outcome
+                        </p>
+                        <p className="text-[10px] text-muted-foreground">
+                          Action: {selected.action_id.substring(0, 16)}…
+                        </p>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 text-xs shrink-0"
+                        onClick={() => {
+                          setSelectedId(null);
+                          navigate(`/owner/action-center?action_id=${selected.action_id}`);
+                        }}
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                        Action Center
+                      </Button>
+                    </div>
                   </Section>
 
                   {/* Policy */}
