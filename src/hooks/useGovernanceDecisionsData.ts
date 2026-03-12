@@ -319,6 +319,7 @@ export function useGovernanceDecisionAction() {
         policy_tuning: "policy_tuning_proposals",
         agent_selection_tuning: "agent_selection_tuning_proposals",
         readiness_tuning: "readiness_tuning_proposals",
+        knowledge_renewal: "renewal_governance_bridge",
       }[params.source];
 
       const { error } = await supabase
