@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { PROMOTION_TRUST_FLOOR, PROMOTION_MAX_RISK_SCORE } from "../_shared/canon-poisoning-scorer.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
