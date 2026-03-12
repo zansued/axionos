@@ -410,6 +410,8 @@ flowchart LR
 | 19 | Security Surface | AF | 143-146 |
 | 20 | Adoption Intelligence | AG | 147-154 |
 | 21 | Governance Decision Lifecycle | AH | 155-163 |
+| 22 | Repository Intelligence & Institutional Learning | AI | 164-171 |
+| 23 | Self-Improving Architecture Engine | AJ | 172-179 |
 
 ---
 
