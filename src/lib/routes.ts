@@ -255,6 +255,17 @@ export const OWNER_ROUTES: RouteEntry[] = [
     pageKey: "knowledge-acquisition",
   },
   {
+    path: "/owner/knowledge-acquisition-execution",
+    title: "Acquisition Execution",
+    description: "Execute and monitor knowledge acquisition jobs",
+    icon: Search,
+    mode: "owner",
+    group: "Institutional Memory",
+    order: 5.85,
+    sidebar: true,
+    pageKey: "knowledge-acquisition-execution",
+  },
+  {
     path: "/owner/security-war-room",
     title: "Security War Room",
     description: "Active security operations",

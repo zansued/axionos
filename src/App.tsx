@@ -112,6 +112,7 @@ import KnowledgeHealthDashboard from "./pages/KnowledgeHealthDashboard";
 import KnowledgePortfolioDashboard from "./pages/KnowledgePortfolioDashboard";
 import KnowledgeDemandForecastDashboard from "./pages/KnowledgeDemandForecastDashboard";
 import KnowledgeAcquisitionDashboard from "./pages/KnowledgeAcquisitionDashboard";
+import KnowledgeAcquisitionExecutionDashboard from "./pages/KnowledgeAcquisitionExecutionDashboard";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
@@ -323,6 +324,7 @@ const App = () => (
                             <Route path="/owner/knowledge-portfolio" element={<P><KnowledgePortfolioDashboard /></P>} />
                             <Route path="/owner/knowledge-demand" element={<P><KnowledgeDemandForecastDashboard /></P>} />
                             <Route path="/owner/knowledge-acquisition" element={<P><KnowledgeAcquisitionDashboard /></P>} />
+                            <Route path="/owner/knowledge-acquisition-execution" element={<P><KnowledgeAcquisitionExecutionDashboard /></P>} />
                             <Route path="/owner/security-war-room" element={<P><SecurityWarRoom /></P>} />
                             <Route path="/owner/security-intelligence" element={<P><SecurityIntelligenceDashboard /></P>} />
                             <Route path="/owner/red-team-simulation" element={<P><RedTeamSimulationDashboard /></P>} />
