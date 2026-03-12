@@ -22932,6 +22932,165 @@ export type Database = {
           },
         ]
       }
+      knowledge_acquisition_budgets: {
+        Row: {
+          budget_limit: number
+          budget_type: string
+          budget_used: number
+          budget_window: string
+          created_at: string
+          id: string
+          organization_id: string
+        }
+        Insert: {
+          budget_limit?: number
+          budget_type?: string
+          budget_used?: number
+          budget_window?: string
+          created_at?: string
+          id?: string
+          organization_id: string
+        }
+        Update: {
+          budget_limit?: number
+          budget_type?: string
+          budget_used?: number
+          budget_window?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_acquisition_budgets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_acquisition_opportunities: {
+        Row: {
+          created_at: string
+          evidence_summary: Json | null
+          expected_cost: number | null
+          expected_downstream_value: number | null
+          expected_knowledge_gain: number | null
+          id: string
+          novelty_score: number | null
+          opportunity_score: number | null
+          organization_id: string
+          redundancy_risk: number | null
+          source_ref: string
+          source_type: string
+          target_domain: string | null
+          target_stack: string | null
+          urgency_score: number | null
+        }
+        Insert: {
+          created_at?: string
+          evidence_summary?: Json | null
+          expected_cost?: number | null
+          expected_downstream_value?: number | null
+          expected_knowledge_gain?: number | null
+          id?: string
+          novelty_score?: number | null
+          opportunity_score?: number | null
+          organization_id: string
+          redundancy_risk?: number | null
+          source_ref?: string
+          source_type?: string
+          target_domain?: string | null
+          target_stack?: string | null
+          urgency_score?: number | null
+        }
+        Update: {
+          created_at?: string
+          evidence_summary?: Json | null
+          expected_cost?: number | null
+          expected_downstream_value?: number | null
+          expected_knowledge_gain?: number | null
+          id?: string
+          novelty_score?: number | null
+          opportunity_score?: number | null
+          organization_id?: string
+          redundancy_risk?: number | null
+          source_ref?: string
+          source_type?: string
+          target_domain?: string | null
+          target_stack?: string | null
+          urgency_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_acquisition_opportunities_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_acquisition_plans: {
+        Row: {
+          confidence: number | null
+          created_at: string
+          expected_benefit: number | null
+          expected_cost: number | null
+          id: string
+          organization_id: string
+          plan_name: string
+          priority: string
+          rationale: string | null
+          source_refs: Json | null
+          status: string
+          strategy_mode: string
+          target_scope: string
+          updated_at: string
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string
+          expected_benefit?: number | null
+          expected_cost?: number | null
+          id?: string
+          organization_id: string
+          plan_name?: string
+          priority?: string
+          rationale?: string | null
+          source_refs?: Json | null
+          status?: string
+          strategy_mode?: string
+          target_scope?: string
+          updated_at?: string
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string
+          expected_benefit?: number | null
+          expected_cost?: number | null
+          id?: string
+          organization_id?: string
+          plan_name?: string
+          priority?: string
+          rationale?: string | null
+          source_refs?: Json | null
+          status?: string
+          strategy_mode?: string
+          target_scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_acquisition_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       knowledge_confidence_breakdowns: {
         Row: {
           base_confidence: number
@@ -22990,6 +23149,162 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "knowledge_confidence_breakdowns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_demand_forecasts: {
+        Row: {
+          coverage_gap_score: number | null
+          created_at: string
+          demand_direction: string
+          evidence_summary: Json | null
+          forecast_confidence: number | null
+          forecast_scope_key: string
+          forecast_scope_type: string
+          forecast_score: number | null
+          forecast_window: string
+          id: string
+          organization_id: string
+          pressure_score: number | null
+          primary_driver: string | null
+        }
+        Insert: {
+          coverage_gap_score?: number | null
+          created_at?: string
+          demand_direction?: string
+          evidence_summary?: Json | null
+          forecast_confidence?: number | null
+          forecast_scope_key?: string
+          forecast_scope_type?: string
+          forecast_score?: number | null
+          forecast_window?: string
+          id?: string
+          organization_id: string
+          pressure_score?: number | null
+          primary_driver?: string | null
+        }
+        Update: {
+          coverage_gap_score?: number | null
+          created_at?: string
+          demand_direction?: string
+          evidence_summary?: Json | null
+          forecast_confidence?: number | null
+          forecast_scope_key?: string
+          forecast_scope_type?: string
+          forecast_score?: number | null
+          forecast_window?: string
+          id?: string
+          organization_id?: string
+          pressure_score?: number | null
+          primary_driver?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_demand_forecasts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_demand_proposals: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_notes: string | null
+          evidence_summary: Json | null
+          id: string
+          organization_id: string
+          priority: string
+          proposal_type: string
+          reason: string
+          status: string
+          target_scope_key: string
+          target_scope_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          evidence_summary?: Json | null
+          id?: string
+          organization_id: string
+          priority?: string
+          proposal_type?: string
+          reason?: string
+          status?: string
+          target_scope_key?: string
+          target_scope_type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          evidence_summary?: Json | null
+          id?: string
+          organization_id?: string
+          priority?: string
+          proposal_type?: string
+          reason?: string
+          status?: string
+          target_scope_key?: string
+          target_scope_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_demand_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_forecast_signals: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          payload: Json | null
+          scope_key: string
+          scope_type: string
+          signal_strength: number | null
+          signal_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          payload?: Json | null
+          scope_key?: string
+          scope_type?: string
+          signal_strength?: number | null
+          signal_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          payload?: Json | null
+          scope_key?: string
+          scope_type?: string
+          signal_strength?: number | null
+          signal_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_forecast_signals_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
