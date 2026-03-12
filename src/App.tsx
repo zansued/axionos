@@ -108,6 +108,7 @@ import RedTeamSimulationDashboard from "./pages/RedTeamSimulationDashboard";
 import BlueTeamDefenseDashboard from "./pages/BlueTeamDefenseDashboard";
 import PurpleLearningDashboard from "./pages/PurpleLearningDashboard";
 import SecurityWarRoom from "./pages/SecurityWarRoom";
+import KnowledgeHealthDashboard from "./pages/KnowledgeHealthDashboard";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
