@@ -9,7 +9,7 @@
  */
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
@@ -29,8 +29,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Activity, Clock, CheckCircle2, XCircle, AlertTriangle, ShieldAlert,
   ShieldCheck, Loader2, Inbox, Zap, Pause, Play, RotateCcw,
-  ArrowUpCircle, Timer, Ban, Eye,
+  ArrowUpCircle, Timer, Ban, Eye, GitBranch, BookOpen, Shield, FlaskConical,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 // ── Types ──
 
@@ -117,11 +119,39 @@ const MODE_CFG: Record<string, string> = {
 export default function ActionCenter() {
   const { currentOrg } = useOrg();
   const orgId = currentOrg?.id;
+  const qc = useQueryClient();
 
   const [tab, setTab] = useState("active");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [stageFilter, setStageFilter] = useState("all");
   const [riskFilter, setRiskFilter] = useState("all");
+
+  // Simulate recovery mutation
+  const simulateRecovery = useMutation({
+    mutationFn: async (actionEntry: ActionEntry) => {
+      const { data, error } = await supabase.functions.invoke("architecture-simulation", {
+        body: {
+          action: "recompute",
+          organization_id: orgId,
+          initiative_id: actionEntry.initiative_id,
+          simulation_context: {
+            source: "action_center_recovery",
+            action_id: actionEntry.action_id,
+            trigger_type: actionEntry.trigger_type,
+            stage: actionEntry.stage,
+            risk_level: actionEntry.risk_level,
+          },
+        },
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (d) => {
+      toast.success(`Recovery simulation complete: ${d?.simulations_created || 0} scenarios generated`);
+      qc.invalidateQueries({ queryKey: ["action-center"] });
+    },
+    onError: () => toast.error("Recovery simulation failed"),
+  });
 
   // ── Fetch actions ──
   const { data: actions = [], isLoading } = useQuery({
@@ -309,12 +339,40 @@ export default function ActionCenter() {
                     {selected.initiative_id && <DetailRow label="Initiative" value={selected.initiative_id} />}
                   </Section>
 
-                  {/* Policy */}
+                  {/* Decision Path — Canon + Policy lineage */}
+                  <Section title="Decision Path">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-xs">
+                        <BookOpen className="h-3.5 w-3.5 text-primary shrink-0" />
+                        <span className="text-muted-foreground">Canon informed:</span>
+                        <span className="text-foreground font-medium">{selected.stage} stage context</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        <Shield className="h-3.5 w-3.5 text-warning shrink-0" />
+                        <span className="text-muted-foreground">Policy constrained:</span>
+                        <span className="text-foreground font-medium">{MODE_CFG[selected.execution_mode] || selected.execution_mode}</span>
+                      </div>
+                      {selected.policy_decision_id && (
+                        <div className="flex items-center gap-2 text-xs">
+                          <GitBranch className="h-3.5 w-3.5 text-info shrink-0" />
+                          <span className="text-muted-foreground">Policy Decision:</span>
+                          <span className="text-foreground font-mono text-[10px] truncate max-w-[180px]">{selected.policy_decision_id}</span>
+                        </div>
+                      )}
+                      {selected.dispatch_decision_id && (
+                        <div className="flex items-center gap-2 text-xs">
+                          <Zap className="h-3.5 w-3.5 text-info shrink-0" />
+                          <span className="text-muted-foreground">Dispatch:</span>
+                          <span className="text-foreground font-mono text-[10px] truncate max-w-[180px]">{selected.dispatch_decision_id}</span>
+                        </div>
+                      )}
+                    </div>
+                  </Section>
+
+                  {/* Policy & Governance */}
                   <Section title="Policy & Governance">
                     <DetailRow label="Execution Mode" value={MODE_CFG[selected.execution_mode] || selected.execution_mode} />
                     <DetailRow label="Risk Level" value={selected.risk_level} />
-                    {selected.policy_decision_id && <DetailRow label="Policy Decision" value={selected.policy_decision_id} />}
-                    {selected.dispatch_decision_id && <DetailRow label="Dispatch Decision" value={selected.dispatch_decision_id} />}
                     {selected.approval_id && <DetailRow label="Approval ID" value={selected.approval_id} />}
                     {selected.approved_by && <DetailRow label="Approved By" value={selected.approved_by} />}
                   </Section>
@@ -348,6 +406,35 @@ export default function ActionCenter() {
                     <Section title="Recovery">
                       <DetailRow label="Recovery Hook" value={selected.recovery_hook_id} />
                       {selected.recovery_type && <DetailRow label="Recovery Type" value={selected.recovery_type} />}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2 gap-1.5 text-xs"
+                        disabled={simulateRecovery.isPending}
+                        onClick={() => simulateRecovery.mutate(selected)}
+                      >
+                        <FlaskConical className="h-3.5 w-3.5" />
+                        {simulateRecovery.isPending ? "Simulating…" : "Simulate Recovery"}
+                      </Button>
+                    </Section>
+                  )}
+
+                  {/* Simulate Recovery for failed/blocked actions without recovery hook */}
+                  {!selected.recovery_hook_id && (selected.status === "failed" || selected.status === "blocked" || selected.status === "rolled_back") && (
+                    <Section title="Recovery Options">
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Run an architecture simulation before applying a rollback.
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 text-xs"
+                        disabled={simulateRecovery.isPending}
+                        onClick={() => simulateRecovery.mutate(selected)}
+                      >
+                        <FlaskConical className="h-3.5 w-3.5" />
+                        {simulateRecovery.isPending ? "Simulating…" : "Simulate Recovery"}
+                      </Button>
                     </Section>
                   )}
 
@@ -432,6 +519,21 @@ function ActionRow({ action, isSelected, onSelect }: { action: ActionEntry; isSe
           {action.requires_approval && <Badge variant="outline" className="text-[10px] text-warning border-warning/20">Approval</Badge>}
         </div>
         <p className="text-xs text-foreground mt-0.5 truncate">{action.description || action.reason || action.action_id}</p>
+        {/* Decision Path mini-indicator */}
+        <div className="flex items-center gap-1 mt-0.5">
+          <BookOpen className="h-2.5 w-2.5 text-primary/60" />
+          <span className="text-[9px] text-muted-foreground">Canon</span>
+          <span className="text-[9px] text-muted-foreground/40">→</span>
+          <Shield className="h-2.5 w-2.5 text-warning/60" />
+          <span className="text-[9px] text-muted-foreground">{MODE_CFG[action.execution_mode] || action.execution_mode}</span>
+          {action.policy_decision_id && (
+            <>
+              <span className="text-[9px] text-muted-foreground/40">→</span>
+              <GitBranch className="h-2.5 w-2.5 text-info/60" />
+              <span className="text-[9px] text-muted-foreground">Policy</span>
+            </>
+          )}
+        </div>
       </div>
       <div className="text-right shrink-0">
         <p className="text-[10px] text-muted-foreground">{fmtDateShort(action.created_at)}</p>
