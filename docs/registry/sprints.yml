@@ -219,3 +219,6 @@ sprints:
   - { sprint: 167, name: "Action Center ↔ Approval Queue Navigation",             status: complete, block: "AI", phase: "Execution Path Governance", layer: "Operator Navigation Layer" }
   - { sprint: 168, name: "Recovery Invocation Verification & Safe Routing",        status: complete, block: "AI", phase: "Execution Path Governance", layer: "Recovery Governance Layer" }
   - { sprint: 169, name: "Action Domain State Machine Formalization",               status: complete, block: "AI", phase: "Execution Path Governance", layer: "Domain State Machine Layer" }
+
+  # === BLOCK AJ — Canon Pipeline Operationalization === IN PROGRESS
+  - { sprint: 170, name: "Canon Review Engine & Pipeline Completion",               status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Canon Review & Promotion Layer" }
