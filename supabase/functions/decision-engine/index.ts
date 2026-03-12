@@ -1,5 +1,5 @@
 /**
- * Sprint 98 — Institutional Decision Engine
+ * Sprint 98 — Institutional Decision Engine (Auth hardened Sprint 197)
  * Block T: Governed Intelligence OS — Completion
  *
  * Actions: generate, list, detail, explain, review, defer, escalate, stats
@@ -9,34 +9,33 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, serviceKey);
+    // Auth hardening — Sprint 197
+    const authResult = await authenticateWithRateLimit(req, "decision-engine");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
     const body = await req.json();
-    const { action, organization_id } = body;
+    const { action, organization_id: payloadOrgId } = body;
 
-    if (!organization_id) {
-      return new Response(JSON.stringify({ error: "organization_id required" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "decision-engine", action: action || "unknown",
+    });
 
     const json = (data: any, status = 200) =>
-      new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      new Response(JSON.stringify(data), { status, headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version", "Content-Type": "application/json" } });
 
     // ─── LIST ─────────────────────────────────────────────────────────
     if (action === "list") {

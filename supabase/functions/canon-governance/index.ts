@@ -5,6 +5,9 @@ import { validateTransition } from "../_shared/canon-governance/canon-lifecycle-
 import { aggregateReviews } from "../_shared/canon-governance/canon-review-workflow.ts";
 import { assessDeprecation } from "../_shared/canon-governance/canon-deprecation-engine.ts";
 import { explainCanonGovernance, explainEntryStatus } from "../_shared/canon-governance/canon-decision-explainer.ts";
+import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,14 +15,25 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
-    const { action, organization_id, payload } = await req.json();
+    // Auth hardening — Sprint 197
+    const authResult = await authenticateWithRateLimit(req, "canon-governance");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
+
+    const body = await req.json();
+    const { action, organization_id: payloadOrgId, payload } = body;
+
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "canon-governance", action: action || "unknown",
+    });
 
     switch (action) {
       case "create_entry": {
