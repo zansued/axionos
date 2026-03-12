@@ -102,6 +102,8 @@ export default function ApprovalQueue() {
   const { user } = useAuth();
   const { toast } = useToast();
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const orgId = currentOrg?.id;
 
   const [tab, setTab] = useState("waiting");
