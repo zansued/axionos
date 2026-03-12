@@ -48,12 +48,25 @@ function LandingPage() {
         />
       </div>
 
-      {/* Radial glow behind center */}
+      {/* Planet / Sun-rise effect — concentric rings at bottom */}
       <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] pointer-events-none"
+        className="absolute left-1/2 w-[1600px] h-[1600px] sm:w-[3043px] sm:h-[2865px] pointer-events-none"
+        style={{ bottom: "-1400px", transform: "translateX(-50%)" }}
+      >
+        <div className="absolute w-full h-full rounded-full" style={{ background: "radial-gradient(43.89% 25.74% at 50.02% 2.76%, hsl(var(--surface-deep)) 0%, hsl(var(--background)) 100%)", border: "16px solid white", zIndex: 5 }} />
+        <div className="absolute w-full h-full rounded-full bg-background mt-[2px]" style={{ border: "23px solid #b7d7f6", zIndex: 4 }} />
+        <div className="absolute w-full h-full rounded-full bg-background mt-[5px]" style={{ border: "23px solid #8fc1f2", zIndex: 3 }} />
+        <div className="absolute w-full h-full rounded-full bg-background mt-[9px]" style={{ border: "23px solid #64acf6", zIndex: 2 }} />
+        <div className="absolute w-full h-full rounded-full bg-background mt-[13px]" style={{ border: "20px solid #1172e2", boxShadow: "0 15px 24.8px rgba(17, 114, 226, 0.6)", zIndex: 1 }} />
+      </div>
+
+      {/* Radial glow above planet */}
+      <div
+        className="absolute left-1/2 -translate-x-1/2 w-[4000px] h-[1800px] pointer-events-none"
         style={{
+          bottom: 0,
           background:
-            "radial-gradient(circle, hsl(198 100% 50% / 0.06) 0%, transparent 60%)",
+            "radial-gradient(circle at center 100%, rgba(20, 136, 252, 0.8) 0%, rgba(20, 136, 252, 0.35) 8%, rgba(20, 136, 252, 0.18) 12%, rgba(20, 136, 252, 0.08) 16%, transparent 22%)",
         }}
       />
 
@@ -68,13 +81,13 @@ function LandingPage() {
       </div>
 
       {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center w-full px-4">
+      <div className="relative z-10 flex flex-col items-center w-full px-4 -mt-16">
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-6"
+          className="mb-5"
         >
           <img
             src={axionLogo}
@@ -83,23 +96,39 @@ function LandingPage() {
           />
         </motion.div>
 
-        {/* Title */}
+        {/* Title — Axion with gradient light-to-dark + OS gradient */}
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-4xl sm:text-5xl font-bold font-display tracking-tight text-foreground mb-2"
+          className="text-5xl sm:text-6xl font-bold font-display tracking-tight mb-3"
         >
-          Axion
+          <span
+            className="bg-clip-text text-transparent"
+            style={{
+              backgroundImage:
+                "linear-gradient(180deg, #ffffff 0%, #4da5fc 100%)",
+            }}
+          >
+            Axion
+          </span>
           <span className="text-gradient">OS</span>
         </motion.h1>
 
-        {/* Subtitle */}
+        {/* Impactful subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-base sm:text-lg text-muted-foreground mb-10 text-center max-w-md"
+          className="text-lg sm:text-xl font-semibold text-muted-foreground mb-2 text-center max-w-lg"
+        >
+          From idea to delivered software.
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="text-sm sm:text-base text-muted-foreground/70 mb-10 text-center max-w-md"
         >
           Describe what you want to build — we orchestrate the rest.
         </motion.p>
