@@ -25,7 +25,8 @@ export type ProductType =
   | "mobile_app"
   | "internal_tool"
   | "ai_product"
-  | "api_product";
+  | "api_product"
+  | "backend_api";
 
 export type DeploymentTarget =
   | "vercel"
