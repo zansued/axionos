@@ -3,8 +3,8 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-12
-> **Current state:** Level 15 -- Knowledge Health Dashboard & Renewal Automation. 184 sprints complete. All blocks (Foundation through AM).
-> **Completed blocks:** Foundation through AM (Sprints 1--184)
+> **Current state:** Level 15 -- Renewal-to-Governance Decision Bridge. 185 sprints complete. All blocks (Foundation through AN).
+> **Completed blocks:** Foundation through AN (Sprints 1--185)
 > **Sprint details:** See `docs/registry/sprints.yml`
 
 ## Document Authority
