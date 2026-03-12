@@ -54,7 +54,8 @@ export async function resolveAndValidateOrg(
   if (payloadOrgId) {
     const match = memberships.find((m: any) => m.organization_id === payloadOrgId);
     if (!match) {
-      return { orgId: null, error: "Not a member of the specified organization" };
+      // Sprint 199: Same generic error — do not reveal whether org exists
+      return { orgId: null, error: "Organization access denied" };
     }
     return { orgId: payloadOrgId, error: null };
   }
