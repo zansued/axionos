@@ -25,7 +25,7 @@ export function useCanonRuntime() {
     queryKey: ["canon-runtime-applications", orgId],
     queryFn: async () => {
       const { data, error } = await (supabase
-        .from("canon_runtime_applications" as any)
+        .from("canon_pattern_applications" as any)
         .select("*")
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false })
