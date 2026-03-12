@@ -1,21 +1,14 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI, getAIConfig } from "../_shared/ai-client.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 /**
- * Canon Evolution Engine — Sprint 171
+ * Canon Evolution Engine — Sprint 171 (Auth hardened Sprint 197)
  *
  * Complete institutional knowledge metabolism pipeline:
  *   source → candidate → evaluation → dedup → promotion → canon_entry → retrievable
- *
- * Actions:
- *   - evaluate_candidates: AI-powered evaluation with scoring
- *   - deduplicate_candidates: Pattern similarity & merge detection
- *   - promote_candidates: Promote approved candidates to canon_entries
- *   - run_full_pipeline: evaluate → deduplicate → promote in one call
- *   - reinforce_from_signals: Boost confidence from operational signals
- *   - get_pipeline_status: Current pipeline health metrics
- *   - process_backlog: Process all pending candidates end-to-end
  */
 
 Deno.serve(async (req: Request) => {
@@ -23,13 +16,23 @@ Deno.serve(async (req: Request) => {
   if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
+    // Auth hardening — Sprint 197
+    const authResult = await authenticateWithRateLimit(req, "canon-evolution-engine");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
-    const { action, organization_id, ...params } = await req.json();
-    if (!organization_id) return errorResponse("organization_id required", 400, req);
+    const body = await req.json();
+    const { action, organization_id: payloadOrgId, ...params } = body;
+
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "canon-evolution-engine", action: action || "unknown",
+    });
+
+    const config = getAIConfig();
 
     const config = getAIConfig();
 
