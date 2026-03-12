@@ -45,7 +45,7 @@ serve(async (req) => {
     .eq("id", initiativeId)
     .maybeSingle();
   if (!initiative) {
-    return errorResponse("Initiative not found", 404);
+    return notFoundOrForbiddenResponse("Initiative");
   }
 
   const { data: membership } = await serviceClient
@@ -55,7 +55,8 @@ serve(async (req) => {
     .eq("user_id", user.id)
     .maybeSingle();
   if (!membership) {
-    return errorResponse("Access denied", 403);
+    // Sprint 199: Same generic error to prevent existence inference
+    return notFoundOrForbiddenResponse("Initiative");
   }
 
   await logSecurityAudit(serviceClient, {

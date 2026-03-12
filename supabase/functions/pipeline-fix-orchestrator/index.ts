@@ -66,7 +66,7 @@ serve(async (req) => {
     const organization_id = initiativeRecord.organization_id;
     // If payload provided org, validate it matches
     if (payloadOrgId && payloadOrgId !== organization_id) {
-      return errorResponse("Organization mismatch", 403);
+      return notFoundOrForbiddenResponse("Initiative");
     }
 
     const ctx: PipelineContext = {
