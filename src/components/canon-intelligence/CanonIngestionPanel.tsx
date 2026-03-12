@@ -220,6 +220,41 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
         </Button>
       </div>
 
+      {/* Deep Repo Absorber */}
+      <Card className="border-border/30 bg-card/60">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <GitMerge className="h-4 w-4 text-primary" />
+            Absorb GitHub Repository
+          </CardTitle>
+          <CardDescription className="text-xs">
+            Paste a public GitHub repository URL to extract canonical patterns, architecture and best practices.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-2">
+            <Input
+              placeholder="https://github.com/owner/repo"
+              value={repoUrl}
+              onChange={(e) => setRepoUrl(e.target.value)}
+              className="text-sm"
+            />
+            <Button
+              size="sm"
+              onClick={absorbRepo}
+              disabled={absorbingRepo || !repoUrl || !repoUrl.includes("github.com")}
+            >
+              {absorbingRepo ? (
+                <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+              ) : (
+                <DatabaseZap className="h-3.5 w-3.5 mr-1.5" />
+              )}
+              Absorb
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Source Registry with Lifecycle */}
         <Card className="border-border/30 bg-card/60">
