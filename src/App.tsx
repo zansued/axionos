@@ -316,6 +316,7 @@ const App = () => (
                             {/* Institutional Memory */}
                             <Route path="/owner/pattern-library" element={<P><PatternLibraryDashboard /></P>} />
                             <Route path="/owner/canon-intelligence" element={<P><CanonIntelligenceDashboard /></P>} />
+                            <Route path="/owner/knowledge-health" element={<P><KnowledgeHealthDashboard /></P>} />
                             <Route path="/owner/security-war-room" element={<P><SecurityWarRoom /></P>} />
                             <Route path="/owner/security-intelligence" element={<P><SecurityIntelligenceDashboard /></P>} />
                             <Route path="/owner/red-team-simulation" element={<P><RedTeamSimulationDashboard /></P>} />
