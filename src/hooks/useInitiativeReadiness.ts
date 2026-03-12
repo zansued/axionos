@@ -11,10 +11,10 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  evaluateInitiativeReadiness,
   type ReadinessResult,
   type InitiativeReadinessInput,
 } from "@/lib/readiness";
+import { selectReadiness } from "@/lib/readiness/memoized-selectors";
 
 interface InitiativeRow {
   id: string;
@@ -102,7 +102,7 @@ export function useInitiativeReadiness(initiative: InitiativeRow | null | undefi
       ...counts,
     };
 
-    return evaluateInitiativeReadiness(input);
+    return selectReadiness(input);
   }, [initiative, counts]);
 
   return result;
