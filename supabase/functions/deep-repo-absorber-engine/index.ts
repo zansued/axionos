@@ -4,11 +4,19 @@ import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticateWithRateLimit } from "../_shared/auth.ts";
 import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 import { callAI } from "../_shared/ai-client.ts";
+import {
+  validateSchema, validationErrorResponse, logValidationFailure,
+  COMMON_FIELDS,
+  type Schema,
+} from "../_shared/input-validation.ts";
 
 const GITHUB_API = "https://api.github.com";
 
-// Allowed GitHub URL pattern
-const GITHUB_URL_REGEX = /^https:\/\/github\.com\/[\w\-\.]+\/[\w\-\.]+\/?$/;
+const REPO_ABSORBER_SCHEMA: Schema = {
+  repoUrl: COMMON_FIELDS.github_url,
+  orgId: COMMON_FIELDS.organization_id,
+  initiativeId: { type: "uuid", required: false },
+};
 
 async function getGitHubFileContent(ghHeaders: Record<string, string>, owner: string, repo: string, branch: string, path: string) {
   try {
@@ -31,13 +39,19 @@ serve(async (req) => {
     if (authResult instanceof Response) return authResult;
     const { user, serviceClient } = authResult;
 
-    const { repoUrl, orgId: payloadOrgId, initiativeId } = await req.json();
-    if (!repoUrl) return errorResponse("repoUrl is required", 400, req);
+    let body: Record<string, unknown>;
+    try { body = await req.json(); } catch { return errorResponse("Invalid JSON body", 400, req); }
 
-    // 2. Validate URL (SSRF prevention)
-    if (!GITHUB_URL_REGEX.test(repoUrl.replace(/\/$/, ""))) {
-      return errorResponse("Only GitHub repository URLs are allowed", 400, req);
+    // 2. Validate input schema (includes URL pattern check)
+    const validation = validateSchema(body, REPO_ABSORBER_SCHEMA);
+    if (!validation.valid) {
+      await logValidationFailure(serviceClient, { actor_id: user.id, function_name: "deep-repo-absorber-engine", errors: validation.errors });
+      return validationErrorResponse(validation.errors, req);
     }
+
+    const repoUrl = body.repoUrl as string;
+    const payloadOrgId = body.orgId as string | undefined;
+    const initiativeId = body.initiativeId as string | undefined;
 
     // 3. Resolve & validate org
     const { orgId, error: orgError } = await resolveAndValidateOrg(
