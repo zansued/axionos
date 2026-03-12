@@ -356,6 +356,32 @@ export default function ApprovalQueue() {
                     )}
                   </Section>
 
+                  {/* Cross-navigation: go to Action Center */}
+                  <Section title="Related Action">
+                    <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 p-2.5">
+                      <div className="space-y-0.5">
+                        <p className="text-xs font-medium text-foreground">
+                          View full action lifecycle, audit trail, and outcome
+                        </p>
+                        <p className="text-[10px] text-muted-foreground">
+                          Action: {selected.action_id.substring(0, 16)}…
+                        </p>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 text-xs shrink-0"
+                        onClick={() => {
+                          setSelectedId(null);
+                          navigate(`/owner/action-center?action_id=${selected.action_id}`);
+                        }}
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                        Action Center
+                      </Button>
+                    </div>
+                  </Section>
+
                   {/* Policy */}
                   {Array.isArray(selected.policy_rules) && selected.policy_rules.length > 0 && (
                     <Section title="Policy rules that triggered approval">
