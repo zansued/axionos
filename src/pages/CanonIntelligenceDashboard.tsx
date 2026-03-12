@@ -145,6 +145,10 @@ export default function CanonIntelligenceDashboard() {
             <TabsContent value="trust">
               <RepoTrustTab />
             </TabsContent>
+
+            <TabsContent value="lineage">
+              <KnowledgeLineageTab />
+            </TabsContent>
           </Tabs>
       </div>
     </AppShell>
