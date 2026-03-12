@@ -545,8 +545,8 @@ export default function ActionCenter() {
                     </Section>
                   )}
 
-                  {/* Simulate Recovery for failed/blocked actions without recovery hook */}
-                  {!selected.recovery_hook_id && (selected.status === "failed" || selected.status === "blocked" || selected.status === "rolled_back") && (
+                  {/* Simulate Recovery for recovery-eligible states (state machine driven) */}
+                  {!selected.recovery_hook_id && isRecoveryEligible(selected.status as ActionState) && (
                     <Section title="Recovery Options">
                       <p className="text-xs text-muted-foreground mb-2">
                         Run an architecture simulation before applying a rollback.
