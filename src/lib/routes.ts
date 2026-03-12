@@ -266,6 +266,17 @@ export const OWNER_ROUTES: RouteEntry[] = [
     pageKey: "knowledge-acquisition-execution",
   },
   {
+    path: "/owner/knowledge-acquisition-roi",
+    title: "Acquisition ROI",
+    description: "Measure learning efficiency and acquisition return on investment",
+    icon: Search,
+    mode: "owner",
+    group: "Institutional Memory",
+    order: 5.9,
+    sidebar: true,
+    pageKey: "knowledge-acquisition-roi",
+  },
+  {
     path: "/owner/security-war-room",
     title: "Security War Room",
     description: "Active security operations",
