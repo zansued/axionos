@@ -142,7 +142,7 @@ function LandingPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25 }}
-          className="text-base sm:text-lg text-muted-foreground/80 mb-8 text-center max-w-lg"
+          className="text-base sm:text-lg text-muted-foreground/80 mb-14 text-center max-w-lg"
         >
           Describe what you want to build — we orchestrate the rest.
         </motion.p>
