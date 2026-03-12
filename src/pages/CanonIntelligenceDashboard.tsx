@@ -17,6 +17,7 @@ import { CanonGovernanceTab } from "@/components/canon-intelligence/CanonGoverna
 import { OperationalLearningTab } from "@/components/canon-intelligence/OperationalLearningTab";
 import { CanonIngestionPanel } from "@/components/canon-intelligence/CanonIngestionPanel";
 import { RepoTrustTab } from "@/components/canon-intelligence/RepoTrustTab";
+import { KnowledgeLineageTab } from "@/components/canon-intelligence/KnowledgeLineageTab";
 
 export default function CanonIntelligenceDashboard() {
   const intel = useCanonIntelligence();
