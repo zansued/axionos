@@ -55,7 +55,11 @@ export function Topbar({ compact = false }: TopbarProps) {
         )}
       </div>
 
-      <div className="flex items-center gap-2 mr-2 border-r border-border/50 pr-2">`n        <BoltPromptDrawer />`n      </div>`n`n      <div className="flex items-center gap-0.5">
+      <div className="flex items-center gap-2 mr-2 border-r border-border/50 pr-2">
+        <BoltPromptDrawer />
+      </div>
+
+      <div className="flex items-center gap-0.5">
         <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
           <Search className="h-3.5 w-3.5" />
         </Button>
