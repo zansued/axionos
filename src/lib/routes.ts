@@ -133,6 +133,17 @@ export const BUILDER_ROUTES: RouteEntry[] = [
 export const OWNER_ROUTES: RouteEntry[] = [
   // System Intelligence
   {
+    path: "/owner/system-intelligence",
+    title: "System Intelligence",
+    description: "AI-powered system insights",
+    icon: Sparkles,
+    mode: "owner",
+    group: "System Intelligence",
+    order: -1,
+    sidebar: true,
+    pageKey: "system-intelligence",
+  },
+  {
     path: "/owner/system-health",
     title: "System Health",
     description: "Platform health & uptime",
