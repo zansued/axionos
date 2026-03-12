@@ -68,5 +68,5 @@ blocks:
   # === BLOCK AI — Governed Execution Path === COMPLETE
   - { block_id: "AI",         block_name: "Governed Execution Path",                      sprint_range: "164–169",  status: complete,  purpose: "Execution worker governance gates, audit trail enforcement, schema alignment, approval expiration timers, cross-surface navigation, recovery simulation contracts, action domain state machine formalization" }
 
-  # === BLOCK AJ — Canon Pipeline Operationalization === IN PROGRESS
-  - { block_id: "AJ",         block_name: "Canon Pipeline Operationalization",              sprint_range: "170–",     status: active,    purpose: "Canon candidate review engine, automated quality scoring, pipeline completion from ingestion to retrieval" }
+  # === BLOCK AJ — Canon Pipeline Operationalization === COMPLETE
+  - { block_id: "AJ",         block_name: "Canon Pipeline Operationalization",              sprint_range: "170–179",  status: complete,  purpose: "Canon candidate review engine, automated quality scoring, pattern deduplication & merge intelligence, canon promotion workflow, retrieval activation & indexing, repository skill distillation, repo-to-canon intelligence graph, agent skill injection runtime, institutional learning governance surface" }
