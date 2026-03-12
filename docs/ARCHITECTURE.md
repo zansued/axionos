@@ -417,7 +417,7 @@ flowchart LR
 
 ## 10. Implementation Status
 
-> **163 sprints complete.** All blocks Foundation through AH implemented.
+> **179 sprints complete.** All blocks Foundation through AJ implemented.
 > **Sprint-by-sprint record:** `docs/registry/sprints.yml`
 
 | Block | Sprints | Name | Status |
@@ -449,6 +449,8 @@ flowchart LR
 | AF | 143-146 | Security Surface | Complete |
 | AG | 147-154 | Adoption Intelligence & Product Experience | Complete |
 | AH | 155-163 | Governance Decision Lifecycle | Complete |
+| AI | 164-171 | Repository Intelligence & Institutional Learning | Complete |
+| AJ | 172-179 | Self-Improving Architecture Engine | Complete |
 
 ---
 
