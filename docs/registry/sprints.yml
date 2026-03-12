@@ -220,7 +220,14 @@ sprints:
   - { sprint: 168, name: "Recovery Invocation Verification & Safe Routing",        status: complete, block: "AI", phase: "Execution Path Governance", layer: "Recovery Governance Layer" }
   - { sprint: 169, name: "Action Domain State Machine Formalization",               status: complete, block: "AI", phase: "Execution Path Governance", layer: "Domain State Machine Layer" }
 
-  # === BLOCK AJ — Canon Pipeline Operationalization === IN PROGRESS
+  # === BLOCK AJ — Canon Pipeline Operationalization === COMPLETE
   - { sprint: 170, name: "Canon Review Engine & Pipeline Completion",               status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Canon Review & Promotion Layer" }
   - { sprint: 171, name: "Canon Evolution Engine — Institutional Knowledge Metabolism", status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Canon Evolution & Dedup Layer" }
-  - { sprint: 164, name: "Canon Candidate Review Engine",                              status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Learning Candidate Review Layer" }
+  - { sprint: 172, name: "Canon Candidate Review Engine",                           status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Learning Candidate Review Layer" }
+  - { sprint: 173, name: "Pattern Deduplication & Merge Intelligence",              status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Deduplication & Merge Layer" }
+  - { sprint: 174, name: "Canon Promotion Workflow",                                status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Promotion Governance Layer" }
+  - { sprint: 175, name: "Retrieval Activation & Canon Indexing",                   status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Retrieval & Indexing Layer" }
+  - { sprint: 176, name: "Repository Skill Distillation Engine",                    status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Skill Distillation Layer" }
+  - { sprint: 177, name: "Repo-to-Canon Intelligence Graph",                        status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Intelligence Graph Layer" }
+  - { sprint: 178, name: "Agent Skill Injection Runtime",                           status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Skill Injection Layer" }
+  - { sprint: 179, name: "Institutional Learning Governance Surface",               status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Learning Governance Surface Layer" }
