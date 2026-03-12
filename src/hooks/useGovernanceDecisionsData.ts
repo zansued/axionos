@@ -134,8 +134,8 @@ function inferAssessment(p: any, source: ProposalSource): ProposalAssessment {
     operationalRisk: sev,
     governanceRisk: isHighRisk ? "high" : "medium",
     stabilityRisk: conf < 0.4 ? "high" : conf < 0.7 ? "medium" : "low",
-    reversibility: source === "canon_evolution" ? "partial" : "full",
-    blastRadius: source === "policy_tuning" ? "cross_system" : source === "canon_evolution" ? "subsystem" : "local",
+    reversibility: source === "canon_evolution" || source === "knowledge_renewal" ? "partial" : "full",
+    blastRadius: source === "policy_tuning" ? "cross_system" : (source === "canon_evolution" || source === "knowledge_renewal") ? "subsystem" : "local",
     humanOversightRequired: isHighRisk || conf < 0.5,
   };
 }
