@@ -112,6 +112,7 @@ import KnowledgeHealthDashboard from "./pages/KnowledgeHealthDashboard";
 import KnowledgePortfolioDashboard from "./pages/KnowledgePortfolioDashboard";
 import KnowledgeDemandForecastDashboard from "./pages/KnowledgeDemandForecastDashboard";
 import KnowledgeAcquisitionDashboard from "./pages/KnowledgeAcquisitionDashboard";
+import KnowledgeAcquisitionExecutionDashboard from "./pages/KnowledgeAcquisitionExecutionDashboard";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
