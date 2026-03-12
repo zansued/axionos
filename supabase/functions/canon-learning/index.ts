@@ -1,20 +1,51 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { corsHeaders } from "../_shared/cors.ts";
-import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { authenticate } from "../_shared/auth.ts";
+import { checkRateLimit } from "../_shared/rate-limit.ts";
 import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
+
+const READ_ONLY_ACTIONS = new Set([
+  "list_candidates",
+  "list_signals",
+  "list_failure_patterns",
+  "list_refactor_patterns",
+  "list_success_patterns",
+  "list_validation_patterns",
+  "list_reviews",
+]);
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
     // Auth hardening — Sprint 196
-    const authResult = await authenticateWithRateLimit(req, "canon-learning");
+    const authResult = await authenticate(req);
     if (authResult instanceof Response) return authResult;
     const { user, serviceClient: sc } = authResult;
 
-    const body = await req.json();
+    let body: Record<string, any>;
+    try {
+      body = await req.json();
+    } catch {
+      return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { action, organizationId: payloadOrgId } = body;
+
+    const rateLimitScope = READ_ONLY_ACTIONS.has(action)
+      ? "canon-learning-read"
+      : "canon-learning-write";
+
+    const { allowed } = await checkRateLimit(user.id, rateLimitScope);
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em breve." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
 
     const { orgId: organizationId, error: orgError } = await resolveAndValidateOrg(sc, user.id, payloadOrgId);
     if (orgError || !organizationId) {
