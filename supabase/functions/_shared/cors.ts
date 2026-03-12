@@ -60,6 +60,16 @@ export function errorResponse(message: string, status = 500, req?: Request): Res
   return jsonResponse({ error: message }, status, req);
 }
 
+/**
+ * Normalized error for tenant-scoped resource lookups.
+ * Returns the same generic message for both "not found" and "access denied"
+ * to prevent cross-tenant existence inference.
+ * Sprint 199: Inference resistance
+ */
+export function notFoundOrForbiddenResponse(resourceType = "Resource", req?: Request): Response {
+  return jsonResponse({ error: `${resourceType} not found or access denied` }, 404, req);
+}
+
 /** Handle OPTIONS preflight */
 export function handleCors(req: Request): Response | null {
   if (req.method === "OPTIONS") {
