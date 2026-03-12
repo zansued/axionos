@@ -5,10 +5,15 @@
  * Actions: list, detail, explain, evaluate, execute, rollback, block, stats
  *
  * Invariants: advisory-first, bounded autonomy, rollback everywhere, tenant isolation, auditable
+ *
+ * Sprint 198: Hardened with auth + org validation
  */
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { resolveAndValidateOrg, logSecurityAudit } from "../_shared/security-audit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,18 +27,24 @@ serve(async (req: Request) => {
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, serviceKey);
+    const authResult = await authenticateWithRateLimit(req, "autonomous-ops");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
     const body = await req.json();
-    const { action, organization_id } = body;
+    const { action, organization_id: payloadOrgId } = body;
 
-    if (!organization_id) {
-      return new Response(JSON.stringify({ error: "organization_id required" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) {
+      return errorResponse(orgError || "Organization access denied", 403);
     }
+
+    await logSecurityAudit(supabase, {
+      organization_id,
+      actor_id: user.id,
+      function_name: "autonomous-ops",
+      action: action || "unknown",
+    });
 
     const json = (data: any, status = 200) =>
       new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });

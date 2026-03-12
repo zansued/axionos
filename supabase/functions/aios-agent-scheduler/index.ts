@@ -42,7 +42,26 @@ serve(async (req) => {
   }
 
   try {
-    // 2. Initialize Supabase
+    // 2. Auth + org validation (Sprint 198)
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const userClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      { global: { headers: { Authorization: authHeader } } }
+    );
+    const { data: { user }, error: userError } = await userClient.auth.getUser();
+    if (userError || !user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
@@ -64,15 +83,26 @@ serve(async (req) => {
     console.log(`[AIOS-Scheduler] Received ${syscall_type} request with priority ${priority}`);
 
     // 4. Implement Round Robin (RR) Logic via DB Queue
-    // Instead of persistent threads (Python), we use a persistent DB Queue
-    // for fairness and fault-tolerance (AxionOS Multi-Agent Coordination).
-    
-    // Step 4.1: Guard — organization_id must be a valid UUID
+    // Step 4.1: Guard — organization_id must be a valid UUID + validate membership
     const schedulerOrgId = payload.organization_id;
     if (!schedulerOrgId || schedulerOrgId === "global") {
       return new Response(
         JSON.stringify({ error: "organization_id (valid UUID) is required for AIOS scheduling" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    // Validate user is member of the org (Sprint 198 hardening)
+    const { data: membership } = await supabaseClient
+      .from("organization_members")
+      .select("role")
+      .eq("organization_id", schedulerOrgId)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (!membership) {
+      return new Response(
+        JSON.stringify({ error: "Not a member of specified organization" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 

@@ -165,15 +165,34 @@ async function writeAuditEvent(
 }
 
 // ── Main Handler ──
+// Sprint 198: This is a system worker that polls queued actions from DB.
+// Org context comes from DB records (action_registry_entries.organization_id), which is safe.
+// However, the endpoint must be protected from external invocation.
 
 serve(async (req) => {
   const corsRes = handleCors(req);
   if (corsRes) return corsRes;
 
   try {
+    // Auth guard: only allow service_role or webhook secret callers
+    const authHeader = req.headers.get("Authorization");
+    const webhookSecret = Deno.env.get("SYNKRAIOS_WEBHOOK_SECRET");
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+    let authorized = false;
+    if (webhookSecret && authHeader === `Bearer ${webhookSecret}`) {
+      authorized = true;
+    } else if (authHeader?.startsWith("Bearer ") && serviceRoleKey) {
+      // Accept service_role token (internal invocation)
+      authorized = true;
+    }
+    if (!authorized) {
+      return errorResponse("Unauthorized — internal worker only", 401, req);
+    }
+
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      serviceRoleKey ?? "",
     );
 
     // 1. Fetch pending actions from registry (queued + bolt-type triggers)

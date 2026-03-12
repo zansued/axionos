@@ -1,9 +1,11 @@
 // Architecture Subjob Retry — retries a single failed subjob
 // Invokes the main pipeline-architecture with retry parameters.
+// Sprint 198: Hardened with org validation via initiative ownership
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { logSecurityAudit } from "../_shared/security-audit.ts";
 
 serve(async (req) => {
   const cors = handleCors(req);
@@ -35,6 +37,33 @@ serve(async (req) => {
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
   );
+
+  // Sprint 198: Validate user has org access via initiative ownership
+  const { data: initiative } = await serviceClient
+    .from("initiatives")
+    .select("id, organization_id")
+    .eq("id", initiativeId)
+    .maybeSingle();
+  if (!initiative) {
+    return errorResponse("Initiative not found", 404);
+  }
+
+  const { data: membership } = await serviceClient
+    .from("organization_members")
+    .select("role")
+    .eq("organization_id", initiative.organization_id)
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!membership) {
+    return errorResponse("Access denied", 403);
+  }
+
+  await logSecurityAudit(serviceClient, {
+    organization_id: initiative.organization_id,
+    actor_id: user.id,
+    function_name: "architecture-subjob-retry",
+    action: `retry_subjob_${subjobKey}`,
+  });
 
   const { data: subjob, error: subjobErr } = await serviceClient
     .from("pipeline_subjobs")

@@ -47,10 +47,26 @@ serve(async (req) => {
     );
 
     const body = await req.json();
-    const { initiative_id, organization_id, ci_run_id, github_token, owner, repo, base_branch } = body;
+    const { initiative_id, organization_id: payloadOrgId, ci_run_id, github_token, owner, repo, base_branch } = body;
 
-    if (!initiative_id || !organization_id) {
-      return errorResponse("initiative_id and organization_id required", 400);
+    if (!initiative_id) {
+      return errorResponse("initiative_id is required", 400);
+    }
+
+    // Sprint 198: Derive org from initiative record, not payload
+    const { data: initiativeRecord } = await serviceClient
+      .from("initiatives")
+      .select("id, organization_id")
+      .eq("id", initiative_id)
+      .maybeSingle();
+    if (!initiativeRecord) {
+      return errorResponse("Initiative not found", 404);
+    }
+
+    const organization_id = initiativeRecord.organization_id;
+    // If payload provided org, validate it matches
+    if (payloadOrgId && payloadOrgId !== organization_id) {
+      return errorResponse("Organization mismatch", 403);
     }
 
     const ctx: PipelineContext = {
