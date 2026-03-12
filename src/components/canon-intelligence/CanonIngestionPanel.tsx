@@ -46,7 +46,30 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
   const [ingestingAll, setIngestingAll] = useState(false);
   const [repoUrl, setRepoUrl] = useState("");
   const [absorbingRepo, setAbsorbingRepo] = useState(false);
+  const [reviewingPipeline, setReviewingPipeline] = useState(false);
   const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
+
+  const runReviewPipeline = async () => {
+    if (!currentOrg?.id) return;
+    setReviewingPipeline(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("canon-review-engine", {
+        body: { action: "run_full_pipeline", organization_id: currentOrg.id },
+      });
+      if (error) throw error;
+      const reviewInfo = data?.review || {};
+      const promoInfo = data?.promotion || {};
+      toast({
+        title: "Review Pipeline Complete",
+        description: `Reviewed: ${reviewInfo.reviewed || 0} (${reviewInfo.approved || 0} approved, ${reviewInfo.rejected || 0} rejected). Promoted: ${promoInfo.promoted || 0} to Canon.`,
+      });
+      onRefresh();
+    } catch (err: any) {
+      toast({ title: "Review Pipeline Failed", description: err.message, variant: "destructive" });
+    } finally {
+      setReviewingPipeline(false);
+    }
+  };
 
   const seedSources = async () => {
     if (!currentOrg?.id) return;
