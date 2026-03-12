@@ -31,10 +31,20 @@ import {
   Activity, Clock, CheckCircle2, XCircle, AlertTriangle, ShieldAlert,
   ShieldCheck, Loader2, Inbox, Zap, Pause, Play, RotateCcw,
   ArrowUpCircle, Timer, Ban, Eye, GitBranch, BookOpen, Shield, FlaskConical,
-  ExternalLink,
+  ExternalLink, ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import {
+  ACTION_STATES,
+  STATE_CATEGORIES,
+  getTransitionsForActor,
+  isRecoveryEligible,
+  isTerminalState,
+  validateTransition,
+  type ActionState,
+  type TransitionDefinition,
+} from "@/lib/action-domain-state-machine";
 
 // ── Types ──
 
