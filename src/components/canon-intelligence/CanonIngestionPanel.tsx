@@ -49,6 +49,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
   const [absorbingRepo, setAbsorbingRepo] = useState(false);
   const [reviewingPipeline, setReviewingPipeline] = useState(false);
   const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
+  const evolution = useCanonEvolutionEngine();
 
   const runReviewPipeline = async () => {
     if (!currentOrg?.id) return;
