@@ -1,15 +1,11 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 type ActionBody = {
   action: string;
   organization_id: string;
-
-  // Create
   dossier_title?: string;
   proposed_direction?: string;
   expected_benefit?: string;
@@ -26,14 +22,8 @@ type ActionBody = {
     evidence_summary: string;
     confidence_contribution: number;
   }>;
-
-  // Detail
   dossier_id?: string;
-
-  // Decisions
   rationale?: string;
-
-  // Reviews
   review_status?: string;
   review_notes?: string;
   review_reason_codes?: Record<string, unknown> | unknown[];
@@ -44,30 +34,31 @@ function nowIso() {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
-
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) throw new Error("Missing authorization");
-
-    const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error: authErr } = await supabase.auth.getUser(token);
-    if (authErr || !user) throw new Error("Unauthorized");
+    // Auth hardening — Sprint 197
+    const authResult = await authenticateWithRateLimit(req, "architecture-promotion");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
     const body = (await req.json()) as ActionBody;
-    const { action, organization_id } = body;
-    if (!organization_id) throw new Error("Missing organization_id");
+    const { action, organization_id: payloadOrgId } = body;
 
-    const { data: isMember } = await supabase.rpc("is_org_member", {
-      _user_id: user.id,
-      _org_id: organization_id,
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "architecture-promotion", action: action || "unknown",
     });
-    if (!isMember) throw new Error("Not a member of this organization");
+
+    const userClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: req.headers.get("Authorization")! } } },
+    );
 
     const userClient = createClient(
       Deno.env.get("SUPABASE_URL")!,

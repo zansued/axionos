@@ -136,6 +136,19 @@ serve(async (req) => {
       .from("initiatives").select("*").eq("id", initiativeId).single();
     if (initErr || !initiative) throw new Error("Initiative not found");
 
+    // Org validation — Sprint 197: verify user belongs to initiative's org
+    const { data: memberCheck } = await serviceClient
+      .from("organization_members")
+      .select("role")
+      .eq("organization_id", initiative.organization_id)
+      .eq("user_id", user.id)
+      .single();
+    if (!memberCheck) {
+      return new Response(JSON.stringify({ error: "Not a member of this organization" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // ── Usage limit enforcement ──
     const usageCheck = await enforceUsageLimits(serviceClient, initiative.organization_id);
     if (!usageCheck.allowed) {
