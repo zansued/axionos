@@ -291,9 +291,9 @@ These invariants act as the **physical laws** of the platform.
 
 ## Sprint Canon
 
-- **Sprints 1–179** represent the canonical development arc of the platform
-- **Blocks Foundation through AJ** are complete
-- The system has reached **Level 12 maturity: Self-Improving Governed Intelligence**
+- **Sprints 1–181** represent the canonical development arc of the platform
+- **Blocks Foundation through AK** are complete
+- The system has reached **Level 13 maturity: Knowledge Provenance & Trust-Weighted Intelligence**
 - **200+ Edge Functions** deployed across all pipeline stages and intelligence engines
 - **Key milestones post-138:**
   - Sprint 139–142: Axion Action Engine (AE Block)
@@ -302,6 +302,7 @@ These invariants act as the **physical laws** of the platform.
   - Sprint 155–163: Governance Decision Lifecycle — Surfaces, Handoff, Tracking (AH Block)
   - Sprint 164–171: Repository Intelligence & Institutional Learning — Canon candidate review, deduplication, promotion, retrieval, skill distillation, intelligence graph, agent injection, learning governance (AI Block)
   - Sprint 172–179: Self-Improving Architecture Engine — Canon distillation, micro-skills, token budgeting, multi-layer memory, architecture heuristics, self-improvement proposals, efficiency dashboard, self-improvement governance (AJ Block)
+  - Sprint 180–181: Knowledge Provenance & Trust-Weighted Intelligence — Repo trust scoring, pattern weighting, confidence recalibration, knowledge lineage, provenance navigation, integrity alerts (AK Block)
 
 Future work focuses on improving:
 
