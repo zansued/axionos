@@ -288,6 +288,17 @@ export const OWNER_ROUTES: RouteEntry[] = [
     pageKey: "canon-poisoning-prevention",
   },
   {
+    path: "/owner/security-monitoring",
+    title: "Security Monitoring",
+    description: "Automated anomaly detection, security alerts, and signal correlation",
+    icon: ShieldAlert,
+    mode: "owner",
+    group: "Institutional Memory",
+    order: 5.96,
+    sidebar: true,
+    pageKey: "security-monitoring",
+  },
+  {
     path: "/owner/security-war-room",
     title: "Security War Room",
     description: "Active security operations",

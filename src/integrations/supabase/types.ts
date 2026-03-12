@@ -36160,6 +36160,140 @@ export type Database = {
           },
         ]
       }
+      security_monitoring_alerts: {
+        Row: {
+          acknowledged_at: string | null
+          actor_id: string | null
+          alert_type: string
+          correlation_group: string | null
+          created_at: string
+          evidence_snapshot: Json
+          id: string
+          organization_id: string
+          recommended_action: string | null
+          related_objects: Json
+          resolved_at: string | null
+          severity: string
+          source_category: string
+          source_ref: string | null
+          status: string
+          summary: string
+          title: string
+          triggering_signals: Json
+          updated_at: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          actor_id?: string | null
+          alert_type?: string
+          correlation_group?: string | null
+          created_at?: string
+          evidence_snapshot?: Json
+          id?: string
+          organization_id: string
+          recommended_action?: string | null
+          related_objects?: Json
+          resolved_at?: string | null
+          severity?: string
+          source_category?: string
+          source_ref?: string | null
+          status?: string
+          summary?: string
+          title?: string
+          triggering_signals?: Json
+          updated_at?: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          actor_id?: string | null
+          alert_type?: string
+          correlation_group?: string | null
+          created_at?: string
+          evidence_snapshot?: Json
+          id?: string
+          organization_id?: string
+          recommended_action?: string | null
+          related_objects?: Json
+          resolved_at?: string | null
+          severity?: string
+          source_category?: string
+          source_ref?: string | null
+          status?: string
+          summary?: string
+          title?: string
+          triggering_signals?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_monitoring_alerts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_monitoring_signals: {
+        Row: {
+          actor_id: string | null
+          alert_id: string | null
+          created_at: string
+          description: string
+          evidence: Json
+          id: string
+          organization_id: string
+          severity: string
+          signal_category: string
+          signal_type: string
+          source_function: string | null
+          source_ref: string | null
+        }
+        Insert: {
+          actor_id?: string | null
+          alert_id?: string | null
+          created_at?: string
+          description?: string
+          evidence?: Json
+          id?: string
+          organization_id: string
+          severity?: string
+          signal_category?: string
+          signal_type?: string
+          source_function?: string | null
+          source_ref?: string | null
+        }
+        Update: {
+          actor_id?: string | null
+          alert_id?: string | null
+          created_at?: string
+          description?: string
+          evidence?: Json
+          id?: string
+          organization_id?: string
+          severity?: string
+          signal_category?: string
+          signal_type?: string
+          source_function?: string | null
+          source_ref?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_monitoring_signals_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "security_monitoring_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_monitoring_signals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       security_pattern_entries: {
         Row: {
           agent_types: string[]

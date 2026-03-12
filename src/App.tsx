@@ -115,6 +115,7 @@ import KnowledgeAcquisitionDashboard from "./pages/KnowledgeAcquisitionDashboard
 import KnowledgeAcquisitionExecutionDashboard from "./pages/KnowledgeAcquisitionExecutionDashboard";
 import KnowledgeAcquisitionRoiDashboard from "./pages/KnowledgeAcquisitionRoiDashboard";
 import CanonPoisoningPreventionDashboard from "./pages/CanonPoisoningPreventionDashboard";
+import SecurityMonitoringDashboard from "./pages/SecurityMonitoringDashboard";
 import OperationalPostureDashboard from "./pages/OperationalPostureDashboard";
 import AttentionAllocationDashboard from "./pages/AttentionAllocationDashboard";
 import AdaptiveRoutingDashboard from "./pages/AdaptiveRoutingDashboard";
@@ -334,6 +335,7 @@ const App = () => (
                             <Route path="/owner/blue-team-defense" element={<P><BlueTeamDefenseDashboard /></P>} />
                             <Route path="/owner/purple-learning" element={<P><PurpleLearningDashboard /></P>} />
                             <Route path="/owner/canon-poisoning-prevention" element={<P><CanonPoisoningPreventionDashboard /></P>} />
+                            <Route path="/owner/security-monitoring" element={<P><SecurityMonitoringDashboard /></P>} />
                             <Route path="/owner/capabilities" element={<W><CapabilityRegistry /></W>} />
 
                             {/* Governance */}
