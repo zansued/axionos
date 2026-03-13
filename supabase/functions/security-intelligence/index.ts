@@ -6,6 +6,7 @@ import { mapSecuritySurfaces } from "../_shared/security-intelligence/security-s
 import { classifyThreatDomains, getCompositeRiskScore } from "../_shared/security-intelligence/threat-domain-classifier.ts";
 import { computeExposureScore } from "../_shared/security-intelligence/exposure-score-engine.ts";
 import { explainRisk } from "../_shared/security-intelligence/security-boundary-explainer.ts";
+import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 
 /**
  * Security Intelligence Engine
@@ -109,6 +110,20 @@ Deno.serve(async (req) => {
 
       default:
         return errorResponse(`Unknown action: ${action}`, 400, req);
+    }
+
+    // Security matcher: scan response body for accidental leaks
+    const responseBody = JSON.stringify(result).slice(0, 10000);
+    const secMatchInput: MatchInput = { status_code: 200, body: responseBody };
+    const secReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, secMatchInput);
+    if (!secReport.passed) {
+      const logEntry = buildMatcherLogEntry("security-intelligence", secReport);
+      await logSecurityAudit(supabase, {
+        organization_id, actor_id: user.id,
+        function_name: "security-intelligence",
+        action: "security_matcher_flagged",
+        context: { matched_rule_ids: logEntry.matched_rule_ids, highest_severity: logEntry.highest_severity },
+      });
     }
 
     return jsonResponse({ data: result }, 200, req);

@@ -7,6 +7,7 @@ import {
   COMMON_ACTIONS, COMMON_FIELDS,
   type Schema,
 } from "../_shared/input-validation.ts";
+import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 
 // ─── Anomaly Detection Thresholds ───
 
@@ -388,6 +389,21 @@ Deno.serve(async (req) => {
 
       case "run_scan": {
         const result = await runFullScan(serviceClient, orgId, user.id);
+
+        // Security matcher: scan scan results for anomalies in own output
+        const scanBody = JSON.stringify(result).slice(0, 10000);
+        const scanMatchInput: MatchInput = { status_code: 200, body: scanBody };
+        const scanSecReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, scanMatchInput);
+        if (!scanSecReport.passed) {
+          const logEntry = buildMatcherLogEntry("security-monitoring-engine", scanSecReport);
+          await logSecurityAudit(serviceClient, {
+            organization_id: orgId, actor_id: user.id,
+            function_name: "security-monitoring-engine",
+            action: "security_matcher_flagged",
+            context: { matched_rule_ids: logEntry.matched_rule_ids, highest_severity: logEntry.highest_severity },
+          });
+        }
+
         return jsonResponse(result, 200, req);
       }
 

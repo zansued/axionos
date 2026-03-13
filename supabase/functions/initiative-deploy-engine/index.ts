@@ -14,8 +14,9 @@ import {
   type DeployProviderName,
 } from "../_shared/contracts/deploy-provider.schema.ts";
 import {
-  evaluateRules,
+  evaluateSecurityRules,
   PIPELINE_SECURITY_RULES,
+  buildMatcherLogEntry,
 } from "../_shared/contracts/security-matcher.schema.ts";
 
 /**
@@ -91,9 +92,10 @@ serve(async (req) => {
       status_code: deployResult.error_code ? 500 : 200,
       body: JSON.stringify(deployResult),
     };
-    const matchReport = evaluateRules(PIPELINE_SECURITY_RULES, matcherInput);
+    const matchReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, matcherInput);
     if (!matchReport.passed) {
-      pipelineLog(ctx, "deploy", `Security matcher flagged: ${matchReport.results.filter(r => r.matched).map(r => r.rule_name).join(", ")}`);
+      const logEntry = buildMatcherLogEntry("initiative-deploy-engine", matchReport);
+      pipelineLog(ctx, "security_matcher_flagged", `Security matcher flagged: ${logEntry.matched_rule_ids.join(", ")}`, logEntry as unknown as Record<string, unknown>);
     }
 
     // ── Step 6: Parse errors for suggestions ──

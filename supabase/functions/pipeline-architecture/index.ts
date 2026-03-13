@@ -9,6 +9,7 @@ import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { generateBrainContext, upsertNode, addEdge, recordDecision } from "../_shared/brain-helpers.ts";
+import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 import { ARCHITECTURE_SUBJOBS, getReadySubjobs, areAllComplete, hasAnyFailed } from "../_shared/architecture-subjob/types.ts";
 import {
   createSubjobs, getSubjobs, markSubjobRunning, completeSubjob,
@@ -730,6 +731,17 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
       }
     }
 
+    // Security matcher: scan synthesized architecture output for red flags
+    const archSynthContent = JSON.stringify({ system: systemResult, data: dataResult, api: apiResult, deps: depResult }).slice(0, 15000);
+    const archMatchInput: MatchInput = { status_code: 200, body: archSynthContent };
+    const archSecReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, archMatchInput);
+    if (!archSecReport.passed) {
+      const logEntry = buildMatcherLogEntry("pipeline-architecture", archSecReport);
+      await pipelineLog(ctx, "security_matcher_flagged",
+        `⚠️ Security matcher flagged architecture output: ${logEntry.matched_rule_ids.join(", ")}`,
+        logEntry as unknown as Record<string, unknown>);
+    }
+
     await completeJob(ctx, jobId, {
       system_architecture: systemResult,
       data_architecture: dataResult,
@@ -738,6 +750,7 @@ Público-alvo: ${initiative.target_user || "A definir"}${brainBlock}`;
       total_tokens: totalTokens,
       total_cost_usd: totalCost,
       orchestration: "subjob_v1_bg",
+      security_matcher_passed: archSecReport.passed,
     }, { model: "multi-agent", costUsd: totalCost, durationMs: totalDuration });
 
     // Generate and log bottleneck analysis

@@ -3,6 +3,7 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
+import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 
 serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-discovery");
@@ -95,6 +96,17 @@ Produza uma análise completa no seguinte formato JSON:
     );
 
     const discovery = JSON.parse(aiResult.content);
+
+    // Security matcher: scan AI-generated discovery output for red flags
+    const discoveryMatchInput: MatchInput = { status_code: 200, body: aiResult.content.slice(0, 10000) };
+    const discoverySecReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, discoveryMatchInput);
+    if (!discoverySecReport.passed) {
+      const logEntry = buildMatcherLogEntry("pipeline-discovery", discoverySecReport);
+      await pipelineLog(ctx, "security_matcher_flagged",
+        `⚠️ Security matcher flagged discovery output: ${logEntry.matched_rule_ids.join(", ")}`,
+        logEntry as unknown as Record<string, unknown>);
+    }
+
     await updateInitiative(ctx, {
       stage_status: "discovered",
       idea_raw: initiative.description || initiative.title,

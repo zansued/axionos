@@ -4,7 +4,7 @@ import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { generateBrainContext, recordError, updateNodeStatus, getNodeByPath, markErrorFixed } from "../_shared/brain-helpers.ts";
-import { evaluateRules, PIPELINE_SECURITY_RULES, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
+import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 
 /**
  * Camada 5 — Verificação com Fix Loop Automático (Synchronous, One-at-a-time)
@@ -200,10 +200,11 @@ Retorne APENAS JSON:
     if (passes) {
       // Run security matcher on artifact content for leak detection
       const matchInput: MatchInput = { status_code: 200, body: currentText.slice(0, 10000) };
-      const secReport = evaluateRules(PIPELINE_SECURITY_RULES, matchInput);
+      const secReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, matchInput);
       if (!secReport.passed) {
+        const logEntry = buildMatcherLogEntry("pipeline-validation", secReport);
         await pipelineLog(ctx, "security_matcher_alert",
-          `⚠️ Security matcher flagged artifact ${artifact.id}: ${secReport.results.filter(r => r.matched).map(r => r.rule_name).join(", ")}`);
+          `⚠️ Security matcher flagged artifact ${artifact.id}: ${logEntry.matched_rule_ids.join(", ")}`, logEntry as unknown as Record<string, unknown>);
       }
 
       await serviceClient.from("agent_outputs").update({ status: "approved" }).eq("id", artifact.id);
