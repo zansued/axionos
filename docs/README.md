@@ -1,7 +1,7 @@
 # AxionOS — Documentation Index
 
 > Single navigation point for all AxionOS documentation.
-> Last updated: 2026-03-12
+> Last updated: 2026-03-13
 
 ---
 
