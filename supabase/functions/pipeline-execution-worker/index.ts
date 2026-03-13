@@ -162,12 +162,13 @@ REGRAS package.json:
     let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
     totalTokens += devResult.tokens;
     totalCost += devResult.costUsd;
-    await recordAgentMessage(ctx, {
+    // Non-blocking agent message recording on hot path
+    recordAgentMessage(ctx, {
       storyId: payload.storyId, subtaskId: payload.subtaskId,
       fromAgent: effectiveDev, toAgent: effectiveIntegration,
       content: codeContent, messageType: "handoff",
       iteration: 1, tokens: devResult.tokens, model: devResult.model, stage: "execution",
-    });
+    }).catch(() => {});
 
     // ──── Step 3: INTEGRATION AGENT ────
     const integrationResult = await callAI(apiKey,
