@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 import { AppLayout } from "@/components/AppLayout";
 import { OperationalDashboard } from "@/components/dashboard/OperationalDashboard";
 import { ArrowRight, Settings, Zap, Bot, BarChart3 } from "lucide-react";
@@ -11,7 +12,34 @@ import NeuralBackground from "@/components/ui/NeuralBackground";
 
 const IDEA_KEY = "axion_initial_idea";
 
-const QUICK_IDEAS: Record<string, string[]> = {
+const QUICK_IDEAS_PT: Record<string, string[]> = {
+  "API REST": [
+    "Construir uma API REST para gestão de usuários com auth JWT",
+    "Criar uma API CRUD para rastreamento de inventário com rate limiting",
+    "Projetar uma API REST com webhooks para processamento de pagamentos",
+    "Construir uma API REST multi-tenant com controle de acesso baseado em roles",
+  ],
+  "Automação": [
+    "Automatizar pipeline de deploy com rollback em falha",
+    "Construir um workflow que sincroniza dados do CRM a cada hora",
+    "Criar um pipeline orientado a eventos que processa pedidos recebidos",
+    "Automatizar escalonamento de infraestrutura baseado em padrões de tráfego",
+  ],
+  "Agente IA": [
+    "Construir um agente IA que faz triagem de tickets de suporte",
+    "Criar um agente autônomo de code review com guardrails de segurança",
+    "Projetar um agente de pesquisa multi-etapas que resume descobertas",
+    "Construir um agente IA que monitora logs e sugere correções",
+  ],
+  "Dashboard": [
+    "Criar um dashboard de analytics em tempo real para métricas SaaS",
+    "Construir um dashboard de monitoramento DevOps com gestão de alertas",
+    "Projetar um dashboard executivo com KPIs e análise de tendências",
+    "Criar um dashboard de gestão de frota com rastreamento GPS ao vivo",
+  ],
+};
+
+const QUICK_IDEAS_EN: Record<string, string[]> = {
   "REST API": [
     "Build a REST API for user management with JWT auth",
     "Create a CRUD API for inventory tracking with rate limiting",
@@ -38,7 +66,14 @@ const QUICK_IDEAS: Record<string, string[]> = {
   ],
 };
 
-const QUICK_IDEA_ICONS: Record<string, React.ReactNode> = {
+const QUICK_IDEA_ICONS_PT: Record<string, React.ReactNode> = {
+  "API REST": <Settings className="size-4" />,
+  "Automação": <Zap className="size-4" />,
+  "Agente IA": <Bot className="size-4" />,
+  "Dashboard": <BarChart3 className="size-4" />,
+};
+
+const QUICK_IDEA_ICONS_EN: Record<string, React.ReactNode> = {
   "REST API": <Settings className="size-4" />,
   "Automation": <Zap className="size-4" />,
   "AI Agent": <Bot className="size-4" />,
@@ -47,8 +82,13 @@ const QUICK_IDEA_ICONS: Record<string, React.ReactNode> = {
 
 function LandingPage() {
   const navigate = useNavigate();
+  const { t, locale } = useI18n();
   const [message, setMessage] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const isPt = locale === "pt-BR";
+  const quickIdeas = isPt ? QUICK_IDEAS_PT : QUICK_IDEAS_EN;
+  const quickIdeaIcons = isPt ? QUICK_IDEA_ICONS_PT : QUICK_IDEA_ICONS_EN;
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -72,7 +112,7 @@ function LandingPage() {
   };
 
   const handleQuickIdea = (category: string) => {
-    const ideas = QUICK_IDEAS[category];
+    const ideas = quickIdeas[category];
     const randomIdea = ideas[Math.floor(Math.random() * ideas.length)];
     setMessage(randomIdea);
     textareaRef.current?.focus();
@@ -90,7 +130,7 @@ function LandingPage() {
         />
       </div>
 
-      {/* Planet / Sun-rise effect — concentric rings at bottom */}
+      {/* Planet / Sun-rise effect */}
       <div
         className="absolute left-1/2 w-[1600px] h-[1600px] sm:w-[3043px] sm:h-[2865px] pointer-events-none z-[2]"
         style={{ bottom: "-2500px", transform: "translateX(-50%)" }}
@@ -118,7 +158,7 @@ function LandingPage() {
           onClick={() => navigate("/auth")}
           className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
         >
-          Sign in
+          {t("landing.signIn")}
         </button>
       </div>
 
@@ -138,7 +178,7 @@ function LandingPage() {
           />
         </motion.div>
 
-        {/* Title — Axion with gradient light-to-dark + OS white bold */}
+        {/* Title */}
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -157,14 +197,14 @@ function LandingPage() {
           <span className="text-foreground font-bold">OS</span>
         </motion.h1>
 
-        {/* Tagline — uppercase spaced */}
+        {/* Tagline */}
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.18 }}
           className="text-[11px] sm:text-xs uppercase tracking-[0.25em] text-muted-foreground font-medium mb-6 text-center"
         >
-          Autonomous Intelligent Infrastructure for the AI Era
+          {t("landing.tagline")}
         </motion.p>
 
         {/* Subtitle */}
@@ -174,7 +214,7 @@ function LandingPage() {
           transition={{ duration: 0.6, delay: 0.25 }}
           className="text-base sm:text-lg text-muted-foreground/80 mb-14 text-center max-w-lg"
         >
-          Describe what you want to build — we orchestrate the rest.
+          {t("landing.subtitle")}
         </motion.p>
 
         {/* Chat input */}
@@ -198,7 +238,7 @@ function LandingPage() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Design an automation system"
+              placeholder={t("landing.placeholder")}
               className="w-full resize-none bg-transparent text-[15px] text-foreground placeholder:text-muted-foreground/50 px-5 pt-5 pb-3 focus:outline-none min-h-[80px] max-h-[200px] rounded-2xl"
               style={{ height: "80px" }}
             />
@@ -209,7 +249,7 @@ function LandingPage() {
                 disabled={!message.trim()}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium bg-primary/90 hover:bg-primary text-primary-foreground transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 glow-primary"
               >
-                <span>Create project</span>
+                <span>{t("landing.createProject")}</span>
                 <ArrowRight className="size-4" />
               </button>
             </div>
@@ -223,13 +263,13 @@ function LandingPage() {
           transition={{ duration: 0.6, delay: 0.45 }}
           className="flex flex-wrap items-center justify-center gap-2 mt-6"
         >
-          {Object.keys(QUICK_IDEAS).map((category) => (
+          {Object.keys(quickIdeas).map((category) => (
             <button
               key={category}
               onClick={() => handleQuickIdea(category)}
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border border-border bg-card/50 hover:bg-card text-muted-foreground hover:text-foreground transition-all duration-200 active:scale-95"
             >
-              {QUICK_IDEA_ICONS[category]}
+              {quickIdeaIcons[category]}
               <span>{category}</span>
             </button>
           ))}
@@ -248,7 +288,6 @@ export default function Dashboard() {
       const saved = sessionStorage.getItem(IDEA_KEY);
       if (saved) {
         sessionStorage.removeItem(IDEA_KEY);
-        // TODO: use saved idea in onboarding
       }
     }
   }, [user]);

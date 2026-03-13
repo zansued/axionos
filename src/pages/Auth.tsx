@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ import { Sparkles } from "lucide-react";
 export default function Auth() {
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [loginEmail, setLoginEmail] = useState("");
@@ -24,7 +26,6 @@ export default function Auth() {
   const [signupName, setSignupName] = useState("");
   const savedIdea = sessionStorage.getItem("axion_initial_idea");
 
-  // If somehow the user lands here already authenticated, clear stale session
   useEffect(() => {
     if (user) {
       navigate("/builder/projects", { replace: true });
@@ -35,17 +36,16 @@ export default function Auth() {
     e.preventDefault();
     setLoading(true);
     try {
-      // Clear any stale session before attempting login
       await supabase.auth.signOut();
       await signIn(loginEmail, loginPassword);
     } catch (error: any) {
       const msg = error?.message || "";
       const description = msg.includes("Failed to fetch") || msg.includes("NetworkError")
-        ? "Erro de conexão. Verifique sua internet e tente novamente."
+        ? t("auth.networkError")
         : msg.includes("Invalid login")
-        ? "Email ou senha incorretos."
+        ? t("auth.invalidCredentials")
         : msg;
-      toast({ variant: "destructive", title: "Erro no login", description });
+      toast({ variant: "destructive", title: t("auth.loginError"), description });
     } finally {
       setLoading(false);
     }
@@ -56,9 +56,9 @@ export default function Auth() {
     setLoading(true);
     try {
       await signUp(signupEmail, signupPassword, signupName);
-      toast({ title: "Conta criada!", description: "Verifique seu email para confirmar." });
+      toast({ title: t("auth.accountCreated"), description: t("auth.confirmEmail") });
     } catch (error: any) {
-      toast({ variant: "destructive", title: "Erro no cadastro", description: error.message });
+      toast({ variant: "destructive", title: t("auth.signupError"), description: error.message });
     } finally {
       setLoading(false);
     }
@@ -68,7 +68,7 @@ export default function Auth() {
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-4"
       style={{ background: '#08080a' }}
     >
-      {/* Background — same as landing */}
+      {/* Background */}
       <div className="absolute inset-0 pointer-events-none select-none">
         <div
           className="absolute left-1/2 -translate-x-1/2 w-[4000px] h-[1800px] sm:w-[6000px]"
@@ -117,7 +117,7 @@ export default function Auth() {
             transition={{ delay: 0.25, duration: 0.5 }}
             className="mt-2 text-[13px] font-semibold tracking-[0.15em] uppercase text-white"
           >
-            Autonomous Intelligent Infrastructure
+            {t("auth.autonomousInfra")}
           </motion.p>
         </div>
 
@@ -132,7 +132,7 @@ export default function Auth() {
             <div className="flex items-start gap-2.5">
               <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
               <div className="min-w-0">
-                <p className="text-[12px] font-medium text-primary mb-1">Your idea is waiting</p>
+                <p className="text-[12px] font-medium text-primary mb-1">{t("auth.ideaWaiting")}</p>
                 <p className="text-[13px] text-white/60 leading-snug line-clamp-2">{savedIdea}</p>
               </div>
             </div>
@@ -146,30 +146,30 @@ export default function Auth() {
         >
           <Card className="border-white/[0.08] bg-white/[0.04] backdrop-blur-xl">
             <CardHeader className="pb-4">
-              <CardTitle className="font-display text-lg text-white">Acesso ao Painel</CardTitle>
-              <CardDescription style={{ color: '#55555c' }}>Entre ou crie uma conta para gerenciar seus agentes</CardDescription>
+              <CardTitle className="font-display text-lg text-white">{t("auth.panelAccess")}</CardTitle>
+              <CardDescription style={{ color: '#55555c' }}>{t("auth.panelDesc")}</CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="login">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="login">Entrar</TabsTrigger>
-                  <TabsTrigger value="signup">Criar Conta</TabsTrigger>
+                  <TabsTrigger value="login">{t("auth.login")}</TabsTrigger>
+                  <TabsTrigger value="signup">{t("auth.signup")}</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="login">
                   <form onSubmit={handleLogin} className="space-y-4 pt-4">
                     <div className="space-y-2">
-                      <Label htmlFor="login-email" className="text-white/70">Email</Label>
-                      <Input id="login-email" type="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required placeholder="seu@email.com" className="border-white/[0.1] bg-white/[0.04]" />
+                      <Label htmlFor="login-email" className="text-white/70">{t("auth.email")}</Label>
+                      <Input id="login-email" type="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required placeholder={t("auth.emailPlaceholder")} className="border-white/[0.1] bg-white/[0.04]" />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="login-password" className="text-white/70">Senha</Label>
+                      <Label htmlFor="login-password" className="text-white/70">{t("auth.password")}</Label>
                       <Input id="login-password" type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required placeholder="••••••••" className="border-white/[0.1] bg-white/[0.04]" />
                     </div>
                     <Button type="submit" className="w-full" disabled={loading}
                       style={{ background: 'linear-gradient(135deg, #1488fc, #4da5fc)', boxShadow: '0 0 20px rgba(20,136,252,0.3)' }}
                     >
-                      {loading ? "Entrando..." : "Entrar"}
+                      {loading ? t("auth.loggingIn") : t("auth.login")}
                     </Button>
                   </form>
                 </TabsContent>
@@ -177,21 +177,21 @@ export default function Auth() {
                 <TabsContent value="signup">
                   <form onSubmit={handleSignup} className="space-y-4 pt-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signup-name" className="text-white/70">Nome</Label>
-                      <Input id="signup-name" value={signupName} onChange={(e) => setSignupName(e.target.value)} placeholder="Seu nome" className="border-white/[0.1] bg-white/[0.04]" />
+                      <Label htmlFor="signup-name" className="text-white/70">{t("auth.name")}</Label>
+                      <Input id="signup-name" value={signupName} onChange={(e) => setSignupName(e.target.value)} placeholder={t("auth.namePlaceholder")} className="border-white/[0.1] bg-white/[0.04]" />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="signup-email" className="text-white/70">Email</Label>
-                      <Input id="signup-email" type="email" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required placeholder="seu@email.com" className="border-white/[0.1] bg-white/[0.04]" />
+                      <Label htmlFor="signup-email" className="text-white/70">{t("auth.email")}</Label>
+                      <Input id="signup-email" type="email" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required placeholder={t("auth.emailPlaceholder")} className="border-white/[0.1] bg-white/[0.04]" />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="signup-password" className="text-white/70">Senha</Label>
+                      <Label htmlFor="signup-password" className="text-white/70">{t("auth.password")}</Label>
                       <Input id="signup-password" type="password" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required minLength={6} placeholder="••••••••" className="border-white/[0.1] bg-white/[0.04]" />
                     </div>
                     <Button type="submit" className="w-full" disabled={loading}
                       style={{ background: 'linear-gradient(135deg, #1488fc, #4da5fc)', boxShadow: '0 0 20px rgba(20,136,252,0.3)' }}
                     >
-                      {loading ? "Criando..." : "Criar Conta"}
+                      {loading ? t("auth.creatingAccount") : t("auth.signup")}
                     </Button>
                   </form>
                 </TabsContent>
