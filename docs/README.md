@@ -31,8 +31,8 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
-- Sprints 1–163 are the completed canon — do not casually reopen
-- All blocks (Foundation through AH) are complete
+- Sprints 1–185 are the completed canon — do not casually reopen
+- All blocks (Foundation through AN) are complete
 - Do not collapse internal architecture and user-facing journey into the same surface
 
 ---
