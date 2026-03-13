@@ -108,6 +108,7 @@ import RedTeamSimulationDashboard from "./pages/RedTeamSimulationDashboard";
 import BlueTeamDefenseDashboard from "./pages/BlueTeamDefenseDashboard";
 import PurpleLearningDashboard from "./pages/PurpleLearningDashboard";
 import SecurityWarRoom from "./pages/SecurityWarRoom";
+import CognitiveArchitectureMap from "./pages/CognitiveArchitectureMap";
 import KnowledgeHealthDashboard from "./pages/KnowledgeHealthDashboard";
 import KnowledgePortfolioDashboard from "./pages/KnowledgePortfolioDashboard";
 import KnowledgeDemandForecastDashboard from "./pages/KnowledgeDemandForecastDashboard";
@@ -319,6 +320,7 @@ const App = () => (
                             <Route path="/owner/adoption" element={<W><AdoptionIntelligence /></W>} />
                             <Route path="/owner/delivery-outcomes" element={<W><DeliveryOutcomes /></W>} />
                             <Route path="/owner/platform-observability" element={<P><Observability /></P>} />
+                            <Route path="/owner/cognitive-architecture-map" element={<P><CognitiveArchitectureMap /></P>} />
 
                             {/* Institutional Memory */}
                             <Route path="/owner/pattern-library" element={<P><PatternLibraryDashboard /></P>} />
