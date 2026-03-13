@@ -189,7 +189,7 @@ Deno.serve(async (req: Request) => {
           .limit(batchSize);
 
         if (entErr) return errorResponse(entErr.message, 500, req);
-        if (!entries?.length) return jsonResponse({ recalibrated: 0 }, req);
+        if (!entries?.length) return jsonResponse({ recalibrated: 0 }, 200, req);
 
         const { data: trustScores } = await supabase
           .from("repo_trust_scores")
