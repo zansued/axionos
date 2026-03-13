@@ -187,6 +187,19 @@ export const OWNER_DOMAIN_GROUPS: OwnerDomainGroup[] = [
 // ─── Owner Routes ──────────────────────────────────────────────────────────
 
 export const OWNER_ROUTES: RouteEntry[] = [
+  // ── Cognitive Architecture (top-level) ──
+  {
+    path: "/owner/cognitive-architecture-map",
+    title: "Cognitive Architecture",
+    description: "Living intelligence loop visualization",
+    icon: Brain,
+    mode: "owner",
+    group: "Cognitive Architecture",
+    order: 0,
+    sidebar: true,
+    pageKey: "cognitive-architecture-map",
+  },
+
   // ── System Intelligence ──
   // Order: overview → diagnostics → tools
   {
@@ -243,17 +256,6 @@ export const OWNER_ROUTES: RouteEntry[] = [
     order: 4,
     sidebar: true,
     pageKey: "knowledge-demand",
-  },
-  {
-    path: "/owner/cognitive-architecture-map",
-    title: "Cognitive Architecture",
-    description: "Living intelligence loop visualization",
-    icon: Brain,
-    mode: "owner",
-    group: "Cognitive Architecture",
-    order: 0,
-    sidebar: true,
-    pageKey: "cognitive-architecture-map",
   },
 
   // ── Knowledge Command ──
