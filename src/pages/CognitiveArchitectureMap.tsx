@@ -586,27 +586,25 @@ export default function CognitiveArchitectureMap() {
         </motion.div>
 
         {/* Main content: flow + insights */}
-        <div className="flex gap-6 items-start">
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
           {/* Architecture flow */}
           <div className="flex-1 min-w-0">
-            {/* Horizontal flow */}
-            <ScrollArea className="w-full">
-              <div className="flex items-center pb-4 min-w-max">
-                {layers.map((layer, i) => (
-                  <LayerNode
-                    key={layer.title}
-                    title={layer.title}
-                    subtitle={layer.subtitle}
-                    icon={layer.icon}
-                    metrics={layer.metrics}
-                    color={layer.color}
-                    navigateTo={layer.navigateTo}
-                    index={i}
-                    isLast={i === layers.length - 1}
-                  />
-                ))}
-              </div>
-            </ScrollArea>
+            {/* Responsive flow grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-3">
+              {layers.map((layer, i) => (
+                <LayerNode
+                  key={layer.title}
+                  title={layer.title}
+                  subtitle={layer.subtitle}
+                  icon={layer.icon}
+                  metrics={layer.metrics}
+                  color={layer.color}
+                  navigateTo={layer.navigateTo}
+                  index={i}
+                  isLast={i === layers.length - 1}
+                />
+              ))}
+            </div>
 
             {/* Learning loop connector */}
             <LearningLoopConnector />
@@ -616,7 +614,7 @@ export default function CognitiveArchitectureMap() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.4 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4"
             >
               <SummaryCard
                 label="Intelligence Loop Health"
