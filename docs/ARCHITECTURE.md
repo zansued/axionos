@@ -536,12 +536,14 @@ Execution routing is now **adaptive by risk and context**, not purely static. Th
 | 25 | Knowledge Renewal & Revalidation Engine | AL | 182-183 |
 | 26 | Canon Intelligence Hub Restructuring & Skills Layer | AM | 184 |
 | 27 | Adaptive Execution Architecture | AN | 185 |
+| 28 | Self-Improving Canon Pipeline | AO | 186-192 |
+| 29 | Security Hardening & Canon Integrity | AP | 193-200 |
 
 ---
 
 ## 10. Implementation Status
 
-> **183 sprints complete.** All blocks Foundation through AL implemented.
+> **200 sprints complete.** All blocks Foundation through AP implemented.
 > **Sprint-by-sprint record:** `docs/registry/sprints.yml`
 
 | Block | Sprints | Name | Status |
@@ -573,12 +575,14 @@ Execution routing is now **adaptive by risk and context**, not purely static. Th
 | AF | 143-146 | Security Surface | Complete |
 | AG | 147-154 | Adoption Intelligence & Product Experience | Complete |
 | AH | 155-163 | Governance Decision Lifecycle | Complete |
-| AI | 164-171 | Repository Intelligence & Institutional Learning | Complete |
-| AJ | 172-179 | Self-Improving Architecture Engine | Complete |
+| AI | 164-169 | Governed Execution Path | Complete |
+| AJ | 170-179 | Canon Pipeline Operationalization | Complete |
 | AK | 180-181 | Knowledge Provenance & Trust-Weighted Intelligence | Complete |
 | AL | 182-183 | Knowledge Renewal & Revalidation Engine | Complete |
 | AM | 184 | Canon Intelligence Hub Restructuring & Skills Layer | Complete |
 | AN | 185 | Adaptive Execution Architecture | Complete |
+| AO | 186-192 | Self-Improving Canon Pipeline | Complete |
+| AP | 193-200 | Security Hardening & Canon Integrity | Complete |
 
 ---
 
