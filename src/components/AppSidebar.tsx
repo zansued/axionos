@@ -8,6 +8,7 @@ import { LogOut, ChevronLeft, ChevronDown, ChevronRight, Settings } from "lucide
 import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 import { useRoleBasedExperience } from "@/hooks/useRoleBasedExperience";
 import {
   SurfaceSwitcher,
@@ -60,6 +61,9 @@ function NavItemRow({
   collapsed: boolean;
   surfaceColor: string;
 }) {
+  const { t } = useI18n();
+  const displayTitle = item.titleKey ? t(item.titleKey) : item.title;
+
   return (
     <SidebarMenuItem>
       <Tooltip>
@@ -84,13 +88,13 @@ function NavItemRow({
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className="text-[13px] whitespace-nowrap overflow-hidden"
             >
-              {item.title}
+              {displayTitle}
             </motion.span>
           </NavLink>
         </TooltipTrigger>
         {collapsed && (
           <TooltipContent side="right" className="text-xs">
-            {item.title}
+            {displayTitle}
           </TooltipContent>
         )}
       </Tooltip>
@@ -118,8 +122,12 @@ function OwnerDomainSection({
   surfaceColor: string;
   currentPath: string;
 }) {
+  const { t } = useI18n();
   const hasActiveRoute = items.some((item) => currentPath === item.url || currentPath.startsWith(item.url + "/"));
   const [isOpen, setIsOpen] = useState(hasActiveRoute);
+
+  const groupLabel = group.labelKey ? t(group.labelKey) : group.label;
+  const groupSubtitle = group.subtitleKey ? t(group.subtitleKey) : group.subtitle;
 
   // Auto-expand when navigating into a group
   useMemo(() => {
@@ -127,7 +135,6 @@ function OwnerDomainSection({
   }, [hasActiveRoute]);
 
   if (collapsed) {
-    // In collapsed mode, show only child route icons — no parent group icon
     return (
       <div className="mb-1">
         <SidebarMenu className="space-y-0.5">
@@ -145,7 +152,7 @@ function OwnerDomainSection({
         <group.icon className="h-3.5 w-3.5 shrink-0 text-muted-foreground/70 group-hover:text-muted-foreground transition-colors" />
         <div className="flex-1 text-left min-w-0">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 group-hover:text-muted-foreground transition-colors truncate">
-            {group.label}
+            {groupLabel}
           </p>
         </div>
         <motion.div
@@ -161,9 +168,8 @@ function OwnerDomainSection({
           animate={{ opacity: 1 }}
           className="ml-1 mt-0.5 border-l border-sidebar-border/30 pl-1.5"
         >
-          {/* Domain subtitle */}
           <p className="text-[10px] text-muted-foreground/40 px-2 py-0.5 mb-0.5 truncate">
-            {group.subtitle}
+            {groupSubtitle}
           </p>
           <SidebarMenu className="space-y-0.5">
             {items.map((item) => (
@@ -182,6 +188,7 @@ export function AppSidebar() {
   const { open, setOpen } = useSidebar();
   const collapsed = !open;
   const { signOut, user } = useAuth();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const location = useLocation();
   const { canonicalRole, navGroups } = useRoleBasedExperience();
@@ -243,7 +250,7 @@ export function AppSidebar() {
                   <button
                     onClick={() => setOpen(!open)}
                     className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-                    aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    aria-label={collapsed ? t("nav.expandSidebar") : t("nav.collapseSidebar")}
                   >
                     <img src={axionLogo} alt="AxionOS" className="h-7 w-7 shrink-0" />
                     <motion.span
@@ -265,7 +272,7 @@ export function AppSidebar() {
                     <button
                       onClick={() => setOpen(false)}
                       className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/50 transition-colors"
-                      aria-label="Collapse sidebar"
+                      aria-label={t("nav.collapseSidebar")}
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </button>
@@ -309,7 +316,6 @@ export function AppSidebar() {
                     transition={{ duration: 0.15 }}
                   >
                     {isOwnerMode ? (
-                      // ── Owner Mode: Cognitive Architecture as direct link, rest as collapsible domain groups ──
                       <div className="space-y-0.5">
                       {ownerGroups.map(({ group, items }) => {
                           const domainGroup = domainGroupMap.get(group);
@@ -317,9 +323,9 @@ export function AppSidebar() {
                             title: r.title,
                             url: r.path,
                             icon: r.icon,
+                            titleKey: r.titleKey,
                           }));
 
-                          // Cognitive Architecture: render as direct top-level link
                           if (group === "Cognitive Architecture") {
                             return (
                               <SidebarMenu key={group} className="space-y-0.5 mb-1">
@@ -335,7 +341,6 @@ export function AppSidebar() {
                             );
                           }
 
-                          // Other domain groups render as collapsible sections
                           if (domainGroup) {
                             return (
                               <OwnerDomainSection
@@ -349,7 +354,6 @@ export function AppSidebar() {
                             );
                           }
 
-                          // Settings or ungrouped items — render flat
                           return (
                             <SidebarMenu key={group} className="space-y-0.5 mt-1">
                               {navItems.map((item) => (
@@ -365,7 +369,6 @@ export function AppSidebar() {
                         })}
                       </div>
                     ) : (
-                      // ── Builder Mode: Flat nav ──
                       <SidebarMenu className="space-y-0.5">
                         {activeNavItems?.map((item) => (
                           <NavItemRow
@@ -418,7 +421,7 @@ export function AppSidebar() {
                 transition={{ duration: 0.2 }}
                 className="text-sm whitespace-nowrap overflow-hidden"
               >
-                Sign Out
+                {t("nav.signOut")}
               </motion.span>
             </Button>
           </div>

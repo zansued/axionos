@@ -9,6 +9,7 @@ import { SystemStatusBar, KPIGrid } from "./DashboardOverview";
 import { RuntimeActivity } from "./RuntimeActivity";
 import { GovernancePanel } from "./GovernancePanel";
 import { ObservabilityMini, QuickActions } from "./ObservabilityPanel";
+import { useI18n } from "@/contexts/I18nContext";
 
 const container = {
   hidden: { opacity: 0 },
@@ -16,6 +17,9 @@ const container = {
 };
 
 export function OperationalDashboard() {
+  const { t, locale } = useI18n();
+  const dateLocale = locale === "pt-BR" ? "pt-BR" : "en-US";
+
   return (
     <motion.div
       variants={container}
@@ -26,12 +30,12 @@ export function OperationalDashboard() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-display font-semibold tracking-tight py-[10px]">Dashboard</h1>
-          <p className="text-xs text-muted-foreground mt-0.5">Idea → Software Running — AxionOS handles the rest</p>
+          <h1 className="text-xl font-display font-semibold tracking-tight py-[10px]">{t("dashboard.title")}</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">{t("dashboard.subtitle")}</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-[10px] font-mono">
-            {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+            {new Date().toLocaleDateString(dateLocale, { month: "short", day: "numeric", year: "numeric" })}
           </Badge>
         </div>
       </div>
@@ -53,6 +57,6 @@ export function OperationalDashboard() {
           <QuickActions />
         </div>
       </div>
-    </motion.div>);
-
+    </motion.div>
+  );
 }

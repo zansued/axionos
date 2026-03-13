@@ -4,7 +4,7 @@ export type Locale = "pt-BR" | "en-US";
 
 const translations = {
   "pt-BR": {
-    // Sidebar
+    // ─── Navigation / Sidebar ───
     "nav.dashboard": "Dashboard",
     "nav.initiatives": "Iniciativas",
     "nav.squads": "Squads",
@@ -25,9 +25,35 @@ const translations = {
     "nav.governance": "Governança",
     "nav.lightMode": "Modo Claro",
     "nav.darkMode": "Modo Escuro",
-    // Initiatives
+    "nav.settings": "Configurações",
+    "nav.signOut": "Sair",
+    "nav.expandSidebar": "Expandir barra lateral",
+    "nav.collapseSidebar": "Recolher barra lateral",
+
+    // ─── Surface Switcher ───
+    "surface.builder": "Modo Builder",
+    "surface.builderDesc": "Construa e entregue suas iniciativas",
+    "surface.owner": "Modo Owner",
+    "surface.ownerDesc": "Governança e operações do sistema",
+    "surface.switchMode": "Trocar Modo",
+
+    // ─── Owner Domain Groups ───
+    "domain.cognitiveArchitecture": "Arquitetura Cognitiva",
+    "domain.cognitiveArchitectureDesc": "Loop de inteligência: conhecimento → habilidades → agentes → resultados",
+    "domain.systemIntelligence": "Inteligência do Sistema",
+    "domain.systemIntelligenceDesc": "Consciência da plataforma e sinais operacionais",
+    "domain.knowledgeCommand": "Comando de Conhecimento",
+    "domain.knowledgeCommandDesc": "Sistemas de aprendizado e conhecimento operacional",
+    "domain.securityCommand": "Comando de Segurança",
+    "domain.securityCommandDesc": "Defesa adversarial e proteção do sistema",
+    "domain.deliveryOps": "Entrega & Operações",
+    "domain.deliveryOpsDesc": "Performance de execução e governança de entrega",
+    "domain.agentArchitecture": "Arquitetura de Agentes",
+    "domain.agentArchitectureDesc": "Estrutura e orquestração de agentes autônomos",
+
+    // ─── Initiatives ───
     "initiatives.title": "Iniciativas",
-    "initiatives.subtitle": "Autonomous Intelligent Infrastructure — da ideia ao software entregue",
+    "initiatives.subtitle": "Infraestrutura Inteligente Autônoma — da ideia ao software entregue",
     "initiatives.new": "Nova Iniciativa",
     "initiatives.selectPrompt": "Selecione uma iniciativa para ver o pipeline",
     "initiatives.created": "Iniciativa criada!",
@@ -42,13 +68,15 @@ const translations = {
     "initiatives.refUrl": "URL de Referência",
     "initiatives.refUrlHint": "A IA irá analisar este site e usar como referência no Discovery e Planning.",
     "initiatives.create": "Criar Iniciativa",
-    // Templates
+
+    // ─── Templates ───
     "template.simple": "Simples",
     "template.medium": "Médio",
     "template.complex": "Complexo",
     "template.lowRisk": "Risco baixo",
     "template.medRisk": "Risco médio",
-    // Common
+
+    // ─── Common ───
     "common.error": "Erro",
     "common.or": "ou",
     "common.export": "Exportar",
@@ -56,10 +84,83 @@ const translations = {
     "common.exportPDF": "Exportar PDF",
     "common.noData": "Nenhum dado disponível",
     "common.language": "Idioma",
-    // Dashboard
-    "dashboard.title": "Dashboard Estratégico",
-    "dashboard.subtitle": "Visão consolidada do pipeline de iniciativas",
-    // Keyboard
+    "common.loading": "Carregando...",
+    "common.save": "Salvar",
+    "common.cancel": "Cancelar",
+    "common.delete": "Excluir",
+    "common.edit": "Editar",
+    "common.create": "Criar",
+    "common.search": "Buscar",
+    "common.filter": "Filtrar",
+    "common.back": "Voltar",
+    "common.next": "Próximo",
+    "common.previous": "Anterior",
+    "common.confirm": "Confirmar",
+    "common.close": "Fechar",
+    "common.yes": "Sim",
+    "common.no": "Não",
+    "common.all": "Todos",
+    "common.none": "Nenhum",
+    "common.status": "Status",
+    "common.actions": "Ações",
+    "common.details": "Detalhes",
+    "common.description": "Descrição",
+    "common.name": "Nome",
+    "common.type": "Tipo",
+    "common.date": "Data",
+    "common.createdAt": "Criado em",
+    "common.updatedAt": "Atualizado em",
+    "common.viewAll": "Ver Todos",
+    "common.retry": "Tentar Novamente",
+    "common.refresh": "Atualizar",
+
+    // ─── Dashboard ───
+    "dashboard.title": "Dashboard",
+    "dashboard.subtitle": "Ideia → Software Rodando — AxionOS cuida do resto",
+    "dashboard.strategicTitle": "Dashboard Estratégico",
+    "dashboard.strategicSubtitle": "Visão consolidada do pipeline de iniciativas",
+
+    // ─── Landing Page ───
+    "landing.tagline": "Infraestrutura Inteligente Autônoma para a Era da IA",
+    "landing.subtitle": "Descreva o que você quer construir — nós orquestramos o resto.",
+    "landing.placeholder": "Projete um sistema de automação",
+    "landing.createProject": "Criar Projeto",
+    "landing.signIn": "Entrar",
+
+    // ─── Quick Ideas ───
+    "quickIdea.restApi": "API REST",
+    "quickIdea.automation": "Automação",
+    "quickIdea.aiAgent": "Agente IA",
+    "quickIdea.dashboard": "Dashboard",
+
+    // ─── Auth ───
+    "auth.panelAccess": "Acesso ao Painel",
+    "auth.panelDesc": "Entre ou crie uma conta para gerenciar seus agentes",
+    "auth.login": "Entrar",
+    "auth.signup": "Criar Conta",
+    "auth.email": "Email",
+    "auth.password": "Senha",
+    "auth.name": "Nome",
+    "auth.emailPlaceholder": "seu@email.com",
+    "auth.namePlaceholder": "Seu nome",
+    "auth.loggingIn": "Entrando...",
+    "auth.creatingAccount": "Criando...",
+    "auth.loginError": "Erro no login",
+    "auth.signupError": "Erro no cadastro",
+    "auth.accountCreated": "Conta criada!",
+    "auth.confirmEmail": "Verifique seu email para confirmar.",
+    "auth.networkError": "Erro de conexão. Verifique sua internet e tente novamente.",
+    "auth.invalidCredentials": "Email ou senha incorretos.",
+    "auth.ideaWaiting": "Sua ideia está esperando",
+    "auth.autonomousInfra": "Infraestrutura Inteligente Autônoma",
+
+    // ─── Placeholder Page ───
+    "placeholder.underConstruction": "Tela em Construção",
+    "placeholder.underConstructionDesc": "Esta tela está definida no Blueprint do AxionOS e será implementada em um sprint futuro.",
+    "placeholder.plannedComponents": "Componentes Planejados",
+    "placeholder.primaryActions": "Ações Principais",
+
+    // ─── Keyboard Shortcuts ───
     "shortcuts.title": "Atalhos de Teclado",
     "shortcuts.navigation": "Navegação",
     "shortcuts.actions": "Ações",
@@ -70,13 +171,133 @@ const translations = {
     "shortcuts.newInitiative": "Nova Iniciativa",
     "shortcuts.toggleTheme": "Alternar Tema",
     "shortcuts.showShortcuts": "Mostrar Atalhos",
-    // Notifications
+
+    // ─── Notifications ───
     "notifications.title": "Pipeline",
     "notifications.running": "estágio(s) em execução",
     "notifications.empty": "Nenhuma notificação ainda",
+
+    // ─── Kanban ───
+    "kanban.todo": "A Fazer",
+    "kanban.inProgress": "Em Progresso",
+    "kanban.done": "Concluído",
+    "kanban.blocked": "Bloqueado",
+    "kanban.low": "Baixa",
+    "kanban.medium": "Média",
+    "kanban.high": "Alta",
+    "kanban.critical": "Crítica",
+
+    // ─── Roles ───
+    "role.builder": "Builder",
+    "role.operator": "Operador",
+    "role.owner": "Owner",
+    "role.reviewer": "Revisor",
+    "role.admin": "Admin",
+
+    // ─── Error Messages ───
+    "error.duplicateItem": "Este item já existe.",
+    "error.linkedRecords": "Este item está vinculado a outros registros.",
+    "error.noPermission": "Você não tem permissão para esta ação.",
+    "error.sessionExpired": "Sessão expirada. Faça login novamente.",
+    "error.networkError": "Erro de conexão. Verifique sua internet.",
+    "error.unauthorized": "Sessão expirada. Faça login novamente.",
+    "error.rateLimit": "Muitas requisições. Aguarde um momento.",
+    "error.aiConfig": "Configuração de IA não disponível.",
+    "error.aiService": "Erro no serviço de IA. Tente novamente.",
+    "error.generic": "Ocorreu um erro. Tente novamente.",
+
+    // ─── Route Titles (Builder) ───
+    "route.dashboard": "Dashboard",
+    "route.projects": "Projetos",
+    "route.agents": "Agentes",
+    "route.pipelines": "Pipelines",
+    "route.runtime": "Runtime",
+    "route.executionObservability": "Observabilidade de Execução",
+    "route.connections": "Conexões",
+    "route.settings": "Configurações",
+
+    // ─── Route Descriptions (Builder) ───
+    "routeDesc.dashboard": "Visão geral e métricas de entrega",
+    "routeDesc.projects": "Gerenciar iniciativas e ideias",
+    "routeDesc.agents": "Gestão de agentes de IA",
+    "routeDesc.pipelines": "Orquestração de pipeline de entrega",
+    "routeDesc.runtime": "Monitoramento em tempo real",
+    "routeDesc.executionObservability": "Telemetria e performance do pipeline",
+    "routeDesc.connections": "GitHub, Supabase e integrações",
+    "routeDesc.settings": "Configurações do workspace",
+
+    // ─── Route Titles (Owner) ───
+    "route.cognitiveArchitecture": "Arquitetura Cognitiva",
+    "route.executiveOverview": "Visão Executiva",
+    "route.systemHealth": "Saúde do Sistema",
+    "route.platformObservability": "Observabilidade da Plataforma",
+    "route.adoption": "Adoção",
+    "route.demandForecast": "Previsão de Demanda",
+    "route.patternLibrary": "Biblioteca de Padrões",
+    "route.canonIntelligence": "Inteligência do Canon",
+    "route.knowledgeHealth": "Saúde do Conhecimento",
+    "route.knowledgePortfolio": "Portfólio de Conhecimento",
+    "route.capabilities": "Capacidades",
+    "route.poisoningPrevention": "Prevenção de Envenenamento",
+    "route.securityMonitoring": "Monitoramento de Segurança",
+    "route.securityIntelligence": "Inteligência de Segurança",
+    "route.securityWarRoom": "Sala de Guerra de Segurança",
+    "route.redTeamSimulation": "Simulação Red Team",
+    "route.blueTeamDefense": "Defesa Blue Team",
+    "route.purpleLearning": "Aprendizado Purple",
+    "route.deliveryOutcomes": "Resultados de Entrega",
+    "route.deliveryGovernance": "Governança de Entrega",
+    "route.autonomyPosture": "Postura de Autonomia",
+    "route.calibration": "Calibração",
+    "route.acquisitionPlanner": "Planejador de Aquisição",
+    "route.acquisitionExecution": "Execução de Aquisição",
+    "route.acquisitionRoi": "ROI de Aquisição",
+    "route.agentSwarm": "Enxame de Agentes",
+    "route.changeTracking": "Rastreamento de Mudanças",
+
+    // ─── Route Descriptions (Owner) ───
+    "routeDesc.cognitiveArchitecture": "Visualização do loop de inteligência vivo",
+    "routeDesc.executiveOverview": "Insights estratégicos e sinais do sistema com IA",
+    "routeDesc.systemHealth": "Diagnósticos e uptime da plataforma",
+    "routeDesc.platformObservability": "Telemetria e métricas de infraestrutura",
+    "routeDesc.adoption": "Análise de uso e fricção",
+    "routeDesc.demandForecast": "Previsão de demanda de conhecimento e pressão de cobertura",
+    "routeDesc.patternLibrary": "Padrões de arquitetura reutilizáveis",
+    "routeDesc.canonIntelligence": "Base de conhecimento e canon",
+    "routeDesc.knowledgeHealth": "Renovação, revalidação e recuperação de confiança",
+    "routeDesc.knowledgePortfolio": "Otimização de portfólio, redundância e análise de cobertura",
+    "routeDesc.capabilities": "Registro e confiança de capacidades",
+    "routeDesc.poisoningPrevention": "Detectar, quarentenar e revisar conhecimento suspeito",
+    "routeDesc.securityMonitoring": "Detecção automatizada de anomalias e alertas",
+    "routeDesc.securityIntelligence": "Análise e detecção de ameaças",
+    "routeDesc.securityWarRoom": "Operações de segurança ativas",
+    "routeDesc.redTeamSimulation": "Exercícios de simulação de ataques",
+    "routeDesc.blueTeamDefense": "Operações defensivas",
+    "routeDesc.purpleLearning": "Aprendizado combinado red/blue",
+    "routeDesc.deliveryOutcomes": "Medição e rastreamento de resultados",
+    "routeDesc.deliveryGovernance": "Governança e aprovações de pipeline",
+    "routeDesc.autonomyPosture": "Controles de governança de autonomia",
+    "routeDesc.calibration": "Calibração e ajuste do sistema",
+    "routeDesc.acquisitionPlanner": "Planejamento estratégico de aquisição de conhecimento",
+    "routeDesc.acquisitionExecution": "Executar e monitorar jobs de aquisição",
+    "routeDesc.acquisitionRoi": "Eficiência de aprendizado e retorno sobre investimento",
+    "routeDesc.agentSwarm": "Coordenação multi-agente",
+    "routeDesc.changeTracking": "Ciclo de vida de aplicação de mudanças de governança",
+    "routeDesc.platformSettings": "Configurações da plataforma",
+
+    // ─── Breadcrumbs ───
+    "breadcrumb.builder": "Builder",
+    "breadcrumb.owner": "Owner",
+
+    // ─── Guidance ───
+    "guidance.nextAction": "Próxima ação:",
+    "guidance.noApproval": "Sem aprovação necessária",
+    "guidance.optionalApproval": "Aprovação opcional",
+    "guidance.recommendedApproval": "Aprovação recomendada",
+    "guidance.requiredApproval": "Aprovação obrigatória",
   },
   "en-US": {
-    // Sidebar
+    // ─── Navigation / Sidebar ───
     "nav.dashboard": "Dashboard",
     "nav.initiatives": "Initiatives",
     "nav.squads": "Squads",
@@ -97,7 +318,33 @@ const translations = {
     "nav.governance": "Governance",
     "nav.lightMode": "Light Mode",
     "nav.darkMode": "Dark Mode",
-    // Initiatives
+    "nav.settings": "Settings",
+    "nav.signOut": "Sign Out",
+    "nav.expandSidebar": "Expand sidebar",
+    "nav.collapseSidebar": "Collapse sidebar",
+
+    // ─── Surface Switcher ───
+    "surface.builder": "Builder Mode",
+    "surface.builderDesc": "Build and ship your initiatives",
+    "surface.owner": "Owner Mode",
+    "surface.ownerDesc": "System governance & operations",
+    "surface.switchMode": "Switch Mode",
+
+    // ─── Owner Domain Groups ───
+    "domain.cognitiveArchitecture": "Cognitive Architecture",
+    "domain.cognitiveArchitectureDesc": "Intelligence loop: knowledge → skills → agents → outcomes",
+    "domain.systemIntelligence": "System Intelligence",
+    "domain.systemIntelligenceDesc": "Platform awareness and operational signals",
+    "domain.knowledgeCommand": "Knowledge Command",
+    "domain.knowledgeCommandDesc": "Learning systems and operational knowledge",
+    "domain.securityCommand": "Security Command",
+    "domain.securityCommandDesc": "Adversarial defense and system protection",
+    "domain.deliveryOps": "Delivery & Operations",
+    "domain.deliveryOpsDesc": "Execution performance and delivery governance",
+    "domain.agentArchitecture": "Agent Architecture",
+    "domain.agentArchitectureDesc": "Structure and orchestration of autonomous agents",
+
+    // ─── Initiatives ───
     "initiatives.title": "Initiatives",
     "initiatives.subtitle": "Autonomous Intelligent Infrastructure — from idea to delivered software",
     "initiatives.new": "New Initiative",
@@ -114,13 +361,15 @@ const translations = {
     "initiatives.refUrl": "Reference URL",
     "initiatives.refUrlHint": "AI will analyze this site and use it as a reference in Discovery and Planning.",
     "initiatives.create": "Create Initiative",
-    // Templates
+
+    // ─── Templates ───
     "template.simple": "Simple",
     "template.medium": "Medium",
     "template.complex": "Complex",
     "template.lowRisk": "Low risk",
     "template.medRisk": "Medium risk",
-    // Common
+
+    // ─── Common ───
     "common.error": "Error",
     "common.or": "or",
     "common.export": "Export",
@@ -128,10 +377,83 @@ const translations = {
     "common.exportPDF": "Export PDF",
     "common.noData": "No data available",
     "common.language": "Language",
-    // Dashboard
-    "dashboard.title": "Strategic Dashboard",
-    "dashboard.subtitle": "Consolidated view of the initiative pipeline",
-    // Keyboard
+    "common.loading": "Loading...",
+    "common.save": "Save",
+    "common.cancel": "Cancel",
+    "common.delete": "Delete",
+    "common.edit": "Edit",
+    "common.create": "Create",
+    "common.search": "Search",
+    "common.filter": "Filter",
+    "common.back": "Back",
+    "common.next": "Next",
+    "common.previous": "Previous",
+    "common.confirm": "Confirm",
+    "common.close": "Close",
+    "common.yes": "Yes",
+    "common.no": "No",
+    "common.all": "All",
+    "common.none": "None",
+    "common.status": "Status",
+    "common.actions": "Actions",
+    "common.details": "Details",
+    "common.description": "Description",
+    "common.name": "Name",
+    "common.type": "Type",
+    "common.date": "Date",
+    "common.createdAt": "Created at",
+    "common.updatedAt": "Updated at",
+    "common.viewAll": "View All",
+    "common.retry": "Retry",
+    "common.refresh": "Refresh",
+
+    // ─── Dashboard ───
+    "dashboard.title": "Dashboard",
+    "dashboard.subtitle": "Idea → Software Running — AxionOS handles the rest",
+    "dashboard.strategicTitle": "Strategic Dashboard",
+    "dashboard.strategicSubtitle": "Consolidated view of the initiative pipeline",
+
+    // ─── Landing Page ───
+    "landing.tagline": "Autonomous Intelligent Infrastructure for the AI Era",
+    "landing.subtitle": "Describe what you want to build — we orchestrate the rest.",
+    "landing.placeholder": "Design an automation system",
+    "landing.createProject": "Create project",
+    "landing.signIn": "Sign in",
+
+    // ─── Quick Ideas ───
+    "quickIdea.restApi": "REST API",
+    "quickIdea.automation": "Automation",
+    "quickIdea.aiAgent": "AI Agent",
+    "quickIdea.dashboard": "Dashboard",
+
+    // ─── Auth ───
+    "auth.panelAccess": "Panel Access",
+    "auth.panelDesc": "Sign in or create an account to manage your agents",
+    "auth.login": "Sign In",
+    "auth.signup": "Create Account",
+    "auth.email": "Email",
+    "auth.password": "Password",
+    "auth.name": "Name",
+    "auth.emailPlaceholder": "you@email.com",
+    "auth.namePlaceholder": "Your name",
+    "auth.loggingIn": "Signing in...",
+    "auth.creatingAccount": "Creating...",
+    "auth.loginError": "Login error",
+    "auth.signupError": "Signup error",
+    "auth.accountCreated": "Account created!",
+    "auth.confirmEmail": "Check your email to confirm.",
+    "auth.networkError": "Connection error. Check your internet and try again.",
+    "auth.invalidCredentials": "Invalid email or password.",
+    "auth.ideaWaiting": "Your idea is waiting",
+    "auth.autonomousInfra": "Autonomous Intelligent Infrastructure",
+
+    // ─── Placeholder Page ───
+    "placeholder.underConstruction": "Screen Under Construction",
+    "placeholder.underConstructionDesc": "This screen is defined in the AxionOS UI Blueprint and will be implemented in a future sprint.",
+    "placeholder.plannedComponents": "Planned Components",
+    "placeholder.primaryActions": "Primary Actions",
+
+    // ─── Keyboard Shortcuts ───
     "shortcuts.title": "Keyboard Shortcuts",
     "shortcuts.navigation": "Navigation",
     "shortcuts.actions": "Actions",
@@ -142,14 +464,134 @@ const translations = {
     "shortcuts.newInitiative": "New Initiative",
     "shortcuts.toggleTheme": "Toggle Theme",
     "shortcuts.showShortcuts": "Show Shortcuts",
-    // Notifications
+
+    // ─── Notifications ───
     "notifications.title": "Pipeline",
     "notifications.running": "stage(s) running",
     "notifications.empty": "No notifications yet",
+
+    // ─── Kanban ───
+    "kanban.todo": "To Do",
+    "kanban.inProgress": "In Progress",
+    "kanban.done": "Done",
+    "kanban.blocked": "Blocked",
+    "kanban.low": "Low",
+    "kanban.medium": "Medium",
+    "kanban.high": "High",
+    "kanban.critical": "Critical",
+
+    // ─── Roles ───
+    "role.builder": "Builder",
+    "role.operator": "Operator",
+    "role.owner": "Owner",
+    "role.reviewer": "Reviewer",
+    "role.admin": "Admin",
+
+    // ─── Error Messages ───
+    "error.duplicateItem": "This item already exists.",
+    "error.linkedRecords": "This item is linked to other records.",
+    "error.noPermission": "You don't have permission for this action.",
+    "error.sessionExpired": "Session expired. Please sign in again.",
+    "error.networkError": "Connection error. Check your internet.",
+    "error.unauthorized": "Session expired. Please sign in again.",
+    "error.rateLimit": "Too many requests. Please wait a moment.",
+    "error.aiConfig": "AI configuration unavailable.",
+    "error.aiService": "AI service error. Please try again.",
+    "error.generic": "An error occurred. Please try again.",
+
+    // ─── Route Titles (Builder) ───
+    "route.dashboard": "Dashboard",
+    "route.projects": "Projects",
+    "route.agents": "Agents",
+    "route.pipelines": "Pipelines",
+    "route.runtime": "Runtime",
+    "route.executionObservability": "Execution Observability",
+    "route.connections": "Connections",
+    "route.settings": "Settings",
+
+    // ─── Route Descriptions (Builder) ───
+    "routeDesc.dashboard": "Overview & delivery metrics",
+    "routeDesc.projects": "Manage initiatives & ideas",
+    "routeDesc.agents": "AI agent management",
+    "routeDesc.pipelines": "Delivery pipeline orchestration",
+    "routeDesc.runtime": "Live runtime monitoring",
+    "routeDesc.executionObservability": "Pipeline telemetry & performance",
+    "routeDesc.connections": "GitHub, Supabase & integrations",
+    "routeDesc.settings": "Builder workspace settings",
+
+    // ─── Route Titles (Owner) ───
+    "route.cognitiveArchitecture": "Cognitive Architecture",
+    "route.executiveOverview": "Executive Overview",
+    "route.systemHealth": "System Health",
+    "route.platformObservability": "Platform Observability",
+    "route.adoption": "Adoption",
+    "route.demandForecast": "Demand Forecast",
+    "route.patternLibrary": "Pattern Library",
+    "route.canonIntelligence": "Canon Intelligence",
+    "route.knowledgeHealth": "Knowledge Health",
+    "route.knowledgePortfolio": "Knowledge Portfolio",
+    "route.capabilities": "Capabilities",
+    "route.poisoningPrevention": "Poisoning Prevention",
+    "route.securityMonitoring": "Security Monitoring",
+    "route.securityIntelligence": "Security Intelligence",
+    "route.securityWarRoom": "Security War Room",
+    "route.redTeamSimulation": "Red Team Simulation",
+    "route.blueTeamDefense": "Blue Team Defense",
+    "route.purpleLearning": "Purple Learning",
+    "route.deliveryOutcomes": "Delivery Outcomes",
+    "route.deliveryGovernance": "Delivery Governance",
+    "route.autonomyPosture": "Autonomy Posture",
+    "route.calibration": "Calibration",
+    "route.acquisitionPlanner": "Acquisition Planner",
+    "route.acquisitionExecution": "Acquisition Execution",
+    "route.acquisitionRoi": "Acquisition ROI",
+    "route.agentSwarm": "Agent Swarm",
+    "route.changeTracking": "Change Tracking",
+
+    // ─── Route Descriptions (Owner) ───
+    "routeDesc.cognitiveArchitecture": "Living intelligence loop visualization",
+    "routeDesc.executiveOverview": "AI-powered system insights & strategic signals",
+    "routeDesc.systemHealth": "Platform diagnostics & uptime",
+    "routeDesc.platformObservability": "Infrastructure telemetry & metrics",
+    "routeDesc.adoption": "Usage analytics & friction",
+    "routeDesc.demandForecast": "Knowledge demand forecasting & coverage pressure",
+    "routeDesc.patternLibrary": "Reusable architecture patterns",
+    "routeDesc.canonIntelligence": "Knowledge base & canon",
+    "routeDesc.knowledgeHealth": "Renewal, revalidation & confidence recovery",
+    "routeDesc.knowledgePortfolio": "Portfolio optimization, redundancy & coverage analysis",
+    "routeDesc.capabilities": "Capability registry & trust",
+    "routeDesc.poisoningPrevention": "Detect, quarantine, and review suspicious knowledge",
+    "routeDesc.securityMonitoring": "Automated anomaly detection & alerts",
+    "routeDesc.securityIntelligence": "Threat analysis & detection",
+    "routeDesc.securityWarRoom": "Active security operations",
+    "routeDesc.redTeamSimulation": "Attack simulation exercises",
+    "routeDesc.blueTeamDefense": "Defensive operations",
+    "routeDesc.purpleLearning": "Combined red/blue learning",
+    "routeDesc.deliveryOutcomes": "Outcome measurement & tracking",
+    "routeDesc.deliveryGovernance": "Pipeline governance & approvals",
+    "routeDesc.autonomyPosture": "Autonomy governance controls",
+    "routeDesc.calibration": "System calibration & tuning",
+    "routeDesc.acquisitionPlanner": "Strategic knowledge acquisition planning",
+    "routeDesc.acquisitionExecution": "Execute and monitor acquisition jobs",
+    "routeDesc.acquisitionRoi": "Learning efficiency & return on investment",
+    "routeDesc.agentSwarm": "Multi-agent coordination",
+    "routeDesc.changeTracking": "Downstream application lifecycle for governance changes",
+    "routeDesc.platformSettings": "Platform settings",
+
+    // ─── Breadcrumbs ───
+    "breadcrumb.builder": "Builder",
+    "breadcrumb.owner": "Owner",
+
+    // ─── Guidance ───
+    "guidance.nextAction": "Next action:",
+    "guidance.noApproval": "No approval needed",
+    "guidance.optionalApproval": "Optional approval",
+    "guidance.recommendedApproval": "Approval recommended",
+    "guidance.requiredApproval": "Approval required",
   },
 } as const;
 
-type TranslationKey = keyof typeof translations["pt-BR"];
+export type TranslationKey = keyof typeof translations["pt-BR"];
 
 interface I18nContextValue {
   locale: Locale;

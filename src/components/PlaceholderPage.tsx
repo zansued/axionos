@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Construction, ArrowLeft, type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useI18n } from "@/contexts/I18nContext";
 
 interface PlaceholderPageProps {
   title: string;
@@ -28,6 +29,7 @@ export function PlaceholderPage({
   plannedActions = [],
 }: PlaceholderPageProps) {
   const navigate = useNavigate();
+  const { t } = useI18n();
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -58,17 +60,17 @@ export function PlaceholderPage({
         <CardHeader>
           <CardTitle className="text-sm flex items-center gap-2">
             <Construction className="h-4 w-4 text-warning" />
-            Screen Under Construction
+            {t("placeholder.underConstruction")}
           </CardTitle>
           <CardDescription>
-            This screen is defined in the AxionOS UI Blueprint and will be implemented in a future sprint.
+            {t("placeholder.underConstructionDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {plannedComponents.length > 0 && (
             <div>
               <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">
-                Planned Components
+                {t("placeholder.plannedComponents")}
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {plannedComponents.map((c) => (
@@ -83,7 +85,7 @@ export function PlaceholderPage({
           {plannedActions.length > 0 && (
             <div>
               <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">
-                Primary Actions
+                {t("placeholder.primaryActions")}
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {plannedActions.map((a) => (

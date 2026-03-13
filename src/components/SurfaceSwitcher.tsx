@@ -1,10 +1,11 @@
 // SurfaceSwitcher – native AxionOS mode pivot with framer-motion animations.
-// Supports Builder / Owner modes with role-aware access.
+// Supports Builder / Owner modes with role-aware access and i18n.
 
 import * as React from "react";
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
 import { ChevronDown, Rocket, Shield, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/contexts/I18nContext";
 import type { CanonicalRole, NavGroups } from "@/lib/permissions";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -17,6 +18,8 @@ interface Surface {
   description: string;
   icon: React.ElementType;
   colorVar: string;
+  labelKey: "surface.builder" | "surface.owner";
+  descKey: "surface.builderDesc" | "surface.ownerDesc";
 }
 
 // ─── Surface metadata ────────────────────────────────────────────────────────
@@ -27,14 +30,18 @@ const ALL_SURFACES: Surface[] = [
     label: "Builder Mode",
     description: "Build and ship your initiatives",
     icon: Rocket,
-    colorVar: "--surface-product", // mantendo a cor antiga p/ nao quebrar CSS
+    colorVar: "--surface-product",
+    labelKey: "surface.builder",
+    descKey: "surface.builderDesc",
   },
   {
     id: "owner",
     label: "Owner Mode",
     description: "System governance & operations",
     icon: Shield,
-    colorVar: "--surface-platform", // mantendo a cor antiga
+    colorVar: "--surface-platform",
+    labelKey: "surface.owner",
+    descKey: "surface.ownerDesc",
   },
 ];
 
@@ -132,6 +139,7 @@ export function SurfaceSwitcher({
   onSurfaceChange,
   collapsed = false,
 }: SurfaceSwitcherProps) {
+  const { t } = useI18n();
   const allowedSurfaces = React.useMemo(() => getAllowedSurfaces(role), [role]);
   const [isOpen, setIsOpen] = React.useState(false);
   const [hovered, setHovered] = React.useState<SurfaceId | null>(null);
@@ -167,7 +175,7 @@ export function SurfaceSwitcher({
           style={{ color: `hsl(var(${selectedSurface.colorVar}))` }}
         />
         <span className="text-sm font-medium text-sidebar-foreground">
-          {selectedSurface.label}
+          {t(selectedSurface.labelKey)}
         </span>
       </div>
     );
@@ -213,10 +221,10 @@ export function SurfaceSwitcher({
             />
             <span className="flex flex-col leading-tight">
               <span className="text-sm font-medium text-sidebar-accent-foreground">
-                {selectedSurface.label}
+                {t(selectedSurface.labelKey)}
               </span>
               <span className="text-[10px] text-muted-foreground/70">
-                {selectedSurface.description}
+                {t(selectedSurface.descKey)}
               </span>
             </span>
           </span>
@@ -241,7 +249,7 @@ export function SurfaceSwitcher({
             >
               <div className="rounded-xl border border-sidebar-border bg-sidebar p-1.5 shadow-xl">
                 <div className="mb-1 px-2 pt-1 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
-                  Switch Mode
+                  {t("surface.switchMode")}
                 </div>
                 <div className="space-y-0.5">
                   {allowedSurfaces.map((surface) => {
@@ -279,10 +287,10 @@ export function SurfaceSwitcher({
                         />
                         <div className="flex flex-1 flex-col">
                           <span className="text-sm font-medium text-sidebar-accent-foreground">
-                            {surface.label}
+                            {t(surface.labelKey)}
                           </span>
                           <span className="text-[10px] text-muted-foreground/70">
-                            {surface.description}
+                            {t(surface.descKey)}
                           </span>
                         </div>
                         {isActive && (
