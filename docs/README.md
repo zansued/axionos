@@ -31,8 +31,8 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
-- Sprints 1–185 are the completed canon — do not casually reopen
-- All blocks (Foundation through AN) are complete
+- Sprints 1–200 are the completed canon — do not casually reopen
+- All blocks (Foundation through AP) are complete
 - Do not collapse internal architecture and user-facing journey into the same surface
 
 ---
@@ -50,7 +50,7 @@ The default user-facing journey remains:
 
 ## Current Canon Note
 
-> Public documentation reflects the **stable architecture line** through Sprint 185 (all blocks Foundation through AN).
+> Public documentation reflects the **stable architecture line** through Sprint 200 (all blocks Foundation through AP).
 >
 > Internal roadmap and experimental canon may be ahead of this baseline.
 > This notice exists to preserve credibility — not to obscure progress.
@@ -110,6 +110,8 @@ Owner Mode is for governing the platform's intelligence and evolution.
 | 182–183 | AL | Knowledge Renewal & Revalidation Engine — Renewal triggers, revalidation workflows, confidence recovery, renewal proposals, renewal history |
 | 184 | AM | Canon Intelligence Hub Restructuring — Cognitive domain grouping, Skills layer tables, operational reorganization |
 | 185 | AN | Execution Architecture Evolution — Adaptive risk-based execution routing (OX/DX sprints), evidence-informed policy tuning |
+| 186–192 | AO | Self-Improving Canon Pipeline — Deep Repo Absorber, Knowledge Demand Forecast, Acquisition Orchestrator, Portfolio Optimization, ROI Engine, Hub UI Consolidation, Skills Activation |
+| 193–200 | AP | Security Hardening & Canon Integrity — Poisoning Prevention, Auth Hardening (3 waves across 200+ Edge Functions), RLS Tightening, Execution Worker Security, Inference Resistance |
 
 ### Axion Action Engine
 
@@ -117,22 +119,26 @@ The Axion Action Engine is now **implemented and operational**. It formalizes tr
 
 ---
 
-## After Sprint 185 — Current Strategic State
+## After Sprint 200 — Current Strategic State
 
-The platform has completed 185 sprints across all blocks from Foundation through AN. The system operates as a governed adaptive organism with:
+The platform has completed 200 sprints across all blocks from Foundation through AP. The system operates as a security-hardened governed adaptive organism with:
 
 - ✅ Full Axion Action Engine with governed execution pipeline
 - ✅ Governance decision lifecycle (proposal → review → handoff → application tracking)
 - ✅ Security surface with threat domain mapping and risk profiles
 - ✅ Builder/Owner Mode separation for clear workspace boundaries
 - ✅ Adoption intelligence and user journey orchestration
-- ✅ Repository intelligence and institutional learning pipeline
-- ✅ Self-improving architecture engine with governed self-evolution
+- ✅ Canon pipeline operationalization (review, evolution, dedup, promotion, skills, graph, injection)
+- ✅ Self-improving canon pipeline (deep repo absorber, knowledge demand, acquisition, portfolio, ROI)
 - ✅ Knowledge provenance, trust-weighted intelligence, and renewal engine
 - ✅ Canon Intelligence Hub with cognitive domain structure
 - ✅ Emerging Skills layer (skill_bundles, engineering_skills, skill_capabilities)
 - ✅ Adaptive execution routing with evidence-informed policy tuning
-- ✅ 200+ Edge Functions deployed
+- ✅ Canon Poisoning Prevention Engine
+- ✅ Full auth hardening across 200+ Edge Functions (3 waves)
+- ✅ RLS policy audit and tightening
+- ✅ Inference resistance — cross-tenant existence inference prevention
+- ✅ 200+ Edge Functions deployed and security-hardened
 
 The focus shifts to:
 - Deepening intelligence quality and advisory precision
@@ -141,17 +147,18 @@ The focus shifts to:
 - Connecting the Action Engine to real downstream execution
 - Improving end-to-end delivery reliability
 - Maturing the Skills layer into full operational depth
+- Activating the skill extraction → review → capability binding pipeline
 
 ---
 
-## How To Continue Safely After Sprint 185
+## How To Continue Safely After Sprint 200
 
 1. Read **this README** for canon boundaries and invariants
 2. Use **ARCHITECTURE.md** for structural context, the product boundary model, and the role/surface model
 3. Use **GOVERNANCE.md** for Agent OS modules, contracts, and governance reference
 4. Implement future work **sprint by sprint** with human review
 5. Do **not** collapse internal architecture and user-facing journey into the same surface
-6. Do **not** casually reopen completed canon (Sprints 1–185) without deliberate review
+6. Do **not** casually reopen completed canon (Sprints 1–200) without deliberate review
 7. Internal layers are backstage support — the default product surface is the user journey
 
 ---
@@ -168,7 +175,7 @@ The focus shifts to:
 
 ### Current Canon Boundaries
 
-- **Sprints 1–185** = canonical complete (Foundation through Block AN)
+- **Sprints 1–200** = canonical complete (Foundation through Block AP)
 
 ---
 

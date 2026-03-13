@@ -1,7 +1,7 @@
 # AxionOS — Canonical Sprint Registry
 # Single source of truth for sprint metadata.
 # Detailed descriptions live in PLAN.md. Strategic context in ROADMAP.md.
-# Last updated: 2026-03-10
+# Last updated: 2026-03-13
 
 sprints:
   # === COMPLETE CANON (Sprints 1–94) ===
@@ -231,3 +231,36 @@ sprints:
   - { sprint: 177, name: "Repo-to-Canon Intelligence Graph",                        status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Intelligence Graph Layer" }
   - { sprint: 178, name: "Agent Skill Injection Runtime",                           status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Skill Injection Layer" }
   - { sprint: 179, name: "Institutional Learning Governance Surface",               status: complete, block: "AJ", phase: "Canon Pipeline Ops", layer: "Learning Governance Surface Layer" }
+
+  # === BLOCK AK — Knowledge Provenance & Trust-Weighted Intelligence === COMPLETE
+  - { sprint: 180, name: "Repo Trust Score & Pattern Weighting Engine",             status: complete, block: "AK", phase: "Knowledge Provenance", layer: "Trust Score & Pattern Weighting Layer" }
+  - { sprint: 181, name: "Source Provenance & Knowledge Lineage Surface",           status: complete, block: "AK", phase: "Knowledge Provenance", layer: "Knowledge Lineage Layer" }
+
+  # === BLOCK AL — Knowledge Renewal & Revalidation Engine === COMPLETE
+  - { sprint: 182, name: "Knowledge Quality & Decay Assessment",                    status: complete, block: "AL", phase: "Knowledge Renewal", layer: "Knowledge Decay Assessment Layer" }
+  - { sprint: 183, name: "Knowledge Renewal & Revalidation Engine",                 status: complete, block: "AL", phase: "Knowledge Renewal", layer: "Knowledge Renewal Layer" }
+
+  # === BLOCK AM — Canon Intelligence Hub Restructuring === COMPLETE
+  - { sprint: 184, name: "Canon Intelligence Hub Restructuring & Skills Layer",     status: complete, block: "AM", phase: "Canon Hub Restructuring", layer: "Canon Hub & Skills Layer" }
+
+  # === BLOCK AN — Adaptive Execution Architecture === COMPLETE
+  - { sprint: 185, name: "Execution Architecture Evolution (OX/DX Tracks)",         status: complete, block: "AN", phase: "Execution Architecture Evolution", layer: "Adaptive Execution Routing Layer" }
+
+  # === BLOCK AO — Self-Improving Canon Pipeline === COMPLETE
+  - { sprint: 186, name: "Deep Repo Absorber Engine",                               status: complete, block: "AO", phase: "Self-Improving Canon Pipeline", layer: "Deep Repo Absorber Layer" }
+  - { sprint: 187, name: "Knowledge Demand Forecast Engine",                        status: complete, block: "AO", phase: "Self-Improving Canon Pipeline", layer: "Knowledge Demand Forecast Layer" }
+  - { sprint: 188, name: "Knowledge Acquisition Orchestrator",                      status: complete, block: "AO", phase: "Self-Improving Canon Pipeline", layer: "Knowledge Acquisition Orchestration Layer" }
+  - { sprint: 189, name: "Knowledge Portfolio Optimization Engine",                 status: complete, block: "AO", phase: "Self-Improving Canon Pipeline", layer: "Knowledge Portfolio Optimization Layer" }
+  - { sprint: 190, name: "Knowledge Acquisition ROI Engine",                        status: complete, block: "AO", phase: "Self-Improving Canon Pipeline", layer: "Knowledge Acquisition ROI Layer" }
+  - { sprint: 191, name: "Canon Intelligence Hub UI Consolidation",                 status: complete, block: "AO", phase: "Self-Improving Canon Pipeline", layer: "Canon Hub UI Layer" }
+  - { sprint: 192, name: "Skills Layer Operational Activation",                     status: complete, block: "AO", phase: "Self-Improving Canon Pipeline", layer: "Skills Operational Layer" }
+
+  # === BLOCK AP — Security Hardening & Canon Integrity === COMPLETE
+  - { sprint: 193, name: "Canon Poisoning Prevention Engine",                       status: complete, block: "AP", phase: "Security Hardening", layer: "Canon Poisoning Prevention Layer" }
+  - { sprint: 194, name: "Canon Promotion Auth Fix & Pipeline Hardening",           status: complete, block: "AP", phase: "Security Hardening", layer: "Pipeline Auth Hardening Layer" }
+  - { sprint: 195, name: "RLS Policy Audit & Tightening",                           status: complete, block: "AP", phase: "Security Hardening", layer: "RLS Hardening Layer" }
+  - { sprint: 196, name: "Auth Hardening Wave 1 — Core Engines",                    status: complete, block: "AP", phase: "Security Hardening", layer: "Auth Hardening Layer" }
+  - { sprint: 197, name: "Auth Hardening Wave 2 — Governance & Intelligence",       status: complete, block: "AP", phase: "Security Hardening", layer: "Auth Hardening Layer" }
+  - { sprint: 198, name: "Execution Worker Security & Org Validation",              status: complete, block: "AP", phase: "Security Hardening", layer: "Execution Security Layer" }
+  - { sprint: 199, name: "Inference Resistance & Cross-Tenant Protection",          status: complete, block: "AP", phase: "Security Hardening", layer: "Inference Resistance Layer" }
+  - { sprint: 200, name: "Auth Hardening Wave 3 — Final Coverage",                  status: complete, block: "AP", phase: "Security Hardening", layer: "Auth Hardening Final Layer" }

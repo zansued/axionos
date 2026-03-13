@@ -503,6 +503,42 @@ Execution routing is now **adaptive by risk and context**, not purely static. Th
 
 > **Status:** Stable. The classifier, risk signals, and adaptive policy layer are implemented and operational. Future work may add persistent policy storage and automated evidence aggregation once metrics tables mature.
 
+## 8h. Block AO — Self-Improving Canon Pipeline (Sprints 186–192)
+
+This block activates the **autonomous knowledge acquisition and portfolio optimization** pipeline. The system can now proactively identify knowledge gaps, plan acquisition strategies, absorb repositories deeply, forecast knowledge demand, and optimize its canon portfolio for coverage and ROI.
+
+| Sprint | Name |
+|--------|------|
+| 186 | Deep Repo Absorber Engine |
+| 187 | Knowledge Demand Forecast Engine |
+| 188 | Knowledge Acquisition Orchestrator |
+| 189 | Knowledge Portfolio Optimization Engine |
+| 190 | Knowledge Acquisition ROI Engine |
+| 191 | Canon Intelligence Hub UI Consolidation |
+| 192 | Skills Layer Operational Activation |
+
+## 8i. Block AP — Security Hardening & Canon Integrity (Sprints 193–200)
+
+This block implements **comprehensive security hardening** across the entire Edge Function fleet, Canon integrity protection, and cross-tenant inference resistance.
+
+| Sprint | Name |
+|--------|------|
+| 193 | Canon Poisoning Prevention Engine |
+| 194 | Canon Promotion Auth Fix & Pipeline Hardening |
+| 195 | RLS Policy Audit & Tightening |
+| 196 | Auth Hardening Wave 1 — Core Engines |
+| 197 | Auth Hardening Wave 2 — Governance & Intelligence |
+| 198 | Execution Worker Security & Org Validation |
+| 199 | Inference Resistance & Cross-Tenant Protection |
+| 200 | Auth Hardening Wave 3 — Final Coverage |
+
+**Key security improvements:**
+- `authenticateWithRateLimit()` and `resolveAndValidateOrg()` applied across all Edge Functions
+- `notFoundOrForbiddenResponse()` prevents cross-tenant existence inference
+- Canon Poisoning Prevention gate integrated into promotion pipeline
+- RLS policies tightened: public-facing policies scoped to `service_role` or org membership
+- Execution workers derive org context from DB records, not request payloads
+
 ---
 
 ## 9. Capability Tiers (Summary)
@@ -536,12 +572,14 @@ Execution routing is now **adaptive by risk and context**, not purely static. Th
 | 25 | Knowledge Renewal & Revalidation Engine | AL | 182-183 |
 | 26 | Canon Intelligence Hub Restructuring & Skills Layer | AM | 184 |
 | 27 | Adaptive Execution Architecture | AN | 185 |
+| 28 | Self-Improving Canon Pipeline | AO | 186-192 |
+| 29 | Security Hardening & Canon Integrity | AP | 193-200 |
 
 ---
 
 ## 10. Implementation Status
 
-> **183 sprints complete.** All blocks Foundation through AL implemented.
+> **200 sprints complete.** All blocks Foundation through AP implemented.
 > **Sprint-by-sprint record:** `docs/registry/sprints.yml`
 
 | Block | Sprints | Name | Status |
@@ -573,12 +611,14 @@ Execution routing is now **adaptive by risk and context**, not purely static. Th
 | AF | 143-146 | Security Surface | Complete |
 | AG | 147-154 | Adoption Intelligence & Product Experience | Complete |
 | AH | 155-163 | Governance Decision Lifecycle | Complete |
-| AI | 164-171 | Repository Intelligence & Institutional Learning | Complete |
-| AJ | 172-179 | Self-Improving Architecture Engine | Complete |
+| AI | 164-169 | Governed Execution Path | Complete |
+| AJ | 170-179 | Canon Pipeline Operationalization | Complete |
 | AK | 180-181 | Knowledge Provenance & Trust-Weighted Intelligence | Complete |
 | AL | 182-183 | Knowledge Renewal & Revalidation Engine | Complete |
 | AM | 184 | Canon Intelligence Hub Restructuring & Skills Layer | Complete |
 | AN | 185 | Adaptive Execution Architecture | Complete |
+| AO | 186-192 | Self-Improving Canon Pipeline | Complete |
+| AP | 193-200 | Security Hardening & Canon Integrity | Complete |
 
 ---
 

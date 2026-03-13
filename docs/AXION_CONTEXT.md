@@ -291,21 +291,23 @@ These invariants act as the **physical laws** of the platform.
 
 ## Sprint Canon
 
-- **Sprints 1–185** represent the canonical development arc of the platform
-- **Blocks Foundation through AN** are complete
-- The system has reached **Level 15 maturity: Renewal-to-Governance Decision Bridge**
+- **Sprints 1–200** represent the canonical development arc of the platform
+- **Blocks Foundation through AP** are complete
+- The system has reached **Level 18 maturity: Security-Hardened Governed Adaptive Organism**
 - **200+ Edge Functions** deployed across all pipeline stages and intelligence engines
 - **Key milestones post-138:**
   - Sprint 139–142: Axion Action Engine (AE Block)
   - Sprint 143–146: Security Surface (AF Block)
   - Sprint 147–154: Adoption Intelligence, Landing Page, Builder/Owner Mode (AG Block)
   - Sprint 155–163: Governance Decision Lifecycle — Surfaces, Handoff, Tracking (AH Block)
-  - Sprint 164–171: Repository Intelligence & Institutional Learning (AI Block)
-  - Sprint 172–179: Self-Improving Architecture Engine (AJ Block)
+  - Sprint 164–169: Governed Execution Path — Action Domain State Machine, Recovery, Approval (AI Block)
+  - Sprint 170–179: Canon Pipeline Operationalization — Review, Evolution, Dedup, Promotion, Skills, Graph, Injection, Learning Governance (AJ Block)
   - Sprint 180–181: Knowledge Provenance & Trust-Weighted Intelligence (AK Block)
   - Sprint 182–183: Knowledge Renewal & Revalidation Engine (AL Block)
   - Sprint 184: Canon Intelligence Hub Restructuring — cognitive domain grouping, Skills layer (AM Block)
   - Sprint 185: Execution Architecture Evolution — adaptive risk-based routing, evidence-informed policy (AN Block)
+  - Sprint 186–192: Self-Improving Canon Pipeline — Deep Repo Absorber, Knowledge Demand Forecast, Acquisition Orchestrator, Portfolio Optimization, ROI Engine, Hub UI, Skills Activation (AO Block)
+  - Sprint 193–200: Security Hardening & Canon Integrity — Poisoning Prevention, Auth Hardening (3 waves), RLS Tightening, Execution Worker Security, Inference Resistance (AP Block)
 
 Future work focuses on improving:
 
@@ -331,14 +333,14 @@ Future work focuses on improving:
 | Phase 6 | AgentOS Decision Contract | Complete |
 | Phase 7 | Action Engine | Complete (Sprints 139–142) |
 | Phase 8 | Governance and Approval Flow | Complete (Sprints 155–163) |
-| Phase 9 | Governed Execution Path | Complete (Sprints 139–142) |
-| Phase 10 | Canon Pipeline Operationalization | Complete (Sprints 155–163) |
-| Phase 11 | Repository Intelligence & Institutional Learning | Complete (Sprints 164–171) |
-| Phase 12 | Self-Improving Architecture Engine | Complete (Sprints 172–179) |
-| Phase 13 | Knowledge Provenance & Trust-Weighted Intelligence | Complete (Sprints 180–181) |
-| Phase 14 | Knowledge Renewal & Revalidation | Complete (Sprints 182–183) |
-| Phase 15 | Canon Hub Restructuring & Skills Layer | Complete (Sprint 184) |
-| Phase 16 | Execution Architecture Evolution | Complete (Sprint 185) |
+| Phase 9 | Governed Execution Path | Complete (Sprints 164–169) |
+| Phase 10 | Canon Pipeline Operationalization | Complete (Sprints 170–179) |
+| Phase 11 | Knowledge Provenance & Trust-Weighted Intelligence | Complete (Sprints 180–181) |
+| Phase 12 | Knowledge Renewal & Revalidation | Complete (Sprints 182–183) |
+| Phase 13 | Canon Hub Restructuring & Skills Layer | Complete (Sprint 184) |
+| Phase 14 | Execution Architecture Evolution | Complete (Sprint 185) |
+| Phase 15 | Self-Improving Canon Pipeline | Complete (Sprints 186–192) |
+| Phase 16 | Security Hardening & Canon Integrity | Complete (Sprints 193–200) |
 
 ---
 
