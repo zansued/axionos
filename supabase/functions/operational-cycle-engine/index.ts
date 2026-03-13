@@ -39,9 +39,7 @@ Deno.serve(async (req) => {
   } catch (e: any) { return errorResponse(e.message || "Internal error", 500, req); }
 });
 
-function json(data: any, headers: any, status = 200) {
-  return new Response(JSON.stringify(data), { status, headers: { ...headers, "Content-Type": "application/json" } });
-}
+// json helper removed — using shared jsonResponse/errorResponse
 
 // ── Posture-to-cycle mapping ──
 const POSTURE_CYCLE_MAP: Record<string, string> = {
