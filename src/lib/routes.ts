@@ -181,10 +181,11 @@ export const OWNER_DOMAIN_GROUPS: OwnerDomainGroup[] = [
 
 export const OWNER_ROUTES: RouteEntry[] = [
   // ── System Intelligence ──
+  // Order: overview → diagnostics → tools
   {
     path: "/owner/system-intelligence",
-    title: "System Intelligence",
-    description: "AI-powered system insights",
+    title: "Executive Overview",
+    description: "AI-powered system insights & strategic signals",
     icon: Sparkles,
     mode: "owner",
     group: "System Intelligence",
@@ -195,7 +196,7 @@ export const OWNER_ROUTES: RouteEntry[] = [
   {
     path: "/owner/system-health",
     title: "System Health",
-    description: "Platform health & uptime",
+    description: "Platform diagnostics & uptime",
     icon: HeartPulse,
     mode: "owner",
     group: "System Intelligence",
@@ -206,7 +207,7 @@ export const OWNER_ROUTES: RouteEntry[] = [
   {
     path: "/owner/platform-observability",
     title: "Platform Observability",
-    description: "Infrastructure telemetry",
+    description: "Infrastructure telemetry & metrics",
     icon: Activity,
     mode: "owner",
     group: "System Intelligence",
