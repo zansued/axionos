@@ -478,6 +478,37 @@ This block introduces **governed knowledge renewal**: the ability to detect agin
 
 **Sprint 183 — Knowledge Renewal & Revalidation Engine** implements a full renewal pipeline with 8 trigger types (stale_knowledge, confidence_decay, runtime_mismatch, superseded_signal, negative_feedback_accumulation, low_recent_usage, lineage_weakening, distillation_stale), 4 renewal modes (light revalidation, source refresh, redistillation, competitive revalidation), 7 revalidation outcomes, governed confidence recovery (evidence-backed only), and renewal proposals that route to governance when automated resolution is insufficient. All renewals are recorded in an auditable history with before/after confidence and full evidence trails.
 
+## 8f. Block AM — Canon Intelligence Hub Restructuring (Sprint 184)
+
+This sprint restructured the Canon Intelligence Hub into four cognitive domains (Knowledge Library, Ingestion & Learning, Governance & Trust, Knowledge Application) and introduced the **Skills layer** tables (`skill_bundles`, `engineering_skills`, `skill_capabilities`, `skill_reviews`, `distilled_outputs`). The Skills layer is **emerging** — tables and workflows are functional, but operational coverage is still maturing across engineering domains.
+
+## 8g. Block AN — Execution Architecture Evolution (Sprint 185)
+
+This block formalizes the evolution of execution routing from static heuristics to **adaptive, risk-informed execution postures**. The work was implemented across two sprint tracks:
+
+### Orchestration Optimization (OX Track)
+
+| Sprint | Change | Impact |
+|--------|--------|--------|
+| OX-1 | DB batching, debounced writes, fire-and-forget logs | ~5–15% non-AI time saved |
+| OX-2 | Disabled AI efficiency layer for execution-stage hot path | 9–39s saved per file |
+| OX-3 / OX-5 | 2-call vs 3-call execution worker prototype and A/B validation | ~8–20s expected savings via selective fast-path |
+
+### Execution Intelligence (DX Track)
+
+| Sprint | Change | Impact |
+|--------|--------|--------|
+| DX-1 | Routing policy analysis and outcome gap identification | Evidence base for classifier |
+| DX-2 | Structured risk signals: import density, fan-out, auth sensitivity, operational sensitivity, complexity estimate | Richer execution-risk inputs |
+| DX-3 | Explicit rule-based execution risk classifier with risk tiers (low/medium/high/critical) and execution postures (fast/safe, lean/normal/full context, standard/strict validation) | Replaces ad-hoc heuristics with inspectable classification |
+| DX-4 | Adaptive routing policy with evidence-informed threshold tuning, guard rails, audit trail, and operator freeze/revert controls | Policy evolves from evidence without becoming opaque |
+
+### Architectural Principle
+
+Execution routing is now **adaptive by risk and context**, not purely static. The system classifies each file/task by structural risk signals and routes to the appropriate execution posture. Policy thresholds are tunable based on observed outcomes, but all adaptations are bounded, auditable, and reversible. No ML is used — the classifier is rule-based and explainable.
+
+> **Status:** Stable. The classifier, risk signals, and adaptive policy layer are implemented and operational. Future work may add persistent policy storage and automated evidence aggregation once metrics tables mature.
+
 ---
 
 ## 9. Capability Tiers (Summary)
