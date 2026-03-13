@@ -50,7 +50,7 @@ The default user-facing journey remains:
 
 ## Current Canon Note
 
-> Public documentation reflects the **stable architecture line** through Sprint 163 (all blocks Foundation through AH).
+> Public documentation reflects the **stable architecture line** through Sprint 185 (all blocks Foundation through AN).
 >
 > Internal roadmap and experimental canon may be ahead of this baseline.
 > This notice exists to preserve credibility — not to obscure progress.
