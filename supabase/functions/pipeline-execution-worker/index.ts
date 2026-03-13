@@ -125,8 +125,20 @@ ${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}
 
     const workerStartedAt = new Date().toISOString();
 
-    // ──── OX-3: Branch between consolidated (2-call) and standard (3-call) paths ────
-    if (payload.useConsolidatedWorker) {
+    // ──── OX-5: Selective fast-path eligibility ────
+    const fastPathEval: FastPathEligibility = evaluateFastPathEligibility({
+      filePath: payload.filePath,
+      fileType: payload.fileType,
+      contextLength: (contextStr || "").length + (baseContext || "").length,
+      waveNum: payload.waveNum,
+      explicitOverride: payload.useConsolidatedWorker,
+    });
+
+    const useConsolidated = fastPathEval.eligible;
+    console.log(`[OX-5] ${payload.filePath}: fast-path=${useConsolidated}, reason=${fastPathEval.reason}, risk=${fastPathEval.riskTier}`);
+
+    // ──── Branch between consolidated (2-call) and standard (3-call) paths ────
+    if (useConsolidated) {
       // ═══════════════════════════════════════════════════════
       // CONSOLIDATED 2-CALL PATH (prototype — feature-flagged)
       // ═══════════════════════════════════════════════════════
