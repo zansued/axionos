@@ -249,7 +249,7 @@ Deno.serve(async (req: Request) => {
           }
         }
 
-        return jsonResponse({ recalibrated: recalibrated.length, results: recalibrated }, req);
+        return jsonResponse({ recalibrated: recalibrated.length, results: recalibrated }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
