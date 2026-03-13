@@ -20530,6 +20530,54 @@ export type Database = {
           },
         ]
       }
+      frontend_error_reports: {
+        Row: {
+          component: string | null
+          created_at: string
+          id: string
+          message: string
+          metadata: Json | null
+          organization_id: string | null
+          reported_at: string
+          route: string | null
+          severity: string
+          source: string
+          stack: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          component?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          metadata?: Json | null
+          organization_id?: string | null
+          reported_at?: string
+          route?: string | null
+          severity?: string
+          source?: string
+          stack?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          component?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          metadata?: Json | null
+          organization_id?: string | null
+          reported_at?: string
+          route?: string | null
+          severity?: string
+          source?: string
+          stack?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       future_continuity_snapshots: {
         Row: {
           continuity_score: number
