@@ -13,6 +13,7 @@
  */
 
 import { callAI, type AIResult } from "./ai-client.ts";
+import { classifyIntegrationSeverity, type IntegrationSeverity } from "./integration-severity.ts";
 
 export interface ConsolidatedMetrics {
   /** Which path was used */
@@ -25,8 +26,12 @@ export interface ConsolidatedMetrics {
   totalTokens: number;
   /** Total cost */
   totalCostUsd: number;
-  /** Whether integration agent made changes */
+  /** Whether integration agent made changes (legacy) */
   integrationModified: boolean;
+  /** OX-6: Severity classification */
+  integrationSeverity: IntegrationSeverity;
+  /** OX-6: Edit ratio (0-1) */
+  integrationEditRatio: number;
   /** Output length in chars */
   outputLengthChars: number;
   /** Timestamp for comparison */
@@ -157,10 +162,16 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
     .trim();
 
   let integrationModified = false;
+  let integrationSeverity: IntegrationSeverity = "none";
+  let integrationEditRatio = 0;
+
   if (integrationCode.length > 20 && !integrationCode.startsWith("{\"")) {
-    // Only count as modified if meaningfully different
-    integrationModified = integrationCode !== codeContent;
+    const preIntegrationCode = codeContent;
     codeContent = integrationCode;
+    const severity = classifyIntegrationSeverity(preIntegrationCode, integrationCode);
+    integrationModified = severity.severity !== "none";
+    integrationSeverity = severity.severity;
+    integrationEditRatio = severity.editRatio;
   }
 
   const completedAt = new Date().toISOString();
@@ -172,6 +183,8 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
     totalTokens,
     totalCostUsd: totalCost,
     integrationModified,
+    integrationSeverity,
+    integrationEditRatio,
     outputLengthChars: codeContent.length,
     startedAt,
     completedAt,
@@ -195,10 +208,12 @@ export function buildStandardPathMetrics(
   archResult: AIResult,
   devResult: AIResult,
   integrationResult: AIResult,
+  preIntegrationCode: string,
   codeContent: string,
   integrationModified: boolean,
   startedAt: string,
 ): ConsolidatedMetrics {
+  const severity = classifyIntegrationSeverity(preIntegrationCode, codeContent);
   return {
     path: "standard_3call",
     totalAiLatencyMs: archResult.durationMs + devResult.durationMs + integrationResult.durationMs,
@@ -210,6 +225,8 @@ export function buildStandardPathMetrics(
     totalTokens: archResult.tokens + devResult.tokens + integrationResult.tokens,
     totalCostUsd: archResult.costUsd + devResult.costUsd + integrationResult.costUsd,
     integrationModified,
+    integrationSeverity: severity.severity,
+    integrationEditRatio: severity.editRatio,
     outputLengthChars: codeContent.length,
     startedAt,
     completedAt: new Date().toISOString(),

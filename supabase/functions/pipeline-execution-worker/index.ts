@@ -15,6 +15,8 @@ import { embedBrainNode } from "../_shared/embedding-helpers.ts";
 import type { PipelineContext } from "../_shared/pipeline-helpers.ts";
 import { executeConsolidatedPath, buildStandardPathMetrics, type ConsolidatedMetrics } from "../_shared/consolidated-worker-prototype.ts";
 import { evaluateFastPathEligibility, type FastPathEligibility } from "../_shared/execution-fast-path.ts";
+import { classifyIntegrationSeverity } from "../_shared/integration-severity.ts";
+import { type ExecutionMetrics, type ValidationSignals, type FastPathPolicyRecord, validateSyntax, validateImports, countImports } from "../_shared/execution-metrics-contract.ts";
 
 interface WorkerPayload {
   initiativeId: string;
@@ -264,6 +266,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
 
       const integrationCode = integrationResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
       let integrationModified = false;
+      const preIntegrationCode = codeContent;
       if (integrationCode.length > 20 && !integrationCode.startsWith("{\"")) {
         integrationModified = integrationCode !== codeContent;
         codeContent = integrationCode;
@@ -278,7 +281,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
 
       workerMetrics = buildStandardPathMetrics(
         codeArchResult, devResult, integrationResult,
-        codeContent, integrationModified, workerStartedAt,
+        preIntegrationCode, codeContent, integrationModified, workerStartedAt,
       );
     }
 
@@ -287,12 +290,54 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
     if (deterministicFiles[payload.filePath]) codeContent = deterministicFiles[payload.filePath];
     if (payload.filePath === "package.json") codeContent = sanitizePackageJson(codeContent);
 
-    // ── OX-3: Log metrics for comparison (non-blocking) ──
+    // ── OX-6: Structured execution metrics + validation signals ──
+    const contextLength = (contextStr || "").length + (baseContext || "").length;
+    const ext2 = payload.filePath.split(".").pop() || "ts";
+    const knownPaths = (contextStr || "").match(/## Arquivo: ([^\n]+)/g)?.map(m => m.replace("## Arquivo: ", "")) || [];
+
+    const validationSignals: ValidationSignals = {
+      import_resolution_ok: validateImports(codeContent, knownPaths),
+      syntax_valid: validateSyntax(codeContent, ext2),
+      integration_passed: workerMetrics.integrationSeverity !== "major_fix",
+    };
+
+    const executionMetrics: ExecutionMetrics = {
+      path: useConsolidated ? "fast_2call" : "safe_3call",
+      file_type: payload.fileType,
+      wave: payload.waveNum,
+      context_length: contextLength,
+      latency_ms: workerMetrics.totalAiLatencyMs,
+      ai_calls: workerMetrics.callLatencies.length,
+      tokens_used: workerMetrics.totalTokens,
+      cost_usd: workerMetrics.totalCostUsd,
+      integration_severity: workerMetrics.integrationSeverity,
+      integration_edit_ratio: workerMetrics.integrationEditRatio,
+      output_size: workerMetrics.outputLengthChars,
+      fast_path_reason: fastPathEval.reason,
+      risk_tier: fastPathEval.riskTier,
+      retry_count: 0,
+    };
+
+    const policyRecord: FastPathPolicyRecord = {
+      file_type: payload.fileType,
+      context_length: contextLength,
+      wave: payload.waveNum,
+      import_density: countImports(codeContent),
+      historical_fix_rate: 0, // populated by future aggregation
+      path_used: useConsolidated ? "fast_2call" : "safe_3call",
+      needed_major_fix: workerMetrics.integrationSeverity === "major_fix",
+      validation_passed: validationSignals.syntax_valid && validationSignals.integration_passed,
+      recorded_at: new Date().toISOString(),
+    };
+
     serviceClient.from("pipeline_job_metrics").insert({
       organization_id: payload.organizationId,
       initiative_id: payload.initiativeId,
       job_type: "execution_worker",
       metadata: {
+        ox6_execution_metrics: executionMetrics,
+        ox6_validation_signals: validationSignals,
+        ox6_policy_record: policyRecord,
         ox5_fast_path: fastPathEval,
         ox3_metrics: workerMetrics,
         file_path: payload.filePath,
@@ -301,7 +346,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
         node_id: payload.nodeId,
       },
     }).then(() => {}).catch((e: unknown) => {
-      console.warn("[OX-5] Metrics log failed (non-blocking):", e);
+      console.warn("[OX-6] Metrics log failed (non-blocking):", e);
     });
 
     // ── Persist subtask output + create artifact in parallel ──
