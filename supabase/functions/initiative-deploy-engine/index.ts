@@ -14,8 +14,9 @@ import {
   type DeployProviderName,
 } from "../_shared/contracts/deploy-provider.schema.ts";
 import {
-  evaluateRules,
+  evaluateSecurityRules,
   PIPELINE_SECURITY_RULES,
+  buildMatcherLogEntry,
 } from "../_shared/contracts/security-matcher.schema.ts";
 
 /**
