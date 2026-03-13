@@ -47,6 +47,8 @@ interface WorkerPayload {
   codeArchitect: { id: string; name: string; role: string; description?: string } | null;
   developer: { id: string; name: string; role: string; description?: string } | null;
   integrationAgent: { id: string; name: string; role: string; description?: string } | null;
+  /** OX-3: Feature flag — use consolidated 2-call path instead of standard 3-call */
+  useConsolidatedWorker?: boolean;
 }
 
 serve(async (req) => {
