@@ -337,6 +337,54 @@ The Canon Intelligence Engine is the mechanism by which AxionOS transitions from
 
 ---
 
+## 11. Canon Intelligence Hub — Operational Structure
+
+The Canon Intelligence Hub is the primary interface for interacting with the Canon Intelligence Engine. It is organized into four cognitive domains to improve discoverability and operational clarity:
+
+| Domain | Components | Core Question |
+|--------|-----------|---------------|
+| **Knowledge Library** | Pattern Library, Query Console, Canon Graph | "What knowledge exists and how is it structured?" |
+| **Knowledge Ingestion & Learning** | Ingestion Agent, Operational Learning, Repo Trust | "How does new knowledge enter the system?" |
+| **Governance & Trust** | Governance workflows, Lineage, Renewal | "Is this knowledge trustworthy and well-governed?" |
+| **Knowledge Application** | Retrieval Explorer, Usage Analytics, Applications | "How is knowledge being used and what is its impact?" |
+
+This structure maps the Canon's lifecycle — from ingestion through governance to operational application — into navigable, role-aware surfaces within Owner Mode under the **Knowledge Command** domain.
+
+---
+
+## 12. Emerging Skills Layer
+
+The Canon Intelligence Engine is evolving a **Skills layer** that transforms distilled knowledge into reusable, composable engineering skills. This layer represents the next evolution of Canon — from validated knowledge to actionable capability.
+
+### Skills Layer Tables
+
+| Table | Purpose |
+|-------|---------|
+| `skill_bundles` | Groups of related skills assembled for specific engineering contexts |
+| `engineering_skills` | Individual skills extracted from canon knowledge and execution patterns |
+| `skill_capabilities` | Specific capabilities that a skill provides (e.g., "generates API routes from schema") |
+| `skill_reviews` | Governance review records for skill promotion and quality assurance |
+| `distilled_outputs` | Compressed, injection-ready knowledge artifacts derived from canon entries |
+
+### Maturity Status
+
+> **Status: Emerging / Being Operationalized**
+>
+> The Skills layer tables and data structures are implemented. Skill distillation, injection, and review workflows are functional. However, full operational coverage across all engineering domains is still maturing. The layer is not yet uniformly deep — some domains have rich skill coverage while others are still accumulating.
+>
+> This is expected and by design: the Skills layer grows organically from execution evidence and canon promotion, not from speculative pre-population.
+
+### Relationship to Canon
+
+```
+Canon Entry → Distillation → Distilled Output → Skill Extraction
+→ Engineering Skill → Skill Bundle → Agent Injection at Runtime
+```
+
+Skills are **derived from Canon**, not independent of it. Every skill traces back to validated canonical knowledge through the provenance and lineage system.
+
+---
+
 ## Related Documents
 
 | Document | Relationship |

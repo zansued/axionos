@@ -337,6 +337,8 @@ Future work focuses on improving:
 | Phase 12 | Self-Improving Architecture Engine | Complete (Sprints 172–179) |
 | Phase 13 | Knowledge Provenance & Trust-Weighted Intelligence | Complete (Sprints 180–181) |
 | Phase 14 | Knowledge Renewal & Revalidation | Complete (Sprints 182–183) |
+| Phase 15 | Canon Hub Restructuring & Skills Layer | Complete (Sprint 184) |
+| Phase 16 | Execution Architecture Evolution | Complete (Sprint 185) |
 
 ---
 
