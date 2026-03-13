@@ -320,7 +320,7 @@ export function AppSidebar() {
                     transition={{ duration: 0.15 }}
                   >
                     {isOwnerMode ? (
-                      // ── Owner Mode: Collapsible domain groups ──
+                      // ── Owner Mode: Cognitive Architecture as direct link, rest as collapsible domain groups ──
                       <div className="space-y-0.5">
                       {ownerGroups.map(({ group, items }) => {
                           const domainGroup = domainGroupMap.get(group);
@@ -330,8 +330,23 @@ export function AppSidebar() {
                             icon: r.icon,
                           }));
 
-                          // All domain groups render as collapsible sections
+                          // Cognitive Architecture: render as direct top-level link
+                          if (group === "cognitive_architecture") {
+                            return (
+                              <SidebarMenu key={group} className="space-y-0.5 mb-1">
+                                {navItems.map((item) => (
+                                  <NavItemRow
+                                    key={item.url}
+                                    item={item}
+                                    collapsed={collapsed}
+                                    surfaceColor={surfaceMeta.colorVar}
+                                  />
+                                ))}
+                              </SidebarMenu>
+                            );
+                          }
 
+                          // Other domain groups render as collapsible sections
                           if (domainGroup) {
                             return (
                               <OwnerDomainSection

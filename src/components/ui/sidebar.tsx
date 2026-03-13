@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const SIDEBAR_WIDTH_EXPANDED = "13.5rem";
-const SIDEBAR_WIDTH_COLLAPSED = "3.5rem";
+const SIDEBAR_WIDTH_COLLAPSED = "4rem";
 
 // ─── Context ─────────────────────────────────────────────────────────────────
 
