@@ -306,3 +306,186 @@ async function extractionStatus(sc: any, orgId: string, _params: any) {
     recent_bundles: bundles.slice(0, 5),
   });
 }
+
+// ══════════════════════════════════════════════════
+// SKILL GOVERNANCE — SF-3
+// ══════════════════════════════════════════════════
+//
+// Lifecycle model:
+//   engineering_skills: extracted → pending_review → approved | rejected | archived
+//   skill_bundles:      draft → active | archived
+//
+// Review dimensions (0-1 each):
+//   specificity      — how precise and actionable is the skill?
+//   applicability    — how broadly useful within the domain?
+//   reusability      — can agents/pipelines reuse this without modification?
+//   confidence_assessment — is the inherited confidence reasonable?
+//
+// overall_score = average of the 4 dimensions
+
+const VALID_VERDICTS = ["approved", "rejected", "needs_refinement"];
+
+async function reviewSkill(sc: any, orgId: string, reviewerId: string, p: any) {
+  const { skill_id, verdict, specificity, applicability, reusability, confidence_assessment, notes } = p;
+
+  if (!skill_id) return json({ error: "skill_id required" }, 400);
+  if (!VALID_VERDICTS.includes(verdict)) return json({ error: `verdict must be one of: ${VALID_VERDICTS.join(", ")}` }, 400);
+
+  // Verify skill belongs to org
+  const { data: skill, error: skillErr } = await sc
+    .from("engineering_skills")
+    .select("id, organization_id, lifecycle_status, bundle_id")
+    .eq("id", skill_id)
+    .eq("organization_id", orgId)
+    .single();
+
+  if (skillErr || !skill) return json({ error: "Skill not found or access denied" }, 404);
+
+  const scores = {
+    specificity: Math.max(0, Math.min(1, specificity || 0)),
+    applicability: Math.max(0, Math.min(1, applicability || 0)),
+    reusability: Math.max(0, Math.min(1, reusability || 0)),
+    confidence_assessment: Math.max(0, Math.min(1, confidence_assessment || 0)),
+  };
+  const overall = +((scores.specificity + scores.applicability + scores.reusability + scores.confidence_assessment) / 4).toFixed(3);
+
+  // Create review record
+  const { data: review, error: reviewErr } = await sc
+    .from("skill_reviews")
+    .insert({
+      organization_id: orgId,
+      engineering_skill_id: skill_id,
+      bundle_id: skill.bundle_id || null,
+      reviewer_id: reviewerId,
+      verdict,
+      specificity_score: scores.specificity,
+      applicability_score: scores.applicability,
+      reusability_score: scores.reusability,
+      confidence_assessment: scores.confidence_assessment,
+      overall_score: overall,
+      notes: notes || "",
+      review_type: "manual",
+    })
+    .select("id")
+    .single();
+
+  if (reviewErr) return json({ error: reviewErr.message }, 400);
+
+  // Update skill lifecycle based on verdict
+  const statusMap: Record<string, string> = {
+    approved: "approved",
+    rejected: "rejected",
+    needs_refinement: "pending_review",
+  };
+
+  const newStatus = statusMap[verdict];
+  const skillUpdate: any = {
+    lifecycle_status: newStatus,
+    updated_at: new Date().toISOString(),
+  };
+
+  // If approved, optionally boost confidence; if rejected, reduce it
+  if (verdict === "approved" && overall > 0.7) {
+    skillUpdate.confidence = Math.min(1, (skill.confidence || 0.5) * 1.05);
+  } else if (verdict === "rejected") {
+    skillUpdate.confidence = Math.max(0.1, (skill.confidence || 0.5) * 0.5);
+  }
+
+  await sc.from("engineering_skills").update(skillUpdate).eq("id", skill_id);
+
+  // If all skills in a bundle are approved, promote the bundle
+  if (verdict === "approved" && skill.bundle_id) {
+    const { data: bundleSkills } = await sc
+      .from("engineering_skills")
+      .select("lifecycle_status")
+      .eq("bundle_id", skill.bundle_id)
+      .eq("organization_id", orgId);
+
+    const allApproved = bundleSkills?.every((s: any) => s.lifecycle_status === "approved");
+    if (allApproved) {
+      await sc.from("skill_bundles").update({ status: "active", updated_at: new Date().toISOString() }).eq("id", skill.bundle_id);
+    }
+  }
+
+  return json({
+    review_id: review.id,
+    skill_id,
+    verdict,
+    overall_score: overall,
+    new_lifecycle_status: newStatus,
+    scores,
+  });
+}
+
+async function batchReview(sc: any, orgId: string, reviewerId: string, p: any) {
+  const { skill_ids, verdict, specificity, applicability, reusability, confidence_assessment, notes } = p;
+
+  if (!skill_ids?.length) return json({ error: "skill_ids array required" }, 400);
+  if (!VALID_VERDICTS.includes(verdict)) return json({ error: `verdict must be one of: ${VALID_VERDICTS.join(", ")}` }, 400);
+
+  const results = [];
+  const errors = [];
+
+  for (const sid of skill_ids.slice(0, 50)) {
+    const res = await reviewSkill(sc, orgId, reviewerId, {
+      skill_id: sid,
+      verdict,
+      specificity: specificity || 0.5,
+      applicability: applicability || 0.5,
+      reusability: reusability || 0.5,
+      confidence_assessment: confidence_assessment || 0.5,
+      notes: notes || `Batch ${verdict}`,
+    });
+    const body = JSON.parse(await (res as Response).text());
+    if (body.error) {
+      errors.push({ skill_id: sid, error: body.error });
+    } else {
+      results.push(body);
+    }
+  }
+
+  return json({
+    reviewed: results.length,
+    errors: errors.length > 0 ? errors : undefined,
+    verdict,
+    results: results.slice(0, 10),
+  });
+}
+
+async function listReviewable(sc: any, orgId: string, p: any) {
+  const status = p.status || "extracted";
+  const limit = Math.min(p.limit || 50, 200);
+
+  const { data: skills, error } = await sc
+    .from("engineering_skills")
+    .select("id, skill_name, description, domain, confidence, lifecycle_status, extraction_method, bundle_id, canon_entry_id, created_at")
+    .eq("organization_id", orgId)
+    .eq("lifecycle_status", status)
+    .order("confidence", { ascending: false })
+    .limit(limit);
+
+  if (error) return json({ error: error.message }, 400);
+
+  return json({
+    skills: skills || [],
+    count: skills?.length || 0,
+    filter_status: status,
+  });
+}
+
+async function reviewHistory(sc: any, orgId: string, p: any) {
+  let query = sc
+    .from("skill_reviews")
+    .select("id, engineering_skill_id, bundle_id, reviewer_id, verdict, overall_score, specificity_score, applicability_score, reusability_score, confidence_assessment, notes, review_type, created_at")
+    .eq("organization_id", orgId)
+    .order("created_at", { ascending: false })
+    .limit(Math.min(p.limit || 50, 200));
+
+  if (p.skill_id) query = query.eq("engineering_skill_id", p.skill_id);
+  if (p.verdict) query = query.eq("verdict", p.verdict);
+
+  const { data, error } = await query;
+  if (error) return json({ error: error.message }, 400);
+
+  return json({ reviews: data || [], count: data?.length || 0 });
+}
