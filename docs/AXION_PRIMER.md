@@ -145,17 +145,25 @@ These rules ensure the system **evolves safely**.
 
 ## Development Status
 
-The canonical architecture currently includes development through **Sprint 163**.
+The canonical architecture currently includes development through **Sprint 200**.
 
-The platform has reached the stage called: **Adaptive Operational Organism**.
+The platform has reached the stage called: **Governed Adaptive Organism with Security-Hardened Canon Pipeline**.
 
-163 sprints complete across blocks Foundation through AH. Key recent additions:
+200 sprints complete across blocks Foundation through AP. Key milestones:
 - Axion Action Engine (Sprints 139–142)
 - Security Surface (Sprints 143–146)
+- Adoption Intelligence & Product Experience (Sprints 147–154)
 - Governance Decision Lifecycle (Sprints 155–163)
-- Builder/Owner Mode Separation
+- Governed Execution Path (Sprints 164–169)
+- Canon Pipeline Operationalization (Sprints 170–179)
+- Knowledge Provenance & Trust-Weighted Intelligence (Sprints 180–181)
+- Knowledge Renewal & Revalidation Engine (Sprints 182–183)
+- Canon Intelligence Hub Restructuring & Skills Layer (Sprint 184)
+- Adaptive Execution Architecture (Sprint 185)
+- Self-Improving Canon Pipeline (Sprints 186–192)
+- Security Hardening & Canon Integrity (Sprints 193–200)
 
-Future development focuses on improving intelligence quality, governance maturity, and product usability rather than adding uncontrolled complexity.
+Future development focuses on improving intelligence quality, skills layer operational depth, governance maturity, and product usability rather than adding uncontrolled complexity.
 
 ---
 
