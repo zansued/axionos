@@ -296,7 +296,7 @@ Deno.serve(async (req: Request) => {
           avg_trust_score: trustScores.length
             ? (trustScores.reduce((s: number, t: any) => s + Number(t.trust_score), 0) / trustScores.length).toFixed(3)
             : 0,
-        }, req);
+        }, 200, req);
       }
 
       default:
