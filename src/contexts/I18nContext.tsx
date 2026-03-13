@@ -576,7 +576,7 @@ const translations = {
     "routeDesc.acquisitionRoi": "Learning efficiency & return on investment",
     "routeDesc.agentSwarm": "Multi-agent coordination",
     "routeDesc.changeTracking": "Downstream application lifecycle for governance changes",
-    "routeDesc.settings": "Platform settings",
+    "routeDesc.platformSettings": "Platform settings",
 
     // ─── Breadcrumbs ───
     "breadcrumb.builder": "Builder",
