@@ -1,8 +1,11 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 /**
  * Knowledge Lineage Engine — Sprint 181
+ * Auth hardened — Sprint 200
  *
  * Actions:
  *   - build_lineage: construct lineage events and provenance links for canon entries
@@ -17,13 +20,19 @@ Deno.serve(async (req: Request) => {
   if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
+    const authResult = await authenticateWithRateLimit(req, "knowledge-lineage-engine");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
-    const { action, organization_id, ...params } = await req.json();
-    if (!organization_id) return errorResponse("organization_id required", 400, req);
+    const { action, organization_id: payloadOrgId, ...params } = await req.json();
+
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "knowledge-lineage-engine", action: action || "unknown",
+    });
 
     switch (action) {
       // ═══════════════════════════════════════════════════
