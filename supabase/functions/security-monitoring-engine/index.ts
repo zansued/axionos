@@ -7,6 +7,7 @@ import {
   COMMON_ACTIONS, COMMON_FIELDS,
   type Schema,
 } from "../_shared/input-validation.ts";
+import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 
 // ─── Anomaly Detection Thresholds ───
 

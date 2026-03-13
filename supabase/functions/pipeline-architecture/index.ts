@@ -9,6 +9,7 @@ import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { generateBrainContext, upsertNode, addEdge, recordDecision } from "../_shared/brain-helpers.ts";
+import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 import { ARCHITECTURE_SUBJOBS, getReadySubjobs, areAllComplete, hasAnyFailed } from "../_shared/architecture-subjob/types.ts";
 import {
   createSubjobs, getSubjobs, markSubjobRunning, completeSubjob,

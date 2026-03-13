@@ -562,6 +562,17 @@ Retorne APENAS JSON:
 
     if (committedFiles.length === 0) throw new Error("Nenhum arquivo foi commitado com sucesso");
 
+    // ═══ PHASE 3.5: Security matcher scan on all committed file contents ═══
+    const allContent = fileEntries.map(f => f.content).join("\n").slice(0, 20000);
+    const publishMatchInput: MatchInput = { status_code: 200, body: allContent };
+    const publishSecReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, publishMatchInput);
+    if (!publishSecReport.passed) {
+      const logEntry = buildMatcherLogEntry("pipeline-publish", publishSecReport);
+      await pipelineLog(ctx, "security_matcher_flagged",
+        `⚠️ Security matcher flagged publish artifacts: ${logEntry.matched_rule_ids.join(", ")}`,
+        logEntry as unknown as Record<string, unknown>);
+    }
+
     // ═══ PHASE 4: Post-deploy Verification (Release Agent) ═══
     await pipelineLog(ctx, "release_verify_start", "Release Agent: Verificando integridade pós-deploy...");
 

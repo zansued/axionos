@@ -6,6 +6,7 @@ import { mapSecuritySurfaces } from "../_shared/security-intelligence/security-s
 import { classifyThreatDomains, getCompositeRiskScore } from "../_shared/security-intelligence/threat-domain-classifier.ts";
 import { computeExposureScore } from "../_shared/security-intelligence/exposure-score-engine.ts";
 import { explainRisk } from "../_shared/security-intelligence/security-boundary-explainer.ts";
+import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 
 /**
  * Security Intelligence Engine

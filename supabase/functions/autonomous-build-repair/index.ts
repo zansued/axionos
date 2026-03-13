@@ -11,6 +11,7 @@ import { upsertNode, recordError, generateBrainContext, upsertPreventionRule } f
 import { callAI } from "../_shared/ai-client.ts";
 import { recordRepairEvidence } from "../_shared/repair/repair-evidence-recorder.ts";
 import { normalizeErrorSignature } from "../_shared/repair/error-signature-normalizer.ts";
+import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 
 // ═══════════════════════════════════════════════
 // TYPES
