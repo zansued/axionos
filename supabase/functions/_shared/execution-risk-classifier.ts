@@ -16,6 +16,7 @@
 
 import { evaluateFastPathEligibility, type FastPathEligibility } from "./execution-fast-path.ts";
 import { computeExecutionRiskSignals, type RiskAssessment, type ExecutionRiskSignals } from "./execution-risk-signals.ts";
+import { getActiveThresholds } from "./execution-policy-tuner.ts";
 
 // ─── Classifier Contract ─────────────────────────────────────────
 
@@ -62,6 +63,8 @@ export interface ExecutionClassification {
   legacy_fast_path: FastPathEligibility;
   /** The DX-2 risk assessment (for audit) */
   risk_assessment: RiskAssessment;
+  /** DX-4: Policy version that produced this classification */
+  policy_version?: number;
 }
 
 /** Inputs to the classifier */
@@ -78,26 +81,21 @@ export interface ClassifierInput {
   explicitOverride?: boolean;
 }
 
-// ─── Thresholds ──────────────────────────────────────────────────
+// ─── Thresholds (DX-4: now read from adaptive policy) ────────────
 
-const THRESHOLDS = {
-  /** Import density above this → escalate risk */
-  HIGH_IMPORT_DENSITY: 10,
-  /** Dependency fan-out above this → escalate risk */
-  HIGH_FAN_OUT: 8,
-  /** Operational sensitivity above this → escalate risk */
-  HIGH_OPERATIONAL_SENSITIVITY: 0.4,
-  /** Content complexity above this → escalate risk */
-  HIGH_COMPLEXITY: 0.5,
-  /** Composite score above this → high risk tier */
-  COMPOSITE_HIGH: 0.45,
-  /** Composite score above this → medium risk tier */
-  COMPOSITE_MEDIUM: 0.20,
-  /** Context length above this → full context posture */
-  LARGE_CONTEXT: 12_000,
-  /** Context length above this → normal context posture */
-  MEDIUM_CONTEXT: 6_000,
-} as const;
+function getThresholds() {
+  const active = getActiveThresholds();
+  return {
+    HIGH_IMPORT_DENSITY: active.high_import_density ?? 10,
+    HIGH_FAN_OUT: active.high_fan_out ?? 8,
+    HIGH_OPERATIONAL_SENSITIVITY: active.high_operational_sensitivity ?? 0.4,
+    HIGH_COMPLEXITY: active.high_complexity ?? 0.5,
+    COMPOSITE_HIGH: active.composite_high ?? 0.45,
+    COMPOSITE_MEDIUM: active.composite_medium ?? 0.20,
+    LARGE_CONTEXT: active.large_context ?? 12_000,
+    MEDIUM_CONTEXT: 6_000,
+  };
+}
 
 // ─── Classification Logic ────────────────────────────────────────
 
@@ -113,6 +111,7 @@ const THRESHOLDS = {
  */
 export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassification {
   const factors: ClassifierFactor[] = [];
+  const T = getThresholds(); // DX-4: read from adaptive policy
 
   // ── Step 1: Manual override ──
   if (input.explicitOverride === true) {
@@ -205,11 +204,11 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
   }
 
   // Rule 4: High import density
-  if (signals.import_density > THRESHOLDS.HIGH_IMPORT_DENSITY) {
+  if (signals.import_density > T.HIGH_IMPORT_DENSITY) {
     factors.push({
       signal: "import_density",
       value: signals.import_density,
-      threshold: `> ${THRESHOLDS.HIGH_IMPORT_DENSITY}`,
+      threshold: `> ${T.HIGH_IMPORT_DENSITY}`,
       impact: "escalate",
       explanation: `High import density (${signals.import_density}) increases integration failure risk`,
     });
@@ -217,18 +216,18 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
     factors.push({
       signal: "import_density",
       value: signals.import_density,
-      threshold: `<= ${THRESHOLDS.HIGH_IMPORT_DENSITY}`,
+      threshold: `<= ${T.HIGH_IMPORT_DENSITY}`,
       impact: "neutral",
       explanation: `Import density within normal range`,
     });
   }
 
   // Rule 5: High dependency fan-out
-  if (signals.dependency_fan_out > THRESHOLDS.HIGH_FAN_OUT) {
+  if (signals.dependency_fan_out > T.HIGH_FAN_OUT) {
     factors.push({
       signal: "dependency_fan_out",
       value: signals.dependency_fan_out,
-      threshold: `> ${THRESHOLDS.HIGH_FAN_OUT}`,
+      threshold: `> ${T.HIGH_FAN_OUT}`,
       impact: "escalate",
       explanation: `High fan-out (${signals.dependency_fan_out} unique modules) = large integration surface`,
     });
@@ -245,22 +244,22 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
   }
 
   // Rule 7: Operational sensitivity
-  if (signals.operational_sensitivity > THRESHOLDS.HIGH_OPERATIONAL_SENSITIVITY) {
+  if (signals.operational_sensitivity > T.HIGH_OPERATIONAL_SENSITIVITY) {
     factors.push({
       signal: "operational_sensitivity",
       value: signals.operational_sensitivity,
-      threshold: `> ${THRESHOLDS.HIGH_OPERATIONAL_SENSITIVITY}`,
+      threshold: `> ${T.HIGH_OPERATIONAL_SENSITIVITY}`,
       impact: "escalate",
       explanation: "Infrastructure-critical file (provider/config/client/middleware patterns)",
     });
   }
 
   // Rule 8: Content complexity (weaker signal, advisory)
-  if (signals.content_complexity_estimate > THRESHOLDS.HIGH_COMPLEXITY) {
+  if (signals.content_complexity_estimate > T.HIGH_COMPLEXITY) {
     factors.push({
       signal: "content_complexity_estimate",
       value: signals.content_complexity_estimate,
-      threshold: `> ${THRESHOLDS.HIGH_COMPLEXITY}`,
+      threshold: `> ${T.HIGH_COMPLEXITY}`,
       impact: "escalate",
       explanation: "High code complexity (nested async, deep conditionals)",
     });
@@ -287,7 +286,7 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
   if (
     escalationCount >= 3 ||
     signals.is_retry && signals.auth_schema_sensitivity ||
-    riskAssessment.composite_score >= THRESHOLDS.COMPOSITE_HIGH
+    riskAssessment.composite_score >= T.COMPOSITE_HIGH
   ) {
     risk_tier = "critical";
     primary_reason = escalatingFactors.length > 0
@@ -295,7 +294,7 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
       : "multiple_risk_factors";
   } else if (
     escalationCount >= 2 ||
-    riskAssessment.composite_score >= THRESHOLDS.COMPOSITE_MEDIUM ||
+    riskAssessment.composite_score >= T.COMPOSITE_MEDIUM ||
     !legacyFastPath.eligible
   ) {
     risk_tier = "high";
@@ -320,14 +319,14 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
     : "standard";
 
   const context_posture: ContextPosture =
-    input.contextLength > THRESHOLDS.LARGE_CONTEXT ? "full"
+    input.contextLength > T.LARGE_CONTEXT ? "full"
     : risk_tier === "critical" || risk_tier === "high" ? "full"
-    : input.contextLength > THRESHOLDS.MEDIUM_CONTEXT ? "normal"
+    : input.contextLength > T.MEDIUM_CONTEXT ? "normal"
     : "lean";
 
   // ── Confidence: higher when signals agree, lower on borderline ──
   let confidence = 0.9;
-  if (escalationCount === 1 && riskAssessment.composite_score < THRESHOLDS.COMPOSITE_MEDIUM) {
+  if (escalationCount === 1 && riskAssessment.composite_score < T.COMPOSITE_MEDIUM) {
     confidence = 0.7; // single weak escalation
   }
   if (riskAssessment.weak_signals.length > 1) {
@@ -346,5 +345,6 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
     override_applied: false,
     legacy_fast_path: legacyFastPath,
     risk_assessment: riskAssessment,
+    policy_version: undefined, // populated when policy tuner is active
   };
 }
