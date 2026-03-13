@@ -237,6 +237,17 @@ export const OWNER_ROUTES: RouteEntry[] = [
     sidebar: true,
     pageKey: "knowledge-demand",
   },
+  {
+    path: "/owner/cognitive-architecture-map",
+    title: "Cognitive Architecture Map",
+    description: "Living intelligence loop visualization",
+    icon: Brain,
+    mode: "owner",
+    group: "System Intelligence",
+    order: 5,
+    sidebar: true,
+    pageKey: "cognitive-architecture-map",
+  },
 
   // ── Knowledge Command ──
   {

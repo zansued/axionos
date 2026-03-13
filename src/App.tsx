@@ -108,6 +108,7 @@ import RedTeamSimulationDashboard from "./pages/RedTeamSimulationDashboard";
 import BlueTeamDefenseDashboard from "./pages/BlueTeamDefenseDashboard";
 import PurpleLearningDashboard from "./pages/PurpleLearningDashboard";
 import SecurityWarRoom from "./pages/SecurityWarRoom";
+import CognitiveArchitectureMap from "./pages/CognitiveArchitectureMap";
 import KnowledgeHealthDashboard from "./pages/KnowledgeHealthDashboard";
 import KnowledgePortfolioDashboard from "./pages/KnowledgePortfolioDashboard";
 import KnowledgeDemandForecastDashboard from "./pages/KnowledgeDemandForecastDashboard";
