@@ -15674,6 +15674,73 @@ export type Database = {
           },
         ]
       }
+      distilled_outputs: {
+        Row: {
+          confidence_score: number | null
+          content: string | null
+          created_at: string | null
+          distillation_type: string | null
+          engineering_skill_id: string | null
+          id: string
+          metadata: Json | null
+          organization_id: string
+          skill_bundle_id: string | null
+          source_refs: Json | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          confidence_score?: number | null
+          content?: string | null
+          created_at?: string | null
+          distillation_type?: string | null
+          engineering_skill_id?: string | null
+          id?: string
+          metadata?: Json | null
+          organization_id: string
+          skill_bundle_id?: string | null
+          source_refs?: Json | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          confidence_score?: number | null
+          content?: string | null
+          created_at?: string | null
+          distillation_type?: string | null
+          engineering_skill_id?: string | null
+          id?: string
+          metadata?: Json | null
+          organization_id?: string
+          skill_bundle_id?: string | null
+          source_refs?: Json | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "distilled_outputs_engineering_skill_id_fkey"
+            columns: ["engineering_skill_id"]
+            isOneToOne: false
+            referencedRelation: "engineering_skills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distilled_outputs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distilled_outputs_skill_bundle_id_fkey"
+            columns: ["skill_bundle_id"]
+            isOneToOne: false
+            referencedRelation: "skill_bundles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       distributed_job_assignments: {
         Row: {
           assigned_at: string
@@ -18005,6 +18072,76 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engineering_skills: {
+        Row: {
+          bundle_id: string | null
+          canon_entry_id: string | null
+          confidence: number | null
+          created_at: string | null
+          description: string | null
+          domain: string | null
+          extraction_method: string | null
+          id: string
+          lifecycle_status: string | null
+          metadata: Json | null
+          organization_id: string
+          skill_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          bundle_id?: string | null
+          canon_entry_id?: string | null
+          confidence?: number | null
+          created_at?: string | null
+          description?: string | null
+          domain?: string | null
+          extraction_method?: string | null
+          id?: string
+          lifecycle_status?: string | null
+          metadata?: Json | null
+          organization_id: string
+          skill_name?: string
+          updated_at?: string | null
+        }
+        Update: {
+          bundle_id?: string | null
+          canon_entry_id?: string | null
+          confidence?: number | null
+          created_at?: string | null
+          description?: string | null
+          domain?: string | null
+          extraction_method?: string | null
+          id?: string
+          lifecycle_status?: string | null
+          metadata?: Json | null
+          organization_id?: string
+          skill_name?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engineering_skills_bundle_id_fkey"
+            columns: ["bundle_id"]
+            isOneToOne: false
+            referencedRelation: "skill_bundles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engineering_skills_canon_entry_id_fkey"
+            columns: ["canon_entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engineering_skills_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -37289,6 +37426,117 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "simulation_subjects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      skill_bundles: {
+        Row: {
+          bundle_name: string
+          confidence: number | null
+          created_at: string | null
+          description: string | null
+          domain: string | null
+          id: string
+          initiative_id: string | null
+          metadata: Json | null
+          organization_id: string
+          skill_type: string
+          source_type: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          bundle_name?: string
+          confidence?: number | null
+          created_at?: string | null
+          description?: string | null
+          domain?: string | null
+          id?: string
+          initiative_id?: string | null
+          metadata?: Json | null
+          organization_id: string
+          skill_type?: string
+          source_type?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          bundle_name?: string
+          confidence?: number | null
+          created_at?: string | null
+          description?: string | null
+          domain?: string | null
+          id?: string
+          initiative_id?: string | null
+          metadata?: Json | null
+          organization_id?: string
+          skill_type?: string
+          source_type?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skill_bundles_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "skill_bundles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      skill_capabilities: {
+        Row: {
+          capability_description: string | null
+          capability_key: string
+          created_at: string | null
+          engineering_skill_id: string
+          id: string
+          metadata: Json | null
+          organization_id: string
+          strength: number | null
+        }
+        Insert: {
+          capability_description?: string | null
+          capability_key?: string
+          created_at?: string | null
+          engineering_skill_id: string
+          id?: string
+          metadata?: Json | null
+          organization_id: string
+          strength?: number | null
+        }
+        Update: {
+          capability_description?: string | null
+          capability_key?: string
+          created_at?: string | null
+          engineering_skill_id?: string
+          id?: string
+          metadata?: Json | null
+          organization_id?: string
+          strength?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skill_capabilities_engineering_skill_id_fkey"
+            columns: ["engineering_skill_id"]
+            isOneToOne: false
+            referencedRelation: "engineering_skills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "skill_capabilities_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
