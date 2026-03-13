@@ -141,10 +141,11 @@ serve(async (req) => {
     let incrementalStats: IncrementalStats = incremental.stats;
 
     if (incremental.stats.cleanFiles > 0) {
-      await pipelineLog(ctx, "incremental_detection",
+      // Non-blocking informational log
+      pipelineLog(ctx, "incremental_detection",
         `Incremental: ${incremental.stats.cleanFiles} clean, ${incremental.stats.dirtyFiles} dirty (${incremental.stats.newFiles} new, ${incremental.stats.hashMismatch} changed, ${incremental.stats.cascadeDirty} cascade). Savings: ~${incremental.stats.savingsPercent}%`,
         incremental.stats
-      );
+      ).catch(() => {});
     }
 
     // Filter to only dirty subtasks for execution
