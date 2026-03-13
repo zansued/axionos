@@ -17,6 +17,7 @@ import { executeConsolidatedPath, buildStandardPathMetrics, type ConsolidatedMet
 import { evaluateFastPathEligibility, type FastPathEligibility } from "../_shared/execution-fast-path.ts";
 import { classifyIntegrationSeverity } from "../_shared/integration-severity.ts";
 import { type ExecutionMetrics, type ValidationSignals, type FastPathPolicyRecord, validateSyntax, validateImports, countImports } from "../_shared/execution-metrics-contract.ts";
+import { computeExecutionRiskSignals, type RiskAssessment } from "../_shared/execution-risk-signals.ts";
 
 interface WorkerPayload {
   initiativeId: string;
@@ -330,6 +331,14 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       recorded_at: new Date().toISOString(),
     };
 
+    // ── DX-2: Compute execution risk signals ──
+    const riskAssessment: RiskAssessment = computeExecutionRiskSignals(
+      payload.filePath,
+      codeContent,
+      0, // retryCount — wire from payload when available
+    );
+    console.log(`[DX-2] ${payload.filePath}: composite_risk=${riskAssessment.composite_score}, factors=[${riskAssessment.top_factors.join("; ")}]`);
+
     serviceClient.from("pipeline_job_metrics").insert({
       organization_id: payload.organizationId,
       initiative_id: payload.initiativeId,
@@ -340,6 +349,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
         ox6_policy_record: policyRecord,
         ox5_fast_path: fastPathEval,
         ox3_metrics: workerMetrics,
+        dx2_risk_assessment: riskAssessment,
         file_path: payload.filePath,
         file_type: payload.fileType,
         wave: payload.waveNum,
