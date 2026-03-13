@@ -1,28 +1,35 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders } from "../_shared/cors.ts";
+import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 import { mapSecuritySurfaces } from "../_shared/security-intelligence/security-surface-mapper.ts";
 import { classifyThreatDomains, getCompositeRiskScore } from "../_shared/security-intelligence/threat-domain-classifier.ts";
 import { computeExposureScore } from "../_shared/security-intelligence/exposure-score-engine.ts";
 import { explainRisk } from "../_shared/security-intelligence/security-boundary-explainer.ts";
 
+/**
+ * Security Intelligence Engine
+ * Auth hardened — Sprint 200
+ */
+
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: corsHeaders });
+    const authResult = await authenticateWithRateLimit(req, "security-intelligence");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    const { action, organization_id: payloadOrgId } = await req.json();
 
-    const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    if (authError || !user) return new Response(JSON.stringify({ error: "Invalid token" }), { status: 401, headers: corsHeaders });
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
 
-    const { action, organization_id } = await req.json();
-    if (!organization_id) return new Response(JSON.stringify({ error: "organization_id required" }), { status: 400, headers: corsHeaders });
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "security-intelligence", action: action || "unknown",
+    });
 
     let result: unknown;
 

@@ -1,29 +1,42 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+/**
+ * Operational Cycle Engine
+ * Auth hardened — Sprint 200
+ */
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-    const body = await req.json();
-    const { action, organization_id, ...params } = body;
+    const authResult = await authenticateWithRateLimit(req, "operational-cycle-engine");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
-    if (!organization_id) return json({ error: "organization_id required" }, corsHeaders, 400);
+    const body = await req.json();
+    const { action, organization_id: payloadOrgId, ...params } = body;
+
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "operational-cycle-engine", action: action || "unknown",
+    });
 
     switch (action) {
-      case "start_cycle": return json(await startCycle(supabase, organization_id, params), corsHeaders);
-      case "evaluate_cycle": return json(await evaluateCycle(supabase, organization_id, params), corsHeaders);
-      case "end_cycle": return json(await endCycle(supabase, organization_id, params), corsHeaders);
-      case "cycle_metrics": return json(await cycleMetrics(supabase, organization_id), corsHeaders);
-      case "list_cycles": return json(await listCycles(supabase, organization_id), corsHeaders);
-      default: return json({ error: `Unknown action: ${action}` }, corsHeaders, 400);
+      case "start_cycle": return jsonResponse(await startCycle(supabase, organization_id, params), 200, req);
+      case "evaluate_cycle": return jsonResponse(await evaluateCycle(supabase, organization_id, params), 200, req);
+      case "end_cycle": return jsonResponse(await endCycle(supabase, organization_id, params), 200, req);
+      case "cycle_metrics": return jsonResponse(await cycleMetrics(supabase, organization_id), 200, req);
+      case "list_cycles": return jsonResponse(await listCycles(supabase, organization_id), 200, req);
+      default: return errorResponse(`Unknown action: ${action}`, 400, req);
     }
-  } catch (e) { return json({ error: e.message }, corsHeaders, 500); }
+  } catch (e: any) { return errorResponse(e.message || "Internal error", 500, req); }
 });
 
 function json(data: any, headers: any, status = 200) {
