@@ -2,6 +2,19 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, errorResponse } from "../_shared/cors.ts";
 import { authenticateWithRateLimit } from "../_shared/auth.ts";
 import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
+import {
+  createAgentContract,
+  validateAgentContract,
+  DEFAULT_AGENT_CONSTRAINTS,
+  DEFAULT_REVIEW_POLICY,
+  DEFAULT_HANDOFF_POLICY,
+  type AgentContract,
+  type AgentContractRole,
+  type TaskDelegation,
+  type DelegationResult,
+  type OrchestrationPlan,
+  type ReviewVerdict,
+} from "../_shared/contracts/agent-contract.schema.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
