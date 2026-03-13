@@ -23,37 +23,18 @@
 | Agent OS | [GOVERNANCE.md](GOVERNANCE.md) -- planes, modules, agent types, contracts |
 | Canon Intelligence Engine | [CANON_INTELLIGENCE_ENGINE.md](CANON_INTELLIGENCE_ENGINE.md) -- knowledge layer, Agent-Contract model, canonization workflow |
 ### Definições de Classes (Suas Cores)
----
-```mermaid
-graph LR
-    %% Título da Tabela
-    subgraph "Dicionário de Cores e Funções"
-    direction TB
-    
-    %% Definição das Classes
-    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111
-    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111
-    classDef gov fill:#C56CF0,stroke:#6C3483,color:#111
-    classDef intel fill:#00CEC9,stroke:#117A65,color:#111
-    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111
-    classDef data fill:#55EFC4,stroke:#117A65,color:#111
-    classDef external fill:#B2BEC3,stroke:#636E72,color:#111
-    classDef strategy fill:#D6A2E8,stroke:#7D3C98,color:#111
-    classDef reflex fill:#FF7675,stroke:#922B21,color:#111
-    classDef canon fill:#6C5CE7,stroke:#2E1A8A,color:#fff
-
-    %% Linhas da "Tabela"
-    L1[Human / operator interaction] ::: human
-    L2[Core system / platform structure] ::: core
-    L3[Governance / policy / control] ::: gov
-    L4[Intelligence / analysis / cognition] ::: intel
-    L5[Runtime / execution / repair loops] ::: runtime
-    L6[Data / memory / persistence] ::: data
-    L7[External systems / providers / connectors] ::: external
-    L8[Strategic coordination layers] ::: strategy
-    L9[Reflexive governance / self-regulation] ::: reflex
-    L10[Canonical knowledge / implementation intelligence] ::: canon
-    end
+| Function | Color Label | Visual Reference |
+| :--- | :---: | :--- |
+| Human / operator interaction | Warm Yellow | $\colorbox{#F6E58D}{\color{#111}{\text{ Interaction Layer }}}$ |
+| Core system / platform structure | Blue | $\colorbox{#74B9FF}{\color{#111}{\text{ Core Structure }}}$ |
+| Governance / policy / control | Purple | $\colorbox{#C56CF0}{\color{#111}{\text{ Governance }}}$ |
+| Intelligence / analysis / cognition | Teal | $\colorbox{#00CEC9}{\color{#111}{\text{ Intelligence }}}$ |
+| Runtime / execution / repair loops | Pink-Magenta | $\colorbox{#FD79A8}{\color{#111}{\text{ Runtime Loop }}}$ |
+| Data / memory / persistence | Green | $\colorbox{#55EFC4}{\color{#111}{\text{ Data/Memory }}}$ |
+| External systems / providers / connectors | Gray | $\colorbox{#B2BEC3}{\color{#111}{\text{ External Conn }}}$ |
+| Strategic coordination layers | Soft Violet | $\colorbox{#D6A2E8}{\color{#111}{\text{ Strategic Layer }}}$ |
+| Reflexive governance / self-regulation | Red | $\colorbox{#FF7675}{\color{#111}{\text{ Self-Regulation }}}$ |
+| Canonical knowledge / implementation | Indigo | $\colorbox{#6C5CE7}{\color{#fff}{\text{ Canonical Knowledge }}}$ |
 
 ## 1. System Context
 
