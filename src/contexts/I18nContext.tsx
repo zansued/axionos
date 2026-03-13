@@ -283,7 +283,7 @@ const translations = {
     "routeDesc.acquisitionRoi": "Eficiência de aprendizado e retorno sobre investimento",
     "routeDesc.agentSwarm": "Coordenação multi-agente",
     "routeDesc.changeTracking": "Ciclo de vida de aplicação de mudanças de governança",
-    "routeDesc.settings": "Configurações da plataforma",
+    "routeDesc.platformSettings": "Configurações da plataforma",
 
     // ─── Breadcrumbs ───
     "breadcrumb.builder": "Builder",
