@@ -111,6 +111,7 @@ function getThresholds() {
  */
 export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassification {
   const factors: ClassifierFactor[] = [];
+  const T = getThresholds(); // DX-4: read from adaptive policy
 
   // ── Step 1: Manual override ──
   if (input.explicitOverride === true) {
