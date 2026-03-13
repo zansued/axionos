@@ -162,10 +162,16 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
     .trim();
 
   let integrationModified = false;
+  let integrationSeverity: IntegrationSeverity = "none";
+  let integrationEditRatio = 0;
+
   if (integrationCode.length > 20 && !integrationCode.startsWith("{\"")) {
-    // Only count as modified if meaningfully different
-    integrationModified = integrationCode !== codeContent;
+    const preIntegrationCode = codeContent;
     codeContent = integrationCode;
+    const severity = classifyIntegrationSeverity(preIntegrationCode, integrationCode);
+    integrationModified = severity.severity !== "none";
+    integrationSeverity = severity.severity;
+    integrationEditRatio = severity.editRatio;
   }
 
   const completedAt = new Date().toISOString();
@@ -177,6 +183,8 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
     totalTokens,
     totalCostUsd: totalCost,
     integrationModified,
+    integrationSeverity,
+    integrationEditRatio,
     outputLengthChars: codeContent.length,
     startedAt,
     completedAt,
