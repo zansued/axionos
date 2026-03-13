@@ -293,6 +293,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       initiative_id: payload.initiativeId,
       job_type: "execution_worker",
       metadata: {
+        ox5_fast_path: fastPathEval,
         ox3_metrics: workerMetrics,
         file_path: payload.filePath,
         file_type: payload.fileType,
@@ -300,8 +301,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
         node_id: payload.nodeId,
       },
     }).then(() => {}).catch((e: unknown) => {
-      // Non-critical — metrics table may not exist yet, that's fine
-      console.warn("[OX-3] Metrics log failed (non-blocking):", e);
+      console.warn("[OX-5] Metrics log failed (non-blocking):", e);
     });
 
     // ── Persist subtask output + create artifact in parallel ──
