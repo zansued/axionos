@@ -8,7 +8,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Search, Bell, ChevronRight, Zap } from "lucide-react";
 import { getRouteEntry, getBreadcrumbs } from "@/lib/routes";
-import { AxionPromptDrawer } from "@/components/ui/AxionPromptDrawer";
+
 
 interface TopbarProps {
   compact?: boolean;
