@@ -49,7 +49,7 @@ Deno.serve(async (req: Request) => {
           .order("created_at", { ascending: false })
           .limit(batchSize);
 
-        if (!entries?.length) return jsonResponse({ built: 0 }, req);
+        if (!entries?.length) return jsonResponse({ built: 0 }, 200, req);
 
         // Get related data
         const [candidatesRes, trustRes, weightsRes, recalsRes] = await Promise.all([
