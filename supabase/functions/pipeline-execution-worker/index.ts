@@ -307,10 +307,13 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
         raw_output: {
           file_path: payload.filePath, file_type: payload.fileType,
           language: ext, content: codeContent,
-          chain: ["code_architect", "developer", "integration_agent"],
+          chain: payload.useConsolidatedWorker
+            ? ["merged_architect_developer", "integration_agent"]
+            : ["code_architect", "developer", "integration_agent"],
           wave: payload.waveNum,
+          ox3_path: workerMetrics.path,
         },
-        model_used: devResult.model, prompt_used: payload.description,
+        model_used: devModel, prompt_used: payload.description,
         tokens_used: totalTokens, cost_estimate: totalCost,
       }).select("id").single(),
     ]);
