@@ -266,6 +266,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
 
       const integrationCode = integrationResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
       let integrationModified = false;
+      const preIntegrationCode = codeContent;
       if (integrationCode.length > 20 && !integrationCode.startsWith("{\"")) {
         integrationModified = integrationCode !== codeContent;
         codeContent = integrationCode;
@@ -280,7 +281,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
 
       workerMetrics = buildStandardPathMetrics(
         codeArchResult, devResult, integrationResult,
-        codeContent, integrationModified, workerStartedAt,
+        preIntegrationCode, codeContent, integrationModified, workerStartedAt,
       );
     }
 
