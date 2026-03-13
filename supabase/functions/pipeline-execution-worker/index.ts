@@ -18,6 +18,7 @@ import { evaluateFastPathEligibility, type FastPathEligibility } from "../_share
 import { classifyIntegrationSeverity } from "../_shared/integration-severity.ts";
 import { type ExecutionMetrics, type ValidationSignals, type FastPathPolicyRecord, validateSyntax, validateImports, countImports } from "../_shared/execution-metrics-contract.ts";
 import { computeExecutionRiskSignals, type RiskAssessment } from "../_shared/execution-risk-signals.ts";
+import { classifyExecutionRisk, type ExecutionClassification } from "../_shared/execution-risk-classifier.ts";
 
 interface WorkerPayload {
   initiativeId: string;
@@ -128,17 +129,21 @@ ${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}
 
     const workerStartedAt = new Date().toISOString();
 
-    // ──── OX-5: Selective fast-path eligibility ────
-    const fastPathEval: FastPathEligibility = evaluateFastPathEligibility({
+    // ──── DX-3: Execution Risk Classifier (replaces OX-5 direct eligibility) ────
+    const classification: ExecutionClassification = classifyExecutionRisk({
       filePath: payload.filePath,
       fileType: payload.fileType,
       contextLength: (contextStr || "").length + (baseContext || "").length,
       waveNum: payload.waveNum,
+      codeContent: "", // pre-generation: no code yet, signals computed post-generation for audit
+      retryCount: 0,   // wire from payload when available
       explicitOverride: payload.useConsolidatedWorker,
     });
 
-    const useConsolidated = fastPathEval.eligible;
-    console.log(`[OX-5] ${payload.filePath}: fast-path=${useConsolidated}, reason=${fastPathEval.reason}, risk=${fastPathEval.riskTier}`);
+    // Backward compat: extract legacy values used downstream
+    const fastPathEval: FastPathEligibility = classification.legacy_fast_path;
+    const useConsolidated = classification.execution_path === "fast_2call";
+    console.log(`[DX-3] ${payload.filePath}: tier=${classification.risk_tier}, path=${classification.execution_path}, validation=${classification.validation_posture}, confidence=${classification.confidence}, reason=${classification.primary_reason}`);
 
     // ──── Branch between consolidated (2-call) and standard (3-call) paths ────
     if (useConsolidated) {
@@ -331,13 +336,18 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       recorded_at: new Date().toISOString(),
     };
 
-    // ── DX-2: Compute execution risk signals ──
-    const riskAssessment: RiskAssessment = computeExecutionRiskSignals(
-      payload.filePath,
-      codeContent,
-      0, // retryCount — wire from payload when available
-    );
-    console.log(`[DX-2] ${payload.filePath}: composite_risk=${riskAssessment.composite_score}, factors=[${riskAssessment.top_factors.join("; ")}]`);
+    // ── DX-3: Post-generation re-classification with actual code ──
+    const postGenClassification: ExecutionClassification = classifyExecutionRisk({
+      filePath: payload.filePath,
+      fileType: payload.fileType,
+      contextLength: contextLength,
+      waveNum: payload.waveNum,
+      codeContent: codeContent,
+      retryCount: 0,
+      explicitOverride: payload.useConsolidatedWorker,
+    });
+    const riskAssessment = postGenClassification.risk_assessment;
+    console.log(`[DX-3] ${payload.filePath} post-gen: tier=${postGenClassification.risk_tier}, composite=${riskAssessment.composite_score}, factors=[${riskAssessment.top_factors.join("; ")}]`);
 
     serviceClient.from("pipeline_job_metrics").insert({
       organization_id: payload.organizationId,
@@ -349,14 +359,15 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
         ox6_policy_record: policyRecord,
         ox5_fast_path: fastPathEval,
         ox3_metrics: workerMetrics,
-        dx2_risk_assessment: riskAssessment,
+        dx3_pre_classification: classification,
+        dx3_post_classification: postGenClassification,
         file_path: payload.filePath,
         file_type: payload.fileType,
         wave: payload.waveNum,
         node_id: payload.nodeId,
       },
     }).then(() => {}).catch((e: unknown) => {
-      console.warn("[OX-6] Metrics log failed (non-blocking):", e);
+      console.warn("[DX-3] Metrics log failed (non-blocking):", e);
     });
 
     // ── Persist subtask output + create artifact in parallel ──
