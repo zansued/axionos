@@ -442,6 +442,7 @@ async function parallelWaveSchedule(sb: any, p: any) {
       ? "Validation agents started analyzing partial build artifacts — pipeline latency reduced"
       : "Waiting for build agents to produce first artifacts before starting validation",
   });
+}
 
 // ══════════════════════════════════════════════════
 // Hierarchical Agent Contract Operations
