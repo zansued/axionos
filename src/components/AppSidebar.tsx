@@ -127,20 +127,9 @@ function OwnerDomainSection({
   }, [hasActiveRoute]);
 
   if (collapsed) {
-    // In collapsed mode, show just the domain icon as a tooltip group
+    // In collapsed mode, show only child route icons — no parent group icon
     return (
       <div className="mb-1">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="flex items-center justify-center py-1.5 px-2 rounded-md text-muted-foreground/60 hover:text-muted-foreground transition-colors cursor-default">
-              <group.icon className="h-4 w-4" />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent side="right" className="text-xs">
-            <p className="font-medium">{group.label}</p>
-            <p className="text-muted-foreground text-[10px]">{group.subtitle}</p>
-          </TooltipContent>
-        </Tooltip>
         <SidebarMenu className="space-y-0.5">
           {items.map((item) => (
             <NavItemRow key={item.url} item={item} collapsed={collapsed} surfaceColor={surfaceColor} />
