@@ -129,7 +129,7 @@ Deno.serve(async (req: Request) => {
           .limit(batchSize);
 
         if (candErr) return errorResponse(candErr.message, 500, req);
-        if (!candidates?.length) return jsonResponse({ weighted: 0 }, req);
+        if (!candidates?.length) return jsonResponse({ weighted: 0 }, 200, req);
 
         // Get all trust scores for this org
         const { data: trustScores } = await supabase
