@@ -208,10 +208,12 @@ export function buildStandardPathMetrics(
   archResult: AIResult,
   devResult: AIResult,
   integrationResult: AIResult,
+  preIntegrationCode: string,
   codeContent: string,
   integrationModified: boolean,
   startedAt: string,
 ): ConsolidatedMetrics {
+  const severity = classifyIntegrationSeverity(preIntegrationCode, codeContent);
   return {
     path: "standard_3call",
     totalAiLatencyMs: archResult.durationMs + devResult.durationMs + integrationResult.durationMs,
@@ -223,6 +225,8 @@ export function buildStandardPathMetrics(
     totalTokens: archResult.tokens + devResult.tokens + integrationResult.tokens,
     totalCostUsd: archResult.costUsd + devResult.costUsd + integrationResult.costUsd,
     integrationModified,
+    integrationSeverity: severity.severity,
+    integrationEditRatio: severity.editRatio,
     outputLengthChars: codeContent.length,
     startedAt,
     completedAt: new Date().toISOString(),
