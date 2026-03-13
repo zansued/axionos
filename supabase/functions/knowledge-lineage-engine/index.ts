@@ -369,7 +369,7 @@ Deno.serve(async (req: Request) => {
           incoming_links: incomingRes.data || [],
           outgoing_links: outgoingRes.data || [],
           confidence_breakdown: breakdownRes.data,
-        }, req);
+        }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
