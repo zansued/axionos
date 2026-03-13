@@ -3,7 +3,7 @@ import { ProtectedRoute } from "./guards";
 import {
   Initiatives, Stories, Kanban, CodeExplorer, Artifacts, Projects, ProjectDetail,
   Agents, Squads, Journey, Onboarding, Workspace, Delivery, Pipelines, Runtime,
-  OrgSettings, SystemHealthDashboard,
+  OrgSettings, SystemHealthDashboard, Connections,
   AgentDetailPage, AgentPerformancePage, AgentMemoryPage, AgentPoliciesPage,
   PipelineDetailPage, ExecutionHistoryPage, RepairLoopPage, PreflightValidationPage,
   PublishQueuePage, RuntimeStatusPage, ErrorsAlertsPage, ValidationAnalyticsPage,
@@ -53,7 +53,8 @@ export function BuilderRoutes() {
       <Route path="/builder/throughput-metrics" element={<ProtectedRoute><ThroughputMetricsPage /></ProtectedRoute>} />
       <Route path="/builder/logs-explorer" element={<ProtectedRoute><LogsExplorerPage /></ProtectedRoute>} />
 
-      {/* Settings */}
+      {/* Settings & Connections */}
+      <Route path="/builder/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
       <Route path="/builder/settings" element={<ProtectedRoute><OrgSettings /></ProtectedRoute>} />
       <Route path="/builder/user-settings" element={<ProtectedRoute><UserSettingsPage /></ProtectedRoute>} />
       <Route path="/builder/roles-access" element={<ProtectedRoute><RolesAccessPage /></ProtectedRoute>} />

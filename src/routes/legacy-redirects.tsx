@@ -102,7 +102,8 @@ export function LegacyRedirects() {
       <Route path="/post-deploy-feedback" element={<LegacyRedirect to="/owner/post-deploy-feedback" />} />
       <Route path="/extensions" element={<LegacyRedirect to="/owner/extensions" />} />
       <Route path="/audit" element={<LegacyRedirect to="/owner/audit" />} />
-      <Route path="/connections" element={<LegacyRedirect to="/owner/connections" />} />
+      <Route path="/connections" element={<LegacyRedirect to="/builder/connections" />} />
+      <Route path="/owner/connections" element={<LegacyRedirect to="/builder/connections" />} />
       <Route path="/billing" element={<LegacyRedirect to="/owner/billing" />} />
       <Route path="/agent-routing" element={<LegacyRedirect to="/owner/agent-routing" />} />
       <Route path="/agent-debates" element={<LegacyRedirect to="/owner/agent-debates" />} />
