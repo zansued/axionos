@@ -1,26 +1,31 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+/**
+ * Delivery Outcomes Engine
+ * Auth hardened — Sprint 200
+ */
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) return new Response(JSON.stringify({ error: "No auth" }), { status: 401, headers: corsHeaders });
+    const authResult = await authenticateWithRateLimit(req, "delivery-outcomes");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    if (authError || !user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: corsHeaders });
+    const { action, organization_id: payloadOrgId, ...params } = await req.json();
 
-    const { action, organization_id, ...params } = await req.json();
-    if (!organization_id) return new Response(JSON.stringify({ error: "organization_id required" }), { status: 400, headers: corsHeaders });
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "delivery-outcomes", action: action || "unknown",
+    });
 
     let result: unknown = null;
 
@@ -127,11 +132,11 @@ Deno.serve(async (req) => {
       }
 
       default:
-        return new Response(JSON.stringify({ error: `Unknown action: ${action}` }), { status: 400, headers: corsHeaders });
+        return errorResponse(`Unknown action: ${action}`, 400, req);
     }
 
-    return new Response(JSON.stringify({ data: result }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
-  } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: corsHeaders });
+    return jsonResponse({ data: result }, 200, req);
+  } catch (err: any) {
+    return errorResponse(err.message || "Internal error", 500, req);
   }
 });

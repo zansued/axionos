@@ -1,8 +1,11 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 /**
  * Knowledge Lineage Engine — Sprint 181
+ * Auth hardened — Sprint 200
  *
  * Actions:
  *   - build_lineage: construct lineage events and provenance links for canon entries
@@ -17,13 +20,19 @@ Deno.serve(async (req: Request) => {
   if (corsRes) return corsRes;
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
+    const authResult = await authenticateWithRateLimit(req, "knowledge-lineage-engine");
+    if (authResult instanceof Response) return authResult;
+    const { user, serviceClient: supabase } = authResult;
 
-    const { action, organization_id, ...params } = await req.json();
-    if (!organization_id) return errorResponse("organization_id required", 400, req);
+    const { action, organization_id: payloadOrgId, ...params } = await req.json();
+
+    const { orgId: organization_id, error: orgError } = await resolveAndValidateOrg(supabase, user.id, payloadOrgId);
+    if (orgError || !organization_id) return errorResponse(orgError || "Organization access denied", 403, req);
+
+    await logSecurityAudit(supabase, {
+      organization_id, actor_id: user.id,
+      function_name: "knowledge-lineage-engine", action: action || "unknown",
+    });
 
     switch (action) {
       // ═══════════════════════════════════════════════════
@@ -40,7 +49,7 @@ Deno.serve(async (req: Request) => {
           .order("created_at", { ascending: false })
           .limit(batchSize);
 
-        if (!entries?.length) return jsonResponse({ built: 0 }, req);
+        if (!entries?.length) return jsonResponse({ built: 0 }, 200, req);
 
         // Get related data
         const [candidatesRes, trustRes, weightsRes, recalsRes] = await Promise.all([
@@ -141,7 +150,7 @@ Deno.serve(async (req: Request) => {
           }
         }
 
-        return jsonResponse({ built: entries.length, events_created: eventsCreated, links_created: linksCreated }, req);
+        return jsonResponse({ built: entries.length, events_created: eventsCreated, links_created: linksCreated }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
@@ -157,7 +166,7 @@ Deno.serve(async (req: Request) => {
           .order("created_at", { ascending: false })
           .limit(batchSize);
 
-        if (!entries?.length) return jsonResponse({ computed: 0 }, req);
+        if (!entries?.length) return jsonResponse({ computed: 0 }, 200, req);
 
         const [linksRes, trustRes, weightsRes] = await Promise.all([
           supabase.from("knowledge_provenance_links").select("*").eq("organization_id", organization_id),
@@ -231,7 +240,7 @@ Deno.serve(async (req: Request) => {
           computed++;
         }
 
-        return jsonResponse({ computed }, req);
+        return jsonResponse({ computed }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
@@ -319,7 +328,7 @@ Deno.serve(async (req: Request) => {
           total_checked: entries?.length || 0,
           alerts_count: alerts.length,
           alerts: alerts.sort((a, b) => (a.severity === "warning" ? -1 : 1)),
-        }, req);
+        }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
@@ -360,7 +369,7 @@ Deno.serve(async (req: Request) => {
           incoming_links: incomingRes.data || [],
           outgoing_links: outgoingRes.data || [],
           confidence_breakdown: breakdownRes.data,
-        }, req);
+        }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
@@ -396,7 +405,7 @@ Deno.serve(async (req: Request) => {
           recent_events: events.slice(0, 20),
           highest_confidence: breakdowns.slice(0, 5),
           lowest_confidence: breakdowns.slice(-5).reverse(),
-        }, req);
+        }, 200, req);
       }
 
       default:
