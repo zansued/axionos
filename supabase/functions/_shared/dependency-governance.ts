@@ -13,7 +13,7 @@
  *   5. Return updated package.json + governance report
  */
 
-import { CANONICAL_DEPS, BLOCKED_PACKAGES } from "./canonical-deps.ts";
+import { CANONICAL_DEPS, BLOCKED_PACKAGES, BLOCKED_REPLACEMENTS } from "./canonical-deps.ts";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -110,6 +110,19 @@ export async function runDependencyGovernance(packageJsonContent: string): Promi
       delete (pkg[key] as Record<string, string>)[name];
       upgrades.push({ name, declared: version, upgraded: "(removed)", reason: "blocked" });
       console.log(`[DEP-GOV] Removed blocked package: ${name}`);
+
+      // Auto-inject canonical replacement if one exists
+      const replacement = BLOCKED_REPLACEMENTS[name];
+      if (replacement) {
+        const replKey = replacement.dev ? "devDependencies" : "dependencies";
+        if (!pkg[replKey]) pkg[replKey] = {};
+        const target = pkg[replKey] as Record<string, string>;
+        if (!target[replacement.name]) {
+          target[replacement.name] = replacement.version;
+          upgrades.push({ name: replacement.name, declared: "(added)", upgraded: replacement.version, reason: "blocked" });
+          console.log(`[DEP-GOV] Auto-replaced ${name} -> ${replacement.name}@${replacement.version}`);
+        }
+      }
       continue;
     }
 
@@ -221,7 +234,10 @@ function computeRisk({ upgrades, deprecated, blocked, unresolved }: {
   blocked: string[];
   unresolved: string[];
 }): GovernanceReport["risk"] {
-  if (blocked.length > 0) return "critical";
+  // If all blocked packages were auto-replaced, downgrade from critical to medium
+  const unreplaceableBlocked = blocked.filter(name => !BLOCKED_REPLACEMENTS[name]);
+  if (unreplaceableBlocked.length > 0) return "critical";
+  if (blocked.length > 0) return "medium"; // all were auto-replaced
   if (deprecated.length > 2 || upgrades.length > 10) return "high";
   if (deprecated.length > 0 || upgrades.length > 5) return "medium";
   return "low";
