@@ -141,17 +141,17 @@ export interface OwnerDomainGroup {
 
 export const OWNER_DOMAIN_GROUPS: OwnerDomainGroup[] = [
   {
-    id: "System Intelligence",
-    label: "System Intelligence",
-    subtitle: "Platform awareness and operational signals",
-    icon: Activity,
-    order: 0,
-  },
-  {
     id: "Cognitive Architecture",
     label: "Cognitive Architecture",
     subtitle: "Intelligence loop: knowledge → skills → agents → outcomes",
     icon: Brain,
+    order: 0,
+  },
+  {
+    id: "System Intelligence",
+    label: "System Intelligence",
+    subtitle: "Platform awareness and operational signals",
+    icon: Activity,
     order: 1,
   },
   {
