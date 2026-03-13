@@ -110,6 +110,19 @@ export async function runDependencyGovernance(packageJsonContent: string): Promi
       delete (pkg[key] as Record<string, string>)[name];
       upgrades.push({ name, declared: version, upgraded: "(removed)", reason: "blocked" });
       console.log(`[DEP-GOV] Removed blocked package: ${name}`);
+
+      // Auto-inject canonical replacement if one exists
+      const replacement = BLOCKED_REPLACEMENTS[name];
+      if (replacement) {
+        const replKey = replacement.dev ? "devDependencies" : "dependencies";
+        if (!pkg[replKey]) pkg[replKey] = {};
+        const target = pkg[replKey] as Record<string, string>;
+        if (!target[replacement.name]) {
+          target[replacement.name] = replacement.version;
+          upgrades.push({ name: replacement.name, declared: "(added)", upgraded: replacement.version, reason: "blocked" });
+          console.log(`[DEP-GOV] Auto-replaced ${name} -> ${replacement.name}@${replacement.version}`);
+        }
+      }
       continue;
     }
 
