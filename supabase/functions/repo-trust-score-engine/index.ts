@@ -172,7 +172,7 @@ Deno.serve(async (req: Request) => {
           });
         }
 
-        return jsonResponse({ weighted: weighted.length, results: weighted }, req);
+        return jsonResponse({ weighted: weighted.length, results: weighted }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
