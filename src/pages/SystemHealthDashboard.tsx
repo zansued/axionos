@@ -109,70 +109,95 @@ export default function SystemHealthDashboard() {
           </Button>
         </div>
 
-        {/* Overall Score */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-3">
-                <Activity className="h-8 w-8 text-primary" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Overall Health Score</p>
-                  <div className="flex items-baseline gap-2">
-                    <p className="text-3xl font-bold">{(overall * 100).toFixed(1)}%</p>
-                    {rawScore != null && rawScore !== overall && (
-                      <span className="text-sm text-muted-foreground">
-                        (raw: {(rawScore * 100).toFixed(1)}%)
-                      </span>
-                    )}
-                  </div>
-                </div>
+        {/* Overall Score — Three-panel layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Panel 1: Overall Health */}
+          <Card>
+            <CardContent className="pt-6">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Overall Health</p>
+              <div className="flex items-baseline gap-3">
+                <p className="text-4xl font-bold">{(overall * 100).toFixed(1)}%</p>
+                <Badge className={`text-sm px-3 py-0.5 ${GRADE_COLORS[grade] || ""}`}>
+                  {grade}
+                </Badge>
               </div>
-              <Badge className={`text-lg px-4 py-1 ${GRADE_COLORS[grade] || ""}`}>
-                Grade {grade}
-              </Badge>
-            </div>
-            <Progress value={overall * 100} className="mt-4 h-3" />
+              {rawScore != null && rawScore !== overall && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Raw score: {(rawScore * 100).toFixed(1)}% (before confidence weighting)
+                </p>
+              )}
+              <Progress value={overall * 100} className="mt-3 h-2" />
+            </CardContent>
+          </Card>
 
-            {/* Confidence & Evidence Summary */}
-            {(overallConfidence != null || evidenceSummary) && (
-              <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
-                {overallConfidence != null && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground">Confidence:</span>
-                    <span className={`font-mono font-medium ${
-                      overallConfidence >= 0.7 ? "text-emerald-400" : 
-                      overallConfidence >= 0.4 ? "text-yellow-400" : "text-destructive"
-                    }`}>
-                      {(overallConfidence * 100).toFixed(0)}%
-                    </span>
-                  </div>
-                )}
-                {evidenceSummary && (
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    {evidenceSummary.observed > 0 && (
-                      <span className="text-emerald-400">● {evidenceSummary.observed} observed</span>
+          {/* Panel 2: Evidence Confidence */}
+          <Card>
+            <CardContent className="pt-6">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Evidence Confidence</p>
+              {overallConfidence != null ? (() => {
+                const level = overallConfidence >= 0.7 ? "High" : overallConfidence >= 0.4 ? "Medium" : "Low";
+                const color = overallConfidence >= 0.7 ? "text-emerald-400" : overallConfidence >= 0.4 ? "text-yellow-400" : "text-destructive";
+                const bgColor = overallConfidence >= 0.7 ? "bg-emerald-500" : overallConfidence >= 0.4 ? "bg-yellow-500" : "bg-destructive";
+                return (
+                  <>
+                    <p className={`text-4xl font-bold ${color}`}>{level}</p>
+                    <p className={`text-sm ${color} font-mono mt-1`}>{(overallConfidence * 100).toFixed(0)}%</p>
+                    <div className="h-2 rounded-full bg-muted mt-3 overflow-hidden">
+                      <div className={`h-full rounded-full ${bgColor}`} style={{ width: `${overallConfidence * 100}%` }} />
+                    </div>
+                  </>
+                );
+              })() : (
+                <p className="text-2xl font-bold text-muted-foreground">—</p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Panel 3: Operational Trustworthiness */}
+          <Card>
+            <CardContent className="pt-6">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Operational Trustworthiness</p>
+              {evidenceSummary ? (() => {
+                const total = (evidenceSummary.observed || 0) + (evidenceSummary.inferred || 0) + (evidenceSummary.seeded || 0) + (evidenceSummary.insufficient || 0);
+                const observedRatio = total > 0 ? (evidenceSummary.observed || 0) / total : 0;
+                const seededRatio = total > 0 ? (evidenceSummary.seeded || 0) / total : 0;
+                const trustLabel = observedRatio >= 0.7 ? "Strongly Observed"
+                  : seededRatio >= 0.5 ? "Bootstrap-Heavy"
+                  : "Mixed";
+                const trustColor = observedRatio >= 0.7 ? "text-emerald-400"
+                  : seededRatio >= 0.5 ? "text-yellow-400"
+                  : "text-blue-400";
+                return (
+                  <>
+                    <p className={`text-2xl font-bold ${trustColor}`}>{trustLabel}</p>
+                    <div className="flex items-center gap-3 mt-3 text-xs">
+                      {evidenceSummary.observed > 0 && (
+                        <span className="text-emerald-400">● {evidenceSummary.observed} observed</span>
+                      )}
+                      {evidenceSummary.inferred > 0 && (
+                        <span className="text-blue-400">● {evidenceSummary.inferred} inferred</span>
+                      )}
+                      {evidenceSummary.seeded > 0 && (
+                        <span className="text-yellow-400">● {evidenceSummary.seeded} bootstrap</span>
+                      )}
+                      {evidenceSummary.insufficient > 0 && (
+                        <span className="text-destructive">● {evidenceSummary.insufficient} insufficient</span>
+                      )}
+                    </div>
+                    {!evidenceSummary.trustworthy && (
+                      <div className="flex items-center gap-1.5 mt-3 text-xs text-yellow-400">
+                        <AlertTriangle className="h-3 w-3 flex-shrink-0" />
+                        More operational evidence needed for full trust
+                      </div>
                     )}
-                    {evidenceSummary.inferred > 0 && (
-                      <span className="text-blue-400">● {evidenceSummary.inferred} inferred</span>
-                    )}
-                    {evidenceSummary.seeded > 0 && (
-                      <span className="text-yellow-400">● {evidenceSummary.seeded} bootstrap</span>
-                    )}
-                    {evidenceSummary.insufficient > 0 && (
-                      <span className="text-destructive">● {evidenceSummary.insufficient} insufficient</span>
-                    )}
-                  </div>
-                )}
-                {evidenceSummary && !evidenceSummary.trustworthy && (
-                  <div className="flex items-center gap-1 text-xs text-yellow-400">
-                    <AlertTriangle className="h-3 w-3" />
-                    Score not yet fully trustworthy — more operational evidence needed
-                  </div>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                  </>
+                );
+              })() : (
+                <p className="text-2xl font-bold text-muted-foreground">—</p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Metric Breakdown */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
