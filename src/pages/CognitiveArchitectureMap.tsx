@@ -642,8 +642,8 @@ export default function CognitiveArchitectureMap() {
         </div>
       </div>
     </TooltipProvider>
+    </AppShell>
   );
-}
 
 // ── Summary Card ─────────────────────────────────────────────────────────────
 
