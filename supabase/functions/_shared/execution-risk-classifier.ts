@@ -204,11 +204,11 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
   }
 
   // Rule 4: High import density
-  if (signals.import_density > THRESHOLDS.HIGH_IMPORT_DENSITY) {
+  if (signals.import_density > T.HIGH_IMPORT_DENSITY) {
     factors.push({
       signal: "import_density",
       value: signals.import_density,
-      threshold: `> ${THRESHOLDS.HIGH_IMPORT_DENSITY}`,
+      threshold: `> ${T.HIGH_IMPORT_DENSITY}`,
       impact: "escalate",
       explanation: `High import density (${signals.import_density}) increases integration failure risk`,
     });
@@ -216,18 +216,18 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
     factors.push({
       signal: "import_density",
       value: signals.import_density,
-      threshold: `<= ${THRESHOLDS.HIGH_IMPORT_DENSITY}`,
+      threshold: `<= ${T.HIGH_IMPORT_DENSITY}`,
       impact: "neutral",
       explanation: `Import density within normal range`,
     });
   }
 
   // Rule 5: High dependency fan-out
-  if (signals.dependency_fan_out > THRESHOLDS.HIGH_FAN_OUT) {
+  if (signals.dependency_fan_out > T.HIGH_FAN_OUT) {
     factors.push({
       signal: "dependency_fan_out",
       value: signals.dependency_fan_out,
-      threshold: `> ${THRESHOLDS.HIGH_FAN_OUT}`,
+      threshold: `> ${T.HIGH_FAN_OUT}`,
       impact: "escalate",
       explanation: `High fan-out (${signals.dependency_fan_out} unique modules) = large integration surface`,
     });
@@ -244,22 +244,22 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
   }
 
   // Rule 7: Operational sensitivity
-  if (signals.operational_sensitivity > THRESHOLDS.HIGH_OPERATIONAL_SENSITIVITY) {
+  if (signals.operational_sensitivity > T.HIGH_OPERATIONAL_SENSITIVITY) {
     factors.push({
       signal: "operational_sensitivity",
       value: signals.operational_sensitivity,
-      threshold: `> ${THRESHOLDS.HIGH_OPERATIONAL_SENSITIVITY}`,
+      threshold: `> ${T.HIGH_OPERATIONAL_SENSITIVITY}`,
       impact: "escalate",
       explanation: "Infrastructure-critical file (provider/config/client/middleware patterns)",
     });
   }
 
   // Rule 8: Content complexity (weaker signal, advisory)
-  if (signals.content_complexity_estimate > THRESHOLDS.HIGH_COMPLEXITY) {
+  if (signals.content_complexity_estimate > T.HIGH_COMPLEXITY) {
     factors.push({
       signal: "content_complexity_estimate",
       value: signals.content_complexity_estimate,
-      threshold: `> ${THRESHOLDS.HIGH_COMPLEXITY}`,
+      threshold: `> ${T.HIGH_COMPLEXITY}`,
       impact: "escalate",
       explanation: "High code complexity (nested async, deep conditionals)",
     });
