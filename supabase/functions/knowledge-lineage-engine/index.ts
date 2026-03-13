@@ -405,7 +405,7 @@ Deno.serve(async (req: Request) => {
           recent_events: events.slice(0, 20),
           highest_confidence: breakdowns.slice(0, 5),
           lowest_confidence: breakdowns.slice(-5).reverse(),
-        }, req);
+        }, 200, req);
       }
 
       default:
