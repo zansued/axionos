@@ -328,7 +328,7 @@ Deno.serve(async (req: Request) => {
           total_checked: entries?.length || 0,
           alerts_count: alerts.length,
           alerts: alerts.sort((a, b) => (a.severity === "warning" ? -1 : 1)),
-        }, req);
+        }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
