@@ -100,7 +100,7 @@ export function OwnerRoutes() {
       <Route path="/owner/post-deploy-feedback" element={<W><PostDeployFeedback /></W>} />
       <Route path="/owner/extensions" element={<W><Extensions /></W>} />
       <Route path="/owner/audit" element={<W><AuditLogs /></W>} />
-      <Route path="/owner/connections" element={<W><Connections /></W>} />
+      {/* Connections moved to /builder/connections */}
       <Route path="/owner/billing" element={<W><Billing /></W>} />
 
       {/* Agent Architecture */}

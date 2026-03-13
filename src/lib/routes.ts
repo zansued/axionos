@@ -649,7 +649,7 @@ export const LEGACY_REDIRECTS: Record<string, string> = {
   "/dependency-sovereignty": "/owner/dependency-sovereignty",
   "/strategic-succession": "/owner/strategic-succession",
   "/audit": "/owner/audit",
-  "/connections": "/owner/connections",
+  "/connections": "/builder/connections",
   "/billing": "/owner/billing",
   "/improvement-ledger": "/owner/improvement-ledger",
   "/improvement-candidates": "/owner/improvement-candidates",
