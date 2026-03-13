@@ -16,7 +16,7 @@ import {
   InstitutionalMemoryConstitution, SovereignDecisionRights, DependencySovereignty,
   StrategicSuccession, MultiHorizonAlignment, TradeoffArbitration, MissionIntegrity,
   ContinuitySimulation, ImprovementLedger, ImprovementCandidates, ImprovementBenchmarks,
-  CapabilityGovernance, PostDeployFeedback, Extensions, AuditLogs, Connections, Billing,
+  CapabilityGovernance, PostDeployFeedback, Extensions, AuditLogs, Billing,
   AgentRouting, AgentDebates, WorkingMemory, PilotMarketplace, MarketplaceOutcomes,
   MetaAgents, MetaArtifacts, PromptOptimization,
   DistributedJobs, CrossRegionRecovery, TenantRuntime, LargeScaleOrchestration,
