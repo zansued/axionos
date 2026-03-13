@@ -46,7 +46,7 @@ Deno.serve(async (req: Request) => {
           .limit(batchSize);
 
         if (srcErr) return errorResponse(srcErr.message, 500, req);
-        if (!sources?.length) return jsonResponse({ evaluated: 0, message: "No sources to evaluate" }, req);
+        if (!sources?.length) return jsonResponse({ evaluated: 0, message: "No sources to evaluate" }, 200, req);
 
         // Get existing trust profiles for context
         const { data: existingProfiles } = await supabase
