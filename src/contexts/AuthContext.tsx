@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { setObservabilityUser } from "@/lib/observability";
 
 interface AuthContextType {
   user: User | null;
