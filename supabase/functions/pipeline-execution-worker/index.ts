@@ -74,18 +74,19 @@ serve(async (req) => {
       organizationId: payload.organizationId,
     };
 
-    const jobId = await createJob(ctx, "execution_worker", {
-      subtask_id: payload.subtaskId,
-      file_path: payload.filePath,
-      wave: payload.waveNum,
-      node_id: payload.nodeId,
-    });
-
-    // Mark subtask in progress
-    await serviceClient.from("story_subtasks").update({
-      status: "in_progress",
-      executed_by_agent_id: payload.developer?.id || null,
-    }).eq("id", payload.subtaskId);
+    // Fire job creation and subtask status update in parallel
+    const [jobId] = await Promise.all([
+      createJob(ctx, "execution_worker", {
+        subtask_id: payload.subtaskId,
+        file_path: payload.filePath,
+        wave: payload.waveNum,
+        node_id: payload.nodeId,
+      }),
+      serviceClient.from("story_subtasks").update({
+        status: "in_progress",
+        executed_by_agent_id: payload.developer?.id || null,
+      }).eq("id", payload.subtaskId),
+    ]);
 
     const effectiveCodeArch = payload.codeArchitect || { id: "", name: "CodeArchitect", role: "code_architect" };
     const effectiveDev = payload.developer || { id: "", name: "Developer", role: "developer" };
