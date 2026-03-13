@@ -52,12 +52,13 @@ export function usePipelineSelector<R>(selector: (ctx: PipelineSelectorInput) =>
       events: pipeline.events,
       unreadCount: pipeline.unreadCount,
     };
+    const stateRecord = stateObj as unknown as AnyObject;
 
     // Check if tracked keys changed
     if (prevRef.current) {
       let changed = false;
       for (const [key, prevVal] of prevRef.current.snapshot) {
-        if ((stateObj as AnyObject)[key] !== prevVal) {
+        if (stateRecord[key] !== prevVal) {
           changed = true;
           break;
         }
@@ -66,13 +67,13 @@ export function usePipelineSelector<R>(selector: (ctx: PipelineSelectorInput) =>
     }
 
     // Run selector with tracking
-    const { proxy, tracked } = createTrackingProxy(stateObj as AnyObject);
-    const result = selector(proxy as PipelineSelectorInput);
+    const { proxy, tracked } = createTrackingProxy(stateRecord);
+    const result = selector(proxy as unknown as PipelineSelectorInput);
 
     // Snapshot tracked keys
     const snapshot = new Map<string, unknown>();
     for (const key of tracked.keys) {
-      snapshot.set(key, (stateObj as AnyObject)[key]);
+      snapshot.set(key, stateRecord[key]);
     }
 
     prevRef.current = { result, snapshot };
