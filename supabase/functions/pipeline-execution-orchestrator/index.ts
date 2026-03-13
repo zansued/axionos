@@ -375,10 +375,11 @@ serve(async (req) => {
       }
 
       waveNum++;
-      await pipelineLog(ctx, "swarm_wave_start",
+      // Non-blocking wave log — fire-and-forget
+      pipelineLog(ctx, "swarm_wave_start",
         `Wave ${waveNum}: dispatching ${readyNodes.length} worker(s)`,
         { wave: waveNum, files: readyNodes.map(n => n.filePath) }
-      );
+      ).catch(() => {});
 
       // Execute wave in batches of MAX_WORKERS
       for (let i = 0; i < readyNodes.length; i += MAX_WORKERS) {
