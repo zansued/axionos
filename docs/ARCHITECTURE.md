@@ -24,30 +24,36 @@
 | Canon Intelligence Engine | [CANON_INTELLIGENCE_ENGINE.md](CANON_INTELLIGENCE_ENGINE.md) -- knowledge layer, Agent-Contract model, canonization workflow |
 
 ---
-
-## Mermaid Diagram Color Canon
-
-graph TD
-    %% Definições de Classes (Suas Cores)
+### Definições de Classes (Suas Cores)
+graph LR
+    %% Título da Tabela
+    subgraph "Dicionário de Cores e Funções"
+    direction TB
+    
+    %% Definição das Classes
     classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111
     classDef core fill:#74B9FF,stroke:#1B4F72,color:#111
     classDef gov fill:#C56CF0,stroke:#6C3483,color:#111
     classDef intel fill:#00CEC9,stroke:#117A65,color:#111
+    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111
     classDef data fill:#55EFC4,stroke:#117A65,color:#111
+    classDef external fill:#B2BEC3,stroke:#636E72,color:#111
+    classDef strategy fill:#D6A2E8,stroke:#7D3C98,color:#111
+    classDef reflex fill:#FF7675,stroke:#922B21,color:#111
+    classDef canon fill:#6C5CE7,stroke:#2E1A8A,color:#fff
 
-    %% Elementos aplicando as classes
-    A[Interação Humana] ::: human
-    B[Plataforma Core] ::: core
-    C[Governança] ::: gov
-    D[Análise de Dados] ::: intel
-    E[(Banco de Dados)] ::: data
-
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-
----
+    %% Linhas da "Tabela"
+    L1[Human / operator interaction] ::: human
+    L2[Core system / platform structure] ::: core
+    L3[Governance / policy / control] ::: gov
+    L4[Intelligence / analysis / cognition] ::: intel
+    L5[Runtime / execution / repair loops] ::: runtime
+    L6[Data / memory / persistence] ::: data
+    L7[External systems / providers / connectors] ::: external
+    L8[Strategic coordination layers] ::: strategy
+    L9[Reflexive governance / self-regulation] ::: reflex
+    L10[Canonical knowledge / implementation intelligence] ::: canon
+    end
 
 ## 1. System Context
 
