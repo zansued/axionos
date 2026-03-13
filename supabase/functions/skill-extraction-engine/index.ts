@@ -61,6 +61,15 @@ Deno.serve(async (req) => {
         return await listReviewable(sc, orgId, params);
       case "review_history":
         return await reviewHistory(sc, orgId, params);
+      // SF-4: Skill-Capability Binding
+      case "bind_capability":
+        return await bindCapability(sc, orgId, user.id, params);
+      case "auto_bind":
+        return await autoBind(sc, orgId, user.id, params);
+      case "list_bindings":
+        return await listBindings(sc, orgId, params);
+      case "skill_context_for_agent":
+        return await skillContextForAgent(sc, orgId, params);
       default:
         return json({ error: `Unknown action: ${action}` }, 400);
     }
