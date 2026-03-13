@@ -551,6 +551,7 @@ export default function CognitiveArchitectureMap() {
   }
 
   return (
+    <AppShell>
     <TooltipProvider delayDuration={200}>
       <div className="p-6 space-y-6 max-w-full">
         {/* Header */}
