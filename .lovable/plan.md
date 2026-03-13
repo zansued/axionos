@@ -1,101 +1,231 @@
+# AxionOS — Plano de Execução
 
-
-# Sprint OX-4 — Performance Decision Gate
-
-## A. Consolidated Performance Findings
-
-### OX-1: Orchestration I/O Hygiene — Verified Gains
-
-| Fix | Before | After | Estimated Saving |
-|-----|--------|-------|-----------------|
-| Batch clean-file output loading | N sequential queries (1 per clean subtask) | 1 query per 500 items | ~200-800ms per run (scales with clean files) |
-| Batched `updateBrainEdgesFromImports` | ~3N+1 queries per file (N = import count) | 3 total queries per file | ~50-150ms per file |
-| Debounced `updateProgress` | Write on every dispatch + completion | Max 1 write per 5s + wave boundaries | ~100-500ms per wave (fewer DB roundtrips) |
-| Non-blocking `pipelineLog` / `recordAgentMessage` | Blocking `await` on hot path | Fire-and-forget `.catch(() => {})` | ~20-50ms per call removed from critical path |
-| Parallel worker DB writes | Sequential subtask update + artifact insert | `Promise.all` | ~50-100ms per file |
-
-**Total OX-1 estimated gain**: ~5-15% of non-AI execution time. Small in absolute terms because AI latency dominates, but eliminates unnecessary serialization on every hot-path cycle.
-
-### OX-2: AI Efficiency Layer ROI — Measured Verdict
-
-| Metric | Value | Source |
-|--------|-------|--------|
-| Execution-stage cache hit rate | ~0% | Structural (unique code gen prompts) |
-| Pre-call overhead per `callAI` (with efficiency) | 3-13s per call (compression + 2× embedding gen) | Code analysis: up to 3 extra AI calls |
-| Overhead per 3-call file (old path) | 9-39s parasitic latency | 3 calls × 3-13s overhead each |
-| Double cache lookup bug | Fixed | Embedding reuse from miss data |
-| **Policy applied** | `skipEfficiency=true` for all execution-stage calls | Worker code updated |
-
-**OX-2 verdict**: The efficiency layer was actively harmful in execution. Disabling it for execution-stage calls eliminates 9-39s of wasted latency per file. This is the single largest non-AI-architecture improvement found. The layer remains active for planning/orchestration where prompt reuse may occur.
-
-### OX-3: Worker Call Consolidation — Prototype Status
-
-| Aspect | Status |
-|--------|--------|
-| Prototype implemented | Yes — `consolidated-worker-prototype.ts` |
-| Feature flag | `useConsolidatedWorker` in payload |
-| Design | Merged Architect+Developer → 1 call, Integration Agent → 1 call |
-| Metrics instrumentation | `pipeline_job_metrics` table with `ox3_metrics` |
-| Default path | Standard 3-call (unchanged) |
-| Comparison data | **Not yet collected** — prototype exists but has not been run against real workloads |
-
-**OX-3 verdict**: The prototype is structurally sound. The merged prompt includes both specification and implementation phases. Expected saving: ~8-20s per file (one full AI roundtrip eliminated). Quality impact: unknown until tested.
+> **Current Sprint:** 138 (Adaptive Operational Organism Console) — ✅ Complete
+> **Next Sprint:** Post-138 strategic planning
+> Execution: **Sprint-based**
 
 ---
 
-## B. Decision Matrix
+## Strategic Directive
 
-| Option | Bottleneck Addressed | Expected Gain | Complexity | Risk | Confidence | Evidence Justifies? | Recommendation |
-|--------|---------------------|---------------|------------|------|------------|--------------------|----|
-| **Full rollout of 2-call worker** | AI latency (85-95% of time) | 25-35% per-file latency reduction | Low (code exists) | Medium (quality unknown) | Medium | **Not yet** — need A/B data | **Prototype first** — run controlled comparison |
-| **Execution-stage AI fast-path** | Already done (OX-2) | 9-39s saved per file | Done | None | High | Yes | **Done** ✓ |
-| **More DB batching** | Secondary DB chatter | 2-5% additional | Low | Low | High | Diminishing returns | **Defer** — major batching done in OX-1 |
-| **Selective caching** (non-execution) | Planning/orchestration repeat calls | 5-10% on planning stages | Medium | Low | Medium | Partial | **Defer** — measure planning-stage hit rates first |
-| **Redis prototype** | Transient state, queue polling | Unknown | High | High (ops complexity, consistency) | Low | No | **Reject for now** |
-| **No additional infra change** | N/A | Baseline | None | None | High | Yes | **Valid default** |
-| **Worker coordination tuning** | Wave dispatch overhead | 1-3% | Low | Low | Medium | Marginal | **Defer** |
+AxionOS has completed its Level 10+ milestone. All blocks through AD (Adaptive Operational Organism) are complete. Learning canonization, adaptive coordination, organism memory, multi-loop governance, systemic health monitoring, and unified organism console are operational.
+
+**The focus is now:**
+
+1. Future planning beyond Sprint 138
+2. Consolidation and hardening of all completed blocks
+3. Preserve all governance constraints: no autonomous architecture mutation, rollback everywhere, human approval for structural change
 
 ---
 
-## C. Updated Verdicts
+## Strategic Principle
 
-### Redis
-**Verdict: Still reject.** No new evidence changes the assessment. The system is I/O-bound on AI API calls, not on state lookup speed. DB batching (OX-1) addressed the verified read/write hotspots. Redis would add operational complexity for a problem that doesn't exist yet.
+> **Governance before autonomy.**
+> **Autonomy earned through evidence, bounded, and reversible.**
+> **No autonomous architecture mutation.**
 
-### Rust
-**Verdict: Still reject.** The orchestrator spends <1% of wall-clock time on computation. The bottleneck is network I/O (AI API calls + DB). A compiled runtime would optimize the wrong layer entirely.
-
-### Context Compression
-**Verdict: Still defer.** `buildSmartContextWindow` already handles context sizing. No evidence of context-growth causing failures or degraded output quality. Revisit only if token costs become a concern or if output quality degrades on large projects.
+Every new capability must be governable, auditable, and non-destructive before it is expanded. AxionOS does not pursue autonomy for its own sake.
 
 ---
 
-## D. Recommended Next Sprint
+## Completed Sprints
 
-### Immediate (OX-5: Consolidated Worker Validation)
-1. **Run controlled A/B comparison** of 2-call vs 3-call on 10-20 real files
-2. Measure: latency, token cost, output quality (manual review), integration error rate
-3. Decision gate: if quality is acceptable at ≥80% of files, promote to default
+### Level 3 — Autonomous Engineering System (Sprints 1–10) ✅
 
-### Medium-term
-- If 2-call validated: promote as default, keep 3-call as fallback flag
-- Measure planning-stage cache hit rates to decide if efficiency layer adds value there
-- Consider adaptive model routing (use cheaper models for simpler files)
+| Sprint    | Deliverable                                                             | Status |
+| --------- | ----------------------------------------------------------------------- | ------ |
+| Sprint 1  | Initiative Brief — structured idea intake contract                      | ✅     |
+| Sprint 2  | Simulation Engine — feasibility gate before execution                   | ✅     |
+| Sprint 3  | Deploy Contract — publish-to-deploy state machine                       | ✅     |
+| Sprint 4  | Product Observability — initiative lifecycle metrics                    | ✅     |
+| Sprint 5  | Onboarding & Packaging — user activation and product framing            | ✅     |
+| Sprint 6  | Repair Evidence — traceable, evidence-based repair loop                 | ✅     |
+| Sprint 7  | Error Pattern Library — pattern intelligence and strategy effectiveness | ✅     |
+| Sprint 8  | Prevention Layer — active guardrails from known patterns                | ✅     |
+| Sprint 9  | Adaptive Routing — evidence-informed repair strategy selection          | ✅     |
+| Sprint 10 | Learning Foundation — learning records, prompt outcomes, aggregation    | ✅     |
 
-### Explicitly Deferred
-- Redis infrastructure
-- Additional DB batching beyond OX-1
-- Worker architecture redesign
-- Context compression engine
+### Level 4–6 (Sprints 11–106) ✅
 
-### Explicitly Rejected
-- Rust port
-- Full caching overhaul
-- Speculative agent coordination redesign
+All sprints from Learning Agents v1 through Sovereign Institutional Intelligence are complete. See [docs/PLAN.md](../docs/PLAN.md) for the full sprint-by-sprint record.
+
+### Level 7 — Strategic Autonomy & Civilizational Coordination (Sprints 107–110) ✅ Hardened
+
+| Sprint     | Deliverable                                | Status |
+| ---------- | ------------------------------------------ | ------ |
+| Sprint 107 | Multi-Horizon Strategic Alignment Engine   | ✅     |
+| Sprint 108 | Institutional Tradeoff Arbitration System  | ✅     |
+| Sprint 109 | Mission Integrity & Drift Prevention       | ✅     |
+| Sprint 110 | Civilizational Continuity Simulation Layer | ✅     |
+
+### Level 8 — Reflexive Governance & Evolution Control (Sprints 111–114) ✅
+
+| Sprint     | Deliverable                                 | Status |
+| ---------- | ------------------------------------------- | ------ |
+| Sprint 111 | Evolution Proposal Governance Engine        | ✅     |
+| Sprint 112 | Architectural Mutation Control Layer        | ✅     |
+| Sprint 113 | Reflective Validation & Self-Revision Audit | ✅     |
+| Sprint 114 | Kernel Integrity & Anti-Corrosion Guard     | ✅     |
+
+### Level 9 — Implementation Canon & Knowledge Governance (Sprints 115–118) ✅
+
+| Sprint     | Deliverable                                         | Status |
+| ---------- | --------------------------------------------------- | ------ |
+| Sprint 115 | Canon Steward & Knowledge Governance Engine         | ✅     |
+| Sprint 116 | Implementation Pattern Library & Retrieval Layer    | ✅     |
+| Sprint 117 | Failure Memory & Repair Intelligence Archive        | ✅     |
+| Sprint 118 | External Knowledge Intake & Canon Evolution Control | ✅     |
+
+### Level 10 — Autonomous Delivery Sovereignty (Sprints 119–122) ✅
+
+| Sprint     | Deliverable                                      | Status |
+| ---------- | ------------------------------------------------ | ------ |
+| Sprint 119 | Live Runtime Feedback Mesh                       | ✅     |
+| Sprint 120 | Tenant Doctrine & Adaptive Operating Profiles v2 | ✅     |
+| Sprint 121 | Outcome-Based Autonomy Engine                    | ✅     |
+| Sprint 122 | Compounding Advantage & Moat Orchestrator        | ✅     |
+
+### Block AA — Runtime Proof & Adaptive Governance (Sprints 123–126) ✅
+
+| Sprint     | Deliverable                          | Status |
+| ---------- | ------------------------------------ | ------ |
+| Sprint 123 | Runtime Execution Validation Harness | ✅     |
+| Sprint 124 | Autonomy Ladder Stabilization        | ✅     |
+| Sprint 125 | Tenant-Adaptive Regression Profiles  | ✅     |
+| Sprint 126 | Cold Start Explainability Layer      | ✅     |
 
 ---
 
-## E. OX-4 Summary
+## Current State
 
-The three sprints produced one major win (OX-2: eliminating 9-39s parasitic overhead per file), solid incremental gains (OX-1: fewer DB roundtrips), and a ready prototype (OX-3: 2-call consolidation). The dominant remaining bottleneck is the number of sequential AI calls per file — the only option that addresses this with evidence is the 2-call consolidation, which needs A/B validation before rollout. All infrastructure-heavy options (Redis, Rust) remain unjustified. The next correct move is to run the OX-3 prototype against real workloads and make a keep/promote/reject decision based on measured quality and latency data.
+AxionOS is an **Adaptive Operational Organism** platform (Level 10+):
 
+- **Execution:** Stable 32-stage deterministic pipeline with DAG orchestration, runtime validation, autonomous repair, and preventive engineering.
+- **Learning:** Active rule-based learning with prompt outcome analysis, strategy effectiveness tracking, predictive error detection, and bounded weight adjustment.
+- **Meta-Analysis:** 4 memory-aware meta-agents with historical context enrichment, continuity scoring, redundancy suppression, alignment classification, quality feedback loop, and advisory calibration.
+- **Guidance & Copilot:** ✅ Active — PageGuidanceShell, ContextualCopilotDrawer, GovernanceMentorDrawer, 4 copilot submodes, centralized content registries.
+- **Engineering Memory:** Full stack operational — foundation, retrieval surfaces, summaries, and memory-aware reasoning.
+- **Multi-Agent Coordination:** ✅ Active — role arbitration, debate & resolution, shared working memory, bounded swarm execution.
+- **Ecosystem:** ✅ Active — capability packaging, trust/entitlements, partner marketplace, outcome-aware marketplace.
+- **Distributed Runtime:** ✅ Active — job control, cross-region recovery, tenant-isolated scale, resilient orchestration.
+- **Architecture Research:** ✅ Active — hypothesis engine, simulated evolution, cross-tenant synthesis, governed promotion.
+- **Strategic Coordination:** ✅ Active — multi-horizon alignment, tradeoff arbitration, mission integrity, civilizational continuity simulation.
+- **Reflexive Governance:** ✅ Active — evolution proposal governance, mutation control, self-revision audit, kernel integrity guard.
+- **Canonical Knowledge:** ✅ Active — canon stewardship, pattern library, failure memory, external knowledge intake.
+- **Runtime Sovereignty:** ✅ Active — runtime feedback mesh, tenant doctrine, outcome-based autonomy, compounding advantage.
+- **Runtime Proof & Adaptive Governance:** ✅ Active — execution validation harness, autonomy stabilization, tenant-adaptive regression, cold-start explainability.
+- **Learning Canonization:** ✅ Active — learning extraction, canon promotion pipeline, cross-tenant pattern distillation, canon reuse injection.
+- **Adaptive Coordination:** ✅ Active — operational posture engine, attention allocation, adaptive resource routing, operational rhythm & recovery cycles.
+- **Adaptive Operational Organism:** ✅ Active — multi-loop governance orchestrator, systemic health model, organism memory layers, organism console.
+- **Commercial:** Product plans, billing, workspace isolation, and usage enforcement active.
+- **Governance:** Full audit trail, stage permissions, SLA enforcement, and review workflows across recommendations and artifacts.
+
+---
+
+## Next Phase
+
+### Future Horizons
+
+### Completed Arc (Blocks AB–AD, Sprints 127–138)
+
+| Block | Sprints | Name                          | Status      |
+| ----- | ------- | ----------------------------- | ----------- |
+| AB    | 127–130 | Learning Canonization         | ✅ Complete |
+| AC    | 131–134 | Adaptive Coordination         | ✅ Complete |
+| AD    | 135–138 | Adaptive Operational Organism | ✅ Complete |
+
+### Level 11 — Adaptive Runtime Intelligence (Future Horizon)
+
+- Autonomous execution parameter reconfiguration
+- Runtime self-healing beyond manual intervention
+- Controlled experimentation with governance safeguards
+- This level is a vision, not a current priority
+
+---
+
+## Success Metrics
+
+| Metric                                         | Target              |
+| ---------------------------------------------- | ------------------- |
+| Pipeline success rate (no manual intervention) | > 80%               |
+| Build OK rate                                  | > 90%               |
+| Deploy success rate                            | > 85%               |
+| Average retries per initiative                 | < 2                 |
+| Automatic repair success rate                  | > 70%               |
+| Cost per initiative                            | Tracked & declining |
+| Time from idea to validated repository         | < 15 min            |
+| Time from idea to deployment                   | < 20 min            |
+| Memory entries captured per initiative         | Tracked             |
+| Memory retrieval frequency                     | Tracked             |
+
+---
+
+## Active Kernel Components
+
+| Component                                          | Status |
+| -------------------------------------------------- | ------ |
+| 32-stage deterministic pipeline                    | ✅     |
+| Project Brain (knowledge graph + semantic search)  | ✅     |
+| DAG Execution Engine (Kahn's algorithm, 6 workers) | ✅     |
+| AI Efficiency Layer (compressor + cache + router)  | ✅     |
+| Smart Context Window (~60-80% token reduction)     | ✅     |
+| Runtime Validation (tsc + vite via CI)             | ✅     |
+| Autonomous Build Repair + Fix Orchestrator         | ✅     |
+| Evidence-Oriented Repair Loop                      | ✅     |
+| Error Pattern Library                              | ✅     |
+| Preventive Engineering Layer                       | ✅     |
+| Adaptive Repair Routing                            | ✅     |
+| Learning Foundation                                | ✅     |
+| Learning Agents v1                                 | ✅     |
+| Meta-Agents v1.2 (4 memory-aware agents)           | ✅     |
+| Controlled Proposal Generation                     | ✅     |
+| Engineering Memory Foundation                      | ✅     |
+| Governance (gates, SLAs, audit logs)               | ✅     |
+| Observability + Cost Tracking                      | ✅     |
+| Commercial Readiness (plans, billing, usage)       | ✅     |
+| Proposal Quality Feedback Loop                     | ✅     |
+| Advisory Calibration Layer                         | ✅     |
+| Strategic Coordination (Block W)                   | ✅     |
+| Reflexive Governance (Block X)                     | ✅     |
+| Canonical Knowledge (Block Y)                      | ✅     |
+| Runtime Sovereignty (Block Z)                      | ✅     |
+| Runtime Proof & Adaptive Governance (Block AA)     | ✅     |
+| Learning Canonization (Block AB)                   | ✅     |
+| Adaptive Coordination (Block AC)                   | ✅     |
+| Adaptive Operational Organism (Block AD)           | ✅     |
+
+---
+
+## Technology Stack
+
+| Layer     | Technology                                                                                                             |
+| --------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Frontend  | Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui                                                                |
+| State     | TanStack React Query + React Context                                                                                   |
+| Backend   | Supabase (PostgreSQL, Auth, Edge Functions, RLS)                                                                       |
+| AI Engine | DeepSeek (economy) + OpenAI GPT-5-mini (high-confidence) + GPT-5.4 (premium) + Lovable AI Gateway (fallback transport) |
+| Git       | GitHub API v3 (Tree API for atomic commits)                                                                            |
+| Deploy    | Vercel/Netlify auto-generated configs                                                                                  |
+
+---
+
+## Product Positioning
+
+**Present AxionOS as:**
+
+- An autonomous software engineering platform
+- A governed SaaS / MVP generator
+- A system that transforms ideas into validated repositories
+- A meta-aware platform that analyzes its own performance and generates improvement proposals
+- A system accumulating institutional engineering experience
+- A strategically coordinated platform with multi-horizon alignment
+
+**Do NOT present as:**
+
+- A startup factory
+- A global marketplace of agents
+- An abstract agent operating system
+- An AGI system
+- A fully autonomous self-modifying system (governance before autonomy)
+
+> Pipeline contracts: [docs/PIPELINE_CONTRACTS.md](../docs/PIPELINE_CONTRACTS.md) | Agents: [docs/AGENTS.md](../docs/AGENTS.md) | Roadmap: [docs/ROADMAP.md](../docs/ROADMAP.md)
