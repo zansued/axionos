@@ -419,9 +419,20 @@ serve(async (req) => {
       return jsonResponse({ success: true, skipped: true, message: "No build log to analyze" });
     }
 
-    // ── 2. Classify errors ──
+    // ── 2. Classify errors + security matcher scan ──
     await pipelineLog(ctx, "build_repair_classify", "📋 Classifying build errors...");
     const errors = classifyBuildErrors(effectiveLog);
+
+    // Security matcher: scan build log for secrets, auth failures, cross-tenant leaks
+    const repairMatchInput: MatchInput = { status_code: 200, body: effectiveLog.slice(0, 15000) };
+    const repairSecReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, repairMatchInput);
+    if (!repairSecReport.passed) {
+      const logEntry = buildMatcherLogEntry("autonomous-build-repair", repairSecReport);
+      await pipelineLog(ctx, "security_matcher_flagged",
+        `⚠️ Security matcher flagged build log: ${logEntry.matched_rule_ids.join(", ")}`,
+        logEntry as unknown as Record<string, unknown>);
+    }
+
     await pipelineLog(ctx, "build_repair_errors",
       `Found ${errors.length} errors: ${[...new Set(errors.map(e => e.category))].join(", ")}`,
       { errors: errors.slice(0, 20) });
