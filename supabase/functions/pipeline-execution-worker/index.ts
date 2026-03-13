@@ -18,6 +18,7 @@ import { evaluateFastPathEligibility, type FastPathEligibility } from "../_share
 import { classifyIntegrationSeverity } from "../_shared/integration-severity.ts";
 import { type ExecutionMetrics, type ValidationSignals, type FastPathPolicyRecord, validateSyntax, validateImports, countImports } from "../_shared/execution-metrics-contract.ts";
 import { computeExecutionRiskSignals, type RiskAssessment } from "../_shared/execution-risk-signals.ts";
+import { classifyExecutionRisk, type ExecutionClassification } from "../_shared/execution-risk-classifier.ts";
 
 interface WorkerPayload {
   initiativeId: string;
