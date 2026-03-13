@@ -166,7 +166,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   )
 }`,
       "vite.config.ts": `import { defineConfig } from "vite"
-import react from "@vitejs/plugin-react"
+import react from "@vitejs/plugin-react-swc"
 
 export default defineConfig({
   plugins: [react()],
@@ -203,7 +203,7 @@ export default defineConfig({
           devDependencies: {
             "@types/react": "^18.3.0",
             "@types/react-dom": "^18.3.0",
-            "@vitejs/plugin-react": "^4.3.0",
+            "@vitejs/plugin-react-swc": "^3.11.0",
             typescript: "^5.5.0",
             vite: "^5.4.0",
           },
