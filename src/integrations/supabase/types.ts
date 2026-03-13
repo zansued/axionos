@@ -37544,6 +37544,85 @@ export type Database = {
           },
         ]
       }
+      skill_reviews: {
+        Row: {
+          applicability_score: number | null
+          bundle_id: string | null
+          confidence_assessment: number | null
+          created_at: string | null
+          engineering_skill_id: string | null
+          id: string
+          metadata: Json | null
+          notes: string | null
+          organization_id: string
+          overall_score: number | null
+          reusability_score: number | null
+          review_type: string | null
+          reviewer_id: string
+          specificity_score: number | null
+          updated_at: string | null
+          verdict: string
+        }
+        Insert: {
+          applicability_score?: number | null
+          bundle_id?: string | null
+          confidence_assessment?: number | null
+          created_at?: string | null
+          engineering_skill_id?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          organization_id: string
+          overall_score?: number | null
+          reusability_score?: number | null
+          review_type?: string | null
+          reviewer_id: string
+          specificity_score?: number | null
+          updated_at?: string | null
+          verdict?: string
+        }
+        Update: {
+          applicability_score?: number | null
+          bundle_id?: string | null
+          confidence_assessment?: number | null
+          created_at?: string | null
+          engineering_skill_id?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          organization_id?: string
+          overall_score?: number | null
+          reusability_score?: number | null
+          review_type?: string | null
+          reviewer_id?: string
+          specificity_score?: number | null
+          updated_at?: string | null
+          verdict?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skill_reviews_bundle_id_fkey"
+            columns: ["bundle_id"]
+            isOneToOne: false
+            referencedRelation: "skill_bundles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "skill_reviews_engineering_skill_id_fkey"
+            columns: ["engineering_skill_id"]
+            isOneToOne: false
+            referencedRelation: "engineering_skills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "skill_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       squad_members: {
         Row: {
           agent_id: string
