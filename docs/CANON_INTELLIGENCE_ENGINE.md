@@ -2,7 +2,7 @@
 
 > Architectural reference for the Canon Intelligence Engine and the Agent–Contract relationship model.
 >
-> **Last updated:** 2026-03-10
+> **Last updated:** 2026-03-13
 
 ## Document Authority
 
