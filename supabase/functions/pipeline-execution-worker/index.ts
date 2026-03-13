@@ -17,6 +17,7 @@ import { executeConsolidatedPath, buildStandardPathMetrics, type ConsolidatedMet
 import { evaluateFastPathEligibility, type FastPathEligibility } from "../_shared/execution-fast-path.ts";
 import { classifyIntegrationSeverity } from "../_shared/integration-severity.ts";
 import { type ExecutionMetrics, type ValidationSignals, type FastPathPolicyRecord, validateSyntax, validateImports, countImports } from "../_shared/execution-metrics-contract.ts";
+import { computeExecutionRiskSignals, type RiskAssessment } from "../_shared/execution-risk-signals.ts";
 
 interface WorkerPayload {
   initiativeId: string;
