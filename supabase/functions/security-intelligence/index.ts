@@ -112,6 +112,20 @@ Deno.serve(async (req) => {
         return errorResponse(`Unknown action: ${action}`, 400, req);
     }
 
+    // Security matcher: scan response body for accidental leaks
+    const responseBody = JSON.stringify(result).slice(0, 10000);
+    const secMatchInput: MatchInput = { status_code: 200, body: responseBody };
+    const secReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, secMatchInput);
+    if (!secReport.passed) {
+      const logEntry = buildMatcherLogEntry("security-intelligence", secReport);
+      await logSecurityAudit(supabase, {
+        organization_id, actor_id: user.id,
+        function_name: "security-intelligence",
+        action: "security_matcher_flagged",
+        context: { matched_rule_ids: logEntry.matched_rule_ids, highest_severity: logEntry.highest_severity },
+      });
+    }
+
     return jsonResponse({ data: result }, 200, req);
   } catch (err: any) {
     return errorResponse(err.message || "Internal error", 500, req);
