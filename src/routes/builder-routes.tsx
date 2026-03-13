@@ -3,7 +3,7 @@ import { ProtectedRoute } from "./guards";
 import {
   Initiatives, Stories, Kanban, CodeExplorer, Artifacts, Projects, ProjectDetail,
   Agents, Squads, Journey, Onboarding, Workspace, Delivery, Pipelines, Runtime,
-  OrgSettings, SystemHealthDashboard,
+  OrgSettings, SystemHealthDashboard, Connections,
   AgentDetailPage, AgentPerformancePage, AgentMemoryPage, AgentPoliciesPage,
   PipelineDetailPage, ExecutionHistoryPage, RepairLoopPage, PreflightValidationPage,
   PublishQueuePage, RuntimeStatusPage, ErrorsAlertsPage, ValidationAnalyticsPage,
