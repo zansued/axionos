@@ -238,18 +238,15 @@ export async function callAI(
         const content = data.choices?.[0]?.message?.content || "";
 
         // Store in semantic cache (async, non-blocking)
+        // OX-2 FIX: Reuse embedding from pre-call cache miss instead of calling lookupCache again
         if (!skipEfficiency && stage) {
           try {
-            const cacheResult = await lookupCache(
-              compressedSystem + "\n" + compressedUser,
-              stage,
-              cfg.key,
-              orgId,
-            );
-            if (!cacheResult.hit) {
+            // @ts-ignore — cacheMissData is set via var in cache miss branch above
+            const missData = typeof cacheMissData !== "undefined" ? cacheMissData : null;
+            if (missData && !missData.hit) {
               storeInCache(
-                cacheResult.promptHash,
-                cacheResult.embedding,
+                missData.promptHash,
+                missData.embedding,
                 content,
                 stage,
                 cfg.model,

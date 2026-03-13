@@ -197,7 +197,8 @@ REGRA: Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem expl
 
 ## Arquivos já gerados (para verificar imports):\n${contextStr || "(nenhum)"}
 
-Verifique integração e retorne o código final (corrigido se necessário).`
+Verifique integração e retorne o código final (corrigido se necessário).`,
+      false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
     );
     totalTokens += integrationResult.tokens;
     totalCost += integrationResult.costUsd;
