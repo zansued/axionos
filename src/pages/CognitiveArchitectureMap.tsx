@@ -182,7 +182,7 @@ function useCognitiveMetrics(orgId: string | null) {
           rejected: rejectedOutputs,
         },
         learning: {
-          learningSignals: 0, // Placeholder — wire when table exists
+          learningSignals: (learningSignalsRes.data || []).length,
           canonUpdates: approvedCanon.length,
           skillExtractions: skills.length,
         },
