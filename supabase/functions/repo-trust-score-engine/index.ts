@@ -46,7 +46,7 @@ Deno.serve(async (req: Request) => {
           .limit(batchSize);
 
         if (srcErr) return errorResponse(srcErr.message, 500, req);
-        if (!sources?.length) return jsonResponse({ evaluated: 0, message: "No sources to evaluate" }, req);
+        if (!sources?.length) return jsonResponse({ evaluated: 0, message: "No sources to evaluate" }, 200, req);
 
         // Get existing trust profiles for context
         const { data: existingProfiles } = await supabase
@@ -111,7 +111,7 @@ Deno.serve(async (req: Request) => {
         return jsonResponse({
           evaluated: evaluated.length,
           results: evaluated,
-        }, req);
+        }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
@@ -129,7 +129,7 @@ Deno.serve(async (req: Request) => {
           .limit(batchSize);
 
         if (candErr) return errorResponse(candErr.message, 500, req);
-        if (!candidates?.length) return jsonResponse({ weighted: 0 }, req);
+        if (!candidates?.length) return jsonResponse({ weighted: 0 }, 200, req);
 
         // Get all trust scores for this org
         const { data: trustScores } = await supabase
@@ -172,7 +172,7 @@ Deno.serve(async (req: Request) => {
           });
         }
 
-        return jsonResponse({ weighted: weighted.length, results: weighted }, req);
+        return jsonResponse({ weighted: weighted.length, results: weighted }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
@@ -189,7 +189,7 @@ Deno.serve(async (req: Request) => {
           .limit(batchSize);
 
         if (entErr) return errorResponse(entErr.message, 500, req);
-        if (!entries?.length) return jsonResponse({ recalibrated: 0 }, req);
+        if (!entries?.length) return jsonResponse({ recalibrated: 0 }, 200, req);
 
         const { data: trustScores } = await supabase
           .from("repo_trust_scores")
@@ -249,7 +249,7 @@ Deno.serve(async (req: Request) => {
           }
         }
 
-        return jsonResponse({ recalibrated: recalibrated.length, results: recalibrated }, req);
+        return jsonResponse({ recalibrated: recalibrated.length, results: recalibrated }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
@@ -296,7 +296,7 @@ Deno.serve(async (req: Request) => {
           avg_trust_score: trustScores.length
             ? (trustScores.reduce((s: number, t: any) => s + Number(t.trust_score), 0) / trustScores.length).toFixed(3)
             : 0,
-        }, req);
+        }, 200, req);
       }
 
       default:
