@@ -23,58 +23,17 @@
 | Agent OS | [GOVERNANCE.md](GOVERNANCE.md) -- planes, modules, agent types, contracts |
 | Canon Intelligence Engine | [CANON_INTELLIGENCE_ENGINE.md](CANON_INTELLIGENCE_ENGINE.md) -- knowledge layer, Agent-Contract model, canonization workflow |
 ### Definições de Classes (Suas Cores)
-```mermaid
-graph TD
-    %% 1. DEFINIÇÃO DAS CORES
-    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111,stroke-width:2px
-    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111,stroke-width:2px
-    classDef gov fill:#C56CF0,stroke:#6C3483,color:#111,stroke-width:2px
-    classDef intel fill:#00CEC9,stroke:#117A65,color:#111,stroke-width:2px
-    classDef runtime fill:#FD79A8,stroke:#AD1457,color:#111,stroke-width:2px
-    classDef data fill:#55EFC4,stroke:#117A65,color:#111,stroke-width:2px
-    classDef external fill:#B2BEC3,stroke:#636E72,color:#111,stroke-width:2px
-    classDef strategy fill:#D6A2E8,stroke:#7D3C98,color:#111,stroke-width:2px
-    classDef reflex fill:#FF7675,stroke:#922B21,color:#111,stroke-width:2px
-    classDef canon fill:#6C5CE7,stroke:#2E1A8A,color:#fff,stroke-width:2px
-
-    %% 2. ESTRUTURA DOS NÓS
-    subgraph "System Architecture Functions"
-        direction TB
-        L1[Human / operator interaction]
-        L2[Core system / platform structure]
-        L3[Governance / policy / control]
-        L4[Intelligence / analysis / cognition]
-        L5[Runtime / execution / repair loops]
-        L6[Data / memory / persistence]
-        L7[External systems / providers / connectors]
-        L8[Strategic coordination layers]
-        L9[Reflexive governance / self-regulation]
-        L10[Canonical knowledge / implementation intelligence]
-    end
-
-    %% 3. APLICAÇÃO DAS CLASSES
-    class L1 human
-    class L2 core
-    class L3 gov
-    class L4 intel
-    class L5 runtime
-    class L6 data
-    class L7 external
-    class L8 strategy
-    class L9 reflex
-    class L10 canon
-
-    %% 4. CONEXÕES INVISÍVEIS (Para manter a ordem vertical)
-    L1 ~~~ L2
-    L2 ~~~ L3
-    L3 ~~~ L4
-    L4 ~~~ L5
-    L5 ~~~ L6
-    L6 ~~~ L7
-    L7 ~~~ L8
-    L8 ~~~ L9
-    L9 ~~~ L10
-```
+Function,Color Fill (HEX)
+Human Interaction,
+Core System,
+Governance,
+Intelligence,
+Runtime,
+Data / Memory,
+External Systems,
+Strategic Layers,
+Reflexive Gov,
+Canonical,
 
 ## 1. System Context
 
