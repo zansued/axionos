@@ -13,6 +13,7 @@
  */
 
 import { callAI, type AIResult } from "./ai-client.ts";
+import { classifyIntegrationSeverity, type IntegrationSeverity } from "./integration-severity.ts";
 
 export interface ConsolidatedMetrics {
   /** Which path was used */
@@ -25,8 +26,12 @@ export interface ConsolidatedMetrics {
   totalTokens: number;
   /** Total cost */
   totalCostUsd: number;
-  /** Whether integration agent made changes */
+  /** Whether integration agent made changes (legacy) */
   integrationModified: boolean;
+  /** OX-6: Severity classification */
+  integrationSeverity: IntegrationSeverity;
+  /** OX-6: Edit ratio (0-1) */
+  integrationEditRatio: number;
   /** Output length in chars */
   outputLengthChars: number;
   /** Timestamp for comparison */
