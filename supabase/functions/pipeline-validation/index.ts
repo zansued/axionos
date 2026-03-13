@@ -4,6 +4,7 @@ import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { generateBrainContext, recordError, updateNodeStatus, getNodeByPath, markErrorFixed } from "../_shared/brain-helpers.ts";
+import { evaluateRules, PIPELINE_SECURITY_RULES, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 
 /**
  * Camada 5 — Verificação com Fix Loop Automático (Synchronous, One-at-a-time)
