@@ -1,4 +1,4 @@
-﻿import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -40,7 +40,7 @@ function json(data: unknown, status = 200) {
   });
 }
 
-// â”€â”€ Health Evaluation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// -- Health Evaluation --
 
 interface MetricCalc {
   type: string;
@@ -49,7 +49,6 @@ interface MetricCalc {
 }
 
 async function evaluateHealth(supabase: any, orgId: string) {
-  // Gather signals from existing tables
   const [execRes, loopsRes, cyclesRes, routingRes, candidatesRes, rulesRes, prevMetrics] =
     await Promise.all([
       supabase
@@ -97,16 +96,16 @@ async function evaluateHealth(supabase: any, orgId: string) {
   const routing = routingRes.data || [];
   const prev = prevMetrics.data || [];
 
-  // â”€â”€ Compute metrics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // -- Compute metrics --
   const totalOutputs = outputs.length;
   const successOutputs = outputs.filter(
     (o: any) => o.status === "approved" || o.status === "published"
   ).length;
 
-  // 1. Resilience â€” execution success rate
+  // 1. Resilience - execution success rate
   const resilience = totalOutputs > 0 ? successOutputs / totalOutputs : 0.8;
 
-  // 2. Coherence â€” loop health average
+  // 2. Coherence - loop health average
   const loopHealthValues = loops.map((l: any) => {
     const h = l.loop_health;
     if (h === "healthy") return 1;
@@ -120,19 +119,15 @@ async function evaluateHealth(supabase: any, orgId: string) {
         loopHealthValues.length
       : 0.7;
 
-  
-  // 3. Learning velocity â€” based on cycle activity + real knowledge distillation
+  // 3. Learning velocity - based on cycle activity + real knowledge distillation
   const recentCycles = cycles.filter(
     (c: any) => c.cycle_type === "exploration_window"
   ).length;
   const recentCandidates = (candidatesRes.data || []).length;
   const recentRules = (rulesRes.data || []).length;
-  
-  // Base 0.3 + cycles (up to 0.2) + candidates (up to 0.3) + rules (up to 0.2)
   const learningVelocity = Math.min(1, 0.3 + (recentCycles * 0.1) + (recentCandidates * 0.05) + (recentRules * 0.1));
 
-
-  // 4. Governance integrity â€” based on routing profile discipline
+  // 4. Governance integrity - based on routing profile discipline
   const governanceIntegrity =
     routing.length > 0
       ? Math.min(
@@ -146,7 +141,7 @@ async function evaluateHealth(supabase: any, orgId: string) {
         )
       : 0.7;
 
-  // 5. Operator trust â€” stable posture signals
+  // 5. Operator trust - stable posture signals
   const stableLoops = loops.filter(
     (l: any) => l.loop_status === "active" && l.loop_health === "healthy"
   ).length;
@@ -155,14 +150,47 @@ async function evaluateHealth(supabase: any, orgId: string) {
     loops.length > 0 ? stableLoops / loops.length + 0.2 : 0.6
   );
 
-  // 6. Compounding strength â€” improvement over previous metrics
-  const prevScores = prev
-    .filter((m: any) => m.metric_type === "resilience")
-    .map((m: any) => Number(m.metric_value));
-  const compoundingStrength =
-    prevScores.length >= 2 && prevScores[0] >= prevScores[1]
-      ? Math.min(1, 0.6 + (prevScores[0] - prevScores[1]))
-      : 0.5;
+  // 6. Compounding strength - multi-dimensional system improvement
+  // Measures whether the system is getting better, more stable, or more governed over time
+  const compoundingDimensions = [
+    { type: "resilience", weight: 0.25 },
+    { type: "coherence", weight: 0.25 },
+    { type: "governance_integrity", weight: 0.20 },
+    { type: "operator_trust", weight: 0.20 },
+    { type: "learning_velocity", weight: 0.10 },
+  ];
+
+  let compoundingStrength = 0.5; // neutral baseline when no history
+  if (prev.length >= 6) {
+    let weightedImprovement = 0;
+    let totalWeight = 0;
+    let stableDimensions = 0;
+
+    for (const dim of compoundingDimensions) {
+      const history = prev
+        .filter((m: any) => m.metric_type === dim.type)
+        .map((m: any) => Number(m.metric_value));
+
+      if (history.length >= 2) {
+        const delta = history[0] - history[1];
+        // Reward improvement, penalize decline, slightly reward stability
+        const dimScore = delta > 0.01 ? 0.8 + Math.min(0.2, delta)
+                       : delta < -0.01 ? Math.max(0.2, 0.5 + delta)
+                       : 0.65; // stable = modest positive signal
+        weightedImprovement += dimScore * dim.weight;
+        totalWeight += dim.weight;
+        if (Math.abs(delta) <= 0.01) stableDimensions++;
+      }
+    }
+
+    if (totalWeight > 0) {
+      compoundingStrength = weightedImprovement / totalWeight;
+      // Bonus for sustained stability across many dimensions
+      if (stableDimensions >= 3) {
+        compoundingStrength = Math.min(1, compoundingStrength + 0.05);
+      }
+    }
+  }
 
   const metrics: MetricCalc[] = [
     {
@@ -235,7 +263,6 @@ async function getMetrics(supabase: any, orgId: string) {
     .order("evaluated_at", { ascending: false })
     .limit(30);
 
-  // Group by latest per type
   const latest: Record<string, any> = {};
   for (const m of data || []) {
     if (!latest[m.metric_type]) latest[m.metric_type] = m;
@@ -265,7 +292,6 @@ async function getTrend(supabase: any, orgId: string) {
     .order("evaluated_at", { ascending: false })
     .limit(100);
 
-  // Group by type with history
   const byType: Record<string, any[]> = {};
   for (const m of data || []) {
     if (!byType[m.metric_type]) byType[m.metric_type] = [];
@@ -275,7 +301,7 @@ async function getTrend(supabase: any, orgId: string) {
   return { trend_data: byType };
 }
 
-// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// -- Helpers --
 
 function round(n: number) {
   return Math.round(n * 1000) / 1000;
@@ -301,4 +327,3 @@ function gradeFromScore(score: number): string {
   if (score >= 0.4) return "D";
   return "F";
 }
-
