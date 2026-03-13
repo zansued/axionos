@@ -175,7 +175,13 @@ export function evaluateRule(rule: ValidationRule, input: MatchInput): MatchResu
 
 const SEVERITY_ORDER: Record<MatchSeverity, number> = { info: 0, low: 1, medium: 2, high: 3, critical: 4 };
 
-export function evaluateRules(rules: ValidationRule[], input: MatchInput): ValidationReport {
+/**
+ * Evaluate security matcher rules against input.
+ * Renamed from evaluateRules to avoid collision with prevention-evaluator.ts
+ * which has its own evaluateRules(ActiveRule[], PipelineRuleContext) for
+ * pipeline guardrails (different domain, different signature).
+ */
+export function evaluateSecurityRules(rules: ValidationRule[], input: MatchInput): ValidationReport {
   const results = rules.map(r => evaluateRule(r, input));
   const matchedResults = results.filter(r => r.matched);
   
@@ -196,6 +202,36 @@ export function evaluateRules(rules: ValidationRule[], input: MatchInput): Valid
     highest_severity: highest,
     passed,
     evaluated_at: new Date().toISOString(),
+  };
+}
+
+/** @deprecated Use evaluateSecurityRules instead. Kept for backward compat during migration. */
+export const evaluateRules = evaluateSecurityRules;
+
+// ══════════════════════════════════════════════════
+//  STRUCTURED OBSERVABILITY HELPER
+// ══════════════════════════════════════════════════
+
+export interface MatcherLogEntry {
+  function_name: string;
+  report: ValidationReport;
+  matched_rule_ids: string[];
+  highest_severity: MatchSeverity | null;
+  evidence_summary: string[];
+}
+
+/**
+ * Produce a structured log entry from a matcher report.
+ * Use with pipelineLog or audit logging for consistent observability.
+ */
+export function buildMatcherLogEntry(functionName: string, report: ValidationReport): MatcherLogEntry {
+  const matchedRules = report.results.filter(r => r.matched);
+  return {
+    function_name: functionName,
+    report,
+    matched_rule_ids: matchedRules.map(r => r.rule_id),
+    highest_severity: report.highest_severity,
+    evidence_summary: matchedRules.flatMap(r => r.evidence).slice(0, 10),
   };
 }
 
