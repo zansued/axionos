@@ -13,6 +13,7 @@ import { updateBrainEdgesFromImports } from "../_shared/dependency-scheduler.ts"
 import { simpleHash } from "../_shared/incremental-engine.ts";
 import { embedBrainNode } from "../_shared/embedding-helpers.ts";
 import type { PipelineContext } from "../_shared/pipeline-helpers.ts";
+import { executeConsolidatedPath, buildStandardPathMetrics, type ConsolidatedMetrics } from "../_shared/consolidated-worker-prototype.ts";
 
 interface WorkerPayload {
   initiativeId: string;
