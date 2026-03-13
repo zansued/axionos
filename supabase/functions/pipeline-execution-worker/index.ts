@@ -97,7 +97,7 @@ serve(async (req) => {
     const language = langMap[ext] || "TypeScript";
     const isBackend = ["schema", "migration", "edge_function", "seed", "supabase_client", "auth_config"].includes(payload.fileType || "");
 
-    // Brain context
+    // Brain context — non-blocking, don't fail the worker if it errors
     let brainBlock = "";
     try { brainBlock = await generateBrainContext(ctx); } catch {}
     if (brainBlock) brainBlock = `\n\n${brainBlock}`;

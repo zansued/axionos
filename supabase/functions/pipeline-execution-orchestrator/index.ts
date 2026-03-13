@@ -35,7 +35,8 @@ serve(async (req) => {
     updateFields.approved_at_planning = new Date().toISOString();
   }
   await updateInitiative(ctx, updateFields);
-  await pipelineLog(ctx, "orchestrator_start", "Orchestrator iniciado — Agent Swarm + DAG Scheduler");
+  // Non-blocking — orchestrator start log
+  pipelineLog(ctx, "orchestrator_start", "Orchestrator iniciado — Agent Swarm + DAG Scheduler").catch(() => {});
 
   try {
     // ── Fetch stories, squad, connections (same as pipeline-execution) ──

@@ -281,23 +281,16 @@ export async function updateBrainEdgesFromImports(
   const imports = extractImports(codeContent);
   if (imports.length === 0) return;
 
-  // Get the source node
-  const { data: sourceNode } = await ctx.serviceClient
-    .from("project_brain_nodes")
-    .select("id")
-    .eq("initiative_id", ctx.initiativeId)
-    .eq("file_path", filePath)
-    .maybeSingle();
-  
-  if (!sourceNode) return;
-
-  // Resolve import paths relative to the file and find matching brain nodes
+  // Resolve all import paths up front
   const resolvedPaths = imports
     .map(imp => resolveImportPath(filePath, imp))
     .filter(Boolean) as string[];
+  if (resolvedPaths.length === 0) return;
 
+  // Build all candidate paths for batch resolution
+  const allCandidates: string[] = [];
+  const candidatesByTarget = new Map<string, string[]>();
   for (const targetPath of resolvedPaths) {
-    // Try exact match and common extensions
     const candidates = [
       targetPath,
       `${targetPath}.ts`,
@@ -305,38 +298,75 @@ export async function updateBrainEdgesFromImports(
       `${targetPath}/index.ts`,
       `${targetPath}/index.tsx`,
     ];
+    candidatesByTarget.set(targetPath, candidates);
+    allCandidates.push(...candidates);
+  }
 
+  // Single batch query: fetch all brain nodes matching any candidate path + source
+  const allPathsToSearch = [...new Set([filePath, ...allCandidates])];
+  const { data: matchedNodes } = await ctx.serviceClient
+    .from("project_brain_nodes")
+    .select("id, file_path")
+    .eq("initiative_id", ctx.initiativeId)
+    .in("file_path", allPathsToSearch.slice(0, 500));
+
+  const nodeByPath = new Map<string, string>();
+  for (const n of (matchedNodes || [])) {
+    if (n.file_path) nodeByPath.set(n.file_path, n.id);
+  }
+
+  const sourceNodeId = nodeByPath.get(filePath);
+  if (!sourceNodeId) return;
+
+  // Resolve each import to its target node ID (first candidate match wins)
+  const edgesToInsert: Array<{
+    initiative_id: string;
+    organization_id: string;
+    source_node_id: string;
+    target_node_id: string;
+    relation_type: string;
+    metadata: Record<string, unknown>;
+  }> = [];
+
+  for (const targetPath of resolvedPaths) {
+    const candidates = candidatesByTarget.get(targetPath) || [];
     for (const candidate of candidates) {
-      const { data: targetNode } = await ctx.serviceClient
-        .from("project_brain_nodes")
-        .select("id")
-        .eq("initiative_id", ctx.initiativeId)
-        .eq("file_path", candidate)
-        .maybeSingle();
-
-      if (targetNode) {
-        // Check if edge already exists
-        const { data: existing } = await ctx.serviceClient
-          .from("project_brain_edges")
-          .select("id")
-          .eq("source_node_id", sourceNode.id)
-          .eq("target_node_id", targetNode.id)
-          .eq("relation_type", "imports")
-          .maybeSingle();
-
-        if (!existing) {
-          await ctx.serviceClient.from("project_brain_edges").insert({
-            initiative_id: ctx.initiativeId,
-            organization_id: ctx.organizationId,
-            source_node_id: sourceNode.id,
-            target_node_id: targetNode.id,
-            relation_type: "imports",
-            metadata: { source: "code_extraction", detected_at: new Date().toISOString() },
-          });
-        }
-        break; // Found match, no need to try other candidates
+      const targetNodeId = nodeByPath.get(candidate);
+      if (targetNodeId && targetNodeId !== sourceNodeId) {
+        edgesToInsert.push({
+          initiative_id: ctx.initiativeId,
+          organization_id: ctx.organizationId,
+          source_node_id: sourceNodeId,
+          target_node_id: targetNodeId,
+          relation_type: "imports",
+          metadata: { source: "code_extraction", detected_at: new Date().toISOString() },
+        });
+        break; // first match wins
       }
     }
+  }
+
+  if (edgesToInsert.length === 0) return;
+
+  // Batch fetch existing edges to avoid duplicates
+  const { data: existingEdges } = await ctx.serviceClient
+    .from("project_brain_edges")
+    .select("source_node_id, target_node_id")
+    .eq("source_node_id", sourceNodeId)
+    .eq("relation_type", "imports")
+    .in("target_node_id", edgesToInsert.map(e => e.target_node_id));
+
+  const existingSet = new Set(
+    (existingEdges || []).map(e => `${e.source_node_id}:${e.target_node_id}`)
+  );
+
+  const newEdges = edgesToInsert.filter(
+    e => !existingSet.has(`${e.source_node_id}:${e.target_node_id}`)
+  );
+
+  // Single batch insert for all new edges
+  if (newEdges.length > 0) {
+    await ctx.serviceClient.from("project_brain_edges").insert(newEdges);
   }
 }
 
