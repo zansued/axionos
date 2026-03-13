@@ -90,15 +90,7 @@ function useCognitiveMetrics(orgId: string | null) {
     queryFn: async (): Promise<LayerMetrics> => {
       if (!orgId) throw new Error("No org");
 
-      const q = (table: string, select: string, filters?: Record<string, any>) => {
-        let query = supabase.from(table).select(select, { count: "exact" }) as any;
-        if (filters) {
-          for (const [k, v] of Object.entries(filters)) {
-            query = query.eq(k, v);
-          }
-        }
-        return query;
-      };
+      const sb = supabase as any;
 
       const [
         canonRes,
@@ -109,15 +101,13 @@ function useCognitiveMetrics(orgId: string | null) {
         outputsRes,
         bundlesRes,
       ] = await Promise.all([
-        q("canon_entries", "id, confidence_score, approval_status", { organization_id: orgId }),
-        q("engineering_skills", "id, lifecycle_status", { organization_id: orgId }),
-        q("skill_capabilities", "id, engineering_skill_id", { organization_id: orgId }),
-        q("agents", "id, status", { organization_id: orgId }),
-        (supabase.from("story_subtasks").select("id, status", { count: "exact" }) as any)
-          .eq("organization_id", orgId)
-          .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
-        q("agent_outputs", "id, status", { organization_id: orgId }),
-        q("skill_bundles", "id", { organization_id: orgId }),
+        sb.from("canon_entries").select("id, confidence_score, approval_status", { count: "exact" }).eq("organization_id", orgId),
+        sb.from("engineering_skills").select("id, lifecycle_status", { count: "exact" }).eq("organization_id", orgId),
+        sb.from("skill_capabilities").select("id, engineering_skill_id", { count: "exact" }).eq("organization_id", orgId),
+        sb.from("agents").select("id, status", { count: "exact" }).eq("organization_id", orgId),
+        sb.from("story_subtasks").select("id, status", { count: "exact" }).eq("organization_id", orgId).gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+        sb.from("agent_outputs").select("id, status", { count: "exact" }).eq("organization_id", orgId),
+        sb.from("skill_bundles").select("id", { count: "exact" }).eq("organization_id", orgId),
       ]);
 
       const canon = canonRes.data || [];
