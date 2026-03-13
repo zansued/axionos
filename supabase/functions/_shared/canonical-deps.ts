@@ -1,5 +1,5 @@
 /**
- * Canonical Dependency Registry â€” AXIONOS
+ * Canonical Dependency Registry — AXIONOS
  *
  * Source of truth for acceptable and preferred versions of the standard stack.
  * Used as offline fallback when the npm registry is unreachable.
@@ -17,7 +17,7 @@ export interface CanonicalDepEntry {
 }
 
 export const CANONICAL_DEPS: Record<string, CanonicalDepEntry> = {
-  // â”€â”€ Runtime dependencies â”€â”€
+  // — Runtime dependencies —
   "react":                        { preferred: "^18.3.1",  minAcceptable: "^18.0.0" },
   "react-dom":                    { preferred: "^18.3.1",  minAcceptable: "^18.0.0" },
   "react-router-dom":             { preferred: "^6.30.0",  minAcceptable: "^6.0.0" },
@@ -36,7 +36,7 @@ export const CANONICAL_DEPS: Record<string, CanonicalDepEntry> = {
   "framer-motion":                { preferred: "^12.5.0",  minAcceptable: "^10.0.0" },
   "recharts":                     { preferred: "^2.15.1",  minAcceptable: "^2.0.0" },
 
-  // â”€â”€ Dev dependencies â”€â”€
+  // — Dev dependencies —
   "vite":                         { preferred: "^5.4.19",  minAcceptable: "^5.0.0",  devOnly: true },
   "@vitejs/plugin-react-swc":     { preferred: "^3.11.0",  minAcceptable: "^3.0.0",  devOnly: true },
   "typescript":                   { preferred: "^5.8.3",   minAcceptable: "^5.0.0",  devOnly: true },
@@ -47,7 +47,7 @@ export const CANONICAL_DEPS: Record<string, CanonicalDepEntry> = {
   "@types/react-dom":             { preferred: "^18.3.7",  minAcceptable: "^18.0.0", devOnly: true },
   "@types/node":                  { preferred: "^22.13.10",minAcceptable: "^20.0.0", devOnly: true },
 
-  // â”€â”€ ESLint / Linting (Pinned to stable v9 due to peer-dep conflicts in v10) â”€â”€
+  // — ESLint / Linting (Pinned to stable v9 due to peer-dep conflicts in v10) —
   "eslint":                       { preferred: "^9.32.0",  minAcceptable: "^9.0.0",  devOnly: true },
   "eslint-plugin-react-hooks":    { preferred: "^5.2.0",   minAcceptable: "^5.0.0",  devOnly: true },
   "eslint-plugin-react-refresh":  { preferred: "^0.4.20",  minAcceptable: "^0.4.0",  devOnly: true },
@@ -58,7 +58,7 @@ export const CANONICAL_DEPS: Record<string, CanonicalDepEntry> = {
 /** Packages that are permanently deprecated/renamed and should never appear */
 export const BLOCKED_PACKAGES = new Set([
   "eslint@10",             // blocked until plugins support v10 (peer-dep ERESOLVE)
-  "react-scripts",         // CRA â€” EOL
+  "react-scripts",         // CRA — EOL
   "create-react-app",      // EOL
   "node-sass",             // deprecated, use sass
   "request",               // deprecated
@@ -66,3 +66,11 @@ export const BLOCKED_PACKAGES = new Set([
   "lodash",                // prefer native ES or lodash-es
   "@vitejs/plugin-react",  // replaced by plugin-react-swc
 ]);
+
+/** Auto-replacement map: blocked package -> canonical replacement */
+export const BLOCKED_REPLACEMENTS: Record<string, { name: string; version: string; dev: boolean }> = {
+  "@vitejs/plugin-react": { name: "@vitejs/plugin-react-swc", version: "^3.11.0", dev: true },
+  "node-sass":            { name: "sass",                     version: "^1.80.0",  dev: true },
+  "moment":               { name: "date-fns",                 version: "^4.1.0",   dev: false },
+  "lodash":               { name: "lodash-es",                version: "^4.17.21", dev: false },
+};
