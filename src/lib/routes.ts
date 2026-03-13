@@ -143,35 +143,35 @@ export const OWNER_DOMAIN_GROUPS: OwnerDomainGroup[] = [
   {
     id: "System Intelligence",
     label: "System Intelligence",
-    subtitle: "Platform health, observability & adoption",
+    subtitle: "Platform awareness and operational signals",
     icon: Activity,
     order: 0,
   },
   {
     id: "Knowledge Command",
     label: "Knowledge Command",
-    subtitle: "Learning systems, patterns & operational intelligence",
+    subtitle: "Learning systems and operational knowledge",
     icon: BookOpen,
     order: 1,
   },
   {
     id: "Security Command",
     label: "Security Command",
-    subtitle: "Defense systems & adversarial monitoring",
+    subtitle: "Adversarial defense and system protection",
     icon: Lock,
     order: 2,
   },
   {
     id: "Delivery & Operations",
     label: "Delivery & Operations",
-    subtitle: "Execution results, governance & acquisition",
+    subtitle: "Execution performance and delivery governance",
     icon: Truck,
     order: 3,
   },
   {
     id: "Agent Architecture",
     label: "Agent Architecture",
-    subtitle: "Agent orchestration & change tracking",
+    subtitle: "Structure and orchestration of autonomous agents",
     icon: Boxes,
     order: 4,
   },
@@ -181,10 +181,11 @@ export const OWNER_DOMAIN_GROUPS: OwnerDomainGroup[] = [
 
 export const OWNER_ROUTES: RouteEntry[] = [
   // ── System Intelligence ──
+  // Order: overview → diagnostics → tools
   {
     path: "/owner/system-intelligence",
-    title: "System Intelligence",
-    description: "AI-powered system insights",
+    title: "Executive Overview",
+    description: "AI-powered system insights & strategic signals",
     icon: Sparkles,
     mode: "owner",
     group: "System Intelligence",
@@ -195,7 +196,7 @@ export const OWNER_ROUTES: RouteEntry[] = [
   {
     path: "/owner/system-health",
     title: "System Health",
-    description: "Platform health & uptime",
+    description: "Platform diagnostics & uptime",
     icon: HeartPulse,
     mode: "owner",
     group: "System Intelligence",
@@ -206,7 +207,7 @@ export const OWNER_ROUTES: RouteEntry[] = [
   {
     path: "/owner/platform-observability",
     title: "Platform Observability",
-    description: "Infrastructure telemetry",
+    description: "Infrastructure telemetry & metrics",
     icon: Activity,
     mode: "owner",
     group: "System Intelligence",
