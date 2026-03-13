@@ -48,7 +48,7 @@
 
   /* ─── Sidebar ─── */
   --sidebar-width: 216px;
-  --sidebar-collapsed-width: 48px;
+  --sidebar-collapsed-width: 64px;
 
   /* ─── Modal / Dialog ─── */
   --modal-overlay: hsl(0 0% 0% / 0.6);
