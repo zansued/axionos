@@ -6,10 +6,7 @@
  *   - breadcrumbs
  *   - page title & description
  *   - route-to-pageKey mapping (guidance)
- *
- * Every route entry carries enough metadata so that the sidebar,
- * breadcrumbs, Topbar, and PageGuidanceShell can all derive their
- * content from one place.
+ *   - i18n translation keys for titles and descriptions
  */
 
 import type { LucideIcon } from "lucide-react";
@@ -20,6 +17,7 @@ import {
   ShieldAlert, ShieldCheck, Crosshair, BarChart3, Swords,
   BookOpen, Lock, Truck, Boxes,
 } from "lucide-react";
+import type { TranslationKey } from "@/contexts/I18nContext";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -28,10 +26,14 @@ export type AppMode = "builder" | "owner";
 export interface RouteEntry {
   /** URL path (must start with /builder/ or /owner/) */
   path: string;
-  /** Display title — used in sidebar, Topbar, breadcrumbs */
+  /** Display title — used in sidebar, Topbar, breadcrumbs (English fallback) */
   title: string;
-  /** Short page description — shown in Topbar subtitle */
+  /** Short page description — shown in Topbar subtitle (English fallback) */
   description: string;
+  /** i18n key for title */
+  titleKey?: TranslationKey;
+  /** i18n key for description */
+  descriptionKey?: TranslationKey;
   /** Lucide icon component */
   icon: LucideIcon;
   /** Which mode this route belongs to */
@@ -55,6 +57,8 @@ export const BUILDER_ROUTES: RouteEntry[] = [
     path: "/builder/dashboard",
     title: "Dashboard",
     description: "Overview & delivery metrics",
+    titleKey: "route.dashboard",
+    descriptionKey: "routeDesc.dashboard",
     icon: LayoutDashboard,
     mode: "builder",
     group: "Core",
@@ -66,6 +70,8 @@ export const BUILDER_ROUTES: RouteEntry[] = [
     path: "/builder/projects",
     title: "Projects",
     description: "Manage initiatives & ideas",
+    titleKey: "route.projects",
+    descriptionKey: "routeDesc.projects",
     icon: FolderKanban,
     mode: "builder",
     group: "Core",
@@ -77,6 +83,8 @@ export const BUILDER_ROUTES: RouteEntry[] = [
     path: "/builder/agents",
     title: "Agents",
     description: "AI agent management",
+    titleKey: "route.agents",
+    descriptionKey: "routeDesc.agents",
     icon: Bot,
     mode: "builder",
     group: "Core",
@@ -88,6 +96,8 @@ export const BUILDER_ROUTES: RouteEntry[] = [
     path: "/builder/pipelines",
     title: "Pipelines",
     description: "Delivery pipeline orchestration",
+    titleKey: "route.pipelines",
+    descriptionKey: "routeDesc.pipelines",
     icon: GitBranch,
     mode: "builder",
     group: "Core",
@@ -99,6 +109,8 @@ export const BUILDER_ROUTES: RouteEntry[] = [
     path: "/builder/runtime",
     title: "Runtime",
     description: "Live runtime monitoring",
+    titleKey: "route.runtime",
+    descriptionKey: "routeDesc.runtime",
     icon: Radio,
     mode: "builder",
     group: "Core",
@@ -110,6 +122,8 @@ export const BUILDER_ROUTES: RouteEntry[] = [
     path: "/builder/execution-observability",
     title: "Execution Observability",
     description: "Pipeline telemetry & performance",
+    titleKey: "route.executionObservability",
+    descriptionKey: "routeDesc.executionObservability",
     icon: Eye,
     mode: "builder",
     group: "Intelligence",
@@ -121,6 +135,8 @@ export const BUILDER_ROUTES: RouteEntry[] = [
     path: "/builder/connections",
     title: "Conexões",
     description: "GitHub, Supabase & integrations",
+    titleKey: "route.connections",
+    descriptionKey: "routeDesc.connections",
     icon: GitBranch,
     mode: "builder",
     group: "System",
@@ -132,6 +148,8 @@ export const BUILDER_ROUTES: RouteEntry[] = [
     path: "/builder/settings",
     title: "Settings",
     description: "Builder workspace settings",
+    titleKey: "route.settings",
+    descriptionKey: "routeDesc.settings",
     icon: Settings,
     mode: "builder",
     group: "System",
@@ -146,6 +164,10 @@ export interface OwnerDomainGroup {
   id: string;
   label: string;
   subtitle: string;
+  /** i18n key for label */
+  labelKey?: TranslationKey;
+  /** i18n key for subtitle */
+  subtitleKey?: TranslationKey;
   icon: LucideIcon;
   order: number;
 }
@@ -155,6 +177,8 @@ export const OWNER_DOMAIN_GROUPS: OwnerDomainGroup[] = [
     id: "Cognitive Architecture",
     label: "Cognitive Architecture",
     subtitle: "Intelligence loop: knowledge → skills → agents → outcomes",
+    labelKey: "domain.cognitiveArchitecture",
+    subtitleKey: "domain.cognitiveArchitectureDesc",
     icon: Brain,
     order: 0,
   },
@@ -162,6 +186,8 @@ export const OWNER_DOMAIN_GROUPS: OwnerDomainGroup[] = [
     id: "System Intelligence",
     label: "System Intelligence",
     subtitle: "Platform awareness and operational signals",
+    labelKey: "domain.systemIntelligence",
+    subtitleKey: "domain.systemIntelligenceDesc",
     icon: Activity,
     order: 1,
   },
@@ -169,6 +195,8 @@ export const OWNER_DOMAIN_GROUPS: OwnerDomainGroup[] = [
     id: "Knowledge Command",
     label: "Knowledge Command",
     subtitle: "Learning systems and operational knowledge",
+    labelKey: "domain.knowledgeCommand",
+    subtitleKey: "domain.knowledgeCommandDesc",
     icon: BookOpen,
     order: 2,
   },
@@ -176,6 +204,8 @@ export const OWNER_DOMAIN_GROUPS: OwnerDomainGroup[] = [
     id: "Security Command",
     label: "Security Command",
     subtitle: "Adversarial defense and system protection",
+    labelKey: "domain.securityCommand",
+    subtitleKey: "domain.securityCommandDesc",
     icon: Lock,
     order: 3,
   },
@@ -183,6 +213,8 @@ export const OWNER_DOMAIN_GROUPS: OwnerDomainGroup[] = [
     id: "Delivery & Operations",
     label: "Delivery & Operations",
     subtitle: "Execution performance and delivery governance",
+    labelKey: "domain.deliveryOps",
+    subtitleKey: "domain.deliveryOpsDesc",
     icon: Truck,
     order: 4,
   },
@@ -190,6 +222,8 @@ export const OWNER_DOMAIN_GROUPS: OwnerDomainGroup[] = [
     id: "Agent Architecture",
     label: "Agent Architecture",
     subtitle: "Structure and orchestration of autonomous agents",
+    labelKey: "domain.agentArchitecture",
+    subtitleKey: "domain.agentArchitectureDesc",
     icon: Boxes,
     order: 5,
   },
@@ -203,6 +237,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/cognitive-architecture-map",
     title: "Cognitive Architecture",
     description: "Living intelligence loop visualization",
+    titleKey: "route.cognitiveArchitecture",
+    descriptionKey: "routeDesc.cognitiveArchitecture",
     icon: Brain,
     mode: "owner",
     group: "Cognitive Architecture",
@@ -212,11 +248,12 @@ export const OWNER_ROUTES: RouteEntry[] = [
   },
 
   // ── System Intelligence ──
-  // Order: overview → diagnostics → tools
   {
     path: "/owner/system-intelligence",
     title: "Executive Overview",
     description: "AI-powered system insights & strategic signals",
+    titleKey: "route.executiveOverview",
+    descriptionKey: "routeDesc.executiveOverview",
     icon: Sparkles,
     mode: "owner",
     group: "System Intelligence",
@@ -228,6 +265,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/system-health",
     title: "System Health",
     description: "Platform diagnostics & uptime",
+    titleKey: "route.systemHealth",
+    descriptionKey: "routeDesc.systemHealth",
     icon: HeartPulse,
     mode: "owner",
     group: "System Intelligence",
@@ -239,6 +278,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/platform-observability",
     title: "Platform Observability",
     description: "Infrastructure telemetry & metrics",
+    titleKey: "route.platformObservability",
+    descriptionKey: "routeDesc.platformObservability",
     icon: Activity,
     mode: "owner",
     group: "System Intelligence",
@@ -250,6 +291,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/adoption",
     title: "Adoption",
     description: "Usage analytics & friction",
+    titleKey: "route.adoption",
+    descriptionKey: "routeDesc.adoption",
     icon: LineChart,
     mode: "owner",
     group: "System Intelligence",
@@ -261,6 +304,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/knowledge-demand",
     title: "Demand Forecast",
     description: "Knowledge demand forecasting & coverage pressure",
+    titleKey: "route.demandForecast",
+    descriptionKey: "routeDesc.demandForecast",
     icon: LineChart,
     mode: "owner",
     group: "System Intelligence",
@@ -274,6 +319,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/pattern-library",
     title: "Pattern Library",
     description: "Reusable architecture patterns",
+    titleKey: "route.patternLibrary",
+    descriptionKey: "routeDesc.patternLibrary",
     icon: Brain,
     mode: "owner",
     group: "Knowledge Command",
@@ -285,6 +332,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/canon-intelligence",
     title: "Canon Intelligence",
     description: "Knowledge base & canon",
+    titleKey: "route.canonIntelligence",
+    descriptionKey: "routeDesc.canonIntelligence",
     icon: Database,
     mode: "owner",
     group: "Knowledge Command",
@@ -296,6 +345,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/knowledge-health",
     title: "Knowledge Health",
     description: "Renewal, revalidation & confidence recovery",
+    titleKey: "route.knowledgeHealth",
+    descriptionKey: "routeDesc.knowledgeHealth",
     icon: HeartPulse,
     mode: "owner",
     group: "Knowledge Command",
@@ -307,6 +358,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/knowledge-portfolio",
     title: "Knowledge Portfolio",
     description: "Portfolio optimization, redundancy & coverage analysis",
+    titleKey: "route.knowledgePortfolio",
+    descriptionKey: "routeDesc.knowledgePortfolio",
     icon: BarChart3,
     mode: "owner",
     group: "Knowledge Command",
@@ -318,6 +371,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/capabilities",
     title: "Capabilities",
     description: "Capability registry & trust",
+    titleKey: "route.capabilities",
+    descriptionKey: "routeDesc.capabilities",
     icon: Fingerprint,
     mode: "owner",
     group: "Knowledge Command",
@@ -330,6 +385,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/canon-poisoning-prevention",
     title: "Poisoning Prevention",
     description: "Detect, quarantine, and review suspicious knowledge",
+    titleKey: "route.poisoningPrevention",
+    descriptionKey: "routeDesc.poisoningPrevention",
     icon: ShieldAlert,
     mode: "owner",
     group: "Security Command",
@@ -341,6 +398,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/security-monitoring",
     title: "Security Monitoring",
     description: "Automated anomaly detection & alerts",
+    titleKey: "route.securityMonitoring",
+    descriptionKey: "routeDesc.securityMonitoring",
     icon: ShieldAlert,
     mode: "owner",
     group: "Security Command",
@@ -352,6 +411,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/security-intelligence",
     title: "Security Intelligence",
     description: "Threat analysis & detection",
+    titleKey: "route.securityIntelligence",
+    descriptionKey: "routeDesc.securityIntelligence",
     icon: Shield,
     mode: "owner",
     group: "Security Command",
@@ -363,6 +424,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/security-war-room",
     title: "Security War Room",
     description: "Active security operations",
+    titleKey: "route.securityWarRoom",
+    descriptionKey: "routeDesc.securityWarRoom",
     icon: ShieldAlert,
     mode: "owner",
     group: "Security Command",
@@ -374,6 +437,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/red-team-simulation",
     title: "Red Team Simulation",
     description: "Attack simulation exercises",
+    titleKey: "route.redTeamSimulation",
+    descriptionKey: "routeDesc.redTeamSimulation",
     icon: Swords,
     mode: "owner",
     group: "Security Command",
@@ -384,6 +449,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/blue-team-defense",
     title: "Blue Team Defense",
     description: "Defensive operations",
+    titleKey: "route.blueTeamDefense",
+    descriptionKey: "routeDesc.blueTeamDefense",
     icon: ShieldCheck,
     mode: "owner",
     group: "Security Command",
@@ -394,6 +461,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/purple-learning",
     title: "Purple Learning",
     description: "Combined red/blue learning",
+    titleKey: "route.purpleLearning",
+    descriptionKey: "routeDesc.purpleLearning",
     icon: Sparkles,
     mode: "owner",
     group: "Security Command",
@@ -406,6 +475,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/delivery-outcomes",
     title: "Delivery Outcomes",
     description: "Outcome measurement & tracking",
+    titleKey: "route.deliveryOutcomes",
+    descriptionKey: "routeDesc.deliveryOutcomes",
     icon: Search,
     mode: "owner",
     group: "Delivery & Operations",
@@ -417,6 +488,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/delivery-governance",
     title: "Delivery Governance",
     description: "Pipeline governance & approvals",
+    titleKey: "route.deliveryGovernance",
+    descriptionKey: "routeDesc.deliveryGovernance",
     icon: Shield,
     mode: "owner",
     group: "Delivery & Operations",
@@ -428,6 +501,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/autonomy-posture",
     title: "Autonomy Posture",
     description: "Autonomy governance controls",
+    titleKey: "route.autonomyPosture",
+    descriptionKey: "routeDesc.autonomyPosture",
     icon: Scale,
     mode: "owner",
     group: "Delivery & Operations",
@@ -439,6 +514,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/calibration",
     title: "Calibration",
     description: "System calibration & tuning",
+    titleKey: "route.calibration",
+    descriptionKey: "routeDesc.calibration",
     icon: Cpu,
     mode: "owner",
     group: "Delivery & Operations",
@@ -449,6 +526,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/knowledge-acquisition",
     title: "Acquisition Planner",
     description: "Strategic knowledge acquisition planning",
+    titleKey: "route.acquisitionPlanner",
+    descriptionKey: "routeDesc.acquisitionPlanner",
     icon: Search,
     mode: "owner",
     group: "Delivery & Operations",
@@ -460,6 +539,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/knowledge-acquisition-execution",
     title: "Acquisition Execution",
     description: "Execute and monitor acquisition jobs",
+    titleKey: "route.acquisitionExecution",
+    descriptionKey: "routeDesc.acquisitionExecution",
     icon: Search,
     mode: "owner",
     group: "Delivery & Operations",
@@ -471,6 +552,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/knowledge-acquisition-roi",
     title: "Acquisition ROI",
     description: "Learning efficiency & return on investment",
+    titleKey: "route.acquisitionRoi",
+    descriptionKey: "routeDesc.acquisitionRoi",
     icon: Search,
     mode: "owner",
     group: "Delivery & Operations",
@@ -484,6 +567,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/agent-swarm",
     title: "Agent Swarm",
     description: "Multi-agent coordination",
+    titleKey: "route.agentSwarm",
+    descriptionKey: "routeDesc.agentSwarm",
     icon: Users,
     mode: "owner",
     group: "Agent Architecture",
@@ -494,6 +579,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/governance-application-tracking",
     title: "Change Tracking",
     description: "Downstream application lifecycle for governance changes",
+    titleKey: "route.changeTracking",
+    descriptionKey: "routeDesc.changeTracking",
     icon: Crosshair,
     mode: "owner",
     group: "Agent Architecture",
@@ -507,6 +594,8 @@ export const OWNER_ROUTES: RouteEntry[] = [
     path: "/owner/settings",
     title: "Settings",
     description: "Platform settings",
+    titleKey: "route.settings",
+    descriptionKey: "routeDesc.platformSettings",
     icon: Settings,
     mode: "owner",
     group: "Settings",
@@ -672,9 +761,10 @@ export type NavItem = {
   title: string;
   url: string;
   icon: LucideIcon;
+  titleKey?: TranslationKey;
 };
 
 /** Convert RouteEntry[] to NavItem[] for sidebar compat */
 export function toNavItems(routes: RouteEntry[]): NavItem[] {
-  return routes.map((r) => ({ title: r.title, url: r.path, icon: r.icon }));
+  return routes.map((r) => ({ title: r.title, url: r.path, icon: r.icon, titleKey: r.titleKey }));
 }
