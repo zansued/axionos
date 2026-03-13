@@ -63,6 +63,7 @@ Deno.serve(async (req) => {
       case "delegate_task": return await delegateTask(supabase, params);
       case "review_delegation": return await reviewDelegation(supabase, params);
       case "create_orchestration_plan": return await createOrchestrationPlan(supabase, params);
+      case "launch_contracted_campaign": return await launchContractedCampaign(supabase, params);
       default: return json({ error: `Unknown action: ${action}` }, 400);
     }
   } catch (e) {
@@ -612,4 +613,186 @@ async function createOrchestrationPlan(sb: any, p: any) {
   });
 
   return json({ plan });
+}
+
+// ══════════════════════════════════════════════════
+// Contracted Campaign — First Real E2E Consumer (IH-3)
+// Creates campaign → registers contracts → builds orchestration plan
+// → delegates first task to executor — all in one atomic flow.
+// ══════════════════════════════════════════════════
+
+async function launchContractedCampaign(sb: any, p: any) {
+  const {
+    organization_id,
+    workspace_id,
+    initiative_id,
+    campaign_name,
+    campaign_description,
+    agent_contracts: rawContracts,
+    first_task,
+  } = p;
+
+  if (!rawContracts?.length || rawContracts.length < 2) {
+    return json({ error: "At least 2 agent_contracts required (one manager + one executor)" }, 400);
+  }
+  if (!first_task?.description) {
+    return json({ error: "first_task.description is required" }, 400);
+  }
+
+  // 1. Validate all contracts
+  const contracts: AgentContract[] = [];
+  for (const raw of rawContracts) {
+    const v = validateAgentContract(raw);
+    if (!v.valid) return json({ error: `Invalid contract for ${raw.agent_id || "unknown"}: ${v.error}` }, 400);
+    contracts.push(v.contract);
+  }
+
+  const manager = contracts.find(c => c.role === "manager" || c.role === "coordinator");
+  const executor = contracts.find(c => c.role === "executor" || c.role === "specialist");
+  if (!manager) return json({ error: "At least one contract must have role 'manager' or 'coordinator'" }, 400);
+  if (!executor) return json({ error: "At least one contract must have role 'executor' or 'specialist'" }, 400);
+
+  // 2. Create campaign
+  const { data: campaign, error: campErr } = await sb
+    .from("swarm_execution_campaigns")
+    .insert({
+      organization_id,
+      workspace_id: workspace_id || null,
+      initiative_id: initiative_id || null,
+      campaign_name: campaign_name || `Contracted Campaign ${Date.now()}`,
+      campaign_description: campaign_description || "",
+      participating_agent_ids: contracts.map(c => c.agent_id),
+      execution_plan: {},
+      bounded_scope: {},
+      checkpoint_schedule: {},
+      escalation_triggers: {},
+      abort_posture: {},
+      rollback_posture: {},
+      risk_posture: first_task.priority === "critical" ? "high" : "medium",
+      max_branches: contracts.length * 2,
+      max_retries: manager.constraints.max_retries,
+      status: "active",
+    })
+    .select()
+    .single();
+  if (campErr) return json({ error: campErr.message }, 400);
+
+  // 3. Register all agent contracts
+  const agentInserts = contracts.map(c => ({
+    campaign_id: campaign.id,
+    organization_id,
+    agent_id: c.agent_id,
+    agent_role: c.role,
+    agent_contract: c,
+  }));
+  await sb.from("swarm_execution_agents").insert(agentInserts);
+
+  // 4. Emit contract registration events
+  for (const c of contracts) {
+    await sb.from("swarm_execution_events").insert({
+      campaign_id: campaign.id,
+      organization_id,
+      agent_id: c.agent_id,
+      event_type: "agent.contract_registered",
+      event_payload: { role: c.role, goal: c.goal, capabilities: c.capabilities },
+    });
+  }
+
+  // 5. Create orchestration plan
+  const plan: OrchestrationPlan = {
+    plan_id: crypto.randomUUID(),
+    campaign_id: campaign.id,
+    orchestration_type: "sequential",
+    phases: [
+      {
+        phase_id: crypto.randomUUID(),
+        phase_label: "Execution Phase",
+        phase_type: "sequential",
+        delegations: [],
+        depends_on_phases: [],
+        gate: { min_score: 70, required_verdicts: ["approved"], allow_partial_pass: false, escalation_on_fail: true },
+      },
+    ],
+    global_constraints: manager.constraints,
+    completion_criteria: {
+      min_phases_completed: 1,
+      min_overall_score: 70,
+      require_all_reviews_passed: true,
+      max_total_cost_usd: manager.constraints.cost_budget_usd * contracts.length,
+    },
+  };
+
+  await sb.from("swarm_execution_campaigns")
+    .update({ execution_plan: plan, updated_at: new Date().toISOString() })
+    .eq("id", campaign.id);
+
+  await sb.from("swarm_execution_events").insert({
+    campaign_id: campaign.id,
+    organization_id,
+    event_type: "orchestration.plan_created",
+    event_payload: { plan_id: plan.plan_id, type: plan.orchestration_type, phases_count: plan.phases.length },
+  });
+
+  // 6. Delegate first task from manager → executor
+  const delegation: TaskDelegation = {
+    delegation_id: crypto.randomUUID(),
+    from_agent_id: manager.agent_id,
+    to_agent_id: executor.agent_id,
+    task_description: first_task.description,
+    task_context: first_task.context || {},
+    expected_output_schema: first_task.expected_output_schema || null,
+    priority: first_task.priority || "medium",
+    status: "pending",
+    constraints: executor.constraints,
+    created_at: new Date().toISOString(),
+    completed_at: null,
+    result: null,
+  };
+
+  const { data: branch, error: brErr } = await sb
+    .from("swarm_execution_branches")
+    .insert({
+      campaign_id: campaign.id,
+      organization_id,
+      branch_label: `delegation-${delegation.delegation_id.slice(0, 8)}`,
+      branch_type: "delegation",
+      assigned_agent_id: executor.agent_id,
+      branch_plan: {
+        delegation,
+        orchestration_type: "delegated",
+        from_role: manager.role,
+        to_role: executor.role,
+      },
+      status: "pending",
+    })
+    .select()
+    .single();
+
+  if (brErr) return json({ error: brErr.message }, 400);
+
+  await sb.from("swarm_execution_events").insert({
+    campaign_id: campaign.id,
+    organization_id,
+    agent_id: manager.agent_id,
+    branch_id: branch.id,
+    event_type: "task.delegated",
+    event_payload: {
+      delegation_id: delegation.delegation_id,
+      to_agent: executor.agent_id,
+      priority: delegation.priority,
+      task: delegation.task_description.slice(0, 200),
+    },
+  });
+
+  return json({
+    campaign_id: campaign.id,
+    plan_id: plan.plan_id,
+    delegation_id: delegation.delegation_id,
+    branch_id: branch.id,
+    manager_agent: manager.agent_id,
+    executor_agent: executor.agent_id,
+    contracts_registered: contracts.length,
+    status: "active",
+    events_emitted: contracts.length + 3, // contract registrations + plan + delegation + campaign
+  });
 }

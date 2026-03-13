@@ -1,0 +1,1 @@
+ALTER TABLE public.swarm_execution_agents ADD COLUMN IF NOT EXISTS agent_contract jsonb DEFAULT '{}'::jsonb;

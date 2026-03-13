@@ -38332,6 +38332,7 @@ export type Database = {
       }
       swarm_execution_agents: {
         Row: {
+          agent_contract: Json | null
           agent_id: string
           agent_role: string
           assigned_branch_ids: string[]
@@ -38343,6 +38344,7 @@ export type Database = {
           status: string
         }
         Insert: {
+          agent_contract?: Json | null
           agent_id?: string
           agent_role?: string
           assigned_branch_ids?: string[]
@@ -38354,6 +38356,7 @@ export type Database = {
           status?: string
         }
         Update: {
+          agent_contract?: Json | null
           agent_id?: string
           agent_role?: string
           assigned_branch_ids?: string[]
