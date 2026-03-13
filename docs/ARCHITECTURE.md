@@ -540,6 +540,8 @@ Execution routing is now **adaptive by risk and context**, not purely static. Th
 | 23 | Self-Improving Architecture Engine | AJ | 172-179 |
 | 24 | Knowledge Provenance & Trust-Weighted Intelligence | AK | 180-181 |
 | 25 | Knowledge Renewal & Revalidation Engine | AL | 182-183 |
+| 26 | Canon Intelligence Hub Restructuring & Skills Layer | AM | 184 |
+| 27 | Adaptive Execution Architecture | AN | 185 |
 
 ---
 
