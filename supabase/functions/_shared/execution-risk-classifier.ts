@@ -16,6 +16,7 @@
 
 import { evaluateFastPathEligibility, type FastPathEligibility } from "./execution-fast-path.ts";
 import { computeExecutionRiskSignals, type RiskAssessment, type ExecutionRiskSignals } from "./execution-risk-signals.ts";
+import { getActiveThresholds } from "./execution-policy-tuner.ts";
 
 // ─── Classifier Contract ─────────────────────────────────────────
 
@@ -62,6 +63,8 @@ export interface ExecutionClassification {
   legacy_fast_path: FastPathEligibility;
   /** The DX-2 risk assessment (for audit) */
   risk_assessment: RiskAssessment;
+  /** DX-4: Policy version that produced this classification */
+  policy_version?: number;
 }
 
 /** Inputs to the classifier */
@@ -78,26 +81,21 @@ export interface ClassifierInput {
   explicitOverride?: boolean;
 }
 
-// ─── Thresholds ──────────────────────────────────────────────────
+// ─── Thresholds (DX-4: now read from adaptive policy) ────────────
 
-const THRESHOLDS = {
-  /** Import density above this → escalate risk */
-  HIGH_IMPORT_DENSITY: 10,
-  /** Dependency fan-out above this → escalate risk */
-  HIGH_FAN_OUT: 8,
-  /** Operational sensitivity above this → escalate risk */
-  HIGH_OPERATIONAL_SENSITIVITY: 0.4,
-  /** Content complexity above this → escalate risk */
-  HIGH_COMPLEXITY: 0.5,
-  /** Composite score above this → high risk tier */
-  COMPOSITE_HIGH: 0.45,
-  /** Composite score above this → medium risk tier */
-  COMPOSITE_MEDIUM: 0.20,
-  /** Context length above this → full context posture */
-  LARGE_CONTEXT: 12_000,
-  /** Context length above this → normal context posture */
-  MEDIUM_CONTEXT: 6_000,
-} as const;
+function getThresholds() {
+  const active = getActiveThresholds();
+  return {
+    HIGH_IMPORT_DENSITY: active.high_import_density ?? 10,
+    HIGH_FAN_OUT: active.high_fan_out ?? 8,
+    HIGH_OPERATIONAL_SENSITIVITY: active.high_operational_sensitivity ?? 0.4,
+    HIGH_COMPLEXITY: active.high_complexity ?? 0.5,
+    COMPOSITE_HIGH: active.composite_high ?? 0.45,
+    COMPOSITE_MEDIUM: active.composite_medium ?? 0.20,
+    LARGE_CONTEXT: active.large_context ?? 12_000,
+    MEDIUM_CONTEXT: 6_000,
+  };
+}
 
 // ─── Classification Logic ────────────────────────────────────────
 
