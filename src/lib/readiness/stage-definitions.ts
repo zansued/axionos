@@ -310,9 +310,10 @@ export const STAGE_DEFINITIONS: StageDefinition[] = [
   {
     stage: "architecture",
     matchStatuses: [
-      "architecture_ready", "architected", "architecture_simulated",
+      "architecting", "architecture_ready", "architected", "architecture_simulated",
       "preventive_validated", "bootstrap_planned", "scaffolded", "foundation_scaffolded",
-      "simulating_modules", "modules_simulated", "analyzing_dependencies", "dependencies_analyzed",
+      "simulating_modules", "modules_simulated", "module_graph_simulated",
+      "analyzing_dependencies", "dependencies_analyzed",
       "bootstrapping_schema", "schema_bootstrapped", "provisioning_db", "db_provisioned",
       "analyzing_domain", "domain_analyzed", "generating_data_model", "data_model_generated",
       "synthesizing_logic", "logic_synthesized", "generating_api", "api_generated",
