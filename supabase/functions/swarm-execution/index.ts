@@ -63,6 +63,7 @@ Deno.serve(async (req) => {
       case "delegate_task": return await delegateTask(supabase, params);
       case "review_delegation": return await reviewDelegation(supabase, params);
       case "create_orchestration_plan": return await createOrchestrationPlan(supabase, params);
+      case "launch_contracted_campaign": return await launchContractedCampaign(supabase, params);
       default: return json({ error: `Unknown action: ${action}` }, 400);
     }
   } catch (e) {
