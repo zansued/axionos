@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { setObservabilityUser } from "@/lib/observability";
 
 interface AuthContextType {
   user: User | null;
@@ -25,6 +26,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      // Enrich observability context
+      setObservabilityUser(session?.user?.id);
     });
     return () => subscription.unsubscribe();
   }, []);

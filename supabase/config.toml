@@ -200,3 +200,6 @@ verify_jwt = false
 
 [functions.execution-harness-run]
 verify_jwt = false
+
+[functions.frontend-errors]
+verify_jwt = false
