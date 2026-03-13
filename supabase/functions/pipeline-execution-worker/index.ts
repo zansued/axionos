@@ -74,18 +74,19 @@ serve(async (req) => {
       organizationId: payload.organizationId,
     };
 
-    const jobId = await createJob(ctx, "execution_worker", {
-      subtask_id: payload.subtaskId,
-      file_path: payload.filePath,
-      wave: payload.waveNum,
-      node_id: payload.nodeId,
-    });
-
-    // Mark subtask in progress
-    await serviceClient.from("story_subtasks").update({
-      status: "in_progress",
-      executed_by_agent_id: payload.developer?.id || null,
-    }).eq("id", payload.subtaskId);
+    // Fire job creation and subtask status update in parallel
+    const [jobId] = await Promise.all([
+      createJob(ctx, "execution_worker", {
+        subtask_id: payload.subtaskId,
+        file_path: payload.filePath,
+        wave: payload.waveNum,
+        node_id: payload.nodeId,
+      }),
+      serviceClient.from("story_subtasks").update({
+        status: "in_progress",
+        executed_by_agent_id: payload.developer?.id || null,
+      }).eq("id", payload.subtaskId),
+    ]);
 
     const effectiveCodeArch = payload.codeArchitect || { id: "", name: "CodeArchitect", role: "code_architect" };
     const effectiveDev = payload.developer || { id: "", name: "Developer", role: "developer" };
@@ -96,7 +97,7 @@ serve(async (req) => {
     const language = langMap[ext] || "TypeScript";
     const isBackend = ["schema", "migration", "edge_function", "seed", "supabase_client", "auth_config"].includes(payload.fileType || "");
 
-    // Brain context
+    // Brain context — non-blocking, don't fail the worker if it errors
     let brainBlock = "";
     try { brainBlock = await generateBrainContext(ctx); } catch {}
     if (brainBlock) brainBlock = `\n\n${brainBlock}`;
@@ -130,12 +131,13 @@ Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
     );
     totalTokens += codeArchResult.tokens;
     totalCost += codeArchResult.costUsd;
-    await recordAgentMessage(ctx, {
+    // Non-blocking agent message recording on hot path
+    recordAgentMessage(ctx, {
       storyId: payload.storyId, subtaskId: payload.subtaskId,
       fromAgent: effectiveCodeArch, toAgent: effectiveDev,
       content: codeArchResult.content, messageType: "handoff",
       iteration: 1, tokens: codeArchResult.tokens, model: codeArchResult.model, stage: "execution",
-    });
+    }).catch(() => {});
 
     // ──── Step 2: DEVELOPER ────
     const backendRules = isBackend ? `\nREGRAS BACKEND:\n- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto\n- edge_function: Deno/TS com CORS headers e auth\n- supabase_client: createClient com import.meta.env` : "";
@@ -160,12 +162,13 @@ REGRAS package.json:
     let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
     totalTokens += devResult.tokens;
     totalCost += devResult.costUsd;
-    await recordAgentMessage(ctx, {
+    // Non-blocking agent message recording on hot path
+    recordAgentMessage(ctx, {
       storyId: payload.storyId, subtaskId: payload.subtaskId,
       fromAgent: effectiveDev, toAgent: effectiveIntegration,
       content: codeContent, messageType: "handoff",
       iteration: 1, tokens: devResult.tokens, model: devResult.model, stage: "execution",
-    });
+    }).catch(() => {});
 
     // ──── Step 3: INTEGRATION AGENT ────
     const integrationResult = await callAI(apiKey,
@@ -199,48 +202,51 @@ Verifique integração e retorne o código final (corrigido se necessário).`
       codeContent = integrationCode;
     }
 
-    await recordAgentMessage(ctx, {
+    // Non-blocking agent message recording on hot path
+    recordAgentMessage(ctx, {
       storyId: payload.storyId, subtaskId: payload.subtaskId,
       fromAgent: effectiveIntegration, toAgent: effectiveDev,
       content: integrationResult.content, messageType: "review",
       iteration: 1, tokens: integrationResult.tokens, model: integrationResult.model, stage: "execution",
-    });
+    }).catch(() => {});
 
     // Override deterministic files
     const deterministicFiles: Record<string, string> = { ...DETERMINISTIC_FILES };
     if (deterministicFiles[payload.filePath]) codeContent = deterministicFiles[payload.filePath];
     if (payload.filePath === "package.json") codeContent = sanitizePackageJson(codeContent);
 
-    // ── Persist subtask output ──
-    await serviceClient.from("story_subtasks").update({
-      output: codeContent, status: "completed", executed_at: new Date().toISOString(),
-    }).eq("id", payload.subtaskId);
-
-    // ── Create artifact ──
-    const { data: artifact } = await serviceClient.from("agent_outputs").insert({
-      organization_id: payload.organizationId,
-      workspace_id: payload.workspaceId,
-      initiative_id: payload.initiativeId,
-      agent_id: effectiveDev.id || null,
-      subtask_id: payload.subtaskId,
-      type: "code", status: "draft",
-      summary: `${payload.filePath} — ${payload.description.slice(0, 150)}`,
-      raw_output: {
-        file_path: payload.filePath, file_type: payload.fileType,
-        language: ext, content: codeContent,
-        chain: ["code_architect", "developer", "integration_agent"],
-        wave: payload.waveNum,
-      },
-      model_used: devResult.model, prompt_used: payload.description,
-      tokens_used: totalTokens, cost_estimate: totalCost,
-    }).select("id").single();
+    // ── Persist subtask output + create artifact in parallel ──
+    const [, artifactResult] = await Promise.all([
+      serviceClient.from("story_subtasks").update({
+        output: codeContent, status: "completed", executed_at: new Date().toISOString(),
+      }).eq("id", payload.subtaskId),
+      serviceClient.from("agent_outputs").insert({
+        organization_id: payload.organizationId,
+        workspace_id: payload.workspaceId,
+        initiative_id: payload.initiativeId,
+        agent_id: effectiveDev.id || null,
+        subtask_id: payload.subtaskId,
+        type: "code", status: "draft",
+        summary: `${payload.filePath} — ${payload.description.slice(0, 150)}`,
+        raw_output: {
+          file_path: payload.filePath, file_type: payload.fileType,
+          language: ext, content: codeContent,
+          chain: ["code_architect", "developer", "integration_agent"],
+          wave: payload.waveNum,
+        },
+        model_used: devResult.model, prompt_used: payload.description,
+        tokens_used: totalTokens, cost_estimate: totalCost,
+      }).select("id").single(),
+    ]);
+    const artifact = artifactResult.data;
 
     if (artifact?.id) {
-      await serviceClient.from("code_artifacts").insert({
+      // Non-blocking — code_artifacts insert is not on critical path
+      serviceClient.from("code_artifacts").insert({
         output_id: artifact.id,
         files_affected: [{ path: payload.filePath, type: payload.fileType, language: ext }],
         build_status: "pending", test_status: "pending",
-      });
+      }).then(() => {}).catch(() => {});
     }
 
     // ── Update Project Brain with content hash + embedding ──

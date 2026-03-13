@@ -35,7 +35,8 @@ serve(async (req) => {
     updateFields.approved_at_planning = new Date().toISOString();
   }
   await updateInitiative(ctx, updateFields);
-  await pipelineLog(ctx, "orchestrator_start", "Orchestrator iniciado — Agent Swarm + DAG Scheduler");
+  // Non-blocking — orchestrator start log
+  pipelineLog(ctx, "orchestrator_start", "Orchestrator iniciado — Agent Swarm + DAG Scheduler").catch(() => {});
 
   try {
     // ── Fetch stories, squad, connections (same as pipeline-execution) ──
@@ -141,10 +142,11 @@ serve(async (req) => {
     let incrementalStats: IncrementalStats = incremental.stats;
 
     if (incremental.stats.cleanFiles > 0) {
-      await pipelineLog(ctx, "incremental_detection",
+      // Non-blocking informational log
+      pipelineLog(ctx, "incremental_detection",
         `Incremental: ${incremental.stats.cleanFiles} clean, ${incremental.stats.dirtyFiles} dirty (${incremental.stats.newFiles} new, ${incremental.stats.hashMismatch} changed, ${incremental.stats.cascadeDirty} cascade). Savings: ~${incremental.stats.savingsPercent}%`,
         incremental.stats
-      );
+      ).catch(() => {});
     }
 
     // Filter to only dirty subtasks for execution
@@ -153,14 +155,23 @@ serve(async (req) => {
       return incremental.dirtySubtaskIds.has(st.id);
     });
 
-    // For clean subtasks, mark them as skipped and load their existing output
-    for (const st of allSubtasks) {
-      if (st.file_path && incremental.cleanFilePaths.has(st.file_path)) {
-        // Load existing output into generatedFiles for context injection
-        const { data: existing } = await serviceClient.from("story_subtasks")
-          .select("output").eq("id", st.id).single();
-        if (existing?.output) {
-          generatedFiles[st.file_path] = existing.output;
+    // For clean subtasks, batch-load their existing outputs in one query
+    const cleanSubtasks = allSubtasks.filter(
+      st => st.file_path && incremental.cleanFilePaths.has(st.file_path)
+    );
+    if (cleanSubtasks.length > 0) {
+      const cleanIds = cleanSubtasks.map(st => st.id);
+      // Batch in chunks of 500 (PostgREST .in() limit)
+      for (let i = 0; i < cleanIds.length; i += 500) {
+        const chunk = cleanIds.slice(i, i + 500);
+        const { data: existingOutputs } = await serviceClient
+          .from("story_subtasks")
+          .select("id, file_path, output")
+          .in("id", chunk);
+        for (const row of (existingOutputs || [])) {
+          if (row.output && row.file_path) {
+            generatedFiles[row.file_path] = row.output;
+          }
         }
       }
     }
@@ -183,12 +194,14 @@ serve(async (req) => {
     const skippedCount = incremental.stats.cleanFiles;
     const retryCount: Record<string, number> = {};
 
-    const updateProgress = async (currentFile?: string, currentAgent?: string, waveNum?: number) => {
-      const current = executedCount + failedCount;
+    // Debounced progress: write at most once every 5 seconds or on wave boundaries
+    let lastProgressWrite = 0;
+    const PROGRESS_DEBOUNCE_MS = 5000;
+    const writeProgress = async (currentFile?: string, currentAgent?: string, waveNum?: number) => {
       await serviceClient.from("initiatives").update({
         execution_progress: {
-          current, total: totalNodes,
-          percent: totalNodes > 0 ? Math.round((current / totalNodes) * 100) : 0,
+          current: executedCount + failedCount, total: totalNodes,
+          percent: totalNodes > 0 ? Math.round(((executedCount + failedCount) / totalNodes) * 100) : 0,
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
           current_file: currentFile, current_agent: currentAgent,
@@ -199,8 +212,14 @@ serve(async (req) => {
           savings_percent: incremental.stats.savingsPercent,
         },
       }).eq("id", ctx.initiativeId);
+      lastProgressWrite = Date.now();
     };
-    await updateProgress();
+    const updateProgress = async (currentFile?: string, currentAgent?: string, waveNum?: number) => {
+      const now = Date.now();
+      if (now - lastProgressWrite < PROGRESS_DEBOUNCE_MS) return; // skip — too recent
+      await writeProgress(currentFile, currentAgent, waveNum);
+    };
+    await writeProgress(); // initial write always fires
 
     // ── Worker dispatcher ──
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -358,10 +377,11 @@ serve(async (req) => {
       }
 
       waveNum++;
-      await pipelineLog(ctx, "swarm_wave_start",
+      // Non-blocking wave log — fire-and-forget
+      pipelineLog(ctx, "swarm_wave_start",
         `Wave ${waveNum}: dispatching ${readyNodes.length} worker(s)`,
         { wave: waveNum, files: readyNodes.map(n => n.filePath) }
-      );
+      ).catch(() => {});
 
       // Execute wave in batches of MAX_WORKERS
       for (let i = 0; i < readyNodes.length; i += MAX_WORKERS) {
@@ -381,10 +401,12 @@ serve(async (req) => {
 
       if (timeBudgetExceeded) break;
 
-      await pipelineLog(ctx, "swarm_wave_complete",
+      // Non-blocking wave complete log + force progress write at wave boundary
+      pipelineLog(ctx, "swarm_wave_complete",
         `Wave ${waveNum} concluída: ${readyNodes.length} worker(s)`,
         { wave: waveNum, executed: executedCount, failed: failedCount }
-      );
+      ).catch(() => {});
+      await writeProgress(undefined, "wave_complete", waveNum);
     }
 
     // ── Non-file subtasks (sequential, only if time allows) ──
