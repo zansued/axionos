@@ -1,0 +1,150 @@
+import { Route } from "react-router-dom";
+import { LegacyRedirect } from "./guards";
+
+export function LegacyRedirects() {
+  return (
+    <>
+      {/* Builder renames */}
+      <Route path="/builder/initiatives" element={<LegacyRedirect to="/builder/projects" />} />
+      <Route path="/builder/delivery" element={<LegacyRedirect to="/builder/pipelines" />} />
+      <Route path="/builder/governance" element={<LegacyRedirect to="/owner/delivery-governance" />} />
+      <Route path="/builder/delivery-governance" element={<LegacyRedirect to="/owner/delivery-governance" />} />
+      <Route path="/builder/governance-overview" element={<LegacyRedirect to="/owner/governance-overview" />} />
+      <Route path="/builder/pending-approvals" element={<LegacyRedirect to="/owner/pending-approvals" />} />
+      <Route path="/builder/policy-controls" element={<LegacyRedirect to="/owner/policy-controls" />} />
+      <Route path="/builder/action-center" element={<LegacyRedirect to="/owner/action-center" />} />
+      <Route path="/builder/system-intelligence" element={<LegacyRedirect to="/owner/system-intelligence" />} />
+      <Route path="/builder/project/:id" element={<LegacyRedirect to="/builder/projects" />} />
+
+      {/* Root-level legacy redirects */}
+      <Route path="/initiatives" element={<LegacyRedirect to="/builder/projects" />} />
+      <Route path="/stories" element={<LegacyRedirect to="/builder/projects" />} />
+      <Route path="/kanban" element={<LegacyRedirect to="/builder/projects" />} />
+      <Route path="/code" element={<LegacyRedirect to="/builder/projects" />} />
+      <Route path="/artifacts" element={<LegacyRedirect to="/builder/projects" />} />
+      <Route path="/projects" element={<LegacyRedirect to="/builder/projects" />} />
+      <Route path="/project/:id" element={<LegacyRedirect to="/builder/projects" />} />
+      <Route path="/agents" element={<LegacyRedirect to="/builder/agents" />} />
+      <Route path="/delivery" element={<LegacyRedirect to="/builder/pipelines" />} />
+      <Route path="/pipelines" element={<LegacyRedirect to="/builder/pipelines" />} />
+      <Route path="/runtime" element={<LegacyRedirect to="/builder/runtime" />} />
+      <Route path="/runtime-status" element={<LegacyRedirect to="/builder/runtime-status" />} />
+      <Route path="/system-health" element={<LegacyRedirect to="/builder/execution-observability" />} />
+      <Route path="/system-intelligence" element={<LegacyRedirect to="/owner/system-intelligence" />} />
+      <Route path="/governance" element={<LegacyRedirect to="/owner/delivery-governance" />} />
+      <Route path="/org" element={<LegacyRedirect to="/builder/settings" />} />
+      <Route path="/settings" element={<LegacyRedirect to="/builder/settings" />} />
+      <Route path="/squads" element={<LegacyRedirect to="/builder/squads" />} />
+      <Route path="/workspace" element={<LegacyRedirect to="/builder/workspace" />} />
+      <Route path="/journey" element={<LegacyRedirect to="/builder/journey" />} />
+      <Route path="/onboarding" element={<LegacyRedirect to="/builder/onboarding" />} />
+      <Route path="/planning" element={<LegacyRedirect to="/builder/projects" />} />
+      <Route path="/pipeline-detail" element={<LegacyRedirect to="/builder/pipeline-detail" />} />
+      <Route path="/execution-history" element={<LegacyRedirect to="/builder/execution-history" />} />
+      <Route path="/repair-loop" element={<LegacyRedirect to="/builder/repair-loop" />} />
+      <Route path="/preflight-validation" element={<LegacyRedirect to="/builder/preflight-validation" />} />
+      <Route path="/publish-queue" element={<LegacyRedirect to="/builder/publish-queue" />} />
+      <Route path="/errors-alerts" element={<LegacyRedirect to="/builder/errors-alerts" />} />
+      <Route path="/validation-analytics" element={<LegacyRedirect to="/builder/validation-analytics" />} />
+      <Route path="/throughput-metrics" element={<LegacyRedirect to="/builder/throughput-metrics" />} />
+      <Route path="/logs-explorer" element={<LegacyRedirect to="/builder/logs-explorer" />} />
+      <Route path="/governance-overview" element={<LegacyRedirect to="/builder/governance-overview" />} />
+      <Route path="/pending-approvals" element={<LegacyRedirect to="/builder/pending-approvals" />} />
+      <Route path="/policy-controls" element={<LegacyRedirect to="/builder/policy-controls" />} />
+      <Route path="/agent-detail" element={<LegacyRedirect to="/builder/agent-detail" />} />
+      <Route path="/agent-performance" element={<LegacyRedirect to="/builder/agent-performance" />} />
+      <Route path="/agent-memory" element={<LegacyRedirect to="/builder/agent-memory" />} />
+      <Route path="/agent-policies" element={<LegacyRedirect to="/builder/agent-policies" />} />
+      <Route path="/modes" element={<LegacyRedirect to="/builder/modes" />} />
+      <Route path="/surface-modes" element={<LegacyRedirect to="/builder/surface-modes" />} />
+      <Route path="/strategy-modes" element={<LegacyRedirect to="/builder/strategy-modes" />} />
+      <Route path="/runtime-modes" element={<LegacyRedirect to="/builder/runtime-modes" />} />
+      <Route path="/user-settings" element={<LegacyRedirect to="/builder/user-settings" />} />
+      <Route path="/roles-access" element={<LegacyRedirect to="/builder/roles-access" />} />
+      <Route path="/api-integrations" element={<LegacyRedirect to="/builder/api-integrations" />} />
+      <Route path="/environment-controls" element={<LegacyRedirect to="/builder/environment-controls" />} />
+
+      {/* Owner legacy redirects */}
+      <Route path="/observability" element={<LegacyRedirect to="/owner/platform-observability" />} />
+      <Route path="/adoption" element={<LegacyRedirect to="/owner/adoption" />} />
+      <Route path="/delivery-outcomes" element={<LegacyRedirect to="/owner/delivery-outcomes" />} />
+      <Route path="/pattern-library" element={<LegacyRedirect to="/owner/pattern-library" />} />
+      <Route path="/canon-intelligence" element={<LegacyRedirect to="/owner/canon-intelligence" />} />
+      <Route path="/security-war-room" element={<LegacyRedirect to="/owner/security-war-room" />} />
+      <Route path="/security-intelligence" element={<LegacyRedirect to="/owner/security-intelligence" />} />
+      <Route path="/red-team-simulation" element={<LegacyRedirect to="/owner/red-team-simulation" />} />
+      <Route path="/blue-team-defense" element={<LegacyRedirect to="/owner/blue-team-defense" />} />
+      <Route path="/purple-learning" element={<LegacyRedirect to="/owner/purple-learning" />} />
+      <Route path="/capability-registry" element={<LegacyRedirect to="/owner/capabilities" />} />
+      <Route path="/autonomy-posture" element={<LegacyRedirect to="/owner/autonomy-posture" />} />
+      <Route path="/swarm-execution" element={<LegacyRedirect to="/owner/agent-swarm" />} />
+      <Route path="/calibration" element={<LegacyRedirect to="/owner/calibration" />} />
+      <Route path="/intelligence-memory" element={<LegacyRedirect to="/owner/intelligence-memory" />} />
+      <Route path="/playbooks" element={<LegacyRedirect to="/owner/playbooks" />} />
+      <Route path="/bounded-operations" element={<LegacyRedirect to="/owner/bounded-operations" />} />
+      <Route path="/decision-engine" element={<LegacyRedirect to="/owner/decision-engine" />} />
+      <Route path="/doctrine-adaptation" element={<LegacyRedirect to="/owner/doctrine-adaptation" />} />
+      <Route path="/institutional-conflicts" element={<LegacyRedirect to="/owner/institutional-conflicts" />} />
+      <Route path="/federated-boundaries" element={<LegacyRedirect to="/owner/federated-boundaries" />} />
+      <Route path="/resilience-continuity" element={<LegacyRedirect to="/owner/resilience-continuity" />} />
+      <Route path="/memory-constitution" element={<LegacyRedirect to="/owner/memory-constitution" />} />
+      <Route path="/decision-rights" element={<LegacyRedirect to="/owner/decision-rights" />} />
+      <Route path="/dependency-sovereignty" element={<LegacyRedirect to="/owner/dependency-sovereignty" />} />
+      <Route path="/strategic-succession" element={<LegacyRedirect to="/owner/strategic-succession" />} />
+      <Route path="/multi-horizon-alignment" element={<LegacyRedirect to="/owner/multi-horizon-alignment" />} />
+      <Route path="/tradeoff-arbitration" element={<LegacyRedirect to="/owner/tradeoff-arbitration" />} />
+      <Route path="/mission-integrity" element={<LegacyRedirect to="/owner/mission-integrity" />} />
+      <Route path="/continuity-simulation" element={<LegacyRedirect to="/owner/continuity-simulation" />} />
+      <Route path="/improvement-ledger" element={<LegacyRedirect to="/owner/improvement-ledger" />} />
+      <Route path="/improvement-candidates" element={<LegacyRedirect to="/owner/improvement-candidates" />} />
+      <Route path="/improvement-benchmarks" element={<LegacyRedirect to="/owner/improvement-benchmarks" />} />
+      <Route path="/capability-governance" element={<LegacyRedirect to="/owner/capability-governance" />} />
+      <Route path="/post-deploy-feedback" element={<LegacyRedirect to="/owner/post-deploy-feedback" />} />
+      <Route path="/extensions" element={<LegacyRedirect to="/owner/extensions" />} />
+      <Route path="/audit" element={<LegacyRedirect to="/owner/audit" />} />
+      <Route path="/connections" element={<LegacyRedirect to="/owner/connections" />} />
+      <Route path="/billing" element={<LegacyRedirect to="/owner/billing" />} />
+      <Route path="/agent-routing" element={<LegacyRedirect to="/owner/agent-routing" />} />
+      <Route path="/agent-debates" element={<LegacyRedirect to="/owner/agent-debates" />} />
+      <Route path="/working-memory" element={<LegacyRedirect to="/owner/working-memory" />} />
+      <Route path="/pilot-marketplace" element={<LegacyRedirect to="/owner/pilot-marketplace" />} />
+      <Route path="/marketplace-outcomes" element={<LegacyRedirect to="/owner/marketplace-outcomes" />} />
+      <Route path="/meta-agents" element={<LegacyRedirect to="/owner/meta-agents" />} />
+      <Route path="/meta-artifacts" element={<LegacyRedirect to="/owner/meta-artifacts" />} />
+      <Route path="/prompt-optimization" element={<LegacyRedirect to="/owner/prompt-optimization" />} />
+      <Route path="/distributed-jobs" element={<LegacyRedirect to="/owner/distributed-jobs" />} />
+      <Route path="/cross-region-recovery" element={<LegacyRedirect to="/owner/cross-region-recovery" />} />
+      <Route path="/tenant-runtime" element={<LegacyRedirect to="/owner/tenant-runtime" />} />
+      <Route path="/large-scale-orchestration" element={<LegacyRedirect to="/owner/large-scale-orchestration" />} />
+      <Route path="/delivery-tuning" element={<LegacyRedirect to="/owner/delivery-tuning" />} />
+      <Route path="/outcome-assurance" element={<LegacyRedirect to="/owner/outcome-assurance" />} />
+      <Route path="/architecture-hypotheses" element={<LegacyRedirect to="/owner/architecture-hypotheses" />} />
+      <Route path="/research-sandbox" element={<LegacyRedirect to="/owner/research-sandbox" />} />
+      <Route path="/research-patterns" element={<LegacyRedirect to="/owner/research-patterns" />} />
+      <Route path="/architecture-promotion" element={<LegacyRedirect to="/owner/architecture-promotion" />} />
+      <Route path="/ai-routing-policy" element={<LegacyRedirect to="/owner/ai-routing-policy" />} />
+      <Route path="/evolution-governance" element={<LegacyRedirect to="/owner/evolution-governance" />} />
+      <Route path="/mutation-control" element={<LegacyRedirect to="/owner/mutation-control" />} />
+      <Route path="/reflective-validation" element={<LegacyRedirect to="/owner/reflective-validation" />} />
+      <Route path="/kernel-integrity" element={<LegacyRedirect to="/owner/kernel-integrity" />} />
+      <Route path="/canon-governance" element={<LegacyRedirect to="/owner/canon-governance" />} />
+      <Route path="/failure-memory" element={<LegacyRedirect to="/owner/failure-memory" />} />
+      <Route path="/external-knowledge" element={<LegacyRedirect to="/owner/external-knowledge" />} />
+      <Route path="/runtime-feedback" element={<LegacyRedirect to="/owner/runtime-feedback" />} />
+      <Route path="/tenant-doctrine" element={<LegacyRedirect to="/owner/tenant-doctrine" />} />
+      <Route path="/compounding-advantage" element={<LegacyRedirect to="/owner/compounding-advantage" />} />
+      <Route path="/runtime-harness" element={<LegacyRedirect to="/owner/runtime-harness" />} />
+      <Route path="/learning-signals" element={<LegacyRedirect to="/owner/learning-signals" />} />
+      <Route path="/canon-evolution" element={<LegacyRedirect to="/owner/canon-evolution" />} />
+      <Route path="/pattern-distillation" element={<LegacyRedirect to="/owner/pattern-distillation" />} />
+      <Route path="/canon-reuse" element={<LegacyRedirect to="/owner/canon-reuse" />} />
+      <Route path="/operational-posture" element={<LegacyRedirect to="/owner/operational-posture" />} />
+      <Route path="/attention-allocation" element={<LegacyRedirect to="/owner/attention-allocation" />} />
+      <Route path="/adaptive-routing" element={<LegacyRedirect to="/owner/adaptive-routing" />} />
+      <Route path="/operational-cycles" element={<LegacyRedirect to="/owner/operational-cycles" />} />
+      <Route path="/operational-loops" element={<LegacyRedirect to="/owner/operational-loops" />} />
+      <Route path="/organism-memory" element={<LegacyRedirect to="/owner/organism-memory" />} />
+      <Route path="/organism-console" element={<LegacyRedirect to="/owner/organism-console" />} />
+    </>
+  );
+}
