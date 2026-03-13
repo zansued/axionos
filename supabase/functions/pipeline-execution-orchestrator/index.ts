@@ -192,12 +192,14 @@ serve(async (req) => {
     const skippedCount = incremental.stats.cleanFiles;
     const retryCount: Record<string, number> = {};
 
-    const updateProgress = async (currentFile?: string, currentAgent?: string, waveNum?: number) => {
-      const current = executedCount + failedCount;
+    // Debounced progress: write at most once every 5 seconds or on wave boundaries
+    let lastProgressWrite = 0;
+    const PROGRESS_DEBOUNCE_MS = 5000;
+    const writeProgress = async (currentFile?: string, currentAgent?: string, waveNum?: number) => {
       await serviceClient.from("initiatives").update({
         execution_progress: {
-          current, total: totalNodes,
-          percent: totalNodes > 0 ? Math.round((current / totalNodes) * 100) : 0,
+          current: executedCount + failedCount, total: totalNodes,
+          percent: totalNodes > 0 ? Math.round(((executedCount + failedCount) / totalNodes) * 100) : 0,
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
           current_file: currentFile, current_agent: currentAgent,
@@ -208,8 +210,14 @@ serve(async (req) => {
           savings_percent: incremental.stats.savingsPercent,
         },
       }).eq("id", ctx.initiativeId);
+      lastProgressWrite = Date.now();
     };
-    await updateProgress();
+    const updateProgress = async (currentFile?: string, currentAgent?: string, waveNum?: number) => {
+      const now = Date.now();
+      if (now - lastProgressWrite < PROGRESS_DEBOUNCE_MS) return; // skip — too recent
+      await writeProgress(currentFile, currentAgent, waveNum);
+    };
+    await writeProgress(); // initial write always fires
 
     // ── Worker dispatcher ──
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
