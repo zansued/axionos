@@ -3,9 +3,10 @@
 > Technical architecture of the autonomous software engineering system.
 >
 > **Last updated:** 2026-03-12
-> **Current state:** Level 15 -- Renewal-to-Governance Decision Bridge. 185 sprints complete. All blocks (Foundation through AN).
+> **Current state:** Level 16 -- Adaptive Execution Architecture. 185 sprints complete. All blocks (Foundation through AN).
 > **Completed blocks:** Foundation through AN (Sprints 1--185)
 > **Sprint details:** See `docs/registry/sprints.yml`
+> **Last updated:** 2026-03-13
 
 ## Document Authority
 
