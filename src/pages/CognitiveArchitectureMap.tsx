@@ -100,6 +100,7 @@ function useCognitiveMetrics(orgId: string | null) {
         subtasksRes,
         outputsRes,
         bundlesRes,
+        learningSignalsRes,
       ] = await Promise.all([
         sb.from("canon_entries").select("id, confidence_score, approval_status", { count: "exact" }).eq("organization_id", orgId),
         sb.from("engineering_skills").select("id, lifecycle_status", { count: "exact" }).eq("organization_id", orgId),
@@ -108,6 +109,7 @@ function useCognitiveMetrics(orgId: string | null) {
         sb.from("story_subtasks").select("id, status", { count: "exact" }).eq("organization_id", orgId).gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
         sb.from("agent_outputs").select("id, status", { count: "exact" }).eq("organization_id", orgId),
         sb.from("skill_bundles").select("id", { count: "exact" }).eq("organization_id", orgId),
+        sb.from("operational_learning_signals").select("id", { count: "exact" }).eq("organization_id", orgId),
       ]);
 
       const canon = canonRes.data || [];
