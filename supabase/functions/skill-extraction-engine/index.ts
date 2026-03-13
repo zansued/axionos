@@ -498,3 +498,343 @@ async function reviewHistory(sc: any, orgId: string, p: any) {
 
   return json({ reviews: data || [], count: data?.length || 0 });
 }
+
+// ══════════════════════════════════════════════════
+// SKILL-CAPABILITY BINDING — SF-4
+// ══════════════════════════════════════════════════
+//
+// Binding model:
+//   - Only approved skills (lifecycle_status = 'approved') can be bound
+//   - capability_key maps to Agent OS capability declarations
+//   - strength (0-1) = skill confidence * review overall_score
+//   - Bindings are stored in skill_capabilities table (created SF-1)
+//
+// Binding strategy (first pass — deterministic):
+//   Domain/practice_type → capability_key mapping using DOMAIN_CAPABILITY_MAP
+//   This is explainable and auditable. AI-driven mapping deferred.
+//
+// Runtime integration path: execute-subtask
+//   When an agent executes a subtask, skill_capabilities matching
+//   the agent's role are queried and injected as context enrichment.
+
+const DOMAIN_CAPABILITY_MAP: Record<string, string[]> = {
+  // stack/domain → capability keys
+  "react": ["code_generation", "frontend_development"],
+  "typescript": ["code_generation", "type_system_design"],
+  "node": ["code_generation", "backend_development"],
+  "api": ["api_design", "backend_development"],
+  "database": ["data_modeling", "migration_authoring"],
+  "sql": ["data_modeling", "migration_authoring"],
+  "testing": ["test_generation", "validation"],
+  "architecture": ["architecture_analysis", "system_design"],
+  "security": ["security_analysis", "validation"],
+  "devops": ["deployment", "infrastructure"],
+  "ci": ["deployment", "infrastructure"],
+  "css": ["frontend_development", "code_generation"],
+  "design": ["frontend_development", "system_design"],
+  "performance": ["optimization", "validation"],
+  "monitoring": ["observability", "validation"],
+  "general": ["general_analysis"],
+};
+
+const PRACTICE_TYPE_CAPABILITY_MAP: Record<string, string[]> = {
+  "architecture_pattern": ["architecture_analysis", "system_design"],
+  "best_practice": ["general_analysis", "validation"],
+  "implementation_pattern": ["code_generation"],
+  "template": ["code_generation", "scaffolding"],
+  "checklist": ["validation", "review"],
+  "anti_pattern": ["validation", "security_analysis"],
+  "validation_rule": ["validation", "test_generation"],
+  "migration_note": ["migration_authoring"],
+  "methodology_guideline": ["general_analysis", "system_design"],
+};
+
+function deriveCapabilityKeys(domain: string, metadata: any): string[] {
+  const keys = new Set<string>();
+
+  // Match by domain
+  const domainLower = (domain || "general").toLowerCase();
+  for (const [pattern, caps] of Object.entries(DOMAIN_CAPABILITY_MAP)) {
+    if (domainLower.includes(pattern)) {
+      caps.forEach(c => keys.add(c));
+    }
+  }
+
+  // Match by practice_type from metadata
+  const practiceType = metadata?.source_practice_type || "";
+  const ptCaps = PRACTICE_TYPE_CAPABILITY_MAP[practiceType];
+  if (ptCaps) ptCaps.forEach(c => keys.add(c));
+
+  // Fallback
+  if (keys.size === 0) keys.add("general_analysis");
+
+  return [...keys];
+}
+
+async function bindCapability(sc: any, orgId: string, userId: string, p: any) {
+  const { skill_id, capability_key, capability_description, strength_override } = p;
+
+  if (!skill_id || !capability_key) return json({ error: "skill_id and capability_key required" }, 400);
+
+  // Verify skill is approved
+  const { data: skill, error: skillErr } = await sc
+    .from("engineering_skills")
+    .select("id, lifecycle_status, confidence, skill_name, domain, metadata")
+    .eq("id", skill_id)
+    .eq("organization_id", orgId)
+    .single();
+
+  if (skillErr || !skill) return json({ error: "Skill not found" }, 404);
+  if (skill.lifecycle_status !== "approved") {
+    return json({ error: `Only approved skills can be bound. Current status: ${skill.lifecycle_status}` }, 400);
+  }
+
+  // Calculate strength from confidence + latest review score
+  const { data: latestReview } = await sc
+    .from("skill_reviews")
+    .select("overall_score")
+    .eq("engineering_skill_id", skill_id)
+    .eq("organization_id", orgId)
+    .eq("verdict", "approved")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const reviewScore = latestReview?.overall_score || 0.5;
+  const strength = strength_override ?? +((skill.confidence || 0.5) * reviewScore).toFixed(3);
+
+  // Check for existing binding
+  const { data: existing } = await sc
+    .from("skill_capabilities")
+    .select("id")
+    .eq("engineering_skill_id", skill_id)
+    .eq("capability_key", capability_key)
+    .eq("organization_id", orgId)
+    .maybeSingle();
+
+  if (existing) {
+    // Update existing binding
+    const { error: updateErr } = await sc
+      .from("skill_capabilities")
+      .update({
+        strength,
+        capability_description: capability_description || null,
+        metadata: { updated_by: userId, updated_at: new Date().toISOString(), basis: "manual_bind_sf4" },
+      })
+      .eq("id", existing.id);
+
+    if (updateErr) return json({ error: updateErr.message }, 400);
+    return json({ binding_id: existing.id, action: "updated", skill_id, capability_key, strength });
+  }
+
+  // Create new binding
+  const { data: binding, error: bindErr } = await sc
+    .from("skill_capabilities")
+    .insert({
+      organization_id: orgId,
+      engineering_skill_id: skill_id,
+      capability_key,
+      capability_description: capability_description || `Skill-derived: ${skill.skill_name}`,
+      strength,
+      metadata: { bound_by: userId, bound_at: new Date().toISOString(), basis: "manual_bind_sf4", source_domain: skill.domain },
+    })
+    .select("id")
+    .single();
+
+  if (bindErr) return json({ error: bindErr.message }, 400);
+
+  return json({ binding_id: binding.id, action: "created", skill_id, capability_key, strength });
+}
+
+async function autoBind(sc: any, orgId: string, userId: string, p: any) {
+  const limit = Math.min(p.limit || 50, 200);
+  const minConfidence = p.min_confidence || 0.4;
+
+  // Fetch approved skills not yet bound
+  const { data: approvedSkills, error: skillErr } = await sc
+    .from("engineering_skills")
+    .select("id, skill_name, domain, confidence, metadata")
+    .eq("organization_id", orgId)
+    .eq("lifecycle_status", "approved")
+    .gte("confidence", minConfidence)
+    .order("confidence", { ascending: false })
+    .limit(limit);
+
+  if (skillErr) return json({ error: skillErr.message }, 400);
+  if (!approvedSkills?.length) return json({ bound: 0, message: "No approved skills eligible for binding" });
+
+  // Fetch existing bindings to avoid duplicates
+  const skillIds = approvedSkills.map((s: any) => s.id);
+  const { data: existingBindings } = await sc
+    .from("skill_capabilities")
+    .select("engineering_skill_id, capability_key")
+    .eq("organization_id", orgId)
+    .in("engineering_skill_id", skillIds);
+
+  const existingSet = new Set((existingBindings || []).map((b: any) => `${b.engineering_skill_id}::${b.capability_key}`));
+
+  const inserts: any[] = [];
+  const bindingMap: Record<string, string[]> = {};
+
+  for (const skill of approvedSkills) {
+    const capKeys = deriveCapabilityKeys(skill.domain, skill.metadata);
+    bindingMap[skill.id] = [];
+
+    for (const capKey of capKeys) {
+      const dedupeKey = `${skill.id}::${capKey}`;
+      if (existingSet.has(dedupeKey)) continue;
+
+      const strength = +((skill.confidence || 0.5) * 0.8).toFixed(3); // conservative auto-bind discount
+
+      inserts.push({
+        organization_id: orgId,
+        engineering_skill_id: skill.id,
+        capability_key: capKey,
+        capability_description: `Auto-derived from ${skill.skill_name}`,
+        strength,
+        metadata: {
+          bound_by: userId,
+          bound_at: new Date().toISOString(),
+          basis: "auto_bind_sf4",
+          source_domain: skill.domain,
+          derivation: "domain_practice_type_map",
+        },
+      });
+      bindingMap[skill.id].push(capKey);
+      existingSet.add(dedupeKey);
+    }
+  }
+
+  if (!inserts.length) return json({ bound: 0, message: "All eligible skills already bound" });
+
+  // Batch insert (chunks of 50)
+  let totalBound = 0;
+  const errors: string[] = [];
+  for (let i = 0; i < inserts.length; i += 50) {
+    const chunk = inserts.slice(i, i + 50);
+    const { error: insertErr } = await sc.from("skill_capabilities").insert(chunk);
+    if (insertErr) {
+      errors.push(insertErr.message);
+    } else {
+      totalBound += chunk.length;
+    }
+  }
+
+  return json({
+    bound: totalBound,
+    skills_processed: approvedSkills.length,
+    skipped_existing: existingBindings?.length || 0,
+    errors: errors.length > 0 ? errors : undefined,
+    binding_strategy: {
+      method: "domain_practice_type_deterministic_map",
+      confidence_discount: 0.8,
+      min_confidence_filter: minConfidence,
+      governed_only: true,
+    },
+    sample_bindings: Object.entries(bindingMap).slice(0, 5).map(([sid, caps]) => ({ skill_id: sid, capability_keys: caps })),
+  });
+}
+
+async function listBindings(sc: any, orgId: string, p: any) {
+  const limit = Math.min(p.limit || 100, 500);
+
+  let query = sc
+    .from("skill_capabilities")
+    .select("id, engineering_skill_id, capability_key, capability_description, strength, metadata, created_at")
+    .eq("organization_id", orgId)
+    .order("strength", { ascending: false })
+    .limit(limit);
+
+  if (p.capability_key) query = query.eq("capability_key", p.capability_key);
+  if (p.skill_id) query = query.eq("engineering_skill_id", p.skill_id);
+
+  const { data, error } = await query;
+  if (error) return json({ error: error.message }, 400);
+
+  // Group by capability_key for summary
+  const byCapability: Record<string, number> = {};
+  for (const b of (data || [])) {
+    byCapability[b.capability_key] = (byCapability[b.capability_key] || 0) + 1;
+  }
+
+  return json({
+    bindings: data || [],
+    count: data?.length || 0,
+    by_capability: byCapability,
+  });
+}
+
+// ══════════════════════════════════════════════════
+// RUNTIME CONTEXT — Skill context for agent use
+// ══════════════════════════════════════════════════
+//
+// This is the query endpoint that runtime paths (e.g. execute-subtask)
+// call to retrieve skill-backed capability context for an agent.
+// Only approved skills with active bindings are returned.
+
+async function skillContextForAgent(sc: any, orgId: string, p: any) {
+  const { agent_role, capability_keys, domain, limit: queryLimit } = p;
+  const limit = Math.min(queryLimit || 20, 50);
+
+  if (!agent_role && !capability_keys?.length && !domain) {
+    return json({ error: "At least one of agent_role, capability_keys, or domain required" }, 400);
+  }
+
+  // Build query for skill_capabilities joined with engineering_skills
+  let query = sc
+    .from("skill_capabilities")
+    .select("id, capability_key, strength, capability_description, engineering_skill_id, metadata, engineering_skills(id, skill_name, description, domain, confidence, lifecycle_status, metadata)")
+    .eq("organization_id", orgId)
+    .order("strength", { ascending: false })
+    .limit(limit);
+
+  if (capability_keys?.length) {
+    query = query.in("capability_key", capability_keys);
+  }
+
+  const { data: bindings, error } = await query;
+  if (error) return json({ error: error.message }, 400);
+
+  // Filter to only approved skills
+  const approved = (bindings || []).filter((b: any) =>
+    b.engineering_skills?.lifecycle_status === "approved"
+  );
+
+  // Optionally filter by domain
+  const filtered = domain
+    ? approved.filter((b: any) => (b.engineering_skills?.domain || "").toLowerCase().includes(domain.toLowerCase()))
+    : approved;
+
+  // Map agent_role to capability_keys for convenience
+  const ROLE_CAPABILITY_MAP: Record<string, string[]> = {
+    architect: ["architecture_analysis", "system_design", "api_design"],
+    dev: ["code_generation", "frontend_development", "backend_development", "migration_authoring"],
+    devops: ["deployment", "infrastructure", "observability"],
+    analyst: ["general_analysis", "data_modeling"],
+    po: ["general_analysis", "system_design"],
+    qa: ["test_generation", "validation", "security_analysis"],
+    reviewer: ["validation", "review", "security_analysis"],
+  };
+
+  let roleFiltered = filtered;
+  if (agent_role && ROLE_CAPABILITY_MAP[agent_role]) {
+    const roleCaps = new Set(ROLE_CAPABILITY_MAP[agent_role]);
+    roleFiltered = filtered.filter((b: any) => roleCaps.has(b.capability_key));
+  }
+
+  return json({
+    skills: roleFiltered.map((b: any) => ({
+      binding_id: b.id,
+      capability_key: b.capability_key,
+      strength: b.strength,
+      skill_id: b.engineering_skill_id,
+      skill_name: b.engineering_skills?.skill_name,
+      skill_description: b.engineering_skills?.description,
+      domain: b.engineering_skills?.domain,
+      confidence: b.engineering_skills?.confidence,
+    })),
+    count: roleFiltered.length,
+    filter: { agent_role, capability_keys, domain },
+    governed: true,
+  });
+}
