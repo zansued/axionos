@@ -175,7 +175,7 @@ The focus shifts to:
 
 ### Current Canon Boundaries
 
-- **Sprints 1–185** = canonical complete (Foundation through Block AN)
+- **Sprints 1–200** = canonical complete (Foundation through Block AP)
 
 ---
 
