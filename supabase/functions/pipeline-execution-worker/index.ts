@@ -14,6 +14,7 @@ import { simpleHash } from "../_shared/incremental-engine.ts";
 import { embedBrainNode } from "../_shared/embedding-helpers.ts";
 import type { PipelineContext } from "../_shared/pipeline-helpers.ts";
 import { executeConsolidatedPath, buildStandardPathMetrics, type ConsolidatedMetrics } from "../_shared/consolidated-worker-prototype.ts";
+import { evaluateFastPathEligibility, type FastPathEligibility } from "../_shared/execution-fast-path.ts";
 
 interface WorkerPayload {
   initiativeId: string;
@@ -124,8 +125,20 @@ ${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}
 
     const workerStartedAt = new Date().toISOString();
 
-    // ──── OX-3: Branch between consolidated (2-call) and standard (3-call) paths ────
-    if (payload.useConsolidatedWorker) {
+    // ──── OX-5: Selective fast-path eligibility ────
+    const fastPathEval: FastPathEligibility = evaluateFastPathEligibility({
+      filePath: payload.filePath,
+      fileType: payload.fileType,
+      contextLength: (contextStr || "").length + (baseContext || "").length,
+      waveNum: payload.waveNum,
+      explicitOverride: payload.useConsolidatedWorker,
+    });
+
+    const useConsolidated = fastPathEval.eligible;
+    console.log(`[OX-5] ${payload.filePath}: fast-path=${useConsolidated}, reason=${fastPathEval.reason}, risk=${fastPathEval.riskTier}`);
+
+    // ──── Branch between consolidated (2-call) and standard (3-call) paths ────
+    if (useConsolidated) {
       // ═══════════════════════════════════════════════════════
       // CONSOLIDATED 2-CALL PATH (prototype — feature-flagged)
       // ═══════════════════════════════════════════════════════
@@ -280,6 +293,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       initiative_id: payload.initiativeId,
       job_type: "execution_worker",
       metadata: {
+        ox5_fast_path: fastPathEval,
         ox3_metrics: workerMetrics,
         file_path: payload.filePath,
         file_type: payload.fileType,
@@ -287,8 +301,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
         node_id: payload.nodeId,
       },
     }).then(() => {}).catch((e: unknown) => {
-      // Non-critical — metrics table may not exist yet, that's fine
-      console.warn("[OX-3] Metrics log failed (non-blocking):", e);
+      console.warn("[OX-5] Metrics log failed (non-blocking):", e);
     });
 
     // ── Persist subtask output + create artifact in parallel ──
