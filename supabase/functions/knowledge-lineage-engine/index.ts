@@ -166,7 +166,7 @@ Deno.serve(async (req: Request) => {
           .order("created_at", { ascending: false })
           .limit(batchSize);
 
-        if (!entries?.length) return jsonResponse({ computed: 0 }, req);
+        if (!entries?.length) return jsonResponse({ computed: 0 }, 200, req);
 
         const [linksRes, trustRes, weightsRes] = await Promise.all([
           supabase.from("knowledge_provenance_links").select("*").eq("organization_id", organization_id),
