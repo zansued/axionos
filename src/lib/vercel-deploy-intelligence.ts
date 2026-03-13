@@ -1,9 +1,21 @@
 /**
  * Vercel Deploy Intelligence — Build Repair & Deployment Contract
  *
+ * @status LEGACY — Sprint IH-4
+ * @reason Deploy error parsing has been unified into DeployErrorParser.tsx
+ *   which prefers adapter-provided suggestions from the backend deploy provider
+ *   contract layer. This file's parseDeployError() and DEPLOY_ERROR_PATTERNS
+ *   are no longer imported anywhere. The VercelBuildOptions / generateVercelJson
+ *   utilities are still potentially useful for deploy config generation but
+ *   have zero current consumers.
+ *
+ * Do not add new consumers of parseDeployError — use the deploy provider
+ * adapter output path instead.
+ *
+ * Original contents:
  * 1. BuildOptions interface aligned with Vercel's contract
  * 2. vercel.json generator for initiatives
- * 3. Pretty Error Parser for deploy logs
+ * 3. Pretty Error Parser for deploy logs (LEGACY — superseded)
  * 4. Framework-to-config mapping with @vercel/backends support
  */
 
