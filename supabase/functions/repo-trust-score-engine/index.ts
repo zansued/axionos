@@ -111,7 +111,7 @@ Deno.serve(async (req: Request) => {
         return jsonResponse({
           evaluated: evaluated.length,
           results: evaluated,
-        }, req);
+        }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
