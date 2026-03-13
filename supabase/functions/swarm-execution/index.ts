@@ -59,6 +59,10 @@ Deno.serve(async (req) => {
       case "swarm_campaign_detail": return await campaignDetail(supabase, params);
       case "explain_swarm_state": return await explainSwarmState(supabase, params);
       case "parallel_wave_schedule": return await parallelWaveSchedule(supabase, params);
+      case "register_agent_contract": return await registerAgentContract(supabase, params);
+      case "delegate_task": return await delegateTask(supabase, params);
+      case "review_delegation": return await reviewDelegation(supabase, params);
+      case "create_orchestration_plan": return await createOrchestrationPlan(supabase, params);
       default: return json({ error: `Unknown action: ${action}` }, 400);
     }
   } catch (e) {
