@@ -360,7 +360,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
 
     if (jobId) await completeJob(ctx, jobId, {
       artifact_id: artifact?.id, file_path: payload.filePath, wave: payload.waveNum,
-    }, { model: devResult.model, costUsd: totalCost, durationMs: devResult.durationMs });
+    }, { model: devModel, costUsd: totalCost, durationMs: workerMetrics.totalAiLatencyMs });
 
     return jsonResponse({
       success: true,
@@ -370,7 +370,8 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       codeContent,
       tokens: totalTokens,
       costUsd: totalCost,
-      model: devResult.model,
+      model: devModel,
+      ox3_metrics: workerMetrics,
     });
 
   } catch (e) {
