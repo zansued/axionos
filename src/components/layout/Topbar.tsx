@@ -56,9 +56,6 @@ export function Topbar({ compact = false }: TopbarProps) {
         )}
       </div>
 
-      <div className="flex items-center gap-2 mr-2 border-r border-border/50 pr-2">
-        <AxionPromptDrawer />
-      </div>
 
       <div className="flex items-center gap-0.5">
         <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
