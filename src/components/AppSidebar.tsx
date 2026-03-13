@@ -330,18 +330,7 @@ export function AppSidebar() {
                             icon: r.icon,
                           }));
 
-                          // Single-item domain groups render as direct nav links
-                          if (domainGroup && navItems.length === 1) {
-                            return (
-                              <SidebarMenu key={group} className="space-y-0.5">
-                                <NavItemRow
-                                  item={navItems[0]}
-                                  collapsed={collapsed}
-                                  surfaceColor={surfaceMeta.colorVar}
-                                />
-                              </SidebarMenu>
-                            );
-                          }
+                          // All domain groups render as collapsible sections
 
                           if (domainGroup) {
                             return (
