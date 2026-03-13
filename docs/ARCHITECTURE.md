@@ -503,6 +503,42 @@ Execution routing is now **adaptive by risk and context**, not purely static. Th
 
 > **Status:** Stable. The classifier, risk signals, and adaptive policy layer are implemented and operational. Future work may add persistent policy storage and automated evidence aggregation once metrics tables mature.
 
+## 8h. Block AO — Self-Improving Canon Pipeline (Sprints 186–192)
+
+This block activates the **autonomous knowledge acquisition and portfolio optimization** pipeline. The system can now proactively identify knowledge gaps, plan acquisition strategies, absorb repositories deeply, forecast knowledge demand, and optimize its canon portfolio for coverage and ROI.
+
+| Sprint | Name |
+|--------|------|
+| 186 | Deep Repo Absorber Engine |
+| 187 | Knowledge Demand Forecast Engine |
+| 188 | Knowledge Acquisition Orchestrator |
+| 189 | Knowledge Portfolio Optimization Engine |
+| 190 | Knowledge Acquisition ROI Engine |
+| 191 | Canon Intelligence Hub UI Consolidation |
+| 192 | Skills Layer Operational Activation |
+
+## 8i. Block AP — Security Hardening & Canon Integrity (Sprints 193–200)
+
+This block implements **comprehensive security hardening** across the entire Edge Function fleet, Canon integrity protection, and cross-tenant inference resistance.
+
+| Sprint | Name |
+|--------|------|
+| 193 | Canon Poisoning Prevention Engine |
+| 194 | Canon Promotion Auth Fix & Pipeline Hardening |
+| 195 | RLS Policy Audit & Tightening |
+| 196 | Auth Hardening Wave 1 — Core Engines |
+| 197 | Auth Hardening Wave 2 — Governance & Intelligence |
+| 198 | Execution Worker Security & Org Validation |
+| 199 | Inference Resistance & Cross-Tenant Protection |
+| 200 | Auth Hardening Wave 3 — Final Coverage |
+
+**Key security improvements:**
+- `authenticateWithRateLimit()` and `resolveAndValidateOrg()` applied across all Edge Functions
+- `notFoundOrForbiddenResponse()` prevents cross-tenant existence inference
+- Canon Poisoning Prevention gate integrated into promotion pipeline
+- RLS policies tightened: public-facing policies scoped to `service_role` or org membership
+- Execution workers derive org context from DB records, not request payloads
+
 ---
 
 ## 9. Capability Tiers (Summary)
