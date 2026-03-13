@@ -215,36 +215,38 @@ Verifique integração e retorne o código final (corrigido se necessário).`
     if (deterministicFiles[payload.filePath]) codeContent = deterministicFiles[payload.filePath];
     if (payload.filePath === "package.json") codeContent = sanitizePackageJson(codeContent);
 
-    // ── Persist subtask output ──
-    await serviceClient.from("story_subtasks").update({
-      output: codeContent, status: "completed", executed_at: new Date().toISOString(),
-    }).eq("id", payload.subtaskId);
-
-    // ── Create artifact ──
-    const { data: artifact } = await serviceClient.from("agent_outputs").insert({
-      organization_id: payload.organizationId,
-      workspace_id: payload.workspaceId,
-      initiative_id: payload.initiativeId,
-      agent_id: effectiveDev.id || null,
-      subtask_id: payload.subtaskId,
-      type: "code", status: "draft",
-      summary: `${payload.filePath} — ${payload.description.slice(0, 150)}`,
-      raw_output: {
-        file_path: payload.filePath, file_type: payload.fileType,
-        language: ext, content: codeContent,
-        chain: ["code_architect", "developer", "integration_agent"],
-        wave: payload.waveNum,
-      },
-      model_used: devResult.model, prompt_used: payload.description,
-      tokens_used: totalTokens, cost_estimate: totalCost,
-    }).select("id").single();
+    // ── Persist subtask output + create artifact in parallel ──
+    const [, artifactResult] = await Promise.all([
+      serviceClient.from("story_subtasks").update({
+        output: codeContent, status: "completed", executed_at: new Date().toISOString(),
+      }).eq("id", payload.subtaskId),
+      serviceClient.from("agent_outputs").insert({
+        organization_id: payload.organizationId,
+        workspace_id: payload.workspaceId,
+        initiative_id: payload.initiativeId,
+        agent_id: effectiveDev.id || null,
+        subtask_id: payload.subtaskId,
+        type: "code", status: "draft",
+        summary: `${payload.filePath} — ${payload.description.slice(0, 150)}`,
+        raw_output: {
+          file_path: payload.filePath, file_type: payload.fileType,
+          language: ext, content: codeContent,
+          chain: ["code_architect", "developer", "integration_agent"],
+          wave: payload.waveNum,
+        },
+        model_used: devResult.model, prompt_used: payload.description,
+        tokens_used: totalTokens, cost_estimate: totalCost,
+      }).select("id").single(),
+    ]);
+    const artifact = artifactResult.data;
 
     if (artifact?.id) {
-      await serviceClient.from("code_artifacts").insert({
+      // Non-blocking — code_artifacts insert is not on critical path
+      serviceClient.from("code_artifacts").insert({
         output_id: artifact.id,
         files_affected: [{ path: payload.filePath, type: payload.fileType, language: ext }],
         build_status: "pending", test_status: "pending",
-      });
+      }).then(() => {}).catch(() => {});
     }
 
     // ── Update Project Brain with content hash + embedding ──
