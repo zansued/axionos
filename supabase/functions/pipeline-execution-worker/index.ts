@@ -161,7 +161,8 @@ REGRAS package.json:
 - Use "lucide-react" (não "lucide")
 - SEMPRE inclua "type": "module"
 - Use @vitejs/plugin-react-swc`,
-      `${baseContext}\n\n## Especificação do Code Architect:\n${codeArchResult.content}`
+      `${baseContext}\n\n## Especificação do Code Architect:\n${codeArchResult.content}`,
+      false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
     );
     let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
     totalTokens += devResult.tokens;
