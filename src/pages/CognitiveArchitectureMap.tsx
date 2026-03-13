@@ -648,7 +648,7 @@ export default function CognitiveArchitectureMap() {
           </div>
 
           {/* Insights panel */}
-          <div className="w-[280px] shrink-0 hidden lg:block">
+          <div className="w-full lg:w-[300px] shrink-0">
             <ArchitectureInsightsPanel metrics={metrics} />
           </div>
         </div>
