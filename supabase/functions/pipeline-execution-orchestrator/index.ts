@@ -399,10 +399,12 @@ serve(async (req) => {
 
       if (timeBudgetExceeded) break;
 
-      await pipelineLog(ctx, "swarm_wave_complete",
+      // Non-blocking wave complete log + force progress write at wave boundary
+      pipelineLog(ctx, "swarm_wave_complete",
         `Wave ${waveNum} concluída: ${readyNodes.length} worker(s)`,
         { wave: waveNum, executed: executedCount, failed: failedCount }
-      );
+      ).catch(() => {});
+      await writeProgress(undefined, "wave_complete", waveNum);
     }
 
     // ── Non-file subtasks (sequential, only if time allows) ──
