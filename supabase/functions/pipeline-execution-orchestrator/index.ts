@@ -153,14 +153,23 @@ serve(async (req) => {
       return incremental.dirtySubtaskIds.has(st.id);
     });
 
-    // For clean subtasks, mark them as skipped and load their existing output
-    for (const st of allSubtasks) {
-      if (st.file_path && incremental.cleanFilePaths.has(st.file_path)) {
-        // Load existing output into generatedFiles for context injection
-        const { data: existing } = await serviceClient.from("story_subtasks")
-          .select("output").eq("id", st.id).single();
-        if (existing?.output) {
-          generatedFiles[st.file_path] = existing.output;
+    // For clean subtasks, batch-load their existing outputs in one query
+    const cleanSubtasks = allSubtasks.filter(
+      st => st.file_path && incremental.cleanFilePaths.has(st.file_path)
+    );
+    if (cleanSubtasks.length > 0) {
+      const cleanIds = cleanSubtasks.map(st => st.id);
+      // Batch in chunks of 500 (PostgREST .in() limit)
+      for (let i = 0; i < cleanIds.length; i += 500) {
+        const chunk = cleanIds.slice(i, i + 500);
+        const { data: existingOutputs } = await serviceClient
+          .from("story_subtasks")
+          .select("id, file_path, output")
+          .in("id", chunk);
+        for (const row of (existingOutputs || [])) {
+          if (row.output && row.file_path) {
+            generatedFiles[row.file_path] = row.output;
+          }
         }
       }
     }
