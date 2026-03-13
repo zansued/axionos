@@ -205,8 +205,7 @@ export function evaluateSecurityRules(rules: ValidationRule[], input: MatchInput
   };
 }
 
-/** @deprecated Use evaluateSecurityRules instead. Kept for backward compat during migration. */
-export const evaluateRules = evaluateSecurityRules;
+// evaluateRules alias removed in IH-4 — all consumers migrated to evaluateSecurityRules
 
 // ══════════════════════════════════════════════════
 //  STRUCTURED OBSERVABILITY HELPER
