@@ -549,9 +549,12 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                 </a>
               </div>
             )}
-            {/* Error details — Pretty Error Parser */}
+            {/* Error details — Unified Deploy Error Parser */}
             {(initiative.deploy_error_code || initiative.deploy_error_message) && stageStatus === "deploy_failed" && (
               <DeployErrorParser
+                errorSuggestions={
+                  jobs.find((j: any) => j.stage === "deploy" && j.outputs?.error_suggestions)?.outputs?.error_suggestions as any[] | undefined
+                }
                 errorCode={initiative.deploy_error_code}
                 errorMessage={initiative.deploy_error_message}
               />

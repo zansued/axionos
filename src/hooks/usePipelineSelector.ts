@@ -1,12 +1,20 @@
 /**
  * Tracked Selector Hook for PipelineContext
  * 
+ * @status DEFERRED — Sprint IH-1
+ * @reason Only 1 consumer (Initiatives.tsx) uses PipelineContext, and it
+ *   requires action functions (runStage, rollbackToStage, getRunningStage)
+ *   that this selector intentionally does not expose (state-only tracking).
+ *   With a single consumer, the re-render optimization provides zero
+ *   measurable benefit. Adopt when PipelineContext gains 3+ consumers
+ *   that only read state without needing actions.
+ * 
  * Uses proxy-based memoization to reduce re-renders by tracking
  * which specific state properties each consumer accesses.
  * Components only re-render when their tracked properties change.
  */
 
-import { useRef, useMemo, useSyncExternalStore, useCallback } from "react";
+import { useRef, useMemo } from "react";
 import { usePipeline, type PipelineEvent } from "@/contexts/PipelineContext";
 
 type AnyObject = Record<string, unknown>;
@@ -33,13 +41,14 @@ function createTrackingProxy<T extends AnyObject>(target: T): { proxy: T; tracke
 }
 
 /**
+ * @deferred Sprint IH-1 — not adopted yet. See file header for rationale.
+ * 
  * Hook: select specific derived state from PipelineContext.
  * Only triggers re-render when the selected value changes (by reference).
  * 
- * Usage:
+ * Usage (future):
  * ```tsx
- * // Only re-renders when `running` changes, not when `events` change
- * const isRunning = usePipelineSelector(ctx => ctx.isRunning("abc-123"));
+ * const isRunning = usePipelineSelector(ctx => !!ctx.running["abc-123"]);
  * ```
  */
 export function usePipelineSelector<R>(selector: (ctx: PipelineSelectorInput) => R): R {
@@ -88,8 +97,8 @@ export interface PipelineSelectorInput {
 }
 
 /**
+ * @deferred Sprint IH-1 — zero consumers.
  * Convenience: select only running state for a specific initiative.
- * Much cheaper than subscribing to full context.
  */
 export function useInitiativeRunning(initiativeId: string): { isRunning: boolean; stage: string | null } {
   const pipeline = usePipeline();
@@ -101,6 +110,7 @@ export function useInitiativeRunning(initiativeId: string): { isRunning: boolean
 }
 
 /**
+ * @deferred Sprint IH-1 — zero consumers.
  * Convenience: select only unread event count.
  */
 export function useUnreadPipelineCount(): number {
