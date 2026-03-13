@@ -85,6 +85,8 @@ export async function callAI(
   skipEfficiency = false,
   abortSignal?: AbortSignal,
 ): Promise<AIResult> {
+  const callStartMs = Date.now();
+
   const routing = routeRequest({
     systemPrompt,
     userPrompt,
@@ -106,10 +108,14 @@ export async function callAI(
   let compressedUser = userPrompt;
   let compressionRatio = 1;
   let tokensSaved = 0;
+  let efficiencyOverheadMs = 0;
 
   // ── Efficiency Layer ──
+  // OX-2: Skipped in execution stage — verified overhead (up to 3 extra AI calls per invocation)
+  // exceeds benefit when cache hit rate is near-zero (unique code gen prompts).
   if (!skipEfficiency) {
     // 1. Prompt Compression
+    const compressionStart = Date.now();
     try {
       const combined = systemPrompt + "\n" + userPrompt;
       if (combined.length > 8000) {
@@ -117,14 +123,18 @@ export async function callAI(
         compressedUser = result.compressed;
         compressionRatio = result.ratio;
         tokensSaved = result.originalTokens - result.compressedTokens;
-        console.log(`[efficiency] Compression: ${result.originalTokens} → ${result.compressedTokens} tokens (${Math.round((1 - result.ratio) * 100)}% saved, AI=${result.usedAI})`);
+        const compressionMs = Date.now() - compressionStart;
+        efficiencyOverheadMs += compressionMs;
+        console.log(`[efficiency] Compression: ${result.originalTokens} → ${result.compressedTokens} tokens (${Math.round((1 - result.ratio) * 100)}% saved, AI=${result.usedAI}, ${compressionMs}ms)`);
       }
     } catch (e) {
+      efficiencyOverheadMs += Date.now() - compressionStart;
       console.warn("[efficiency] Compression failed, using original:", e);
     }
 
     // 2. Semantic Cache
     if (stage) {
+      const cacheStart = Date.now();
       try {
         const cacheResult = await lookupCache(
           compressedSystem + "\n" + compressedUser,
@@ -133,12 +143,15 @@ export async function callAI(
           orgId,
         );
 
+        const cacheMs = Date.now() - cacheStart;
+        efficiencyOverheadMs += cacheMs;
+
         if (cacheResult.hit) {
-          console.log(`[efficiency] Cache HIT (similarity=${cacheResult.similarity.toFixed(3)}, saved=${cacheResult.tokensSaved} tokens)`);
+          console.log(`[efficiency] Cache HIT (similarity=${cacheResult.similarity.toFixed(3)}, saved=${cacheResult.tokensSaved} tokens, lookup=${cacheMs}ms)`);
           return {
             content: cacheResult.response,
             tokens: 0,
-            durationMs: 0,
+            durationMs: cacheMs,
             costUsd: 0,
             model: "cache",
             efficiency: {
@@ -150,10 +163,18 @@ export async function callAI(
             },
           };
         }
+        // OX-2: Preserve embedding from cache miss for post-call store (avoids double lookup)
+        var cacheMissData = cacheResult;
+        console.log(`[efficiency] Cache MISS (lookup=${cacheMs}ms)`);
       } catch (e) {
+        efficiencyOverheadMs += Date.now() - cacheStart;
         console.warn("[efficiency] Cache lookup failed:", e);
       }
     }
+  }
+
+  if (efficiencyOverheadMs > 0) {
+    console.log(`[efficiency] Total pre-call overhead: ${efficiencyOverheadMs}ms (stage=${stage || "unknown"}, skipEfficiency=${skipEfficiency})`);
   }
 
   // 3. Model from routing decision
@@ -165,7 +186,7 @@ export async function callAI(
     estimatedCostMultiplier: routing.metadata.estimatedCostMultiplier,
   };
 
-  console.log(`[efficiency] Routed to ${effectiveModel} via ${routing.metadata.provider} (${routingDecision.complexity}: ${routingDecision.reason})`);
+  console.log(`[ai-client] Routed to ${effectiveModel} via ${routing.metadata.provider} (${routingDecision.complexity}: ${routingDecision.reason})`);
 
   // ── AI Call with Retries + Fallback ──
   let lastError: Error | null = null;
@@ -217,18 +238,15 @@ export async function callAI(
         const content = data.choices?.[0]?.message?.content || "";
 
         // Store in semantic cache (async, non-blocking)
+        // OX-2 FIX: Reuse embedding from pre-call cache miss instead of calling lookupCache again
         if (!skipEfficiency && stage) {
           try {
-            const cacheResult = await lookupCache(
-              compressedSystem + "\n" + compressedUser,
-              stage,
-              cfg.key,
-              orgId,
-            );
-            if (!cacheResult.hit) {
+            // @ts-ignore — cacheMissData is set via var in cache miss branch above
+            const missData = typeof cacheMissData !== "undefined" ? cacheMissData : null;
+            if (missData && !missData.hit) {
               storeInCache(
-                cacheResult.promptHash,
-                cacheResult.embedding,
+                missData.promptHash,
+                missData.embedding,
                 content,
                 stage,
                 cfg.model,

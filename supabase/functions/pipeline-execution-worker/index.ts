@@ -117,6 +117,9 @@ ${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}
     let totalTokens = 0, totalCost = 0;
 
     // ──── Step 1: CODE ARCHITECT ────
+    // OX-2: Skip efficiency layer in execution stage — verified overhead exceeds benefit
+    const execSkipEfficiency = true;
+
     const codeArchResult = await callAI(apiKey,
       `Você é o Code Architect "${effectiveCodeArch.name}" no AxionOS.
 Antes do Developer implementar, você define:
@@ -127,7 +130,8 @@ Antes do Developer implementar, você define:
 5. Edge cases e validações
 
 Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
-      baseContext
+      baseContext,
+      false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
     );
     totalTokens += codeArchResult.tokens;
     totalCost += codeArchResult.costUsd;
@@ -157,7 +161,8 @@ REGRAS package.json:
 - Use "lucide-react" (não "lucide")
 - SEMPRE inclua "type": "module"
 - Use @vitejs/plugin-react-swc`,
-      `${baseContext}\n\n## Especificação do Code Architect:\n${codeArchResult.content}`
+      `${baseContext}\n\n## Especificação do Code Architect:\n${codeArchResult.content}`,
+      false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
     );
     let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
     totalTokens += devResult.tokens;
@@ -192,7 +197,8 @@ REGRA: Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem expl
 
 ## Arquivos já gerados (para verificar imports):\n${contextStr || "(nenhum)"}
 
-Verifique integração e retorne o código final (corrigido se necessário).`
+Verifique integração e retorne o código final (corrigido se necessário).`,
+      false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
     );
     totalTokens += integrationResult.tokens;
     totalCost += integrationResult.costUsd;
