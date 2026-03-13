@@ -80,13 +80,16 @@ Deno.serve(async (req) => {
 
 async function analyzePortfolio(sc: any, orgId: string) {
   // Gather all knowledge objects
-  const [canonRes, skillRes, distilledRes, heuristicsRes, triggersRes] = await Promise.all([
+  const [canonRes, skillRes, distilledRes, triggersRes] = await Promise.all([
     sc.from("canon_entries").select("id, entry_type, confidence_score, lifecycle_status, domain, created_at, updated_at").eq("organization_id", orgId).limit(500),
     sc.from("skill_bundles").select("id, skill_type, confidence, status, domain, created_at").eq("organization_id", orgId).limit(500),
     sc.from("distilled_outputs").select("id, distillation_type, confidence_score, status, created_at").eq("organization_id", orgId).limit(500),
-    sc.from("architecture_heuristics").select("id, domain, confidence, status, created_at").eq("organization_id", orgId).limit(500),
     sc.from("knowledge_renewal_triggers").select("id, status").eq("organization_id", orgId).eq("status", "pending").limit(200),
   ]);
+
+  // architecture_heuristics — deferred in SF-1; table does not exist yet
+  // Gated to empty array to prevent runtime errors
+  const heuristicsRes = { data: [] as any[] };
 
   const canon = canonRes.data || [];
   const skills = skillRes.data || [];
