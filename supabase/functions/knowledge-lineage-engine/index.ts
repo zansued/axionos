@@ -240,7 +240,7 @@ Deno.serve(async (req: Request) => {
           computed++;
         }
 
-        return jsonResponse({ computed }, req);
+        return jsonResponse({ computed }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
