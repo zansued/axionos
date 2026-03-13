@@ -322,13 +322,26 @@ export function AppSidebar() {
                     {isOwnerMode ? (
                       // ── Owner Mode: Collapsible domain groups ──
                       <div className="space-y-0.5">
-                        {ownerGroups.map(({ group, items }) => {
+                      {ownerGroups.map(({ group, items }) => {
                           const domainGroup = domainGroupMap.get(group);
                           const navItems = items.map((r) => ({
                             title: r.title,
                             url: r.path,
                             icon: r.icon,
                           }));
+
+                          // Single-item domain groups render as direct nav links
+                          if (domainGroup && navItems.length === 1) {
+                            return (
+                              <SidebarMenu key={group} className="space-y-0.5">
+                                <NavItemRow
+                                  item={navItems[0]}
+                                  collapsed={collapsed}
+                                  surfaceColor={surfaceMeta.colorVar}
+                                />
+                              </SidebarMenu>
+                            );
+                          }
 
                           if (domainGroup) {
                             return (

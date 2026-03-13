@@ -208,65 +208,49 @@ function LayerNode({ title, subtitle, icon: Icon, metrics, color, navigateTo, in
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.08, duration: 0.4, ease: "easeOut" }}
-        className="relative"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.08, duration: 0.4, ease: "easeOut" }}
+    >
+      <button
+        onClick={() => navigate(navigateTo)}
+        className="group block w-full text-left focus:outline-none"
       >
-        <button
-          onClick={() => navigate(navigateTo)}
-          className="group block w-full text-left focus:outline-none"
-        >
-          <Card className={`relative overflow-hidden border-2 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer w-[180px] ${color}`}>
-            {/* Top accent bar */}
-            <div className={`h-1 w-full ${color.includes("border-blue") ? "bg-blue-500" : color.includes("border-emerald") ? "bg-emerald-500" : color.includes("border-red") ? "bg-red-500" : color.includes("border-amber") ? "bg-amber-500" : color.includes("border-violet") ? "bg-violet-500" : color.includes("border-cyan") ? "bg-cyan-500" : "bg-primary"}`} />
+        <Card className={`relative overflow-hidden border-2 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer h-full ${color}`}>
+          {/* Top accent bar */}
+          <div className={`h-1 w-full ${color.includes("border-blue") ? "bg-blue-500" : color.includes("border-emerald") ? "bg-emerald-500" : color.includes("border-red") ? "bg-red-500" : color.includes("border-amber") ? "bg-amber-500" : color.includes("border-violet") ? "bg-violet-500" : color.includes("border-cyan") ? "bg-cyan-500" : "bg-primary"}`} />
 
-            <CardHeader className="pb-2 pt-3 px-3">
-              <div className="flex items-center gap-2">
-                <div className={`p-1.5 rounded-md ${color.includes("border-blue") ? "bg-blue-500/10 text-blue-500" : color.includes("border-emerald") ? "bg-emerald-500/10 text-emerald-500" : color.includes("border-red") ? "bg-red-500/10 text-red-500" : color.includes("border-amber") ? "bg-amber-500/10 text-amber-500" : color.includes("border-violet") ? "bg-violet-500/10 text-violet-500" : color.includes("border-cyan") ? "bg-cyan-500/10 text-cyan-500" : "bg-primary/10 text-primary"}`}>
-                  <Icon className="h-4 w-4" />
-                </div>
-                <div className="min-w-0">
-                  <CardTitle className="text-xs font-bold truncate">{title}</CardTitle>
-                  <p className="text-[9px] text-muted-foreground truncate">{subtitle}</p>
-                </div>
+          <CardHeader className="pb-2 pt-3 px-3">
+            <div className="flex items-center gap-2">
+              <div className={`p-1.5 rounded-md ${color.includes("border-blue") ? "bg-blue-500/10 text-blue-500" : color.includes("border-emerald") ? "bg-emerald-500/10 text-emerald-500" : color.includes("border-red") ? "bg-red-500/10 text-red-500" : color.includes("border-amber") ? "bg-amber-500/10 text-amber-500" : color.includes("border-violet") ? "bg-violet-500/10 text-violet-500" : color.includes("border-cyan") ? "bg-cyan-500/10 text-cyan-500" : "bg-primary/10 text-primary"}`}>
+                <Icon className="h-4 w-4" />
               </div>
-            </CardHeader>
-
-            <CardContent className="px-3 pb-3 pt-0">
-              <div className="space-y-1.5">
-                {metrics.map((m, i) => (
-                  <div key={i} className="flex items-center justify-between text-[10px]">
-                    <span className="text-muted-foreground truncate mr-1">{m.label}</span>
-                    <span className="font-semibold tabular-nums">{m.value}</span>
-                  </div>
-                ))}
+              <div className="min-w-0">
+                <CardTitle className="text-xs font-bold truncate">{title}</CardTitle>
+                <p className="text-[9px] text-muted-foreground truncate">{subtitle}</p>
               </div>
-            </CardContent>
-
-            {/* Hover indicator */}
-            <div className="absolute bottom-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-              <ChevronRight className="h-3 w-3 text-muted-foreground" />
             </div>
-          </Card>
-        </button>
-      </motion.div>
+          </CardHeader>
 
-      {/* Connector arrow */}
-      {!isLast && (
-        <motion.div
-          initial={{ opacity: 0, scaleX: 0 }}
-          animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ delay: index * 0.08 + 0.2, duration: 0.3 }}
-          className="flex items-center mx-1 shrink-0"
-        >
-          <div className="w-6 h-[2px] bg-gradient-to-r from-muted-foreground/30 to-muted-foreground/60" />
-          <ArrowRight className="h-3 w-3 text-muted-foreground/60 -ml-1" />
-        </motion.div>
-      )}
-    </div>
+          <CardContent className="px-3 pb-3 pt-0">
+            <div className="space-y-1.5">
+              {metrics.map((m, i) => (
+                <div key={i} className="flex items-center justify-between text-[10px]">
+                  <span className="text-muted-foreground truncate mr-1">{m.label}</span>
+                  <span className="font-semibold tabular-nums">{m.value}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+
+          {/* Hover indicator */}
+          <div className="absolute bottom-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+            <ChevronRight className="h-3 w-3 text-muted-foreground" />
+          </div>
+        </Card>
+      </button>
+    </motion.div>
   );
 }
 
@@ -586,27 +570,25 @@ export default function CognitiveArchitectureMap() {
         </motion.div>
 
         {/* Main content: flow + insights */}
-        <div className="flex gap-6 items-start">
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
           {/* Architecture flow */}
           <div className="flex-1 min-w-0">
-            {/* Horizontal flow */}
-            <ScrollArea className="w-full">
-              <div className="flex items-center pb-4 min-w-max">
-                {layers.map((layer, i) => (
-                  <LayerNode
-                    key={layer.title}
-                    title={layer.title}
-                    subtitle={layer.subtitle}
-                    icon={layer.icon}
-                    metrics={layer.metrics}
-                    color={layer.color}
-                    navigateTo={layer.navigateTo}
-                    index={i}
-                    isLast={i === layers.length - 1}
-                  />
-                ))}
-              </div>
-            </ScrollArea>
+            {/* Responsive flow grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-3">
+              {layers.map((layer, i) => (
+                <LayerNode
+                  key={layer.title}
+                  title={layer.title}
+                  subtitle={layer.subtitle}
+                  icon={layer.icon}
+                  metrics={layer.metrics}
+                  color={layer.color}
+                  navigateTo={layer.navigateTo}
+                  index={i}
+                  isLast={i === layers.length - 1}
+                />
+              ))}
+            </div>
 
             {/* Learning loop connector */}
             <LearningLoopConnector />
@@ -616,7 +598,7 @@ export default function CognitiveArchitectureMap() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.4 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4"
             >
               <SummaryCard
                 label="Intelligence Loop Health"
@@ -650,7 +632,7 @@ export default function CognitiveArchitectureMap() {
           </div>
 
           {/* Insights panel */}
-          <div className="w-[280px] shrink-0 hidden lg:block">
+          <div className="w-full lg:w-[300px] shrink-0">
             <ArchitectureInsightsPanel metrics={metrics} />
           </div>
         </div>

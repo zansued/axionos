@@ -246,7 +246,7 @@ export const OWNER_ROUTES: RouteEntry[] = [
   },
   {
     path: "/owner/cognitive-architecture-map",
-    title: "Cognitive Architecture Map",
+    title: "Cognitive Architecture",
     description: "Living intelligence loop visualization",
     icon: Brain,
     mode: "owner",
