@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
+import { AppShell } from "@/components/AppShell";
 import { motion } from "framer-motion";
 import {
   BookOpen, Brain, Fingerprint, Bot, Zap, Target, RefreshCw,
@@ -537,19 +538,22 @@ export default function CognitiveArchitectureMap() {
 
   if (isLoading || !metrics) {
     return (
-      <div className="p-6 space-y-6">
-        <div>
-          <h1 className="text-xl font-bold">Cognitive Architecture Map</h1>
-          <p className="text-sm text-muted-foreground">Loading intelligence loop…</p>
+      <AppShell>
+        <div className="p-6 space-y-6">
+          <div>
+            <h1 className="text-xl font-bold">Cognitive Architecture Map</h1>
+            <p className="text-sm text-muted-foreground">Loading intelligence loop…</p>
+          </div>
+          <div className="flex items-center justify-center h-64">
+            <RefreshCw className="h-6 w-6 text-muted-foreground animate-spin" />
+          </div>
         </div>
-        <div className="flex items-center justify-center h-64">
-          <RefreshCw className="h-6 w-6 text-muted-foreground animate-spin" />
-        </div>
-      </div>
+      </AppShell>
     );
   }
 
   return (
+    <AppShell>
     <TooltipProvider delayDuration={200}>
       <div className="p-6 space-y-6 max-w-full">
         {/* Header */}
@@ -640,6 +644,7 @@ export default function CognitiveArchitectureMap() {
         </div>
       </div>
     </TooltipProvider>
+    </AppShell>
   );
 }
 
