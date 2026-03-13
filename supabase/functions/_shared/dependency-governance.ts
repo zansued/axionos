@@ -104,7 +104,7 @@ export async function runDependencyGovernance(packageJsonContent: string): Promi
   const unresolved: string[] = [];
 
   for (const [name, { version, key }] of allDeps.entries()) {
-    // 1. Check blocked packages
+    // 1. Check blocked packages (exact name match)
     if (BLOCKED_PACKAGES.has(name)) {
       blocked.push(name);
       delete (pkg[key] as Record<string, string>)[name];
@@ -124,6 +124,26 @@ export async function runDependencyGovernance(packageJsonContent: string): Promi
         }
       }
       continue;
+    }
+
+    // 1b. Check version-blocked packages (e.g. "eslint@10" blocks eslint if major >= 10)
+    for (const blockedEntry of BLOCKED_PACKAGES) {
+      if (!blockedEntry.includes("@") || blockedEntry.startsWith("@")) continue;
+      const [blockedName, blockedMajorStr] = blockedEntry.split("@");
+      if (blockedName !== name) continue;
+      const blockedMajor = parseInt(blockedMajorStr, 10);
+      if (isNaN(blockedMajor)) continue;
+      // Extract declared major version
+      const declaredMajor = parseInt(version.replace(/[^0-9]/g, "").slice(0, String(blockedMajor).length), 10);
+      if (declaredMajor >= blockedMajor) {
+        // Downgrade to canonical preferred version
+        const canonical = CANONICAL_DEPS[name];
+        if (canonical) {
+          (pkg[key] as Record<string, string>)[name] = canonical.preferred;
+          upgrades.push({ name, declared: version, upgraded: canonical.preferred, reason: "blocked" });
+          console.log(`[DEP-GOV] Downgraded ${name}@${version} -> ${canonical.preferred} (v${blockedMajor}+ blocked)`);
+        }
+      }
     }
 
     const npmInfo = registryData.get(name);

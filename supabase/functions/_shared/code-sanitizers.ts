@@ -94,6 +94,13 @@ export function sanitizePackageJson(content: string): string {
     forceDevDep("@types/react", "^18.3.23");
     forceDevDep("@types/react-dom", "^18.3.7");
 
+    // Force ESLint 9.x — v10 breaks peer deps with plugins
+    forceDevDep("eslint", "^9.32.0");
+    forceDevDep("eslint-plugin-react-hooks", "^5.2.0");
+    forceDevDep("eslint-plugin-react-refresh", "^0.4.20");
+    forceDevDep("@eslint/js", "^9.32.0");
+    forceDevDep("typescript-eslint", "^8.38.0");
+
     return JSON.stringify(pkg, null, 2);
   } catch {
     return content;
