@@ -234,7 +234,10 @@ function computeRisk({ upgrades, deprecated, blocked, unresolved }: {
   blocked: string[];
   unresolved: string[];
 }): GovernanceReport["risk"] {
-  if (blocked.length > 0) return "critical";
+  // If all blocked packages were auto-replaced, downgrade from critical to medium
+  const unreplaceableBlocked = blocked.filter(name => !BLOCKED_REPLACEMENTS[name]);
+  if (unreplaceableBlocked.length > 0) return "critical";
+  if (blocked.length > 0) return "medium"; // all were auto-replaced
   if (deprecated.length > 2 || upgrades.length > 10) return "high";
   if (deprecated.length > 0 || upgrades.length > 5) return "medium";
   return "low";
