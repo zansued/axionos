@@ -53,6 +53,14 @@ Deno.serve(async (req) => {
         return await extractSkills(sc, orgId, params);
       case "extraction_status":
         return await extractionStatus(sc, orgId, params);
+      case "review_skill":
+        return await reviewSkill(sc, orgId, user.id, params);
+      case "batch_review":
+        return await batchReview(sc, orgId, user.id, params);
+      case "list_reviewable":
+        return await listReviewable(sc, orgId, params);
+      case "review_history":
+        return await reviewHistory(sc, orgId, params);
       default:
         return json({ error: `Unknown action: ${action}` }, 400);
     }
