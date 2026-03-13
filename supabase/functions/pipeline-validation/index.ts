@@ -198,9 +198,17 @@ Retorne APENAS JSON:
     const passes = combinedScore >= APPROVAL_THRESHOLD && !hasErrors && !hasSecurityIssues;
 
     if (passes) {
+      // Run security matcher on artifact content for leak detection
+      const matchInput: MatchInput = { status_code: 200, body: currentText.slice(0, 10000) };
+      const secReport = evaluateRules(PIPELINE_SECURITY_RULES, matchInput);
+      if (!secReport.passed) {
+        await pipelineLog(ctx, "security_matcher_alert",
+          `⚠️ Security matcher flagged artifact ${artifact.id}: ${secReport.results.filter(r => r.matched).map(r => r.rule_name).join(", ")}`);
+      }
+
       await serviceClient.from("agent_outputs").update({ status: "approved" }).eq("id", artifact.id);
       await persistReview(serviceClient, artifact.id, user.id, "auto_approved", artifact.status,
-        `${isFirstPass ? "Aprovado" : `Aprovado após ${fixAttempts} fix(es)`}. Score: ${combinedScore}/100`);
+        `${isFirstPass ? "Aprovado" : `Aprovado após ${fixAttempts} fix(es)`}. Score: ${combinedScore}/100${!secReport.passed ? ` [security: ${secReport.highest_severity}]` : ""}`);
       await pipelineLog(ctx, "artifact_auto_approved", `✅ ${artifact.summary?.slice(0, 40)} approved (${combinedScore}/100, ${fixAttempts} fixes)`);
       return;
     }
