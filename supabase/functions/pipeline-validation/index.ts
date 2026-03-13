@@ -200,10 +200,11 @@ Retorne APENAS JSON:
     if (passes) {
       // Run security matcher on artifact content for leak detection
       const matchInput: MatchInput = { status_code: 200, body: currentText.slice(0, 10000) };
-      const secReport = evaluateRules(PIPELINE_SECURITY_RULES, matchInput);
+      const secReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, matchInput);
       if (!secReport.passed) {
+        const logEntry = buildMatcherLogEntry("pipeline-validation", secReport);
         await pipelineLog(ctx, "security_matcher_alert",
-          `⚠️ Security matcher flagged artifact ${artifact.id}: ${secReport.results.filter(r => r.matched).map(r => r.rule_name).join(", ")}`);
+          `⚠️ Security matcher flagged artifact ${artifact.id}: ${logEntry.matched_rule_ids.join(", ")}`, logEntry as unknown as Record<string, unknown>);
       }
 
       await serviceClient.from("agent_outputs").update({ status: "approved" }).eq("id", artifact.id);
