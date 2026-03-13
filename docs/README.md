@@ -1,7 +1,7 @@
 # AxionOS — Documentation Index
 
 > Single navigation point for all AxionOS documentation.
-> Last updated: 2026-03-12
+> Last updated: 2026-03-13
 
 ---
 
@@ -31,8 +31,8 @@ If prior chat history is unavailable, follow this sequence to re-establish conte
 
 - Future sprint implementation should proceed **one sprint at a time**
 - Each sprint should be reviewed and approved before execution begins
-- Sprints 1–163 are the completed canon — do not casually reopen
-- All blocks (Foundation through AH) are complete
+- Sprints 1–185 are the completed canon — do not casually reopen
+- All blocks (Foundation through AN) are complete
 - Do not collapse internal architecture and user-facing journey into the same surface
 
 ---
@@ -50,7 +50,7 @@ The default user-facing journey remains:
 
 ## Current Canon Note
 
-> Public documentation reflects the **stable architecture line** through Sprint 163 (all blocks Foundation through AH).
+> Public documentation reflects the **stable architecture line** through Sprint 185 (all blocks Foundation through AN).
 >
 > Internal roadmap and experimental canon may be ahead of this baseline.
 > This notice exists to preserve credibility — not to obscure progress.
@@ -104,6 +104,12 @@ Owner Mode is for governing the platform's intelligence and evolution.
 | 151–154 | AG | Landing Page, Axion Prompt Drawer, Builder/Owner Mode separation |
 | 155–158 | AH | Governance Review Workflow — decision state machine, governance review surface, proposal lifecycle |
 | 159–163 | AH | Governance Surfaces — Insights, Decision Surface, Execution Handoff, Change Application Tracking |
+| 164–171 | AI | Repository Intelligence & Institutional Learning — Canon candidate review, deduplication, promotion, retrieval, skill distillation, intelligence graph, agent injection, learning governance |
+| 172–179 | AJ | Self-Improving Architecture Engine — Canon distillation, micro-skills, token budgeting, multi-layer memory, architecture heuristics, self-improvement proposals, efficiency dashboard, self-improvement governance |
+| 180–181 | AK | Knowledge Provenance & Trust-Weighted Intelligence — Repo trust scoring, pattern weighting, confidence recalibration, knowledge lineage, provenance navigation, integrity alerts |
+| 182–183 | AL | Knowledge Renewal & Revalidation Engine — Renewal triggers, revalidation workflows, confidence recovery, renewal proposals, renewal history |
+| 184 | AM | Canon Intelligence Hub Restructuring — Cognitive domain grouping, Skills layer tables, operational reorganization |
+| 185 | AN | Execution Architecture Evolution — Adaptive risk-based execution routing (OX/DX sprints), evidence-informed policy tuning |
 
 ### Axion Action Engine
 
@@ -111,15 +117,21 @@ The Axion Action Engine is now **implemented and operational**. It formalizes tr
 
 ---
 
-## After Sprint 163 — Current Strategic State
+## After Sprint 185 — Current Strategic State
 
-The platform has completed 163 sprints across all blocks from Foundation through AH. The system operates as a governed adaptive organism with:
+The platform has completed 185 sprints across all blocks from Foundation through AN. The system operates as a governed adaptive organism with:
 
 - ✅ Full Axion Action Engine with governed execution pipeline
 - ✅ Governance decision lifecycle (proposal → review → handoff → application tracking)
 - ✅ Security surface with threat domain mapping and risk profiles
 - ✅ Builder/Owner Mode separation for clear workspace boundaries
 - ✅ Adoption intelligence and user journey orchestration
+- ✅ Repository intelligence and institutional learning pipeline
+- ✅ Self-improving architecture engine with governed self-evolution
+- ✅ Knowledge provenance, trust-weighted intelligence, and renewal engine
+- ✅ Canon Intelligence Hub with cognitive domain structure
+- ✅ Emerging Skills layer (skill_bundles, engineering_skills, skill_capabilities)
+- ✅ Adaptive execution routing with evidence-informed policy tuning
 - ✅ 200+ Edge Functions deployed
 
 The focus shifts to:
@@ -128,17 +140,18 @@ The focus shifts to:
 - Hardening institutional governance across distributed and federated contexts
 - Connecting the Action Engine to real downstream execution
 - Improving end-to-end delivery reliability
+- Maturing the Skills layer into full operational depth
 
 ---
 
-## How To Continue Safely After Sprint 163
+## How To Continue Safely After Sprint 185
 
 1. Read **this README** for canon boundaries and invariants
 2. Use **ARCHITECTURE.md** for structural context, the product boundary model, and the role/surface model
 3. Use **GOVERNANCE.md** for Agent OS modules, contracts, and governance reference
 4. Implement future work **sprint by sprint** with human review
 5. Do **not** collapse internal architecture and user-facing journey into the same surface
-6. Do **not** casually reopen completed canon (Sprints 1–163) without deliberate review
+6. Do **not** casually reopen completed canon (Sprints 1–185) without deliberate review
 7. Internal layers are backstage support — the default product surface is the user journey
 
 ---
@@ -155,7 +168,7 @@ The focus shifts to:
 
 ### Current Canon Boundaries
 
-- **Sprints 1–163** = canonical complete (Foundation through Block AH)
+- **Sprints 1–185** = canonical complete (Foundation through Block AN)
 
 ---
 

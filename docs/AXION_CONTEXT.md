@@ -1,7 +1,7 @@
 # AxionOS Context File
 
 > **Purpose:** Restore system understanding quickly when prior conversation context is unavailable.
-> **Last Updated:** 2026-03-12
+> **Last Updated:** 2026-03-13
 
 ---
 
@@ -291,19 +291,21 @@ These invariants act as the **physical laws** of the platform.
 
 ## Sprint Canon
 
-- **Sprints 1–183** represent the canonical development arc of the platform
-- **Blocks Foundation through AL** are complete
-- The system has reached **Level 14 maturity: Knowledge Renewal & Revalidation**
+- **Sprints 1–185** represent the canonical development arc of the platform
+- **Blocks Foundation through AN** are complete
+- The system has reached **Level 15 maturity: Renewal-to-Governance Decision Bridge**
 - **200+ Edge Functions** deployed across all pipeline stages and intelligence engines
 - **Key milestones post-138:**
   - Sprint 139–142: Axion Action Engine (AE Block)
   - Sprint 143–146: Security Surface (AF Block)
   - Sprint 147–154: Adoption Intelligence, Landing Page, Builder/Owner Mode (AG Block)
   - Sprint 155–163: Governance Decision Lifecycle — Surfaces, Handoff, Tracking (AH Block)
-  - Sprint 164–171: Repository Intelligence & Institutional Learning — Canon candidate review, deduplication, promotion, retrieval, skill distillation, intelligence graph, agent injection, learning governance (AI Block)
-  - Sprint 172–179: Self-Improving Architecture Engine — Canon distillation, micro-skills, token budgeting, multi-layer memory, architecture heuristics, self-improvement proposals, efficiency dashboard, self-improvement governance (AJ Block)
-  - Sprint 180–181: Knowledge Provenance & Trust-Weighted Intelligence — Repo trust scoring, pattern weighting, confidence recalibration, knowledge lineage, provenance navigation, integrity alerts (AK Block)
-  - Sprint 182–183: Knowledge Renewal & Revalidation Engine — Renewal triggers, revalidation workflows, confidence recovery, renewal proposals, renewal history (AL Block)
+  - Sprint 164–171: Repository Intelligence & Institutional Learning (AI Block)
+  - Sprint 172–179: Self-Improving Architecture Engine (AJ Block)
+  - Sprint 180–181: Knowledge Provenance & Trust-Weighted Intelligence (AK Block)
+  - Sprint 182–183: Knowledge Renewal & Revalidation Engine (AL Block)
+  - Sprint 184: Canon Intelligence Hub Restructuring — cognitive domain grouping, Skills layer (AM Block)
+  - Sprint 185: Execution Architecture Evolution — adaptive risk-based routing, evidence-informed policy (AN Block)
 
 Future work focuses on improving:
 
@@ -312,6 +314,7 @@ Future work focuses on improving:
 - Institutional governance across distributed contexts
 - Long-horizon system resilience
 - Canon intelligence operational depth
+- Skills layer maturation and full operational coverage
 - Real downstream execution of Action Engine packages
 
 ---
@@ -334,6 +337,8 @@ Future work focuses on improving:
 | Phase 12 | Self-Improving Architecture Engine | Complete (Sprints 172–179) |
 | Phase 13 | Knowledge Provenance & Trust-Weighted Intelligence | Complete (Sprints 180–181) |
 | Phase 14 | Knowledge Renewal & Revalidation | Complete (Sprints 182–183) |
+| Phase 15 | Canon Hub Restructuring & Skills Layer | Complete (Sprint 184) |
+| Phase 16 | Execution Architecture Evolution | Complete (Sprint 185) |
 
 ---
 
