@@ -15,6 +15,8 @@ import { embedBrainNode } from "../_shared/embedding-helpers.ts";
 import type { PipelineContext } from "../_shared/pipeline-helpers.ts";
 import { executeConsolidatedPath, buildStandardPathMetrics, type ConsolidatedMetrics } from "../_shared/consolidated-worker-prototype.ts";
 import { evaluateFastPathEligibility, type FastPathEligibility } from "../_shared/execution-fast-path.ts";
+import { classifyIntegrationSeverity } from "../_shared/integration-severity.ts";
+import { type ExecutionMetrics, type ValidationSignals, type FastPathPolicyRecord, validateSyntax, validateImports, countImports } from "../_shared/execution-metrics-contract.ts";
 
 interface WorkerPayload {
   initiativeId: string;
