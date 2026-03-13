@@ -118,13 +118,59 @@ ${payload.prdSnippet ? `## PRD:\n${payload.prdSnippet}` : ""}
 ${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}` : ""}${payload.dataArchContext}${payload.apiContext}${payload.fileTreeContext}${payload.supabaseConnInfo}${payload.memoryContext}${brainBlock}`;
 
     let totalTokens = 0, totalCost = 0;
+    let codeContent = "";
+    let workerMetrics: ConsolidatedMetrics;
+    let devModel = "";
 
-    // ──── Step 1: CODE ARCHITECT ────
-    // OX-2: Skip efficiency layer in execution stage — verified overhead exceeds benefit
-    const execSkipEfficiency = true;
+    const workerStartedAt = new Date().toISOString();
 
-    const codeArchResult = await callAI(apiKey,
-      `Você é o Code Architect "${effectiveCodeArch.name}" no AxionOS.
+    // ──── OX-3: Branch between consolidated (2-call) and standard (3-call) paths ────
+    if (payload.useConsolidatedWorker) {
+      // ═══════════════════════════════════════════════════════
+      // CONSOLIDATED 2-CALL PATH (prototype — feature-flagged)
+      // ═══════════════════════════════════════════════════════
+      console.log(`[OX-3] Consolidated path for ${payload.filePath}`);
+
+      const consolidated = await executeConsolidatedPath({
+        apiKey,
+        filePath: payload.filePath,
+        fileType: payload.fileType,
+        language,
+        isBackend,
+        baseContext,
+        contextStr,
+        agentNames: {
+          codeArchitect: effectiveCodeArch.name,
+          developer: effectiveDev.name,
+          integrationAgent: effectiveIntegration.name,
+        },
+      });
+
+      codeContent = consolidated.codeContent;
+      totalTokens = consolidated.totalTokens;
+      totalCost = consolidated.totalCostUsd;
+      devModel = consolidated.model;
+      workerMetrics = consolidated.metrics;
+
+      // Non-blocking: log merged handoff for audit trail
+      recordAgentMessage(ctx, {
+        storyId: payload.storyId, subtaskId: payload.subtaskId,
+        fromAgent: effectiveCodeArch, toAgent: effectiveIntegration,
+        content: `[OX-3 consolidated] Merged architect+developer output`,
+        messageType: "handoff", iteration: 1,
+        tokens: consolidated.callResults.merged?.tokens || 0,
+        model: consolidated.model, stage: "execution",
+      }).catch(() => {});
+
+    } else {
+      // ═══════════════════════════════════════════════════════
+      // STANDARD 3-CALL PATH (current production flow)
+      // ═══════════════════════════════════════════════════════
+      // OX-2: Skip efficiency layer in execution stage
+      const execSkipEfficiency = true;
+
+      const codeArchResult = await callAI(apiKey,
+        `Você é o Code Architect "${effectiveCodeArch.name}" no AxionOS.
 Antes do Developer implementar, você define:
 1. Interfaces e tipos TypeScript necessários
 2. Contratos de função (parâmetros, retornos)
@@ -133,23 +179,21 @@ Antes do Developer implementar, você define:
 5. Edge cases e validações
 
 Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
-      baseContext,
-      false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
-    );
-    totalTokens += codeArchResult.tokens;
-    totalCost += codeArchResult.costUsd;
-    // Non-blocking agent message recording on hot path
-    recordAgentMessage(ctx, {
-      storyId: payload.storyId, subtaskId: payload.subtaskId,
-      fromAgent: effectiveCodeArch, toAgent: effectiveDev,
-      content: codeArchResult.content, messageType: "handoff",
-      iteration: 1, tokens: codeArchResult.tokens, model: codeArchResult.model, stage: "execution",
-    }).catch(() => {});
+        baseContext,
+        false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
+      );
+      totalTokens += codeArchResult.tokens;
+      totalCost += codeArchResult.costUsd;
+      recordAgentMessage(ctx, {
+        storyId: payload.storyId, subtaskId: payload.subtaskId,
+        fromAgent: effectiveCodeArch, toAgent: effectiveDev,
+        content: codeArchResult.content, messageType: "handoff",
+        iteration: 1, tokens: codeArchResult.tokens, model: codeArchResult.model, stage: "execution",
+      }).catch(() => {});
 
-    // ──── Step 2: DEVELOPER ────
-    const backendRules = isBackend ? `\nREGRAS BACKEND:\n- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto\n- edge_function: Deno/TS com CORS headers e auth\n- supabase_client: createClient com import.meta.env` : "";
-    const devResult = await callAI(apiKey,
-      `Você é o Developer "${effectiveDev.name}" no AxionOS.
+      const backendRules = isBackend ? `\nREGRAS BACKEND:\n- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto\n- edge_function: Deno/TS com CORS headers e auth\n- supabase_client: createClient com import.meta.env` : "";
+      const devResult = await callAI(apiKey,
+        `Você é o Developer "${effectiveDev.name}" no AxionOS.
 Recebeu a especificação do Code Architect. Implemente o código COMPLETO.
 
 REGRAS:
@@ -164,23 +208,22 @@ REGRAS package.json:
 - Use "lucide-react" (não "lucide")
 - SEMPRE inclua "type": "module"
 - Use @vitejs/plugin-react-swc`,
-      `${baseContext}\n\n## Especificação do Code Architect:\n${codeArchResult.content}`,
-      false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
-    );
-    let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
-    totalTokens += devResult.tokens;
-    totalCost += devResult.costUsd;
-    // Non-blocking agent message recording on hot path
-    recordAgentMessage(ctx, {
-      storyId: payload.storyId, subtaskId: payload.subtaskId,
-      fromAgent: effectiveDev, toAgent: effectiveIntegration,
-      content: codeContent, messageType: "handoff",
-      iteration: 1, tokens: devResult.tokens, model: devResult.model, stage: "execution",
-    }).catch(() => {});
+        `${baseContext}\n\n## Especificação do Code Architect:\n${codeArchResult.content}`,
+        false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
+      );
+      codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+      totalTokens += devResult.tokens;
+      totalCost += devResult.costUsd;
+      devModel = devResult.model;
+      recordAgentMessage(ctx, {
+        storyId: payload.storyId, subtaskId: payload.subtaskId,
+        fromAgent: effectiveDev, toAgent: effectiveIntegration,
+        content: codeContent, messageType: "handoff",
+        iteration: 1, tokens: devResult.tokens, model: devResult.model, stage: "execution",
+      }).catch(() => {});
 
-    // ──── Step 3: INTEGRATION AGENT ────
-    const integrationResult = await callAI(apiKey,
-      `Você é o Integration Agent "${effectiveIntegration.name}" no AxionOS.
+      const integrationResult = await callAI(apiKey,
+        `Você é o Integration Agent "${effectiveIntegration.name}" no AxionOS.
 Sua função é verificar e corrigir problemas de integração no código gerado:
 
 1. IMPORTS: Todos os imports existem e apontam para arquivos corretos?
@@ -193,7 +236,7 @@ Se encontrar problemas, retorne o código CORRIGIDO completo.
 Se tudo estiver correto, retorne o código original sem alterações.
 
 REGRA: Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.`,
-      `## Arquivo: ${payload.filePath}
+        `## Arquivo: ${payload.filePath}
 ## Especificação do Code Architect:\n${codeArchResult.content.slice(0, 2000)}
 
 ## Código do Developer:\n${codeContent.slice(0, 8000)}
@@ -201,28 +244,52 @@ REGRA: Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem expl
 ## Arquivos já gerados (para verificar imports):\n${contextStr || "(nenhum)"}
 
 Verifique integração e retorne o código final (corrigido se necessário).`,
-      false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
-    );
-    totalTokens += integrationResult.tokens;
-    totalCost += integrationResult.costUsd;
+        false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
+      );
+      totalTokens += integrationResult.tokens;
+      totalCost += integrationResult.costUsd;
 
-    const integrationCode = integrationResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
-    if (integrationCode.length > 20 && !integrationCode.startsWith("{\"")) {
-      codeContent = integrationCode;
+      const integrationCode = integrationResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
+      let integrationModified = false;
+      if (integrationCode.length > 20 && !integrationCode.startsWith("{\"")) {
+        integrationModified = integrationCode !== codeContent;
+        codeContent = integrationCode;
+      }
+
+      recordAgentMessage(ctx, {
+        storyId: payload.storyId, subtaskId: payload.subtaskId,
+        fromAgent: effectiveIntegration, toAgent: effectiveDev,
+        content: integrationResult.content, messageType: "review",
+        iteration: 1, tokens: integrationResult.tokens, model: integrationResult.model, stage: "execution",
+      }).catch(() => {});
+
+      workerMetrics = buildStandardPathMetrics(
+        codeArchResult, devResult, integrationResult,
+        codeContent, integrationModified, workerStartedAt,
+      );
     }
-
-    // Non-blocking agent message recording on hot path
-    recordAgentMessage(ctx, {
-      storyId: payload.storyId, subtaskId: payload.subtaskId,
-      fromAgent: effectiveIntegration, toAgent: effectiveDev,
-      content: integrationResult.content, messageType: "review",
-      iteration: 1, tokens: integrationResult.tokens, model: integrationResult.model, stage: "execution",
-    }).catch(() => {});
 
     // Override deterministic files
     const deterministicFiles: Record<string, string> = { ...DETERMINISTIC_FILES };
     if (deterministicFiles[payload.filePath]) codeContent = deterministicFiles[payload.filePath];
     if (payload.filePath === "package.json") codeContent = sanitizePackageJson(codeContent);
+
+    // ── OX-3: Log metrics for comparison (non-blocking) ──
+    serviceClient.from("pipeline_job_metrics").insert({
+      organization_id: payload.organizationId,
+      initiative_id: payload.initiativeId,
+      job_type: "execution_worker",
+      metadata: {
+        ox3_metrics: workerMetrics,
+        file_path: payload.filePath,
+        file_type: payload.fileType,
+        wave: payload.waveNum,
+        node_id: payload.nodeId,
+      },
+    }).then(() => {}).catch((e: unknown) => {
+      // Non-critical — metrics table may not exist yet, that's fine
+      console.warn("[OX-3] Metrics log failed (non-blocking):", e);
+    });
 
     // ── Persist subtask output + create artifact in parallel ──
     const [, artifactResult] = await Promise.all([
