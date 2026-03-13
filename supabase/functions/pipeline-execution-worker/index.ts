@@ -14,6 +14,7 @@ import { simpleHash } from "../_shared/incremental-engine.ts";
 import { embedBrainNode } from "../_shared/embedding-helpers.ts";
 import type { PipelineContext } from "../_shared/pipeline-helpers.ts";
 import { executeConsolidatedPath, buildStandardPathMetrics, type ConsolidatedMetrics } from "../_shared/consolidated-worker-prototype.ts";
+import { evaluateFastPathEligibility, type FastPathEligibility } from "../_shared/execution-fast-path.ts";
 
 interface WorkerPayload {
   initiativeId: string;
