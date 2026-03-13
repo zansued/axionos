@@ -13,7 +13,7 @@
  *   5. Return updated package.json + governance report
  */
 
-import { CANONICAL_DEPS, BLOCKED_PACKAGES } from "./canonical-deps.ts";
+import { CANONICAL_DEPS, BLOCKED_PACKAGES, BLOCKED_REPLACEMENTS } from "./canonical-deps.ts";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
