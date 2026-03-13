@@ -202,12 +202,13 @@ Verifique integração e retorne o código final (corrigido se necessário).`
       codeContent = integrationCode;
     }
 
-    await recordAgentMessage(ctx, {
+    // Non-blocking agent message recording on hot path
+    recordAgentMessage(ctx, {
       storyId: payload.storyId, subtaskId: payload.subtaskId,
       fromAgent: effectiveIntegration, toAgent: effectiveDev,
       content: integrationResult.content, messageType: "review",
       iteration: 1, tokens: integrationResult.tokens, model: integrationResult.model, stage: "execution",
-    });
+    }).catch(() => {});
 
     // Override deterministic files
     const deterministicFiles: Record<string, string> = { ...DETERMINISTIC_FILES };
