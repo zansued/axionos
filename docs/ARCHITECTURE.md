@@ -23,17 +23,18 @@
 | Agent OS | [GOVERNANCE.md](GOVERNANCE.md) -- planes, modules, agent types, contracts |
 | Canon Intelligence Engine | [CANON_INTELLIGENCE_ENGINE.md](CANON_INTELLIGENCE_ENGINE.md) -- knowledge layer, Agent-Contract model, canonization workflow |
 ### Definições de Classes (Suas Cores)
-Function,Color Fill (HEX)
-Human Interaction,
-Core System,
-Governance,
-Intelligence,
-Runtime,
-Data / Memory,
-External Systems,
-Strategic Layers,
-Reflexive Gov,
-Canonical,
+| Function | Color Fill | HEX Code |
+| :--- | :---: | :--- |
+| **Human Interaction** | ![](https://img.shields.io/badge/-%20-F6E58D?style=flat-square) | `#F6E58D` |
+| **Core System** | ![](https://img.shields.io/badge/-%20-74B9FF?style=flat-square) | `#74B9FF` |
+| **Governance** | ![](https://img.shields.io/badge/-%20-C56CF0?style=flat-square) | `#C56CF0` |
+| **Intelligence** | ![](https://img.shields.io/badge/-%20-00CEC9?style=flat-square) | `#00CEC9` |
+| **Runtime** | ![](https://img.shields.io/badge/-%20-FD79A8?style=flat-square) | `#FD79A8` |
+| **Data / Memory** | ![](https://img.shields.io/badge/-%20-55EFC4?style=flat-square) | `#55EFC4` |
+| **External Systems** | ![](https://img.shields.io/badge/-%20-B2BEC3?style=flat-square) | `#B2BEC3` |
+| **Strategic Layers** | ![](https://img.shields.io/badge/-%20-D6A2E8?style=flat-square) | `#D6A2E8` |
+| **Reflexive Gov** | ![](https://img.shields.io/badge/-%20-FF7675?style=flat-square) | `#FF7675` |
+| **Canonical** | ![](https://img.shields.io/badge/-%20-6C5CE7?style=flat-square) | `#6C5CE7` |
 
 ## 1. System Context
 
