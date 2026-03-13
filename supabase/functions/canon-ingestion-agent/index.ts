@@ -142,6 +142,20 @@ serve(async (req) => {
           }
 
           const truncated = markdown.slice(0, 12000);
+
+          // Security matcher: scan ingested content for secrets/sensitive data before processing
+          const ingestMatchInput: MatchInput = { status_code: 200, body: truncated };
+          const ingestSecReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, ingestMatchInput);
+          if (!ingestSecReport.passed) {
+            const logEntry = buildMatcherLogEntry("canon-ingestion-agent", ingestSecReport);
+            await logSecurityAudit(serviceClient, {
+              organization_id: orgId, actor_id: user.id,
+              function_name: "canon-ingestion-agent",
+              action: "security_matcher_flagged",
+              context: { source_id, matched_rule_ids: logEntry.matched_rule_ids, highest_severity: logEntry.highest_severity },
+            });
+          }
+
           await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "chunked" }).eq("id", source_id);
           await serviceClient.from("canon_source_sync_runs").update({ lifecycle_state: "chunked", chunks_created: 1 }).eq("id", syncRun.id);
 
