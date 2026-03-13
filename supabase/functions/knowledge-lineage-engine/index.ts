@@ -150,7 +150,7 @@ Deno.serve(async (req: Request) => {
           }
         }
 
-        return jsonResponse({ built: entries.length, events_created: eventsCreated, links_created: linksCreated }, req);
+        return jsonResponse({ built: entries.length, events_created: eventsCreated, links_created: linksCreated }, 200, req);
       }
 
       // ═══════════════════════════════════════════════════
