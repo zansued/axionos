@@ -129,17 +129,21 @@ ${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}
 
     const workerStartedAt = new Date().toISOString();
 
-    // ──── OX-5: Selective fast-path eligibility ────
-    const fastPathEval: FastPathEligibility = evaluateFastPathEligibility({
+    // ──── DX-3: Execution Risk Classifier (replaces OX-5 direct eligibility) ────
+    const classification: ExecutionClassification = classifyExecutionRisk({
       filePath: payload.filePath,
       fileType: payload.fileType,
       contextLength: (contextStr || "").length + (baseContext || "").length,
       waveNum: payload.waveNum,
+      codeContent: "", // pre-generation: no code yet, signals computed post-generation for audit
+      retryCount: 0,   // wire from payload when available
       explicitOverride: payload.useConsolidatedWorker,
     });
 
-    const useConsolidated = fastPathEval.eligible;
-    console.log(`[OX-5] ${payload.filePath}: fast-path=${useConsolidated}, reason=${fastPathEval.reason}, risk=${fastPathEval.riskTier}`);
+    // Backward compat: extract legacy values used downstream
+    const fastPathEval: FastPathEligibility = classification.legacy_fast_path;
+    const useConsolidated = classification.execution_path === "fast_2call";
+    console.log(`[DX-3] ${payload.filePath}: tier=${classification.risk_tier}, path=${classification.execution_path}, validation=${classification.validation_posture}, confidence=${classification.confidence}, reason=${classification.primary_reason}`);
 
     // ──── Branch between consolidated (2-call) and standard (3-call) paths ────
     if (useConsolidated) {
