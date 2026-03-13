@@ -131,12 +131,13 @@ Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
     );
     totalTokens += codeArchResult.tokens;
     totalCost += codeArchResult.costUsd;
-    await recordAgentMessage(ctx, {
+    // Non-blocking agent message recording on hot path
+    recordAgentMessage(ctx, {
       storyId: payload.storyId, subtaskId: payload.subtaskId,
       fromAgent: effectiveCodeArch, toAgent: effectiveDev,
       content: codeArchResult.content, messageType: "handoff",
       iteration: 1, tokens: codeArchResult.tokens, model: codeArchResult.model, stage: "execution",
-    });
+    }).catch(() => {});
 
     // ──── Step 2: DEVELOPER ────
     const backendRules = isBackend ? `\nREGRAS BACKEND:\n- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto\n- edge_function: Deno/TS com CORS headers e auth\n- supabase_client: createClient com import.meta.env` : "";
