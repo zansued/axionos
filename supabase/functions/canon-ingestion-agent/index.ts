@@ -8,6 +8,7 @@ import {
   COMMON_ACTIONS, COMMON_FIELDS,
   type Schema,
 } from "../_shared/input-validation.ts";
+import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 
 const INGESTION_SCHEMA: Schema = {
   action: COMMON_FIELDS.action(COMMON_ACTIONS.CANON_INGESTION),
