@@ -144,14 +144,14 @@ The focus shifts to:
 
 ---
 
-## How To Continue Safely After Sprint 163
+## How To Continue Safely After Sprint 185
 
 1. Read **this README** for canon boundaries and invariants
 2. Use **ARCHITECTURE.md** for structural context, the product boundary model, and the role/surface model
 3. Use **GOVERNANCE.md** for Agent OS modules, contracts, and governance reference
 4. Implement future work **sprint by sprint** with human review
 5. Do **not** collapse internal architecture and user-facing journey into the same surface
-6. Do **not** casually reopen completed canon (Sprints 1–163) without deliberate review
+6. Do **not** casually reopen completed canon (Sprints 1–185) without deliberate review
 7. Internal layers are backstage support — the default product surface is the user journey
 
 ---
