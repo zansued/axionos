@@ -123,7 +123,7 @@ async function extractSkills(sc: any, orgId: string, params: any) {
     .select("id, title, summary, body, practice_type, canon_type, stack_scope, layer_scope, topic, subtopic, confidence_score, source_reference, tags, created_at")
     .eq("organization_id", orgId)
     .eq("approval_status", "approved")
-    .eq("lifecycle_status", "active")
+    .in("lifecycle_status", ["active", "approved"])
     .gte("confidence_score", minConfidence)
     .order("confidence_score", { ascending: false })
     .limit(limit);
