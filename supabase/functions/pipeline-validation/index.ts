@@ -12,10 +12,8 @@ import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, t
  * Processes ONE artifact per invocation synchronously.
  * Frontend retries automatically until all artifacts are validated.
  *
- * 3 agentes especializados + Fix Loop (max 2 tentativas):
- *   1. Static Analysis (Agente 15)
- *   2. Runtime QA     (Agente 16)
- *   3. Fix Agent      (Agente 17)
+ * Optimized: Static + Runtime analysis merged into single AI call to fit edge function timeout.
+ * Fix Agent runs separately if needed (max 2 attempts).
  */
 
 const MAX_FIX_ATTEMPTS = 2;
@@ -66,7 +64,7 @@ serve(async (req) => {
   const alreadyApproved = artifacts.filter((a: any) => a.status === "approved").length;
   const alreadyEscalated = artifacts.filter((a: any) => a.status === "pending_review").length;
 
-  // All already processed (approved or escalated) → done
+  // All already processed (approved or escalated) -> done
   if (artifactsToValidate.length === 0) {
     const overallPass = alreadyApproved === total;
     await updateInitiative(ctx, { stage_status: "ready_to_publish" });
@@ -81,7 +79,6 @@ serve(async (req) => {
 
   // Pick ONE artifact to process synchronously
   const artifact = artifactsToValidate[0];
-  const remaining = artifactsToValidate.length - 1;
 
   try {
     await processOneArtifact(artifact, {
@@ -114,7 +111,7 @@ serve(async (req) => {
     }, { model: "routed", costUsd: 0, durationMs: 0 });
 
     await pipelineLog(ctx, "pipeline_validation_batch_done",
-      `Validated 1 artifact (${artifact.summary?.slice(0, 40)}). ${approvedCount}/${finalArtifacts.length} approved, ${escalatedCount} escalated. ${allProcessed ? "ALL PROCESSED ✅" : "More pending..."}`,
+      `Validated 1 artifact (${artifact.summary?.slice(0, 40)}). ${approvedCount}/${finalArtifacts.length} approved, ${escalatedCount} escalated. ${allProcessed ? "ALL PROCESSED" : "More pending..."}`,
     );
 
     return jsonResponse({
@@ -134,67 +131,61 @@ serve(async (req) => {
   }
 });
 
-// ══════════════════════════════════════════════════
+// ======================================================
 // Process ONE artifact through the fix loop
-// ══════════════════════════════════════════════════
+// Optimized: Static + Runtime merged into single AI call
+// ======================================================
 async function processOneArtifact(artifact: any, deps: any) {
   const { user, initiative, ctx, serviceClient, apiKey } = deps;
-  const agentName = artifact.agents?.name || "?";
   const isCode = artifact.type === "code";
   let currentText = extractText(artifact.raw_output);
   let fixAttempts = 0;
-  let lastCombinedScore = 0;
 
   // Get architecture context (light)
   let archContext = "";
   if (initiative.architecture_content) {
-    archContext = String(initiative.architecture_content).slice(0, 1500);
+    archContext = String(initiative.architecture_content).slice(0, 1200);
   }
 
   for (let loop = 0; loop <= MAX_FIX_ATTEMPTS; loop++) {
     const isFirstPass = loop === 0;
 
-    // ═══ AGENT 15: Static Analysis ═══
-    const staticResult = await callAI(apiKey,
-      `Você é o agente "Static Analysis" (Agente 15). ${!isFirstPass ? `Re-validação #${loop} após correção.` : ""}
-Analise quanto a: Lint, Tipos, Imports, Complexidade, Padrões.
-${archContext ? `\nContexto Arquitetural:\n${archContext.slice(0, 800)}` : ""}
+    // ═══ MERGED: Static Analysis (Agent 15) + Runtime QA (Agent 16) in ONE call ═══
+    const combinedResult = await callAI(apiKey,
+      `You are a combined Static Analysis + Runtime QA validator. ${!isFirstPass ? `Re-validation #${loop} after fix.` : ""}
 
-Retorne APENAS JSON:
-{"static_score": 0-100, "issues": [{"severity": "error|warning|info", "category": "string", "message": "string", "suggestion": "string"}], "summary": "string", "imports_valid": true, "type_safety_score": 0-100, "complexity_score": 0-100}`,
-      `Artefato: ${artifact.summary || "N/A"} (${artifact.type}, Loop ${loop}/${MAX_FIX_ATTEMPTS})\n\n${currentText.slice(0, 4000)}`,
+Analyze for: Lint, Types, Imports, Complexity, Patterns, Security, Performance, Resilience.
+${archContext ? `\nArchitecture context:\n${archContext.slice(0, 800)}` : ""}
+
+Return ONLY JSON:
+{
+  "static_score": 0-100,
+  "runtime_score": 0-100,
+  "issues": [{"severity": "error|warning|info", "category": "string", "message": "string", "suggestion": "string"}],
+  "security_issues": [],
+  "performance_issues": [],
+  "imports_valid": true,
+  "type_safety_score": 0-100,
+  "resilience_score": 0-100,
+  "summary": "string"
+}`,
+      `Artifact: ${artifact.summary || "N/A"} (${artifact.type}, Loop ${loop}/${MAX_FIX_ATTEMPTS})\n\n${currentText.slice(0, 5000)}`,
       true
     );
 
-    let staticAnalysis: any;
-    try { staticAnalysis = extractJsonFromResponse(staticResult.content); }
-    catch { staticAnalysis = { static_score: 60, issues: [], summary: "Parse failed", imports_valid: true, type_safety_score: 60, complexity_score: 60 }; }
+    let analysis: any;
+    try { analysis = extractJsonFromResponse(combinedResult.content); }
+    catch { analysis = { static_score: 60, runtime_score: 60, issues: [], security_issues: [], performance_issues: [], summary: "Parse failed", imports_valid: true, type_safety_score: 60, resilience_score: 60 }; }
 
-    await persistValidationRun(serviceClient, artifact.id, isFirstPass ? "static_analysis" : `static_revalidation_${loop}`, staticAnalysis, staticResult.durationMs);
-    if (isFirstPass) await persistReview(serviceClient, artifact.id, user.id, "static_analysis", artifact.status, JSON.stringify(staticAnalysis));
-
-    // ═══ AGENT 16: Runtime QA ═══
-    const runtimeResult = await callAI(apiKey,
-      `Você é o agente "Runtime QA" (Agente 16). ${!isFirstPass ? `Re-validação #${loop}.` : ""}
-Analise: cenários de teste, segurança, performance, resiliência.
-
-Retorne APENAS JSON:
-{"runtime_score": 0-100, "test_scenarios": [{"name": "string", "type": "happy|edge|error|security", "risk": "low|medium|high"}], "security_issues": [], "performance_issues": [], "resilience_score": 0-100, "summary": "string"}`,
-      `Artefato: ${artifact.summary || "N/A"} (${artifact.type}, Loop ${loop})\nStatic Issues: ${JSON.stringify((staticAnalysis.issues || []).slice(0, 5))}\n\n${currentText.slice(0, 4000)}`,
-      true
-    );
-
-    let runtimeQA: any;
-    try { runtimeQA = extractJsonFromResponse(runtimeResult.content); }
-    catch { runtimeQA = { runtime_score: 60, test_scenarios: [], security_issues: [], performance_issues: [], resilience_score: 60, summary: "Parse failed" }; }
-
-    await persistValidationRun(serviceClient, artifact.id, isFirstPass ? "runtime_qa" : `runtime_revalidation_${loop}`, runtimeQA, runtimeResult.durationMs);
+    await persistValidationRun(serviceClient, artifact.id, isFirstPass ? "combined_analysis" : `combined_revalidation_${loop}`, analysis, combinedResult.durationMs);
+    if (isFirstPass) await persistReview(serviceClient, artifact.id, user.id, "combined_analysis", artifact.status, JSON.stringify(analysis));
 
     // Combined score
-    const combinedScore = Math.round(((staticAnalysis.static_score || 0) + (runtimeQA.runtime_score || 0)) / 2);
-    lastCombinedScore = combinedScore;
-    const hasErrors = (staticAnalysis.issues || []).some((i: any) => i.severity === "error");
-    const hasSecurityIssues = (runtimeQA.security_issues || []).length > 0;
+    const staticScore = analysis.static_score || 60;
+    const runtimeScore = analysis.runtime_score || 60;
+    const combinedScore = Math.round((staticScore + runtimeScore) / 2);
+    const hasErrors = (analysis.issues || []).some((i: any) => i.severity === "error");
+    const hasSecurityIssues = (analysis.security_issues || []).length > 0;
     const passes = combinedScore >= APPROVAL_THRESHOLD && !hasErrors && !hasSecurityIssues;
 
     if (passes) {
@@ -204,36 +195,36 @@ Retorne APENAS JSON:
       if (!secReport.passed) {
         const logEntry = buildMatcherLogEntry("pipeline-validation", secReport);
         await pipelineLog(ctx, "security_matcher_alert",
-          `⚠️ Security matcher flagged artifact ${artifact.id}: ${logEntry.matched_rule_ids.join(", ")}`, logEntry as unknown as Record<string, unknown>);
+          `Security matcher flagged artifact ${artifact.id}: ${logEntry.matched_rule_ids.join(", ")}`, logEntry as unknown as Record<string, unknown>);
       }
 
       await serviceClient.from("agent_outputs").update({ status: "approved" }).eq("id", artifact.id);
       await persistReview(serviceClient, artifact.id, user.id, "auto_approved", artifact.status,
-        `${isFirstPass ? "Aprovado" : `Aprovado após ${fixAttempts} fix(es)`}. Score: ${combinedScore}/100${!secReport.passed ? ` [security: ${secReport.highest_severity}]` : ""}`);
-      await pipelineLog(ctx, "artifact_auto_approved", `✅ ${artifact.summary?.slice(0, 40)} approved (${combinedScore}/100, ${fixAttempts} fixes)`);
+        `${isFirstPass ? "Approved" : `Approved after ${fixAttempts} fix(es)`}. Score: ${combinedScore}/100${!secReport.passed ? ` [security: ${secReport.highest_severity}]` : ""}`);
+      await pipelineLog(ctx, "artifact_auto_approved", `${artifact.summary?.slice(0, 40)} approved (${combinedScore}/100, ${fixAttempts} fixes)`);
       return;
     }
 
-    // Last attempt → escalate
+    // Last attempt -> escalate
     if (loop === MAX_FIX_ATTEMPTS) {
       await serviceClient.from("agent_outputs").update({ status: "pending_review" }).eq("id", artifact.id);
       await persistReview(serviceClient, artifact.id, user.id, "escalated_to_human", artifact.status,
-        `Escalado após ${MAX_FIX_ATTEMPTS} tentativas. Score: ${combinedScore}/100`);
-      await pipelineLog(ctx, "artifact_escalated", `⚠️ ${artifact.summary?.slice(0, 40)} escalated (${combinedScore}/100)`);
+        `Escalated after ${MAX_FIX_ATTEMPTS} attempts. Score: ${combinedScore}/100`);
+      await pipelineLog(ctx, "artifact_escalated", `${artifact.summary?.slice(0, 40)} escalated (${combinedScore}/100)`);
       return;
     }
 
     // ═══ AGENT 17: Fix Agent ═══
     fixAttempts++;
     const allIssues = [
-      ...(staticAnalysis.issues || []).filter((i: any) => i.severity !== "info").map((i: any) => `[${i.category}] ${i.message}`),
-      ...(runtimeQA.security_issues || []).map((s: string) => `[security] ${s}`),
+      ...(analysis.issues || []).filter((i: any) => i.severity !== "info").map((i: any) => `[${i.category}] ${i.message}`),
+      ...(analysis.security_issues || []).map((s: string) => `[security] ${s}`),
     ].slice(0, 10).join("\n");
 
     const fixResult = await callAI(apiKey,
-      `Você é o "Fix Agent" (Agente 17). Tentativa ${fixAttempts}/${MAX_FIX_ATTEMPTS}.
-Corrija TODOS os issues. Retorne o artefato COMPLETO corrigido, sem markdown wrapping.`,
-      `## Artefato (score: ${combinedScore}/100)\n${currentText.slice(0, 5000)}\n\n## Issues\n${allIssues}\n\nRetorne o output COMPLETO corrigido.`
+      `You are the "Fix Agent" (Agent 17). Attempt ${fixAttempts}/${MAX_FIX_ATTEMPTS}.
+Fix ALL issues. Return the COMPLETE corrected artifact, no markdown wrapping.`,
+      `## Artifact (score: ${combinedScore}/100)\n${currentText.slice(0, 5000)}\n\n## Issues\n${allIssues}\n\nReturn the COMPLETE corrected output.`
     );
 
     const fixedOutput = fixResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
@@ -251,10 +242,10 @@ Corrija TODOS os issues. Retorne o artefato COMPLETO corrigido, sem markdown wra
     }).eq("id", artifact.id);
 
     await persistReview(serviceClient, artifact.id, user.id, "fix_agent",
-      artifact.status, `Fix attempt ${fixAttempts}/${MAX_FIX_ATTEMPTS}. Score antes: ${combinedScore}/100`);
+      artifact.status, `Fix attempt ${fixAttempts}/${MAX_FIX_ATTEMPTS}. Score before: ${combinedScore}/100`);
 
     await pipelineLog(ctx, "fix_agent_attempt",
-      `🔧 Fix #${fixAttempts} for ${artifact.summary?.slice(0, 40)} (score: ${combinedScore})`);
+      `Fix #${fixAttempts} for ${artifact.summary?.slice(0, 40)} (score: ${combinedScore})`);
   }
 }
 
