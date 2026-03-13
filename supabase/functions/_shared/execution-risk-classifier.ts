@@ -286,7 +286,7 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
   if (
     escalationCount >= 3 ||
     signals.is_retry && signals.auth_schema_sensitivity ||
-    riskAssessment.composite_score >= THRESHOLDS.COMPOSITE_HIGH
+    riskAssessment.composite_score >= T.COMPOSITE_HIGH
   ) {
     risk_tier = "critical";
     primary_reason = escalatingFactors.length > 0
@@ -294,7 +294,7 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
       : "multiple_risk_factors";
   } else if (
     escalationCount >= 2 ||
-    riskAssessment.composite_score >= THRESHOLDS.COMPOSITE_MEDIUM ||
+    riskAssessment.composite_score >= T.COMPOSITE_MEDIUM ||
     !legacyFastPath.eligible
   ) {
     risk_tier = "high";
@@ -319,14 +319,14 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
     : "standard";
 
   const context_posture: ContextPosture =
-    input.contextLength > THRESHOLDS.LARGE_CONTEXT ? "full"
+    input.contextLength > T.LARGE_CONTEXT ? "full"
     : risk_tier === "critical" || risk_tier === "high" ? "full"
-    : input.contextLength > THRESHOLDS.MEDIUM_CONTEXT ? "normal"
+    : input.contextLength > T.MEDIUM_CONTEXT ? "normal"
     : "lean";
 
   // ── Confidence: higher when signals agree, lower on borderline ──
   let confidence = 0.9;
-  if (escalationCount === 1 && riskAssessment.composite_score < THRESHOLDS.COMPOSITE_MEDIUM) {
+  if (escalationCount === 1 && riskAssessment.composite_score < T.COMPOSITE_MEDIUM) {
     confidence = 0.7; // single weak escalation
   }
   if (riskAssessment.weak_signals.length > 1) {
@@ -345,5 +345,6 @@ export function classifyExecutionRisk(input: ClassifierInput): ExecutionClassifi
     override_applied: false,
     legacy_fast_path: legacyFastPath,
     risk_assessment: riskAssessment,
+    policy_version: undefined, // populated when policy tuner is active
   };
 }
