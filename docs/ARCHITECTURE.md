@@ -22,9 +22,9 @@
 |-----------|-----------|
 | Agent OS | [GOVERNANCE.md](GOVERNANCE.md) -- planes, modules, agent types, contracts |
 | Canon Intelligence Engine | [CANON_INTELLIGENCE_ENGINE.md](CANON_INTELLIGENCE_ENGINE.md) -- knowledge layer, Agent-Contract model, canonization workflow |
-
----
 ### Definições de Classes (Suas Cores)
+---
+```mermaid
 graph LR
     %% Título da Tabela
     subgraph "Dicionário de Cores e Funções"
