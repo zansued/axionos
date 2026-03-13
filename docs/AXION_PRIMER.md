@@ -2,7 +2,7 @@
 
 > **Purpose:** Ultra-short explanation of the AxionOS system — cognitive anchor for AI.
 > **Reading time:** ~2 minutes.
-> **Last Updated:** 2026-03-12
+> **Last Updated:** 2026-03-13
 
 ---
 
