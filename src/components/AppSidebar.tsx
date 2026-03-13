@@ -331,7 +331,7 @@ export function AppSidebar() {
                           }));
 
                           // Cognitive Architecture: render as direct top-level link
-                          if (group === "cognitive_architecture") {
+                          if (group === "Cognitive Architecture") {
                             return (
                               <SidebarMenu key={group} className="space-y-0.5 mb-1">
                                 {navItems.map((item) => (
