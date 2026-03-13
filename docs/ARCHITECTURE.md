@@ -27,18 +27,25 @@
 
 ## Mermaid Diagram Color Canon
 
-| Function | Color | classDef |
-|----------|-------|----------|
-| Human / operator interaction | warm yellow | `fill:#F6E58D,stroke:#8C6D1F,color:#111` |
-| Core system / platform structure | blue | `fill:#74B9FF,stroke:#1B4F72,color:#111` |
-| Governance / policy / control | purple | `fill:#C56CF0,stroke:#6C3483,color:#111` |
-| Intelligence / analysis / cognition | teal | `fill:#00CEC9,stroke:#117A65,color:#111` |
-| Runtime / execution / repair loops | pink-magenta | `fill:#FD79A8,stroke:#AD1457,color:#111` |
-| Data / memory / persistence | green | `fill:#55EFC4,stroke:#117A65,color:#111` |
-| External systems / providers / connectors | neutral gray | `fill:#B2BEC3,stroke:#636E72,color:#111` |
-| Strategic coordination layers | soft violet | `fill:#D6A2E8,stroke:#7D3C98,color:#111` |
-| Reflexive governance / self-regulation | red | `fill:#FF7675,stroke:#922B21,color:#111` |
-| Canonical knowledge / implementation intelligence | indigo | `fill:#6C5CE7,stroke:#2E1A8A,color:#fff` |
+graph TD
+    %% Definições de Classes (Suas Cores)
+    classDef human fill:#F6E58D,stroke:#8C6D1F,color:#111
+    classDef core fill:#74B9FF,stroke:#1B4F72,color:#111
+    classDef gov fill:#C56CF0,stroke:#6C3483,color:#111
+    classDef intel fill:#00CEC9,stroke:#117A65,color:#111
+    classDef data fill:#55EFC4,stroke:#117A65,color:#111
+
+    %% Elementos aplicando as classes
+    A[Interação Humana] ::: human
+    B[Plataforma Core] ::: core
+    C[Governança] ::: gov
+    D[Análise de Dados] ::: intel
+    E[(Banco de Dados)] ::: data
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
 
 ---
 
