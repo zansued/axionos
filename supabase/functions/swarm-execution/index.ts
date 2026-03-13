@@ -442,4 +442,173 @@ async function parallelWaveSchedule(sb: any, p: any) {
       ? "Validation agents started analyzing partial build artifacts — pipeline latency reduced"
       : "Waiting for build agents to produce first artifacts before starting validation",
   });
+
+// ══════════════════════════════════════════════════
+// Hierarchical Agent Contract Operations
+// ══════════════════════════════════════════════════
+
+async function registerAgentContract(sb: any, p: any) {
+  const validation = validateAgentContract(p.contract);
+  if (!validation.valid) return json({ error: validation.error }, 400);
+
+  const contract = validation.contract;
+
+  // Update or insert agent with contract metadata
+  const { error } = await sb
+    .from("swarm_execution_agents")
+    .update({
+      agent_role: contract.role,
+      agent_contract: contract,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("campaign_id", p.campaign_id)
+    .eq("agent_id", contract.agent_id);
+
+  if (error) return json({ error: error.message }, 400);
+
+  await sb.from("swarm_execution_events").insert({
+    campaign_id: p.campaign_id,
+    organization_id: p.organization_id,
+    agent_id: contract.agent_id,
+    event_type: "agent.contract_registered",
+    event_payload: { role: contract.role, goal: contract.goal, capabilities: contract.capabilities },
+  });
+
+  return json({ registered: true, contract });
+}
+
+async function delegateTask(sb: any, p: any) {
+  const delegation: TaskDelegation = {
+    delegation_id: crypto.randomUUID(),
+    from_agent_id: p.from_agent_id,
+    to_agent_id: p.to_agent_id,
+    task_description: p.task_description || "",
+    task_context: p.task_context || {},
+    expected_output_schema: p.expected_output_schema || null,
+    priority: p.priority || "medium",
+    status: "pending",
+    constraints: p.constraints || {},
+    created_at: new Date().toISOString(),
+    completed_at: null,
+    result: null,
+  };
+
+  // Create delegation branch
+  const { data: branch, error } = await sb
+    .from("swarm_execution_branches")
+    .insert({
+      campaign_id: p.campaign_id,
+      organization_id: p.organization_id,
+      branch_label: `delegation-${delegation.delegation_id.slice(0, 8)}`,
+      branch_type: "delegation",
+      assigned_agent_id: p.to_agent_id,
+      branch_plan: {
+        delegation,
+        orchestration_type: "delegated",
+        from_role: p.from_role || "manager",
+        to_role: p.to_role || "executor",
+      },
+      status: "pending",
+    })
+    .select()
+    .single();
+
+  if (error) return json({ error: error.message }, 400);
+
+  await sb.from("swarm_execution_events").insert({
+    campaign_id: p.campaign_id,
+    organization_id: p.organization_id,
+    agent_id: p.from_agent_id,
+    branch_id: branch.id,
+    event_type: "task.delegated",
+    event_payload: { to_agent: p.to_agent_id, priority: delegation.priority, task: delegation.task_description.slice(0, 200) },
+  });
+
+  return json({ delegation_id: delegation.delegation_id, branch_id: branch.id, status: "pending" });
+}
+
+async function reviewDelegation(sb: any, p: any) {
+  const verdict: ReviewVerdict = p.verdict || "approved";
+  const qualityScore = p.quality_score || 0;
+
+  const result: DelegationResult = {
+    verdict,
+    output: p.output || {},
+    quality_score: qualityScore,
+    tokens_used: p.tokens_used || 0,
+    cost_usd: p.cost_usd || 0,
+    duration_ms: p.duration_ms || 0,
+    revision_round: p.revision_round || 0,
+    reviewer_notes: p.reviewer_notes || null,
+  };
+
+  const statusMap: Record<ReviewVerdict, string> = {
+    approved: "completed",
+    needs_revision: "retrying",
+    rejected: "failed",
+    escalated: "blocked",
+  };
+
+  const { error } = await sb
+    .from("swarm_execution_branches")
+    .update({
+      status: statusMap[verdict] || "completed",
+      result_summary: `${verdict}: score ${qualityScore}/100`,
+      result_artifacts: { delegation_result: result },
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", p.branch_id);
+
+  if (error) return json({ error: error.message }, 400);
+
+  await sb.from("swarm_execution_events").insert({
+    campaign_id: p.campaign_id,
+    organization_id: p.organization_id,
+    agent_id: p.reviewer_agent_id || null,
+    branch_id: p.branch_id,
+    event_type: `delegation.${verdict}`,
+    event_payload: { quality_score: qualityScore, verdict, reviewer_notes: p.reviewer_notes },
+  });
+
+  return json({ verdict, branch_id: p.branch_id, quality_score: qualityScore });
+}
+
+async function createOrchestrationPlan(sb: any, p: any) {
+  const plan: OrchestrationPlan = {
+    plan_id: crypto.randomUUID(),
+    campaign_id: p.campaign_id,
+    orchestration_type: p.orchestration_type || "sequential",
+    phases: p.phases || [],
+    global_constraints: p.global_constraints || DEFAULT_AGENT_CONSTRAINTS,
+    completion_criteria: p.completion_criteria || {
+      min_phases_completed: 1,
+      min_overall_score: 70,
+      require_all_reviews_passed: false,
+      max_total_cost_usd: 5.0,
+    },
+  };
+
+  // Store plan in campaign execution_plan
+  const { error } = await sb
+    .from("swarm_execution_campaigns")
+    .update({
+      execution_plan: plan,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", p.campaign_id);
+
+  if (error) return json({ error: error.message }, 400);
+
+  await sb.from("swarm_execution_events").insert({
+    campaign_id: p.campaign_id,
+    organization_id: p.organization_id,
+    event_type: "orchestration.plan_created",
+    event_payload: {
+      plan_id: plan.plan_id,
+      type: plan.orchestration_type,
+      phases_count: plan.phases.length,
+    },
+  });
+
+  return json({ plan });
 }
