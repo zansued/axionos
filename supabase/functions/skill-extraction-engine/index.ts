@@ -140,7 +140,7 @@ async function extractSkills(sc: any, orgId: string, params: any) {
     .select("id, title, summary, body, practice_type, canon_type, stack_scope, layer_scope, topic, subtopic, confidence_score, source_reference, tags, created_at")
     .eq("organization_id", orgId)
     .eq("approval_status", "approved")
-    .in("lifecycle_status", ["active", "approved"])
+    .eq("lifecycle_status", "approved")
     .gte("confidence_score", minConfidence)
     .order("confidence_score", { ascending: false })
     .limit(limit);
@@ -286,7 +286,7 @@ async function extractionStatus(sc: any, orgId: string, _params: any) {
   const [bundleRes, skillRes, canonRes] = await Promise.all([
     sc.from("skill_bundles").select("id, status, domain, skill_type, confidence, source_type, created_at").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50),
     sc.from("engineering_skills").select("id, lifecycle_status, confidence, extraction_method, domain, created_at").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(200),
-    sc.from("canon_entries").select("id").eq("organization_id", orgId).eq("approval_status", "approved").in("lifecycle_status", ["active", "approved"]),
+    sc.from("canon_entries").select("id").eq("organization_id", orgId).eq("approval_status", "approved").eq("lifecycle_status", "approved"),
   ]);
 
   const bundles = bundleRes.data || [];
