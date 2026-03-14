@@ -67,9 +67,9 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 
 ---
 
-## Next Block: AS — Canon Intelligence Hub: Ativação Operacional Completa
+## Block AS — Canon Intelligence Hub: Ativação Operacional Completa
 
-**Sprints 203–207** | Status: **planned**
+**Sprints 203–207** | Status: **in progress (203–206 complete)**
 
 ### Sprint 203 — Tela de Revisão Humana de Candidatos Canon
 **Priority: High** | **Dependency: None**
