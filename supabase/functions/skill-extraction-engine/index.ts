@@ -61,6 +61,8 @@ Deno.serve(async (req) => {
         return await listReviewable(sc, orgId, params);
       case "review_history":
         return await reviewHistory(sc, orgId, params);
+      case "ai_review_batch":
+        return await aiReviewBatch(sc, orgId, user.id, params);
       // SF-4: Skill-Capability Binding
       case "bind_capability":
         return await bindCapability(sc, orgId, user.id, params);
