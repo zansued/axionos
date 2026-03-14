@@ -27,6 +27,7 @@ import { KnowledgeLineageTab } from "@/components/canon-intelligence/KnowledgeLi
 import { KnowledgeRenewalTab } from "@/components/canon-intelligence/KnowledgeRenewalTab";
 import { SkillExtractionTab } from "@/components/canon-intelligence/SkillExtractionTab";
 import { SkillReviewTab } from "@/components/canon-intelligence/SkillReviewTab";
+import { CapabilityBindingTab } from "@/components/canon-intelligence/CapabilityBindingTab";
 
 /* ──────────────── Section definitions ──────────────── */
 
@@ -76,6 +77,7 @@ const SECTIONS = [
     tabs: [
       { value: "extraction", label: "Extraction", icon: Boxes },
       { value: "review", label: "Skill Review", icon: Shield },
+      { value: "bindings", label: "Capability Binding", icon: Route },
     ],
   },
   {
@@ -198,6 +200,8 @@ export default function CanonIntelligenceDashboard() {
         return <SkillExtractionTab />;
       case "review":
         return <SkillReviewTab />;
+      case "bindings":
+        return <CapabilityBindingTab />;
       case "retrieval":
         return <RetrievalExplorerTab sessions={runtime.sessions} feedback={runtime.feedback} />;
       case "analytics":
