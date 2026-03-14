@@ -30,7 +30,7 @@ export function Topbar({ compact = false }: TopbarProps) {
             {breadcrumbs.map((crumb, i) => {
               const isLast = i === breadcrumbs.length - 1;
               return (
-                <span key={crumb.path} className="flex items-center gap-1 min-w-0">
+                <span key={`${crumb.path}-${i}`} className="flex items-center gap-1 min-w-0">
                   {i > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground/40 shrink-0" />}
                   {isLast ? (
                     <span className="font-medium text-foreground truncate">{crumb.label}</span>
