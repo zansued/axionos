@@ -1185,6 +1185,160 @@ export type Database = {
           },
         ]
       }
+      agent_learning_confidence_ledger: {
+        Row: {
+          canon_entry_id: string
+          created_at: string
+          cumulative_delta: number
+          current_effective_confidence: number
+          degradation_count: number
+          id: string
+          last_delta: number
+          last_updated_at: string
+          neutral_count: number
+          organization_id: string
+          reinforcement_count: number
+          total_feedback_count: number
+        }
+        Insert: {
+          canon_entry_id: string
+          created_at?: string
+          cumulative_delta?: number
+          current_effective_confidence?: number
+          degradation_count?: number
+          id?: string
+          last_delta?: number
+          last_updated_at?: string
+          neutral_count?: number
+          organization_id: string
+          reinforcement_count?: number
+          total_feedback_count?: number
+        }
+        Update: {
+          canon_entry_id?: string
+          created_at?: string
+          cumulative_delta?: number
+          current_effective_confidence?: number
+          degradation_count?: number
+          id?: string
+          last_delta?: number
+          last_updated_at?: string
+          neutral_count?: number
+          organization_id?: string
+          reinforcement_count?: number
+          total_feedback_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_learning_confidence_ledger_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_learning_feedback: {
+        Row: {
+          agent_id: string
+          agent_type: string
+          applied_confidence_delta: number
+          canon_entry_id: string | null
+          category: Database["public"]["Enums"]["learning_feedback_category"]
+          context_match_score: number
+          created_at: string
+          evidence_refs: Json
+          execution_context: Json
+          feedback_source: string
+          graph_node_id: string | null
+          human_review_notes: string | null
+          human_reviewed: boolean
+          id: string
+          impact_direction: Database["public"]["Enums"]["confidence_impact_direction"]
+          initiative_id: string | null
+          noise_score: number
+          organization_id: string
+          outcome_quality_score: number
+          pipeline_stage: string
+          raw_confidence_delta: number
+          relevance_score: number
+          signal_strength: number
+          skill_id: string | null
+          story_id: string | null
+          subtask_id: string | null
+          suppressed: boolean
+          suppression_reason: string | null
+        }
+        Insert: {
+          agent_id?: string
+          agent_type?: string
+          applied_confidence_delta?: number
+          canon_entry_id?: string | null
+          category: Database["public"]["Enums"]["learning_feedback_category"]
+          context_match_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          execution_context?: Json
+          feedback_source?: string
+          graph_node_id?: string | null
+          human_review_notes?: string | null
+          human_reviewed?: boolean
+          id?: string
+          impact_direction?: Database["public"]["Enums"]["confidence_impact_direction"]
+          initiative_id?: string | null
+          noise_score?: number
+          organization_id: string
+          outcome_quality_score?: number
+          pipeline_stage?: string
+          raw_confidence_delta?: number
+          relevance_score?: number
+          signal_strength?: number
+          skill_id?: string | null
+          story_id?: string | null
+          subtask_id?: string | null
+          suppressed?: boolean
+          suppression_reason?: string | null
+        }
+        Update: {
+          agent_id?: string
+          agent_type?: string
+          applied_confidence_delta?: number
+          canon_entry_id?: string | null
+          category?: Database["public"]["Enums"]["learning_feedback_category"]
+          context_match_score?: number
+          created_at?: string
+          evidence_refs?: Json
+          execution_context?: Json
+          feedback_source?: string
+          graph_node_id?: string | null
+          human_review_notes?: string | null
+          human_reviewed?: boolean
+          id?: string
+          impact_direction?: Database["public"]["Enums"]["confidence_impact_direction"]
+          initiative_id?: string | null
+          noise_score?: number
+          organization_id?: string
+          outcome_quality_score?: number
+          pipeline_stage?: string
+          raw_confidence_delta?: number
+          relevance_score?: number
+          signal_strength?: number
+          skill_id?: string | null
+          story_id?: string | null
+          subtask_id?: string | null
+          suppressed?: boolean
+          suppression_reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_learning_feedback_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_memory: {
         Row: {
           agent_id: string
@@ -41868,6 +42022,7 @@ export type Database = {
         | "deprecated"
         | "archived"
         | "superseded"
+      confidence_impact_direction: "reinforce" | "degrade" | "neutral"
       confidence_posture: "very_low" | "low" | "moderate" | "high" | "very_high"
       conflict_status:
         | "detected"
@@ -42079,6 +42234,13 @@ export type Database = {
         | "reviewed"
         | "escalated"
         | "resolved"
+      learning_feedback_category:
+        | "successful_application"
+        | "neutral_application"
+        | "misapplied_pattern"
+        | "conflict_detected"
+        | "insufficient_context"
+        | "superseded_guidance_detected"
       mutation_approval_status:
         | "pending_analysis"
         | "analyzed"
@@ -42375,6 +42537,7 @@ export const Constants = {
         "archived",
         "superseded",
       ],
+      confidence_impact_direction: ["reinforce", "degrade", "neutral"],
       confidence_posture: ["very_low", "low", "moderate", "high", "very_high"],
       conflict_status: [
         "detected",
@@ -42603,6 +42766,14 @@ export const Constants = {
         "reviewed",
         "escalated",
         "resolved",
+      ],
+      learning_feedback_category: [
+        "successful_application",
+        "neutral_application",
+        "misapplied_pattern",
+        "conflict_detected",
+        "insufficient_context",
+        "superseded_guidance_detected",
       ],
       mutation_approval_status: [
         "pending_analysis",
