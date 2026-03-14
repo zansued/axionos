@@ -644,15 +644,15 @@ Deno.serve(async (req) => {
           // Log recalibration event
           await sb.from("confidence_recalibration_log").insert({
             organization_id: orgId,
-            entity_type: "canon_entry",
-            entity_id: entry.id,
+            target_type: "canon_entry",
+            target_id: entry.id,
             previous_confidence: currentConf,
             new_confidence: newConf,
-            delta: Math.round(delta * 1000) / 1000,
-            reason: delta > 0
+            recalibration_reason: delta > 0
               ? `Boosted: evidence=${evidenceDensity.toFixed(2)}, trust=${sourceTrust.toFixed(2)}, signals=${signalAgreement.toFixed(2)}`
               : `Degraded: evidence=${evidenceDensity.toFixed(2)}, trust=${sourceTrust.toFixed(2)}, signals=${signalAgreement.toFixed(2)}`,
-            recalibration_source: "cron_auto_recalibration",
+            factors: { delta: Math.round(delta * 1000) / 1000, evidence_density: evidenceDensity, source_trust: sourceTrust, signal_agreement: signalAgreement, execution_reinforcement: executionReinforcement },
+            recalibrated_by: "cron_auto_recalibration",
           });
 
           recalibrated++;
