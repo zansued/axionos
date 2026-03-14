@@ -64,7 +64,7 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 | **Operational Learning** | ⚠️ No data | Edge functions exist and are deployed, but signal producers depend on real initiative executions. No executions, no data. |
 | **Repo Trust** | ⚠️ Never executed | `repo-trust-score-engine` is implemented but never invoked. Not included in daily cron. |
 | **Repo Trust in cron** | ❌ Missing | Scheduled pipeline only covers ingestion + review + promote. Does not include source trust evaluation. |
-| **Operational learning signals in cron** | ❌ Missing | Operational pattern mining is not automated in the daily pipeline. |
+| **Operational learning signals in cron** | ✅ Resolved | Sprint 206: Pattern mining integrated into daily pipeline. Patterns with ≥3 occurrences and confidence ≥ 0.6 auto-generate canon candidates. |
 
 ---
 
