@@ -49,7 +49,7 @@ A jornada padrão voltada ao usuário permanece:
 
 ## Nota Canônica Atual
 
-> A documentação pública reflete a **linha arquitetural estável** até o Sprint 202 (todos os blocos Foundation até AR).
+> A documentação pública reflete a **linha arquitetural estável** até o Sprint 207 (todos os blocos Foundation até AS).
 >
 > O roadmap interno e o canon experimental podem estar à frente desta baseline.
 > Este aviso existe para preservar credibilidade — não para obscurecer progresso.
