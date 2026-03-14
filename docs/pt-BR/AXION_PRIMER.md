@@ -2,7 +2,7 @@
 
 > **Propósito:** Explicação ultra-curta do sistema AxionOS — âncora cognitiva para IA.
 > **Tempo de leitura:** ~2 minutos.
-> **Última Atualização:** 2026-03-13
+> **Última Atualização:** 2026-03-14
 
 ---
 
