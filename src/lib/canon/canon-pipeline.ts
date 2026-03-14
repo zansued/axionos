@@ -1,12 +1,22 @@
 /**
  * Canon Pipeline — Operational Knowledge Pipeline Logic
- * Encapsulates lifecycle transitions, promotion rules, and pipeline state management.
+ * Sprint 204: Canonical lifecycle transitions formalized with explicit transition matrices.
  */
 
-import type { IngestionLifecycleState, CanonCandidate, CanonEntry, PatternLibraryEntry, CanonCategory } from "./canon-types";
+import type {
+  IngestionLifecycleState,
+  CanonCandidate,
+  CanonEntry,
+  PatternLibraryEntry,
+  CanonCategory,
+  CandidateReviewStatus,
+  CandidatePromotionStatus,
+  EntryLifecycleStatus,
+  EntryApprovalStatus,
+} from "./canon-types";
 
-// ─── Lifecycle State Machine ───
-const VALID_TRANSITIONS: Record<IngestionLifecycleState, IngestionLifecycleState[]> = {
+// ─── Ingestion Lifecycle State Machine ───
+const VALID_INGESTION_TRANSITIONS: Record<IngestionLifecycleState, IngestionLifecycleState[]> = {
   discovered: ["queued", "failed"],
   queued: ["fetched", "failed"],
   fetched: ["parsed", "failed"],
@@ -16,11 +26,58 @@ const VALID_TRANSITIONS: Record<IngestionLifecycleState, IngestionLifecycleState
   candidate_generated: ["canon_promoted", "rejected"],
   canon_promoted: [],
   rejected: [],
-  failed: ["queued"], // Allow retry
+  failed: ["queued"],
 };
 
+// ─── Candidate Review Transition Matrix (Sprint 204) ───
+const VALID_CANDIDATE_REVIEW_TRANSITIONS: Record<CandidateReviewStatus, CandidateReviewStatus[]> = {
+  pending: ["approved", "needs_human_review", "rejected"],
+  needs_human_review: ["approved", "rejected"],
+  approved: [],   // terminal for review — promotion is separate
+  rejected: [],   // terminal
+};
+
+// ─── Candidate Promotion Transition Matrix (Sprint 204) ───
+const VALID_CANDIDATE_PROMOTION_TRANSITIONS: Record<CandidatePromotionStatus, CandidatePromotionStatus[]> = {
+  pending: ["promoted", "not_promoted"],
+  promoted: [],       // terminal
+  not_promoted: [],   // terminal
+};
+
+// ─── Entry Lifecycle Transition Matrix (Sprint 204) ───
+const VALID_ENTRY_LIFECYCLE_TRANSITIONS: Record<EntryLifecycleStatus, EntryLifecycleStatus[]> = {
+  active: ["deprecated", "superseded"],
+  deprecated: ["archived"],
+  superseded: ["archived"],
+  archived: [],   // terminal
+};
+
+// ─── Entry Approval Transition Matrix (Sprint 204) ───
+const VALID_ENTRY_APPROVAL_TRANSITIONS: Record<EntryApprovalStatus, EntryApprovalStatus[]> = {
+  pending: ["approved"],
+  approved: ["revoked"],
+  revoked: [],  // terminal
+};
+
+// ─── Transition validators ───
 export function canTransition(from: IngestionLifecycleState, to: IngestionLifecycleState): boolean {
-  return (VALID_TRANSITIONS[from] || []).includes(to);
+  return (VALID_INGESTION_TRANSITIONS[from] || []).includes(to);
+}
+
+export function canTransitionCandidateReview(from: CandidateReviewStatus, to: CandidateReviewStatus): boolean {
+  return (VALID_CANDIDATE_REVIEW_TRANSITIONS[from] || []).includes(to);
+}
+
+export function canTransitionCandidatePromotion(from: CandidatePromotionStatus, to: CandidatePromotionStatus): boolean {
+  return (VALID_CANDIDATE_PROMOTION_TRANSITIONS[from] || []).includes(to);
+}
+
+export function canTransitionEntryLifecycle(from: EntryLifecycleStatus, to: EntryLifecycleStatus): boolean {
+  return (VALID_ENTRY_LIFECYCLE_TRANSITIONS[from] || []).includes(to);
+}
+
+export function canTransitionEntryApproval(from: EntryApprovalStatus, to: EntryApprovalStatus): boolean {
+  return (VALID_ENTRY_APPROVAL_TRANSITIONS[from] || []).includes(to);
 }
 
 export function isTerminalState(state: IngestionLifecycleState): boolean {
@@ -28,21 +85,30 @@ export function isTerminalState(state: IngestionLifecycleState): boolean {
 }
 
 export function getNextStates(state: IngestionLifecycleState): IngestionLifecycleState[] {
-  return VALID_TRANSITIONS[state] || [];
+  return VALID_INGESTION_TRANSITIONS[state] || [];
 }
+
+// ─── Export transition matrices for health-check ───
+export const TRANSITION_MATRICES = {
+  ingestion: VALID_INGESTION_TRANSITIONS,
+  candidateReview: VALID_CANDIDATE_REVIEW_TRANSITIONS,
+  candidatePromotion: VALID_CANDIDATE_PROMOTION_TRANSITIONS,
+  entryLifecycle: VALID_ENTRY_LIFECYCLE_TRANSITIONS,
+  entryApproval: VALID_ENTRY_APPROVAL_TRANSITIONS,
+} as const;
 
 // ─── Promotion Eligibility ───
 export function isCandidatePromotable(candidate: CanonCandidate): { eligible: boolean; reasons: string[] } {
   const reasons: string[] = [];
 
   if (candidate.internal_validation_status !== "approved") {
-    reasons.push("Candidate must be approved before promotion");
+    reasons.push("Review status must be 'approved' before promotion");
   }
   if (candidate.promotion_status === "promoted") {
-    reasons.push("Candidate already promoted");
+    reasons.push("Already promoted");
   }
-  if (candidate.promotion_status === "rejected") {
-    reasons.push("Candidate was rejected");
+  if (candidate.promotion_status === "not_promoted") {
+    reasons.push("Marked as not promoted");
   }
   if (candidate.source_reliability_score < 30) {
     reasons.push("Source reliability too low (< 30)");
@@ -64,7 +130,7 @@ const PROMOTABLE_CANON_TYPES: string[] = [
 ];
 
 export function isCanonEntryPromotableToLibrary(entry: CanonEntry): boolean {
-  if (entry.lifecycle_status !== "active" && entry.lifecycle_status !== "approved") return false;
+  if (entry.lifecycle_status !== "active") return false;
   if (entry.approval_status !== "approved") return false;
   if (!PROMOTABLE_CANON_TYPES.includes(entry.canon_type) && !PROMOTABLE_CANON_TYPES.includes(entry.practice_type)) return false;
   return true;
