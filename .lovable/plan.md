@@ -1,7 +1,7 @@
 # AxionOS — Plano de Execução
 
-> **Current Sprint:** 206 (Mineração de Padrões no Cron) — ✅ Complete
-> **Next Sprint:** 207 — Recalibração de Confiança Automática
+> **Current Sprint:** 207 (Recalibração de Confiança Automática) — ✅ Complete
+> **Next Sprint:** 208 — TBD (Block AS complete)
 > Execution: **Sprint-based**
 
 ---
