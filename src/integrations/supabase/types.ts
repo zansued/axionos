@@ -8244,58 +8244,115 @@ export type Database = {
       }
       canon_evolution_proposals: {
         Row: {
+          auto_approvable: boolean
+          block_reason: string | null
+          blocked: boolean
           candidate_id: string | null
+          confidence_score: number
           created_at: string
           decision_notes: string | null
+          evidence_sources: Json
+          evidence_summary: string
+          executed: boolean
+          executed_at: string | null
+          execution_result: Json | null
           expected_impact: string | null
+          feedback_signal_count: number
           id: string
+          impact_level: string
           justification: string | null
+          mined_pattern_refs: string[]
           organization_id: string
+          priority_score: number
+          proposal_source: string
           proposal_type: string
           proposed_by: string | null
+          requires_human_review: boolean
+          reviewed_at: string | null
           reviewed_by: string | null
           risk_assessment: string | null
+          risk_score_v2: number
+          secondary_entry_ids: string[]
           status: string
           supersession_plan: string | null
           target_canon_entry_id: string | null
           title: string
           updated_at: string
+          urgency_score: number
         }
         Insert: {
+          auto_approvable?: boolean
+          block_reason?: string | null
+          blocked?: boolean
           candidate_id?: string | null
+          confidence_score?: number
           created_at?: string
           decision_notes?: string | null
+          evidence_sources?: Json
+          evidence_summary?: string
+          executed?: boolean
+          executed_at?: string | null
+          execution_result?: Json | null
           expected_impact?: string | null
+          feedback_signal_count?: number
           id?: string
+          impact_level?: string
           justification?: string | null
+          mined_pattern_refs?: string[]
           organization_id: string
+          priority_score?: number
+          proposal_source?: string
           proposal_type?: string
           proposed_by?: string | null
+          requires_human_review?: boolean
+          reviewed_at?: string | null
           reviewed_by?: string | null
           risk_assessment?: string | null
+          risk_score_v2?: number
+          secondary_entry_ids?: string[]
           status?: string
           supersession_plan?: string | null
           target_canon_entry_id?: string | null
           title?: string
           updated_at?: string
+          urgency_score?: number
         }
         Update: {
+          auto_approvable?: boolean
+          block_reason?: string | null
+          blocked?: boolean
           candidate_id?: string | null
+          confidence_score?: number
           created_at?: string
           decision_notes?: string | null
+          evidence_sources?: Json
+          evidence_summary?: string
+          executed?: boolean
+          executed_at?: string | null
+          execution_result?: Json | null
           expected_impact?: string | null
+          feedback_signal_count?: number
           id?: string
+          impact_level?: string
           justification?: string | null
+          mined_pattern_refs?: string[]
           organization_id?: string
+          priority_score?: number
+          proposal_source?: string
           proposal_type?: string
           proposed_by?: string | null
+          requires_human_review?: boolean
+          reviewed_at?: string | null
           reviewed_by?: string | null
           risk_assessment?: string | null
+          risk_score_v2?: number
+          secondary_entry_ids?: string[]
           status?: string
           supersession_plan?: string | null
           target_canon_entry_id?: string | null
           title?: string
           updated_at?: string
+          urgency_score?: number
         }
         Relationships: [
           {
@@ -8307,6 +8364,38 @@ export type Database = {
           },
           {
             foreignKeyName: "canon_evolution_proposals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_evolution_rate_limits: {
+        Row: {
+          id: string
+          max_proposals_per_window: number
+          organization_id: string
+          proposal_count: number
+          window_start: string
+        }
+        Insert: {
+          id?: string
+          max_proposals_per_window?: number
+          organization_id: string
+          proposal_count?: number
+          window_start?: string
+        }
+        Update: {
+          id?: string
+          max_proposals_per_window?: number
+          organization_id?: string
+          proposal_count?: number
+          window_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_evolution_rate_limits_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
