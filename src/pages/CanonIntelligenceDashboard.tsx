@@ -12,6 +12,7 @@ import { useCanonIntelligence } from "@/hooks/useCanonIntelligence";
 import { useCanonStewardship } from "@/hooks/useCanonStewardship";
 import { useCanonRuntime } from "@/hooks/useCanonRuntime";
 import { useCanonLearning } from "@/hooks/useCanonLearning";
+import { useCanonPipeline } from "@/hooks/useCanonPipeline";
 
 import { PatternLibraryTab } from "@/components/canon-intelligence/PatternLibraryTab";
 import { QueryConsoleTab } from "@/components/canon-intelligence/QueryConsoleTab";
