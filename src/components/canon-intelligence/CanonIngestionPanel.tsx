@@ -614,12 +614,17 @@ function DiscoveryCandidateCard({
   );
 }
 
-function MiniStat({ label, value, accent }: { label: string; value: number; accent?: boolean }) {
+function MiniStat({ label, value, accent, clickable, onClick }: { label: string; value: number; accent?: boolean; clickable?: boolean; onClick?: () => void }) {
   return (
-    <Card className="border-border/30 bg-card/40">
+    <Card
+      className={`border-border/30 bg-card/40 ${clickable ? "cursor-pointer hover:bg-card/60 hover:border-primary/40 transition-colors" : ""}`}
+      onClick={clickable ? onClick : undefined}
+    >
       <CardContent className="pt-3 pb-2 text-center">
         <p className={`text-lg font-bold ${accent ? "text-primary" : "text-foreground"}`}>{value}</p>
-        <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5 truncate">{label}</p>
+        <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5 truncate">
+          {clickable && "👁 "}{label}
+        </p>
       </CardContent>
     </Card>
   );
