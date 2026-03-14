@@ -30,8 +30,8 @@ Se o histórico anterior do chat não estiver disponível, siga esta sequência 
 
 - A implementação de sprints futuros deve prosseguir **um sprint de cada vez**
 - Cada sprint deve ser revisado e aprovado antes do início da execução
-- Sprints 1–200 são o canon completo — não reabra casualmente
-- Todos os blocos (Foundation até AP) estão completos
+- Sprints 1–202 são o canon completo — não reabra casualmente
+- Todos os blocos (Foundation até AR) estão completos
 - Não colapse a arquitetura interna e a jornada do usuário na mesma superfície
 
 ---
@@ -49,7 +49,7 @@ A jornada padrão voltada ao usuário permanece:
 
 ## Nota Canônica Atual
 
-> A documentação pública reflete a **linha arquitetural estável** até o Sprint 200 (todos os blocos Foundation até AP).
+> A documentação pública reflete a **linha arquitetural estável** até o Sprint 202 (todos os blocos Foundation até AR).
 >
 > O roadmap interno e o canon experimental podem estar à frente desta baseline.
 > Este aviso existe para preservar credibilidade — não para obscurecer progresso.
@@ -111,12 +111,14 @@ O Modo Owner é para governar a inteligência e evolução da plataforma.
 | 185 | AN | Evolução da Arquitetura de Execução — roteamento adaptativo baseado em risco, ajuste de política informado por evidências |
 | 186–192 | AO | Pipeline Canon Auto-Aprimorante — Deep Repo Absorber, Previsão de Demanda de Conhecimento, Orquestrador de Aquisição, Otimização de Portfólio, Engine de ROI, Consolidação UI do Hub, Ativação de Skills |
 | 193–200 | AP | Hardening de Segurança e Integridade Canon — Prevenção de Envenenamento, Hardening de Auth (3 ondas em 200+ Edge Functions), Ajuste de RLS, Segurança de Workers de Execução, Resistência a Inferência |
+| 201 | AQ | Ajustes Operacionais — Unificação do pipeline de absorção (repo→candidatos padrão), normalização de lifecycle_status, remoção de limites de query nos hooks |
+| 202 | AR | Consolidação de Autoridade de Review — Canon-review-engine como autoridade única de revisão/promoção, canon-evolution-engine restrito a manutenção pós-cânone, cron diário de ingestão automática (pg_cron + pg_net) |
 
 ---
 
-## Após Sprint 200 — Estado Estratégico Atual
+## Após Sprint 202 — Estado Estratégico Atual
 
-A plataforma completou 200 sprints em todos os blocos de Foundation até AP. O sistema opera como um organismo adaptativo governado com segurança reforçada com:
+A plataforma completou 202 sprints em todos os blocos de Foundation até AR. O sistema opera como um organismo adaptativo governado com segurança reforçada com:
 
 - ✅ Action Engine Axion completo com pipeline de execução governada
 - ✅ Ciclo de vida de decisões de governança (proposta → revisão → handoff → rastreamento de aplicação)
@@ -134,15 +136,27 @@ A plataforma completou 200 sprints em todos os blocos de Foundation até AP. O s
 - ✅ Auditoria e ajuste de políticas RLS
 - ✅ Resistência a inferência — prevenção de inferência de existência cross-tenant
 - ✅ 200+ Edge Functions implantadas e com segurança reforçada
+- ✅ Pipeline de absorção unificado — repo absorber escreve em canon_candidate_entries
+- ✅ Canon-review-engine como autoridade única de revisão e promoção de candidatos
+- ✅ Cron diário de ingestão automática (meia-noite, pg_cron + canon-scheduled-pipeline)
+
+### Lacunas Operacionais Conhecidas (Honestidade Canônica)
+
+| Área | Status | Lacuna |
+|------|--------|--------|
+| **Revisão Humana de Candidatos** | ⚠️ Parcial | A IA classifica candidatos como `needs_review`, mas não existe UI dedicada para stewards tomarem decisões individuais. Apenas contagem é exibida. |
+| **Operational Learning** | ⚠️ Sem dados | Edge functions existem e estão deployadas, mas os producers de sinais (`operational_learning_signals`) dependem de execuções reais de iniciativas. Sem execuções, sem dados. |
+| **Repo Trust** | ⚠️ Nunca executado | `repo-trust-score-engine` está implementado, mas nunca foi invocado. Não está incluído no cron diário. |
+| **Repo Trust no cron** | ❌ Falta | O pipeline agendado só cobre ingestão + review + promote. Não inclui avaliação de trust de fontes. |
+| **Sinais de aprendizado operacional no cron** | ❌ Falta | Mineração de padrões operacionais não está automatizada no pipeline diário. |
 
 O foco agora se volta para:
-- Aprofundar a qualidade da inteligência e precisão consultiva
-- Fortalecer a experiência do produto e o loop de feedback de adoção
-- Endurecer a governança institucional em contextos distribuídos e federados
-- Conectar o Action Engine à execução real downstream
-- Melhorar a confiabilidade de entrega ponta a ponta
+- **Construir a tela de Revisão Humana** para candidatos borderline (needs_review)
+- **Incluir Repo Trust no cron diário** para avaliação automática de confiança de fontes
+- **Ativar producers de sinais operacionais** em mais pontos do pipeline de delivery
 - Maturar a camada Skills para profundidade operacional completa
 - Ativar o pipeline de extração de skills → revisão → vinculação de capacidades
+- Conectar o Action Engine à execução real downstream
 
 ---
 
@@ -153,7 +167,7 @@ O foco agora se volta para:
 3. Use **GOVERNANCE.md** para módulos Agent OS, contratos e referência de governança
 4. Implemente trabalho futuro **sprint por sprint** com revisão humana
 5. **Não** colapse a arquitetura interna e a jornada do usuário na mesma superfície
-6. **Não** reabra casualmente o canon completo (Sprints 1–200) sem revisão deliberada
+6. **Não** reabra casualmente o canon completo (Sprints 1–202) sem revisão deliberada
 7. Camadas internas são suporte de bastidores — a superfície padrão do produto é a jornada do usuário
 
 ---
@@ -170,7 +184,7 @@ O foco agora se volta para:
 
 ### Fronteiras Canônicas Atuais
 
-- **Sprints 1–200** = canon completo (Foundation até Bloco AP)
+- **Sprints 1–202** = canon completo (Foundation até Bloco AR)
 
 ---
 
