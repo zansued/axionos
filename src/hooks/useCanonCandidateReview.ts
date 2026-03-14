@@ -32,6 +32,8 @@ export function useCanonCandidateReview() {
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: STATUS_KEY });
     qc.invalidateQueries({ queryKey: ["canon-intelligence"] });
+    qc.invalidateQueries({ queryKey: ["canon-pipeline-stats"] });
+    qc.invalidateQueries({ queryKey: ["canon-candidates"] });
   };
 
   const reviewPending = useMutation({
