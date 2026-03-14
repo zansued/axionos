@@ -133,9 +133,9 @@ export default function SystemHealthDashboard() {
           {/* Panel 2: Evidence Confidence */}
           <Card>
             <CardContent className="pt-6">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Evidence Confidence</p>
-              {overallConfidence != null ? (() => {
-                const level = overallConfidence >= 0.7 ? "High" : overallConfidence >= 0.4 ? "Medium" : "Low";
+               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Confiança da Evidência</p>
+               {overallConfidence != null ? (() => {
+                const level = overallConfidence >= 0.7 ? "Alta" : overallConfidence >= 0.4 ? "Média" : "Baixa";
                 const color = overallConfidence >= 0.7 ? "text-emerald-400" : overallConfidence >= 0.4 ? "text-yellow-400" : "text-destructive";
                 const bgColor = overallConfidence >= 0.7 ? "bg-emerald-500" : overallConfidence >= 0.4 ? "bg-yellow-500" : "bg-destructive";
                 return (
