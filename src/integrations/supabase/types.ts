@@ -9166,6 +9166,73 @@ export type Database = {
           },
         ]
       }
+      canon_renewal_triggers: {
+        Row: {
+          canon_entry_id: string
+          created_at: string
+          detected_at: string
+          id: string
+          organization_id: string
+          resolution_action: string | null
+          resolved_at: string | null
+          severity: string
+          trigger_condition: Json
+          trigger_type: string
+          updated_at: string
+          workflow_id: string | null
+        }
+        Insert: {
+          canon_entry_id: string
+          created_at?: string
+          detected_at?: string
+          id?: string
+          organization_id: string
+          resolution_action?: string | null
+          resolved_at?: string | null
+          severity?: string
+          trigger_condition?: Json
+          trigger_type?: string
+          updated_at?: string
+          workflow_id?: string | null
+        }
+        Update: {
+          canon_entry_id?: string
+          created_at?: string
+          detected_at?: string
+          id?: string
+          organization_id?: string
+          resolution_action?: string | null
+          resolved_at?: string | null
+          severity?: string
+          trigger_condition?: Json
+          trigger_type?: string
+          updated_at?: string
+          workflow_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_renewal_triggers_canon_entry_id_fkey"
+            columns: ["canon_entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_renewal_triggers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_renewal_triggers_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "canon_revalidation_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_retrieval_contexts: {
         Row: {
           confidence_threshold: number
@@ -9367,6 +9434,75 @@ export type Database = {
           },
           {
             foreignKeyName: "canon_reuse_registry_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_revalidation_workflows: {
+        Row: {
+          canon_entry_id: string
+          completed_at: string | null
+          confidence_after: number | null
+          confidence_before: number | null
+          created_at: string
+          id: string
+          organization_id: string
+          revalidation_result: string | null
+          review_notes: string | null
+          reviewed_by: string | null
+          started_at: string | null
+          status: string
+          trigger_reason: string
+          trigger_type: string
+          updated_at: string
+        }
+        Insert: {
+          canon_entry_id: string
+          completed_at?: string | null
+          confidence_after?: number | null
+          confidence_before?: number | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          revalidation_result?: string | null
+          review_notes?: string | null
+          reviewed_by?: string | null
+          started_at?: string | null
+          status?: string
+          trigger_reason?: string
+          trigger_type?: string
+          updated_at?: string
+        }
+        Update: {
+          canon_entry_id?: string
+          completed_at?: string | null
+          confidence_after?: number | null
+          confidence_before?: number | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          revalidation_result?: string | null
+          review_notes?: string | null
+          reviewed_by?: string | null
+          started_at?: string | null
+          status?: string
+          trigger_reason?: string
+          trigger_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_revalidation_workflows_canon_entry_id_fkey"
+            columns: ["canon_entry_id"]
+            isOneToOne: false
+            referencedRelation: "canon_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_revalidation_workflows_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
