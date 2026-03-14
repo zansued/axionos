@@ -41,8 +41,7 @@ export function useCanonStewardship() {
         .from("canon_entry_conflicts")
         .select("*")
         .eq("organization_id", orgId!)
-        .order("created_at", { ascending: false })
-        .limit(100);
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },
