@@ -60,33 +60,10 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
   const [ingestingAll, setIngestingAll] = useState(false);
   const [repoUrl, setRepoUrl] = useState("");
   const [absorbingRepo, setAbsorbingRepo] = useState(false);
-  const [reviewingPipeline, setReviewingPipeline] = useState(false);
   const [discoveryTopic, setDiscoveryTopic] = useState("");
   const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
   const evolution = useCanonEvolutionEngine();
   const discovery = useSourceDiscoveryAgent();
-
-  const runReviewPipeline = async () => {
-    if (!currentOrg?.id) return;
-    setReviewingPipeline(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("canon-review-engine", {
-        body: { action: "run_full_pipeline", organization_id: currentOrg.id },
-      });
-      if (error) throw error;
-      const reviewInfo = data?.review || {};
-      const promoInfo = data?.promotion || {};
-      toast({
-        title: "Pipeline de Review Concluído",
-        description: `Revisados: ${reviewInfo.reviewed || 0} (${reviewInfo.approved || 0} aprovados, ${reviewInfo.rejected || 0} rejeitados). Promovidos: ${promoInfo.promoted || 0} ao Canon.`,
-      });
-      onRefresh();
-    } catch (err: any) {
-      toast({ title: "Falha no Pipeline de Review", description: err.message, variant: "destructive" });
-    } finally {
-      setReviewingPipeline(false);
-    }
-  };
 
   const seedSources = async () => {
     if (!currentOrg?.id) return;
@@ -157,6 +134,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
     let totalCreated = 0;
     let processed = 0;
     try {
+      // Phase 1: Ingest all sources
       for (const src of active) {
         try {
           const { data, error } = await supabase.functions.invoke("canon-ingestion-agent", {
@@ -170,18 +148,35 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
           console.error(`Ingestion failed for ${src.source_name}:`, err.message);
           processed++;
         }
-        // Small delay between sources to avoid rate limits
         if (processed < active.length) {
           await new Promise((r) => setTimeout(r, 2000));
         }
       }
+
+      // Phase 2: Auto review + promote all new candidates
+      let reviewInfo: any = {};
+      let promoInfo: any = {};
+      if (totalCreated > 0) {
+        try {
+          const { data, error } = await supabase.functions.invoke("canon-review-engine", {
+            body: { action: "run_full_pipeline", organization_id: currentOrg.id },
+          });
+          if (!error && data) {
+            reviewInfo = data.review || {};
+            promoInfo = data.promotion || {};
+          }
+        } catch (err: any) {
+          console.error("Auto review/promote failed:", err.message);
+        }
+      }
+
       toast({
-        title: "Ingestão em Lote Concluída",
-        description: `${totalCreated} novos candidatos extraídos de ${processed} fontes.`,
+        title: "Pipeline Completo Concluído",
+        description: `Ingestão: ${totalCreated} candidatos de ${processed} fontes. Revisão: ${reviewInfo.approved || 0} aprovados. Promoção: ${promoInfo.promoted || 0} ao Canon.`,
       });
       onRefresh();
     } catch (err: any) {
-      toast({ title: "Falha na Ingestão em Lote", description: err.message, variant: "destructive" });
+      toast({ title: "Falha no Pipeline", description: err.message, variant: "destructive" });
     } finally {
       setIngestingAll(false);
     }
@@ -230,39 +225,6 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
             <Button size="sm" onClick={ingestAll} disabled={ingestingAll || activeSources.length === 0}>
               {ingestingAll ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Zap className="h-3.5 w-3.5 mr-1.5" />}
               Ingerir Todas as Fontes
-            </Button>
-            {stats && stats.pendingCandidates > 0 && (
-              <Button size="sm" variant="secondary" onClick={runReviewPipeline} disabled={reviewingPipeline}>
-                {reviewingPipeline ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Bot className="h-3.5 w-3.5 mr-1.5" />}
-                Revisar e Promover ({stats.pendingCandidates} pendentes)
-              </Button>
-            )}
-            {stats && stats.approvedCandidates > 0 && (
-              <Button size="sm" variant="default" onClick={batchPromoteApproved} disabled={promoting}>
-                {promoting ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <ArrowUpCircle className="h-3.5 w-3.5 mr-1.5" />}
-                Promover {stats.approvedCandidates} ao Canon
-              </Button>
-            )}
-            <Button
-              size="sm" variant="secondary"
-              onClick={() => evolution.runFullPipeline.mutate()}
-              disabled={evolution.runFullPipeline.isPending}
-              className="border-primary/30"
-            >
-              {evolution.runFullPipeline.isPending
-                ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                : <Sparkles className="h-3.5 w-3.5 mr-1.5" />}
-              Pipeline Completo
-            </Button>
-            <Button
-              size="sm" variant="outline"
-              onClick={() => evolution.processBacklog.mutate()}
-              disabled={evolution.processBacklog.isPending}
-            >
-              {evolution.processBacklog.isPending
-                ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                : <TrendingUp className="h-3.5 w-3.5 mr-1.5" />}
-              Processar Backlog
             </Button>
             <Button size="sm" variant="ghost" onClick={onRefresh}>
               <RefreshCw className="h-3.5 w-3.5 mr-1.5" />Atualizar
