@@ -270,7 +270,7 @@ export default function CanonIntelligenceDashboard() {
               return (
                 <button
                   key={section.key}
-                  onClick={() => setActiveSection(section.key)}
+                  onClick={() => { setActiveSection(section.key); setActiveTabOverride(null); }}
                   className={`text-left rounded-xl border p-4 transition-all duration-200 ${
                     isActive
                       ? "border-primary/50 bg-primary/5 shadow-sm shadow-primary/10 ring-1 ring-primary/20"
