@@ -105,7 +105,7 @@ export default function SystemHealthDashboard() {
             disabled={evaluate.isPending}
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${evaluate.isPending ? "animate-spin" : ""}`} />
-            Evaluate Health
+            Avaliar Saúde
           </Button>
         </div>
 
