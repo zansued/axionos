@@ -171,17 +171,17 @@ export default function SystemHealthDashboard() {
                   <>
                     <p className={`text-2xl font-bold ${trustColor}`}>{trustLabel}</p>
                     <div className="flex items-center gap-3 mt-3 text-xs">
-                      {evidenceSummary.observed > 0 && (
-                        <span className="text-emerald-400">● {evidenceSummary.observed} observed</span>
+                       {evidenceSummary.observed > 0 && (
+                        <span className="text-emerald-400">● {evidenceSummary.observed} observados</span>
                       )}
                       {evidenceSummary.inferred > 0 && (
-                        <span className="text-blue-400">● {evidenceSummary.inferred} inferred</span>
+                        <span className="text-blue-400">● {evidenceSummary.inferred} inferidos</span>
                       )}
                       {evidenceSummary.seeded > 0 && (
                         <span className="text-yellow-400">● {evidenceSummary.seeded} bootstrap</span>
                       )}
                       {evidenceSummary.insufficient > 0 && (
-                        <span className="text-destructive">● {evidenceSummary.insufficient} insufficient</span>
+                        <span className="text-destructive">● {evidenceSummary.insufficient} insuficientes</span>
                       )}
                     </div>
                     {!evidenceSummary.trustworthy && (
