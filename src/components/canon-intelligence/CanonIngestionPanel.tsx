@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import {
   ArrowUpCircle, DatabaseZap, Bot, Sparkles, GitMerge, TrendingUp,
   Search, Star, Shield, ThumbsUp, ThumbsDown, ExternalLink
 } from "lucide-react";
+import { useCanonCandidateReview } from "@/hooks/useCanonCandidateReview";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { useToast } from "@/hooks/use-toast";
@@ -65,6 +66,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh, onNavigateTo
   const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
   const evolution = useCanonEvolutionEngine();
   const discovery = useSourceDiscoveryAgent();
+  const review = useCanonCandidateReview();
 
   const seedSources = async () => {
     if (!currentOrg?.id) return;
@@ -219,13 +221,33 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh, onNavigateTo
         <TabsContent value="sources" className="space-y-4 mt-4">
           {/* Action bar */}
           <div className="flex flex-wrap gap-2">
-            <Button size="sm" variant="outline" onClick={seedSources} disabled={seeding}>
-              {seeding ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Globe className="h-3.5 w-3.5 mr-1.5" />}
-              Seed Fontes Iniciais
-            </Button>
             <Button size="sm" onClick={ingestAll} disabled={ingestingAll || activeSources.length === 0}>
               {ingestingAll ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Zap className="h-3.5 w-3.5 mr-1.5" />}
               Ingerir Todas as Fontes
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => review.reviewPending.mutate(undefined)}
+              disabled={review.reviewPending.isPending}
+              className="border-primary/30"
+            >
+              {review.reviewPending.isPending
+                ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                : <Bot className="h-3.5 w-3.5 mr-1.5" />}
+              Revisar Pendentes
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => review.promoteReady.mutate()}
+              disabled={review.promoteReady.isPending}
+              className="border-emerald-500/30"
+            >
+              {review.promoteReady.isPending
+                ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                : <ArrowUpCircle className="h-3.5 w-3.5 mr-1.5" />}
+              Promover Aprovados
             </Button>
             <Button size="sm" variant="ghost" onClick={onRefresh}>
               <RefreshCw className="h-3.5 w-3.5 mr-1.5" />Atualizar
