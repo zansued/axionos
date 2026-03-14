@@ -322,6 +322,7 @@ Marcos principais pós-138:
 | Fase 15 | Pipeline Canon Auto-Aprimorante | Completo (Sprints 186–192) |
 | Fase 16 | Hardening de Segurança e Integridade Canon | Completo (Sprints 193–200) |
 | Fase 17 | Ajustes Operacionais e Consolidação de Review | Completo (Sprints 201–202) |
+| Fase 18 | Ativação Operacional Completa do Hub Canon | Completo (Sprints 203–207) |
 
 ---
 
