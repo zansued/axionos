@@ -426,6 +426,107 @@ Deno.serve(async (req) => {
 
     console.log(`[cron] Trust evaluation complete:`, JSON.stringify(trustSummary));
 
+    // ═══ Phase 4: Operational Pattern Mining ═══
+    console.log(`[cron] Phase 4: Mining operational patterns for ${uniqueOrgIds.length} org(s)`);
+    const miningSummary: any[] = [];
+
+    for (const orgId of uniqueOrgIds) {
+      try {
+        // Fetch recent signals (last 7 days)
+        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+        const { data: signals } = await sb
+          .from("operational_learning_signals")
+          .select("id, signal_type, outcome, outcome_success, confidence, payload, created_at")
+          .eq("organization_id", orgId)
+          .gte("created_at", sevenDaysAgo)
+          .order("created_at", { ascending: false })
+          .limit(200);
+
+        if (!signals || signals.length < 3) {
+          miningSummary.push({ organization_id: orgId, signals_found: signals?.length || 0, patterns_mined: 0, candidates_created: 0, message: "Insufficient signals" });
+          continue;
+        }
+
+        // Group by signal_type to detect recurring patterns
+        const groupedByType = new Map<string, any[]>();
+        for (const sig of signals) {
+          const key = sig.signal_type || "unknown";
+          if (!groupedByType.has(key)) groupedByType.set(key, []);
+          groupedByType.get(key)!.push(sig);
+        }
+
+        let patternsMined = 0;
+        let candidatesCreated = 0;
+
+        for (const [signalType, group] of groupedByType) {
+          if (group.length < 3) continue; // minimum 3 occurrences
+
+          const successCount = group.filter((s: any) => s.outcome_success).length;
+          const successRate = successCount / group.length;
+          const avgConfidence = group.reduce((sum: number, s: any) => sum + (s.confidence || 0.5), 0) / group.length;
+
+          // Only mine patterns with sufficient confidence
+          if (avgConfidence < 0.6 && successRate < 0.6) continue;
+
+          patternsMined++;
+
+          // Determine pattern category based on signal characteristics
+          let category = "best_practice";
+          let patternTitle = "";
+          let patternSummary = "";
+
+          if (successRate >= 0.8) {
+            category = "best_practice";
+            patternTitle = `Operational success pattern: ${signalType}`;
+            patternSummary = `Recurring successful pattern "${signalType}" detected across ${group.length} occurrences with ${Math.round(successRate * 100)}% success rate and avg confidence ${avgConfidence.toFixed(2)}.`;
+          } else if (successRate <= 0.3) {
+            category = "anti_pattern";
+            patternTitle = `Operational anti-pattern: ${signalType}`;
+            patternSummary = `Recurring failure pattern "${signalType}" detected across ${group.length} occurrences with only ${Math.round(successRate * 100)}% success rate. Requires investigation.`;
+          } else {
+            category = "process_guideline";
+            patternTitle = `Operational pattern: ${signalType}`;
+            patternSummary = `Mixed-outcome pattern "${signalType}" observed ${group.length} times with ${Math.round(successRate * 100)}% success rate. May benefit from refinement.`;
+          }
+
+          // Check for duplicate before inserting as canon candidate
+          const { data: existingCandidate } = await sb
+            .from("canon_candidate_entries")
+            .select("id")
+            .eq("organization_id", orgId)
+            .ilike("title", `%${signalType}%`)
+            .limit(1);
+
+          if (existingCandidate && existingCandidate.length > 0) continue;
+
+          const { error: insertErr } = await sb.from("canon_candidate_entries").insert({
+            organization_id: orgId,
+            title: patternTitle,
+            summary: patternSummary,
+            category,
+            domain_tags: ["operational_learning", signalType],
+            confidence_score: Math.round(avgConfidence * 100) / 100,
+            source_refs: [{ source: "operational_pattern_mining", signal_type: signalType, occurrences: group.length, success_rate: successRate }],
+            review_status: "pending",
+            internal_validation_status: "pending",
+            trial_status: "none",
+            promotion_status: "pending",
+            promotion_decision_reason: "",
+            submitted_by: "cron_pattern_mining",
+          });
+
+          if (!insertErr) candidatesCreated++;
+        }
+
+        miningSummary.push({ organization_id: orgId, signals_found: signals.length, patterns_mined: patternsMined, candidates_created: candidatesCreated });
+      } catch (mineErr: any) {
+        console.error(`[cron] Pattern mining error for org ${orgId}:`, mineErr.message);
+        miningSummary.push({ organization_id: orgId, error: mineErr.message });
+      }
+    }
+
+    console.log(`[cron] Pattern mining complete:`, JSON.stringify(miningSummary));
+
     // Log the cron run
     await sb.from("audit_logs").insert({
       action: "canon_scheduled_pipeline",
@@ -433,7 +534,7 @@ Deno.serve(async (req) => {
       entity_type: "canon",
       message: `Scheduled pipeline completed: ${uniqueOrgIds.length} org(s) processed`,
       severity: "info",
-      metadata: { summary, trust_summary: trustSummary, run_at: new Date().toISOString() },
+      metadata: { summary, trust_summary: trustSummary, mining_summary: miningSummary, run_at: new Date().toISOString() },
     });
 
     // Sprint 205: Emit operational learning signal per org
