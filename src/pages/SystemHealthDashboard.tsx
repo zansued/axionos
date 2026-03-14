@@ -123,7 +123,7 @@ export default function SystemHealthDashboard() {
               </div>
               {rawScore != null && rawScore !== overall && (
                 <p className="text-xs text-muted-foreground mt-1">
-                  Raw score: {(rawScore * 100).toFixed(1)}% (before confidence weighting)
+                  Score bruto: {(rawScore * 100).toFixed(1)}% (antes da ponderação por confiança)
                 </p>
               )}
               <Progress value={overall * 100} className="mt-3 h-2" />
