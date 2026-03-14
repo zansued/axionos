@@ -23,6 +23,7 @@ interface CanonIngestionPanelProps {
   sources: any[];
   syncRuns: any[];
   onRefresh: () => void;
+  onNavigateToHumanReview?: () => void;
 }
 
 const SYNC_STATUS_ICON: Record<string, React.ReactNode> = {
