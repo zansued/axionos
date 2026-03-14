@@ -27948,6 +27948,167 @@ export type Database = {
           },
         ]
       }
+      operational_mined_patterns: {
+        Row: {
+          agent_types: string[]
+          confidence_score: number
+          created_at: string
+          description: string
+          dismissal_reason: string | null
+          domain_scopes: string[]
+          evidence_refs: Json
+          first_seen_at: string
+          id: string
+          involved_canon_ids: string[]
+          involved_skill_ids: string[]
+          last_seen_at: string
+          metadata: Json
+          noise_score: number
+          occurrence_count: number
+          organization_id: string
+          pattern_signature: string
+          pattern_type: Database["public"]["Enums"]["mined_pattern_type"]
+          pipeline_stages: string[]
+          proposed_candidate_id: string | null
+          signal_strength: number
+          status: Database["public"]["Enums"]["mined_pattern_status"]
+          success_rate: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          agent_types?: string[]
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          dismissal_reason?: string | null
+          domain_scopes?: string[]
+          evidence_refs?: Json
+          first_seen_at?: string
+          id?: string
+          involved_canon_ids?: string[]
+          involved_skill_ids?: string[]
+          last_seen_at?: string
+          metadata?: Json
+          noise_score?: number
+          occurrence_count?: number
+          organization_id: string
+          pattern_signature?: string
+          pattern_type: Database["public"]["Enums"]["mined_pattern_type"]
+          pipeline_stages?: string[]
+          proposed_candidate_id?: string | null
+          signal_strength?: number
+          status?: Database["public"]["Enums"]["mined_pattern_status"]
+          success_rate?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          agent_types?: string[]
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          dismissal_reason?: string | null
+          domain_scopes?: string[]
+          evidence_refs?: Json
+          first_seen_at?: string
+          id?: string
+          involved_canon_ids?: string[]
+          involved_skill_ids?: string[]
+          last_seen_at?: string
+          metadata?: Json
+          noise_score?: number
+          occurrence_count?: number
+          organization_id?: string
+          pattern_signature?: string
+          pattern_type?: Database["public"]["Enums"]["mined_pattern_type"]
+          pipeline_stages?: string[]
+          proposed_candidate_id?: string | null
+          signal_strength?: number
+          status?: Database["public"]["Enums"]["mined_pattern_status"]
+          success_rate?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operational_mined_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operational_mining_evidence: {
+        Row: {
+          action_sequence: Json
+          agent_type: string
+          canon_entry_ids: string[]
+          context_snapshot: Json
+          created_at: string
+          id: string
+          initiative_id: string | null
+          organization_id: string
+          outcome_quality: number
+          outcome_status: string
+          pattern_id: string
+          pipeline_stage: string
+          skill_ids: string[]
+          story_id: string | null
+          subtask_id: string | null
+        }
+        Insert: {
+          action_sequence?: Json
+          agent_type?: string
+          canon_entry_ids?: string[]
+          context_snapshot?: Json
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id: string
+          outcome_quality?: number
+          outcome_status?: string
+          pattern_id: string
+          pipeline_stage?: string
+          skill_ids?: string[]
+          story_id?: string | null
+          subtask_id?: string | null
+        }
+        Update: {
+          action_sequence?: Json
+          agent_type?: string
+          canon_entry_ids?: string[]
+          context_snapshot?: Json
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          organization_id?: string
+          outcome_quality?: number
+          outcome_status?: string
+          pattern_id?: string
+          pipeline_stage?: string
+          skill_ids?: string[]
+          story_id?: string | null
+          subtask_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operational_mining_evidence_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operational_mining_evidence_pattern_id_fkey"
+            columns: ["pattern_id"]
+            isOneToOne: false
+            referencedRelation: "operational_mined_patterns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       operational_posture_state: {
         Row: {
           activated_at: string
@@ -42241,6 +42402,20 @@ export type Database = {
         | "conflict_detected"
         | "insufficient_context"
         | "superseded_guidance_detected"
+      mined_pattern_status:
+        | "detected"
+        | "confirmed"
+        | "candidate_proposed"
+        | "promoted"
+        | "dismissed"
+        | "noise"
+      mined_pattern_type:
+        | "recurring_success"
+        | "skill_combination"
+        | "recurring_failure"
+        | "improvised_method"
+        | "bottleneck"
+        | "emergent_convention"
       mutation_approval_status:
         | "pending_analysis"
         | "analyzed"
@@ -42774,6 +42949,22 @@ export const Constants = {
         "conflict_detected",
         "insufficient_context",
         "superseded_guidance_detected",
+      ],
+      mined_pattern_status: [
+        "detected",
+        "confirmed",
+        "candidate_proposed",
+        "promoted",
+        "dismissed",
+        "noise",
+      ],
+      mined_pattern_type: [
+        "recurring_success",
+        "skill_combination",
+        "recurring_failure",
+        "improvised_method",
+        "bottleneck",
+        "emergent_convention",
       ],
       mutation_approval_status: [
         "pending_analysis",
