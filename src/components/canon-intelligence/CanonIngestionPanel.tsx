@@ -60,7 +60,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
   const [ingestingAll, setIngestingAll] = useState(false);
   const [repoUrl, setRepoUrl] = useState("");
   const [absorbingRepo, setAbsorbingRepo] = useState(false);
-  const [reviewingPipeline, setReviewingPipeline] = useState(false);
+  const [_reviewingPipeline, _setReviewingPipeline] = useState(false);
   const [discoveryTopic, setDiscoveryTopic] = useState("");
   const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
   const evolution = useCanonEvolutionEngine();
