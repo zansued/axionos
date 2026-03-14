@@ -99,8 +99,8 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 
 ---
 
-### Sprint 205 — Ativação de Producers de Sinais Operacionais
-**Priority: Medium** | **Dependency: None (parallel)**
+### Sprint 205 — Ativação de Producers de Sinais Operacionais ✅
+**Priority: Medium** | **Status: Complete**
 
 - Instrumenta 4+ edge functions para emitir `operational_learning_signals`:
   - `canon-review-engine` → review_batch_completed
