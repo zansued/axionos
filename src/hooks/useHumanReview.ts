@@ -158,7 +158,7 @@ export function useHumanReview() {
           updated_at: new Date().toISOString(),
         })
         .eq("organization_id", orgId!)
-        .eq("internal_validation_status", "needs_review")
+        .in("internal_validation_status", ["needs_review", "needs_human_review"])
         .eq("promotion_status", "pending");
       if (error) throw error;
       await logAudit("human_review_bulk_approve", "bulk", { count: candidates.length });

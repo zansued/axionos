@@ -87,7 +87,7 @@ export function useCanonPipeline() {
         lifecycleCounts,
         totalCandidates: candData.length,
         pendingCandidates: candData.filter((c: any) => c.internal_validation_status === "pending" && c.promotion_status === "pending").length,
-        needsHumanReview: candData.filter((c: any) => c.internal_validation_status === "needs_human_review").length,
+        needsHumanReview: candData.filter((c: any) => c.internal_validation_status === "needs_human_review" || c.internal_validation_status === "needs_review").length,
         approvedCandidates: candData.filter((c: any) => c.internal_validation_status === "approved" && c.promotion_status === "pending").length,
         promotedCandidates: candData.filter((c: any) => c.promotion_status === "promoted").length,
         candidatesByStatus,
