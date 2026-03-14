@@ -68,6 +68,7 @@ const SECTIONS = [
     defaultTab: "governance-tab",
     tabs: [
       { value: "governance-tab", label: "Governance", icon: Shield },
+      { value: "human-review", label: "Revisão Humana", icon: UserCheck },
       { value: "lineage", label: "Lineage", icon: Route },
       { value: "renewal", label: "Renewal", icon: HeartPulse },
     ],
