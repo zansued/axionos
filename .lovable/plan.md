@@ -64,7 +64,7 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 | **Human Review UI** | ✅ Resolved | Sprint 203: Dedicated steward UI with AI scores, approve/reject/review flows, batch actions, and audit trail. |
 | **Operational Learning** | ✅ Resolved | Sprint 205: 4 edge functions instrumented as signal producers. Sprint 206: Pattern mining automates candidate generation from signals. |
 | **Repo Trust** | ✅ Resolved | Sprint 204: Trust evaluation integrated into daily cron. Updates `repo_trust_scores` and `pattern_weight_factors` automatically. |
-| **Confidence Recalibration** | ⚠️ Planned | Sprint 207: Automatic recalibration not yet implemented. |
+| **Confidence Recalibration** | ✅ Resolved | Sprint 207: Automatic recalibration integrated into daily cron. Boosts/degrades canon entry confidence based on usage, source trust, and operational signal agreement. |
 
 ---
 
