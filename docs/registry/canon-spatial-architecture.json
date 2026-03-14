@@ -1,0 +1,17 @@
+{
+  "title": "Spatial Architect & Visual Reasoning Pattern",
+  "slug": "spatial-architecture-visual",
+  "canon_type": "architectural_guideline",
+  "practice_type": "ux_engineering",
+  "lifecycle_status": "promoted",
+  "confidence_score": 0.98,
+  "summary": "Princípios de raciocínio espacial baseados em tldraw v4 para design de interfaces infinitas e visualização de dados complexos (DAGs).",
+  "body": "Utiliza lógica de coordenadas (x, y, w, h), hierarquia de Frames e reatividade baseada em Signals (Atoms/Computed). Trata elementos de UI como registros puros em uma Store performática.",
+  "implementation_guidance": "1. Utilize @tldraw/state para gerenciar a reatividade granular. 2. Implemente ShapeUtils para novas formas visuais. 3. Projete o Live DAG Visualizer do AxionOS usando este motor reativo.",
+  "stack_scope": "React, TypeScript, tldraw, Signals",
+  "layer_scope": "Frontend, Vibe Layer",
+  "problem_scope": "Infinite Canvas, Real-time Observability, Visual Logic",
+  "tags": ["tldraw", "signals", "spatial-computing", "vibe-layer"],
+  "source_reference": "https://github.com/tldraw/tldraw",
+  "created_at": "2026-03-13T10:30:00Z"
+}
