@@ -67,6 +67,16 @@ const SECTIONS = [
     ],
   },
   {
+    key: "skills",
+    label: "Skills Pipeline",
+    icon: Boxes,
+    description: "Extract, review, and govern engineering skills derived from canonical knowledge.",
+    defaultTab: "extraction",
+    tabs: [
+      { value: "extraction", label: "Extraction", icon: Boxes },
+    ],
+  },
+  {
     key: "application",
     label: "Knowledge Application",
     icon: Target,
