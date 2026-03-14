@@ -58,6 +58,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
   const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
   const evolution = useCanonEvolutionEngine();
 
+  // Review & Promote uses canon-review-engine (single authority — Sprint 202)
   const runReviewPipeline = async () => {
     if (!currentOrg?.id) return;
     setReviewingPipeline(true);
@@ -210,7 +211,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
           {evolution.runFullPipeline.isPending
             ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
             : <Sparkles className="h-3.5 w-3.5 mr-1.5" />}
-          Pipeline de Evolução
+          Pipeline Completo
         </Button>
         <Button
           size="sm"
