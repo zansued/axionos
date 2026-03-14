@@ -201,6 +201,8 @@ export default function CanonIntelligenceDashboard() {
             candidates={intel.candidates}
           />
         );
+      case "human-review":
+        return <HumanReviewTab />;
       case "lineage":
         return <KnowledgeLineageTab />;
       case "renewal":
