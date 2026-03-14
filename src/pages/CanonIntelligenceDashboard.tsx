@@ -28,6 +28,7 @@ import { KnowledgeRenewalTab } from "@/components/canon-intelligence/KnowledgeRe
 import { SkillExtractionTab } from "@/components/canon-intelligence/SkillExtractionTab";
 import { SkillReviewTab } from "@/components/canon-intelligence/SkillReviewTab";
 import { CapabilityBindingTab } from "@/components/canon-intelligence/CapabilityBindingTab";
+import { SkillRuntimeTab } from "@/components/canon-intelligence/SkillRuntimeTab";
 
 /* ──────────────── Section definitions ──────────────── */
 
