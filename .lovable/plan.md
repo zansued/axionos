@@ -1,7 +1,7 @@
 # AxionOS — Plano de Execução
 
-> **Current Sprint:** 206 (Mineração de Padrões no Cron) — ✅ Complete
-> **Next Sprint:** 207 — Recalibração de Confiança Automática
+> **Current Sprint:** 207 (Recalibração de Confiança Automática) — ✅ Complete
+> **Next Sprint:** 208 — TBD (Block AS complete)
 > Execution: **Sprint-based**
 
 ---
@@ -53,6 +53,7 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 | AS-204 | 204 | Repo Trust in Daily Cron Pipeline | ✅ Complete |
 | AS-205 | 205 | Operational Learning Signal Producers | ✅ Complete |
 | AS-206 | 206 | Pattern Mining in Daily Cron Pipeline | ✅ Complete |
+| AS-207 | 207 | Automatic Confidence Recalibration | ✅ Complete |
 
 ---
 
@@ -63,13 +64,13 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 | **Human Review UI** | ✅ Resolved | Sprint 203: Dedicated steward UI with AI scores, approve/reject/review flows, batch actions, and audit trail. |
 | **Operational Learning** | ✅ Resolved | Sprint 205: 4 edge functions instrumented as signal producers. Sprint 206: Pattern mining automates candidate generation from signals. |
 | **Repo Trust** | ✅ Resolved | Sprint 204: Trust evaluation integrated into daily cron. Updates `repo_trust_scores` and `pattern_weight_factors` automatically. |
-| **Confidence Recalibration** | ⚠️ Planned | Sprint 207: Automatic recalibration not yet implemented. |
+| **Confidence Recalibration** | ✅ Resolved | Sprint 207: Automatic recalibration integrated into daily cron. Boosts/degrades canon entry confidence based on usage, source trust, and operational signal agreement. |
 
 ---
 
 ## Block AS — Canon Intelligence Hub: Ativação Operacional Completa
 
-**Sprints 203–207** | Status: **in progress (203–206 complete)**
+**Sprints 203–207** | Status: **✅ Complete**
 
 ### Sprint 203 — Tela de Revisão Humana de Candidatos Canon ✅
 **Priority: High** | **Status: Complete**
