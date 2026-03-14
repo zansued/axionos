@@ -286,11 +286,19 @@ hover:border-border/60 transition-colors
 | API / Integrations | External connections | API keys, webhooks, connectors | Connect, revoke |
 | Environment Controls | Runtime config | Feature flags, limits, quotas | Toggle, set |
 
-### 10. Future Areas (Reserved)
+### 10. Canon Intelligence (Owner Mode — Implemented)
+| Screen | Purpose | Key Components | Primary Actions |
+|--------|---------|----------------|-----------------|
+| Canon Intelligence Hub | Institutional knowledge management | Knowledge Library, Ingestion, Governance, Application domains | Browse, query, review |
+| Pattern Library | Reusable patterns from execution | Pattern cards, confidence scores, domain tags | Search, inspect, promote |
+| Canon Graph | Knowledge relationship visualization | Node graph, lineage links, trust scores | Explore, drill down |
+| Governance & Lineage | Knowledge trust and provenance | Lineage chains, renewal triggers, revalidation workflows | Review, approve, renew |
+| Skills Pipeline | Canon → Skills extraction | Extraction status, skill bundles, engineering skills | Run extraction, review |
+| Knowledge Renewal | Staleness detection and revalidation | Renewal triggers, revalidation workflows, confidence recovery | Trigger renewal, review |
+
+### 11. Future Areas (Reserved)
 | Screen | Purpose |
 |--------|---------|
-| Canon & Knowledge Governance | Institutional knowledge management |
-| Runtime Sovereignty | Tenant isolation controls |
 | Doctrine Packs | Governance template marketplace |
 | Compounding Advantage | Strategic moat tracking |
 | Strategic Control | Long-term strategy alignment |
