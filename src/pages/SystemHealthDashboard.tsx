@@ -114,7 +114,7 @@ export default function SystemHealthDashboard() {
           {/* Panel 1: Overall Health */}
           <Card>
             <CardContent className="pt-6">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Overall Health</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Saúde Geral</p>
               <div className="flex items-baseline gap-3">
                 <p className="text-4xl font-bold">{(overall * 100).toFixed(1)}%</p>
                 <Badge className={`text-sm px-3 py-0.5 ${GRADE_COLORS[grade] || ""}`}>
