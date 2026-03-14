@@ -315,29 +315,226 @@ Return ONLY valid JSON: {"reviews": [{"index": 1, "verdict": "approve"|"reject"|
         }, 200, req);
       }
 
-      // ── Full pipeline: review + promote ──
+      // ── Full pipeline: review + promote (inline to avoid recursive auth issues) ──
       case "run_full_pipeline": {
-        // Step 1: Review
-        const reviewResp = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/canon-review-engine`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ action: "review_candidates", organization_id }),
-        });
-        const reviewResult = await reviewResp.json();
+        // Step 1: Review pending candidates
+        let reviewResult: any = { reviewed: 0, approved: 0, rejected: 0, needs_human_review: 0 };
+        try {
+          const { data: candidates, error: fetchErr } = await supabase
+            .from("canon_candidate_entries")
+            .select("*")
+            .eq("organization_id", organization_id)
+            .eq("internal_validation_status", "pending")
+            .eq("promotion_status", "pending")
+            .order("created_at", { ascending: true })
+            .limit(20);
 
-        // Step 2: Promote
-        const promoteResp = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/canon-review-engine`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ action: "promote_approved", organization_id }),
-        });
-        const promoteResult = await promoteResp.json();
+          if (!fetchErr && candidates && candidates.length > 0) {
+            const { data: existingEntries } = await supabase
+              .from("canon_entries")
+              .select("id, title, summary, practice_type, stack_scope, topic")
+              .eq("organization_id", organization_id)
+              .neq("lifecycle_status", "deprecated")
+              .limit(500);
+
+            const existingTitles = (existingEntries || []).map((e: any) => e.title.toLowerCase());
+
+            const { data: reviewedCandidates } = await supabase
+              .from("canon_candidate_entries")
+              .select("title, summary")
+              .eq("organization_id", organization_id)
+              .neq("internal_validation_status", "pending")
+              .limit(500);
+
+            const reviewedTitles = (reviewedCandidates || []).map((c: any) => c.title.toLowerCase());
+            const results: Array<{ id: string; verdict: string; reason: string }> = [];
+
+            for (let i = 0; i < candidates.length; i += 5) {
+              const batch = candidates.slice(i, i + 5);
+              const candidateSummaries = batch.map((c: any, idx: number) =>
+                `[${idx + 1}] Title: "${c.title}"\n    Type: ${c.knowledge_type}\n    Domain: ${c.domain_scope}\n    Summary: ${c.summary}\n    Reliability: ${c.source_reliability_score}/100`
+              ).join("\n\n");
+
+              const existingContext = existingTitles.length > 0
+                ? `\nExisting canon entries (check for duplicates):\n${existingTitles.slice(0, 50).map(t => `- ${t}`).join("\n")}`
+                : "";
+
+              try {
+                const aiResult = await callAI(
+                  config.key,
+                  `You are a Canon Knowledge Quality Reviewer for AxionOS. Evaluate engineering knowledge candidates for promotion to the institutional canon.
+
+For each candidate, assess:
+1. QUALITY: Is the pattern clearly defined, actionable, and reusable? (0-100)
+2. NOVELTY: Does it add new knowledge not already in the canon? (0-100)
+3. RELEVANCE: Is it useful for software engineering teams? (0-100)
+4. CLARITY: Is the description clear enough to be applied? (0-100)
+
+Produce a verdict for each:
+- "approve" — high quality, novel, relevant (scores avg > 60)
+- "reject" — low quality, duplicate, irrelevant, or too vague (scores avg < 40)
+- "needs_human_review" — borderline cases (scores avg 40-60)
+
+Return ONLY valid JSON: {"reviews": [{"index": 1, "verdict": "approve"|"reject"|"needs_human_review", "quality": N, "novelty": N, "relevance": N, "clarity": N, "reason": "brief explanation"}]}`,
+                  `Review these canon candidates:\n\n${candidateSummaries}${existingContext}`,
+                  true, 2, false, "canon_review", organization_id,
+                );
+
+                let reviews: any[] = [];
+                try {
+                  const parsed = JSON.parse(aiResult.content);
+                  reviews = parsed.reviews || [];
+                } catch { continue; }
+
+                for (const review of reviews) {
+                  const candidateIdx = (review.index || 1) - 1;
+                  const candidate = batch[candidateIdx];
+                  if (!candidate) continue;
+
+                  const titleLower = candidate.title.toLowerCase();
+                  const isDuplicate = existingTitles.some((t: string) =>
+                    t.includes(titleLower) || titleLower.includes(t) || levenshteinSimilarity(t, titleLower) > 0.8
+                  ) || reviewedTitles.some((t: string) =>
+                    t.includes(titleLower) || titleLower.includes(t) || levenshteinSimilarity(t, titleLower) > 0.8
+                  );
+
+                  let verdict = review.verdict;
+                  let reason = review.reason || "";
+                  if (isDuplicate && verdict === "approve") {
+                    verdict = "reject";
+                    reason = `Duplicate detected: similar entry already exists in canon. ${reason}`;
+                  }
+
+                  const avgScore = ((review.quality || 0) + (review.novelty || 0) + (review.relevance || 0) + (review.clarity || 0)) / 4;
+                  const updates: Record<string, unknown> = {
+                    updated_at: new Date().toISOString(),
+                    reviewed_by: "canon-review-engine",
+                    novelty_score: review.novelty || 0,
+                  };
+
+                  if (verdict === "approve") {
+                    updates.internal_validation_status = "approved";
+                    updates.promotion_decision_reason = reason;
+                    updates.source_reliability_score = Math.round(Math.max(candidate.source_reliability_score || 0, avgScore));
+                  } else if (verdict === "reject") {
+                    updates.internal_validation_status = "rejected";
+                    updates.promotion_status = "rejected";
+                    updates.promotion_decision_reason = reason;
+                  } else {
+                    updates.internal_validation_status = "needs_review";
+                    updates.promotion_decision_reason = `[AI Review] ${reason}. Scores: Q=${review.quality} N=${review.novelty} R=${review.relevance} C=${review.clarity}`;
+                  }
+
+                  await supabase.from("canon_candidate_entries").update(updates).eq("id", candidate.id).eq("organization_id", organization_id);
+                  results.push({ id: candidate.id, verdict, reason });
+                }
+              } catch (aiErr: any) {
+                console.error("AI review batch failed:", aiErr.message);
+                continue;
+              }
+            }
+
+            reviewResult = {
+              reviewed: results.length,
+              approved: results.filter(r => r.verdict === "approve").length,
+              rejected: results.filter(r => r.verdict === "reject").length,
+              needs_human_review: results.filter(r => r.verdict === "needs_human_review").length,
+            };
+          }
+        } catch (reviewErr: any) {
+          console.error("Pipeline review step failed:", reviewErr.message);
+        }
+
+        // Step 2: Promote approved candidates
+        let promoteResult: any = { promoted: 0 };
+        try {
+          const { data: approved } = await supabase
+            .from("canon_candidate_entries")
+            .select("*")
+            .eq("organization_id", organization_id)
+            .eq("internal_validation_status", "approved")
+            .eq("promotion_status", "pending")
+            .order("source_reliability_score", { ascending: false })
+            .limit(50);
+
+          if (approved && approved.length > 0) {
+            let promoted = 0;
+            const promotedEntries: any[] = [];
+
+            for (const candidate of approved) {
+              try {
+                const slug = candidate.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
+                const canonEntry = {
+                  organization_id,
+                  title: candidate.title,
+                  slug: `${slug}-${Date.now()}-${promoted}`,
+                  canon_type: candidate.knowledge_type === "anti_pattern" ? "anti_pattern" : "pattern",
+                  practice_type: candidate.knowledge_type || "pattern",
+                  lifecycle_status: "active",
+                  approval_status: "approved",
+                  confidence_score: Math.min((candidate.source_reliability_score || 50) / 100, 1),
+                  summary: candidate.summary || "",
+                  body: candidate.body || "",
+                  implementation_guidance: "",
+                  stack_scope: candidate.domain_scope || "general",
+                  layer_scope: "general",
+                  problem_scope: "general",
+                  topic: candidate.domain_scope || "general",
+                  subtopic: candidate.knowledge_type || "pattern",
+                  tags: [],
+                  source_reference: candidate.source_reference || "",
+                  source_type: candidate.source_type || "external_documentation",
+                  source_candidate_id: candidate.id,
+                  approved_by: "canon-review-engine",
+                  created_by: candidate.submitted_by || "canon-review-engine",
+                  metadata: {},
+                  structured_guidance: {},
+                };
+
+                const { data: entry, error: insertErr } = await supabase.from("canon_entries").insert(canonEntry).select().single();
+                if (insertErr) { console.error("Canon entry insert error:", insertErr.message); continue; }
+
+                await supabase.from("canon_candidate_entries").update({
+                  promotion_status: "promoted",
+                  promoted_entry_id: entry.id,
+                  promoted_at: new Date().toISOString(),
+                  updated_at: new Date().toISOString(),
+                }).eq("id", candidate.id);
+
+                await supabase.from("canon_entry_versions").insert({
+                  entry_id: entry.id, organization_id, version_number: 1,
+                  title: entry.title, summary: entry.summary, body: entry.body,
+                  implementation_guidance: "",
+                  change_description: "Auto-promoted from canon candidate review",
+                  changed_by: "canon-review-engine",
+                });
+
+                await supabase.from("canon_entry_status_history").insert({
+                  entry_id: entry.id, organization_id,
+                  from_status: "none", to_status: "active",
+                  reason: `Auto-promoted from candidate ${candidate.id}. Review: ${candidate.promotion_decision_reason || "approved by AI review"}`,
+                  changed_by: "canon-review-engine",
+                });
+
+                if (candidate.source_id) {
+                  await supabase.from("canon_sources").update({
+                    ingestion_lifecycle_state: "canon_promoted",
+                    updated_at: new Date().toISOString(),
+                  }).eq("id", candidate.source_id);
+                }
+
+                promoted++;
+                promotedEntries.push({ id: entry.id, title: entry.title });
+              } catch (e: any) {
+                console.error("Promote error for", candidate.id, e.message);
+              }
+            }
+
+            promoteResult = { promoted, total_eligible: approved.length, entries: promotedEntries };
+          }
+        } catch (promoteErr: any) {
+          console.error("Pipeline promote step failed:", promoteErr.message);
+        }
 
         return jsonResponse({
           pipeline: "complete",
