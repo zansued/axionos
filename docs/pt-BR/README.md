@@ -113,6 +113,11 @@ O Modo Owner é para governar a inteligência e evolução da plataforma.
 | 193–200 | AP | Hardening de Segurança e Integridade Canon — Prevenção de Envenenamento, Hardening de Auth (3 ondas em 200+ Edge Functions), Ajuste de RLS, Segurança de Workers de Execução, Resistência a Inferência |
 | 201 | AQ | Ajustes Operacionais — Unificação do pipeline de absorção (repo→candidatos padrão), normalização de lifecycle_status, remoção de limites de query nos hooks |
 | 202 | AR | Consolidação de Autoridade de Review — Canon-review-engine como autoridade única de revisão/promoção, canon-evolution-engine restrito a manutenção pós-cânone, cron diário de ingestão automática (pg_cron + pg_net) |
+| 203 | AS | Tela de Revisão Humana de Candidatos Canon — UI dedicada para stewards com scores de IA, fluxos de aprovação/rejeição, ações em lote, trilha de auditoria |
+| 204 | AS | Repo Trust no Pipeline Automático — Avaliação de trust de fontes integrada ao cron diário |
+| 205 | AS | Ativação de Producers de Sinais Operacionais — 4+ edge functions instrumentadas como produtores de sinais |
+| 206 | AS | Mineração de Padrões Operacionais no Cron — Extração automática de padrões recorrentes, geração de candidatos canon |
+| 207 | AS | Recalibração de Confiança Automática — Boost/degradação de confiança baseado em uso, trust de fonte e sinais operacionais |
 
 ---
 
