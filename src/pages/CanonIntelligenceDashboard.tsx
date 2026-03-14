@@ -12,6 +12,7 @@ import { useCanonIntelligence } from "@/hooks/useCanonIntelligence";
 import { useCanonStewardship } from "@/hooks/useCanonStewardship";
 import { useCanonRuntime } from "@/hooks/useCanonRuntime";
 import { useCanonLearning } from "@/hooks/useCanonLearning";
+import { useCanonPipeline } from "@/hooks/useCanonPipeline";
 
 import { PatternLibraryTab } from "@/components/canon-intelligence/PatternLibraryTab";
 import { QueryConsoleTab } from "@/components/canon-intelligence/QueryConsoleTab";
@@ -119,8 +120,11 @@ export default function CanonIntelligenceDashboard() {
 
   const [activeSection, setActiveSection] = useState<string>("knowledge");
 
+  const pipeline = useCanonPipeline();
+  const pStats = pipeline.stats;
+
   const activeEntries = stewardship.library.filter(
-    (e: any) => e.lifecycle_status === "approved" || e.lifecycle_status === "active"
+    (e: any) => e.lifecycle_status === "active"
   );
   const deprecatedEntries = stewardship.library.filter(
     (e: any) => e.lifecycle_status === "deprecated"
@@ -323,13 +327,18 @@ export default function CanonIntelligenceDashboard() {
 function TopMetric({ value, label, accent, warn, passive }: { value: number; label: string; accent?: boolean; warn?: boolean; passive?: boolean }) {
   const color = warn ? "text-amber-400" : accent ? "text-primary" : passive ? "text-muted-foreground" : "text-foreground";
   const tooltip = METRIC_TOOLTIPS[label] || `Current value for ${label}`;
+  const isPassiveEmpty = passive && value === 0;
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Card className={`border-border/30 bg-card/40 hover:bg-card/60 transition-colors cursor-default ${passive ? "opacity-60" : ""}`}>
           <CardContent className="pt-3.5 pb-2.5 text-center">
-            <p className={`text-xl font-bold ${color}`}>{value}</p>
+            {isPassiveEmpty ? (
+              <p className="text-[10px] text-muted-foreground/50 italic leading-tight mt-1">Sem telemetria</p>
+            ) : (
+              <p className={`text-xl font-bold ${color}`}>{value}</p>
+            )}
             <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5 truncate">
               {passive && "⏸ "}{label}
             </p>

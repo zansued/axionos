@@ -41,7 +41,7 @@ export function useCanonPipeline() {
       const [sources, candidates, entries, syncRuns] = await Promise.all([
         supabase.from("canon_sources").select("id, ingestion_lifecycle_state, status").eq("organization_id", orgId),
         supabase.from("canon_candidate_entries").select("id, promotion_status, internal_validation_status").eq("organization_id", orgId),
-        supabase.from("canon_entries").select("id, lifecycle_status, approval_status, canon_type").eq("organization_id", orgId),
+        supabase.from("canon_entries").select("id, lifecycle_status, approval_status, canon_type, confidence_score").eq("organization_id", orgId),
         supabase.from("canon_source_sync_runs").select("id, sync_status, candidates_found, candidates_accepted, candidates_rejected, documents_fetched, chunks_created, candidates_promoted, duplicates_skipped").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50),
       ]);
 
@@ -92,17 +92,20 @@ export function useCanonPipeline() {
         promotedCandidates: candData.filter((c: any) => c.promotion_status === "promoted").length,
         candidatesByStatus,
         totalCanonEntries: entryData.length,
-        activeEntries: entryData.filter((e: any) => e.lifecycle_status === "active" || e.lifecycle_status === "approved").length,
+        activeEntries: entryData.filter((e: any) => e.lifecycle_status === "active").length,
         entriesByType,
         syncTotals,
+        deprecatedEntries: entryData.filter((e: any) => e.lifecycle_status === "deprecated").length,
         retrievablePatterns: entryData.filter((e: any) =>
-          (e.lifecycle_status === "active" || e.lifecycle_status === "approved") &&
-          e.approval_status === "approved"
+          e.lifecycle_status === "active" &&
+          e.approval_status === "approved" &&
+          (e.confidence_score ?? 0) >= 0.5
         ).length,
       };
     },
     enabled: !!orgId,
     refetchInterval: 30000,
+    refetchOnWindowFocus: true,
   });
 
   // ─── Promote Candidate to Canon Entry ───
