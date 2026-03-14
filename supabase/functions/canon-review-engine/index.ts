@@ -230,7 +230,7 @@ Return ONLY valid JSON: {"reviews": [{"index": 1, "verdict": "approve"|"reject"|
               slug: `${slug}-${Date.now()}-${promoted}`,
               canon_type: candidate.knowledge_type === "anti_pattern" ? "anti_pattern" : "pattern",
               practice_type: candidate.knowledge_type || "pattern",
-              lifecycle_status: "active",
+              lifecycle_status: "approved",
               approval_status: "approved",
               confidence_score: Math.min((candidate.source_reliability_score || 50) / 100, 1),
               summary: candidate.summary || "",
@@ -288,7 +288,7 @@ Return ONLY valid JSON: {"reviews": [{"index": 1, "verdict": "approve"|"reject"|
               entry_id: entry.id,
               organization_id,
               from_status: "none",
-              to_status: "active",
+              to_status: "approved",
               reason: `Auto-promoted from candidate ${candidate.id}. Review: ${candidate.promotion_decision_reason || "approved by AI review"}`,
               changed_by: "canon-review-engine",
             });
@@ -470,7 +470,7 @@ Return ONLY valid JSON: {"reviews": [{"index": 1, "verdict": "approve"|"reject"|
                   slug: `${slug}-${Date.now()}-${promoted}`,
                   canon_type: candidate.knowledge_type === "anti_pattern" ? "anti_pattern" : "pattern",
                   practice_type: candidate.knowledge_type || "pattern",
-                  lifecycle_status: "active",
+                  lifecycle_status: "approved",
                   approval_status: "approved",
                   confidence_score: Math.min((candidate.source_reliability_score || 50) / 100, 1),
                   summary: candidate.summary || "",
@@ -511,7 +511,7 @@ Return ONLY valid JSON: {"reviews": [{"index": 1, "verdict": "approve"|"reject"|
 
                 await supabase.from("canon_entry_status_history").insert({
                   entry_id: entry.id, organization_id,
-                  from_status: "none", to_status: "active",
+                  from_status: "none", to_status: "approved",
                   reason: `Auto-promoted from candidate ${candidate.id}. Review: ${candidate.promotion_decision_reason || "approved by AI review"}`,
                   changed_by: "canon-review-engine",
                 });
@@ -568,10 +568,10 @@ Return ONLY valid JSON: {"reviews": [{"index": 1, "verdict": "approve"|"reject"|
           },
           canon_entries: {
             total: entryData.length,
-            active: entryData.filter((e: any) => e.lifecycle_status === "active").length,
+            active: entryData.filter((e: any) => e.lifecycle_status === "approved").length,
             approved: entryData.filter((e: any) => e.approval_status === "approved").length,
             retrievable: entryData.filter((e: any) =>
-              (e.lifecycle_status === "active" || e.lifecycle_status === "approved") &&
+              (e.lifecycle_status === "approved") &&
               e.approval_status === "approved"
             ).length,
           },
