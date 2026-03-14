@@ -288,7 +288,7 @@ Return ONLY valid JSON: {"reviews": [{"index": 1, "verdict": "approve"|"reject"|
               entry_id: entry.id,
               organization_id,
               from_status: "none",
-              to_status: "active",
+              to_status: "approved",
               reason: `Auto-promoted from candidate ${candidate.id}. Review: ${candidate.promotion_decision_reason || "approved by AI review"}`,
               changed_by: "canon-review-engine",
             });
