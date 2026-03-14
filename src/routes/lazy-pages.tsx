@@ -142,6 +142,7 @@ export const OperationalCyclesDashboard = lazy(() => import("@/pages/Operational
 export const OperationalLoopsDashboard = lazy(() => import("@/pages/OperationalLoopsDashboard"));
 export const OrganismMemoryDashboard = lazy(() => import("@/pages/OrganismMemoryDashboard"));
 export const OrganismConsoleDashboard = lazy(() => import("@/pages/OrganismConsoleDashboard"));
+export const CanonIntelligenceControlCenter = lazy(() => import("@/pages/CanonIntelligenceControlCenter"));
 
 // ─── Owner: Distributed Runtime ────────────────────────────────────────────
 export const DistributedJobs = lazy(() => import("@/pages/DistributedJobs"));

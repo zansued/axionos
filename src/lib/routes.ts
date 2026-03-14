@@ -379,6 +379,19 @@ export const OWNER_ROUTES: RouteEntry[] = [
     order: 14,
     sidebar: true,
   },
+  {
+    path: "/owner/canon-intelligence-control",
+    title: "Canon Control Center",
+    description: "Meta-learning governance & canon intelligence control",
+    titleKey: "route.canonIntelligenceControl",
+    descriptionKey: "routeDesc.canonIntelligenceControl",
+    icon: Brain,
+    mode: "owner",
+    group: "Knowledge Command",
+    order: 15,
+    sidebar: true,
+    pageKey: "canon-intelligence-control",
+  },
 
   // ── Security Command ──
   {
