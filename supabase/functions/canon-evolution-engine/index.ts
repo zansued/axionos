@@ -5,10 +5,21 @@ import { authenticateWithRateLimit } from "../_shared/auth.ts";
 import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 
 /**
- * Canon Evolution Engine — Sprint 171 (Auth hardened Sprint 197)
+ * Canon Evolution Engine — Sprint 202 (Review Consolidation)
  *
- * Complete institutional knowledge metabolism pipeline:
- *   source → candidate → evaluation → dedup → promotion → canon_entry → retrievable
+ * Post-canon maintenance engine. Does NOT review or promote raw candidates.
+ * Candidate review authority belongs exclusively to canon-review-engine.
+ *
+ * Responsibilities:
+ *   - deduplicate_candidates: merge duplicate candidates (utility, no review decisions)
+ *   - reinforce_from_signals: boost confidence of canon entries from operational signals
+ *   - run_full_pipeline: orchestrates review (via canon-review-engine) + dedup + reinforce
+ *   - process_backlog: multi-round orchestration of review + dedup + promote + reinforce
+ *   - get_pipeline_status: read-only pipeline health
+ *
+ * Removed in Sprint 202:
+ *   - evaluate_candidates → consolidated into canon-review-engine
+ *   - promote_candidates → consolidated into canon-review-engine
  */
 
 Deno.serve(async (req: Request) => {
@@ -16,7 +27,6 @@ Deno.serve(async (req: Request) => {
   if (corsRes) return corsRes;
 
   try {
-    // Auth hardening — Sprint 197
     const authResult = await authenticateWithRateLimit(req, "canon-evolution-engine");
     if (authResult instanceof Response) return authResult;
     const { user, serviceClient: supabase } = authResult;
@@ -36,154 +46,23 @@ Deno.serve(async (req: Request) => {
 
     switch (action) {
       // ═══════════════════════════════════════════════════
-      // 1. EVALUATE — Score candidates with AI
+      // REMOVED — Sprint 202: Review authority consolidated
       // ═══════════════════════════════════════════════════
-      case "evaluate_candidates": {
-        const batchSize = params.batch_size || 20;
-        
-        const { data: candidates, error: fetchErr } = await supabase
-          .from("canon_candidate_entries")
-          .select("*")
-          .eq("organization_id", organization_id)
-          .eq("evaluation_status", "pending")
-          .eq("internal_validation_status", "pending")
-          .is("merged_with_id", null)
-          .order("created_at", { ascending: true })
-          .limit(batchSize);
-
-        if (fetchErr) throw fetchErr;
-        if (!candidates?.length) {
-          return jsonResponse({ evaluated: 0, message: "No pending candidates" }, 200, req);
-        }
-
-        // Fetch existing canon for dedup context
-        const { data: existingEntries } = await supabase
-          .from("canon_entries")
-          .select("id, title, summary, practice_type, stack_scope, topic")
-          .eq("organization_id", organization_id)
-          .neq("lifecycle_status", "deprecated")
-          .limit(500);
-
-        const existingContext = (existingEntries || [])
-          .map((e: any) => `• ${e.title} (${e.practice_type}, ${e.stack_scope})`)
-          .slice(0, 40)
-          .join("\n");
-
-        const results: any[] = [];
-
-        // Process in AI batches of 5
-        for (let i = 0; i < candidates.length; i += 5) {
-          const batch = candidates.slice(i, i + 5);
-
-          const candidateDescriptions = batch.map((c: any, idx: number) =>
-            `[${idx + 1}] Title: "${c.title}"
-    Type: ${c.knowledge_type}
-    Domain: ${c.domain_scope}
-    Summary: ${c.summary?.slice(0, 300)}
-    Source Reliability: ${c.source_reliability_score}/100`
-          ).join("\n\n");
-
-          try {
-            const aiResult = await callAI(
-              config.key,
-              `You are the Canon Evolution Engine for AxionOS — an institutional knowledge quality evaluator.
-
-Evaluate each candidate on 5 dimensions (0-100):
-1. QUALITY: Is the pattern clearly defined, actionable, and reusable?
-2. NOVELTY: Does it add new knowledge not in the existing canon?
-3. RELEVANCE: Is it useful for software engineering teams?
-4. CLARITY: Is the description clear enough to be applied?
-5. DOMAIN_FIT: Does it fit a clear engineering domain (frontend, backend, architecture, etc.)?
-
-Compute an overall evaluation_score = weighted average (Quality 30%, Novelty 25%, Relevance 20%, Clarity 15%, Domain Fit 10%).
-
-Determine evaluation_status:
-- "ready_to_promote" — score >= 65, no dedup concern
-- "needs_human_review" — score 45-64, or uncertain novelty
-- "rejected" — score < 45, duplicate, irrelevant, or too vague
-
-Also classify:
-- pattern_classification: one of [best_practice, anti_pattern, implementation_recipe, architecture_pattern, convention, template, methodology, operational_guideline]
-- domain_classification: one of [frontend, backend, fullstack, architecture, devops, testing, security, data, general]
-
-Return ONLY valid JSON:
-{"evaluations": [{"index": 1, "quality": N, "novelty": N, "relevance": N, "clarity": N, "domain_fit": N, "evaluation_score": N, "evaluation_status": "...", "pattern_classification": "...", "domain_classification": "...", "notes": "brief explanation"}]}`,
-              `Evaluate these candidates:\n\n${candidateDescriptions}\n\n${existingContext ? `Existing canon entries (check novelty):\n${existingContext}` : "No existing canon entries yet."}`,
-              true,
-              2,
-              false,
-              "canon_evolution_evaluation",
-              organization_id,
-            );
-
-            let evaluations: any[] = [];
-            try {
-              const parsed = JSON.parse(aiResult.content);
-              evaluations = parsed.evaluations || [];
-            } catch {
-              console.error("Failed to parse AI evaluation response");
-              continue;
-            }
-
-            for (const ev of evaluations) {
-              const candidate = batch[(ev.index || 1) - 1];
-              if (!candidate) continue;
-
-              const evalScore = ev.evaluation_score || 0;
-              const evalStatus = ev.evaluation_status || "needs_human_review";
-
-              const updates: Record<string, unknown> = {
-                evaluation_score: evalScore,
-                evaluation_notes: ev.notes || "",
-                evaluation_status: evalStatus,
-                pattern_classification: ev.pattern_classification || "",
-                domain_classification: ev.domain_classification || "",
-                updated_at: new Date().toISOString(),
-              };
-
-              // Map evaluation_status to internal_validation_status
-              if (evalStatus === "ready_to_promote") {
-                updates.internal_validation_status = "approved";
-              } else if (evalStatus === "rejected") {
-                updates.internal_validation_status = "rejected";
-                updates.promotion_status = "rejected";
-                updates.promotion_decision_reason = `[Evolution Engine] ${ev.notes}`;
-              } else {
-                updates.internal_validation_status = "needs_review";
-                updates.promotion_decision_reason = `[Needs Review] Score: ${evalScore}. ${ev.notes}`;
-              }
-
-              await supabase.from("canon_candidate_entries")
-                .update(updates)
-                .eq("id", candidate.id)
-                .eq("organization_id", organization_id);
-
-              results.push({
-                id: candidate.id,
-                title: candidate.title,
-                evaluation_score: evalScore,
-                evaluation_status: evalStatus,
-                pattern_classification: ev.pattern_classification,
-                domain_classification: ev.domain_classification,
-              });
-            }
-          } catch (aiErr: any) {
-            console.error("AI evaluation batch failed:", aiErr.message);
-            continue;
-          }
-        }
-
+      case "evaluate_candidates":
+      case "promote_candidates": {
         return jsonResponse({
-          evaluated: results.length,
-          ready_to_promote: results.filter(r => r.evaluation_status === "ready_to_promote").length,
-          needs_human_review: results.filter(r => r.evaluation_status === "needs_human_review").length,
-          rejected: results.filter(r => r.evaluation_status === "rejected").length,
-          details: results,
-        }, 200, req);
+          error: "deprecated",
+          message: `Action "${action}" has been consolidated into canon-review-engine as of Sprint 202. Use canon-review-engine for candidate review and promotion.`,
+          migration: {
+            evaluate_candidates: "canon-review-engine → review_candidates",
+            promote_candidates: "canon-review-engine → promote_approved",
+          },
+        }, 410, req);
       }
 
       // ═══════════════════════════════════════════════════
-      // 2. DEDUPLICATE — Find and merge similar candidates
+      // DEDUPLICATE — Find and merge similar candidates (utility only)
+      // Does NOT make review decisions. Only marks duplicates.
       // ═══════════════════════════════════════════════════
       case "deduplicate_candidates": {
         const { data: candidates, error: fetchErr } = await supabase
@@ -200,7 +79,6 @@ Return ONLY valid JSON:
           return jsonResponse({ merged: 0, message: "No candidates to deduplicate" }, 200, req);
         }
 
-        // Also check against existing canon entries
         const { data: existingEntries } = await supabase
           .from("canon_entries")
           .select("id, title, summary")
@@ -216,7 +94,6 @@ Return ONLY valid JSON:
           const c1 = candidates[i];
           if (processed.has(c1.id)) continue;
 
-          // Check against existing canon entries first
           const isDuplicateOfCanon = existingTitles.some((t: string) =>
             levenshteinSimilarity(t, c1.title.toLowerCase()) > 0.75
           );
@@ -224,10 +101,10 @@ Return ONLY valid JSON:
           if (isDuplicateOfCanon) {
             await supabase.from("canon_candidate_entries").update({
               duplication_score: 1.0,
-              evaluation_status: "rejected",
               internal_validation_status: "rejected",
               promotion_status: "rejected",
-              promotion_decision_reason: "[Dedup] Duplicate of existing canon entry",
+              promotion_decision_reason: "[Dedup/Sprint202] Duplicate of existing canon entry",
+              reviewed_by: "canon-evolution-engine/dedup",
               updated_at: new Date().toISOString(),
             }).eq("id", c1.id);
             processed.add(c1.id);
@@ -235,7 +112,6 @@ Return ONLY valid JSON:
             continue;
           }
 
-          // Find similar candidates
           for (let j = i + 1; j < candidates.length; j++) {
             const c2 = candidates[j];
             if (processed.has(c2.id)) continue;
@@ -250,7 +126,6 @@ Return ONLY valid JSON:
             const dupScore = titleSim * 0.5 + summarySim * 0.25 + domainMatch + typeMatch;
 
             if (dupScore > 0.7) {
-              // Keep the one with higher score, merge the other
               const keepId = (c1.evaluation_score || 0) >= (c2.evaluation_score || 0) ? c1.id : c2.id;
               const mergeId = keepId === c1.id ? c2.id : c1.id;
               const keepCandidate = keepId === c1.id ? c1 : c2;
@@ -258,14 +133,13 @@ Return ONLY valid JSON:
               await supabase.from("canon_candidate_entries").update({
                 merged_with_id: keepId,
                 duplication_score: dupScore,
-                evaluation_status: "merged",
                 internal_validation_status: "rejected",
                 promotion_status: "rejected",
-                promotion_decision_reason: `[Dedup] Merged with ${keepId} (similarity: ${(dupScore * 100).toFixed(0)}%)`,
+                promotion_decision_reason: `[Dedup/Sprint202] Merged with ${keepId} (similarity: ${(dupScore * 100).toFixed(0)}%)`,
+                reviewed_by: "canon-evolution-engine/dedup",
                 updated_at: new Date().toISOString(),
               }).eq("id", mergeId);
 
-              // Boost the keeper's confidence
               const newReliability = Math.min(
                 (keepCandidate.source_reliability_score || 50) + 5,
                 100
@@ -295,150 +169,9 @@ Return ONLY valid JSON:
       }
 
       // ═══════════════════════════════════════════════════
-      // 3. PROMOTE — Approved candidates → canon_entries
-      // ═══════════════════════════════════════════════════
-      case "promote_candidates": {
-        const { data: approved, error: aErr } = await supabase
-          .from("canon_candidate_entries")
-          .select("*")
-          .eq("organization_id", organization_id)
-          .eq("internal_validation_status", "approved")
-          .eq("promotion_status", "pending")
-          .is("merged_with_id", null)
-          .order("evaluation_score", { ascending: false })
-          .limit(50);
-
-        if (aErr) throw aErr;
-        if (!approved?.length) {
-          return jsonResponse({ promoted: 0, message: "No approved candidates to promote" }, 200, req);
-        }
-
-        let promoted = 0;
-        const promotedEntries: any[] = [];
-
-        for (const candidate of approved) {
-          try {
-            const slug = candidate.title
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, "-")
-              .replace(/^-|-$/g, "")
-              .slice(0, 80);
-
-            const canonEntry = {
-              organization_id,
-              title: candidate.title,
-              slug: `${slug}-${Date.now()}-${promoted}`,
-              canon_type: mapKnowledgeType(candidate.knowledge_type),
-              practice_type: candidate.pattern_classification || candidate.knowledge_type || "pattern",
-              lifecycle_status: "active",
-              approval_status: "approved",
-              confidence_score: Math.min((candidate.evaluation_score || candidate.source_reliability_score || 50) / 100, 1),
-              summary: candidate.summary || "",
-              body: candidate.body || "",
-              implementation_guidance: "",
-              stack_scope: candidate.domain_classification || candidate.domain_scope || "general",
-              layer_scope: "general",
-              problem_scope: "general",
-              topic: candidate.domain_classification || candidate.domain_scope || "general",
-              subtopic: candidate.knowledge_type || "pattern",
-              tags: [],
-              source_reference: candidate.source_reference || "",
-              source_type: candidate.source_type || "external_documentation",
-              source_candidate_id: candidate.id,
-              approved_by: "canon-evolution-engine",
-              created_by: candidate.submitted_by || "canon-evolution-engine",
-              metadata: {
-                evaluation_score: candidate.evaluation_score,
-                evaluation_notes: candidate.evaluation_notes,
-                pattern_classification: candidate.pattern_classification,
-                domain_classification: candidate.domain_classification,
-                promoted_by: "canon-evolution-engine",
-                promoted_at: new Date().toISOString(),
-              },
-              structured_guidance: {},
-            };
-
-            const { data: entry, error: insertErr } = await supabase
-              .from("canon_entries")
-              .insert(canonEntry)
-              .select()
-              .single();
-
-            if (insertErr) {
-              console.error("Canon entry insert error:", insertErr.message);
-              continue;
-            }
-
-            // Update candidate status
-            await supabase.from("canon_candidate_entries").update({
-              promotion_status: "promoted",
-              promoted_entry_id: entry.id,
-              promoted_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            }).eq("id", candidate.id);
-
-            // Create version record
-            try {
-              await supabase.from("canon_entry_versions").insert({
-                entry_id: entry.id,
-                organization_id,
-                version_number: 1,
-                title: entry.title,
-                summary: entry.summary,
-                body: entry.body,
-                implementation_guidance: "",
-                change_description: "Promoted from candidate by Canon Evolution Engine",
-                changed_by: "canon-evolution-engine",
-              });
-            } catch (_) {}
-
-            // Create audit trail
-            try {
-              await supabase.from("canon_entry_status_history").insert({
-                entry_id: entry.id,
-                organization_id,
-                from_status: "none",
-                to_status: "active",
-                reason: `Auto-promoted by Canon Evolution Engine. Evaluation score: ${candidate.evaluation_score || 'N/A'}. ${candidate.evaluation_notes || ''}`,
-                changed_by: "canon-evolution-engine",
-              });
-            } catch (_) {}
-
-            // Update source lifecycle if linked
-            if (candidate.source_id) {
-              try {
-                await supabase.from("canon_sources").update({
-                  ingestion_lifecycle_state: "canon_promoted",
-                  updated_at: new Date().toISOString(),
-                }).eq("id", candidate.source_id);
-              } catch (_) {}
-            }
-
-            promoted++;
-            promotedEntries.push({
-              id: entry.id,
-              title: entry.title,
-              evaluation_score: candidate.evaluation_score,
-              pattern_classification: candidate.pattern_classification,
-              domain_classification: candidate.domain_classification,
-            });
-          } catch (e: any) {
-            console.error("Promote error for", candidate.id, e.message);
-          }
-        }
-
-        return jsonResponse({
-          promoted,
-          total_eligible: approved.length,
-          entries: promotedEntries,
-        }, 200, req);
-      }
-
-      // ═══════════════════════════════════════════════════
-      // 4. REINFORCE — Boost confidence from operational signals
+      // REINFORCE — Boost confidence from operational signals (post-canon)
       // ═══════════════════════════════════════════════════
       case "reinforce_from_signals": {
-        // Find canon entries that appear in successful execution signals
         const { data: signals } = await supabase
           .from("learning_signals")
           .select("*")
@@ -477,13 +210,26 @@ Return ONLY valid JSON:
       }
 
       // ═══════════════════════════════════════════════════
-      // 5. FULL PIPELINE — Evaluate → Dedup → Promote
+      // FULL PIPELINE — Delegates review to canon-review-engine
+      // Then runs dedup + reinforce locally
       // ═══════════════════════════════════════════════════
       case "run_full_pipeline": {
         const baseUrl = Deno.env.get("SUPABASE_URL")!;
         const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-        const invoke = async (a: string) => {
+        const invokeReview = async (a: string) => {
+          const resp = await fetch(`${baseUrl}/functions/v1/canon-review-engine`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${serviceKey}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ action: a, organization_id }),
+          });
+          return resp.json();
+        };
+
+        const invokeLocal = async (a: string) => {
           const resp = await fetch(`${baseUrl}/functions/v1/canon-evolution-engine`, {
             method: "POST",
             headers: {
@@ -495,14 +241,19 @@ Return ONLY valid JSON:
           return resp.json();
         };
 
-        const evalResult = await invoke("evaluate_candidates");
-        const dedupResult = await invoke("deduplicate_candidates");
-        const promoteResult = await invoke("promote_candidates");
-        const reinforceResult = await invoke("reinforce_from_signals");
+        // Step 1: Review via canon-review-engine (single authority)
+        const reviewResult = await invokeReview("review_candidates");
+        // Step 2: Dedup locally
+        const dedupResult = await invokeLocal("deduplicate_candidates");
+        // Step 3: Promote via canon-review-engine (single authority)
+        const promoteResult = await invokeReview("promote_approved");
+        // Step 4: Reinforce locally
+        const reinforceResult = await invokeLocal("reinforce_from_signals");
 
         return jsonResponse({
           pipeline: "complete",
-          evaluation: evalResult,
+          review_engine: "canon-review-engine",
+          review: reviewResult,
           deduplication: dedupResult,
           promotion: promoteResult,
           reinforcement: reinforceResult,
@@ -510,14 +261,14 @@ Return ONLY valid JSON:
       }
 
       // ═══════════════════════════════════════════════════
-      // 6. PROCESS BACKLOG — All pending, multiple rounds
+      // PROCESS BACKLOG — Multi-round, delegates review to canon-review-engine
       // ═══════════════════════════════════════════════════
       case "process_backlog": {
         const baseUrl = Deno.env.get("SUPABASE_URL")!;
         const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-        const invoke = async (a: string, extra: Record<string, any> = {}) => {
-          const resp = await fetch(`${baseUrl}/functions/v1/canon-evolution-engine`, {
+        const invokeEngine = async (engine: string, a: string, extra: Record<string, any> = {}) => {
+          const resp = await fetch(`${baseUrl}/functions/v1/${engine}`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${serviceKey}`,
@@ -528,27 +279,30 @@ Return ONLY valid JSON:
           return resp.json();
         };
 
-        // Run evaluation in multiple rounds to process full backlog
-        const evalResults: any[] = [];
-        let totalEvaluated = 0;
+        // Multi-round review via canon-review-engine
+        const reviewResults: any[] = [];
+        let totalReviewed = 0;
         for (let round = 0; round < 5; round++) {
-          const result = await invoke("evaluate_candidates", { batch_size: 20 });
-          evalResults.push(result);
-          totalEvaluated += result.evaluated || 0;
-          if ((result.evaluated || 0) < 20) break; // No more pending
+          const result = await invokeEngine("canon-review-engine", "review_candidates");
+          reviewResults.push(result);
+          totalReviewed += result.reviewed || 0;
+          if ((result.reviewed || 0) < 20) break;
         }
 
-        const dedupResult = await invoke("deduplicate_candidates");
-        const promoteResult = await invoke("promote_candidates");
-        const reinforceResult = await invoke("reinforce_from_signals");
-
-        // Get final status
-        const statusResult = await invoke("get_pipeline_status");
+        // Dedup locally
+        const dedupResult = await invokeEngine("canon-evolution-engine", "deduplicate_candidates");
+        // Promote via canon-review-engine
+        const promoteResult = await invokeEngine("canon-review-engine", "promote_approved");
+        // Reinforce locally
+        const reinforceResult = await invokeEngine("canon-evolution-engine", "reinforce_from_signals");
+        // Status
+        const statusResult = await invokeEngine("canon-evolution-engine", "get_pipeline_status");
 
         return jsonResponse({
           pipeline: "backlog_processed",
-          total_evaluated: totalEvaluated,
-          evaluation_rounds: evalResults.length,
+          review_engine: "canon-review-engine",
+          total_reviewed: totalReviewed,
+          review_rounds: reviewResults.length,
           deduplication: dedupResult,
           promotion: promoteResult,
           reinforcement: reinforceResult,
@@ -557,12 +311,12 @@ Return ONLY valid JSON:
       }
 
       // ═══════════════════════════════════════════════════
-      // 7. PIPELINE STATUS
+      // PIPELINE STATUS (read-only)
       // ═══════════════════════════════════════════════════
       case "get_pipeline_status": {
         const [candidates, entries] = await Promise.all([
           supabase.from("canon_candidate_entries")
-            .select("id, internal_validation_status, promotion_status, evaluation_status, evaluation_score")
+            .select("id, internal_validation_status, promotion_status")
             .eq("organization_id", organization_id),
           supabase.from("canon_entries")
             .select("id, lifecycle_status, approval_status, confidence_score")
@@ -573,26 +327,21 @@ Return ONLY valid JSON:
         const entryData = entries.data || [];
 
         return jsonResponse({
+          review_authority: "canon-review-engine",
           candidates: {
             total: candData.length,
-            pending: candData.filter((c: any) => c.evaluation_status === "pending").length,
-            evaluated: candData.filter((c: any) => c.evaluation_status !== "pending").length,
-            ready_to_promote: candData.filter((c: any) => c.evaluation_status === "ready_to_promote" && c.promotion_status === "pending").length,
-            needs_human_review: candData.filter((c: any) => c.evaluation_status === "needs_human_review").length,
+            pending_review: candData.filter((c: any) => c.internal_validation_status === "pending" && c.promotion_status === "pending").length,
+            approved: candData.filter((c: any) => c.internal_validation_status === "approved" && c.promotion_status === "pending").length,
+            needs_human_review: candData.filter((c: any) => c.internal_validation_status === "needs_review").length,
             rejected: candData.filter((c: any) => c.promotion_status === "rejected").length,
-            merged: candData.filter((c: any) => c.evaluation_status === "merged").length,
             promoted: candData.filter((c: any) => c.promotion_status === "promoted").length,
-            avg_evaluation_score: candData.length > 0
-              ? Math.round(candData.reduce((sum: number, c: any) => sum + (c.evaluation_score || 0), 0) / candData.length)
-              : 0,
           },
           canon_entries: {
             total: entryData.length,
             active: entryData.filter((e: any) => e.lifecycle_status === "active").length,
             approved: entryData.filter((e: any) => e.approval_status === "approved").length,
             retrievable: entryData.filter((e: any) =>
-              (e.lifecycle_status === "active" || e.lifecycle_status === "approved") &&
-              e.approval_status === "approved"
+              e.lifecycle_status === "active" && e.approval_status === "approved"
             ).length,
             avg_confidence: entryData.length > 0
               ? Number((entryData.reduce((sum: number, e: any) => sum + (e.confidence_score || 0), 0) / entryData.length).toFixed(2))
@@ -636,23 +385,3 @@ function levenshteinSimilarity(a: string, b: string): number {
   }
   return 1 - matrix[a.length][b.length] / maxLen;
 }
-
-function mapKnowledgeType(kt: string): string {
-  // Valid enum: pattern, template, anti_pattern, architectural_guideline, implementation_recipe, failure_memory, external_knowledge
-  const map: Record<string, string> = {
-    pattern: "pattern",
-    anti_pattern: "anti_pattern",
-    best_practice: "pattern",
-    architectural_guideline: "architectural_guideline",
-    implementation_recipe: "implementation_recipe",
-    template: "template",
-    methodology: "pattern",
-    convention: "pattern",
-    operational_guideline: "pattern",
-    architecture_pattern: "architectural_guideline",
-    failure_memory: "failure_memory",
-    external_knowledge: "external_knowledge",
-  };
-  return map[kt] || "pattern";
-}
-

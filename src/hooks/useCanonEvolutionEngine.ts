@@ -3,6 +3,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { useToast } from "@/hooks/use-toast";
 
+/**
+ * useCanonEvolutionEngine — Sprint 202
+ *
+ * Post-canon maintenance hook. Does NOT review or promote raw candidates.
+ * Candidate review authority belongs exclusively to canon-review-engine.
+ *
+ * Available operations:
+ *   - runFullPipeline: orchestrates review (via review-engine) + dedup + reinforce
+ *   - processBacklog: multi-round orchestration
+ *   - deduplicateCandidates: merge duplicate candidates
+ *   - reinforceFromSignals: boost canon entry confidence from operational signals
+ */
 export function useCanonEvolutionEngine() {
   const { currentOrg } = useOrg();
   const { toast } = useToast();
@@ -27,17 +39,10 @@ export function useCanonEvolutionEngine() {
 
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: STATUS_KEY });
-    qc.invalidateQueries({ queryKey: ["canon-intelligence"] });
+    qc.invalidateQueries({ queryKey: ["canon-library"] });
+    qc.invalidateQueries({ queryKey: ["canon-candidates"] });
+    qc.invalidateQueries({ queryKey: ["canon-pipeline-stats"] });
   };
-
-  const evaluateCandidates = useMutation({
-    mutationFn: (batchSize?: number) => invoke("evaluate_candidates", { batch_size: batchSize }),
-    onSuccess: (data) => {
-      invalidate();
-      toast({ title: `${data?.evaluated || 0} candidato(s) avaliado(s)` });
-    },
-    onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
-  });
 
   const deduplicateCandidates = useMutation({
     mutationFn: () => invoke("deduplicate_candidates"),
@@ -48,21 +53,13 @@ export function useCanonEvolutionEngine() {
     onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
   });
 
-  const promoteCandidates = useMutation({
-    mutationFn: () => invoke("promote_candidates"),
-    onSuccess: (data) => {
-      invalidate();
-      toast({ title: `${data?.promoted || 0} entrada(s) promovida(s) ao Canon` });
-    },
-    onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
-  });
-
   const runFullPipeline = useMutation({
     mutationFn: () => invoke("run_full_pipeline"),
     onSuccess: (data) => {
       invalidate();
+      const reviewed = data?.review?.reviewed || 0;
       const promo = data?.promotion?.promoted || 0;
-      toast({ title: `Pipeline completo — ${promo} entrada(s) promovida(s)` });
+      toast({ title: `Pipeline completo — ${reviewed} revisados, ${promo} promovidos` });
     },
     onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
   });
@@ -71,7 +68,7 @@ export function useCanonEvolutionEngine() {
     mutationFn: () => invoke("process_backlog"),
     onSuccess: (data) => {
       invalidate();
-      toast({ title: `Backlog processado — ${data?.total_evaluated || 0} avaliados, ${data?.promotion?.promoted || 0} promovidos` });
+      toast({ title: `Backlog processado — ${data?.total_reviewed || 0} revisados, ${data?.promotion?.promoted || 0} promovidos` });
     },
     onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
   });
@@ -88,9 +85,7 @@ export function useCanonEvolutionEngine() {
   return {
     status: statusQuery.data,
     loadingStatus: statusQuery.isLoading,
-    evaluateCandidates,
     deduplicateCandidates,
-    promoteCandidates,
     runFullPipeline,
     processBacklog,
     reinforceFromSignals,
