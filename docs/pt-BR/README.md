@@ -111,6 +111,8 @@ O Modo Owner é para governar a inteligência e evolução da plataforma.
 | 185 | AN | Evolução da Arquitetura de Execução — roteamento adaptativo baseado em risco, ajuste de política informado por evidências |
 | 186–192 | AO | Pipeline Canon Auto-Aprimorante — Deep Repo Absorber, Previsão de Demanda de Conhecimento, Orquestrador de Aquisição, Otimização de Portfólio, Engine de ROI, Consolidação UI do Hub, Ativação de Skills |
 | 193–200 | AP | Hardening de Segurança e Integridade Canon — Prevenção de Envenenamento, Hardening de Auth (3 ondas em 200+ Edge Functions), Ajuste de RLS, Segurança de Workers de Execução, Resistência a Inferência |
+| 201 | AQ | Ajustes Operacionais — Unificação do pipeline de absorção (repo→candidatos padrão), normalização de lifecycle_status, remoção de limites de query nos hooks |
+| 202 | AR | Consolidação de Autoridade de Review — Canon-review-engine como autoridade única de revisão/promoção, canon-evolution-engine restrito a manutenção pós-cânone, cron diário de ingestão automática (pg_cron + pg_net) |
 
 ---
 
