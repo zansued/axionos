@@ -206,3 +206,510 @@ verify_jwt = false
 
 [functions.source-discovery-agent]
 verify_jwt = false
+
+[functions.knowledge-lineage-engine]
+verify_jwt = false
+
+[functions.canon-review-engine]
+verify_jwt = false
+
+[functions.canon-candidate-review-engine]
+verify_jwt = false
+
+[functions.canon-evolution-engine]
+verify_jwt = false
+
+[functions.canon-ingestion-agent]
+verify_jwt = false
+
+[functions.canon-promotion-pipeline]
+verify_jwt = false
+
+[functions.canon-intake]
+verify_jwt = false
+
+[functions.system-health-engine]
+verify_jwt = false
+
+[functions.canon-stewardship]
+verify_jwt = false
+
+[functions.canon-integrity-drift-governance-engine]
+verify_jwt = false
+
+[functions.knowledge-renewal-engine]
+verify_jwt = false
+
+[functions.skill-extraction-engine]
+verify_jwt = false
+
+[functions.action-engine]
+verify_jwt = false
+
+[functions.execution-policy-engine]
+verify_jwt = false
+
+[functions.swarm-execution]
+verify_jwt = false
+
+[functions.agent-debate]
+verify_jwt = false
+
+[functions.agent-routing]
+verify_jwt = false
+
+[functions.agent-memory-engine]
+verify_jwt = false
+
+[functions.working-memory]
+verify_jwt = false
+
+[functions.initiative-simulation-engine]
+verify_jwt = false
+
+[functions.deep-repo-absorber-engine]
+verify_jwt = false
+
+[functions.repo-trust-score-engine]
+verify_jwt = false
+
+[functions.learning-dashboard]
+verify_jwt = false
+
+[functions.learning-foundation-engine]
+verify_jwt = false
+
+[functions.learning-feedback-loop]
+verify_jwt = false
+
+[functions.observability-engine]
+verify_jwt = false
+
+[functions.decision-engine]
+verify_jwt = false
+
+[functions.product-dashboard]
+verify_jwt = false
+
+[functions.delivery-outcomes]
+verify_jwt = false
+
+[functions.post-deploy-feedback]
+verify_jwt = false
+
+[functions.capability-registry]
+verify_jwt = false
+
+[functions.capability-governance]
+verify_jwt = false
+
+[functions.extension-management]
+verify_jwt = false
+
+[functions.benchmark-governance]
+verify_jwt = false
+
+[functions.evidence-management]
+verify_jwt = false
+
+[functions.security-intelligence]
+verify_jwt = false
+
+[functions.prompt-optimization-engine]
+verify_jwt = false
+
+[functions.advisory-calibration-engine]
+verify_jwt = false
+
+[functions.canon-scheduled-pipeline]
+verify_jwt = false
+
+[functions.canon-learning]
+verify_jwt = false
+
+[functions.pilot-marketplace]
+verify_jwt = false
+
+[functions.marketplace-outcomes]
+verify_jwt = false
+
+[functions.delivery-tuning]
+verify_jwt = false
+
+[functions.outcome-assurance]
+verify_jwt = false
+
+[functions.attention-allocation-engine]
+verify_jwt = false
+
+[functions.operational-posture-engine]
+verify_jwt = false
+
+[functions.operational-cycle-engine]
+verify_jwt = false
+
+[functions.run-meta-agent-analysis]
+verify_jwt = false
+
+[functions.meta-artifact-generator]
+verify_jwt = false
+
+[functions.meta-artifact-review]
+verify_jwt = false
+
+[functions.meta-recommendation-review]
+verify_jwt = false
+
+[functions.knowledge-acquisition-orchestrator]
+verify_jwt = false
+
+[functions.knowledge-acquisition-planner]
+verify_jwt = false
+
+[functions.knowledge-demand-forecast]
+verify_jwt = false
+
+[functions.knowledge-portfolio-engine]
+verify_jwt = false
+
+[functions.knowledge-acquisition-roi-engine]
+verify_jwt = false
+
+[functions.canon-reuse-engine]
+verify_jwt = false
+
+[functions.canon-runtime]
+verify_jwt = false
+
+[functions.canon-poisoning-prevention]
+verify_jwt = false
+
+[functions.memory-retrieval-surface]
+verify_jwt = false
+
+[functions.engineering-memory-service]
+verify_jwt = false
+
+[functions.run-memory-summaries]
+verify_jwt = false
+
+[functions.organism-console]
+verify_jwt = false
+
+[functions.organism-memory-engine]
+verify_jwt = false
+
+[functions.semantic-retrieval]
+verify_jwt = false
+
+[functions.tenant-policy-engine]
+verify_jwt = false
+
+[functions.tenant-runtime]
+verify_jwt = false
+
+[functions.product-analytics-engine]
+verify_jwt = false
+
+[functions.product-evolution-engine]
+verify_jwt = false
+
+[functions.product-intelligence-entry-engine]
+verify_jwt = false
+
+[functions.product-intelligence-operations-engine]
+verify_jwt = false
+
+[functions.product-validation-engine]
+verify_jwt = false
+
+[functions.security-monitoring-engine]
+verify_jwt = false
+
+[functions.prevention-rule-engine]
+verify_jwt = false
+
+[functions.predictive-error-engine]
+verify_jwt = false
+
+[functions.predictive-error-runtime]
+verify_jwt = false
+
+[functions.error-pattern-library-engine]
+verify_jwt = false
+
+[functions.repair-intelligence-archive]
+verify_jwt = false
+
+[functions.repair-learning-engine]
+verify_jwt = false
+
+[functions.repair-policy-engine]
+verify_jwt = false
+
+[functions.repair-routing-engine]
+verify_jwt = false
+
+[functions.red-team-simulation]
+verify_jwt = false
+
+[functions.blue-team-defense]
+verify_jwt = false
+
+[functions.purple-learning]
+verify_jwt = false
+
+[functions.initiative-intake-engine]
+verify_jwt = false
+
+[functions.initiative-deploy-engine]
+verify_jwt = false
+
+[functions.initiative-observability-engine]
+verify_jwt = false
+
+[functions.architecture-fitness]
+verify_jwt = false
+
+[functions.architecture-hypotheses]
+verify_jwt = false
+
+[functions.architecture-simulation]
+verify_jwt = false
+
+[functions.architecture-promotion]
+verify_jwt = false
+
+[functions.architecture-evolution-engine]
+verify_jwt = false
+
+[functions.architecture-change-planning]
+verify_jwt = false
+
+[functions.architecture-migration-execution]
+verify_jwt = false
+
+[functions.architecture-portfolio-governance]
+verify_jwt = false
+
+[functions.architecture-rollout-pilot]
+verify_jwt = false
+
+[functions.architecture-rollout-sandbox]
+verify_jwt = false
+
+[functions.architecture-subjob-retry]
+verify_jwt = false
+
+[functions.research-sandbox]
+verify_jwt = false
+
+[functions.research-patterns]
+verify_jwt = false
+
+[functions.strategy-performance-engine]
+verify_jwt = false
+
+[functions.strategy-portfolio-governance]
+verify_jwt = false
+
+[functions.multi-loop-orchestrator]
+verify_jwt = false
+
+[functions.cross-stage-learning-engine]
+verify_jwt = false
+
+[functions.neural-feedback-loop]
+verify_jwt = false
+
+[functions.learning-extraction-engine]
+verify_jwt = false
+
+[functions.learning-recommendation-engine]
+verify_jwt = false
+
+[functions.pattern-distillation-engine]
+verify_jwt = false
+
+[functions.candidate-distillation]
+verify_jwt = false
+
+[functions.autonomous-ops]
+verify_jwt = false
+
+[functions.large-scale-orchestration]
+verify_jwt = false
+
+[functions.distributed-jobs]
+verify_jwt = false
+
+[functions.axion-execution-worker]
+verify_jwt = false
+
+[functions.aios-agent-scheduler]
+verify_jwt = false
+
+[functions.build-self-healing]
+verify_jwt = false
+
+[functions.adaptive-resource-router]
+verify_jwt = false
+
+[functions.agent-selection-tuning-hooks]
+verify_jwt = false
+
+[functions.policy-tuning-hooks]
+verify_jwt = false
+
+[functions.readiness-tuning-hooks]
+verify_jwt = false
+
+[functions.execution-strategy-evolution]
+verify_jwt = false
+
+[functions.growth-optimization-engine]
+verify_jwt = false
+
+[functions.revenue-strategy-engine]
+verify_jwt = false
+
+[functions.startup-portfolio-manager]
+verify_jwt = false
+
+[functions.user-behavior-analyzer]
+verify_jwt = false
+
+[functions.user-journey-orchestration-engine]
+verify_jwt = false
+
+[functions.opportunity-discovery-engine]
+verify_jwt = false
+
+[functions.market-signal-analyzer]
+verify_jwt = false
+
+[functions.engineering-advisor]
+verify_jwt = false
+
+[functions.approval-expiration]
+verify_jwt = false
+
+[functions.change-advisory-orchestrator]
+verify_jwt = false
+
+[functions.doctrine-synthesis]
+verify_jwt = false
+
+[functions.cross-context-doctrine-adaptation]
+verify_jwt = false
+
+[functions.platform-intelligence-engine]
+verify_jwt = false
+
+[functions.platform-convergence-engine]
+verify_jwt = false
+
+[functions.platform-self-calibration]
+verify_jwt = false
+
+[functions.platform-self-stabilization]
+verify_jwt = false
+
+[functions.platform-stabilization-v2]
+verify_jwt = false
+
+[functions.system-evolution-engine]
+verify_jwt = false
+
+[functions.canon-evolution-from-learning]
+verify_jwt = false
+
+[functions.prompt-outcome-analyzer]
+verify_jwt = false
+
+[functions.proposal-quality-engine]
+verify_jwt = false
+
+[functions.operating-profiles-engine]
+verify_jwt = false
+
+[functions.operating-completion-engine]
+verify_jwt = false
+
+[functions.generate-avatar]
+verify_jwt = false
+
+[functions.organize-stories]
+verify_jwt = false
+
+[functions.execute-subtask]
+verify_jwt = false
+
+[functions.limited-marketplace-pilot-engine]
+verify_jwt = false
+
+[functions.product-opportunity-portfolio-governance-engine]
+verify_jwt = false
+
+[functions.multi-party-policy-revenue-governance-engine]
+verify_jwt = false
+
+[functions.capability-exposure-governance-engine]
+verify_jwt = false
+
+[functions.capability-registry-governance-engine]
+verify_jwt = false
+
+[functions.controlled-ecosystem-readiness-engine]
+verify_jwt = false
+
+[functions.external-trust-admission-engine]
+verify_jwt = false
+
+[functions.convergence-governance-engine]
+verify_jwt = false
+
+[functions.institutional-memory-constitution]
+verify_jwt = false
+
+[functions.institutional-conflict-resolution-engine]
+verify_jwt = false
+
+[functions.institutional-convergence-memory-engine]
+verify_jwt = false
+
+[functions.institutional-outcome-assurance-engine]
+verify_jwt = false
+
+[functions.institutional-tradeoff-arbitration-system]
+verify_jwt = false
+
+[functions.mission-integrity-drift-prevention]
+verify_jwt = false
+
+[functions.sovereign-decision-rights-orchestration]
+verify_jwt = false
+
+[functions.dependency-sovereignty-governance]
+verify_jwt = false
+
+[functions.resilience-continuity-governance]
+verify_jwt = false
+
+[functions.civilizational-continuity-simulation-layer]
+verify_jwt = false
+
+[functions.strategic-succession-long-horizon-continuity]
+verify_jwt = false
+
+[functions.multi-horizon-strategic-alignment-engine]
+verify_jwt = false
+
+[functions.federated-intelligence-boundaries]
+verify_jwt = false
+
+[functions.cross-region-recovery]
+verify_jwt = false
+
+[functions.ecosystem-simulation-sandbox-engine]
+verify_jwt = false
