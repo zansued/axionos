@@ -144,21 +144,22 @@ A plataforma completou 207 sprints em todos os blocos de Foundation até AS. O s
 - ✅ Pipeline de absorção unificado — repo absorber escreve em canon_candidate_entries
 - ✅ Canon-review-engine como autoridade única de revisão e promoção de candidatos
 - ✅ Cron diário de ingestão automática (meia-noite, pg_cron + canon-scheduled-pipeline)
+- ✅ UI de Revisão Humana para candidatos canon (HumanReviewTab com scores de IA, aprovação/rejeição, ações em lote)
+- ✅ Repo Trust integrado ao pipeline cron diário (avaliação automática de trust de fontes)
+- ✅ 4+ edge functions instrumentadas como produtores de sinais operacionais
+- ✅ Mineração automática de padrões operacionais com geração de candidatos canon
+- ✅ Recalibração automática de confiança baseada em uso, trust de fonte e sinais operacionais
 
-### Lacunas Operacionais Conhecidas (Honestidade Canônica)
+### Lacunas Operacionais — Status Atualizado
 
-| Área | Status | Lacuna |
-|------|--------|--------|
-| **Revisão Humana de Candidatos** | ⚠️ Parcial | A IA classifica candidatos como `needs_review`, mas não existe UI dedicada para stewards tomarem decisões individuais. Apenas contagem é exibida. |
-| **Operational Learning** | ⚠️ Sem dados | Edge functions existem e estão deployadas, mas os producers de sinais (`operational_learning_signals`) dependem de execuções reais de iniciativas. Sem execuções, sem dados. |
-| **Repo Trust** | ⚠️ Nunca executado | `repo-trust-score-engine` está implementado, mas nunca foi invocado. Não está incluído no cron diário. |
-| **Repo Trust no cron** | ❌ Falta | O pipeline agendado só cobre ingestão + review + promote. Não inclui avaliação de trust de fontes. |
-| **Sinais de aprendizado operacional no cron** | ❌ Falta | Mineração de padrões operacionais não está automatizada no pipeline diário. |
+| Área | Status | Notas |
+|------|--------|-------|
+| **Revisão Humana de Candidatos** | ✅ Resolvido | Sprint 203: UI dedicada com scores de IA, fluxos approve/reject/review, ações em lote e trilha de auditoria |
+| **Operational Learning** | ✅ Resolvido | Sprint 205: 4 edge functions instrumentadas. Sprint 206: Mineração de padrões automatizada no cron |
+| **Repo Trust** | ✅ Resolvido | Sprint 204: Avaliação de trust integrada ao cron diário |
+| **Recalibração de Confiança** | ✅ Resolvido | Sprint 207: Recalibração automática integrada ao cron (boost/degradação por uso, trust e sinais) |
 
-O foco agora se volta para:
-- **Construir a tela de Revisão Humana** para candidatos borderline (needs_review)
-- **Incluir Repo Trust no cron diário** para avaliação automática de confiança de fontes
-- **Ativar producers de sinais operacionais** em mais pontos do pipeline de delivery
+O foco futuro se volta para:
 - Maturar a camada Skills para profundidade operacional completa
 - Ativar o pipeline de extração de skills → revisão → vinculação de capacidades
 - Conectar o Action Engine à execução real downstream
