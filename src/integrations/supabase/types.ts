@@ -8273,6 +8273,132 @@ export type Database = {
           },
         ]
       }
+      canon_graph_edges: {
+        Row: {
+          bidirectional: boolean
+          confidence: number
+          created_at: string
+          evidence_refs: Json
+          id: string
+          metadata: Json
+          organization_id: string
+          provenance_detail: string | null
+          provenance_source: string
+          relation_type: Database["public"]["Enums"]["canon_graph_relation_type"]
+          source_node_id: string
+          strength: number
+          target_node_id: string
+          updated_at: string
+        }
+        Insert: {
+          bidirectional?: boolean
+          confidence?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          metadata?: Json
+          organization_id: string
+          provenance_detail?: string | null
+          provenance_source?: string
+          relation_type: Database["public"]["Enums"]["canon_graph_relation_type"]
+          source_node_id: string
+          strength?: number
+          target_node_id: string
+          updated_at?: string
+        }
+        Update: {
+          bidirectional?: boolean
+          confidence?: number
+          created_at?: string
+          evidence_refs?: Json
+          id?: string
+          metadata?: Json
+          organization_id?: string
+          provenance_detail?: string | null
+          provenance_source?: string
+          relation_type?: Database["public"]["Enums"]["canon_graph_relation_type"]
+          source_node_id?: string
+          strength?: number
+          target_node_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_graph_edges_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_graph_edges_source_node_id_fkey"
+            columns: ["source_node_id"]
+            isOneToOne: false
+            referencedRelation: "canon_graph_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canon_graph_edges_target_node_id_fkey"
+            columns: ["target_node_id"]
+            isOneToOne: false
+            referencedRelation: "canon_graph_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canon_graph_nodes: {
+        Row: {
+          canon_entry_id: string
+          centrality_score: number
+          cluster_id: string | null
+          created_at: string
+          domain_scope: string
+          id: string
+          label: string
+          metadata: Json
+          node_type: string
+          organization_id: string
+          tags: Json
+          updated_at: string
+        }
+        Insert: {
+          canon_entry_id: string
+          centrality_score?: number
+          cluster_id?: string | null
+          created_at?: string
+          domain_scope?: string
+          id?: string
+          label?: string
+          metadata?: Json
+          node_type?: string
+          organization_id: string
+          tags?: Json
+          updated_at?: string
+        }
+        Update: {
+          canon_entry_id?: string
+          centrality_score?: number
+          cluster_id?: string | null
+          created_at?: string
+          domain_scope?: string
+          id?: string
+          label?: string
+          metadata?: Json
+          node_type?: string
+          organization_id?: string
+          tags?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canon_graph_nodes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canon_integrity_assessments: {
         Row: {
           architecture_canon_alignment_score: number
@@ -41575,6 +41701,30 @@ export type Database = {
         Args: { p_initiative_id: string }
         Returns: undefined
       }
+      get_canon_graph_neighborhood: {
+        Args: {
+          p_depth?: number
+          p_min_strength?: number
+          p_node_id: string
+          p_organization_id: string
+          p_relation_types?: string[]
+        }
+        Returns: {
+          canon_entry_id: string
+          centrality_score: number
+          confidence: number
+          depth: number
+          direction: string
+          domain_scope: string
+          edge_id: string
+          label: string
+          node_id: string
+          node_type: string
+          provenance_source: string
+          relation_type: string
+          strength: number
+        }[]
+      }
       get_unembedded_nodes: {
         Args: { p_initiative_id: string; p_limit?: number }
         Returns: {
@@ -41702,6 +41852,13 @@ export type Database = {
         | "implementation_recipe"
         | "failure_memory"
         | "external_knowledge"
+      canon_graph_relation_type:
+        | "supports"
+        | "contradicts"
+        | "supersedes"
+        | "depends_on"
+        | "similar_to"
+        | "derived_from"
       canon_lifecycle_status:
         | "draft"
         | "proposed"
@@ -42199,6 +42356,14 @@ export const Constants = {
         "implementation_recipe",
         "failure_memory",
         "external_knowledge",
+      ],
+      canon_graph_relation_type: [
+        "supports",
+        "contradicts",
+        "supersedes",
+        "depends_on",
+        "similar_to",
+        "derived_from",
       ],
       canon_lifecycle_status: [
         "draft",
