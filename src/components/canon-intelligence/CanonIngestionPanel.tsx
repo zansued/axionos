@@ -4,12 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Play, RefreshCw, Zap, Globe, CheckCircle2, XCircle, Clock, ArrowUpCircle, DatabaseZap, Bot, Sparkles, GitMerge, TrendingUp } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Loader2, Play, RefreshCw, Zap, Globe, CheckCircle2, XCircle, Clock,
+  ArrowUpCircle, DatabaseZap, Bot, Sparkles, GitMerge, TrendingUp,
+  Search, Star, Shield, ThumbsUp, ThumbsDown, ExternalLink
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { useToast } from "@/hooks/use-toast";
 import { useCanonPipeline } from "@/hooks/useCanonPipeline";
 import { useCanonEvolutionEngine } from "@/hooks/useCanonEvolutionEngine";
+import { useSourceDiscoveryAgent, type DiscoveryCandidate } from "@/hooks/useSourceDiscoveryAgent";
 import { INGESTION_LIFECYCLE_LABELS } from "@/lib/canon/canon-types";
 import type { IngestionLifecycleState } from "@/lib/canon/canon-types";
 
@@ -55,10 +61,11 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
   const [repoUrl, setRepoUrl] = useState("");
   const [absorbingRepo, setAbsorbingRepo] = useState(false);
   const [reviewingPipeline, setReviewingPipeline] = useState(false);
+  const [discoveryTopic, setDiscoveryTopic] = useState("");
   const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
   const evolution = useCanonEvolutionEngine();
+  const discovery = useSourceDiscoveryAgent();
 
-  // Review & Promote uses canon-review-engine (single authority — Sprint 202)
   const runReviewPipeline = async () => {
     if (!currentOrg?.id) return;
     setReviewingPipeline(true);
@@ -165,7 +172,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
 
   return (
     <div className="space-y-4">
-      {/* Estatísticas do Pipeline */}
+      {/* Pipeline Stats */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
           <MiniStat label="Fontes" value={stats.totalSources} />
@@ -179,194 +186,446 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
         </div>
       )}
 
-      {/* Barra de ações */}
-      <div className="flex flex-wrap gap-2">
-        <Button size="sm" variant="outline" onClick={seedSources} disabled={seeding}>
-          {seeding ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Globe className="h-3.5 w-3.5 mr-1.5" />}
-          Adicionar Fontes Padrão
-        </Button>
-        <Button size="sm" onClick={ingestAll} disabled={ingestingAll || activeSources.length === 0}>
-          {ingestingAll ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Zap className="h-3.5 w-3.5 mr-1.5" />}
-          Ingerir Todas as Fontes
-        </Button>
-        {stats && stats.pendingCandidates > 0 && (
-          <Button size="sm" variant="secondary" onClick={runReviewPipeline} disabled={reviewingPipeline}>
-            {reviewingPipeline ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Bot className="h-3.5 w-3.5 mr-1.5" />}
-            Revisar e Promover ({stats.pendingCandidates} pendentes)
-          </Button>
-        )}
-        {stats && stats.approvedCandidates > 0 && (
-          <Button size="sm" variant="default" onClick={batchPromoteApproved} disabled={promoting}>
-            {promoting ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <ArrowUpCircle className="h-3.5 w-3.5 mr-1.5" />}
-            Promover {stats.approvedCandidates} ao Canon
-          </Button>
-        )}
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => evolution.runFullPipeline.mutate()}
-          disabled={evolution.runFullPipeline.isPending}
-          className="border-primary/30"
-        >
-          {evolution.runFullPipeline.isPending
-            ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-            : <Sparkles className="h-3.5 w-3.5 mr-1.5" />}
-          Pipeline Completo
-        </Button>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => evolution.processBacklog.mutate()}
-          disabled={evolution.processBacklog.isPending}
-        >
-          {evolution.processBacklog.isPending
-            ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-            : <TrendingUp className="h-3.5 w-3.5 mr-1.5" />}
-          Processar Backlog
-        </Button>
-        <Button size="sm" variant="ghost" onClick={onRefresh}>
-          <RefreshCw className="h-3.5 w-3.5 mr-1.5" />Atualizar
-        </Button>
-      </div>
+      <Tabs defaultValue="sources" className="w-full">
+        <TabsList className="grid grid-cols-4 w-full">
+          <TabsTrigger value="sources" className="text-xs">Fontes & Ingestão</TabsTrigger>
+          <TabsTrigger value="discovery" className="text-xs">
+            Descoberta de Fontes
+            {discovery.pendingCandidates.length > 0 && (
+              <Badge variant="secondary" className="ml-1.5 text-[9px] px-1 py-0">{discovery.pendingCandidates.length}</Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="review" className="text-xs">Revisar Descobertas</TabsTrigger>
+          <TabsTrigger value="runs" className="text-xs">Execuções</TabsTrigger>
+        </TabsList>
 
-      {/* Absorção de Repositório GitHub */}
-      <Card className="border-border/30 bg-card/60">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm flex items-center gap-2">
-            <GitMerge className="h-4 w-4 text-primary" />
-            Absorver Repositório GitHub
-          </CardTitle>
-          <CardDescription className="text-xs">
-            Cole a URL de um repositório público do GitHub para extrair padrões canônicos, arquitetura e boas práticas.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-2">
-            <Input
-              placeholder="https://github.com/owner/repo"
-              value={repoUrl}
-              onChange={(e) => setRepoUrl(e.target.value)}
-              className="text-sm"
-            />
+        {/* Tab: Sources & Ingestion */}
+        <TabsContent value="sources" className="space-y-4 mt-4">
+          {/* Action bar */}
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" variant="outline" onClick={seedSources} disabled={seeding}>
+              {seeding ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Globe className="h-3.5 w-3.5 mr-1.5" />}
+              Seed Fontes Iniciais
+            </Button>
+            <Button size="sm" onClick={ingestAll} disabled={ingestingAll || activeSources.length === 0}>
+              {ingestingAll ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Zap className="h-3.5 w-3.5 mr-1.5" />}
+              Ingerir Todas as Fontes
+            </Button>
+            {stats && stats.pendingCandidates > 0 && (
+              <Button size="sm" variant="secondary" onClick={runReviewPipeline} disabled={reviewingPipeline}>
+                {reviewingPipeline ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Bot className="h-3.5 w-3.5 mr-1.5" />}
+                Revisar e Promover ({stats.pendingCandidates} pendentes)
+              </Button>
+            )}
+            {stats && stats.approvedCandidates > 0 && (
+              <Button size="sm" variant="default" onClick={batchPromoteApproved} disabled={promoting}>
+                {promoting ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <ArrowUpCircle className="h-3.5 w-3.5 mr-1.5" />}
+                Promover {stats.approvedCandidates} ao Canon
+              </Button>
+            )}
             <Button
-              size="sm"
-              onClick={absorbRepo}
-              disabled={absorbingRepo || !repoUrl || !repoUrl.includes("github.com")}
+              size="sm" variant="secondary"
+              onClick={() => evolution.runFullPipeline.mutate()}
+              disabled={evolution.runFullPipeline.isPending}
+              className="border-primary/30"
             >
-              {absorbingRepo ? (
-                <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-              ) : (
-                <DatabaseZap className="h-3.5 w-3.5 mr-1.5" />
-              )}
-              Absorver
+              {evolution.runFullPipeline.isPending
+                ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                : <Sparkles className="h-3.5 w-3.5 mr-1.5" />}
+              Pipeline Completo
+            </Button>
+            <Button
+              size="sm" variant="outline"
+              onClick={() => evolution.processBacklog.mutate()}
+              disabled={evolution.processBacklog.isPending}
+            >
+              {evolution.processBacklog.isPending
+                ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                : <TrendingUp className="h-3.5 w-3.5 mr-1.5" />}
+              Processar Backlog
+            </Button>
+            <Button size="sm" variant="ghost" onClick={onRefresh}>
+              <RefreshCw className="h-3.5 w-3.5 mr-1.5" />Atualizar
             </Button>
           </div>
-        </CardContent>
-      </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Registro de Fontes */}
-        <Card className="border-border/30 bg-card/60">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Registro de Fontes</CardTitle>
-            <CardDescription className="text-xs">{activeSources.length} fontes ativas configuradas</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {activeSources.length === 0 ? (
-              <p className="text-xs text-muted-foreground py-4 text-center">
-                Nenhuma fonte registrada. Clique em "Adicionar Fontes Padrão" para adicionar fontes de conhecimento de exemplo.
-              </p>
-            ) : (
-              <ScrollArea className="h-[300px]">
-                <div className="space-y-2">
-                  {activeSources.map((src: any) => {
-                    const lifecycleState = (src.ingestion_lifecycle_state || "discovered") as IngestionLifecycleState;
-                    return (
-                      <div key={src.id} className="p-3 rounded-lg border border-border/20 bg-muted/10 hover:bg-muted/20 transition-colors">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate">{src.source_name}</p>
-                            <p className="text-[10px] text-muted-foreground truncate mt-0.5">{src.source_url}</p>
-                            <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-                              <Badge variant="outline" className="text-[9px]">{src.source_type}</Badge>
-                              <Badge variant="outline" className="text-[9px]">{src.domain_scope}</Badge>
-                              <Badge className={`text-[9px] border ${LIFECYCLE_COLOR[lifecycleState] || ""}`}>
-                                {INGESTION_LIFECYCLE_LABELS[lifecycleState] || lifecycleState}
-                              </Badge>
-                              {src.last_synced_at && (
-                                <span className="text-[9px] text-muted-foreground/60">
-                                  Último: {new Date(src.last_synced_at).toLocaleDateString("pt-BR")}
-                                </span>
-                              )}
+          {/* GitHub Repo Absorb */}
+          <Card className="border-border/30 bg-card/60">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <GitMerge className="h-4 w-4 text-primary" />
+                Absorver Repositório GitHub
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Cole a URL de um repositório público do GitHub para extrair padrões canônicos.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="https://github.com/owner/repo"
+                  value={repoUrl}
+                  onChange={(e) => setRepoUrl(e.target.value)}
+                  className="text-sm"
+                />
+                <Button
+                  size="sm"
+                  onClick={absorbRepo}
+                  disabled={absorbingRepo || !repoUrl || !repoUrl.includes("github.com")}
+                >
+                  {absorbingRepo ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <DatabaseZap className="h-3.5 w-3.5 mr-1.5" />}
+                  Absorver
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Source Registry */}
+          <Card className="border-border/30 bg-card/60">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm">Registro de Fontes</CardTitle>
+              <CardDescription className="text-xs">{activeSources.length} fontes ativas configuradas</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {activeSources.length === 0 ? (
+                <p className="text-xs text-muted-foreground py-4 text-center">
+                  Nenhuma fonte registrada. Use "Seed Fontes Iniciais" ou "Descoberta de Fontes" para adicionar.
+                </p>
+              ) : (
+                <ScrollArea className="h-[300px]">
+                  <div className="space-y-2">
+                    {activeSources.map((src: any) => {
+                      const lifecycleState = (src.ingestion_lifecycle_state || "discovered") as IngestionLifecycleState;
+                      return (
+                        <div key={src.id} className="p-3 rounded-lg border border-border/20 bg-muted/10 hover:bg-muted/20 transition-colors">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">{src.source_name}</p>
+                              <p className="text-[10px] text-muted-foreground truncate mt-0.5">{src.source_url}</p>
+                              <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                                <Badge variant="outline" className="text-[9px]">{src.source_type}</Badge>
+                                <Badge variant="outline" className="text-[9px]">{src.domain_scope}</Badge>
+                                <Badge className={`text-[9px] border ${LIFECYCLE_COLOR[lifecycleState] || ""}`}>
+                                  {INGESTION_LIFECYCLE_LABELS[lifecycleState] || lifecycleState}
+                                </Badge>
+                                {src.last_synced_at && (
+                                  <span className="text-[9px] text-muted-foreground/60">
+                                    Último: {new Date(src.last_synced_at).toLocaleDateString("pt-BR")}
+                                  </span>
+                                )}
+                              </div>
                             </div>
+                            <Button
+                              size="sm" variant="ghost" className="h-7 w-7 p-0 shrink-0"
+                              onClick={() => ingestSource(src.id, src.source_name)}
+                              disabled={ingesting === src.id}
+                            >
+                              {ingesting === src.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
+                            </Button>
                           </div>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-7 w-7 p-0 shrink-0"
-                            onClick={() => ingestSource(src.id, src.source_name)}
-                            disabled={ingesting === src.id}
-                          >
-                            {ingesting === src.id ? (
-                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                            ) : (
-                              <Play className="h-3.5 w-3.5" />
-                            )}
-                          </Button>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </ScrollArea>
-            )}
-          </CardContent>
-        </Card>
+                      );
+                    })}
+                  </div>
+                </ScrollArea>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-        {/* Execuções Recentes de Sincronização */}
-        <Card className="border-border/30 bg-card/60">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Execuções Recentes</CardTitle>
-            <CardDescription className="text-xs">{recentSyncs.length} ingestões recentes</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {recentSyncs.length === 0 ? (
-              <p className="text-xs text-muted-foreground py-4 text-center">Nenhuma execução registrada ainda.</p>
-            ) : (
-              <ScrollArea className="h-[300px]">
-                <div className="space-y-2">
-                  {recentSyncs.map((run: any) => (
-                    <div key={run.id} className="p-3 rounded-lg border border-border/20 bg-muted/10">
-                      <div className="flex items-center gap-2">
-                        {SYNC_STATUS_ICON[run.sync_status] || <Clock className="h-3.5 w-3.5 text-muted-foreground" />}
-                        <span className="text-xs font-medium">{SYNC_STATUS_LABEL[run.sync_status] || run.sync_status}</span>
-                        {run.lifecycle_state && (
-                          <Badge variant="outline" className="text-[9px]">{run.lifecycle_state}</Badge>
-                        )}
-                        <span className="text-[10px] text-muted-foreground ml-auto">
-                          {new Date(run.created_at).toLocaleString("pt-BR")}
-                        </span>
+        {/* Tab: Discovery */}
+        <TabsContent value="discovery" className="space-y-4 mt-4">
+          <Card className="border-border/30 bg-card/60">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Search className="h-4 w-4 text-primary" />
+                Descoberta Inteligente de Fontes
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Descubra fontes oficiais de documentação e repositórios GitHub por tópico/tecnologia.
+                O agente prioriza domínios oficiais, organizações verificadas e fontes de alta confiança.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Ex: React, Kubernetes, Supabase, OpenTelemetry..."
+                  value={discoveryTopic}
+                  onChange={(e) => setDiscoveryTopic(e.target.value)}
+                  className="text-sm"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  size="sm"
+                  onClick={() => { if (discoveryTopic) discovery.discoverSources.mutate(discoveryTopic); }}
+                  disabled={!discoveryTopic || discovery.discoverSources.isPending}
+                >
+                  {discovery.discoverSources.isPending
+                    ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                    : <Globe className="h-3.5 w-3.5 mr-1.5" />}
+                  Descobrir Fontes Oficiais
+                </Button>
+                <Button
+                  size="sm" variant="secondary"
+                  onClick={() => { if (discoveryTopic) discovery.discoverRepos.mutate(discoveryTopic); }}
+                  disabled={!discoveryTopic || discovery.discoverRepos.isPending}
+                >
+                  {discovery.discoverRepos.isPending
+                    ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                    : <GitMerge className="h-3.5 w-3.5 mr-1.5" />}
+                  Descobrir Repositórios Oficiais
+                </Button>
+              </div>
+
+              {/* Quick topic buttons */}
+              <div className="flex flex-wrap gap-1.5">
+                {["React", "Next.js", "Supabase", "Docker", "Kubernetes", "TypeScript", "Postgres", "Vite", "Tailwind", "LangChain"].map((t) => (
+                  <Button
+                    key={t} size="sm" variant="outline"
+                    className="h-6 text-[10px] px-2"
+                    onClick={() => setDiscoveryTopic(t)}
+                  >
+                    {t}
+                  </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Discovery runs */}
+          {discovery.runs.length > 0 && (
+            <Card className="border-border/30 bg-card/60">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">Execuções de Descoberta</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ScrollArea className="h-[200px]">
+                  <div className="space-y-2">
+                    {discovery.runs.map((run) => (
+                      <div key={run.id} className="p-2 rounded-lg border border-border/20 bg-muted/10 flex items-center justify-between">
+                        <div>
+                          <p className="text-xs font-medium">{run.query_topic}</p>
+                          <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-foreground">
+                            <Badge variant="outline" className="text-[9px]">{run.discovery_type}</Badge>
+                            <span>Encontrados: {run.candidates_found}</span>
+                            <span>Aprovados: {run.candidates_approved}</span>
+                            <span>{new Date(run.created_at).toLocaleDateString("pt-BR")}</span>
+                          </div>
+                        </div>
+                        <Badge variant={run.status === "completed" ? "default" : "secondary"} className="text-[9px]">
+                          {run.status}
+                        </Badge>
                       </div>
-                      <div className="flex items-center gap-3 mt-1.5 text-[10px] text-muted-foreground flex-wrap">
-                        <span>Docs: {run.documents_fetched || 0}</span>
-                        <span>Chunks: {run.chunks_created || 0}</span>
-                        <span>Encontrados: {run.candidates_found}</span>
-                        <span>Aceitos: {run.candidates_accepted}</span>
-                        <span>Dupl.: {run.duplicates_skipped || run.candidates_rejected}</span>
-                        {(run.candidates_promoted || 0) > 0 && (
-                          <span className="text-primary">Promovidos: {run.candidates_promoted}</span>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+
+        {/* Tab: Review Discovered */}
+        <TabsContent value="review" className="space-y-4 mt-4">
+          <div className="grid grid-cols-3 gap-2">
+            <MiniStat label="Pendentes" value={discovery.pendingCandidates.length} accent />
+            <MiniStat label="Aprovados" value={discovery.approvedCandidates.length} />
+            <MiniStat label="Rejeitados" value={discovery.rejectedCandidates.length} />
+          </div>
+
+          {discovery.highTrustPending.length > 0 && (
+            <div className="p-3 rounded-lg border border-primary/30 bg-primary/5">
+              <p className="text-xs font-medium text-primary flex items-center gap-1.5">
+                <Star className="h-3.5 w-3.5" />
+                {discovery.highTrustPending.length} candidatos de alta confiança aguardam revisão
+              </p>
+            </div>
+          )}
+
+          <Card className="border-border/30 bg-card/60">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Shield className="h-4 w-4 text-primary" />
+                Candidatos Descobertos
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Revise, aprove ou rejeite fontes descobertas antes de adicioná-las ao canon.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {discovery.pendingCandidates.length === 0 && discovery.approvedCandidates.length === 0 ? (
+                <p className="text-xs text-muted-foreground py-4 text-center">
+                  Nenhum candidato descoberto. Use a aba "Descoberta de Fontes" para encontrar novas fontes.
+                </p>
+              ) : (
+                <ScrollArea className="h-[400px]">
+                  <div className="space-y-2">
+                    {discovery.candidates.map((c) => (
+                      <DiscoveryCandidateCard
+                        key={c.id}
+                        candidate={c}
+                        onApprove={() => discovery.approveCandidate.mutate(c.id)}
+                        onReject={() => discovery.rejectCandidate.mutate({ candidateId: c.id })}
+                        approving={discovery.approveCandidate.isPending}
+                        rejecting={discovery.rejectCandidate.isPending}
+                      />
+                    ))}
+                  </div>
+                </ScrollArea>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Tab: Runs */}
+        <TabsContent value="runs" className="mt-4">
+          <Card className="border-border/30 bg-card/60">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm">Execuções Recentes de Ingestão</CardTitle>
+              <CardDescription className="text-xs">{recentSyncs.length} ingestões recentes</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {recentSyncs.length === 0 ? (
+                <p className="text-xs text-muted-foreground py-4 text-center">Nenhuma execução registrada ainda.</p>
+              ) : (
+                <ScrollArea className="h-[400px]">
+                  <div className="space-y-2">
+                    {recentSyncs.map((run: any) => (
+                      <div key={run.id} className="p-3 rounded-lg border border-border/20 bg-muted/10">
+                        <div className="flex items-center gap-2">
+                          {SYNC_STATUS_ICON[run.sync_status] || <Clock className="h-3.5 w-3.5 text-muted-foreground" />}
+                          <span className="text-xs font-medium">{SYNC_STATUS_LABEL[run.sync_status] || run.sync_status}</span>
+                          {run.lifecycle_state && (
+                            <Badge variant="outline" className="text-[9px]">{run.lifecycle_state}</Badge>
+                          )}
+                          <span className="text-[10px] text-muted-foreground ml-auto">
+                            {new Date(run.created_at).toLocaleString("pt-BR")}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3 mt-1.5 text-[10px] text-muted-foreground flex-wrap">
+                          <span>Docs: {run.documents_fetched || 0}</span>
+                          <span>Chunks: {run.chunks_created || 0}</span>
+                          <span>Encontrados: {run.candidates_found}</span>
+                          <span>Aceitos: {run.candidates_accepted}</span>
+                          <span>Dupl.: {run.duplicates_skipped || run.candidates_rejected}</span>
+                          {(run.candidates_promoted || 0) > 0 && (
+                            <span className="text-primary">Promovidos: {run.candidates_promoted}</span>
+                          )}
+                        </div>
+                        {run.sync_notes && (
+                          <p className="text-[10px] text-muted-foreground/70 mt-1 truncate">{run.sync_notes}</p>
                         )}
                       </div>
-                      {run.sync_notes && (
-                        <p className="text-[10px] text-muted-foreground/70 mt-1 truncate">{run.sync_notes}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
+                    ))}
+                  </div>
+                </ScrollArea>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+// ─── Subcomponents ───
+
+function DiscoveryCandidateCard({
+  candidate,
+  onApprove,
+  onReject,
+  approving,
+  rejecting,
+}: {
+  candidate: DiscoveryCandidate;
+  onApprove: () => void;
+  onReject: () => void;
+  approving: boolean;
+  rejecting: boolean;
+}) {
+  const trustColor = candidate.composite_trust_score >= 0.7
+    ? "text-emerald-400"
+    : candidate.composite_trust_score >= 0.4
+    ? "text-amber-400"
+    : "text-destructive";
+
+  const stageColor: Record<string, string> = {
+    pending: "bg-amber-500/10 text-amber-400 border-amber-500/30",
+    approved: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+    rejected: "bg-destructive/10 text-destructive border-destructive/30",
+  };
+
+  return (
+    <div className="p-3 rounded-lg border border-border/20 bg-muted/10 hover:bg-muted/20 transition-colors">
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-medium truncate">{candidate.source_name}</p>
+            <a
+              href={candidate.source_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary shrink-0"
+            >
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          </div>
+          <p className="text-[10px] text-muted-foreground truncate mt-0.5">{candidate.source_url}</p>
+          <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+            <Badge variant="outline" className="text-[9px]">{candidate.source_type}</Badge>
+            <Badge className={`text-[9px] border ${stageColor[candidate.review_status] || ""}`}>
+              {candidate.review_status}
+            </Badge>
+            <span className={`text-[10px] font-mono font-bold ${trustColor}`}>
+              {(candidate.composite_trust_score * 100).toFixed(0)}%
+            </span>
+            {candidate.official_domain_match && (
+              <Badge variant="outline" className="text-[9px] border-emerald-500/30 text-emerald-400">oficial</Badge>
             )}
-          </CardContent>
-        </Card>
+            {candidate.official_org_match && (
+              <Badge variant="outline" className="text-[9px] border-blue-500/30 text-blue-400">org oficial</Badge>
+            )}
+            {candidate.github_verified_org && (
+              <Badge variant="outline" className="text-[9px] border-violet-500/30 text-violet-400">verificado</Badge>
+            )}
+            {candidate.repo_stars && candidate.repo_stars > 0 && (
+              <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
+                <Star className="h-2.5 w-2.5" />{candidate.repo_stars.toLocaleString()}
+              </span>
+            )}
+          </div>
+          {/* Trust score breakdown */}
+          <div className="flex items-center gap-2 mt-1 text-[9px] text-muted-foreground/60">
+            <span>Docs: {(candidate.docs_quality_score * 100).toFixed(0)}%</span>
+            <span>Arq: {(candidate.architecture_relevance_score * 100).toFixed(0)}%</span>
+            <span>Ruído: {(candidate.noise_risk_score * 100).toFixed(0)}%</span>
+            <span>Fresh: {(candidate.freshness_score * 100).toFixed(0)}%</span>
+          </div>
+          {candidate.rejection_reason && (
+            <p className="text-[10px] text-destructive/70 mt-1">{candidate.rejection_reason}</p>
+          )}
+        </div>
+        {candidate.review_status === "pending" && (
+          <div className="flex gap-1 shrink-0">
+            <Button
+              size="sm" variant="ghost"
+              className="h-7 w-7 p-0 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
+              onClick={onApprove} disabled={approving}
+            >
+              {approving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ThumbsUp className="h-3.5 w-3.5" />}
+            </Button>
+            <Button
+              size="sm" variant="ghost"
+              className="h-7 w-7 p-0 text-destructive hover:text-destructive/80 hover:bg-destructive/10"
+              onClick={onReject} disabled={rejecting}
+            >
+              {rejecting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ThumbsDown className="h-3.5 w-3.5" />}
+            </Button>
+          </div>
+        )}
+        {candidate.review_status === "approved" && candidate.promoted_source_id && (
+          <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+        )}
       </div>
     </div>
   );

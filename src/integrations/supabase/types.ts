@@ -38337,6 +38337,212 @@ export type Database = {
           },
         ]
       }
+      source_discovery_blocked_domains: {
+        Row: {
+          blocked_by: string | null
+          created_at: string
+          domain_pattern: string
+          id: string
+          organization_id: string
+          reason: string
+        }
+        Insert: {
+          blocked_by?: string | null
+          created_at?: string
+          domain_pattern?: string
+          id?: string
+          organization_id: string
+          reason?: string
+        }
+        Update: {
+          blocked_by?: string | null
+          created_at?: string
+          domain_pattern?: string
+          id?: string
+          organization_id?: string
+          reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_discovery_blocked_domains_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      source_discovery_candidates: {
+        Row: {
+          architecture_relevance_score: number
+          composite_trust_score: number
+          created_at: string
+          discovery_method: string
+          docs_quality_score: number
+          freshness_score: number
+          github_verified_org: boolean
+          id: string
+          noise_risk_score: number
+          official_domain_match: boolean
+          official_org_match: boolean
+          organization_id: string
+          pipeline_stage: string
+          promoted_source_id: string | null
+          rejection_reason: string | null
+          repo_forks: number | null
+          repo_last_activity: string | null
+          repo_stars: number | null
+          review_notes: string | null
+          review_status: string
+          reviewed_by: string | null
+          run_id: string | null
+          source_name: string
+          source_type: string
+          source_url: string
+          updated_at: string
+          url_hash: string
+        }
+        Insert: {
+          architecture_relevance_score?: number
+          composite_trust_score?: number
+          created_at?: string
+          discovery_method?: string
+          docs_quality_score?: number
+          freshness_score?: number
+          github_verified_org?: boolean
+          id?: string
+          noise_risk_score?: number
+          official_domain_match?: boolean
+          official_org_match?: boolean
+          organization_id: string
+          pipeline_stage?: string
+          promoted_source_id?: string | null
+          rejection_reason?: string | null
+          repo_forks?: number | null
+          repo_last_activity?: string | null
+          repo_stars?: number | null
+          review_notes?: string | null
+          review_status?: string
+          reviewed_by?: string | null
+          run_id?: string | null
+          source_name?: string
+          source_type?: string
+          source_url?: string
+          updated_at?: string
+          url_hash?: string
+        }
+        Update: {
+          architecture_relevance_score?: number
+          composite_trust_score?: number
+          created_at?: string
+          discovery_method?: string
+          docs_quality_score?: number
+          freshness_score?: number
+          github_verified_org?: boolean
+          id?: string
+          noise_risk_score?: number
+          official_domain_match?: boolean
+          official_org_match?: boolean
+          organization_id?: string
+          pipeline_stage?: string
+          promoted_source_id?: string | null
+          rejection_reason?: string | null
+          repo_forks?: number | null
+          repo_last_activity?: string | null
+          repo_stars?: number | null
+          review_notes?: string | null
+          review_status?: string
+          reviewed_by?: string | null
+          run_id?: string | null
+          source_name?: string
+          source_type?: string
+          source_url?: string
+          updated_at?: string
+          url_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_discovery_candidates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "source_discovery_candidates_promoted_source_id_fkey"
+            columns: ["promoted_source_id"]
+            isOneToOne: false
+            referencedRelation: "canon_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "source_discovery_candidates_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "source_discovery_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      source_discovery_runs: {
+        Row: {
+          candidates_approved: number
+          candidates_found: number
+          candidates_rejected: number
+          completed_at: string | null
+          created_at: string
+          discovery_type: string
+          error_message: string | null
+          id: string
+          organization_id: string
+          query_params: Json
+          query_topic: string
+          started_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          candidates_approved?: number
+          candidates_found?: number
+          candidates_rejected?: number
+          completed_at?: string | null
+          created_at?: string
+          discovery_type?: string
+          error_message?: string | null
+          id?: string
+          organization_id: string
+          query_params?: Json
+          query_topic?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          candidates_approved?: number
+          candidates_found?: number
+          candidates_rejected?: number
+          completed_at?: string | null
+          created_at?: string
+          discovery_type?: string
+          error_message?: string | null
+          id?: string
+          organization_id?: string
+          query_params?: Json
+          query_topic?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_discovery_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       squad_members: {
         Row: {
           agent_id: string
