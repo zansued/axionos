@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/comp
 import {
   Database, BookOpen, Search, Activity, Zap, Eye, GitBranch,
   Shield, Brain, Download, Scale, Route, HeartPulse,
-  Library, Lightbulb, ShieldCheck, Target, Boxes,
+  Library, Lightbulb, ShieldCheck, Target, Boxes, UserCheck,
 } from "lucide-react";
 import { useCanonIntelligence } from "@/hooks/useCanonIntelligence";
 import { useCanonStewardship } from "@/hooks/useCanonStewardship";
@@ -31,6 +31,7 @@ import { SkillReviewTab } from "@/components/canon-intelligence/SkillReviewTab";
 import { CapabilityBindingTab } from "@/components/canon-intelligence/CapabilityBindingTab";
 import { SkillRuntimeTab } from "@/components/canon-intelligence/SkillRuntimeTab";
 import { LifecycleHealthCheck } from "@/components/canon-intelligence/LifecycleHealthCheck";
+import { HumanReviewTab } from "@/components/canon-intelligence/HumanReviewTab";
 
 /* ──────────────── Section definitions ──────────────── */
 
@@ -67,6 +68,7 @@ const SECTIONS = [
     defaultTab: "governance-tab",
     tabs: [
       { value: "governance-tab", label: "Governance", icon: Shield },
+      { value: "human-review", label: "Revisão Humana", icon: UserCheck },
       { value: "lineage", label: "Lineage", icon: Route },
       { value: "renewal", label: "Renewal", icon: HeartPulse },
     ],
@@ -199,6 +201,8 @@ export default function CanonIntelligenceDashboard() {
             candidates={intel.candidates}
           />
         );
+      case "human-review":
+        return <HumanReviewTab />;
       case "lineage":
         return <KnowledgeLineageTab />;
       case "renewal":
