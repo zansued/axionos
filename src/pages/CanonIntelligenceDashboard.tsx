@@ -25,6 +25,7 @@ import { CanonIngestionPanel } from "@/components/canon-intelligence/CanonIngest
 import { RepoTrustTab } from "@/components/canon-intelligence/RepoTrustTab";
 import { KnowledgeLineageTab } from "@/components/canon-intelligence/KnowledgeLineageTab";
 import { KnowledgeRenewalTab } from "@/components/canon-intelligence/KnowledgeRenewalTab";
+import { SkillExtractionTab } from "@/components/canon-intelligence/SkillExtractionTab";
 
 /* ──────────────── Section definitions ──────────────── */
 
