@@ -77,6 +77,7 @@ const SECTIONS = [
     tabs: [
       { value: "extraction", label: "Extraction", icon: Boxes },
       { value: "review", label: "Skill Review", icon: Shield },
+      { value: "bindings", label: "Capability Binding", icon: Route },
     ],
   },
   {
