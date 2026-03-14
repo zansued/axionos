@@ -52,6 +52,7 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 | AS-203 | 203 | Human Review UI for Canon Candidates | ✅ Complete |
 | AS-204 | 204 | Repo Trust in Daily Cron Pipeline | ✅ Complete |
 | AS-205 | 205 | Operational Learning Signal Producers | ✅ Complete |
+| AS-206 | 206 | Pattern Mining in Daily Cron Pipeline | ✅ Complete |
 
 ---
 

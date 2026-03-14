@@ -534,7 +534,7 @@ Deno.serve(async (req) => {
       entity_type: "canon",
       message: `Scheduled pipeline completed: ${uniqueOrgIds.length} org(s) processed`,
       severity: "info",
-      metadata: { summary, trust_summary: trustSummary, run_at: new Date().toISOString() },
+      metadata: { summary, trust_summary: trustSummary, mining_summary: miningSummary, run_at: new Date().toISOString() },
     });
 
     // Sprint 205: Emit operational learning signal per org
