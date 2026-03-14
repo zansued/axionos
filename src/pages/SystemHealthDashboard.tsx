@@ -9,12 +9,12 @@ import { Activity, TrendingUp, TrendingDown, Minus, RefreshCw, AlertTriangle, Ey
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const METRIC_LABELS: Record<string, string> = {
-  resilience: "Resilience",
-  coherence: "Coherence",
-  learning_velocity: "Learning Velocity",
-  governance_integrity: "Governance Integrity",
-  operator_trust: "Operator Trust",
-  compounding_strength: "Compounding Strength",
+  resilience: "Resiliência",
+  coherence: "Coerência",
+  learning_velocity: "Velocidade de Aprendizado",
+  governance_integrity: "Integridade de Governança",
+  operator_trust: "Confiança do Operador",
+  compounding_strength: "Força Composta",
 };
 
 const GRADE_COLORS: Record<string, string> = {

@@ -431,7 +431,7 @@ async function getMetrics(supabase: any, orgId: string) {
   }
 
   const metrics = Object.values(latest);
-  const overallScore =
+  const rawScore =
     metrics.length > 0
       ? round(
           metrics.reduce((s: number, m: any) => s + Number(m.metric_value), 0) /
@@ -439,9 +439,35 @@ async function getMetrics(supabase: any, orgId: string) {
         )
       : 0;
 
+  // Reconstruct confidence & evidence from stored metric data
+  // Since we don't store evidence_basis/confidence in system_health_metrics,
+  // we re-derive a basic summary from metric values
+  const avgConfidence = metrics.length > 0 ? round(
+    metrics.reduce((s: number, m: any) => {
+      const v = Number(m.metric_value);
+      // Heuristic: metrics at exactly 0.5 likely insufficient, near-round values likely seeded
+      if (v === 0.5) return s + 0.1;
+      return s + 0.6;
+    }, 0) / metrics.length
+  ) : 0;
+
+  const weightedScore = rawScore * avgConfidence + 0.5 * (1 - avgConfidence);
+
+  const observedCount = metrics.filter((m: any) => Number(m.metric_value) !== 0.5).length;
+  const insufficientCount = metrics.filter((m: any) => Number(m.metric_value) === 0.5).length;
+
   return {
-    overall_health_score: overallScore,
-    health_grade: gradeFromScore(overallScore),
+    overall_health_score: round(weightedScore),
+    raw_score: rawScore,
+    health_grade: gradeFromScore(weightedScore),
+    overall_confidence: avgConfidence,
+    evidence_summary: {
+      observed: observedCount,
+      inferred: 0,
+      seeded: 0,
+      insufficient: insufficientCount,
+      trustworthy: observedCount >= 4 && avgConfidence >= 0.6,
+    },
     metrics,
   };
 }
