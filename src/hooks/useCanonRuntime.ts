@@ -28,8 +28,7 @@ export function useCanonRuntime() {
         .from("canon_pattern_applications" as any)
         .select("*")
         .eq("organization_id", orgId!)
-        .order("created_at", { ascending: false })
-        as any);
+        .order("created_at", { ascending: false }) as any);
       if (error) throw error;
       return (data || []) as any[];
     },
