@@ -568,10 +568,10 @@ Return ONLY valid JSON: {"reviews": [{"index": 1, "verdict": "approve"|"reject"|
           },
           canon_entries: {
             total: entryData.length,
-            active: entryData.filter((e: any) => e.lifecycle_status === "active").length,
+            active: entryData.filter((e: any) => e.lifecycle_status === "approved").length,
             approved: entryData.filter((e: any) => e.approval_status === "approved").length,
             retrievable: entryData.filter((e: any) =>
-              (e.lifecycle_status === "active" || e.lifecycle_status === "approved") &&
+              (e.lifecycle_status === "approved") &&
               e.approval_status === "approved"
             ).length,
           },
