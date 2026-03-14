@@ -46,6 +46,8 @@ export function SkillReviewTab() {
   const [batchMode, setBatchMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [submitting, setSubmitting] = useState(false);
+  const [aiReviewing, setAiReviewing] = useState(false);
+  const [aiResult, setAiResult] = useState<any>(null);
 
   // Review form state
   const [scores, setScores] = useState({
