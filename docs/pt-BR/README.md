@@ -116,9 +116,9 @@ O Modo Owner é para governar a inteligência e evolução da plataforma.
 
 ---
 
-## Após Sprint 200 — Estado Estratégico Atual
+## Após Sprint 202 — Estado Estratégico Atual
 
-A plataforma completou 200 sprints em todos os blocos de Foundation até AP. O sistema opera como um organismo adaptativo governado com segurança reforçada com:
+A plataforma completou 202 sprints em todos os blocos de Foundation até AR. O sistema opera como um organismo adaptativo governado com segurança reforçada com:
 
 - ✅ Action Engine Axion completo com pipeline de execução governada
 - ✅ Ciclo de vida de decisões de governança (proposta → revisão → handoff → rastreamento de aplicação)
@@ -136,15 +136,27 @@ A plataforma completou 200 sprints em todos os blocos de Foundation até AP. O s
 - ✅ Auditoria e ajuste de políticas RLS
 - ✅ Resistência a inferência — prevenção de inferência de existência cross-tenant
 - ✅ 200+ Edge Functions implantadas e com segurança reforçada
+- ✅ Pipeline de absorção unificado — repo absorber escreve em canon_candidate_entries
+- ✅ Canon-review-engine como autoridade única de revisão e promoção de candidatos
+- ✅ Cron diário de ingestão automática (meia-noite, pg_cron + canon-scheduled-pipeline)
+
+### Lacunas Operacionais Conhecidas (Honestidade Canônica)
+
+| Área | Status | Lacuna |
+|------|--------|--------|
+| **Revisão Humana de Candidatos** | ⚠️ Parcial | A IA classifica candidatos como `needs_review`, mas não existe UI dedicada para stewards tomarem decisões individuais. Apenas contagem é exibida. |
+| **Operational Learning** | ⚠️ Sem dados | Edge functions existem e estão deployadas, mas os producers de sinais (`operational_learning_signals`) dependem de execuções reais de iniciativas. Sem execuções, sem dados. |
+| **Repo Trust** | ⚠️ Nunca executado | `repo-trust-score-engine` está implementado, mas nunca foi invocado. Não está incluído no cron diário. |
+| **Repo Trust no cron** | ❌ Falta | O pipeline agendado só cobre ingestão + review + promote. Não inclui avaliação de trust de fontes. |
+| **Sinais de aprendizado operacional no cron** | ❌ Falta | Mineração de padrões operacionais não está automatizada no pipeline diário. |
 
 O foco agora se volta para:
-- Aprofundar a qualidade da inteligência e precisão consultiva
-- Fortalecer a experiência do produto e o loop de feedback de adoção
-- Endurecer a governança institucional em contextos distribuídos e federados
-- Conectar o Action Engine à execução real downstream
-- Melhorar a confiabilidade de entrega ponta a ponta
+- **Construir a tela de Revisão Humana** para candidatos borderline (needs_review)
+- **Incluir Repo Trust no cron diário** para avaliação automática de confiança de fontes
+- **Ativar producers de sinais operacionais** em mais pontos do pipeline de delivery
 - Maturar a camada Skills para profundidade operacional completa
 - Ativar o pipeline de extração de skills → revisão → vinculação de capacidades
+- Conectar o Action Engine à execução real downstream
 
 ---
 
