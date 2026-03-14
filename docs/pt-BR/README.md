@@ -184,7 +184,7 @@ O foco agora se volta para:
 
 ### Fronteiras Canônicas Atuais
 
-- **Sprints 1–200** = canon completo (Foundation até Bloco AP)
+- **Sprints 1–202** = canon completo (Foundation até Bloco AR)
 
 ---
 
