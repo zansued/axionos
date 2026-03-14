@@ -119,8 +119,11 @@ export default function CanonIntelligenceDashboard() {
 
   const [activeSection, setActiveSection] = useState<string>("knowledge");
 
+  const pipeline = useCanonPipeline();
+  const pStats = pipeline.stats;
+
   const activeEntries = stewardship.library.filter(
-    (e: any) => e.lifecycle_status === "approved" || e.lifecycle_status === "active"
+    (e: any) => e.lifecycle_status === "active"
   );
   const deprecatedEntries = stewardship.library.filter(
     (e: any) => e.lifecycle_status === "deprecated"
