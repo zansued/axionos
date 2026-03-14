@@ -306,8 +306,7 @@ export default function CanonIntelligenceDashboard() {
             </CardHeader>
             <CardContent className="pt-0">
               <Tabs
-                value={activeTabOverride && activeSection === currentSection.key ? activeTabOverride : undefined}
-                defaultValue={currentSection.defaultTab}
+                defaultValue={activeTabOverride && activeSection === currentSection.key ? activeTabOverride : currentSection.defaultTab}
                 key={activeTabOverride ? `${currentSection.key}-${activeTabOverride}` : currentSection.key}
                 onValueChange={() => setActiveTabOverride(null)}
                 className="space-y-4"
