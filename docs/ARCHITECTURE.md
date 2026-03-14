@@ -593,6 +593,15 @@ This block implements **comprehensive security hardening** across the entire Edg
 > **200 sprints complete.** All blocks Foundation through AP implemented.
 > **Sprint-by-sprint record:** `docs/registry/sprints.yml`
 
+### Maturity Classification
+
+| Symbol | Label | Definition |
+|--------|-------|-----------|
+| ✅ | **Structurally implemented** | Code, tables, and edge functions exist; may lack operational volume |
+| ✅ | **Operationally active** | Running in production with real data flowing through |
+| 🔄 | **Operationally maturing** | Functional end-to-end but coverage, volume, or feedback loops still growing |
+| 🧪 | **Experimental/emerging** | Infrastructure exists but not yet exercised with meaningful operational data |
+
 | Block | Sprints | Name | Status |
 |-------|---------|------|--------|
 | Foundation | 1-40 | Execution Kernel + Intelligence + Governance + Architecture | Complete |
