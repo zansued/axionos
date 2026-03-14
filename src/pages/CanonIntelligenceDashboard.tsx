@@ -176,6 +176,10 @@ export default function CanonIntelligenceDashboard() {
             sources={intel.sources}
             syncRuns={intel.syncRuns}
             onRefresh={() => { intel.refetch(); stewardship.refetch(); }}
+            onNavigateToHumanReview={() => {
+              setActiveSection("governance");
+              setActiveTabOverride("human-review");
+            }}
           />
         );
       case "learning":
