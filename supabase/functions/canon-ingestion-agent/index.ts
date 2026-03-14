@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { getAIConfig } from "../_shared/ai-client.ts";
 import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 import {
   validateSchema, validationErrorResponse, logValidationFailure,
@@ -160,14 +161,19 @@ serve(async (req) => {
           await serviceClient.from("canon_source_sync_runs").update({ lifecycle_state: "chunked", chunks_created: 1 }).eq("id", syncRun.id);
 
           console.log("Extracting patterns via LLM...");
-          const llmResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${LOVABLE_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              model: "google/gemini-2.5-flash",
+          
+          // Build provider chain with failover: primary config → Lovable Gateway
+          const aiConfig = getAIConfig();
+          const LOVABLE_GW_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
+          const providerChain = [
+            { url: aiConfig.url, key: aiConfig.key, model: aiConfig.model, label: "primary" },
+          ];
+          // Add Lovable Gateway as fallback if primary is different
+          if (aiConfig.url !== LOVABLE_GW_URL && LOVABLE_API_KEY) {
+            providerChain.push({ url: LOVABLE_GW_URL, key: LOVABLE_API_KEY, model: "google/gemini-2.5-flash", label: "lovable-gateway" });
+          }
+
+          const llmBody = {
               messages: [
                 {
                   role: "system",
@@ -222,20 +228,42 @@ Return ONLY a valid JSON array, no other text.`,
                 },
               ],
               tool_choice: { type: "function", function: { name: "extract_patterns" } },
-            }),
-          });
+          };
+
+          let llmResp: Response | null = null;
+          for (const provider of providerChain) {
+            console.log(`[canon-ingestion] Trying AI provider: ${provider.label} (${provider.model})`);
+            const resp = await fetch(provider.url, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${provider.key}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ model: provider.model, ...llmBody }),
+            });
+
+            if (resp.status === 402 || resp.status === 403) {
+              const errText = await resp.text();
+              console.warn(`[canon-ingestion] Provider ${provider.label} returned ${resp.status}: ${errText}, trying next...`);
+              continue;
+            }
+            llmResp = resp;
+            break;
+          }
+
+          if (!llmResp) {
+            await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
+            await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "All AI providers exhausted (credits/auth)", "failed");
+            return errorResponse("Créditos de IA esgotados em todos os provedores. Tente novamente mais tarde.", 402, req);
+          }
 
           if (!llmResp.ok) {
             const errText = await llmResp.text();
             console.error("LLM error:", llmResp.status, errText);
             await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
             if (llmResp.status === 429) {
-              await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "Rate limited by AI gateway", "failed");
+              await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "Rate limited by AI provider", "failed");
               return errorResponse("Rate limited, please try again later", 429, req);
-            }
-            if (llmResp.status === 402) {
-              await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, "AI credits exhausted", "failed");
-              return errorResponse("AI credits exhausted", 402, req);
             }
             await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 1, 1, 0, `LLM error: ${llmResp.status}`, "failed");
             return errorResponse("Pattern extraction failed", 502, req);

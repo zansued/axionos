@@ -24,6 +24,8 @@ export function getUserFriendlyError(error: any): string {
   // AI-specific
   if (msg.includes("DEEPSEEK_API_KEY")) return "Configuração de IA não disponível.";
   if (msg.includes("DeepSeek")) return "Erro no serviço de IA. Tente novamente.";
+  if (msg.includes("credits exhausted") || msg.includes("402"))
+    return "Créditos de IA esgotados. Tente novamente mais tarde.";
 
   // Generic fallback — don't expose raw message
   return "Ocorreu um erro. Tente novamente.";

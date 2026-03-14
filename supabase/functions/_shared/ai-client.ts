@@ -226,6 +226,14 @@ export async function callAI(
           continue;
         }
 
+        // 402 (credits exhausted) or 403 — skip retries, jump to next provider
+        if (resp.status === 402 || resp.status === 403) {
+          const t = await resp.text();
+          console.warn(`[ai-client] ${resp.status} from ${cfg.model}: ${t} — skipping to fallback provider`);
+          lastError = new Error(`AI credits/auth error ${resp.status}: ${t}`);
+          break; // break retry loop, move to next provider in configs
+        }
+
         if (!resp.ok) {
           const t = await resp.text();
           throw new Error(`AI error ${resp.status}: ${t}`);
