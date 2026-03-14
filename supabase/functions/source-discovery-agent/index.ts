@@ -464,16 +464,14 @@ async function approveCandidate(db: any, orgId: string, userId: string, candidat
 
   // Update run stats
   if (candidate.run_id) {
-    await db.rpc("increment_field", {
-      table_name: "source_discovery_runs",
-      field_name: "candidates_approved",
-      row_id: candidate.run_id,
-    }).catch(() => {
-      // Fallback: direct update
-      db.from("source_discovery_runs")
-        .update({ candidates_approved: (candidate.candidates_approved || 0) + 1 })
-        .eq("id", candidate.run_id);
-    });
+    const { data: runData } = await db
+      .from("source_discovery_runs")
+      .select("candidates_approved")
+      .eq("id", candidate.run_id)
+      .single();
+    await db.from("source_discovery_runs")
+      .update({ candidates_approved: ((runData?.candidates_approved) || 0) + 1 })
+      .eq("id", candidate.run_id);
   }
 
   return jsonResponse({
