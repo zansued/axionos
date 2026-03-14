@@ -474,3 +474,125 @@ async function completeSyncRun(
     ingestion_status: accepted > 0 ? "ingested" : "pending",
   }).eq("id", sourceId);
 }
+
+// ═══════════════════════════════════════════════════
+// Repo Trust Helper Functions (inlined from repo-trust-score-engine)
+// ═══════════════════════════════════════════════════
+
+function computeTrustFactors(source: any, candidates: any[]): Record<string, number> {
+  const factors: Record<string, number> = {};
+
+  if (source.last_synced_at) {
+    const daysSince = (Date.now() - new Date(source.last_synced_at).getTime()) / (1000 * 60 * 60 * 24);
+    factors.activity_recency = daysSince < 7 ? 1.0 : daysSince < 30 ? 0.7 : daysSince < 90 ? 0.4 : 0.2;
+  } else {
+    factors.activity_recency = 0.3;
+  }
+
+  factors.structural_clarity = source.source_notes?.length > 50 ? 0.8 : 0.4;
+
+  const typeScores: Record<string, number> = {
+    repository: 0.8, documentation: 0.9, framework: 0.85, internal: 0.7,
+    community: 0.5, experimental: 0.3,
+  };
+  factors.source_type_quality = typeScores[source.source_type] || 0.5;
+
+  const trustLevels: Record<string, number> = {
+    high: 0.9, medium: 0.6, low: 0.3, untrusted: 0.1,
+  };
+  factors.configured_trust = trustLevels[source.trust_level] || 0.5;
+
+  factors.documentation_quality = (source.approved_categories?.length > 0) ? 0.7 : 0.4;
+  factors.domain_scope = source.domain_scope === "broad" ? 0.6 : source.domain_scope === "specific" ? 0.8 : 0.5;
+  factors.ingestion_health = source.ingestion_lifecycle_state === "active" ? 0.9
+    : source.ingestion_lifecycle_state === "paused" ? 0.5 : 0.3;
+
+  const sourceCandidates = candidates.filter(
+    (c: any) => c.source_type === source.source_type || c.source_type === source.source_name
+  );
+  const promoted = sourceCandidates.filter((c: any) => c.status === "promoted").length;
+  factors.historical_promotion_success = sourceCandidates.length > 0 ? promoted / sourceCandidates.length : 0.5;
+
+  factors.maintenance_signals = source.sync_policy === "auto" ? 0.8
+    : source.sync_policy === "manual" ? 0.5 : 0.4;
+
+  const avgConf = sourceCandidates.length > 0
+    ? sourceCandidates.reduce((s: number, c: any) => s + (c.confidence_score || 0), 0) / sourceCandidates.length
+    : 0.5;
+  factors.pattern_quality = avgConf;
+
+  return factors;
+}
+
+function computeCompositeTrustScore(factors: Record<string, number>): number {
+  const weights: Record<string, number> = {
+    activity_recency: 0.10, structural_clarity: 0.08, source_type_quality: 0.10,
+    configured_trust: 0.15, documentation_quality: 0.08, domain_scope: 0.05,
+    ingestion_health: 0.09, historical_promotion_success: 0.20,
+    maintenance_signals: 0.05, pattern_quality: 0.10,
+  };
+
+  let score = 0;
+  let totalWeight = 0;
+  for (const [key, weight] of Object.entries(weights)) {
+    if (factors[key] !== undefined) {
+      score += factors[key] * weight;
+      totalWeight += weight;
+    }
+  }
+
+  return totalWeight > 0 ? Math.round((score / totalWeight) * 1000) / 1000 : 0.5;
+}
+
+function getTrustTier(score: number): string {
+  if (score >= 0.8) return "high";
+  if (score >= 0.6) return "medium";
+  if (score >= 0.4) return "low";
+  return "untrusted";
+}
+
+function computePatternWeight(candidate: any, trustMap: Map<string, any>, allCandidates: any[]): any {
+  let sourceTrust = 0.5;
+  let trustedSourceCount = 0;
+  const sourceRefs: any[] = [];
+
+  const domains = candidate.source_domains || [];
+  for (const [, trust] of trustMap) {
+    if (trust.source_name && domains.includes?.(trust.source_name)) {
+      sourceTrust = Math.max(sourceTrust, Number(trust.trust_score));
+      if (Number(trust.trust_score) >= 0.6) trustedSourceCount++;
+      sourceRefs.push({ source: trust.source_name, trust: trust.trust_score });
+    }
+  }
+
+  const similar = allCandidates.filter(
+    (c: any) => c.id !== candidate.id && c.pattern_signature === candidate.pattern_signature
+  );
+  const recurrenceBonus = Math.min(0.3, similar.length * 0.05);
+  const evidenceCount = candidate.evidence_count || 0;
+  const executionReinforcement = Math.min(0.3, evidenceCount * 0.02);
+  const duplicationNoise = similar.length > 5 ? 0.1 : 0;
+  const weakSourcePenalty = sourceTrust < 0.3 ? 0.15 : sourceTrust < 0.5 ? 0.05 : 0;
+  const signalCount = candidate.signal_count || 0;
+  const neuralFeedbackBonus = Math.min(0.2, signalCount * 0.01);
+
+  const patternWeight = Math.min(1.0, Math.max(0.0,
+    (sourceTrust * 0.35) + executionReinforcement + recurrenceBonus + neuralFeedbackBonus
+    - duplicationNoise - weakSourcePenalty
+  ));
+
+  return {
+    pattern_weight: Math.round(patternWeight * 1000) / 1000,
+    source_trust: sourceTrust,
+    source_support: domains?.length || 1,
+    execution_reinforcement: executionReinforcement,
+    recurrence_bonus: recurrenceBonus,
+    duplication_noise_penalty: duplicationNoise,
+    weak_source_penalty: weakSourcePenalty,
+    neural_feedback_bonus: neuralFeedbackBonus,
+    distinct_source_count: domains?.length || 1,
+    trusted_source_count: trustedSourceCount,
+    source_refs: sourceRefs,
+    notes: `Cron weight: ${domains?.length || 0} domains, trust=${sourceTrust}`,
+  };
+}
