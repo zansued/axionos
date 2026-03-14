@@ -365,7 +365,7 @@ function EvolutionProposalsPanel() {
                   pri: {p.priority_score.toFixed(2)}
                 </span>
                 {p.requires_human_review && (
-                  <Shield className="h-3 w-3 text-yellow-500 shrink-0" title="Requires human review" />
+                  <Shield className="h-3 w-3 text-yellow-500 shrink-0" />
                 )}
               </div>
             ))}
