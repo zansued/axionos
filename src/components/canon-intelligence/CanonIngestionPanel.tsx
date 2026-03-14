@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
+import { useCanonCandidateReview } from "@/hooks/useCanonCandidateReview";
   Loader2, Play, RefreshCw, Zap, Globe, CheckCircle2, XCircle, Clock,
   ArrowUpCircle, DatabaseZap, Bot, Sparkles, GitMerge, TrendingUp,
   Search, Star, Shield, ThumbsUp, ThumbsDown, ExternalLink
