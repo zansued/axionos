@@ -165,6 +165,29 @@ export function SkillReviewTab() {
     setSelectedIds(new Set(reviewable.map(s => s.id)));
   };
 
+  const runAiReview = async () => {
+    setAiReviewing(true);
+    setAiResult(null);
+    try {
+      const res = await supabase.functions.invoke("skill-extraction-engine", {
+        body: { action: "ai_review_batch", limit: 50 },
+      });
+      if (res.error) throw res.error;
+      setAiResult(res.data);
+      toast({
+        title: `AI Review concluído`,
+        description: `${res.data.reviewed} skills avaliadas. Aprovadas: ${res.data.verdict_distribution?.approved || 0}, Rejeitadas: ${res.data.verdict_distribution?.rejected || 0}`,
+      });
+      refetch();
+      queryClient.invalidateQueries({ queryKey: ["skill-extraction-status"] });
+      queryClient.invalidateQueries({ queryKey: ["skill-review-stats"] });
+    } catch (e: any) {
+      toast({ title: "Erro no AI Review", description: e.message, variant: "destructive" });
+    } finally {
+      setAiReviewing(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Stats Bar */}
