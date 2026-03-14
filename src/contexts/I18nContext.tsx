@@ -238,6 +238,7 @@ const translations = {
     "route.knowledgeHealth": "Saúde do Conhecimento",
     "route.knowledgePortfolio": "Portfólio de Conhecimento",
     "route.capabilities": "Capacidades",
+    "route.canonIntelligenceControl": "Centro de Controle Canon",
     "route.poisoningPrevention": "Prevenção de Envenenamento",
     "route.securityMonitoring": "Monitoramento de Segurança",
     "route.securityIntelligence": "Inteligência de Segurança",
