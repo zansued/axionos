@@ -13,8 +13,7 @@ export function useCanonStewardship() {
         .from("canon_entries")
         .select("*")
         .eq("organization_id", orgId!)
-        .order("created_at", { ascending: false })
-        .limit(100);
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },
@@ -28,8 +27,7 @@ export function useCanonStewardship() {
         .from("canon_entry_reviews")
         .select("*")
         .eq("organization_id", orgId!)
-        .order("created_at", { ascending: false })
-        .limit(100);
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },

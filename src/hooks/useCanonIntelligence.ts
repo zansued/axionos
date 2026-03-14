@@ -41,8 +41,7 @@ export function useCanonIntelligence() {
         .from("canon_candidate_entries")
         .select("*")
         .eq("organization_id", orgId!)
-        .order("created_at", { ascending: false })
-        .limit(100);
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },

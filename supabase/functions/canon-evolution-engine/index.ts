@@ -398,7 +398,7 @@ Return ONLY valid JSON:
                 entry_id: entry.id,
                 organization_id,
                 from_status: "none",
-                to_status: "approved",
+                to_status: "active",
                 reason: `Auto-promoted by Canon Evolution Engine. Evaluation score: ${candidate.evaluation_score || 'N/A'}. ${candidate.evaluation_notes || ''}`,
                 changed_by: "canon-evolution-engine",
               });
