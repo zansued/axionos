@@ -13,7 +13,7 @@ import { ShieldCheck, AlertTriangle, RefreshCw, CheckCircle2 } from "lucide-reac
 
 const VALID_CANDIDATE_REVIEW = ["pending", "approved", "needs_human_review", "rejected"];
 const VALID_CANDIDATE_PROMOTION = ["pending", "promoted", "not_promoted"];
-const VALID_ENTRY_LIFECYCLE = ["active", "deprecated", "archived", "superseded"];
+const VALID_ENTRY_LIFECYCLE = ["draft", "proposed", "approved", "experimental", "contested", "deprecated", "archived", "superseded"];
 const VALID_ENTRY_APPROVAL = ["pending", "approved", "revoked"];
 
 // Legacy values that should have been migrated
