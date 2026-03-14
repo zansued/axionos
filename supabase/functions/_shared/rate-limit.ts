@@ -15,6 +15,7 @@ const FUNCTION_LIMITS: Record<string, number> = {
   "canon-ingestion-agent": 120,
   "canon-promotion-pipeline": 120,
   "canon-review-engine": 120,
+  "canon-candidate-review-engine": 120,
   "canon-evolution-engine": 120,
   "canon-evolution-control": 120,
   "deep-repo-absorber-engine": 90,
