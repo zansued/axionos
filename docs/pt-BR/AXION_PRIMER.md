@@ -2,7 +2,7 @@
 
 > **Propósito:** Explicação ultra-curta do sistema AxionOS — âncora cognitiva para IA.
 > **Tempo de leitura:** ~2 minutos.
-> **Última Atualização:** 2026-03-13
+> **Última Atualização:** 2026-03-14
 
 ---
 
@@ -145,11 +145,11 @@ Estas regras garantem que o sistema **evolua com segurança**.
 
 ## Status de Desenvolvimento
 
-A arquitetura canônica atualmente inclui desenvolvimento até o **Sprint 200**.
+A arquitetura canônica atualmente inclui desenvolvimento até o **Sprint 207**.
 
-A plataforma alcançou o estágio chamado: **Organismo Adaptativo Governado com Pipeline Canon de Segurança Reforçada**.
+A plataforma alcançou o estágio chamado: **Organismo Adaptativo Governado com Hub de Inteligência Canon Totalmente Operacional**.
 
-200 sprints completos em blocos Foundation até AP. Marcos principais:
+207 sprints completos em blocos Foundation até AS. Marcos principais:
 - Axion Action Engine (Sprints 139–142)
 - Superfície de Segurança (Sprints 143–146)
 - Inteligência de Adoção e Experiência de Produto (Sprints 147–154)
@@ -162,6 +162,8 @@ A plataforma alcançou o estágio chamado: **Organismo Adaptativo Governado com 
 - Arquitetura de Execução Adaptativa (Sprint 185)
 - Pipeline Canon Auto-Aprimorante (Sprints 186–192)
 - Hardening de Segurança e Integridade Canon (Sprints 193–200)
+- Ajustes Operacionais e Consolidação de Autoridade de Review (Sprints 201–202)
+- Ativação Operacional Completa do Hub Canon (Sprints 203–207): UI de Revisão Humana, Repo Trust no Cron, Producers de Sinais Operacionais, Mineração de Padrões, Recalibração Automática de Confiança
 
 O desenvolvimento futuro foca em melhorar a qualidade da inteligência, profundidade operacional da camada skills, maturidade de governança e usabilidade do produto em vez de adicionar complexidade descontrolada.
 

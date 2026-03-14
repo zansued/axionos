@@ -1,7 +1,7 @@
 # AxionOS — Índice de Documentação
 
 > Ponto único de navegação para toda a documentação do AxionOS.
-> Última atualização: 2026-03-13
+> Última atualização: 2026-03-14
 
 ---
 
@@ -30,8 +30,8 @@ Se o histórico anterior do chat não estiver disponível, siga esta sequência 
 
 - A implementação de sprints futuros deve prosseguir **um sprint de cada vez**
 - Cada sprint deve ser revisado e aprovado antes do início da execução
-- Sprints 1–202 são o canon completo — não reabra casualmente
-- Todos os blocos (Foundation até AR) estão completos
+- Sprints 1–207 são o canon completo — não reabra casualmente
+- Todos os blocos (Foundation até AS) estão completos
 - Não colapse a arquitetura interna e a jornada do usuário na mesma superfície
 
 ---
@@ -49,7 +49,7 @@ A jornada padrão voltada ao usuário permanece:
 
 ## Nota Canônica Atual
 
-> A documentação pública reflete a **linha arquitetural estável** até o Sprint 202 (todos os blocos Foundation até AR).
+> A documentação pública reflete a **linha arquitetural estável** até o Sprint 207 (todos os blocos Foundation até AS).
 >
 > O roadmap interno e o canon experimental podem estar à frente desta baseline.
 > Este aviso existe para preservar credibilidade — não para obscurecer progresso.
@@ -113,12 +113,17 @@ O Modo Owner é para governar a inteligência e evolução da plataforma.
 | 193–200 | AP | Hardening de Segurança e Integridade Canon — Prevenção de Envenenamento, Hardening de Auth (3 ondas em 200+ Edge Functions), Ajuste de RLS, Segurança de Workers de Execução, Resistência a Inferência |
 | 201 | AQ | Ajustes Operacionais — Unificação do pipeline de absorção (repo→candidatos padrão), normalização de lifecycle_status, remoção de limites de query nos hooks |
 | 202 | AR | Consolidação de Autoridade de Review — Canon-review-engine como autoridade única de revisão/promoção, canon-evolution-engine restrito a manutenção pós-cânone, cron diário de ingestão automática (pg_cron + pg_net) |
+| 203 | AS | Tela de Revisão Humana de Candidatos Canon — UI dedicada para stewards com scores de IA, fluxos de aprovação/rejeição, ações em lote, trilha de auditoria |
+| 204 | AS | Repo Trust no Pipeline Automático — Avaliação de trust de fontes integrada ao cron diário |
+| 205 | AS | Ativação de Producers de Sinais Operacionais — 4+ edge functions instrumentadas como produtores de sinais |
+| 206 | AS | Mineração de Padrões Operacionais no Cron — Extração automática de padrões recorrentes, geração de candidatos canon |
+| 207 | AS | Recalibração de Confiança Automática — Boost/degradação de confiança baseado em uso, trust de fonte e sinais operacionais |
 
 ---
 
 ## Após Sprint 202 — Estado Estratégico Atual
 
-A plataforma completou 202 sprints em todos os blocos de Foundation até AR. O sistema opera como um organismo adaptativo governado com segurança reforçada com:
+A plataforma completou 207 sprints em todos os blocos de Foundation até AS. O sistema opera como um organismo adaptativo governado com hub de inteligência canon totalmente operacional:
 
 - ✅ Action Engine Axion completo com pipeline de execução governada
 - ✅ Ciclo de vida de decisões de governança (proposta → revisão → handoff → rastreamento de aplicação)
@@ -139,21 +144,22 @@ A plataforma completou 202 sprints em todos os blocos de Foundation até AR. O s
 - ✅ Pipeline de absorção unificado — repo absorber escreve em canon_candidate_entries
 - ✅ Canon-review-engine como autoridade única de revisão e promoção de candidatos
 - ✅ Cron diário de ingestão automática (meia-noite, pg_cron + canon-scheduled-pipeline)
+- ✅ UI de Revisão Humana para candidatos canon (HumanReviewTab com scores de IA, aprovação/rejeição, ações em lote)
+- ✅ Repo Trust integrado ao pipeline cron diário (avaliação automática de trust de fontes)
+- ✅ 4+ edge functions instrumentadas como produtores de sinais operacionais
+- ✅ Mineração automática de padrões operacionais com geração de candidatos canon
+- ✅ Recalibração automática de confiança baseada em uso, trust de fonte e sinais operacionais
 
-### Lacunas Operacionais Conhecidas (Honestidade Canônica)
+### Lacunas Operacionais — Status Atualizado
 
-| Área | Status | Lacuna |
-|------|--------|--------|
-| **Revisão Humana de Candidatos** | ⚠️ Parcial | A IA classifica candidatos como `needs_review`, mas não existe UI dedicada para stewards tomarem decisões individuais. Apenas contagem é exibida. |
-| **Operational Learning** | ⚠️ Sem dados | Edge functions existem e estão deployadas, mas os producers de sinais (`operational_learning_signals`) dependem de execuções reais de iniciativas. Sem execuções, sem dados. |
-| **Repo Trust** | ⚠️ Nunca executado | `repo-trust-score-engine` está implementado, mas nunca foi invocado. Não está incluído no cron diário. |
-| **Repo Trust no cron** | ❌ Falta | O pipeline agendado só cobre ingestão + review + promote. Não inclui avaliação de trust de fontes. |
-| **Sinais de aprendizado operacional no cron** | ❌ Falta | Mineração de padrões operacionais não está automatizada no pipeline diário. |
+| Área | Status | Notas |
+|------|--------|-------|
+| **Revisão Humana de Candidatos** | ✅ Resolvido | Sprint 203: UI dedicada com scores de IA, fluxos approve/reject/review, ações em lote e trilha de auditoria |
+| **Operational Learning** | ✅ Resolvido | Sprint 205: 4 edge functions instrumentadas. Sprint 206: Mineração de padrões automatizada no cron |
+| **Repo Trust** | ✅ Resolvido | Sprint 204: Avaliação de trust integrada ao cron diário |
+| **Recalibração de Confiança** | ✅ Resolvido | Sprint 207: Recalibração automática integrada ao cron (boost/degradação por uso, trust e sinais) |
 
-O foco agora se volta para:
-- **Construir a tela de Revisão Humana** para candidatos borderline (needs_review)
-- **Incluir Repo Trust no cron diário** para avaliação automática de confiança de fontes
-- **Ativar producers de sinais operacionais** em mais pontos do pipeline de delivery
+O foco futuro se volta para:
 - Maturar a camada Skills para profundidade operacional completa
 - Ativar o pipeline de extração de skills → revisão → vinculação de capacidades
 - Conectar o Action Engine à execução real downstream
@@ -184,7 +190,7 @@ O foco agora se volta para:
 
 ### Fronteiras Canônicas Atuais
 
-- **Sprints 1–202** = canon completo (Foundation até Bloco AR)
+- **Sprints 1–207** = canon completo (Foundation até Bloco AS)
 
 ---
 

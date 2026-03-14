@@ -48,14 +48,14 @@ The system's moat emerges from accumulated runtime evidence, canonized learning,
 
 ## Maturity & Roadmap
 
-**Current Mode:** Governed Adaptive Organism with Security-Hardened Canon Pipeline / 200 Sprints Complete
+**Current Mode:** Governed Adaptive Organism with Fully Operational Canon Intelligence Hub / 207 Sprints Complete
 
 | Level | Name | Status |
 |-------|------|--------|
 | Level 1–3 | Code Generator to Autonomous Engineering | Complete |
 | Level 4–5 | Self-Learning Factory & M-Aware Platform | Operational |
 | Level 6–10 | Sovereign, Strategic & Autonomous OS | Complete |
-| Level 11–15 | Governed Adaptive Organism | Complete (Sprints 1–200) |
+| Level 11–15 | Governed Adaptive Organism | Complete (Sprints 1–207) |
 
 **Roadmap History (Completed Blocks):**
 
@@ -70,6 +70,8 @@ The system's moat emerges from accumulated runtime evidence, canonized learning,
 | AL – AN | 170–183 | Canon Pipeline Operationalization, Knowledge Provenance & Trust-Weighted Intelligence, Knowledge Renewal & Revalidation Engine |
 | AO | 184–192 | Canon Intelligence Hub Restructuring, Skills Layer, Adaptive Execution Architecture, Self-Improving Canon Pipeline |
 | AP | 193–200 | Security Hardening & Canon Integrity |
+| AQ – AR | 201–202 | Operational Adjustments, Review Authority Consolidation |
+| AS | 203–207 | Canon Intelligence Hub Full Operational Activation |
 
 *(For deep architectural breakdown, see `docs/ARCHITECTURE.md`)*
 
@@ -110,7 +112,7 @@ No layer may assume the responsibilities of another.
 
 ## System Architecture
 
-AxionOS runs atop Supabase Edge Functions in a Deno runtime. Each of the 32 pipeline stages is deployed independently. The platform comprises 200+ Edge Functions and 100+ architectural layers.
+AxionOS runs atop Supabase Edge Functions in a Deno runtime. Each of the 32 pipeline stages is deployed independently. The platform comprises 200+ Edge Functions and 100+ architectural layers. 207 sprints complete across blocks Foundation through AS.
 
 **Four Architectural Surfaces:**
 
