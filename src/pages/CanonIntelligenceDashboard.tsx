@@ -26,6 +26,7 @@ import { RepoTrustTab } from "@/components/canon-intelligence/RepoTrustTab";
 import { KnowledgeLineageTab } from "@/components/canon-intelligence/KnowledgeLineageTab";
 import { KnowledgeRenewalTab } from "@/components/canon-intelligence/KnowledgeRenewalTab";
 import { SkillExtractionTab } from "@/components/canon-intelligence/SkillExtractionTab";
+import { SkillReviewTab } from "@/components/canon-intelligence/SkillReviewTab";
 
 /* ──────────────── Section definitions ──────────────── */
 
