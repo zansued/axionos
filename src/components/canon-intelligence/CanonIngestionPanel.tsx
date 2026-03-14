@@ -148,16 +148,36 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
 
   const ingestAll = async () => {
     if (!currentOrg?.id) return;
+    const active = sources.filter((s: any) => s.status === "active");
+    if (active.length === 0) {
+      toast({ title: "Sem fontes ativas", description: "Adicione fontes antes de ingerir.", variant: "destructive" });
+      return;
+    }
     setIngestingAll(true);
+    let totalCreated = 0;
+    let processed = 0;
     try {
-      const { data, error } = await supabase.functions.invoke("canon-ingestion-agent", {
-        body: { action: "ingest_all", organization_id: currentOrg.id },
-      });
-      if (error) throw error;
-      const total = (data.results || []).reduce((sum: number, r: any) => sum + (r.candidates_created || 0), 0);
+      for (const src of active) {
+        try {
+          const { data, error } = await supabase.functions.invoke("canon-ingestion-agent", {
+            body: { action: "ingest_source", organization_id: currentOrg.id, source_id: src.id },
+          });
+          if (!error && data) {
+            totalCreated += data.candidates_created || 0;
+          }
+          processed++;
+        } catch (err: any) {
+          console.error(`Ingestion failed for ${src.source_name}:`, err.message);
+          processed++;
+        }
+        // Small delay between sources to avoid rate limits
+        if (processed < active.length) {
+          await new Promise((r) => setTimeout(r, 2000));
+        }
+      }
       toast({
         title: "Ingestão em Lote Concluída",
-        description: `${total} novos candidatos extraídos de ${data.results?.length || 0} fontes.`,
+        description: `${totalCreated} novos candidatos extraídos de ${processed} fontes.`,
       });
       onRefresh();
     } catch (err: any) {
