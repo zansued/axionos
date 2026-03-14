@@ -237,7 +237,7 @@ export default function CanonIntelligenceDashboard() {
           </div>
 
           {/* ── Section Selector ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             {SECTIONS.map((section) => {
               const Icon = section.icon;
               const isActive = activeSection === section.key;
