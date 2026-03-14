@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, CheckCircle, XCircle, AlertTriangle, ChevronDown, ChevronUp, Shield, Eye } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, AlertTriangle, ChevronDown, ChevronUp, Shield, Eye, Bot, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
