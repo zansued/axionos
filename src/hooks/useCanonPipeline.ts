@@ -105,6 +105,7 @@ export function useCanonPipeline() {
     },
     enabled: !!orgId,
     refetchInterval: 30000,
+    refetchOnWindowFocus: true,
   });
 
   // ─── Promote Candidate to Canon Entry ───
