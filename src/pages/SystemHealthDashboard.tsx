@@ -9,12 +9,12 @@ import { Activity, TrendingUp, TrendingDown, Minus, RefreshCw, AlertTriangle, Ey
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const METRIC_LABELS: Record<string, string> = {
-  resilience: "Resilience",
-  coherence: "Coherence",
-  learning_velocity: "Learning Velocity",
-  governance_integrity: "Governance Integrity",
-  operator_trust: "Operator Trust",
-  compounding_strength: "Compounding Strength",
+  resilience: "Resiliência",
+  coherence: "Coerência",
+  learning_velocity: "Velocidade de Aprendizado",
+  governance_integrity: "Integridade de Governança",
+  operator_trust: "Confiança do Operador",
+  compounding_strength: "Força Composta",
 };
 
 const GRADE_COLORS: Record<string, string> = {
@@ -26,10 +26,10 @@ const GRADE_COLORS: Record<string, string> = {
 };
 
 const BASIS_CONFIG: Record<string, { icon: typeof Eye; label: string; color: string; description: string }> = {
-  observed: { icon: Eye, label: "Observed", color: "text-emerald-400", description: "Based on real operational data" },
-  inferred: { icon: HelpCircle, label: "Inferred", color: "text-blue-400", description: "Derived from limited evidence" },
-  seeded: { icon: Database, label: "Bootstrap", color: "text-yellow-400", description: "Based on seeded/bootstrap data — discounted" },
-  insufficient: { icon: AlertTriangle, label: "Insufficient", color: "text-destructive", description: "Not enough evidence to evaluate" },
+  observed: { icon: Eye, label: "Observado", color: "text-emerald-400", description: "Baseado em dados operacionais reais" },
+  inferred: { icon: HelpCircle, label: "Inferido", color: "text-blue-400", description: "Derivado de evidência limitada" },
+  seeded: { icon: Database, label: "Bootstrap", color: "text-yellow-400", description: "Baseado em dados iniciais — descontado" },
+  insufficient: { icon: AlertTriangle, label: "Insuficiente", color: "text-destructive", description: "Evidência insuficiente para avaliar" },
 };
 
 function TrendIcon({ trend }: { trend: string }) {
@@ -93,9 +93,9 @@ export default function SystemHealthDashboard() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">System Health</h1>
+            <h1 className="text-2xl font-bold">Saúde do Sistema</h1>
             <p className="text-sm text-muted-foreground">
-              Evidence-based health assessment across all operational dimensions
+              Avaliação de saúde baseada em evidências em todas as dimensões operacionais
             </p>
           </div>
           <Button
@@ -105,7 +105,7 @@ export default function SystemHealthDashboard() {
             disabled={evaluate.isPending}
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${evaluate.isPending ? "animate-spin" : ""}`} />
-            Evaluate Health
+            Avaliar Saúde
           </Button>
         </div>
 
@@ -114,7 +114,7 @@ export default function SystemHealthDashboard() {
           {/* Panel 1: Overall Health */}
           <Card>
             <CardContent className="pt-6">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Overall Health</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Saúde Geral</p>
               <div className="flex items-baseline gap-3">
                 <p className="text-4xl font-bold">{(overall * 100).toFixed(1)}%</p>
                 <Badge className={`text-sm px-3 py-0.5 ${GRADE_COLORS[grade] || ""}`}>
@@ -123,7 +123,7 @@ export default function SystemHealthDashboard() {
               </div>
               {rawScore != null && rawScore !== overall && (
                 <p className="text-xs text-muted-foreground mt-1">
-                  Raw score: {(rawScore * 100).toFixed(1)}% (before confidence weighting)
+                  Score bruto: {(rawScore * 100).toFixed(1)}% (antes da ponderação por confiança)
                 </p>
               )}
               <Progress value={overall * 100} className="mt-3 h-2" />
@@ -133,9 +133,9 @@ export default function SystemHealthDashboard() {
           {/* Panel 2: Evidence Confidence */}
           <Card>
             <CardContent className="pt-6">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Evidence Confidence</p>
-              {overallConfidence != null ? (() => {
-                const level = overallConfidence >= 0.7 ? "High" : overallConfidence >= 0.4 ? "Medium" : "Low";
+               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Confiança da Evidência</p>
+               {overallConfidence != null ? (() => {
+                const level = overallConfidence >= 0.7 ? "Alta" : overallConfidence >= 0.4 ? "Média" : "Baixa";
                 const color = overallConfidence >= 0.7 ? "text-emerald-400" : overallConfidence >= 0.4 ? "text-yellow-400" : "text-destructive";
                 const bgColor = overallConfidence >= 0.7 ? "bg-emerald-500" : overallConfidence >= 0.4 ? "bg-yellow-500" : "bg-destructive";
                 return (
@@ -156,14 +156,14 @@ export default function SystemHealthDashboard() {
           {/* Panel 3: Operational Trustworthiness */}
           <Card>
             <CardContent className="pt-6">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Operational Trustworthiness</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Confiabilidade Operacional</p>
               {evidenceSummary ? (() => {
                 const total = (evidenceSummary.observed || 0) + (evidenceSummary.inferred || 0) + (evidenceSummary.seeded || 0) + (evidenceSummary.insufficient || 0);
                 const observedRatio = total > 0 ? (evidenceSummary.observed || 0) / total : 0;
                 const seededRatio = total > 0 ? (evidenceSummary.seeded || 0) / total : 0;
-                const trustLabel = observedRatio >= 0.7 ? "Strongly Observed"
-                  : seededRatio >= 0.5 ? "Bootstrap-Heavy"
-                  : "Mixed";
+                const trustLabel = observedRatio >= 0.7 ? "Fortemente Observado"
+                  : seededRatio >= 0.5 ? "Predominância Bootstrap"
+                  : "Misto";
                 const trustColor = observedRatio >= 0.7 ? "text-emerald-400"
                   : seededRatio >= 0.5 ? "text-yellow-400"
                   : "text-blue-400";
@@ -171,23 +171,23 @@ export default function SystemHealthDashboard() {
                   <>
                     <p className={`text-2xl font-bold ${trustColor}`}>{trustLabel}</p>
                     <div className="flex items-center gap-3 mt-3 text-xs">
-                      {evidenceSummary.observed > 0 && (
-                        <span className="text-emerald-400">● {evidenceSummary.observed} observed</span>
+                       {evidenceSummary.observed > 0 && (
+                        <span className="text-emerald-400">● {evidenceSummary.observed} observados</span>
                       )}
                       {evidenceSummary.inferred > 0 && (
-                        <span className="text-blue-400">● {evidenceSummary.inferred} inferred</span>
+                        <span className="text-blue-400">● {evidenceSummary.inferred} inferidos</span>
                       )}
                       {evidenceSummary.seeded > 0 && (
                         <span className="text-yellow-400">● {evidenceSummary.seeded} bootstrap</span>
                       )}
                       {evidenceSummary.insufficient > 0 && (
-                        <span className="text-destructive">● {evidenceSummary.insufficient} insufficient</span>
+                        <span className="text-destructive">● {evidenceSummary.insufficient} insuficientes</span>
                       )}
                     </div>
                     {!evidenceSummary.trustworthy && (
                       <div className="flex items-center gap-1.5 mt-3 text-xs text-yellow-400">
                         <AlertTriangle className="h-3 w-3 flex-shrink-0" />
-                        More operational evidence needed for full trust
+                        Mais evidência operacional necessária para confiança total
                       </div>
                     )}
                   </>
@@ -225,7 +225,7 @@ export default function SystemHealthDashboard() {
                   {isInsufficient ? (
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <AlertTriangle className="h-4 w-4" />
-                      <span className="text-sm">Insufficient evidence</span>
+                      <span className="text-sm">Evidência insuficiente</span>
                     </div>
                   ) : (
                     <>
@@ -244,7 +244,7 @@ export default function SystemHealthDashboard() {
         {metricsList.length === 0 && !metrics.isLoading && (
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">
-              No health data yet. Click "Evaluate Health" to generate the first assessment.
+              Nenhum dado de saúde ainda. Clique em "Avaliar Saúde" para gerar a primeira avaliação.
             </CardContent>
           </Card>
         )}
