@@ -60,11 +60,10 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 
 | Area | Status | Gap |
 |------|--------|-----|
-| **Human Review UI** | ⚠️ Partial | AI classifies candidates as `needs_review`, but no dedicated UI for stewards to decide. Only count displayed. |
-| **Operational Learning** | ⚠️ No data | Edge functions exist and are deployed, but signal producers depend on real initiative executions. No executions, no data. |
-| **Repo Trust** | ⚠️ Never executed | `repo-trust-score-engine` is implemented but never invoked. Not included in daily cron. |
-| **Repo Trust in cron** | ❌ Missing | Scheduled pipeline only covers ingestion + review + promote. Does not include source trust evaluation. |
-| **Operational learning signals in cron** | ✅ Resolved | Sprint 206: Pattern mining integrated into daily pipeline. Patterns with ≥3 occurrences and confidence ≥ 0.6 auto-generate canon candidates. |
+| **Human Review UI** | ✅ Resolved | Sprint 203: Dedicated steward UI with AI scores, approve/reject/review flows, batch actions, and audit trail. |
+| **Operational Learning** | ✅ Resolved | Sprint 205: 4 edge functions instrumented as signal producers. Sprint 206: Pattern mining automates candidate generation from signals. |
+| **Repo Trust** | ✅ Resolved | Sprint 204: Trust evaluation integrated into daily cron. Updates `repo_trust_scores` and `pattern_weight_factors` automatically. |
+| **Confidence Recalibration** | ⚠️ Planned | Sprint 207: Automatic recalibration not yet implemented. |
 
 ---
 
