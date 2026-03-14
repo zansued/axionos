@@ -167,7 +167,7 @@ O foco agora se volta para:
 3. Use **GOVERNANCE.md** para módulos Agent OS, contratos e referência de governança
 4. Implemente trabalho futuro **sprint por sprint** com revisão humana
 5. **Não** colapse a arquitetura interna e a jornada do usuário na mesma superfície
-6. **Não** reabra casualmente o canon completo (Sprints 1–200) sem revisão deliberada
+6. **Não** reabra casualmente o canon completo (Sprints 1–202) sem revisão deliberada
 7. Camadas internas são suporte de bastidores — a superfície padrão do produto é a jornada do usuário
 
 ---
