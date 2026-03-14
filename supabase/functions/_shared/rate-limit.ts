@@ -14,6 +14,9 @@ const FUNCTION_LIMITS: Record<string, number> = {
   "purple-learning-write": 240,
   "canon-ingestion-agent": 120,
   "canon-promotion-pipeline": 120,
+  "canon-review-engine": 120,
+  "canon-evolution-engine": 120,
+  "canon-evolution-control": 120,
   "deep-repo-absorber-engine": 90,
   "source-discovery-agent": 60,
 };
