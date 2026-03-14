@@ -407,16 +407,16 @@ flowchart TB
 
 This block transforms the Canon Hub into a **living institutional knowledge system** capable of absorbing engineering knowledge from repositories and execution outcomes.
 
-| Sprint | Capability |
-|--------|-----------|
-| 164 | Canon Candidate Review Engine |
-| 165 | Pattern Deduplication & Merge Intelligence |
-| 166 | Canon Promotion Workflow |
-| 167 | Retrieval Activation & Canon Indexing |
-| 168 | Repository Skill Distillation Engine |
-| 169 | Repo-to-Canon Intelligence Graph |
-| 170 | Agent Skill Injection Runtime |
-| 171 | Institutional Learning Governance Surface |
+| Sprint | Capability | Maturity |
+|--------|-----------|----------|
+| 164 | Canon Candidate Review Engine | ✅ Structurally implemented |
+| 165 | Pattern Deduplication & Merge Intelligence | ✅ Structurally implemented |
+| 166 | Canon Promotion Workflow | ✅ Structurally implemented |
+| 167 | Retrieval Activation & Canon Indexing | ✅ Structurally implemented |
+| 168 | Repository Skill Distillation Engine | ✅ Operationally active |
+| 169 | Repo-to-Canon Intelligence Graph | ✅ Structurally implemented |
+| 170 | Agent Skill Injection Runtime | 🔄 Operationally maturing |
+| 171 | Institutional Learning Governance Surface | ✅ Operationally active |
 
 ---
 
@@ -473,7 +473,19 @@ This block introduces **governed knowledge renewal**: the ability to detect agin
 
 ## 8f. Block AM — Canon Intelligence Hub Restructuring (Sprint 184)
 
-This sprint restructured the Canon Intelligence Hub into four cognitive domains (Knowledge Library, Ingestion & Learning, Governance & Trust, Knowledge Application) and introduced the **Skills layer** tables (`skill_bundles`, `engineering_skills`, `skill_capabilities`, `skill_reviews`, `distilled_outputs`). The Skills layer is **emerging** — tables and workflows are functional, but operational coverage is still maturing across engineering domains.
+This sprint restructured the Canon Intelligence Hub into five cognitive sections (Knowledge Library, Ingestion & Learning, Governance & Trust, Skills Pipeline, Knowledge Application) and introduced the **Skills layer** tables (`skill_bundles`, `engineering_skills`, `skill_capabilities`, `skill_reviews`, `distilled_outputs`).
+
+### Skills Layer — Operational Maturity
+
+| Component | Maturity | Notes |
+|-----------|----------|-------|
+| Skills tables & schema | ✅ Structurally implemented | `engineering_skills`, `skill_bundles`, `skill_capabilities`, `skill_reviews` |
+| Skill Extraction Engine | ✅ Operationally active | Extracts skills from canon entries via `skill-extraction-engine` edge function |
+| Skill Review (manual + AI) | ✅ Operationally active | Governance workflow with AI-assisted batch review (Gemini 2.5 Flash) |
+| Capability Binding | ✅ Operationally active | Auto-bind maps skills to AgentOS capability keys via domain+practice_type |
+| Runtime Skill Injection | 🔄 Operationally maturing | `execute-subtask` injects approved skills into agent context (SF-4); telemetry via audit_logs |
+| Skill Feedback Loop | 🧪 Experimental/emerging | Outcome-to-skill feedback not yet instrumented end-to-end |
+| Portfolio Optimization | 🧪 Experimental/emerging | Gap analysis and coverage metrics exist but lack operational volume |
 
 ## 8g. Block AN — Execution Architecture Evolution (Sprint 185)
 
@@ -506,15 +518,15 @@ Execution routing is now **adaptive by risk and context**, not purely static. Th
 
 This block activates the **autonomous knowledge acquisition and portfolio optimization** pipeline. The system can now proactively identify knowledge gaps, plan acquisition strategies, absorb repositories deeply, forecast knowledge demand, and optimize its canon portfolio for coverage and ROI.
 
-| Sprint | Name |
-|--------|------|
-| 186 | Deep Repo Absorber Engine |
-| 187 | Knowledge Demand Forecast Engine |
-| 188 | Knowledge Acquisition Orchestrator |
-| 189 | Knowledge Portfolio Optimization Engine |
-| 190 | Knowledge Acquisition ROI Engine |
-| 191 | Canon Intelligence Hub UI Consolidation |
-| 192 | Skills Layer Operational Activation |
+| Sprint | Name | Maturity |
+|--------|------|----------|
+| 186 | Deep Repo Absorber Engine | ✅ Structurally implemented |
+| 187 | Knowledge Demand Forecast Engine | ✅ Structurally implemented |
+| 188 | Knowledge Acquisition Orchestrator | ✅ Structurally implemented |
+| 189 | Knowledge Portfolio Optimization Engine | 🧪 Experimental/emerging |
+| 190 | Knowledge Acquisition ROI Engine | 🧪 Experimental/emerging |
+| 191 | Canon Intelligence Hub UI Consolidation | ✅ Operationally active |
+| 192 | Skills Layer Operational Activation | 🔄 Operationally maturing |
 
 ## 8i. Block AP — Security Hardening & Canon Integrity (Sprints 193–200)
 
@@ -580,6 +592,15 @@ This block implements **comprehensive security hardening** across the entire Edg
 
 > **200 sprints complete.** All blocks Foundation through AP implemented.
 > **Sprint-by-sprint record:** `docs/registry/sprints.yml`
+
+### Maturity Classification
+
+| Symbol | Label | Definition |
+|--------|-------|-----------|
+| ✅ | **Structurally implemented** | Code, tables, and edge functions exist; may lack operational volume |
+| ✅ | **Operationally active** | Running in production with real data flowing through |
+| 🔄 | **Operationally maturing** | Functional end-to-end but coverage, volume, or feedback loops still growing |
+| 🧪 | **Experimental/emerging** | Infrastructure exists but not yet exercised with meaningful operational data |
 
 | Block | Sprints | Name | Status |
 |-------|---------|------|--------|
@@ -649,7 +670,20 @@ This block implements **comprehensive security hardening** across the entire Edg
 | Mode | Purpose | Surfaces |
 |------|---------|----------|
 | **Builder Mode** | Tactical engineering | Dashboard, Projects, Agents, Pipelines, Runtime, Execution Observability |
-| **Owner Mode** | Strategic governance | System Intelligence, Canon Intelligence, Governance Decisions, Delivery Governance, Insights, Handoff, Application Tracking, Security |
+| **Owner Mode** | Strategic governance | Grouped into cognitive domains (see below) |
+
+### Owner Mode — Domain Structure
+
+Owner Mode navigation follows a **System-as-Organism** hierarchy:
+
+| Domain | Purpose | Key Areas |
+|--------|---------|-----------|
+| **Cognitive Architecture** | Top-level system awareness | System Brain Map (direct link) |
+| **System Intelligence** | Awareness & sensing | Operational Intelligence, Platform Intelligence, Calibration, Prompt Optimization, Observability |
+| **Knowledge Command** | Memory & institutional knowledge | Canon Intelligence Hub, Canon Graph, Knowledge Lineage, Skills Pipeline |
+| **Security Command** | Immunity & protection | Security Posture, Canon Integrity, Auth Hardening, Inference Resistance |
+| **Delivery & Operations** | Metabolism & execution | Delivery Governance, Adoption Intelligence, Outcomes, Post-Deploy, Extensions |
+| **Agent Architecture** | Nervous system & coordination | Agent Routing, Debates, Working Memory, Swarm, Marketplace, Meta-Agents |
 
 ---
 
