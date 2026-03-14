@@ -31,6 +31,7 @@ import { SkillReviewTab } from "@/components/canon-intelligence/SkillReviewTab";
 import { CapabilityBindingTab } from "@/components/canon-intelligence/CapabilityBindingTab";
 import { SkillRuntimeTab } from "@/components/canon-intelligence/SkillRuntimeTab";
 import { LifecycleHealthCheck } from "@/components/canon-intelligence/LifecycleHealthCheck";
+import { HumanReviewTab } from "@/components/canon-intelligence/HumanReviewTab";
 
 /* ──────────────── Section definitions ──────────────── */
 
