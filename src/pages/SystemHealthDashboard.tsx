@@ -26,10 +26,10 @@ const GRADE_COLORS: Record<string, string> = {
 };
 
 const BASIS_CONFIG: Record<string, { icon: typeof Eye; label: string; color: string; description: string }> = {
-  observed: { icon: Eye, label: "Observed", color: "text-emerald-400", description: "Based on real operational data" },
-  inferred: { icon: HelpCircle, label: "Inferred", color: "text-blue-400", description: "Derived from limited evidence" },
-  seeded: { icon: Database, label: "Bootstrap", color: "text-yellow-400", description: "Based on seeded/bootstrap data — discounted" },
-  insufficient: { icon: AlertTriangle, label: "Insufficient", color: "text-destructive", description: "Not enough evidence to evaluate" },
+  observed: { icon: Eye, label: "Observado", color: "text-emerald-400", description: "Baseado em dados operacionais reais" },
+  inferred: { icon: HelpCircle, label: "Inferido", color: "text-blue-400", description: "Derivado de evidência limitada" },
+  seeded: { icon: Database, label: "Bootstrap", color: "text-yellow-400", description: "Baseado em dados iniciais — descontado" },
+  insufficient: { icon: AlertTriangle, label: "Insuficiente", color: "text-destructive", description: "Evidência insuficiente para avaliar" },
 };
 
 function TrendIcon({ trend }: { trend: string }) {
