@@ -187,7 +187,7 @@ export default function SystemHealthDashboard() {
                     {!evidenceSummary.trustworthy && (
                       <div className="flex items-center gap-1.5 mt-3 text-xs text-yellow-400">
                         <AlertTriangle className="h-3 w-3 flex-shrink-0" />
-                        More operational evidence needed for full trust
+                        Mais evidência operacional necessária para confiança total
                       </div>
                     )}
                   </>
