@@ -518,15 +518,15 @@ Execution routing is now **adaptive by risk and context**, not purely static. Th
 
 This block activates the **autonomous knowledge acquisition and portfolio optimization** pipeline. The system can now proactively identify knowledge gaps, plan acquisition strategies, absorb repositories deeply, forecast knowledge demand, and optimize its canon portfolio for coverage and ROI.
 
-| Sprint | Name |
-|--------|------|
-| 186 | Deep Repo Absorber Engine |
-| 187 | Knowledge Demand Forecast Engine |
-| 188 | Knowledge Acquisition Orchestrator |
-| 189 | Knowledge Portfolio Optimization Engine |
-| 190 | Knowledge Acquisition ROI Engine |
-| 191 | Canon Intelligence Hub UI Consolidation |
-| 192 | Skills Layer Operational Activation |
+| Sprint | Name | Maturity |
+|--------|------|----------|
+| 186 | Deep Repo Absorber Engine | ✅ Structurally implemented |
+| 187 | Knowledge Demand Forecast Engine | ✅ Structurally implemented |
+| 188 | Knowledge Acquisition Orchestrator | ✅ Structurally implemented |
+| 189 | Knowledge Portfolio Optimization Engine | 🧪 Experimental/emerging |
+| 190 | Knowledge Acquisition ROI Engine | 🧪 Experimental/emerging |
+| 191 | Canon Intelligence Hub UI Consolidation | ✅ Operationally active |
+| 192 | Skills Layer Operational Activation | 🔄 Operationally maturing |
 
 ## 8i. Block AP — Security Hardening & Canon Integrity (Sprints 193–200)
 
