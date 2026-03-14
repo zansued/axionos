@@ -41,7 +41,7 @@ export function useCanonPipeline() {
       const [sources, candidates, entries, syncRuns] = await Promise.all([
         supabase.from("canon_sources").select("id, ingestion_lifecycle_state, status").eq("organization_id", orgId),
         supabase.from("canon_candidate_entries").select("id, promotion_status, internal_validation_status").eq("organization_id", orgId),
-        supabase.from("canon_entries").select("id, lifecycle_status, approval_status, canon_type").eq("organization_id", orgId),
+        supabase.from("canon_entries").select("id, lifecycle_status, approval_status, canon_type, confidence_score").eq("organization_id", orgId),
         supabase.from("canon_source_sync_runs").select("id, sync_status, candidates_found, candidates_accepted, candidates_rejected, documents_fetched, chunks_created, candidates_promoted, duplicates_skipped").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50),
       ]);
 
