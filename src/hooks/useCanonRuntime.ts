@@ -29,7 +29,7 @@ export function useCanonRuntime() {
         .select("*")
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false })
-        .limit(100) as any);
+        as any);
       if (error) throw error;
       return (data || []) as any[];
     },
