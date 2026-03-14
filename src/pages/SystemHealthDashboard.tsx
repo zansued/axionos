@@ -225,7 +225,7 @@ export default function SystemHealthDashboard() {
                   {isInsufficient ? (
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <AlertTriangle className="h-4 w-4" />
-                      <span className="text-sm">Insufficient evidence</span>
+                      <span className="text-sm">Evidência insuficiente</span>
                     </div>
                   ) : (
                     <>
