@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { getAIConfig } from "../_shared/ai-client.ts";
 import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 import {
   validateSchema, validationErrorResponse, logValidationFailure,
