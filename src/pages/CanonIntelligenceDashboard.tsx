@@ -305,7 +305,13 @@ export default function CanonIntelligenceDashboard() {
               </div>
             </CardHeader>
             <CardContent className="pt-0">
-              <Tabs defaultValue={currentSection.defaultTab} key={currentSection.key} className="space-y-4">
+              <Tabs
+                value={activeTabOverride && activeSection === currentSection.key ? activeTabOverride : undefined}
+                defaultValue={currentSection.defaultTab}
+                key={activeTabOverride ? `${currentSection.key}-${activeTabOverride}` : currentSection.key}
+                onValueChange={() => setActiveTabOverride(null)}
+                className="space-y-4"
+              >
                 <TabsList className="bg-muted/20 border border-border/20 h-auto gap-0.5 p-1">
                   {currentSection.tabs.map((tab) => {
                     const TabIcon = tab.icon;
