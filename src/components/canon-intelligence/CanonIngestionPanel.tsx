@@ -61,6 +61,9 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
   const [repoUrl, setRepoUrl] = useState("");
   const [absorbingRepo, setAbsorbingRepo] = useState(false);
   const [discoveryTopic, setDiscoveryTopic] = useState("");
+  const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
+  const evolution = useCanonEvolutionEngine();
+  const discovery = useSourceDiscoveryAgent();
 
   const seedSources = async () => {
     if (!currentOrg?.id) return;
