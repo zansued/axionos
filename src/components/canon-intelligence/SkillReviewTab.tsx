@@ -369,8 +369,8 @@ export function SkillReviewTab() {
 }
 
 function ScoreSliders({ scores, onChange }: {
-  scores: Record<string, number>;
-  onChange: (s: Record<string, number>) => void;
+  scores: { specificity: number; applicability: number; reusability: number; confidence_assessment: number };
+  onChange: (s: { specificity: number; applicability: number; reusability: number; confidence_assessment: number }) => void;
 }) {
   const labels: Record<string, string> = {
     specificity: "Especificidade",
