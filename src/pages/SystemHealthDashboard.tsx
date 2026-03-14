@@ -93,9 +93,9 @@ export default function SystemHealthDashboard() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">System Health</h1>
+            <h1 className="text-2xl font-bold">Saúde do Sistema</h1>
             <p className="text-sm text-muted-foreground">
-              Evidence-based health assessment across all operational dimensions
+              Avaliação de saúde baseada em evidências em todas as dimensões operacionais
             </p>
           </div>
           <Button
