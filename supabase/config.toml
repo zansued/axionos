@@ -203,3 +203,6 @@ verify_jwt = false
 
 [functions.frontend-errors]
 verify_jwt = false
+
+[functions.source-discovery-agent]
+verify_jwt = false
