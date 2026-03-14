@@ -8,6 +8,7 @@ const FALLBACK_ORIGINS = [
   "https://ccef78df-1438-43ec-94d2-4ad01c14fb3a.lovableproject.com",
   "https://axionos.com",
   "https://axionos.vercel.app",
+  "https://aios.techstorebrasil.com",
 ];
 
 function getAllowedOrigins(): string[] {
