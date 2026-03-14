@@ -260,6 +260,20 @@ async function extractSkills(sc: any, orgId: string, params: any) {
     }
   }
 
+  // Sprint 205: Emit operational learning signal
+  await sc.from("operational_learning_signals").insert({
+    organization_id: orgId,
+    signal_type: "skills_extracted",
+    outcome: `Extracted ${skillsCreated.length} skills into ${bundlesCreated.length} bundles from ${eligible.length} canon entries`,
+    outcome_success: skillsCreated.length > 0,
+    payload: {
+      extracted: skillsCreated.length,
+      bundles_created: bundlesCreated.length,
+      eligible: eligible.length,
+      errors_count: errors.length,
+    },
+  });
+
   return json({
     extracted: skillsCreated.length,
     bundles_created: bundlesCreated.length,

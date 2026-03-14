@@ -441,6 +441,24 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       artifact_id: artifact?.id, file_path: payload.filePath, wave: payload.waveNum,
     }, { model: devModel, costUsd: totalCost, durationMs: workerMetrics.totalAiLatencyMs });
 
+    // Sprint 205: Emit operational learning signal
+    try {
+      await serviceClient.from("operational_learning_signals").insert({
+        organization_id: payload.organizationId,
+        initiative_id: payload.initiativeId || null,
+        signal_type: "execution_completed",
+        outcome: `Generated ${payload.filePath} (wave ${payload.waveNum}, ${totalTokens} tokens, $${totalCost.toFixed(4)})`,
+        outcome_success: true,
+        payload: {
+          file_path: payload.filePath,
+          wave: payload.waveNum,
+          tokens: totalTokens,
+          cost_usd: totalCost,
+          model: devModel,
+        },
+      });
+    } catch (_) { /* non-blocking */ }
+
     return jsonResponse({
       success: true,
       filePath: payload.filePath,

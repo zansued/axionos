@@ -436,6 +436,17 @@ Deno.serve(async (req) => {
       metadata: { summary, trust_summary: trustSummary, run_at: new Date().toISOString() },
     });
 
+    // Sprint 205: Emit operational learning signal per org
+    for (const orgSummary of summary) {
+      await sb.from("operational_learning_signals").insert({
+        organization_id: orgSummary.organization_id,
+        signal_type: "scheduled_pipeline_completed",
+        outcome: `Pipeline: ${orgSummary.candidates_created || 0} candidates, ${orgSummary.promoted || 0} promoted`,
+        outcome_success: !orgSummary.error,
+        payload: orgSummary,
+      });
+    }
+
     console.log(`[cron] Pipeline complete:`, JSON.stringify(summary));
 
     return new Response(
