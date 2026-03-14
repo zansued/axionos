@@ -53,7 +53,7 @@ const SYNC_STATUS_LABEL: Record<string, string> = {
   failed: "falhou",
 };
 
-export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonIngestionPanelProps) {
+export function CanonIngestionPanel({ sources, syncRuns, onRefresh, onNavigateToHumanReview }: CanonIngestionPanelProps) {
   const { currentOrg } = useOrg();
   const { toast } = useToast();
   const [ingesting, setIngesting] = useState<string | null>(null);
