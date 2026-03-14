@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,6 +16,23 @@ import {
 } from "lucide-react";
 
 type ReviewAction = "approve" | "reject" | "revision" | null;
+
+function ScoreBadge({ label, value }: { label: string; value: number }) {
+  const color = value >= 70 ? "text-primary" : value >= 50 ? "text-accent-foreground" : "text-destructive";
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      <span className={`text-sm font-bold ${color}`}>{value}</span>
+      <span className="text-[9px] text-muted-foreground uppercase">{label}</span>
+    </div>
+  );
+}
+
+function parseScores(reason: string | null | undefined): { quality: number; novelty: number; relevance: number; clarity: number } | null {
+  if (!reason) return null;
+  const match = reason.match(/Q=(\d+)\s+N=(\d+)\s+R=(\d+)\s+C=(\d+)/);
+  if (!match) return null;
+  return { quality: +match[1], novelty: +match[2], relevance: +match[3], clarity: +match[4] };
+}
 
 export function HumanReviewTab() {
   const {
@@ -49,31 +66,13 @@ export function HumanReviewTab() {
     setDetailOpen(true);
   };
 
-  // Parse AI scores from promotion_decision_reason
-  const parseScores = (reason: string | null) => {
-    if (!reason) return null;
-    const match = reason.match(/Q=(\d+)\s+N=(\d+)\s+R=(\d+)\s+C=(\d+)/);
-    if (!match) return null;
-    return { quality: +match[1], novelty: +match[2], relevance: +match[3], clarity: +match[4] };
-  };
-
-  const ScoreBadge = ({ label, value }: { label: string; value: number }) => {
-    const color = value >= 70 ? "text-emerald-400" : value >= 50 ? "text-amber-400" : "text-destructive";
-    return (
-      <div className="flex flex-col items-center gap-0.5">
-        <span className={`text-sm font-bold ${color}`}>{value}</span>
-        <span className="text-[9px] text-muted-foreground uppercase">{label}</span>
-      </div>
-    );
-  };
-
   return (
     <div className="space-y-4">
       {/* Header stats */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Inbox className="h-4 w-4 text-amber-400" />
+            <Inbox className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium">{pendingCandidates.length} aguardando revisão</span>
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
@@ -134,14 +133,13 @@ export function HumanReviewTab() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <h4 className="text-sm font-semibold text-foreground truncate">{c.title}</h4>
-                            <Badge variant="outline" className="text-[9px] shrink-0">{c.practice_type}</Badge>
-                            {c.stack_scope && (
-                              <Badge variant="secondary" className="text-[9px] shrink-0">{c.stack_scope}</Badge>
+                            <Badge variant="outline" className="text-[9px] shrink-0">{c.knowledge_type}</Badge>
+                            {c.domain_scope && (
+                              <Badge variant="secondary" className="text-[9px] shrink-0">{c.domain_scope}</Badge>
                             )}
                           </div>
                           <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{c.summary}</p>
 
-                          {/* AI Reason */}
                           {c.promotion_decision_reason && (
                             <p className="text-[10px] text-muted-foreground/70 italic line-clamp-1">
                               IA: {c.promotion_decision_reason.replace("[AI Review] ", "")}
@@ -161,41 +159,29 @@ export function HumanReviewTab() {
 
                         {/* Right: Actions */}
                         <div className="flex items-center gap-1.5 shrink-0">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-8 w-8 p-0"
-                            onClick={() => openDetail(c)}
-                            title="Ver detalhes"
-                          >
+                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => openDetail(c)} title="Ver detalhes">
                             <Eye className="h-3.5 w-3.5" />
                           </Button>
                           <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-8 px-2 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-400/10"
-                            onClick={() => openAction(c, "approve")}
-                            disabled={isActing}
+                            size="sm" variant="ghost"
+                            className="h-8 px-2 text-primary hover:text-primary hover:bg-primary/10"
+                            onClick={() => openAction(c, "approve")} disabled={isActing}
                           >
                             <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
                             <span className="text-xs">Aprovar</span>
                           </Button>
                           <Button
-                            size="sm"
-                            variant="ghost"
+                            size="sm" variant="ghost"
                             className="h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10"
-                            onClick={() => openAction(c, "reject")}
-                            disabled={isActing}
+                            onClick={() => openAction(c, "reject")} disabled={isActing}
                           >
                             <XCircle className="h-3.5 w-3.5 mr-1" />
                             <span className="text-xs">Rejeitar</span>
                           </Button>
                           <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-8 px-2 text-amber-400 hover:text-amber-300 hover:bg-amber-400/10"
-                            onClick={() => openAction(c, "revision")}
-                            disabled={isActing}
+                            size="sm" variant="ghost"
+                            className="h-8 px-2 text-accent-foreground hover:bg-accent/10"
+                            onClick={() => openAction(c, "revision")} disabled={isActing}
                           >
                             <RotateCcw className="h-3.5 w-3.5 mr-1" />
                             <span className="text-xs">Revisar</span>
@@ -236,7 +222,7 @@ export function HumanReviewTab() {
                 {reviewHistory.map((c) => (
                   <TableRow key={c.id}>
                     <TableCell className="text-xs font-medium max-w-[200px] truncate">{c.title}</TableCell>
-                    <TableCell><Badge variant="outline" className="text-[9px]">{c.practice_type}</Badge></TableCell>
+                    <TableCell><Badge variant="outline" className="text-[9px]">{c.knowledge_type}</Badge></TableCell>
                     <TableCell>
                       <Badge
                         variant={c.internal_validation_status === "approved" ? "default" : "destructive"}
@@ -249,7 +235,7 @@ export function HumanReviewTab() {
                       {c.promotion_decision_reason?.replace("[Human Review] ", "")}
                     </TableCell>
                     <TableCell className="text-[10px] text-muted-foreground">
-                      {new Date(c.created_at).toLocaleDateString("pt-BR")}
+                      {new Date(c.updated_at).toLocaleDateString("pt-BR")}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -324,10 +310,11 @@ export function HumanReviewTab() {
             <>
               <DialogHeader>
                 <DialogTitle className="text-sm">{selectedCandidate.title}</DialogTitle>
-                <DialogDescription className="text-xs flex gap-2">
-                  <Badge variant="outline" className="text-[9px]">{selectedCandidate.practice_type}</Badge>
-                  {selectedCandidate.stack_scope && <Badge variant="secondary" className="text-[9px]">{selectedCandidate.stack_scope}</Badge>}
-                  {selectedCandidate.topic && <Badge variant="secondary" className="text-[9px]">{selectedCandidate.topic}</Badge>}
+                <DialogDescription className="text-xs flex gap-2 flex-wrap">
+                  <Badge variant="outline" className="text-[9px]">{selectedCandidate.knowledge_type}</Badge>
+                  {selectedCandidate.domain_scope && <Badge variant="secondary" className="text-[9px]">{selectedCandidate.domain_scope}</Badge>}
+                  {selectedCandidate.domain_classification && <Badge variant="secondary" className="text-[9px]">{selectedCandidate.domain_classification}</Badge>}
+                  {selectedCandidate.source_type && <Badge variant="outline" className="text-[9px]">{selectedCandidate.source_type}</Badge>}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-3">
@@ -336,18 +323,35 @@ export function HumanReviewTab() {
                   <p className="text-xs text-foreground leading-relaxed">{selectedCandidate.summary}</p>
                 </div>
 
-                {selectedCandidate.source_url && (
+                {selectedCandidate.body && (
                   <div>
-                    <h5 className="text-[10px] uppercase text-muted-foreground font-semibold mb-1">Fonte</h5>
-                    <a href={selectedCandidate.source_url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline break-all">
-                      {selectedCandidate.source_url}
-                    </a>
+                    <h5 className="text-[10px] uppercase text-muted-foreground font-semibold mb-1">Corpo</h5>
+                    <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap max-h-[200px] overflow-y-auto">
+                      {selectedCandidate.body}
+                    </p>
                   </div>
                 )}
 
-                <div>
-                  <h5 className="text-[10px] uppercase text-muted-foreground font-semibold mb-1">Confiança</h5>
-                  <span className="text-sm font-bold">{(selectedCandidate.confidence_score * 100).toFixed(1)}%</span>
+                {selectedCandidate.source_reference && (
+                  <div>
+                    <h5 className="text-[10px] uppercase text-muted-foreground font-semibold mb-1">Fonte</h5>
+                    <p className="text-xs text-primary break-all">{selectedCandidate.source_reference}</p>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <h5 className="text-[10px] uppercase text-muted-foreground font-semibold mb-1">Novelty</h5>
+                    <span className="text-sm font-bold">{(selectedCandidate.novelty_score * 100).toFixed(0)}%</span>
+                  </div>
+                  <div>
+                    <h5 className="text-[10px] uppercase text-muted-foreground font-semibold mb-1">Confiabilidade Fonte</h5>
+                    <span className="text-sm font-bold">{(selectedCandidate.source_reliability_score * 100).toFixed(0)}%</span>
+                  </div>
+                  <div>
+                    <h5 className="text-[10px] uppercase text-muted-foreground font-semibold mb-1">Score Avaliação</h5>
+                    <span className="text-sm font-bold">{selectedCandidate.evaluation_score ?? "—"}</span>
+                  </div>
                 </div>
 
                 {selectedCandidate.promotion_decision_reason && (
@@ -359,7 +363,6 @@ export function HumanReviewTab() {
                   </div>
                 )}
 
-                {/* AI Scores */}
                 {(() => {
                   const scores = parseScores(selectedCandidate.promotion_decision_reason);
                   if (!scores) return null;
@@ -383,7 +386,7 @@ export function HumanReviewTab() {
               <DialogFooter className="gap-1.5">
                 <Button
                   size="sm"
-                  className="gap-1 bg-emerald-600 hover:bg-emerald-700"
+                  className="gap-1"
                   onClick={() => { setDetailOpen(false); openAction(selectedCandidate, "approve"); }}
                 >
                   <CheckCircle2 className="h-3.5 w-3.5" /> Aprovar

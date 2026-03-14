@@ -2,21 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 import { useToast } from "@/hooks/use-toast";
+import type { Database } from "@/integrations/supabase/types";
 
-export interface HumanReviewCandidate {
-  id: string;
-  title: string;
-  summary: string;
-  practice_type: string;
-  stack_scope: string;
-  topic: string;
-  confidence_score: number;
-  source_url: string | null;
-  internal_validation_status: string;
-  promotion_status: string;
-  promotion_decision_reason: string | null;
-  created_at: string;
-}
+type CandidateRow = Database["public"]["Tables"]["canon_candidate_entries"]["Row"];
+
+export type HumanReviewCandidate = CandidateRow;
 
 export function useHumanReview() {
   const { currentOrg } = useOrg();
@@ -29,7 +19,6 @@ export function useHumanReview() {
     history: ["human-review-history", orgId],
   };
 
-  // Candidates needing human review
   const pendingQuery = useQuery({
     queryKey: KEYS.pending,
     queryFn: async () => {
@@ -39,15 +28,14 @@ export function useHumanReview() {
         .eq("organization_id", orgId!)
         .eq("internal_validation_status", "needs_review")
         .eq("promotion_status", "pending")
-        .order("confidence_score", { ascending: false });
+        .order("novelty_score", { ascending: false });
       if (error) throw error;
-      return data as HumanReviewCandidate[];
+      return data;
     },
     enabled: !!orgId,
     refetchInterval: 30000,
   });
 
-  // Recently reviewed by humans (last 50)
   const historyQuery = useQuery({
     queryKey: KEYS.history,
     queryFn: async () => {
@@ -56,12 +44,11 @@ export function useHumanReview() {
         .select("*")
         .eq("organization_id", orgId!)
         .in("internal_validation_status", ["approved", "rejected"])
-        .not("promotion_decision_reason", "is", null)
         .ilike("promotion_decision_reason", "%[Human Review]%")
         .order("updated_at", { ascending: false })
         .limit(50);
       if (error) throw error;
-      return data as HumanReviewCandidate[];
+      return data;
     },
     enabled: !!orgId,
   });
@@ -73,7 +60,24 @@ export function useHumanReview() {
     qc.invalidateQueries({ queryKey: ["canon-intelligence"] });
   };
 
-  // Approve a candidate (mark as approved, ready for promotion)
+  const getUserId = async () => {
+    const { data } = await supabase.auth.getUser();
+    return data.user?.id || "unknown";
+  };
+
+  const logAudit = async (action: string, entityId: string, details: Record<string, unknown>) => {
+    const userId = await getUserId();
+    await supabase.from("audit_logs").insert({
+      organization_id: orgId!,
+      user_id: userId,
+      action,
+      message: `${action}: ${entityId}`,
+      entity_type: "canon_candidate",
+      entity_id: entityId,
+      metadata: details as any,
+    });
+  };
+
   const approveCandidate = useMutation({
     mutationFn: async ({ candidateId, notes }: { candidateId: string; notes?: string }) => {
       const reason = `[Human Review] Aprovado manualmente. ${notes || ""}`.trim();
@@ -87,15 +91,7 @@ export function useHumanReview() {
         .eq("id", candidateId)
         .eq("organization_id", orgId!);
       if (error) throw error;
-
-      // Audit log
-      await supabase.from("audit_logs").insert({
-        organization_id: orgId!,
-        action: "human_review_approve",
-        entity_type: "canon_candidate",
-        entity_id: candidateId,
-        details: { notes, reason },
-      });
+      await logAudit("human_review_approve", candidateId, { notes, reason });
     },
     onSuccess: () => {
       invalidateAll();
@@ -104,7 +100,6 @@ export function useHumanReview() {
     onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
   });
 
-  // Reject a candidate
   const rejectCandidate = useMutation({
     mutationFn: async ({ candidateId, notes }: { candidateId: string; notes?: string }) => {
       const reason = `[Human Review] Rejeitado. ${notes || ""}`.trim();
@@ -119,14 +114,7 @@ export function useHumanReview() {
         .eq("id", candidateId)
         .eq("organization_id", orgId!);
       if (error) throw error;
-
-      await supabase.from("audit_logs").insert({
-        organization_id: orgId!,
-        action: "human_review_reject",
-        entity_type: "canon_candidate",
-        entity_id: candidateId,
-        details: { notes, reason },
-      });
+      await logAudit("human_review_reject", candidateId, { notes, reason });
     },
     onSuccess: () => {
       invalidateAll();
@@ -135,7 +123,6 @@ export function useHumanReview() {
     onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
   });
 
-  // Request revision (send back to pending for re-review by AI with notes)
   const requestRevision = useMutation({
     mutationFn: async ({ candidateId, notes }: { candidateId: string; notes: string }) => {
       const reason = `[Human Review] Revisão solicitada: ${notes}`;
@@ -149,14 +136,7 @@ export function useHumanReview() {
         .eq("id", candidateId)
         .eq("organization_id", orgId!);
       if (error) throw error;
-
-      await supabase.from("audit_logs").insert({
-        organization_id: orgId!,
-        action: "human_review_request_revision",
-        entity_type: "canon_candidate",
-        entity_id: candidateId,
-        details: { notes, reason },
-      });
+      await logAudit("human_review_request_revision", candidateId, { notes, reason });
     },
     onSuccess: () => {
       invalidateAll();
@@ -165,7 +145,6 @@ export function useHumanReview() {
     onError: (e: any) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
   });
 
-  // Bulk approve all
   const bulkApprove = useMutation({
     mutationFn: async () => {
       const candidates = pendingQuery.data || [];
@@ -182,15 +161,7 @@ export function useHumanReview() {
         .eq("internal_validation_status", "needs_review")
         .eq("promotion_status", "pending");
       if (error) throw error;
-
-      await supabase.from("audit_logs").insert({
-        organization_id: orgId!,
-        action: "human_review_bulk_approve",
-        entity_type: "canon_candidate",
-        entity_id: "bulk",
-        details: { count: candidates.length },
-      });
-
+      await logAudit("human_review_bulk_approve", "bulk", { count: candidates.length });
       return candidates.length;
     },
     onSuccess: (count) => {
