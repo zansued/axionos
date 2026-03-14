@@ -1,7 +1,7 @@
 # AxionOS — Plano de Execução
 
-> **Current Sprint:** 202 (Consolidação de Autoridade de Review) — ✅ Complete
-> **Next Block:** AS — Canon Intelligence Hub: Ativação Operacional Completa
+> **Current Sprint:** 206 (Mineração de Padrões no Cron) — ✅ Complete
+> **Next Sprint:** 207 — Recalibração de Confiança Automática
 > Execution: **Sprint-based**
 
 ---
@@ -60,20 +60,19 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 
 | Area | Status | Gap |
 |------|--------|-----|
-| **Human Review UI** | ⚠️ Partial | AI classifies candidates as `needs_review`, but no dedicated UI for stewards to decide. Only count displayed. |
-| **Operational Learning** | ⚠️ No data | Edge functions exist and are deployed, but signal producers depend on real initiative executions. No executions, no data. |
-| **Repo Trust** | ⚠️ Never executed | `repo-trust-score-engine` is implemented but never invoked. Not included in daily cron. |
-| **Repo Trust in cron** | ❌ Missing | Scheduled pipeline only covers ingestion + review + promote. Does not include source trust evaluation. |
-| **Operational learning signals in cron** | ✅ Resolved | Sprint 206: Pattern mining integrated into daily pipeline. Patterns with ≥3 occurrences and confidence ≥ 0.6 auto-generate canon candidates. |
+| **Human Review UI** | ✅ Resolved | Sprint 203: Dedicated steward UI with AI scores, approve/reject/review flows, batch actions, and audit trail. |
+| **Operational Learning** | ✅ Resolved | Sprint 205: 4 edge functions instrumented as signal producers. Sprint 206: Pattern mining automates candidate generation from signals. |
+| **Repo Trust** | ✅ Resolved | Sprint 204: Trust evaluation integrated into daily cron. Updates `repo_trust_scores` and `pattern_weight_factors` automatically. |
+| **Confidence Recalibration** | ⚠️ Planned | Sprint 207: Automatic recalibration not yet implemented. |
 
 ---
 
-## Next Block: AS — Canon Intelligence Hub: Ativação Operacional Completa
+## Block AS — Canon Intelligence Hub: Ativação Operacional Completa
 
-**Sprints 203–207** | Status: **planned**
+**Sprints 203–207** | Status: **in progress (203–206 complete)**
 
-### Sprint 203 — Tela de Revisão Humana de Candidatos Canon
-**Priority: High** | **Dependency: None**
+### Sprint 203 — Tela de Revisão Humana de Candidatos Canon ✅
+**Priority: High** | **Status: Complete**
 
 - Cria página/tab dedicada no Canon Intelligence Hub para stewards
 - Lista candidatos com `internal_validation_status = 'needs_review'`
@@ -87,8 +86,8 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 
 ---
 
-### Sprint 204 — Repo Trust no Pipeline Automático
-**Priority: High** | **Dependency: None (parallel with 203)**
+### Sprint 204 — Repo Trust no Pipeline Automático ✅
+**Priority: High** | **Status: Complete**
 
 - Inclui `evaluate_sources` e `weight_patterns` no cron diário
 - Atualiza `canon-scheduled-pipeline/index.ts`
@@ -100,8 +99,8 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 
 ---
 
-### Sprint 205 — Ativação de Producers de Sinais Operacionais
-**Priority: Medium** | **Dependency: None (parallel)**
+### Sprint 205 — Ativação de Producers de Sinais Operacionais ✅
+**Priority: Medium** | **Status: Complete**
 
 - Instrumenta 4+ edge functions para emitir `operational_learning_signals`:
   - `canon-review-engine` → review_batch_completed
@@ -115,8 +114,8 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 
 ---
 
-### Sprint 206 — Mineração de Padrões Operacionais no Cron
-**Priority: Medium** | **Dependency: Sprint 205**
+### Sprint 206 — Mineração de Padrões Operacionais no Cron ✅
+**Priority: Medium** | **Status: Complete**
 
 - Inclui mineração de padrões no cron diário
 - Padrões confirmados (≥3 ocorrências, confiança ≥ 0.6) geram candidatos ao cânone
@@ -136,11 +135,11 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 ## Sprint Execution Map
 
 ```
-Sprint 203 ──── Tela de Revisão Humana          ← PRIORITY 1
-Sprint 204 ──── Repo Trust no Cron              ← PRIORITY 1 (parallel)
-Sprint 205 ──── Producers de Sinais Operacionais ← PRIORITY 2
-Sprint 206 ──── Mineração de Padrões no Cron    ← depends on 205
-Sprint 207 ──── Recalibração de Confiança Auto  ← depends on 204
+Sprint 203 ──── Tela de Revisão Humana          ✅ DONE
+Sprint 204 ──── Repo Trust no Cron              ✅ DONE
+Sprint 205 ──── Producers de Sinais Operacionais ✅ DONE
+Sprint 206 ──── Mineração de Padrões no Cron    ✅ DONE
+Sprint 207 ──── Recalibração de Confiança Auto  ← NEXT
 ```
 
 ---
