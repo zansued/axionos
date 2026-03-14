@@ -473,7 +473,19 @@ This block introduces **governed knowledge renewal**: the ability to detect agin
 
 ## 8f. Block AM — Canon Intelligence Hub Restructuring (Sprint 184)
 
-This sprint restructured the Canon Intelligence Hub into four cognitive domains (Knowledge Library, Ingestion & Learning, Governance & Trust, Knowledge Application) and introduced the **Skills layer** tables (`skill_bundles`, `engineering_skills`, `skill_capabilities`, `skill_reviews`, `distilled_outputs`). The Skills layer is **emerging** — tables and workflows are functional, but operational coverage is still maturing across engineering domains.
+This sprint restructured the Canon Intelligence Hub into five cognitive sections (Knowledge Library, Ingestion & Learning, Governance & Trust, Skills Pipeline, Knowledge Application) and introduced the **Skills layer** tables (`skill_bundles`, `engineering_skills`, `skill_capabilities`, `skill_reviews`, `distilled_outputs`).
+
+### Skills Layer — Operational Maturity
+
+| Component | Maturity | Notes |
+|-----------|----------|-------|
+| Skills tables & schema | ✅ Structurally implemented | `engineering_skills`, `skill_bundles`, `skill_capabilities`, `skill_reviews` |
+| Skill Extraction Engine | ✅ Operationally active | Extracts skills from canon entries via `skill-extraction-engine` edge function |
+| Skill Review (manual + AI) | ✅ Operationally active | Governance workflow with AI-assisted batch review (Gemini 2.5 Flash) |
+| Capability Binding | ✅ Operationally active | Auto-bind maps skills to AgentOS capability keys via domain+practice_type |
+| Runtime Skill Injection | 🔄 Operationally maturing | `execute-subtask` injects approved skills into agent context (SF-4); telemetry via audit_logs |
+| Skill Feedback Loop | 🧪 Experimental/emerging | Outcome-to-skill feedback not yet instrumented end-to-end |
+| Portfolio Optimization | 🧪 Experimental/emerging | Gap analysis and coverage metrics exist but lack operational volume |
 
 ## 8g. Block AN — Execution Architecture Evolution (Sprint 185)
 
