@@ -75,6 +75,7 @@ const SECTIONS = [
     defaultTab: "extraction",
     tabs: [
       { value: "extraction", label: "Extraction", icon: Boxes },
+      { value: "review", label: "Skill Review", icon: Shield },
     ],
   },
   {
