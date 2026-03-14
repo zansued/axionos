@@ -156,7 +156,7 @@ export default function SystemHealthDashboard() {
           {/* Panel 3: Operational Trustworthiness */}
           <Card>
             <CardContent className="pt-6">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Operational Trustworthiness</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Confiabilidade Operacional</p>
               {evidenceSummary ? (() => {
                 const total = (evidenceSummary.observed || 0) + (evidenceSummary.inferred || 0) + (evidenceSummary.seeded || 0) + (evidenceSummary.insufficient || 0);
                 const observedRatio = total > 0 ? (evidenceSummary.observed || 0) / total : 0;
