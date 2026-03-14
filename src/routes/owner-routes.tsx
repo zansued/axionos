@@ -162,6 +162,9 @@ export function OwnerRoutes() {
       <Route path="/owner/governance-decisions" element={<P><GovernanceDecisions /></P>} />
       <Route path="/owner/governance-handoff" element={<P><GovernanceExecutionHandoff /></P>} />
       <Route path="/owner/governance-application-tracking" element={<P><GovernanceChangeApplicationTracking /></P>} />
+
+      {/* Canon Intelligence Control Center */}
+      <Route path="/owner/canon-intelligence-control" element={<P><CanonIntelligenceControlCenter /></P>} />
     </>
   );
 }
