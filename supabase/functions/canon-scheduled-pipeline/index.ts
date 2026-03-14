@@ -316,6 +316,116 @@ Deno.serve(async (req) => {
       }
     }
 
+    // ═══ Phase 3: Repo Trust Evaluation ═══
+    console.log(`[cron] Phase 3: Evaluating repo trust for ${uniqueOrgIds.length} org(s)`);
+    const trustSummary: any[] = [];
+
+    for (const orgId of uniqueOrgIds) {
+      try {
+        // Get all sources for trust evaluation
+        const { data: sources } = await sb
+          .from("canon_sources")
+          .select("*")
+          .eq("organization_id", orgId)
+          .order("created_at", { ascending: true })
+          .limit(50);
+
+        if (!sources?.length) continue;
+
+        // Get candidates for promotion stats
+        const { data: candidates } = await sb
+          .from("learning_candidates")
+          .select("source_type, status, evaluation_status, confidence_score, source_domains, pattern_signature, evidence_count, signal_count")
+          .eq("organization_id", orgId);
+
+        let evaluated = 0;
+
+        for (const source of sources) {
+          const factors = computeTrustFactors(source, candidates || []);
+          const trustScore = computeCompositeTrustScore(factors);
+          const trustTier = getTrustTier(trustScore);
+
+          const sourceCandidates = (candidates || []).filter(
+            (c: any) => c.source_type === source.source_type || c.source_type === source.source_name
+          );
+          const promoted = sourceCandidates.filter((c: any) => c.status === "promoted").length;
+          const rejected = sourceCandidates.filter((c: any) => c.evaluation_status === "rejected").length;
+
+          const { error: upsertErr } = await sb
+            .from("repo_trust_scores")
+            .upsert({
+              organization_id: orgId,
+              source_id: source.id,
+              source_name: source.source_name || "",
+              source_url: source.source_url || "",
+              trust_score: trustScore,
+              trust_tier: trustTier,
+              trust_factors: factors,
+              patterns_extracted: sourceCandidates.length,
+              patterns_promoted: promoted,
+              patterns_rejected: rejected,
+              promotion_success_rate: sourceCandidates.length > 0 ? promoted / sourceCandidates.length : 0,
+              last_evaluated_at: new Date().toISOString(),
+              evaluated_by: "cron_scheduled_pipeline",
+              evaluation_notes: `Cron trust eval: ${Object.keys(factors).length} dimensions`,
+              updated_at: new Date().toISOString(),
+            }, { onConflict: "source_id" });
+
+          if (!upsertErr) evaluated++;
+        }
+
+        // Phase 3b: Weight patterns
+        const { data: weightCandidates } = await sb
+          .from("learning_candidates")
+          .select("*")
+          .eq("organization_id", orgId)
+          .in("status", ["pending", "under_review", "approved"])
+          .limit(50);
+
+        const { data: trustScores } = await sb
+          .from("repo_trust_scores")
+          .select("*")
+          .eq("organization_id", orgId);
+
+        const trustMap = new Map((trustScores || []).map((t: any) => [t.source_id, t]));
+        let weighted = 0;
+
+        for (const candidate of (weightCandidates || [])) {
+          const weight = computePatternWeight(candidate, trustMap, weightCandidates || []);
+
+          const { error: wErr } = await sb.from("pattern_weight_factors").upsert({
+            organization_id: orgId,
+            target_type: "learning_candidate",
+            target_id: candidate.id,
+            pattern_weight: weight.pattern_weight,
+            source_trust: weight.source_trust,
+            source_support: weight.source_support,
+            execution_reinforcement: weight.execution_reinforcement,
+            recurrence_bonus: weight.recurrence_bonus,
+            duplication_noise_penalty: weight.duplication_noise_penalty,
+            weak_source_penalty: weight.weak_source_penalty,
+            neural_feedback_bonus: weight.neural_feedback_bonus,
+            distinct_source_count: weight.distinct_source_count,
+            trusted_source_count: weight.trusted_source_count,
+            source_refs: weight.source_refs,
+            computation_notes: weight.notes,
+            recalibration_count: 1,
+            last_recalibrated_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          }, { onConflict: "target_type,target_id" });
+
+          if (!wErr) weighted++;
+        }
+
+        trustSummary.push({ organization_id: orgId, sources_evaluated: evaluated, patterns_weighted: weighted });
+      } catch (trustErr: any) {
+        console.error(`[cron] Trust evaluation error for org ${orgId}:`, trustErr.message);
+        trustSummary.push({ organization_id: orgId, error: trustErr.message });
+      }
+    }
+
+    console.log(`[cron] Trust evaluation complete:`, JSON.stringify(trustSummary));
+
     // Log the cron run
     await sb.from("audit_logs").insert({
       action: "canon_scheduled_pipeline",
@@ -323,7 +433,7 @@ Deno.serve(async (req) => {
       entity_type: "canon",
       message: `Scheduled pipeline completed: ${uniqueOrgIds.length} org(s) processed`,
       severity: "info",
-      metadata: { summary, run_at: new Date().toISOString() },
+      metadata: { summary, trust_summary: trustSummary, run_at: new Date().toISOString() },
     });
 
     console.log(`[cron] Pipeline complete:`, JSON.stringify(summary));
