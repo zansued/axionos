@@ -30,8 +30,8 @@ Se o histórico anterior do chat não estiver disponível, siga esta sequência 
 
 - A implementação de sprints futuros deve prosseguir **um sprint de cada vez**
 - Cada sprint deve ser revisado e aprovado antes do início da execução
-- Sprints 1–200 são o canon completo — não reabra casualmente
-- Todos os blocos (Foundation até AP) estão completos
+- Sprints 1–202 são o canon completo — não reabra casualmente
+- Todos os blocos (Foundation até AR) estão completos
 - Não colapse a arquitetura interna e a jornada do usuário na mesma superfície
 
 ---
