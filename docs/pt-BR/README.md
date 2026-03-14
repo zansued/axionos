@@ -1,7 +1,7 @@
 # AxionOS — Índice de Documentação
 
 > Ponto único de navegação para toda a documentação do AxionOS.
-> Última atualização: 2026-03-13
+> Última atualização: 2026-03-14
 
 ---
 
