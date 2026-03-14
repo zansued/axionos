@@ -103,10 +103,10 @@ const METRIC_TOOLTIPS: Record<string, string> = {
   Active: "Entries currently approved and actively used by agents.",
   Candidates: "Knowledge candidates awaiting review or promotion.",
   Deprecated: "Entries marked as deprecated and no longer actively used.",
-  Applications: "Times canonical knowledge was applied during agent execution.",
-  Sessions: "Retrieval sessions where agents consulted canonical knowledge.",
+  Applications: "Times canonical knowledge was applied during agent execution. (Passive — populated by runtime telemetry)",
+  Sessions: "Retrieval sessions where agents consulted canonical knowledge. (Passive — populated by runtime telemetry)",
   "Learning Queue": "Pending learning candidates not yet reviewed.",
-  "Top Agent": "Agent type with the most retrieval sessions.",
+  "Top Agent": "Agent type with the most retrieval sessions. (Passive — populated by runtime telemetry)",
 };
 
 /* ──────────────── Main component ──────────────── */
@@ -141,10 +141,10 @@ export default function CanonIntelligenceDashboard() {
     { value: activeEntries.length, label: "Active", accent: true },
     { value: intel.candidates.length, label: "Candidates" },
     { value: deprecatedEntries.length, label: "Deprecated", warn: deprecatedEntries.length > 0 },
-    { value: runtime.analytics.totalApplications, label: "Applications", accent: true },
-    { value: runtime.analytics.totalSessions, label: "Sessions" },
+    { value: runtime.analytics.totalApplications, label: "Applications", passive: true },
+    { value: runtime.analytics.totalSessions, label: "Sessions", passive: true },
     { value: pendingLearning.length, label: "Learning Queue", accent: true },
-    { value: topAgent ? topAgent[1] : 0, label: topAgent ? topAgent[0] : "Top Agent" },
+    { value: topAgent ? topAgent[1] : 0, label: topAgent ? topAgent[0] : "Top Agent", passive: true },
   ];
 
   /* ── Tab content renderer ── */
