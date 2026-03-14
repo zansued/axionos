@@ -649,7 +649,20 @@ This block implements **comprehensive security hardening** across the entire Edg
 | Mode | Purpose | Surfaces |
 |------|---------|----------|
 | **Builder Mode** | Tactical engineering | Dashboard, Projects, Agents, Pipelines, Runtime, Execution Observability |
-| **Owner Mode** | Strategic governance | System Intelligence, Canon Intelligence, Governance Decisions, Delivery Governance, Insights, Handoff, Application Tracking, Security |
+| **Owner Mode** | Strategic governance | Grouped into cognitive domains (see below) |
+
+### Owner Mode — Domain Structure
+
+Owner Mode navigation follows a **System-as-Organism** hierarchy:
+
+| Domain | Purpose | Key Areas |
+|--------|---------|-----------|
+| **Cognitive Architecture** | Top-level system awareness | System Brain Map (direct link) |
+| **System Intelligence** | Awareness & sensing | Operational Intelligence, Platform Intelligence, Calibration, Prompt Optimization, Observability |
+| **Knowledge Command** | Memory & institutional knowledge | Canon Intelligence Hub, Canon Graph, Knowledge Lineage, Skills Pipeline |
+| **Security Command** | Immunity & protection | Security Posture, Canon Integrity, Auth Hardening, Inference Resistance |
+| **Delivery & Operations** | Metabolism & execution | Delivery Governance, Adoption Intelligence, Outcomes, Post-Deploy, Extensions |
+| **Agent Architecture** | Nervous system & coordination | Agent Routing, Debates, Working Memory, Swarm, Marketplace, Meta-Agents |
 
 ---
 
