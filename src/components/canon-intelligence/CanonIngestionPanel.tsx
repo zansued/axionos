@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +39,13 @@ const LIFECYCLE_COLOR: Record<string, string> = {
   failed: "bg-destructive/10 text-destructive border-destructive/30",
 };
 
+const SYNC_STATUS_LABEL: Record<string, string> = {
+  completed: "concluído",
+  completed_empty: "concluído (vazio)",
+  in_progress: "em andamento",
+  failed: "falhou",
+};
+
 export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonIngestionPanelProps) {
   const { currentOrg } = useOrg();
   const { toast } = useToast();
@@ -62,12 +69,12 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
       const reviewInfo = data?.review || {};
       const promoInfo = data?.promotion || {};
       toast({
-        title: "Review Pipeline Complete",
-        description: `Reviewed: ${reviewInfo.reviewed || 0} (${reviewInfo.approved || 0} approved, ${reviewInfo.rejected || 0} rejected). Promoted: ${promoInfo.promoted || 0} to Canon.`,
+        title: "Pipeline de Review Concluído",
+        description: `Revisados: ${reviewInfo.reviewed || 0} (${reviewInfo.approved || 0} aprovados, ${reviewInfo.rejected || 0} rejeitados). Promovidos: ${promoInfo.promoted || 0} ao Canon.`,
       });
       onRefresh();
     } catch (err: any) {
-      toast({ title: "Review Pipeline Failed", description: err.message, variant: "destructive" });
+      toast({ title: "Falha no Pipeline de Review", description: err.message, variant: "destructive" });
     } finally {
       setReviewingPipeline(false);
     }
@@ -81,10 +88,10 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
         body: { action: "seed_sources", organization_id: currentOrg.id },
       });
       if (error) throw error;
-      toast({ title: "Sources Seeded", description: `${data.sources_created} knowledge sources added.` });
+      toast({ title: "Fontes Adicionadas", description: `${data.sources_created} fontes de conhecimento adicionadas.` });
       onRefresh();
     } catch (err: any) {
-      toast({ title: "Error", description: err.message, variant: "destructive" });
+      toast({ title: "Erro", description: err.message, variant: "destructive" });
     } finally {
       setSeeding(false);
     }
@@ -99,12 +106,12 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
       });
       if (error) throw error;
       toast({
-        title: "Ingestion Complete",
-        description: `${sourceName}: ${data.candidates_created || 0} new patterns extracted.`,
+        title: "Ingestão Concluída",
+        description: `${sourceName}: ${data.candidates_created || 0} novos padrões extraídos.`,
       });
       onRefresh();
     } catch (err: any) {
-      toast({ title: "Ingestion Failed", description: err.message, variant: "destructive" });
+      toast({ title: "Falha na Ingestão", description: err.message, variant: "destructive" });
     } finally {
       setIngesting(null);
     }
@@ -119,13 +126,13 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
       });
       if (error) throw error;
       toast({
-        title: "Repository Absorbed",
-        description: `Extracted ${data.patterns_extracted} canonical patterns from ${data.architecture}.`,
+        title: "Repositório Absorvido",
+        description: `Extraídos ${data.patterns_extracted} padrões canônicos de ${data.architecture}.`,
       });
       setRepoUrl("");
       onRefresh();
     } catch (err: any) {
-      toast({ title: "Absorption Failed", description: err.message, variant: "destructive" });
+      toast({ title: "Falha na Absorção", description: err.message, variant: "destructive" });
     } finally {
       setAbsorbingRepo(false);
     }
@@ -141,12 +148,12 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
       if (error) throw error;
       const total = (data.results || []).reduce((sum: number, r: any) => sum + (r.candidates_created || 0), 0);
       toast({
-        title: "Batch Ingestion Complete",
-        description: `${total} new pattern candidates extracted from ${data.results?.length || 0} sources.`,
+        title: "Ingestão em Lote Concluída",
+        description: `${total} novos candidatos extraídos de ${data.results?.length || 0} fontes.`,
       });
       onRefresh();
     } catch (err: any) {
-      toast({ title: "Batch Ingestion Failed", description: err.message, variant: "destructive" });
+      toast({ title: "Falha na Ingestão em Lote", description: err.message, variant: "destructive" });
     } finally {
       setIngestingAll(false);
     }
@@ -157,39 +164,39 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
 
   return (
     <div className="space-y-4">
-      {/* Pipeline Stats */}
+      {/* Estatísticas do Pipeline */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
-          <MiniStat label="Sources" value={stats.totalSources} />
-          <MiniStat label="Candidates" value={stats.totalCandidates} />
-          <MiniStat label="Pending Review" value={stats.pendingCandidates} accent />
-          <MiniStat label="Ready to Promote" value={stats.approvedCandidates} accent />
-          <MiniStat label="Promoted" value={stats.promotedCandidates} />
-          <MiniStat label="Canon Entries" value={stats.totalCanonEntries} />
-          <MiniStat label="Retrievable" value={stats.retrievablePatterns} accent />
+          <MiniStat label="Fontes" value={stats.totalSources} />
+          <MiniStat label="Candidatos" value={stats.totalCandidates} />
+          <MiniStat label="Pendente Review" value={stats.pendingCandidates} accent />
+          <MiniStat label="Prontos p/ Promoção" value={stats.approvedCandidates} accent />
+          <MiniStat label="Promovidos" value={stats.promotedCandidates} />
+          <MiniStat label="Entradas Canon" value={stats.totalCanonEntries} />
+          <MiniStat label="Recuperáveis" value={stats.retrievablePatterns} accent />
         </div>
       )}
 
-      {/* Actions bar */}
+      {/* Barra de ações */}
       <div className="flex flex-wrap gap-2">
         <Button size="sm" variant="outline" onClick={seedSources} disabled={seeding}>
           {seeding ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Globe className="h-3.5 w-3.5 mr-1.5" />}
-          Seed Default Sources
+          Adicionar Fontes Padrão
         </Button>
         <Button size="sm" onClick={ingestAll} disabled={ingestingAll || activeSources.length === 0}>
           {ingestingAll ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Zap className="h-3.5 w-3.5 mr-1.5" />}
-          Ingest All Sources
+          Ingerir Todas as Fontes
         </Button>
         {stats && stats.pendingCandidates > 0 && (
           <Button size="sm" variant="secondary" onClick={runReviewPipeline} disabled={reviewingPipeline}>
             {reviewingPipeline ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Bot className="h-3.5 w-3.5 mr-1.5" />}
-            Review & Promote ({stats.pendingCandidates} pending)
+            Revisar e Promover ({stats.pendingCandidates} pendentes)
           </Button>
         )}
         {stats && stats.approvedCandidates > 0 && (
           <Button size="sm" variant="default" onClick={batchPromoteApproved} disabled={promoting}>
             {promoting ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <ArrowUpCircle className="h-3.5 w-3.5 mr-1.5" />}
-            Promote {stats.approvedCandidates} to Canon
+            Promover {stats.approvedCandidates} ao Canon
           </Button>
         )}
         <Button
@@ -202,7 +209,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
           {evolution.runFullPipeline.isPending
             ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
             : <Sparkles className="h-3.5 w-3.5 mr-1.5" />}
-          Evolution Pipeline
+          Pipeline de Evolução
         </Button>
         <Button
           size="sm"
@@ -213,22 +220,22 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
           {evolution.processBacklog.isPending
             ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
             : <TrendingUp className="h-3.5 w-3.5 mr-1.5" />}
-          Process Backlog
+          Processar Backlog
         </Button>
         <Button size="sm" variant="ghost" onClick={onRefresh}>
-          <RefreshCw className="h-3.5 w-3.5 mr-1.5" />Refresh
+          <RefreshCw className="h-3.5 w-3.5 mr-1.5" />Atualizar
         </Button>
       </div>
 
-      {/* Deep Repo Absorber */}
+      {/* Absorção de Repositório GitHub */}
       <Card className="border-border/30 bg-card/60">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
             <GitMerge className="h-4 w-4 text-primary" />
-            Absorb GitHub Repository
+            Absorver Repositório GitHub
           </CardTitle>
           <CardDescription className="text-xs">
-            Paste a public GitHub repository URL to extract canonical patterns, architecture and best practices.
+            Cole a URL de um repositório público do GitHub para extrair padrões canônicos, arquitetura e boas práticas.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -249,23 +256,23 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
               ) : (
                 <DatabaseZap className="h-3.5 w-3.5 mr-1.5" />
               )}
-              Absorb
+              Absorver
             </Button>
           </div>
         </CardContent>
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Source Registry with Lifecycle */}
+        {/* Registro de Fontes */}
         <Card className="border-border/30 bg-card/60">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Source Registry</CardTitle>
-            <CardDescription className="text-xs">{activeSources.length} active sources configured</CardDescription>
+            <CardTitle className="text-sm">Registro de Fontes</CardTitle>
+            <CardDescription className="text-xs">{activeSources.length} fontes ativas configuradas</CardDescription>
           </CardHeader>
           <CardContent>
             {activeSources.length === 0 ? (
               <p className="text-xs text-muted-foreground py-4 text-center">
-                No sources registered. Click "Seed Default Sources" to add example knowledge sources.
+                Nenhuma fonte registrada. Clique em "Adicionar Fontes Padrão" para adicionar fontes de conhecimento de exemplo.
               </p>
             ) : (
               <ScrollArea className="h-[300px]">
@@ -286,7 +293,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
                               </Badge>
                               {src.last_synced_at && (
                                 <span className="text-[9px] text-muted-foreground/60">
-                                  Last: {new Date(src.last_synced_at).toLocaleDateString()}
+                                  Último: {new Date(src.last_synced_at).toLocaleDateString("pt-BR")}
                                 </span>
                               )}
                             </div>
@@ -314,15 +321,15 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
           </CardContent>
         </Card>
 
-        {/* Recent Sync Runs with enriched data */}
+        {/* Execuções Recentes de Sincronização */}
         <Card className="border-border/30 bg-card/60">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Recent Sync Runs</CardTitle>
-            <CardDescription className="text-xs">{recentSyncs.length} recent ingestion runs</CardDescription>
+            <CardTitle className="text-sm">Execuções Recentes</CardTitle>
+            <CardDescription className="text-xs">{recentSyncs.length} ingestões recentes</CardDescription>
           </CardHeader>
           <CardContent>
             {recentSyncs.length === 0 ? (
-              <p className="text-xs text-muted-foreground py-4 text-center">No sync runs yet.</p>
+              <p className="text-xs text-muted-foreground py-4 text-center">Nenhuma execução registrada ainda.</p>
             ) : (
               <ScrollArea className="h-[300px]">
                 <div className="space-y-2">
@@ -330,22 +337,22 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
                     <div key={run.id} className="p-3 rounded-lg border border-border/20 bg-muted/10">
                       <div className="flex items-center gap-2">
                         {SYNC_STATUS_ICON[run.sync_status] || <Clock className="h-3.5 w-3.5 text-muted-foreground" />}
-                        <span className="text-xs font-medium">{run.sync_status}</span>
+                        <span className="text-xs font-medium">{SYNC_STATUS_LABEL[run.sync_status] || run.sync_status}</span>
                         {run.lifecycle_state && (
                           <Badge variant="outline" className="text-[9px]">{run.lifecycle_state}</Badge>
                         )}
                         <span className="text-[10px] text-muted-foreground ml-auto">
-                          {new Date(run.created_at).toLocaleString()}
+                          {new Date(run.created_at).toLocaleString("pt-BR")}
                         </span>
                       </div>
                       <div className="flex items-center gap-3 mt-1.5 text-[10px] text-muted-foreground flex-wrap">
                         <span>Docs: {run.documents_fetched || 0}</span>
                         <span>Chunks: {run.chunks_created || 0}</span>
-                        <span>Found: {run.candidates_found}</span>
-                        <span>Accepted: {run.candidates_accepted}</span>
-                        <span>Dupes: {run.duplicates_skipped || run.candidates_rejected}</span>
+                        <span>Encontrados: {run.candidates_found}</span>
+                        <span>Aceitos: {run.candidates_accepted}</span>
+                        <span>Dupl.: {run.duplicates_skipped || run.candidates_rejected}</span>
                         {(run.candidates_promoted || 0) > 0 && (
-                          <span className="text-primary">Promoted: {run.candidates_promoted}</span>
+                          <span className="text-primary">Promovidos: {run.candidates_promoted}</span>
                         )}
                       </div>
                       {run.sync_notes && (
@@ -373,4 +380,3 @@ function MiniStat({ label, value, accent }: { label: string; value: number; acce
     </Card>
   );
 }
-
