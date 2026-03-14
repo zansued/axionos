@@ -188,11 +188,24 @@ Return ONLY valid JSON: {"reviews": [{"index": 1, "verdict": "approve"|"reject"|
           }
         }
 
-        return jsonResponse({
+        const reviewSummary = {
           reviewed: results.length,
           approved: results.filter(r => r.verdict === "approve").length,
           rejected: results.filter(r => r.verdict === "reject").length,
           needs_human_review: results.filter(r => r.verdict === "needs_human_review").length,
+        };
+
+        // Sprint 205: Emit operational learning signal
+        await supabase.from("operational_learning_signals").insert({
+          organization_id: organization_id,
+          signal_type: "review_batch_completed",
+          outcome: `Reviewed ${reviewSummary.reviewed}: ${reviewSummary.approved} approved, ${reviewSummary.rejected} rejected, ${reviewSummary.needs_human_review} needs_review`,
+          outcome_success: reviewSummary.reviewed > 0,
+          payload: reviewSummary,
+        });
+
+        return jsonResponse({
+          ...reviewSummary,
           details: results,
         }, 200, req);
       }
