@@ -122,6 +122,7 @@ export default function CanonIntelligenceDashboard() {
   const learning = useCanonLearning();
 
   const [activeSection, setActiveSection] = useState<string>("knowledge");
+  const [activeTabOverride, setActiveTabOverride] = useState<string | null>(null);
 
   const pipeline = useCanonPipeline();
   const pStats = pipeline.stats;
@@ -175,6 +176,10 @@ export default function CanonIntelligenceDashboard() {
             sources={intel.sources}
             syncRuns={intel.syncRuns}
             onRefresh={() => { intel.refetch(); stewardship.refetch(); }}
+            onNavigateToHumanReview={() => {
+              setActiveSection("governance");
+              setActiveTabOverride("human-review");
+            }}
           />
         );
       case "learning":
@@ -265,7 +270,7 @@ export default function CanonIntelligenceDashboard() {
               return (
                 <button
                   key={section.key}
-                  onClick={() => setActiveSection(section.key)}
+                  onClick={() => { setActiveSection(section.key); setActiveTabOverride(null); }}
                   className={`text-left rounded-xl border p-4 transition-all duration-200 ${
                     isActive
                       ? "border-primary/50 bg-primary/5 shadow-sm shadow-primary/10 ring-1 ring-primary/20"
@@ -300,7 +305,12 @@ export default function CanonIntelligenceDashboard() {
               </div>
             </CardHeader>
             <CardContent className="pt-0">
-              <Tabs defaultValue={currentSection.defaultTab} key={currentSection.key} className="space-y-4">
+              <Tabs
+                defaultValue={activeTabOverride && activeSection === currentSection.key ? activeTabOverride : currentSection.defaultTab}
+                key={activeTabOverride ? `${currentSection.key}-${activeTabOverride}` : currentSection.key}
+                onValueChange={() => setActiveTabOverride(null)}
+                className="space-y-4"
+              >
                 <TabsList className="bg-muted/20 border border-border/20 h-auto gap-0.5 p-1">
                   {currentSection.tabs.map((tab) => {
                     const TabIcon = tab.icon;

@@ -23,6 +23,7 @@ interface CanonIngestionPanelProps {
   sources: any[];
   syncRuns: any[];
   onRefresh: () => void;
+  onNavigateToHumanReview?: () => void;
 }
 
 const SYNC_STATUS_ICON: Record<string, React.ReactNode> = {
@@ -52,7 +53,7 @@ const SYNC_STATUS_LABEL: Record<string, string> = {
   failed: "falhou",
 };
 
-export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonIngestionPanelProps) {
+export function CanonIngestionPanel({ sources, syncRuns, onRefresh, onNavigateToHumanReview }: CanonIngestionPanelProps) {
   const { currentOrg } = useOrg();
   const { toast } = useToast();
   const [ingesting, setIngesting] = useState<string | null>(null);
@@ -193,7 +194,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
           <MiniStat label="Fontes" value={stats.totalSources} />
           <MiniStat label="Candidatos" value={stats.totalCandidates} />
           <MiniStat label="Pendente Review" value={stats.pendingCandidates} accent />
-          <MiniStat label="Revisão Humana" value={stats.needsHumanReview || 0} />
+          <MiniStat label="Revisão Humana" value={stats.needsHumanReview || 0} onClick={onNavigateToHumanReview} clickable />
           <MiniStat label="Prontos p/ Promoção" value={stats.approvedCandidates} accent />
           <MiniStat label="Promovidos" value={stats.promotedCandidates} />
           <MiniStat label="Entradas Canon" value={stats.totalCanonEntries} />
@@ -613,12 +614,17 @@ function DiscoveryCandidateCard({
   );
 }
 
-function MiniStat({ label, value, accent }: { label: string; value: number; accent?: boolean }) {
+function MiniStat({ label, value, accent, clickable, onClick }: { label: string; value: number; accent?: boolean; clickable?: boolean; onClick?: () => void }) {
   return (
-    <Card className="border-border/30 bg-card/40">
+    <Card
+      className={`border-border/30 bg-card/40 ${clickable ? "cursor-pointer hover:bg-card/60 hover:border-primary/40 transition-colors" : ""}`}
+      onClick={clickable ? onClick : undefined}
+    >
       <CardContent className="pt-3 pb-2 text-center">
         <p className={`text-lg font-bold ${accent ? "text-primary" : "text-foreground"}`}>{value}</p>
-        <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5 truncate">{label}</p>
+        <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5 truncate">
+          {clickable && "👁 "}{label}
+        </p>
       </CardContent>
     </Card>
   );
