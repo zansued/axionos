@@ -190,7 +190,7 @@ O foco futuro se volta para:
 
 ### Fronteiras Canônicas Atuais
 
-- **Sprints 1–202** = canon completo (Foundation até Bloco AR)
+- **Sprints 1–207** = canon completo (Foundation até Bloco AS)
 
 ---
 
