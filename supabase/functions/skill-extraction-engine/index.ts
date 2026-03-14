@@ -61,6 +61,8 @@ Deno.serve(async (req) => {
         return await listReviewable(sc, orgId, params);
       case "review_history":
         return await reviewHistory(sc, orgId, params);
+      case "ai_review_batch":
+        return await aiReviewBatch(sc, orgId, user.id, params);
       // SF-4: Skill-Capability Binding
       case "bind_capability":
         return await bindCapability(sc, orgId, user.id, params);
@@ -496,7 +498,179 @@ async function reviewHistory(sc: any, orgId: string, p: any) {
   const { data, error } = await query;
   if (error) return json({ error: error.message }, 400);
 
-  return json({ reviews: data || [], count: data?.length || 0 });
+  return json({ reviews: data || [], count: data?.length || 0, total_reviews: data?.length || 0 });
+}
+
+// ══════════════════════════════════════════════════
+// AI-ASSISTED BATCH REVIEW
+// ══════════════════════════════════════════════════
+//
+// Uses Lovable AI to evaluate each skill across 4 dimensions,
+// produce a verdict (approved/rejected/needs_refinement) and rationale.
+// Results are advisory-first: AI scores + verdict are applied via
+// the existing reviewSkill function, preserving full audit trail.
+
+async function aiReviewBatch(sc: any, orgId: string, reviewerId: string, p: any) {
+  const limit = Math.min(p.limit || 20, 50);
+  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+  if (!LOVABLE_API_KEY) return json({ error: "LOVABLE_API_KEY not configured" }, 500);
+
+  // Fetch skills pending review
+  const { data: skills, error: fetchErr } = await sc
+    .from("engineering_skills")
+    .select("id, skill_name, description, domain, confidence, lifecycle_status, extraction_method, metadata")
+    .eq("organization_id", orgId)
+    .in("lifecycle_status", ["extracted", "pending_review"])
+    .order("confidence", { ascending: false })
+    .limit(limit);
+
+  if (fetchErr) return json({ error: fetchErr.message }, 400);
+  if (!skills?.length) return json({ reviewed: 0, message: "No skills pending review" });
+
+  const results: any[] = [];
+  const errors: any[] = [];
+
+  // Process in batches of 5 for efficiency
+  const batches = [];
+  for (let i = 0; i < skills.length; i += 5) {
+    batches.push(skills.slice(i, i + 5));
+  }
+
+  for (const batch of batches) {
+    const skillsPrompt = batch.map((s: any, i: number) => 
+      `[Skill ${i + 1}]\nID: ${s.id}\nName: ${s.skill_name}\nDomain: ${s.domain}\nConfidence: ${s.confidence}\nDescription: ${s.description}\nSource: ${s.extraction_method}\nCanon Type: ${s.metadata?.source_canon_type || "unknown"}\nPractice Type: ${s.metadata?.source_practice_type || "unknown"}\nTopic: ${s.metadata?.source_topic || "unknown"}`
+    ).join("\n\n");
+
+    try {
+      const aiRes = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          messages: [
+            {
+              role: "system",
+              content: `You are an expert engineering skill reviewer for AxionOS, a governed autonomous software factory.
+
+Evaluate each skill on 4 dimensions (0.0 to 1.0):
+- specificity: How precise and actionable is this skill? (vague=0.2, specific=0.8+)
+- applicability: How broadly useful within its domain? (niche=0.3, universal=0.9)
+- reusability: Can agents reuse this without modification? (one-off=0.2, reusable=0.8+)
+- confidence_assessment: Is the inherited confidence score reasonable? (inflated=0.3, accurate=0.8+)
+
+Then assign a verdict:
+- "approved" — skill is specific, applicable, reusable, confidence is fair (overall >= 0.6)
+- "needs_refinement" — skill has potential but is too vague or overlaps with others (overall 0.4-0.6)
+- "rejected" — skill is too generic, redundant, or low value (overall < 0.4)
+
+Respond ONLY with a JSON array. No markdown, no explanation outside the JSON.`
+            },
+            {
+              role: "user",
+              content: `Review these ${batch.length} skills:\n\n${skillsPrompt}`
+            }
+          ],
+          tools: [{
+            type: "function",
+            function: {
+              name: "submit_reviews",
+              description: "Submit skill review results",
+              parameters: {
+                type: "object",
+                properties: {
+                  reviews: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        skill_id: { type: "string" },
+                        verdict: { type: "string", enum: ["approved", "rejected", "needs_refinement"] },
+                        specificity: { type: "number" },
+                        applicability: { type: "number" },
+                        reusability: { type: "number" },
+                        confidence_assessment: { type: "number" },
+                        rationale: { type: "string" }
+                      },
+                      required: ["skill_id", "verdict", "specificity", "applicability", "reusability", "confidence_assessment", "rationale"]
+                    }
+                  }
+                },
+                required: ["reviews"]
+              }
+            }
+          }],
+          tool_choice: { type: "function", function: { name: "submit_reviews" } },
+        }),
+      });
+
+      if (!aiRes.ok) {
+        const errText = await aiRes.text();
+        errors.push({ batch_index: batches.indexOf(batch), error: `AI gateway ${aiRes.status}: ${errText.slice(0, 200)}` });
+        continue;
+      }
+
+      const aiData = await aiRes.json();
+      const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
+      if (!toolCall?.function?.arguments) {
+        errors.push({ batch_index: batches.indexOf(batch), error: "No tool call in AI response" });
+        continue;
+      }
+
+      let reviews: any[];
+      try {
+        const parsed = JSON.parse(toolCall.function.arguments);
+        reviews = parsed.reviews || parsed;
+      } catch {
+        errors.push({ batch_index: batches.indexOf(batch), error: "Failed to parse AI response" });
+        continue;
+      }
+
+      // Apply each AI review through the existing governance function
+      for (const review of reviews) {
+        if (!review.skill_id || !review.verdict) continue;
+        const res = await reviewSkill(sc, orgId, reviewerId, {
+          skill_id: review.skill_id,
+          verdict: review.verdict,
+          specificity: Math.max(0, Math.min(1, review.specificity || 0.5)),
+          applicability: Math.max(0, Math.min(1, review.applicability || 0.5)),
+          reusability: Math.max(0, Math.min(1, review.reusability || 0.5)),
+          confidence_assessment: Math.max(0, Math.min(1, review.confidence_assessment || 0.5)),
+          notes: `[AI Review] ${review.rationale || "No rationale provided"}`,
+        });
+        const body = JSON.parse(await (res as Response).text());
+        if (body.error) {
+          errors.push({ skill_id: review.skill_id, error: body.error });
+        } else {
+          results.push({ ...body, ai_rationale: review.rationale });
+        }
+      }
+    } catch (e: any) {
+      errors.push({ batch_index: batches.indexOf(batch), error: e.message });
+    }
+  }
+
+  // Summary stats
+  const verdictCounts: Record<string, number> = {};
+  for (const r of results) {
+    const v = r.verdict || "unknown";
+    verdictCounts[v] = (verdictCounts[v] || 0) + 1;
+  }
+
+  return json({
+    reviewed: results.length,
+    total_pending: skills.length,
+    verdict_distribution: verdictCounts,
+    avg_overall_score: results.length > 0
+      ? +(results.reduce((a: number, r: any) => a + (r.overall_score || 0), 0) / results.length).toFixed(3)
+      : 0,
+    results: results.slice(0, 20),
+    errors: errors.length > 0 ? errors : undefined,
+    review_method: "ai_assisted_lovable_gateway",
+    model: "google/gemini-2.5-flash",
+  });
 }
 
 // ══════════════════════════════════════════════════

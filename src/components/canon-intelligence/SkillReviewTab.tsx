@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, CheckCircle, XCircle, AlertTriangle, ChevronDown, ChevronUp, Shield, Eye } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, AlertTriangle, ChevronDown, ChevronUp, Shield, Eye, Bot, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -46,6 +46,8 @@ export function SkillReviewTab() {
   const [batchMode, setBatchMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [submitting, setSubmitting] = useState(false);
+  const [aiReviewing, setAiReviewing] = useState(false);
+  const [aiResult, setAiResult] = useState<any>(null);
 
   // Review form state
   const [scores, setScores] = useState({
@@ -163,6 +165,29 @@ export function SkillReviewTab() {
     setSelectedIds(new Set(reviewable.map(s => s.id)));
   };
 
+  const runAiReview = async () => {
+    setAiReviewing(true);
+    setAiResult(null);
+    try {
+      const res = await supabase.functions.invoke("skill-extraction-engine", {
+        body: { action: "ai_review_batch", limit: 50 },
+      });
+      if (res.error) throw res.error;
+      setAiResult(res.data);
+      toast({
+        title: `AI Review concluído`,
+        description: `${res.data.reviewed} skills avaliadas. Aprovadas: ${res.data.verdict_distribution?.approved || 0}, Rejeitadas: ${res.data.verdict_distribution?.rejected || 0}`,
+      });
+      refetch();
+      queryClient.invalidateQueries({ queryKey: ["skill-extraction-status"] });
+      queryClient.invalidateQueries({ queryKey: ["skill-review-stats"] });
+    } catch (e: any) {
+      toast({ title: "Erro no AI Review", description: e.message, variant: "destructive" });
+    } finally {
+      setAiReviewing(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Stats Bar */}
@@ -172,6 +197,70 @@ export function SkillReviewTab() {
         <StatCard label="Rejeitadas" value={rejectedCount} />
         <StatCard label="Reviews Realizados" value={reviewStats?.total_reviews ?? 0} />
       </div>
+
+      {/* AI Review Card */}
+      <Card className="border-primary/20 bg-primary/5">
+        <CardContent className="py-3 flex flex-wrap items-center gap-3">
+          <Bot className="h-4 w-4 text-primary" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium">AI Skill Review</p>
+            <p className="text-[10px] text-muted-foreground">
+              IA avalia as skills pendentes em 4 dimensões e recomenda veredicto. Resultados são aplicados como reviews auditáveis.
+            </p>
+          </div>
+          <Button
+            onClick={runAiReview}
+            disabled={aiReviewing || pendingCount === 0}
+            size="sm"
+            className="gap-1.5 text-xs"
+          >
+            {aiReviewing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+            {aiReviewing ? "Analisando..." : `AI Review (${pendingCount} pendentes)`}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* AI Review Results */}
+      {aiResult && (
+        <Card className="border-emerald-500/20 bg-emerald-500/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-emerald-400" />
+              Resultado do AI Review
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+              <div className="bg-muted/10 rounded p-2">
+                <p className="text-muted-foreground">Avaliadas</p>
+                <p className="font-semibold text-foreground">{aiResult.reviewed}</p>
+              </div>
+              <div className="bg-muted/10 rounded p-2">
+                <p className="text-muted-foreground">Score Médio</p>
+                <p className="font-semibold text-foreground">{(aiResult.avg_overall_score * 100).toFixed(0)}%</p>
+              </div>
+              {Object.entries(aiResult.verdict_distribution || {}).map(([v, count]) => (
+                <div key={v} className="bg-muted/10 rounded p-2">
+                  <p className="text-muted-foreground">{v}</p>
+                  <p className="font-semibold text-foreground">{count as number}</p>
+                </div>
+              ))}
+            </div>
+            {aiResult.results?.slice(0, 5).map((r: any) => (
+              <div key={r.skill_id} className="text-[10px] border-t border-border/20 pt-1.5">
+                <span className="font-medium">{r.skill_id?.slice(0, 8)}...</span>
+                <Badge variant="outline" className={`ml-2 text-[9px] ${STATUS_COLORS[r.verdict] || ""}`}>{r.verdict}</Badge>
+                <span className="text-muted-foreground ml-2">{r.ai_rationale?.slice(0, 120)}</span>
+              </div>
+            ))}
+            {aiResult.errors?.length > 0 && (
+              <div className="text-xs text-destructive">
+                {aiResult.errors.length} erro(s) durante o review
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Filters & Actions Bar */}
       <Card className="border-border/30 bg-card/40">
