@@ -407,16 +407,16 @@ flowchart TB
 
 This block transforms the Canon Hub into a **living institutional knowledge system** capable of absorbing engineering knowledge from repositories and execution outcomes.
 
-| Sprint | Capability |
-|--------|-----------|
-| 164 | Canon Candidate Review Engine |
-| 165 | Pattern Deduplication & Merge Intelligence |
-| 166 | Canon Promotion Workflow |
-| 167 | Retrieval Activation & Canon Indexing |
-| 168 | Repository Skill Distillation Engine |
-| 169 | Repo-to-Canon Intelligence Graph |
-| 170 | Agent Skill Injection Runtime |
-| 171 | Institutional Learning Governance Surface |
+| Sprint | Capability | Maturity |
+|--------|-----------|----------|
+| 164 | Canon Candidate Review Engine | ✅ Structurally implemented |
+| 165 | Pattern Deduplication & Merge Intelligence | ✅ Structurally implemented |
+| 166 | Canon Promotion Workflow | ✅ Structurally implemented |
+| 167 | Retrieval Activation & Canon Indexing | ✅ Structurally implemented |
+| 168 | Repository Skill Distillation Engine | ✅ Operationally active |
+| 169 | Repo-to-Canon Intelligence Graph | ✅ Structurally implemented |
+| 170 | Agent Skill Injection Runtime | 🔄 Operationally maturing |
+| 171 | Institutional Learning Governance Surface | ✅ Operationally active |
 
 ---
 
