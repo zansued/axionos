@@ -166,10 +166,11 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
     <div className="space-y-4">
       {/* Estatísticas do Pipeline */}
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
           <MiniStat label="Fontes" value={stats.totalSources} />
           <MiniStat label="Candidatos" value={stats.totalCandidates} />
           <MiniStat label="Pendente Review" value={stats.pendingCandidates} accent />
+          <MiniStat label="Revisão Humana" value={stats.needsHumanReview || 0} />
           <MiniStat label="Prontos p/ Promoção" value={stats.approvedCandidates} accent />
           <MiniStat label="Promovidos" value={stats.promotedCandidates} />
           <MiniStat label="Entradas Canon" value={stats.totalCanonEntries} />

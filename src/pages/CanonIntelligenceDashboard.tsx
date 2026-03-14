@@ -103,10 +103,10 @@ const METRIC_TOOLTIPS: Record<string, string> = {
   Active: "Entries currently approved and actively used by agents.",
   Candidates: "Knowledge candidates awaiting review or promotion.",
   Deprecated: "Entries marked as deprecated and no longer actively used.",
-  Applications: "Times canonical knowledge was applied during agent execution.",
-  Sessions: "Retrieval sessions where agents consulted canonical knowledge.",
+  Applications: "Times canonical knowledge was applied during agent execution. (Passive — populated by runtime telemetry)",
+  Sessions: "Retrieval sessions where agents consulted canonical knowledge. (Passive — populated by runtime telemetry)",
   "Learning Queue": "Pending learning candidates not yet reviewed.",
-  "Top Agent": "Agent type with the most retrieval sessions.",
+  "Top Agent": "Agent type with the most retrieval sessions. (Passive — populated by runtime telemetry)",
 };
 
 /* ──────────────── Main component ──────────────── */
@@ -141,10 +141,10 @@ export default function CanonIntelligenceDashboard() {
     { value: activeEntries.length, label: "Active", accent: true },
     { value: intel.candidates.length, label: "Candidates" },
     { value: deprecatedEntries.length, label: "Deprecated", warn: deprecatedEntries.length > 0 },
-    { value: runtime.analytics.totalApplications, label: "Applications", accent: true },
-    { value: runtime.analytics.totalSessions, label: "Sessions" },
+    { value: runtime.analytics.totalApplications, label: "Applications", passive: true },
+    { value: runtime.analytics.totalSessions, label: "Sessions", passive: true },
     { value: pendingLearning.length, label: "Learning Queue", accent: true },
-    { value: topAgent ? topAgent[1] : 0, label: topAgent ? topAgent[0] : "Top Agent" },
+    { value: topAgent ? topAgent[1] : 0, label: topAgent ? topAgent[0] : "Top Agent", passive: true },
   ];
 
   /* ── Tab content renderer ── */
@@ -320,17 +320,19 @@ export default function CanonIntelligenceDashboard() {
 
 /* ──────────────── TopMetric with Tooltip ──────────────── */
 
-function TopMetric({ value, label, accent, warn }: { value: number; label: string; accent?: boolean; warn?: boolean }) {
-  const color = warn ? "text-amber-400" : accent ? "text-primary" : "text-foreground";
+function TopMetric({ value, label, accent, warn, passive }: { value: number; label: string; accent?: boolean; warn?: boolean; passive?: boolean }) {
+  const color = warn ? "text-amber-400" : accent ? "text-primary" : passive ? "text-muted-foreground" : "text-foreground";
   const tooltip = METRIC_TOOLTIPS[label] || `Current value for ${label}`;
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Card className="border-border/30 bg-card/40 hover:bg-card/60 transition-colors cursor-default">
+        <Card className={`border-border/30 bg-card/40 hover:bg-card/60 transition-colors cursor-default ${passive ? "opacity-60" : ""}`}>
           <CardContent className="pt-3.5 pb-2.5 text-center">
             <p className={`text-xl font-bold ${color}`}>{value}</p>
-            <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5 truncate">{label}</p>
+            <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5 truncate">
+              {passive && "⏸ "}{label}
+            </p>
           </CardContent>
         </Card>
       </TooltipTrigger>

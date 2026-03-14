@@ -330,7 +330,7 @@ Return ONLY valid JSON:
               slug: `${slug}-${Date.now()}-${promoted}`,
               canon_type: mapKnowledgeType(candidate.knowledge_type),
               practice_type: candidate.pattern_classification || candidate.knowledge_type || "pattern",
-              lifecycle_status: "approved",
+              lifecycle_status: "active",
               approval_status: "approved",
               confidence_score: Math.min((candidate.evaluation_score || candidate.source_reliability_score || 50) / 100, 1),
               summary: candidate.summary || "",
@@ -398,7 +398,7 @@ Return ONLY valid JSON:
                 entry_id: entry.id,
                 organization_id,
                 from_status: "none",
-                to_status: "approved",
+                to_status: "active",
                 reason: `Auto-promoted by Canon Evolution Engine. Evaluation score: ${candidate.evaluation_score || 'N/A'}. ${candidate.evaluation_notes || ''}`,
                 changed_by: "canon-evolution-engine",
               });

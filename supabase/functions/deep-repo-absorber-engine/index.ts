@@ -293,13 +293,39 @@ Extract the intelligence and return a JSON object with the following structure:
     const insertedIds = [];
 
     for (const candidate of candidates) {
-      const { data, error } = await serviceClient.from("learning_candidates").insert({
+      // Write directly to canon_candidate_entries (unified pipeline)
+      const { data, error } = await serviceClient.from("canon_candidate_entries").insert({
+        organization_id: orgId,
+        source_id: null,
+        title: candidate.title,
+        summary: `Absorbed from ${owner}/${repo}: ${candidate.summary}`,
+        body: "",
+        knowledge_type: candidate.type || "pattern",
+        domain_scope: candidate.domain || "general",
+        source_type: "deep_repo_absorber",
+        source_reference: repoUrl,
+        source_reliability_score: 60,
+        novelty_score: 0,
+        conflict_with_existing_canon: false,
+        internal_validation_status: "pending",
+        trial_status: "none",
+        promotion_status: "pending",
+        promotion_decision_reason: "",
+        submitted_by: user.id,
+      }).select("id").single();
+
+      if (!error && data) insertedIds.push(data.id);
+    }
+
+    // Also record in learning_candidates for lineage/signal tracking
+    for (const candidate of candidates) {
+      await serviceClient.from("learning_candidates").insert({
         organization_id: orgId,
         initiative_id: initiativeId || null,
         title: `[Deep Absorber] ${candidate.title}`,
         summary: `Absorbed from ${owner}/${repo}: ${candidate.summary}`,
         proposed_practice_type: candidate.type,
-        confidence_score: 60, // Reduced from 85 — external sources need review
+        confidence_score: 60,
         signal_count: 1,
         source_type: "deep_repo_absorber",
         review_status: "pending",
@@ -309,9 +335,7 @@ Extract the intelligence and return a JSON object with the following structure:
           tech_stack: absorptionData.tech_stack,
           absorbed_by: user.id,
         }
-      }).select("id").single();
-
-      if (!error && data) insertedIds.push(data.id);
+      }).catch(() => {}); // Non-critical — lineage record only
     }
 
     // 6. Operational Signal
