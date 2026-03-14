@@ -1,6 +1,6 @@
 /**
  * Canon Pipeline Types — Operational Knowledge Infrastructure
- * Defines the complete lifecycle, models, and contracts for the Canon system.
+ * Sprint 204: Canonical lifecycle semantics formalized and enforced.
  */
 
 // ─── Ingestion Lifecycle ───
@@ -34,6 +34,58 @@ export const INGESTION_LIFECYCLE_LABELS: Record<IngestionLifecycleState, string>
   failed: "Failed",
 };
 
+// ─── Candidate Review Status (Sprint 204 canonical) ───
+export type CandidateReviewStatus =
+  | "pending"
+  | "approved"
+  | "needs_human_review"
+  | "rejected";
+
+export const CANDIDATE_REVIEW_STATUS_LABELS: Record<CandidateReviewStatus, string> = {
+  pending: "Pending Review",
+  approved: "Approved",
+  needs_human_review: "Needs Human Review",
+  rejected: "Rejected",
+};
+
+// ─── Candidate Promotion Status (Sprint 204 canonical) ───
+export type CandidatePromotionStatus =
+  | "pending"
+  | "promoted"
+  | "not_promoted";
+
+export const CANDIDATE_PROMOTION_STATUS_LABELS: Record<CandidatePromotionStatus, string> = {
+  pending: "Awaiting Promotion",
+  promoted: "Promoted",
+  not_promoted: "Not Promoted",
+};
+
+// ─── Entry Lifecycle Status (Sprint 204 canonical) ───
+export type EntryLifecycleStatus =
+  | "active"
+  | "deprecated"
+  | "archived"
+  | "superseded";
+
+export const ENTRY_LIFECYCLE_LABELS: Record<EntryLifecycleStatus, string> = {
+  active: "Active",
+  deprecated: "Deprecated",
+  archived: "Archived",
+  superseded: "Superseded",
+};
+
+// ─── Entry Approval Status (Sprint 204 canonical) ───
+export type EntryApprovalStatus =
+  | "pending"
+  | "approved"
+  | "revoked";
+
+export const ENTRY_APPROVAL_LABELS: Record<EntryApprovalStatus, string> = {
+  pending: "Pending Approval",
+  approved: "Approved",
+  revoked: "Revoked",
+};
+
 // ─── Source Registry ───
 export interface CanonSourceRecord {
   id: string;
@@ -49,7 +101,6 @@ export interface CanonSourceRecord {
   sync_policy: string;
   created_at: string;
   updated_at: string;
-  // Computed from sync runs
   documents_found?: number;
   chunks_generated?: number;
   candidates_generated?: number;
@@ -58,9 +109,6 @@ export interface CanonSourceRecord {
 }
 
 // ─── Candidate Pipeline ───
-export type CandidateReviewStatus = "pending" | "approved" | "rejected";
-export type CandidatePromotionStatus = "pending" | "promoted" | "rejected";
-
 export interface CanonCandidate {
   id: string;
   source_id: string | null;
@@ -72,8 +120,8 @@ export interface CanonCandidate {
   source_type: string;
   source_reference: string;
   source_reliability_score: number;
-  internal_validation_status: string;
-  promotion_status: string;
+  internal_validation_status: CandidateReviewStatus;
+  promotion_status: CandidatePromotionStatus;
   promotion_decision_reason: string;
   promoted_entry_id: string | null;
   promoted_at: string | null;
@@ -99,8 +147,8 @@ export interface CanonEntry {
   slug: string;
   canon_type: string;
   practice_type: string;
-  lifecycle_status: string;
-  approval_status: string;
+  lifecycle_status: EntryLifecycleStatus;
+  approval_status: EntryApprovalStatus;
   confidence_score: number;
   summary: string;
   body: string;
