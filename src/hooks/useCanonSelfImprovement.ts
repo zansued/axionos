@@ -48,6 +48,7 @@ export interface EvolutionProposal {
   title: string;
   proposal_type: string;
   justification: string | null;
+  decision_notes: string | null;
   status: string;
   impact_level: string;
   confidence_score: number;
@@ -63,11 +64,11 @@ export interface EvolutionProposal {
   block_reason: string | null;
   proposal_source: string;
   reviewed_by: string | null;
-  review_notes: string | null;
   reviewed_at: string | null;
   executed: boolean;
   created_at: string;
   updated_at: string;
+  [key: string]: unknown;
 }
 
 export interface ProposalInput {
