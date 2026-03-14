@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/comp
 import {
   Database, BookOpen, Search, Activity, Zap, Eye, GitBranch,
   Shield, Brain, Download, Scale, Route, HeartPulse,
-  Library, Lightbulb, ShieldCheck, Target,
+  Library, Lightbulb, ShieldCheck, Target, Boxes,
 } from "lucide-react";
 import { useCanonIntelligence } from "@/hooks/useCanonIntelligence";
 import { useCanonStewardship } from "@/hooks/useCanonStewardship";
@@ -25,6 +25,7 @@ import { CanonIngestionPanel } from "@/components/canon-intelligence/CanonIngest
 import { RepoTrustTab } from "@/components/canon-intelligence/RepoTrustTab";
 import { KnowledgeLineageTab } from "@/components/canon-intelligence/KnowledgeLineageTab";
 import { KnowledgeRenewalTab } from "@/components/canon-intelligence/KnowledgeRenewalTab";
+import { SkillExtractionTab } from "@/components/canon-intelligence/SkillExtractionTab";
 
 /* ──────────────── Section definitions ──────────────── */
 
@@ -63,6 +64,16 @@ const SECTIONS = [
       { value: "governance-tab", label: "Governance", icon: Shield },
       { value: "lineage", label: "Lineage", icon: Route },
       { value: "renewal", label: "Renewal", icon: HeartPulse },
+    ],
+  },
+  {
+    key: "skills",
+    label: "Skills Pipeline",
+    icon: Boxes,
+    description: "Extract, review, and govern engineering skills derived from canonical knowledge.",
+    defaultTab: "extraction",
+    tabs: [
+      { value: "extraction", label: "Extraction", icon: Boxes },
     ],
   },
   {
@@ -181,6 +192,8 @@ export default function CanonIntelligenceDashboard() {
         return <KnowledgeLineageTab />;
       case "renewal":
         return <KnowledgeRenewalTab />;
+      case "extraction":
+        return <SkillExtractionTab />;
       case "retrieval":
         return <RetrievalExplorerTab sessions={runtime.sessions} feedback={runtime.feedback} />;
       case "analytics":
@@ -224,7 +237,7 @@ export default function CanonIntelligenceDashboard() {
           </div>
 
           {/* ── Section Selector ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             {SECTIONS.map((section) => {
               const Icon = section.icon;
               const isActive = activeSection === section.key;
