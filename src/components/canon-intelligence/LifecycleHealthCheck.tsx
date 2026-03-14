@@ -140,14 +140,14 @@ export function LifecycleHealthCheck() {
           });
         }
 
-        // Contradiction check: active but not approved
-        if (lifecycle === "active" && approval !== "approved") {
+        // Contradiction check: approved lifecycle but revoked approval
+        if (lifecycle === "approved" && approval === "revoked") {
           violations.push({
             table: "canon_entries",
             field: "lifecycle_status + approval_status",
             recordId: e.id,
             currentValue: `lifecycle=${lifecycle}, approval=${approval}`,
-            issue: "Active entry without approved status — contradictory state",
+            issue: "Approved entry with revoked approval — contradictory state",
             severity: "error",
           });
         }
