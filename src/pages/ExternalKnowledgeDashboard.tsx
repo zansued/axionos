@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useCanonEvolutionControl } from "@/hooks/useCanonEvolutionControl";
-import { PackagePlus, Search, ShieldAlert, TrendingUp, FileText, XCircle } from "lucide-react";
+import { useCanonReviewPipeline } from "@/hooks/useCanonReviewPipeline";
+import {
+  PackagePlus, Search, ShieldAlert, TrendingUp, FileText, XCircle,
+  Zap, CheckCircle2, RotateCcw, Loader2, Rocket,
+} from "lucide-react";
 
 const STATUS_COLORS: Record<string, string> = {
   pending: "bg-muted text-muted-foreground",
@@ -17,6 +21,7 @@ const STATUS_COLORS: Record<string, string> = {
   draft: "bg-muted text-muted-foreground",
   open: "bg-primary/20 text-primary",
   approved: "bg-primary/20 text-primary",
+  needs_review: "bg-warning/20 text-warning",
   under_trial: "bg-accent/20 text-accent-foreground",
 };
 
@@ -25,31 +30,83 @@ export default function ExternalKnowledgeDashboard() {
     candidates, proposals, loadingCandidates, loadingProposals,
     detectConflict, promoteCandidate, rejectCandidate,
   } = useCanonEvolutionControl();
+  const pipeline = useCanonReviewPipeline();
   const [tab, setTab] = useState("candidates");
+
+  const ps = pipeline.status;
 
   return (
     <AppLayout>
       <div className="space-y-6 p-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">External Knowledge & Canon Evolution</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Govern external knowledge intake, trials, and canon promotion decisions.
-          </p>
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">External Knowledge & Canon Evolution</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Govern external knowledge intake, trials, and canon promotion decisions.
+            </p>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => pipeline.reviewCandidates.mutate()}
+              disabled={pipeline.isRunning}
+            >
+              {pipeline.reviewCandidates.isPending
+                ? <><Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />Revisando…</>
+                : <><CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />AI Review</>
+              }
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => pipeline.promoteApproved.mutate()}
+              disabled={pipeline.isRunning}
+            >
+              {pipeline.promoteApproved.isPending
+                ? <><Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />Promovendo…</>
+                : <><TrendingUp className="h-3.5 w-3.5 mr-1.5" />Promote Approved</>
+              }
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => pipeline.runFullPipeline.mutate()}
+              disabled={pipeline.isRunning}
+              className="bg-primary text-primary-foreground"
+            >
+              {pipeline.runFullPipeline.isPending
+                ? <><Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />Pipeline…</>
+                : <><Rocket className="h-3.5 w-3.5 mr-1.5" />Auto Pipeline Completo</>
+              }
+            </Button>
+          </div>
         </div>
 
-        {/* Summary cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Candidates</CardTitle></CardHeader>
-            <CardContent><div className="text-2xl font-bold text-foreground">{candidates.length}</div></CardContent>
+        {/* Pipeline Status Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+          <Card className="border-border/40 bg-card/80">
+            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-[10px] text-muted-foreground uppercase">Candidatos</CardTitle></CardHeader>
+            <CardContent className="px-3 pb-3"><span className="text-xl font-bold text-foreground">{ps?.candidates?.total ?? candidates.length}</span></CardContent>
           </Card>
-          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Pending</CardTitle></CardHeader>
-            <CardContent><div className="text-2xl font-bold text-foreground">{candidates.filter((c: any) => c.promotion_status === "pending").length}</div></CardContent>
+          <Card className="border-border/40 bg-card/80">
+            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-[10px] text-muted-foreground uppercase">Pendente Revisão</CardTitle></CardHeader>
+            <CardContent className="px-3 pb-3"><span className="text-xl font-bold text-warning">{ps?.candidates?.pending_review ?? "—"}</span></CardContent>
           </Card>
-          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Promoted</CardTitle></CardHeader>
-            <CardContent><div className="text-2xl font-bold text-primary">{candidates.filter((c: any) => c.promotion_status === "promoted").length}</div></CardContent>
+          <Card className="border-border/40 bg-card/80">
+            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-[10px] text-muted-foreground uppercase">Aprovados</CardTitle></CardHeader>
+            <CardContent className="px-3 pb-3"><span className="text-xl font-bold text-primary">{ps?.candidates?.approved ?? "—"}</span></CardContent>
           </Card>
-          <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Proposals</CardTitle></CardHeader>
-            <CardContent><div className="text-2xl font-bold text-foreground">{proposals.length}</div></CardContent>
+          <Card className="border-border/40 bg-card/80">
+            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-[10px] text-muted-foreground uppercase">Revisão Humana</CardTitle></CardHeader>
+            <CardContent className="px-3 pb-3"><span className="text-xl font-bold text-accent-foreground">{ps?.candidates?.needs_human_review ?? "—"}</span></CardContent>
+          </Card>
+          <Card className="border-border/40 bg-card/80">
+            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-[10px] text-muted-foreground uppercase">Promovidos</CardTitle></CardHeader>
+            <CardContent className="px-3 pb-3"><span className="text-xl font-bold text-emerald-500">{ps?.candidates?.promoted ?? "—"}</span></CardContent>
+          </Card>
+          <Card className="border-border/40 bg-card/80">
+            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-[10px] text-muted-foreground uppercase">Canon Entries</CardTitle></CardHeader>
+            <CardContent className="px-3 pb-3"><span className="text-xl font-bold text-foreground">{ps?.canon_entries?.active ?? "—"}</span></CardContent>
           </Card>
         </div>
 
@@ -75,7 +132,7 @@ export default function ExternalKnowledgeDashboard() {
                         <TableHead>Source</TableHead>
                         <TableHead>Stack</TableHead>
                         <TableHead>Reliability</TableHead>
-                        <TableHead>Conflicts</TableHead>
+                        <TableHead>Review</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Actions</TableHead>
                       </TableRow>
@@ -83,12 +140,16 @@ export default function ExternalKnowledgeDashboard() {
                     <TableBody>
                       {candidates.map((c: any) => (
                         <TableRow key={c.id}>
-                          <TableCell className="font-medium text-foreground">{c.title}</TableCell>
+                          <TableCell className="font-medium text-foreground max-w-[200px] truncate">{c.title}</TableCell>
                           <TableCell><Badge variant="outline">{c.knowledge_type}</Badge></TableCell>
                           <TableCell className="text-sm text-muted-foreground">{c.source_type}</TableCell>
-                          <TableCell className="text-sm">{c.stack_scope || "—"}</TableCell>
+                          <TableCell className="text-sm">{c.stack_scope || c.domain_scope || "—"}</TableCell>
                           <TableCell>{c.source_reliability_score}</TableCell>
-                          <TableCell>{c.conflict_with_existing_canon ? <ShieldAlert className="h-4 w-4 text-destructive" /> : "—"}</TableCell>
+                          <TableCell>
+                            <Badge className={STATUS_COLORS[c.internal_validation_status] || "bg-muted text-muted-foreground"}>
+                              {c.internal_validation_status || "pending"}
+                            </Badge>
+                          </TableCell>
                           <TableCell><Badge className={STATUS_COLORS[c.promotion_status] || ""}>{c.promotion_status}</Badge></TableCell>
                           <TableCell className="space-x-1">
                             <Button size="sm" variant="ghost" onClick={() => detectConflict.mutate(c.id)} title="Detect conflicts"><Search className="h-3 w-3" /></Button>
