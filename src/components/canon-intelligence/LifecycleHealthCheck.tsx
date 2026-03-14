@@ -13,7 +13,7 @@ import { ShieldCheck, AlertTriangle, RefreshCw, CheckCircle2 } from "lucide-reac
 
 const VALID_CANDIDATE_REVIEW = ["pending", "approved", "needs_human_review", "rejected"];
 const VALID_CANDIDATE_PROMOTION = ["pending", "promoted", "not_promoted"];
-const VALID_ENTRY_LIFECYCLE = ["active", "deprecated", "archived", "superseded"];
+const VALID_ENTRY_LIFECYCLE = ["draft", "proposed", "approved", "experimental", "contested", "deprecated", "archived", "superseded"];
 const VALID_ENTRY_APPROVAL = ["pending", "approved", "revoked"];
 
 // Legacy values that should have been migrated
@@ -140,14 +140,14 @@ export function LifecycleHealthCheck() {
           });
         }
 
-        // Contradiction check: active but not approved
-        if (lifecycle === "active" && approval !== "approved") {
+        // Contradiction check: approved lifecycle but revoked approval
+        if (lifecycle === "approved" && approval === "revoked") {
           violations.push({
             table: "canon_entries",
             field: "lifecycle_status + approval_status",
             recordId: e.id,
             currentValue: `lifecycle=${lifecycle}, approval=${approval}`,
-            issue: "Active entry without approved status — contradictory state",
+            issue: "Approved entry with revoked approval — contradictory state",
             severity: "error",
           });
         }
