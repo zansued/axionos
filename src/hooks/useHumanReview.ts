@@ -26,7 +26,7 @@ export function useHumanReview() {
         .from("canon_candidate_entries")
         .select("*")
         .eq("organization_id", orgId!)
-        .eq("internal_validation_status", "needs_review")
+        .in("internal_validation_status", ["needs_review", "needs_human_review"])
         .eq("promotion_status", "pending")
         .order("novelty_score", { ascending: false });
       if (error) throw error;
