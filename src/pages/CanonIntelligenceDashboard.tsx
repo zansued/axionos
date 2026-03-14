@@ -30,6 +30,7 @@ import { SkillExtractionTab } from "@/components/canon-intelligence/SkillExtract
 import { SkillReviewTab } from "@/components/canon-intelligence/SkillReviewTab";
 import { CapabilityBindingTab } from "@/components/canon-intelligence/CapabilityBindingTab";
 import { SkillRuntimeTab } from "@/components/canon-intelligence/SkillRuntimeTab";
+import { LifecycleHealthCheck } from "@/components/canon-intelligence/LifecycleHealthCheck";
 
 /* ──────────────── Section definitions ──────────────── */
 
