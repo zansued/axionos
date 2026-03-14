@@ -3,8 +3,8 @@
 > Consolidated reference for the Agent Operating System architecture.
 > Canonical source for planes, modules, agent types, contracts, safety boundaries, and events.
 >
-> Last updated: 2026-03-12
-> 181 sprints complete (Blocks Foundation through AK)
+> Last updated: 2026-03-14
+> 200 sprints complete (Blocks Foundation through AP)
 
 ## Document Authority
 
