@@ -335,7 +335,7 @@ Extract the intelligence and return a JSON object with the following structure:
           tech_stack: absorptionData.tech_stack,
           absorbed_by: user.id,
         }
-      }).catch(() => {}); // Non-critical — lineage record only
+      }); // Non-critical — lineage record only
     }
 
     // 6. Operational Signal
