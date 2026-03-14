@@ -1,0 +1,17 @@
+{
+  "title": "Agentic Message Orchestration Pattern",
+  "slug": "agentic-message-orchestration",
+  "canon_type": "implementation_recipe",
+  "practice_type": "agentic_infrastructure",
+  "lifecycle_status": "promoted",
+  "confidence_score": 0.95,
+  "summary": "Padrão de orquestração para mensageria multi-instância (WhatsApp) com integração nativa de LLMs e tratamento resiliente de eventos.",
+  "body": "Utiliza o motor Baileys para gerenciar conexões socket multi-device, persistindo sessões em PostgreSQL/Prisma. A lógica de negócio é desacoplada via webhooks e serviços de integração (Typebot, Dify).",
+  "implementation_guidance": "1. Utilize StateNode para gerenciar o ciclo de vida da conexão (QR, CONNECTED, DISCONNECTED). 2. Implemente filas (SQS/RabbitMQ) para processar webhooks de mensagens sem bloquear o socket. 3. Integre LLMs via fluxos de eventos assíncronos.",
+  "stack_scope": "Node.js, TypeScript, Baileys, Prisma",
+  "layer_scope": "Infrastructure, Integration",
+  "problem_scope": "Scalable Messaging, AI-to-User Bridge",
+  "tags": ["whatsapp", "agentos", "evolution-api", "real-time"],
+  "source_reference": "https://github.com/EvolutionAPI/evolution-api",
+  "created_at": "2026-03-13T10:00:00Z"
+}
