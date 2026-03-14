@@ -277,9 +277,9 @@ Estas invariantes agem como as **leis físicas** da plataforma.
 
 ## Canon de Sprints
 
-- **Sprints 1–202** representam o arco de desenvolvimento canônico da plataforma
-- **Blocos Foundation até AR** estão completos
-- O sistema alcançou **maturidade Nível 18: Organismo Adaptativo Governado com Segurança Reforçada**
+- **Sprints 1–207** representam o arco de desenvolvimento canônico da plataforma
+- **Blocos Foundation até AS** estão completos
+- O sistema alcançou **maturidade Nível 19: Organismo Adaptativo Governado com Hub Canon Totalmente Operacional**
 - **200+ Edge Functions** implantadas em todos os estágios de pipeline e engines de inteligência
 
 Marcos principais pós-138:
@@ -297,6 +297,7 @@ Marcos principais pós-138:
 - Sprint 193–200: Hardening de Segurança e Integridade Canon (Bloco AP)
 - Sprint 201: Ajustes Operacionais — unificação do pipeline, normalização de lifecycle (Bloco AQ)
 - Sprint 202: Consolidação de Review — autoridade única, cron de ingestão diária (Bloco AR)
+- Sprint 203–207: Ativação Operacional Completa do Hub Canon (Bloco AS) — UI de Revisão Humana, Repo Trust no Cron, Producers de Sinais Operacionais, Mineração de Padrões, Recalibração Automática de Confiança
 
 ---
 
