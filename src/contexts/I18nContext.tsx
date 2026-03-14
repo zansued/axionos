@@ -563,6 +563,7 @@ const translations = {
     "routeDesc.knowledgeHealth": "Renewal, revalidation & confidence recovery",
     "routeDesc.knowledgePortfolio": "Portfolio optimization, redundancy & coverage analysis",
     "routeDesc.capabilities": "Capability registry & trust",
+    "routeDesc.canonIntelligenceControl": "Meta-learning governance & canon intelligence control",
     "routeDesc.poisoningPrevention": "Detect, quarantine, and review suspicious knowledge",
     "routeDesc.securityMonitoring": "Automated anomaly detection & alerts",
     "routeDesc.securityIntelligence": "Threat analysis & detection",
