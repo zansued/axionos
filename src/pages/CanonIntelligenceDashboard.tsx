@@ -122,6 +122,7 @@ export default function CanonIntelligenceDashboard() {
   const learning = useCanonLearning();
 
   const [activeSection, setActiveSection] = useState<string>("knowledge");
+  const [activeTabOverride, setActiveTabOverride] = useState<string | null>(null);
 
   const pipeline = useCanonPipeline();
   const pStats = pipeline.stats;
