@@ -4,14 +4,13 @@ import { generateProposalsFromSignals } from "../_shared/canon-evolution/canon-e
 import { aggregateSignals, filterWeakGroups } from "../_shared/canon-evolution/canon-evolution-aggregation.ts";
 import { routeProposal, summarizeProposals } from "../_shared/canon-evolution/canon-evolution-routing.ts";
 import { validateReviewTransition, getAvailableReviewTransitions } from "../_shared/canon-evolution/canon-evolution-proposal-types.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { handleCors, getCorsHeaders } from "../_shared/cors.ts";
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const corsRes = handleCors(req);
+  if (corsRes) return corsRes;
+
+  const corsHeaders = getCorsHeaders(req);
 
   try {
     const supabase = createClient(
