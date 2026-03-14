@@ -244,7 +244,7 @@ export default function SystemHealthDashboard() {
         {metricsList.length === 0 && !metrics.isLoading && (
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">
-              No health data yet. Click "Evaluate Health" to generate the first assessment.
+              Nenhum dado de saúde ainda. Clique em "Avaliar Saúde" para gerar a primeira avaliação.
             </CardContent>
           </Card>
         )}
