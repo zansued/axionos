@@ -249,39 +249,6 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
               {ingestingAll ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Zap className="h-3.5 w-3.5 mr-1.5" />}
               Ingerir Todas as Fontes
             </Button>
-            {stats && stats.pendingCandidates > 0 && (
-              <Button size="sm" variant="secondary" onClick={runReviewPipeline} disabled={reviewingPipeline}>
-                {reviewingPipeline ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Bot className="h-3.5 w-3.5 mr-1.5" />}
-                Revisar e Promover ({stats.pendingCandidates} pendentes)
-              </Button>
-            )}
-            {stats && stats.approvedCandidates > 0 && (
-              <Button size="sm" variant="default" onClick={batchPromoteApproved} disabled={promoting}>
-                {promoting ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <ArrowUpCircle className="h-3.5 w-3.5 mr-1.5" />}
-                Promover {stats.approvedCandidates} ao Canon
-              </Button>
-            )}
-            <Button
-              size="sm" variant="secondary"
-              onClick={() => evolution.runFullPipeline.mutate()}
-              disabled={evolution.runFullPipeline.isPending}
-              className="border-primary/30"
-            >
-              {evolution.runFullPipeline.isPending
-                ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                : <Sparkles className="h-3.5 w-3.5 mr-1.5" />}
-              Pipeline Completo
-            </Button>
-            <Button
-              size="sm" variant="outline"
-              onClick={() => evolution.processBacklog.mutate()}
-              disabled={evolution.processBacklog.isPending}
-            >
-              {evolution.processBacklog.isPending
-                ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                : <TrendingUp className="h-3.5 w-3.5 mr-1.5" />}
-              Processar Backlog
-            </Button>
             <Button size="sm" variant="ghost" onClick={onRefresh}>
               <RefreshCw className="h-3.5 w-3.5 mr-1.5" />Atualizar
             </Button>
