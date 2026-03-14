@@ -60,33 +60,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
   const [ingestingAll, setIngestingAll] = useState(false);
   const [repoUrl, setRepoUrl] = useState("");
   const [absorbingRepo, setAbsorbingRepo] = useState(false);
-  const [_reviewingPipeline, _setReviewingPipeline] = useState(false);
   const [discoveryTopic, setDiscoveryTopic] = useState("");
-  const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
-  const evolution = useCanonEvolutionEngine();
-  const discovery = useSourceDiscoveryAgent();
-
-  const runReviewPipeline = async () => {
-    if (!currentOrg?.id) return;
-    setReviewingPipeline(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("canon-review-engine", {
-        body: { action: "run_full_pipeline", organization_id: currentOrg.id },
-      });
-      if (error) throw error;
-      const reviewInfo = data?.review || {};
-      const promoInfo = data?.promotion || {};
-      toast({
-        title: "Pipeline de Review Concluído",
-        description: `Revisados: ${reviewInfo.reviewed || 0} (${reviewInfo.approved || 0} aprovados, ${reviewInfo.rejected || 0} rejeitados). Promovidos: ${promoInfo.promoted || 0} ao Canon.`,
-      });
-      onRefresh();
-    } catch (err: any) {
-      toast({ title: "Falha no Pipeline de Review", description: err.message, variant: "destructive" });
-    } finally {
-      setReviewingPipeline(false);
-    }
-  };
 
   const seedSources = async () => {
     if (!currentOrg?.id) return;
