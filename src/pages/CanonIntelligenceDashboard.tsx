@@ -317,6 +317,9 @@ export default function CanonIntelligenceDashboard() {
               </Tabs>
             </CardContent>
           </Card>
+
+          {/* ── Lifecycle Health Check ── */}
+          {activeSection === "governance" && <LifecycleHealthCheck />}
         </div>
       </TooltipProvider>
     </AppShell>
