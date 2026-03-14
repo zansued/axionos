@@ -161,9 +161,9 @@ export default function SystemHealthDashboard() {
                 const total = (evidenceSummary.observed || 0) + (evidenceSummary.inferred || 0) + (evidenceSummary.seeded || 0) + (evidenceSummary.insufficient || 0);
                 const observedRatio = total > 0 ? (evidenceSummary.observed || 0) / total : 0;
                 const seededRatio = total > 0 ? (evidenceSummary.seeded || 0) / total : 0;
-                const trustLabel = observedRatio >= 0.7 ? "Strongly Observed"
-                  : seededRatio >= 0.5 ? "Bootstrap-Heavy"
-                  : "Mixed";
+                const trustLabel = observedRatio >= 0.7 ? "Fortemente Observado"
+                  : seededRatio >= 0.5 ? "Predominância Bootstrap"
+                  : "Misto";
                 const trustColor = observedRatio >= 0.7 ? "text-emerald-400"
                   : seededRatio >= 0.5 ? "text-yellow-400"
                   : "text-blue-400";
