@@ -32,6 +32,7 @@ import {
   OrganismMemoryDashboard, OrganismConsoleDashboard,
   GovernanceInsights, GovernanceDecisions, GovernanceExecutionHandoff,
   GovernanceChangeApplicationTracking,
+  CanonIntelligenceControlCenter,
 } from "./lazy-pages";
 
 export function OwnerRoutes() {
