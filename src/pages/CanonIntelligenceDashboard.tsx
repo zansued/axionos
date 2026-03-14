@@ -196,6 +196,8 @@ export default function CanonIntelligenceDashboard() {
         return <KnowledgeRenewalTab />;
       case "extraction":
         return <SkillExtractionTab />;
+      case "review":
+        return <SkillReviewTab />;
       case "retrieval":
         return <RetrievalExplorerTab sessions={runtime.sessions} feedback={runtime.feedback} />;
       case "analytics":
