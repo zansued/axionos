@@ -20,7 +20,7 @@ import { logSecurityAudit } from "../_shared/security-audit.ts";
 import { callAI, getAIConfig } from "../_shared/ai-client.ts";
 import { logSecurityAudit, logValidationFailure } from "../_shared/security-audit.ts";
 import { callAI, getAIConfig } from "../_shared/ai-client.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 
 const ACTIONS = ["discover_sources", "discover_repos", "score_candidates", "approve_candidate", "reject_candidate", "get_candidates"] as const;
 
