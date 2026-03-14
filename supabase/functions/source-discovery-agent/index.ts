@@ -15,7 +15,9 @@
 
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticateWithRateLimit } from "../_shared/auth.ts";
-import { validateSchema, type Schema } from "../_shared/input-validation.ts";
+import { validateSchema, logValidationFailure, type Schema } from "../_shared/input-validation.ts";
+import { logSecurityAudit } from "../_shared/security-audit.ts";
+import { callAI, getAIConfig } from "../_shared/ai-client.ts";
 import { logSecurityAudit, logValidationFailure } from "../_shared/security-audit.ts";
 import { callAI, getAIConfig } from "../_shared/ai-client.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
