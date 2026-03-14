@@ -66,6 +66,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh, onNavigateTo
   const { stats, promoting, batchPromoteApproved } = useCanonPipeline();
   const evolution = useCanonEvolutionEngine();
   const discovery = useSourceDiscoveryAgent();
+  const review = useCanonCandidateReview();
 
   const seedSources = async () => {
     if (!currentOrg?.id) return;
