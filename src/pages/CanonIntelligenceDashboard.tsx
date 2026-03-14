@@ -204,6 +204,8 @@ export default function CanonIntelligenceDashboard() {
         return <SkillReviewTab />;
       case "bindings":
         return <CapabilityBindingTab />;
+      case "runtime":
+        return <SkillRuntimeTab />;
       case "retrieval":
         return <RetrievalExplorerTab sessions={runtime.sessions} feedback={runtime.feedback} />;
       case "analytics":
