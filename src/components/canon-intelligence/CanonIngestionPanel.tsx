@@ -194,7 +194,7 @@ export function CanonIngestionPanel({ sources, syncRuns, onRefresh }: CanonInges
           <MiniStat label="Fontes" value={stats.totalSources} />
           <MiniStat label="Candidatos" value={stats.totalCandidates} />
           <MiniStat label="Pendente Review" value={stats.pendingCandidates} accent />
-          <MiniStat label="Revisão Humana" value={stats.needsHumanReview || 0} />
+          <MiniStat label="Revisão Humana" value={stats.needsHumanReview || 0} onClick={props.onNavigateToHumanReview} clickable />
           <MiniStat label="Prontos p/ Promoção" value={stats.approvedCandidates} accent />
           <MiniStat label="Promovidos" value={stats.promotedCandidates} />
           <MiniStat label="Entradas Canon" value={stats.totalCanonEntries} />
