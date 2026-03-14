@@ -49,6 +49,8 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 | AP | 193–200 | Security Hardening & Canon Integrity | ✅ Complete |
 | AQ | 201 | Operational Adjustments — pipeline unification, lifecycle normalization | ✅ Complete |
 | AR | 202 | Review Authority Consolidation — single review authority, daily cron | ✅ Complete |
+| AS-203 | 203 | Human Review UI for Canon Candidates | ✅ Complete |
+| AS-204 | 204 | Repo Trust in Daily Cron Pipeline | ✅ Complete |
 
 ---
 
