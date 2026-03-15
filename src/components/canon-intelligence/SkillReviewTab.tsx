@@ -191,7 +191,7 @@ export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab
       queryClient.invalidateQueries({ queryKey: ["skill-extraction-status"] });
       queryClient.invalidateQueries({ queryKey: ["skill-review-stats"] });
     } catch (e: any) {
-      toast({ title: "Erro no AI Review", description: e.message, variant: "destructive" });
+      toast({ title: "Erro no AI Review", description: getUserFriendlyError(e), variant: "destructive" });
     } finally {
       setAiReviewing(false);
     }
