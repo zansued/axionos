@@ -317,7 +317,7 @@ export async function maybePromoteToPattern(
   sc: SupabaseClient,
   orgId: string,
   groupId: string
-): Promise<void> {
+): Promise<boolean> {
   const { data: group } = await sc
     .from("nervous_system_signal_groups")
     .select("*")
