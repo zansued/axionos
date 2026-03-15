@@ -8,6 +8,7 @@ import { Loader2, CheckCircle, XCircle, AlertTriangle, ChevronDown, ChevronUp, S
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getUserFriendlyError } from "@/lib/error-utils";
 
 interface ReviewableSkill {
   id: string;
