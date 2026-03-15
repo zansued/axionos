@@ -1,14 +1,14 @@
 /**
- * AI Nervous System — Sprint NS-01 through NS-04 Domain Types
+ * AI Nervous System — Sprint NS-01 through NS-05 Domain Types
  *
  * ARCHITECTURE NOTES:
  * - Read-only contract between backend and frontend.
  * - Frontend NEVER writes to nervous system tables.
- * - All processing (classification, context, decisions) is backend-only.
+ * - All processing (classification, context, decisions, surfacing) is backend-only.
  *
  * EVOLUTION PATH:
- * - NS-05: Surfacing & execution types
  * - NS-06: Learning feedback types
+ * - NS-07: Execution layer
  */
 
 // ═══════════════════════════════════════════════════
