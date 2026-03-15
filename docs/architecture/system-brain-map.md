@@ -29,17 +29,22 @@ It is designed to be:
 ```mermaid
 flowchart TB
 
-  %% ══════════════════════════════════════════════
-  %% SECTION 1 — SURFACES
-  %% ══════════════════════════════════════════════
+  %% =========================================================
+  %% AXIONOS — UNIFIED OPERATIONAL ARCHITECTURE
+  %% One Organism · One Cortex · One Motor System · One Spine
+  %% =========================================================
+
+  %% =========================
+  %% 1 · SURFACES
+  %% =========================
   subgraph SURFACES["1 · Operator & Product Surfaces"]
     direction TB
-    UI["AxionOS UI"]
+    UI["AxionOS Unified Interface"]
 
     subgraph BUILDER["Builder Mode"]
-      Projects["Projects / Initiatives"]
+      Projects["Projects & Initiatives"]
       Pipelines["Pipelines"]
-      RuntimeUI["Runtime"]
+      RuntimeUI["Runtime Console"]
       ObsUI["Execution & Platform Observability"]
     end
 
@@ -47,17 +52,18 @@ flowchart TB
       HealthUI["System Health"]
       CanonUI["Canon Intelligence Hub"]
       LibraryUI["Pattern Library"]
+      NSUI["Nervous System Center"]
       ActionsUI["Operational Actions Center"]
-      GovernanceUI["Governance / Approval Center"]
+      GovernanceUI["Governance & Approval Center"]
     end
   end
 
   UI --> BUILDER
   UI --> OWNER
 
-  %% ══════════════════════════════════════════════
-  %% SECTION 2 — KNOWLEDGE LAYER
-  %% ══════════════════════════════════════════════
+  %% =========================
+  %% 2 · KNOWLEDGE LAYER
+  %% =========================
   subgraph KNOWLEDGE["2 · Knowledge Layer"]
     direction LR
     Sources["Source Registry"]
@@ -84,94 +90,122 @@ flowchart TB
   LibraryUI --> Patterns
   LibraryUI --> Retrieval
 
-  %% ══════════════════════════════════════════════
-  %% SECTION 3 — SIGNALS / STATE EVALUATION
-  %% ══════════════════════════════════════════════
-  subgraph SIGNALS["3 · State Evaluation Layer"]
-    direction LR
-    DeliveryState["Delivery State"]
-    Metrics["Metrics Contract"]
-    Events["Events System"]
-    Readiness["Readiness Engine"]
-    Blockers["Blockers"]
-    Warnings["Warnings"]
+  %% =========================
+  %% 3 · NERVOUS SYSTEM
+  %% =========================
+  subgraph NS["3 · AI Nervous System · Operational Cortex"]
+    direction TB
+
+    subgraph NS_SIGNAL["Signal Foundation"]
+      NSEvents["Signals & Events"]
+      NSMetrics["Metrics Inputs"]
+      NSFingerprint["Fingerprinting & Dedup"]
+    end
+
+    subgraph NS_CLASSIFY["Classification & Grouping"]
+      NSClassify["Signal Classification"]
+      NSEnrich["Enrichment"]
+      NSGroups["Signal Groups"]
+      NSPatterns["Pattern Promotion"]
+    end
+
+    subgraph NS_CONTEXT["Context Engine"]
+      NSContext["Contextualization Engine"]
+      NSLinks["Context Links"]
+      NSSequences["Sequence Detection"]
+    end
+
+    subgraph NS_DECIDE["Decision & Surfacing"]
+      NSDecisions["Advisory Decisions"]
+      NSSurface["Surfaced Triage Items"]
+      NSHandoff["NS → Action Engine Handoff"]
+    end
   end
 
-  Projects --> DeliveryState
-  Pipelines --> DeliveryState
-  RuntimeUI --> DeliveryState
-  DeliveryState --> Metrics
-  DeliveryState --> Events
-  Metrics --> Readiness
-  Events --> Readiness
-  Readiness --> Blockers
-  Readiness --> Warnings
+  Projects --> NSEvents
+  Pipelines --> NSEvents
+  RuntimeUI --> NSEvents
+  RuntimeUI --> NSMetrics
+  ObsUI --> NSMetrics
 
-  %% ══════════════════════════════════════════════
-  %% SECTION 4 — POLICY & GOVERNANCE
-  %% ══════════════════════════════════════════════
+  NSEvents --> NSFingerprint
+  NSMetrics --> NSClassify
+  NSFingerprint --> NSClassify
+  NSClassify --> NSEnrich
+  NSEnrich --> NSGroups
+  NSGroups --> NSPatterns
+  NSEnrich --> NSContext
+  NSGroups --> NSContext
+  NSContext --> NSLinks
+  NSContext --> NSSequences
+  NSContext --> NSDecisions
+  NSDecisions --> NSSurface
+  NSSurface --> NSHandoff
+
+  NSUI --> NSEvents
+  NSUI --> NSGroups
+  NSUI --> NSContext
+  NSUI --> NSDecisions
+  NSUI --> NSSurface
+
+  %% =========================
+  %% 4 · POLICY & GOVERNANCE
+  %% =========================
   subgraph POLICY["4 · Policy & Governance Layer"]
     direction LR
     PolicyEngine["Policy Engine"]
     GovRules["Governance Rules"]
     Risk["Risk Classification"]
-    Approvals["Approval Requirements"]
-    Compliance["Compliance / Canon Boundaries"]
+    ApprovalReq["Approval Requirements"]
+    Compliance["Compliance & Canon Boundaries"]
   end
 
-  Metrics --> PolicyEngine
-  Events --> PolicyEngine
-  Readiness --> PolicyEngine
-  Blockers --> PolicyEngine
+  NSMetrics --> PolicyEngine
+  NSEvents --> PolicyEngine
+  NSContext --> PolicyEngine
+  NSDecisions --> PolicyEngine
 
   GovRules --> PolicyEngine
   Risk --> PolicyEngine
-  Approvals --> PolicyEngine
+  ApprovalReq --> PolicyEngine
   Compliance --> PolicyEngine
 
-  %% ══════════════════════════════════════════════
-  %% SECTION 5 — ACTION ENGINE
-  %% ══════════════════════════════════════════════
-  subgraph ACTION["5 · Action Engine"]
+  GovernanceUI --> PolicyEngine
+  GovernanceUI --> ApprovalReq
+
+  %% =========================
+  %% 5 · ACTION ENGINE
+  %% =========================
+  subgraph ACTION["5 · Governed Action Engine · Motor System"]
     direction TB
 
-    subgraph AE_INTAKE["Trigger Intake"]
-      Triggers["Action Triggers"]
-      TriggerIntake["Trigger Intake Processor"]
-      TriggerClassification["Trigger Classification"]
+    subgraph AE_FORM["Formalization"]
+      ActionRegistry["Action Registry Entries"]
+      ActionPayload["Action Payload Builder"]
+      ActionApproval["Approval Workflow"]
     end
 
-    subgraph AE_RESOLVE["Intent & Resolution"]
-      IntentMapping["Intent Mapping"]
-      PolicyResolution["Policy-Aware Resolution"]
-      ActionRecordCreation["Action Record Creation"]
-    end
-
-    subgraph AE_REGISTRY["Registry & Dispatch"]
-      ActionRegistry["Action Registry"]
-      ActionQueue["Action Queue"]
-      DispatchRequest["Dispatch Request Builder"]
+    subgraph AE_EXEC["Governed Execution"]
+      ActionQueue["Execution Queue"]
+      ExecutionWorker["Axion Execution Worker"]
+      ActionAudit["Action Audit Events"]
     end
   end
 
-  Metrics --> Triggers
-  Events --> Triggers
-  Readiness --> Triggers
-  PolicyEngine --> Triggers
+  NSHandoff --> ActionPayload
+  PolicyEngine --> ActionPayload
+  ActionPayload --> ActionRegistry
+  ActionRegistry --> ActionApproval
+  ActionApproval --> ActionQueue
+  ActionQueue --> ExecutionWorker
+  ExecutionWorker --> ActionAudit
 
-  Triggers --> TriggerIntake
-  TriggerIntake --> TriggerClassification
-  TriggerClassification --> IntentMapping
-  IntentMapping --> PolicyResolution
-  PolicyEngine --> PolicyResolution
-  PolicyResolution --> ActionRecordCreation
-  ActionRecordCreation --> ActionRegistry
-  ActionRegistry --> ActionQueue
-  ActionQueue --> DispatchRequest
+  ActionsUI --> ActionRegistry
+  GovernanceUI --> ActionApproval
 
-  %% ══════════════════════════════════════════════
-  %% SECTION 6 — AGENTOS ORCHESTRATOR
-  %% ══════════════════════════════════════════════
+  %% =========================
+  %% 6 · AGENTOS ORCHESTRATOR
+  %% =========================
   subgraph ORCH["6 · AgentOS Orchestrator"]
     direction TB
     Dispatch["Dispatch Contract"]
@@ -180,10 +214,10 @@ flowchart TB
     ContextAsm["Context Assembly"]
     KPInjection["Knowledge Packet Injection"]
     ExecConstraints["Execution Constraints"]
-    Swarm["Agent Swarm / Task Routing"]
+    Swarm["Agent Swarm & Task Routing"]
   end
 
-  DispatchRequest --> Dispatch
+  ActionRegistry --> Dispatch
   KnowledgePackets --> KPInjection
   PolicyEngine --> ExecConstraints
 
@@ -194,9 +228,9 @@ flowchart TB
   ExecConstraints --> ContextAsm
   ContextAsm --> Swarm
 
-  %% ══════════════════════════════════════════════
-  %% SECTION 7 — EXECUTION LAYER
-  %% ══════════════════════════════════════════════
+  %% =========================
+  %% 7 · EXECUTION LAYER
+  %% =========================
   subgraph EXEC["7 · Execution Layer"]
     direction TB
     DevAgent["Developer / Code Agent"]
@@ -204,7 +238,7 @@ flowchart TB
     DeployAgent["Deployment Agent"]
     RuntimeGuardian["Runtime Guardian"]
     GovAgent["Governance Agent"]
-    Human["Human Approval / Operator"]
+    Human["Human Operator / Approval Actor"]
 
     subgraph EXT["External Systems"]
       GitHub["GitHub"]
@@ -229,16 +263,16 @@ flowchart TB
   GovAgent --> CIPlatform
   Human --> GitHub
 
-  %% ══════════════════════════════════════════════
-  %% SECTION 8 — RUNTIME & DELIVERY
-  %% ══════════════════════════════════════════════
+  %% =========================
+  %% 8 · RUNTIME & DELIVERY
+  %% =========================
   subgraph RUNTIME["8 · Runtime & Delivery Systems"]
     direction LR
     Repo["Repositories"]
-    CI["Build / CI / Validation"]
+    CI["Build · CI · Validation"]
     Deploy["Deploy Targets"]
     LiveRuntime["Live Runtime"]
-    Telemetry["Observability / Telemetry"]
+    Telemetry["Observability & Telemetry"]
   end
 
   GitHub --> Repo
@@ -249,14 +283,13 @@ flowchart TB
   Deploy --> LiveRuntime
   LiveRuntime --> Telemetry
 
-  %% ══════════════════════════════════════════════
-  %% SECTION 9 — LEARNING & COMPOUNDING LOOP
-  %% ══════════════════════════════════════════════
+  %% =========================
+  %% 9 · LEARNING LOOP
+  %% =========================
   subgraph LEARNING["9 · Learning & Compounding Loop"]
     direction TB
     Evidence["Execution Evidence"]
-    PatternsExtract["Pattern Extraction"]
-    CanonUpdate["Canon Update / Promotion / Deprecation"]
+    Feedback["Execution Outcome Feedback"]
     Memory["Institutional Memory"]
     Improvement["Adaptive Improvement"]
   end
@@ -264,27 +297,57 @@ flowchart TB
   Telemetry --> Evidence
   CI --> Evidence
   Repo --> Evidence
-  Evidence --> PatternsExtract
-  PatternsExtract --> CanonUpdate
-  CanonUpdate --> Canon
+  ActionAudit --> Feedback
+  ExecutionWorker --> Feedback
+
   Evidence --> Memory
+  Feedback --> Memory
   Memory --> Improvement
+
   Improvement --> GovRules
   Improvement --> Selection
-  Improvement --> Readiness
+  Improvement --> NSClassify
+  Improvement --> NSContext
+  Improvement --> NSDecisions
+  Improvement --> Patterns
+  Improvement --> Canon
 
-  %% ══════════════════════════════════════════════
-  %% UI FEEDBACK CONNECTIONS
-  %% ══════════════════════════════════════════════
-  Metrics --> ObsUI
-  Metrics --> HealthUI
-  Readiness --> Pipelines
-  Blockers --> Pipelines
+  %% =========================
+  %% 10 · UI FEEDBACK
+  %% =========================
+  NSMetrics --> ObsUI
+  NSMetrics --> HealthUI
+  NSGroups --> NSUI
+  NSContext --> NSUI
+  NSSurface --> NSUI
   ActionRegistry --> ActionsUI
-  Approvals --> GovernanceUI
+  ActionApproval --> GovernanceUI
   Telemetry --> RuntimeUI
   Canon --> CanonUI
   Patterns --> LibraryUI
+
+  %% =========================
+  %% STYLES
+  %% =========================
+  classDef surface fill:#0f172a,stroke:#38bdf8,color:#e2e8f0,stroke-width:2px;
+  classDef knowledge fill:#1e293b,stroke:#a78bfa,color:#f8fafc,stroke-width:2px;
+  classDef nervous fill:#0b3b2e,stroke:#34d399,color:#ecfdf5,stroke-width:2px;
+  classDef policy fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+  classDef motor fill:#3b0f1d,stroke:#fb7185,color:#fff1f2,stroke-width:2px;
+  classDef orchestration fill:#1f2937,stroke:#60a5fa,color:#f9fafb,stroke-width:2px;
+  classDef execution fill:#312e81,stroke:#818cf8,color:#eef2ff,stroke-width:2px;
+  classDef runtime fill:#134e4a,stroke:#2dd4bf,color:#f0fdfa,stroke-width:2px;
+  classDef learning fill:#3f3f46,stroke:#facc15,color:#fefce8,stroke-width:2px;
+
+  class UI,Projects,Pipelines,RuntimeUI,ObsUI,HealthUI,CanonUI,LibraryUI,NSUI,ActionsUI,GovernanceUI surface;
+  class Sources,Ingestion,Candidates,Canon,Patterns,Retrieval,KnowledgePackets knowledge;
+  class NSEvents,NSMetrics,NSFingerprint,NSClassify,NSEnrich,NSGroups,NSPatterns,NSContext,NSLinks,NSSequences,NSDecisions,NSSurface,NSHandoff nervous;
+  class PolicyEngine,GovRules,Risk,ApprovalReq,Compliance policy;
+  class ActionRegistry,ActionPayload,ActionApproval,ActionQueue,ExecutionWorker,ActionAudit motor;
+  class Dispatch,Selection,CapMatch,ContextAsm,KPInjection,ExecConstraints,Swarm orchestration;
+  class DevAgent,RepairAgent,DeployAgent,RuntimeGuardian,GovAgent,Human,GitHub,CIPlatform,DeployPlatform,CloudServices,Databases execution;
+  class Repo,CI,Deploy,LiveRuntime,Telemetry runtime;
+  class Evidence,Feedback,Memory,Improvement learning;
 ```
 
 ---
