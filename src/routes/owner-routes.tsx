@@ -4,7 +4,7 @@ import {
   SystemIntelligence, SystemHealthDashboard, AdoptionIntelligence, DeliveryOutcomes,
   Observability, CognitiveArchitectureMap,
   PatternLibraryDashboard, CanonIntelligenceDashboard, KnowledgeHealthDashboard,
-  KnowledgePortfolioDashboard, KnowledgeDemandForecastDashboard, KnowledgeAcquisitionDashboard,
+  KnowledgePortfolioDashboard, SovereignCapabilitiesDashboard, KnowledgeDemandForecastDashboard, KnowledgeAcquisitionDashboard,
   KnowledgeAcquisitionExecutionDashboard, KnowledgeAcquisitionRoiDashboard,
   SecurityWarRoom, SecurityIntelligenceDashboard, RedTeamSimulationDashboard,
   BlueTeamDefenseDashboard, PurpleLearningDashboard, CanonPoisoningPreventionDashboard,
