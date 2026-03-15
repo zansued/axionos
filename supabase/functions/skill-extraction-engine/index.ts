@@ -1,7 +1,17 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, errorResponse } from "../_shared/cors.ts";
-import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { authenticate } from "../_shared/auth.ts";
+import { checkRateLimit } from "../_shared/rate-limit.ts";
 import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
+
+const READ_ACTIONS = new Set([
+  "extraction_status", "list_reviewable", "review_history",
+  "list_bindings", "skill_context_for_agent",
+]);
+const WRITE_ACTIONS = new Set([
+  "extract_skills", "review_skill", "batch_review",
+  "ai_review_batch", "bind_capability", "auto_bind",
+]);
 
 /**
  * Skill Extraction Engine — SF-2
@@ -31,12 +41,23 @@ Deno.serve(async (req) => {
   if (corsRes) return corsRes;
 
   try {
-    const authResult = await authenticateWithRateLimit(req, "skill-extraction-engine");
+    const authResult = await authenticate(req);
     if (authResult instanceof Response) return authResult;
     const { user, serviceClient: sc } = authResult;
 
     const body = await req.json();
     const { action, organization_id: payloadOrgId, ...params } = body;
+
+    // Granular rate limiting: read vs write
+    const rateScope = READ_ACTIONS.has(action)
+      ? "skill-extraction-engine-read"
+      : WRITE_ACTIONS.has(action)
+        ? "skill-extraction-engine-write"
+        : "skill-extraction-engine";
+    const { allowed } = await checkRateLimit(user.id, rateScope);
+    if (!allowed) {
+      return errorResponse("Limite de requisições excedido. Tente novamente em breve.", 429, req);
+    }
 
     const { orgId, error: orgError } = await resolveAndValidateOrg(sc, user.id, payloadOrgId);
     if (orgError || !orgId) return errorResponse(orgError || "Organization access denied", 403, req);

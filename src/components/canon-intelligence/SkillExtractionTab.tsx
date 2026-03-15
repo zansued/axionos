@@ -6,6 +6,7 @@ import { Loader2, Play, CheckCircle, AlertTriangle, Boxes, Package } from "lucid
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
+import { getUserFriendlyError } from "@/lib/error-utils";
 
 interface ExtractionResult {
   extracted: number;
@@ -44,6 +45,10 @@ export function SkillExtractionTab() {
       if (res.error) throw res.error;
       return res.data;
     },
+    retry: (failureCount, error: any) => {
+      if (error?.message?.includes("429") || error?.message?.includes("Rate limit")) return false;
+      return failureCount < 2;
+    },
   });
 
   const runExtraction = async () => {
@@ -61,7 +66,7 @@ export function SkillExtractionTab() {
       });
       refetch();
     } catch (e: any) {
-      toast({ title: "Erro na extração", description: e.message, variant: "destructive" });
+      toast({ title: "Erro na extração", description: getUserFriendlyError(e), variant: "destructive" });
     } finally {
       setRunning(false);
     }

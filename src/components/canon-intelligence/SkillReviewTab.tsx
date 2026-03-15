@@ -8,6 +8,7 @@ import { Loader2, CheckCircle, XCircle, AlertTriangle, ChevronDown, ChevronUp, S
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getUserFriendlyError } from "@/lib/error-utils";
 
 interface ReviewableSkill {
   id: string;
@@ -69,6 +70,10 @@ export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab
       if (res.error) throw res.error;
       return res.data?.skills || [];
     },
+    retry: (failureCount, error: any) => {
+      if (error?.message?.includes("429") || error?.message?.includes("Rate limit")) return false;
+      return failureCount < 2;
+    },
   });
 
   const { data: reviewStats } = useQuery({
@@ -81,6 +86,10 @@ export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab
       });
       if (res.error) throw res.error;
       return res.data;
+    },
+    retry: (failureCount, error: any) => {
+      if (error?.message?.includes("429") || error?.message?.includes("Rate limit")) return false;
+      return failureCount < 2;
     },
   });
 
@@ -116,7 +125,7 @@ export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab
       refetch();
       queryClient.invalidateQueries({ queryKey: ["skill-extraction-status"] });
     } catch (e: any) {
-      toast({ title: "Erro no review", description: e.message, variant: "destructive" });
+      toast({ title: "Erro no review", description: getUserFriendlyError(e), variant: "destructive" });
     } finally {
       setSubmitting(false);
     }
@@ -146,7 +155,7 @@ export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab
       refetch();
       queryClient.invalidateQueries({ queryKey: ["skill-extraction-status"] });
     } catch (e: any) {
-      toast({ title: "Erro no batch review", description: e.message, variant: "destructive" });
+      toast({ title: "Erro no batch review", description: getUserFriendlyError(e), variant: "destructive" });
     } finally {
       setSubmitting(false);
     }
@@ -182,7 +191,7 @@ export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab
       queryClient.invalidateQueries({ queryKey: ["skill-extraction-status"] });
       queryClient.invalidateQueries({ queryKey: ["skill-review-stats"] });
     } catch (e: any) {
-      toast({ title: "Erro no AI Review", description: e.message, variant: "destructive" });
+      toast({ title: "Erro no AI Review", description: getUserFriendlyError(e), variant: "destructive" });
     } finally {
       setAiReviewing(false);
     }
