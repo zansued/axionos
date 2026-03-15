@@ -20,6 +20,7 @@ const FUNCTION_LIMITS: Record<string, number> = {
   "canon-evolution-control": 120,
   "deep-repo-absorber-engine": 90,
   "source-discovery-agent": 60,
+  "skill-extraction-engine": 120,
 };
 
 /**
