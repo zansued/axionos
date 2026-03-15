@@ -1,4 +1,4 @@
-import { useState, forwardRef } from "react";
+import { useState, forwardRef, type Ref } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -498,13 +498,15 @@ function ScoreSliders({ scores, onChange }: {
   );
 }
 
-function StatCard({ label, value, accent }: { label: string; value: number; accent?: boolean }) {
-  return (
-    <Card className="border-border/30 bg-card/40">
-      <CardContent className="pt-3 pb-2.5 text-center">
-        <p className={`text-lg font-bold ${accent ? "text-primary" : "text-foreground"}`}>{value}</p>
-        <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5">{label}</p>
-      </CardContent>
-    </Card>
-  );
-}
+const StatCard = forwardRef<HTMLDivElement, { label: string; value: number; accent?: boolean }>(
+  function StatCard({ label, value, accent }, ref) {
+    return (
+      <Card ref={ref} className="border-border/30 bg-card/40">
+        <CardContent className="pt-3 pb-2.5 text-center">
+          <p className={`text-lg font-bold ${accent ? "text-primary" : "text-foreground"}`}>{value}</p>
+          <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5">{label}</p>
+        </CardContent>
+      </Card>
+    );
+  }
+);
