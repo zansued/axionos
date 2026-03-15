@@ -1,75 +1,126 @@
+/**
+ * Nervous System Engine — NS-01: Signal Foundation
+ *
+ * ARCHITECTURE NOTES:
+ * - This edge function is the controlled gateway to the nervous system.
+ * - Writes (emit_event) go through the trusted emitNervousSystemEvent utility
+ *   using a service-role client, bypassing RLS intentionally.
+ * - Reads (list_events, get_pulse, list_patterns) use the service client
+ *   but enforce org membership validation before any query.
+ * - The frontend does NOT write directly to nervous_system_events tables.
+ * - Rate limiting is granular: reads have high limits, writes are controlled.
+ *
+ * EVOLUTION:
+ * - NS-02 will add classification worker integration.
+ * - NS-05 will add SSE/realtime streaming endpoints.
+ * - This function remains the API surface; workers are separate concerns.
+ *
+ * Actions:
+ *   READ:  list_events, get_pulse, list_patterns
+ *   WRITE: emit_event (backend-triggered only in production)
+ */
+
 import { handleCors, errorResponse } from "../_shared/cors.ts";
 import { authenticate } from "../_shared/auth.ts";
 import { checkRateLimit } from "../_shared/rate-limit.ts";
 import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 import { emitNervousSystemEvent } from "../_shared/nervous-system.ts";
 
-/**
- * Nervous System Engine — NS-01
- *
- * Actions:
- *   emit_event    — record a new nervous system signal
- *   list_events   — query recent events
- *   get_pulse     — get live system pulse
- *   list_patterns — get known patterns
- */
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 const READ_ACTIONS = new Set(["list_events", "get_pulse", "list_patterns"]);
 const WRITE_ACTIONS = new Set(["emit_event"]);
+const ALL_ACTIONS = new Set([...READ_ACTIONS, ...WRITE_ACTIONS]);
+
+// Validation constants
+const MAX_LIST_LIMIT = 200;
+const DEFAULT_LIST_LIMIT = 50;
+
+const VALID_DOMAINS = new Set([
+  "runtime", "pipeline", "agent", "governance",
+  "cost", "adoption", "deployment", "security", "learning",
+]);
+
+const VALID_SEVERITIES = new Set(["low", "medium", "high", "critical"]);
+
+const VALID_STATUSES = new Set([
+  "new", "classified", "contextualized", "decided",
+  "surfaced", "resolved", "archived",
+]);
 
 Deno.serve(async (req) => {
   const corsRes = handleCors(req);
   if (corsRes) return corsRes;
 
   try {
+    // 1. Authenticate
     const authResult = await authenticate(req);
     if (authResult instanceof Response) return authResult;
     const { user, serviceClient: sc } = authResult;
 
-    const body = await req.json();
-    const { action, organization_id: payloadOrgId, ...params } = body;
-
-    // Granular rate limiting
-    const rateScope = READ_ACTIONS.has(action)
-      ? "nervous-system-engine-read"
-      : WRITE_ACTIONS.has(action)
-        ? "nervous-system-engine-write"
-        : "nervous-system-engine";
-    const { allowed } = await checkRateLimit(user.id, rateScope);
-    if (!allowed) {
-      return errorResponse("Limite de requisições excedido. Tente novamente em breve.", 429, req);
+    // 2. Parse body
+    let body: Record<string, unknown>;
+    try {
+      body = await req.json();
+    } catch {
+      return json({ error: "Invalid JSON body" }, 400);
     }
 
-    const { orgId, error: orgError } = await resolveAndValidateOrg(sc, user.id, payloadOrgId);
-    if (orgError || !orgId) return errorResponse(orgError || "Organization access denied", 403, req);
+    const action = body.action as string;
+    const payloadOrgId = body.organization_id as string | undefined;
 
+    // 3. Validate action
+    if (!action || !ALL_ACTIONS.has(action)) {
+      return json({ error: `Unknown or missing action. Valid: ${[...ALL_ACTIONS].join(", ")}` }, 400);
+    }
+
+    // 4. Granular rate limiting
+    const rateScope = READ_ACTIONS.has(action)
+      ? "nervous-system-engine-read"
+      : "nervous-system-engine-write";
+    const { allowed } = await checkRateLimit(user.id, rateScope);
+    if (!allowed) {
+      return json({
+        error: "Limite de requisições excedido. Tente novamente em breve.",
+        retry_after_seconds: 60,
+      }, 429);
+    }
+
+    // 5. Resolve and validate org membership
+    const { orgId, error: orgError } = await resolveAndValidateOrg(sc, user.id, payloadOrgId);
+    if (orgError || !orgId) {
+      return errorResponse(orgError || "Organization access denied", 403, req);
+    }
+
+    // 6. Audit log
     await logSecurityAudit(sc, {
       organization_id: orgId,
       actor_id: user.id,
       function_name: "nervous-system-engine",
-      action: action || "unknown",
+      action,
     });
 
+    // 7. Route to handler
     switch (action) {
       case "emit_event":
-        return await handleEmitEvent(sc, orgId, params);
+        return await handleEmitEvent(sc, orgId, body);
       case "list_events":
-        return await handleListEvents(sc, orgId, params);
+        return await handleListEvents(sc, orgId, body);
       case "get_pulse":
         return await handleGetPulse(sc, orgId);
       case "list_patterns":
-        return await handleListPatterns(sc, orgId, params);
+        return await handleListPatterns(sc, orgId, body);
       default:
-        return json({ error: `Unknown action: ${action}` }, 400);
+        return json({ error: `Unhandled action: ${action}` }, 400);
     }
-  } catch (e: any) {
-    return json({ error: e.message }, 500);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Internal server error";
+    console.error("[NervousSystemEngine] Unhandled error:", message);
+    return json({ error: "Internal server error" }, 500);
   }
 });
 
@@ -84,62 +135,98 @@ function json(data: unknown, status = 200) {
 // HANDLERS
 // ═══════════════════════════════════════════════════
 
-async function handleEmitEvent(sc: any, orgId: string, params: any) {
-  const {
-    source_type, source_id, event_type, event_domain,
-    event_subdomain, initiative_id, pipeline_id, agent_id,
-    service_name, severity, summary, payload, metadata,
-  } = params;
+/**
+ * Emit a nervous system event.
+ * The service client (service-role) is used for the actual insert,
+ * bypassing RLS. Organization membership was already validated above.
+ */
+async function handleEmitEvent(sc: ReturnType<typeof Object>, orgId: string, body: Record<string, unknown>) {
+  const sourceType = body.source_type as string;
+  const eventType = body.event_type as string;
+  const eventDomain = body.event_domain as string;
+  const summary = body.summary as string;
 
-  if (!source_type || !event_type || !event_domain || !summary) {
-    return json({ error: "Missing required fields: source_type, event_type, event_domain, summary" }, 400);
+  // Required field validation
+  if (!sourceType || !eventType || !eventDomain || !summary) {
+    return json({
+      error: "Missing required fields: source_type, event_type, event_domain, summary",
+    }, 400);
+  }
+
+  // Enum validation
+  if (!VALID_DOMAINS.has(eventDomain)) {
+    return json({ error: `Invalid event_domain: ${eventDomain}. Valid: ${[...VALID_DOMAINS].join(", ")}` }, 400);
+  }
+  const severity = body.severity as string | undefined;
+  if (severity && !VALID_SEVERITIES.has(severity)) {
+    return json({ error: `Invalid severity: ${severity}. Valid: ${[...VALID_SEVERITIES].join(", ")}` }, 400);
   }
 
   const result = await emitNervousSystemEvent(sc, {
     organization_id: orgId,
-    source_type,
-    source_id,
-    event_type,
-    event_domain,
-    event_subdomain,
-    initiative_id,
-    pipeline_id,
-    agent_id,
-    service_name,
+    source_type: sourceType,
+    source_id: (body.source_id as string) || undefined,
+    event_type: eventType,
+    event_domain: eventDomain,
+    event_subdomain: (body.event_subdomain as string) || undefined,
+    initiative_id: (body.initiative_id as string) || undefined,
+    pipeline_id: (body.pipeline_id as string) || undefined,
+    agent_id: (body.agent_id as string) || undefined,
+    service_name: (body.service_name as string) || undefined,
     severity,
     summary,
-    payload,
-    metadata,
+    payload: (body.payload as Record<string, unknown>) || {},
+    metadata: (body.metadata as Record<string, unknown>) || {},
+    occurred_at: (body.occurred_at as string) || undefined,
   });
 
   if (!result) {
     return json({ error: "Failed to emit event" }, 500);
   }
 
-  return json({ success: true, event_id: result.id });
+  return json({
+    success: true,
+    event_id: result.id,
+    fingerprint: result.fingerprint,
+    deduplicated: result.deduplicated,
+  });
 }
 
-async function handleListEvents(sc: any, orgId: string, params: any) {
-  const {
-    limit = 50,
-    domain,
-    severity,
-    status,
-    event_type,
-    since,
-  } = params;
+/**
+ * List recent events for the tenant.
+ * Supports filtering by domain, severity, status, event_type, and time range.
+ */
+async function handleListEvents(sc: ReturnType<typeof Object>, orgId: string, body: Record<string, unknown>) {
+  const rawLimit = Number(body.limit) || DEFAULT_LIST_LIMIT;
+  const limit = Math.min(Math.max(1, rawLimit), MAX_LIST_LIMIT);
+  const domain = body.domain as string | undefined;
+  const severity = body.severity as string | undefined;
+  const status = body.status as string | undefined;
+  const eventType = body.event_type as string | undefined;
+  const since = body.since as string | undefined;
 
-  let query = sc
+  // Validate filter enums if provided
+  if (domain && !VALID_DOMAINS.has(domain)) {
+    return json({ error: `Invalid domain filter: ${domain}` }, 400);
+  }
+  if (severity && !VALID_SEVERITIES.has(severity)) {
+    return json({ error: `Invalid severity filter: ${severity}` }, 400);
+  }
+  if (status && !VALID_STATUSES.has(status)) {
+    return json({ error: `Invalid status filter: ${status}` }, 400);
+  }
+
+  let query = (sc as any)
     .from("nervous_system_events")
-    .select("*")
+    .select("id, created_at, occurred_at, source_type, source_id, event_type, event_domain, event_subdomain, severity, severity_score, novelty_score, fingerprint, dedup_group, summary, payload, metadata, status, initiative_id, service_name")
     .eq("organization_id", orgId)
     .order("created_at", { ascending: false })
-    .limit(Math.min(limit, 200));
+    .limit(limit);
 
   if (domain) query = query.eq("event_domain", domain);
   if (severity) query = query.eq("severity", severity);
   if (status) query = query.eq("status", status);
-  if (event_type) query = query.eq("event_type", event_type);
+  if (eventType) query = query.eq("event_type", eventType);
   if (since) query = query.gte("created_at", since);
 
   const { data, error } = await query;
@@ -148,50 +235,44 @@ async function handleListEvents(sc: any, orgId: string, params: any) {
   return json({ events: data || [], count: data?.length || 0 });
 }
 
-async function handleGetPulse(sc: any, orgId: string) {
-  // Get live state
-  const { data: pulse } = await sc
+/**
+ * Get the pre-aggregated system pulse for this tenant.
+ * Reads from nervous_system_live_state — a materialized cache,
+ * NOT a live query against the full events table.
+ */
+async function handleGetPulse(sc: ReturnType<typeof Object>, orgId: string) {
+  const { data: pulse } = await (sc as any)
     .from("nervous_system_live_state")
-    .select("*")
+    .select("state_value, updated_at")
     .eq("organization_id", orgId)
     .eq("state_key", "system_pulse")
     .single();
 
-  // Get recent event counts by domain
-  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-  const { data: recentEvents } = await sc
-    .from("nervous_system_events")
-    .select("event_domain, severity, status")
-    .eq("organization_id", orgId)
-    .gte("created_at", oneHourAgo);
-
-  const domainCounts: Record<string, number> = {};
-  const severityCounts: Record<string, number> = {};
-  for (const e of recentEvents || []) {
-    domainCounts[e.event_domain] = (domainCounts[e.event_domain] || 0) + 1;
-    severityCounts[e.severity] = (severityCounts[e.severity] || 0) + 1;
-  }
-
   return json({
     pulse: pulse?.state_value || null,
-    events_last_hour: {
-      total: recentEvents?.length || 0,
-      by_domain: domainCounts,
-      by_severity: severityCounts,
-    },
     updated_at: pulse?.updated_at || null,
   });
 }
 
-async function handleListPatterns(sc: any, orgId: string, params: any) {
-  const { limit = 50, domain } = params;
+/**
+ * List known event patterns for the tenant.
+ * Patterns are populated by backend workers (NS-02+), not by the frontend.
+ */
+async function handleListPatterns(sc: ReturnType<typeof Object>, orgId: string, body: Record<string, unknown>) {
+  const rawLimit = Number(body.limit) || DEFAULT_LIST_LIMIT;
+  const limit = Math.min(Math.max(1, rawLimit), 100);
+  const domain = body.domain as string | undefined;
 
-  let query = sc
+  if (domain && !VALID_DOMAINS.has(domain)) {
+    return json({ error: `Invalid domain filter: ${domain}` }, 400);
+  }
+
+  let query = (sc as any)
     .from("nervous_system_event_patterns")
-    .select("*")
+    .select("id, created_at, updated_at, pattern_key, title, domain, subdomain, description, occurrence_count, successful_resolution_count, confidence_score, canon_reference_id")
     .eq("organization_id", orgId)
     .order("occurrence_count", { ascending: false })
-    .limit(Math.min(limit, 100));
+    .limit(limit);
 
   if (domain) query = query.eq("domain", domain);
 
