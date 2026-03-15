@@ -37,7 +37,7 @@ const STATUS_COLORS: Record<string, string> = {
   rejected: "border-destructive/30 text-destructive",
 };
 
-export function SkillReviewTab() {
+export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab(_props, ref) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [expandedId, setExpandedId] = useState<string | null>(null);
