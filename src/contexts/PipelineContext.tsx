@@ -436,17 +436,25 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
         }
 
         // Auto-trigger deep validation after AI validation completes (pass or fail — always continue chain)
+        // But skip if there were literally no artifacts to validate (execution didn't produce anything)
         if (stage === "validation" && result.success && !result.batch_incomplete) {
-          if (result.overall_pass) {
-            toast({ title: "✅ Fix Loop concluído! Iniciando Deep Static Analysis..." });
+          const hasArtifacts = (result.artifacts_validated || 0) > 0;
+          if (!hasArtifacts) {
+            toast({ variant: "destructive", title: "⚠️ Nenhum artefato encontrado para validar. Execute o pipeline de execução primeiro." });
+            addEvent(initiativeId, stage, "Fix Loop: nenhum artefato — execução pode não ter gerado código");
+            // Don't continue chain — nothing to validate
           } else {
-            toast({ title: `⚠️ Fix Loop: ${result.failed || 0} falhas, ${result.fixed || 0} corrigidos. Continuando com Deep Static Analysis...` });
+            if (result.overall_pass) {
+              toast({ title: "✅ Fix Loop concluído! Iniciando Deep Static Analysis..." });
+            } else {
+              toast({ title: `⚠️ Fix Loop: ${result.failed || 0} falhas, ${result.fixed || 0} corrigidos. Continuando com Deep Static Analysis...` });
+            }
+            addEvent(initiativeId, stage, `Fix Loop finalizado: ${result.passed || 0} aprovados, ${result.failed || 0} falhas, ${result.fixed || 0} corrigidos`);
+            setTimeout(() => {
+              runStage(initiativeId, "deep_validation");
+            }, 1500);
+            return;
           }
-          addEvent(initiativeId, stage, `Fix Loop finalizado: ${result.passed || 0} aprovados, ${result.failed || 0} falhas, ${result.fixed || 0} corrigidos`);
-          setTimeout(() => {
-            runStage(initiativeId, "deep_validation");
-          }, 1500);
-          return;
         }
 
         // Auto-trigger drift detection after deep validation passes
