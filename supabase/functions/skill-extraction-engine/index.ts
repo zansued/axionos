@@ -550,15 +550,208 @@ async function reviewHistory(sc: any, orgId: string, p: any) {
 // AI-ASSISTED BATCH REVIEW
 // ══════════════════════════════════════════════════
 //
-// Uses Lovable AI to evaluate each skill across 4 dimensions,
-// produce a verdict (approved/rejected/needs_refinement) and rationale.
-// Results are advisory-first: AI scores + verdict are applied via
-// the existing reviewSkill function, preserving full audit trail.
+// Uses AI provider failover (OpenAI → DeepSeek → Lovable Gateway)
+// and structured tool-calling to avoid parse drift and zero-review runs.
+
+type AiReviewProvider = {
+  label: string;
+  url: string;
+  key: string;
+  model: string;
+};
+
+const AI_REVIEW_TOOL = {
+  type: "function",
+  function: {
+    name: "review_skills_batch",
+    description: "Return review decisions for each provided skill.",
+    parameters: {
+      type: "object",
+      properties: {
+        reviews: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              skill_id: { type: "string" },
+              skill_index: { type: "integer", minimum: 1 },
+              skill_name: { type: "string" },
+              verdict: {
+                type: "string",
+                enum: ["approved", "rejected", "needs_refinement"],
+              },
+              specificity: { type: "number", minimum: 0, maximum: 1 },
+              applicability: { type: "number", minimum: 0, maximum: 1 },
+              reusability: { type: "number", minimum: 0, maximum: 1 },
+              confidence_assessment: { type: "number", minimum: 0, maximum: 1 },
+              rationale: { type: "string" },
+            },
+            required: ["verdict", "specificity", "applicability", "reusability", "confidence_assessment", "rationale"],
+            additionalProperties: false,
+          },
+        },
+      },
+      required: ["reviews"],
+      additionalProperties: false,
+    },
+  },
+} as const;
+
+function getAiReviewProviderChain(): AiReviewProvider[] {
+  const openaiKey = Deno.env.get("OPENAI_API_KEY") || "";
+  const deepseekKey = Deno.env.get("DEEPSEEK_API_KEY") || "";
+  const lovableKey = Deno.env.get("LOVABLE_API_KEY") || "";
+
+  const providers: AiReviewProvider[] = [];
+
+  if (openaiKey) {
+    providers.push({
+      label: "openai",
+      url: "https://api.openai.com/v1/chat/completions",
+      key: openaiKey,
+      model: "gpt-5-mini",
+    });
+  }
+
+  if (deepseekKey) {
+    providers.push({
+      label: "deepseek",
+      url: "https://api.deepseek.com/chat/completions",
+      key: deepseekKey,
+      model: "deepseek-chat",
+    });
+  }
+
+  if (lovableKey) {
+    providers.push({
+      label: "lovable_gateway_openai",
+      url: "https://ai.gateway.lovable.dev/v1/chat/completions",
+      key: lovableKey,
+      model: "openai/gpt-5-mini",
+    });
+  }
+
+  return providers;
+}
+
+async function invokeAiReviewWithFailover(
+  providers: AiReviewProvider[],
+  body: Record<string, unknown>,
+): Promise<{ data: any; provider: AiReviewProvider }> {
+  const failures: string[] = [];
+
+  for (const provider of providers) {
+    try {
+      const resp = await fetch(provider.url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${provider.key}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ model: provider.model, ...body }),
+      });
+
+      if (!resp.ok) {
+        const text = await resp.text();
+        failures.push(`${provider.label}:${resp.status}`);
+
+        // Continue failover on auth/quota/not-found/rate-limit/server/provider incompatibility
+        if ([400, 401, 402, 403, 404, 409, 422, 429].includes(resp.status) || resp.status >= 500) {
+          console.warn(`[skill-ai-review] Provider ${provider.label} failed ${resp.status}: ${text.slice(0, 180)}`);
+          continue;
+        }
+
+        throw new Error(`[${provider.label}] ${resp.status}: ${text}`);
+      }
+
+      const data = await resp.json();
+      return { data, provider };
+    } catch (e: any) {
+      failures.push(`${provider.label}:network`);
+      console.warn(`[skill-ai-review] Provider ${provider.label} network error:`, e?.message || e);
+      continue;
+    }
+  }
+
+  throw new Error(`All AI providers failed (${failures.join(", ")})`);
+}
+
+function extractAiReviews(aiData: any): any[] {
+  const toolCalls = aiData?.choices?.[0]?.message?.tool_calls;
+  if (Array.isArray(toolCalls) && toolCalls.length > 0) {
+    for (const call of toolCalls) {
+      const args = call?.function?.arguments;
+      if (!args) continue;
+      try {
+        const parsed = typeof args === "string" ? JSON.parse(args) : args;
+        const reviews = Array.isArray(parsed?.reviews)
+          ? parsed.reviews
+          : Array.isArray(parsed)
+            ? parsed
+            : [];
+        if (reviews.length > 0) return reviews;
+      } catch {
+        // Continue to content fallback
+      }
+    }
+  }
+
+  const content = aiData?.choices?.[0]?.message?.content;
+  if (!content) return [];
+
+  try {
+    const parsed = typeof content === "string" ? JSON.parse(content) : content;
+    if (Array.isArray(parsed?.reviews)) return parsed.reviews;
+    if (Array.isArray(parsed)) return parsed;
+    return parsed ? [parsed] : [];
+  } catch {
+    return [];
+  }
+}
+
+function normalizeVerdict(raw: unknown): "approved" | "rejected" | "needs_refinement" | null {
+  const value = String(raw || "").toLowerCase().trim();
+  if (!value) return null;
+
+  if (["approved", "approve", "aprovado", "aprovada"].includes(value)) return "approved";
+  if (["rejected", "reject", "rejeitado", "rejeitada"].includes(value)) return "rejected";
+  if (["needs_refinement", "needs-refinement", "needs refinement", "refine", "refinar"].includes(value)) return "needs_refinement";
+
+  return null;
+}
+
+function resolveSkillIdFromAi(review: any, batch: any[], validSkillIds: Set<string>): string | null {
+  if (review?.skill_id && typeof review.skill_id === "string" && validSkillIds.has(review.skill_id)) {
+    return review.skill_id;
+  }
+
+  if (typeof review?.skill_index === "number") {
+    const idx = Math.floor(review.skill_index) - 1;
+    if (idx >= 0 && idx < batch.length) return batch[idx].id;
+  }
+
+  if (typeof review?.skill_name === "string") {
+    const normalized = review.skill_name.toLowerCase().trim();
+    const byName = batch.find((s: any) => s.skill_name?.toLowerCase().trim() === normalized);
+    if (byName) return byName.id;
+  }
+
+  if (typeof review?.skill_id === "string") {
+    const prefix = review.skill_id.slice(0, 8);
+    const byPrefix = batch.find((s: any) => s.id.startsWith(prefix));
+    if (byPrefix) return byPrefix.id;
+  }
+
+  return null;
+}
 
 async function aiReviewBatch(sc: any, orgId: string, reviewerId: string, p: any) {
   const limit = Math.min(p.limit || 20, 50);
-  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-  if (!LOVABLE_API_KEY) return json({ error: "LOVABLE_API_KEY not configured" }, 500);
+  const providerChain = getAiReviewProviderChain();
+
+  if (providerChain.length === 0) {
+    return json({ error: "No AI provider configured (OPENAI_API_KEY, DEEPSEEK_API_KEY, LOVABLE_API_KEY)" }, 500);
+  }
 
   // Fetch skills pending review
   const { data: skills, error: fetchErr } = await sc
@@ -583,115 +776,92 @@ async function aiReviewBatch(sc: any, orgId: string, reviewerId: string, p: any)
 
   // Build a map of valid skill IDs for validation
   const validSkillIds = new Set(skills.map((s: any) => s.id));
+  const providerStats: Record<string, number> = {};
 
   for (const batch of batches) {
-    const skillsPrompt = batch.map((s: any, i: number) => 
+    const batchIndex = batches.indexOf(batch);
+    const skillsPrompt = batch.map((s: any, i: number) =>
       `[Skill ${i + 1}]\nID: ${s.id}\nName: ${s.skill_name}\nDomain: ${s.domain}\nConfidence: ${s.confidence}\nDescription: ${s.description}\nSource: ${s.extraction_method}\nCanon Type: ${s.metadata?.source_canon_type || "unknown"}\nPractice Type: ${s.metadata?.source_practice_type || "unknown"}\nTopic: ${s.metadata?.source_topic || "unknown"}`
     ).join("\n\n");
 
     try {
-      const aiRes = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "openai/gpt-5-mini",
-          messages: [
-            {
-              role: "system",
-              content: `You are an expert engineering skill reviewer for AxionOS, a governed autonomous software factory.
+      const llmBody = {
+        temperature: 0.1,
+        messages: [
+          {
+            role: "system",
+            content: `You are an expert engineering skill reviewer for AxionOS.
+Evaluate each skill with strict governance discipline.
 
-Evaluate each skill on 4 dimensions (0.0 to 1.0):
-- specificity: How precise and actionable is this skill? (vague=0.2, specific=0.8+)
-- applicability: How broadly useful within its domain? (niche=0.3, universal=0.9)
-- reusability: Can agents reuse this without modification? (one-off=0.2, reusable=0.8+)
-- confidence_assessment: Is the inherited confidence score reasonable? (inflated=0.3, accurate=0.8+)
+Score each dimension from 0.0 to 1.0:
+- specificity
+- applicability
+- reusability
+- confidence_assessment
 
-Then assign a verdict:
-- "approved" — skill is specific, applicable, reusable, confidence is fair (overall >= 0.6)
-- "needs_refinement" — skill has potential but is too vague or overlaps with others (overall 0.4-0.6)
-- "rejected" — skill is too generic, redundant, or low value (overall < 0.4)
+Then output verdict:
+- approved (overall >= 0.6)
+- needs_refinement (overall 0.4-0.6)
+- rejected (overall < 0.4)
 
-IMPORTANT: Return the skill_id EXACTLY as provided. Do not modify UUIDs.
+Return structured tool output only. Preserve skill_id exactly when present.`,
+          },
+          {
+            role: "user",
+            content: `Review these ${batch.length} skills and return one decision per skill:\n\n${skillsPrompt}`,
+          },
+        ],
+        tools: [AI_REVIEW_TOOL],
+        tool_choice: { type: "function", function: { name: "review_skills_batch" } },
+      };
 
-Respond with a JSON object: { "reviews": [...] } where each review has: skill_id, verdict, specificity, applicability, reusability, confidence_assessment, rationale.`
-            },
-            {
-              role: "user",
-              content: `Review these ${batch.length} skills:\n\n${skillsPrompt}`
-            }
-          ],
-          response_format: { type: "json_object" },
-        }),
-      });
+      const { data: aiData, provider } = await invokeAiReviewWithFailover(providerChain, llmBody);
+      providerStats[provider.label] = (providerStats[provider.label] || 0) + 1;
 
-      if (!aiRes.ok) {
-        const errText = await aiRes.text();
-        errors.push({ batch_index: batches.indexOf(batch), error: `AI gateway ${aiRes.status}: ${errText.slice(0, 200)}` });
-        continue;
-      }
-
-      const aiData = await aiRes.json();
-      const content = aiData.choices?.[0]?.message?.content;
-      if (!content) {
-        errors.push({ batch_index: batches.indexOf(batch), error: "Empty AI response content" });
-        continue;
-      }
-
-      let reviews: any[];
-      try {
-        const parsed = typeof content === "string" ? JSON.parse(content) : content;
-        reviews = parsed.reviews || parsed;
-        if (!Array.isArray(reviews)) {
-          reviews = [reviews];
-        }
-      } catch {
-        errors.push({ batch_index: batches.indexOf(batch), error: "Failed to parse AI JSON response" });
+      const reviews = extractAiReviews(aiData);
+      if (!reviews.length) {
+        errors.push({ batch_index: batchIndex, error: "AI returned no structured reviews" });
         continue;
       }
 
       // Apply each AI review through the existing governance function
       for (const review of reviews) {
-        if (!review.skill_id || !review.verdict) continue;
+        const resolvedSkillId = resolveSkillIdFromAi(review, batch, validSkillIds);
+        const normalizedVerdict = normalizeVerdict(review?.verdict);
 
-        // Validate skill_id belongs to the fetched batch
-        if (!validSkillIds.has(review.skill_id)) {
-          // Try to match by index or skip
-          const matchByName = batch.find((s: any) => 
-            s.skill_name === review.skill_name || s.id.startsWith(review.skill_id?.slice(0, 8))
-          );
-          if (matchByName) {
-            review.skill_id = matchByName.id;
-          } else {
-            errors.push({ skill_id: review.skill_id, error: "AI returned unrecognized skill_id" });
-            continue;
-          }
+        if (!resolvedSkillId) {
+          errors.push({ batch_index: batchIndex, error: "AI returned unrecognized skill mapping", raw_skill_id: review?.skill_id || null });
+          continue;
+        }
+
+        if (!normalizedVerdict) {
+          errors.push({ skill_id: resolvedSkillId, error: `Invalid AI verdict: ${String(review?.verdict || "")}` });
+          continue;
         }
 
         try {
           const res = await reviewSkill(sc, orgId, reviewerId, {
-            skill_id: review.skill_id,
-            verdict: review.verdict,
-            specificity: Math.max(0, Math.min(1, review.specificity || 0.5)),
-            applicability: Math.max(0, Math.min(1, review.applicability || 0.5)),
-            reusability: Math.max(0, Math.min(1, review.reusability || 0.5)),
-            confidence_assessment: Math.max(0, Math.min(1, review.confidence_assessment || 0.5)),
-            notes: `[AI Review] ${review.rationale || "No rationale provided"}`,
+            skill_id: resolvedSkillId,
+            verdict: normalizedVerdict,
+            specificity: Math.max(0, Math.min(1, Number(review?.specificity ?? 0.5))),
+            applicability: Math.max(0, Math.min(1, Number(review?.applicability ?? 0.5))),
+            reusability: Math.max(0, Math.min(1, Number(review?.reusability ?? 0.5))),
+            confidence_assessment: Math.max(0, Math.min(1, Number(review?.confidence_assessment ?? 0.5))),
+            notes: `[AI Review:${provider.label}/${provider.model}] ${review?.rationale || "No rationale provided"}`,
           });
+
           const body = JSON.parse(await (res as Response).text());
           if (body.error) {
-            errors.push({ skill_id: review.skill_id, error: body.error });
+            errors.push({ skill_id: resolvedSkillId, error: body.error });
           } else {
-            results.push({ ...body, ai_rationale: review.rationale });
+            results.push({ ...body, ai_rationale: review?.rationale, ai_provider: provider.label, ai_model: provider.model });
           }
         } catch (innerErr: any) {
-          errors.push({ skill_id: review.skill_id, error: innerErr.message });
+          errors.push({ skill_id: resolvedSkillId, error: innerErr?.message || "Unknown review apply error" });
         }
       }
     } catch (e: any) {
-      errors.push({ batch_index: batches.indexOf(batch), error: e.message });
+      errors.push({ batch_index: batchIndex, error: e?.message || "AI batch review failed" });
     }
   }
 
@@ -711,8 +881,9 @@ Respond with a JSON object: { "reviews": [...] } where each review has: skill_id
       : 0,
     results: results.slice(0, 20),
     errors: errors.length > 0 ? errors : undefined,
-    review_method: "ai_assisted_lovable_gateway",
-    model: "openai/gpt-5-mini",
+    review_method: "ai_assisted_provider_failover_tool_call",
+    providers_used: providerStats,
+    provider_chain: providerChain.map((p) => `${p.label}:${p.model}`),
   });
 }
 
