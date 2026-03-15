@@ -325,7 +325,7 @@ export async function maybePromoteToPattern(
     .eq("organization_id", orgId)
     .single();
 
-  if (!group || group.event_count < MIN_EVENTS_FOR_PATTERN) return;
+  if (!group || group.event_count < MIN_EVENTS_FOR_PATTERN) return false;
 
   const patternKey = `${group.event_domain}::${group.event_type}`;
 
