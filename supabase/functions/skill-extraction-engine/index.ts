@@ -41,12 +41,23 @@ Deno.serve(async (req) => {
   if (corsRes) return corsRes;
 
   try {
-    const authResult = await authenticateWithRateLimit(req, "skill-extraction-engine");
+    const authResult = await authenticate(req);
     if (authResult instanceof Response) return authResult;
     const { user, serviceClient: sc } = authResult;
 
     const body = await req.json();
     const { action, organization_id: payloadOrgId, ...params } = body;
+
+    // Granular rate limiting: read vs write
+    const rateScope = READ_ACTIONS.has(action)
+      ? "skill-extraction-engine-read"
+      : WRITE_ACTIONS.has(action)
+        ? "skill-extraction-engine-write"
+        : "skill-extraction-engine";
+    const { allowed } = await checkRateLimit(user.id, rateScope);
+    if (!allowed) {
+      return errorResponse("Limite de requisições excedido. Tente novamente em breve.", 429, req);
+    }
 
     const { orgId, error: orgError } = await resolveAndValidateOrg(sc, user.id, payloadOrgId);
     if (orgError || !orgId) return errorResponse(orgError || "Organization access denied", 403, req);

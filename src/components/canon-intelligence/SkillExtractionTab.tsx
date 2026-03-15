@@ -66,7 +66,7 @@ export function SkillExtractionTab() {
       });
       refetch();
     } catch (e: any) {
-      toast({ title: "Erro na extração", description: e.message, variant: "destructive" });
+      toast({ title: "Erro na extração", description: getUserFriendlyError(e), variant: "destructive" });
     } finally {
       setRunning(false);
     }
