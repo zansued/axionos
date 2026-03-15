@@ -15,7 +15,7 @@ import {
   Sparkles, Shield, Settings, HeartPulse, LineChart, Search,
   Brain, Fingerprint, Scale, Users, Activity, Cpu, Database,
   ShieldAlert, ShieldCheck, Crosshair, BarChart3, Swords,
-  BookOpen, Lock, Truck, Boxes,
+  BookOpen, Lock, Truck, Boxes, Code2,
 } from "lucide-react";
 import type { TranslationKey } from "@/contexts/I18nContext";
 
@@ -104,6 +104,19 @@ export const BUILDER_ROUTES: RouteEntry[] = [
     order: 3,
     sidebar: true,
     pageKey: "deployments",
+  },
+  {
+    path: "/builder/code",
+    title: "Code",
+    description: "Explore generated code files",
+    titleKey: "route.code" as TranslationKey,
+    descriptionKey: "routeDesc.code" as TranslationKey,
+    icon: Code2,
+    mode: "builder",
+    group: "Core",
+    order: 3.5,
+    sidebar: true,
+    pageKey: "code",
   },
   {
     path: "/builder/runtime",
