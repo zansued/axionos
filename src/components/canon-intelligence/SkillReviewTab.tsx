@@ -155,7 +155,7 @@ export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab
       refetch();
       queryClient.invalidateQueries({ queryKey: ["skill-extraction-status"] });
     } catch (e: any) {
-      toast({ title: "Erro no batch review", description: e.message, variant: "destructive" });
+      toast({ title: "Erro no batch review", description: getUserFriendlyError(e), variant: "destructive" });
     } finally {
       setSubmitting(false);
     }
