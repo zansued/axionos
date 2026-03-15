@@ -418,19 +418,27 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
           <CardContent className="p-4 flex items-center gap-3">
             <Loader2 className="h-5 w-5 animate-spin text-primary shrink-0" />
             <div>
-              <p className="text-sm font-medium">
+            <p className="text-sm font-medium">
                 {runningStage === "discovery" && "IA analisando ideia, mercado e viabilidade..."}
                 {runningStage === "squad_formation" && "Montando squad ideal de agentes..."}
                 {runningStage === "planning" && "Gerando PRD → Arquitetura → Stories..."}
                 {runningStage === "execution" && "Agentes executando subtasks automaticamente..."}
-                {runningStage === "validation" && "Validando qualidade dos artefatos com IA..."}
+                {runningStage === "validation" && "🔁 Fix Loop — Validando e corrigindo artefatos com IA..."}
+                {runningStage === "deep_validation" && "🔬 Deep Static Analysis — Verificando imports, tipos e build..."}
+                {runningStage === "drift_detection" && "🏗️ Drift Detection — Verificando desvios arquiteturais..."}
+                {runningStage === "runtime_validation" && "🚀 Runtime Validation — Executando tsc + vite build..."}
+                {runningStage === "preventive_validation" && "🛡️ Validação Preventiva da Arquitetura..."}
                 {runningStage === "publish" && "Criando branch, commitando artefatos e abrindo PR..."}
                 {runningStage === "deploy_vercel" && "Iniciando deploy no Vercel..."}
+                {!["discovery","squad_formation","planning","execution","validation","deep_validation","drift_detection","runtime_validation","preventive_validation","publish","deploy_vercel"].includes(runningStage || "") && `Executando ${runningStage}...`}
               </p>
               <p className="text-xs text-muted-foreground">
                 {runningStage === "planning" ? "Isso pode levar ~2 minutos." :
                  runningStage === "execution" ? "Isso pode levar vários minutos dependendo do número de subtasks." :
-                 runningStage === "validation" ? "Cada artefato será analisado individualmente. ~1 min." :
+                 runningStage === "validation" ? "Cada artefato é analisado e corrigido automaticamente. Pode levar alguns minutos." :
+                 runningStage === "deep_validation" ? "Análise estática profunda dos arquivos gerados. ~30 seg." :
+                 runningStage === "drift_detection" ? "Verificando conformidade arquitetural. ~30 seg." :
+                 runningStage === "runtime_validation" ? "Build completo para validar em runtime. ~1 min." :
                  runningStage === "publish" ? "Commitando arquivos no GitHub..." :
                  runningStage === "deploy_vercel" ? "Conectando ao Vercel e iniciando deploy..." :
                  "Isso pode levar ~30 segundos."}
