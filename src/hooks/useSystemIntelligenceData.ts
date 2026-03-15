@@ -198,7 +198,8 @@ export function useSystemIntelligenceData(): SystemIntelligenceData {
     queryKey: ["system-intelligence", orgId],
     queryFn: () => fetchIntelligenceData(orgId!),
     enabled: !!orgId,
-    staleTime: 60_000,
+    staleTime: 120_000,
+    refetchInterval: 120_000,
   });
 
   return {
