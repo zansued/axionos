@@ -1,7 +1,17 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, errorResponse } from "../_shared/cors.ts";
-import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { authenticate } from "../_shared/auth.ts";
+import { checkRateLimit } from "../_shared/rate-limit.ts";
 import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
+
+const READ_ACTIONS = new Set([
+  "extraction_status", "list_reviewable", "review_history",
+  "list_bindings", "skill_context_for_agent",
+]);
+const WRITE_ACTIONS = new Set([
+  "extract_skills", "review_skill", "batch_review",
+  "ai_review_batch", "bind_capability", "auto_bind",
+]);
 
 /**
  * Skill Extraction Engine — SF-2
