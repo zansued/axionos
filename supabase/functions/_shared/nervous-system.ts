@@ -107,9 +107,22 @@ function validateEmitParams(params: EmitEventParams): string | null {
 // ═══════════════════════════════════════════════════
 
 function generateFingerprint(params: EmitEventParams): string {
-  // Fingerprint captures the semantic identity of the signal,
+  // Fingerprint captures the SEMANTIC IDENTITY of the signal,
   // not the specific instance. Two identical signals within a
   // dedup window should produce the same fingerprint.
+  //
+  // Includes: tenant, source identity, event classification, payload signature
+  // Excludes: timestamps, cosmetic fields, volatile metadata
+  //
+  // The payload signature uses sorted top-level keys to create a stable
+  // representation — same payload shape = same fingerprint, even if
+  // values differ slightly (e.g., latency_ms: 842 vs 850).
+  // For value-sensitive dedup, NS-02 classifier will handle that.
+
+  const payloadSignature = params.payload
+    ? Object.keys(params.payload).sort().join(",")
+    : "_";
+
   const raw = [
     params.organization_id,
     params.source_type,
@@ -119,6 +132,8 @@ function generateFingerprint(params: EmitEventParams): string {
     params.event_subdomain || "_",
     params.service_name || "_",
     params.agent_id || "_",
+    params.initiative_id || "_",
+    payloadSignature,
   ].join("|");
 
   // djb2 hash — fast, deterministic, no crypto dependency needed
