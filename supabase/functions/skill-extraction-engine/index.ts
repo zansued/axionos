@@ -604,12 +604,19 @@ function getAiReviewProviderChain(): AiReviewProvider[] {
 
   const providers: AiReviewProvider[] = [];
 
-  if (openaiKey) {
+  // Lovable Gateway FIRST — always available, cheapest models
+  if (lovableKey) {
     providers.push({
-      label: "openai",
-      url: "https://api.openai.com/v1/chat/completions",
-      key: openaiKey,
-      model: "gpt-5-mini",
+      label: "lovable_gateway_flash",
+      url: "https://ai.gateway.lovable.dev/v1/chat/completions",
+      key: lovableKey,
+      model: "google/gemini-2.5-flash-lite",
+    });
+    providers.push({
+      label: "lovable_gateway_gemini",
+      url: "https://ai.gateway.lovable.dev/v1/chat/completions",
+      key: lovableKey,
+      model: "google/gemini-2.5-flash",
     });
   }
 
@@ -622,12 +629,12 @@ function getAiReviewProviderChain(): AiReviewProvider[] {
     });
   }
 
-  if (lovableKey) {
+  if (openaiKey) {
     providers.push({
-      label: "lovable_gateway_openai",
-      url: "https://ai.gateway.lovable.dev/v1/chat/completions",
-      key: lovableKey,
-      model: "openai/gpt-5-mini",
+      label: "openai",
+      url: "https://api.openai.com/v1/chat/completions",
+      key: openaiKey,
+      model: "gpt-5-mini",
     });
   }
 
