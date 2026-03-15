@@ -581,6 +581,9 @@ async function aiReviewBatch(sc: any, orgId: string, reviewerId: string, p: any)
     batches.push(skills.slice(i, i + 5));
   }
 
+  // Build a map of valid skill IDs for validation
+  const validSkillIds = new Set(skills.map((s: any) => s.id));
+
   for (const batch of batches) {
     const skillsPrompt = batch.map((s: any, i: number) => 
       `[Skill ${i + 1}]\nID: ${s.id}\nName: ${s.skill_name}\nDomain: ${s.domain}\nConfidence: ${s.confidence}\nDescription: ${s.description}\nSource: ${s.extraction_method}\nCanon Type: ${s.metadata?.source_canon_type || "unknown"}\nPractice Type: ${s.metadata?.source_practice_type || "unknown"}\nTopic: ${s.metadata?.source_topic || "unknown"}`
@@ -594,7 +597,7 @@ async function aiReviewBatch(sc: any, orgId: string, reviewerId: string, p: any)
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
+          model: "openai/gpt-5-mini",
           messages: [
             {
               role: "system",
@@ -611,43 +614,16 @@ Then assign a verdict:
 - "needs_refinement" — skill has potential but is too vague or overlaps with others (overall 0.4-0.6)
 - "rejected" — skill is too generic, redundant, or low value (overall < 0.4)
 
-Respond ONLY with a JSON array. No markdown, no explanation outside the JSON.`
+IMPORTANT: Return the skill_id EXACTLY as provided. Do not modify UUIDs.
+
+Respond with a JSON object: { "reviews": [...] } where each review has: skill_id, verdict, specificity, applicability, reusability, confidence_assessment, rationale.`
             },
             {
               role: "user",
               content: `Review these ${batch.length} skills:\n\n${skillsPrompt}`
             }
           ],
-          tools: [{
-            type: "function",
-            function: {
-              name: "submit_reviews",
-              description: "Submit skill review results",
-              parameters: {
-                type: "object",
-                properties: {
-                  reviews: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        skill_id: { type: "string" },
-                        verdict: { type: "string", enum: ["approved", "rejected", "needs_refinement"] },
-                        specificity: { type: "number" },
-                        applicability: { type: "number" },
-                        reusability: { type: "number" },
-                        confidence_assessment: { type: "number" },
-                        rationale: { type: "string" }
-                      },
-                      required: ["skill_id", "verdict", "specificity", "applicability", "reusability", "confidence_assessment", "rationale"]
-                    }
-                  }
-                },
-                required: ["reviews"]
-              }
-            }
-          }],
-          tool_choice: { type: "function", function: { name: "submit_reviews" } },
+          response_format: { type: "json_object" },
         }),
       });
 
@@ -658,38 +634,60 @@ Respond ONLY with a JSON array. No markdown, no explanation outside the JSON.`
       }
 
       const aiData = await aiRes.json();
-      const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
-      if (!toolCall?.function?.arguments) {
-        errors.push({ batch_index: batches.indexOf(batch), error: "No tool call in AI response" });
+      const content = aiData.choices?.[0]?.message?.content;
+      if (!content) {
+        errors.push({ batch_index: batches.indexOf(batch), error: "Empty AI response content" });
         continue;
       }
 
       let reviews: any[];
       try {
-        const parsed = JSON.parse(toolCall.function.arguments);
+        const parsed = typeof content === "string" ? JSON.parse(content) : content;
         reviews = parsed.reviews || parsed;
+        if (!Array.isArray(reviews)) {
+          reviews = [reviews];
+        }
       } catch {
-        errors.push({ batch_index: batches.indexOf(batch), error: "Failed to parse AI response" });
+        errors.push({ batch_index: batches.indexOf(batch), error: "Failed to parse AI JSON response" });
         continue;
       }
 
       // Apply each AI review through the existing governance function
       for (const review of reviews) {
         if (!review.skill_id || !review.verdict) continue;
-        const res = await reviewSkill(sc, orgId, reviewerId, {
-          skill_id: review.skill_id,
-          verdict: review.verdict,
-          specificity: Math.max(0, Math.min(1, review.specificity || 0.5)),
-          applicability: Math.max(0, Math.min(1, review.applicability || 0.5)),
-          reusability: Math.max(0, Math.min(1, review.reusability || 0.5)),
-          confidence_assessment: Math.max(0, Math.min(1, review.confidence_assessment || 0.5)),
-          notes: `[AI Review] ${review.rationale || "No rationale provided"}`,
-        });
-        const body = JSON.parse(await (res as Response).text());
-        if (body.error) {
-          errors.push({ skill_id: review.skill_id, error: body.error });
-        } else {
-          results.push({ ...body, ai_rationale: review.rationale });
+
+        // Validate skill_id belongs to the fetched batch
+        if (!validSkillIds.has(review.skill_id)) {
+          // Try to match by index or skip
+          const matchByName = batch.find((s: any) => 
+            s.skill_name === review.skill_name || s.id.startsWith(review.skill_id?.slice(0, 8))
+          );
+          if (matchByName) {
+            review.skill_id = matchByName.id;
+          } else {
+            errors.push({ skill_id: review.skill_id, error: "AI returned unrecognized skill_id" });
+            continue;
+          }
+        }
+
+        try {
+          const res = await reviewSkill(sc, orgId, reviewerId, {
+            skill_id: review.skill_id,
+            verdict: review.verdict,
+            specificity: Math.max(0, Math.min(1, review.specificity || 0.5)),
+            applicability: Math.max(0, Math.min(1, review.applicability || 0.5)),
+            reusability: Math.max(0, Math.min(1, review.reusability || 0.5)),
+            confidence_assessment: Math.max(0, Math.min(1, review.confidence_assessment || 0.5)),
+            notes: `[AI Review] ${review.rationale || "No rationale provided"}`,
+          });
+          const body = JSON.parse(await (res as Response).text());
+          if (body.error) {
+            errors.push({ skill_id: review.skill_id, error: body.error });
+          } else {
+            results.push({ ...body, ai_rationale: review.rationale });
+          }
+        } catch (innerErr: any) {
+          errors.push({ skill_id: review.skill_id, error: innerErr.message });
         }
       }
     } catch (e: any) {
@@ -714,7 +712,7 @@ Respond ONLY with a JSON array. No markdown, no explanation outside the JSON.`
     results: results.slice(0, 20),
     errors: errors.length > 0 ? errors : undefined,
     review_method: "ai_assisted_lovable_gateway",
-    model: "google/gemini-2.5-flash",
+    model: "openai/gpt-5-mini",
   });
 }
 
