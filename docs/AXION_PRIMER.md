@@ -145,11 +145,11 @@ These rules ensure the system **evolves safely**.
 
 ## Development Status
 
-The canonical architecture currently includes development through **Sprint 207**.
+The canonical architecture currently includes development through **Sprint 208 + AI Nervous System (NS-01–NS-06)**.
 
-The platform has reached the stage called: **Governed Adaptive Organism with Fully Operational Canon Intelligence Hub**.
+The platform has reached the stage called: **Governed Adaptive Organism with Operational Nervous System**.
 
-207 sprints complete across blocks Foundation through AS. Key milestones:
+208 sprints complete across blocks Foundation through AT, plus 6 Nervous System sprints. Key milestones:
 - Axion Action Engine (Sprints 139–142)
 - Security Surface (Sprints 143–146)
 - Adoption Intelligence & Product Experience (Sprints 147–154)
@@ -163,9 +163,39 @@ The platform has reached the stage called: **Governed Adaptive Organism with Ful
 - Self-Improving Canon Pipeline (Sprints 186–192)
 - Security Hardening & Canon Integrity (Sprints 193–200)
 - Operational Adjustments & Review Authority Consolidation (Sprints 201–202)
-- Canon Intelligence Hub Full Operational Activation (Sprints 203–207): Human Review UI, Repo Trust in Cron, Operational Signal Producers, Pattern Mining, Automatic Confidence Recalibration
+- Canon Intelligence Hub Full Operational Activation (Sprints 203–207)
+- Sovereign Capabilities Portfolio (Sprint 208)
+- **AI Nervous System (NS-01–NS-06)**: Signal Foundation, Classification & Grouping, Context Engine, Decision Layer, Surfacing Layer, Governed Action Execution & Learning Feedback
 
-Future development focuses on improving intelligence quality, skills layer operational depth, governance maturity, and product usability rather than adding uncontrolled complexity.
+Future development focuses on improving intelligence quality, nervous system maturity, governance depth, and product usability.
+
+---
+
+## AI Nervous System
+
+The AI Nervous System is the **real-time operational intelligence backbone** of AxionOS.
+
+It converts raw operational signals into governed, auditable actions through a strict lifecycle:
+
+```
+Signal → Classification → Context → Decision → Surface → Execution → Learning
+```
+
+| Layer | Sprint | Role |
+|-------|--------|------|
+| **Signal Foundation** | NS-01 | Event ingestion, fingerprinting, deduplication, live pulse |
+| **Classification & Grouping** | NS-02 | Deterministic classification, enrichment, signal groups, pattern promotion |
+| **Context Engine** | NS-03 | Temporal correlation, sequence detection, contextual confidence |
+| **Decision Layer** | NS-04 | Typed decisions (observe, surface, escalate, recommend, queue, learn) |
+| **Surfacing Layer** | NS-05 | Curated operator-facing items, acknowledgement/approval workflow |
+| **Governed Execution** | NS-06 | Policy-aware action execution, learning feedback loop |
+
+**Key invariants:**
+- No LLM usage — all logic is deterministic and rule-based
+- No automatic execution of high-risk actions
+- Every decision, surface, and action is auditable with full lineage
+- Tenant isolation enforced at every layer
+- Learning feedback closes the loop without autonomous mutation
 
 ---
 
@@ -176,6 +206,7 @@ To understand the system more deeply:
 1. **[README.md](README.md)** — platform thesis and boundaries
 2. **[ARCHITECTURE.md](ARCHITECTURE.md)** — system structure
 3. **[GOVERNANCE.md](GOVERNANCE.md)** — agent modules and contracts
+4. **[AI_NERVOUS_SYSTEM.md](AI_NERVOUS_SYSTEM.md)** — nervous system architecture
 
 `AXION_PRIMER.md` exists only to **quickly restore understanding**.
 
