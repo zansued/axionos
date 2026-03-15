@@ -26969,6 +26969,71 @@ export type Database = {
           },
         ]
       }
+      nervous_system_decisions: {
+        Row: {
+          created_at: string
+          decided_at: string
+          decision_confidence: number
+          decision_metadata: Json
+          decision_reason: string
+          decision_type: string
+          event_id: string
+          expected_outcome: Json
+          id: string
+          organization_id: string
+          priority_level: string
+          recommended_action_payload: Json
+          recommended_action_type: string | null
+          risk_level: string
+          signal_group_id: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string
+          decision_confidence?: number
+          decision_metadata?: Json
+          decision_reason?: string
+          decision_type?: string
+          event_id: string
+          expected_outcome?: Json
+          id?: string
+          organization_id: string
+          priority_level?: string
+          recommended_action_payload?: Json
+          recommended_action_type?: string | null
+          risk_level?: string
+          signal_group_id?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string
+          decision_confidence?: number
+          decision_metadata?: Json
+          decision_reason?: string
+          decision_type?: string
+          event_id?: string
+          expected_outcome?: Json
+          id?: string
+          organization_id?: string
+          priority_level?: string
+          recommended_action_payload?: Json
+          recommended_action_type?: string | null
+          risk_level?: string
+          signal_group_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nervous_system_decisions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nervous_system_event_context_links: {
         Row: {
           created_at: string
@@ -27082,6 +27147,7 @@ export type Database = {
           context_summary: Json | null
           contextualized_at: string | null
           created_at: string
+          decision_id: string | null
           dedup_group: string | null
           event_domain: string
           event_subdomain: string | null
@@ -27116,6 +27182,7 @@ export type Database = {
           context_summary?: Json | null
           contextualized_at?: string | null
           created_at?: string
+          decision_id?: string | null
           dedup_group?: string | null
           event_domain: string
           event_subdomain?: string | null
@@ -27150,6 +27217,7 @@ export type Database = {
           context_summary?: Json | null
           contextualized_at?: string | null
           created_at?: string
+          decision_id?: string | null
           dedup_group?: string | null
           event_domain?: string
           event_subdomain?: string | null
