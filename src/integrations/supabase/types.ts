@@ -27037,7 +27037,10 @@ export type Database = {
       nervous_system_events: {
         Row: {
           agent_id: string | null
+          classification_metadata: Json
+          classified_at: string | null
           confidence_score: number | null
+          contextualized_at: string | null
           created_at: string
           dedup_group: string | null
           event_domain: string
@@ -27055,14 +27058,19 @@ export type Database = {
           service_name: string | null
           severity: string
           severity_score: number | null
+          signal_group_id: string | null
           source_id: string | null
           source_type: string
           status: string
           summary: string
+          surfaced_at: string | null
         }
         Insert: {
           agent_id?: string | null
+          classification_metadata?: Json
+          classified_at?: string | null
           confidence_score?: number | null
+          contextualized_at?: string | null
           created_at?: string
           dedup_group?: string | null
           event_domain: string
@@ -27080,14 +27088,19 @@ export type Database = {
           service_name?: string | null
           severity?: string
           severity_score?: number | null
+          signal_group_id?: string | null
           source_id?: string | null
           source_type: string
           status?: string
           summary: string
+          surfaced_at?: string | null
         }
         Update: {
           agent_id?: string | null
+          classification_metadata?: Json
+          classified_at?: string | null
           confidence_score?: number | null
+          contextualized_at?: string | null
           created_at?: string
           dedup_group?: string | null
           event_domain?: string
@@ -27105,12 +27118,21 @@ export type Database = {
           service_name?: string | null
           severity?: string
           severity_score?: number | null
+          signal_group_id?: string | null
           source_id?: string | null
           source_type?: string
           status?: string
           summary?: string
+          surfaced_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_ns_events_signal_group"
+            columns: ["signal_group_id"]
+            isOneToOne: false
+            referencedRelation: "nervous_system_signal_groups"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "nervous_system_events_organization_id_fkey"
             columns: ["organization_id"]
@@ -27142,6 +27164,98 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "nervous_system_live_state_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nervous_system_signal_groups: {
+        Row: {
+          aggregated_payload: Json
+          confidence_score: number | null
+          created_at: string
+          event_count: number
+          event_domain: string
+          event_subdomain: string | null
+          event_type: string
+          fingerprint: string
+          first_seen_at: string
+          group_key: string
+          id: string
+          last_seen_at: string
+          metadata: Json
+          novelty_score: number | null
+          organization_id: string
+          recurrence_score: number
+          representative_event_id: string | null
+          service_name: string | null
+          severity: string
+          severity_score: number | null
+          source_type: string | null
+          status: string
+          summary: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          aggregated_payload?: Json
+          confidence_score?: number | null
+          created_at?: string
+          event_count?: number
+          event_domain: string
+          event_subdomain?: string | null
+          event_type: string
+          fingerprint: string
+          first_seen_at?: string
+          group_key: string
+          id?: string
+          last_seen_at?: string
+          metadata?: Json
+          novelty_score?: number | null
+          organization_id: string
+          recurrence_score?: number
+          representative_event_id?: string | null
+          service_name?: string | null
+          severity?: string
+          severity_score?: number | null
+          source_type?: string | null
+          status?: string
+          summary: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          aggregated_payload?: Json
+          confidence_score?: number | null
+          created_at?: string
+          event_count?: number
+          event_domain?: string
+          event_subdomain?: string | null
+          event_type?: string
+          fingerprint?: string
+          first_seen_at?: string
+          group_key?: string
+          id?: string
+          last_seen_at?: string
+          metadata?: Json
+          novelty_score?: number | null
+          organization_id?: string
+          recurrence_score?: number
+          representative_event_id?: string | null
+          service_name?: string | null
+          severity?: string
+          severity_score?: number | null
+          source_type?: string | null
+          status?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nervous_system_signal_groups_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
