@@ -337,7 +337,7 @@ export async function maybePromoteToPattern(
     .single();
 
   if (existingPattern) {
-    // Update occurrence count
+    // Update occurrence count — not a new promotion
     await sc
       .from("nervous_system_event_patterns")
       .update({
@@ -346,6 +346,7 @@ export async function maybePromoteToPattern(
         updated_at: new Date().toISOString(),
       })
       .eq("id", existingPattern.id);
+    return false; // Updated existing, not a new promotion
   } else {
     // Create new pattern — conservative, evidence-based
     await sc
@@ -366,6 +367,7 @@ export async function maybePromoteToPattern(
           min_threshold: MIN_EVENTS_FOR_PATTERN,
         },
       });
+    return true; // New pattern created
   }
 }
 
