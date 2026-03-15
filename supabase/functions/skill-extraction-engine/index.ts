@@ -604,12 +604,19 @@ function getAiReviewProviderChain(): AiReviewProvider[] {
 
   const providers: AiReviewProvider[] = [];
 
-  if (openaiKey) {
+  // Lovable Gateway FIRST — always available, cheapest models
+  if (lovableKey) {
     providers.push({
-      label: "openai",
-      url: "https://api.openai.com/v1/chat/completions",
-      key: openaiKey,
-      model: "gpt-5-mini",
+      label: "lovable_gateway_flash",
+      url: "https://ai.gateway.lovable.dev/v1/chat/completions",
+      key: lovableKey,
+      model: "google/gemini-2.5-flash-lite",
+    });
+    providers.push({
+      label: "lovable_gateway_gemini",
+      url: "https://ai.gateway.lovable.dev/v1/chat/completions",
+      key: lovableKey,
+      model: "google/gemini-2.5-flash",
     });
   }
 
@@ -622,12 +629,12 @@ function getAiReviewProviderChain(): AiReviewProvider[] {
     });
   }
 
-  if (lovableKey) {
+  if (openaiKey) {
     providers.push({
-      label: "lovable_gateway_openai",
-      url: "https://ai.gateway.lovable.dev/v1/chat/completions",
-      key: lovableKey,
-      model: "openai/gpt-5-mini",
+      label: "openai",
+      url: "https://api.openai.com/v1/chat/completions",
+      key: openaiKey,
+      model: "gpt-5-mini",
     });
   }
 
@@ -793,7 +800,7 @@ async function aiReviewBatch(sc: any, orgId: string, reviewerId: string, p: any)
     ).join("\n\n");
 
     try {
-      const llmBody = {
+      const llmBody: Record<string, unknown> = {
         messages: [
           {
             role: "system",
@@ -811,15 +818,17 @@ Then output verdict:
 - needs_refinement (overall 0.4-0.6)
 - rejected (overall < 0.4)
 
-Return structured tool output only. Preserve skill_id exactly when present.`,
+Return ONLY valid JSON with this structure:
+{"reviews": [{"skill_id": "exact-uuid", "skill_index": 1, "verdict": "approved|rejected|needs_refinement", "specificity": 0.8, "applicability": 0.7, "reusability": 0.9, "confidence_assessment": 0.85, "rationale": "brief reason"}]}
+
+Preserve skill_id exactly as provided. One review per skill.`,
           },
           {
             role: "user",
             content: `Review these ${batch.length} skills and return one decision per skill:\n\n${skillsPrompt}`,
           },
         ],
-        tools: [AI_REVIEW_TOOL],
-        tool_choice: { type: "function", function: { name: "review_skills_batch" } },
+        response_format: { type: "json_object" },
       };
 
       const { data: aiData, provider } = await invokeAiReviewWithFailover(providerChain, llmBody);
