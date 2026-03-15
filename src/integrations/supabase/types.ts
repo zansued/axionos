@@ -5704,6 +5704,92 @@ export type Database = {
           },
         ]
       }
+      autonomic_actions: {
+        Row: {
+          action_metadata: Json
+          action_payload: Json
+          action_type: string
+          approved_at: string | null
+          approved_by: string | null
+          cancelled_at: string | null
+          completed_at: string | null
+          created_at: string
+          decision_id: string
+          event_id: string
+          execution_error: Json
+          execution_mode: string
+          execution_result: Json
+          execution_status: string
+          expected_outcome: Json
+          failed_at: string | null
+          id: string
+          organization_id: string
+          policy_snapshot: Json
+          signal_group_id: string | null
+          started_at: string | null
+          surfaced_item_id: string
+          updated_at: string
+        }
+        Insert: {
+          action_metadata?: Json
+          action_payload?: Json
+          action_type: string
+          approved_at?: string | null
+          approved_by?: string | null
+          cancelled_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          decision_id: string
+          event_id: string
+          execution_error?: Json
+          execution_mode?: string
+          execution_result?: Json
+          execution_status?: string
+          expected_outcome?: Json
+          failed_at?: string | null
+          id?: string
+          organization_id: string
+          policy_snapshot?: Json
+          signal_group_id?: string | null
+          started_at?: string | null
+          surfaced_item_id: string
+          updated_at?: string
+        }
+        Update: {
+          action_metadata?: Json
+          action_payload?: Json
+          action_type?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          cancelled_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          decision_id?: string
+          event_id?: string
+          execution_error?: Json
+          execution_mode?: string
+          execution_result?: Json
+          execution_status?: string
+          expected_outcome?: Json
+          failed_at?: string | null
+          id?: string
+          organization_id?: string
+          policy_snapshot?: Json
+          signal_group_id?: string | null
+          started_at?: string | null
+          surfaced_item_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "autonomic_actions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       autonomous_operation_executions: {
         Row: {
           created_at: string
@@ -26978,6 +27064,7 @@ export type Database = {
           decision_reason: string
           decision_type: string
           event_id: string
+          execution_status: string | null
           expected_outcome: Json
           id: string
           organization_id: string
@@ -26997,6 +27084,7 @@ export type Database = {
           decision_reason?: string
           decision_type?: string
           event_id: string
+          execution_status?: string | null
           expected_outcome?: Json
           id?: string
           organization_id: string
@@ -27016,6 +27104,7 @@ export type Database = {
           decision_reason?: string
           decision_type?: string
           event_id?: string
+          execution_status?: string | null
           expected_outcome?: Json
           id?: string
           organization_id?: string
@@ -27263,6 +27352,71 @@ export type Database = {
           },
         ]
       }
+      nervous_system_learning_feedback: {
+        Row: {
+          action_id: string
+          created_at: string
+          decision_id: string
+          event_id: string
+          expected_outcome_met: boolean | null
+          feedback_metadata: Json
+          feedback_reason: string | null
+          feedback_score: number | null
+          feedback_type: string
+          id: string
+          measured_metrics: Json
+          operator_signal: string | null
+          organization_id: string
+          signal_group_id: string | null
+          surfaced_item_id: string
+          was_successful: boolean | null
+        }
+        Insert: {
+          action_id: string
+          created_at?: string
+          decision_id: string
+          event_id: string
+          expected_outcome_met?: boolean | null
+          feedback_metadata?: Json
+          feedback_reason?: string | null
+          feedback_score?: number | null
+          feedback_type: string
+          id?: string
+          measured_metrics?: Json
+          operator_signal?: string | null
+          organization_id: string
+          signal_group_id?: string | null
+          surfaced_item_id: string
+          was_successful?: boolean | null
+        }
+        Update: {
+          action_id?: string
+          created_at?: string
+          decision_id?: string
+          event_id?: string
+          expected_outcome_met?: boolean | null
+          feedback_metadata?: Json
+          feedback_reason?: string | null
+          feedback_score?: number | null
+          feedback_type?: string
+          id?: string
+          measured_metrics?: Json
+          operator_signal?: string | null
+          organization_id?: string
+          signal_group_id?: string | null
+          surfaced_item_id?: string
+          was_successful?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nervous_system_learning_feedback_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nervous_system_live_state: {
         Row: {
           organization_id: string
@@ -27388,6 +27542,7 @@ export type Database = {
         Row: {
           acknowledged_at: string | null
           acknowledged_by: string | null
+          action_id: string | null
           approved_at: string | null
           approved_by: string | null
           attention_level: string
@@ -27396,13 +27551,16 @@ export type Database = {
           dismissed_at: string | null
           dismissed_by: string | null
           event_id: string
+          execution_status: string | null
           expected_outcome: Json
+          expired_at: string | null
           id: string
           operator_notes: Json
           organization_id: string
           priority_level: string
           recommended_action_payload: Json
           recommended_action_type: string | null
+          resolved_at: string | null
           risk_level: string
           signal_group_id: string | null
           status_reason: string | null
@@ -27416,6 +27574,7 @@ export type Database = {
         Insert: {
           acknowledged_at?: string | null
           acknowledged_by?: string | null
+          action_id?: string | null
           approved_at?: string | null
           approved_by?: string | null
           attention_level: string
@@ -27424,13 +27583,16 @@ export type Database = {
           dismissed_at?: string | null
           dismissed_by?: string | null
           event_id: string
+          execution_status?: string | null
           expected_outcome?: Json
+          expired_at?: string | null
           id?: string
           operator_notes?: Json
           organization_id: string
           priority_level: string
           recommended_action_payload?: Json
           recommended_action_type?: string | null
+          resolved_at?: string | null
           risk_level: string
           signal_group_id?: string | null
           status_reason?: string | null
@@ -27444,6 +27606,7 @@ export type Database = {
         Update: {
           acknowledged_at?: string | null
           acknowledged_by?: string | null
+          action_id?: string | null
           approved_at?: string | null
           approved_by?: string | null
           attention_level?: string
@@ -27452,13 +27615,16 @@ export type Database = {
           dismissed_at?: string | null
           dismissed_by?: string | null
           event_id?: string
+          execution_status?: string | null
           expected_outcome?: Json
+          expired_at?: string | null
           id?: string
           operator_notes?: Json
           organization_id?: string
           priority_level?: string
           recommended_action_payload?: Json
           recommended_action_type?: string | null
+          resolved_at?: string | null
           risk_level?: string
           signal_group_id?: string | null
           status_reason?: string | null
