@@ -1,17 +1,10 @@
 /**
- * Nervous System Engine — NS-01 + NS-02 + NS-03
- *
- * ARCHITECTURE NOTES:
- * - This edge function is the controlled gateway to the nervous system.
- * - Writes use service-role client, bypassing RLS intentionally.
- * - All org membership is validated before any query.
- * - NS-02 adds: process_pending, list_signal_groups, get_classified_feed.
- * - NS-03 adds: process_context_batch, get_contextual_feed.
+ * Nervous System Engine — NS-01 + NS-02 + NS-03 + NS-04
  *
  * Actions:
  *   READ:  list_events, get_pulse, list_patterns, list_signal_groups,
- *          get_classified_feed, get_contextual_feed
- *   WRITE: emit_event, process_pending, process_context_batch
+ *          get_classified_feed, get_contextual_feed, get_decision_feed, list_decisions
+ *   WRITE: emit_event, process_pending, process_context_batch, process_decision_batch
  */
 
 import { handleCors, errorResponse } from "../_shared/cors.ts";
@@ -21,6 +14,7 @@ import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-aud
 import { emitNervousSystemEvent } from "../_shared/nervous-system.ts";
 import { processPendingEvents } from "../_shared/nervous-system-classifier.ts";
 import { processContextualization } from "../_shared/nervous-system-context-engine.ts";
+import { processDecisionBatch } from "../_shared/nervous-system-decision-engine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -31,8 +25,11 @@ const corsHeaders = {
 const READ_ACTIONS = new Set([
   "list_events", "get_pulse", "list_patterns",
   "list_signal_groups", "get_classified_feed", "get_contextual_feed",
+  "get_decision_feed", "list_decisions",
 ]);
-const WRITE_ACTIONS = new Set(["emit_event", "process_pending", "process_context_batch"]);
+const WRITE_ACTIONS = new Set([
+  "emit_event", "process_pending", "process_context_batch", "process_decision_batch",
+]);
 const ALL_ACTIONS = new Set([...READ_ACTIONS, ...WRITE_ACTIONS]);
 
 const MAX_LIST_LIMIT = 200;
@@ -47,6 +44,10 @@ const VALID_STATUSES = new Set([
   "new", "classified", "contextualized", "decided",
   "surfaced", "resolved", "archived",
 ]);
+const VALID_DECISION_TYPES = new Set([
+  "observe", "surface", "recommend_action", "escalate", "queue_for_action", "mark_for_learning",
+]);
+const VALID_PRIORITY_LEVELS = new Set(["low", "medium", "high", "urgent"]);
 
 Deno.serve(async (req) => {
   const corsRes = handleCors(req);
@@ -96,6 +97,8 @@ Deno.serve(async (req) => {
         return await handleProcessPending(sc, orgId, body);
       case "process_context_batch":
         return await handleProcessContextBatch(sc, orgId, body);
+      case "process_decision_batch":
+        return await handleProcessDecisionBatch(sc, orgId, body);
       case "list_events":
         return await handleListEvents(sc, orgId, body);
       case "get_pulse":
@@ -108,6 +111,10 @@ Deno.serve(async (req) => {
         return await handleGetClassifiedFeed(sc, orgId, body);
       case "get_contextual_feed":
         return await handleGetContextualFeed(sc, orgId, body);
+      case "get_decision_feed":
+        return await handleGetDecisionFeed(sc, orgId, body);
+      case "list_decisions":
+        return await handleListDecisions(sc, orgId, body);
       default:
         return json({ error: `Unhandled action: ${action}` }, 400);
     }
@@ -138,13 +145,9 @@ async function handleEmitEvent(sc: any, orgId: string, body: Record<string, unkn
   if (!sourceType || !eventType || !eventDomain || !summary) {
     return json({ error: "Missing required fields: source_type, event_type, event_domain, summary" }, 400);
   }
-  if (!VALID_DOMAINS.has(eventDomain)) {
-    return json({ error: `Invalid event_domain: ${eventDomain}` }, 400);
-  }
+  if (!VALID_DOMAINS.has(eventDomain)) return json({ error: `Invalid event_domain: ${eventDomain}` }, 400);
   const severity = body.severity as string | undefined;
-  if (severity && !VALID_SEVERITIES.has(severity)) {
-    return json({ error: `Invalid severity: ${severity}` }, 400);
-  }
+  if (severity && !VALID_SEVERITIES.has(severity)) return json({ error: `Invalid severity: ${severity}` }, 400);
 
   const result = await emitNervousSystemEvent(sc, {
     organization_id: orgId,
@@ -165,13 +168,7 @@ async function handleEmitEvent(sc: any, orgId: string, body: Record<string, unkn
   });
 
   if (!result) return json({ error: "Failed to emit event" }, 500);
-
-  return json({
-    success: true,
-    event_id: result.id,
-    fingerprint: result.fingerprint,
-    deduplicated: result.deduplicated,
-  });
+  return json({ success: true, event_id: result.id, fingerprint: result.fingerprint, deduplicated: result.deduplicated });
 }
 
 async function handleProcessPending(sc: any, orgId: string, body: Record<string, unknown>) {
@@ -180,12 +177,15 @@ async function handleProcessPending(sc: any, orgId: string, body: Record<string,
   return json({ success: true, result });
 }
 
-/**
- * NS-03: Trigger batch contextualization of classified events.
- */
 async function handleProcessContextBatch(sc: any, orgId: string, body: Record<string, unknown>) {
   const batchSize = Math.min(Number(body.batch_size) || 50, 100);
   const result = await processContextualization(sc, orgId, batchSize);
+  return json({ success: true, result });
+}
+
+async function handleProcessDecisionBatch(sc: any, orgId: string, body: Record<string, unknown>) {
+  const batchSize = Math.min(Number(body.batch_size) || 50, 100);
+  const result = await processDecisionBatch(sc, orgId, batchSize);
   return json({ success: true, result });
 }
 
@@ -203,7 +203,7 @@ async function handleListEvents(sc: any, orgId: string, body: Record<string, unk
 
   let query = sc
     .from("nervous_system_events")
-    .select("id, created_at, occurred_at, source_type, source_id, event_type, event_domain, event_subdomain, severity, severity_score, novelty_score, confidence_score, fingerprint, dedup_group, signal_group_id, summary, payload, metadata, classification_metadata, status, classified_at, contextualized_at, surfaced_at, context_summary, context_confidence, related_event_ids, related_signal_group_ids, initiative_id, service_name")
+    .select("id, created_at, occurred_at, source_type, source_id, event_type, event_domain, event_subdomain, severity, severity_score, novelty_score, confidence_score, fingerprint, dedup_group, signal_group_id, summary, payload, metadata, classification_metadata, status, classified_at, contextualized_at, surfaced_at, decided_at, decision_id, context_summary, context_confidence, related_event_ids, related_signal_group_ids, initiative_id, service_name")
     .eq("organization_id", orgId)
     .order("created_at", { ascending: false })
     .limit(limit);
@@ -224,24 +224,22 @@ async function handleGetPulse(sc: any, orgId: string) {
     .from("nervous_system_live_state")
     .select("state_key, state_value, updated_at")
     .eq("organization_id", orgId)
-    .in("state_key", ["system_pulse", "classified_summary", "contextualized_summary"]);
+    .in("state_key", ["system_pulse", "classified_summary", "contextualized_summary", "decision_summary"]);
 
-  const pulse = liveStates?.find((s: any) => s.state_key === "system_pulse");
-  const classified = liveStates?.find((s: any) => s.state_key === "classified_summary");
-  const contextualized = liveStates?.find((s: any) => s.state_key === "contextualized_summary");
+  const find = (key: string) => liveStates?.find((s: any) => s.state_key === key);
 
   return json({
-    pulse: pulse?.state_value || null,
-    classified_summary: classified?.state_value || null,
-    contextualized_summary: contextualized?.state_value || null,
-    updated_at: pulse?.updated_at || classified?.updated_at || contextualized?.updated_at || null,
+    pulse: find("system_pulse")?.state_value || null,
+    classified_summary: find("classified_summary")?.state_value || null,
+    contextualized_summary: find("contextualized_summary")?.state_value || null,
+    decision_summary: find("decision_summary")?.state_value || null,
+    updated_at: find("system_pulse")?.updated_at || find("decision_summary")?.updated_at || null,
   });
 }
 
 async function handleListPatterns(sc: any, orgId: string, body: Record<string, unknown>) {
   const limit = Math.min(Math.max(1, Number(body.limit) || DEFAULT_LIST_LIMIT), 100);
   const domain = body.domain as string | undefined;
-
   if (domain && !VALID_DOMAINS.has(domain)) return json({ error: `Invalid domain: ${domain}` }, 400);
 
   let query = sc
@@ -250,7 +248,6 @@ async function handleListPatterns(sc: any, orgId: string, body: Record<string, u
     .eq("organization_id", orgId)
     .order("occurrence_count", { ascending: false })
     .limit(limit);
-
   if (domain) query = query.eq("domain", domain);
 
   const { data, error } = await query;
@@ -274,7 +271,6 @@ async function handleListSignalGroups(sc: any, orgId: string, body: Record<strin
     .eq("status", status)
     .order("last_seen_at", { ascending: false })
     .limit(limit);
-
   if (domain) query = query.eq("event_domain", domain);
   if (severity) query = query.eq("severity", severity);
 
@@ -287,17 +283,15 @@ async function handleGetClassifiedFeed(sc: any, orgId: string, body: Record<stri
   const limit = Math.min(Math.max(1, Number(body.limit) || 20), 50);
   const domain = body.domain as string | undefined;
   const minSeverity = body.min_severity as string | undefined;
-
   if (domain && !VALID_DOMAINS.has(domain)) return json({ error: `Invalid domain: ${domain}` }, 400);
 
   let query = sc
     .from("nervous_system_events")
     .select("id, created_at, occurred_at, event_type, event_domain, event_subdomain, severity, severity_score, novelty_score, confidence_score, signal_group_id, summary, classification_metadata, status, classified_at, service_name, source_type")
     .eq("organization_id", orgId)
-    .in("status", ["classified", "contextualized", "surfaced"])
+    .in("status", ["classified", "contextualized", "decided", "surfaced"])
     .order("classified_at", { ascending: false })
     .limit(limit);
-
   if (domain) query = query.eq("event_domain", domain);
   if (minSeverity && VALID_SEVERITIES.has(minSeverity)) {
     const minScore = { low: 0.25, medium: 0.50, high: 0.75, critical: 1.00 }[minSeverity] || 0;
@@ -309,14 +303,10 @@ async function handleGetClassifiedFeed(sc: any, orgId: string, body: Record<stri
   return json({ feed: data || [], count: data?.length || 0 });
 }
 
-/**
- * NS-03: Get contextualized feed — only contextualized events with full context.
- */
 async function handleGetContextualFeed(sc: any, orgId: string, body: Record<string, unknown>) {
   const limit = Math.min(Math.max(1, Number(body.limit) || 20), 50);
   const domain = body.domain as string | undefined;
   const attention = body.attention as string | undefined;
-
   if (domain && !VALID_DOMAINS.has(domain)) return json({ error: `Invalid domain: ${domain}` }, 400);
 
   let query = sc
@@ -326,19 +316,68 @@ async function handleGetContextualFeed(sc: any, orgId: string, body: Record<stri
     .in("status", ["contextualized", "decided", "surfaced"])
     .order("contextualized_at", { ascending: false })
     .limit(limit);
-
   if (domain) query = query.eq("event_domain", domain);
 
   const { data, error } = await query;
   if (error) return json({ error: error.message }, 500);
 
-  // Filter by attention level in-memory (jsonb field)
   let feed = data || [];
   if (attention) {
-    feed = feed.filter((e: any) =>
-      e.context_summary?.recommended_attention === attention
-    );
+    feed = feed.filter((e: any) => e.context_summary?.recommended_attention === attention);
+  }
+  return json({ feed, count: feed.length });
+}
+
+/**
+ * NS-04: Get decision feed — recent decisions with priority/type filters.
+ */
+async function handleGetDecisionFeed(sc: any, orgId: string, body: Record<string, unknown>) {
+  const limit = Math.min(Math.max(1, Number(body.limit) || 20), 50);
+  const decisionType = body.decision_type as string | undefined;
+  const priority = body.priority as string | undefined;
+  const riskLevel = body.risk_level as string | undefined;
+
+  if (decisionType && !VALID_DECISION_TYPES.has(decisionType)) return json({ error: `Invalid decision_type` }, 400);
+  if (priority && !VALID_PRIORITY_LEVELS.has(priority)) return json({ error: `Invalid priority` }, 400);
+
+  let query = sc
+    .from("nervous_system_decisions")
+    .select("id, organization_id, event_id, signal_group_id, decision_type, decision_reason, decision_confidence, risk_level, priority_level, recommended_action_type, recommended_action_payload, expected_outcome, decision_metadata, created_at, decided_at, status")
+    .eq("organization_id", orgId)
+    .eq("status", "active")
+    .order("decided_at", { ascending: false })
+    .limit(limit);
+
+  if (decisionType) query = query.eq("decision_type", decisionType);
+  if (priority) query = query.eq("priority_level", priority);
+  if (riskLevel) query = query.eq("risk_level", riskLevel);
+
+  const { data, error } = await query;
+  if (error) return json({ error: error.message }, 500);
+  return json({ decisions: data || [], count: data?.length || 0 });
+}
+
+/**
+ * NS-04: List all decisions with flexible filters.
+ */
+async function handleListDecisions(sc: any, orgId: string, body: Record<string, unknown>) {
+  const limit = Math.min(Math.max(1, Number(body.limit) || DEFAULT_LIST_LIMIT), MAX_LIST_LIMIT);
+  const status = (body.status as string) || "active";
+  const decisionType = body.decision_type as string | undefined;
+
+  let query = sc
+    .from("nervous_system_decisions")
+    .select("id, event_id, signal_group_id, decision_type, decision_reason, decision_confidence, risk_level, priority_level, recommended_action_type, expected_outcome, decided_at, status")
+    .eq("organization_id", orgId)
+    .eq("status", status)
+    .order("decided_at", { ascending: false })
+    .limit(limit);
+
+  if (decisionType && VALID_DECISION_TYPES.has(decisionType)) {
+    query = query.eq("decision_type", decisionType);
   }
 
-  return json({ feed, count: feed.length });
+  const { data, error } = await query;
+  if (error) return json({ error: error.message }, 500);
+  return json({ decisions: data || [], count: data?.length || 0 });
 }

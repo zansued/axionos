@@ -77,14 +77,46 @@ Deno.test("NS-03: Action get_contextual_feed requires auth", async () => {
   assertEquals(status, 401);
 });
 
-Deno.test("NS-03: Action process_context_batch is recognized (not 400)", async () => {
-  // With anon key as bearer (will fail at auth or org, not at action validation)
-  const { status } = await callEngine({ action: "process_context_batch" }, SUPABASE_ANON_KEY);
-  // Should be 401 (auth fail) or 403 (org fail), NOT 400 (unknown action)
-  assertEquals(status === 401 || status === 403, true);
+Deno.test("NS-03: Actions recognized (not 400)", async () => {
+  const { status: s1 } = await callEngine({ action: "process_context_batch" }, SUPABASE_ANON_KEY);
+  assertEquals(s1 === 401 || s1 === 403, true);
+  const { status: s2 } = await callEngine({ action: "get_contextual_feed" }, SUPABASE_ANON_KEY);
+  assertEquals(s2 === 401 || s2 === 403, true);
 });
 
-Deno.test("NS-03: Action get_contextual_feed is recognized (not 400)", async () => {
-  const { status } = await callEngine({ action: "get_contextual_feed" }, SUPABASE_ANON_KEY);
+// ═══════════════════════════════════════════════════
+// NS-04: Decision Layer Actions
+// ═══════════════════════════════════════════════════
+
+Deno.test("NS-04: Action process_decision_batch requires auth", async () => {
+  const { status } = await callEngine({ action: "process_decision_batch" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-04: Action get_decision_feed requires auth", async () => {
+  const { status } = await callEngine({ action: "get_decision_feed" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-04: Action list_decisions requires auth", async () => {
+  const { status } = await callEngine({ action: "list_decisions" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-04: Decision actions recognized (not 400)", async () => {
+  const actions = ["process_decision_batch", "get_decision_feed", "list_decisions"];
+  for (const action of actions) {
+    const { status } = await callEngine({ action }, SUPABASE_ANON_KEY);
+    assertEquals(status === 401 || status === 403, true, `${action} returned ${status}`);
+  }
+});
+
+// ═══════════════════════════════════════════════════
+// NS-04: Tenant isolation on decisions
+// ═══════════════════════════════════════════════════
+
+Deno.test("NS-04: Decisions query requires org membership", async () => {
+  // Anon key without proper user → auth fails before org check
+  const { status } = await callEngine({ action: "list_decisions" }, SUPABASE_ANON_KEY);
   assertEquals(status === 401 || status === 403, true);
 });

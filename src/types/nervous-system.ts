@@ -1,16 +1,14 @@
 /**
- * AI Nervous System — Sprint NS-01 + NS-02 + NS-03 Domain Types
+ * AI Nervous System — Sprint NS-01 through NS-04 Domain Types
  *
  * ARCHITECTURE NOTES:
- * - These types define the read-only contract between backend and frontend.
- * - The frontend NEVER writes to nervous system tables.
- * - Classification, enrichment, grouping, and contextualization happen exclusively on the backend.
- * - Realtime subscriptions are tenant-scoped and read-only.
+ * - Read-only contract between backend and frontend.
+ * - Frontend NEVER writes to nervous system tables.
+ * - All processing (classification, context, decisions) is backend-only.
  *
  * EVOLUTION PATH:
- * - NS-04: Decision types (recommendations, action proposals)
- * - NS-05: Live stream types (SSE payloads, pulse metrics)
- * - NS-06: Learning feedback types (outcome scoring, confidence evolution)
+ * - NS-05: Surfacing & execution types
+ * - NS-06: Learning feedback types
  */
 
 // ═══════════════════════════════════════════════════
@@ -22,10 +20,6 @@ export const NS_EVENT_DOMAINS = [
   "cost", "adoption", "deployment", "security", "learning",
 ] as const;
 export type NsEventDomain = (typeof NS_EVENT_DOMAINS)[number];
-
-// ═══════════════════════════════════════════════════
-// Event Type Taxonomy
-// ═══════════════════════════════════════════════════
 
 export const NS_EVENT_TYPES = [
   "latency_spike", "error_pattern_detected", "resource_exhaustion",
@@ -40,34 +34,19 @@ export const NS_EVENT_TYPES = [
 ] as const;
 export type NsEventType = (typeof NS_EVENT_TYPES)[number];
 
-// ═══════════════════════════════════════════════════
-// Severity
-// ═══════════════════════════════════════════════════
-
 export const NS_SEVERITIES = ["low", "medium", "high", "critical"] as const;
 export type NsSeverity = (typeof NS_SEVERITIES)[number];
 
 // ═══════════════════════════════════════════════════
-// Event Status Lifecycle
+// Event Status Lifecycle (updated NS-04)
 //
-// LIFECYCLE SEMANTICS (canonical, updated NS-03):
-//
-//   new             → Event emitted, not yet processed.
-//   classified      → Classifier assigned domain, severity, scores.
-//   contextualized  → Context Engine has correlated with recent signals,
-//                     detected sequences, and attached operational context.
-//                     context_summary, context_confidence, related_event_ids,
-//                     and related_signal_group_ids are populated.
-//   decided         → (NS-04) Decision Layer has produced a recommendation.
-//   surfaced        → (NS-05) Formally selected for prominent display.
-//   resolved        → Signal has been addressed.
-//   archived        → Retained for history, no longer active.
+//   new → classified → contextualized → decided → surfaced → resolved → archived
 //
 // Transitions (backend-only):
-//   new → classified          (NS-02: classifier)
-//   classified → contextualized (NS-03: context engine)
-//   contextualized → decided    (NS-04: decision layer)
-//   decided → surfaced          (NS-05: formal escalation)
+//   new → classified          (NS-02)
+//   classified → contextualized (NS-03)
+//   contextualized → decided    (NS-04: decision engine)
+//   decided → surfaced          (NS-05)
 //   surfaced → resolved         (manual or autonomic)
 //   any → archived              (TTL or manual)
 // ═══════════════════════════════════════════════════
@@ -77,10 +56,6 @@ export const NS_EVENT_STATUSES = [
   "surfaced", "resolved", "archived",
 ] as const;
 export type NsEventStatus = (typeof NS_EVENT_STATUSES)[number];
-
-// ═══════════════════════════════════════════════════
-// Source Types
-// ═══════════════════════════════════════════════════
 
 export const NS_SOURCE_TYPES = [
   "edge_function", "pipeline_worker", "agent",
@@ -94,75 +69,84 @@ export type NsSourceType = (typeof NS_SOURCE_TYPES)[number];
 // ═══════════════════════════════════════════════════
 
 export const NS_CONTEXT_TYPES = [
-  "isolated_signal",
-  "recurring_issue",
-  "escalating_incident",
-  "recovery_sequence",
-  "agent_instability",
-  "pipeline_disruption",
+  "isolated_signal", "recurring_issue", "escalating_incident",
+  "recovery_sequence", "agent_instability", "pipeline_disruption",
 ] as const;
 export type NsContextType = (typeof NS_CONTEXT_TYPES)[number];
 
-export const NS_ATTENTION_LEVELS = [
-  "none", "monitor", "investigate", "escalate",
-] as const;
+export const NS_ATTENTION_LEVELS = ["none", "monitor", "investigate", "escalate"] as const;
 export type NsAttentionLevel = (typeof NS_ATTENTION_LEVELS)[number];
 
-export const NS_RECURRENCE_LEVELS = [
-  "none", "low", "moderate", "high",
-] as const;
+export const NS_RECURRENCE_LEVELS = ["none", "low", "moderate", "high"] as const;
 export type NsRecurrenceLevel = (typeof NS_RECURRENCE_LEVELS)[number];
 
 export const NS_CONTEXT_RELATION_TYPES = [
-  "temporal_proximity",
-  "same_signal_group",
-  "same_agent",
-  "same_service",
-  "same_initiative",
-  "causal_candidate",
+  "temporal_proximity", "same_signal_group", "same_agent",
+  "same_service", "same_initiative", "causal_candidate",
 ] as const;
 export type NsContextRelationType = (typeof NS_CONTEXT_RELATION_TYPES)[number];
 
 // ═══════════════════════════════════════════════════
-// Core Event Interface (read-only from frontend)
+// NS-04: Decision Types
+// ═══════════════════════════════════════════════════
+
+export const NS_DECISION_TYPES = [
+  "observe", "surface", "recommend_action",
+  "escalate", "queue_for_action", "mark_for_learning",
+] as const;
+export type NsDecisionType = (typeof NS_DECISION_TYPES)[number];
+
+export const NS_RISK_LEVELS = ["low", "medium", "high", "critical"] as const;
+export type NsRiskLevel = (typeof NS_RISK_LEVELS)[number];
+
+export const NS_PRIORITY_LEVELS = ["low", "medium", "high", "urgent"] as const;
+export type NsPriorityLevel = (typeof NS_PRIORITY_LEVELS)[number];
+
+export const NS_RECOMMENDED_ACTIONS = [
+  "investigate_service_health",
+  "inspect_agent_fallback_chain",
+  "review_pipeline_dependencies",
+  "increase_observability",
+  "validate_retry_policy",
+  "review_cost_routing",
+  "mark_pattern_for_review",
+] as const;
+export type NsRecommendedAction = (typeof NS_RECOMMENDED_ACTIONS)[number];
+
+// ═══════════════════════════════════════════════════
+// Core Event Interface
 // ═══════════════════════════════════════════════════
 
 export interface NervousSystemEvent {
   id: string;
   created_at: string;
   occurred_at: string;
-
   source_type: NsSourceType;
   source_id: string | null;
   event_type: string;
   event_domain: NsEventDomain;
   event_subdomain: string | null;
-
   initiative_id: string | null;
   pipeline_id: string | null;
   agent_id: string | null;
   service_name: string | null;
-
   severity: NsSeverity;
   severity_score: number | null;
   novelty_score: number | null;
   confidence_score: number | null;
-
   fingerprint: string | null;
   dedup_group: string | null;
   signal_group_id: string | null;
-
   summary: string;
   payload: Record<string, unknown>;
   metadata: Record<string, unknown>;
   classification_metadata: NsClassificationMetadata;
-
   status: NsEventStatus;
   classified_at: string | null;
   contextualized_at: string | null;
   surfaced_at: string | null;
-
-  // NS-03: Context fields
+  decided_at: string | null;
+  decision_id: string | null;
   context_summary: NsContextSummary | null;
   context_confidence: number | null;
   related_event_ids: string[] | null;
@@ -170,34 +154,24 @@ export interface NervousSystemEvent {
 }
 
 // ═══════════════════════════════════════════════════
-// NS-02: Classification Metadata — FROZEN CONTRACT v1.0
-// (see v1.0 spec in NS-02 for full documentation)
-//
-// VERSION HISTORY:
-//   v1.0 (NS-02): Initial contract.
-//   v1.1 (NS-03): Added context_engine_version, canon_refs_count.
+// Classification Metadata — Contract v1.1
 // ═══════════════════════════════════════════════════
 
 export interface NsClassificationMetadata {
-  // === REQUIRED (always present after classification) ===
   classified_by: string;
   rule_version: string;
   type_matched: boolean;
-
-  // === OPTIONAL (present when applicable) ===
   severity_overridden?: boolean;
   fingerprint_count_1h?: number;
   enriched_by?: string;
   enrichment_version?: string;
   normalized_source?: string;
   category_hints?: string[];
-
-  // === NS-03 (populated after contextualization) ===
   context_engine_version?: string;
   canon_refs_count?: number;
+  decision_engine_version?: string;
 }
 
-/** Validates that classification_metadata conforms to the v1.0+ contract */
 export function isValidClassificationMetadata(meta: unknown): meta is NsClassificationMetadata {
   if (!meta || typeof meta !== "object") return false;
   const m = meta as Record<string, unknown>;
@@ -228,10 +202,6 @@ export interface NsContextSummary {
   possible_cause: string | null;
 }
 
-// ═══════════════════════════════════════════════════
-// NS-03: Context Link (traceability record)
-// ═══════════════════════════════════════════════════
-
 export interface NsEventContextLink {
   id: string;
   organization_id: string;
@@ -243,45 +213,58 @@ export interface NsEventContextLink {
 }
 
 // ═══════════════════════════════════════════════════
-// NS-02: Signal Group
+// NS-04: Decision
+// ═══════════════════════════════════════════════════
+
+export interface NsDecision {
+  id: string;
+  organization_id: string;
+  event_id: string;
+  signal_group_id: string | null;
+  decision_type: NsDecisionType;
+  decision_reason: string;
+  decision_confidence: number;
+  risk_level: NsRiskLevel;
+  priority_level: NsPriorityLevel;
+  recommended_action_type: string | null;
+  recommended_action_payload: Record<string, unknown>;
+  expected_outcome: Record<string, unknown>;
+  decision_metadata: Record<string, unknown>;
+  created_at: string;
+  decided_at: string;
+  status: "active" | "superseded" | "resolved" | "archived";
+}
+
+// ═══════════════════════════════════════════════════
+// Signal Group
 // ═══════════════════════════════════════════════════
 
 export interface NsSignalGroup {
   id: string;
   created_at: string;
   updated_at: string;
-
   fingerprint: string;
   group_key: string;
   title: string;
-
   event_domain: NsEventDomain;
   event_subdomain: string | null;
   event_type: string;
   severity: NsSeverity;
   severity_score: number | null;
-
   event_count: number;
   first_seen_at: string;
   last_seen_at: string;
   representative_event_id: string | null;
-
   novelty_score: number | null;
   confidence_score: number | null;
   recurrence_score: number;
-
   status: "active" | "resolved" | "archived";
-
   source_type: string | null;
   service_name: string | null;
   summary: string;
   aggregated_payload: Record<string, unknown>;
   metadata: Record<string, unknown>;
 }
-
-// ═══════════════════════════════════════════════════
-// Pattern Interface
-// ═══════════════════════════════════════════════════
 
 export interface NervousSystemEventPattern {
   id: string;
@@ -332,11 +315,22 @@ export interface NsClassifiedSummary {
   last_updated: string;
 }
 
-/** NS-03: Contextualized summary for live state */
 export interface NsContextualizedSummary {
   contextualized_last_hour: number;
   by_attention: Record<string, number>;
   by_context_type: Record<string, number>;
+  last_updated: string;
+}
+
+/** NS-04: Decision summary for live state */
+export interface NsDecisionSummary {
+  active_decisions_last_hour: number;
+  by_type: Record<string, number>;
+  by_risk: Record<string, number>;
+  by_priority: Record<string, number>;
+  escalations_count: number;
+  recommendations_count: number;
+  learning_marks_count: number;
   last_updated: string;
 }
 
@@ -363,7 +357,6 @@ export interface NsProcessingResult {
   errors: number;
 }
 
-/** NS-03: Context processing result */
 export interface NsContextProcessingResult {
   processed: number;
   contextualized: number;
@@ -371,26 +364,28 @@ export interface NsContextProcessingResult {
   errors: number;
 }
 
+/** NS-04: Decision processing result */
+export interface NsDecisionProcessingResult {
+  processed: number;
+  decided: number;
+  by_type: Record<string, number>;
+  errors: number;
+}
+
 // ═══════════════════════════════════════════════════
 // Known Limitations Registry
 //
-// NS-02 limitations (carried forward):
-// 1. Novelty scoring: structural rarity, not operational novelty.
-// 2. Grouping: exact fingerprint match only, no fuzzy/semantic.
-// 3. Classification: rule-based only, no adaptive learning.
-// 4. Pattern promotion: threshold-based (≥5), no statistical significance.
-//
-// NS-03 limitations:
-// 5. Context window: fixed 30 minutes, not adaptive.
-// 6. Sequence detection: ordered subsequence matching, not statistical.
-// 7. No Canon Graph Memory correlation yet (placeholder only).
-// 8. Possible cause is pattern-derived, not root-cause analysis.
-// 9. Context confidence is heuristic, not calibrated.
-// 10. No cross-tenant context (by design, security invariant).
+// NS-02: Novelty=structural rarity; grouping=exact fingerprint;
+//         classification=rule-based; pattern promotion=threshold.
+// NS-03: Fixed 30min window; subsequence matching; no Canon Graph;
+//         possible_cause=pattern-derived; confidence=heuristic.
+// NS-04: Decision rules are static (no adaptive thresholds);
+//         no execution yet (recommend only); no cross-event
+//         decision aggregation; confidence is heuristic average.
 //
 // Improvement targets:
-//   NS-04: Decision layer will consume context for recommendations.
-//   NS-06: Learning feedback will calibrate context confidence.
+//   NS-05: Surfacing executes on escalate/surface decisions.
+//   NS-06: Learning feedback calibrates decision confidence.
 // ═══════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════
@@ -406,6 +401,7 @@ export interface NsGetPulseResponse {
   pulse: NsSystemPulse | null;
   classified_summary: NsClassifiedSummary | null;
   contextualized_summary: NsContextualizedSummary | null;
+  decision_summary: NsDecisionSummary | null;
   updated_at: string | null;
 }
 
@@ -430,9 +426,20 @@ export interface NsGetClassifiedFeedResponse {
   count: number;
 }
 
-/** NS-03: Contextual feed response */
 export interface NsGetContextualFeedResponse {
   feed: NervousSystemEvent[];
+  count: number;
+}
+
+/** NS-04: Decision feed response */
+export interface NsGetDecisionFeedResponse {
+  decisions: NsDecision[];
+  count: number;
+}
+
+/** NS-04: Decision list response */
+export interface NsListDecisionsResponse {
+  decisions: NsDecision[];
   count: number;
 }
 
@@ -441,8 +448,13 @@ export interface NsProcessEventsResponse {
   result: NsProcessingResult;
 }
 
-/** NS-03: Context processing response */
 export interface NsProcessContextResponse {
   success: boolean;
   result: NsContextProcessingResult;
+}
+
+/** NS-04: Decision batch response */
+export interface NsProcessDecisionResponse {
+  success: boolean;
+  result: NsDecisionProcessingResult;
 }
