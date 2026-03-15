@@ -478,23 +478,33 @@ async function batchReview(sc: any, orgId: string, reviewerId: string, p: any) {
 }
 
 async function listReviewable(sc: any, orgId: string, p: any) {
-  const status = p.status || "extracted";
-  const limit = Math.min(p.limit || 50, 200);
+  const includeReviewed = p.include_reviewed === true;
+  const status = p.status;
+  const limit = Math.min(p.limit || 200, 500);
 
-  const { data: skills, error } = await sc
+  let query = sc
     .from("engineering_skills")
-    .select("id, skill_name, description, domain, confidence, lifecycle_status, extraction_method, bundle_id, canon_entry_id, created_at")
+    .select("id, skill_name, description, domain, confidence, lifecycle_status, extraction_method, bundle_id, canon_entry_id, metadata, created_at")
     .eq("organization_id", orgId)
-    .eq("lifecycle_status", status)
-    .order("confidence", { ascending: false })
+    .order("created_at", { ascending: false })
     .limit(limit);
+
+  if (!includeReviewed && !status) {
+    // Default: only pending review statuses
+    query = query.in("lifecycle_status", ["extracted", "pending_review"]);
+  } else if (status && status !== "all") {
+    query = query.eq("lifecycle_status", status);
+  }
+  // If include_reviewed=true and no specific status, return all
+
+  const { data: skills, error } = await query;
 
   if (error) return json({ error: error.message }, 400);
 
   return json({
     skills: skills || [],
     count: skills?.length || 0,
-    filter_status: status,
+    include_reviewed: includeReviewed,
   });
 }
 
