@@ -33,87 +33,87 @@ import { SkillRuntimeTab } from "@/components/canon-intelligence/SkillRuntimeTab
 import { LifecycleHealthCheck } from "@/components/canon-intelligence/LifecycleHealthCheck";
 import { HumanReviewTab } from "@/components/canon-intelligence/HumanReviewTab";
 
-/* ──────────────── Section definitions ──────────────── */
+/* ──────────────── Definições de seções ──────────────── */
 
 const SECTIONS = [
   {
     key: "knowledge",
-    label: "Knowledge Library",
+    label: "Biblioteca de Conhecimento",
     icon: Library,
-    description: "Explore and search the system's known patterns, rules, and architectural intelligence.",
+    description: "Explore e pesquise os padrões, regras e inteligência arquitetural conhecidos pelo sistema.",
     defaultTab: "library",
     tabs: [
-      { value: "library", label: "Pattern Library", icon: BookOpen },
-      { value: "query", label: "Query Console", icon: Search },
-      { value: "graph", label: "Canon Graph", icon: GitBranch },
+      { value: "library", label: "Biblioteca de Padrões", icon: BookOpen },
+      { value: "query", label: "Console de Consulta", icon: Search },
+      { value: "graph", label: "Grafo Canon", icon: GitBranch },
     ],
   },
   {
     key: "ingestion",
-    label: "Knowledge Ingestion & Learning",
+    label: "Ingestão & Aprendizado",
     icon: Lightbulb,
-    description: "Observe how new knowledge enters the system and how operational signals produce learning.",
+    description: "Observe como novos conhecimentos entram no sistema e como sinais operacionais geram aprendizado.",
     defaultTab: "ingestion-agent",
     tabs: [
-      { value: "ingestion-agent", label: "Ingestion Agent", icon: Download },
-      { value: "learning", label: "Operational Learning", icon: Brain },
-      { value: "trust", label: "Repo Trust", icon: Scale },
+      { value: "ingestion-agent", label: "Agente de Ingestão", icon: Download },
+      { value: "learning", label: "Aprendizado Operacional", icon: Brain },
+      { value: "trust", label: "Confiança de Repo", icon: Scale },
     ],
   },
   {
     key: "governance",
-    label: "Governance & Trust",
+    label: "Governança & Confiança",
     icon: ShieldCheck,
-    description: "Review, validate, trace, and maintain the lifecycle of canonical knowledge.",
+    description: "Revise, valide, rastreie e mantenha o ciclo de vida do conhecimento canônico.",
     defaultTab: "governance-tab",
     tabs: [
-      { value: "governance-tab", label: "Governance", icon: Shield },
+      { value: "governance-tab", label: "Governança", icon: Shield },
       { value: "human-review", label: "Revisão Humana", icon: UserCheck },
-      { value: "lineage", label: "Lineage", icon: Route },
-      { value: "renewal", label: "Renewal", icon: HeartPulse },
+      { value: "lineage", label: "Linhagem", icon: Route },
+      { value: "renewal", label: "Renovação", icon: HeartPulse },
     ],
   },
   {
     key: "skills",
-    label: "Skills Pipeline",
+    label: "Pipeline de Skills",
     icon: Boxes,
-    description: "Extract, review, and govern engineering skills derived from canonical knowledge.",
+    description: "Extraia, revise e governe skills de engenharia derivadas do conhecimento canônico.",
     defaultTab: "extraction",
     tabs: [
-      { value: "extraction", label: "Extraction", icon: Boxes },
-      { value: "review", label: "Skill Review", icon: Shield },
-      { value: "bindings", label: "Capability Binding", icon: Route },
-      { value: "runtime", label: "Runtime Use", icon: Zap },
+      { value: "extraction", label: "Extração", icon: Boxes },
+      { value: "review", label: "Revisão de Skills", icon: Shield },
+      { value: "bindings", label: "Vínculo de Capacidades", icon: Route },
+      { value: "runtime", label: "Uso em Runtime", icon: Zap },
     ],
   },
   {
     key: "application",
-    label: "Knowledge Application",
+    label: "Aplicação de Conhecimento",
     icon: Target,
-    description: "Track how knowledge is retrieved, applied, and whether it produces successful outcomes.",
+    description: "Acompanhe como o conhecimento é recuperado, aplicado e se produz resultados bem-sucedidos.",
     defaultTab: "retrieval",
     tabs: [
-      { value: "retrieval", label: "Retrieval Explorer", icon: Eye },
-      { value: "analytics", label: "Usage Analytics", icon: Activity },
-      { value: "applications", label: "Applications", icon: Zap },
+      { value: "retrieval", label: "Explorador de Recuperação", icon: Eye },
+      { value: "analytics", label: "Análise de Uso", icon: Activity },
+      { value: "applications", label: "Aplicações", icon: Zap },
     ],
   },
 ] as const;
 
-/* ──────────────── Metric tooltips ──────────────── */
+/* ──────────────── Tooltips das métricas ──────────────── */
 
 const METRIC_TOOLTIPS: Record<string, string> = {
-  "Canon Entries": "Total canonical knowledge entries registered in the system.",
-  Active: "Entries currently approved and actively used by agents.",
-  Candidates: "Knowledge candidates awaiting review or promotion.",
-  Deprecated: "Entries marked as deprecated and no longer actively used.",
-  Applications: "Times canonical knowledge was applied during agent execution. (Passive — populated by runtime telemetry)",
-  Sessions: "Retrieval sessions where agents consulted canonical knowledge. (Passive — populated by runtime telemetry)",
-  "Learning Queue": "Pending learning candidates not yet reviewed.",
-  "Top Agent": "Agent type with the most retrieval sessions. (Passive — populated by runtime telemetry)",
+  "Entradas Canon": "Total de entradas de conhecimento canônico registradas no sistema.",
+  "Ativas": "Entradas atualmente aprovadas e utilizadas ativamente pelos agentes.",
+  "Candidatas": "Candidatas a conhecimento aguardando revisão ou promoção.",
+  "Deprecadas": "Entradas marcadas como deprecadas e não mais utilizadas ativamente.",
+  "Aplicações": "Vezes que o conhecimento canônico foi aplicado durante a execução de agentes. (Passivo — populado por telemetria de runtime)",
+  "Sessões": "Sessões de recuperação onde agentes consultaram conhecimento canônico. (Passivo — populado por telemetria de runtime)",
+  "Fila de Aprendizado": "Candidatas de aprendizado pendentes ainda não revisadas.",
+  "Top Agente": "Tipo de agente com mais sessões de recuperação. (Passivo — populado por telemetria de runtime)",
 };
 
-/* ──────────────── Main component ──────────────── */
+/* ──────────────── Componente principal ──────────────── */
 
 export default function CanonIntelligenceDashboard() {
   const intel = useCanonIntelligence();
@@ -145,17 +145,17 @@ export default function CanonIntelligenceDashboard() {
   const topAgent = [...agentCounts.entries()].sort((a, b) => b[1] - a[1])[0];
 
   const metrics = [
-    { value: stewardship.library.length, label: "Canon Entries" },
-    { value: activeEntries.length, label: "Active", accent: true },
-    { value: intel.candidates.length, label: "Candidates" },
-    { value: deprecatedEntries.length, label: "Deprecated", warn: deprecatedEntries.length > 0 },
-    { value: runtime.analytics.totalApplications, label: "Applications", passive: true },
-    { value: runtime.analytics.totalSessions, label: "Sessions", passive: true },
-    { value: pendingLearning.length, label: "Learning Queue", accent: true },
-    { value: topAgent ? topAgent[1] : 0, label: topAgent ? topAgent[0] : "Top Agent", passive: true },
+    { value: stewardship.library.length, label: "Entradas Canon" },
+    { value: activeEntries.length, label: "Ativas", accent: true },
+    { value: intel.candidates.length, label: "Candidatas" },
+    { value: deprecatedEntries.length, label: "Deprecadas", warn: deprecatedEntries.length > 0 },
+    { value: runtime.analytics.totalApplications, label: "Aplicações", passive: true },
+    { value: runtime.analytics.totalSessions, label: "Sessões", passive: true },
+    { value: pendingLearning.length, label: "Fila de Aprendizado", accent: true },
+    { value: topAgent ? topAgent[1] : 0, label: topAgent ? topAgent[0] : "Top Agente", passive: true },
   ];
 
-  /* ── Tab content renderer ── */
+  /* ── Renderizador de conteúdo de aba ── */
   function renderTabContent(tabValue: string) {
     switch (tabValue) {
       case "library":
@@ -244,25 +244,25 @@ export default function CanonIntelligenceDashboard() {
     <AppShell>
       <TooltipProvider delayDuration={200}>
         <div className="space-y-5">
-          {/* ── Header ── */}
+          {/* ── Cabeçalho ── */}
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2.5 font-['Space_Grotesk']">
               <Database className="h-6 w-6 text-primary" />
-              Canon Intelligence Hub
+              Hub de Inteligência Canon
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Knowledge control center — explore, learn, govern, and observe implementation intelligence
+              Centro de controle de conhecimento — explore, aprenda, governe e observe a inteligência de implementação
             </p>
           </div>
 
-          {/* ── Dashboard Metrics ── */}
+          {/* ── Métricas do Dashboard ── */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2.5">
             {metrics.map((m) => (
               <TopMetric key={m.label} {...m} />
             ))}
           </div>
 
-          {/* ── Section Selector ── */}
+          {/* ── Seletor de Seção ── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             {SECTIONS.map((section) => {
               const Icon = section.icon;
@@ -293,7 +293,7 @@ export default function CanonIntelligenceDashboard() {
             })}
           </div>
 
-          {/* ── Active Section Content ── */}
+          {/* ── Conteúdo da Seção Ativa ── */}
           <Card className="border-border/30 bg-card/30">
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2.5">
@@ -332,7 +332,7 @@ export default function CanonIntelligenceDashboard() {
             </CardContent>
           </Card>
 
-          {/* ── Lifecycle Health Check ── */}
+          {/* ── Verificação de Saúde do Ciclo de Vida ── */}
           {activeSection === "governance" && <LifecycleHealthCheck />}
         </div>
       </TooltipProvider>
@@ -340,11 +340,11 @@ export default function CanonIntelligenceDashboard() {
   );
 }
 
-/* ──────────────── TopMetric with Tooltip ──────────────── */
+/* ──────────────── TopMetric com Tooltip ──────────────── */
 
 function TopMetric({ value, label, accent, warn, passive }: { value: number; label: string; accent?: boolean; warn?: boolean; passive?: boolean }) {
   const color = warn ? "text-amber-400" : accent ? "text-primary" : passive ? "text-muted-foreground" : "text-foreground";
-  const tooltip = METRIC_TOOLTIPS[label] || `Current value for ${label}`;
+  const tooltip = METRIC_TOOLTIPS[label] || `Valor atual para ${label}`;
   const isPassiveEmpty = passive && value === 0;
 
   return (
