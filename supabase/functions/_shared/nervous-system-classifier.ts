@@ -445,10 +445,19 @@ export async function processPendingEvents(
       // Enrich
       const enrichment = enrichEvent(event);
 
-      // Merge classification + enrichment metadata
+      // Merge classification + enrichment into FROZEN v1.0 contract
+      // All keys here MUST exist in NsClassificationMetadata interface
       const classificationMeta = {
-        ...classification.classification_metadata,
-        ...enrichment.enrichment_metadata,
+        // Required (classifier)
+        classified_by: classification.classification_metadata.classified_by as string,
+        rule_version: classification.classification_metadata.rule_version as string,
+        type_matched: classification.classification_metadata.type_matched as boolean,
+        // Optional (classifier)
+        severity_overridden: classification.classification_metadata.severity_overridden as boolean | undefined,
+        fingerprint_count_1h: classification.classification_metadata.fingerprint_count_1h as number | undefined,
+        // Optional (enricher)
+        enriched_by: enrichment.enrichment_metadata.enriched_by as string,
+        enrichment_version: enrichment.enrichment_metadata.enrichment_version as string,
         normalized_source: enrichment.normalized_source_label,
         category_hints: enrichment.category_hints,
       };
