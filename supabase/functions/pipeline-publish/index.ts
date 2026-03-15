@@ -90,10 +90,17 @@ serve(async (req) => {
     for (const st of (subtasks || [])) subtaskFileMap.set(st.id, { file_path: st.file_path, file_type: st.file_type, description: st.description });
     const subtaskIds = (subtasks || []).map((st: any) => st.id);
 
-    const { data: artifacts } = await serviceClient.from("agent_outputs")
+    const { data: initiativeArtifacts } = await serviceClient.from("agent_outputs")
       .select("id, type, summary, raw_output, subtask_id, status, agents(name, role)")
-      .in("subtask_id", subtaskIds.length > 0 ? subtaskIds : ["00000000-0000-0000-0000-000000000000"])
-      .eq("organization_id", ctx.organizationId);
+      .eq("organization_id", ctx.organizationId)
+      .eq("initiative_id", ctx.initiativeId);
+
+    const subtaskIdSet = new Set(subtaskIds);
+    const artifacts = (initiativeArtifacts || []).filter((artifact: any) => {
+      if (subtaskIds.length === 0) return true;
+      return !artifact.subtask_id || subtaskIdSet.has(artifact.subtask_id);
+    });
+
     if (!artifacts || artifacts.length === 0) {
       await pipelineLog(ctx, "publish_skip", "Nenhum artefato encontrado — execute o pipeline de execução primeiro");
       await completeJob(ctx, jobId!, { skipped: "no_artifacts", artifacts_found: 0 });

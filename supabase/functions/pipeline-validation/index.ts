@@ -47,16 +47,43 @@ serve(async (req) => {
   const { data: subtasks } = await serviceClient.from("story_subtasks").select("id").in("phase_id", phaseIds);
   const subtaskIds = (subtasks || []).map((st: any) => st.id);
 
-  const safeSubtaskIds = subtaskIds.length > 0 ? subtaskIds : ["00000000-0000-0000-0000-000000000000"];
-
-  const { data: artifacts } = await serviceClient.from("agent_outputs")
+  const { data: initiativeArtifacts } = await serviceClient.from("agent_outputs")
     .select("id, type, summary, raw_output, agent_id, tokens_used, model_used, status, subtask_id, cost_estimate, agents(name, role)")
-    .in("subtask_id", safeSubtaskIds)
-    .eq("organization_id", ctx.organizationId);
+    .eq("organization_id", ctx.organizationId)
+    .eq("initiative_id", ctx.initiativeId);
+
+  const subtaskIdSet = new Set(subtaskIds);
+  const artifacts = (initiativeArtifacts || []).filter((artifact: any) => {
+    if (subtaskIds.length === 0) return true;
+    return !artifact.subtask_id || subtaskIdSet.has(artifact.subtask_id);
+  });
 
   if (!artifacts || artifacts.length === 0) {
-    if (jobId) await completeJob(ctx, jobId, { artifacts_validated: 0, passed: 0, skipped: "no_artifacts" }, { model: "none", costUsd: 0, durationMs: 0 });
-    return jsonResponse({ success: true, overall_pass: false, remaining_to_validate: 0, message: "Nenhum artefato encontrado — execute o pipeline primeiro", job_id: jobId });
+    if (jobId) {
+      await completeJob(
+        ctx,
+        jobId,
+        {
+          artifacts_validated: 0,
+          passed: 0,
+          failed: 0,
+          fixed: 0,
+          pending_review: 0,
+          remaining_to_validate: 0,
+          overall_pass: false,
+          skipped: "no_artifacts",
+        },
+        { model: "none", costUsd: 0, durationMs: 0 }
+      );
+    }
+    return jsonResponse({
+      success: true,
+      artifacts_validated: 0,
+      overall_pass: false,
+      remaining_to_validate: 0,
+      message: "Nenhum artefato encontrado — execute o pipeline primeiro",
+      job_id: jobId,
+    });
   }
 
   const artifactsToValidate = artifacts.filter((a: any) => a.status !== "approved" && a.status !== "pending_review");
