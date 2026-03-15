@@ -535,6 +535,7 @@ const translations = {
     "route.knowledgeHealth": "Knowledge Health",
     "route.knowledgePortfolio": "Knowledge Portfolio",
     "route.capabilities": "Capabilities",
+    "route.sovereignCapabilities": "Sovereign Capabilities",
     "route.canonIntelligenceControl": "Canon Control Center",
     "route.poisoningPrevention": "Poisoning Prevention",
     "route.securityMonitoring": "Security Monitoring",
