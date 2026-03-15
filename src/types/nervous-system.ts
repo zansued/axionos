@@ -1,14 +1,10 @@
 /**
- * AI Nervous System — Sprint NS-01 through NS-05 Domain Types
+ * AI Nervous System — Sprint NS-01 through NS-06 Domain Types
  *
  * ARCHITECTURE NOTES:
  * - Read-only contract between backend and frontend.
  * - Frontend NEVER writes to nervous system tables.
- * - All processing (classification, context, decisions, surfacing) is backend-only.
- *
- * EVOLUTION PATH:
- * - NS-06: Learning feedback types
- * - NS-07: Execution layer
+ * - All processing (classification, context, decisions, surfacing, execution, feedback) is backend-only.
  */
 
 // ═══════════════════════════════════════════════════
@@ -38,16 +34,16 @@ export const NS_SEVERITIES = ["low", "medium", "high", "critical"] as const;
 export type NsSeverity = (typeof NS_SEVERITIES)[number];
 
 // ═══════════════════════════════════════════════════
-// Event Status Lifecycle (updated NS-04)
+// Event Status Lifecycle (updated NS-06)
 //
 //   new → classified → contextualized → decided → surfaced → resolved → archived
 //
 // Transitions (backend-only):
 //   new → classified          (NS-02)
 //   classified → contextualized (NS-03)
-//   contextualized → decided    (NS-04: decision engine)
+//   contextualized → decided    (NS-04)
 //   decided → surfaced          (NS-05)
-//   surfaced → resolved         (manual or autonomic)
+//   surfaced → resolved         (NS-06: after action execution)
 //   any → archived              (TTL or manual)
 // ═══════════════════════════════════════════════════
 
@@ -112,6 +108,25 @@ export const NS_RECOMMENDED_ACTIONS = [
   "mark_pattern_for_review",
 ] as const;
 export type NsRecommendedAction = (typeof NS_RECOMMENDED_ACTIONS)[number];
+
+// ═══════════════════════════════════════════════════
+// NS-06: Execution Types
+// ═══════════════════════════════════════════════════
+
+export const NS_EXECUTION_MODES = ["manual", "assisted", "automatic"] as const;
+export type NsExecutionMode = (typeof NS_EXECUTION_MODES)[number];
+
+export const NS_EXECUTION_STATUSES = [
+  "pending", "ready", "running", "succeeded", "failed", "cancelled", "skipped",
+] as const;
+export type NsExecutionStatus = (typeof NS_EXECUTION_STATUSES)[number];
+
+export const NS_FEEDBACK_TYPES = [
+  "execution_success", "execution_failure", "approval_rejected",
+  "dismissal_signal", "false_positive", "threshold_too_aggressive",
+  "threshold_too_conservative", "learning_candidate_confirmed",
+] as const;
+export type NsFeedbackType = (typeof NS_FEEDBACK_TYPES)[number];
 
 // ═══════════════════════════════════════════════════
 // Core Event Interface
@@ -233,6 +248,7 @@ export interface NsDecision {
   created_at: string;
   decided_at: string;
   status: "active" | "superseded" | "resolved" | "archived";
+  execution_status: NsExecutionStatus | null;
 }
 
 // ═══════════════════════════════════════════════════
@@ -284,95 +300,6 @@ export interface NervousSystemEventPattern {
 }
 
 // ═══════════════════════════════════════════════════
-// Live State Interfaces
-// ═══════════════════════════════════════════════════
-
-export interface NervousSystemLiveState {
-  state_key: string;
-  updated_at: string;
-  state_value: Record<string, unknown>;
-}
-
-export interface NsSystemPulse {
-  events_last_hour: {
-    total: number;
-    critical: number;
-    high: number;
-    medium: number;
-    low: number;
-    new_count: number;
-  };
-  health_status: "healthy" | "degraded" | "critical";
-  last_updated: string;
-}
-
-export interface NsClassifiedSummary {
-  classified_last_hour: number;
-  pending_count: number;
-  by_domain: Record<string, number>;
-  by_severity: Record<string, number>;
-  top_signal_groups: NsSignalGroupSummary[];
-  last_updated: string;
-}
-
-export interface NsContextualizedSummary {
-  contextualized_last_hour: number;
-  by_attention: Record<string, number>;
-  by_context_type: Record<string, number>;
-  last_updated: string;
-}
-
-/** NS-04: Decision summary for live state */
-export interface NsDecisionSummary {
-  active_decisions_last_hour: number;
-  by_type: Record<string, number>;
-  by_risk: Record<string, number>;
-  by_priority: Record<string, number>;
-  escalations_count: number;
-  recommendations_count: number;
-  learning_marks_count: number;
-  last_updated: string;
-}
-
-export interface NsSignalGroupSummary {
-  id: string;
-  title: string;
-  event_domain: string;
-  event_type: string;
-  severity: string;
-  event_count: number;
-  last_seen_at: string;
-  recurrence_score: number;
-}
-
-// ═══════════════════════════════════════════════════
-// Processing Results
-// ═══════════════════════════════════════════════════
-
-export interface NsProcessingResult {
-  processed: number;
-  classified: number;
-  grouped: number;
-  patterns_promoted: number;
-  errors: number;
-}
-
-export interface NsContextProcessingResult {
-  processed: number;
-  contextualized: number;
-  relations_created: number;
-  errors: number;
-}
-
-/** NS-04: Decision processing result */
-export interface NsDecisionProcessingResult {
-  processed: number;
-  decided: number;
-  by_type: Record<string, number>;
-  errors: number;
-}
-
-// ═══════════════════════════════════════════════════
 // NS-05: Surfacing Types
 // ═══════════════════════════════════════════════════
 
@@ -417,9 +344,115 @@ export interface NsSurfacedItem {
   surfaced_at: string;
   status_reason: string | null;
   surface_metadata: Record<string, unknown>;
+  action_id: string | null;
+  execution_status: NsExecutionStatus | null;
+  resolved_at: string | null;
+  expired_at: string | null;
 }
 
-/** NS-05: Surfaced summary for live state */
+// ═══════════════════════════════════════════════════
+// NS-06: Autonomic Action
+// ═══════════════════════════════════════════════════
+
+export interface NsAutonomicAction {
+  id: string;
+  organization_id: string;
+  surfaced_item_id: string;
+  decision_id: string;
+  event_id: string;
+  signal_group_id: string | null;
+  action_type: string;
+  execution_mode: NsExecutionMode;
+  execution_status: NsExecutionStatus;
+  action_payload: Record<string, unknown>;
+  expected_outcome: Record<string, unknown>;
+  execution_result: Record<string, unknown>;
+  execution_error: Record<string, unknown>;
+  policy_snapshot: Record<string, unknown>;
+  approved_by: string | null;
+  approved_at: string | null;
+  started_at: string | null;
+  completed_at: string | null;
+  failed_at: string | null;
+  cancelled_at: string | null;
+  created_at: string;
+  updated_at: string;
+  action_metadata: Record<string, unknown>;
+}
+
+// ═══════════════════════════════════════════════════
+// NS-06: Learning Feedback
+// ═══════════════════════════════════════════════════
+
+export interface NsLearningFeedback {
+  id: string;
+  organization_id: string;
+  action_id: string;
+  surfaced_item_id: string;
+  decision_id: string;
+  event_id: string;
+  signal_group_id: string | null;
+  feedback_type: NsFeedbackType;
+  feedback_score: number | null;
+  was_successful: boolean | null;
+  expected_outcome_met: boolean | null;
+  operator_signal: string | null;
+  feedback_reason: string | null;
+  measured_metrics: Record<string, unknown>;
+  feedback_metadata: Record<string, unknown>;
+  created_at: string;
+}
+
+// ═══════════════════════════════════════════════════
+// Live State Interfaces
+// ═══════════════════════════════════════════════════
+
+export interface NervousSystemLiveState {
+  state_key: string;
+  updated_at: string;
+  state_value: Record<string, unknown>;
+}
+
+export interface NsSystemPulse {
+  events_last_hour: {
+    total: number;
+    critical: number;
+    high: number;
+    medium: number;
+    low: number;
+    new_count: number;
+  };
+  health_status: "healthy" | "degraded" | "critical";
+  last_updated: string;
+}
+
+export interface NsClassifiedSummary {
+  classified_last_hour: number;
+  pending_count: number;
+  by_domain: Record<string, number>;
+  by_severity: Record<string, number>;
+  top_signal_groups: NsSignalGroupSummary[];
+  last_updated: string;
+}
+
+export interface NsContextualizedSummary {
+  contextualized_last_hour: number;
+  by_attention: Record<string, number>;
+  by_context_type: Record<string, number>;
+  last_updated: string;
+}
+
+export interface NsDecisionSummary {
+  active_decisions_last_hour: number;
+  by_type: Record<string, number>;
+  by_risk: Record<string, number>;
+  by_priority: Record<string, number>;
+  escalations_count: number;
+  recommendations_count: number;
+  learning_marks_count: number;
+  last_updated: string;
+}
+
 export interface NsSurfacedSummary {
   active_surfaced_count: number;
   active_escalations: number;
@@ -438,13 +471,93 @@ export interface NsSurfacedSummary {
   last_updated: string;
 }
 
-/** NS-05: Surfacing processing result */
+/** NS-06: Execution summary for live state */
+export interface NsExecutionSummary {
+  pending_actions_count: number;
+  running_actions_count: number;
+  succeeded_actions_count: number;
+  failed_actions_count: number;
+  total: number;
+  by_status: Record<string, number>;
+  by_type: Record<string, number>;
+  by_mode: Record<string, number>;
+  recent_execution_feed: {
+    id: string;
+    type: string;
+    mode: string;
+    status: string;
+    created_at: string;
+    completed_at: string | null;
+    failed_at: string | null;
+  }[];
+  last_updated: string;
+}
+
+/** NS-06: Feedback/calibration summary */
+export interface NsFeedbackSummary {
+  total_feedback_signals: number;
+  success_rate: number;
+  failure_rate: number;
+  false_positive_rate: number;
+  expected_outcome_accuracy: number;
+  by_type: Record<string, number>;
+  calibration_advice: string[];
+  last_updated: string;
+}
+
+export interface NsSignalGroupSummary {
+  id: string;
+  title: string;
+  event_domain: string;
+  event_type: string;
+  severity: string;
+  event_count: number;
+  last_seen_at: string;
+  recurrence_score: number;
+}
+
+// ═══════════════════════════════════════════════════
+// Processing Results
+// ═══════════════════════════════════════════════════
+
+export interface NsProcessingResult {
+  processed: number;
+  classified: number;
+  grouped: number;
+  patterns_promoted: number;
+  errors: number;
+}
+
+export interface NsContextProcessingResult {
+  processed: number;
+  contextualized: number;
+  relations_created: number;
+  errors: number;
+}
+
+export interface NsDecisionProcessingResult {
+  processed: number;
+  decided: number;
+  by_type: Record<string, number>;
+  errors: number;
+}
+
 export interface NsSurfacingProcessingResult {
   processed: number;
   surfaced: number;
   skipped: number;
   by_type: Record<string, number>;
   errors: number;
+}
+
+/** NS-06: Action batch processing result */
+export interface NsActionBatchResult {
+  processed: number;
+  created: number;
+  executed: number;
+  skipped: number;
+  errors: number;
+  by_mode: Record<string, number>;
 }
 
 // ═══════════════════════════════════════════════════
@@ -455,15 +568,16 @@ export interface NsSurfacingProcessingResult {
 // NS-03: Fixed 30min window; subsequence matching; no Canon Graph;
 //         possible_cause=pattern-derived; confidence=heuristic.
 // NS-04: Decision rules are static (no adaptive thresholds);
-//         no execution yet (recommend only); no cross-event
-//         decision aggregation; confidence is heuristic average.
+//         no cross-event decision aggregation; confidence is heuristic average.
 // NS-05: Surfacing thresholds are static; no operator preference
-//         learning; dismiss/approve do not yet feed back into
-//         decision engine; no expiration TTL enforcement.
+//         learning; no expiration TTL enforcement.
+// NS-06: Execution is workflow-trigger only (no direct system mutation);
+//         feedback does not yet auto-recalibrate thresholds;
+//         calibration hints are advisory only.
 //
 // Improvement targets:
-//   NS-06: Learning feedback calibrates decision confidence.
-//   NS-07: Execution layer acts on approved surfaced items.
+//   NS-07: Adaptive threshold tuning from feedback.
+//   NS-08: Full autonomous execution for safe action classes.
 // ═══════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════
@@ -481,8 +595,12 @@ export interface NsGetPulseResponse {
   contextualized_summary: NsContextualizedSummary | null;
   decision_summary: NsDecisionSummary | null;
   surfaced_summary: NsSurfacedSummary | null;
+  execution_summary: NsExecutionSummary | null;
+  feedback_summary: NsFeedbackSummary | null;
   pending_approvals_count: number;
   active_escalations_count: number;
+  pending_actions_count: number;
+  running_actions_count: number;
   updated_at: string | null;
 }
 
@@ -512,27 +630,35 @@ export interface NsGetContextualFeedResponse {
   count: number;
 }
 
-/** NS-04: Decision feed response */
 export interface NsGetDecisionFeedResponse {
   decisions: NsDecision[];
   count: number;
 }
 
-/** NS-04: Decision list response */
 export interface NsListDecisionsResponse {
   decisions: NsDecision[];
   count: number;
 }
 
-/** NS-05: Surfaced feed response */
 export interface NsGetSurfacedFeedResponse {
   items: NsSurfacedItem[];
   count: number;
 }
 
-/** NS-05: Surfaced items list response */
 export interface NsListSurfacedItemsResponse {
   items: NsSurfacedItem[];
+  count: number;
+}
+
+/** NS-06: Action list response */
+export interface NsListActionsResponse {
+  actions: NsAutonomicAction[];
+  count: number;
+}
+
+/** NS-06: Action feed response */
+export interface NsGetActionFeedResponse {
+  actions: NsAutonomicAction[];
   count: number;
 }
 
@@ -546,14 +672,18 @@ export interface NsProcessContextResponse {
   result: NsContextProcessingResult;
 }
 
-/** NS-04: Decision batch response */
 export interface NsProcessDecisionResponse {
   success: boolean;
   result: NsDecisionProcessingResult;
 }
 
-/** NS-05: Surfacing batch response */
 export interface NsProcessSurfacingResponse {
   success: boolean;
   result: NsSurfacingProcessingResult;
+}
+
+/** NS-06: Action batch response */
+export interface NsProcessActionBatchResponse {
+  success: boolean;
+  result: NsActionBatchResult;
 }

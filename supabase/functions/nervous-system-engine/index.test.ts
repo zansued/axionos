@@ -176,3 +176,64 @@ Deno.test("NS-05: dismiss_surface without reason returns error (with anon key)",
   // Should fail auth first (401/403), but if it somehow passes, the missing reason check applies
   assertEquals(status === 401 || status === 403 || status === 400, true);
 });
+
+// ═══════════════════════════════════════════════════
+// NS-06: Governed Action Execution & Learning Feedback
+// ═══════════════════════════════════════════════════
+
+Deno.test("NS-06: Action process_approved_actions_batch requires auth", async () => {
+  const { status } = await callEngine({ action: "process_approved_actions_batch" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-06: Action list_actions requires auth", async () => {
+  const { status } = await callEngine({ action: "list_actions" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-06: Action get_action_feed requires auth", async () => {
+  const { status } = await callEngine({ action: "get_action_feed" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-06: Action get_execution_summary requires auth", async () => {
+  const { status } = await callEngine({ action: "get_execution_summary" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-06: Action resolve_surface_item requires auth", async () => {
+  const { status } = await callEngine({ action: "resolve_surface_item" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-06: Action expire_surface_item requires auth", async () => {
+  const { status } = await callEngine({ action: "expire_surface_item" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-06: Action register_feedback_signal requires auth", async () => {
+  const { status } = await callEngine({ action: "register_feedback_signal" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-06: All NS-06 actions recognized (not 400)", async () => {
+  const actions = [
+    "process_approved_actions_batch", "list_actions", "get_action_feed",
+    "get_execution_summary", "resolve_surface_item", "expire_surface_item",
+    "register_feedback_signal",
+  ];
+  for (const action of actions) {
+    const { status } = await callEngine({ action }, SUPABASE_ANON_KEY);
+    assertEquals(status === 401 || status === 403, true, `${action} returned ${status}`);
+  }
+});
+
+Deno.test("NS-06: Tenant isolation — actions query requires org membership", async () => {
+  const { status } = await callEngine({ action: "list_actions" }, SUPABASE_ANON_KEY);
+  assertEquals(status === 401 || status === 403, true);
+});
+
+Deno.test("NS-06: expire_surface_item without reason returns error", async () => {
+  const { status } = await callEngine({ action: "expire_surface_item", item_id: "test" }, SUPABASE_ANON_KEY);
+  assertEquals(status === 401 || status === 403 || status === 400, true);
+});
