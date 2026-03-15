@@ -23,6 +23,9 @@ const FUNCTION_LIMITS: Record<string, number> = {
   "skill-extraction-engine": 600,
   "skill-extraction-engine-read": 2400,
   "skill-extraction-engine-write": 240,
+  "nervous-system-engine": 600,
+  "nervous-system-engine-read": 2400,
+  "nervous-system-engine-write": 240,
 };
 
 /**
