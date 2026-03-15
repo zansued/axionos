@@ -191,12 +191,13 @@ async function fetchIntelligenceData(orgId: string) {
 }
 
 export function useSystemIntelligenceData(): SystemIntelligenceData {
-  const { organizationId } = useOrganization();
+  const { currentOrg } = useOrg();
+  const orgId = currentOrg?.id;
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["system-intelligence", organizationId],
-    queryFn: () => fetchIntelligenceData(organizationId!),
-    enabled: !!organizationId,
+    queryKey: ["system-intelligence", orgId],
+    queryFn: () => fetchIntelligenceData(orgId!),
+    enabled: !!orgId,
     staleTime: 60_000,
   });
 
