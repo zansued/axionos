@@ -26969,6 +26969,186 @@ export type Database = {
           },
         ]
       }
+      nervous_system_event_patterns: {
+        Row: {
+          canon_reference_id: string | null
+          confidence_score: number | null
+          created_at: string
+          description: string | null
+          domain: string
+          id: string
+          known_causes: Json
+          known_resolutions: Json
+          metadata: Json
+          occurrence_count: number
+          organization_id: string
+          pattern_key: string
+          subdomain: string | null
+          successful_resolution_count: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          canon_reference_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          description?: string | null
+          domain: string
+          id?: string
+          known_causes?: Json
+          known_resolutions?: Json
+          metadata?: Json
+          occurrence_count?: number
+          organization_id: string
+          pattern_key: string
+          subdomain?: string | null
+          successful_resolution_count?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          canon_reference_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          description?: string | null
+          domain?: string
+          id?: string
+          known_causes?: Json
+          known_resolutions?: Json
+          metadata?: Json
+          occurrence_count?: number
+          organization_id?: string
+          pattern_key?: string
+          subdomain?: string | null
+          successful_resolution_count?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nervous_system_event_patterns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nervous_system_events: {
+        Row: {
+          agent_id: string | null
+          confidence_score: number | null
+          created_at: string
+          dedup_group: string | null
+          event_domain: string
+          event_subdomain: string | null
+          event_type: string
+          fingerprint: string | null
+          id: string
+          initiative_id: string | null
+          metadata: Json
+          novelty_score: number | null
+          occurred_at: string
+          organization_id: string
+          payload: Json
+          pipeline_id: string | null
+          service_name: string | null
+          severity: string
+          severity_score: number | null
+          source_id: string | null
+          source_type: string
+          status: string
+          summary: string
+        }
+        Insert: {
+          agent_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          dedup_group?: string | null
+          event_domain: string
+          event_subdomain?: string | null
+          event_type: string
+          fingerprint?: string | null
+          id?: string
+          initiative_id?: string | null
+          metadata?: Json
+          novelty_score?: number | null
+          occurred_at?: string
+          organization_id: string
+          payload?: Json
+          pipeline_id?: string | null
+          service_name?: string | null
+          severity?: string
+          severity_score?: number | null
+          source_id?: string | null
+          source_type: string
+          status?: string
+          summary: string
+        }
+        Update: {
+          agent_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          dedup_group?: string | null
+          event_domain?: string
+          event_subdomain?: string | null
+          event_type?: string
+          fingerprint?: string | null
+          id?: string
+          initiative_id?: string | null
+          metadata?: Json
+          novelty_score?: number | null
+          occurred_at?: string
+          organization_id?: string
+          payload?: Json
+          pipeline_id?: string | null
+          service_name?: string | null
+          severity?: string
+          severity_score?: number | null
+          source_id?: string | null
+          source_type?: string
+          status?: string
+          summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nervous_system_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nervous_system_live_state: {
+        Row: {
+          organization_id: string
+          state_key: string
+          state_value: Json
+          updated_at: string
+        }
+        Insert: {
+          organization_id: string
+          state_key: string
+          state_value?: Json
+          updated_at?: string
+        }
+        Update: {
+          organization_id?: string
+          state_key?: string
+          state_value?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nervous_system_live_state_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       onboarding_flows: {
         Row: {
           assumptions: Json
