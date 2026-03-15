@@ -641,6 +641,10 @@ async function invokeAiReviewWithFailover(
   const failures: string[] = [];
 
   for (const provider of providers) {
+    const controller = new AbortController();
+    const timeoutMs = 18000;
+    const timeoutId = setTimeout(() => controller.abort("timeout"), timeoutMs);
+
     try {
       const resp = await fetch(provider.url, {
         method: "POST",
@@ -649,6 +653,7 @@ async function invokeAiReviewWithFailover(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ model: provider.model, ...body }),
+        signal: controller.signal,
       });
 
       if (!resp.ok) {
@@ -667,9 +672,12 @@ async function invokeAiReviewWithFailover(
       const data = await resp.json();
       return { data, provider };
     } catch (e: any) {
-      failures.push(`${provider.label}:network`);
-      console.warn(`[skill-ai-review] Provider ${provider.label} network error:`, e?.message || e);
+      const isTimeout = e?.name === "AbortError";
+      failures.push(`${provider.label}:${isTimeout ? "timeout" : "network"}`);
+      console.warn(`[skill-ai-review] Provider ${provider.label} ${isTimeout ? "timeout" : "network error"}:`, e?.message || e);
       continue;
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 
