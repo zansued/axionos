@@ -269,6 +269,7 @@ const translations = {
     "routeDesc.knowledgeHealth": "Renovação, revalidação e recuperação de confiança",
     "routeDesc.knowledgePortfolio": "Otimização de portfólio, redundância e análise de cobertura",
     "routeDesc.capabilities": "Registro e confiança de capacidades",
+    "routeDesc.sovereignCapabilities": "Maturidade, cobertura e análise de lacunas de capacidades",
     "routeDesc.canonIntelligenceControl": "Governança de meta-aprendizado e controle de inteligência canônica",
     "routeDesc.poisoningPrevention": "Detectar, quarentenar e revisar conhecimento suspeito",
     "routeDesc.securityMonitoring": "Detecção automatizada de anomalias e alertas",
