@@ -1,15 +1,17 @@
 import { AppShell } from "@/components/AppShell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, BarChart3, ListChecks, AlertTriangle, Sparkles, Activity } from "lucide-react";
+import { TrendingUp, BarChart3, ListChecks, AlertTriangle, Sparkles, Activity, Info, Brain } from "lucide-react";
 import { useKnowledgeDemandForecast } from "@/hooks/useKnowledgeDemandForecast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
+import { useState } from "react";
 
 export default function KnowledgeDemandForecastDashboard() {
   const forecast = useKnowledgeDemandForecast();
+  const [showCopilot, setShowCopilot] = useState(true);
   const rising = forecast.forecasts.filter((f: any) => f.demand_direction === "rising");
   const highPressure = forecast.forecasts.filter((f: any) => f.pressure_score > 0.5);
   const pending = forecast.proposals.filter((p: any) => p.status === "pending");
@@ -21,54 +23,97 @@ export default function KnowledgeDemandForecastDashboard() {
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2.5 font-['Space_Grotesk']">
               <TrendingUp className="h-6 w-6 text-primary" />
-              Knowledge Demand Forecast
+              Previsão de Demanda de Conhecimento
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">Anticipate future knowledge needs and coverage pressure</p>
+            <p className="text-sm text-muted-foreground mt-1">Antecipe necessidades futuras de conhecimento e pressão de cobertura</p>
           </div>
           <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => setShowCopilot(!showCopilot)}>
+              <Brain className="h-3.5 w-3.5 mr-1.5" />{showCopilot ? "Ocultar Guia" : "Mostrar Guia"}
+            </Button>
             <Button size="sm" variant="outline" onClick={() => forecast.generateProposals.mutate()} disabled={forecast.generateProposals.isPending}>
-              <Sparkles className="h-3.5 w-3.5 mr-1.5" />{forecast.generateProposals.isPending ? "Gerando…" : "Generate Proposals"}
+              <Sparkles className="h-3.5 w-3.5 mr-1.5" />{forecast.generateProposals.isPending ? "Gerando…" : "Gerar Propostas"}
             </Button>
             <Button size="sm" onClick={() => forecast.generateForecasts.mutate()} disabled={forecast.generateForecasts.isPending}>
-              <TrendingUp className="h-3.5 w-3.5 mr-1.5" />{forecast.generateForecasts.isPending ? "Analisando…" : "Generate Forecasts"}
+              <TrendingUp className="h-3.5 w-3.5 mr-1.5" />{forecast.generateForecasts.isPending ? "Analisando…" : "Gerar Previsões"}
             </Button>
           </div>
         </div>
 
-        {/* Summary */}
+        {/* Copilot Guidance Card */}
+        {showCopilot && (
+          <Card className="bg-primary/5 border-primary/20">
+            <CardContent className="py-4 px-5">
+              <div className="flex gap-3">
+                <Info className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                <div className="space-y-2 text-sm">
+                  <p className="font-semibold text-foreground">O que é a Previsão de Demanda?</p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Este módulo analisa <strong>sinais operacionais</strong> — como sessões de recuperação de conhecimento, 
+                    triggers de renovação e lacunas de cobertura — para <strong>prever quais domínios de conhecimento 
+                    terão maior demanda no futuro</strong>.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 text-xs text-muted-foreground">
+                    <div className="flex items-start gap-1.5">
+                      <BarChart3 className="h-3.5 w-3.5 text-primary mt-0.5" />
+                      <span><strong>Previsões:</strong> Domínios classificados por demanda futura, com direção (em alta, estável, em queda) e confiança.</span>
+                    </div>
+                    <div className="flex items-start gap-1.5">
+                      <AlertTriangle className="h-3.5 w-3.5 text-warning mt-0.5" />
+                      <span><strong>Pressão de Cobertura:</strong> Domínios com alto gap de cobertura que precisam de atenção imediata.</span>
+                    </div>
+                    <div className="flex items-start gap-1.5">
+                      <Activity className="h-3.5 w-3.5 text-primary mt-0.5" />
+                      <span><strong>Sinais:</strong> Eventos que alimentam as previsões — uso de retrieval, triggers de renovação, gaps.</span>
+                    </div>
+                    <div className="flex items-start gap-1.5">
+                      <ListChecks className="h-3.5 w-3.5 text-primary mt-0.5" />
+                      <span><strong>Propostas:</strong> Ações recomendadas para preencher lacunas — aprovar ou rejeitar cada uma.</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground/70 mt-2">
+                    💡 <strong>Próximo passo:</strong> Clique em "Gerar Previsões" para analisar os sinais atuais, depois "Gerar Propostas" para criar recomendações de aquisição.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Resumo */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Card className="bg-card/50 border-border/30">
-            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-xs text-muted-foreground">Total Forecasts</CardTitle></CardHeader>
+            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-xs text-muted-foreground">Total de Previsões</CardTitle></CardHeader>
             <CardContent className="px-3 pb-3"><span className="text-xl font-bold">{forecast.forecasts.length}</span></CardContent>
           </Card>
           <Card className="bg-card/50 border-border/30">
-            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-xs text-muted-foreground flex items-center gap-1"><TrendingUp className="h-3 w-3" />Rising</CardTitle></CardHeader>
+            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-xs text-muted-foreground flex items-center gap-1"><TrendingUp className="h-3 w-3" />Em Alta</CardTitle></CardHeader>
             <CardContent className="px-3 pb-3"><span className="text-xl font-bold text-warning">{rising.length}</span></CardContent>
           </Card>
           <Card className="bg-card/50 border-border/30">
-            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-xs text-muted-foreground flex items-center gap-1"><AlertTriangle className="h-3 w-3" />High Pressure</CardTitle></CardHeader>
+            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-xs text-muted-foreground flex items-center gap-1"><AlertTriangle className="h-3 w-3" />Alta Pressão</CardTitle></CardHeader>
             <CardContent className="px-3 pb-3"><span className="text-xl font-bold text-destructive">{highPressure.length}</span></CardContent>
           </Card>
           <Card className="bg-card/50 border-border/30">
-            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-xs text-muted-foreground flex items-center gap-1"><ListChecks className="h-3 w-3" />Pending Proposals</CardTitle></CardHeader>
+            <CardHeader className="pb-1 pt-3 px-3"><CardTitle className="text-xs text-muted-foreground flex items-center gap-1"><ListChecks className="h-3 w-3" />Propostas Pendentes</CardTitle></CardHeader>
             <CardContent className="px-3 pb-3"><span className="text-xl font-bold">{pending.length}</span></CardContent>
           </Card>
         </div>
 
         <Tabs defaultValue="forecasts" className="space-y-4">
           <TabsList className="bg-muted/20 border border-border/20 flex-wrap h-auto gap-0.5 p-1">
-            <TabsTrigger value="forecasts" className="text-xs gap-1.5"><BarChart3 className="h-3.5 w-3.5" />Forecasts</TabsTrigger>
-            <TabsTrigger value="pressure" className="text-xs gap-1.5"><AlertTriangle className="h-3.5 w-3.5" />Coverage Pressure</TabsTrigger>
-            <TabsTrigger value="signals" className="text-xs gap-1.5"><Activity className="h-3.5 w-3.5" />Signals</TabsTrigger>
-            <TabsTrigger value="proposals" className="text-xs gap-1.5"><ListChecks className="h-3.5 w-3.5" />Proposals</TabsTrigger>
+            <TabsTrigger value="forecasts" className="text-xs gap-1.5"><BarChart3 className="h-3.5 w-3.5" />Previsões</TabsTrigger>
+            <TabsTrigger value="pressure" className="text-xs gap-1.5"><AlertTriangle className="h-3.5 w-3.5" />Pressão de Cobertura</TabsTrigger>
+            <TabsTrigger value="signals" className="text-xs gap-1.5"><Activity className="h-3.5 w-3.5" />Sinais</TabsTrigger>
+            <TabsTrigger value="proposals" className="text-xs gap-1.5"><ListChecks className="h-3.5 w-3.5" />Propostas</TabsTrigger>
           </TabsList>
 
           <TabsContent value="forecasts">
             <Card className="bg-card/50 border-border/30">
-              <CardHeader className="pb-2"><CardTitle className="text-sm">Demand Forecasts by Domain</CardTitle></CardHeader>
+              <CardHeader className="pb-2"><CardTitle className="text-sm">Previsões de Demanda por Domínio</CardTitle></CardHeader>
               <CardContent>
                 {forecast.forecasts.length === 0 ? (
-                  <p className="text-xs text-muted-foreground text-center py-4">Execute Generate Forecasts para começar.</p>
+                  <p className="text-xs text-muted-foreground text-center py-4">Execute "Gerar Previsões" para começar.</p>
                 ) : (
                   <Table>
                     <TableHeader><TableRow>
@@ -84,12 +129,18 @@ export default function KnowledgeDemandForecastDashboard() {
                       {forecast.forecasts.slice(0, 20).map((f: any) => (
                         <TableRow key={f.id}>
                           <TableCell className="text-xs font-medium">{f.forecast_scope_key}</TableCell>
-                          <TableCell><Badge variant={f.demand_direction === "rising" ? "destructive" : f.demand_direction === "stable" ? "secondary" : "default"} className="text-[10px]">{f.demand_direction}</Badge></TableCell>
+                          <TableCell>
+                            <Badge variant={f.demand_direction === "rising" ? "destructive" : f.demand_direction === "stable" ? "secondary" : "default"} className="text-[10px]">
+                              {f.demand_direction === "rising" ? "Em Alta" : f.demand_direction === "stable" ? "Estável" : "Em Queda"}
+                            </Badge>
+                          </TableCell>
                           <TableCell className="text-xs text-right">{(f.forecast_score * 100).toFixed(0)}%</TableCell>
                           <TableCell className="text-xs text-right">{(f.forecast_confidence * 100).toFixed(0)}%</TableCell>
                           <TableCell className="text-xs text-right">{(f.pressure_score * 100).toFixed(0)}%</TableCell>
                           <TableCell className="text-xs text-right">{(f.coverage_gap_score * 100).toFixed(0)}%</TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{f.primary_driver}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">
+                            {f.primary_driver === "usage_trend" ? "Tendência de uso" : f.primary_driver === "renewal_pressure" ? "Pressão de renovação" : f.primary_driver === "coverage_gap" ? "Lacuna de cobertura" : f.primary_driver}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -101,7 +152,7 @@ export default function KnowledgeDemandForecastDashboard() {
 
           <TabsContent value="pressure">
             <Card className="bg-card/50 border-border/30">
-              <CardHeader className="pb-2"><CardTitle className="text-sm">High Coverage Pressure Domains</CardTitle></CardHeader>
+              <CardHeader className="pb-2"><CardTitle className="text-sm">Domínios com Alta Pressão de Cobertura</CardTitle></CardHeader>
               <CardContent className="space-y-2">
                 {highPressure.length === 0 ? (
                   <p className="text-xs text-muted-foreground text-center py-4">Nenhum domínio com alta pressão detectado.</p>
@@ -112,7 +163,7 @@ export default function KnowledgeDemandForecastDashboard() {
                         <span className="text-xs font-medium">{f.forecast_scope_key}</span>
                         <span className="text-[10px] text-muted-foreground ml-2">Gap: {(f.coverage_gap_score * 100).toFixed(0)}%</span>
                       </div>
-                      <Badge variant="destructive" className="text-[10px]">Pressure {(f.pressure_score * 100).toFixed(0)}%</Badge>
+                      <Badge variant="destructive" className="text-[10px]">Pressão {(f.pressure_score * 100).toFixed(0)}%</Badge>
                     </div>
                   ))
                 )}
@@ -122,7 +173,7 @@ export default function KnowledgeDemandForecastDashboard() {
 
           <TabsContent value="signals">
             <Card className="bg-card/50 border-border/30">
-              <CardHeader className="pb-2"><CardTitle className="text-sm">Recent Forecast Signals</CardTitle></CardHeader>
+              <CardHeader className="pb-2"><CardTitle className="text-sm">Sinais Recentes de Previsão</CardTitle></CardHeader>
               <CardContent>
                 {forecast.signals.length === 0 ? (
                   <p className="text-xs text-muted-foreground text-center py-4">Nenhum sinal registrado.</p>
@@ -137,10 +188,14 @@ export default function KnowledgeDemandForecastDashboard() {
                     <TableBody>
                       {forecast.signals.slice(0, 20).map((s: any) => (
                         <TableRow key={s.id}>
-                          <TableCell className="text-xs"><Badge variant="outline" className="text-[10px]">{s.signal_type}</Badge></TableCell>
+                          <TableCell className="text-xs">
+                            <Badge variant="outline" className="text-[10px]">
+                              {s.signal_type === "usage_trend" ? "Tendência de uso" : s.signal_type === "renewal_pressure" ? "Renovação" : s.signal_type === "coverage_gap" ? "Lacuna" : s.signal_type}
+                            </Badge>
+                          </TableCell>
                           <TableCell className="text-xs">{s.scope_key}</TableCell>
                           <TableCell className="text-xs text-right">{(s.signal_strength * 100).toFixed(0)}%</TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{new Date(s.created_at).toLocaleDateString()}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">{new Date(s.created_at).toLocaleDateString("pt-BR")}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -152,10 +207,10 @@ export default function KnowledgeDemandForecastDashboard() {
 
           <TabsContent value="proposals">
             <Card className="bg-card/50 border-border/30">
-              <CardHeader className="pb-2"><CardTitle className="text-sm">Demand-Driven Proposals ({pending.length} pendentes)</CardTitle></CardHeader>
+              <CardHeader className="pb-2"><CardTitle className="text-sm">Propostas Baseadas em Demanda ({pending.length} pendentes)</CardTitle></CardHeader>
               <CardContent>
                 {pending.length === 0 ? (
-                  <p className="text-xs text-muted-foreground text-center py-4">Nenhuma proposta pendente.</p>
+                  <p className="text-xs text-muted-foreground text-center py-4">Nenhuma proposta pendente. Gere previsões primeiro, depois gere propostas.</p>
                 ) : (
                   <Table>
                     <TableHeader><TableRow>
@@ -168,14 +223,26 @@ export default function KnowledgeDemandForecastDashboard() {
                     <TableBody>
                       {pending.slice(0, 15).map((p: any) => (
                         <TableRow key={p.id}>
-                          <TableCell className="text-xs"><Badge variant="outline" className="text-[10px]">{p.proposal_type}</Badge></TableCell>
+                          <TableCell className="text-xs">
+                            <Badge variant="outline" className="text-[10px]">
+                              {p.proposal_type === "expand_domain_knowledge" ? "Expandir domínio" : p.proposal_type === "anti_pattern_expansion" ? "Anti-padrões" : p.proposal_type === "targeted_repo_absorption" ? "Absorção dirigida" : p.proposal_type}
+                            </Badge>
+                          </TableCell>
                           <TableCell className="text-xs font-medium">{p.target_scope_key}</TableCell>
                           <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate">{p.reason}</TableCell>
-                          <TableCell><Badge variant={p.priority === "high" ? "destructive" : "secondary"} className="text-[10px]">{p.priority}</Badge></TableCell>
+                          <TableCell>
+                            <Badge variant={p.priority === "high" ? "destructive" : "secondary"} className="text-[10px]">
+                              {p.priority === "high" ? "Alta" : p.priority === "medium" ? "Média" : "Baixa"}
+                            </Badge>
+                          </TableCell>
                           <TableCell className="text-right">
                             <div className="flex gap-1 justify-end">
-                              <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => forecast.decideProposal.mutate({ proposalId: p.id, decision: "approved" })}><Check className="h-3 w-3 text-success" /></Button>
-                              <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => forecast.decideProposal.mutate({ proposalId: p.id, decision: "rejected" })}><X className="h-3 w-3 text-destructive" /></Button>
+                              <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => forecast.decideProposal.mutate({ proposalId: p.id, decision: "approved" })} title="Aprovar">
+                                <Check className="h-3 w-3 text-emerald-500" />
+                              </Button>
+                              <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => forecast.decideProposal.mutate({ proposalId: p.id, decision: "rejected" })} title="Rejeitar">
+                                <X className="h-3 w-3 text-destructive" />
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
