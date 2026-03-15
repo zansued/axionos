@@ -641,6 +641,10 @@ async function invokeAiReviewWithFailover(
   const failures: string[] = [];
 
   for (const provider of providers) {
+    const controller = new AbortController();
+    const timeoutMs = 18000;
+    const timeoutId = setTimeout(() => controller.abort("timeout"), timeoutMs);
+
     try {
       const resp = await fetch(provider.url, {
         method: "POST",
@@ -649,6 +653,7 @@ async function invokeAiReviewWithFailover(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ model: provider.model, ...body }),
+        signal: controller.signal,
       });
 
       if (!resp.ok) {
@@ -667,9 +672,12 @@ async function invokeAiReviewWithFailover(
       const data = await resp.json();
       return { data, provider };
     } catch (e: any) {
-      failures.push(`${provider.label}:network`);
-      console.warn(`[skill-ai-review] Provider ${provider.label} network error:`, e?.message || e);
+      const isTimeout = e?.name === "AbortError";
+      failures.push(`${provider.label}:${isTimeout ? "timeout" : "network"}`);
+      console.warn(`[skill-ai-review] Provider ${provider.label} ${isTimeout ? "timeout" : "network error"}:`, e?.message || e);
       continue;
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 
@@ -746,7 +754,8 @@ function resolveSkillIdFromAi(review: any, batch: any[], validSkillIds: Set<stri
 }
 
 async function aiReviewBatch(sc: any, orgId: string, reviewerId: string, p: any) {
-  const limit = Math.min(p.limit || 20, 50);
+  // Bounded per-call workload to avoid gateway timeouts (prevents CORS-like browser errors from 504)
+  const limit = Math.min(p.limit || 20, 15);
   const providerChain = getAiReviewProviderChain();
 
   if (providerChain.length === 0) {
@@ -778,15 +787,13 @@ async function aiReviewBatch(sc: any, orgId: string, reviewerId: string, p: any)
   const validSkillIds = new Set(skills.map((s: any) => s.id));
   const providerStats: Record<string, number> = {};
 
-  for (const batch of batches) {
-    const batchIndex = batches.indexOf(batch);
+  for (const [batchIndex, batch] of batches.entries()) {
     const skillsPrompt = batch.map((s: any, i: number) =>
       `[Skill ${i + 1}]\nID: ${s.id}\nName: ${s.skill_name}\nDomain: ${s.domain}\nConfidence: ${s.confidence}\nDescription: ${s.description}\nSource: ${s.extraction_method}\nCanon Type: ${s.metadata?.source_canon_type || "unknown"}\nPractice Type: ${s.metadata?.source_practice_type || "unknown"}\nTopic: ${s.metadata?.source_topic || "unknown"}`
     ).join("\n\n");
 
     try {
       const llmBody = {
-        temperature: 0.1,
         messages: [
           {
             role: "system",
