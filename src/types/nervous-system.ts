@@ -1,14 +1,13 @@
 /**
- * AI Nervous System — Sprint NS-01 + NS-02 Domain Types
+ * AI Nervous System — Sprint NS-01 + NS-02 + NS-03 Domain Types
  *
  * ARCHITECTURE NOTES:
  * - These types define the read-only contract between backend and frontend.
  * - The frontend NEVER writes to nervous system tables.
- * - Classification, enrichment, and grouping happen exclusively on the backend.
+ * - Classification, enrichment, grouping, and contextualization happen exclusively on the backend.
  * - Realtime subscriptions are tenant-scoped and read-only.
  *
  * EVOLUTION PATH:
- * - NS-03: Context link types (canon correlation, precedents)
  * - NS-04: Decision types (recommendations, action proposals)
  * - NS-05: Live stream types (SSE payloads, pulse metrics)
  * - NS-06: Learning feedback types (outcome scoring, confidence evolution)
@@ -51,33 +50,20 @@ export type NsSeverity = (typeof NS_SEVERITIES)[number];
 // ═══════════════════════════════════════════════════
 // Event Status Lifecycle
 //
-// LIFECYCLE SEMANTICS (canonical, frozen after NS-02 review):
+// LIFECYCLE SEMANTICS (canonical, updated NS-03):
 //
 //   new             → Event emitted, not yet processed.
 //   classified      → Classifier assigned domain, severity, scores.
-//                     Event is usable for backend queries and curated feeds.
-//                     The "classified feed" (get_classified_feed) returns
-//                     events in this status for OPERATIONAL VISIBILITY.
-//                     This is NOT formal "surfacing" — it is a technical
-//                     feed for operators, not an executive alert channel.
-//   contextualized  → (NS-03) Context Engine has attached canon/precedent refs.
+//   contextualized  → Context Engine has correlated with recent signals,
+//                     detected sequences, and attached operational context.
+//                     context_summary, context_confidence, related_event_ids,
+//                     and related_signal_group_ids are populated.
 //   decided         → (NS-04) Decision Layer has produced a recommendation.
-//   surfaced        → (NS-05) Event has been FORMALLY selected for prominent
-//                     display, notification, or escalation. This status means
-//                     "this signal was deemed important enough to push to
-//                     attention." It is NOT the same as "classified and visible
-//                     in a feed." Surfacing requires explicit criteria:
-//                     severity >= high, or decision layer recommendation,
-//                     or operator escalation.
-//   resolved        → Signal has been addressed (manual or autonomic).
+//   surfaced        → (NS-05) Formally selected for prominent display.
+//   resolved        → Signal has been addressed.
 //   archived        → Retained for history, no longer active.
 //
-// KEY DISTINCTION:
-//   classified feed  = operational visibility for monitoring (NS-02)
-//   surfaced status  = formal attention escalation (NS-05)
-//   These are NOT the same. The frontend must treat them differently.
-//
-// Transitions (backend-only, never frontend):
+// Transitions (backend-only):
 //   new → classified          (NS-02: classifier)
 //   classified → contextualized (NS-03: context engine)
 //   contextualized → decided    (NS-04: decision layer)
@@ -102,6 +88,40 @@ export const NS_SOURCE_TYPES = [
   "scheduler", "manual",
 ] as const;
 export type NsSourceType = (typeof NS_SOURCE_TYPES)[number];
+
+// ═══════════════════════════════════════════════════
+// NS-03: Context Types
+// ═══════════════════════════════════════════════════
+
+export const NS_CONTEXT_TYPES = [
+  "isolated_signal",
+  "recurring_issue",
+  "escalating_incident",
+  "recovery_sequence",
+  "agent_instability",
+  "pipeline_disruption",
+] as const;
+export type NsContextType = (typeof NS_CONTEXT_TYPES)[number];
+
+export const NS_ATTENTION_LEVELS = [
+  "none", "monitor", "investigate", "escalate",
+] as const;
+export type NsAttentionLevel = (typeof NS_ATTENTION_LEVELS)[number];
+
+export const NS_RECURRENCE_LEVELS = [
+  "none", "low", "moderate", "high",
+] as const;
+export type NsRecurrenceLevel = (typeof NS_RECURRENCE_LEVELS)[number];
+
+export const NS_CONTEXT_RELATION_TYPES = [
+  "temporal_proximity",
+  "same_signal_group",
+  "same_agent",
+  "same_service",
+  "same_initiative",
+  "causal_candidate",
+] as const;
+export type NsContextRelationType = (typeof NS_CONTEXT_RELATION_TYPES)[number];
 
 // ═══════════════════════════════════════════════════
 // Core Event Interface (read-only from frontend)
@@ -141,36 +161,21 @@ export interface NervousSystemEvent {
   classified_at: string | null;
   contextualized_at: string | null;
   surfaced_at: string | null;
+
+  // NS-03: Context fields
+  context_summary: NsContextSummary | null;
+  context_confidence: number | null;
+  related_event_ids: string[] | null;
+  related_signal_group_ids: string[] | null;
 }
 
 // ═══════════════════════════════════════════════════
 // NS-02: Classification Metadata — FROZEN CONTRACT v1.0
-//
-// This interface defines the ONLY accepted keys in
-// classification_metadata. Any new key MUST be added here
-// with a version bump. Do NOT dump arbitrary data into this
-// field. If you need unstructured storage, use event.metadata.
+// (see v1.0 spec in NS-02 for full documentation)
 //
 // VERSION HISTORY:
-//   v1.0 (NS-02): Initial contract — classifier + enricher fields.
-//
-// REQUIRED fields (always present after classification):
-//   - classified_by:      Identifier of the classifier module
-//   - rule_version:       Version of the classification ruleset
-//   - type_matched:       Whether event_type had a known classification rule
-//
-// OPTIONAL fields (present when applicable):
-//   - severity_overridden: Whether severity was escalated by a rule
-//   - fingerprint_count_1h: Number of same-fingerprint events in last hour
-//   - enriched_by:        Identifier of the enrichment module
-//   - enrichment_version: Version of the enrichment logic
-//   - normalized_source:  Normalized source label (source_type/service_name)
-//   - category_hints:     Lightweight categorical tags for future context engine
-//
-// FUTURE (reserved, not yet populated):
-//   - context_engine_version: (NS-03) Context engine identifier
-//   - canon_refs_count:       (NS-03) Number of canon correlations found
-//   - decision_engine_version:(NS-04) Decision engine identifier
+//   v1.0 (NS-02): Initial contract.
+//   v1.1 (NS-03): Added context_engine_version, canon_refs_count.
 // ═══════════════════════════════════════════════════
 
 export interface NsClassificationMetadata {
@@ -187,13 +192,12 @@ export interface NsClassificationMetadata {
   normalized_source?: string;
   category_hints?: string[];
 
-  // === RESERVED (NS-03+, not yet populated) ===
-  // context_engine_version?: string;
-  // canon_refs_count?: number;
-  // decision_engine_version?: string;
+  // === NS-03 (populated after contextualization) ===
+  context_engine_version?: string;
+  canon_refs_count?: number;
 }
 
-/** Validates that classification_metadata conforms to the v1.0 contract */
+/** Validates that classification_metadata conforms to the v1.0+ contract */
 export function isValidClassificationMetadata(meta: unknown): meta is NsClassificationMetadata {
   if (!meta || typeof meta !== "object") return false;
   const m = meta as Record<string, unknown>;
@@ -205,32 +209,41 @@ export function isValidClassificationMetadata(meta: unknown): meta is NsClassifi
 }
 
 // ═══════════════════════════════════════════════════
-// NS-02: Signal Group (cluster of correlated events)
-//
-// TRACEABILITY CONTRACT:
-// - Every group has a representative_event_id pointing to the
-//   most recent event in the cluster.
-// - Every event in a group has signal_group_id set, enabling
-//   reverse lookup: SELECT * FROM nervous_system_events
-//   WHERE signal_group_id = <group_id> ORDER BY created_at.
-// - group_key explains WHY events are grouped:
-//   format is "domain::event_type::fingerprint".
-// - Membership is explainable: an event belongs to a group
-//   if and only if it shares the same group_key AND was
-//   processed within the grouping window.
-//
-// KNOWN LIMITATIONS (NS-02):
-// - group_key uses exact fingerprint match. Events with
-//   slightly different payloads (different fingerprints)
-//   will form separate groups, even if operationally
-//   they represent the same phenomenon.
-// - No semantic similarity or fuzzy matching.
-// - No cross-domain grouping (e.g., a pipeline failure
-//   and a related agent failure are separate groups).
-// - Groups do not merge retroactively if fingerprints
-//   converge after initial divergence.
-// - NS-03 Context Engine may introduce correlation links
-//   between groups without merging them.
+// NS-03: Context Summary
+// ═══════════════════════════════════════════════════
+
+export interface NsContextSummary {
+  context_type: NsContextType;
+  sequence_length: number;
+  recurrence_level: NsRecurrenceLevel;
+  related_entities: {
+    agents: string[];
+    services: string[];
+    initiatives: string[];
+    signal_groups: string[];
+  };
+  operational_scope: string;
+  recommended_attention: NsAttentionLevel;
+  detected_sequence: string | null;
+  possible_cause: string | null;
+}
+
+// ═══════════════════════════════════════════════════
+// NS-03: Context Link (traceability record)
+// ═══════════════════════════════════════════════════
+
+export interface NsEventContextLink {
+  id: string;
+  organization_id: string;
+  source_event_id: string;
+  related_event_id: string;
+  relation_type: NsContextRelationType;
+  relation_strength: number;
+  created_at: string;
+}
+
+// ═══════════════════════════════════════════════════
+// NS-02: Signal Group
 // ═══════════════════════════════════════════════════
 
 export interface NsSignalGroup {
@@ -239,7 +252,6 @@ export interface NsSignalGroup {
   updated_at: string;
 
   fingerprint: string;
-  /** Format: "domain::event_type::fingerprint" — explains grouping rationale */
   group_key: string;
   title: string;
 
@@ -252,19 +264,10 @@ export interface NsSignalGroup {
   event_count: number;
   first_seen_at: string;
   last_seen_at: string;
-  /** Points to the most recent event in this group */
   representative_event_id: string | null;
 
-  /**
-   * KNOWN LIMITATION: novelty_score measures structural rarity
-   * (inverse of fingerprint frequency), NOT operational novelty.
-   * A rare fingerprint may represent a banal variant of a known
-   * problem. A common fingerprint may mask a genuinely new issue
-   * with different root cause. Treat as heuristic, not truth.
-   */
   novelty_score: number | null;
   confidence_score: number | null;
-  /** Saturates at 1.0 (20+ events). Measures recurrence intensity. */
   recurrence_score: number;
 
   status: "active" | "resolved" | "archived";
@@ -277,7 +280,7 @@ export interface NsSignalGroup {
 }
 
 // ═══════════════════════════════════════════════════
-// Pattern Interface (populated by backend, read-only on frontend)
+// Pattern Interface
 // ═══════════════════════════════════════════════════
 
 export interface NervousSystemEventPattern {
@@ -320,21 +323,20 @@ export interface NsSystemPulse {
   last_updated: string;
 }
 
-/**
- * NS-02: Classified summary live state shape.
- *
- * NOTE: This summary provides OPERATIONAL VISIBILITY into
- * classification results. It is NOT the same as formal
- * "surfacing" (NS-05). The UI should display this as
- * "recent classified signals" or "processing status",
- * not as "alerts" or "escalations".
- */
 export interface NsClassifiedSummary {
   classified_last_hour: number;
   pending_count: number;
   by_domain: Record<string, number>;
   by_severity: Record<string, number>;
   top_signal_groups: NsSignalGroupSummary[];
+  last_updated: string;
+}
+
+/** NS-03: Contextualized summary for live state */
+export interface NsContextualizedSummary {
+  contextualized_last_hour: number;
+  by_attention: Record<string, number>;
+  by_context_type: Record<string, number>;
   last_updated: string;
 }
 
@@ -350,7 +352,7 @@ export interface NsSignalGroupSummary {
 }
 
 // ═══════════════════════════════════════════════════
-// NS-02: Processing Result
+// Processing Results
 // ═══════════════════════════════════════════════════
 
 export interface NsProcessingResult {
@@ -361,46 +363,34 @@ export interface NsProcessingResult {
   errors: number;
 }
 
+/** NS-03: Context processing result */
+export interface NsContextProcessingResult {
+  processed: number;
+  contextualized: number;
+  relations_created: number;
+  errors: number;
+}
+
 // ═══════════════════════════════════════════════════
-// NS-02: Known Limitations Registry
+// Known Limitations Registry
 //
-// This section documents known limitations that are
-// ACCEPTED for NS-02 and must be addressed in future sprints.
-// Do NOT claim these capabilities exist.
+// NS-02 limitations (carried forward):
+// 1. Novelty scoring: structural rarity, not operational novelty.
+// 2. Grouping: exact fingerprint match only, no fuzzy/semantic.
+// 3. Classification: rule-based only, no adaptive learning.
+// 4. Pattern promotion: threshold-based (≥5), no statistical significance.
 //
-// 1. NOVELTY SCORING
-//    - Measures fingerprint frequency (structural rarity),
-//      not operational novelty.
-//    - Cannot detect "same problem, different fingerprint" cases.
-//    - Cannot detect "different problem, same fingerprint" cases.
-//    - Improvement target: NS-03 (context-aware novelty).
+// NS-03 limitations:
+// 5. Context window: fixed 30 minutes, not adaptive.
+// 6. Sequence detection: ordered subsequence matching, not statistical.
+// 7. No Canon Graph Memory correlation yet (placeholder only).
+// 8. Possible cause is pattern-derived, not root-cause analysis.
+// 9. Context confidence is heuristic, not calibrated.
+// 10. No cross-tenant context (by design, security invariant).
 //
-// 2. GROUPING
-//    - Exact fingerprint match only. No fuzzy/semantic grouping.
-//    - No cross-domain correlation (pipeline + agent = separate groups).
-//    - No retroactive group merging.
-//    - group_key is rigid: domain::event_type::fingerprint.
-//    - Improvement target: NS-03 (context-linked groups).
-//
-// 3. CLASSIFICATION
-//    - Rule-based only. No adaptive learning.
-//    - Unknown event types get pass-through domain from emitter.
-//    - Severity overrides are static (no contextual escalation).
-//    - Confidence measures signal completeness, not accuracy.
-//    - Improvement target: NS-06 (learning feedback loop).
-//
-// 4. PATTERN PROMOTION
-//    - Threshold-based only (≥5 events). No statistical significance.
-//    - Pattern confidence mirrors group confidence (no independent calc).
-//    - patterns_promoted counter overcounts (increments per group check).
-//    - Improvement target: NS-03/NS-06.
-//
-// 5. LIFECYCLE
-//    - Only new → classified transition is implemented.
-//    - get_classified_feed provides operational visibility, not
-//      formal surfacing.
-//    - No transition back from classified to new (no reclassification).
-//    - Improvement target: NS-03 (contextualized), NS-05 (surfaced).
+// Improvement targets:
+//   NS-04: Decision layer will consume context for recommendations.
+//   NS-06: Learning feedback will calibrate context confidence.
 // ═══════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════
@@ -415,6 +405,7 @@ export interface NsListEventsResponse {
 export interface NsGetPulseResponse {
   pulse: NsSystemPulse | null;
   classified_summary: NsClassifiedSummary | null;
+  contextualized_summary: NsContextualizedSummary | null;
   updated_at: string | null;
 }
 
@@ -434,15 +425,13 @@ export interface NsListSignalGroupsResponse {
   count: number;
 }
 
-/**
- * Response for get_classified_feed.
- *
- * SEMANTIC NOTE: This feed returns classified events for
- * OPERATIONAL MONITORING. It does NOT imply formal surfacing.
- * The UI should label this as "Classified Signals" or
- * "Processing Feed", not as "Alerts" or "Escalations".
- */
 export interface NsGetClassifiedFeedResponse {
+  feed: NervousSystemEvent[];
+  count: number;
+}
+
+/** NS-03: Contextual feed response */
+export interface NsGetContextualFeedResponse {
   feed: NervousSystemEvent[];
   count: number;
 }
@@ -450,4 +439,10 @@ export interface NsGetClassifiedFeedResponse {
 export interface NsProcessEventsResponse {
   success: boolean;
   result: NsProcessingResult;
+}
+
+/** NS-03: Context processing response */
+export interface NsProcessContextResponse {
+  success: boolean;
+  result: NsContextProcessingResult;
 }

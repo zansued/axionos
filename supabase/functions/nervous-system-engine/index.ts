@@ -1,18 +1,17 @@
 /**
- * Nervous System Engine — NS-01 + NS-02
+ * Nervous System Engine — NS-01 + NS-02 + NS-03
  *
  * ARCHITECTURE NOTES:
  * - This edge function is the controlled gateway to the nervous system.
  * - Writes use service-role client, bypassing RLS intentionally.
  * - All org membership is validated before any query.
  * - NS-02 adds: process_pending, list_signal_groups, get_classified_feed.
- * - Classification, enrichment, and grouping happen in process_pending.
- * - The frontend calls process_pending to trigger batch processing.
- *   In production, this would be a scheduled cron job.
+ * - NS-03 adds: process_context_batch, get_contextual_feed.
  *
  * Actions:
- *   READ:  list_events, get_pulse, list_patterns, list_signal_groups, get_classified_feed
- *   WRITE: emit_event, process_pending
+ *   READ:  list_events, get_pulse, list_patterns, list_signal_groups,
+ *          get_classified_feed, get_contextual_feed
+ *   WRITE: emit_event, process_pending, process_context_batch
  */
 
 import { handleCors, errorResponse } from "../_shared/cors.ts";
@@ -21,6 +20,7 @@ import { checkRateLimit } from "../_shared/rate-limit.ts";
 import { logSecurityAudit, resolveAndValidateOrg } from "../_shared/security-audit.ts";
 import { emitNervousSystemEvent } from "../_shared/nervous-system.ts";
 import { processPendingEvents } from "../_shared/nervous-system-classifier.ts";
+import { processContextualization } from "../_shared/nervous-system-context-engine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -30,9 +30,9 @@ const corsHeaders = {
 
 const READ_ACTIONS = new Set([
   "list_events", "get_pulse", "list_patterns",
-  "list_signal_groups", "get_classified_feed",
+  "list_signal_groups", "get_classified_feed", "get_contextual_feed",
 ]);
-const WRITE_ACTIONS = new Set(["emit_event", "process_pending"]);
+const WRITE_ACTIONS = new Set(["emit_event", "process_pending", "process_context_batch"]);
 const ALL_ACTIONS = new Set([...READ_ACTIONS, ...WRITE_ACTIONS]);
 
 const MAX_LIST_LIMIT = 200;
@@ -94,6 +94,8 @@ Deno.serve(async (req) => {
         return await handleEmitEvent(sc, orgId, body);
       case "process_pending":
         return await handleProcessPending(sc, orgId, body);
+      case "process_context_batch":
+        return await handleProcessContextBatch(sc, orgId, body);
       case "list_events":
         return await handleListEvents(sc, orgId, body);
       case "get_pulse":
@@ -104,6 +106,8 @@ Deno.serve(async (req) => {
         return await handleListSignalGroups(sc, orgId, body);
       case "get_classified_feed":
         return await handleGetClassifiedFeed(sc, orgId, body);
+      case "get_contextual_feed":
+        return await handleGetContextualFeed(sc, orgId, body);
       default:
         return json({ error: `Unhandled action: ${action}` }, 400);
     }
@@ -170,13 +174,18 @@ async function handleEmitEvent(sc: any, orgId: string, body: Record<string, unkn
   });
 }
 
-/**
- * NS-02: Trigger batch classification of pending events.
- * In production, this would be a cron-triggered job.
- */
 async function handleProcessPending(sc: any, orgId: string, body: Record<string, unknown>) {
   const batchSize = Math.min(Number(body.batch_size) || 50, 100);
   const result = await processPendingEvents(sc, orgId, batchSize);
+  return json({ success: true, result });
+}
+
+/**
+ * NS-03: Trigger batch contextualization of classified events.
+ */
+async function handleProcessContextBatch(sc: any, orgId: string, body: Record<string, unknown>) {
+  const batchSize = Math.min(Number(body.batch_size) || 50, 100);
+  const result = await processContextualization(sc, orgId, batchSize);
   return json({ success: true, result });
 }
 
@@ -194,7 +203,7 @@ async function handleListEvents(sc: any, orgId: string, body: Record<string, unk
 
   let query = sc
     .from("nervous_system_events")
-    .select("id, created_at, occurred_at, source_type, source_id, event_type, event_domain, event_subdomain, severity, severity_score, novelty_score, confidence_score, fingerprint, dedup_group, signal_group_id, summary, payload, metadata, classification_metadata, status, classified_at, contextualized_at, surfaced_at, initiative_id, service_name")
+    .select("id, created_at, occurred_at, source_type, source_id, event_type, event_domain, event_subdomain, severity, severity_score, novelty_score, confidence_score, fingerprint, dedup_group, signal_group_id, summary, payload, metadata, classification_metadata, status, classified_at, contextualized_at, surfaced_at, context_summary, context_confidence, related_event_ids, related_signal_group_ids, initiative_id, service_name")
     .eq("organization_id", orgId)
     .order("created_at", { ascending: false })
     .limit(limit);
@@ -211,20 +220,21 @@ async function handleListEvents(sc: any, orgId: string, body: Record<string, unk
 }
 
 async function handleGetPulse(sc: any, orgId: string) {
-  // Fetch both pulse and classified summary from live state
   const { data: liveStates } = await sc
     .from("nervous_system_live_state")
     .select("state_key, state_value, updated_at")
     .eq("organization_id", orgId)
-    .in("state_key", ["system_pulse", "classified_summary"]);
+    .in("state_key", ["system_pulse", "classified_summary", "contextualized_summary"]);
 
   const pulse = liveStates?.find((s: any) => s.state_key === "system_pulse");
   const classified = liveStates?.find((s: any) => s.state_key === "classified_summary");
+  const contextualized = liveStates?.find((s: any) => s.state_key === "contextualized_summary");
 
   return json({
     pulse: pulse?.state_value || null,
     classified_summary: classified?.state_value || null,
-    updated_at: pulse?.updated_at || classified?.updated_at || null,
+    contextualized_summary: contextualized?.state_value || null,
+    updated_at: pulse?.updated_at || classified?.updated_at || contextualized?.updated_at || null,
   });
 }
 
@@ -248,9 +258,6 @@ async function handleListPatterns(sc: any, orgId: string, body: Record<string, u
   return json({ patterns: data || [] });
 }
 
-/**
- * NS-02: List signal groups (clusters of correlated events).
- */
 async function handleListSignalGroups(sc: any, orgId: string, body: Record<string, unknown>) {
   const limit = Math.min(Math.max(1, Number(body.limit) || DEFAULT_LIST_LIMIT), MAX_LIST_LIMIT);
   const domain = body.domain as string | undefined;
@@ -276,11 +283,6 @@ async function handleListSignalGroups(sc: any, orgId: string, body: Record<strin
   return json({ groups: data || [], count: data?.length || 0 });
 }
 
-/**
- * NS-02: Get curated classified feed for UI consumption.
- * Returns only classified/surfaced events with enrichment metadata.
- * This is the "smart feed" — not the raw event table.
- */
 async function handleGetClassifiedFeed(sc: any, orgId: string, body: Record<string, unknown>) {
   const limit = Math.min(Math.max(1, Number(body.limit) || 20), 50);
   const domain = body.domain as string | undefined;
@@ -305,4 +307,38 @@ async function handleGetClassifiedFeed(sc: any, orgId: string, body: Record<stri
   const { data, error } = await query;
   if (error) return json({ error: error.message }, 500);
   return json({ feed: data || [], count: data?.length || 0 });
+}
+
+/**
+ * NS-03: Get contextualized feed — only contextualized events with full context.
+ */
+async function handleGetContextualFeed(sc: any, orgId: string, body: Record<string, unknown>) {
+  const limit = Math.min(Math.max(1, Number(body.limit) || 20), 50);
+  const domain = body.domain as string | undefined;
+  const attention = body.attention as string | undefined;
+
+  if (domain && !VALID_DOMAINS.has(domain)) return json({ error: `Invalid domain: ${domain}` }, 400);
+
+  let query = sc
+    .from("nervous_system_events")
+    .select("id, created_at, occurred_at, event_type, event_domain, event_subdomain, severity, severity_score, novelty_score, confidence_score, signal_group_id, summary, classification_metadata, status, classified_at, contextualized_at, context_summary, context_confidence, related_event_ids, related_signal_group_ids, service_name, source_type, agent_id, initiative_id")
+    .eq("organization_id", orgId)
+    .in("status", ["contextualized", "decided", "surfaced"])
+    .order("contextualized_at", { ascending: false })
+    .limit(limit);
+
+  if (domain) query = query.eq("event_domain", domain);
+
+  const { data, error } = await query;
+  if (error) return json({ error: error.message }, 500);
+
+  // Filter by attention level in-memory (jsonb field)
+  let feed = data || [];
+  if (attention) {
+    feed = feed.filter((e: any) =>
+      e.context_summary?.recommended_attention === attention
+    );
+  }
+
+  return json({ feed, count: feed.length });
 }
