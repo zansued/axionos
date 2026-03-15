@@ -55,6 +55,7 @@ export const PatternLibraryDashboard = lazy(() => import("@/pages/PatternLibrary
 export const CanonIntelligenceDashboard = lazy(() => import("@/pages/CanonIntelligenceDashboard"));
 export const KnowledgeHealthDashboard = lazy(() => import("@/pages/KnowledgeHealthDashboard"));
 export const KnowledgePortfolioDashboard = lazy(() => import("@/pages/KnowledgePortfolioDashboard"));
+export const SovereignCapabilitiesDashboard = lazy(() => import("@/pages/SovereignCapabilitiesDashboard"));
 export const KnowledgeDemandForecastDashboard = lazy(() => import("@/pages/KnowledgeDemandForecastDashboard"));
 export const KnowledgeAcquisitionDashboard = lazy(() => import("@/pages/KnowledgeAcquisitionDashboard"));
 export const KnowledgeAcquisitionExecutionDashboard = lazy(() => import("@/pages/KnowledgeAcquisitionExecutionDashboard"));
