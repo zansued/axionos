@@ -503,12 +503,14 @@ export async function processPendingEvents(
   }
 
   // 4. Check pattern promotion for updated groups
+  // NOTE: patterns_promoted counts groups checked, not patterns created.
+  // This is a known NS-02 limitation — acceptable at this stage.
   for (const groupId of groupsUpdated) {
     try {
-      await maybePromoteToPattern(sc, orgId, groupId);
-      result.patterns_promoted++;
+      const promoted = await maybePromoteToPattern(sc, orgId, groupId);
+      if (promoted) result.patterns_promoted++;
     } catch {
-      // Non-fatal
+      // Non-fatal — pattern promotion failure must not block processing
     }
   }
 
