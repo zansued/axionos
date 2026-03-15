@@ -1,11 +1,10 @@
 /**
  * SystemIntelligence — Autonomous infrastructure insights.
  * Advisory-only surface showing what AxionOS learns and optimizes automatically.
- * The user does not operate these — they observe autonomous intelligence at work.
  */
 
 import { AppLayout } from "@/components/AppLayout";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -13,6 +12,7 @@ import {
   Activity, Gauge, GitBranch, Cpu,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useI18n } from "@/contexts/I18nContext";
 
 const container = {
   hidden: { opacity: 0 },
@@ -59,47 +59,49 @@ function InsightCard({ title, description, icon: Icon, category, confidence }: {
 }
 
 export default function SystemIntelligence() {
+  const { t } = useI18n();
+
   const insights = [
     {
-      title: "Architecture Optimization Available",
-      description: "Based on runtime patterns, the API Gateway module in Initiative #142 could benefit from connection pooling. Estimated latency reduction: 23%.",
+      title: t("sysIntel.archOptTitle"),
+      description: t("sysIntel.archOptDesc"),
       icon: GitBranch,
-      category: "Architecture",
+      category: t("sysIntel.catArchitecture"),
       confidence: 87,
     },
     {
-      title: "Pipeline Efficiency Improving",
-      description: "Validation pass rate has increased from 82% to 94% over the last 30 days. The repair loop has resolved 12 issues autonomously.",
+      title: t("sysIntel.pipelineTitle"),
+      description: t("sysIntel.pipelineDesc"),
       icon: TrendingUp,
-      category: "Performance",
+      category: t("sysIntel.catPerformance"),
       confidence: 95,
     },
     {
-      title: "Usage Pattern Detected",
-      description: "Peak usage for Initiative #141 occurs between 14:00–16:00 UTC. Auto-scaling rules have been optimized accordingly.",
+      title: t("sysIntel.usageTitle"),
+      description: t("sysIntel.usageDesc"),
       icon: Activity,
-      category: "Usage",
+      category: t("sysIntel.catUsage"),
       confidence: 91,
     },
     {
-      title: "Learning Signal: Error Pattern",
-      description: "A recurring timeout pattern was detected in database queries. The system has catalogued this as a known pattern and applied a preventive rule.",
+      title: t("sysIntel.learningTitle"),
+      description: t("sysIntel.learningDesc"),
       icon: Brain,
-      category: "Learning",
+      category: t("sysIntel.catLearning"),
       confidence: 83,
     },
     {
-      title: "Deployment Health Score",
-      description: "Overall deployment health is at 96%. All rollback mechanisms are active and tested. No governance violations detected.",
+      title: t("sysIntel.healthTitle"),
+      description: t("sysIntel.healthDesc"),
       icon: Shield,
-      category: "Health",
+      category: t("sysIntel.catHealth"),
       confidence: 96,
     },
     {
-      title: "Cost Optimization Opportunity",
-      description: "Agent routing analysis suggests switching to economy-tier models for classification tasks could save ~18% on monthly compute costs.",
+      title: t("sysIntel.costTitle"),
+      description: t("sysIntel.costDesc"),
       icon: Cpu,
-      category: "Optimization",
+      category: t("sysIntel.catOptimization"),
       confidence: 78,
     },
   ];
@@ -116,10 +118,10 @@ export default function SystemIntelligence() {
         <div>
           <h1 className="text-xl font-display font-semibold tracking-tight flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            System Intelligence
+            {t("sysIntel.title")}
           </h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Autonomous insights — AxionOS continuously learns, optimizes, and evolves your infrastructure
+            {t("sysIntel.subtitle")}
           </p>
         </div>
 
@@ -127,19 +129,19 @@ export default function SystemIntelligence() {
         <motion.div variants={item}>
           <Card className="border-primary/20 bg-primary/5">
             <CardContent className="py-3 px-4">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
                 <div className="flex items-center gap-2">
                   <span className="relative flex h-2 w-2">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-50" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
                   </span>
-                  <span className="text-xs font-medium">Autonomous Intelligence Active</span>
+                  <span className="text-xs font-medium">{t("sysIntel.statusActive")}</span>
                 </div>
                 <Separator orientation="vertical" className="h-4" />
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1"><Gauge className="h-3 w-3" /> 6 active insights</span>
-                  <span className="flex items-center gap-1"><Brain className="h-3 w-3" /> 142 patterns learned</span>
-                  <span className="flex items-center gap-1"><Lightbulb className="h-3 w-3" /> 3 optimizations applied today</span>
+                <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
+                  <span className="flex items-center gap-1"><Gauge className="h-3 w-3" /> 6 {t("sysIntel.activeInsights")}</span>
+                  <span className="flex items-center gap-1"><Brain className="h-3 w-3" /> 142 {t("sysIntel.patternsLearned")}</span>
+                  <span className="flex items-center gap-1"><Lightbulb className="h-3 w-3" /> 3 {t("sysIntel.optimizationsToday")}</span>
                 </div>
               </div>
             </CardContent>
@@ -158,7 +160,7 @@ export default function SystemIntelligence() {
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/30 border border-border/30">
             <Separator orientation="vertical" className="h-4 bg-muted-foreground/30" />
             <p className="text-[11px] text-muted-foreground">
-              These insights are generated autonomously. AxionOS observes, learns, and optimizes — you focus on building.
+              {t("sysIntel.advisoryNote")}
             </p>
           </div>
         </motion.div>
