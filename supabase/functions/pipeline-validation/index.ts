@@ -55,8 +55,8 @@ serve(async (req) => {
     .eq("organization_id", ctx.organizationId);
 
   if (!artifacts || artifacts.length === 0) {
-    if (jobId) await failJob(ctx, jobId, "Nenhum artefato encontrado");
-    return errorResponse("Nenhum artefato encontrado para validar");
+    if (jobId) await completeJob(ctx, jobId, { artifacts_validated: 0, passed: 0, skipped: "no_artifacts" }, { model: "none", costUsd: 0, durationMs: 0 });
+    return jsonResponse({ success: true, overall_pass: false, remaining_to_validate: 0, message: "Nenhum artefato encontrado — execute o pipeline primeiro", job_id: jobId });
   }
 
   const artifactsToValidate = artifacts.filter((a: any) => a.status !== "approved" && a.status !== "pending_review");
