@@ -44,6 +44,7 @@ Deno.serve(async (req) => {
 
         return {
           initiative_id: init.id,
+          initiative_title: init.title || init.id?.slice(0, 8),
           stage_status: stageStatus,
           milestone_completion_score: milestoneScore,
           adoption_score: success.adoption_score,
