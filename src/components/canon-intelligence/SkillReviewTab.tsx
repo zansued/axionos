@@ -455,7 +455,7 @@ export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab
       )}
     </div>
   );
-}
+});
 
 function ScoreSliders({ scores, onChange }: {
   scores: { specificity: number; applicability: number; reusability: number; confidence_assessment: number };
