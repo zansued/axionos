@@ -435,9 +435,14 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        // Auto-trigger deep validation after AI validation passes
-        if (stage === "validation" && result.success && result.overall_pass) {
-          toast({ title: "🔬 Iniciando Deep Static Analysis (imports, tipos, build)..." });
+        // Auto-trigger deep validation after AI validation completes (pass or fail — always continue chain)
+        if (stage === "validation" && result.success && !result.batch_incomplete) {
+          if (result.overall_pass) {
+            toast({ title: "✅ Fix Loop concluído! Iniciando Deep Static Analysis..." });
+          } else {
+            toast({ title: `⚠️ Fix Loop: ${result.failed || 0} falhas, ${result.fixed || 0} corrigidos. Continuando com Deep Static Analysis...` });
+          }
+          addEvent(initiativeId, stage, `Fix Loop finalizado: ${result.passed || 0} aprovados, ${result.failed || 0} falhas, ${result.fixed || 0} corrigidos`);
           setTimeout(() => {
             runStage(initiativeId, "deep_validation");
           }, 1500);
