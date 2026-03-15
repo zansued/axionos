@@ -111,12 +111,68 @@ Deno.test("NS-04: Decision actions recognized (not 400)", async () => {
   }
 });
 
-// ═══════════════════════════════════════════════════
-// NS-04: Tenant isolation on decisions
-// ═══════════════════════════════════════════════════
-
 Deno.test("NS-04: Decisions query requires org membership", async () => {
-  // Anon key without proper user → auth fails before org check
   const { status } = await callEngine({ action: "list_decisions" }, SUPABASE_ANON_KEY);
   assertEquals(status === 401 || status === 403, true);
+});
+
+// ═══════════════════════════════════════════════════
+// NS-05: Surfacing Layer Actions
+// ═══════════════════════════════════════════════════
+
+Deno.test("NS-05: Action process_surfacing_batch requires auth", async () => {
+  const { status } = await callEngine({ action: "process_surfacing_batch" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-05: Action get_surfaced_feed requires auth", async () => {
+  const { status } = await callEngine({ action: "get_surfaced_feed" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-05: Action list_surfaced_items requires auth", async () => {
+  const { status } = await callEngine({ action: "list_surfaced_items" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-05: Action get_surface_summary requires auth", async () => {
+  const { status } = await callEngine({ action: "get_surface_summary" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-05: Action acknowledge_surface requires auth", async () => {
+  const { status } = await callEngine({ action: "acknowledge_surface" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-05: Action approve_surface requires auth", async () => {
+  const { status } = await callEngine({ action: "approve_surface" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-05: Action dismiss_surface requires auth", async () => {
+  const { status } = await callEngine({ action: "dismiss_surface" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-05: Surfacing actions recognized (not 400)", async () => {
+  const actions = [
+    "process_surfacing_batch", "get_surfaced_feed", "list_surfaced_items",
+    "get_surface_summary", "acknowledge_surface", "approve_surface", "dismiss_surface",
+  ];
+  for (const action of actions) {
+    const { status } = await callEngine({ action }, SUPABASE_ANON_KEY);
+    assertEquals(status === 401 || status === 403, true, `${action} returned ${status}`);
+  }
+});
+
+Deno.test("NS-05: Surfaced items query requires org membership", async () => {
+  const { status } = await callEngine({ action: "list_surfaced_items" }, SUPABASE_ANON_KEY);
+  assertEquals(status === 401 || status === 403, true);
+});
+
+Deno.test("NS-05: dismiss_surface without reason returns error (with anon key)", async () => {
+  const { status } = await callEngine({ action: "dismiss_surface", item_id: "test" }, SUPABASE_ANON_KEY);
+  // Should fail auth first (401/403), but if it somehow passes, the missing reason check applies
+  assertEquals(status === 401 || status === 403 || status === 400, true);
 });

@@ -1,10 +1,12 @@
 /**
- * Nervous System Engine — NS-01 + NS-02 + NS-03 + NS-04
+ * Nervous System Engine — NS-01 + NS-02 + NS-03 + NS-04 + NS-05
  *
  * Actions:
  *   READ:  list_events, get_pulse, list_patterns, list_signal_groups,
- *          get_classified_feed, get_contextual_feed, get_decision_feed, list_decisions
- *   WRITE: emit_event, process_pending, process_context_batch, process_decision_batch
+ *          get_classified_feed, get_contextual_feed, get_decision_feed, list_decisions,
+ *          get_surfaced_feed, list_surfaced_items, get_surface_summary
+ *   WRITE: emit_event, process_pending, process_context_batch, process_decision_batch,
+ *          process_surfacing_batch, acknowledge_surface, approve_surface, dismiss_surface
  */
 
 import { handleCors, errorResponse } from "../_shared/cors.ts";
@@ -15,6 +17,12 @@ import { emitNervousSystemEvent } from "../_shared/nervous-system.ts";
 import { processPendingEvents } from "../_shared/nervous-system-classifier.ts";
 import { processContextualization } from "../_shared/nervous-system-context-engine.ts";
 import { processDecisionBatch } from "../_shared/nervous-system-decision-engine.ts";
+import {
+  processSurfacingBatch,
+  acknowledgeSurfacedItem,
+  approveSurfacedItem,
+  dismissSurfacedItem,
+} from "../_shared/nervous-system-surfacing-engine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -26,9 +34,11 @@ const READ_ACTIONS = new Set([
   "list_events", "get_pulse", "list_patterns",
   "list_signal_groups", "get_classified_feed", "get_contextual_feed",
   "get_decision_feed", "list_decisions",
+  "get_surfaced_feed", "list_surfaced_items", "get_surface_summary",
 ]);
 const WRITE_ACTIONS = new Set([
   "emit_event", "process_pending", "process_context_batch", "process_decision_batch",
+  "process_surfacing_batch", "acknowledge_surface", "approve_surface", "dismiss_surface",
 ]);
 const ALL_ACTIONS = new Set([...READ_ACTIONS, ...WRITE_ACTIONS]);
 
@@ -48,6 +58,7 @@ const VALID_DECISION_TYPES = new Set([
   "observe", "surface", "recommend_action", "escalate", "queue_for_action", "mark_for_learning",
 ]);
 const VALID_PRIORITY_LEVELS = new Set(["low", "medium", "high", "urgent"]);
+const VALID_SURFACE_STATUSES = new Set(["active", "acknowledged", "approved", "dismissed", "resolved", "expired"]);
 
 Deno.serve(async (req) => {
   const corsRes = handleCors(req);
@@ -91,14 +102,11 @@ Deno.serve(async (req) => {
     });
 
     switch (action) {
+      // ── NS-01/02 ──
       case "emit_event":
         return await handleEmitEvent(sc, orgId, body);
       case "process_pending":
         return await handleProcessPending(sc, orgId, body);
-      case "process_context_batch":
-        return await handleProcessContextBatch(sc, orgId, body);
-      case "process_decision_batch":
-        return await handleProcessDecisionBatch(sc, orgId, body);
       case "list_events":
         return await handleListEvents(sc, orgId, body);
       case "get_pulse":
@@ -109,12 +117,33 @@ Deno.serve(async (req) => {
         return await handleListSignalGroups(sc, orgId, body);
       case "get_classified_feed":
         return await handleGetClassifiedFeed(sc, orgId, body);
+      // ── NS-03 ──
+      case "process_context_batch":
+        return await handleProcessContextBatch(sc, orgId, body);
       case "get_contextual_feed":
         return await handleGetContextualFeed(sc, orgId, body);
+      // ── NS-04 ──
+      case "process_decision_batch":
+        return await handleProcessDecisionBatch(sc, orgId, body);
       case "get_decision_feed":
         return await handleGetDecisionFeed(sc, orgId, body);
       case "list_decisions":
         return await handleListDecisions(sc, orgId, body);
+      // ── NS-05 ──
+      case "process_surfacing_batch":
+        return await handleProcessSurfacingBatch(sc, orgId, body);
+      case "get_surfaced_feed":
+        return await handleGetSurfacedFeed(sc, orgId, body);
+      case "list_surfaced_items":
+        return await handleListSurfacedItems(sc, orgId, body);
+      case "get_surface_summary":
+        return await handleGetSurfaceSummary(sc, orgId);
+      case "acknowledge_surface":
+        return await handleAcknowledgeSurface(sc, orgId, body, user.id);
+      case "approve_surface":
+        return await handleApproveSurface(sc, orgId, body, user.id);
+      case "dismiss_surface":
+        return await handleDismissSurface(sc, orgId, body, user.id);
       default:
         return json({ error: `Unhandled action: ${action}` }, 400);
     }
@@ -133,7 +162,7 @@ function json(data: unknown, status = 200) {
 }
 
 // ═══════════════════════════════════════════════════
-// HANDLERS
+// NS-01/02 HANDLERS
 // ═══════════════════════════════════════════════════
 
 async function handleEmitEvent(sc: any, orgId: string, body: Record<string, unknown>) {
@@ -224,7 +253,7 @@ async function handleGetPulse(sc: any, orgId: string) {
     .from("nervous_system_live_state")
     .select("state_key, state_value, updated_at")
     .eq("organization_id", orgId)
-    .in("state_key", ["system_pulse", "classified_summary", "contextualized_summary", "decision_summary"]);
+    .in("state_key", ["system_pulse", "classified_summary", "contextualized_summary", "decision_summary", "surfaced_summary"]);
 
   const find = (key: string) => liveStates?.find((s: any) => s.state_key === key);
 
@@ -233,7 +262,10 @@ async function handleGetPulse(sc: any, orgId: string) {
     classified_summary: find("classified_summary")?.state_value || null,
     contextualized_summary: find("contextualized_summary")?.state_value || null,
     decision_summary: find("decision_summary")?.state_value || null,
-    updated_at: find("system_pulse")?.updated_at || find("decision_summary")?.updated_at || null,
+    surfaced_summary: find("surfaced_summary")?.state_value || null,
+    pending_approvals_count: find("surfaced_summary")?.state_value?.pending_approvals || 0,
+    active_escalations_count: find("surfaced_summary")?.state_value?.active_escalations || 0,
+    updated_at: find("system_pulse")?.updated_at || find("surfaced_summary")?.updated_at || null,
   });
 }
 
@@ -328,9 +360,10 @@ async function handleGetContextualFeed(sc: any, orgId: string, body: Record<stri
   return json({ feed, count: feed.length });
 }
 
-/**
- * NS-04: Get decision feed — recent decisions with priority/type filters.
- */
+// ═══════════════════════════════════════════════════
+// NS-04 HANDLERS
+// ═══════════════════════════════════════════════════
+
 async function handleGetDecisionFeed(sc: any, orgId: string, body: Record<string, unknown>) {
   const limit = Math.min(Math.max(1, Number(body.limit) || 20), 50);
   const decisionType = body.decision_type as string | undefined;
@@ -357,9 +390,6 @@ async function handleGetDecisionFeed(sc: any, orgId: string, body: Record<string
   return json({ decisions: data || [], count: data?.length || 0 });
 }
 
-/**
- * NS-04: List all decisions with flexible filters.
- */
 async function handleListDecisions(sc: any, orgId: string, body: Record<string, unknown>) {
   const limit = Math.min(Math.max(1, Number(body.limit) || DEFAULT_LIST_LIMIT), MAX_LIST_LIMIT);
   const status = (body.status as string) || "active";
@@ -380,4 +410,92 @@ async function handleListDecisions(sc: any, orgId: string, body: Record<string, 
   const { data, error } = await query;
   if (error) return json({ error: error.message }, 500);
   return json({ decisions: data || [], count: data?.length || 0 });
+}
+
+// ═══════════════════════════════════════════════════
+// NS-05 HANDLERS
+// ═══════════════════════════════════════════════════
+
+async function handleProcessSurfacingBatch(sc: any, orgId: string, body: Record<string, unknown>) {
+  const batchSize = Math.min(Number(body.batch_size) || 50, 100);
+  const result = await processSurfacingBatch(sc, orgId, batchSize);
+  return json({ success: true, result });
+}
+
+async function handleGetSurfacedFeed(sc: any, orgId: string, body: Record<string, unknown>) {
+  const limit = Math.min(Math.max(1, Number(body.limit) || 20), 50);
+  const surfaceType = body.surface_type as string | undefined;
+  const attention = body.attention_level as string | undefined;
+
+  let query = sc
+    .from("nervous_system_surfaced_items")
+    .select("id, event_id, decision_id, signal_group_id, surface_type, surface_status, priority_level, risk_level, title, summary, recommended_action_type, attention_level, surfaced_at, acknowledged_at, approved_at, surface_metadata")
+    .eq("organization_id", orgId)
+    .in("surface_status", ["active", "acknowledged"])
+    .order("surfaced_at", { ascending: false })
+    .limit(limit);
+
+  if (surfaceType) query = query.eq("surface_type", surfaceType);
+  if (attention) query = query.eq("attention_level", attention);
+
+  const { data, error } = await query;
+  if (error) return json({ error: error.message }, 500);
+  return json({ items: data || [], count: data?.length || 0 });
+}
+
+async function handleListSurfacedItems(sc: any, orgId: string, body: Record<string, unknown>) {
+  const limit = Math.min(Math.max(1, Number(body.limit) || DEFAULT_LIST_LIMIT), MAX_LIST_LIMIT);
+  const status = body.surface_status as string | undefined;
+  const surfaceType = body.surface_type as string | undefined;
+
+  let query = sc
+    .from("nervous_system_surfaced_items")
+    .select("id, event_id, decision_id, signal_group_id, surface_type, surface_status, priority_level, risk_level, title, summary, recommended_action_type, recommended_action_payload, expected_outcome, attention_level, operator_notes, acknowledged_by, acknowledged_at, approved_by, approved_at, dismissed_by, dismissed_at, surfaced_at, status_reason, surface_metadata")
+    .eq("organization_id", orgId)
+    .order("surfaced_at", { ascending: false })
+    .limit(limit);
+
+  if (status && VALID_SURFACE_STATUSES.has(status)) query = query.eq("surface_status", status);
+  if (surfaceType) query = query.eq("surface_type", surfaceType);
+
+  const { data, error } = await query;
+  if (error) return json({ error: error.message }, 500);
+  return json({ items: data || [], count: data?.length || 0 });
+}
+
+async function handleGetSurfaceSummary(sc: any, orgId: string) {
+  const { data } = await sc
+    .from("nervous_system_live_state")
+    .select("state_value, updated_at")
+    .eq("organization_id", orgId)
+    .eq("state_key", "surfaced_summary")
+    .single();
+
+  return json({ summary: data?.state_value || null, updated_at: data?.updated_at || null });
+}
+
+async function handleAcknowledgeSurface(sc: any, orgId: string, body: Record<string, unknown>, userId: string) {
+  const itemId = body.item_id as string;
+  if (!itemId) return json({ error: "Missing item_id" }, 400);
+  const result = await acknowledgeSurfacedItem(sc, orgId, itemId, userId);
+  if (!result.success) return json({ error: result.error }, 400);
+  return json({ success: true });
+}
+
+async function handleApproveSurface(sc: any, orgId: string, body: Record<string, unknown>, userId: string) {
+  const itemId = body.item_id as string;
+  if (!itemId) return json({ error: "Missing item_id" }, 400);
+  const result = await approveSurfacedItem(sc, orgId, itemId, userId);
+  if (!result.success) return json({ error: result.error }, 400);
+  return json({ success: true });
+}
+
+async function handleDismissSurface(sc: any, orgId: string, body: Record<string, unknown>, userId: string) {
+  const itemId = body.item_id as string;
+  const reason = body.reason as string;
+  if (!itemId) return json({ error: "Missing item_id" }, 400);
+  if (!reason) return json({ error: "Missing reason for dismissal" }, 400);
+  const result = await dismissSurfacedItem(sc, orgId, itemId, userId, reason);
+  if (!result.success) return json({ error: result.error }, 400);
+  return json({ success: true });
 }

@@ -26987,6 +26987,7 @@ export type Database = {
           risk_level: string
           signal_group_id: string | null
           status: string
+          surfaced_item_id: string | null
         }
         Insert: {
           created_at?: string
@@ -27005,6 +27006,7 @@ export type Database = {
           risk_level?: string
           signal_group_id?: string | null
           status?: string
+          surfaced_item_id?: string | null
         }
         Update: {
           created_at?: string
@@ -27023,6 +27025,7 @@ export type Database = {
           risk_level?: string
           signal_group_id?: string | null
           status?: string
+          surfaced_item_id?: string | null
         }
         Relationships: [
           {
@@ -27374,6 +27377,101 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "nervous_system_signal_groups_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nervous_system_surfaced_items: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          approved_at: string | null
+          approved_by: string | null
+          attention_level: string
+          created_at: string
+          decision_id: string
+          dismissed_at: string | null
+          dismissed_by: string | null
+          event_id: string
+          expected_outcome: Json
+          id: string
+          operator_notes: Json
+          organization_id: string
+          priority_level: string
+          recommended_action_payload: Json
+          recommended_action_type: string | null
+          risk_level: string
+          signal_group_id: string | null
+          status_reason: string | null
+          summary: string
+          surface_metadata: Json
+          surface_status: string
+          surface_type: string
+          surfaced_at: string
+          title: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          attention_level: string
+          created_at?: string
+          decision_id: string
+          dismissed_at?: string | null
+          dismissed_by?: string | null
+          event_id: string
+          expected_outcome?: Json
+          id?: string
+          operator_notes?: Json
+          organization_id: string
+          priority_level: string
+          recommended_action_payload?: Json
+          recommended_action_type?: string | null
+          risk_level: string
+          signal_group_id?: string | null
+          status_reason?: string | null
+          summary: string
+          surface_metadata?: Json
+          surface_status?: string
+          surface_type: string
+          surfaced_at?: string
+          title: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          attention_level?: string
+          created_at?: string
+          decision_id?: string
+          dismissed_at?: string | null
+          dismissed_by?: string | null
+          event_id?: string
+          expected_outcome?: Json
+          id?: string
+          operator_notes?: Json
+          organization_id?: string
+          priority_level?: string
+          recommended_action_payload?: Json
+          recommended_action_type?: string | null
+          risk_level?: string
+          signal_group_id?: string | null
+          status_reason?: string | null
+          summary?: string
+          surface_metadata?: Json
+          surface_status?: string
+          surface_type?: string
+          surfaced_at?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nervous_system_surfaced_items_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
