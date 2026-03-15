@@ -51,6 +51,7 @@ export function OwnerRoutes() {
       <Route path="/owner/canon-intelligence" element={<P><CanonIntelligenceDashboard /></P>} />
       <Route path="/owner/knowledge-health" element={<P><KnowledgeHealthDashboard /></P>} />
       <Route path="/owner/knowledge-portfolio" element={<P><KnowledgePortfolioDashboard /></P>} />
+      <Route path="/owner/sovereign-capabilities" element={<P><SovereignCapabilitiesDashboard /></P>} />
       <Route path="/owner/knowledge-demand" element={<P><KnowledgeDemandForecastDashboard /></P>} />
       <Route path="/owner/knowledge-acquisition" element={<P><KnowledgeAcquisitionDashboard /></P>} />
       <Route path="/owner/knowledge-acquisition-execution" element={<P><KnowledgeAcquisitionExecutionDashboard /></P>} />
