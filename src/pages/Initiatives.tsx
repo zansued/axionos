@@ -94,6 +94,8 @@ export default function Initiatives() {
       return data;
     },
     enabled: !!selectedId,
+    refetchInterval: selectedIsProcessing ? 5000 : false,
+    staleTime: 10000,
   });
 
   const createMutation = useMutation({
