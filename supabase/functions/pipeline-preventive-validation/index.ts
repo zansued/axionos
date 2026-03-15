@@ -179,7 +179,8 @@ serve(async (req) => {
       };
 
       for (const rule of activeRules) {
-        const conditions = (rule.trigger_conditions as any[]) || [];
+        const rawConditions = rule.trigger_conditions;
+        const conditions: any[] = Array.isArray(rawConditions) ? rawConditions : [];
         let matched = conditions.length > 0;
         for (const cond of conditions) {
           const ctxVal = pipelineContext[cond.field as keyof typeof pipelineContext];
