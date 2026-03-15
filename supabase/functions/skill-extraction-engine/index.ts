@@ -712,7 +712,7 @@ Respond with a JSON object: { "reviews": [...] } where each review has: skill_id
     results: results.slice(0, 20),
     errors: errors.length > 0 ? errors : undefined,
     review_method: "ai_assisted_lovable_gateway",
-    model: "google/gemini-2.5-flash",
+    model: "openai/gpt-5-mini",
   });
 }
 
