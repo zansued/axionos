@@ -373,6 +373,81 @@ export interface NsDecisionProcessingResult {
 }
 
 // ═══════════════════════════════════════════════════
+// NS-05: Surfacing Types
+// ═══════════════════════════════════════════════════
+
+export const NS_SURFACE_TYPES = [
+  "decision_surface", "escalation_surface", "recommendation_surface",
+  "learning_surface", "queue_surface",
+] as const;
+export type NsSurfaceType = (typeof NS_SURFACE_TYPES)[number];
+
+export const NS_SURFACE_STATUSES = [
+  "active", "acknowledged", "approved", "dismissed", "resolved", "expired",
+] as const;
+export type NsSurfaceStatus = (typeof NS_SURFACE_STATUSES)[number];
+
+export const NS_SURFACE_ATTENTION_LEVELS = ["low", "medium", "high", "urgent"] as const;
+export type NsSurfaceAttentionLevel = (typeof NS_SURFACE_ATTENTION_LEVELS)[number];
+
+export interface NsSurfacedItem {
+  id: string;
+  organization_id: string;
+  event_id: string;
+  decision_id: string;
+  signal_group_id: string | null;
+  surface_type: NsSurfaceType;
+  surface_status: NsSurfaceStatus;
+  priority_level: NsPriorityLevel;
+  risk_level: NsRiskLevel;
+  title: string;
+  summary: string;
+  recommended_action_type: string | null;
+  recommended_action_payload: Record<string, unknown>;
+  expected_outcome: Record<string, unknown>;
+  attention_level: NsSurfaceAttentionLevel;
+  operator_notes: Record<string, unknown>;
+  acknowledged_by: string | null;
+  acknowledged_at: string | null;
+  approved_by: string | null;
+  approved_at: string | null;
+  dismissed_by: string | null;
+  dismissed_at: string | null;
+  created_at: string;
+  surfaced_at: string;
+  status_reason: string | null;
+  surface_metadata: Record<string, unknown>;
+}
+
+/** NS-05: Surfaced summary for live state */
+export interface NsSurfacedSummary {
+  active_surfaced_count: number;
+  active_escalations: number;
+  active_recommendations: number;
+  pending_approvals: number;
+  learning_candidates: number;
+  by_type: Record<string, number>;
+  by_attention: Record<string, number>;
+  recent_surfaced_feed: {
+    title: string;
+    type: string;
+    status: string;
+    attention: string;
+    at: string;
+  }[];
+  last_updated: string;
+}
+
+/** NS-05: Surfacing processing result */
+export interface NsSurfacingProcessingResult {
+  processed: number;
+  surfaced: number;
+  skipped: number;
+  by_type: Record<string, number>;
+  errors: number;
+}
+
+// ═══════════════════════════════════════════════════
 // Known Limitations Registry
 //
 // NS-02: Novelty=structural rarity; grouping=exact fingerprint;
@@ -382,10 +457,13 @@ export interface NsDecisionProcessingResult {
 // NS-04: Decision rules are static (no adaptive thresholds);
 //         no execution yet (recommend only); no cross-event
 //         decision aggregation; confidence is heuristic average.
+// NS-05: Surfacing thresholds are static; no operator preference
+//         learning; dismiss/approve do not yet feed back into
+//         decision engine; no expiration TTL enforcement.
 //
 // Improvement targets:
-//   NS-05: Surfacing executes on escalate/surface decisions.
 //   NS-06: Learning feedback calibrates decision confidence.
+//   NS-07: Execution layer acts on approved surfaced items.
 // ═══════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════
@@ -402,6 +480,9 @@ export interface NsGetPulseResponse {
   classified_summary: NsClassifiedSummary | null;
   contextualized_summary: NsContextualizedSummary | null;
   decision_summary: NsDecisionSummary | null;
+  surfaced_summary: NsSurfacedSummary | null;
+  pending_approvals_count: number;
+  active_escalations_count: number;
   updated_at: string | null;
 }
 
@@ -443,6 +524,18 @@ export interface NsListDecisionsResponse {
   count: number;
 }
 
+/** NS-05: Surfaced feed response */
+export interface NsGetSurfacedFeedResponse {
+  items: NsSurfacedItem[];
+  count: number;
+}
+
+/** NS-05: Surfaced items list response */
+export interface NsListSurfacedItemsResponse {
+  items: NsSurfacedItem[];
+  count: number;
+}
+
 export interface NsProcessEventsResponse {
   success: boolean;
   result: NsProcessingResult;
@@ -457,4 +550,10 @@ export interface NsProcessContextResponse {
 export interface NsProcessDecisionResponse {
   success: boolean;
   result: NsDecisionProcessingResult;
+}
+
+/** NS-05: Surfacing batch response */
+export interface NsProcessSurfacingResponse {
+  success: boolean;
+  result: NsSurfacingProcessingResult;
 }
