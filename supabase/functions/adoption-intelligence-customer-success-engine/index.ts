@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
       // Fetch initiatives for org to compute aggregate adoption posture
       const { data: initiatives } = await client
         .from("initiatives")
-        .select("id, stage_status, build_status, deploy_url, repo_url")
+        .select("id, title, stage_status, build_status, deploy_url, repo_url")
         .eq("organization_id", organization_id)
         .limit(50);
 
@@ -44,6 +44,7 @@ Deno.serve(async (req) => {
 
         return {
           initiative_id: init.id,
+          initiative_title: init.title || init.id?.slice(0, 8),
           stage_status: stageStatus,
           milestone_completion_score: milestoneScore,
           adoption_score: success.adoption_score,
