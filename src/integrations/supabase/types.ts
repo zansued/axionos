@@ -26969,6 +26969,44 @@ export type Database = {
           },
         ]
       }
+      nervous_system_event_context_links: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          related_event_id: string
+          relation_strength: number
+          relation_type: string
+          source_event_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          related_event_id: string
+          relation_strength?: number
+          relation_type?: string
+          source_event_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          related_event_id?: string
+          relation_strength?: number
+          relation_type?: string
+          source_event_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nervous_system_event_context_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nervous_system_event_patterns: {
         Row: {
           canon_reference_id: string | null
@@ -27040,6 +27078,8 @@ export type Database = {
           classification_metadata: Json
           classified_at: string | null
           confidence_score: number | null
+          context_confidence: number | null
+          context_summary: Json | null
           contextualized_at: string | null
           created_at: string
           dedup_group: string | null
@@ -27055,6 +27095,8 @@ export type Database = {
           organization_id: string
           payload: Json
           pipeline_id: string | null
+          related_event_ids: string[] | null
+          related_signal_group_ids: string[] | null
           service_name: string | null
           severity: string
           severity_score: number | null
@@ -27070,6 +27112,8 @@ export type Database = {
           classification_metadata?: Json
           classified_at?: string | null
           confidence_score?: number | null
+          context_confidence?: number | null
+          context_summary?: Json | null
           contextualized_at?: string | null
           created_at?: string
           dedup_group?: string | null
@@ -27085,6 +27129,8 @@ export type Database = {
           organization_id: string
           payload?: Json
           pipeline_id?: string | null
+          related_event_ids?: string[] | null
+          related_signal_group_ids?: string[] | null
           service_name?: string | null
           severity?: string
           severity_score?: number | null
@@ -27100,6 +27146,8 @@ export type Database = {
           classification_metadata?: Json
           classified_at?: string | null
           confidence_score?: number | null
+          context_confidence?: number | null
+          context_summary?: Json | null
           contextualized_at?: string | null
           created_at?: string
           dedup_group?: string | null
@@ -27115,6 +27163,8 @@ export type Database = {
           organization_id?: string
           payload?: Json
           pipeline_id?: string | null
+          related_event_ids?: string[] | null
+          related_signal_group_ids?: string[] | null
           service_name?: string | null
           severity?: string
           severity_score?: number | null

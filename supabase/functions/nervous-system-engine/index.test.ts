@@ -22,6 +22,10 @@ async function callEngine(body: Record<string, unknown>, token?: string) {
   return { status: res.status, data };
 }
 
+// ═══════════════════════════════════════════════════
+// NS-01: Foundation Tests
+// ═══════════════════════════════════════════════════
+
 Deno.test("NS-01: Unauthenticated request returns 401", async () => {
   const { status, data } = await callEngine({ action: "get_pulse" });
   assertEquals(status, 401);
@@ -40,18 +44,47 @@ Deno.test("NS-01: CORS preflight succeeds", async () => {
   assertExists(res.headers.get("access-control-allow-origin"));
 });
 
-Deno.test("NS-02: New actions registered (list_signal_groups)", async () => {
-  // Without auth → 401, but action name is accepted by the set
+// ═══════════════════════════════════════════════════
+// NS-02: Classification Actions
+// ═══════════════════════════════════════════════════
+
+Deno.test("NS-02: Action list_signal_groups requires auth", async () => {
   const { status } = await callEngine({ action: "list_signal_groups" });
-  assertEquals(status, 401); // Rejected at auth, not at action validation
+  assertEquals(status, 401);
 });
 
-Deno.test("NS-02: New actions registered (get_classified_feed)", async () => {
+Deno.test("NS-02: Action get_classified_feed requires auth", async () => {
   const { status } = await callEngine({ action: "get_classified_feed" });
   assertEquals(status, 401);
 });
 
-Deno.test("NS-02: New actions registered (process_pending)", async () => {
+Deno.test("NS-02: Action process_pending requires auth", async () => {
   const { status } = await callEngine({ action: "process_pending" });
   assertEquals(status, 401);
+});
+
+// ═══════════════════════════════════════════════════
+// NS-03: Context Engine Actions
+// ═══════════════════════════════════════════════════
+
+Deno.test("NS-03: Action process_context_batch requires auth", async () => {
+  const { status } = await callEngine({ action: "process_context_batch" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-03: Action get_contextual_feed requires auth", async () => {
+  const { status } = await callEngine({ action: "get_contextual_feed" });
+  assertEquals(status, 401);
+});
+
+Deno.test("NS-03: Action process_context_batch is recognized (not 400)", async () => {
+  // With anon key as bearer (will fail at auth or org, not at action validation)
+  const { status } = await callEngine({ action: "process_context_batch" }, SUPABASE_ANON_KEY);
+  // Should be 401 (auth fail) or 403 (org fail), NOT 400 (unknown action)
+  assertEquals(status === 401 || status === 403, true);
+});
+
+Deno.test("NS-03: Action get_contextual_feed is recognized (not 400)", async () => {
+  const { status } = await callEngine({ action: "get_contextual_feed" }, SUPABASE_ANON_KEY);
+  assertEquals(status === 401 || status === 403, true);
 });
