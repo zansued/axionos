@@ -27554,6 +27554,9 @@ export type Database = {
           execution_status: string | null
           expected_outcome: Json
           expired_at: string | null
+          handoff_action_id: string | null
+          handoff_at: string | null
+          handoff_status: string | null
           id: string
           operator_notes: Json
           organization_id: string
@@ -27586,6 +27589,9 @@ export type Database = {
           execution_status?: string | null
           expected_outcome?: Json
           expired_at?: string | null
+          handoff_action_id?: string | null
+          handoff_at?: string | null
+          handoff_status?: string | null
           id?: string
           operator_notes?: Json
           organization_id: string
@@ -27618,6 +27624,9 @@ export type Database = {
           execution_status?: string | null
           expected_outcome?: Json
           expired_at?: string | null
+          handoff_action_id?: string | null
+          handoff_at?: string | null
+          handoff_status?: string | null
           id?: string
           operator_notes?: Json
           organization_id?: string

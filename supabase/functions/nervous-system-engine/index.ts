@@ -1,15 +1,21 @@
 /**
- * Nervous System Engine — NS-01 + NS-02 + NS-03 + NS-04 + NS-05 + NS-06
+ * Nervous System Engine — NS-01 through NS-05 + Action Handoff Integration
+ *
+ * ARCHITECTURAL REDIRECT (post NS-06):
+ *   The Nervous System is the operational cortex (signal → triage).
+ *   The Action Engine stack is the governed motor system (formalize → execute → audit).
+ *   NS-06 parallel execution (autonomic_actions) is DEPRECATED.
+ *   Approved surfaced items now hand off to the existing action_registry/approval/execution stack.
  *
  * Actions:
  *   READ:  list_events, get_pulse, list_patterns, list_signal_groups,
  *          get_classified_feed, get_contextual_feed, get_decision_feed, list_decisions,
  *          get_surfaced_feed, list_surfaced_items, get_surface_summary,
- *          list_actions, get_action_feed, get_execution_summary
+ *          get_handoff_status, get_execution_summary
  *   WRITE: emit_event, process_pending, process_context_batch, process_decision_batch,
  *          process_surfacing_batch, acknowledge_surface, approve_surface, dismiss_surface,
- *          process_approved_actions_batch, resolve_surface_item, expire_surface_item,
- *          register_feedback_signal
+ *          handoff_surface_to_action_engine, resolve_surface_item, expire_surface_item,
+ *          register_feedback_signal, ingest_execution_outcome
  */
 
 import { handleCors, errorResponse } from "../_shared/cors.ts";
@@ -27,14 +33,19 @@ import {
   dismissSurfacedItem,
 } from "../_shared/nervous-system-surfacing-engine.ts";
 import {
-  processApprovedActionsBatch,
   resolveSurfacedItem,
   expireSurfacedItem,
 } from "../_shared/nervous-system-action-engine.ts";
 import {
   processFeedbackSignals,
   createLearningFeedbackFromDismissal,
+  updateConfidenceCalibrationHints,
 } from "../_shared/nervous-system-learning-feedback.ts";
+import {
+  processHandoffBatch,
+  getHandoffStatus,
+  ingestExecutionOutcomeToNS,
+} from "../_shared/nervous-system-action-handoff.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -47,13 +58,13 @@ const READ_ACTIONS = new Set([
   "list_signal_groups", "get_classified_feed", "get_contextual_feed",
   "get_decision_feed", "list_decisions",
   "get_surfaced_feed", "list_surfaced_items", "get_surface_summary",
-  "list_actions", "get_action_feed", "get_execution_summary",
+  "get_handoff_status", "get_execution_summary",
 ]);
 const WRITE_ACTIONS = new Set([
   "emit_event", "process_pending", "process_context_batch", "process_decision_batch",
   "process_surfacing_batch", "acknowledge_surface", "approve_surface", "dismiss_surface",
-  "process_approved_actions_batch", "resolve_surface_item", "expire_surface_item",
-  "register_feedback_signal",
+  "handoff_surface_to_action_engine", "resolve_surface_item", "expire_surface_item",
+  "register_feedback_signal", "ingest_execution_outcome",
 ]);
 const ALL_ACTIONS = new Set([...READ_ACTIONS, ...WRITE_ACTIONS]);
 
@@ -74,7 +85,6 @@ const VALID_DECISION_TYPES = new Set([
 ]);
 const VALID_PRIORITY_LEVELS = new Set(["low", "medium", "high", "urgent"]);
 const VALID_SURFACE_STATUSES = new Set(["active", "acknowledged", "approved", "dismissed", "resolved", "expired"]);
-const VALID_EXECUTION_STATUSES = new Set(["pending", "ready", "running", "succeeded", "failed", "cancelled", "skipped"]);
 
 Deno.serve(async (req) => {
   const corsRes = handleCors(req);
@@ -160,13 +170,11 @@ Deno.serve(async (req) => {
         return await handleApproveSurface(sc, orgId, body, user.id);
       case "dismiss_surface":
         return await handleDismissSurface(sc, orgId, body, user.id);
-      // ── NS-06 ──
-      case "process_approved_actions_batch":
-        return await handleProcessApprovedActionsBatch(sc, orgId, body);
-      case "list_actions":
-        return await handleListActions(sc, orgId, body);
-      case "get_action_feed":
-        return await handleGetActionFeed(sc, orgId, body);
+      // ── Handoff Integration (replaces NS-06 parallel execution) ──
+      case "handoff_surface_to_action_engine":
+        return await handleHandoffToActionEngine(sc, orgId, body);
+      case "get_handoff_status":
+        return await handleGetHandoffStatus(sc, orgId, body);
       case "get_execution_summary":
         return await handleGetExecutionSummary(sc, orgId);
       case "resolve_surface_item":
@@ -175,6 +183,8 @@ Deno.serve(async (req) => {
         return await handleExpireSurfaceItem(sc, orgId, body);
       case "register_feedback_signal":
         return await handleRegisterFeedbackSignal(sc, orgId, body);
+      case "ingest_execution_outcome":
+        return await handleIngestExecutionOutcome(sc, orgId, body);
       default:
         return json({ error: `Unhandled action: ${action}` }, 400);
     }
@@ -286,7 +296,7 @@ async function handleGetPulse(sc: any, orgId: string) {
     .eq("organization_id", orgId)
     .in("state_key", [
       "system_pulse", "classified_summary", "contextualized_summary",
-      "decision_summary", "surfaced_summary", "execution_summary", "feedback_summary",
+      "decision_summary", "surfaced_summary", "handoff_summary", "feedback_summary",
     ]);
 
   const find = (key: string) => liveStates?.find((s: any) => s.state_key === key);
@@ -297,12 +307,11 @@ async function handleGetPulse(sc: any, orgId: string) {
     contextualized_summary: find("contextualized_summary")?.state_value || null,
     decision_summary: find("decision_summary")?.state_value || null,
     surfaced_summary: find("surfaced_summary")?.state_value || null,
-    execution_summary: find("execution_summary")?.state_value || null,
+    handoff_summary: find("handoff_summary")?.state_value || null,
     feedback_summary: find("feedback_summary")?.state_value || null,
     pending_approvals_count: find("surfaced_summary")?.state_value?.pending_approvals || 0,
     active_escalations_count: find("surfaced_summary")?.state_value?.active_escalations || 0,
-    pending_actions_count: find("execution_summary")?.state_value?.pending_actions_count || 0,
-    running_actions_count: find("execution_summary")?.state_value?.running_actions_count || 0,
+    pending_handoffs_count: find("handoff_summary")?.state_value?.pending_handoff_count || 0,
     updated_at: find("system_pulse")?.updated_at || find("surfaced_summary")?.updated_at || null,
   });
 }
@@ -467,7 +476,7 @@ async function handleGetSurfacedFeed(sc: any, orgId: string, body: Record<string
 
   let query = sc
     .from("nervous_system_surfaced_items")
-    .select("id, event_id, decision_id, signal_group_id, surface_type, surface_status, priority_level, risk_level, title, summary, recommended_action_type, attention_level, surfaced_at, acknowledged_at, approved_at, surface_metadata")
+    .select("id, event_id, decision_id, signal_group_id, surface_type, surface_status, priority_level, risk_level, title, summary, recommended_action_type, attention_level, surfaced_at, acknowledged_at, approved_at, surface_metadata, handoff_action_id, handoff_status, handoff_at")
     .eq("organization_id", orgId)
     .in("surface_status", ["active", "acknowledged"])
     .order("surfaced_at", { ascending: false })
@@ -488,7 +497,7 @@ async function handleListSurfacedItems(sc: any, orgId: string, body: Record<stri
 
   let query = sc
     .from("nervous_system_surfaced_items")
-    .select("id, event_id, decision_id, signal_group_id, surface_type, surface_status, priority_level, risk_level, title, summary, recommended_action_type, recommended_action_payload, expected_outcome, attention_level, operator_notes, acknowledged_by, acknowledged_at, approved_by, approved_at, dismissed_by, dismissed_at, surfaced_at, status_reason, surface_metadata, action_id, execution_status, resolved_at, expired_at")
+    .select("id, event_id, decision_id, signal_group_id, surface_type, surface_status, priority_level, risk_level, title, summary, recommended_action_type, recommended_action_payload, expected_outcome, attention_level, operator_notes, acknowledged_by, acknowledged_at, approved_by, approved_at, dismissed_by, dismissed_at, surfaced_at, status_reason, surface_metadata, action_id, execution_status, resolved_at, expired_at, handoff_action_id, handoff_status, handoff_at")
     .eq("organization_id", orgId)
     .order("surfaced_at", { ascending: false })
     .limit(limit);
@@ -536,7 +545,6 @@ async function handleDismissSurface(sc: any, orgId: string, body: Record<string,
   const result = await dismissSurfacedItem(sc, orgId, itemId, userId, reason);
   if (!result.success) return json({ error: result.error }, 400);
 
-  // Create learning feedback from dismissal
   const { data: dismissed } = await sc
     .from("nervous_system_surfaced_items")
     .select("*")
@@ -550,55 +558,30 @@ async function handleDismissSurface(sc: any, orgId: string, body: Record<string,
 }
 
 // ═══════════════════════════════════════════════════
-// NS-06 HANDLERS
+// HANDOFF INTEGRATION HANDLERS (replaces NS-06 parallel execution)
 // ═══════════════════════════════════════════════════
 
-async function handleProcessApprovedActionsBatch(sc: any, orgId: string, body: Record<string, unknown>) {
+async function handleHandoffToActionEngine(sc: any, orgId: string, body: Record<string, unknown>) {
   const batchSize = Math.min(Number(body.batch_size) || 50, 100);
-  const result = await processApprovedActionsBatch(sc, orgId, batchSize);
+  const result = await processHandoffBatch(sc, orgId, batchSize);
   return json({ success: true, result });
 }
 
-async function handleListActions(sc: any, orgId: string, body: Record<string, unknown>) {
-  const limit = Math.min(Math.max(1, Number(body.limit) || DEFAULT_LIST_LIMIT), MAX_LIST_LIMIT);
-  const status = body.execution_status as string | undefined;
-  const actionType = body.action_type as string | undefined;
-
-  let query = sc
-    .from("autonomic_actions")
-    .select("id, surfaced_item_id, decision_id, event_id, signal_group_id, action_type, execution_mode, execution_status, action_payload, expected_outcome, execution_result, execution_error, policy_snapshot, approved_by, approved_at, started_at, completed_at, failed_at, cancelled_at, created_at, action_metadata")
-    .eq("organization_id", orgId)
-    .order("created_at", { ascending: false })
-    .limit(limit);
-
-  if (status && VALID_EXECUTION_STATUSES.has(status)) query = query.eq("execution_status", status);
-  if (actionType) query = query.eq("action_type", actionType);
-
-  const { data, error } = await query;
-  if (error) return json({ error: error.message }, 500);
-  return json({ actions: data || [], count: data?.length || 0 });
-}
-
-async function handleGetActionFeed(sc: any, orgId: string, body: Record<string, unknown>) {
-  const limit = Math.min(Math.max(1, Number(body.limit) || 20), 50);
-
-  const { data, error } = await sc
-    .from("autonomic_actions")
-    .select("id, action_type, execution_mode, execution_status, approved_by, started_at, completed_at, failed_at, created_at, action_metadata")
-    .eq("organization_id", orgId)
-    .order("created_at", { ascending: false })
-    .limit(limit);
-
-  if (error) return json({ error: error.message }, 500);
-  return json({ actions: data || [], count: data?.length || 0 });
+async function handleGetHandoffStatus(sc: any, orgId: string, body: Record<string, unknown>) {
+  const itemId = body.item_id as string;
+  if (!itemId) return json({ error: "Missing item_id" }, 400);
+  const status = await getHandoffStatus(sc, orgId, itemId);
+  if (!status) return json({ error: "No handoff found for this item" }, 404);
+  return json({ handoff: status });
 }
 
 async function handleGetExecutionSummary(sc: any, orgId: string) {
+  // Return handoff summary instead of deprecated autonomic_actions summary
   const { data } = await sc
     .from("nervous_system_live_state")
     .select("state_value, updated_at")
     .eq("organization_id", orgId)
-    .eq("state_key", "execution_summary")
+    .eq("state_key", "handoff_summary")
     .single();
 
   return json({ summary: data?.state_value || null, updated_at: data?.updated_at || null });
@@ -625,4 +608,12 @@ async function handleExpireSurfaceItem(sc: any, orgId: string, body: Record<stri
 async function handleRegisterFeedbackSignal(sc: any, orgId: string, body: Record<string, unknown>) {
   const result = await processFeedbackSignals(sc, orgId);
   return json({ success: true, result });
+}
+
+async function handleIngestExecutionOutcome(sc: any, orgId: string, body: Record<string, unknown>) {
+  const actionId = body.action_id as string;
+  if (!actionId) return json({ error: "Missing action_id" }, 400);
+  const result = await ingestExecutionOutcomeToNS(sc, orgId, actionId);
+  if (!result.success) return json({ error: result.error }, 400);
+  return json({ success: true, feedback_id: result.feedback_id });
 }
