@@ -1,10 +1,17 @@
 /**
- * AI Nervous System — Sprint NS-01 through NS-06 Domain Types
+ * AI Nervous System — Sprint NS-01 through NS-05 + Handoff Integration Domain Types
  *
  * ARCHITECTURE NOTES:
  * - Read-only contract between backend and frontend.
  * - Frontend NEVER writes to nervous system tables.
- * - All processing (classification, context, decisions, surfacing, execution, feedback) is backend-only.
+ * - All processing (classification, context, decisions, surfacing) is backend-only.
+ * - Execution is delegated to the existing Action Engine stack via handoff.
+ * - Learning feedback flows back from Action Engine outcomes into NS.
+ *
+ * ARCHITECTURAL REDIRECT:
+ * - NS-06 parallel execution (autonomic_actions) is DEPRECATED.
+ * - Approved surfaced items now hand off to action_registry_entries.
+ * - Types for autonomic_actions are preserved for backward compat but marked deprecated.
  */
 
 // ═══════════════════════════════════════════════════
@@ -34,16 +41,16 @@ export const NS_SEVERITIES = ["low", "medium", "high", "critical"] as const;
 export type NsSeverity = (typeof NS_SEVERITIES)[number];
 
 // ═══════════════════════════════════════════════════
-// Event Status Lifecycle (updated NS-06)
+// Event Status Lifecycle
 //
-//   new → classified → contextualized → decided → surfaced → resolved → archived
+//   new → classified → contextualized → decided → surfaced → [handoff] → resolved → archived
 //
 // Transitions (backend-only):
 //   new → classified          (NS-02)
 //   classified → contextualized (NS-03)
 //   contextualized → decided    (NS-04)
 //   decided → surfaced          (NS-05)
-//   surfaced → resolved         (NS-06: after action execution)
+//   surfaced → resolved         (via action engine outcome feedback)
 //   any → archived              (TTL or manual)
 // ═══════════════════════════════════════════════════
 
@@ -110,16 +117,15 @@ export const NS_RECOMMENDED_ACTIONS = [
 export type NsRecommendedAction = (typeof NS_RECOMMENDED_ACTIONS)[number];
 
 // ═══════════════════════════════════════════════════
-// NS-06: Execution Types
+// Handoff Integration Types
 // ═══════════════════════════════════════════════════
 
-export const NS_EXECUTION_MODES = ["manual", "assisted", "automatic"] as const;
-export type NsExecutionMode = (typeof NS_EXECUTION_MODES)[number];
+export const NS_HANDOFF_STATUSES = ["handed_off", "action_completed", "action_failed"] as const;
+export type NsHandoffStatus = (typeof NS_HANDOFF_STATUSES)[number];
 
-export const NS_EXECUTION_STATUSES = [
-  "pending", "ready", "running", "succeeded", "failed", "cancelled", "skipped",
-] as const;
-export type NsExecutionStatus = (typeof NS_EXECUTION_STATUSES)[number];
+// ═══════════════════════════════════════════════════
+// Feedback Types (shared between learning paths)
+// ═══════════════════════════════════════════════════
 
 export const NS_FEEDBACK_TYPES = [
   "execution_success", "execution_failure", "approval_rejected",
@@ -127,6 +133,23 @@ export const NS_FEEDBACK_TYPES = [
   "threshold_too_conservative", "learning_candidate_confirmed",
 ] as const;
 export type NsFeedbackType = (typeof NS_FEEDBACK_TYPES)[number];
+
+// ═══════════════════════════════════════════════════
+// DEPRECATED: NS-06 Execution Types (kept for backward compat)
+// Use action_registry_entries via handoff instead.
+// ═══════════════════════════════════════════════════
+
+/** @deprecated Use action_registry_entries execution_mode instead */
+export const NS_EXECUTION_MODES = ["manual", "assisted", "automatic"] as const;
+/** @deprecated */
+export type NsExecutionMode = (typeof NS_EXECUTION_MODES)[number];
+
+/** @deprecated Use action_registry_entries status instead */
+export const NS_EXECUTION_STATUSES = [
+  "pending", "ready", "running", "succeeded", "failed", "cancelled", "skipped",
+] as const;
+/** @deprecated */
+export type NsExecutionStatus = (typeof NS_EXECUTION_STATUSES)[number];
 
 // ═══════════════════════════════════════════════════
 // Core Event Interface
@@ -198,61 +221,24 @@ export function isValidClassificationMetadata(meta: unknown): meta is NsClassifi
 }
 
 // ═══════════════════════════════════════════════════
-// NS-03: Context Summary
+// Context Summary Interface
 // ═══════════════════════════════════════════════════
 
 export interface NsContextSummary {
   context_type: NsContextType;
-  sequence_length: number;
   recurrence_level: NsRecurrenceLevel;
-  related_entities: {
-    agents: string[];
-    services: string[];
-    initiatives: string[];
-    signal_groups: string[];
-  };
-  operational_scope: string;
-  recommended_attention: NsAttentionLevel;
-  detected_sequence: string | null;
+  temporal_density: number;
+  related_events_count: number;
+  related_groups_count: number;
+  canon_match_count: number;
   possible_cause: string | null;
-}
-
-export interface NsEventContextLink {
-  id: string;
-  organization_id: string;
-  source_event_id: string;
-  related_event_id: string;
-  relation_type: NsContextRelationType;
-  relation_strength: number;
-  created_at: string;
+  recommended_attention: NsAttentionLevel;
+  sequence_detected: string | null;
+  sequence_confidence: number;
 }
 
 // ═══════════════════════════════════════════════════
-// NS-04: Decision
-// ═══════════════════════════════════════════════════
-
-export interface NsDecision {
-  id: string;
-  organization_id: string;
-  event_id: string;
-  signal_group_id: string | null;
-  decision_type: NsDecisionType;
-  decision_reason: string;
-  decision_confidence: number;
-  risk_level: NsRiskLevel;
-  priority_level: NsPriorityLevel;
-  recommended_action_type: string | null;
-  recommended_action_payload: Record<string, unknown>;
-  expected_outcome: Record<string, unknown>;
-  decision_metadata: Record<string, unknown>;
-  created_at: string;
-  decided_at: string;
-  status: "active" | "superseded" | "resolved" | "archived";
-  execution_status: NsExecutionStatus | null;
-}
-
-// ═══════════════════════════════════════════════════
-// Signal Group
+// Signal Group Interface
 // ═══════════════════════════════════════════════════
 
 export interface NsSignalGroup {
@@ -266,7 +252,7 @@ export interface NsSignalGroup {
   event_subdomain: string | null;
   event_type: string;
   severity: NsSeverity;
-  severity_score: number | null;
+  severity_score: number;
   event_count: number;
   first_seen_at: string;
   last_seen_at: string;
@@ -274,13 +260,15 @@ export interface NsSignalGroup {
   novelty_score: number | null;
   confidence_score: number | null;
   recurrence_score: number;
-  status: "active" | "resolved" | "archived";
+  status: string;
   source_type: string | null;
   service_name: string | null;
-  summary: string;
-  aggregated_payload: Record<string, unknown>;
-  metadata: Record<string, unknown>;
+  summary: string | null;
 }
+
+// ═══════════════════════════════════════════════════
+// Event Pattern Interface
+// ═══════════════════════════════════════════════════
 
 export interface NervousSystemEventPattern {
   id: string;
@@ -291,31 +279,40 @@ export interface NervousSystemEventPattern {
   domain: NsEventDomain;
   subdomain: string | null;
   description: string | null;
-  known_causes: unknown[];
-  known_resolutions: unknown[];
   occurrence_count: number;
   successful_resolution_count: number;
-  confidence_score: number | null;
+  confidence_score: number;
   canon_reference_id: string | null;
 }
 
 // ═══════════════════════════════════════════════════
-// NS-05: Surfacing Types
+// Decision Interface
 // ═══════════════════════════════════════════════════
 
-export const NS_SURFACE_TYPES = [
-  "decision_surface", "escalation_surface", "recommendation_surface",
-  "learning_surface", "queue_surface",
-] as const;
-export type NsSurfaceType = (typeof NS_SURFACE_TYPES)[number];
+export interface NsDecision {
+  id: string;
+  organization_id: string;
+  event_id: string;
+  signal_group_id: string | null;
+  decision_type: NsDecisionType;
+  decision_reason: string;
+  decision_confidence: number;
+  risk_level: NsRiskLevel;
+  priority_level: NsPriorityLevel;
+  recommended_action_type: NsRecommendedAction | null;
+  recommended_action_payload: Record<string, unknown>;
+  expected_outcome: Record<string, unknown>;
+  decision_metadata: Record<string, unknown>;
+  created_at: string;
+  decided_at: string;
+  status: string;
+  execution_status: string | null;
+  surfaced_item_id: string | null;
+}
 
-export const NS_SURFACE_STATUSES = [
-  "active", "acknowledged", "approved", "dismissed", "resolved", "expired",
-] as const;
-export type NsSurfaceStatus = (typeof NS_SURFACE_STATUSES)[number];
-
-export const NS_SURFACE_ATTENTION_LEVELS = ["low", "medium", "high", "urgent"] as const;
-export type NsSurfaceAttentionLevel = (typeof NS_SURFACE_ATTENTION_LEVELS)[number];
+// ═══════════════════════════════════════════════════
+// Surfaced Item Interface (updated with handoff fields)
+// ═══════════════════════════════════════════════════
 
 export interface NsSurfacedItem {
   id: string;
@@ -323,8 +320,8 @@ export interface NsSurfacedItem {
   event_id: string;
   decision_id: string;
   signal_group_id: string | null;
-  surface_type: NsSurfaceType;
-  surface_status: NsSurfaceStatus;
+  surface_type: string;
+  surface_status: string;
   priority_level: NsPriorityLevel;
   risk_level: NsRiskLevel;
   title: string;
@@ -332,7 +329,7 @@ export interface NsSurfacedItem {
   recommended_action_type: string | null;
   recommended_action_payload: Record<string, unknown>;
   expected_outcome: Record<string, unknown>;
-  attention_level: NsSurfaceAttentionLevel;
+  attention_level: string;
   operator_notes: Record<string, unknown>;
   acknowledged_by: string | null;
   acknowledged_at: string | null;
@@ -340,48 +337,22 @@ export interface NsSurfacedItem {
   approved_at: string | null;
   dismissed_by: string | null;
   dismissed_at: string | null;
-  created_at: string;
   surfaced_at: string;
   status_reason: string | null;
   surface_metadata: Record<string, unknown>;
+  // Handoff integration fields
+  handoff_action_id: string | null;
+  handoff_status: NsHandoffStatus | null;
+  handoff_at: string | null;
+  // Legacy fields (still present in DB from NS-06)
   action_id: string | null;
-  execution_status: NsExecutionStatus | null;
+  execution_status: string | null;
   resolved_at: string | null;
   expired_at: string | null;
 }
 
 // ═══════════════════════════════════════════════════
-// NS-06: Autonomic Action
-// ═══════════════════════════════════════════════════
-
-export interface NsAutonomicAction {
-  id: string;
-  organization_id: string;
-  surfaced_item_id: string;
-  decision_id: string;
-  event_id: string;
-  signal_group_id: string | null;
-  action_type: string;
-  execution_mode: NsExecutionMode;
-  execution_status: NsExecutionStatus;
-  action_payload: Record<string, unknown>;
-  expected_outcome: Record<string, unknown>;
-  execution_result: Record<string, unknown>;
-  execution_error: Record<string, unknown>;
-  policy_snapshot: Record<string, unknown>;
-  approved_by: string | null;
-  approved_at: string | null;
-  started_at: string | null;
-  completed_at: string | null;
-  failed_at: string | null;
-  cancelled_at: string | null;
-  created_at: string;
-  updated_at: string;
-  action_metadata: Record<string, unknown>;
-}
-
-// ═══════════════════════════════════════════════════
-// NS-06: Learning Feedback
+// Learning Feedback Interface
 // ═══════════════════════════════════════════════════
 
 export interface NsLearningFeedback {
@@ -401,6 +372,31 @@ export interface NsLearningFeedback {
   measured_metrics: Record<string, unknown>;
   feedback_metadata: Record<string, unknown>;
   created_at: string;
+}
+
+/** @deprecated Use NsLearningFeedback instead */
+export interface NsAutonomicAction {
+  id: string;
+  surfaced_item_id: string;
+  decision_id: string;
+  event_id: string;
+  signal_group_id: string | null;
+  action_type: string;
+  execution_mode: string;
+  execution_status: string;
+  action_payload: Record<string, unknown>;
+  expected_outcome: Record<string, unknown>;
+  execution_result: Record<string, unknown>;
+  execution_error: Record<string, unknown>;
+  policy_snapshot: Record<string, unknown>;
+  approved_by: string | null;
+  approved_at: string | null;
+  started_at: string | null;
+  completed_at: string | null;
+  failed_at: string | null;
+  cancelled_at: string | null;
+  created_at: string;
+  action_metadata: Record<string, unknown>;
 }
 
 // ═══════════════════════════════════════════════════
@@ -471,29 +467,14 @@ export interface NsSurfacedSummary {
   last_updated: string;
 }
 
-/** NS-06: Execution summary for live state */
-export interface NsExecutionSummary {
-  pending_actions_count: number;
-  running_actions_count: number;
-  succeeded_actions_count: number;
-  failed_actions_count: number;
-  total: number;
-  by_status: Record<string, number>;
-  by_type: Record<string, number>;
-  by_mode: Record<string, number>;
-  recent_execution_feed: {
-    id: string;
-    type: string;
-    mode: string;
-    status: string;
-    created_at: string;
-    completed_at: string | null;
-    failed_at: string | null;
-  }[];
+export interface NsHandoffSummary {
+  total_handoffs: number;
+  by_handoff_status: Record<string, number>;
+  by_execution_status: Record<string, number>;
+  pending_handoff_count: number;
   last_updated: string;
 }
 
-/** NS-06: Feedback/calibration summary */
 export interface NsFeedbackSummary {
   total_feedback_signals: number;
   success_rate: number;
@@ -550,7 +531,14 @@ export interface NsSurfacingProcessingResult {
   errors: number;
 }
 
-/** NS-06: Action batch processing result */
+export interface NsHandoffBatchResult {
+  processed: number;
+  handed_off: number;
+  skipped: number;
+  errors: number;
+}
+
+/** @deprecated Use NsHandoffBatchResult instead */
 export interface NsActionBatchResult {
   processed: number;
   created: number;
@@ -558,6 +546,28 @@ export interface NsActionBatchResult {
   skipped: number;
   errors: number;
   by_mode: Record<string, number>;
+}
+
+/** @deprecated */
+export interface NsExecutionSummary {
+  pending_actions_count: number;
+  running_actions_count: number;
+  succeeded_actions_count: number;
+  failed_actions_count: number;
+  total: number;
+  by_status: Record<string, number>;
+  by_type: Record<string, number>;
+  by_mode: Record<string, number>;
+  recent_execution_feed: {
+    id: string;
+    type: string;
+    mode: string;
+    status: string;
+    created_at: string;
+    completed_at: string | null;
+    failed_at: string | null;
+  }[];
+  last_updated: string;
 }
 
 // ═══════════════════════════════════════════════════
@@ -571,13 +581,12 @@ export interface NsActionBatchResult {
 //         no cross-event decision aggregation; confidence is heuristic average.
 // NS-05: Surfacing thresholds are static; no operator preference
 //         learning; no expiration TTL enforcement.
-// NS-06: Execution is workflow-trigger only (no direct system mutation);
-//         feedback does not yet auto-recalibrate thresholds;
-//         calibration hints are advisory only.
+// Handoff: One-way handoff; feedback ingestion is pull-based;
+//          no automatic outcome polling from action engine.
 //
 // Improvement targets:
 //   NS-07: Adaptive threshold tuning from feedback.
-//   NS-08: Full autonomous execution for safe action classes.
+//   NS-08: Automatic outcome polling from action engine.
 // ═══════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════
@@ -595,12 +604,11 @@ export interface NsGetPulseResponse {
   contextualized_summary: NsContextualizedSummary | null;
   decision_summary: NsDecisionSummary | null;
   surfaced_summary: NsSurfacedSummary | null;
-  execution_summary: NsExecutionSummary | null;
+  handoff_summary: NsHandoffSummary | null;
   feedback_summary: NsFeedbackSummary | null;
   pending_approvals_count: number;
   active_escalations_count: number;
-  pending_actions_count: number;
-  running_actions_count: number;
+  pending_handoffs_count: number;
   updated_at: string | null;
 }
 
@@ -650,18 +658,6 @@ export interface NsListSurfacedItemsResponse {
   count: number;
 }
 
-/** NS-06: Action list response */
-export interface NsListActionsResponse {
-  actions: NsAutonomicAction[];
-  count: number;
-}
-
-/** NS-06: Action feed response */
-export interface NsGetActionFeedResponse {
-  actions: NsAutonomicAction[];
-  count: number;
-}
-
 export interface NsProcessEventsResponse {
   success: boolean;
   result: NsProcessingResult;
@@ -682,8 +678,25 @@ export interface NsProcessSurfacingResponse {
   result: NsSurfacingProcessingResult;
 }
 
-/** NS-06: Action batch response */
+export interface NsProcessHandoffResponse {
+  success: boolean;
+  result: NsHandoffBatchResult;
+}
+
+/** @deprecated Use NsProcessHandoffResponse */
 export interface NsProcessActionBatchResponse {
   success: boolean;
   result: NsActionBatchResult;
+}
+
+/** @deprecated Use action_registry_entries queries */
+export interface NsListActionsResponse {
+  actions: NsAutonomicAction[];
+  count: number;
+}
+
+/** @deprecated */
+export interface NsGetActionFeedResponse {
+  actions: NsAutonomicAction[];
+  count: number;
 }
