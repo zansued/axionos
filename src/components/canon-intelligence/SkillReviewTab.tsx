@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, forwardRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +37,7 @@ const STATUS_COLORS: Record<string, string> = {
   rejected: "border-destructive/30 text-destructive",
 };
 
-export function SkillReviewTab() {
+export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab(_props, ref) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -189,7 +189,7 @@ export function SkillReviewTab() {
   };
 
   return (
-    <div className="space-y-4">
+    <div ref={ref} className="space-y-4">
       {/* Stats Bar */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="Pendentes" value={pendingCount} accent />
@@ -455,7 +455,7 @@ export function SkillReviewTab() {
       )}
     </div>
   );
-}
+});
 
 function ScoreSliders({ scores, onChange }: {
   scores: { specificity: number; applicability: number; reusability: number; confidence_assessment: number };
