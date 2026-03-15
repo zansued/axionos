@@ -789,6 +789,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {stories.length === 0 ? (
+              <p className="text-xs text-muted-foreground py-4 text-center">Carregando stories...</p>
+            ) : (
             <div className="space-y-3">
               {stories.map((story: any) => {
                 const phases = story.story_phases || [];
@@ -845,6 +848,7 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                 );
               })}
             </div>
+            )}
           </CardContent>
         </Card>
       )}
