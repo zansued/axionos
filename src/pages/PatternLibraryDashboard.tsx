@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useOrg } from "@/contexts/OrgContext";
 import { useCanonPatterns, useCanonUsageEvents, useCanonPatternApplications, useRetrievePatterns, useExplainRetrieval } from "@/hooks/useCanonRetrieval";
@@ -35,26 +34,23 @@ export default function PatternLibraryDashboard() {
   return (
     <AppLayout>
       <div className="space-y-6 p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-              <Library className="h-6 w-6 text-primary" />
-              Pattern Library & Retrieval
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Runtime-connected implementation intelligence — retrieve approved patterns, templates, and conventions.
-            </p>
-          </div>
-          <Badge variant="outline" className="text-xs">Sprint 116</Badge>
+        <div>
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <Library className="h-6 w-6 text-primary" />
+            Biblioteca de Padrões & Recuperação
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Inteligência de implementação conectada ao runtime — recupere padrões aprovados, templates e convenções.
+          </p>
         </div>
 
-        {/* Summary Cards */}
+        {/* Cartões Resumo */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="pt-4">
               <div className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-primary" />
-                <span className="text-sm text-muted-foreground">Available Patterns</span>
+                <span className="text-sm text-muted-foreground">Padrões Disponíveis</span>
               </div>
               <p className="text-2xl font-bold mt-1">{totalAvailable}</p>
             </CardContent>
@@ -63,7 +59,7 @@ export default function PatternLibraryDashboard() {
             <CardContent className="pt-4">
               <div className="flex items-center gap-2">
                 <Zap className="h-4 w-4 text-primary" />
-                <span className="text-sm text-muted-foreground">Usage Events</span>
+                <span className="text-sm text-muted-foreground">Eventos de Uso</span>
               </div>
               <p className="text-2xl font-bold mt-1">{usageEvents?.length || 0}</p>
             </CardContent>
@@ -72,7 +68,7 @@ export default function PatternLibraryDashboard() {
             <CardContent className="pt-4">
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-primary" />
-                <span className="text-sm text-muted-foreground">Applications</span>
+                <span className="text-sm text-muted-foreground">Aplicações</span>
               </div>
               <p className="text-2xl font-bold mt-1">{applications?.length || 0}</p>
             </CardContent>
@@ -81,7 +77,7 @@ export default function PatternLibraryDashboard() {
             <CardContent className="pt-4">
               <div className="flex items-center gap-2">
                 <BarChart3 className="h-4 w-4 text-primary" />
-                <span className="text-sm text-muted-foreground">Retrieved Now</span>
+                <span className="text-sm text-muted-foreground">Recuperados Agora</span>
               </div>
               <p className="text-2xl font-bold mt-1">{patterns.length}</p>
             </CardContent>
@@ -90,43 +86,41 @@ export default function PatternLibraryDashboard() {
 
         <Tabs defaultValue="patterns" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="patterns">Patterns</TabsTrigger>
-            <TabsTrigger value="query">Query Console</TabsTrigger>
-            <TabsTrigger value="usage">Usage Analytics</TabsTrigger>
-            <TabsTrigger value="applications">Applications</TabsTrigger>
+            <TabsTrigger value="patterns">Padrões</TabsTrigger>
+            <TabsTrigger value="query">Console de Consulta</TabsTrigger>
+            <TabsTrigger value="usage">Análise de Uso</TabsTrigger>
+            <TabsTrigger value="applications">Aplicações</TabsTrigger>
           </TabsList>
 
           <TabsContent value="patterns" className="space-y-4">
-            {/* Filters */}
             <Card>
               <CardContent className="pt-4">
                 <div className="flex gap-3 flex-wrap">
-                  <Input placeholder="Stack (e.g. react)" value={stackFilter} onChange={e => setStackFilter(e.target.value)} className="w-40" />
-                  <Input placeholder="Language (e.g. typescript)" value={languageFilter} onChange={e => setLanguageFilter(e.target.value)} className="w-40" />
-                  <Input placeholder="Problem type" value={problemFilter} onChange={e => setProblemFilter(e.target.value)} className="w-40" />
-                  <Button size="sm" variant="outline" onClick={() => { setStackFilter(""); setLanguageFilter(""); setProblemFilter(""); }}>Clear</Button>
+                  <Input placeholder="Stack (ex: react)" value={stackFilter} onChange={e => setStackFilter(e.target.value)} className="w-40" />
+                  <Input placeholder="Linguagem (ex: typescript)" value={languageFilter} onChange={e => setLanguageFilter(e.target.value)} className="w-40" />
+                  <Input placeholder="Tipo de problema" value={problemFilter} onChange={e => setProblemFilter(e.target.value)} className="w-40" />
+                  <Button size="sm" variant="outline" onClick={() => { setStackFilter(""); setLanguageFilter(""); setProblemFilter(""); }}>Limpar</Button>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Pattern Table */}
             <Card>
-              <CardHeader><CardTitle className="text-lg">Retrieved Patterns</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-lg">Padrões Recuperados</CardTitle></CardHeader>
               <CardContent>
                 {patternsLoading ? (
-                  <p className="text-sm text-muted-foreground">Loading...</p>
+                  <p className="text-sm text-muted-foreground">Carregando...</p>
                 ) : patterns.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No patterns match the current filters.</p>
+                  <p className="text-sm text-muted-foreground">Nenhum padrão corresponde aos filtros atuais.</p>
                 ) : (
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Title</TableHead>
-                        <TableHead>Type</TableHead>
+                        <TableHead>Título</TableHead>
+                        <TableHead>Tipo</TableHead>
                         <TableHead>Stack</TableHead>
-                        <TableHead>Confidence</TableHead>
+                        <TableHead>Confiança</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead>Quality</TableHead>
+                        <TableHead>Qualidade</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -160,9 +154,9 @@ export default function PatternLibraryDashboard() {
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Search className="h-4 w-4" />
-                  Retrieval Query Console
+                  Console de Consulta de Recuperação
                 </CardTitle>
-                <CardDescription>Test retrieval queries and see explanation of pattern selection.</CardDescription>
+                <CardDescription>Teste consultas de recuperação e veja a explicação da seleção de padrões.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex gap-3">
@@ -173,11 +167,11 @@ export default function PatternLibraryDashboard() {
                       stack: stackFilter || undefined,
                       language: languageFilter || undefined,
                       problem_type: problemFilter || undefined,
-                      query_description: `Stack: ${stackFilter || "any"}, Lang: ${languageFilter || "any"}, Problem: ${problemFilter || "any"}`,
+                      query_description: `Stack: ${stackFilter || "qualquer"}, Linguagem: ${languageFilter || "qualquer"}, Problema: ${problemFilter || "qualquer"}`,
                     })}
                     disabled={!orgId || explainMutation.isPending}
                   >
-                    Explain Retrieval
+                    Explicar Recuperação
                   </Button>
                 </div>
                 {explainMutation.data && (
@@ -186,7 +180,7 @@ export default function PatternLibraryDashboard() {
                     <p className="text-sm text-muted-foreground">{explainMutation.data.topPatternExplanation}</p>
                     {explainMutation.data.selectionCriteria?.length > 0 && (
                       <div>
-                        <p className="text-xs font-medium mb-1">Selection Criteria:</p>
+                        <p className="text-xs font-medium mb-1">Critérios de Seleção:</p>
                         {explainMutation.data.selectionCriteria.map((c: string, i: number) => (
                           <Badge key={i} variant="outline" className="text-xs mr-1 mb-1">{c}</Badge>
                         ))}
@@ -194,7 +188,7 @@ export default function PatternLibraryDashboard() {
                     )}
                     {explainMutation.data.antiPatternWarnings?.length > 0 && (
                       <div>
-                        <p className="text-xs font-medium mb-1 flex items-center gap-1"><AlertTriangle className="h-3 w-3" /> Cautions:</p>
+                        <p className="text-xs font-medium mb-1 flex items-center gap-1"><AlertTriangle className="h-3 w-3" /> Cautelas:</p>
                         {explainMutation.data.antiPatternWarnings.map((w: string, i: number) => (
                           <p key={i} className="text-xs text-destructive">{w}</p>
                         ))}
@@ -202,7 +196,7 @@ export default function PatternLibraryDashboard() {
                     )}
                     {explainMutation.data.recommendations?.length > 0 && (
                       <div>
-                        <p className="text-xs font-medium mb-1">Recommendations:</p>
+                        <p className="text-xs font-medium mb-1">Recomendações:</p>
                         {explainMutation.data.recommendations.map((r: string, i: number) => (
                           <p key={i} className="text-xs text-muted-foreground">{r}</p>
                         ))}
@@ -216,20 +210,20 @@ export default function PatternLibraryDashboard() {
 
           <TabsContent value="usage" className="space-y-4">
             <Card>
-              <CardHeader><CardTitle className="text-lg">Usage Events</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-lg">Eventos de Uso</CardTitle></CardHeader>
               <CardContent>
                 {!usageEvents?.length ? (
-                  <p className="text-sm text-muted-foreground">No usage events recorded yet.</p>
+                  <p className="text-sm text-muted-foreground">Nenhum evento de uso registrado ainda.</p>
                 ) : (
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Context</TableHead>
-                        <TableHead>Stage</TableHead>
-                        <TableHead>Agent</TableHead>
-                        <TableHead>Score</TableHead>
-                        <TableHead>Applied</TableHead>
-                        <TableHead>Time</TableHead>
+                        <TableHead>Contexto</TableHead>
+                        <TableHead>Estágio</TableHead>
+                        <TableHead>Agente</TableHead>
+                        <TableHead>Pontuação</TableHead>
+                        <TableHead>Aplicado</TableHead>
+                        <TableHead>Data</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -252,19 +246,19 @@ export default function PatternLibraryDashboard() {
 
           <TabsContent value="applications" className="space-y-4">
             <Card>
-              <CardHeader><CardTitle className="text-lg">Pattern Applications</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-lg">Aplicações de Padrões</CardTitle></CardHeader>
               <CardContent>
                 {!applications?.length ? (
-                  <p className="text-sm text-muted-foreground">No pattern applications recorded yet.</p>
+                  <p className="text-sm text-muted-foreground">Nenhuma aplicação de padrão registrada ainda.</p>
                 ) : (
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Stage</TableHead>
-                        <TableHead>Applied By</TableHead>
-                        <TableHead>Outcome</TableHead>
-                        <TableHead>Quality Impact</TableHead>
-                        <TableHead>Time</TableHead>
+                        <TableHead>Estágio</TableHead>
+                        <TableHead>Aplicado Por</TableHead>
+                        <TableHead>Resultado</TableHead>
+                        <TableHead>Impacto na Qualidade</TableHead>
+                        <TableHead>Data</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
