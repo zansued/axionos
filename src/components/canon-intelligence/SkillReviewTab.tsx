@@ -70,6 +70,10 @@ export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab
       if (res.error) throw res.error;
       return res.data?.skills || [];
     },
+    retry: (failureCount, error: any) => {
+      if (error?.message?.includes("429") || error?.message?.includes("Rate limit")) return false;
+      return failureCount < 2;
+    },
   });
 
   const { data: reviewStats } = useQuery({
