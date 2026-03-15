@@ -60,6 +60,27 @@ serve(async (req) => {
       }
     }
 
+    // Fallback para iniciativas antigas/alternativas: usar agent_outputs quando subtasks não têm output.
+    if (Object.keys(virtualFS).length === 0) {
+      const { data: fallbackArtifacts } = await serviceClient
+        .from("agent_outputs")
+        .select("id, raw_output, summary, type")
+        .eq("organization_id", ctx.organizationId)
+        .eq("initiative_id", ctx.initiativeId)
+        .eq("type", "code");
+
+      for (const artifact of (fallbackArtifacts || [])) {
+        const raw = artifact?.raw_output as any;
+        const fallbackPath = typeof artifact?.summary === "string" ? artifact.summary.split(" — ")[0]?.trim() : null;
+        const filePath = raw?.file_path || fallbackPath;
+        const content = raw?.content || raw?.text || "";
+
+        if (filePath && typeof content === "string" && content.trim().length > 0) {
+          virtualFS[filePath] = { content, fileType: "code" };
+        }
+      }
+    }
+
     const fileCount = Object.keys(virtualFS).length;
     if (fileCount === 0) {
       await pipelineLog(ctx, "deep_validation_skip", "Nenhum arquivo gerado encontrado — pulando deep validation");

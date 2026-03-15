@@ -418,12 +418,21 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
 
         // Auto-trigger validation after execution completes fully
         if (stage === "execution" && result.success && !result.batch_incomplete) {
-          retryCountRef.current[initiativeId] = 0; // reset on success
-          toast({ title: "🔍 Iniciando validação automática dos artefatos..." });
-          setTimeout(() => {
-            runStage(initiativeId, "validation");
-          }, 1500);
-          return; // Don't clear running yet
+          const producedOrReused = (result.code_files || 0) + (result.skipped || 0);
+          if (producedOrReused <= 0) {
+            toast({
+              variant: "destructive",
+              title: "⚠️ Execução concluída sem arquivos pendentes para processar. Rode Planning/Execution novamente para gerar artefatos.",
+            });
+            addEvent(initiativeId, stage, "Execução sem artefatos processáveis — validação automática não iniciada");
+          } else {
+            retryCountRef.current[initiativeId] = 0; // reset on success
+            toast({ title: "🔍 Iniciando validação automática dos artefatos..." });
+            setTimeout(() => {
+              runStage(initiativeId, "validation");
+            }, 1500);
+            return; // Don't clear running yet
+          }
         }
 
         // Continue validation automatically while there are remaining batched artifacts

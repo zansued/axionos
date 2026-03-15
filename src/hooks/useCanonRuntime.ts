@@ -2,6 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/contexts/OrgContext";
 
+function isMissingRelationError(error: any): boolean {
+  if (!error) return false;
+  const code = String(error.code || "");
+  const text = `${error.message || ""} ${error.details || ""}`.toLowerCase();
+  return code === "PGRST205" || text.includes("does not exist") || text.includes("could not find the table");
+}
+
 export function useCanonRuntime() {
   const { currentOrg } = useOrg();
   const orgId = currentOrg?.id;
@@ -15,7 +22,9 @@ export function useCanonRuntime() {
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false })
         .limit(50) as any);
-      if (error) throw error;
+
+      // Ambiente pode não ter a tabela antiga; evita 404 quebrando a UI.
+      if (error && !isMissingRelationError(error)) throw error;
       return (data || []) as any[];
     },
     enabled: !!orgId,
