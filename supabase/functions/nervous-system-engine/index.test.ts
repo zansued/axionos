@@ -81,5 +81,5 @@ Deno.test("NS-01: OPTIONS returns CORS headers", async () => {
   const text = await res.text();
   assertEquals(res.status, 200);
   assertExists(res.headers.get("access-control-allow-origin"));
-  assertExists(text !== undefined, true);
+  assertExists(text);
 });
