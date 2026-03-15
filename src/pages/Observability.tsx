@@ -444,11 +444,11 @@ export default function Observability() {
             {isObsTabVisible("costs") && <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>}
             {isObsTabVisible("quality") && <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Quality</TabsTrigger>}
             {isObsTabVisible("patterns") && <TabsTrigger value="patterns" className="text-xs gap-1"><Bug className="h-3 w-3" /> Patterns</TabsTrigger>}
-            {isObsTabVisible("prevention") && <TabsTrigger value="prevention" className="text-xs gap-1"><Shield className="h-3 w-3" /> Prev</TabsTrigger>}
-            {isObsTabVisible("predictive") && <TabsTrigger value="predictive" className="text-xs gap-1"><ShieldAlert className="h-3 w-3" /> Predict</TabsTrigger>}
+            {isObsTabVisible("prevention") && <TabsTrigger value="prevention" className="text-xs gap-1"><Shield className="h-3 w-3" /> Prevention</TabsTrigger>}
+            {isObsTabVisible("predictive") && <TabsTrigger value="predictive" className="text-xs gap-1"><ShieldAlert className="h-3 w-3" /> Predictive</TabsTrigger>}
             {isObsTabVisible("repair") && <TabsTrigger value="repair" className="text-xs gap-1"><Wrench className="h-3 w-3" /> Repair</TabsTrigger>}
-            {isObsTabVisible("cross-stage") && <TabsTrigger value="cross-stage" className="text-xs gap-1"><GitBranch className="h-3 w-3" /> X-Stage</TabsTrigger>}
-            {isObsTabVisible("exec-policy") && <TabsTrigger value="exec-policy" className="text-xs gap-1"><Gauge className="h-3 w-3" /> ExPol</TabsTrigger>}
+            {isObsTabVisible("cross-stage") && <TabsTrigger value="cross-stage" className="text-xs gap-1"><GitBranch className="h-3 w-3" /> Cross-Stage</TabsTrigger>}
+            {isObsTabVisible("exec-policy") && <TabsTrigger value="exec-policy" className="text-xs gap-1"><Gauge className="h-3 w-3" /> Exec Policy</TabsTrigger>}
             {isObsTabVisible("portfolio") && <TabsTrigger value="portfolio" className="text-xs gap-1"><Layers className="h-3 w-3" /> Portfolio</TabsTrigger>}
             {isObsTabVisible("tenant") && <TabsTrigger value="tenant" className="text-xs gap-1"><Building2 className="h-3 w-3" /> Tenant</TabsTrigger>}
             {isObsTabVisible("learning") && <TabsTrigger value="learning" className="text-xs gap-1"><GraduationCap className="h-3 w-3" /> Learn</TabsTrigger>}
