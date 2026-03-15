@@ -189,7 +189,7 @@ export const SkillReviewTab = forwardRef<HTMLDivElement>(function SkillReviewTab
   };
 
   return (
-    <div className="space-y-4">
+    <div ref={ref} className="space-y-4">
       {/* Stats Bar */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="Pendentes" value={pendingCount} accent />
