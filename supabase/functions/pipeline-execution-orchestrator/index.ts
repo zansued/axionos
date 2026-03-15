@@ -40,11 +40,29 @@ serve(async (req) => {
 
   try {
     // ── Fetch stories, squad, connections (same as pipeline-execution) ──
-    const { data: stories } = await serviceClient.from("stories")
+    // First try pending stories; if all already done, reset them for re-execution
+    let { data: stories } = await serviceClient.from("stories")
       .select("id, title, description")
       .eq("initiative_id", ctx.initiativeId)
       .in("status", ["todo", "in_progress"]);
-    if (!stories?.length) throw new Error("Nenhuma story encontrada para execução");
+
+    if (!stories?.length) {
+      // Check if stories exist but are already completed — reset them for re-run
+      const { data: allStories } = await serviceClient.from("stories")
+        .select("id, title, description")
+        .eq("initiative_id", ctx.initiativeId);
+      
+      if (allStories?.length) {
+        await serviceClient.from("stories")
+          .update({ status: "todo" })
+          .eq("initiative_id", ctx.initiativeId)
+          .in("status", ["done", "completed"]);
+        stories = allStories;
+        pipelineLog(ctx, "stories_reset", `${allStories.length} stories resetadas para re-execução`).catch(() => {});
+      } else {
+        throw new Error("Nenhuma story encontrada — execute o Planning primeiro");
+      }
+    }
 
     const { data: squads } = await serviceClient.from("squads")
       .select("id, squad_members(agent_id, role_in_squad, agents(id, name, role, description, exclusive_authorities))")
