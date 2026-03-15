@@ -6,6 +6,7 @@ import { Loader2, Play, CheckCircle, AlertTriangle, Boxes, Package } from "lucid
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
+import { getUserFriendlyError } from "@/lib/error-utils";
 
 interface ExtractionResult {
   extracted: number;
