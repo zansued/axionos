@@ -113,6 +113,7 @@ function formatTimeAgo(ts: string) {
 
 export default function Observability() {
   const { currentOrg } = useOrg();
+  useObservabilityBootstrap();
   const { isObsTabVisible, isAdmin } = useRoleBasedExperience();
   const [events, setEvents] = useState<LiveEvent[]>([]);
   const [paused, setPaused] = useState(false);
