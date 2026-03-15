@@ -94,7 +94,16 @@ serve(async (req) => {
       .select("id, type, summary, raw_output, subtask_id, status, agents(name, role)")
       .in("subtask_id", subtaskIds.length > 0 ? subtaskIds : ["00000000-0000-0000-0000-000000000000"])
       .eq("organization_id", ctx.organizationId);
-    if (!artifacts || artifacts.length === 0) throw new Error("Nenhum artefato encontrado para publicar");
+    if (!artifacts || artifacts.length === 0) {
+      await pipelineLog(ctx, "publish_skip", "Nenhum artefato encontrado — execute o pipeline de execução primeiro");
+      await completeJob(ctx, jobId!, { skipped: "no_artifacts", artifacts_found: 0 });
+      return jsonResponse({
+        success: true,
+        skipped: true,
+        message: "Nenhum artefato encontrado para publicar. Execute o pipeline de execução primeiro para gerar código.",
+        artifacts_found: 0,
+      });
+    }
 
     // ═══ PHASE 1: Pre-flight Checks (Release Agent) ═══
     await pipelineLog(ctx, "release_preflight_start", "Release Agent: Executando pre-flight checks...");
