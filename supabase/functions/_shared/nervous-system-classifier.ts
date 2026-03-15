@@ -139,6 +139,9 @@ export function classifyEvent(
     severity_score: severityScore,
     novelty_score: noveltyScore,
     confidence_score: Math.round(confidenceScore * 10000) / 10000,
+    // FROZEN CONTRACT v1.0 — keys must match NsClassificationMetadata
+    // Required: classified_by, rule_version, type_matched
+    // Optional: severity_overridden, fingerprint_count_1h
     classification_metadata: {
       classified_by: "ns02_rule_engine",
       rule_version: "1.0",
