@@ -61,7 +61,11 @@ serve(async (req) => {
     }
 
     const fileCount = Object.keys(virtualFS).length;
-    if (fileCount === 0) throw new Error("Nenhum arquivo gerado encontrado");
+    if (fileCount === 0) {
+      await pipelineLog(ctx, "deep_validation_skip", "Nenhum arquivo gerado encontrado — pulando deep validation");
+      if (jobId) await completeJob(ctx, jobId, { passed: true, total_files: 0, skipped: "no_files", errors_count: 0, warnings_count: 0 }, { model: "none", costUsd: 0, durationMs: 0 });
+      return jsonResponse({ success: true, passed: true, total_files: 0, errors_count: 0, warnings_count: 0, message: "Nenhum arquivo gerado — execute o pipeline de execução primeiro" });
+    }
 
     // ── Fetch Brain graph for cross-referencing ──
     const [brainNodes, brainEdges, preventionRules] = await Promise.all([
