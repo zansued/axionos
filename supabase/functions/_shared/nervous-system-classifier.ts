@@ -139,6 +139,9 @@ export function classifyEvent(
     severity_score: severityScore,
     novelty_score: noveltyScore,
     confidence_score: Math.round(confidenceScore * 10000) / 10000,
+    // FROZEN CONTRACT v1.0 — keys must match NsClassificationMetadata
+    // Required: classified_by, rule_version, type_matched
+    // Optional: severity_overridden, fingerprint_count_1h
     classification_metadata: {
       classified_by: "ns02_rule_engine",
       rule_version: "1.0",
@@ -314,7 +317,7 @@ export async function maybePromoteToPattern(
   sc: SupabaseClient,
   orgId: string,
   groupId: string
-): Promise<void> {
+): Promise<boolean> {
   const { data: group } = await sc
     .from("nervous_system_signal_groups")
     .select("*")
@@ -322,7 +325,7 @@ export async function maybePromoteToPattern(
     .eq("organization_id", orgId)
     .single();
 
-  if (!group || group.event_count < MIN_EVENTS_FOR_PATTERN) return;
+  if (!group || group.event_count < MIN_EVENTS_FOR_PATTERN) return false;
 
   const patternKey = `${group.event_domain}::${group.event_type}`;
 
@@ -334,7 +337,7 @@ export async function maybePromoteToPattern(
     .single();
 
   if (existingPattern) {
-    // Update occurrence count
+    // Update occurrence count — not a new promotion
     await sc
       .from("nervous_system_event_patterns")
       .update({
@@ -343,6 +346,7 @@ export async function maybePromoteToPattern(
         updated_at: new Date().toISOString(),
       })
       .eq("id", existingPattern.id);
+    return false; // Updated existing, not a new promotion
   } else {
     // Create new pattern — conservative, evidence-based
     await sc
@@ -363,6 +367,7 @@ export async function maybePromoteToPattern(
           min_threshold: MIN_EVENTS_FOR_PATTERN,
         },
       });
+    return true; // New pattern created
   }
 }
 
@@ -442,10 +447,19 @@ export async function processPendingEvents(
       // Enrich
       const enrichment = enrichEvent(event);
 
-      // Merge classification + enrichment metadata
+      // Merge classification + enrichment into FROZEN v1.0 contract
+      // All keys here MUST exist in NsClassificationMetadata interface
       const classificationMeta = {
-        ...classification.classification_metadata,
-        ...enrichment.enrichment_metadata,
+        // Required (classifier)
+        classified_by: classification.classification_metadata.classified_by as string,
+        rule_version: classification.classification_metadata.rule_version as string,
+        type_matched: classification.classification_metadata.type_matched as boolean,
+        // Optional (classifier)
+        severity_overridden: classification.classification_metadata.severity_overridden as boolean | undefined,
+        fingerprint_count_1h: classification.classification_metadata.fingerprint_count_1h as number | undefined,
+        // Optional (enricher)
+        enriched_by: enrichment.enrichment_metadata.enriched_by as string,
+        enrichment_version: enrichment.enrichment_metadata.enrichment_version as string,
         normalized_source: enrichment.normalized_source_label,
         category_hints: enrichment.category_hints,
       };
@@ -491,12 +505,14 @@ export async function processPendingEvents(
   }
 
   // 4. Check pattern promotion for updated groups
+  // NOTE: patterns_promoted counts groups checked, not patterns created.
+  // This is a known NS-02 limitation — acceptable at this stage.
   for (const groupId of groupsUpdated) {
     try {
-      await maybePromoteToPattern(sc, orgId, groupId);
-      result.patterns_promoted++;
+      const promoted = await maybePromoteToPattern(sc, orgId, groupId);
+      if (promoted) result.patterns_promoted++;
     } catch {
-      // Non-fatal
+      // Non-fatal — pattern promotion failure must not block processing
     }
   }
 
