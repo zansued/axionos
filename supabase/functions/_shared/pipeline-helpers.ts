@@ -40,6 +40,45 @@ export async function updateInitiative(
     .eq("id", ctx.initiativeId);
 }
 
+/**
+ * Sprint 204: Validated stage transition.
+ * Checks the state machine before updating stage_status.
+ * Returns { success, reason? }.
+ */
+export async function transitionStage(
+  ctx: PipelineContext,
+  toStatus: string,
+  extraFields: Record<string, unknown> = {}
+): Promise<{ success: boolean; reason?: string }> {
+  // Fetch current status
+  const { data: init } = await ctx.serviceClient
+    .from("initiatives")
+    .select("stage_status, repo_url")
+    .eq("id", ctx.initiativeId)
+    .single();
+
+  if (!init) return { success: false, reason: "Initiative not found" };
+
+  const result = validateTransition(init.stage_status, toStatus, {
+    repoUrl: init.repo_url,
+  });
+
+  if (!result.allowed) {
+    await pipelineLog(ctx, "invalid_transition_blocked", 
+      `Blocked: "${init.stage_status}" → "${toStatus}": ${result.reason}`,
+      { from: init.stage_status, to: toStatus }
+    );
+    return { success: false, reason: result.reason };
+  }
+
+  await ctx.serviceClient
+    .from("initiatives")
+    .update({ stage_status: toStatus, ...extraFields })
+    .eq("id", ctx.initiativeId);
+
+  return { success: true };
+}
+
 /** Create a pipeline job record and return its ID */
 export async function createJob(
   ctx: PipelineContext,
