@@ -538,6 +538,9 @@ serve(async (req) => {
           current: totalNodes, total: totalNodes, percent: 100,
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
+          current_file: null, current_agent: null,
+          current_subtask_id: null, current_subtask_description: null,
+          current_story_id: null, current_stage: "execution",
           chain_of_agents: true, status: "completed", completed_at: new Date().toISOString(),
           scheduler: "swarm", waves_executed: waveNum, max_workers: MAX_WORKERS,
           incremental: true, skipped: skippedCount,
@@ -551,7 +554,8 @@ serve(async (req) => {
         chain: ["code_architect", "developer", "integration_agent"],
         scheduler: "swarm", max_workers: MAX_WORKERS,
         skipped: skippedCount, savings_percent: incremental.stats.savingsPercent,
-      }, { model: "routed", costUsd: totalCost, durationMs: 0 });
+        batch_incomplete: false,
+      }, { model: "routed", costUsd: totalCost, durationMs: Date.now() - startTime });
 
       await pipelineLog(ctx, "orchestrator_complete",
         `Orchestrator concluído: ${executedCount} gerados, ${skippedCount} reutilizados (${incremental.stats.savingsPercent}% economia), ${failedCount} falhas, ${waveNum} waves`,
