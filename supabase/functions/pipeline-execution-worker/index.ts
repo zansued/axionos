@@ -503,6 +503,36 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       });
     } catch (_) { /* non-blocking */ }
 
+    // Sprint 208: Record pipeline execution metrics
+    try {
+      await serviceClient.from("pipeline_execution_metrics").insert({
+        organization_id: payload.organizationId,
+        initiative_id: payload.initiativeId || null,
+        subtask_id: payload.subtaskId || null,
+        file_path: payload.filePath,
+        file_type: payload.fileType || null,
+        wave_number: payload.waveNum,
+        execution_path: workerMetrics.path || "safe_3call",
+        risk_tier: workerMetrics.riskTier || "medium",
+        latency_ms: workerMetrics.totalAiLatencyMs || 0,
+        ai_calls: workerMetrics.aiCalls || 0,
+        tokens_used: totalTokens,
+        cost_usd: totalCost,
+        integration_severity: workerMetrics.integrationSeverity || "none",
+        integration_edit_ratio: workerMetrics.integrationEditRatio || 0,
+        output_size: codeContent.length,
+        retry_count: payload.retryAttempt || 0,
+        validation_passed: true,
+        syntax_valid: true,
+        import_resolution_ok: true,
+        fast_path_reason: workerMetrics.fastPathReason || "",
+        succeeded: true,
+        trace_id: payload.traceId || null,
+        attempt_id: payload.attemptId || null,
+        duration_ms: workerMetrics.totalAiLatencyMs || 0,
+      });
+    } catch (_) { /* non-blocking */ }
+
     return jsonResponse({
       success: true,
       filePath: payload.filePath,
