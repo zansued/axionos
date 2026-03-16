@@ -30,6 +30,9 @@ serve(async (req) => {
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey } = result;
 
+  // Sprint 203: Generate canonical trace_id for this entire orchestrator run
+  const traceId = crypto.randomUUID();
+
   const dp = initiative.discovery_payload || {};
 
   // ══════════════════════════════════════════════════════════════
