@@ -158,6 +158,9 @@ Crie o grafo de tarefas:
         true,
       );
 
+      // Normalize variant key names from AI
+      normalizeTaskGraph(taskPlanner.result);
+
       await serviceClient.from("agent_outputs").insert({
         organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
         type: "analysis", status: "approved",
