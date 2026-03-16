@@ -275,6 +275,9 @@ Valide e defina a árvore completa de arquivos:
 }`,
       );
 
+      // Normalize file tree (may be nested object instead of array)
+      normalizeFilePlanner(filePlanner.result);
+
       await serviceClient.from("agent_outputs").insert({
         organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
         type: "analysis", status: "approved",
