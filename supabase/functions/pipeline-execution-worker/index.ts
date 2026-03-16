@@ -374,6 +374,11 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
         file_type: payload.fileType,
         wave: payload.waveNum,
         node_id: payload.nodeId,
+        // Sprint 203: Canonical traceability in metrics
+        trace_id: payload.traceId || null,
+        attempt_id: payload.attemptId || null,
+        retry_attempt: payload.retryAttempt || 0,
+        agent_role: effectiveDev.role || "developer",
       },
     }).then(() => {}).catch((e: unknown) => {
       console.warn("[DX-3] Metrics log failed (non-blocking):", e);
