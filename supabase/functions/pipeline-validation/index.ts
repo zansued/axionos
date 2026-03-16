@@ -121,6 +121,26 @@ serve(async (req) => {
   if (artifactsToValidate.length === 0) {
     const overallPass = alreadyApproved === total;
     await updateInitiative(ctx, { stage_status: "ready_to_publish" });
+    await persistExecutionProgress({
+      status: "completed",
+      current_stage: "validation",
+      current_file: null,
+      current_agent: null,
+      current_subtask_id: null,
+      current_subtask_description: null,
+      validation: {
+        status: "completed",
+        total_artifacts: total,
+        approved: alreadyApproved,
+        escalated: alreadyEscalated,
+        remaining: 0,
+        current_artifact_id: null,
+        current_artifact_summary: null,
+        current_subtask_id: null,
+        current_phase: "completed",
+        last_error: null,
+      },
+    });
     if (jobId) await completeJob(ctx, jobId, {
       artifacts_validated: total, passed: alreadyApproved, failed: 0, fixed: 0,
       escalated: alreadyEscalated,
@@ -132,10 +152,44 @@ serve(async (req) => {
 
   // Pick ONE artifact to process synchronously
   const artifact = artifactsToValidate[0];
+  await persistExecutionProgress({
+    status: "running",
+    current_stage: "validation",
+    current_file: null,
+    current_agent: "fix_loop",
+    current_subtask_id: artifact.subtask_id || null,
+    current_subtask_description: artifact.summary || null,
+    validation: {
+      status: "running",
+      total_artifacts: total,
+      approved: alreadyApproved,
+      escalated: alreadyEscalated,
+      remaining: artifactsToValidate.length,
+      current_artifact_id: artifact.id,
+      current_artifact_summary: artifact.summary || null,
+      current_subtask_id: artifact.subtask_id || null,
+      current_phase: "queued",
+      current_attempt: 0,
+      max_attempts: MAX_FIX_ATTEMPTS,
+      last_error: null,
+      last_issue_summary: null,
+    },
+  });
 
   try {
     await processOneArtifact(artifact, {
       user, initiative, ctx, serviceClient, apiKey,
+      onProgress: async (validationPatch: Record<string, unknown>) => {
+        await persistExecutionProgress({
+          status: "running",
+          current_stage: "validation",
+          current_file: null,
+          current_agent: "fix_loop",
+          current_subtask_id: artifact.subtask_id || null,
+          current_subtask_description: artifact.summary || null,
+          validation: validationPatch,
+        });
+      },
     });
 
     // After processing, check overall status
