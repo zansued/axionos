@@ -282,7 +282,7 @@ serve(async (req) => {
 // Optimized: Static + Runtime merged into single AI call
 // ======================================================
 async function processOneArtifact(artifact: any, deps: any) {
-  const { user, initiative, ctx, serviceClient, apiKey } = deps;
+  const { user, initiative, ctx, serviceClient, apiKey, onProgress } = deps;
   const isCode = artifact.type === "code";
   let currentText = extractText(artifact.raw_output);
   let fixAttempts = 0;
@@ -295,6 +295,15 @@ async function processOneArtifact(artifact: any, deps: any) {
 
   for (let loop = 0; loop <= MAX_FIX_ATTEMPTS; loop++) {
     const isFirstPass = loop === 0;
+    await onProgress?.({
+      current_artifact_id: artifact.id,
+      current_artifact_summary: artifact.summary || null,
+      current_subtask_id: artifact.subtask_id || null,
+      current_phase: isFirstPass ? "analysis" : "reanalysis",
+      current_attempt: loop,
+      max_attempts: MAX_FIX_ATTEMPTS,
+      last_error: null,
+    });
 
     // ═══ MERGED: Static Analysis (Agent 15) + Runtime QA (Agent 16) in ONE call ═══
     const combinedResult = await callAI(apiKey,
@@ -330,9 +339,27 @@ Return ONLY JSON:
     const staticScore = analysis.static_score || 60;
     const runtimeScore = analysis.runtime_score || 60;
     const combinedScore = Math.round((staticScore + runtimeScore) / 2);
+    const blockingIssues = [
+      ...(analysis.issues || []).filter((i: any) => i.severity !== "info").map((i: any) => `[${i.category}] ${i.message}`),
+      ...(analysis.security_issues || []).map((s: string) => `[security] ${s}`),
+    ];
     const hasErrors = (analysis.issues || []).some((i: any) => i.severity === "error");
     const hasSecurityIssues = (analysis.security_issues || []).length > 0;
     const passes = combinedScore >= APPROVAL_THRESHOLD && !hasErrors && !hasSecurityIssues;
+    const issueSummary = blockingIssues[0] || analysis.summary || null;
+
+    await onProgress?.({
+      current_artifact_id: artifact.id,
+      current_artifact_summary: artifact.summary || null,
+      current_subtask_id: artifact.subtask_id || null,
+      current_phase: passes ? "approved" : loop === MAX_FIX_ATTEMPTS ? "escalated" : "fixing",
+      current_attempt: fixAttempts,
+      max_attempts: MAX_FIX_ATTEMPTS,
+      combined_score: combinedScore,
+      issues_count: blockingIssues.length,
+      last_issue_summary: issueSummary,
+      last_error: null,
+    });
 
     if (passes) {
       // Run security matcher on artifact content for leak detection
@@ -362,10 +389,19 @@ Return ONLY JSON:
 
     // ═══ AGENT 17: Fix Agent ═══
     fixAttempts++;
-    const allIssues = [
-      ...(analysis.issues || []).filter((i: any) => i.severity !== "info").map((i: any) => `[${i.category}] ${i.message}`),
-      ...(analysis.security_issues || []).map((s: string) => `[security] ${s}`),
-    ].slice(0, 10).join("\n");
+    const allIssues = blockingIssues.slice(0, 10).join("\n");
+    await onProgress?.({
+      current_artifact_id: artifact.id,
+      current_artifact_summary: artifact.summary || null,
+      current_subtask_id: artifact.subtask_id || null,
+      current_phase: "fixing",
+      current_attempt: fixAttempts,
+      max_attempts: MAX_FIX_ATTEMPTS,
+      combined_score: combinedScore,
+      issues_count: blockingIssues.length,
+      last_issue_summary: issueSummary,
+      last_error: null,
+    });
 
     const fixResult = await callAI(apiKey,
       `You are the "Fix Agent" (Agent 17). Attempt ${fixAttempts}/${MAX_FIX_ATTEMPTS}.
