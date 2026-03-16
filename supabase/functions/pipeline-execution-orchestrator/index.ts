@@ -600,6 +600,9 @@ serve(async (req) => {
           percent: totalNodes > 0 ? Math.round(((executedCount + failedCount) / totalNodes) * 100) : 0,
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
+          current_file: null, current_agent: "awaiting_resume",
+          current_subtask_id: null, current_subtask_description: null,
+          current_story_id: null, current_stage: "execution",
           chain_of_agents: true, status: "running",
           scheduler: "swarm", waves_executed: waveNum, max_workers: MAX_WORKERS,
           incremental: true, skipped: skippedCount,
@@ -608,6 +611,22 @@ serve(async (req) => {
           started_at: new Date().toISOString(),
         },
       }).eq("id", ctx.initiativeId);
+
+      if (masterJobId) await completeJob(ctx, masterJobId, {
+        executed: executedCount,
+        failed: failedCount,
+        code_files: codeFilesGenerated,
+        total_tokens: totalTokens,
+        waves_executed: waveNum,
+        chain: ["code_architect", "developer", "integration_agent"],
+        scheduler: "swarm",
+        max_workers: MAX_WORKERS,
+        skipped: skippedCount,
+        savings_percent: incremental.stats.savingsPercent,
+        batch_incomplete: true,
+        remaining_to_execute: remainingPending || 0,
+        pause_reason: "time_budget",
+      }, { model: "routed", costUsd: totalCost, durationMs: Date.now() - startTime });
 
       await pipelineLog(ctx, "batch_pause",
         `Batch pausado: ${executedCount} executados, ${remainingPending} restantes. Auto-continuando...`,
