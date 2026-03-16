@@ -20,6 +20,17 @@ import { type ExecutionMetrics, type ValidationSignals, type FastPathPolicyRecor
 import { computeExecutionRiskSignals, type RiskAssessment } from "../_shared/execution-risk-signals.ts";
 import { classifyExecutionRisk, type ExecutionClassification } from "../_shared/execution-risk-classifier.ts";
 
+function categorizeError(e: unknown): string {
+  const msg = e instanceof Error ? e.message.toLowerCase() : "";
+  if (msg.includes("timeout") || msg.includes("timed out")) return "timeout";
+  if (msg.includes("rate limit") || msg.includes("429") || msg.includes("too many")) return "rate_limit";
+  if (msg.includes("401") || msg.includes("403") || msg.includes("auth")) return "auth";
+  if (msg.includes("syntax") || msg.includes("parse")) return "syntax";
+  if (msg.includes("network") || msg.includes("fetch")) return "network";
+  if (msg.includes("credit") || msg.includes("402") || msg.includes("quota")) return "quota";
+  return "unknown";
+}
+
 interface WorkerPayload {
   initiativeId: string;
   organizationId: string;
