@@ -3,6 +3,7 @@
 // Workers are invoked via supabase.functions.invoke("pipeline-execution-worker")
 //
 // Sprint 202: Idempotency guards + explicit auto-continuation
+// Sprint 203: Canonical traceability — trace_id, attempt_id, wave_number, agent_role
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
