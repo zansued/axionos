@@ -74,7 +74,7 @@ serve(async (req) => {
     .eq("stage", "execution_worker")
     .lt("created_at", workerStaleTime);
 
-  const masterJobId = await createJob(ctx, "execution_orchestrator", { initiative_id: ctx.initiativeId, mode: "swarm" });
+  const masterJobId = await createJob(ctx, "execution_orchestrator", { initiative_id: ctx.initiativeId, mode: "swarm", trace_id: traceId });
 
   const updateFields: Record<string, unknown> = { stage_status: "in_progress" };
   if (initiative.stage_status === "planned" && !initiative.approved_at_planning) {
