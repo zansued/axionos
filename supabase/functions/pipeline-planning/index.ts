@@ -225,6 +225,16 @@ Gere 3-10 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         true,
       );
 
+      // Normalize story total_files — count from stories if missing
+      if (!storyGen.result.total_files || storyGen.result.total_files === 0) {
+        const storiesArr = (storyGen.result.stories as any[]) || [];
+        let count = 0;
+        for (const s of storiesArr) {
+          for (const p of (s.phases || [])) { count += (p.subtasks || []).length; }
+        }
+        if (count > 0) storyGen.result.total_files = count;
+      }
+
       await serviceClient.from("agent_outputs").insert({
         organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
         type: "analysis", status: "approved",
