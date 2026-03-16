@@ -223,31 +223,55 @@ serve(async (req) => {
     const retryCount: Record<string, number> = {};
 
     // Debounced progress: write at most once every 5 seconds or on wave boundaries
+    type ExecutionProgressSnapshot = {
+      currentFile?: string | null;
+      currentAgent?: string | null;
+      currentSubtaskId?: string | null;
+      currentSubtaskDescription?: string | null;
+      currentStoryId?: string | null;
+      currentStage?: string | null;
+      currentWave?: number | null;
+    };
+
     let lastProgressWrite = 0;
     const PROGRESS_DEBOUNCE_MS = 5000;
-    const writeProgress = async (currentFile?: string, currentAgent?: string, waveNum?: number) => {
+    const buildProgressPayload = (snapshot: ExecutionProgressSnapshot = {}) => ({
+      current: executedCount + failedCount,
+      total: totalNodes,
+      percent: totalNodes > 0 ? Math.round(((executedCount + failedCount) / totalNodes) * 100) : 0,
+      executed: executedCount,
+      failed: failedCount,
+      code_files: codeFilesGenerated,
+      tokens: totalTokens,
+      cost_usd: totalCost,
+      current_file: snapshot.currentFile ?? null,
+      current_agent: snapshot.currentAgent ?? null,
+      current_subtask_id: snapshot.currentSubtaskId ?? null,
+      current_subtask_description: snapshot.currentSubtaskDescription ?? null,
+      current_story_id: snapshot.currentStoryId ?? null,
+      current_stage: snapshot.currentStage ?? "execution",
+      current_wave: snapshot.currentWave ?? null,
+      total_waves: dag.waves.length,
+      chain_of_agents: true,
+      started_at: new Date().toISOString(),
+      status: "running",
+      scheduler: "swarm",
+      incremental: true,
+      skipped: skippedCount,
+      savings_percent: incremental.stats.savingsPercent,
+    });
+    const writeProgress = async (snapshot: ExecutionProgressSnapshot = {}) => {
       await serviceClient.from("initiatives").update({
-        execution_progress: {
-          current: executedCount + failedCount, total: totalNodes,
-          percent: totalNodes > 0 ? Math.round(((executedCount + failedCount) / totalNodes) * 100) : 0,
-          executed: executedCount, failed: failedCount,
-          code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
-          current_file: currentFile, current_agent: currentAgent,
-          current_wave: waveNum, total_waves: dag.waves.length,
-          chain_of_agents: true, started_at: new Date().toISOString(),
-          status: "running", scheduler: "swarm",
-          incremental: true, skipped: skippedCount,
-          savings_percent: incremental.stats.savingsPercent,
-        },
+        execution_progress: buildProgressPayload(snapshot),
       }).eq("id", ctx.initiativeId);
       lastProgressWrite = Date.now();
     };
-    const updateProgress = async (currentFile?: string, currentAgent?: string, waveNum?: number) => {
+    const updateProgress = async (snapshot: ExecutionProgressSnapshot = {}) => {
       const now = Date.now();
       if (now - lastProgressWrite < PROGRESS_DEBOUNCE_MS) return; // skip — too recent
-      await writeProgress(currentFile, currentAgent, waveNum);
+      await writeProgress(snapshot);
     };
-    await writeProgress(); // initial write always fires
+    await writeProgress({ currentStage: "execution" }); // initial write always fires
 
     // ── Worker dispatcher ──
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
