@@ -7,7 +7,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, corsHeaders, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, recordAgentMessage, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
+import { sanitizePackageJson, DETERMINISTIC_FILES, FORBIDDEN_RUNTIME_PACKAGES } from "../_shared/code-sanitizers.ts";
 import { generateBrainContext, upsertNode, getNodeByPath, updateNodeStatus, recordError } from "../_shared/brain-helpers.ts";
 import { updateBrainEdgesFromImports } from "../_shared/dependency-scheduler.ts";
 import { simpleHash } from "../_shared/incremental-engine.ts";
@@ -304,6 +304,31 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
     const deterministicFiles: Record<string, string> = { ...DETERMINISTIC_FILES };
     if (deterministicFiles[payload.filePath]) codeContent = deterministicFiles[payload.filePath];
     if (payload.filePath === "package.json") codeContent = sanitizePackageJson(codeContent);
+
+    // ── Sprint 205: Block forbidden dependencies at execution time ──
+    if (payload.filePath === "package.json") {
+      try {
+        const pkg = JSON.parse(codeContent);
+        const flagged: string[] = [];
+        for (const depKey of ["dependencies", "devDependencies"]) {
+          const deps = pkg[depKey];
+          if (!deps || typeof deps !== "object") continue;
+          for (const name of Object.keys(deps)) {
+            if (FORBIDDEN_RUNTIME_PACKAGES.has(name)) {
+              delete deps[name];
+              flagged.push(name);
+            }
+          }
+        }
+        if (flagged.length > 0) {
+          codeContent = JSON.stringify(pkg, null, 2);
+          pipelineLog(ctx, "forbidden_deps_blocked",
+            `Sprint 205: Blocked ${flagged.length} forbidden package(s) at execution: ${flagged.join(", ")}`,
+            { blocked: flagged, file: payload.filePath }
+          ).catch(() => {});
+        }
+      } catch { /* not valid JSON, sanitizePackageJson already handled it */ }
+    }
 
     // ── OX-6: Structured execution metrics + validation signals ──
     const contextLength = (contextStr || "").length + (baseContext || "").length;

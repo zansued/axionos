@@ -3,10 +3,34 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, autoFixMissingDependencies } from "../_shared/code-sanitizers.ts";
+import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, autoFixMissingDependencies, FORBIDDEN_RUNTIME_PACKAGES } from "../_shared/code-sanitizers.ts";
 import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 import { runDependencyGovernance } from "../_shared/dependency-governance.ts";
 import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
+
+/**
+ * Sprint 205 — Structured Publish Error
+ */
+interface PublishError {
+  error: string;
+  category: "auth" | "artifact" | "dependency" | "config" | "github" | "unknown";
+  missing_artifact?: string;
+  suggested_action: string;
+}
+
+function buildPublishError(
+  category: PublishError["category"],
+  missingArtifact: string | null,
+  suggestedAction: string,
+): string {
+  const err: PublishError = {
+    error: `Publish bloqueado: [${category}] ${missingArtifact || "erro desconhecido"}`,
+    category,
+    ...(missingArtifact ? { missing_artifact: missingArtifact } : {}),
+    suggested_action: suggestedAction,
+  };
+  return JSON.stringify(err);
+}
 
 /**
  * Camada 6 — Release
@@ -44,7 +68,37 @@ serve(async (req) => {
   }
 
   if (!resolvedGithubToken || !resolvedOwner) {
-    return errorResponse("github_token e owner são obrigatórios. Configure uma conexão Git ativa.", 400);
+    return errorResponse(buildPublishError(
+      "auth", "github_token / owner",
+      "Configure uma conexão Git ativa em Configurações → Integrações → GitHub."
+    ), 400);
+  }
+
+  // ── Sprint 205: Pre-flight — Validate GitHub token before anything else ──
+  const GITHUB_API = "https://api.github.com";
+  const ghHeaders = {
+    Authorization: `Bearer ${resolvedGithubToken}`,
+    Accept: "application/vnd.github.v3+json",
+    "Content-Type": "application/json",
+  };
+
+  try {
+    const tokenCheckResp = await fetch(`${GITHUB_API}/user`, { headers: ghHeaders });
+    if (!tokenCheckResp.ok) {
+      const statusCode = tokenCheckResp.status;
+      const hint = statusCode === 401
+        ? "Token expirado ou inválido. Gere um novo Personal Access Token com permissão 'repo'."
+        : `GitHub retornou status ${statusCode}. Verifique permissões do token.`;
+      return errorResponse(buildPublishError("auth", "github_token", hint), 401);
+    }
+    const ghUser = await tokenCheckResp.json();
+    await pipelineLog(ctx, "github_token_validated",
+      `Token GitHub válido — autenticado como ${ghUser.login}`);
+  } catch (tokenErr) {
+    return errorResponse(buildPublishError(
+      "auth", "github_token",
+      `Falha ao validar token GitHub: ${tokenErr instanceof Error ? tokenErr.message : String(tokenErr)}`
+    ), 500);
   }
 
   const repoSlug = (resolvedRepo || initiative.title)
@@ -69,12 +123,7 @@ serve(async (req) => {
     );
   }
 
-  const ghHeaders = {
-    Authorization: `Bearer ${resolvedGithubToken}`,
-    Accept: "application/vnd.github.v3+json",
-    "Content-Type": "application/json",
-  };
-  const GITHUB_API = "https://api.github.com";
+  // ghHeaders and GITHUB_API already defined above (Sprint 205 token pre-flight)
 
   let totalTokens = 0, totalCost = 0;
 
@@ -110,6 +159,25 @@ serve(async (req) => {
         message: "Nenhum artefato encontrado para publicar. Execute o pipeline de execução primeiro para gerar código.",
         artifacts_found: 0,
       });
+    }
+
+    // ═══ Sprint 205: Pre-flight — Validate critical files in agent_outputs ═══
+    const CRITICAL_PUBLISH_FILES = ["index.html", "vite.config.ts", "package.json", "tsconfig.json"];
+    const artifactPaths = new Set<string>();
+    for (const art of artifacts) {
+      const raw = art.raw_output as any;
+      const si = art.subtask_id ? subtaskFileMap.get(art.subtask_id) : null;
+      const fp = raw?.file_path || si?.file_path;
+      if (fp) artifactPaths.add(fp);
+    }
+    // Also check deterministic files (auto-injected later)
+    for (const df of Object.keys(DETERMINISTIC_FILES)) artifactPaths.add(df);
+
+    const missingCritical = CRITICAL_PUBLISH_FILES.filter(f => !artifactPaths.has(f));
+    if (missingCritical.length > 0) {
+      await pipelineLog(ctx, "publish_critical_files_missing",
+        `Arquivos críticos ausentes nos artefatos: ${missingCritical.join(", ")}. Serão auto-injetados via scaffold.`,
+        { missing: missingCritical });
     }
 
     // ═══ PHASE 1: Pre-flight Checks (Release Agent) ═══
