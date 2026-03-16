@@ -305,6 +305,31 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
     if (deterministicFiles[payload.filePath]) codeContent = deterministicFiles[payload.filePath];
     if (payload.filePath === "package.json") codeContent = sanitizePackageJson(codeContent);
 
+    // ── Sprint 205: Block forbidden dependencies at execution time ──
+    if (payload.filePath === "package.json") {
+      try {
+        const pkg = JSON.parse(codeContent);
+        const flagged: string[] = [];
+        for (const depKey of ["dependencies", "devDependencies"]) {
+          const deps = pkg[depKey];
+          if (!deps || typeof deps !== "object") continue;
+          for (const name of Object.keys(deps)) {
+            if (FORBIDDEN_RUNTIME_PACKAGES.has(name)) {
+              delete deps[name];
+              flagged.push(name);
+            }
+          }
+        }
+        if (flagged.length > 0) {
+          codeContent = JSON.stringify(pkg, null, 2);
+          pipelineLog(ctx, "forbidden_deps_blocked",
+            `Sprint 205: Blocked ${flagged.length} forbidden package(s) at execution: ${flagged.join(", ")}`,
+            { blocked: flagged, file: payload.filePath }
+          ).catch(() => {});
+        }
+      } catch { /* not valid JSON, sanitizePackageJson already handled it */ }
+    }
+
     // ── OX-6: Structured execution metrics + validation signals ──
     const contextLength = (contextStr || "").length + (baseContext || "").length;
     const ext2 = payload.filePath.split(".").pop() || "ts";
