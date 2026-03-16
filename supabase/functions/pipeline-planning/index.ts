@@ -67,17 +67,66 @@ function flattenFileTree(tree: unknown, prefix = ""): { path: string; type: stri
 function normalizeFilePlanner(result: Record<string, unknown>): Record<string, unknown> {
   const raw = result.file_tree;
   if (raw && !Array.isArray(raw)) {
-    // Nested object format — flatten it
     const flatFiles = flattenFileTree(raw);
     result.file_tree = flatFiles;
     if (!result.total_files || result.total_files === 0) {
       result.total_files = flatFiles.length;
     }
   }
-  // Also check validation might be missing
   if (!result.validation) {
     result.validation = { completeness_score: (result.file_tree as any[])?.length > 0 ? 70 : 0, issues: [] };
   }
+  return result;
+}
+
+/**
+ * Normalize story generator output — handles variant formats from different AI models.
+ * The AI sometimes returns:
+ *   - "story" instead of "title"
+ *   - subtasks directly on the story (no "phases" wrapper)
+ *   - "subtask_title"/"subtask" instead of "description" in subtasks
+ *   - "name" instead of "title"
+ */
+function normalizeStories(result: Record<string, unknown>): Record<string, unknown> {
+  const stories = (result.stories as any[]) || [];
+  for (const story of stories) {
+    // Normalize title
+    if (!story.title) {
+      story.title = story.story || story.name || story.story_title || "Untitled Story";
+    }
+    // Normalize priority
+    if (!story.priority || !["critical", "high", "medium", "low"].includes(story.priority)) {
+      story.priority = "medium";
+    }
+    // Normalize phases — if subtasks are directly on story without phases wrapper
+    if (!story.phases || !Array.isArray(story.phases) || story.phases.length === 0) {
+      if (Array.isArray(story.subtasks) && story.subtasks.length > 0) {
+        story.phases = [{ name: story.title || "Implementação", subtasks: story.subtasks }];
+        delete story.subtasks;
+      } else {
+        story.phases = [];
+      }
+    }
+    // Normalize subtasks within phases
+    for (const phase of story.phases) {
+      if (!phase.name) phase.name = "Fase";
+      if (!Array.isArray(phase.subtasks)) phase.subtasks = [];
+      for (let i = 0; i < phase.subtasks.length; i++) {
+        const st = phase.subtasks[i];
+        if (typeof st === "string") {
+          phase.subtasks[i] = { description: st };
+          continue;
+        }
+        if (typeof st === "object" && st !== null) {
+          // Normalize description field
+          if (!st.description) {
+            st.description = st.subtask || st.subtask_title || st.task || st.title || st.name || "Subtask";
+          }
+        }
+      }
+    }
+  }
+  result.stories = stories;
   return result;
 }
 
@@ -225,6 +274,9 @@ Gere 3-10 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         true,
       );
 
+      // Normalize variant story formats from different AI models
+      normalizeStories(storyGen.result);
+
       // Normalize story total_files — count from stories if missing
       if (!storyGen.result.total_files || storyGen.result.total_files === 0) {
         const storiesArr = (storyGen.result.stories as any[]) || [];
@@ -234,6 +286,8 @@ Gere 3-10 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         }
         if (count > 0) storyGen.result.total_files = count;
       }
+
+      console.log(`[pipeline-planning] After normalization: ${(storyGen.result.stories as any[])?.length || 0} stories, ${storyGen.result.total_files || 0} files`);
 
       await serviceClient.from("agent_outputs").insert({
         organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
@@ -383,8 +437,13 @@ Valide e defina a árvore completa de arquivos:
       const totalTokens = taskPlanner.tokens + storyGen.tokens + filePlanner.tokens;
       const totalCost = taskPlanner.costUsd + storyGen.costUsd + filePlanner.costUsd;
 
+      // Only mark as "planned" if stories were actually created
+      const finalStatus = createdStories.length > 0 ? "planned" : "planning_ready";
+      if (createdStories.length === 0) {
+        console.warn("[pipeline-planning] WARNING: Planning completed but 0 stories created — staying at planning_ready");
+      }
       await updateInitiative(ctx, {
-        stage_status: "planned",
+        stage_status: finalStatus,
         prd_content: prdContent.slice(0, 5000) || initiative.prd_content,
         discovery_payload: {
           ...dp,
