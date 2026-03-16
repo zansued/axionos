@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Cpu, Loader2, CheckCircle2, AlertTriangle, DollarSign, Zap, SkipForward, TrendingDown } from "lucide-react";
+import { Cpu, Loader2, CheckCircle2, AlertTriangle, DollarSign, Zap, SkipForward, TrendingDown, Clock } from "lucide-react";
 
 interface ExecutionProgressProps {
   initiativeId: string;
@@ -27,6 +27,16 @@ interface ValidationTrace {
   last_issue_summary?: string | null;
   last_error?: string | null;
   last_result?: string | null;
+  attempt_id?: string | null;
+  fix_loop_trace_id?: string | null;
+}
+
+interface SubtaskHistoryEntry {
+  id: string;
+  file: string | null;
+  status: string;
+  ts: string;
+  wave: number;
 }
 
 interface ProgressData {
@@ -52,6 +62,9 @@ interface ProgressData {
   skipped?: number;
   savings_percent?: number;
   validation?: ValidationTrace | null;
+  // Sprint 203
+  trace_id?: string | null;
+  recent_subtasks?: SubtaskHistoryEntry[];
 }
 
 const VALIDATION_PHASE_LABELS: Record<string, string> = {
@@ -66,6 +79,12 @@ const VALIDATION_PHASE_LABELS: Record<string, string> = {
   failed: "Validação falhou",
   no_artifacts: "Sem artefatos para validar",
 };
+
+function formatElapsed(startIso: string): string {
+  const elapsed = Date.now() - new Date(startIso).getTime();
+  if (elapsed < 60_000) return `${Math.round(elapsed / 1000)}s`;
+  return `${Math.floor(elapsed / 60_000)}m ${Math.round((elapsed % 60_000) / 1000)}s`;
+}
 
 export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgressProps) {
   const [progress, setProgress] = useState<ProgressData | null>(null);
@@ -121,6 +140,7 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
   const validationAttempt = validation?.current_attempt && validation.max_attempts
     ? `Tentativa ${validation.current_attempt}/${validation.max_attempts}`
     : null;
+  const recentSubtasks = progress.recent_subtasks || [];
 
   return (
     <Card className={`border-border/50 ${isRunning ? "border-primary/30 bg-primary/5" : isCompleted ? "border-success/30 bg-success/5" : ""}`}>
@@ -150,6 +170,11 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
                 <SkipForward className="h-3 w-3 mr-1" />
                 Incremental
               </Badge>
+            )}
+            {progress.trace_id && (
+              <span className="text-[9px] font-mono text-muted-foreground/50" title={`trace: ${progress.trace_id}`}>
+                trace:{progress.trace_id.slice(0, 8)}
+              </span>
             )}
           </div>
           {hasTrackedExecution && (
@@ -213,6 +238,12 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
               ${progress.cost_usd.toFixed(4)}
             </span>
           )}
+          {progress.started_at && isRunning && (
+            <span className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              {formatElapsed(progress.started_at)}
+            </span>
+          )}
         </div>
 
         {activeStage === "execution" && isRunning && (progress.current_subtask_description || progress.current_file) && (
@@ -227,6 +258,31 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
           </div>
         )}
 
+        {/* Sprint 203: Recent subtask history */}
+        {activeStage === "execution" && recentSubtasks.length > 0 && (
+          <div className="rounded border border-border/50 bg-muted/20 px-3 py-2 space-y-1">
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Últimas subtasks</p>
+            <div className="space-y-0.5">
+              {recentSubtasks.slice().reverse().map((st, i) => (
+                <div key={st.id + i} className="flex items-center gap-2 text-[11px]">
+                  {st.status === "completed" ? (
+                    <CheckCircle2 className="h-3 w-3 text-success shrink-0" />
+                  ) : (
+                    <AlertTriangle className="h-3 w-3 text-destructive shrink-0" />
+                  )}
+                  <span className="font-mono text-muted-foreground truncate max-w-[200px]" title={st.file || st.id}>
+                    {st.file ? st.file.split("/").pop() : st.id.slice(0, 8)}
+                  </span>
+                  <Badge variant="outline" className="text-[9px] px-1 py-0">W{st.wave}</Badge>
+                  <span className="text-muted-foreground/60 text-[10px]">
+                    {formatElapsed(st.ts)} atrás
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {activeStage === "validation" && validation && (
           <div className="rounded border border-border/50 bg-muted/30 px-3 py-2 space-y-1.5">
             <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -234,6 +290,11 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
               <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
                 {validationPhaseLabel ? <span>{validationPhaseLabel}</span> : null}
                 {validationAttempt ? <span>{validationAttempt}</span> : null}
+                {validation.attempt_id && (
+                  <span className="font-mono text-[9px] text-muted-foreground/50" title={`attempt: ${validation.attempt_id}`}>
+                    att:{validation.attempt_id.slice(0, 6)}
+                  </span>
+                )}
               </div>
             </div>
             {validation.current_artifact_summary && (
