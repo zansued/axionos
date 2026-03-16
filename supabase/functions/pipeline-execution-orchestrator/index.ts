@@ -474,7 +474,7 @@ serve(async (req) => {
         `Wave ${waveNum} concluída: ${readyNodes.length} worker(s)`,
         { wave: waveNum, executed: executedCount, failed: failedCount }
       ).catch(() => {});
-      await writeProgress(undefined, "wave_complete", waveNum);
+      await writeProgress({ currentAgent: "wave_complete", currentStage: "execution", currentWave: waveNum });
     }
 
     // ── Non-file subtasks (sequential, only if time allows) ──
