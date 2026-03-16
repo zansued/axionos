@@ -65,6 +65,26 @@ serve(async (req) => {
   });
 
   if (!artifacts || artifacts.length === 0) {
+    await persistExecutionProgress({
+      status: "completed",
+      current_stage: "validation",
+      current_file: null,
+      current_agent: null,
+      current_subtask_id: null,
+      current_subtask_description: null,
+      validation: {
+        status: "completed",
+        total_artifacts: 0,
+        approved: 0,
+        escalated: 0,
+        remaining: 0,
+        current_artifact_id: null,
+        current_artifact_summary: null,
+        current_subtask_id: null,
+        current_phase: "no_artifacts",
+        last_error: "Nenhum artefato encontrado — execute o pipeline primeiro",
+      },
+    });
     if (jobId) {
       await completeJob(
         ctx,
