@@ -456,12 +456,6 @@ async function mergeExecutionProgress(
   return next;
 }
 
-function summarizeValidationIssue(validation: Record<string, unknown> | undefined): string | null {
-  if (!validation) return null;
-  const direct = validation.last_issue_summary;
-  return typeof direct === "string" && direct.trim().length > 0 ? direct : null;
-}
-
 function extractJsonFromResponse(response: string): unknown {
   let cleaned = response
     .replace(/```json\s*/gi, "")

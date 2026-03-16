@@ -188,7 +188,7 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
           ) : null}
           {validation?.remaining ? <span>{validation.remaining} restantes no Fix Loop</span> : null}
           {hasIncremental && activeStage !== "validation" && (
-            <span className="flex items-center gap-1 text-emerald-400">
+            <span className="flex items-center gap-1 text-success">
               <SkipForward className="h-3 w-3" />
               {progress.skipped} reusados
             </span>
