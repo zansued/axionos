@@ -6,7 +6,7 @@ import { routeProposal, summarizeProposals } from "../_shared/canon-evolution/ca
 import { validateReviewTransition, getAvailableReviewTransitions } from "../_shared/canon-evolution/canon-evolution-proposal-types.ts";
 import { handleCors, getCorsHeaders } from "../_shared/cors.ts";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const corsRes = handleCors(req);
   if (corsRes) return corsRes;
 
