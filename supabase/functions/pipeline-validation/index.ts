@@ -286,6 +286,8 @@ async function processOneArtifact(artifact: any, deps: any) {
   const isCode = artifact.type === "code";
   let currentText = extractText(artifact.raw_output);
   let fixAttempts = 0;
+  // Sprint 203: Generate attempt_id per fix loop iteration for traceability
+  const fixLoopTraceId = crypto.randomUUID();
 
   // Get architecture context (light)
   let archContext = "";
