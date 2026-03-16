@@ -137,6 +137,25 @@ serve(async (req) => {
       });
     }
 
+    // ═══ Sprint 205: Pre-flight — Validate critical files in agent_outputs ═══
+    const CRITICAL_PUBLISH_FILES = ["index.html", "vite.config.ts", "package.json", "tsconfig.json"];
+    const artifactPaths = new Set<string>();
+    for (const art of artifacts) {
+      const raw = art.raw_output as any;
+      const si = art.subtask_id ? subtaskFileMap.get(art.subtask_id) : null;
+      const fp = raw?.file_path || si?.file_path;
+      if (fp) artifactPaths.add(fp);
+    }
+    // Also check deterministic files (auto-injected later)
+    for (const df of Object.keys(DETERMINISTIC_FILES)) artifactPaths.add(df);
+
+    const missingCritical = CRITICAL_PUBLISH_FILES.filter(f => !artifactPaths.has(f));
+    if (missingCritical.length > 0) {
+      await pipelineLog(ctx, "publish_critical_files_missing",
+        `Arquivos críticos ausentes nos artefatos: ${missingCritical.join(", ")}. Serão auto-injetados via scaffold.`,
+        { missing: missingCritical });
+    }
+
     // ═══ PHASE 1: Pre-flight Checks (Release Agent) ═══
     await pipelineLog(ctx, "release_preflight_start", "Release Agent: Executando pre-flight checks...");
 
