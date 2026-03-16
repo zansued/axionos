@@ -297,6 +297,15 @@ async function processOneArtifact(artifact: any, deps: any) {
 
   for (let loop = 0; loop <= MAX_FIX_ATTEMPTS; loop++) {
     const isFirstPass = loop === 0;
+    const attemptId = crypto.randomUUID();
+    const attemptStartMs = Date.now();
+
+    // Sprint 203: Structured Fix Loop log — entry
+    await pipelineLog(ctx, "fix_loop_entry", `Fix Loop entry: artifact=${artifact.id}, loop=${loop}, attempt_id=${attemptId}`, {
+      artifact_id: artifact.id, loop, attempt_id: attemptId, fix_loop_trace_id: fixLoopTraceId,
+      phase: isFirstPass ? "analysis" : "reanalysis", subtask_id: artifact.subtask_id,
+    });
+
     await onProgress?.({
       current_artifact_id: artifact.id,
       current_artifact_summary: artifact.summary || null,
@@ -305,6 +314,8 @@ async function processOneArtifact(artifact: any, deps: any) {
       current_attempt: loop,
       max_attempts: MAX_FIX_ATTEMPTS,
       last_error: null,
+      attempt_id: attemptId,
+      fix_loop_trace_id: fixLoopTraceId,
     });
 
     // ═══ MERGED: Static Analysis (Agent 15) + Runtime QA (Agent 16) in ONE call ═══
