@@ -12325,6 +12325,65 @@ export type Database = {
           },
         ]
       }
+      confidence_recalibration_runs: {
+        Row: {
+          avg_delta: number | null
+          created_at: string
+          entries_boosted: number
+          entries_degraded: number
+          entries_evaluated: number
+          entries_recalibrated: number
+          feedback_signals_used: number
+          id: string
+          max_delta: number | null
+          organization_id: string
+          run_duration_ms: number | null
+          run_type: string
+          summary: Json | null
+          triggered_by: string
+        }
+        Insert: {
+          avg_delta?: number | null
+          created_at?: string
+          entries_boosted?: number
+          entries_degraded?: number
+          entries_evaluated?: number
+          entries_recalibrated?: number
+          feedback_signals_used?: number
+          id?: string
+          max_delta?: number | null
+          organization_id: string
+          run_duration_ms?: number | null
+          run_type?: string
+          summary?: Json | null
+          triggered_by?: string
+        }
+        Update: {
+          avg_delta?: number | null
+          created_at?: string
+          entries_boosted?: number
+          entries_degraded?: number
+          entries_evaluated?: number
+          entries_recalibrated?: number
+          feedback_signals_used?: number
+          id?: string
+          max_delta?: number | null
+          organization_id?: string
+          run_duration_ms?: number | null
+          run_type?: string
+          summary?: Json | null
+          triggered_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "confidence_recalibration_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conflict_evidence_records: {
         Row: {
           conflict_id: string
