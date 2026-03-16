@@ -348,6 +348,16 @@ Return ONLY JSON:
     await persistValidationRun(serviceClient, artifact.id, isFirstPass ? "combined_analysis" : `combined_revalidation_${loop}`, analysis, combinedResult.durationMs);
     if (isFirstPass) await persistReview(serviceClient, artifact.id, user.id, "combined_analysis", artifact.status, JSON.stringify(analysis));
 
+    // Sprint 203: Structured Fix Loop log — analysis result
+    const analysisElapsedMs = Date.now() - attemptStartMs;
+    await pipelineLog(ctx, "fix_loop_analysis", `Fix Loop analysis: score=${analysis.static_score}/${analysis.runtime_score}, issues=${(analysis.issues || []).length}`, {
+      artifact_id: artifact.id, loop, attempt_id: attemptId, fix_loop_trace_id: fixLoopTraceId,
+      static_score: analysis.static_score, runtime_score: analysis.runtime_score,
+      issues_count: (analysis.issues || []).length, security_issues: (analysis.security_issues || []).length,
+      elapsed_ms: analysisElapsedMs, subtask_id: artifact.subtask_id,
+      issue_categories: (analysis.issues || []).map((i: any) => i.category).filter(Boolean),
+    });
+
     // Combined score
     const staticScore = analysis.static_score || 60;
     const runtimeScore = analysis.runtime_score || 60;
