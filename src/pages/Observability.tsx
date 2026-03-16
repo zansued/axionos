@@ -67,6 +67,7 @@ import { InstitutionalOutcomeAssuranceDashboard } from "@/components/observabili
 import { CanonIntegrityDriftGovernanceDashboard } from "@/components/observability/CanonIntegrityDriftGovernanceDashboard";
 import { OperatingCompletionDashboard } from "@/components/observability/OperatingCompletionDashboard";
 import { RoleBasedExperienceDashboard } from "@/components/observability/RoleBasedExperienceDashboard";
+import { PipelineHealthDashboard } from "@/components/observability/PipelineHealthDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
