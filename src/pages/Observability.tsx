@@ -442,6 +442,7 @@ export default function Observability() {
             {isObsTabVisible("stability") && <TabsTrigger value="stability" className="text-xs gap-1"><Anchor className="h-3 w-3" /> Stability</TabsTrigger>}
             {isObsTabVisible("strategy-evo") && <TabsTrigger value="strategy-evo" className="text-xs gap-1"><FlaskConical className="h-3 w-3" /> StratEvo</TabsTrigger>}
             {isObsTabVisible("strat-portfolio") && <TabsTrigger value="strat-portfolio" className="text-xs gap-1"><Layers className="h-3 w-3" /> StratPort</TabsTrigger>}
+            {isObsTabVisible("pipeline-health") && <TabsTrigger value="pipeline-health" className="text-xs gap-1"><Gauge className="h-3 w-3" /> PipeHealth</TabsTrigger>}
             {isObsTabVisible("performance") && <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Perf</TabsTrigger>}
             {isObsTabVisible("costs") && <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>}
             {isObsTabVisible("quality") && <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Quality</TabsTrigger>}
