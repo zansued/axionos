@@ -28,6 +28,16 @@ serve(async (req) => {
   const { user, initiative, ctx, serviceClient, apiKey } = result;
 
   const dp = initiative.discovery_payload || {};
+  // ── Cleanup orphaned worker jobs from previous runs for this initiative ──
+  const workerStaleTime = new Date(Date.now() - 3 * 60 * 1000).toISOString();
+  await serviceClient
+    .from("initiative_jobs")
+    .update({ status: "failed", error: "Orphan cleanup: new orchestrator run started", completed_at: new Date().toISOString() })
+    .eq("initiative_id", ctx.initiativeId)
+    .eq("status", "running")
+    .in("stage", ["execution_worker", "execution_orchestrator"])
+    .lt("created_at", workerStaleTime);
+
   const masterJobId = await createJob(ctx, "execution_orchestrator", { initiative_id: ctx.initiativeId, mode: "swarm" });
 
   const updateFields: Record<string, unknown> = { stage_status: "in_progress" };
