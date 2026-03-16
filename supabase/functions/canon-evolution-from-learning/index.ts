@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+// Using built-in Deno.serve
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { generateProposalsFromSignals } from "../_shared/canon-evolution/canon-evolution-proposal-generator.ts";
 import { aggregateSignals, filterWeakGroups } from "../_shared/canon-evolution/canon-evolution-aggregation.ts";
@@ -6,7 +6,7 @@ import { routeProposal, summarizeProposals } from "../_shared/canon-evolution/ca
 import { validateReviewTransition, getAvailableReviewTransitions } from "../_shared/canon-evolution/canon-evolution-proposal-types.ts";
 import { handleCors, getCorsHeaders } from "../_shared/cors.ts";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const corsRes = handleCors(req);
   if (corsRes) return corsRes;
 
