@@ -470,6 +470,8 @@ serve(async (req) => {
           markNodeStatus(dag, node.id, "failed");
           await serviceClient.from("story_subtasks").update({ status: "failed" }).eq("id", node.subtaskId);
           failedCount++;
+          // Sprint 203: Track failed subtask in history
+          subtaskHistory.push({ id: node.subtaskId, file: node.filePath, status: "failed", ts: new Date().toISOString(), wave: waveNum });
           try {
             await recordError(ctx, err instanceof Error ? err.message : "Unknown worker error",
               "execution", node.filePath, `Worker failed after ${retries + 1} attempts`,

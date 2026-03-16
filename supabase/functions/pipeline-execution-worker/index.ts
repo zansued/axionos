@@ -35,6 +35,10 @@ interface WorkerPayload {
   storyId: string | null;
   description: string;
   waveNum: number;
+  // Sprint 203: Canonical traceability IDs
+  traceId?: string;
+  attemptId?: string;
+  retryAttempt?: number;
   // Context
   projectTitle: string;
   projectDescription: string;
