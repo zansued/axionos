@@ -680,6 +680,11 @@ export default function Observability() {
             <RepairIntelligenceDashboard />
           </TabsContent>
 
+          {/* ===== PIPELINE HEALTH (Sprint 208) ===== */}
+          <TabsContent value="pipeline-health" className="mt-4">
+            <PipelineHealthDashboard />
+          </TabsContent>
+
           {/* ===== PERFORMANCE ===== */}
           <TabsContent value="performance" className="mt-4 space-y-4">
             <div className="grid gap-4 lg:grid-cols-2">
