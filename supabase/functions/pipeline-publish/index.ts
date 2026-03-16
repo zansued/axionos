@@ -99,12 +99,7 @@ serve(async (req) => {
     );
   }
 
-  const ghHeaders = {
-    Authorization: `Bearer ${resolvedGithubToken}`,
-    Accept: "application/vnd.github.v3+json",
-    "Content-Type": "application/json",
-  };
-  const GITHUB_API = "https://api.github.com";
+  // ghHeaders and GITHUB_API already defined above (Sprint 205 token pre-flight)
 
   let totalTokens = 0, totalCost = 0;
 
