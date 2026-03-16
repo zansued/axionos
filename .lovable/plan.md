@@ -1,7 +1,8 @@
 # AxionOS — Plano de Execução
 
-> **Current Sprint:** 207 (Recalibração de Confiança Automática) — ✅ Complete
-> **Next Sprint:** 208 — TBD (Block AS complete)
+> **Current Sprint:** 208 (Pipeline Execution Hardening) — ✅ Complete
+> **Next Sprint:** 209 — TBD
+> Execution: **Sprint-based**
 > Execution: **Sprint-based**
 
 ---

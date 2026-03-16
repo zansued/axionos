@@ -547,6 +547,35 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
 
   } catch (e) {
     console.error("Worker error:", e);
+
+    // Sprint 208: Record failure metrics
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const failClient = createClient(supabaseUrl, serviceKey);
+      await failClient.from("pipeline_execution_metrics").insert({
+        organization_id: payload.organizationId,
+        initiative_id: payload.initiativeId || null,
+        subtask_id: payload.subtaskId || null,
+        file_path: payload.filePath || "",
+        file_type: payload.fileType || null,
+        wave_number: payload.waveNum || 0,
+        execution_path: "safe_3call",
+        risk_tier: "high",
+        latency_ms: 0,
+        ai_calls: 0,
+        tokens_used: 0,
+        cost_usd: 0,
+        output_size: 0,
+        retry_count: payload.retryAttempt || 0,
+        succeeded: false,
+        error_message: e instanceof Error ? e.message.slice(0, 500) : "Unknown error",
+        error_category: categorizeError(e),
+        trace_id: payload.traceId || null,
+        attempt_id: payload.attemptId || null,
+      });
+    } catch (_) { /* non-blocking */ }
+
     return jsonResponse({
       success: false,
       error: e instanceof Error ? e.message : "Unknown worker error",
