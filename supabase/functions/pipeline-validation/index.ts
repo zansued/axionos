@@ -24,7 +24,7 @@ serve(async (req) => {
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey } = result;
 
-  const jobId = await createJob(ctx, "validation", { initiative_id: ctx.initiativeId, mode: "fix_loop_bg" });
+  const jobId = await createJob(ctx, "validation", { initiative_id: ctx.initiativeId, mode: "fix_loop_bg", trace_id: crypto.randomUUID() });
   let currentExecutionProgress = initiative.execution_progress && typeof initiative.execution_progress === "object"
     ? initiative.execution_progress as Record<string, unknown>
     : {};
