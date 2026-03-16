@@ -44,7 +44,37 @@ serve(async (req) => {
   }
 
   if (!resolvedGithubToken || !resolvedOwner) {
-    return errorResponse("github_token e owner são obrigatórios. Configure uma conexão Git ativa.", 400);
+    return errorResponse(buildPublishError(
+      "auth", "github_token / owner",
+      "Configure uma conexão Git ativa em Configurações → Integrações → GitHub."
+    ), 400);
+  }
+
+  // ── Sprint 205: Pre-flight — Validate GitHub token before anything else ──
+  const GITHUB_API = "https://api.github.com";
+  const ghHeaders = {
+    Authorization: `Bearer ${resolvedGithubToken}`,
+    Accept: "application/vnd.github.v3+json",
+    "Content-Type": "application/json",
+  };
+
+  try {
+    const tokenCheckResp = await fetch(`${GITHUB_API}/user`, { headers: ghHeaders });
+    if (!tokenCheckResp.ok) {
+      const statusCode = tokenCheckResp.status;
+      const hint = statusCode === 401
+        ? "Token expirado ou inválido. Gere um novo Personal Access Token com permissão 'repo'."
+        : `GitHub retornou status ${statusCode}. Verifique permissões do token.`;
+      return errorResponse(buildPublishError("auth", "github_token", hint), 401);
+    }
+    const ghUser = await tokenCheckResp.json();
+    await pipelineLog(ctx, "github_token_validated",
+      `Token GitHub válido — autenticado como ${ghUser.login}`);
+  } catch (tokenErr) {
+    return errorResponse(buildPublishError(
+      "auth", "github_token",
+      `Falha ao validar token GitHub: ${tokenErr instanceof Error ? tokenErr.message : String(tokenErr)}`
+    ), 500);
   }
 
   const repoSlug = (resolvedRepo || initiative.title)
