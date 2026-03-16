@@ -449,6 +449,14 @@ Fix ALL issues. Return the COMPLETE corrected artifact, no markdown wrapping.`,
     await persistReview(serviceClient, artifact.id, user.id, "fix_agent",
       artifact.status, `Fix attempt ${fixAttempts}/${MAX_FIX_ATTEMPTS}. Score before: ${combinedScore}/100`);
 
+    // Sprint 203: Structured Fix Loop log — fix result
+    await pipelineLog(ctx, "fix_loop_fix_applied", `Fix Loop fix applied: attempt=${fixAttempts}, artifact=${artifact.id}`, {
+      artifact_id: artifact.id, loop, attempt_id: attemptId, fix_loop_trace_id: fixLoopTraceId,
+      fix_attempt: fixAttempts, score_before: combinedScore,
+      issues_fixed: blockingIssues.length, subtask_id: artifact.subtask_id,
+      elapsed_ms: Date.now() - attemptStartMs,
+    });
+
     await pipelineLog(ctx, "fix_agent_attempt",
       `Fix #${fixAttempts} for ${artifact.summary?.slice(0, 40)} (score: ${combinedScore})`);
   }
