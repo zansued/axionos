@@ -25,6 +25,62 @@ async function runAgent(
   return { role, model: aiResult.model, tokens: aiResult.tokens, costUsd: aiResult.costUsd, durationMs: aiResult.durationMs, result };
 }
 
+// ── Normalization helpers ──
+// DeepSeek sometimes returns variant key names or nested objects instead of arrays.
+
+function normalizeTaskGraph(result: Record<string, unknown>): Record<string, unknown> {
+  // Accept "tasks" as alias for "task_graph"
+  if (!Array.isArray(result.task_graph) && Array.isArray(result.tasks)) {
+    result.task_graph = result.tasks;
+  }
+  // Accept "phases" as alias for "execution_phases"
+  if (!Array.isArray(result.execution_phases) && Array.isArray(result.phases)) {
+    result.execution_phases = result.phases;
+  }
+  return result;
+}
+
+function flattenFileTree(tree: unknown, prefix = ""): { path: string; type: string; layer: string; description: string; story_ref: string; exports: string[]; imports_from: string[] }[] {
+  if (Array.isArray(tree)) return tree; // Already correct format
+  if (!tree || typeof tree !== "object") return [];
+
+  // It's a nested directory object — flatten it to array
+  const files: any[] = [];
+  for (const [key, value] of Object.entries(tree as Record<string, unknown>)) {
+    const fullPath = prefix ? `${prefix}${key}` : key;
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      const strVal = String(value);
+      // Check if it's a leaf (file status like "generated", "published", "planned")
+      if (typeof value === "string") {
+        files.push({ path: fullPath, type: "file", layer: "unknown", description: `${value}`, story_ref: "", exports: [], imports_from: [] });
+      } else {
+        // Recurse into subdirectory
+        files.push(...flattenFileTree(value, fullPath.endsWith("/") ? fullPath : `${fullPath}/`));
+      }
+    } else if (typeof value === "string") {
+      files.push({ path: fullPath, type: "file", layer: "unknown", description: value, story_ref: "", exports: [], imports_from: [] });
+    }
+  }
+  return files;
+}
+
+function normalizeFilePlanner(result: Record<string, unknown>): Record<string, unknown> {
+  const raw = result.file_tree;
+  if (raw && !Array.isArray(raw)) {
+    // Nested object format — flatten it
+    const flatFiles = flattenFileTree(raw);
+    result.file_tree = flatFiles;
+    if (!result.total_files || result.total_files === 0) {
+      result.total_files = flatFiles.length;
+    }
+  }
+  // Also check validation might be missing
+  if (!result.validation) {
+    result.validation = { completeness_score: (result.file_tree as any[])?.length > 0 ? 70 : 0, issues: [] };
+  }
+  return result;
+}
+
 // Declare EdgeRuntime for Deno edge environment
 declare const EdgeRuntime: { waitUntil: (promise: Promise<unknown>) => void };
 
@@ -102,6 +158,9 @@ Crie o grafo de tarefas:
         true,
       );
 
+      // Normalize variant key names from AI
+      normalizeTaskGraph(taskPlanner.result);
+
       await serviceClient.from("agent_outputs").insert({
         organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
         type: "analysis", status: "approved",
@@ -166,6 +225,16 @@ Gere 3-10 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         true,
       );
 
+      // Normalize story total_files — count from stories if missing
+      if (!storyGen.result.total_files || storyGen.result.total_files === 0) {
+        const storiesArr = (storyGen.result.stories as any[]) || [];
+        let count = 0;
+        for (const s of storiesArr) {
+          for (const p of (s.phases || [])) { count += (p.subtasks || []).length; }
+        }
+        if (count > 0) storyGen.result.total_files = count;
+      }
+
       await serviceClient.from("agent_outputs").insert({
         organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
         type: "analysis", status: "approved",
@@ -215,6 +284,9 @@ Valide e defina a árvore completa de arquivos:
   "total_files": 0
 }`,
       );
+
+      // Normalize file tree (may be nested object instead of array)
+      normalizeFilePlanner(filePlanner.result);
 
       await serviceClient.from("agent_outputs").insert({
         organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
