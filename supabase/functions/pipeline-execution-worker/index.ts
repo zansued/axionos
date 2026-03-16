@@ -93,6 +93,11 @@ serve(async (req) => {
         file_path: payload.filePath,
         wave: payload.waveNum,
         node_id: payload.nodeId,
+        // Sprint 203: Canonical traceability
+        trace_id: payload.traceId || null,
+        attempt_id: payload.attemptId || null,
+        retry_attempt: payload.retryAttempt || 0,
+        agent_role: payload.developer?.role || "developer",
       }),
       serviceClient.from("story_subtasks").update({
         status: "in_progress",
