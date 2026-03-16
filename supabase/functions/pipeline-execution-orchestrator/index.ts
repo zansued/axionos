@@ -336,6 +336,9 @@ serve(async (req) => {
       incremental: true,
       skipped: skippedCount,
       savings_percent: incremental.stats.savingsPercent,
+      // Sprint 203: Canonical traceability fields
+      trace_id: traceId,
+      recent_subtasks: subtaskHistory.slice(-5),
     });
     const writeProgress = async (snapshot: ExecutionProgressSnapshot = {}) => {
       await serviceClient.from("initiatives").update({
