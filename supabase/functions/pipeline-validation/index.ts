@@ -25,6 +25,12 @@ serve(async (req) => {
   const { user, initiative, ctx, serviceClient, apiKey } = result;
 
   const jobId = await createJob(ctx, "validation", { initiative_id: ctx.initiativeId, mode: "fix_loop_bg" });
+  let currentExecutionProgress = initiative.execution_progress && typeof initiative.execution_progress === "object"
+    ? initiative.execution_progress as Record<string, unknown>
+    : {};
+  const persistExecutionProgress = async (patch: Record<string, unknown>) => {
+    currentExecutionProgress = await mergeExecutionProgress(serviceClient, ctx.initiativeId, currentExecutionProgress, patch);
+  };
 
   // Mark stale jobs as failed
   if (jobId) {
