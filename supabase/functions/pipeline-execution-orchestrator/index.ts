@@ -456,6 +456,8 @@ serve(async (req) => {
         markNodeStatus(dag, node.id, "generated");
         codeFilesGenerated++;
         executedCount++;
+        // Sprint 203: Track subtask completion for history
+        subtaskHistory.push({ id: node.subtaskId, file: node.filePath, status: "completed", ts: new Date().toISOString(), wave: waveNum });
 
       } catch (err) {
         const retries = retryCount[node.id] || 0;
