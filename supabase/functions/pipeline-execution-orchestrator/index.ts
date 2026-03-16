@@ -3,6 +3,7 @@
 // Workers are invoked via supabase.functions.invoke("pipeline-execution-worker")
 //
 // Sprint 202: Idempotency guards + explicit auto-continuation
+// Sprint 203: Canonical traceability — trace_id, attempt_id, wave_number, agent_role
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
@@ -28,6 +29,9 @@ serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-execution-orchestrator");
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey } = result;
+
+  // Sprint 203: Generate canonical trace_id for this entire orchestrator run
+  const traceId = crypto.randomUUID();
 
   const dp = initiative.discovery_payload || {};
 
@@ -70,7 +74,7 @@ serve(async (req) => {
     .eq("stage", "execution_worker")
     .lt("created_at", workerStaleTime);
 
-  const masterJobId = await createJob(ctx, "execution_orchestrator", { initiative_id: ctx.initiativeId, mode: "swarm" });
+  const masterJobId = await createJob(ctx, "execution_orchestrator", { initiative_id: ctx.initiativeId, mode: "swarm", trace_id: traceId });
 
   const updateFields: Record<string, unknown> = { stage_status: "in_progress" };
   if (initiative.stage_status === "planned" && !initiative.approved_at_planning) {
@@ -292,6 +296,8 @@ serve(async (req) => {
     const totalNodes = dag.totalNodes + nonFileSubtasks.length;
     const skippedCount = incremental.stats.cleanFiles;
     const retryCount: Record<string, number> = {};
+    // Sprint 203: Track completed subtask history for UI display
+    const subtaskHistory: Array<{ id: string; file: string | null; status: string; ts: string; wave: number }> = [];
 
     // Debounced progress
     type ExecutionProgressSnapshot = {
@@ -330,6 +336,9 @@ serve(async (req) => {
       incremental: true,
       skipped: skippedCount,
       savings_percent: incremental.stats.savingsPercent,
+      // Sprint 203: Canonical traceability fields
+      trace_id: traceId,
+      recent_subtasks: subtaskHistory.slice(-5),
     });
     const writeProgress = async (snapshot: ExecutionProgressSnapshot = {}) => {
       await serviceClient.from("initiatives").update({
@@ -400,6 +409,10 @@ serve(async (req) => {
         storyId: node.storyId,
         description: node.description,
         waveNum,
+        // Sprint 203: Canonical traceability IDs
+        traceId,
+        attemptId: crypto.randomUUID(),
+        retryAttempt: retryCount[node.id] || 0,
         projectTitle: initiative.title,
         projectDescription: initiative.refined_idea || initiative.description || "",
         projectStructure,
@@ -443,6 +456,8 @@ serve(async (req) => {
         markNodeStatus(dag, node.id, "generated");
         codeFilesGenerated++;
         executedCount++;
+        // Sprint 203: Track subtask completion for history
+        subtaskHistory.push({ id: node.subtaskId, file: node.filePath, status: "completed", ts: new Date().toISOString(), wave: waveNum });
 
       } catch (err) {
         const retries = retryCount[node.id] || 0;
@@ -455,6 +470,8 @@ serve(async (req) => {
           markNodeStatus(dag, node.id, "failed");
           await serviceClient.from("story_subtasks").update({ status: "failed" }).eq("id", node.subtaskId);
           failedCount++;
+          // Sprint 203: Track failed subtask in history
+          subtaskHistory.push({ id: node.subtaskId, file: node.filePath, status: "failed", ts: new Date().toISOString(), wave: waveNum });
           try {
             await recordError(ctx, err instanceof Error ? err.message : "Unknown worker error",
               "execution", node.filePath, `Worker failed after ${retries + 1} attempts`,

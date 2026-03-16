@@ -24,7 +24,7 @@ serve(async (req) => {
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey } = result;
 
-  const jobId = await createJob(ctx, "validation", { initiative_id: ctx.initiativeId, mode: "fix_loop_bg" });
+  const jobId = await createJob(ctx, "validation", { initiative_id: ctx.initiativeId, mode: "fix_loop_bg", trace_id: crypto.randomUUID() });
   let currentExecutionProgress = initiative.execution_progress && typeof initiative.execution_progress === "object"
     ? initiative.execution_progress as Record<string, unknown>
     : {};
@@ -286,6 +286,8 @@ async function processOneArtifact(artifact: any, deps: any) {
   const isCode = artifact.type === "code";
   let currentText = extractText(artifact.raw_output);
   let fixAttempts = 0;
+  // Sprint 203: Generate attempt_id per fix loop iteration for traceability
+  const fixLoopTraceId = crypto.randomUUID();
 
   // Get architecture context (light)
   let archContext = "";
@@ -295,6 +297,15 @@ async function processOneArtifact(artifact: any, deps: any) {
 
   for (let loop = 0; loop <= MAX_FIX_ATTEMPTS; loop++) {
     const isFirstPass = loop === 0;
+    const attemptId = crypto.randomUUID();
+    const attemptStartMs = Date.now();
+
+    // Sprint 203: Structured Fix Loop log — entry
+    await pipelineLog(ctx, "fix_loop_entry", `Fix Loop entry: artifact=${artifact.id}, loop=${loop}, attempt_id=${attemptId}`, {
+      artifact_id: artifact.id, loop, attempt_id: attemptId, fix_loop_trace_id: fixLoopTraceId,
+      phase: isFirstPass ? "analysis" : "reanalysis", subtask_id: artifact.subtask_id,
+    });
+
     await onProgress?.({
       current_artifact_id: artifact.id,
       current_artifact_summary: artifact.summary || null,
@@ -303,6 +314,8 @@ async function processOneArtifact(artifact: any, deps: any) {
       current_attempt: loop,
       max_attempts: MAX_FIX_ATTEMPTS,
       last_error: null,
+      attempt_id: attemptId,
+      fix_loop_trace_id: fixLoopTraceId,
     });
 
     // ═══ MERGED: Static Analysis (Agent 15) + Runtime QA (Agent 16) in ONE call ═══
@@ -334,6 +347,16 @@ Return ONLY JSON:
 
     await persistValidationRun(serviceClient, artifact.id, isFirstPass ? "combined_analysis" : `combined_revalidation_${loop}`, analysis, combinedResult.durationMs);
     if (isFirstPass) await persistReview(serviceClient, artifact.id, user.id, "combined_analysis", artifact.status, JSON.stringify(analysis));
+
+    // Sprint 203: Structured Fix Loop log — analysis result
+    const analysisElapsedMs = Date.now() - attemptStartMs;
+    await pipelineLog(ctx, "fix_loop_analysis", `Fix Loop analysis: score=${analysis.static_score}/${analysis.runtime_score}, issues=${(analysis.issues || []).length}`, {
+      artifact_id: artifact.id, loop, attempt_id: attemptId, fix_loop_trace_id: fixLoopTraceId,
+      static_score: analysis.static_score, runtime_score: analysis.runtime_score,
+      issues_count: (analysis.issues || []).length, security_issues: (analysis.security_issues || []).length,
+      elapsed_ms: analysisElapsedMs, subtask_id: artifact.subtask_id,
+      issue_categories: (analysis.issues || []).map((i: any) => i.category).filter(Boolean),
+    });
 
     // Combined score
     const staticScore = analysis.static_score || 60;
@@ -425,6 +448,14 @@ Fix ALL issues. Return the COMPLETE corrected artifact, no markdown wrapping.`,
 
     await persistReview(serviceClient, artifact.id, user.id, "fix_agent",
       artifact.status, `Fix attempt ${fixAttempts}/${MAX_FIX_ATTEMPTS}. Score before: ${combinedScore}/100`);
+
+    // Sprint 203: Structured Fix Loop log — fix result
+    await pipelineLog(ctx, "fix_loop_fix_applied", `Fix Loop fix applied: attempt=${fixAttempts}, artifact=${artifact.id}`, {
+      artifact_id: artifact.id, loop, attempt_id: attemptId, fix_loop_trace_id: fixLoopTraceId,
+      fix_attempt: fixAttempts, score_before: combinedScore,
+      issues_fixed: blockingIssues.length, subtask_id: artifact.subtask_id,
+      elapsed_ms: Date.now() - attemptStartMs,
+    });
 
     await pipelineLog(ctx, "fix_agent_attempt",
       `Fix #${fixAttempts} for ${artifact.summary?.slice(0, 40)} (score: ${combinedScore})`);

@@ -35,6 +35,10 @@ interface WorkerPayload {
   storyId: string | null;
   description: string;
   waveNum: number;
+  // Sprint 203: Canonical traceability IDs
+  traceId?: string;
+  attemptId?: string;
+  retryAttempt?: number;
   // Context
   projectTitle: string;
   projectDescription: string;
@@ -89,6 +93,11 @@ serve(async (req) => {
         file_path: payload.filePath,
         wave: payload.waveNum,
         node_id: payload.nodeId,
+        // Sprint 203: Canonical traceability
+        trace_id: payload.traceId || null,
+        attempt_id: payload.attemptId || null,
+        retry_attempt: payload.retryAttempt || 0,
+        agent_role: payload.developer?.role || "developer",
       }),
       serviceClient.from("story_subtasks").update({
         status: "in_progress",
@@ -365,6 +374,11 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
         file_type: payload.fileType,
         wave: payload.waveNum,
         node_id: payload.nodeId,
+        // Sprint 203: Canonical traceability in metrics
+        trace_id: payload.traceId || null,
+        attempt_id: payload.attemptId || null,
+        retry_attempt: payload.retryAttempt || 0,
+        agent_role: effectiveDev.role || "developer",
       },
     }).then(() => {}).catch((e: unknown) => {
       console.warn("[DX-3] Metrics log failed (non-blocking):", e);
@@ -391,6 +405,10 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
             : ["code_architect", "developer", "integration_agent"],
           wave: payload.waveNum,
           ox3_path: workerMetrics.path,
+          // Sprint 203: Canonical traceability in artifact
+          trace_id: payload.traceId || null,
+          attempt_id: payload.attemptId || null,
+          agent_role: effectiveDev.role || "developer",
         },
         model_used: devModel, prompt_used: payload.description,
         tokens_used: totalTokens, cost_estimate: totalCost,
@@ -439,6 +457,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
 
     if (jobId) await completeJob(ctx, jobId, {
       artifact_id: artifact?.id, file_path: payload.filePath, wave: payload.waveNum,
+      trace_id: payload.traceId || null, attempt_id: payload.attemptId || null,
     }, { model: devModel, costUsd: totalCost, durationMs: workerMetrics.totalAiLatencyMs });
 
     // Sprint 205: Emit operational learning signal
