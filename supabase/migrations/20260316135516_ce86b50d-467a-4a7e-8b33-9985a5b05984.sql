@@ -1,0 +1,1 @@
+ALTER TABLE public.initiatives ADD COLUMN IF NOT EXISTS publish_confirmation jsonb DEFAULT NULL;

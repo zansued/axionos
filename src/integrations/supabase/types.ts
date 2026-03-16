@@ -22435,6 +22435,7 @@ export type Database = {
           organization_id: string
           pipeline_recommendation: string | null
           prd_content: string | null
+          publish_confirmation: Json | null
           recommended_generation_depth: string | null
           reference_url: string | null
           refined_idea: string | null
@@ -22491,6 +22492,7 @@ export type Database = {
           organization_id: string
           pipeline_recommendation?: string | null
           prd_content?: string | null
+          publish_confirmation?: Json | null
           recommended_generation_depth?: string | null
           reference_url?: string | null
           refined_idea?: string | null
@@ -22547,6 +22549,7 @@ export type Database = {
           organization_id?: string
           pipeline_recommendation?: string | null
           prd_content?: string | null
+          publish_confirmation?: Json | null
           recommended_generation_depth?: string | null
           reference_url?: string | null
           refined_idea?: string | null
