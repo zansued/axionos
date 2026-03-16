@@ -387,6 +387,7 @@ export default function Observability() {
             isObsTabVisible("stability") && "stability",
             isObsTabVisible("strategy-evo") && "strategy-evo",
             isObsTabVisible("strat-portfolio") && "strat-portfolio",
+            isObsTabVisible("pipeline-health") && "pipeline-health",
             isObsTabVisible("performance") && "performance",
             isObsTabVisible("costs") && "costs",
             isObsTabVisible("quality") && "quality",
