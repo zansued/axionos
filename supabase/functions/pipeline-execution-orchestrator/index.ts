@@ -279,7 +279,15 @@ serve(async (req) => {
 
     const dispatchWorker = async (node: DAGNode, waveNum: number): Promise<void> => {
       markNodeStatus(dag, node.id, "generating");
-      await updateProgress(node.filePath, "worker_dispatched", waveNum);
+      await updateProgress({
+        currentFile: node.filePath,
+        currentAgent: "worker_dispatched",
+        currentSubtaskId: node.subtaskId,
+        currentSubtaskDescription: node.description,
+        currentStoryId: node.storyId,
+        currentStage: "execution",
+        currentWave: waveNum,
+      });
 
       // ── Smart Context Window + Semantic Search ──
       const depPaths = [...node.dependencies]
