@@ -451,6 +451,11 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                  runningStage === "deploy_vercel" ? "Conectando ao Vercel e iniciando deploy..." :
                  "Isso pode levar ~30 segundos."}
               </p>
+              {liveTraceLabel && (
+                <p className="mt-2 text-xs font-medium text-foreground/90 leading-relaxed">
+                  Rastreando agora: {liveTraceLabel}
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>

@@ -10,6 +10,25 @@ interface ExecutionProgressProps {
   stageStatus: string;
 }
 
+interface ValidationTrace {
+  status?: string;
+  total_artifacts?: number;
+  approved?: number;
+  escalated?: number;
+  remaining?: number;
+  current_artifact_id?: string | null;
+  current_artifact_summary?: string | null;
+  current_subtask_id?: string | null;
+  current_phase?: string | null;
+  current_attempt?: number;
+  max_attempts?: number;
+  issues_count?: number;
+  combined_score?: number;
+  last_issue_summary?: string | null;
+  last_error?: string | null;
+  last_result?: string | null;
+}
+
 interface ProgressData {
   current: number;
   total: number;
@@ -21,6 +40,10 @@ interface ProgressData {
   cost_usd: number;
   current_file: string | null;
   current_agent: string | null;
+  current_subtask_id?: string | null;
+  current_subtask_description?: string | null;
+  current_story_id?: string | null;
+  current_stage?: string | null;
   chain_of_agents: boolean;
   status: string;
   started_at?: string;
@@ -28,7 +51,21 @@ interface ProgressData {
   incremental?: boolean;
   skipped?: number;
   savings_percent?: number;
+  validation?: ValidationTrace | null;
 }
+
+const VALIDATION_PHASE_LABELS: Record<string, string> = {
+  queued: "Na fila do Fix Loop",
+  analysis: "Analisando artefato",
+  reanalysis: "Revalidando após correção",
+  fixing: "Corrigindo bloqueios",
+  approved: "Aprovado automaticamente",
+  escalated: "Escalado para revisão humana",
+  awaiting_next_artifact: "Aguardando próximo artefato",
+  completed: "Validação concluída",
+  failed: "Validação falhou",
+  no_artifacts: "Sem artefatos para validar",
+};
 
 export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgressProps) {
   const [progress, setProgress] = useState<ProgressData | null>(null);
@@ -68,19 +105,28 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
     return () => { supabase.removeChannel(channel); };
   }, [initiativeId]);
 
-  if (!progress || !progress.total || progress.total === 0) return null;
-  if (stageStatus !== "in_progress" && progress.status !== "completed") return null;
+  if (!progress) return null;
 
-  const isRunning = progress.status === "running";
-  const isCompleted = progress.status === "completed";
+  const activeStage = progress.current_stage || (stageStatus === "validating" ? "validation" : "execution");
+  const validation = progress.validation || null;
+  const isValidationRunning = activeStage === "validation" && validation?.status === "running";
+  const hasTrackedExecution = Boolean(progress.total && progress.total > 0);
+  if (!hasTrackedExecution && !isValidationRunning) return null;
+  if (!["in_progress", "validating"].includes(stageStatus) && progress.status !== "completed" && !isValidationRunning) return null;
+
+  const isRunning = progress.status === "running" || isValidationRunning;
+  const isCompleted = progress.status === "completed" && !isValidationRunning;
   const hasIncremental = progress.incremental && (progress.skipped || 0) > 0;
+  const validationPhaseLabel = validation?.current_phase ? VALIDATION_PHASE_LABELS[validation.current_phase] || validation.current_phase : null;
+  const validationAttempt = validation?.current_attempt && validation.max_attempts
+    ? `Tentativa ${validation.current_attempt}/${validation.max_attempts}`
+    : null;
 
   return (
     <Card className={`border-border/50 ${isRunning ? "border-primary/30 bg-primary/5" : isCompleted ? "border-success/30 bg-success/5" : ""}`}>
       <CardContent className="p-4 space-y-3">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 flex-wrap">
             {isRunning ? (
               <Loader2 className="h-4 w-4 animate-spin text-primary" />
             ) : isCompleted ? (
@@ -89,26 +135,31 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
               <Cpu className="h-4 w-4 text-muted-foreground" />
             )}
             <span className="text-sm font-medium">
-              {isRunning ? "Execução em andamento..." : isCompleted ? "Execução concluída" : "Progresso da Execução"}
+              {activeStage === "validation"
+                ? isRunning ? "Fix Loop em andamento" : "Fix Loop concluído"
+                : isRunning ? "Execução em andamento..." : isCompleted ? "Execução concluída" : "Progresso da Execução"}
             </span>
-            {progress.chain_of_agents && (
+            <Badge variant="secondary" className="text-[10px]">
+              {activeStage === "validation" ? "Fix Loop" : "Execution"}
+            </Badge>
+            {progress.chain_of_agents && activeStage !== "validation" && (
               <Badge variant="secondary" className="text-[10px]">Chain-of-Agents</Badge>
             )}
-            {hasIncremental && (
+            {hasIncremental && activeStage !== "validation" && (
               <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-400">
                 <SkipForward className="h-3 w-3 mr-1" />
                 Incremental
               </Badge>
             )}
           </div>
-          <span className="text-sm font-bold text-primary">{progress.percent}%</span>
+          {hasTrackedExecution && (
+            <span className="text-sm font-bold text-primary">{progress.percent}%</span>
+          )}
         </div>
 
-        {/* Progress bar */}
-        <Progress value={progress.percent} className="h-2" />
+        {hasTrackedExecution && <Progress value={progress.percent} className="h-2" />}
 
-        {/* Incremental savings banner */}
-        {hasIncremental && (
+        {hasIncremental && activeStage !== "validation" && (
           <div className="flex items-center gap-2 text-[11px] bg-emerald-500/10 border border-emerald-500/20 rounded px-2 py-1.5">
             <TrendingDown className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
             <span className="text-emerald-300">
@@ -117,19 +168,26 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
           </div>
         )}
 
-        {/* Stats */}
         <div className="flex items-center gap-4 text-[11px] text-muted-foreground flex-wrap">
-          <span className="flex items-center gap-1">
-            <Zap className="h-3 w-3" />
-            {progress.current}/{progress.total} subtasks
-          </span>
-          {progress.code_files > 0 && (
+          {hasTrackedExecution && (
+            <span className="flex items-center gap-1">
+              <Zap className="h-3 w-3" />
+              {progress.current}/{progress.total} subtasks
+            </span>
+          )}
+          {progress.code_files > 0 && activeStage !== "validation" && (
             <span className="flex items-center gap-1">
               <Cpu className="h-3 w-3" />
               {progress.code_files} gerados
             </span>
           )}
-          {hasIncremental && (
+          {validation?.total_artifacts ? (
+            <span>
+              {validation.approved || 0}/{validation.total_artifacts} artefatos aprovados
+            </span>
+          ) : null}
+          {validation?.remaining ? <span>{validation.remaining} restantes no Fix Loop</span> : null}
+          {hasIncremental && activeStage !== "validation" && (
             <span className="flex items-center gap-1 text-emerald-400">
               <SkipForward className="h-3 w-3" />
               {progress.skipped} reusados
@@ -141,9 +199,14 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
               {progress.failed} falhas
             </span>
           )}
-          {progress.tokens > 0 && (
-            <span>{progress.tokens.toLocaleString()} tokens</span>
-          )}
+          {validation?.issues_count ? (
+            <span className="flex items-center gap-1 text-warning">
+              <AlertTriangle className="h-3 w-3" />
+              {validation.issues_count} bloqueios detectados
+            </span>
+          ) : null}
+          {validation?.combined_score ? <span>score {validation.combined_score}/100</span> : null}
+          {progress.tokens > 0 && <span>{progress.tokens.toLocaleString()} tokens</span>}
           {progress.cost_usd > 0 && (
             <span className="flex items-center gap-1">
               <DollarSign className="h-3 w-3" />
@@ -152,10 +215,36 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
           )}
         </div>
 
-        {/* Current file indicator */}
-        {isRunning && progress.current_file && (
-          <div className="text-[11px] text-muted-foreground bg-muted/30 rounded px-2 py-1 font-mono truncate">
-            → {progress.current_file}
+        {activeStage === "execution" && isRunning && (progress.current_subtask_description || progress.current_file) && (
+          <div className="rounded border border-border/50 bg-muted/30 px-3 py-2 space-y-1">
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Subtask atual</p>
+            {progress.current_subtask_description && (
+              <p className="text-xs font-medium leading-relaxed">{progress.current_subtask_description}</p>
+            )}
+            {progress.current_file && (
+              <p className="text-[11px] font-mono text-muted-foreground break-all">{progress.current_file}</p>
+            )}
+          </div>
+        )}
+
+        {activeStage === "validation" && validation && (
+          <div className="rounded border border-border/50 bg-muted/30 px-3 py-2 space-y-1.5">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Rastro do Fix Loop</p>
+              <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
+                {validationPhaseLabel ? <span>{validationPhaseLabel}</span> : null}
+                {validationAttempt ? <span>{validationAttempt}</span> : null}
+              </div>
+            </div>
+            {validation.current_artifact_summary && (
+              <p className="text-xs font-medium leading-relaxed">{validation.current_artifact_summary}</p>
+            )}
+            {validation.last_issue_summary && (
+              <p className="text-[11px] text-destructive/90 leading-relaxed">Bloqueio atual: {validation.last_issue_summary}</p>
+            )}
+            {validation.last_error && (
+              <p className="text-[11px] text-destructive/90 leading-relaxed">Erro: {validation.last_error}</p>
+            )}
           </div>
         )}
       </CardContent>
