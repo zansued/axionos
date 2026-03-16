@@ -7,6 +7,7 @@ import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, au
 import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 import { runDependencyGovernance } from "../_shared/dependency-governance.ts";
 import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
+import type { PublishConfirmation } from "../_shared/contracts/publish-confirmation.schema.ts";
 
 /**
  * Sprint 205 — Structured Publish Error
@@ -696,6 +697,36 @@ Retorne APENAS JSON:
 
     await updateInitiative(ctx, { stage_status: "published" });
 
+    // ═══ Sprint 206: Build & persist PublishConfirmation contract ═══
+    const publishConfirmation: PublishConfirmation = {
+      schema_version: "1.0",
+      initiative_id: ctx.initiativeId,
+      repo_owner: actualOwner,
+      repo_name: actualRepo,
+      repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
+      branch: resolvedBaseBranch,
+      commit_sha: newCommit.sha,
+      files_committed: committedFiles.length,
+      skipped_files: skippedFiles,
+      preflight_pass: !!preflight.preflight_pass,
+      preflight_risk: preflight.risk_level || "low",
+      verification_healthy: !!verification.deploy_healthy,
+      verification_confidence: verification.confidence || 0,
+      security_passed: publishSecReport.passed,
+      security_highest_severity: publishSecReport.highest_severity,
+      dep_governance_risk: null,
+      version: changelog.version || "1.0.0",
+      published_at: new Date().toISOString(),
+    };
+
+    await updateInitiative(ctx, {
+      repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
+      commit_hash: newCommit.sha,
+      build_status: preflight.preflight_pass ? "pass" : "fail",
+      deploy_status: "published",
+      publish_confirmation: JSON.stringify(publishConfirmation),
+    });
+
     if (jobId) await completeJob(ctx, jobId, {
       branch: resolvedBaseBranch, files_committed: committedFiles.length,
       owner: actualOwner, repo: actualRepo, version: changelog.version || "1.0.0",
@@ -703,15 +734,8 @@ Retorne APENAS JSON:
       preflight: { pass: preflight.preflight_pass, risk: preflight.risk_level },
       verification: { healthy: verification.deploy_healthy, confidence: verification.confidence },
       skipped_files: skippedFiles,
+      publish_confirmation: publishConfirmation,
     }, { model: "routed", costUsd: totalCost, durationMs: 0 });
-
-    // Persist deploy metadata on initiative
-    await updateInitiative(ctx, {
-      repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
-      commit_hash: newCommit.sha, // SHA real, não a versão semântica
-      build_status: preflight.preflight_pass ? "pass" : "fail",
-      deploy_status: "published",
-    });
 
     await pipelineLog(ctx, "pipeline_publish_complete",
       `Release Agent: ${committedFiles.length} arquivos publicados em ${actualOwner}/${actualRepo} v${changelog.version || "1.0.0"} ✅`,
@@ -725,6 +749,7 @@ Retorne APENAS JSON:
       preflight_pass: preflight.preflight_pass,
       deploy_healthy: verification.deploy_healthy,
       job_id: jobId,
+      publish_confirmation: publishConfirmation,
     });
   } catch (e) {
     if (jobId) await failJob(ctx, jobId, e instanceof Error ? e.message : "Unknown error");
