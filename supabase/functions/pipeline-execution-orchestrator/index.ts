@@ -103,7 +103,8 @@ serve(async (req) => {
         stories = allStories;
         pipelineLog(ctx, "stories_reset", `${allStories.length} stories resetadas para re-execução`).catch(() => {});
       } else {
-        throw new Error("Nenhuma story encontrada — execute o Planning primeiro");
+        if (masterJobId) await failJob(ctx, masterJobId, "No stories found for initiative");
+        return errorResponse("Nenhuma story encontrada — execute o Planning primeiro. Acesse a página de Planejamento e gere as stories antes de executar o pipeline.", 400);
       }
     }
 
