@@ -437,8 +437,13 @@ Valide e defina a árvore completa de arquivos:
       const totalTokens = taskPlanner.tokens + storyGen.tokens + filePlanner.tokens;
       const totalCost = taskPlanner.costUsd + storyGen.costUsd + filePlanner.costUsd;
 
+      // Only mark as "planned" if stories were actually created
+      const finalStatus = createdStories.length > 0 ? "planned" : "planning_ready";
+      if (createdStories.length === 0) {
+        console.warn("[pipeline-planning] WARNING: Planning completed but 0 stories created — staying at planning_ready");
+      }
       await updateInitiative(ctx, {
-        stage_status: "planned",
+        stage_status: finalStatus,
         prd_content: prdContent.slice(0, 5000) || initiative.prd_content,
         discovery_payload: {
           ...dp,
