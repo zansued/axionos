@@ -41,7 +41,7 @@ export async function enforceUsageLimits(
   // If no billing account, use Starter defaults
   const plan = billing?.product_plans ?? {
     max_initiatives_per_month: 20,
-    max_tokens_per_month: 2000000,
+    max_tokens_per_month: 10000000,
     max_deployments_per_month: 10,
     max_parallel_runs: 8,
   };
