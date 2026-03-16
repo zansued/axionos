@@ -146,7 +146,7 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
               <Badge variant="secondary" className="text-[10px]">Chain-of-Agents</Badge>
             )}
             {hasIncremental && activeStage !== "validation" && (
-              <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-400">
+              <Badge variant="outline" className="text-[10px] border-success/30 text-success">
                 <SkipForward className="h-3 w-3 mr-1" />
                 Incremental
               </Badge>
@@ -160,9 +160,9 @@ export function ExecutionProgress({ initiativeId, stageStatus }: ExecutionProgre
         {hasTrackedExecution && <Progress value={progress.percent} className="h-2" />}
 
         {hasIncremental && activeStage !== "validation" && (
-          <div className="flex items-center gap-2 text-[11px] bg-emerald-500/10 border border-emerald-500/20 rounded px-2 py-1.5">
-            <TrendingDown className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-            <span className="text-emerald-300">
+          <div className="flex items-center gap-2 text-[11px] bg-success/10 border border-success/20 rounded px-2 py-1.5">
+            <TrendingDown className="h-3.5 w-3.5 text-success shrink-0" />
+            <span className="text-success">
               <strong>{progress.skipped}</strong> arquivos reutilizados ({progress.savings_percent}% economia em tokens)
             </span>
           </div>
