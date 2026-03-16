@@ -142,12 +142,32 @@ Sprint 203 ──── Tela de Revisão Humana          ✅ DONE
 Sprint 204 ──── Repo Trust no Cron              ✅ DONE
 Sprint 205 ──── Producers de Sinais Operacionais ✅ DONE
 Sprint 206 ──── Mineração de Padrões no Cron    ✅ DONE
-Sprint 207 ──── Recalibração de Confiança Auto  ← NEXT
+Sprint 207 ──── Recalibração de Confiança Auto  ✅ DONE
+Sprint 208 ──── Pipeline Execution Hardening    ✅ DONE
 ```
 
 ---
 
-## Out of Scope for Block AS
+## Block AT — Pipeline Reliability & Observability
+
+### Sprint 208 — Pipeline Execution Hardening ✅
+**Priority: High** | **Status: Complete**
+
+- `pipeline_execution_metrics` table for structured observability
+- Execution worker instrumented to record success/failure metrics with error categorization
+- `pipeline-health-metrics` edge function for aggregated health queries (summary + failures)
+- `PipelineHealthDashboard` component with timeline, distribution, failure log, and error category views
+- Error categorization: timeout, rate_limit, auth, syntax, network, quota, unknown
+
+**Deliverables:**
+- `pipeline_execution_metrics` table with RLS
+- `pipeline-health-metrics/index.ts` edge function
+- `PipelineHealthDashboard.tsx` component
+- Worker instrumentation (success + failure paths)
+
+---
+
+## Out of Scope for Block AT
 
 - Skill-to-Capability binding (KX-3) → Future block
 - Knowledge Visual Mesh (KX-7) → Future block
