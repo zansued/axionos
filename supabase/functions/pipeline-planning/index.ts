@@ -274,6 +274,9 @@ Gere 3-10 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         true,
       );
 
+      // Normalize variant story formats from different AI models
+      normalizeStories(storyGen.result);
+
       // Normalize story total_files — count from stories if missing
       if (!storyGen.result.total_files || storyGen.result.total_files === 0) {
         const storiesArr = (storyGen.result.stories as any[]) || [];
@@ -283,6 +286,8 @@ Gere 3-10 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
         }
         if (count > 0) storyGen.result.total_files = count;
       }
+
+      console.log(`[pipeline-planning] After normalization: ${(storyGen.result.stories as any[])?.length || 0} stories, ${storyGen.result.total_files || 0} files`);
 
       await serviceClient.from("agent_outputs").insert({
         organization_id: ctx.organizationId, initiative_id: ctx.initiativeId,
