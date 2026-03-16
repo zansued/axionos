@@ -1,6 +1,7 @@
 // Shared pipeline helper functions (log, job management, initiative updates)
 
 import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { validateTransition, type TransitionResult } from "./initiative-state-machine.ts";
 
 export interface PipelineContext {
   serviceClient: SupabaseClient;
@@ -8,7 +9,6 @@ export interface PipelineContext {
   initiativeId: string;
   organizationId: string;
 }
-
 /** Log an audit event for a pipeline action */
 export async function pipelineLog(
   ctx: PipelineContext,

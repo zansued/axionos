@@ -42985,7 +42985,20 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      initiative_timeline_v: {
+        Row: {
+          completed_at: string | null
+          duration_ms: number | null
+          event_at: string | null
+          event_data: Json | null
+          event_id: string | null
+          event_stage: string | null
+          event_status: string | null
+          event_type: string | null
+          initiative_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       create_organization_with_owner: {
