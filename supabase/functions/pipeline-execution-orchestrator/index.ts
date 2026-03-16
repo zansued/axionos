@@ -409,6 +409,10 @@ serve(async (req) => {
         storyId: node.storyId,
         description: node.description,
         waveNum,
+        // Sprint 203: Canonical traceability IDs
+        traceId,
+        attemptId: crypto.randomUUID(),
+        retryAttempt: retryCount[node.id] || 0,
         projectTitle: initiative.title,
         projectDescription: initiative.refined_idea || initiative.description || "",
         projectStructure,
