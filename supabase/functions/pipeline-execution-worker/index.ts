@@ -457,6 +457,7 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
 
     if (jobId) await completeJob(ctx, jobId, {
       artifact_id: artifact?.id, file_path: payload.filePath, wave: payload.waveNum,
+      trace_id: payload.traceId || null, attempt_id: payload.attemptId || null,
     }, { model: devModel, costUsd: totalCost, durationMs: workerMetrics.totalAiLatencyMs });
 
     // Sprint 205: Emit operational learning signal
