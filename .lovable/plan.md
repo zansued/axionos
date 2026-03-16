@@ -1,7 +1,8 @@
 # AxionOS — Plano de Execução
 
-> **Current Sprint:** 207 (Recalibração de Confiança Automática) — ✅ Complete
-> **Next Sprint:** 208 — TBD (Block AS complete)
+> **Current Sprint:** 208 (Pipeline Execution Hardening) — ✅ Complete
+> **Next Sprint:** 209 — TBD
+> Execution: **Sprint-based**
 > Execution: **Sprint-based**
 
 ---
@@ -54,6 +55,7 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 | AS-205 | 205 | Operational Learning Signal Producers | ✅ Complete |
 | AS-206 | 206 | Pattern Mining in Daily Cron Pipeline | ✅ Complete |
 | AS-207 | 207 | Automatic Confidence Recalibration | ✅ Complete |
+| AT-208 | 208 | Pipeline Execution Hardening | ✅ Complete |
 
 ---
 
@@ -140,12 +142,32 @@ Sprint 203 ──── Tela de Revisão Humana          ✅ DONE
 Sprint 204 ──── Repo Trust no Cron              ✅ DONE
 Sprint 205 ──── Producers de Sinais Operacionais ✅ DONE
 Sprint 206 ──── Mineração de Padrões no Cron    ✅ DONE
-Sprint 207 ──── Recalibração de Confiança Auto  ← NEXT
+Sprint 207 ──── Recalibração de Confiança Auto  ✅ DONE
+Sprint 208 ──── Pipeline Execution Hardening    ✅ DONE
 ```
 
 ---
 
-## Out of Scope for Block AS
+## Block AT — Pipeline Reliability & Observability
+
+### Sprint 208 — Pipeline Execution Hardening ✅
+**Priority: High** | **Status: Complete**
+
+- `pipeline_execution_metrics` table for structured observability
+- Execution worker instrumented to record success/failure metrics with error categorization
+- `pipeline-health-metrics` edge function for aggregated health queries (summary + failures)
+- `PipelineHealthDashboard` component with timeline, distribution, failure log, and error category views
+- Error categorization: timeout, rate_limit, auth, syntax, network, quota, unknown
+
+**Deliverables:**
+- `pipeline_execution_metrics` table with RLS
+- `pipeline-health-metrics/index.ts` edge function
+- `PipelineHealthDashboard.tsx` component
+- Worker instrumentation (success + failure paths)
+
+---
+
+## Out of Scope for Block AT
 
 - Skill-to-Capability binding (KX-3) → Future block
 - Knowledge Visual Mesh (KX-7) → Future block

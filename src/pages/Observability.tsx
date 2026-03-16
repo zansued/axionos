@@ -67,6 +67,7 @@ import { InstitutionalOutcomeAssuranceDashboard } from "@/components/observabili
 import { CanonIntegrityDriftGovernanceDashboard } from "@/components/observability/CanonIntegrityDriftGovernanceDashboard";
 import { OperatingCompletionDashboard } from "@/components/observability/OperatingCompletionDashboard";
 import { RoleBasedExperienceDashboard } from "@/components/observability/RoleBasedExperienceDashboard";
+import { PipelineHealthDashboard } from "@/components/observability/PipelineHealthDashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -386,6 +387,7 @@ export default function Observability() {
             isObsTabVisible("stability") && "stability",
             isObsTabVisible("strategy-evo") && "strategy-evo",
             isObsTabVisible("strat-portfolio") && "strat-portfolio",
+            isObsTabVisible("pipeline-health") && "pipeline-health",
             isObsTabVisible("performance") && "performance",
             isObsTabVisible("costs") && "costs",
             isObsTabVisible("quality") && "quality",
@@ -440,6 +442,7 @@ export default function Observability() {
             {isObsTabVisible("stability") && <TabsTrigger value="stability" className="text-xs gap-1"><Anchor className="h-3 w-3" /> Stability</TabsTrigger>}
             {isObsTabVisible("strategy-evo") && <TabsTrigger value="strategy-evo" className="text-xs gap-1"><FlaskConical className="h-3 w-3" /> StratEvo</TabsTrigger>}
             {isObsTabVisible("strat-portfolio") && <TabsTrigger value="strat-portfolio" className="text-xs gap-1"><Layers className="h-3 w-3" /> StratPort</TabsTrigger>}
+            {isObsTabVisible("pipeline-health") && <TabsTrigger value="pipeline-health" className="text-xs gap-1"><Gauge className="h-3 w-3" /> PipeHealth</TabsTrigger>}
             {isObsTabVisible("performance") && <TabsTrigger value="performance" className="text-xs gap-1"><TrendingUp className="h-3 w-3" /> Perf</TabsTrigger>}
             {isObsTabVisible("costs") && <TabsTrigger value="costs" className="text-xs gap-1"><DollarSign className="h-3 w-3" /> Custos</TabsTrigger>}
             {isObsTabVisible("quality") && <TabsTrigger value="quality" className="text-xs gap-1"><Trophy className="h-3 w-3" /> Quality</TabsTrigger>}
@@ -675,6 +678,11 @@ export default function Observability() {
           {/* ===== REPAIR INTELLIGENCE ===== */}
           <TabsContent value="repair" className="mt-4">
             <RepairIntelligenceDashboard />
+          </TabsContent>
+
+          {/* ===== PIPELINE HEALTH (Sprint 208) ===== */}
+          <TabsContent value="pipeline-health" className="mt-4">
+            <PipelineHealthDashboard />
           </TabsContent>
 
           {/* ===== PERFORMANCE ===== */}

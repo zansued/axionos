@@ -30096,6 +30096,121 @@ export type Database = {
           },
         ]
       }
+      pipeline_execution_metrics: {
+        Row: {
+          ai_calls: number
+          attempt_id: string | null
+          cost_usd: number
+          created_at: string
+          duration_ms: number
+          error_category: string | null
+          error_message: string | null
+          execution_path: string
+          fast_path_reason: string
+          file_path: string
+          file_type: string | null
+          id: string
+          import_resolution_ok: boolean
+          initiative_id: string | null
+          integration_edit_ratio: number
+          integration_severity: string
+          latency_ms: number
+          organization_id: string
+          output_size: number
+          retry_count: number
+          risk_tier: string
+          subtask_id: string | null
+          succeeded: boolean
+          syntax_valid: boolean
+          tokens_used: number
+          trace_id: string | null
+          validation_passed: boolean
+          wave_number: number
+        }
+        Insert: {
+          ai_calls?: number
+          attempt_id?: string | null
+          cost_usd?: number
+          created_at?: string
+          duration_ms?: number
+          error_category?: string | null
+          error_message?: string | null
+          execution_path?: string
+          fast_path_reason?: string
+          file_path?: string
+          file_type?: string | null
+          id?: string
+          import_resolution_ok?: boolean
+          initiative_id?: string | null
+          integration_edit_ratio?: number
+          integration_severity?: string
+          latency_ms?: number
+          organization_id: string
+          output_size?: number
+          retry_count?: number
+          risk_tier?: string
+          subtask_id?: string | null
+          succeeded?: boolean
+          syntax_valid?: boolean
+          tokens_used?: number
+          trace_id?: string | null
+          validation_passed?: boolean
+          wave_number?: number
+        }
+        Update: {
+          ai_calls?: number
+          attempt_id?: string | null
+          cost_usd?: number
+          created_at?: string
+          duration_ms?: number
+          error_category?: string | null
+          error_message?: string | null
+          execution_path?: string
+          fast_path_reason?: string
+          file_path?: string
+          file_type?: string | null
+          id?: string
+          import_resolution_ok?: boolean
+          initiative_id?: string | null
+          integration_edit_ratio?: number
+          integration_severity?: string
+          latency_ms?: number
+          organization_id?: string
+          output_size?: number
+          retry_count?: number
+          risk_tier?: string
+          subtask_id?: string | null
+          succeeded?: boolean
+          syntax_valid?: boolean
+          tokens_used?: number
+          trace_id?: string | null
+          validation_passed?: boolean
+          wave_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pipeline_execution_metrics_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pipeline_execution_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pipeline_execution_metrics_subtask_id_fkey"
+            columns: ["subtask_id"]
+            isOneToOne: false
+            referencedRelation: "story_subtasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pipeline_gate_permissions: {
         Row: {
           action_type: string

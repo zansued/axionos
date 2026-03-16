@@ -20,6 +20,17 @@ import { type ExecutionMetrics, type ValidationSignals, type FastPathPolicyRecor
 import { computeExecutionRiskSignals, type RiskAssessment } from "../_shared/execution-risk-signals.ts";
 import { classifyExecutionRisk, type ExecutionClassification } from "../_shared/execution-risk-classifier.ts";
 
+function categorizeError(e: unknown): string {
+  const msg = e instanceof Error ? e.message.toLowerCase() : "";
+  if (msg.includes("timeout") || msg.includes("timed out")) return "timeout";
+  if (msg.includes("rate limit") || msg.includes("429") || msg.includes("too many")) return "rate_limit";
+  if (msg.includes("401") || msg.includes("403") || msg.includes("auth")) return "auth";
+  if (msg.includes("syntax") || msg.includes("parse")) return "syntax";
+  if (msg.includes("network") || msg.includes("fetch")) return "network";
+  if (msg.includes("credit") || msg.includes("402") || msg.includes("quota")) return "quota";
+  return "unknown";
+}
+
 interface WorkerPayload {
   initiativeId: string;
   organizationId: string;
@@ -503,6 +514,36 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       });
     } catch (_) { /* non-blocking */ }
 
+    // Sprint 208: Record pipeline execution metrics
+    try {
+      await serviceClient.from("pipeline_execution_metrics").insert({
+        organization_id: payload.organizationId,
+        initiative_id: payload.initiativeId || null,
+        subtask_id: payload.subtaskId || null,
+        file_path: payload.filePath,
+        file_type: payload.fileType || null,
+        wave_number: payload.waveNum,
+        execution_path: workerMetrics.path || "safe_3call",
+        risk_tier: workerMetrics.riskTier || "medium",
+        latency_ms: workerMetrics.totalAiLatencyMs || 0,
+        ai_calls: workerMetrics.aiCalls || 0,
+        tokens_used: totalTokens,
+        cost_usd: totalCost,
+        integration_severity: workerMetrics.integrationSeverity || "none",
+        integration_edit_ratio: workerMetrics.integrationEditRatio || 0,
+        output_size: codeContent.length,
+        retry_count: payload.retryAttempt || 0,
+        validation_passed: true,
+        syntax_valid: true,
+        import_resolution_ok: true,
+        fast_path_reason: workerMetrics.fastPathReason || "",
+        succeeded: true,
+        trace_id: payload.traceId || null,
+        attempt_id: payload.attemptId || null,
+        duration_ms: workerMetrics.totalAiLatencyMs || 0,
+      });
+    } catch (_) { /* non-blocking */ }
+
     return jsonResponse({
       success: true,
       filePath: payload.filePath,
@@ -517,6 +558,35 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
 
   } catch (e) {
     console.error("Worker error:", e);
+
+    // Sprint 208: Record failure metrics
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const failClient = createClient(supabaseUrl, serviceKey);
+      await failClient.from("pipeline_execution_metrics").insert({
+        organization_id: payload.organizationId,
+        initiative_id: payload.initiativeId || null,
+        subtask_id: payload.subtaskId || null,
+        file_path: payload.filePath || "",
+        file_type: payload.fileType || null,
+        wave_number: payload.waveNum || 0,
+        execution_path: "safe_3call",
+        risk_tier: "high",
+        latency_ms: 0,
+        ai_calls: 0,
+        tokens_used: 0,
+        cost_usd: 0,
+        output_size: 0,
+        retry_count: payload.retryAttempt || 0,
+        succeeded: false,
+        error_message: e instanceof Error ? e.message.slice(0, 500) : "Unknown error",
+        error_category: categorizeError(e),
+        trace_id: payload.traceId || null,
+        attempt_id: payload.attemptId || null,
+      });
+    } catch (_) { /* non-blocking */ }
+
     return jsonResponse({
       success: false,
       error: e instanceof Error ? e.message : "Unknown worker error",
