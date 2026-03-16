@@ -66,6 +66,14 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
   const stageStatus = initiative.stage_status || initiative.status || "draft";
   const macroIdx = getMacroStageIndex(stageStatus);
   const actions = getAvailableActions(stageStatus);
+  const liveExecution = initiative.execution_progress && typeof initiative.execution_progress === "object"
+    ? initiative.execution_progress as Record<string, any>
+    : null;
+  const liveTraceLabel = runningStage === "execution"
+    ? liveExecution?.current_subtask_description || liveExecution?.current_file || null
+    : runningStage === "validation"
+      ? liveExecution?.validation?.current_artifact_summary || liveExecution?.validation?.last_issue_summary || null
+      : null;
   const dp = initiative.discovery_payload || {};
   const { toast: publishToast } = useToast();
   const [rollbackConfirm, setRollbackConfirm] = useState<{ key: string; label: string } | null>(null);
@@ -443,6 +451,11 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
                  runningStage === "deploy_vercel" ? "Conectando ao Vercel e iniciando deploy..." :
                  "Isso pode levar ~30 segundos."}
               </p>
+              {liveTraceLabel && (
+                <p className="mt-2 text-xs font-medium text-foreground/90 leading-relaxed">
+                  Rastreando agora: {liveTraceLabel}
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>

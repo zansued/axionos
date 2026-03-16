@@ -25,6 +25,12 @@ serve(async (req) => {
   const { user, initiative, ctx, serviceClient, apiKey } = result;
 
   const jobId = await createJob(ctx, "validation", { initiative_id: ctx.initiativeId, mode: "fix_loop_bg" });
+  let currentExecutionProgress = initiative.execution_progress && typeof initiative.execution_progress === "object"
+    ? initiative.execution_progress as Record<string, unknown>
+    : {};
+  const persistExecutionProgress = async (patch: Record<string, unknown>) => {
+    currentExecutionProgress = await mergeExecutionProgress(serviceClient, ctx.initiativeId, currentExecutionProgress, patch);
+  };
 
   // Mark stale jobs as failed
   if (jobId) {
@@ -59,6 +65,26 @@ serve(async (req) => {
   });
 
   if (!artifacts || artifacts.length === 0) {
+    await persistExecutionProgress({
+      status: "completed",
+      current_stage: "validation",
+      current_file: null,
+      current_agent: null,
+      current_subtask_id: null,
+      current_subtask_description: null,
+      validation: {
+        status: "completed",
+        total_artifacts: 0,
+        approved: 0,
+        escalated: 0,
+        remaining: 0,
+        current_artifact_id: null,
+        current_artifact_summary: null,
+        current_subtask_id: null,
+        current_phase: "no_artifacts",
+        last_error: "Nenhum artefato encontrado — execute o pipeline primeiro",
+      },
+    });
     if (jobId) {
       await completeJob(
         ctx,
@@ -95,6 +121,26 @@ serve(async (req) => {
   if (artifactsToValidate.length === 0) {
     const overallPass = alreadyApproved === total;
     await updateInitiative(ctx, { stage_status: "ready_to_publish" });
+    await persistExecutionProgress({
+      status: "completed",
+      current_stage: "validation",
+      current_file: null,
+      current_agent: null,
+      current_subtask_id: null,
+      current_subtask_description: null,
+      validation: {
+        status: "completed",
+        total_artifacts: total,
+        approved: alreadyApproved,
+        escalated: alreadyEscalated,
+        remaining: 0,
+        current_artifact_id: null,
+        current_artifact_summary: null,
+        current_subtask_id: null,
+        current_phase: "completed",
+        last_error: null,
+      },
+    });
     if (jobId) await completeJob(ctx, jobId, {
       artifacts_validated: total, passed: alreadyApproved, failed: 0, fixed: 0,
       escalated: alreadyEscalated,
@@ -106,10 +152,44 @@ serve(async (req) => {
 
   // Pick ONE artifact to process synchronously
   const artifact = artifactsToValidate[0];
+  await persistExecutionProgress({
+    status: "running",
+    current_stage: "validation",
+    current_file: null,
+    current_agent: "fix_loop",
+    current_subtask_id: artifact.subtask_id || null,
+    current_subtask_description: artifact.summary || null,
+    validation: {
+      status: "running",
+      total_artifacts: total,
+      approved: alreadyApproved,
+      escalated: alreadyEscalated,
+      remaining: artifactsToValidate.length,
+      current_artifact_id: artifact.id,
+      current_artifact_summary: artifact.summary || null,
+      current_subtask_id: artifact.subtask_id || null,
+      current_phase: "queued",
+      current_attempt: 0,
+      max_attempts: MAX_FIX_ATTEMPTS,
+      last_error: null,
+      last_issue_summary: null,
+    },
+  });
 
   try {
     await processOneArtifact(artifact, {
       user, initiative, ctx, serviceClient, apiKey,
+      onProgress: async (validationPatch: Record<string, unknown>) => {
+        await persistExecutionProgress({
+          status: "running",
+          current_stage: "validation",
+          current_file: null,
+          current_agent: "fix_loop",
+          current_subtask_id: artifact.subtask_id || null,
+          current_subtask_description: artifact.summary || null,
+          validation: validationPatch,
+        });
+      },
     });
 
     // After processing, check overall status
@@ -127,6 +207,28 @@ serve(async (req) => {
     const allProcessed = remainingCount === 0;
 
     await updateInitiative(ctx, { stage_status: allProcessed ? "ready_to_publish" : "validating" });
+    await persistExecutionProgress({
+      status: allProcessed ? "completed" : "running",
+      current_stage: "validation",
+      current_file: null,
+      current_agent: allProcessed ? null : "fix_loop",
+      current_subtask_id: allProcessed ? null : artifact.subtask_id || null,
+      current_subtask_description: allProcessed ? null : artifact.summary || null,
+      validation: {
+        status: allProcessed ? "completed" : "running",
+        total_artifacts: finalArtifacts.length,
+        approved: approvedCount,
+        escalated: escalatedCount,
+        remaining: remainingCount,
+        current_artifact_id: allProcessed ? null : artifact.id,
+        current_artifact_summary: allProcessed ? null : artifact.summary || null,
+        current_subtask_id: allProcessed ? null : artifact.subtask_id || null,
+        current_phase: allProcessed ? "completed" : "awaiting_next_artifact",
+        last_processed_artifact_id: artifact.id,
+        last_result: overallPass ? "approved" : escalatedCount > 0 ? "needs_review" : "in_progress",
+        last_error: null,
+      },
+    });
 
     if (jobId) await completeJob(ctx, jobId, {
       artifacts_validated: finalArtifacts.length,
@@ -154,6 +256,22 @@ serve(async (req) => {
     });
   } catch (e: any) {
     console.error("pipeline-validation error:", e);
+    await persistExecutionProgress({
+      status: "running",
+      current_stage: "validation",
+      current_file: null,
+      current_agent: "fix_loop",
+      current_subtask_id: artifact.subtask_id || null,
+      current_subtask_description: artifact.summary || null,
+      validation: {
+        status: "running",
+        current_artifact_id: artifact.id,
+        current_artifact_summary: artifact.summary || null,
+        current_subtask_id: artifact.subtask_id || null,
+        current_phase: "failed",
+        last_error: e.message || "Validation processing error",
+      },
+    });
     if (jobId) await failJob(ctx, jobId, e.message || "Validation processing error");
     return errorResponse(e.message || "Validation processing error", 500);
   }
@@ -164,7 +282,7 @@ serve(async (req) => {
 // Optimized: Static + Runtime merged into single AI call
 // ======================================================
 async function processOneArtifact(artifact: any, deps: any) {
-  const { user, initiative, ctx, serviceClient, apiKey } = deps;
+  const { user, initiative, ctx, serviceClient, apiKey, onProgress } = deps;
   const isCode = artifact.type === "code";
   let currentText = extractText(artifact.raw_output);
   let fixAttempts = 0;
@@ -177,6 +295,15 @@ async function processOneArtifact(artifact: any, deps: any) {
 
   for (let loop = 0; loop <= MAX_FIX_ATTEMPTS; loop++) {
     const isFirstPass = loop === 0;
+    await onProgress?.({
+      current_artifact_id: artifact.id,
+      current_artifact_summary: artifact.summary || null,
+      current_subtask_id: artifact.subtask_id || null,
+      current_phase: isFirstPass ? "analysis" : "reanalysis",
+      current_attempt: loop,
+      max_attempts: MAX_FIX_ATTEMPTS,
+      last_error: null,
+    });
 
     // ═══ MERGED: Static Analysis (Agent 15) + Runtime QA (Agent 16) in ONE call ═══
     const combinedResult = await callAI(apiKey,
@@ -212,9 +339,27 @@ Return ONLY JSON:
     const staticScore = analysis.static_score || 60;
     const runtimeScore = analysis.runtime_score || 60;
     const combinedScore = Math.round((staticScore + runtimeScore) / 2);
+    const blockingIssues = [
+      ...(analysis.issues || []).filter((i: any) => i.severity !== "info").map((i: any) => `[${i.category}] ${i.message}`),
+      ...(analysis.security_issues || []).map((s: string) => `[security] ${s}`),
+    ];
     const hasErrors = (analysis.issues || []).some((i: any) => i.severity === "error");
     const hasSecurityIssues = (analysis.security_issues || []).length > 0;
     const passes = combinedScore >= APPROVAL_THRESHOLD && !hasErrors && !hasSecurityIssues;
+    const issueSummary = blockingIssues[0] || analysis.summary || null;
+
+    await onProgress?.({
+      current_artifact_id: artifact.id,
+      current_artifact_summary: artifact.summary || null,
+      current_subtask_id: artifact.subtask_id || null,
+      current_phase: passes ? "approved" : loop === MAX_FIX_ATTEMPTS ? "escalated" : "fixing",
+      current_attempt: fixAttempts,
+      max_attempts: MAX_FIX_ATTEMPTS,
+      combined_score: combinedScore,
+      issues_count: blockingIssues.length,
+      last_issue_summary: issueSummary,
+      last_error: null,
+    });
 
     if (passes) {
       // Run security matcher on artifact content for leak detection
@@ -244,10 +389,19 @@ Return ONLY JSON:
 
     // ═══ AGENT 17: Fix Agent ═══
     fixAttempts++;
-    const allIssues = [
-      ...(analysis.issues || []).filter((i: any) => i.severity !== "info").map((i: any) => `[${i.category}] ${i.message}`),
-      ...(analysis.security_issues || []).map((s: string) => `[security] ${s}`),
-    ].slice(0, 10).join("\n");
+    const allIssues = blockingIssues.slice(0, 10).join("\n");
+    await onProgress?.({
+      current_artifact_id: artifact.id,
+      current_artifact_summary: artifact.summary || null,
+      current_subtask_id: artifact.subtask_id || null,
+      current_phase: "fixing",
+      current_attempt: fixAttempts,
+      max_attempts: MAX_FIX_ATTEMPTS,
+      combined_score: combinedScore,
+      issues_count: blockingIssues.length,
+      last_issue_summary: issueSummary,
+      last_error: null,
+    });
 
     const fixResult = await callAI(apiKey,
       `You are the "Fix Agent" (Agent 17). Attempt ${fixAttempts}/${MAX_FIX_ATTEMPTS}.
@@ -278,6 +432,30 @@ Fix ALL issues. Return the COMPLETE corrected artifact, no markdown wrapping.`,
 }
 
 // ── Helpers ──
+async function mergeExecutionProgress(
+  client: any,
+  initiativeId: string,
+  currentProgress: Record<string, unknown>,
+  patch: Record<string, unknown>,
+) {
+  const base = currentProgress && typeof currentProgress === "object" ? currentProgress : {};
+  const baseValidation = base.validation && typeof base.validation === "object"
+    ? base.validation as Record<string, unknown>
+    : {};
+  const nextValidation = patch.validation && typeof patch.validation === "object"
+    ? { ...baseValidation, ...(patch.validation as Record<string, unknown>) }
+    : baseValidation;
+
+  const next = {
+    ...base,
+    ...patch,
+    validation: nextValidation,
+  };
+
+  await client.from("initiatives").update({ execution_progress: next }).eq("id", initiativeId);
+  return next;
+}
+
 function extractJsonFromResponse(response: string): unknown {
   let cleaned = response
     .replace(/```json\s*/gi, "")

@@ -223,31 +223,55 @@ serve(async (req) => {
     const retryCount: Record<string, number> = {};
 
     // Debounced progress: write at most once every 5 seconds or on wave boundaries
+    type ExecutionProgressSnapshot = {
+      currentFile?: string | null;
+      currentAgent?: string | null;
+      currentSubtaskId?: string | null;
+      currentSubtaskDescription?: string | null;
+      currentStoryId?: string | null;
+      currentStage?: string | null;
+      currentWave?: number | null;
+    };
+
     let lastProgressWrite = 0;
     const PROGRESS_DEBOUNCE_MS = 5000;
-    const writeProgress = async (currentFile?: string, currentAgent?: string, waveNum?: number) => {
+    const buildProgressPayload = (snapshot: ExecutionProgressSnapshot = {}) => ({
+      current: executedCount + failedCount,
+      total: totalNodes,
+      percent: totalNodes > 0 ? Math.round(((executedCount + failedCount) / totalNodes) * 100) : 0,
+      executed: executedCount,
+      failed: failedCount,
+      code_files: codeFilesGenerated,
+      tokens: totalTokens,
+      cost_usd: totalCost,
+      current_file: snapshot.currentFile ?? null,
+      current_agent: snapshot.currentAgent ?? null,
+      current_subtask_id: snapshot.currentSubtaskId ?? null,
+      current_subtask_description: snapshot.currentSubtaskDescription ?? null,
+      current_story_id: snapshot.currentStoryId ?? null,
+      current_stage: snapshot.currentStage ?? "execution",
+      current_wave: snapshot.currentWave ?? null,
+      total_waves: dag.waves.length,
+      chain_of_agents: true,
+      started_at: new Date().toISOString(),
+      status: "running",
+      scheduler: "swarm",
+      incremental: true,
+      skipped: skippedCount,
+      savings_percent: incremental.stats.savingsPercent,
+    });
+    const writeProgress = async (snapshot: ExecutionProgressSnapshot = {}) => {
       await serviceClient.from("initiatives").update({
-        execution_progress: {
-          current: executedCount + failedCount, total: totalNodes,
-          percent: totalNodes > 0 ? Math.round(((executedCount + failedCount) / totalNodes) * 100) : 0,
-          executed: executedCount, failed: failedCount,
-          code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
-          current_file: currentFile, current_agent: currentAgent,
-          current_wave: waveNum, total_waves: dag.waves.length,
-          chain_of_agents: true, started_at: new Date().toISOString(),
-          status: "running", scheduler: "swarm",
-          incremental: true, skipped: skippedCount,
-          savings_percent: incremental.stats.savingsPercent,
-        },
+        execution_progress: buildProgressPayload(snapshot),
       }).eq("id", ctx.initiativeId);
       lastProgressWrite = Date.now();
     };
-    const updateProgress = async (currentFile?: string, currentAgent?: string, waveNum?: number) => {
+    const updateProgress = async (snapshot: ExecutionProgressSnapshot = {}) => {
       const now = Date.now();
       if (now - lastProgressWrite < PROGRESS_DEBOUNCE_MS) return; // skip — too recent
-      await writeProgress(currentFile, currentAgent, waveNum);
+      await writeProgress(snapshot);
     };
-    await writeProgress(); // initial write always fires
+    await writeProgress({ currentStage: "execution" }); // initial write always fires
 
     // ── Worker dispatcher ──
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -255,7 +279,15 @@ serve(async (req) => {
 
     const dispatchWorker = async (node: DAGNode, waveNum: number): Promise<void> => {
       markNodeStatus(dag, node.id, "generating");
-      await updateProgress(node.filePath, "worker_dispatched", waveNum);
+      await updateProgress({
+        currentFile: node.filePath,
+        currentAgent: "worker_dispatched",
+        currentSubtaskId: node.subtaskId,
+        currentSubtaskDescription: node.description,
+        currentStoryId: node.storyId,
+        currentStage: "execution",
+        currentWave: waveNum,
+      });
 
       // ── Smart Context Window + Semantic Search ──
       const depPaths = [...node.dependencies]
@@ -370,7 +402,15 @@ serve(async (req) => {
         }
       }
 
-      await updateProgress(node.filePath, "completed", waveNum);
+      await updateProgress({
+        currentFile: node.filePath,
+        currentAgent: "completed",
+        currentSubtaskId: node.subtaskId,
+        currentSubtaskDescription: node.description,
+        currentStoryId: node.storyId,
+        currentStage: "execution",
+        currentWave: waveNum,
+      });
     };
 
     // ── DAG Wave Execution Loop ──
@@ -434,7 +474,7 @@ serve(async (req) => {
         `Wave ${waveNum} concluída: ${readyNodes.length} worker(s)`,
         { wave: waveNum, executed: executedCount, failed: failedCount }
       ).catch(() => {});
-      await writeProgress(undefined, "wave_complete", waveNum);
+      await writeProgress({ currentAgent: "wave_complete", currentStage: "execution", currentWave: waveNum });
     }
 
     // ── Non-file subtasks (sequential, only if time allows) ──
@@ -498,6 +538,9 @@ serve(async (req) => {
           current: totalNodes, total: totalNodes, percent: 100,
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
+          current_file: null, current_agent: null,
+          current_subtask_id: null, current_subtask_description: null,
+          current_story_id: null, current_stage: "execution",
           chain_of_agents: true, status: "completed", completed_at: new Date().toISOString(),
           scheduler: "swarm", waves_executed: waveNum, max_workers: MAX_WORKERS,
           incremental: true, skipped: skippedCount,
@@ -511,7 +554,8 @@ serve(async (req) => {
         chain: ["code_architect", "developer", "integration_agent"],
         scheduler: "swarm", max_workers: MAX_WORKERS,
         skipped: skippedCount, savings_percent: incremental.stats.savingsPercent,
-      }, { model: "routed", costUsd: totalCost, durationMs: 0 });
+        batch_incomplete: false,
+      }, { model: "routed", costUsd: totalCost, durationMs: Date.now() - startTime });
 
       await pipelineLog(ctx, "orchestrator_complete",
         `Orchestrator concluído: ${executedCount} gerados, ${skippedCount} reutilizados (${incremental.stats.savingsPercent}% economia), ${failedCount} falhas, ${waveNum} waves`,
@@ -556,6 +600,9 @@ serve(async (req) => {
           percent: totalNodes > 0 ? Math.round(((executedCount + failedCount) / totalNodes) * 100) : 0,
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
+          current_file: null, current_agent: "awaiting_resume",
+          current_subtask_id: null, current_subtask_description: null,
+          current_story_id: null, current_stage: "execution",
           chain_of_agents: true, status: "running",
           scheduler: "swarm", waves_executed: waveNum, max_workers: MAX_WORKERS,
           incremental: true, skipped: skippedCount,
@@ -564,6 +611,22 @@ serve(async (req) => {
           started_at: new Date().toISOString(),
         },
       }).eq("id", ctx.initiativeId);
+
+      if (masterJobId) await completeJob(ctx, masterJobId, {
+        executed: executedCount,
+        failed: failedCount,
+        code_files: codeFilesGenerated,
+        total_tokens: totalTokens,
+        waves_executed: waveNum,
+        chain: ["code_architect", "developer", "integration_agent"],
+        scheduler: "swarm",
+        max_workers: MAX_WORKERS,
+        skipped: skippedCount,
+        savings_percent: incremental.stats.savingsPercent,
+        batch_incomplete: true,
+        remaining_to_execute: remainingPending || 0,
+        pause_reason: "time_budget",
+      }, { model: "routed", costUsd: totalCost, durationMs: Date.now() - startTime });
 
       await pipelineLog(ctx, "batch_pause",
         `Batch pausado: ${executedCount} executados, ${remainingPending} restantes. Auto-continuando...`,
