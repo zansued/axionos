@@ -527,148 +527,30 @@ Deno.serve(async (req) => {
 
     console.log(`[cron] Pattern mining complete:`, JSON.stringify(miningSummary));
 
-    // ═══ Phase 5: Automatic Confidence Recalibration ═══
-    console.log(`[cron] Phase 5: Recalibrating confidence for ${uniqueOrgIds.length} org(s)`);
+    // ═══ Phase 5: Confidence Recalibration (Sprint 207 — delegated to canon-confidence-recalibration) ═══
+    console.log(`[cron] Phase 5: Delegating recalibration to canon-confidence-recalibration for ${uniqueOrgIds.length} org(s)`);
     const recalibrationSummary: any[] = [];
 
     for (const orgId of uniqueOrgIds) {
       try {
-        // Get active canon entries eligible for recalibration
-        const { data: entries } = await sb
-          .from("canon_entries")
-          .select("id, title, confidence_score, usage_count, review_count, category, domain_tags, lifecycle_status")
-          .eq("organization_id", orgId)
-          .eq("lifecycle_status", "approved")
-          .limit(100);
-
-        if (!entries || entries.length === 0) {
-          recalibrationSummary.push({ organization_id: orgId, entries_evaluated: 0, recalibrated: 0, message: "No active entries" });
-          continue;
-        }
-
-        // Get recent operational signals for evidence
-        const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-        const { data: recentSignals } = await sb
-          .from("operational_learning_signals")
-          .select("signal_type, outcome_success, confidence, payload")
-          .eq("organization_id", orgId)
-          .gte("created_at", thirtyDaysAgo)
-          .limit(500);
-
-        // Get pattern weight factors for cross-referencing
-        const { data: weightFactors } = await sb
-          .from("pattern_weight_factors")
-          .select("target_id, pattern_weight, source_trust, execution_reinforcement")
-          .eq("organization_id", orgId);
-
-        const weightMap = new Map((weightFactors || []).map((w: any) => [w.target_id, w]));
-
-        // Compute signal-based success metrics
-        const signalSuccess = (recentSignals || []).filter((s: any) => s.outcome_success).length;
-        const signalTotal = (recentSignals || []).length;
-        const orgSignalHealth = signalTotal > 0 ? signalSuccess / signalTotal : 0.5;
-
-        let recalibrated = 0;
-        let boosted = 0;
-        let degraded = 0;
-
-        for (const entry of entries) {
-          const currentConf = Number(entry.confidence_score) || 0.5;
-          const usageCount = entry.usage_count || 0;
-          const reviewCount = entry.review_count || 0;
-          const weight = weightMap.get(entry.id);
-
-          // Evidence density factor: usage + reviews
-          const evidenceDensity = Math.min(1.0, (usageCount * 0.1 + reviewCount * 0.2));
-
-          // Source trust factor from pattern weights
-          const sourceTrust = weight ? Number(weight.source_trust) || 0.5 : 0.5;
-          const executionReinforcement = weight ? Number(weight.execution_reinforcement) || 0 : 0;
-
-          // Signal agreement: how well org signals align with this entry's domain
-          const domainTags = entry.domain_tags || [];
-          const relevantSignals = (recentSignals || []).filter((s: any) =>
-            domainTags.some((tag: string) => s.signal_type?.includes(tag) || s.payload?.domain === tag)
-          );
-          const signalAgreement = relevantSignals.length > 0
-            ? relevantSignals.filter((s: any) => s.outcome_success).length / relevantSignals.length
-            : orgSignalHealth;
-
-          // Compute recalibrated confidence
-          let newConf = currentConf;
-
-          // Boost for high evidence + high trust
-          if (evidenceDensity > 0.5 && sourceTrust > 0.6) {
-            newConf += 0.03;
+        const recalResp = await fetch(
+          `${Deno.env.get("SUPABASE_URL")}/functions/v1/canon-confidence-recalibration`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+            },
+            body: JSON.stringify({
+              organization_id: orgId,
+              triggered_by: "cron_scheduled_pipeline",
+            }),
           }
-
-          // Boost for execution reinforcement
-          if (executionReinforcement > 0.1) {
-            newConf += Math.min(0.05, executionReinforcement * 0.15);
-          }
-
-          // Boost for signal agreement
-          if (signalAgreement > 0.7 && relevantSignals.length >= 3) {
-            newConf += 0.02;
-          }
-
-          // Degrade for low usage over time
-          if (usageCount === 0 && reviewCount <= 1) {
-            newConf -= 0.02;
-          }
-
-          // Degrade for weak source trust
-          if (sourceTrust < 0.3) {
-            newConf -= 0.03;
-          }
-
-          // Degrade for poor signal agreement
-          if (signalAgreement < 0.3 && relevantSignals.length >= 3) {
-            newConf -= 0.02;
-          }
-
-          // Bound confidence [0.05, 0.95]
-          newConf = Math.max(0.05, Math.min(0.95, newConf));
-          newConf = Math.round(newConf * 100) / 100;
-
-          // Only update if delta is meaningful (> 0.01)
-          const delta = newConf - currentConf;
-          if (Math.abs(delta) < 0.01) continue;
-
-          // Update canon entry confidence
-          await sb.from("canon_entries").update({
-            confidence_score: newConf,
-            last_reviewed_at: new Date().toISOString(),
-          }).eq("id", entry.id);
-
-          // Log recalibration event
-          await sb.from("confidence_recalibration_log").insert({
-            organization_id: orgId,
-            target_type: "canon_entry",
-            target_id: entry.id,
-            previous_confidence: currentConf,
-            new_confidence: newConf,
-            recalibration_reason: delta > 0
-              ? `Boosted: evidence=${evidenceDensity.toFixed(2)}, trust=${sourceTrust.toFixed(2)}, signals=${signalAgreement.toFixed(2)}`
-              : `Degraded: evidence=${evidenceDensity.toFixed(2)}, trust=${sourceTrust.toFixed(2)}, signals=${signalAgreement.toFixed(2)}`,
-            factors: { delta: Math.round(delta * 1000) / 1000, evidence_density: evidenceDensity, source_trust: sourceTrust, signal_agreement: signalAgreement, execution_reinforcement: executionReinforcement },
-            recalibrated_by: "cron_auto_recalibration",
-          });
-
-          recalibrated++;
-          if (delta > 0) boosted++;
-          else degraded++;
-        }
-
-        recalibrationSummary.push({
-          organization_id: orgId,
-          entries_evaluated: entries.length,
-          recalibrated,
-          boosted,
-          degraded,
-        });
+        );
+        const recalResult = await recalResp.json();
+        recalibrationSummary.push({ organization_id: orgId, ...recalResult });
       } catch (recalErr: any) {
-        console.error(`[cron] Recalibration error for org ${orgId}:`, recalErr.message);
+        console.error(`[cron] Recalibration delegation error for org ${orgId}:`, recalErr.message);
         recalibrationSummary.push({ organization_id: orgId, error: recalErr.message });
       }
     }
