@@ -3,6 +3,9 @@
  * Checks workspace/org usage against plan limits before pipeline execution.
  * Returns structured error if limits exceeded.
  * 
+ * Sprint 202: Separate master/worker parallel slot counting.
+ * Workers don't consume orchestrator slots.
+ * 
  * IMPORTANT: All queries are org-scoped to prevent cross-tenant data leakage.
  */
 
@@ -17,6 +20,7 @@ export interface UsageLimitCheck {
     tokens: number;
     deployments: number;
     parallel_runs: number;
+    parallel_workers?: number;
   };
   limits: {
     max_initiatives: number;
@@ -24,6 +28,33 @@ export interface UsageLimitCheck {
     max_deployments: number;
     max_parallel_runs: number;
   };
+}
+
+// ── Sprint 202: Stale thresholds by job type ──
+const STALE_THRESHOLDS: Record<string, number> = {
+  execution_worker: 5 * 60 * 1000,         // 5 min
+  execution_orchestrator: 15 * 60 * 1000,   // 15 min (orchestrator can legitimately run longer)
+  _default: 10 * 60 * 1000,                 // 10 min for everything else
+};
+
+// Stages that count as "master" (orchestrator-level) slots
+const MASTER_STAGES = new Set([
+  "execution_orchestrator",
+  "discovery", "comprehension", "squad_formation",
+  "planning", "validation", "publish", "deploy",
+  "architecture_simulation", "foundation_scaffold",
+  "module_graph_simulation", "dependency_intelligence",
+  "deep_validation", "preventive_validation", "full_review",
+  "runtime_validation", "fix_orchestrator", "drift_detection",
+]);
+
+// Worker stages don't consume master slots
+const WORKER_STAGES = new Set([
+  "execution_worker",
+]);
+
+function getStaleThreshold(stage: string): number {
+  return STALE_THRESHOLDS[stage] ?? STALE_THRESHOLDS._default;
 }
 
 export async function enforceUsageLimits(
@@ -67,13 +98,11 @@ export async function enforceUsageLimits(
   const orgInitIds = (orgInits ?? []).map((i) => i.id);
 
   const [initCountRes, outputsRes] = await Promise.all([
-    // Initiatives created this month
     serviceClient
       .from("initiatives")
       .select("id", { count: "exact", head: true })
       .eq("organization_id", organizationId)
       .gte("created_at", monthStart.toISOString()),
-    // Token usage (already org-scoped)
     serviceClient
       .from("agent_outputs")
       .select("tokens_used")
@@ -81,40 +110,64 @@ export async function enforceUsageLimits(
       .gte("created_at", monthStart.toISOString()),
   ]);
 
-  // Query jobs scoped to this org's initiatives only
   let deploymentCount = 0;
-  let parallelRunCount = 0;
+  let masterSlotCount = 0;
+  let workerSlotCount = 0;
 
   if (orgInitIds.length > 0) {
-    // Auto-cleanup stale running jobs
-    // Workers get 5min threshold (they should complete in ~2min)
-    // Orchestrators/other stages get 10min threshold
-    const workerStaleThreshold = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-    const generalStaleThreshold = new Date(Date.now() - 10 * 60 * 1000).toISOString();
     const chunkSize = 100;
 
     for (let i = 0; i < orgInitIds.length; i += chunkSize) {
       const chunk = orgInitIds.slice(i, i + chunkSize);
 
-      // Cleanup stale worker jobs (5min threshold)
+      // ── Sprint 202: Unified stale cleanup by stage type ──
+      const now = Date.now();
+
+      // Cleanup stale worker jobs
+      const workerThreshold = new Date(now - getStaleThreshold("execution_worker")).toISOString();
       await serviceClient
         .from("initiative_jobs")
-        .update({ status: "failed", error: "Auto-cleanup: worker exceeded 5min runtime", completed_at: new Date().toISOString() })
+        .update({
+          status: "failed",
+          error: "Auto-cleanup: worker exceeded stale threshold (5min)",
+          completed_at: new Date().toISOString(),
+        })
         .in("initiative_id", chunk)
         .eq("status", "running")
         .eq("stage", "execution_worker")
-        .lt("created_at", workerStaleThreshold);
+        .lt("created_at", workerThreshold);
 
-      // Cleanup stale non-worker jobs (10min threshold)
+      // Cleanup stale orchestrator jobs
+      const orchThreshold = new Date(now - getStaleThreshold("execution_orchestrator")).toISOString();
       await serviceClient
         .from("initiative_jobs")
-        .update({ status: "failed", error: "Auto-cleanup: exceeded max runtime (10min)", completed_at: new Date().toISOString() })
+        .update({
+          status: "failed",
+          error: "Auto-cleanup: orchestrator exceeded stale threshold (15min)",
+          completed_at: new Date().toISOString(),
+        })
+        .in("initiative_id", chunk)
+        .eq("status", "running")
+        .eq("stage", "execution_orchestrator")
+        .lt("created_at", orchThreshold);
+
+      // Cleanup stale other jobs (10min)
+      const generalThreshold = new Date(now - getStaleThreshold("_default")).toISOString();
+      await serviceClient
+        .from("initiative_jobs")
+        .update({
+          status: "failed",
+          error: "Auto-cleanup: exceeded max runtime (10min)",
+          completed_at: new Date().toISOString(),
+        })
         .in("initiative_id", chunk)
         .eq("status", "running")
         .neq("stage", "execution_worker")
-        .lt("created_at", generalStaleThreshold);
+        .neq("stage", "execution_orchestrator")
+        .lt("created_at", generalThreshold);
 
-      const [deployRes, activeRes] = await Promise.all([
+      // ── Sprint 202: Count master and worker slots separately ──
+      const [deployRes, masterRes, workerRes] = await Promise.all([
         serviceClient
           .from("initiative_jobs")
           .select("id", { count: "exact", head: true })
@@ -122,15 +175,25 @@ export async function enforceUsageLimits(
           .in("stage", ["publish", "deploy"])
           .eq("status", "success")
           .gte("created_at", monthStart.toISOString()),
+        // Master slots: non-worker running jobs
         serviceClient
           .from("initiative_jobs")
           .select("id", { count: "exact", head: true })
           .in("initiative_id", chunk)
-          .eq("status", "running"),
+          .eq("status", "running")
+          .neq("stage", "execution_worker"),
+        // Worker slots: worker running jobs (separate pool)
+        serviceClient
+          .from("initiative_jobs")
+          .select("id", { count: "exact", head: true })
+          .in("initiative_id", chunk)
+          .eq("status", "running")
+          .eq("stage", "execution_worker"),
       ]);
 
       deploymentCount += deployRes.count ?? 0;
-      parallelRunCount += activeRes.count ?? 0;
+      masterSlotCount += masterRes.count ?? 0;
+      workerSlotCount += workerRes.count ?? 0;
     }
   }
 
@@ -138,7 +201,8 @@ export async function enforceUsageLimits(
     initiatives: initCountRes.count ?? 0,
     tokens: (outputsRes.data ?? []).reduce((s, o) => s + (o.tokens_used ?? 0), 0),
     deployments: deploymentCount,
-    parallel_runs: parallelRunCount,
+    parallel_runs: masterSlotCount, // Only master jobs count against the parallel limit
+    parallel_workers: workerSlotCount,
   };
 
   // Check limits
@@ -162,7 +226,7 @@ export async function enforceUsageLimits(
     };
   }
 
-  // Deployment limit only blocks deploy/publish stages, not the entire pipeline
+  // Deployment limit only blocks deploy/publish stages
   const deployStages = ["publish", "deploy", "deploy-checker"];
   const isDeployStage = stageName ? deployStages.includes(stageName) : false;
   if (isDeployStage && current.deployments >= limits.max_deployments) {
@@ -175,14 +239,20 @@ export async function enforceUsageLimits(
     };
   }
 
+  // Sprint 202: Only MASTER jobs count against parallel limit.
+  // Workers are bounded by MAX_WORKERS per orchestrator, not by the global limit.
   if (current.parallel_runs >= limits.max_parallel_runs) {
-    return {
-      allowed: false,
-      reason: `Parallel run limit reached (${current.parallel_runs}/${limits.max_parallel_runs})`,
-      error_code: "PARALLEL_LIMIT_EXCEEDED",
-      current,
-      limits,
-    };
+    // If the caller is a worker, let it through — workers are controlled by the orchestrator
+    const isWorkerStage = stageName ? WORKER_STAGES.has(stageName) : false;
+    if (!isWorkerStage) {
+      return {
+        allowed: false,
+        reason: `Parallel run limit reached (${current.parallel_runs}/${limits.max_parallel_runs})`,
+        error_code: "PARALLEL_LIMIT_EXCEEDED",
+        current,
+        limits,
+      };
+    }
   }
 
   // Check org hard limit from org_usage_limits
@@ -193,7 +263,6 @@ export async function enforceUsageLimits(
     .maybeSingle();
 
   if (orgLimits?.hard_limit && orgInitIds.length > 0) {
-    // Sum costs only for this org's jobs
     let totalCost = 0;
     const chunkSize = 100;
     for (let i = 0; i < orgInitIds.length; i += chunkSize) {

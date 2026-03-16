@@ -1,6 +1,8 @@
 // Execution Orchestrator — builds DAG, dispatches workers, monitors completion
 // Replaces monolithic pipeline-execution with distributed worker architecture
 // Workers are invoked via supabase.functions.invoke("pipeline-execution-worker")
+//
+// Sprint 202: Idempotency guards + explicit auto-continuation
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
@@ -28,14 +30,44 @@ serve(async (req) => {
   const { user, initiative, ctx, serviceClient, apiKey } = result;
 
   const dp = initiative.discovery_payload || {};
-  // ── Cleanup orphaned worker jobs from previous runs for this initiative ──
+
+  // ══════════════════════════════════════════════════════════════
+  // Sprint 202 — Idempotency Guard: at most 1 master job per initiative
+  // ══════════════════════════════════════════════════════════════
+  const { data: existingMasterJobs } = await serviceClient
+    .from("initiative_jobs")
+    .select("id, created_at")
+    .eq("initiative_id", ctx.initiativeId)
+    .eq("stage", "execution_orchestrator")
+    .eq("status", "running");
+
+  if (existingMasterJobs && existingMasterJobs.length > 0) {
+    // Another orchestrator is already running for this initiative
+    // Fail the older ones and proceed (we are the newest invocation)
+    const existingIds = existingMasterJobs.map(j => j.id);
+    await serviceClient
+      .from("initiative_jobs")
+      .update({
+        status: "failed",
+        error: "Superseded by new orchestrator invocation (idempotency guard)",
+        completed_at: new Date().toISOString(),
+      })
+      .in("id", existingIds);
+
+    await pipelineLog(ctx, "idempotency_guard",
+      `Superseded ${existingIds.length} existing orchestrator job(s)`,
+      { superseded_ids: existingIds }
+    );
+  }
+
+  // ── Cleanup orphaned worker jobs from previous runs ──
   const workerStaleTime = new Date(Date.now() - 3 * 60 * 1000).toISOString();
   await serviceClient
     .from("initiative_jobs")
     .update({ status: "failed", error: "Orphan cleanup: new orchestrator run started", completed_at: new Date().toISOString() })
     .eq("initiative_id", ctx.initiativeId)
     .eq("status", "running")
-    .in("stage", ["execution_worker", "execution_orchestrator"])
+    .eq("stage", "execution_worker")
     .lt("created_at", workerStaleTime);
 
   const masterJobId = await createJob(ctx, "execution_orchestrator", { initiative_id: ctx.initiativeId, mode: "swarm" });
@@ -45,19 +77,16 @@ serve(async (req) => {
     updateFields.approved_at_planning = new Date().toISOString();
   }
   await updateInitiative(ctx, updateFields);
-  // Non-blocking — orchestrator start log
   pipelineLog(ctx, "orchestrator_start", "Orchestrator iniciado — Agent Swarm + DAG Scheduler").catch(() => {});
 
   try {
-    // ── Fetch stories, squad, connections (same as pipeline-execution) ──
-    // First try pending stories; if all already done, reset them for re-execution
+    // ── Fetch stories, squad, connections ──
     let { data: stories } = await serviceClient.from("stories")
       .select("id, title, description")
       .eq("initiative_id", ctx.initiativeId)
       .in("status", ["todo", "in_progress"]);
 
     if (!stories?.length) {
-      // Check if stories exist but are already completed — reset them for re-run
       const { data: allStories } = await serviceClient.from("stories")
         .select("id, title, description")
         .eq("initiative_id", ctx.initiativeId);
@@ -151,7 +180,22 @@ serve(async (req) => {
       for (const phase of (phases || [])) {
         await serviceClient.from("story_phases").update({ status: "in_progress" }).eq("id", phase.id);
         for (const st of (phase.story_subtasks || [])) {
-          if (st.status !== "pending") continue;
+          // Sprint 202: Skip already-completed subtasks (idempotency for re-invocations)
+          if (st.status === "completed" || st.status === "done") {
+            if (st.file_path) {
+              // Load existing output for context injection
+              const { data: existingOutput } = await serviceClient
+                .from("story_subtasks")
+                .select("output")
+                .eq("id", st.id)
+                .single();
+              if (existingOutput?.output && st.file_path) {
+                allProjectFiles.push({ file_path: st.file_path, description: st.description });
+              }
+            }
+            continue;
+          }
+          if (st.status !== "pending" && st.status !== "in_progress") continue;
           allSubtasks.push({
             id: st.id, file_path: st.file_path, file_type: st.file_type,
             description: st.description, story_id: story.id, sort_order: st.sort_order,
@@ -162,6 +206,36 @@ serve(async (req) => {
       }
     }
 
+    // Sprint 202: If no subtasks to execute (all completed from previous run), finalize
+    if (allSubtasks.length === 0) {
+      await pipelineLog(ctx, "all_subtasks_complete", "All subtasks already completed — finalizing");
+
+      await serviceClient.from("initiatives").update({
+        stage_status: "validating",
+        execution_progress: {
+          current: 0, total: 0, percent: 100,
+          executed: 0, failed: 0, code_files: 0, tokens: 0, cost_usd: 0,
+          current_file: null, current_agent: null,
+          current_subtask_id: null, current_subtask_description: null,
+          current_story_id: null, current_stage: "execution",
+          chain_of_agents: true, status: "completed", completed_at: new Date().toISOString(),
+          scheduler: "swarm", waves_executed: 0, max_workers: MAX_WORKERS,
+          incremental: true, skipped: 0, savings_percent: 0,
+          resumed_from_previous: true,
+        },
+      }).eq("id", ctx.initiativeId);
+
+      if (masterJobId) await completeJob(ctx, masterJobId, {
+        resumed: true, all_complete: true, batch_incomplete: false,
+      }, { model: "routed", costUsd: 0, durationMs: Date.now() - startTime });
+
+      return jsonResponse({
+        success: true, executed: 0, failed: 0, code_files: 0,
+        tokens: 0, cost_usd: 0, job_id: masterJobId,
+        batch_incomplete: false, all_previously_completed: true,
+      });
+    }
+
     const projectStructure = allProjectFiles.map(f => `- ${f.file_path}: ${f.description}`).join("\n");
     const generatedFiles: Record<string, string> = {};
 
@@ -170,7 +244,6 @@ serve(async (req) => {
     let incrementalStats: IncrementalStats = incremental.stats;
 
     if (incremental.stats.cleanFiles > 0) {
-      // Non-blocking informational log
       pipelineLog(ctx, "incremental_detection",
         `Incremental: ${incremental.stats.cleanFiles} clean, ${incremental.stats.dirtyFiles} dirty (${incremental.stats.newFiles} new, ${incremental.stats.hashMismatch} changed, ${incremental.stats.cascadeDirty} cascade). Savings: ~${incremental.stats.savingsPercent}%`,
         incremental.stats
@@ -179,17 +252,16 @@ serve(async (req) => {
 
     // Filter to only dirty subtasks for execution
     const dirtySubtasks = allSubtasks.filter(st => {
-      if (!st.file_path) return true; // non-file subtasks always run
+      if (!st.file_path) return true;
       return incremental.dirtySubtaskIds.has(st.id);
     });
 
-    // For clean subtasks, batch-load their existing outputs in one query
+    // For clean subtasks, batch-load their existing outputs
     const cleanSubtasks = allSubtasks.filter(
       st => st.file_path && incremental.cleanFilePaths.has(st.file_path)
     );
     if (cleanSubtasks.length > 0) {
       const cleanIds = cleanSubtasks.map(st => st.id);
-      // Batch in chunks of 500 (PostgREST .in() limit)
       for (let i = 0; i < cleanIds.length; i += 500) {
         const chunk = cleanIds.slice(i, i + 500);
         const { data: existingOutputs } = await serviceClient
@@ -217,12 +289,11 @@ serve(async (req) => {
 
     // ── Execution state ──
     let totalTokens = 0, totalCost = 0, executedCount = 0, failedCount = 0, codeFilesGenerated = 0;
-    // generatedFiles already pre-populated with clean file outputs above
     const totalNodes = dag.totalNodes + nonFileSubtasks.length;
     const skippedCount = incremental.stats.cleanFiles;
     const retryCount: Record<string, number> = {};
 
-    // Debounced progress: write at most once every 5 seconds or on wave boundaries
+    // Debounced progress
     type ExecutionProgressSnapshot = {
       currentFile?: string | null;
       currentAgent?: string | null;
@@ -268,10 +339,10 @@ serve(async (req) => {
     };
     const updateProgress = async (snapshot: ExecutionProgressSnapshot = {}) => {
       const now = Date.now();
-      if (now - lastProgressWrite < PROGRESS_DEBOUNCE_MS) return; // skip — too recent
+      if (now - lastProgressWrite < PROGRESS_DEBOUNCE_MS) return;
       await writeProgress(snapshot);
     };
-    await writeProgress({ currentStage: "execution" }); // initial write always fires
+    await writeProgress({ currentStage: "execution" });
 
     // ── Worker dispatcher ──
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -294,15 +365,10 @@ serve(async (req) => {
         .map(d => dag.nodes.get(d)?.filePath)
         .filter(Boolean) as string[];
 
-      // Use semantic search to find related files beyond explicit dependencies
       let semanticPaths: string[] = [];
       try {
         const semanticResults = await semanticSearch(
-          ctx,
-          `${node.filePath} ${node.description}`,
-          apiKey,
-          0.4,
-          5,
+          ctx, `${node.filePath} ${node.description}`, apiKey, 0.4, 5,
         );
         semanticPaths = semanticResults
           .map(r => r.file_path)
@@ -313,7 +379,6 @@ serve(async (req) => {
         ? buildSmartContextWithSemantic(generatedFiles, node.filePath, depPaths, semanticPaths, 12000)
         : buildSmartContextWindow(generatedFiles, node.filePath, depPaths, 12000);
 
-      // Log compression stats periodically
       if (executedCount % 5 === 0 && contextStats.compressionRatio > 0) {
         await pipelineLog(ctx, "smart_context_stats",
           `Smart Context: ${contextStats.compressionRatio}% compression (${contextStats.includedFiles}/${contextStats.totalFiles} files, ${contextStats.originalChars} → ${contextStats.compactChars} chars)`,
@@ -338,9 +403,8 @@ serve(async (req) => {
         projectTitle: initiative.title,
         projectDescription: initiative.refined_idea || initiative.description || "",
         projectStructure,
-        // Smart Context Window — compact API surfaces instead of full files
         dependencyCode: smartDependencyContext,
-        otherGeneratedCode: "", // already included in smart context
+        otherGeneratedCode: "",
         prdSnippet: initiative.prd_content?.slice(0, 1000) || "",
         architectureSnippet: initiative.architecture_content?.slice(0, 1000) || "",
         dataArchContext,
@@ -355,7 +419,6 @@ serve(async (req) => {
       };
 
       try {
-        // Invoke worker Edge Function
         const workerUrl = `${supabaseUrl}/functions/v1/pipeline-execution-worker`;
         const resp = await fetch(workerUrl, {
           method: "POST",
@@ -372,7 +435,6 @@ serve(async (req) => {
           throw new Error(workerResult.error || `Worker returned status ${resp.status}`);
         }
 
-        // Worker succeeded — store generated code for context injection
         if (workerResult.codeContent) {
           generatedFiles[node.filePath] = workerResult.codeContent;
         }
@@ -420,7 +482,6 @@ serve(async (req) => {
     let timeBudgetExceeded = false;
 
     while (hasPendingNodes(dag) && safetyCounter < maxIterations) {
-      // ── Time budget check: stop before Deno timeout ──
       const elapsed = Date.now() - startTime;
       if (elapsed > TIME_BUDGET_MS) {
         timeBudgetExceeded = true;
@@ -445,18 +506,15 @@ serve(async (req) => {
       }
 
       waveNum++;
-      // Non-blocking wave log — fire-and-forget
       pipelineLog(ctx, "swarm_wave_start",
         `Wave ${waveNum}: dispatching ${readyNodes.length} worker(s)`,
         { wave: waveNum, files: readyNodes.map(n => n.filePath) }
       ).catch(() => {});
 
-      // Execute wave in batches of MAX_WORKERS
       for (let i = 0; i < readyNodes.length; i += MAX_WORKERS) {
         const batch = readyNodes.slice(i, i + MAX_WORKERS);
         await Promise.all(batch.map(node => dispatchWorker(node, waveNum)));
 
-        // Check time budget between micro-batches too
         if (Date.now() - startTime > TIME_BUDGET_MS) {
           timeBudgetExceeded = true;
           await pipelineLog(ctx, "time_budget_pause",
@@ -469,7 +527,6 @@ serve(async (req) => {
 
       if (timeBudgetExceeded) break;
 
-      // Non-blocking wave complete log + force progress write at wave boundary
       pipelineLog(ctx, "swarm_wave_complete",
         `Wave ${waveNum} concluída: ${readyNodes.length} worker(s)`,
         { wave: waveNum, executed: executedCount, failed: failedCount }
@@ -506,7 +563,7 @@ serve(async (req) => {
       }
     }
 
-    // ── Check if there are remaining pending subtasks ──
+    // ── Check remaining pending subtasks ──
     const { count: remainingPending } = await serviceClient.from("story_subtasks")
       .select("*", { count: "exact", head: true })
       .in("story_id", stories.map(s => s.id))
@@ -515,7 +572,7 @@ serve(async (req) => {
     const batchIncomplete = timeBudgetExceeded && (remainingPending || 0) > 0;
 
     if (!batchIncomplete) {
-      // ── Finalize stories/phases (only when all done) ──
+      // ── Finalize stories/phases ──
       for (const story of stories) {
         const { data: phases } = await serviceClient.from("story_phases")
           .select("id").eq("story_id", story.id);
@@ -582,7 +639,7 @@ serve(async (req) => {
         }
       } catch {}
 
-      // ── Batch embed any remaining unembedded nodes ──
+      // ── Batch embed remaining unembedded nodes ──
       try {
         const embedResult = await batchEmbedNodes(ctx, apiKey, 30);
         if (embedResult.embedded > 0) {
@@ -593,14 +650,16 @@ serve(async (req) => {
         }
       } catch {}
     } else {
-      // ── Batch incomplete: update progress but keep stage_status as in_progress ──
+      // ══════════════════════════════════════════════════════════════
+      // Sprint 202 — Auto-continuation: schedule self-invocation
+      // ══════════════════════════════════════════════════════════════
       await serviceClient.from("initiatives").update({
         execution_progress: {
           current: executedCount + failedCount, total: totalNodes,
           percent: totalNodes > 0 ? Math.round(((executedCount + failedCount) / totalNodes) * 100) : 0,
           executed: executedCount, failed: failedCount,
           code_files: codeFilesGenerated, tokens: totalTokens, cost_usd: totalCost,
-          current_file: null, current_agent: "awaiting_resume",
+          current_file: null, current_agent: "auto_continuing",
           current_subtask_id: null, current_subtask_description: null,
           current_story_id: null, current_stage: "execution",
           chain_of_agents: true, status: "running",
@@ -612,26 +671,38 @@ serve(async (req) => {
         },
       }).eq("id", ctx.initiativeId);
 
+      // Complete the current master job FIRST to free the slot
       if (masterJobId) await completeJob(ctx, masterJobId, {
-        executed: executedCount,
-        failed: failedCount,
-        code_files: codeFilesGenerated,
-        total_tokens: totalTokens,
-        waves_executed: waveNum,
-        chain: ["code_architect", "developer", "integration_agent"],
-        scheduler: "swarm",
-        max_workers: MAX_WORKERS,
-        skipped: skippedCount,
-        savings_percent: incremental.stats.savingsPercent,
-        batch_incomplete: true,
-        remaining_to_execute: remainingPending || 0,
-        pause_reason: "time_budget",
+        executed: executedCount, failed: failedCount, code_files: codeFilesGenerated,
+        total_tokens: totalTokens, waves_executed: waveNum,
+        scheduler: "swarm", max_workers: MAX_WORKERS,
+        skipped: skippedCount, savings_percent: incremental.stats.savingsPercent,
+        batch_incomplete: true, remaining_to_execute: remainingPending || 0,
+        pause_reason: "time_budget", auto_continue: true,
       }, { model: "routed", costUsd: totalCost, durationMs: Date.now() - startTime });
 
-      await pipelineLog(ctx, "batch_pause",
-        `Batch pausado: ${executedCount} executados, ${remainingPending} restantes. Auto-continuando...`,
+      await pipelineLog(ctx, "auto_continue",
+        `Batch pausado: ${executedCount} executados, ${remainingPending} restantes. Disparando auto-continuação...`,
         { executed: executedCount, remaining: remainingPending }
       );
+
+      // Sprint 202: Auto-continue — fire-and-forget self-invocation
+      // The master job is already completed, so this new invocation gets a fresh slot
+      try {
+        const continueUrl = `${supabaseUrl}/functions/v1/pipeline-execution-orchestrator`;
+        fetch(continueUrl, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${serviceRoleKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ initiativeId: ctx.initiativeId }),
+        }).catch(err => {
+          console.error("[orchestrator] Auto-continue invocation failed:", err);
+        });
+      } catch (err) {
+        console.error("[orchestrator] Auto-continue setup failed:", err);
+      }
     }
 
     return jsonResponse({
@@ -642,6 +713,7 @@ serve(async (req) => {
       savings_percent: incremental.stats.savingsPercent,
       batch_incomplete: batchIncomplete,
       remaining_to_execute: remainingPending || 0,
+      auto_continue: batchIncomplete,
     });
 
   } catch (e) {
