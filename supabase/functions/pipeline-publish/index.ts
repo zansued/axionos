@@ -7,6 +7,7 @@ import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, au
 import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 import { runDependencyGovernance } from "../_shared/dependency-governance.ts";
 import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
+import type { PublishConfirmation } from "../_shared/contracts/publish-confirmation.schema.ts";
 
 /**
  * Sprint 205 — Structured Publish Error
