@@ -324,7 +324,7 @@ export const STAGE_DEFINITIONS: StageDefinition[] = [
   {
     stage: "engineering",
     matchStatuses: [
-      "squad_ready", "squad_formed", "planning_ready", "planned", "in_progress",
+      "squad_ready", "squad_formed", "planning_ready", "planning", "planned", "in_progress", "executing",
     ],
     checks: engineeringChecks,
   },
