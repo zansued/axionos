@@ -207,6 +207,28 @@ serve(async (req) => {
     const allProcessed = remainingCount === 0;
 
     await updateInitiative(ctx, { stage_status: allProcessed ? "ready_to_publish" : "validating" });
+    await persistExecutionProgress({
+      status: allProcessed ? "completed" : "running",
+      current_stage: "validation",
+      current_file: null,
+      current_agent: allProcessed ? null : "fix_loop",
+      current_subtask_id: allProcessed ? null : artifact.subtask_id || null,
+      current_subtask_description: allProcessed ? null : artifact.summary || null,
+      validation: {
+        status: allProcessed ? "completed" : "running",
+        total_artifacts: finalArtifacts.length,
+        approved: approvedCount,
+        escalated: escalatedCount,
+        remaining: remainingCount,
+        current_artifact_id: allProcessed ? null : artifact.id,
+        current_artifact_summary: allProcessed ? null : artifact.summary || null,
+        current_subtask_id: allProcessed ? null : artifact.subtask_id || null,
+        current_phase: allProcessed ? "completed" : "awaiting_next_artifact",
+        last_processed_artifact_id: artifact.id,
+        last_result: overallPass ? "approved" : escalatedCount > 0 ? "needs_review" : "in_progress",
+        last_error: null,
+      },
+    });
 
     if (jobId) await completeJob(ctx, jobId, {
       artifacts_validated: finalArtifacts.length,
@@ -234,6 +256,22 @@ serve(async (req) => {
     });
   } catch (e: any) {
     console.error("pipeline-validation error:", e);
+    await persistExecutionProgress({
+      status: "running",
+      current_stage: "validation",
+      current_file: null,
+      current_agent: "fix_loop",
+      current_subtask_id: artifact.subtask_id || null,
+      current_subtask_description: artifact.summary || null,
+      validation: {
+        status: "running",
+        current_artifact_id: artifact.id,
+        current_artifact_summary: artifact.summary || null,
+        current_subtask_id: artifact.subtask_id || null,
+        current_phase: "failed",
+        last_error: e.message || "Validation processing error",
+      },
+    });
     if (jobId) await failJob(ctx, jobId, e.message || "Validation processing error");
     return errorResponse(e.message || "Validation processing error", 500);
   }
