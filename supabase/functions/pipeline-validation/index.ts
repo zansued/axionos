@@ -432,6 +432,36 @@ Fix ALL issues. Return the COMPLETE corrected artifact, no markdown wrapping.`,
 }
 
 // ── Helpers ──
+async function mergeExecutionProgress(
+  client: any,
+  initiativeId: string,
+  currentProgress: Record<string, unknown>,
+  patch: Record<string, unknown>,
+) {
+  const base = currentProgress && typeof currentProgress === "object" ? currentProgress : {};
+  const baseValidation = base.validation && typeof base.validation === "object"
+    ? base.validation as Record<string, unknown>
+    : {};
+  const nextValidation = patch.validation && typeof patch.validation === "object"
+    ? { ...baseValidation, ...(patch.validation as Record<string, unknown>) }
+    : baseValidation;
+
+  const next = {
+    ...base,
+    ...patch,
+    validation: nextValidation,
+  };
+
+  await client.from("initiatives").update({ execution_progress: next }).eq("id", initiativeId);
+  return next;
+}
+
+function summarizeValidationIssue(validation: Record<string, unknown> | undefined): string | null {
+  if (!validation) return null;
+  const direct = validation.last_issue_summary;
+  return typeof direct === "string" && direct.trim().length > 0 ? direct : null;
+}
+
 function extractJsonFromResponse(response: string): unknown {
   let cleaned = response
     .replace(/```json\s*/gi, "")
