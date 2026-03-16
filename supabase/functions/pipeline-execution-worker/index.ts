@@ -7,7 +7,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, corsHeaders, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, recordAgentMessage, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { sanitizePackageJson, DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
+import { sanitizePackageJson, DETERMINISTIC_FILES, FORBIDDEN_RUNTIME_PACKAGES } from "../_shared/code-sanitizers.ts";
 import { generateBrainContext, upsertNode, getNodeByPath, updateNodeStatus, recordError } from "../_shared/brain-helpers.ts";
 import { updateBrainEdgesFromImports } from "../_shared/dependency-scheduler.ts";
 import { simpleHash } from "../_shared/incremental-engine.ts";

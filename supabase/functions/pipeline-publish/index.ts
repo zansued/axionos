@@ -3,10 +3,34 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, autoFixMissingDependencies } from "../_shared/code-sanitizers.ts";
+import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, autoFixMissingDependencies, FORBIDDEN_RUNTIME_PACKAGES } from "../_shared/code-sanitizers.ts";
 import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 import { runDependencyGovernance } from "../_shared/dependency-governance.ts";
 import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
+
+/**
+ * Sprint 205 — Structured Publish Error
+ */
+interface PublishError {
+  error: string;
+  category: "auth" | "artifact" | "dependency" | "config" | "github" | "unknown";
+  missing_artifact?: string;
+  suggested_action: string;
+}
+
+function buildPublishError(
+  category: PublishError["category"],
+  missingArtifact: string | null,
+  suggestedAction: string,
+): string {
+  const err: PublishError = {
+    error: `Publish bloqueado: [${category}] ${missingArtifact || "erro desconhecido"}`,
+    category,
+    ...(missingArtifact ? { missing_artifact: missingArtifact } : {}),
+    suggested_action: suggestedAction,
+  };
+  return JSON.stringify(err);
+}
 
 /**
  * Camada 6 — Release

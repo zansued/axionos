@@ -17,6 +17,21 @@ const INVALID_PACKAGES = new Set([
   "radix-ui", "@radix/ui", "lucide", "framer", "next-themes/latest",
 ]);
 
+/**
+ * Sprint 205 — Forbidden runtime packages.
+ * These must be blocked during execution (worker), not just at publish time.
+ * Exported so both worker and publish can reference them.
+ */
+export const FORBIDDEN_RUNTIME_PACKAGES = new Set([
+  "@vitejs/plugin-react",   // must use plugin-react-swc
+  "shadcn/ui",
+  "shadcn-ui",
+  "@shadcn/ui",
+  "shadcn",
+  "radix-ui",
+  "@radix/ui",
+]);
+
 /** Package rename map (null = remove entirely) */
 const PACKAGE_RENAMES: Record<string, string | null> = {
   "shadcn/ui": null,
