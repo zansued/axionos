@@ -296,6 +296,8 @@ serve(async (req) => {
     const totalNodes = dag.totalNodes + nonFileSubtasks.length;
     const skippedCount = incremental.stats.cleanFiles;
     const retryCount: Record<string, number> = {};
+    // Sprint 203: Track completed subtask history for UI display
+    const subtaskHistory: Array<{ id: string; file: string | null; status: string; ts: string; wave: number }> = [];
 
     // Debounced progress
     type ExecutionProgressSnapshot = {
