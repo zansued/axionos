@@ -228,6 +228,22 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
         });
         return;
       }
+      // Pre-flight: check stories exist before execution
+      if (stage === "execution") {
+        const { count } = await supabase
+          .from("stories")
+          .select("id", { count: "exact", head: true })
+          .eq("initiative_id", initiativeId);
+        if (!count || count === 0) {
+          toast({
+            variant: "destructive",
+            title: "⚠️ Nenhuma story encontrada",
+            description: "Execute o Planning primeiro para gerar as stories antes da execução.",
+          });
+          return;
+        }
+      }
+
       setRunning((prev) => ({ ...prev, [initiativeId]: stage }));
       try {
         const session = (await supabase.auth.getSession()).data.session;
