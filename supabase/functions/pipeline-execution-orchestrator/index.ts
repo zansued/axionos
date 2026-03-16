@@ -402,7 +402,15 @@ serve(async (req) => {
         }
       }
 
-      await updateProgress(node.filePath, "completed", waveNum);
+      await updateProgress({
+        currentFile: node.filePath,
+        currentAgent: "completed",
+        currentSubtaskId: node.subtaskId,
+        currentSubtaskDescription: node.description,
+        currentStoryId: node.storyId,
+        currentStage: "execution",
+        currentWave: waveNum,
+      });
     };
 
     // ── DAG Wave Execution Loop ──
