@@ -321,12 +321,17 @@ Valide e defina a árvore completa de arquivos:
       let totalSubtasks = 0;
       let scaffoldFiles = 0;
 
-      const { data: oldStories } = await serviceClient.from("stories").select("id").eq("initiative_id", ctx.initiativeId);
-      if (oldStories?.length) {
-        for (const s of oldStories) {
-          await serviceClient.from("story_phases").delete().eq("story_id", s.id);
+      // Only delete old stories if we actually generated new ones — prevents data loss on AI failures
+      if (stories.length > 0) {
+        const { data: oldStories } = await serviceClient.from("stories").select("id").eq("initiative_id", ctx.initiativeId);
+        if (oldStories?.length) {
+          for (const s of oldStories) {
+            await serviceClient.from("story_phases").delete().eq("story_id", s.id);
+          }
+          await serviceClient.from("stories").delete().eq("initiative_id", ctx.initiativeId);
         }
-        await serviceClient.from("stories").delete().eq("initiative_id", ctx.initiativeId);
+      } else {
+        console.warn("[pipeline-planning] Story generator returned 0 stories — keeping existing stories");
       }
 
       for (const story of stories) {
