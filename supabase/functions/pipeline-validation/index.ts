@@ -109,10 +109,11 @@ serve(async (req) => {
 
   try {
     await processOneArtifact(artifact, {
-      user, initiative, ctx, serviceClient, apiKey, safeSubtaskIds,
+      user, initiative, ctx, serviceClient, apiKey,
     });
 
     // After processing, check overall status
+    const safeSubtaskIds = subtaskIds.length > 0 ? subtaskIds : ["__none__"];
     const { data: artifactsAfter } = await serviceClient.from("agent_outputs")
       .select("id, status")
       .in("subtask_id", safeSubtaskIds)
