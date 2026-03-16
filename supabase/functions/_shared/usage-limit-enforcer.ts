@@ -86,20 +86,33 @@ export async function enforceUsageLimits(
   let parallelRunCount = 0;
 
   if (orgInitIds.length > 0) {
-    // Auto-cleanup stale running jobs (older than 10 minutes — covers edge function timeouts)
-    const staleThreshold = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    // Auto-cleanup stale running jobs
+    // Workers get 5min threshold (they should complete in ~2min)
+    // Orchestrators/other stages get 10min threshold
+    const workerStaleThreshold = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const generalStaleThreshold = new Date(Date.now() - 10 * 60 * 1000).toISOString();
     const chunkSize = 100;
 
     for (let i = 0; i < orgInitIds.length; i += chunkSize) {
       const chunk = orgInitIds.slice(i, i + chunkSize);
 
-      // Cleanup stale jobs first
+      // Cleanup stale worker jobs (5min threshold)
+      await serviceClient
+        .from("initiative_jobs")
+        .update({ status: "failed", error: "Auto-cleanup: worker exceeded 5min runtime", completed_at: new Date().toISOString() })
+        .in("initiative_id", chunk)
+        .eq("status", "running")
+        .eq("stage", "execution_worker")
+        .lt("created_at", workerStaleThreshold);
+
+      // Cleanup stale non-worker jobs (10min threshold)
       await serviceClient
         .from("initiative_jobs")
         .update({ status: "failed", error: "Auto-cleanup: exceeded max runtime (10min)", completed_at: new Date().toISOString() })
         .in("initiative_id", chunk)
         .eq("status", "running")
-        .lt("created_at", staleThreshold);
+        .neq("stage", "execution_worker")
+        .lt("created_at", generalStaleThreshold);
 
       const [deployRes, activeRes] = await Promise.all([
         serviceClient
