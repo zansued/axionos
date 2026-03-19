@@ -184,7 +184,7 @@ export function LifecycleHealthCheck() {
             className="text-xs h-7"
           >
             <RefreshCw className={`h-3 w-3 mr-1 ${healthCheck.isFetching ? "animate-spin" : ""}`} />
-            Run Check
+             Executar Verificação
           </Button>
         </div>
       </CardHeader>
