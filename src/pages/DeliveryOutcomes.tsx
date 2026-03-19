@@ -195,7 +195,7 @@ export default function DeliveryOutcomes() {
                     </>
                   )}
                   <Separator />
-                  <div><span className="text-muted-foreground">Updated:</span> <span className="text-foreground">{new Date(selected.updated_at).toLocaleString()}</span></div>
+                  <div><span className="text-muted-foreground">Atualizado:</span> <span className="text-foreground">{new Date(selected.updated_at).toLocaleString()}</span></div>
                 </div>
               )}
             </SheetContent>
