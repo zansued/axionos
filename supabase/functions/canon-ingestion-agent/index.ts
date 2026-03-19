@@ -110,26 +110,52 @@ serve(async (req) => {
           await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "fetched" }).eq("id", source_id);
           await serviceClient.from("canon_source_sync_runs").update({ lifecycle_state: "fetched" }).eq("id", syncRun.id);
 
-          const scrapeResp = await fetch(`${FIRECRAWL_URL}/v1/scrape`, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              url: source.source_url,
-              formats: ["markdown"],
-              onlyMainContent: true,
-              waitFor: 5000,
-            }),
-          });
+          // Progressive scrape attempts: fast → standard → minimal
+          const scrapeStrategies = [
+            { formats: ["markdown"], onlyMainContent: true, timeout: 30000, waitFor: 0, label: "fast" },
+            { formats: ["markdown"], onlyMainContent: true, timeout: 60000, waitFor: 3000, label: "standard" },
+            { formats: ["markdown"], onlyMainContent: false, timeout: 90000, waitFor: 0, label: "minimal" },
+          ];
 
-          const scrapeData = await scrapeResp.json();
-          if (!scrapeResp.ok) {
-            console.error("Firecrawl error:", scrapeData);
+          let scrapeData: any = null;
+          let scrapeSuccess = false;
+
+          for (const strategy of scrapeStrategies) {
+            console.log(`[canon-ingestion] Trying scrape strategy: ${strategy.label}`);
+            try {
+              const scrapeResp = await fetch(`${FIRECRAWL_URL}/v1/scrape`, {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  url: source.source_url,
+                  formats: strategy.formats,
+                  onlyMainContent: strategy.onlyMainContent,
+                  timeout: strategy.timeout,
+                  ...(strategy.waitFor > 0 ? { waitFor: strategy.waitFor } : {}),
+                }),
+              });
+
+              scrapeData = await scrapeResp.json();
+              if (scrapeResp.ok && (scrapeData.data?.markdown || scrapeData.markdown)) {
+                console.log(`[canon-ingestion] Strategy "${strategy.label}" succeeded`);
+                scrapeSuccess = true;
+                break;
+              }
+              console.warn(`[canon-ingestion] Strategy "${strategy.label}" failed: ${scrapeData.error || scrapeResp.status}`);
+            } catch (fetchErr) {
+              console.warn(`[canon-ingestion] Strategy "${strategy.label}" threw: ${fetchErr.message}`);
+            }
+          }
+
+          if (!scrapeSuccess) {
+            const errMsg = scrapeData?.error || "All scrape strategies timed out";
+            console.error("All Firecrawl strategies exhausted:", errMsg);
             await serviceClient.from("canon_sources").update({ ingestion_lifecycle_state: "failed" }).eq("id", source_id);
-            await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 0, 0, 0, `Firecrawl error: ${scrapeData.error || scrapeResp.status}`, "failed");
-            return errorResponse("Crawl failed", 502, req);
+            await completeSyncRun(serviceClient, syncRun.id, source_id, 0, 0, 0, 0, 0, 0, `Firecrawl: ${errMsg}`, "failed");
+            return errorResponse(`Scrape failed after retries: ${errMsg}`, 502, req);
           }
 
           const markdown = scrapeData.data?.markdown || scrapeData.markdown || "";
