@@ -36,9 +36,9 @@ export default function CanonPoisoningPreventionDashboard() {
   const handleAssessBatch = () => {
     assessBatch.mutate({ batch_size: 20 }, {
       onSuccess: (data: any) => {
-        toast.success(`Assessed ${data.assessed} candidates. Quarantined: ${data.quarantined}, Flagged: ${data.flagged}`);
+        toast.success(`Avaliados: ${data.assessed} candidatos. Quarentena: ${data.quarantined}, Sinalizados: ${data.flagged}`);
       },
-      onError: () => toast.error("Failed to assess batch"),
+      onError: () => toast.error("Falha ao avaliar lote"),
     });
   };
 
@@ -47,66 +47,66 @@ export default function CanonPoisoningPreventionDashboard() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Canon Poisoning Prevention</h1>
-            <p className="text-sm text-muted-foreground">Detect, score, quarantine, and review suspicious knowledge before it enters canon.</p>
+            <h1 className="text-2xl font-bold text-foreground">Prevenção de Envenenamento do Cânone</h1>
+            <p className="text-sm text-muted-foreground">Detectar, pontuar, quarentenar e revisar conhecimento suspeito antes de entrar no cânone.</p>
           </div>
           <Button onClick={handleAssessBatch} disabled={assessBatch.isPending} size="sm">
             <RefreshCw className={`w-4 h-4 mr-2 ${assessBatch.isPending ? "animate-spin" : ""}`} />
-            Assess Pending Batch
+            Avaliar Lote Pendente
           </Button>
         </div>
 
-        {/* Overview Metrics */}
+        {/* Métricas Gerais */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="pt-4 text-center">
               <Activity className="w-6 h-6 mx-auto mb-1 text-primary" />
               <p className="text-2xl font-bold text-foreground">{o?.total_assessments ?? "—"}</p>
-              <p className="text-xs text-muted-foreground">Total Assessments</p>
+              <p className="text-xs text-muted-foreground">Total de Avaliações</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4 text-center">
               <ShieldAlert className="w-6 h-6 mx-auto mb-1 text-destructive" />
               <p className="text-2xl font-bold text-foreground">{o?.quarantined_count ?? "—"}</p>
-              <p className="text-xs text-muted-foreground">Quarantined</p>
+              <p className="text-xs text-muted-foreground">Em Quarentena</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4 text-center">
               <AlertTriangle className="w-6 h-6 mx-auto mb-1 text-warning" />
               <p className="text-2xl font-bold text-foreground">{o?.unresolved_signals ?? "—"}</p>
-              <p className="text-xs text-muted-foreground">Unresolved Signals</p>
+              <p className="text-xs text-muted-foreground">Sinais Não Resolvidos</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4 text-center">
               <ShieldCheck className="w-6 h-6 mx-auto mb-1 text-success" />
               <p className="text-2xl font-bold text-foreground">{o?.high_risk_count ?? "—"}</p>
-              <p className="text-xs text-muted-foreground">High/Critical Risk</p>
+              <p className="text-xs text-muted-foreground">Risco Alto/Crítico</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Quarantined Candidates */}
+        {/* Candidatos em Quarentena */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-foreground">
               <ShieldAlert className="w-5 h-5 text-destructive" />
-              Quarantined Candidates
+              Candidatos em Quarentena
             </CardTitle>
           </CardHeader>
           <CardContent>
             {!(quarantined.data as any)?.quarantined?.length ? (
-              <p className="text-sm text-muted-foreground">No quarantined candidates.</p>
+              <p className="text-sm text-muted-foreground">Nenhum candidato em quarentena.</p>
             ) : (
               <div className="space-y-3">
                 {((quarantined.data as any)?.quarantined || []).map((a: any) => (
                   <div key={a.id} className="flex items-start justify-between border border-border rounded-lg p-3 bg-card">
                     <div className="flex-1">
-                      <p className="font-medium text-sm text-foreground">{a.candidate_title || "Untitled"}</p>
+                      <p className="font-medium text-sm text-foreground">{a.candidate_title || "Sem título"}</p>
                       <p className="text-xs text-muted-foreground mt-1">{a.risk_reason_summary}</p>
-                      <p className="text-xs text-muted-foreground">Source: {a.source_name || "unknown"}</p>
+                      <p className="text-xs text-muted-foreground">Fonte: {a.source_name || "desconhecida"}</p>
                     </div>
                     <div className="flex flex-col items-end gap-1">
                       {riskBadge(a.poisoning_risk_level)}
@@ -119,17 +119,17 @@ export default function CanonPoisoningPreventionDashboard() {
           </CardContent>
         </Card>
 
-        {/* Security Signals */}
+        {/* Sinais de Segurança */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-foreground">
               <AlertTriangle className="w-5 h-5 text-warning" />
-              Unresolved Security Signals
+              Sinais de Segurança Não Resolvidos
             </CardTitle>
           </CardHeader>
           <CardContent>
             {!(signals.data as any)?.signals?.length ? (
-              <p className="text-sm text-muted-foreground">No unresolved signals.</p>
+              <p className="text-sm text-muted-foreground">Nenhum sinal não resolvido.</p>
             ) : (
               <div className="space-y-2">
                 {((signals.data as any)?.signals || []).slice(0, 20).map((s: any) => (
@@ -146,26 +146,26 @@ export default function CanonPoisoningPreventionDashboard() {
           </CardContent>
         </Card>
 
-        {/* Recent Assessments */}
+        {/* Avaliações Recentes */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-foreground">Recent Assessments</CardTitle>
+            <CardTitle className="text-foreground">Avaliações Recentes</CardTitle>
           </CardHeader>
           <CardContent>
             {!(assessments.data as any)?.assessments?.length ? (
-              <p className="text-sm text-muted-foreground">No assessments yet. Click "Assess Pending Batch" to start.</p>
+              <p className="text-sm text-muted-foreground">Nenhuma avaliação ainda. Clique em "Avaliar Lote Pendente" para iniciar.</p>
             ) : (
               <div className="space-y-2">
                 {((assessments.data as any)?.assessments || []).slice(0, 15).map((a: any) => (
                   <div key={a.id} className="flex items-center justify-between border border-border rounded p-2 bg-card">
                     <div className="flex-1">
-                      <span className="text-sm font-medium text-foreground">{a.candidate_title || "Untitled"}</span>
+                      <span className="text-sm font-medium text-foreground">{a.candidate_title || "Sem título"}</span>
                       <span className="text-xs text-muted-foreground ml-2">Score: {a.poisoning_risk_score}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       {riskBadge(a.poisoning_risk_level)}
                       {a.quarantine_status === "quarantined" && (
-                        <Badge variant="destructive">Quarantined</Badge>
+                        <Badge variant="destructive">Quarentena</Badge>
                       )}
                     </div>
                   </div>
@@ -175,19 +175,19 @@ export default function CanonPoisoningPreventionDashboard() {
           </CardContent>
         </Card>
 
-        {/* Promotion Gate Info */}
+        {/* Configuração do Portão de Promoção */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-foreground">Promotion Gate Configuration</CardTitle>
+            <CardTitle className="text-foreground">Configuração do Portão de Promoção</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-muted-foreground">Trust Floor for Promotion</p>
+                <p className="text-muted-foreground">Piso de Confiança para Promoção</p>
                 <p className="font-bold text-foreground">{o?.trust_floor ?? 25}</p>
               </div>
               <div>
-                <p className="text-muted-foreground">Max Risk Score for Promotion</p>
+                <p className="text-muted-foreground">Score Máx. de Risco para Promoção</p>
                 <p className="font-bold text-foreground">{o?.max_risk_threshold ?? 40}</p>
               </div>
             </div>
