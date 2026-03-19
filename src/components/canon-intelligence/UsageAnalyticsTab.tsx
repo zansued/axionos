@@ -13,7 +13,7 @@ interface UsageAnalyticsTabProps {
     totalApplications: number;
     totalFeedback: number;
     avgRetrieved: number;
-    avgApplied: number;
+    avgConfidence: number;
   };
 }
 
