@@ -17,13 +17,12 @@ export function useCanonRuntime() {
     queryKey: ["canon-retrieval-sessions", orgId],
     queryFn: async () => {
       const { data, error } = await (supabase
-        .from("canon_retrieval_sessions" as any)
+        .from("semantic_retrieval_sessions" as any)
         .select("*")
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false })
         .limit(50) as any);
 
-      // Ambiente pode não ter a tabela antiga; evita 404 quebrando a UI.
       if (error && !isMissingRelationError(error)) throw error;
       return (data || []) as any[];
     },
