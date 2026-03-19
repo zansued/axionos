@@ -55,7 +55,7 @@ export function UsageAnalyticsTab({ sessions, applications, feedback, analytics 
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <MetricCard value={analytics.avgRetrieved} label="Avg Retrieved / Session" />
-        <MetricCard value={analytics.avgApplied} label="Avg Applied / Session" />
+        <MetricCard value={analytics.avgConfidence} label="Avg Confidence" />
         <MetricCard value={analytics.activeSessions} label="Active Now" accent />
         <MetricCard
           value={deprecatedUsage.length}
