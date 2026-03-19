@@ -16,7 +16,7 @@ export function PortfolioOverviewCards({ snapshot }: Props) {
 
   const cards = [
     {
-      title: "Portfolio Score",
+      title: "Score do Portfólio",
       value: `${(snapshot.portfolio_score * 100).toFixed(0)}%`,
       icon: BarChart3,
       color: snapshot.portfolio_score > 0.7 ? "text-success" : snapshot.portfolio_score > 0.4 ? "text-warning" : "text-destructive",
@@ -46,7 +46,7 @@ export function PortfolioOverviewCards({ snapshot }: Props) {
       color: snapshot.source_diversity_score > 0.5 ? "text-success" : "text-warning",
     },
     {
-      title: "Stale Ratio",
+      title: "Taxa de Obsolescência",
       value: `${(snapshot.stale_ratio * 100).toFixed(0)}%`,
       icon: TrendingDown,
       color: snapshot.stale_ratio < 0.2 ? "text-success" : snapshot.stale_ratio < 0.4 ? "text-warning" : "text-destructive",

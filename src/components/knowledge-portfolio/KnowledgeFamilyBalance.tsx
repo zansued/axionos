@@ -23,7 +23,7 @@ export function KnowledgeFamilyBalance({ segments, snapshot }: Props) {
   return (
     <Card className="bg-card/50 border-border/30">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm">Knowledge Family Balance</CardTitle>
+        <CardTitle className="text-sm">Equilíbrio por Família de Conhecimento</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {families.length === 0 ? (

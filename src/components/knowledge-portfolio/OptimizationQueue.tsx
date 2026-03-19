@@ -31,7 +31,7 @@ export function OptimizationQueue({ proposals, onDecide, deciding }: Props) {
   return (
     <Card className="bg-card/50 border-border/30">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm">Optimization Queue ({pending.length} pendentes)</CardTitle>
+        <CardTitle className="text-sm">Fila de Otimização ({pending.length} pendentes)</CardTitle>
       </CardHeader>
       <CardContent>
         {pending.length === 0 ? (

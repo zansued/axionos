@@ -19,10 +19,10 @@ export default function KnowledgePortfolioDashboard() {
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2.5 font-['Space_Grotesk']">
               <BarChart3 className="h-6 w-6 text-primary" />
-              Knowledge Portfolio
+              Portfólio de Conhecimento
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Analyze redundancy, coverage gaps, and balance across institutional knowledge
+              Analise redundância, lacunas de cobertura e equilíbrio do conhecimento institucional
             </p>
           </div>
           <div className="flex gap-2">
@@ -33,7 +33,7 @@ export default function KnowledgePortfolioDashboard() {
               disabled={portfolio.generateProposals.isPending}
             >
               <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-              {portfolio.generateProposals.isPending ? "Gerando…" : "Generate Proposals"}
+              {portfolio.generateProposals.isPending ? "Gerando…" : "Gerar Propostas"}
             </Button>
             <Button
               size="sm"
@@ -41,7 +41,7 @@ export default function KnowledgePortfolioDashboard() {
               disabled={portfolio.analyzePortfolio.isPending}
             >
               <BarChart3 className="h-3.5 w-3.5 mr-1.5" />
-              {portfolio.analyzePortfolio.isPending ? "Analisando…" : "Analyze Portfolio"}
+              {portfolio.analyzePortfolio.isPending ? "Analisando…" : "Analisar Portfólio"}
             </Button>
           </div>
         </div>
@@ -50,11 +50,11 @@ export default function KnowledgePortfolioDashboard() {
 
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList className="bg-muted/20 border border-border/20 flex-wrap h-auto gap-0.5 p-1">
-            <TabsTrigger value="overview" className="text-xs gap-1.5"><Layers className="h-3.5 w-3.5" />Overview</TabsTrigger>
-            <TabsTrigger value="redundancy" className="text-xs gap-1.5"><AlertTriangle className="h-3.5 w-3.5" />Redundancy</TabsTrigger>
-            <TabsTrigger value="coverage" className="text-xs gap-1.5"><Layers className="h-3.5 w-3.5" />Coverage</TabsTrigger>
-            <TabsTrigger value="balance" className="text-xs gap-1.5"><Scale className="h-3.5 w-3.5" />Balance</TabsTrigger>
-            <TabsTrigger value="proposals" className="text-xs gap-1.5"><ListChecks className="h-3.5 w-3.5" />Proposals</TabsTrigger>
+            <TabsTrigger value="overview" className="text-xs gap-1.5"><Layers className="h-3.5 w-3.5" />Visão Geral</TabsTrigger>
+            <TabsTrigger value="redundancy" className="text-xs gap-1.5"><AlertTriangle className="h-3.5 w-3.5" />Redundância</TabsTrigger>
+            <TabsTrigger value="coverage" className="text-xs gap-1.5"><Layers className="h-3.5 w-3.5" />Cobertura</TabsTrigger>
+            <TabsTrigger value="balance" className="text-xs gap-1.5"><Scale className="h-3.5 w-3.5" />Equilíbrio</TabsTrigger>
+            <TabsTrigger value="proposals" className="text-xs gap-1.5"><ListChecks className="h-3.5 w-3.5" />Propostas</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
