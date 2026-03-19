@@ -46,43 +46,43 @@ export function KnowledgeLineageTab() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-foreground">Source Provenance & Knowledge Lineage</h3>
-          <p className="text-sm text-muted-foreground">Track the origin, evolution, and confidence of every knowledge object</p>
+          <h3 className="text-lg font-semibold text-foreground">Proveniência & Linhagem de Conhecimento</h3>
+          <p className="text-sm text-muted-foreground">Rastreie a origem, evolução e confiança de cada objeto de conhecimento</p>
         </div>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={() => buildLineage.mutate()} disabled={buildLineage.isPending}>
             <GitBranch className="w-4 h-4 mr-1" />
-            {buildLineage.isPending ? "Building..." : "Build Lineage"}
+            {buildLineage.isPending ? "Construindo..." : "Construir Linhagem"}
           </Button>
           <Button size="sm" variant="outline" onClick={() => computeBreakdowns.mutate()} disabled={computeBreakdowns.isPending}>
             <BarChart3 className="w-4 h-4 mr-1" />
-            {computeBreakdowns.isPending ? "Computing..." : "Compute Breakdowns"}
+            {computeBreakdowns.isPending ? "Calculando..." : "Calcular Decomposições"}
           </Button>
           <Button size="sm" variant="outline" onClick={handleCheckIntegrity} disabled={checkIntegrity.isPending}>
             <ShieldAlert className="w-4 h-4 mr-1" />
-            {checkIntegrity.isPending ? "Checking..." : "Check Integrity"}
+            {checkIntegrity.isPending ? "Verificando..." : "Verificar Integridade"}
           </Button>
         </div>
       </div>
 
       {/* Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card><CardHeader className="pb-2"><CardTitle className="text-sm text-muted-foreground">Lineage Events</CardTitle></CardHeader>
+        <Card><CardHeader className="pb-2"><CardTitle className="text-sm text-muted-foreground">Eventos de Linhagem</CardTitle></CardHeader>
           <CardContent><div className="text-2xl font-bold">{events.length}</div></CardContent></Card>
-        <Card><CardHeader className="pb-2"><CardTitle className="text-sm text-muted-foreground">Provenance Links</CardTitle></CardHeader>
+        <Card><CardHeader className="pb-2"><CardTitle className="text-sm text-muted-foreground">Links de Proveniência</CardTitle></CardHeader>
           <CardContent><div className="text-2xl font-bold">{links.length}</div></CardContent></Card>
-        <Card><CardHeader className="pb-2"><CardTitle className="text-sm text-muted-foreground">Confidence Breakdowns</CardTitle></CardHeader>
+        <Card><CardHeader className="pb-2"><CardTitle className="text-sm text-muted-foreground">Decomposições de Confiança</CardTitle></CardHeader>
           <CardContent><div className="text-2xl font-bold">{breakdowns.length}</div></CardContent></Card>
-        <Card><CardHeader className="pb-2"><CardTitle className="text-sm text-muted-foreground">Integrity Alerts</CardTitle></CardHeader>
+        <Card><CardHeader className="pb-2"><CardTitle className="text-sm text-muted-foreground">Alertas de Integridade</CardTitle></CardHeader>
           <CardContent><div className="text-2xl font-bold text-amber-400">{integrityAlerts.length}</div></CardContent></Card>
       </div>
 
       <Tabs defaultValue="timeline" className="w-full">
         <TabsList>
-          <TabsTrigger value="timeline">Lineage Timeline</TabsTrigger>
-          <TabsTrigger value="provenance">Provenance Links</TabsTrigger>
-          <TabsTrigger value="confidence">Confidence Explained</TabsTrigger>
-          <TabsTrigger value="integrity">Integrity Alerts</TabsTrigger>
+          <TabsTrigger value="timeline">Linha do Tempo</TabsTrigger>
+          <TabsTrigger value="provenance">Links de Proveniência</TabsTrigger>
+          <TabsTrigger value="confidence">Confiança Explicada</TabsTrigger>
+          <TabsTrigger value="integrity">Alertas de Integridade</TabsTrigger>
         </TabsList>
 
         {/* Timeline */}
@@ -90,9 +90,9 @@ export function KnowledgeLineageTab() {
           <Card>
             <CardContent className="pt-4">
               {loading ? (
-                <p className="text-sm text-muted-foreground p-4">Loading...</p>
+                <p className="text-sm text-muted-foreground p-4">Carregando...</p>
               ) : events.length === 0 ? (
-                <p className="text-sm text-muted-foreground p-4">No lineage events yet. Click "Build Lineage" to begin.</p>
+                <p className="text-sm text-muted-foreground p-4">Nenhum evento de linhagem ainda. Clique em "Construir Linhagem" para começar.</p>
               ) : (
                 <div className="space-y-2 max-h-[500px] overflow-y-auto">
                   {events.map((e: any) => (
@@ -103,11 +103,11 @@ export function KnowledgeLineageTab() {
                           <Badge variant="outline" className="text-[10px]">{e.event_type}</Badge>
                           <Badge variant="secondary" className="text-[10px]">{e.knowledge_object_type}</Badge>
                           <span className="text-[10px] text-muted-foreground ml-auto">
-                            {new Date(e.created_at).toLocaleString()}
+                            {new Date(e.created_at).toLocaleString("pt-BR")}
                           </span>
                         </div>
                         <p className="text-sm text-foreground mt-1">{e.summary}</p>
-                        {e.actor && <p className="text-[10px] text-muted-foreground mt-0.5">by {e.actor}</p>}
+                        {e.actor && <p className="text-[10px] text-muted-foreground mt-0.5">por {e.actor}</p>}
                       </div>
                     </div>
                   ))}
@@ -122,16 +122,16 @@ export function KnowledgeLineageTab() {
           <Card>
             <CardContent className="pt-4">
               {links.length === 0 ? (
-                <p className="text-sm text-muted-foreground p-4">No provenance links yet.</p>
+                <p className="text-sm text-muted-foreground p-4">Nenhum link de proveniência ainda.</p>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Link Type</TableHead>
-                      <TableHead>Source</TableHead>
-                      <TableHead>Target</TableHead>
-                      <TableHead>Weight</TableHead>
-                      <TableHead>Confidence Contrib.</TableHead>
+                      <TableHead>Tipo de Link</TableHead>
+                      <TableHead>Origem</TableHead>
+                      <TableHead>Destino</TableHead>
+                      <TableHead>Peso</TableHead>
+                      <TableHead>Contrib. Confiança</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -170,7 +170,7 @@ export function KnowledgeLineageTab() {
           <Card>
             <CardContent className="pt-4">
               {breakdowns.length === 0 ? (
-                <p className="text-sm text-muted-foreground p-4">No breakdowns yet. Click "Compute Breakdowns".</p>
+                <p className="text-sm text-muted-foreground p-4">Nenhuma decomposição ainda. Clique em "Calcular Decomposições".</p>
               ) : (
                 <div className="space-y-4">
                   {breakdowns.map((b: any) => (
@@ -187,12 +187,12 @@ export function KnowledgeLineageTab() {
 
                       {/* Factor bars */}
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                        <FactorBar label="Base Confidence" value={Number(b.base_confidence)} />
-                        <FactorBar label="Repo Trust" value={Number(b.repo_trust_contribution)} positive />
-                        <FactorBar label="Recurrence" value={Number(b.recurrence_contribution)} positive />
-                        <FactorBar label="Execution Reinforcement" value={Number(b.execution_reinforcement)} positive />
-                        <FactorBar label="Merge Support" value={Number(b.merge_support)} positive />
-                        <FactorBar label="Penalties" value={Number(b.negative_signal_penalty)} negative />
+                        <FactorBar label="Confiança Base" value={Number(b.base_confidence)} />
+                        <FactorBar label="Confiança do Repo" value={Number(b.repo_trust_contribution)} positive />
+                        <FactorBar label="Recorrência" value={Number(b.recurrence_contribution)} positive />
+                        <FactorBar label="Reforço de Execução" value={Number(b.execution_reinforcement)} positive />
+                        <FactorBar label="Suporte de Merge" value={Number(b.merge_support)} positive />
+                        <FactorBar label="Penalidades" value={Number(b.negative_signal_penalty)} negative />
                       </div>
 
                       {/* Explanation */}
@@ -211,7 +211,7 @@ export function KnowledgeLineageTab() {
             <CardContent className="pt-4">
               {integrityAlerts.length === 0 ? (
                 <p className="text-sm text-muted-foreground p-4">
-                  No integrity alerts. Click "Check Integrity" to scan.
+                  Sem alertas de integridade. Clique em "Verificar Integridade" para escanear.
                 </p>
               ) : (
                 <div className="space-y-2">
@@ -222,7 +222,7 @@ export function KnowledgeLineageTab() {
                          a.severity === "critical" ? <ShieldAlert className="w-4 h-4" /> :
                          <Info className="w-4 h-4" />}
                         <Badge variant="outline" className="text-[10px]">{a.type}</Badge>
-                        <span className="text-sm font-medium">{a.title || "Unknown"}</span>
+                        <span className="text-sm font-medium">{a.title || "Desconhecido"}</span>
                       </div>
                       <p className="text-xs mt-1 opacity-80">{a.message}</p>
                     </div>
