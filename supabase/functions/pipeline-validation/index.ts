@@ -286,7 +286,6 @@ async function processOneArtifact(artifact: any, deps: any) {
   const isCode = artifact.type === "code";
   let currentText = extractText(artifact.raw_output);
   let fixAttempts = 0;
-  // Sprint 203: Generate attempt_id per fix loop iteration for traceability
   const fixLoopTraceId = crypto.randomUUID();
 
   // Get architecture context (light)
@@ -294,6 +293,29 @@ async function processOneArtifact(artifact: any, deps: any) {
   if (initiative.architecture_content) {
     archContext = String(initiative.architecture_content).slice(0, 1200);
   }
+
+  // Sprint 207: Enriched project context — gather type info from approved artifacts
+  let projectTypeContext = "";
+  try {
+    const { data: approvedArts } = await serviceClient.from("agent_outputs")
+      .select("summary, raw_output, type")
+      .eq("initiative_id", ctx.initiativeId)
+      .eq("status", "approved")
+      .eq("type", "code")
+      .limit(8);
+    if (approvedArts && approvedArts.length > 0) {
+      const typeLines = approvedArts.map((a: any) => {
+        const text = extractText(a.raw_output);
+        const lines = text.split("\n").filter((l: string) =>
+          l.startsWith("import ") || l.startsWith("export interface") ||
+          l.startsWith("export type") || l.includes("createClient") ||
+          l.includes("supabase") || l.startsWith("export const")
+        );
+        return lines.length > 0 ? `// ${a.summary}\n${lines.slice(0, 10).join("\n")}` : null;
+      }).filter(Boolean).join("\n");
+      if (typeLines) projectTypeContext = `\n\nProject imports/types reference:\n${typeLines.slice(0, 2000)}`;
+    }
+  } catch { /* non-critical */ }
 
   for (let loop = 0; loop <= MAX_FIX_ATTEMPTS; loop++) {
     const isFirstPass = loop === 0;
