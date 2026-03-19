@@ -136,7 +136,7 @@ export default function DeliveryOutcomes() {
           <Sheet open={!!selected} onOpenChange={() => { setSelected(null); setDetail(null); }}>
             <SheetContent className="w-[480px] bg-card">
               <SheetHeader>
-                <SheetTitle className="text-foreground">Outcome Causality Detail</SheetTitle>
+                <SheetTitle className="text-foreground">Detalhe de Causalidade</SheetTitle>
               </SheetHeader>
               {selected && (
                 <div className="mt-4 space-y-4 text-sm">
