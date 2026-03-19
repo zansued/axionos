@@ -1,0 +1,1 @@
+UPDATE initiative_jobs SET status = 'failed', error = 'Stale job cleared - concurrency lock release', completed_at = now() WHERE id IN ('7ade564c-31b6-47a0-92bb-f52aaa01fc9e', '4671bbdf-de87-43df-ab3d-fd59b39dc0cc') AND status = 'running'
