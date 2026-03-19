@@ -105,7 +105,7 @@ export class VercelAdapter implements IDeployProviderAdapter {
   generateConfig(initiative: DeployInitiativeContext): DeployProviderConfig {
     return {
       framework: initiative.framework || "vite",
-      install_command: "npm install --include=dev --legacy-peer-deps",
+      install_command: "node scripts/pre-install.js && rm -f package-lock.json && npm install --include=dev --legacy-peer-deps",
       build_command: "npm run build",
       output_directory: "dist",
       rewrites: [{ source: "/(.*)", destination: "/index.html" }],
