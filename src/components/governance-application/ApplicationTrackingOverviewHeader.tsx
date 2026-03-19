@@ -5,12 +5,12 @@ import { Activity, CheckCircle2, Ban, AlertTriangle, Undo2, ShieldAlert, Clock, 
 interface Props { overview: ApplicationOverview }
 
 const cards = [
-  { key: "activeApplications", label: "Active", icon: Activity, color: "text-blue-400" },
-  { key: "completedApplications", label: "Completed", icon: CheckCircle2, color: "text-emerald-500" },
-  { key: "blockedApplications", label: "Blocked", icon: Ban, color: "text-destructive" },
-  { key: "driftAlerts", label: "Drift Alerts", icon: AlertTriangle, color: "text-orange-500" },
-  { key: "rolledBack", label: "Rolled Back", icon: Undo2, color: "text-red-500" },
-  { key: "governanceAttention", label: "Needs Attention", icon: ShieldAlert, color: "text-purple-400" },
+  { key: "activeApplications", label: "Ativas", icon: Activity, color: "text-blue-400" },
+  { key: "completedApplications", label: "Concluídas", icon: CheckCircle2, color: "text-emerald-500" },
+  { key: "blockedApplications", label: "Bloqueadas", icon: Ban, color: "text-destructive" },
+  { key: "driftAlerts", label: "Alertas de Desvio", icon: AlertTriangle, color: "text-orange-500" },
+  { key: "rolledBack", label: "Revertidas", icon: Undo2, color: "text-red-500" },
+  { key: "governanceAttention", label: "Atenção Necessária", icon: ShieldAlert, color: "text-purple-400" },
 ] as const;
 
 export function ApplicationTrackingOverviewHeader({ overview }: Props) {
@@ -34,9 +34,9 @@ export function ApplicationTrackingOverviewHeader({ overview }: Props) {
         })}
       </div>
       <div className="flex flex-wrap gap-4 text-xs text-muted-foreground px-1">
-        <span className="flex items-center gap-1"><Clock className="h-3 w-3 text-muted-foreground" /> Avg handoff→complete: {overview.avgHandoffToCompletionHours}h</span>
-        <span className="flex items-center gap-1"><AlertTriangle className="h-3 w-3 text-yellow-500" /> Oldest active: {overview.oldestActiveApplication}</span>
-        <span className="flex items-center gap-1"><Flame className="h-3 w-3 text-orange-500" /> High-risk in progress: {overview.highRiskInProgress}</span>
+        <span className="flex items-center gap-1"><Clock className="h-3 w-3 text-muted-foreground" /> Média handoff→conclusão: {overview.avgHandoffToCompletionHours}h</span>
+        <span className="flex items-center gap-1"><AlertTriangle className="h-3 w-3 text-yellow-500" /> Mais antiga ativa: {overview.oldestActiveApplication}</span>
+        <span className="flex items-center gap-1"><Flame className="h-3 w-3 text-orange-500" /> Alto risco em progresso: {overview.highRiskInProgress}</span>
       </div>
     </div>
   );

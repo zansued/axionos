@@ -15,7 +15,7 @@ export function ApplicationHistoryPanel({ applications }: Props) {
     return (
       <Card className="border-border/30 bg-card/60">
         <CardContent className="p-6 text-center text-xs text-muted-foreground">
-          No completed applications in history.
+          Nenhuma aplicação concluída no histórico.
         </CardContent>
       </Card>
     );
@@ -25,20 +25,20 @@ export function ApplicationHistoryPanel({ applications }: Props) {
     <Card className="border-border/30 bg-card/60">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm flex items-center gap-2">
-          <History className="h-4 w-4 text-primary" /> Application History
+          <History className="h-4 w-4 text-primary" /> Histórico de Aplicações
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/20 hover:bg-muted/20">
-              <TableHead className="text-xs w-[80px]">App ID</TableHead>
-              <TableHead className="text-xs">Change Title</TableHead>
-              <TableHead className="text-xs w-[100px]">Type</TableHead>
-              <TableHead className="text-xs w-[110px]">Outcome</TableHead>
-              <TableHead className="text-xs w-[100px]">Scope</TableHead>
-              <TableHead className="text-xs w-[70px]">Follow-up</TableHead>
-              <TableHead className="text-xs w-[100px]">Completed</TableHead>
+              <TableHead className="text-xs w-[80px]">ID</TableHead>
+              <TableHead className="text-xs">Título da Mudança</TableHead>
+              <TableHead className="text-xs w-[100px]">Tipo</TableHead>
+              <TableHead className="text-xs w-[110px]">Resultado</TableHead>
+              <TableHead className="text-xs w-[100px]">Escopo</TableHead>
+              <TableHead className="text-xs w-[100px]">Acompanhamento</TableHead>
+              <TableHead className="text-xs w-[100px]">Concluído</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -52,8 +52,8 @@ export function ApplicationHistoryPanel({ applications }: Props) {
                   <TableCell><Badge variant="outline" className="text-[10px]">{a.proposalType.replace(/_/g, " ")}</Badge></TableCell>
                   <TableCell><span className={`text-xs ${statusDef.color}`}>{statusDef.label}</span></TableCell>
                   <TableCell><Badge variant={scopeDef.variant} className="text-[10px]">{scopeDef.label}</Badge></TableCell>
-                  <TableCell className="text-xs text-muted-foreground">{a.linkedFollowUpProposalIds.length > 0 ? "Yes" : "—"}</TableCell>
-                  <TableCell className="text-xs text-muted-foreground">{a.completedAt ? format(new Date(a.completedAt), "MMM d") : "—"}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground">{a.linkedFollowUpProposalIds.length > 0 ? "Sim" : "—"}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground">{a.completedAt ? format(new Date(a.completedAt), "dd/MM") : "—"}</TableCell>
                 </TableRow>
               );
             })}

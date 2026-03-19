@@ -40,37 +40,37 @@ export default function GovernanceChangeApplicationTracking() {
           <div>
             <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
               <Crosshair className="h-6 w-6 text-primary" />
-              Governance Change Application Tracking
+              Rastreamento de Aplicação de Mudanças
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Downstream application lifecycle for governance-approved changes. Oversight, not execution.
+              Ciclo de vida downstream para mudanças aprovadas pela governança. Supervisão, não execução.
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[140px] h-8 text-xs"><SelectValue placeholder="Type" /></SelectTrigger>
+              <SelectTrigger className="w-[140px] h-8 text-xs"><SelectValue placeholder="Tipo" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="canon_evolution">Canon</SelectItem>
-                <SelectItem value="policy_tuning">Policy</SelectItem>
-                <SelectItem value="agent_selection_tuning">Agent Selection</SelectItem>
-                <SelectItem value="readiness_tuning">Readiness</SelectItem>
+                <SelectItem value="all">Todos os Tipos</SelectItem>
+                <SelectItem value="canon_evolution">Cânone</SelectItem>
+                <SelectItem value="policy_tuning">Política</SelectItem>
+                <SelectItem value="agent_selection_tuning">Seleção de Agente</SelectItem>
+                <SelectItem value="readiness_tuning">Prontidão</SelectItem>
               </SelectContent>
             </Select>
             <Select value={riskFilter} onValueChange={setRiskFilter}>
-              <SelectTrigger className="w-[110px] h-8 text-xs"><SelectValue placeholder="Risk" /></SelectTrigger>
+              <SelectTrigger className="w-[110px] h-8 text-xs"><SelectValue placeholder="Risco" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Risk</SelectItem>
-                <SelectItem value="critical">Critical</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="all">Todo Risco</SelectItem>
+                <SelectItem value="critical">Crítico</SelectItem>
+                <SelectItem value="high">Alto</SelectItem>
+                <SelectItem value="medium">Médio</SelectItem>
+                <SelectItem value="low">Baixo</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[140px] h-8 text-xs"><SelectValue placeholder="Status" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">Todos os Status</SelectItem>
                 {Object.values(APPLICATION_STATUS_DEFS).map((s) => (
                   <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>
                 ))}
@@ -82,17 +82,16 @@ export default function GovernanceChangeApplicationTracking() {
         {/* Overview */}
         <ApplicationTrackingOverviewHeader overview={MOCK_OVERVIEW} />
 
-        {/* Tabs: Queue + Detail vs History */}
+        {/* Tabs */}
         <Tabs defaultValue="tracking" className="space-y-4">
           <TabsList className="bg-muted/30">
-            <TabsTrigger value="tracking" className="text-xs">Active Tracking</TabsTrigger>
-            <TabsTrigger value="history" className="text-xs">Application History</TabsTrigger>
+            <TabsTrigger value="tracking" className="text-xs">Rastreamento Ativo</TabsTrigger>
+            <TabsTrigger value="history" className="text-xs">Histórico de Aplicações</TabsTrigger>
           </TabsList>
 
           <TabsContent value="tracking" className="space-y-4">
             <ApplicationTrackingQueue applications={filtered} onSelect={setSelectedId} selectedId={selectedId} />
 
-            {/* Detail workspace */}
             {selected && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -100,7 +99,7 @@ export default function GovernanceChangeApplicationTracking() {
                     {selected.applicationId} — {selected.changeTitle}
                   </h2>
                   <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => setSelectedId(null)}>
-                    <X className="h-3 w-3" /> Close
+                    <X className="h-3 w-3" /> Fechar
                   </Button>
                 </div>
 

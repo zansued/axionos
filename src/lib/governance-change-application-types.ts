@@ -26,17 +26,17 @@ export interface ApplicationStatusDef {
 }
 
 export const APPLICATION_STATUS_DEFS: Record<ApplicationStatus, ApplicationStatusDef> = {
-  pending_downstream_start: { key: "pending_downstream_start", label: "Pending Start", color: "text-muted-foreground", terminal: false },
-  in_progress:             { key: "in_progress", label: "In Progress", color: "text-blue-400", terminal: false },
-  partially_applied:       { key: "partially_applied", label: "Partially Applied", color: "text-yellow-500", terminal: false },
-  awaiting_validation:     { key: "awaiting_validation", label: "Awaiting Validation", color: "text-amber-400", terminal: false },
-  stable:                  { key: "stable", label: "Stable", color: "text-emerald-400", terminal: false },
-  completed:               { key: "completed", label: "Completed", color: "text-emerald-500", terminal: true },
-  blocked:                 { key: "blocked", label: "Blocked", color: "text-destructive", terminal: false },
-  drift_detected:          { key: "drift_detected", label: "Drift Detected", color: "text-orange-500", terminal: false },
-  rollback_in_progress:    { key: "rollback_in_progress", label: "Rollback In Progress", color: "text-red-400", terminal: false },
-  rolled_back:             { key: "rolled_back", label: "Rolled Back", color: "text-red-500", terminal: true },
-  escalated_to_governance: { key: "escalated_to_governance", label: "Escalated", color: "text-purple-400", terminal: false },
+  pending_downstream_start: { key: "pending_downstream_start", label: "Início Pendente", color: "text-muted-foreground", terminal: false },
+  in_progress:             { key: "in_progress", label: "Em Progresso", color: "text-blue-400", terminal: false },
+  partially_applied:       { key: "partially_applied", label: "Parcialmente Aplicada", color: "text-yellow-500", terminal: false },
+  awaiting_validation:     { key: "awaiting_validation", label: "Aguardando Validação", color: "text-amber-400", terminal: false },
+  stable:                  { key: "stable", label: "Estável", color: "text-emerald-400", terminal: false },
+  completed:               { key: "completed", label: "Concluída", color: "text-emerald-500", terminal: true },
+  blocked:                 { key: "blocked", label: "Bloqueada", color: "text-destructive", terminal: false },
+  drift_detected:          { key: "drift_detected", label: "Desvio Detectado", color: "text-orange-500", terminal: false },
+  rollback_in_progress:    { key: "rollback_in_progress", label: "Rollback em Progresso", color: "text-red-400", terminal: false },
+  rolled_back:             { key: "rolled_back", label: "Revertida", color: "text-red-500", terminal: true },
+  escalated_to_governance: { key: "escalated_to_governance", label: "Escalada", color: "text-purple-400", terminal: false },
 };
 
 // ── Scope Compliance ────────────────────────────────────────────────────────
@@ -44,11 +44,11 @@ export const APPLICATION_STATUS_DEFS: Record<ApplicationStatus, ApplicationStatu
 export type ScopeComplianceStatus = "in_scope" | "minor_drift" | "material_drift" | "constraint_missing" | "validation_missing";
 
 export const SCOPE_COMPLIANCE_LABELS: Record<ScopeComplianceStatus, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  in_scope:           { label: "In Scope", variant: "default" },
-  minor_drift:        { label: "Minor Drift", variant: "secondary" },
-  material_drift:     { label: "Material Drift", variant: "destructive" },
-  constraint_missing: { label: "Constraint Missing", variant: "destructive" },
-  validation_missing: { label: "Validation Missing", variant: "outline" },
+  in_scope:           { label: "No Escopo", variant: "default" },
+  minor_drift:        { label: "Desvio Menor", variant: "secondary" },
+  material_drift:     { label: "Desvio Material", variant: "destructive" },
+  constraint_missing: { label: "Restrição Ausente", variant: "destructive" },
+  validation_missing: { label: "Validação Ausente", variant: "outline" },
 };
 
 // ── Sub-types ───────────────────────────────────────────────────────────────
