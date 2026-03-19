@@ -119,8 +119,8 @@ export default function DeliveryOutcomes() {
                           <div className="flex-1 min-w-0">
                             <span className="text-sm font-medium text-foreground">{r.initiatives?.title || r.outcome_summary?.slice(0, 40) || r.id.slice(0, 8)}</span>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-[11px] text-muted-foreground">Type: {r.outcome_type}</span>
-                              <span className="text-[11px] text-muted-foreground">Confidence: {Math.round((r.confidence_score || 0) * 100)}%</span>
+                              <span className="text-[11px] text-muted-foreground">Tipo: {r.outcome_type}</span>
+                              <span className="text-[11px] text-muted-foreground">Confiança: {Math.round((r.confidence_score || 0) * 100)}%</span>
                             </div>
                           </div>
                           <Badge variant={statusBadge(r.analysis_status)}>{r.analysis_status}</Badge>
