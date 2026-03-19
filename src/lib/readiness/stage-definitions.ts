@@ -336,7 +336,7 @@ export const STAGE_DEFINITIONS: StageDefinition[] = [
   {
     stage: "deploy",
     matchStatuses: [
-      "ready_to_publish", "published", "deploying", "deployed",
+      "ready_to_publish", "published", "deploying", "deployed", "deploy_failed",
     ],
     checks: deployChecks,
   },
