@@ -125,7 +125,7 @@ export default function DeliveryOutcomes() {
                           </div>
                           <Badge variant={statusBadge(r.analysis_status)}>{r.analysis_status}</Badge>
                         </div>
-                      )) || <p className="text-sm text-muted-foreground">No outcome records yet.</p>}
+                      )) || <p className="text-sm text-muted-foreground">Nenhum registro de resultado ainda.</p>}
                     </ScrollArea>
                   </CardContent>
                 </Card>
