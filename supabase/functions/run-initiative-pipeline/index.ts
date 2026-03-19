@@ -11,7 +11,7 @@ const corsHeaders = {
 
 const DEPLOY_VERCEL_CONFIG = {
   framework: "vite",
-  installCommand: "rm -f package-lock.json && npm install --include=dev",
+  installCommand: "npm install --include=dev --legacy-peer-deps",
   buildCommand: "npm run build",
   outputDirectory: "dist",
   rewrites: [{ source: "/(.*)", destination: "/index.html" }],
