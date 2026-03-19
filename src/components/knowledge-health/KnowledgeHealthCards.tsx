@@ -55,14 +55,14 @@ export function KnowledgeHealthCards({ triggers, workflows, proposals, history }
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2.5">
-      <MetricCard value={pendingTriggers} label="Pending Triggers" icon={AlertTriangle} variant={pendingTriggers > 5 ? "warning" : "default"} />
-      <MetricCard value={activeWorkflows} label="Under Revalidation" icon={Hourglass} variant={activeWorkflows > 0 ? "accent" : "default"} />
-      <MetricCard value={completedWorkflows} label="Completed" icon={CheckCircle2} variant="success" />
-      <MetricCard value={failedWorkflows} label="Failed Renewals" icon={XCircle} variant={failedWorkflows > 0 ? "destructive" : "default"} />
-      <MetricCard value={pendingProposals} label="Pending Proposals" icon={FileCheck} variant={pendingProposals > 0 ? "warning" : "default"} />
-      <MetricCard value={confidenceRestored} label="Confidence Restored" icon={ArrowUpCircle} variant="success" />
-      <MetricCard value={superseded} label="Superseded" icon={Clock} variant={superseded > 0 ? "warning" : "default"} />
-      <MetricCard value={deprecated} label="Deprecated" icon={Ban} variant={deprecated > 0 ? "destructive" : "default"} />
+      <MetricCard value={pendingTriggers} label="Gatilhos Pendentes" icon={AlertTriangle} variant={pendingTriggers > 5 ? "warning" : "default"} />
+      <MetricCard value={activeWorkflows} label="Em Revalidação" icon={Hourglass} variant={activeWorkflows > 0 ? "accent" : "default"} />
+      <MetricCard value={completedWorkflows} label="Concluídos" icon={CheckCircle2} variant="success" />
+      <MetricCard value={failedWorkflows} label="Renovações Falhas" icon={XCircle} variant={failedWorkflows > 0 ? "destructive" : "default"} />
+      <MetricCard value={pendingProposals} label="Propostas Pendentes" icon={FileCheck} variant={pendingProposals > 0 ? "warning" : "default"} />
+      <MetricCard value={confidenceRestored} label="Confiança Restaurada" icon={ArrowUpCircle} variant="success" />
+      <MetricCard value={superseded} label="Substituídos" icon={Clock} variant={superseded > 0 ? "warning" : "default"} />
+      <MetricCard value={deprecated} label="Descontinuados" icon={Ban} variant={deprecated > 0 ? "destructive" : "default"} />
     </div>
   );
 }

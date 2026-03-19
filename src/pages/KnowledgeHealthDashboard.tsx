@@ -21,10 +21,10 @@ export default function KnowledgeHealthDashboard() {
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2.5 font-['Space_Grotesk']">
               <HeartPulse className="h-6 w-6 text-primary" />
-              Knowledge Health Dashboard
+              Saúde do Conhecimento
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Monitor institutional knowledge health, renewal pipelines, and governance bridge
+              Monitore a saúde do conhecimento institucional, pipelines de renovação e ponte de governança
             </p>
           </div>
           <Button
@@ -33,7 +33,7 @@ export default function KnowledgeHealthDashboard() {
             disabled={renewal.scanTriggers.isPending}
           >
             <Activity className="h-3.5 w-3.5 mr-1.5" />
-            {renewal.scanTriggers.isPending ? "Scanning…" : "Scan Triggers"}
+            {renewal.scanTriggers.isPending ? "Escaneando…" : "Escanear Gatilhos"}
           </Button>
         </div>
 
@@ -46,12 +46,12 @@ export default function KnowledgeHealthDashboard() {
 
         <Tabs defaultValue="queue" className="space-y-4">
           <TabsList className="bg-muted/20 border border-border/20 flex-wrap h-auto gap-0.5 p-1">
-            <TabsTrigger value="queue" className="text-xs gap-1.5"><ListChecks className="h-3.5 w-3.5" />Renewal Queue</TabsTrigger>
-            <TabsTrigger value="bridge" className="text-xs gap-1.5"><GitBranch className="h-3.5 w-3.5" />Governance Bridge</TabsTrigger>
-            <TabsTrigger value="timeline" className="text-xs gap-1.5"><TrendingUp className="h-3.5 w-3.5" />Confidence Timeline</TabsTrigger>
-            <TabsTrigger value="breakdown" className="text-xs gap-1.5"><BarChart3 className="h-3.5 w-3.5" />Health Breakdown</TabsTrigger>
-            <TabsTrigger value="throughput" className="text-xs gap-1.5"><Activity className="h-3.5 w-3.5" />Throughput</TabsTrigger>
-            <TabsTrigger value="automation" className="text-xs gap-1.5"><Settings className="h-3.5 w-3.5" />Automation</TabsTrigger>
+            <TabsTrigger value="queue" className="text-xs gap-1.5"><ListChecks className="h-3.5 w-3.5" />Fila de Renovação</TabsTrigger>
+            <TabsTrigger value="bridge" className="text-xs gap-1.5"><GitBranch className="h-3.5 w-3.5" />Ponte de Governança</TabsTrigger>
+            <TabsTrigger value="timeline" className="text-xs gap-1.5"><TrendingUp className="h-3.5 w-3.5" />Linha do Tempo</TabsTrigger>
+            <TabsTrigger value="breakdown" className="text-xs gap-1.5"><BarChart3 className="h-3.5 w-3.5" />Análise de Saúde</TabsTrigger>
+            <TabsTrigger value="throughput" className="text-xs gap-1.5"><Activity className="h-3.5 w-3.5" />Vazão</TabsTrigger>
+            <TabsTrigger value="automation" className="text-xs gap-1.5"><Settings className="h-3.5 w-3.5" />Automação</TabsTrigger>
           </TabsList>
 
           <TabsContent value="queue">
