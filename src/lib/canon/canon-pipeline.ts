@@ -134,7 +134,7 @@ const PROMOTABLE_CANON_TYPES: string[] = [
 ];
 
 export function isCanonEntryPromotableToLibrary(entry: CanonEntry): boolean {
-  if (entry.lifecycle_status !== "active") return false;
+  if (entry.lifecycle_status !== "approved") return false;
   if (entry.approval_status !== "approved") return false;
   if (!PROMOTABLE_CANON_TYPES.includes(entry.canon_type) && !PROMOTABLE_CANON_TYPES.includes(entry.practice_type)) return false;
   return true;
