@@ -253,7 +253,17 @@ Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
         });
 
         // ──── Step 2: DEVELOPER ────
-        const backendRules = isBackend ? `\nREGRAS BACKEND:\n- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto\n- edge_function: Deno/TS com CORS headers e auth\n- supabase_client: createClient com import.meta.env` : "";
+        const backendRules = isBackend ? `\nREGRAS BACKEND OBRIGATÓRIAS:
+- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto
+- edge_function: Deno/TS com CORS headers e auth
+  * USAR: Deno.serve(async (req) => { ... }) — NÃO usar import serve de deno.land/std
+  * USAR: import { createClient } from "https://esm.sh/@supabase/supabase-js@2" — NÃO definir interfaces SupabaseClient custom
+  * USAR: Deno.env.get() para variáveis de ambiente
+  * CORS: const corsHeaders = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version" }
+  * SEMPRE tratar req.method === "OPTIONS" retornando Response com corsHeaders
+  * Para Stripe webhooks: assinatura usa formato "t=timestamp,v1=hex_hmac" — NÃO usar atob() na signature
+  * Usar ReturnType<typeof createClient> para tipar o client — NÃO criar interfaces manuais
+- supabase_client: createClient com import.meta.env` : "";
         const devResult = await callAI(apiKey,
           `Você é o Developer "${effectiveDev.name}" no AxionOS.
 Recebeu a especificação do Code Architect. Implemente o código COMPLETO.
@@ -269,7 +279,12 @@ REGRAS package.json:
 - NÃO inclua "shadcn/ui" como dependência
 - Use "lucide-react" (não "lucide")
 - SEMPRE inclua "type": "module"
-- Use @vitejs/plugin-react-swc`,
+- Use @vitejs/plugin-react-swc
+
+REGRAS DE TIPOS:
+- NÃO crie interfaces manuais para clientes de bibliotecas (SupabaseClient, StripeClient, etc.)
+- Use os tipos nativos das bibliotecas via ReturnType<typeof createClient> ou imports diretos
+- Para Edge Functions, use a API nativa Deno.serve() sem imports externos de server.ts`,
           `${baseContext}\n\n## Especificação do Code Architect:\n${codeArchResult.content}`
         );
         let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
