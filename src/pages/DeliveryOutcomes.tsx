@@ -65,13 +65,13 @@ export default function DeliveryOutcomes() {
   };
 
   const kpis = [
-    { label: "Analyzed", value: ov?.analyzed ?? "—", icon: Activity, color: "text-blue-400" },
-    { label: "Reviewed", value: ov?.reviewed ?? "—", icon: CheckCircle2, color: "text-emerald-400" },
-    { label: "Low Confidence", value: ov?.low_confidence ?? "—", icon: HelpCircle, color: "text-amber-400" },
-    { label: "Pending", value: ov?.pending ?? "—", icon: AlertTriangle, color: "text-orange-400" },
-    { label: "Positive Factors", value: ov?.positive_factors ?? "—", icon: TrendingUp, color: "text-emerald-500" },
-    { label: "Negative Factors", value: ov?.negative_factors ?? "—", icon: TrendingDown, color: "text-red-400" },
-    { label: "Rollback Outcomes", value: ov?.rollback_outcomes ?? "—", icon: XCircle, color: "text-red-500" },
+    { label: "Analisados", value: ov?.analyzed ?? "—", icon: Activity, color: "text-blue-400" },
+    { label: "Revisados", value: ov?.reviewed ?? "—", icon: CheckCircle2, color: "text-emerald-400" },
+    { label: "Baixa Confiança", value: ov?.low_confidence ?? "—", icon: HelpCircle, color: "text-amber-400" },
+    { label: "Pendentes", value: ov?.pending ?? "—", icon: AlertTriangle, color: "text-orange-400" },
+    { label: "Fatores Positivos", value: ov?.positive_factors ?? "—", icon: TrendingUp, color: "text-emerald-500" },
+    { label: "Fatores Negativos", value: ov?.negative_factors ?? "—", icon: TrendingDown, color: "text-red-400" },
+    { label: "Resultados de Rollback", value: ov?.rollback_outcomes ?? "—", icon: XCircle, color: "text-red-500" },
   ];
 
   return (
