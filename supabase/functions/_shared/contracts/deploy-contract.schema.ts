@@ -112,7 +112,7 @@ export interface VercelDeployConfig {
 
 export const VERCEL_DEFAULT_CONFIG: VercelDeployConfig = {
   framework: "vite",
-  install_command: "rm -f package-lock.json && npm install --include=dev",
+  install_command: "npm install --include=dev --legacy-peer-deps",
   build_command: "npm run build",
   output_directory: "dist",
   rewrites: [{ source: "/(.*)", destination: "/index.html" }],

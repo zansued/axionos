@@ -11,7 +11,7 @@ const corsHeaders = {
 
 const DEPLOY_VERCEL_CONFIG = {
   framework: "vite",
-  installCommand: "rm -f package-lock.json && npm install --include=dev",
+  installCommand: "npm install --include=dev --legacy-peer-deps",
   buildCommand: "npm run build",
   outputDirectory: "dist",
   rewrites: [{ source: "/(.*)", destination: "/index.html" }],
@@ -520,7 +520,7 @@ IMPORTANTE:
 - file_type para FRONTEND: scaffold, component, page, style, config, hook, util, test, type
 - file_type para BACKEND: schema, migration, edge_function, auth_config, seed, supabase_client
 - Subtasks de scaffold incluem: package.json, vite.config.ts, tsconfig.json, tailwind.config.ts, index.html, src/main.tsx, src/App.tsx, src/index.css, vercel.json, public/_redirects
-- vercel.json DEVE conter: { "framework": "vite", "installCommand": "rm -f package-lock.json && npm install --include=dev", "buildCommand": "npm run build", "outputDirectory": "dist", "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+- vercel.json DEVE conter: { "framework": "vite", "installCommand": "npm install --include=dev --legacy-peer-deps", "buildCommand": "npm run build", "outputDirectory": "dist", "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
 - public/_redirects DEVE conter: /* /index.html 200  (para Netlify)
 - Use paths relativos ao root do projeto (ex: src/components/Header.tsx)
 
@@ -1056,6 +1056,10 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
 
             // Ensure ESM + scripts
             pkg.type = "module";
+            pkg.engines = {
+              ...(pkg.engines && typeof pkg.engines === "object" ? pkg.engines : {}),
+              node: "20.x",
+            };
             if (!pkg.scripts) pkg.scripts = {};
             pkg.scripts.dev = "vite";
             pkg.scripts.build = "vite build";
@@ -1094,6 +1098,15 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
             forceDevDep("postcss", "^8.5.6");
             forceDevDep("@types/react", "^18.3.23");
             forceDevDep("@types/react-dom", "^18.3.7");
+            forceDevDep("@types/node", "^22.13.10");
+            forceDevDep("globals", "^15.15.0");
+
+            // Force ESLint 9.x — v10 breaks peer deps with plugins
+            forceDevDep("eslint", "^9.32.0");
+            forceDevDep("eslint-plugin-react-hooks", "^5.2.0");
+            forceDevDep("eslint-plugin-react-refresh", "^0.4.20");
+            forceDevDep("@eslint/js", "^9.32.0");
+            forceDevDep("typescript-eslint", "^8.38.0");
 
             return JSON.stringify(pkg, null, 2);
           } catch {
@@ -1254,7 +1267,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
 
                   const devResult = await callAI(
                     LOVABLE_API_KEY,
-                    `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use componentes shadcn/ui e Tailwind CSS para frontend.\n- Siga as melhores práticas de ${language}.\n${backendRules}\n\nREGRAS PARA package.json:\n- NÃO inclua "shadcn/ui", "shadcn-ui", "@shadcn/ui" ou "shadcn" como dependência. Componentes shadcn/ui são copiados localmente, não são pacotes npm.\n- NÃO inclua "@radix/ui" ou "radix-ui". Use pacotes individuais como "@radix-ui/react-dialog".\n- Use "lucide-react" (não "lucide").\n- SEMPRE inclua "type": "module" no package.json.\n- SEMPRE inclua @vitejs/plugin-react-swc, typescript, tailwindcss, autoprefixer, postcss em devDependencies.\n- NÃO use @vitejs/plugin-react.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"rm -f package-lock.json && npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical.`,
+                    `Você é o Dev "${devAgent.name}" no AxionOS. Você recebeu a especificação técnica do Architect abaixo. Implemente o código COMPLETO e FUNCIONAL.\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Siga EXATAMENTE a especificação do Architect.\n- Use componentes shadcn/ui e Tailwind CSS para frontend.\n- Siga as melhores práticas de ${language}.\n${backendRules}\n\nREGRAS PARA package.json:\n- NÃO inclua "shadcn/ui", "shadcn-ui", "@shadcn/ui" ou "shadcn" como dependência. Componentes shadcn/ui são copiados localmente, não são pacotes npm.\n- NÃO inclua "@radix/ui" ou "radix-ui". Use pacotes individuais como "@radix-ui/react-dialog".\n- Use "lucide-react" (não "lucide").\n- SEMPRE inclua "type": "module" no package.json.\n- SEMPRE fixe "engines.node" como "20.x" no package.json.\n- SEMPRE inclua @vitejs/plugin-react-swc, typescript, tailwindcss, autoprefixer, postcss em devDependencies.\n- SEMPRE use eslint@^9.32.0 e eslint-plugin-react-hooks@^5.2.0.\n- NÃO use @vitejs/plugin-react.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev --legacy-peer-deps","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical.`,
                     `${baseContext}\n\n## Especificação do Architect:\n${archResult.content}`
                   );
                   let codeContent = devResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
@@ -1362,7 +1375,7 @@ REGRAS PARA ARQUIVOS BACKEND (Supabase):
 
                   const result = await callAI(
                     LOVABLE_API_KEY,
-                    `Você é um desenvolvedor expert em Full-Stack com Vite + React + TypeScript + Tailwind CSS + Supabase.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use componentes shadcn/ui e Tailwind CSS (para frontend).\n- Siga as melhores práticas de ${language}.\n${singleBackendRules}\n\nREGRAS PARA package.json:\n- NÃO inclua "shadcn/ui", "shadcn-ui", "@shadcn/ui" ou "shadcn" como dependência. Componentes shadcn/ui são copiados localmente, não são pacotes npm.\n- NÃO inclua "@radix/ui" ou "radix-ui". Use pacotes individuais como "@radix-ui/react-dialog".\n- Use "lucide-react" (não "lucide").\n- SEMPRE inclua "type": "module" no package.json.\n- SEMPRE inclua @vitejs/plugin-react-swc, typescript, tailwindcss, autoprefixer, postcss em devDependencies.\n- NÃO use @vitejs/plugin-react.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"rm -f package-lock.json && npm install --include=dev","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical.`,
+                    `Você é um desenvolvedor expert em Full-Stack com Vite + React + TypeScript + Tailwind CSS + Supabase.\nVocê está gerando o arquivo "${subtask.file_path}".\n\nREGRAS:\n- Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações.\n- Código COMPLETO e FUNCIONAL.\n- Use componentes shadcn/ui e Tailwind CSS (para frontend).\n- Siga as melhores práticas de ${language}.\n${singleBackendRules}\n\nREGRAS PARA package.json:\n- NÃO inclua "shadcn/ui", "shadcn-ui", "@shadcn/ui" ou "shadcn" como dependência. Componentes shadcn/ui são copiados localmente, não são pacotes npm.\n- NÃO inclua "@radix/ui" ou "radix-ui". Use pacotes individuais como "@radix-ui/react-dialog".\n- Use "lucide-react" (não "lucide").\n- SEMPRE inclua "type": "module" no package.json.\n- SEMPRE fixe "engines.node" como "20.x" no package.json.\n- SEMPRE inclua @vitejs/plugin-react-swc, typescript, tailwindcss, autoprefixer, postcss em devDependencies.\n- SEMPRE use eslint@^9.32.0 e eslint-plugin-react-hooks@^5.2.0.\n- NÃO use @vitejs/plugin-react.\n\nARQUIVOS DE DEPLOY (conteúdo EXATO se o arquivo for um destes):\n- vercel.json: {"framework":"vite","installCommand":"npm install --include=dev --legacy-peer-deps","buildCommand":"npm run build","outputDirectory":"dist","rewrites":[{"source":"/(.*)", "destination":"/index.html"}]}\n- public/_redirects: /* /index.html 200\n- index.html: NÃO use href="/" em tags link/canonical.`,
                     `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || initiative.refined_idea || ""}\n\n## Estrutura do projeto:\n${projectStructure}\n\n## Arquivos já gerados:\n${contextStr || "(nenhum)"}\n\n## Arquivo: ${subtask.file_path}\n## Tipo: ${subtask.file_type || "code"}\n## Tarefa: ${subtask.description}\n\n${initiative.prd_content ? `## PRD:\n${initiative.prd_content.slice(0, 1500)}` : ""}\n${initiative.architecture_content ? `## Arquitetura:\n${initiative.architecture_content.slice(0, 1500)}` : ""}${supabaseConnInfo}${memoryContext}\n\nGere o conteúdo COMPLETO do arquivo. Retorne APENAS o código.`
                   );
 

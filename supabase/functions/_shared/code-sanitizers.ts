@@ -3,7 +3,7 @@
 /** Vercel deploy configuration */
 export const DEPLOY_VERCEL_CONFIG = {
   framework: "vite",
-  installCommand: "rm -f package-lock.json && npm install --include=dev",
+  installCommand: "npm install --include=dev --legacy-peer-deps",
   buildCommand: "npm run build",
   outputDirectory: "dist",
   rewrites: [{ source: "/(.*)", destination: "/index.html" }],
@@ -70,6 +70,10 @@ export function sanitizePackageJson(content: string): string {
 
     // Ensure ESM + scripts
     pkg.type = "module";
+    pkg.engines = {
+      ...(pkg.engines && typeof pkg.engines === "object" ? pkg.engines : {}),
+      node: "20.x",
+    };
     if (!pkg.scripts) pkg.scripts = {};
     pkg.scripts.dev = "vite";
     pkg.scripts.build = "vite build";
@@ -108,6 +112,8 @@ export function sanitizePackageJson(content: string): string {
     forceDevDep("postcss", "^8.5.6");
     forceDevDep("@types/react", "^18.3.23");
     forceDevDep("@types/react-dom", "^18.3.7");
+    forceDevDep("@types/node", "^22.13.10");
+    forceDevDep("globals", "^15.15.0");
 
     // Force ESLint 9.x — v10 breaks peer deps with plugins
     forceDevDep("eslint", "^9.32.0");
