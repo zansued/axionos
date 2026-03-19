@@ -206,6 +206,9 @@ export function getDeterministicFiles(supabaseConnInfo?: { url: string; anonKey:
       ? `VITE_SUPABASE_URL=${supabaseConnInfo.url}\nVITE_SUPABASE_ANON_KEY=${supabaseConnInfo.anonKey}`
       : `VITE_SUPABASE_URL=https://your-project.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key`,
     "src/lib/supabase.ts": `import { createClient } from '@supabase/supabase-js';\n\nconst supabaseUrl = import.meta.env.VITE_SUPABASE_URL;\nconst supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;\n\nif (!supabaseUrl || !supabaseAnonKey) {\n  throw new Error('Missing Supabase environment variables. Check .env file.');\n}\n\nexport const supabase = createClient(supabaseUrl, supabaseAnonKey);`,
+    "src/main.tsx": `import React from "react";\nimport ReactDOM from "react-dom/client";\nimport App from "./App";\nimport "./index.css";\n\nReactDOM.createRoot(document.getElementById("root")!).render(\n  <React.StrictMode>\n    <App />\n  </React.StrictMode>\n);`,
+    "src/App.tsx": `import React from "react";\n\nfunction App() {\n  return (\n    <div className="min-h-screen flex items-center justify-center bg-background text-foreground">\n      <div className="text-center space-y-4">\n        <h1 className="text-4xl font-bold">App</h1>\n        <p className="text-muted-foreground">Projeto inicializado com sucesso.</p>\n      </div>\n    </div>\n  );\n}\n\nexport default App;`,
+    "src/index.css": `@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\n:root {\n  --background: 0 0% 100%;\n  --foreground: 222.2 84% 4.9%;\n  --muted: 210 40% 96%;\n  --muted-foreground: 215.4 16.3% 46.9%;\n}\n\nbody {\n  margin: 0;\n  font-family: system-ui, sans-serif;\n}`,
   };
 }
 

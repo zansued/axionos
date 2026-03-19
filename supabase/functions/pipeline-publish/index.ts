@@ -242,6 +242,7 @@ serve(async (req) => {
       "index.html", "vite.config.ts", "tsconfig.json", "tsconfig.node.json",
       "tsconfig.app.json", "postcss.config.js", "tailwind.config.js", "vercel.json",
       ".nvmrc", ".node-version", "eslint.config.js", "public/_redirects", "netlify.toml",
+      "src/main.tsx", "src/App.tsx", "src/index.css",
     ];
     for (const sp of SCAFFOLD_FILES) {
       if (!existingPaths.has(sp) && DETERMINISTIC_FILES[sp]) {
