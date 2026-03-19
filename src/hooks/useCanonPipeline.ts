@@ -92,12 +92,12 @@ export function useCanonPipeline() {
         promotedCandidates: candData.filter((c: any) => c.promotion_status === "promoted").length,
         candidatesByStatus,
         totalCanonEntries: entryData.length,
-        activeEntries: entryData.filter((e: any) => e.lifecycle_status === "active").length,
+        activeEntries: entryData.filter((e: any) => e.lifecycle_status === "active" || e.lifecycle_status === "approved").length,
         entriesByType,
         syncTotals,
         deprecatedEntries: entryData.filter((e: any) => e.lifecycle_status === "deprecated").length,
         retrievablePatterns: entryData.filter((e: any) =>
-          e.lifecycle_status === "active" &&
+          (e.lifecycle_status === "active" || e.lifecycle_status === "approved") &&
           e.approval_status === "approved" &&
           (e.confidence_score ?? 0) >= 0.5
         ).length,
