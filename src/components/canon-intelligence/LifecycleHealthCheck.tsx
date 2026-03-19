@@ -190,7 +190,7 @@ export function LifecycleHealthCheck() {
       </CardHeader>
       <CardContent className="space-y-3">
         {!data && !healthCheck.isFetching && (
-          <p className="text-xs text-muted-foreground italic">Press "Run Check" to verify lifecycle correctness.</p>
+          <p className="text-xs text-muted-foreground italic">Clique em "Executar Verificação" para validar a integridade do ciclo de vida.</p>
         )}
 
         {data && (
