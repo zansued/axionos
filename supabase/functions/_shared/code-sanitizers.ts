@@ -15,6 +15,28 @@ export const DEPLOY_VERCEL_JSON = JSON.stringify(DEPLOY_VERCEL_CONFIG, null, 2);
 const INVALID_PACKAGES = new Set([
   "shadcn/ui", "shadcn-ui", "@shadcn/ui", "shadcn", "tailwindcss-animate/latest",
   "radix-ui", "@radix/ui", "lucide", "framer", "next-themes/latest",
+  "@radix-ui/react-button", // does NOT exist on npm
+]);
+
+/** Valid @radix-ui/* packages on npm — anything else is removed */
+const VALID_RADIX_PACKAGES = new Set([
+  "@radix-ui/react-accordion", "@radix-ui/react-alert-dialog", "@radix-ui/react-aspect-ratio",
+  "@radix-ui/react-avatar", "@radix-ui/react-checkbox", "@radix-ui/react-collapsible",
+  "@radix-ui/react-context-menu", "@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu",
+  "@radix-ui/react-hover-card", "@radix-ui/react-label", "@radix-ui/react-menubar",
+  "@radix-ui/react-navigation-menu", "@radix-ui/react-popover", "@radix-ui/react-progress",
+  "@radix-ui/react-radio-group", "@radix-ui/react-scroll-area", "@radix-ui/react-select",
+  "@radix-ui/react-separator", "@radix-ui/react-slider", "@radix-ui/react-slot",
+  "@radix-ui/react-switch", "@radix-ui/react-tabs", "@radix-ui/react-toast",
+  "@radix-ui/react-toggle", "@radix-ui/react-toggle-group", "@radix-ui/react-tooltip",
+  "@radix-ui/react-primitive", "@radix-ui/react-presence", "@radix-ui/react-portal",
+  "@radix-ui/react-compose-refs", "@radix-ui/react-id", "@radix-ui/react-use-callback-ref",
+  "@radix-ui/react-use-controllable-state", "@radix-ui/react-use-escape-keydown",
+  "@radix-ui/react-use-layout-effect", "@radix-ui/react-use-previous", "@radix-ui/react-use-rect",
+  "@radix-ui/react-use-size", "@radix-ui/react-visually-hidden", "@radix-ui/react-direction",
+  "@radix-ui/react-focus-scope", "@radix-ui/react-focus-guards", "@radix-ui/react-dismissable-layer",
+  "@radix-ui/react-roving-focus", "@radix-ui/react-collection", "@radix-ui/react-form",
+  "@radix-ui/react-arrow", "@radix-ui/react-popper",
 ]);
 
 /**
