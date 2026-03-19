@@ -25,55 +25,55 @@ const MOCK_KPIS = {
 };
 
 const THREAT_SURFACES = [
-  { name: "Agent Execution", risk: 72, incidents: 5, color: "hsl(var(--destructive))" },
-  { name: "Contract Validation", risk: 45, incidents: 3, color: "hsl(var(--warning))" },
-  { name: "Runtime Pipeline", risk: 61, incidents: 4, color: "hsl(var(--axion-orange))" },
-  { name: "Retrieval Context", risk: 38, incidents: 2, color: "hsl(var(--warning))" },
-  { name: "Tenant Boundaries", risk: 15, incidents: 0, color: "hsl(var(--success))" },
-  { name: "Deploy Surfaces", risk: 52, incidents: 3, color: "hsl(var(--axion-orange))" },
-  { name: "Auth & Permissions", risk: 28, incidents: 1, color: "hsl(var(--success))" },
-  { name: "Data Storage", risk: 33, incidents: 1, color: "hsl(var(--warning))" },
+  { name: "Execução de Agentes", risk: 72, incidents: 5, color: "hsl(var(--destructive))" },
+  { name: "Validação de Contratos", risk: 45, incidents: 3, color: "hsl(var(--warning))" },
+  { name: "Pipeline de Runtime", risk: 61, incidents: 4, color: "hsl(var(--axion-orange))" },
+  { name: "Contexto de Recuperação", risk: 38, incidents: 2, color: "hsl(var(--warning))" },
+  { name: "Limites de Tenant", risk: 15, incidents: 0, color: "hsl(var(--success))" },
+  { name: "Superfícies de Deploy", risk: 52, incidents: 3, color: "hsl(var(--axion-orange))" },
+  { name: "Auth & Permissões", risk: 28, incidents: 1, color: "hsl(var(--success))" },
+  { name: "Armazenamento de Dados", risk: 33, incidents: 1, color: "hsl(var(--warning))" },
 ];
 
 const WAR_TIMELINE = [
-  { time: "12:34", event: "Red Team simulation started", type: "red", icon: Swords, detail: "Contract input pressure — agent boundary" },
-  { time: "12:36", event: "Fragility detected", type: "warning", icon: AlertTriangle, detail: "Validation bypass partial success on retrieval layer" },
-  { time: "12:37", event: "Breach attempt blocked", type: "blue", icon: ShieldCheck, detail: "Permission boundary probe rejected — tenant isolation intact" },
-  { time: "12:38", event: "Containment applied", type: "blue", icon: Lock, detail: "Execution isolated, validation intensity increased" },
-  { time: "12:40", event: "Rollback advisory issued", type: "neutral", icon: Clock, detail: "Recovery posture assessed — rollback viability confirmed" },
-  { time: "12:42", event: "Learning synthesized", type: "purple", icon: Sparkles, detail: "New secure architecture pattern extracted → Canon candidate" },
-  { time: "12:45", event: "Canon entry promoted", type: "canon", icon: BookOpen, detail: "Hardening checklist for retrieval context added to active canon" },
-  { time: "12:48", event: "Blue Team alert cleared", type: "success", icon: CheckCircle2, detail: "All containment measures verified — normal posture restored" },
+  { time: "12:34", event: "Simulação Red Team iniciada", type: "red", icon: Swords, detail: "Pressão de entrada em contrato — limite de agente" },
+  { time: "12:36", event: "Fragilidade detectada", type: "warning", icon: AlertTriangle, detail: "Bypass de validação parcialmente bem-sucedido na camada de recuperação" },
+  { time: "12:37", event: "Tentativa de violação bloqueada", type: "blue", icon: ShieldCheck, detail: "Sonda de limite de permissão rejeitada — isolamento de tenant intacto" },
+  { time: "12:38", event: "Contenção aplicada", type: "blue", icon: Lock, detail: "Execução isolada, intensidade de validação aumentada" },
+  { time: "12:40", event: "Aviso de rollback emitido", type: "neutral", icon: Clock, detail: "Postura de recuperação avaliada — viabilidade de rollback confirmada" },
+  { time: "12:42", event: "Aprendizado sintetizado", type: "purple", icon: Sparkles, detail: "Novo padrão de arquitetura segura extraído → Candidato ao Cânone" },
+  { time: "12:45", event: "Entrada do Cânone promovida", type: "canon", icon: BookOpen, detail: "Checklist de hardening para contexto de recuperação adicionado ao cânone ativo" },
+  { time: "12:48", event: "Alerta Blue Team resolvido", type: "success", icon: CheckCircle2, detail: "Todas as medidas de contenção verificadas — postura normal restaurada" },
 ];
 
 const ERROR_SUCCESS_MATRIX = {
   detected: [
-    { label: "Contract bypass attempt", severity: "critical", surface: "Agent Execution" },
-    { label: "Retrieval context poisoning", severity: "high", surface: "Retrieval Context" },
-    { label: "Validation escape pattern", severity: "high", surface: "Runtime Pipeline" },
-    { label: "Permission boundary probe", severity: "medium", surface: "Tenant Boundaries" },
-    { label: "Insecure artifact signal", severity: "medium", surface: "Deploy Surfaces" },
+    { label: "Tentativa de bypass de contrato", severity: "critical", surface: "Execução de Agentes" },
+    { label: "Envenenamento de contexto de recuperação", severity: "high", surface: "Contexto de Recuperação" },
+    { label: "Padrão de escape de validação", severity: "high", surface: "Pipeline de Runtime" },
+    { label: "Sonda de limite de permissão", severity: "medium", surface: "Limites de Tenant" },
+    { label: "Sinal de artefato inseguro", severity: "medium", surface: "Superfícies de Deploy" },
   ],
   responded: [
-    { label: "Execution isolated", action: "isolate_execution" },
-    { label: "Validation intensity increased", action: "increase_validation" },
-    { label: "Human review recommended", action: "recommend_review" },
-    { label: "Governance review opened", action: "governance_review" },
-    { label: "Rollback advisory triggered", action: "rollback_advisory" },
+    { label: "Execução isolada", action: "isolar_execução" },
+    { label: "Intensidade de validação aumentada", action: "aumentar_validação" },
+    { label: "Revisão humana recomendada", action: "recomendar_revisão" },
+    { label: "Revisão de governança aberta", action: "revisão_governança" },
+    { label: "Aviso de rollback acionado", action: "aviso_rollback" },
   ],
   canonized: [
-    { label: "Retrieval hardening checklist", type: "hardening_checklist" },
-    { label: "Agent boundary isolation pattern", type: "secure_architecture_pattern" },
-    { label: "Contract validation anti-pattern", type: "anti_pattern" },
-    { label: "Tenant scope verification rule", type: "validation_rule" },
+    { label: "Checklist de hardening de recuperação", type: "checklist_hardening" },
+    { label: "Padrão de isolamento de limite de agente", type: "padrão_arquitetura_segura" },
+    { label: "Anti-padrão de validação de contrato", type: "anti_padrão" },
+    { label: "Regra de verificação de escopo de tenant", type: "regra_validação" },
   ],
 };
 
 const CANON_INFLUENCE = [
-  { agent: "Architecture Agent", patterns: 12, lastUsed: "2m ago", icon: Boxes, usage: 89 },
-  { agent: "Build Agent", patterns: 18, lastUsed: "5m ago", icon: FileCode, usage: 76 },
-  { agent: "Validation Agent", patterns: 23, lastUsed: "1m ago", icon: CheckCircle2, usage: 94 },
-  { agent: "Coordination Agent", patterns: 8, lastUsed: "12m ago", icon: Network, usage: 62 },
+  { agent: "Agente de Arquitetura", patterns: 12, lastUsed: "2m atrás", icon: Boxes, usage: 89 },
+  { agent: "Agente de Build", patterns: 18, lastUsed: "5m atrás", icon: FileCode, usage: 76 },
+  { agent: "Agente de Validação", patterns: 23, lastUsed: "1m atrás", icon: CheckCircle2, usage: 94 },
+  { agent: "Agente de Coordenação", patterns: 8, lastUsed: "12m atrás", icon: Network, usage: 62 },
 ];
 
 const CONTRACT_BOUNDARIES = [
@@ -86,21 +86,44 @@ const CONTRACT_BOUNDARIES = [
 ];
 
 const RED_TEAM_SCENARIOS = [
-  { name: "Contract Input Pressure", runs: 12, fragility: 34, breaches: 0, status: "completed" },
-  { name: "Validation Bypass Attempt", runs: 8, fragility: 52, breaches: 1, status: "completed" },
-  { name: "Permission Boundary Probe", runs: 15, fragility: 18, breaches: 0, status: "running" },
-  { name: "Unsafe Tool Action Request", runs: 6, fragility: 41, breaches: 0, status: "completed" },
-  { name: "Retrieval Context Poisoning", runs: 10, fragility: 67, breaches: 2, status: "review" },
-  { name: "Tenant Boundary Scope Check", runs: 9, fragility: 12, breaches: 0, status: "completed" },
+  { name: "Pressão de Entrada em Contrato", runs: 12, fragility: 34, breaches: 0, status: "completed" },
+  { name: "Tentativa de Bypass de Validação", runs: 8, fragility: 52, breaches: 1, status: "completed" },
+  { name: "Sonda de Limite de Permissão", runs: 15, fragility: 18, breaches: 0, status: "running" },
+  { name: "Requisição de Ação Insegura", runs: 6, fragility: 41, breaches: 0, status: "completed" },
+  { name: "Envenenamento de Contexto de Recuperação", runs: 10, fragility: 67, breaches: 2, status: "review" },
+  { name: "Verificação de Escopo de Tenant", runs: 9, fragility: 12, breaches: 0, status: "completed" },
 ];
 
 const BLUE_TEAM_ALERTS = [
-  { id: 1, type: "contract_anomaly", severity: "critical", surface: "Agent Execution", status: "contained", time: "2m ago" },
-  { id: 2, type: "unsafe_runtime_action", severity: "high", surface: "Runtime Pipeline", status: "investigating", time: "8m ago" },
-  { id: 3, type: "suspicious_retrieval_context", severity: "high", surface: "Retrieval Context", status: "resolved", time: "15m ago" },
-  { id: 4, type: "repeated_validation_escape", severity: "medium", surface: "Validation", status: "monitoring", time: "22m ago" },
-  { id: 5, type: "observability_gap", severity: "low", surface: "Observability", status: "acknowledged", time: "45m ago" },
+  { id: 1, type: "anomalia_contrato", severity: "critical", surface: "Execução de Agentes", status: "contained", time: "2m atrás" },
+  { id: 2, type: "ação_runtime_insegura", severity: "high", surface: "Pipeline de Runtime", status: "investigating", time: "8m atrás" },
+  { id: 3, type: "contexto_recuperação_suspeito", severity: "high", surface: "Contexto de Recuperação", status: "resolved", time: "15m atrás" },
+  { id: 4, type: "escape_validação_repetido", severity: "medium", surface: "Validação", status: "monitoring", time: "22m atrás" },
+  { id: 5, type: "lacuna_observabilidade", severity: "low", surface: "Observabilidade", status: "acknowledged", time: "45m atrás" },
 ];
+
+// ─── Status Labels ──────────────────────────────────────────────────────────
+
+const STATUS_LABELS: Record<string, string> = {
+  secure: "seguro",
+  monitored: "monitorado",
+  at_risk: "em risco",
+  completed: "concluído",
+  running: "em execução",
+  review: "revisão",
+  contained: "contido",
+  investigating: "investigando",
+  resolved: "resolvido",
+  monitoring: "monitorando",
+  acknowledged: "reconhecido",
+};
+
+const SEVERITY_LABELS: Record<string, string> = {
+  critical: "crítico",
+  high: "alto",
+  medium: "médio",
+  low: "baixo",
+};
 
 // ─── Utility Components ─────────────────────────────────────────────────────
 
@@ -131,7 +154,7 @@ function SeverityBadge({ severity }: { severity: string }) {
     medium: "bg-warning/20 text-warning border-warning/30",
     low: "bg-muted/30 text-muted-foreground border-border/30",
   };
-  return <Badge variant="outline" className={`text-[10px] ${styles[severity] || styles.low}`}>{severity}</Badge>;
+  return <Badge variant="outline" className={`text-[10px] ${styles[severity] || styles.low}`}>{SEVERITY_LABELS[severity] || severity}</Badge>;
 }
 
 function StatusBadge({ status }: { status: string }) {
@@ -148,7 +171,7 @@ function StatusBadge({ status }: { status: string }) {
     monitoring: "bg-muted/30 text-muted-foreground border-border/30",
     acknowledged: "bg-muted/30 text-muted-foreground border-border/30",
   };
-  return <Badge variant="outline" className={`text-[10px] ${styles[status] || ""}`}>{status}</Badge>;
+  return <Badge variant="outline" className={`text-[10px] ${styles[status] || ""}`}>{STATUS_LABELS[status] || status}</Badge>;
 }
 
 // ─── Heatmap ────────────────────────────────────────────────────────────────
@@ -167,7 +190,7 @@ function ThreatHeatmap() {
               <div className="text-xs text-muted-foreground mb-1">{s.name}</div>
               <div className="flex items-end justify-between">
                 <div className="text-2xl font-bold font-['Space_Grotesk']" style={{ color: s.color }}>{s.risk}</div>
-                <div className="text-[10px] text-muted-foreground">{s.incidents} incidents</div>
+                <div className="text-[10px] text-muted-foreground">{s.incidents} incidentes</div>
               </div>
               <Progress value={s.risk} className="h-1.5 mt-2" />
             </CardContent>
@@ -197,7 +220,6 @@ function WarTimeline() {
 
   return (
     <div className="relative">
-      {/* Vertical line */}
       <div className="absolute left-[22px] top-0 bottom-0 w-px bg-gradient-to-b from-destructive/40 via-primary/40 to-success/40" />
 
       <div className="space-y-1">
@@ -209,7 +231,6 @@ function WarTimeline() {
             transition={{ delay: i * 0.08 }}
             className={`relative flex items-start gap-4 p-3 rounded-lg border ${typeColors[item.type]} ml-0`}
           >
-            {/* Dot on timeline */}
             <div className="flex flex-col items-center min-w-[44px]">
               <div className={`w-3 h-3 rounded-full ${dotColors[item.type]} ring-2 ring-background z-10`} />
               <span className="text-[10px] text-muted-foreground mt-1 font-mono">{item.time}</span>
@@ -234,12 +255,12 @@ function WarTimeline() {
 function ResilienceMatrix() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {/* Failures Detected */}
+      {/* Falhas Detectadas */}
       <Card className="border border-destructive/20 bg-destructive/5">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
             <XCircle className="h-4 w-4 text-destructive" />
-            Failures Detected
+            Falhas Detectadas
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
@@ -255,12 +276,12 @@ function ResilienceMatrix() {
         </CardContent>
       </Card>
 
-      {/* Responses Applied */}
+      {/* Respostas Aplicadas */}
       <Card className="border border-primary/20 bg-primary/5">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-primary" />
-            Responses Applied
+            Respostas Aplicadas
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
@@ -273,12 +294,12 @@ function ResilienceMatrix() {
         </CardContent>
       </Card>
 
-      {/* Corrections Canonized */}
+      {/* Correções Canonizadas */}
       <Card className="border border-axion-purple/20 bg-axion-purple/5">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-axion-purple" />
-            Corrections Canonized
+            Correções Canonizadas
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
@@ -311,15 +332,15 @@ function CanonInfluencePanel() {
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">Patterns used</span>
+                  <span className="text-muted-foreground">Padrões usados</span>
                   <span className="font-bold">{agent.patterns}</span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">Canon usage</span>
+                  <span className="text-muted-foreground">Uso do Cânone</span>
                   <span className="font-bold text-primary">{agent.usage}%</span>
                 </div>
                 <Progress value={agent.usage} className="h-1.5" />
-                <div className="text-[10px] text-muted-foreground text-right">Last used {agent.lastUsed}</div>
+                <div className="text-[10px] text-muted-foreground text-right">Último uso {agent.lastUsed}</div>
               </div>
             </CardContent>
           </Card>
@@ -348,15 +369,15 @@ function ContractBoundaryViewer() {
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="text-lg font-bold text-warning">{c.pressure}</div>
-                  <div className="text-[10px] text-muted-foreground">Pressure events</div>
+                  <div className="text-[10px] text-muted-foreground">Eventos de pressão</div>
                 </div>
                 <div>
                   <div className="text-lg font-bold text-success">{c.blocked}</div>
-                  <div className="text-[10px] text-muted-foreground">Blocked</div>
+                  <div className="text-[10px] text-muted-foreground">Bloqueados</div>
                 </div>
                 <div>
                   <div className="text-lg font-bold text-destructive">{c.fragile}</div>
-                  <div className="text-[10px] text-muted-foreground">Fragile</div>
+                  <div className="text-[10px] text-muted-foreground">Frágeis</div>
                 </div>
               </div>
             </CardContent>
@@ -385,15 +406,15 @@ function RedTeamTab() {
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-lg font-bold">{s.runs}</div>
-                <div className="text-[10px] text-muted-foreground">Runs</div>
+                <div className="text-[10px] text-muted-foreground">Execuções</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-bold text-warning">{s.fragility}</div>
-                <div className="text-[10px] text-muted-foreground">Fragility</div>
+                <div className="text-[10px] text-muted-foreground">Fragilidade</div>
               </div>
               <div className="text-center">
                 <div className={`text-lg font-bold ${s.breaches > 0 ? "text-destructive" : "text-success"}`}>{s.breaches}</div>
-                <div className="text-[10px] text-muted-foreground">Breaches</div>
+                <div className="text-[10px] text-muted-foreground">Violações</div>
               </div>
             </div>
           </CardContent>
@@ -433,11 +454,11 @@ function BlueTeamTab() {
 
 function PurpleLearningsTab() {
   const learnings = [
-    { pattern: "Retrieval context must validate provenance before injection", type: "secure_architecture_pattern", confidence: 92, source: "Red Team Run #7" },
-    { pattern: "Agent boundary contracts must reject cascaded tool calls", type: "validation_rule", confidence: 88, source: "Incident #12" },
-    { pattern: "Deploy gates should verify artifact integrity hash", type: "hardening_checklist", confidence: 95, source: "Red Team Run #3" },
-    { pattern: "Avoid shared mutable state across tenant-scoped agents", type: "anti_pattern", confidence: 91, source: "Blue Team Alert #19" },
-    { pattern: "Runtime action requests must carry scope attestation", type: "contract_safety_guideline", confidence: 87, source: "Purple Review #5" },
+    { pattern: "Contexto de recuperação deve validar proveniência antes da injeção", type: "padrão_arquitetura_segura", confidence: 92, source: "Red Team Execução #7" },
+    { pattern: "Contratos de limite de agente devem rejeitar chamadas de ferramentas em cascata", type: "regra_validação", confidence: 88, source: "Incidente #12" },
+    { pattern: "Portões de deploy devem verificar hash de integridade do artefato", type: "checklist_hardening", confidence: 95, source: "Red Team Execução #3" },
+    { pattern: "Evitar estado mutável compartilhado entre agentes com escopo de tenant", type: "anti_padrão", confidence: 91, source: "Alerta Blue Team #19" },
+    { pattern: "Requisições de ação em runtime devem carregar atestação de escopo", type: "diretriz_segurança_contrato", confidence: 87, source: "Revisão Purple #5" },
   ];
 
   return (
@@ -446,12 +467,12 @@ function PurpleLearningsTab() {
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
             <TrendingUp className="h-4 w-4 text-axion-purple" />
-            How security learnings improve future builds
+            Como aprendizados de segurança melhoram builds futuros
           </CardTitle>
         </CardHeader>
         <CardContent className="text-xs text-muted-foreground space-y-1">
-          <p>After Sprint 146, all future software generation uses: security patterns, hardening checklists, anti-patterns, validation rules, and contract guidance from the Security Canon.</p>
-          <p className="text-axion-purple font-medium">The system doesn't just react to risk — it builds safer software from the start.</p>
+          <p>Após o Sprint 146, toda geração futura de software utiliza: padrões de segurança, checklists de hardening, anti-padrões, regras de validação e diretrizes de contrato do Cânone de Segurança.</p>
+          <p className="text-axion-purple font-medium">O sistema não apenas reage ao risco — ele constrói software mais seguro desde o início.</p>
         </CardContent>
       </Card>
 
@@ -461,13 +482,13 @@ function PurpleLearningsTab() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1">
                 <div className="text-sm font-medium mb-1">{l.pattern}</div>
-                <div className="text-[10px] text-muted-foreground">Source: {l.source}</div>
+                <div className="text-[10px] text-muted-foreground">Fonte: {l.source}</div>
               </div>
               <div className="flex flex-col items-end gap-1">
                 <Badge variant="outline" className="text-[10px] bg-axion-purple/10 text-axion-purple border-axion-purple/20">
                   {l.type.replace(/_/g, " ")}
                 </Badge>
-                <span className="text-[10px] text-muted-foreground">{l.confidence}% confidence</span>
+                <span className="text-[10px] text-muted-foreground">{l.confidence}% confiança</span>
               </div>
             </div>
           </CardContent>
@@ -487,16 +508,16 @@ function SecurityCanonTab() {
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
             <BarChart3 className="h-4 w-4 text-primary" />
-            Canon Coverage Summary
+            Resumo de Cobertura do Cânone
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: "Architecture Patterns", count: 12, total: 15 },
-              { label: "Implementation Patterns", count: 18, total: 22 },
-              { label: "Validation Rules", count: 23, total: 25 },
-              { label: "Anti-Patterns", count: 8, total: 10 },
+              { label: "Padrões de Arquitetura", count: 12, total: 15 },
+              { label: "Padrões de Implementação", count: 18, total: 22 },
+              { label: "Regras de Validação", count: 23, total: 25 },
+              { label: "Anti-Padrões", count: 8, total: 10 },
             ].map((c) => (
               <div key={c.label} className="text-center">
                 <div className="text-lg font-bold font-['Space_Grotesk']">{c.count}<span className="text-muted-foreground text-sm">/{c.total}</span></div>
@@ -526,10 +547,10 @@ export default function SecurityWarRoom() {
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold font-['Space_Grotesk'] tracking-tight">
-                    Security War Room
+                    Sala de Guerra de Segurança
                   </h1>
                   <p className="text-sm text-muted-foreground">
-                    Governed adversarial resilience, detection, response, and canonized learning
+                    Resiliência adversarial governada, detecção, resposta e aprendizado canonizado
                   </p>
                 </div>
               </div>
@@ -537,58 +558,51 @@ export default function SecurityWarRoom() {
 
             {/* ═══ KPIs ═══ */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-              <KpiCard value={MOCK_KPIS.activeSurfaces} label="Active Threat Surfaces" icon={Target} />
-              <KpiCard value={MOCK_KPIS.redTeamSims} label="Red Team Simulations" icon={Swords} warn />
-              <KpiCard value={MOCK_KPIS.blueTeamAlerts} label="Blue Team Alerts" icon={ShieldCheck} warn={MOCK_KPIS.blueTeamAlerts > 10} />
-              <KpiCard value={MOCK_KPIS.purpleLearnings} label="Purple Learnings" icon={Sparkles} accent />
-              <KpiCard value={MOCK_KPIS.canonEntries} label="Security Canon Entries" icon={BookOpen} accent />
-              <KpiCard value={`${MOCK_KPIS.recoveryReadiness}%`} label="Recovery Readiness" icon={Activity} accent />
+              <KpiCard value={MOCK_KPIS.activeSurfaces} label="Superfícies de Ameaça Ativas" icon={Target} />
+              <KpiCard value={MOCK_KPIS.redTeamSims} label="Simulações Red Team" icon={Swords} warn />
+              <KpiCard value={MOCK_KPIS.blueTeamAlerts} label="Alertas Blue Team" icon={ShieldCheck} warn={MOCK_KPIS.blueTeamAlerts > 10} />
+              <KpiCard value={MOCK_KPIS.purpleLearnings} label="Aprendizados Purple" icon={Sparkles} accent />
+              <KpiCard value={MOCK_KPIS.canonEntries} label="Entradas do Cânone de Segurança" icon={BookOpen} accent />
+              <KpiCard value={`${MOCK_KPIS.recoveryReadiness}%`} label="Prontidão de Recuperação" icon={Activity} accent />
             </div>
 
             {/* ═══ Tabs ═══ */}
             <Tabs defaultValue="surface-map" className="space-y-4">
               <TabsList className="bg-muted/20 border border-border/20 flex-wrap h-auto gap-0.5 p-1">
-                <TabsTrigger value="surface-map" className="text-xs gap-1.5"><MapIcon className="h-3.5 w-3.5" />Surface Map</TabsTrigger>
+                <TabsTrigger value="surface-map" className="text-xs gap-1.5"><MapIcon className="h-3.5 w-3.5" />Mapa de Superfícies</TabsTrigger>
                 <TabsTrigger value="red-team" className="text-xs gap-1.5"><Swords className="h-3.5 w-3.5" />Red Team</TabsTrigger>
                 <TabsTrigger value="blue-team" className="text-xs gap-1.5"><ShieldCheck className="h-3.5 w-3.5" />Blue Team</TabsTrigger>
-                <TabsTrigger value="purple" className="text-xs gap-1.5"><Sparkles className="h-3.5 w-3.5" />Purple Learnings</TabsTrigger>
-                <TabsTrigger value="canon" className="text-xs gap-1.5"><BookOpen className="h-3.5 w-3.5" />Security Canon</TabsTrigger>
-                <TabsTrigger value="timeline" className="text-xs gap-1.5"><Clock className="h-3.5 w-3.5" />War Timeline</TabsTrigger>
-                <TabsTrigger value="contracts" className="text-xs gap-1.5"><FileWarning className="h-3.5 w-3.5" />Contracts & Boundaries</TabsTrigger>
+                <TabsTrigger value="purple" className="text-xs gap-1.5"><Sparkles className="h-3.5 w-3.5" />Aprendizados Purple</TabsTrigger>
+                <TabsTrigger value="canon" className="text-xs gap-1.5"><BookOpen className="h-3.5 w-3.5" />Cânone de Segurança</TabsTrigger>
+                <TabsTrigger value="timeline" className="text-xs gap-1.5"><Clock className="h-3.5 w-3.5" />Linha do Tempo</TabsTrigger>
+                <TabsTrigger value="contracts" className="text-xs gap-1.5"><FileWarning className="h-3.5 w-3.5" />Contratos & Limites</TabsTrigger>
               </TabsList>
 
-              {/* Surface Map */}
               <TabsContent value="surface-map" className="space-y-4">
                 <ThreatHeatmap />
                 <ResilienceMatrix />
               </TabsContent>
 
-              {/* Red Team */}
               <TabsContent value="red-team">
                 <RedTeamTab />
               </TabsContent>
 
-              {/* Blue Team */}
               <TabsContent value="blue-team">
                 <BlueTeamTab />
               </TabsContent>
 
-              {/* Purple Learnings */}
               <TabsContent value="purple">
                 <PurpleLearningsTab />
               </TabsContent>
 
-              {/* Security Canon */}
               <TabsContent value="canon">
                 <SecurityCanonTab />
               </TabsContent>
 
-              {/* War Timeline */}
               <TabsContent value="timeline">
                 <WarTimeline />
               </TabsContent>
 
-              {/* Contracts & Boundaries */}
               <TabsContent value="contracts">
                 <ContractBoundaryViewer />
               </TabsContent>
