@@ -20,7 +20,7 @@ export function CoverageGaps({ segments }: Props) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <Card className="bg-card/50 border-border/30">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm text-warning">Under-Covered Domains</CardTitle>
+          <CardTitle className="text-sm text-warning">Domínios com Baixa Cobertura</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {weakSegments.length === 0 ? (
@@ -33,7 +33,7 @@ export function CoverageGaps({ segments }: Props) {
                   <span className="text-[10px] text-muted-foreground ml-2">{s.object_count} objetos</span>
                 </div>
                 <Badge variant="destructive" className="text-[10px]">
-                  {(s.health_score * 100).toFixed(0)}% health
+                  {(s.health_score * 100).toFixed(0)}% saúde
                 </Badge>
               </div>
             ))
@@ -43,7 +43,7 @@ export function CoverageGaps({ segments }: Props) {
 
       <Card className="bg-card/50 border-border/30">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm text-success">Strongest Segments</CardTitle>
+          <CardTitle className="text-sm text-success">Segmentos Mais Fortes</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {strongSegments.length === 0 ? (
@@ -56,7 +56,7 @@ export function CoverageGaps({ segments }: Props) {
                   <span className="text-[10px] text-muted-foreground ml-2">{s.object_count} objetos</span>
                 </div>
                 <Badge variant="default" className="text-[10px]">
-                  {(s.health_score * 100).toFixed(0)}% health
+                  {(s.health_score * 100).toFixed(0)}% saúde
                 </Badge>
               </div>
             ))

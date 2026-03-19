@@ -15,7 +15,7 @@ export function RedundancyHotspots({ segments }: Props) {
   return (
     <Card className="bg-card/50 border-border/30">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm">Redundancy Hotspots</CardTitle>
+        <CardTitle className="text-sm">Hotspots de Redundância</CardTitle>
       </CardHeader>
       <CardContent>
         {domainSegments.length === 0 ? (

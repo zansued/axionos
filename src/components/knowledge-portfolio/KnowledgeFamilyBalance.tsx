@@ -7,10 +7,10 @@ interface Props {
 }
 
 const FAMILY_LABELS: Record<string, string> = {
-  canon_entries: "Canon Entries",
-  skill_bundles: "Skill Bundles",
-  distilled_outputs: "Distilled Outputs",
-  architecture_heuristics: "Architecture Heuristics",
+  canon_entries: "Entradas do Cânone",
+  skill_bundles: "Pacotes de Skills",
+  distilled_outputs: "Saídas Destiladas",
+  architecture_heuristics: "Heurísticas de Arquitetura",
 };
 
 export function KnowledgeFamilyBalance({ segments, snapshot }: Props) {
@@ -23,7 +23,7 @@ export function KnowledgeFamilyBalance({ segments, snapshot }: Props) {
   return (
     <Card className="bg-card/50 border-border/30">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm">Knowledge Family Balance</CardTitle>
+        <CardTitle className="text-sm">Equilíbrio por Família de Conhecimento</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {families.length === 0 ? (
