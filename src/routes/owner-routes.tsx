@@ -5,7 +5,7 @@ import {
   Observability, CognitiveArchitectureMap,
   PatternLibraryDashboard, CanonIntelligenceDashboard, KnowledgeHealthDashboard,
   KnowledgePortfolioDashboard, SovereignCapabilitiesDashboard, KnowledgeDemandForecastDashboard, KnowledgeAcquisitionDashboard,
-  KnowledgeAcquisitionExecutionDashboard, KnowledgeAcquisitionRoiDashboard,
+  
   SecurityWarRoom, SecurityIntelligenceDashboard, RedTeamSimulationDashboard,
   BlueTeamDefenseDashboard, PurpleLearningDashboard, CanonPoisoningPreventionDashboard,
   SecurityMonitoringDashboard, CapabilityRegistry,
