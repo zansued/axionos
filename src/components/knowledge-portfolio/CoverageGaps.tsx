@@ -33,7 +33,7 @@ export function CoverageGaps({ segments }: Props) {
                   <span className="text-[10px] text-muted-foreground ml-2">{s.object_count} objetos</span>
                 </div>
                 <Badge variant="destructive" className="text-[10px]">
-                  {(s.health_score * 100).toFixed(0)}% health
+                  {(s.health_score * 100).toFixed(0)}% saúde
                 </Badge>
               </div>
             ))
