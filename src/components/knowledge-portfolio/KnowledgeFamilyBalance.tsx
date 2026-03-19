@@ -7,10 +7,10 @@ interface Props {
 }
 
 const FAMILY_LABELS: Record<string, string> = {
-  canon_entries: "Canon Entries",
-  skill_bundles: "Skill Bundles",
-  distilled_outputs: "Distilled Outputs",
-  architecture_heuristics: "Architecture Heuristics",
+  canon_entries: "Entradas do Cânone",
+  skill_bundles: "Pacotes de Skills",
+  distilled_outputs: "Saídas Destiladas",
+  architecture_heuristics: "Heurísticas de Arquitetura",
 };
 
 export function KnowledgeFamilyBalance({ segments, snapshot }: Props) {
