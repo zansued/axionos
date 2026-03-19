@@ -83,6 +83,12 @@ export function sanitizePackageJson(content: string): string {
           console.log(`[SANITIZE] package.json: removed "${name}"${replacement ? ` → "${replacement}"` : ""}`);
           continue;
         }
+        // Block non-existent @radix-ui/* packages
+        if (name.startsWith("@radix-ui/") && !VALID_RADIX_PACKAGES.has(name)) {
+          delete deps[name];
+          console.log(`[SANITIZE] package.json: removed non-existent radix package "${name}"`);
+          continue;
+        }
         if (/[^a-zA-Z0-9@/_.-]/.test(name)) {
           delete deps[name];
           console.log(`[SANITIZE] package.json: removed invalid "${name}"`);
