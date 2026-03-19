@@ -2,7 +2,7 @@
  * CognitiveArchitectureMap — Living intelligence loop visualization.
  *
  * Shows the continuous lifecycle:
- * Knowledge → Skills → Capabilities → Agents → Execution → Outcomes → Learning
+ * Conhecimento → Skills → Capacidades → Agentes → Execução → Resultados → Aprendizado
  *
  * Each node displays live metrics from the platform and links to its
  * respective dashboard for drill-down.
@@ -92,6 +92,7 @@ function useCognitiveMetrics(orgId: string | null) {
       if (!orgId) throw new Error("No org");
 
       const sb = supabase as any;
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
       const [
         canonRes,
@@ -107,7 +108,11 @@ function useCognitiveMetrics(orgId: string | null) {
         sb.from("engineering_skills").select("id, lifecycle_status", { count: "exact" }).eq("organization_id", orgId),
         sb.from("skill_capabilities").select("id, engineering_skill_id", { count: "exact" }).eq("organization_id", orgId),
         sb.from("agents").select("id, status", { count: "exact" }).eq("organization_id", orgId),
-        sb.from("story_subtasks").select("id, status", { count: "exact" }).eq("organization_id", orgId).gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+        // story_subtasks has NO organization_id — join through phases→stories→initiatives
+        sb.from("story_subtasks")
+          .select("id, status, created_at, phase:story_phases!inner(story:stories!inner(initiative:initiatives!inner(organization_id)))")
+          .eq("phase.story.initiative.organization_id", orgId)
+          .gte("created_at", sevenDaysAgo),
         sb.from("agent_outputs").select("id, status", { count: "exact" }).eq("organization_id", orgId),
         sb.from("skill_bundles").select("id", { count: "exact" }).eq("organization_id", orgId),
         sb.from("operational_learning_signals").select("id", { count: "exact" }).eq("organization_id", orgId),
@@ -138,7 +143,7 @@ function useCognitiveMetrics(orgId: string | null) {
       // Agents
       const activeAgents = agents.filter((a: any) => a.status === "active" || !a.status).length;
 
-      // Execution
+      // Execution — subtasks joined through phases
       const completedSubtasks = subtasks.filter((s: any) => s.status === "completed").length;
       const failedSubtasks = subtasks.filter((s: any) => s.status === "failed").length;
       const totalSubtasks = subtasks.length;
@@ -270,7 +275,7 @@ function LearningLoopConnector() {
       <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 border border-border/50">
         <RefreshCw className="h-3.5 w-3.5 text-primary animate-[spin_8s_linear_infinite]" />
         <span className="text-[11px] font-medium text-muted-foreground">
-          Continuous Intelligence Loop — outcomes feed back into knowledge
+          Loop Contínuo de Inteligência — resultados retroalimentam o conhecimento
         </span>
         <RefreshCw className="h-3.5 w-3.5 text-primary animate-[spin_8s_linear_infinite_reverse]" />
       </div>
@@ -284,47 +289,42 @@ function ArchitectureInsightsPanel({ metrics }: { metrics: LayerMetrics }) {
   const insights = useMemo((): ArchitectureInsight[] => {
     const list: ArchitectureInsight[] = [];
 
-    // Skill utilization
     const skillUtil = metrics.skills.total > 0
       ? Math.round((metrics.skills.approved / metrics.skills.total) * 100)
       : 0;
     list.push({
-      label: "Skill Approval Rate",
+      label: "Taxa de Aprovação de Skills",
       value: `${skillUtil}%`,
       status: skillUtil >= 60 ? "good" : skillUtil >= 30 ? "warning" : "critical",
-      detail: `${metrics.skills.approved} of ${metrics.skills.total} skills approved`,
+      detail: `${metrics.skills.approved} de ${metrics.skills.total} skills aprovadas`,
     });
 
-    // Capability coverage
     list.push({
-      label: "Capability Coverage",
+      label: "Cobertura de Capacidades",
       value: `${metrics.capabilities.coverage}%`,
       status: metrics.capabilities.coverage >= 70 ? "good" : metrics.capabilities.coverage >= 40 ? "warning" : "critical",
-      detail: `${metrics.capabilities.linkedToSkills} capabilities backed by skills`,
+      detail: `${metrics.capabilities.linkedToSkills} capacidades com suporte de skills`,
     });
 
-    // Agent capability density
     list.push({
-      label: "Avg Capabilities/Agent",
+      label: "Capacidades/Agente (média)",
       value: `${metrics.agents.avgCapabilities}`,
       status: metrics.agents.avgCapabilities >= 2 ? "good" : metrics.agents.avgCapabilities >= 1 ? "warning" : "critical",
-      detail: `${metrics.capabilities.total} capabilities across ${metrics.agents.total} agents`,
+      detail: `${metrics.capabilities.total} capacidades em ${metrics.agents.total} agentes`,
     });
 
-    // Execution success
     list.push({
-      label: "Execution Success Rate",
+      label: "Taxa de Sucesso de Execução",
       value: `${metrics.execution.successRate}%`,
       status: metrics.execution.successRate >= 80 ? "good" : metrics.execution.successRate >= 50 ? "warning" : "critical",
-      detail: `${metrics.execution.completed} completed, ${metrics.execution.failed} failed (7d)`,
+      detail: `${metrics.execution.completed} concluídas, ${metrics.execution.failed} falharam (7d)`,
     });
 
-    // Knowledge health
     list.push({
-      label: "Knowledge Health",
+      label: "Saúde do Conhecimento",
       value: `${metrics.knowledge.healthScore}%`,
       status: metrics.knowledge.healthScore >= 60 ? "good" : metrics.knowledge.healthScore >= 40 ? "warning" : "critical",
-      detail: `Average confidence across ${metrics.knowledge.portfolioEntries} promoted entries`,
+      detail: `Confiança média de ${metrics.knowledge.portfolioEntries} entradas promovidas`,
     });
 
     return list;
@@ -335,26 +335,26 @@ function ArchitectureInsightsPanel({ metrics }: { metrics: LayerMetrics }) {
 
     if (metrics.capabilities.unlinked > 0) {
       warnings.push({
-        label: "Capabilities without skill backing",
-        detail: `${metrics.capabilities.unlinked} capabilities have no linked engineering skills`,
+        label: "Capacidades sem suporte de skills",
+        detail: `${metrics.capabilities.unlinked} capacidades sem skills de engenharia vinculadas`,
       });
     }
     if (metrics.skills.pending > metrics.skills.approved) {
       warnings.push({
-        label: "Low skill approval rate",
-        detail: `${metrics.skills.pending} pending vs ${metrics.skills.approved} approved`,
+        label: "Baixa taxa de aprovação de skills",
+        detail: `${metrics.skills.pending} pendentes vs ${metrics.skills.approved} aprovadas`,
       });
     }
     if (metrics.knowledge.healthScore < 50) {
       warnings.push({
-        label: "Knowledge health degradation",
-        detail: `Average confidence at ${metrics.knowledge.healthScore}%`,
+        label: "Degradação da saúde do conhecimento",
+        detail: `Confiança média em ${metrics.knowledge.healthScore}%`,
       });
     }
     if (metrics.agents.total > 0 && metrics.capabilities.total === 0) {
       warnings.push({
-        label: "Agents without capability coverage",
-        detail: `${metrics.agents.total} agents but 0 skill-backed capabilities`,
+        label: "Agentes sem cobertura de capacidades",
+        detail: `${metrics.agents.total} agentes mas 0 capacidades com suporte de skills`,
       });
     }
 
@@ -379,14 +379,13 @@ function ArchitectureInsightsPanel({ metrics }: { metrics: LayerMetrics }) {
         <CardHeader className="pb-2">
           <div className="flex items-center gap-2">
             <Brain className="h-4 w-4 text-primary" />
-            <CardTitle className="text-sm">Architecture Insights</CardTitle>
+            <CardTitle className="text-sm">Insights da Arquitetura</CardTitle>
           </div>
           <p className="text-[10px] text-muted-foreground">
-            Automated health signals from the intelligence loop
+            Sinais automatizados de saúde do loop de inteligência
           </p>
         </CardHeader>
         <CardContent className="space-y-3">
-          {/* Insights */}
           {insights.map((insight, i) => (
             <div key={i}>
               <div className="flex items-center justify-between mb-0.5">
@@ -409,14 +408,13 @@ function ArchitectureInsightsPanel({ metrics }: { metrics: LayerMetrics }) {
             </div>
           ))}
 
-          {/* Risks */}
           {risks.length > 0 && (
             <>
               <Separator />
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
                   <Shield className="h-3.5 w-3.5 text-amber-500" />
-                  <span className="text-xs font-semibold text-amber-600">Risk Indicators</span>
+                  <span className="text-xs font-semibold text-amber-600">Indicadores de Risco</span>
                 </div>
                 <div className="space-y-1.5">
                   {risks.map((risk, i) => (
@@ -450,87 +448,87 @@ export default function CognitiveArchitectureMap() {
 
     return [
       {
-        title: "Knowledge",
-        subtitle: "Memory & learning",
+        title: "Conhecimento",
+        subtitle: "Memória & aprendizado",
         icon: BookOpen,
         color: "border-blue-500/40 hover:border-blue-500",
         navigateTo: "/owner/canon-intelligence",
         metrics: [
-          { label: "Canon entries", value: metrics.knowledge.canonEntries },
-          { label: "Promoted", value: metrics.knowledge.portfolioEntries },
-          { label: "Health", value: `${metrics.knowledge.healthScore}%` },
+          { label: "Entradas Canon", value: metrics.knowledge.canonEntries },
+          { label: "Promovidas", value: metrics.knowledge.portfolioEntries },
+          { label: "Saúde", value: `${metrics.knowledge.healthScore}%` },
         ],
       },
       {
         title: "Skills",
-        subtitle: "Extracted knowledge",
+        subtitle: "Conhecimento extraído",
         icon: Brain,
         color: "border-emerald-500/40 hover:border-emerald-500",
         navigateTo: "/owner/knowledge-portfolio",
         metrics: [
           { label: "Total", value: metrics.skills.total },
-          { label: "Approved", value: metrics.skills.approved },
-          { label: "Pending", value: metrics.skills.pending },
+          { label: "Aprovadas", value: metrics.skills.approved },
+          { label: "Pendentes", value: metrics.skills.pending },
         ],
       },
       {
-        title: "Capabilities",
-        subtitle: "Structured abilities",
+        title: "Capacidades",
+        subtitle: "Habilidades estruturadas",
         icon: Fingerprint,
         color: "border-violet-500/40 hover:border-violet-500",
         navigateTo: "/owner/capabilities",
         metrics: [
           { label: "Total", value: metrics.capabilities.total },
-          { label: "Skill-backed", value: metrics.capabilities.linkedToSkills },
-          { label: "Coverage", value: `${metrics.capabilities.coverage}%` },
+          { label: "Com skills", value: metrics.capabilities.linkedToSkills },
+          { label: "Cobertura", value: `${metrics.capabilities.coverage}%` },
         ],
       },
       {
-        title: "Agents",
-        subtitle: "Autonomous actors",
+        title: "Agentes",
+        subtitle: "Atores autônomos",
         icon: Bot,
         color: "border-amber-500/40 hover:border-amber-500",
         navigateTo: "/owner/agent-swarm",
         metrics: [
           { label: "Total", value: metrics.agents.total },
-          { label: "Active", value: metrics.agents.active },
-          { label: "Avg caps", value: metrics.agents.avgCapabilities },
+          { label: "Ativos", value: metrics.agents.active },
+          { label: "Média caps", value: metrics.agents.avgCapabilities },
         ],
       },
       {
-        title: "Execution",
-        subtitle: "Runtime operations",
+        title: "Execução",
+        subtitle: "Operações em runtime",
         icon: Zap,
         color: "border-cyan-500/40 hover:border-cyan-500",
         navigateTo: "/builder/runtime",
         metrics: [
-          { label: "Tasks (7d)", value: metrics.execution.recentSubtasks },
-          { label: "Completed", value: metrics.execution.completed },
-          { label: "Success", value: `${metrics.execution.successRate}%` },
+          { label: "Tarefas (7d)", value: metrics.execution.recentSubtasks },
+          { label: "Concluídas", value: metrics.execution.completed },
+          { label: "Sucesso", value: `${metrics.execution.successRate}%` },
         ],
       },
       {
-        title: "Outcomes",
-        subtitle: "Operational impact",
+        title: "Resultados",
+        subtitle: "Impacto operacional",
         icon: Target,
         color: "border-red-500/40 hover:border-red-500",
         navigateTo: "/owner/delivery-outcomes",
         metrics: [
           { label: "Outputs", value: metrics.outcomes.totalOutputs },
-          { label: "Approved", value: metrics.outcomes.approved },
-          { label: "Rejected", value: metrics.outcomes.rejected },
+          { label: "Aprovados", value: metrics.outcomes.approved },
+          { label: "Rejeitados", value: metrics.outcomes.rejected },
         ],
       },
       {
-        title: "Learning",
-        subtitle: "Feedback loop",
+        title: "Aprendizado",
+        subtitle: "Loop de feedback",
         icon: RefreshCw,
         color: "border-blue-500/40 hover:border-blue-500",
         navigateTo: "/owner/knowledge-health",
         metrics: [
-          { label: "Canon updates", value: metrics.learning.canonUpdates },
-          { label: "Extractions", value: metrics.learning.skillExtractions },
-          { label: "Signals", value: metrics.learning.learningSignals || "—" },
+          { label: "Atualizações Canon", value: metrics.learning.canonUpdates },
+          { label: "Extrações", value: metrics.learning.skillExtractions },
+          { label: "Sinais", value: metrics.learning.learningSignals || "—" },
         ],
       },
     ];
@@ -541,8 +539,8 @@ export default function CognitiveArchitectureMap() {
       <AppShell>
         <div className="p-6 space-y-6">
           <div>
-            <h1 className="text-xl font-bold">Cognitive Architecture Map</h1>
-            <p className="text-sm text-muted-foreground">Loading intelligence loop…</p>
+            <h1 className="text-xl font-bold">Mapa da Arquitetura Cognitiva</h1>
+            <p className="text-sm text-muted-foreground">Carregando loop de inteligência…</p>
           </div>
           <div className="flex items-center justify-center h-64">
             <RefreshCw className="h-6 w-6 text-muted-foreground animate-spin" />
@@ -567,9 +565,9 @@ export default function CognitiveArchitectureMap() {
               <Brain className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight">Cognitive Architecture Map</h1>
+              <h1 className="text-xl font-bold tracking-tight">Mapa da Arquitetura Cognitiva</h1>
               <p className="text-sm text-muted-foreground">
-                How the system perceives, learns, protects, executes, and evolves
+                Como o sistema percebe, aprende, protege, executa e evolui
               </p>
             </div>
           </div>
@@ -607,31 +605,31 @@ export default function CognitiveArchitectureMap() {
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4"
             >
               <SummaryCard
-                label="Intelligence Loop Health"
+                label="Saúde do Loop de Inteligência"
                 value={`${Math.round((metrics.knowledge.healthScore + metrics.execution.successRate + metrics.capabilities.coverage) / 3)}%`}
-                detail="Avg of knowledge, execution & capability health"
+                detail="Média de conhecimento, execução e cobertura"
                 trend={metrics.execution.successRate >= 70 ? "up" : "down"}
               />
               <SummaryCard
-                label="Knowledge → Skill Conversion"
+                label="Conhecimento → Conversão em Skills"
                 value={metrics.knowledge.canonEntries > 0
                   ? `${Math.round((metrics.skills.total / metrics.knowledge.canonEntries) * 100)}%`
                   : "—"}
-                detail={`${metrics.skills.total} skills from ${metrics.knowledge.canonEntries} canon entries`}
+                detail={`${metrics.skills.total} skills de ${metrics.knowledge.canonEntries} entradas canon`}
                 trend={metrics.skills.total > 0 ? "up" : "neutral"}
               />
               <SummaryCard
-                label="Skill → Capability Binding"
+                label="Skill → Vínculo com Capacidade"
                 value={metrics.skills.approved > 0
                   ? `${Math.round((metrics.capabilities.linkedToSkills / Math.max(1, metrics.skills.approved)) * 100)}%`
                   : "—"}
-                detail={`${metrics.capabilities.linkedToSkills} bindings from ${metrics.skills.approved} approved skills`}
+                detail={`${metrics.capabilities.linkedToSkills} vínculos de ${metrics.skills.approved} skills aprovadas`}
                 trend={metrics.capabilities.linkedToSkills > 0 ? "up" : "neutral"}
               />
               <SummaryCard
-                label="Capability → Agent Density"
+                label="Capacidade → Densidade por Agente"
                 value={`${metrics.agents.avgCapabilities}`}
-                detail={`${metrics.capabilities.total} capabilities / ${metrics.agents.total} agents`}
+                detail={`${metrics.capabilities.total} capacidades / ${metrics.agents.total} agentes`}
                 trend={metrics.agents.avgCapabilities >= 1 ? "up" : "down"}
               />
             </motion.div>
