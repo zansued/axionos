@@ -17,7 +17,7 @@ export default function SovereignCapabilitiesDashboard() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2.5 font-['Space_Grotesk']">
             <Shield className="h-6 w-6 text-primary" />
-            Sovereign Capabilities
+            Capacidades Soberanas
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Portfólio de capacidades organizacionais — maturidade, cobertura e lacunas
