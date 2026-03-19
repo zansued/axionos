@@ -37,6 +37,7 @@ import { ArchitectureSubjobsPanel } from "./ArchitectureSubjobsPanel";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 import PipelineGraphView from "./PipelineGraphView";
 import { ReadinessPanel } from "./ReadinessPanel";
+import { ArtifactReviewPanel } from "./ArtifactReviewPanel";
 
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -478,6 +479,9 @@ export function InitiativeDetail({ initiative, jobs, stories = [], runningStage,
 
       {/* Architectural Drift Detection */}
       <ArchitecturalDriftStatus initiativeId={initiative.id} />
+
+      {/* Human Review Panel for escalated artifacts */}
+      <ArtifactReviewPanel initiativeId={initiative.id} />
 
       {/* Runtime Validation (tsc + vite build) */}
       <RuntimeValidationStatus executionProgress={initiative.execution_progress} initiativeId={initiative.id} />

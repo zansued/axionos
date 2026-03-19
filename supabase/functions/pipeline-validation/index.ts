@@ -286,7 +286,6 @@ async function processOneArtifact(artifact: any, deps: any) {
   const isCode = artifact.type === "code";
   let currentText = extractText(artifact.raw_output);
   let fixAttempts = 0;
-  // Sprint 203: Generate attempt_id per fix loop iteration for traceability
   const fixLoopTraceId = crypto.randomUUID();
 
   // Get architecture context (light)
@@ -294,6 +293,29 @@ async function processOneArtifact(artifact: any, deps: any) {
   if (initiative.architecture_content) {
     archContext = String(initiative.architecture_content).slice(0, 1200);
   }
+
+  // Sprint 207: Enriched project context — gather type info from approved artifacts
+  let projectTypeContext = "";
+  try {
+    const { data: approvedArts } = await serviceClient.from("agent_outputs")
+      .select("summary, raw_output, type")
+      .eq("initiative_id", ctx.initiativeId)
+      .eq("status", "approved")
+      .eq("type", "code")
+      .limit(8);
+    if (approvedArts && approvedArts.length > 0) {
+      const typeLines = approvedArts.map((a: any) => {
+        const text = extractText(a.raw_output);
+        const lines = text.split("\n").filter((l: string) =>
+          l.startsWith("import ") || l.startsWith("export interface") ||
+          l.startsWith("export type") || l.includes("createClient") ||
+          l.includes("supabase") || l.startsWith("export const")
+        );
+        return lines.length > 0 ? `// ${a.summary}\n${lines.slice(0, 10).join("\n")}` : null;
+      }).filter(Boolean).join("\n");
+      if (typeLines) projectTypeContext = `\n\nProject imports/types reference:\n${typeLines.slice(0, 2000)}`;
+    }
+  } catch { /* non-critical */ }
 
   for (let loop = 0; loop <= MAX_FIX_ATTEMPTS; loop++) {
     const isFirstPass = loop === 0;
@@ -324,6 +346,13 @@ async function processOneArtifact(artifact: any, deps: any) {
 
 Analyze for: Lint, Types, Imports, Complexity, Patterns, Security, Performance, Resilience.
 ${archContext ? `\nArchitecture context:\n${archContext.slice(0, 800)}` : ""}
+${projectTypeContext ? `\n${projectTypeContext.slice(0, 1500)}` : ""}
+
+IMPORTANT: For Supabase Edge Functions, the correct pattern is:
+- import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+- Do NOT define custom SupabaseClient interfaces — use the SDK's built-in types
+- Use serve() from "https://deno.land/std@0.168.0/http/server.ts"
+- Use Deno.env.get() for secrets
 
 Return ONLY JSON:
 {
@@ -428,8 +457,15 @@ Return ONLY JSON:
 
     const fixResult = await callAI(apiKey,
       `You are the "Fix Agent" (Agent 17). Attempt ${fixAttempts}/${MAX_FIX_ATTEMPTS}.
-Fix ALL issues. Return the COMPLETE corrected artifact, no markdown wrapping.`,
-      `## Artifact (score: ${combinedScore}/100)\n${currentText.slice(0, 5000)}\n\n## Issues\n${allIssues}\n\nReturn the COMPLETE corrected output.`
+Fix ALL issues. Return the COMPLETE corrected artifact, no markdown wrapping.
+
+CRITICAL RULES for Supabase Edge Functions:
+- Import Supabase: import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+- Do NOT create custom SupabaseClient interfaces — use the SDK types directly
+- Use serve() from "https://deno.land/std@0.168.0/http/server.ts"
+- Use Deno.env.get() for environment variables
+- CORS headers must include: authorization, x-client-info, apikey, content-type`,
+      `## Artifact (score: ${combinedScore}/100)\n${currentText.slice(0, 4500)}\n\n## Issues\n${allIssues}${projectTypeContext ? `\n\n## Project Context\n${projectTypeContext.slice(0, 1500)}` : ""}\n\nReturn the COMPLETE corrected output.`
     );
 
     const fixedOutput = fixResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
