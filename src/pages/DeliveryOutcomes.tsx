@@ -78,8 +78,8 @@ export default function DeliveryOutcomes() {
     <AppShell>
       <div className="space-y-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Delivery Outcome Causality</h1>
-            <p className="text-sm text-muted-foreground">Understand which decisions, patterns, and conditions are associated with delivery outcomes.</p>
+            <h1 className="text-2xl font-bold text-foreground">Causalidade de Resultados de Entrega</h1>
+            <p className="text-sm text-muted-foreground">Entenda quais decisões, padrões e condições estão associados aos resultados de entrega.</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
