@@ -206,7 +206,7 @@ export function LifecycleHealthCheck() {
                 </Badge>
               )}
               <span className="text-[10px] text-muted-foreground">
-                {data.totalCandidates} candidates · {data.totalEntries} entries checked
+                {data.totalCandidates} candidatas · {data.totalEntries} entradas verificadas
               </span>
             </div>
 
