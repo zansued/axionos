@@ -42,8 +42,9 @@ const LEGACY_ERROR_PATTERNS: Array<{
   suggestion: string;
   docUrl: string;
 }> = [
-  { pattern: /INVALID_VERCEL_CONFIG|invalid.*vercel\.json/i, code: "INVALID_VERCEL_CONFIG", title: "Invalid vercel.json configuration", suggestion: 'Check your vercel.json syntax.', docUrl: "https://vercel.com/docs/projects/project-configuration" },
-  { pattern: /BUILD_UTILS_SPAWN_\d+|command.*not found|npm.*ERR/i, code: "BUILD_COMMAND_FAILED", title: "Build command failed", suggestion: "Verify your buildCommand and ensure dependencies are listed.", docUrl: "https://vercel.com/docs/deployments/builds#build-step" },
+  { pattern: /VERCEL_TOKEN_MISSING/i, code: "VERCEL_TOKEN_MISSING", title: "Vercel token missing", suggestion: "Configure the VERCEL_TOKEN secret so AxionOS can deploy automatically and return a real online URL.", docUrl: "https://vercel.com/guides/how-do-i-use-a-vercel-api-access-token" },
+  { pattern: /INVALID_VERCEL_CONFIG|invalid.*vercel\.json/i, code: "INVALID_VERCEL_CONFIG", title: "Invalid vercel.json configuration", suggestion: "Check your vercel.json syntax.", docUrl: "https://vercel.com/docs/projects/project-configuration" },
+  { pattern: /BUILD_UTILS_SPAWN_\d+|command.*not found|npm.*ERR|ERESOLVE/i, code: "BUILD_COMMAND_FAILED", title: "Build command failed", suggestion: "Verify your buildCommand and ensure dependencies are listed. For npm peer conflicts, prefer --legacy-peer-deps instead of --force.", docUrl: "https://vercel.com/docs/deployments/builds#build-step" },
   { pattern: /FUNCTION_INVOCATION_TIMEOUT/i, code: "FUNCTION_TIMEOUT", title: "Serverless function timed out", suggestion: "Increase maxDuration in vercel.json.", docUrl: "https://vercel.com/docs/functions/runtimes#max-duration" },
   { pattern: /NO_OUTPUT_DIRECTORY|output.*directory.*not.*found/i, code: "NO_OUTPUT_DIRECTORY", title: "Output directory not found", suggestion: "Set the correct outputDirectory in vercel.json.", docUrl: "https://vercel.com/docs/projects/project-configuration#outputdirectory" },
   { pattern: /MODULE_NOT_FOUND|Cannot find module/i, code: "MODULE_NOT_FOUND", title: "Module not found during build", suggestion: "Ensure all imports resolve and dependencies are in package.json.", docUrl: "https://vercel.com/docs/deployments/troubleshoot-a-build#module-not-found" },
