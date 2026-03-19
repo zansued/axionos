@@ -26,12 +26,12 @@ const DOMAIN_ICONS: Record<string, typeof Activity> = {
 };
 
 const DOMAIN_LABELS: Record<string, string> = {
-  META_AGENT_PERFORMANCE: "Meta-Agent Performance",
-  PROPOSAL_USEFULNESS: "Proposal Usefulness",
-  HISTORICAL_CONTEXT_VALUE: "Historical Context Value",
-  REDUNDANCY_GUARD_EFFECTIVENESS: "Redundancy Guard",
-  NOVELTY_BALANCE: "Novelty Balance",
-  DECISION_FOLLOW_THROUGH: "Follow-Through",
+  META_AGENT_PERFORMANCE: "Desempenho de Meta-Agentes",
+  PROPOSAL_USEFULNESS: "Utilidade de Propostas",
+  HISTORICAL_CONTEXT_VALUE: "Valor do Contexto Histórico",
+  REDUNDANCY_GUARD_EFFECTIVENESS: "Guarda de Redundância",
+  NOVELTY_BALANCE: "Equilíbrio de Novidade",
+  DECISION_FOLLOW_THROUGH: "Acompanhamento de Decisões",
 };
 
 function strengthColor(s: number) {
@@ -87,11 +87,11 @@ export default function Calibration() {
       return data;
     },
     onSuccess: (data) => {
-      toast({ title: "Calibration Complete", description: `Generated ${data?.persisted || 0} advisory signals.` });
+      toast({ title: "Calibração Concluída", description: `${data?.persisted || 0} sinais consultivos gerados.` });
       qc.invalidateQueries({ queryKey: ["calibration-observability"] });
       qc.invalidateQueries({ queryKey: ["calibration-signals"] });
     },
-    onError: () => toast({ title: "Calibration Failed", description: "Could not generate signals.", variant: "destructive" }),
+    onError: () => toast({ title: "Falha na Calibração", description: "Não foi possível gerar os sinais.", variant: "destructive" }),
   });
 
   const obs = observability.data;
@@ -105,14 +105,14 @@ export default function Calibration() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Advisory Calibration</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Calibração Consultiva</h1>
             <p className="text-sm text-muted-foreground">
-              Structured diagnostic signals for system tuning. Advisory only — no automatic changes.
+              Sinais diagnósticos estruturados para ajuste do sistema. Somente consultivo — sem alterações automáticas.
             </p>
           </div>
           <Button onClick={() => generateMutation.mutate()} disabled={generateMutation.isPending}>
             <RefreshCw className={`mr-2 h-4 w-4 ${generateMutation.isPending ? "animate-spin" : ""}`} />
-            Run Calibration
+            Executar Calibração
           </Button>
         </div>
 
@@ -120,13 +120,13 @@ export default function Calibration() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardDescription>Total Signals</CardDescription>
+              <CardDescription>Total de Sinais</CardDescription>
               <CardTitle className="text-2xl">{obs?.total_signals ?? "—"}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardDescription>Avg Signal Strength</CardDescription>
+              <CardDescription>Força Média do Sinal</CardDescription>
               <CardTitle className={`text-2xl ${strengthColor(obs?.avg_signal_strength || 0)}`}>
                 {obs?.avg_signal_strength != null ? `${(obs.avg_signal_strength * 100).toFixed(0)}%` : "—"}
               </CardTitle>
@@ -134,7 +134,7 @@ export default function Calibration() {
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardDescription>Avg Confidence</CardDescription>
+              <CardDescription>Confiança Média</CardDescription>
               <CardTitle className="text-2xl">
                 {obs?.avg_confidence != null ? `${(obs.avg_confidence * 100).toFixed(0)}%` : "—"}
               </CardTitle>
@@ -142,7 +142,7 @@ export default function Calibration() {
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardDescription>Domains Active</CardDescription>
+              <CardDescription>Domínios Ativos</CardDescription>
               <CardTitle className="text-2xl">{obs?.by_domain ? Object.keys(obs.by_domain).length : "—"}</CardTitle>
             </CardHeader>
           </Card>
@@ -151,12 +151,12 @@ export default function Calibration() {
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="agents">Meta-Agent Performance</TabsTrigger>
-            <TabsTrigger value="usefulness">Proposal Usefulness</TabsTrigger>
-            <TabsTrigger value="context">Historical Context</TabsTrigger>
-            <TabsTrigger value="redundancy">Redundancy / Novelty</TabsTrigger>
-            <TabsTrigger value="all">All Signals</TabsTrigger>
+            <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+            <TabsTrigger value="agents">Desempenho de Meta-Agentes</TabsTrigger>
+            <TabsTrigger value="usefulness">Utilidade de Propostas</TabsTrigger>
+            <TabsTrigger value="context">Contexto Histórico</TabsTrigger>
+            <TabsTrigger value="redundancy">Redundância / Novidade</TabsTrigger>
+            <TabsTrigger value="all">Todos os Sinais</TabsTrigger>
           </TabsList>
 
           {/* Overview */}
@@ -169,17 +169,17 @@ export default function Calibration() {
                     <div className="flex items-center gap-2">
                       <Icon className="h-4 w-4 text-muted-foreground" />
                       <CardTitle className="text-sm">{DOMAIN_LABELS[domain] || domain}</CardTitle>
-                      <Badge variant="outline" className="ml-auto">{info.count} signals</Badge>
+                      <Badge variant="outline" className="ml-auto">{info.count} sinais</Badge>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                      <span>Avg strength: <strong className={strengthColor(info.avg_strength)}>{(info.avg_strength * 100).toFixed(0)}%</strong></span>
+                      <span>Força média: <strong className={strengthColor(info.avg_strength)}>{(info.avg_strength * 100).toFixed(0)}%</strong></span>
                     </div>
                     {info.signals?.map((s: any, i: number) => (
                       <div key={i} className="mt-2 text-xs border-l-2 border-muted pl-3 py-1">
                         <span className="font-medium">{s.title}</span>
-                        <span className="ml-2 text-muted-foreground">({(Number(s.signal_strength) * 100).toFixed(0)}% strength)</span>
+                        <span className="ml-2 text-muted-foreground">({(Number(s.signal_strength) * 100).toFixed(0)}% de força)</span>
                       </div>
                     ))}
                   </CardContent>
@@ -189,7 +189,7 @@ export default function Calibration() {
             {!obs?.by_domain || Object.keys(obs.by_domain).length === 0 && (
               <Card>
                 <CardContent className="py-8 text-center text-muted-foreground">
-                  No calibration signals yet. Click "Run Calibration" to analyze system performance.
+                  Nenhum sinal de calibração ainda. Clique em "Executar Calibração" para analisar o desempenho do sistema.
                 </CardContent>
               </Card>
             )}
@@ -205,7 +205,6 @@ export default function Calibration() {
             };
             const domain = domainMap[tab];
             const domainSignals = signalsByDomain(domain);
-            // Also include follow-through for usefulness
             const extra = tab === "usefulness" ? signalsByDomain("DECISION_FOLLOW_THROUGH") : [];
             const combined = [...domainSignals, ...extra];
 
@@ -214,7 +213,7 @@ export default function Calibration() {
                 {combined.length === 0 ? (
                   <Card>
                     <CardContent className="py-8 text-center text-muted-foreground">
-                      No signals for this domain. Run calibration to generate analysis.
+                      Nenhum sinal para este domínio. Execute a calibração para gerar análise.
                     </CardContent>
                   </Card>
                 ) : combined.map((s: any) => (
@@ -231,7 +230,7 @@ export default function Calibration() {
                 {allSignals.length === 0 ? (
                   <Card>
                     <CardContent className="py-8 text-center text-muted-foreground">
-                      No calibration signals yet.
+                      Nenhum sinal de calibração ainda.
                     </CardContent>
                   </Card>
                 ) : allSignals.map((s: any) => (
@@ -246,8 +245,8 @@ export default function Calibration() {
         <div className="flex items-start gap-2 rounded-lg border border-border bg-muted/30 p-4 text-xs text-muted-foreground">
           <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5 text-amber-500" />
           <span>
-            Calibration signals are <strong>advisory only</strong> and do not automatically tune the system.
-            All tuning decisions require human review and approval.
+            Os sinais de calibração são <strong>somente consultivos</strong> e não ajustam o sistema automaticamente.
+            Todas as decisões de ajuste requerem revisão e aprovação humana.
           </span>
         </div>
       </div>
@@ -276,21 +275,21 @@ function SignalCard({ signal }: { signal: any }) {
       <CardContent className="space-y-3">
         <div className="grid grid-cols-3 gap-4 text-xs">
           <div>
-            <span className="text-muted-foreground">Strength</span>
+            <span className="text-muted-foreground">Força</span>
             <div className="flex items-center gap-2 mt-1">
               <Progress value={strength * 100} className="h-1.5 flex-1" />
               <span className={`font-mono ${strengthColor(strength)}`}>{(strength * 100).toFixed(0)}%</span>
             </div>
           </div>
           <div>
-            <span className="text-muted-foreground">Confidence</span>
+            <span className="text-muted-foreground">Confiança</span>
             <div className="flex items-center gap-2 mt-1">
               <Progress value={confidence * 100} className="h-1.5 flex-1" />
               <span className="font-mono">{(confidence * 100).toFixed(0)}%</span>
             </div>
           </div>
           <div>
-            <span className="text-muted-foreground">Overcorrection Risk</span>
+            <span className="text-muted-foreground">Risco de Sobrecorreção</span>
             <div className="flex items-center gap-2 mt-1">
               <Progress value={risk * 100} className="h-1.5 flex-1" />
               <span className="font-mono">{(risk * 100).toFixed(0)}%</span>
@@ -301,14 +300,14 @@ function SignalCard({ signal }: { signal: any }) {
           <>
             <Separator />
             <div className="text-xs">
-              <span className="text-muted-foreground font-medium">Recommended Action: </span>
+              <span className="text-muted-foreground font-medium">Ação Recomendada: </span>
               {signal.recommended_action}
             </div>
           </>
         )}
         {signal.evidence_refs && Array.isArray(signal.evidence_refs) && signal.evidence_refs.length > 0 && (
           <details className="text-xs">
-            <summary className="text-muted-foreground cursor-pointer hover:text-foreground">Evidence</summary>
+            <summary className="text-muted-foreground cursor-pointer hover:text-foreground">Evidências</summary>
             <pre className="mt-1 bg-muted/50 rounded p-2 overflow-auto text-[10px]">
               {JSON.stringify(signal.evidence_refs, null, 2)}
             </pre>
