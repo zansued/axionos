@@ -35,16 +35,16 @@ export default function SovereignCapabilitiesDashboard() {
             <Tabs defaultValue="maturity" className="space-y-4">
               <TabsList className="bg-muted/20 border border-border/20 flex-wrap h-auto gap-0.5 p-1">
                 <TabsTrigger value="maturity" className="text-xs gap-1.5">
-                  <Shield className="h-3.5 w-3.5" />Maturity
+                  <Shield className="h-3.5 w-3.5" />Maturidade
                 </TabsTrigger>
                 <TabsTrigger value="domains" className="text-xs gap-1.5">
-                  <Layers className="h-3.5 w-3.5" />Domains
+                  <Layers className="h-3.5 w-3.5" />Domínios
                 </TabsTrigger>
                 <TabsTrigger value="gaps" className="text-xs gap-1.5">
-                  <AlertTriangle className="h-3.5 w-3.5" />Gap Analysis
+                  <AlertTriangle className="h-3.5 w-3.5" />Análise de Lacunas
                 </TabsTrigger>
                 <TabsTrigger value="lifecycle" className="text-xs gap-1.5">
-                  <BarChart3 className="h-3.5 w-3.5" />Lifecycle
+                  <BarChart3 className="h-3.5 w-3.5" />Ciclo de Vida
                 </TabsTrigger>
               </TabsList>
 
