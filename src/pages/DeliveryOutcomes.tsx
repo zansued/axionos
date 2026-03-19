@@ -140,9 +140,9 @@ export default function DeliveryOutcomes() {
               </SheetHeader>
               {selected && (
                 <div className="mt-4 space-y-4 text-sm">
-                  <div><span className="text-muted-foreground">Initiative:</span> <span className="text-foreground font-medium">{selected.initiatives?.title || "—"}</span></div>
-                  <div><span className="text-muted-foreground">Type:</span> <span className="text-foreground">{selected.outcome_type}</span></div>
-                  <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusBadge(selected.analysis_status)}>{selected.analysis_status}</Badge></div>
+                   <div><span className="text-muted-foreground">Iniciativa:</span> <span className="text-foreground font-medium">{selected.initiatives?.title || "—"}</span></div>
+                   <div><span className="text-muted-foreground">Tipo:</span> <span className="text-foreground">{selected.outcome_type}</span></div>
+                   <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusBadge(selected.analysis_status)}>{selected.analysis_status}</Badge></div>
                   <Separator />
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs"><span className="text-muted-foreground">Confidence</span><span className="text-foreground">{Math.round((selected.confidence_score || 0) * 100)}%</span></div>
