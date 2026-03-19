@@ -520,7 +520,7 @@ IMPORTANTE:
 - file_type para FRONTEND: scaffold, component, page, style, config, hook, util, test, type
 - file_type para BACKEND: schema, migration, edge_function, auth_config, seed, supabase_client
 - Subtasks de scaffold incluem: package.json, vite.config.ts, tsconfig.json, tailwind.config.ts, index.html, src/main.tsx, src/App.tsx, src/index.css, vercel.json, public/_redirects
-- vercel.json DEVE conter: { "framework": "vite", "installCommand": "rm -f package-lock.json && npm install --include=dev", "buildCommand": "npm run build", "outputDirectory": "dist", "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+- vercel.json DEVE conter: { "framework": "vite", "installCommand": "npm install --include=dev --legacy-peer-deps", "buildCommand": "npm run build", "outputDirectory": "dist", "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
 - public/_redirects DEVE conter: /* /index.html 200  (para Netlify)
 - Use paths relativos ao root do projeto (ex: src/components/Header.tsx)
 
