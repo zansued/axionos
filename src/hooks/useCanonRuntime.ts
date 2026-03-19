@@ -63,15 +63,15 @@ export function useCanonRuntime() {
 
   const analytics = {
     totalSessions: sessionData.length,
-    activeSessions: sessionData.filter((s: any) => s.session_status === "active").length,
-    completedSessions: sessionData.filter((s: any) => s.session_status === "completed").length,
+    activeSessions: sessionData.filter((s: any) => s.session_type === "active" || s.session_type === "agent_context").length,
+    completedSessions: sessionData.length,
     totalApplications: appData.length,
     totalFeedback: (feedback.data || []).length,
     avgRetrieved: sessionData.length
-      ? Math.round(sessionData.reduce((sum: number, s: any) => sum + (s.entries_retrieved || 0), 0) / sessionData.length)
+      ? Math.round(sessionData.reduce((sum: number, s: any) => sum + (Array.isArray(s.ranked_results) ? s.ranked_results.length : 0), 0) / sessionData.length)
       : 0,
-    avgApplied: sessionData.length
-      ? Math.round(sessionData.reduce((sum: number, s: any) => sum + (s.entries_applied || 0), 0) / sessionData.length)
+    avgConfidence: sessionData.length
+      ? Math.round(sessionData.reduce((sum: number, s: any) => sum + (s.confidence_score || 0), 0) / sessionData.length * 100) / 100
       : 0,
   };
 
