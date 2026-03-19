@@ -21,10 +21,10 @@ export default function KnowledgeHealthDashboard() {
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2.5 font-['Space_Grotesk']">
               <HeartPulse className="h-6 w-6 text-primary" />
-              Knowledge Health Dashboard
+              Saúde do Conhecimento
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Monitor institutional knowledge health, renewal pipelines, and governance bridge
+              Monitore a saúde do conhecimento institucional, pipelines de renovação e ponte de governança
             </p>
           </div>
           <Button
@@ -33,7 +33,7 @@ export default function KnowledgeHealthDashboard() {
             disabled={renewal.scanTriggers.isPending}
           >
             <Activity className="h-3.5 w-3.5 mr-1.5" />
-            {renewal.scanTriggers.isPending ? "Scanning…" : "Scan Triggers"}
+            {renewal.scanTriggers.isPending ? "Escaneando…" : "Escanear Gatilhos"}
           </Button>
         </div>
 
