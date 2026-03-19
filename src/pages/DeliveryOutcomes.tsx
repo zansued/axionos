@@ -182,7 +182,7 @@ export default function DeliveryOutcomes() {
                       )}
                       {detail.explanation.uncertain_factors?.length > 0 && (
                         <div>
-                          <h4 className="text-xs font-semibold text-amber-400 mb-1">Uncertain Factors</h4>
+                          <h4 className="text-xs font-semibold text-amber-400 mb-1">Fatores Incertos</h4>
                           {detail.explanation.uncertain_factors.map((f: any, i: number) => (
                             <div key={i} className="flex items-center gap-1.5 py-1">
                               {directionIcon("uncertain")}
