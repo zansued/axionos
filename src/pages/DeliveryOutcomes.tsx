@@ -96,9 +96,9 @@ export default function DeliveryOutcomes() {
 
           <Tabs defaultValue="all">
             <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="reviewed">Reviewed</TabsTrigger>
-              <TabsTrigger value="low_confidence">Low Confidence</TabsTrigger>
+              <TabsTrigger value="all">Todos</TabsTrigger>
+              <TabsTrigger value="reviewed">Revisados</TabsTrigger>
+              <TabsTrigger value="low_confidence">Baixa Confiança</TabsTrigger>
               <TabsTrigger value="rollback">Rollback</TabsTrigger>
             </TabsList>
 
