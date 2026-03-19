@@ -198,7 +198,7 @@ export function LifecycleHealthCheck() {
             <div className="flex items-center gap-2">
               {data.healthy ? (
                 <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]">
-                  <CheckCircle2 className="h-3 w-3 mr-1" /> All records valid
+                  <CheckCircle2 className="h-3 w-3 mr-1" /> Todos os registros válidos
                 </Badge>
               ) : (
                 <Badge className="bg-destructive/20 text-destructive border-destructive/30 text-[10px]">
