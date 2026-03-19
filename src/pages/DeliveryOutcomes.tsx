@@ -149,7 +149,7 @@ export default function DeliveryOutcomes() {
                     <Progress value={(selected.confidence_score || 0) * 100} className="h-2" />
                   </div>
                   {selected.uncertainty_notes && (
-                    <div><span className="text-muted-foreground">Uncertainty:</span> <span className="text-foreground">{selected.uncertainty_notes}</span></div>
+                    <div><span className="text-muted-foreground">Incerteza:</span> <span className="text-foreground">{selected.uncertainty_notes}</span></div>
                   )}
                   <Separator />
 
