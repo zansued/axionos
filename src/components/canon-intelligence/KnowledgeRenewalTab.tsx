@@ -27,14 +27,14 @@ export function KnowledgeRenewalTab() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <HeartPulse className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold">Knowledge Renewal Overview</h3>
+          <h3 className="text-sm font-semibold">Visão Geral de Renovação de Conhecimento</h3>
         </div>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => renewal.scanTriggers.mutate()} disabled={renewal.scanTriggers.isPending}>
-            <Activity className="h-3 w-3 mr-1" />Scan
+            <Activity className="h-3 w-3 mr-1" />Escanear
           </Button>
           <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => navigate("/owner/knowledge-health")}>
-            Full Dashboard <ArrowRight className="h-3 w-3 ml-1" />
+            Dashboard Completo <ArrowRight className="h-3 w-3 ml-1" />
           </Button>
         </div>
       </div>
@@ -42,25 +42,25 @@ export function KnowledgeRenewalTab() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
         <Card className="border-border/30 bg-card/40"><CardContent className="pt-3.5 pb-2.5 text-center">
           <p className={`text-xl font-bold ${pendingTriggers > 0 ? "text-amber-500" : "text-foreground"}`}>{pendingTriggers}</p>
-          <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5">Pending Triggers</p>
+          <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5">Gatilhos Pendentes</p>
         </CardContent></Card>
         <Card className="border-border/30 bg-card/40"><CardContent className="pt-3.5 pb-2.5 text-center">
           <p className={`text-xl font-bold ${activeWorkflows > 0 ? "text-primary" : "text-foreground"}`}>{activeWorkflows}</p>
-          <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5">Active Workflows</p>
+          <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5">Fluxos Ativos</p>
         </CardContent></Card>
         <Card className="border-border/30 bg-card/40"><CardContent className="pt-3.5 pb-2.5 text-center">
           <p className="text-xl font-bold text-foreground">{renewal.proposals.length}</p>
-          <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5">Proposals</p>
+          <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5">Propostas</p>
         </CardContent></Card>
         <Card className="border-border/30 bg-card/40"><CardContent className="pt-3.5 pb-2.5 text-center">
           <p className="text-xl font-bold text-foreground">{renewal.history.length}</p>
-          <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5">History Events</p>
+          <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5">Eventos no Histórico</p>
         </CardContent></Card>
       </div>
 
       {recentHistory.length > 0 && (
         <Card className="border-border/30">
-          <CardHeader className="pb-2"><CardTitle className="text-xs">Recent Renewal Events</CardTitle></CardHeader>
+          <CardHeader className="pb-2"><CardTitle className="text-xs">Eventos Recentes de Renovação</CardTitle></CardHeader>
           <CardContent className="space-y-1">
             {recentHistory.map((h: any) => (
               <div key={h.id} className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-muted/30 text-xs">
@@ -70,9 +70,22 @@ export function KnowledgeRenewalTab() {
                   </Badge>
                   <span className="text-muted-foreground truncate max-w-[200px]">{h.summary || h.target_entry_id?.substring(0, 12)}</span>
                 </div>
-                <span className="text-[10px] text-muted-foreground">{new Date(h.created_at).toLocaleDateString()}</span>
+                <span className="text-[10px] text-muted-foreground">{new Date(h.created_at).toLocaleDateString("pt-BR")}</span>
               </div>
             ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {pendingTriggers === 0 && renewal.proposals.length === 0 && recentHistory.length === 0 && (
+        <Card className="border-border/30 bg-card/40">
+          <CardContent className="py-6 text-center text-sm text-muted-foreground">
+            <HeartPulse className="h-8 w-8 mx-auto mb-2 opacity-30" />
+            <p className="font-medium">Base de conhecimento saudável</p>
+            <p className="text-xs mt-1">
+              Nenhum gatilho de renovação detectado. Gatilhos são ativados quando entradas têm confiança baixa ({'<'} 0.4),
+              idade avançada ({'>'} 180 dias), pouco uso ou feedback negativo acumulado.
+            </p>
           </CardContent>
         </Card>
       )}

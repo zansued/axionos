@@ -154,20 +154,49 @@ async function scanTriggers(sc: any, orgId: string) {
 
   if (!entries?.length) return { triggers: [], scanned: 0 };
 
+  // Enrich with real feedback data
+  const entryIds = entries.map((e: any) => e.id);
+  const { data: feedbackRows } = await sc
+    .from("agent_learning_feedback")
+    .select("canon_entry_id, impact_direction")
+    .eq("organization_id", orgId)
+    .in("canon_entry_id", entryIds);
+
+  const feedbackMap = new Map<string, { positive: number; negative: number }>();
+  (feedbackRows || []).forEach((f: any) => {
+    const key = f.canon_entry_id;
+    if (!feedbackMap.has(key)) feedbackMap.set(key, { positive: 0, negative: 0 });
+    const entry = feedbackMap.get(key)!;
+    if (f.impact_direction === "reinforcement") entry.positive++;
+    else if (f.impact_direction === "degradation") entry.negative++;
+  });
+
+  // Enrich with confidence ledger data
+  const { data: ledgerRows } = await sc
+    .from("agent_learning_confidence_ledger")
+    .select("canon_entry_id, total_feedback_count, degradation_count, reinforcement_count")
+    .eq("organization_id", orgId)
+    .in("canon_entry_id", entryIds);
+
+  const ledgerMap = new Map<string, any>();
+  (ledgerRows || []).forEach((l: any) => ledgerMap.set(l.canon_entry_id, l));
+
   const now = Date.now();
   const allTriggers: RenewalTrigger[] = [];
 
   for (const entry of entries) {
     const ageDays = (now - new Date(entry.created_at).getTime()) / (1000 * 60 * 60 * 24);
     const lastUpdatedDays = (now - new Date(entry.updated_at).getTime()) / (1000 * 60 * 60 * 24);
+    const fb = feedbackMap.get(entry.id) || { positive: 0, negative: 0 };
+    const ledger = ledgerMap.get(entry.id);
 
     const input: TriggerDetectionInput = {
       entry_id: entry.id,
       confidence_score: entry.confidence_score || 0.5,
       age_days: Math.round(ageDays),
-      recent_usage_count: 0,
-      negative_feedback_count: 0,
-      positive_feedback_count: 0,
+      recent_usage_count: ledger?.total_feedback_count || 0,
+      negative_feedback_count: ledger?.degradation_count || fb.negative,
+      positive_feedback_count: ledger?.reinforcement_count || fb.positive,
       source_reliability_score: 50,
       last_revalidated_days_ago: Math.round(lastUpdatedDays),
       has_stronger_competitor: false,

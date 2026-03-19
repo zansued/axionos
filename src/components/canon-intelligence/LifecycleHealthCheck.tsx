@@ -174,7 +174,7 @@ export function LifecycleHealthCheck() {
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-primary" />
-            Lifecycle Health Check
+            Verificação de Saúde do Ciclo de Vida
           </CardTitle>
           <Button
             size="sm"
@@ -184,13 +184,13 @@ export function LifecycleHealthCheck() {
             className="text-xs h-7"
           >
             <RefreshCw className={`h-3 w-3 mr-1 ${healthCheck.isFetching ? "animate-spin" : ""}`} />
-            Run Check
+             Executar Verificação
           </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
         {!data && !healthCheck.isFetching && (
-          <p className="text-xs text-muted-foreground italic">Press "Run Check" to verify lifecycle correctness.</p>
+          <p className="text-xs text-muted-foreground italic">Clique em "Executar Verificação" para validar a integridade do ciclo de vida.</p>
         )}
 
         {data && (
@@ -198,15 +198,15 @@ export function LifecycleHealthCheck() {
             <div className="flex items-center gap-2">
               {data.healthy ? (
                 <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]">
-                  <CheckCircle2 className="h-3 w-3 mr-1" /> All records valid
+                  <CheckCircle2 className="h-3 w-3 mr-1" /> Todos os registros válidos
                 </Badge>
               ) : (
                 <Badge className="bg-destructive/20 text-destructive border-destructive/30 text-[10px]">
-                  <AlertTriangle className="h-3 w-3 mr-1" /> {data.errors} errors, {data.warnings} warnings
+                  <AlertTriangle className="h-3 w-3 mr-1" /> {data.errors} erros, {data.warnings} alertas
                 </Badge>
               )}
               <span className="text-[10px] text-muted-foreground">
-                {data.totalCandidates} candidates · {data.totalEntries} entries checked
+                {data.totalCandidates} candidatas · {data.totalEntries} entradas verificadas
               </span>
             </div>
 
@@ -228,7 +228,7 @@ export function LifecycleHealthCheck() {
                   </div>
                 ))}
                 {data.violations.length > 20 && (
-                  <p className="text-[10px] text-muted-foreground">+ {data.violations.length - 20} more violations</p>
+                  <p className="text-[10px] text-muted-foreground">+ {data.violations.length - 20} violações adicionais</p>
                 )}
               </div>
             )}
