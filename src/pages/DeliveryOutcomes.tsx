@@ -170,7 +170,7 @@ export default function DeliveryOutcomes() {
                       )}
                       {detail.explanation.negative_factors?.length > 0 && (
                         <div>
-                          <h4 className="text-xs font-semibold text-red-400 mb-1">Negative Factors</h4>
+                          <h4 className="text-xs font-semibold text-red-400 mb-1">Fatores Negativos</h4>
                           {detail.explanation.negative_factors.map((f: any, i: number) => (
                             <div key={i} className="flex items-center gap-1.5 py-1">
                               {directionIcon("negative")}
