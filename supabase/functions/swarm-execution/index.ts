@@ -502,7 +502,7 @@ async function delegateTask(sb: any, p: any) {
       campaign_id: p.campaign_id,
       organization_id: p.organization_id,
       branch_label: `delegation-${delegation.delegation_id.slice(0, 8)}`,
-      branch_type: "delegation",
+      branch_type: "sequential",
       assigned_agent_id: p.to_agent_id,
       branch_plan: {
         delegation,
@@ -755,7 +755,7 @@ async function launchContractedCampaign(sb: any, p: any) {
       campaign_id: campaign.id,
       organization_id,
       branch_label: `delegation-${delegation.delegation_id.slice(0, 8)}`,
-      branch_type: "delegation",
+      branch_type: "sequential",
       assigned_agent_id: executor.agent_id,
       branch_plan: {
         delegation,
