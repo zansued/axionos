@@ -24,7 +24,7 @@ export function ApplicationLifecycleTimeline({ events }: Props) {
     <Card className="border-border/30 bg-card/60">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm flex items-center gap-2">
-          <GitCommit className="h-4 w-4 text-primary" /> Application Lifecycle
+          <GitCommit className="h-4 w-4 text-primary" /> Ciclo de Vida da Aplicação
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -36,11 +36,11 @@ export function ApplicationLifecycleTimeline({ events }: Props) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-medium text-foreground">{ev.eventType.replace(/_/g, " ")}</span>
-                  <span className="text-[10px] text-muted-foreground">by {ev.actor}</span>
+                  <span className="text-[10px] text-muted-foreground">por {ev.actor}</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">{ev.summary}</p>
               </div>
-              <span className="text-[10px] text-muted-foreground whitespace-nowrap">{format(new Date(ev.timestamp), "MMM d HH:mm")}</span>
+              <span className="text-[10px] text-muted-foreground whitespace-nowrap">{format(new Date(ev.timestamp), "dd/MM HH:mm")}</span>
             </div>
           ))}
         </div>

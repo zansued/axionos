@@ -19,7 +19,7 @@ export function FollowUpGovernanceLoopPanel({ followUpActions, linkedFollowUpPro
     return (
       <Card className="border-border/30 bg-card/60">
         <CardContent className="p-6 text-center text-xs text-muted-foreground">
-          No follow-up governance actions recorded.
+          Nenhuma ação de acompanhamento de governança registrada.
         </CardContent>
       </Card>
     );
@@ -29,7 +29,7 @@ export function FollowUpGovernanceLoopPanel({ followUpActions, linkedFollowUpPro
     <Card className="border-border/30 bg-card/60">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm flex items-center gap-2">
-          <RefreshCw className="h-4 w-4 text-primary" /> Follow-up Governance Loop
+          <RefreshCw className="h-4 w-4 text-primary" /> Loop de Acompanhamento de Governança
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -46,7 +46,7 @@ export function FollowUpGovernanceLoopPanel({ followUpActions, linkedFollowUpPro
         ))}
         {linkedFollowUpProposalIds.length > 0 && (
           <div className="text-xs text-muted-foreground">
-            Linked follow-up proposals: {linkedFollowUpProposalIds.join(", ")}
+            Propostas de acompanhamento vinculadas: {linkedFollowUpProposalIds.join(", ")}
           </div>
         )}
       </CardContent>

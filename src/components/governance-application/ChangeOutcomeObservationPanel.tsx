@@ -16,7 +16,7 @@ export function ChangeOutcomeObservationPanel({ observations }: Props) {
     return (
       <Card className="border-border/30 bg-card/60">
         <CardContent className="p-6 text-center text-xs text-muted-foreground">
-          No outcome observations recorded yet.
+          Nenhuma observação de resultado registrada ainda.
         </CardContent>
       </Card>
     );
@@ -26,7 +26,7 @@ export function ChangeOutcomeObservationPanel({ observations }: Props) {
     <Card className="border-border/30 bg-card/60">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm flex items-center gap-2">
-          <BarChart3 className="h-4 w-4 text-primary" /> Outcome Observations
+          <BarChart3 className="h-4 w-4 text-primary" /> Observações de Resultado
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -40,8 +40,8 @@ export function ChangeOutcomeObservationPanel({ observations }: Props) {
                   <span className={`flex items-center gap-1 text-xs ${cfg.color}`}>{cfg.icon} {obs.status}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
-                  <div><span className="text-muted-foreground">Expected:</span> <span className="text-foreground">{obs.expectedEffect}</span></div>
-                  <div><span className="text-muted-foreground">Observed:</span> <span className="text-foreground">{obs.observedEffect}</span></div>
+                  <div><span className="text-muted-foreground">Esperado:</span> <span className="text-foreground">{obs.expectedEffect}</span></div>
+                  <div><span className="text-muted-foreground">Observado:</span> <span className="text-foreground">{obs.observedEffect}</span></div>
                 </div>
                 <p className="text-[11px] text-muted-foreground">{obs.summary}</p>
                 <div className="flex items-center gap-1">

@@ -44,11 +44,11 @@ export const APPLICATION_STATUS_DEFS: Record<ApplicationStatus, ApplicationStatu
 export type ScopeComplianceStatus = "in_scope" | "minor_drift" | "material_drift" | "constraint_missing" | "validation_missing";
 
 export const SCOPE_COMPLIANCE_LABELS: Record<ScopeComplianceStatus, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  in_scope:           { label: "In Scope", variant: "default" },
-  minor_drift:        { label: "Minor Drift", variant: "secondary" },
-  material_drift:     { label: "Material Drift", variant: "destructive" },
-  constraint_missing: { label: "Constraint Missing", variant: "destructive" },
-  validation_missing: { label: "Validation Missing", variant: "outline" },
+  in_scope:           { label: "No Escopo", variant: "default" },
+  minor_drift:        { label: "Desvio Menor", variant: "secondary" },
+  material_drift:     { label: "Desvio Material", variant: "destructive" },
+  constraint_missing: { label: "Restrição Ausente", variant: "destructive" },
+  validation_missing: { label: "Validação Ausente", variant: "outline" },
 };
 
 // ── Sub-types ───────────────────────────────────────────────────────────────

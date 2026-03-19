@@ -19,35 +19,35 @@ export function ScopeCompliancePanel({ application: a }: Props) {
     <Card className="border-border/30 bg-card/60">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm flex items-center gap-2">
-          <Shield className="h-4 w-4 text-primary" /> Scope Compliance & Constraints
+          <Shield className="h-4 w-4 text-primary" /> Conformidade de Escopo e Restrições
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Scope comparison */}
+        {/* Comparação de escopo */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="rounded-lg border border-border/30 p-3">
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Approved Scope</span>
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Escopo Aprovado</span>
             <p className="text-xs text-foreground mt-1">{a.approvedScope}</p>
           </div>
           <div className="rounded-lg border border-border/30 p-3">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Observed Scope</span>
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Escopo Observado</span>
               <Badge variant={scopeDef.variant} className="text-[10px]">{scopeDef.label}</Badge>
             </div>
             <p className="text-xs text-foreground mt-1">{a.observedScope}</p>
           </div>
         </div>
 
-        {/* Constraint checks */}
+        {/* Verificações de restrições */}
         <div>
-          <span className="text-xs font-medium text-muted-foreground">Constraint Checks</span>
+          <span className="text-xs font-medium text-muted-foreground">Verificações de Restrições</span>
           <div className="mt-2 space-y-2">
             {a.constraintChecks.map((c) => (
               <div key={c.key} className="flex items-start gap-2 text-xs">
                 {checkIcons[c.status]}
                 <div className="flex-1">
                   <span className="text-foreground font-medium">{c.label}</span>
-                  {c.required && <span className="text-muted-foreground ml-1">(required)</span>}
+                  {c.required && <span className="text-muted-foreground ml-1">(obrigatório)</span>}
                   <p className="text-muted-foreground mt-0.5">{c.message}</p>
                 </div>
               </div>
@@ -55,10 +55,10 @@ export function ScopeCompliancePanel({ application: a }: Props) {
           </div>
         </div>
 
-        {/* Monitoring & Validation */}
+        {/* Monitoramento e Validação */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <span className="text-xs font-medium text-muted-foreground">Monitoring Requirements</span>
+            <span className="text-xs font-medium text-muted-foreground">Requisitos de Monitoramento</span>
             <ul className="mt-1 space-y-1">
               {a.monitoringRequirements.map((m, i) => (
                 <li key={i} className="text-xs text-foreground flex items-center gap-1.5">
@@ -69,7 +69,7 @@ export function ScopeCompliancePanel({ application: a }: Props) {
             </ul>
           </div>
           <div>
-            <span className="text-xs font-medium text-muted-foreground">Validation Requirements</span>
+            <span className="text-xs font-medium text-muted-foreground">Requisitos de Validação</span>
             <ul className="mt-1 space-y-1">
               {a.validationRequirements.map((v, i) => (
                 <li key={i} className="text-xs text-foreground flex items-center gap-1.5">

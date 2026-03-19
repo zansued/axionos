@@ -22,14 +22,14 @@ export function ApplicationTrackingQueue({ applications, onSelect, selectedId }:
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/30 hover:bg-muted/30">
-            <TableHead className="text-xs w-[90px]">App ID</TableHead>
-            <TableHead className="text-xs">Change Title</TableHead>
-            <TableHead className="text-xs w-[110px]">Type</TableHead>
-            <TableHead className="text-xs w-[120px]">Subsystem</TableHead>
+            <TableHead className="text-xs w-[90px]">ID</TableHead>
+            <TableHead className="text-xs">Título da Mudança</TableHead>
+            <TableHead className="text-xs w-[110px]">Tipo</TableHead>
+            <TableHead className="text-xs w-[120px]">Subsistema</TableHead>
             <TableHead className="text-xs w-[130px]">Status</TableHead>
-            <TableHead className="text-xs w-[80px]">Risk</TableHead>
-            <TableHead className="text-xs w-[120px]">Scope</TableHead>
-            <TableHead className="text-xs w-[100px]">Updated</TableHead>
+            <TableHead className="text-xs w-[80px]">Risco</TableHead>
+            <TableHead className="text-xs w-[120px]">Escopo</TableHead>
+            <TableHead className="text-xs w-[100px]">Atualizado</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -59,7 +59,7 @@ export function ApplicationTrackingQueue({ applications, onSelect, selectedId }:
                 <TableCell>
                   <Badge variant={scopeDef.variant} className="text-[10px]">{scopeDef.label}</Badge>
                 </TableCell>
-                <TableCell className="text-xs text-muted-foreground">{format(new Date(app.updatedAt), "MMM d, HH:mm")}</TableCell>
+                <TableCell className="text-xs text-muted-foreground">{format(new Date(app.updatedAt), "dd/MM, HH:mm")}</TableCell>
               </TableRow>
             );
           })}
