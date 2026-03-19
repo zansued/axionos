@@ -174,7 +174,7 @@ export function LifecycleHealthCheck() {
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-primary" />
-            Lifecycle Health Check
+            Verificação de Saúde do Ciclo de Vida
           </CardTitle>
           <Button
             size="sm"
