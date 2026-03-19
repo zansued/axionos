@@ -145,7 +145,7 @@ export default function DeliveryOutcomes() {
                    <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusBadge(selected.analysis_status)}>{selected.analysis_status}</Badge></div>
                   <Separator />
                   <div className="space-y-2">
-                    <div className="flex justify-between text-xs"><span className="text-muted-foreground">Confidence</span><span className="text-foreground">{Math.round((selected.confidence_score || 0) * 100)}%</span></div>
+                    <div className="flex justify-between text-xs"><span className="text-muted-foreground">Confiança</span><span className="text-foreground">{Math.round((selected.confidence_score || 0) * 100)}%</span></div>
                     <Progress value={(selected.confidence_score || 0) * 100} className="h-2" />
                   </div>
                   {selected.uncertainty_notes && (
