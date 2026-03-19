@@ -50,7 +50,12 @@ serve(async (req) => {
   try {
     // ── Step 1: Validate publish confirmation contract ──
     const publishConfirmation = initiative.publish_confirmation as unknown;
-    const pcValidation = validatePublishConfirmation(publishConfirmation);
+
+    // If no publish_confirmation exists, skip contract validation (backward compat)
+    const hasConfirmation = publishConfirmation != null && typeof publishConfirmation === "object" && Object.keys(publishConfirmation as Record<string, unknown>).length > 0;
+    const pcValidation = hasConfirmation
+      ? validatePublishConfirmation(publishConfirmation)
+      : { valid: true, errors: [], warnings: ["No publish confirmation present — skipping contract validation"], deploy_ready: true };
 
     if (!pcValidation.valid) {
       pipelineLog(ctx, "deploy_preflight_failed",
@@ -58,7 +63,7 @@ serve(async (req) => {
         { errors: pcValidation.errors, warnings: pcValidation.warnings });
     }
 
-    if (!pcValidation.deploy_ready && publishConfirmation) {
+    if (hasConfirmation && !pcValidation.deploy_ready) {
       throw new Error(
         `Deploy blocked by publish confirmation contract: ${pcValidation.errors.join("; ")}`
       );
