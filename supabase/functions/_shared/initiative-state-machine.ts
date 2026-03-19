@@ -123,7 +123,7 @@ const TRANSITIONS: Record<string, string[]> = {
   published: ["deploying", "observability_ready"],
   deploying: ["deployed", "deploy_failed"],
   deploy_failed: ["deploying", "published"],
-  deployed: ["observability_ready"],
+  deployed: ["observability_ready", "deploying"],
 
   // ── Runtime & Post-Deploy ──
   observability_ready: ["analytics_ready", "observing_product"],
