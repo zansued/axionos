@@ -177,7 +177,7 @@ export function buildCanonEntryFromCandidate(
     slug: `${slug}-${Date.now()}`,
     canon_type: mapKnowledgeTypeToCanonType(candidate.knowledge_type),
     practice_type: candidate.knowledge_type,
-    lifecycle_status: "active",
+    lifecycle_status: "approved",
     approval_status: "approved",
     confidence_score: Math.min(candidate.source_reliability_score / 100, 1),
     summary: candidate.summary,
