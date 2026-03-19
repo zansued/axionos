@@ -105,7 +105,7 @@ export default function DeliveryOutcomes() {
             {["all", "reviewed", "low_confidence", "rollback"].map((tab) => (
               <TabsContent key={tab} value={tab}>
                 <Card className="bg-card border-border">
-                  <CardHeader><CardTitle className="text-sm">Outcome Records</CardTitle></CardHeader>
+                  <CardHeader><CardTitle className="text-sm">Registros de Resultados</CardTitle></CardHeader>
                   <CardContent>
                     <ScrollArea className="h-[420px]">
                       {(records.data as any[])?.filter((r: any) => {
