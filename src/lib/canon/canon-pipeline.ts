@@ -44,9 +44,13 @@ const VALID_CANDIDATE_PROMOTION_TRANSITIONS: Record<CandidatePromotionStatus, Ca
   not_promoted: [],   // terminal
 };
 
-// ─── Entry Lifecycle Transition Matrix (Sprint 204) ───
+// ─── Entry Lifecycle Transition Matrix (aligned with DB enum) ───
 const VALID_ENTRY_LIFECYCLE_TRANSITIONS: Record<EntryLifecycleStatus, EntryLifecycleStatus[]> = {
-  active: ["deprecated", "superseded"],
+  draft: ["proposed", "archived"],
+  proposed: ["approved", "experimental", "deprecated"],
+  approved: ["contested", "deprecated", "superseded"],
+  experimental: ["approved", "deprecated", "archived"],
+  contested: ["approved", "deprecated", "archived"],
   deprecated: ["archived"],
   superseded: ["archived"],
   archived: [],   // terminal
@@ -130,7 +134,7 @@ const PROMOTABLE_CANON_TYPES: string[] = [
 ];
 
 export function isCanonEntryPromotableToLibrary(entry: CanonEntry): boolean {
-  if (entry.lifecycle_status !== "active") return false;
+  if (entry.lifecycle_status !== "approved") return false;
   if (entry.approval_status !== "approved") return false;
   if (!PROMOTABLE_CANON_TYPES.includes(entry.canon_type) && !PROMOTABLE_CANON_TYPES.includes(entry.practice_type)) return false;
   return true;
@@ -173,7 +177,7 @@ export function buildCanonEntryFromCandidate(
     slug: `${slug}-${Date.now()}`,
     canon_type: mapKnowledgeTypeToCanonType(candidate.knowledge_type),
     practice_type: candidate.knowledge_type,
-    lifecycle_status: "active",
+    lifecycle_status: "approved",
     approval_status: "approved",
     confidence_score: Math.min(candidate.source_reliability_score / 100, 1),
     summary: candidate.summary,

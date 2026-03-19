@@ -60,15 +60,23 @@ export const CANDIDATE_PROMOTION_STATUS_LABELS: Record<CandidatePromotionStatus,
   not_promoted: "Not Promoted",
 };
 
-// ─── Entry Lifecycle Status (Sprint 204 canonical) ───
+// ─── Entry Lifecycle Status (aligned with DB enum canon_lifecycle_status) ───
 export type EntryLifecycleStatus =
-  | "active"
+  | "draft"
+  | "proposed"
+  | "approved"
+  | "experimental"
+  | "contested"
   | "deprecated"
   | "archived"
   | "superseded";
 
 export const ENTRY_LIFECYCLE_LABELS: Record<EntryLifecycleStatus, string> = {
-  active: "Active",
+  draft: "Draft",
+  proposed: "Proposed",
+  approved: "Active",
+  experimental: "Experimental",
+  contested: "Contested",
   deprecated: "Deprecated",
   archived: "Archived",
   superseded: "Superseded",
