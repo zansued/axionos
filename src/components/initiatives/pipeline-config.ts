@@ -454,6 +454,11 @@ export function getAvailableActions(stageStatus: string): StageAction[] {
         { stage: "approve", label: "✅ Marcar como Concluído", type: "approve" },
         { stage: "deploy_vercel", label: "🔄 Re-deploy", type: "run" },
       ];
+    case "deploy_failed":
+      return [
+        { stage: "deploy_vercel", label: "🔄 Re-deploy", description: "Tentar o deploy novamente no Vercel.", type: "run", variant: "primary" },
+        { stage: "publish", label: "Re-publicar no GitHub", type: "publish" },
+      ];
     // Background intelligence stages — all map to Runtime in the visible pipeline
     case "observing_product":
     case "product_observed":
