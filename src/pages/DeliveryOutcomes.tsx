@@ -65,21 +65,21 @@ export default function DeliveryOutcomes() {
   };
 
   const kpis = [
-    { label: "Analyzed", value: ov?.analyzed ?? "—", icon: Activity, color: "text-blue-400" },
-    { label: "Reviewed", value: ov?.reviewed ?? "—", icon: CheckCircle2, color: "text-emerald-400" },
-    { label: "Low Confidence", value: ov?.low_confidence ?? "—", icon: HelpCircle, color: "text-amber-400" },
-    { label: "Pending", value: ov?.pending ?? "—", icon: AlertTriangle, color: "text-orange-400" },
-    { label: "Positive Factors", value: ov?.positive_factors ?? "—", icon: TrendingUp, color: "text-emerald-500" },
-    { label: "Negative Factors", value: ov?.negative_factors ?? "—", icon: TrendingDown, color: "text-red-400" },
-    { label: "Rollback Outcomes", value: ov?.rollback_outcomes ?? "—", icon: XCircle, color: "text-red-500" },
+    { label: "Analisados", value: ov?.analyzed ?? "—", icon: Activity, color: "text-blue-400" },
+    { label: "Revisados", value: ov?.reviewed ?? "—", icon: CheckCircle2, color: "text-emerald-400" },
+    { label: "Baixa Confiança", value: ov?.low_confidence ?? "—", icon: HelpCircle, color: "text-amber-400" },
+    { label: "Pendentes", value: ov?.pending ?? "—", icon: AlertTriangle, color: "text-orange-400" },
+    { label: "Fatores Positivos", value: ov?.positive_factors ?? "—", icon: TrendingUp, color: "text-emerald-500" },
+    { label: "Fatores Negativos", value: ov?.negative_factors ?? "—", icon: TrendingDown, color: "text-red-400" },
+    { label: "Resultados de Rollback", value: ov?.rollback_outcomes ?? "—", icon: XCircle, color: "text-red-500" },
   ];
 
   return (
     <AppShell>
       <div className="space-y-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Delivery Outcome Causality</h1>
-            <p className="text-sm text-muted-foreground">Understand which decisions, patterns, and conditions are associated with delivery outcomes.</p>
+            <h1 className="text-2xl font-bold text-foreground">Causalidade de Resultados de Entrega</h1>
+            <p className="text-sm text-muted-foreground">Entenda quais decisões, padrões e condições estão associados aos resultados de entrega.</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
@@ -96,16 +96,16 @@ export default function DeliveryOutcomes() {
 
           <Tabs defaultValue="all">
             <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="reviewed">Reviewed</TabsTrigger>
-              <TabsTrigger value="low_confidence">Low Confidence</TabsTrigger>
+              <TabsTrigger value="all">Todos</TabsTrigger>
+              <TabsTrigger value="reviewed">Revisados</TabsTrigger>
+              <TabsTrigger value="low_confidence">Baixa Confiança</TabsTrigger>
               <TabsTrigger value="rollback">Rollback</TabsTrigger>
             </TabsList>
 
             {["all", "reviewed", "low_confidence", "rollback"].map((tab) => (
               <TabsContent key={tab} value={tab}>
                 <Card className="bg-card border-border">
-                  <CardHeader><CardTitle className="text-sm">Outcome Records</CardTitle></CardHeader>
+                  <CardHeader><CardTitle className="text-sm">Registros de Resultados</CardTitle></CardHeader>
                   <CardContent>
                     <ScrollArea className="h-[420px]">
                       {(records.data as any[])?.filter((r: any) => {
@@ -119,13 +119,13 @@ export default function DeliveryOutcomes() {
                           <div className="flex-1 min-w-0">
                             <span className="text-sm font-medium text-foreground">{r.initiatives?.title || r.outcome_summary?.slice(0, 40) || r.id.slice(0, 8)}</span>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-[11px] text-muted-foreground">Type: {r.outcome_type}</span>
-                              <span className="text-[11px] text-muted-foreground">Confidence: {Math.round((r.confidence_score || 0) * 100)}%</span>
+                              <span className="text-[11px] text-muted-foreground">Tipo: {r.outcome_type}</span>
+                              <span className="text-[11px] text-muted-foreground">Confiança: {Math.round((r.confidence_score || 0) * 100)}%</span>
                             </div>
                           </div>
                           <Badge variant={statusBadge(r.analysis_status)}>{r.analysis_status}</Badge>
                         </div>
-                      )) || <p className="text-sm text-muted-foreground">No outcome records yet.</p>}
+                      )) || <p className="text-sm text-muted-foreground">Nenhum registro de resultado ainda.</p>}
                     </ScrollArea>
                   </CardContent>
                 </Card>
@@ -136,20 +136,20 @@ export default function DeliveryOutcomes() {
           <Sheet open={!!selected} onOpenChange={() => { setSelected(null); setDetail(null); }}>
             <SheetContent className="w-[480px] bg-card">
               <SheetHeader>
-                <SheetTitle className="text-foreground">Outcome Causality Detail</SheetTitle>
+                <SheetTitle className="text-foreground">Detalhe de Causalidade</SheetTitle>
               </SheetHeader>
               {selected && (
                 <div className="mt-4 space-y-4 text-sm">
-                  <div><span className="text-muted-foreground">Initiative:</span> <span className="text-foreground font-medium">{selected.initiatives?.title || "—"}</span></div>
-                  <div><span className="text-muted-foreground">Type:</span> <span className="text-foreground">{selected.outcome_type}</span></div>
-                  <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusBadge(selected.analysis_status)}>{selected.analysis_status}</Badge></div>
+                   <div><span className="text-muted-foreground">Iniciativa:</span> <span className="text-foreground font-medium">{selected.initiatives?.title || "—"}</span></div>
+                   <div><span className="text-muted-foreground">Tipo:</span> <span className="text-foreground">{selected.outcome_type}</span></div>
+                   <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusBadge(selected.analysis_status)}>{selected.analysis_status}</Badge></div>
                   <Separator />
                   <div className="space-y-2">
-                    <div className="flex justify-between text-xs"><span className="text-muted-foreground">Confidence</span><span className="text-foreground">{Math.round((selected.confidence_score || 0) * 100)}%</span></div>
+                    <div className="flex justify-between text-xs"><span className="text-muted-foreground">Confiança</span><span className="text-foreground">{Math.round((selected.confidence_score || 0) * 100)}%</span></div>
                     <Progress value={(selected.confidence_score || 0) * 100} className="h-2" />
                   </div>
                   {selected.uncertainty_notes && (
-                    <div><span className="text-muted-foreground">Uncertainty:</span> <span className="text-foreground">{selected.uncertainty_notes}</span></div>
+                    <div><span className="text-muted-foreground">Incerteza:</span> <span className="text-foreground">{selected.uncertainty_notes}</span></div>
                   )}
                   <Separator />
 
@@ -158,7 +158,7 @@ export default function DeliveryOutcomes() {
                       <p className="text-xs text-muted-foreground italic">{detail.explanation.summary}</p>
                       {detail.explanation.positive_factors?.length > 0 && (
                         <div>
-                          <h4 className="text-xs font-semibold text-emerald-400 mb-1">Positive Factors</h4>
+                          <h4 className="text-xs font-semibold text-emerald-400 mb-1">Fatores Positivos</h4>
                           {detail.explanation.positive_factors.map((f: any, i: number) => (
                             <div key={i} className="flex items-center gap-1.5 py-1">
                               {directionIcon("positive")}
@@ -170,7 +170,7 @@ export default function DeliveryOutcomes() {
                       )}
                       {detail.explanation.negative_factors?.length > 0 && (
                         <div>
-                          <h4 className="text-xs font-semibold text-red-400 mb-1">Negative Factors</h4>
+                          <h4 className="text-xs font-semibold text-red-400 mb-1">Fatores Negativos</h4>
                           {detail.explanation.negative_factors.map((f: any, i: number) => (
                             <div key={i} className="flex items-center gap-1.5 py-1">
                               {directionIcon("negative")}
@@ -182,7 +182,7 @@ export default function DeliveryOutcomes() {
                       )}
                       {detail.explanation.uncertain_factors?.length > 0 && (
                         <div>
-                          <h4 className="text-xs font-semibold text-amber-400 mb-1">Uncertain Factors</h4>
+                          <h4 className="text-xs font-semibold text-amber-400 mb-1">Fatores Incertos</h4>
                           {detail.explanation.uncertain_factors.map((f: any, i: number) => (
                             <div key={i} className="flex items-center gap-1.5 py-1">
                               {directionIcon("uncertain")}
@@ -195,7 +195,7 @@ export default function DeliveryOutcomes() {
                     </>
                   )}
                   <Separator />
-                  <div><span className="text-muted-foreground">Updated:</span> <span className="text-foreground">{new Date(selected.updated_at).toLocaleString()}</span></div>
+                  <div><span className="text-muted-foreground">Atualizado:</span> <span className="text-foreground">{new Date(selected.updated_at).toLocaleString()}</span></div>
                 </div>
               )}
             </SheetContent>
