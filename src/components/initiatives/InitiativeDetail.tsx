@@ -37,6 +37,7 @@ import { ArchitectureSubjobsPanel } from "./ArchitectureSubjobsPanel";
 import { MACRO_STAGES, getMacroStageIndex, getAvailableActions, RISK_COLORS } from "./pipeline-config";
 import PipelineGraphView from "./PipelineGraphView";
 import { ReadinessPanel } from "./ReadinessPanel";
+import { ArtifactReviewPanel } from "./ArtifactReviewPanel";
 
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
