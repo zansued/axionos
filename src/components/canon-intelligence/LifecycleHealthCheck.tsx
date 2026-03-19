@@ -228,7 +228,7 @@ export function LifecycleHealthCheck() {
                   </div>
                 ))}
                 {data.violations.length > 20 && (
-                  <p className="text-[10px] text-muted-foreground">+ {data.violations.length - 20} more violations</p>
+                  <p className="text-[10px] text-muted-foreground">+ {data.violations.length - 20} violações adicionais</p>
                 )}
               </div>
             )}
