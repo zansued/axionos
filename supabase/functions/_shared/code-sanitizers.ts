@@ -3,7 +3,8 @@
 /** Vercel deploy configuration */
 export const DEPLOY_VERCEL_CONFIG = {
   framework: "vite",
-  installCommand: "npm install --include=dev --legacy-peer-deps",
+  installCommand:
+    "node -e \"const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));if(p.dependencies)delete p.dependencies['@radix-ui/react-button'];if(p.devDependencies)delete p.devDependencies['@radix-ui/react-button'];p.engines={...(p.engines||{}),node:'24.x'};fs.writeFileSync('package.json',JSON.stringify(p,null,2)+'\\n')\" && rm -f package-lock.json && npm install --include=dev --legacy-peer-deps",
   buildCommand: "npm run build",
   outputDirectory: "dist",
   rewrites: [{ source: "/(.*)", destination: "/index.html" }],
@@ -100,7 +101,7 @@ export function sanitizePackageJson(content: string): string {
     pkg.type = "module";
     pkg.engines = {
       ...(pkg.engines && typeof pkg.engines === "object" ? pkg.engines : {}),
-      node: "20.x",
+      node: "24.x",
     };
     if (!pkg.scripts) pkg.scripts = {};
     pkg.scripts.dev = "vite";
@@ -163,8 +164,8 @@ export const DETERMINISTIC_FILES: Record<string, string> = getDeterministicFiles
 export function getDeterministicFiles(supabaseConnInfo?: { url: string; anonKey: string } | null): Record<string, string> {
   return {
     "vercel.json": DEPLOY_VERCEL_JSON,
-    ".nvmrc": "20.18.0",
-    ".node-version": "20.18.0",
+    ".nvmrc": "24",
+    ".node-version": "24",
     "public/_redirects": "/* /index.html 200",
     "netlify.toml": '[build]\n  command = "npm run build"\n  publish = "dist"\n\n[[redirects]]\n  from = "/*"\n  to = "/index.html"\n  status = 200',
     "postcss.config.js": `export default {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n};`,
