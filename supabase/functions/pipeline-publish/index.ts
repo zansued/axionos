@@ -106,10 +106,8 @@ serve(async (req) => {
     .toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50) || `axion-${ctx.initiativeId.slice(0, 8)}`;
 
-  const jobId = await createJob(ctx, "publish", { owner: resolvedOwner, repo: repoSlug, base_branch: resolvedBaseBranch, mode: "release_agent" });
-  await pipelineLog(ctx, "pipeline_publish_start", "Release Agent iniciando: Pre-flight → Changelog → Push → Verificação...");
-
-  // Idempotency guard: block if a publish job is already running for this initiative
+  // ── Idempotency guard: check BEFORE creating a new job ──
+  const STALE_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes
   const { data: activePublishJobs } = await serviceClient
     .from("initiative_jobs")
     .select("id, created_at")
@@ -117,12 +115,44 @@ serve(async (req) => {
     .eq("stage", "publish")
     .eq("status", "running")
     .gt("created_at", new Date(Date.now() - 30 * 60 * 1000).toISOString());
-  if (activePublishJobs && activePublishJobs.length > 1) {
-    return errorResponse(
-      "Uma publicação já está em andamento para esta initiative. Aguarde a conclusão antes de publicar novamente.",
-      409
+
+  if (activePublishJobs && activePublishJobs.length > 0) {
+    const now = Date.now();
+    const staleJobs = activePublishJobs.filter(
+      (j: any) => now - new Date(j.created_at).getTime() > STALE_THRESHOLD_MS
     );
+    const freshJobs = activePublishJobs.filter(
+      (j: any) => now - new Date(j.created_at).getTime() <= STALE_THRESHOLD_MS
+    );
+
+    // Auto-expire stale jobs
+    if (staleJobs.length > 0) {
+      const staleIds = staleJobs.map((j: any) => j.id);
+      await serviceClient
+        .from("initiative_jobs")
+        .update({
+          status: "failed",
+          error: `Auto-expirado após ${STALE_THRESHOLD_MS / 60000}min sem conclusão`,
+          completed_at: new Date().toISOString(),
+        })
+        .in("id", staleIds);
+      await pipelineLog(ctx, "publish_stale_jobs_expired",
+        `${staleJobs.length} job(s) de publicação expirado(s) automaticamente`,
+        { expired_ids: staleIds }
+      );
+    }
+
+    // Block only if there are still fresh running jobs
+    if (freshJobs.length > 0) {
+      return errorResponse(
+        "Uma publicação já está em andamento para esta iniciativa. Aguarde a conclusão antes de publicar novamente.",
+        409
+      );
+    }
   }
+
+  const jobId = await createJob(ctx, "publish", { owner: resolvedOwner, repo: repoSlug, base_branch: resolvedBaseBranch, mode: "release_agent" });
+  await pipelineLog(ctx, "pipeline_publish_start", "Release Agent iniciando: Pre-flight → Changelog → Push → Verificação...");
 
   // ghHeaders and GITHUB_API already defined above (Sprint 205 token pre-flight)
 
