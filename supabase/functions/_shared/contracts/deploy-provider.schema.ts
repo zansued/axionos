@@ -147,6 +147,12 @@ export class VercelAdapter implements IDeployProviderAdapter {
 
     try {
       const projectName = repo.slice(0, 100);
+      const projectConfigPayload = {
+        framework: config.framework,
+        installCommand: config.install_command,
+        buildCommand: config.build_command,
+        outputDirectory: config.output_directory,
+      };
 
       let projectId: string | null = null;
       const getRes = await fetch(`https://api.vercel.com/v9/projects/${encodeURIComponent(projectName)}${scopeQuery}`, {
@@ -161,11 +167,8 @@ export class VercelAdapter implements IDeployProviderAdapter {
           headers: { Authorization: `Bearer ${vercelToken}`, "Content-Type": "application/json" },
           body: JSON.stringify({
             name: projectName,
-            framework: config.framework,
             gitRepository: { type: "github", repo: `${owner}/${repo}` },
-            installCommand: config.install_command,
-            buildCommand: config.build_command,
-            outputDirectory: config.output_directory,
+            ...projectConfigPayload,
           }),
         });
         if (!createRes.ok) {
@@ -175,6 +178,16 @@ export class VercelAdapter implements IDeployProviderAdapter {
         projectId = (await createRes.json()).id;
       } else {
         return { deploy_url: null, health_status: "unknown", error_code: "VERCEL_API_ERROR", error_message: await getRes.text() };
+      }
+
+      const updateRes = await fetch(`https://api.vercel.com/v9/projects/${encodeURIComponent(projectId || projectName)}${scopeQuery}`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${vercelToken}`, "Content-Type": "application/json" },
+        body: JSON.stringify(projectConfigPayload),
+      });
+
+      if (!updateRes.ok) {
+        return { deploy_url: null, health_status: "unknown", error_code: "VERCEL_PROJECT_UPDATE_FAILED", error_message: await updateRes.text() };
       }
 
       const deployRes = await fetch(`https://api.vercel.com/v13/deployments${scopeQuery}`, {
