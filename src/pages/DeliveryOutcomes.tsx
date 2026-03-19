@@ -158,7 +158,7 @@ export default function DeliveryOutcomes() {
                       <p className="text-xs text-muted-foreground italic">{detail.explanation.summary}</p>
                       {detail.explanation.positive_factors?.length > 0 && (
                         <div>
-                          <h4 className="text-xs font-semibold text-emerald-400 mb-1">Positive Factors</h4>
+                          <h4 className="text-xs font-semibold text-emerald-400 mb-1">Fatores Positivos</h4>
                           {detail.explanation.positive_factors.map((f: any, i: number) => (
                             <div key={i} className="flex items-center gap-1.5 py-1">
                               {directionIcon("positive")}
