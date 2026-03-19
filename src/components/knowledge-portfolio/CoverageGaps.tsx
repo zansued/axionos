@@ -20,7 +20,7 @@ export function CoverageGaps({ segments }: Props) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <Card className="bg-card/50 border-border/30">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm text-warning">Under-Covered Domains</CardTitle>
+          <CardTitle className="text-sm text-warning">Domínios com Baixa Cobertura</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {weakSegments.length === 0 ? (
