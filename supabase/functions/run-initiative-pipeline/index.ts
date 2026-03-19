@@ -1056,6 +1056,10 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
 
             // Ensure ESM + scripts
             pkg.type = "module";
+            pkg.engines = {
+              ...(pkg.engines && typeof pkg.engines === "object" ? pkg.engines : {}),
+              node: "20.x",
+            };
             if (!pkg.scripts) pkg.scripts = {};
             pkg.scripts.dev = "vite";
             pkg.scripts.build = "vite build";
@@ -1094,6 +1098,15 @@ Gere entre 3-8 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
             forceDevDep("postcss", "^8.5.6");
             forceDevDep("@types/react", "^18.3.23");
             forceDevDep("@types/react-dom", "^18.3.7");
+            forceDevDep("@types/node", "^22.13.10");
+            forceDevDep("globals", "^15.15.0");
+
+            // Force ESLint 9.x — v10 breaks peer deps with plugins
+            forceDevDep("eslint", "^9.32.0");
+            forceDevDep("eslint-plugin-react-hooks", "^5.2.0");
+            forceDevDep("eslint-plugin-react-refresh", "^0.4.20");
+            forceDevDep("@eslint/js", "^9.32.0");
+            forceDevDep("typescript-eslint", "^8.38.0");
 
             return JSON.stringify(pkg, null, 2);
           } catch {
