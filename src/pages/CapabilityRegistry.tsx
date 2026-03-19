@@ -98,9 +98,9 @@ export default function CapabilityRegistry() {
     <AppShell>
       <div className="space-y-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Capability Registry</h1>
+            <h1 className="text-2xl font-bold text-foreground">Registro de Capacidades</h1>
             <p className="text-muted-foreground text-sm mt-1">
-              Packaged capabilities with lifecycle governance, versioning, and explainability.
+              Capacidades empacotadas com governança de ciclo de vida, versionamento e explicabilidade.
             </p>
           </div>
 
@@ -108,36 +108,36 @@ export default function CapabilityRegistry() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Card className="border-border bg-card"><CardContent className="pt-4 flex items-center gap-3">
               <PackageCheck className="h-5 w-5 text-primary" />
-              <div><p className="text-2xl font-bold text-foreground">{kpis.total}</p><p className="text-xs text-muted-foreground">Registered</p></div>
+              <div><p className="text-2xl font-bold text-foreground">{kpis.total}</p><p className="text-xs text-muted-foreground">Registradas</p></div>
             </CardContent></Card>
             <Card className="border-border bg-card"><CardContent className="pt-4 flex items-center gap-3">
               <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-              <div><p className="text-2xl font-bold text-foreground">{kpis.active}</p><p className="text-xs text-muted-foreground">Active</p></div>
+              <div><p className="text-2xl font-bold text-foreground">{kpis.active}</p><p className="text-xs text-muted-foreground">Ativas</p></div>
             </CardContent></Card>
             <Card className="border-border bg-card"><CardContent className="pt-4 flex items-center gap-3">
               <Archive className="h-5 w-5 text-orange-400" />
-              <div><p className="text-2xl font-bold text-foreground">{kpis.deprecated}</p><p className="text-xs text-muted-foreground">Deprecated</p></div>
+              <div><p className="text-2xl font-bold text-foreground">{kpis.deprecated}</p><p className="text-xs text-muted-foreground">Descontinuadas</p></div>
             </CardContent></Card>
             <Card className="border-border bg-card"><CardContent className="pt-4 flex items-center gap-3">
               <AlertTriangle className="h-5 w-5 text-destructive" />
-              <div><p className="text-2xl font-bold text-foreground">{kpis.highRisk}</p><p className="text-xs text-muted-foreground">High Risk</p></div>
+              <div><p className="text-2xl font-bold text-foreground">{kpis.highRisk}</p><p className="text-xs text-muted-foreground">Alto Risco</p></div>
             </CardContent></Card>
           </div>
 
           {/* Tabs */}
           <Tabs value={tab} onValueChange={setTab}>
             <TabsList className="bg-muted">
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="active">Active</TabsTrigger>
-              <TabsTrigger value="registered">Registered</TabsTrigger>
-              <TabsTrigger value="deprecated">Deprecated</TabsTrigger>
+              <TabsTrigger value="all">Todas</TabsTrigger>
+              <TabsTrigger value="active">Ativas</TabsTrigger>
+              <TabsTrigger value="registered">Registradas</TabsTrigger>
+              <TabsTrigger value="deprecated">Descontinuadas</TabsTrigger>
             </TabsList>
 
             <TabsContent value={tab}>
               {loading ? (
                 <div className="flex justify-center py-12"><div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" /></div>
               ) : filtered.length === 0 ? (
-                <Card className="border-border bg-card"><CardContent className="py-12 text-center text-muted-foreground">No capabilities in this view.</CardContent></Card>
+                <Card className="border-border bg-card"><CardContent className="py-12 text-center text-muted-foreground">Nenhuma capacidade nesta visualização.</CardContent></Card>
               ) : (
                 <div className="space-y-2">
                   {filtered.map((c) => {
@@ -148,8 +148,8 @@ export default function CapabilityRegistry() {
                           <div className="flex items-center gap-3 min-w-0">
                             <Icon className="h-4 w-4 text-primary shrink-0" />
                             <div className="min-w-0">
-                              <p className="font-medium text-foreground truncate">{c.name || "Unnamed"}</p>
-                              <p className="text-xs text-muted-foreground truncate">{c.category} · {c.source_type} · {c.affected_surfaces.length} surfaces</p>
+                              <p className="font-medium text-foreground truncate">{c.name || "Sem nome"}</p>
+                              <p className="text-xs text-muted-foreground truncate">{c.category} · {c.source_type} · {c.affected_surfaces.length} superfícies</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
@@ -172,36 +172,35 @@ export default function CapabilityRegistry() {
               {selected && (
                 <>
                   <SheetHeader>
-                    <SheetTitle className="text-foreground">{selected.name || "Capability Detail"}</SheetTitle>
+                    <SheetTitle className="text-foreground">{selected.name || "Detalhe da Capacidade"}</SheetTitle>
                   </SheetHeader>
                   <div className="space-y-4 mt-4">
                     <div className="flex gap-2 flex-wrap">
                       <Badge className={STATUS_COLORS[selected.lifecycle_status] || ""}>{selected.lifecycle_status}</Badge>
                       <Badge variant="outline">{selected.category}</Badge>
                       <Badge variant="outline">{selected.source_type}</Badge>
-                      <Badge variant="outline">{selected.risk_posture} risk</Badge>
-                      {selected.rollback_ready && <Badge variant="outline">rollback ready</Badge>}
+                      <Badge variant="outline">risco {selected.risk_posture}</Badge>
+                      {selected.rollback_ready && <Badge variant="outline">rollback disponível</Badge>}
                     </div>
                     {selected.description && <p className="text-sm text-muted-foreground">{selected.description}</p>}
 
                     {selected.affected_surfaces.length > 0 && (
                       <div>
-                        <h4 className="text-xs font-semibold text-muted-foreground mb-1">Affected Surfaces</h4>
+                        <h4 className="text-xs font-semibold text-muted-foreground mb-1">Superfícies Afetadas</h4>
                         <div className="flex gap-1 flex-wrap">{selected.affected_surfaces.map((s) => <Badge key={s} variant="outline" className="text-xs">{s}</Badge>)}</div>
                       </div>
                     )}
                     {selected.required_scopes.length > 0 && (
                       <div>
-                        <h4 className="text-xs font-semibold text-muted-foreground mb-1">Required Scopes</h4>
+                        <h4 className="text-xs font-semibold text-muted-foreground mb-1">Escopos Necessários</h4>
                         <div className="flex gap-1 flex-wrap">{selected.required_scopes.map((s) => <Badge key={s} variant="outline" className="text-xs">{s}</Badge>)}</div>
                       </div>
                     )}
 
                     <Separator className="bg-border" />
 
-                    {/* Versions */}
                     <div>
-                      <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2"><Tag className="h-4 w-4" /> Versions ({versions.length})</h4>
+                      <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2"><Tag className="h-4 w-4" /> Versões ({versions.length})</h4>
                       {versions.length ? (
                         <ScrollArea className="max-h-40">
                           <div className="space-y-1">
@@ -216,14 +215,13 @@ export default function CapabilityRegistry() {
                             ))}
                           </div>
                         </ScrollArea>
-                      ) : <p className="text-xs text-muted-foreground">No versions yet.</p>}
+                      ) : <p className="text-xs text-muted-foreground">Nenhuma versão ainda.</p>}
                     </div>
 
                     <Separator className="bg-border" />
 
-                    {/* Events */}
                     <div>
-                      <h4 className="font-semibold text-foreground mb-2">Package Events</h4>
+                      <h4 className="font-semibold text-foreground mb-2">Eventos do Pacote</h4>
                       {events.length ? (
                         <ScrollArea className="max-h-40">
                           <div className="space-y-1">
@@ -235,7 +233,7 @@ export default function CapabilityRegistry() {
                             ))}
                           </div>
                         </ScrollArea>
-                      ) : <p className="text-xs text-muted-foreground">No events.</p>}
+                      ) : <p className="text-xs text-muted-foreground">Nenhum evento.</p>}
                     </div>
                   </div>
                 </>
