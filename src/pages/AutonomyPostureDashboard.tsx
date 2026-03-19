@@ -20,12 +20,12 @@ const levelColors: Record<number, string> = {
 };
 
 const levelNames: Record<number, string> = {
-  0: "Manual Only",
-  1: "Assisted",
-  2: "Supervised",
-  3: "Bounded Auto",
-  4: "Trusted Auto",
-  5: "Full Bounded",
+  0: "Somente Manual",
+  1: "Assistido",
+  2: "Supervisionado",
+  3: "Auto Limitado",
+  4: "Auto Confiável",
+  5: "Totalmente Limitado",
 };
 
 export default function AutonomyPostureDashboard() {
@@ -36,40 +36,40 @@ export default function AutonomyPostureDashboard() {
     <AppShell>
       <div className="space-y-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Autonomy Posture</h1>
-            <p className="text-muted-foreground text-sm">Evidence-based autonomy levels with bounded reversibility.</p>
+            <h1 className="text-2xl font-bold text-foreground">Postura de Autonomia</h1>
+            <p className="text-muted-foreground text-sm">Níveis de autonomia baseados em evidências com reversibilidade limitada.</p>
           </div>
 
           {coldStart?.is_cold_start && (
             <ColdStartBanner label={coldStart.label} summary={coldStart.summary} signals={coldStart.signals} />
           )}
 
-          {/* Summary cards */}
+          {/* Cards resumo */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Domains</CardTitle>
+                <CardTitle className="text-sm font-medium">Domínios</CardTitle>
                 <Shield className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent><div className="text-2xl font-bold">{domains.length}</div></CardContent>
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Adjustments</CardTitle>
+                <CardTitle className="text-sm font-medium">Ajustes</CardTitle>
                 <Activity className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent><div className="text-2xl font-bold">{adjustments.length}</div></CardContent>
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Breaches</CardTitle>
+                <CardTitle className="text-sm font-medium">Violações</CardTitle>
                 <AlertTriangle className="h-4 w-4 text-destructive" />
               </CardHeader>
               <CardContent><div className="text-2xl font-bold">{breaches.length}</div></CardContent>
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Regressions</CardTitle>
+                <CardTitle className="text-sm font-medium">Regressões</CardTitle>
                 <TrendingDown className="h-4 w-4 text-destructive" />
               </CardHeader>
               <CardContent><div className="text-2xl font-bold">{regressions.length}</div></CardContent>
@@ -78,31 +78,31 @@ export default function AutonomyPostureDashboard() {
 
           <Tabs defaultValue="domains">
             <TabsList>
-              <TabsTrigger value="domains">Domains</TabsTrigger>
-              <TabsTrigger value="risk-profile">Risk Profile</TabsTrigger>
-              <TabsTrigger value="transitions">Transitions</TabsTrigger>
-              <TabsTrigger value="adjustments">Adjustments</TabsTrigger>
-              <TabsTrigger value="breaches">Breaches</TabsTrigger>
-              <TabsTrigger value="regressions">Regressions</TabsTrigger>
+              <TabsTrigger value="domains">Domínios</TabsTrigger>
+              <TabsTrigger value="risk-profile">Perfil de Risco</TabsTrigger>
+              <TabsTrigger value="transitions">Transições</TabsTrigger>
+              <TabsTrigger value="adjustments">Ajustes</TabsTrigger>
+              <TabsTrigger value="breaches">Violações</TabsTrigger>
+              <TabsTrigger value="regressions">Regressões</TabsTrigger>
             </TabsList>
 
             <TabsContent value="domains">
               <Card>
                 <CardContent className="pt-6">
                   {loadingDomains ? (
-                    <p className="text-muted-foreground text-sm">Loading…</p>
+                    <p className="text-muted-foreground text-sm">Carregando…</p>
                   ) : domains.length === 0 ? (
-                    <p className="text-muted-foreground text-sm">No autonomy domains configured yet.</p>
+                    <p className="text-muted-foreground text-sm">Nenhum domínio de autonomia configurado ainda.</p>
                   ) : (
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Domain</TableHead>
-                          <TableHead>Level</TableHead>
-                          <TableHead>Evidence</TableHead>
-                          <TableHead>Validation</TableHead>
-                          <TableHead>Rollback Dep.</TableHead>
-                          <TableHead>Incident Pen.</TableHead>
+                          <TableHead>Domínio</TableHead>
+                          <TableHead>Nível</TableHead>
+                          <TableHead>Evidência</TableHead>
+                          <TableHead>Validação</TableHead>
+                          <TableHead>Dep. Rollback</TableHead>
+                          <TableHead>Pen. Incidente</TableHead>
                           <TableHead>Status</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -112,7 +112,7 @@ export default function AutonomyPostureDashboard() {
                             <TableCell className="font-medium">{d.domain_name}</TableCell>
                             <TableCell>
                               <Badge className={levelColors[d.current_autonomy_level] || ""}>
-                                L{d.current_autonomy_level} — {levelNames[d.current_autonomy_level] || "Unknown"}
+                                N{d.current_autonomy_level} — {levelNames[d.current_autonomy_level] || "Desconhecido"}
                               </Badge>
                             </TableCell>
                             <TableCell>{(Number(d.evidence_score) * 100).toFixed(0)}%</TableCell>
@@ -129,33 +129,33 @@ export default function AutonomyPostureDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Sprint 124: Transition Stabilization Observability */}
+            {/* Observabilidade de Estabilização de Transições */}
             <TabsContent value="transitions">
               <div className="space-y-4">
-                {/* Transition KPIs */}
+                {/* KPIs de Transição */}
                 {transitionMetrics && (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <Card>
                       <CardContent className="pt-6">
-                        <p className="text-xs text-muted-foreground">Upgrade Attempts</p>
+                        <p className="text-xs text-muted-foreground">Tentativas de Upgrade</p>
                         <p className="text-2xl font-bold">{transitionMetrics.upgrade_attempts ?? 0}</p>
                       </CardContent>
                     </Card>
                     <Card>
                       <CardContent className="pt-6">
-                        <p className="text-xs text-muted-foreground">Approved</p>
+                        <p className="text-xs text-muted-foreground">Aprovadas</p>
                         <p className="text-2xl font-bold text-primary">{transitionMetrics.upgrades_approved ?? 0}</p>
                       </CardContent>
                     </Card>
                     <Card>
                       <CardContent className="pt-6">
-                        <p className="text-xs text-muted-foreground">Rejected (Stabilized)</p>
+                        <p className="text-xs text-muted-foreground">Rejeitadas (Estabilizadas)</p>
                         <p className="text-2xl font-bold text-destructive">{transitionMetrics.upgrades_rejected ?? 0}</p>
                       </CardContent>
                     </Card>
                     <Card>
                       <CardContent className="pt-6">
-                        <p className="text-xs text-muted-foreground">Approval Rate</p>
+                        <p className="text-xs text-muted-foreground">Taxa de Aprovação</p>
                         <p className="text-2xl font-bold">
                           {((transitionMetrics.upgrade_approval_rate ?? 0) * 100).toFixed(0)}%
                         </p>
@@ -165,30 +165,30 @@ export default function AutonomyPostureDashboard() {
                   </div>
                 )}
 
-                {/* Recent transition attempts */}
+                {/* Tentativas de transição recentes */}
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-sm flex items-center gap-2">
                       <Clock className="h-4 w-4 text-muted-foreground" />
-                      Recent Transition Attempts
+                      Tentativas de Transição Recentes
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     {!transitionMetrics?.recent_attempts?.length ? (
-                      <p className="text-muted-foreground text-sm">No transition attempts recorded yet.</p>
+                      <p className="text-muted-foreground text-sm">Nenhuma tentativa de transição registrada ainda.</p>
                     ) : (
                       <Table>
                         <TableHeader>
                           <TableRow>
                             <TableHead>Status</TableHead>
-                            <TableHead>Direction</TableHead>
-                            <TableHead>From</TableHead>
-                            <TableHead>To</TableHead>
-                            <TableHead>Time at Level</TableHead>
-                            <TableHead>Executions</TableHead>
-                            <TableHead>Confidence</TableHead>
-                            <TableHead>Reason</TableHead>
-                            <TableHead>Date</TableHead>
+                            <TableHead>Direção</TableHead>
+                            <TableHead>De</TableHead>
+                            <TableHead>Para</TableHead>
+                            <TableHead>Tempo no Nível</TableHead>
+                            <TableHead>Execuções</TableHead>
+                            <TableHead>Confiança</TableHead>
+                            <TableHead>Motivo</TableHead>
+                            <TableHead>Data</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -203,17 +203,17 @@ export default function AutonomyPostureDashboard() {
                               </TableCell>
                               <TableCell>
                                 <Badge variant={a.direction === "upgrade" ? "default" : "destructive"}>
-                                  {a.direction}
+                                  {a.direction === "upgrade" ? "Promoção" : "Rebaixamento"}
                                 </Badge>
                               </TableCell>
-                              <TableCell>L{a.level_from}</TableCell>
-                              <TableCell>L{a.level_to}</TableCell>
+                              <TableCell>N{a.level_from}</TableCell>
+                              <TableCell>N{a.level_to}</TableCell>
                               <TableCell className="text-xs">{a.time_at_current_level_hours ? `${Number(a.time_at_current_level_hours).toFixed(1)}h` : "—"}</TableCell>
                               <TableCell>{a.execution_count_at_level ?? "—"}</TableCell>
                               <TableCell>{a.confidence_score ? `${(Number(a.confidence_score) * 100).toFixed(0)}%` : "—"}</TableCell>
                               <TableCell className="max-w-xs truncate text-xs text-muted-foreground">{a.rejection_reason || "—"}</TableCell>
                               <TableCell className="text-xs text-muted-foreground">
-                                {new Date(a.created_at).toLocaleDateString()}
+                                {new Date(a.created_at).toLocaleDateString("pt-BR")}
                               </TableCell>
                             </TableRow>
                           ))}
@@ -229,17 +229,17 @@ export default function AutonomyPostureDashboard() {
               <Card>
                 <CardContent className="pt-6">
                   {adjustments.length === 0 ? (
-                    <p className="text-muted-foreground text-sm">No adjustment events yet.</p>
+                    <p className="text-muted-foreground text-sm">Nenhum evento de ajuste ainda.</p>
                   ) : (
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Type</TableHead>
-                          <TableHead>From</TableHead>
-                          <TableHead>To</TableHead>
-                          <TableHead>Reason</TableHead>
-                          <TableHead>By</TableHead>
-                          <TableHead>Date</TableHead>
+                          <TableHead>Tipo</TableHead>
+                          <TableHead>De</TableHead>
+                          <TableHead>Para</TableHead>
+                          <TableHead>Motivo</TableHead>
+                          <TableHead>Por</TableHead>
+                          <TableHead>Data</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -247,14 +247,14 @@ export default function AutonomyPostureDashboard() {
                           <TableRow key={a.id}>
                             <TableCell>
                               <Badge variant={a.adjustment_type === "upgrade" ? "default" : "destructive"}>
-                                {a.adjustment_type}
+                                {a.adjustment_type === "upgrade" ? "Promoção" : "Rebaixamento"}
                               </Badge>
                             </TableCell>
-                            <TableCell>L{a.previous_level}</TableCell>
-                            <TableCell>L{a.new_level}</TableCell>
+                            <TableCell>N{a.previous_level}</TableCell>
+                            <TableCell>N{a.new_level}</TableCell>
                             <TableCell className="max-w-xs truncate">{a.adjustment_reason}</TableCell>
                             <TableCell>{a.adjusted_by}</TableCell>
-                            <TableCell className="text-xs text-muted-foreground">{new Date(a.created_at).toLocaleDateString()}</TableCell>
+                            <TableCell className="text-xs text-muted-foreground">{new Date(a.created_at).toLocaleDateString("pt-BR")}</TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -268,16 +268,16 @@ export default function AutonomyPostureDashboard() {
               <Card>
                 <CardContent className="pt-6">
                   {breaches.length === 0 ? (
-                    <p className="text-muted-foreground text-sm">No guardrail breaches recorded.</p>
+                    <p className="text-muted-foreground text-sm">Nenhuma violação de guardrail registrada.</p>
                   ) : (
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Type</TableHead>
-                          <TableHead>Severity</TableHead>
-                          <TableHead>Action</TableHead>
-                          <TableHead>Blocked</TableHead>
-                          <TableHead>Date</TableHead>
+                          <TableHead>Tipo</TableHead>
+                          <TableHead>Severidade</TableHead>
+                          <TableHead>Ação</TableHead>
+                          <TableHead>Bloqueada</TableHead>
+                          <TableHead>Data</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -286,12 +286,12 @@ export default function AutonomyPostureDashboard() {
                             <TableCell>{b.breach_type}</TableCell>
                             <TableCell>
                               <Badge variant={b.severity === "critical" ? "destructive" : "outline"}>
-                                {b.severity}
+                                {b.severity === "critical" ? "Crítica" : b.severity === "high" ? "Alta" : b.severity === "medium" ? "Média" : "Baixa"}
                               </Badge>
                             </TableCell>
                             <TableCell className="max-w-xs truncate">{b.action_attempted}</TableCell>
-                            <TableCell>{b.blocked ? "Yes" : "No"}</TableCell>
-                            <TableCell className="text-xs text-muted-foreground">{new Date(b.created_at).toLocaleDateString()}</TableCell>
+                            <TableCell>{b.blocked ? "Sim" : "Não"}</TableCell>
+                            <TableCell className="text-xs text-muted-foreground">{new Date(b.created_at).toLocaleDateString("pt-BR")}</TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -305,16 +305,16 @@ export default function AutonomyPostureDashboard() {
               <Card>
                 <CardContent className="pt-6">
                   {regressions.length === 0 ? (
-                    <p className="text-muted-foreground text-sm">No regression cases detected.</p>
+                    <p className="text-muted-foreground text-sm">Nenhum caso de regressão detectado.</p>
                   ) : (
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Type</TableHead>
-                          <TableHead>Severity</TableHead>
-                          <TableHead>Trigger</TableHead>
+                          <TableHead>Tipo</TableHead>
+                          <TableHead>Severidade</TableHead>
+                          <TableHead>Gatilho</TableHead>
                           <TableHead>Status</TableHead>
-                          <TableHead>Date</TableHead>
+                          <TableHead>Data</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -323,12 +323,12 @@ export default function AutonomyPostureDashboard() {
                             <TableCell>{r.regression_type}</TableCell>
                             <TableCell>
                               <Badge variant={r.severity === "critical" ? "destructive" : "outline"}>
-                                {r.severity}
+                                {r.severity === "critical" ? "Crítica" : r.severity === "high" ? "Alta" : r.severity === "medium" ? "Média" : "Baixa"}
                               </Badge>
                             </TableCell>
                             <TableCell className="max-w-xs truncate">{r.trigger_event}</TableCell>
                             <TableCell><Badge variant="outline">{r.resolution_status}</Badge></TableCell>
-                            <TableCell className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</TableCell>
+                            <TableCell className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleDateString("pt-BR")}</TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -338,34 +338,40 @@ export default function AutonomyPostureDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Sprint 125: Risk Profile */}
+            {/* Perfil de Risco */}
             <TabsContent value="risk-profile">
               <div className="space-y-4">
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-sm flex items-center gap-2">
                       <Gauge className="h-4 w-4 text-primary" />
-                      Tenant Risk Profile
+                      Perfil de Risco do Tenant
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">Active Profile:</span>
+                      <span className="text-sm text-muted-foreground">Perfil Ativo:</span>
                       <Badge variant="default" className="text-sm">
-                        {regressionProfile?.active_type || "balanced"}
+                        {regressionProfile?.active_type === "conservative" ? "Conservador" :
+                         regressionProfile?.active_type === "balanced" ? "Equilibrado" :
+                         regressionProfile?.active_type === "aggressive" ? "Agressivo" : "Equilibrado"}
                       </Badge>
                     </div>
 
                     <div className="flex gap-2">
-                      {["conservative", "balanced", "aggressive"].map((pt) => (
+                      {([
+                        { key: "conservative", label: "Conservador" },
+                        { key: "balanced", label: "Equilibrado" },
+                        { key: "aggressive", label: "Agressivo" },
+                      ] as const).map((pt) => (
                         <Button
-                          key={pt}
+                          key={pt.key}
                           size="sm"
-                          variant={regressionProfile?.active_type === pt ? "default" : "outline"}
-                          onClick={() => setRegressionProfile.mutate({ profile_type: pt })}
+                          variant={regressionProfile?.active_type === pt.key ? "default" : "outline"}
+                          onClick={() => setRegressionProfile.mutate({ profile_type: pt.key })}
                           disabled={setRegressionProfile.isPending}
                         >
-                          {pt.charAt(0).toUpperCase() + pt.slice(1)}
+                          {pt.label}
                         </Button>
                       ))}
                     </div>
@@ -373,12 +379,12 @@ export default function AutonomyPostureDashboard() {
                     {regressionProfile?.profile && (
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4">
                         {[
-                          { label: "Validation Failure Threshold", value: `${(Number(regressionProfile.profile.validation_failure_threshold) * 100).toFixed(0)}%` },
-                          { label: "Rollback Threshold", value: `${regressionProfile.profile.rollback_rate_threshold} per window` },
-                          { label: "Guardrail Breach Threshold", value: `${regressionProfile.profile.guardrail_breach_threshold}` },
-                          { label: "Incident Threshold", value: `${regressionProfile.profile.incident_threshold}` },
-                          { label: "Evidence Trend Threshold", value: `${Number(regressionProfile.profile.evidence_trend_threshold).toFixed(2)}` },
-                          { label: "Autonomy Upgrade Speed", value: `${Number(regressionProfile.profile.autonomy_upgrade_modifier).toFixed(1)}×` },
+                          { label: "Limiar de Falha de Validação", value: `${(Number(regressionProfile.profile.validation_failure_threshold) * 100).toFixed(0)}%` },
+                          { label: "Limiar de Rollback", value: `${regressionProfile.profile.rollback_rate_threshold} por janela` },
+                          { label: "Tolerância a Violações", value: `${regressionProfile.profile.guardrail_breach_threshold}` },
+                          { label: "Limiar de Incidentes", value: `${regressionProfile.profile.incident_threshold}` },
+                          { label: "Tendência de Evidência", value: `${Number(regressionProfile.profile.evidence_trend_threshold).toFixed(2)}` },
+                          { label: "Velocidade de Promoção", value: `${Number(regressionProfile.profile.autonomy_upgrade_modifier).toFixed(1)}×` },
                         ].map((item) => (
                           <Card key={item.label} className="border-border/30">
                             <CardContent className="pt-4">
@@ -392,35 +398,35 @@ export default function AutonomyPostureDashboard() {
 
                     {!regressionProfile?.profile && (
                       <p className="text-sm text-muted-foreground">
-                        No custom profile set. Using system default (balanced). Select a profile above to customize.
+                        Nenhum perfil personalizado definido. Usando o padrão do sistema (equilibrado). Selecione um perfil acima para personalizar.
                       </p>
                     )}
                   </CardContent>
                 </Card>
 
-                {/* Profile comparison */}
+                {/* Comparação de perfis */}
                 {regressionProfile?.defaults && (
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-sm">Profile Comparison</CardTitle>
+                      <CardTitle className="text-sm">Comparação de Perfis</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            <TableHead>Parameter</TableHead>
-                            <TableHead>Conservative</TableHead>
-                            <TableHead>Balanced</TableHead>
-                            <TableHead>Aggressive</TableHead>
+                            <TableHead>Parâmetro</TableHead>
+                            <TableHead>Conservador</TableHead>
+                            <TableHead>Equilibrado</TableHead>
+                            <TableHead>Agressivo</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {[
-                            { key: "validation_failure_threshold", label: "Validation Failure", fmt: (v: number) => `${(v * 100).toFixed(0)}%` },
-                            { key: "rollback_rate_threshold", label: "Rollback Limit", fmt: (v: number) => `${v}` },
-                            { key: "incident_threshold", label: "Incident Limit", fmt: (v: number) => `${v}` },
-                            { key: "guardrail_breach_threshold", label: "Breach Tolerance", fmt: (v: number) => `${v}` },
-                            { key: "autonomy_upgrade_modifier", label: "Upgrade Speed", fmt: (v: number) => `${v}×` },
+                            { key: "validation_failure_threshold", label: "Falha de Validação", fmt: (v: number) => `${(v * 100).toFixed(0)}%` },
+                            { key: "rollback_rate_threshold", label: "Limite de Rollback", fmt: (v: number) => `${v}` },
+                            { key: "incident_threshold", label: "Limite de Incidentes", fmt: (v: number) => `${v}` },
+                            { key: "guardrail_breach_threshold", label: "Tolerância a Violações", fmt: (v: number) => `${v}` },
+                            { key: "autonomy_upgrade_modifier", label: "Velocidade de Promoção", fmt: (v: number) => `${v}×` },
                           ].map(({ key, label, fmt }) => (
                             <TableRow key={key}>
                               <TableCell className="font-medium text-xs">{label}</TableCell>
