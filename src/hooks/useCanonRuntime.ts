@@ -17,13 +17,12 @@ export function useCanonRuntime() {
     queryKey: ["canon-retrieval-sessions", orgId],
     queryFn: async () => {
       const { data, error } = await (supabase
-        .from("canon_retrieval_sessions" as any)
+        .from("semantic_retrieval_sessions" as any)
         .select("*")
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false })
         .limit(50) as any);
 
-      // Ambiente pode não ter a tabela antiga; evita 404 quebrando a UI.
       if (error && !isMissingRelationError(error)) throw error;
       return (data || []) as any[];
     },
@@ -64,15 +63,15 @@ export function useCanonRuntime() {
 
   const analytics = {
     totalSessions: sessionData.length,
-    activeSessions: sessionData.filter((s: any) => s.session_status === "active").length,
-    completedSessions: sessionData.filter((s: any) => s.session_status === "completed").length,
+    activeSessions: sessionData.filter((s: any) => s.session_type === "active" || s.session_type === "agent_context").length,
+    completedSessions: sessionData.length,
     totalApplications: appData.length,
     totalFeedback: (feedback.data || []).length,
     avgRetrieved: sessionData.length
-      ? Math.round(sessionData.reduce((sum: number, s: any) => sum + (s.entries_retrieved || 0), 0) / sessionData.length)
+      ? Math.round(sessionData.reduce((sum: number, s: any) => sum + (Array.isArray(s.ranked_results) ? s.ranked_results.length : 0), 0) / sessionData.length)
       : 0,
-    avgApplied: sessionData.length
-      ? Math.round(sessionData.reduce((sum: number, s: any) => sum + (s.entries_applied || 0), 0) / sessionData.length)
+    avgConfidence: sessionData.length
+      ? Math.round(sessionData.reduce((sum: number, s: any) => sum + (s.confidence_score || 0), 0) / sessionData.length * 100) / 100
       : 0,
   };
 
