@@ -31,7 +31,6 @@ export function ThroughputMetrics({ triggers, workflows, history }: Props) {
     const unresolved = triggers.filter((t: any) => t.status === "pending");
     const highPriority = triggers.filter((t: any) => t.status === "pending" && (t.strength || 0) > 0.7);
 
-    // Avg cycle time for completed workflows
     let avgCycleMs = 0;
     if (completed.length > 0) {
       const totalMs = completed.reduce((s: number, w: any) => {
@@ -62,18 +61,18 @@ export function ThroughputMetrics({ triggers, workflows, history }: Props) {
   return (
     <Card className="border-border/30">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base">Renewal Throughput (Last 30 Days)</CardTitle>
+        <CardTitle className="text-base">Vazão de Renovação (Últimos 30 Dias)</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatCard label="Triggers Generated" value={stats.recentTriggers} />
-          <StatCard label="Workflows Opened" value={stats.recentWorkflows} />
-          <StatCard label="Completed" value={stats.completed} />
-          <StatCard label="Failed" value={stats.failed} />
-          <StatCard label="Avg Cycle Time" value={`${stats.avgCycleDays}d`} />
-          <StatCard label="Success Rate" value={`${stats.successRate}%`} />
-          <StatCard label="Unresolved Stale" value={stats.unresolved} />
-          <StatCard label="High Priority" value={stats.highPriority} />
+          <StatCard label="Gatilhos Gerados" value={stats.recentTriggers} />
+          <StatCard label="Workflows Abertos" value={stats.recentWorkflows} />
+          <StatCard label="Concluídos" value={stats.completed} />
+          <StatCard label="Falhas" value={stats.failed} />
+          <StatCard label="Tempo Médio de Ciclo" value={`${stats.avgCycleDays}d`} />
+          <StatCard label="Taxa de Sucesso" value={`${stats.successRate}%`} />
+          <StatCard label="Pendentes Antigos" value={stats.unresolved} />
+          <StatCard label="Alta Prioridade" value={stats.highPriority} />
         </div>
       </CardContent>
     </Card>

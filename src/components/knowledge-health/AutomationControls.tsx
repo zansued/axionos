@@ -50,29 +50,29 @@ export function AutomationControls() {
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
             <Shield className="h-4 w-4 text-primary" />
-            <CardTitle className="text-base">Renewal Automation Settings</CardTitle>
+            <CardTitle className="text-base">Configurações de Automação de Renovação</CardTitle>
           </div>
           <CardDescription className="text-xs">
-            Configure how the renewal engine operates. All settings are bounded and auditable.
+            Configure como o motor de renovação opera. Todas as configurações são delimitadas e auditáveis.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Scan Frequency */}
+          {/* Frequência de Scan */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-xs">Scan Frequency</Label>
+              <Label className="text-xs">Frequência de Escaneamento</Label>
               <Select value={config.scanFrequency} onValueChange={v => setConfig(p => ({ ...p, scanFrequency: v }))}>
                 <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="hourly">Hourly</SelectItem>
-                  <SelectItem value="daily">Daily</SelectItem>
-                  <SelectItem value="weekly">Weekly</SelectItem>
-                  <SelectItem value="manual">Manual Only</SelectItem>
+                  <SelectItem value="hourly">A cada hora</SelectItem>
+                  <SelectItem value="daily">Diário</SelectItem>
+                  <SelectItem value="weekly">Semanal</SelectItem>
+                  <SelectItem value="manual">Apenas Manual</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-xs">Max Items per Run</Label>
+              <Label className="text-xs">Máximo de Itens por Execução</Label>
               <Select value={config.maxPerRun} onValueChange={v => setConfig(p => ({ ...p, maxPerRun: v }))}>
                 <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -85,16 +85,16 @@ export function AutomationControls() {
             </div>
           </div>
 
-          {/* Trigger Auto-Eligibility */}
+          {/* Elegibilidade Automática de Gatilhos */}
           <div className="space-y-3">
-            <Label className="text-xs font-semibold">Trigger Auto-Eligibility</Label>
+            <Label className="text-xs font-semibold">Elegibilidade Automática de Gatilhos</Label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {TRIGGER_TYPES.map(t => (
                 <div key={t} className="flex items-center justify-between rounded-lg border border-border/20 px-3 py-2">
                   <span className="text-xs capitalize">{t.replace(/_/g, " ")}</span>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-[9px]">
-                      {config.autoTriggers.has(t) ? "auto" : "alert only"}
+                      {config.autoTriggers.has(t) ? "auto" : "somente alerta"}
                     </Badge>
                     <Switch
                       checked={config.autoTriggers.has(t)}
@@ -106,16 +106,16 @@ export function AutomationControls() {
             </div>
           </div>
 
-          {/* Mode Auto-Eligibility */}
+          {/* Governança de Modo de Renovação */}
           <div className="space-y-3">
-            <Label className="text-xs font-semibold">Renewal Mode Governance</Label>
+            <Label className="text-xs font-semibold">Governança de Modo de Renovação</Label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {RENEWAL_MODES.map(m => (
                 <div key={m} className="flex items-center justify-between rounded-lg border border-border/20 px-3 py-2">
                   <span className="text-xs capitalize">{m.replace(/_/g, " ")}</span>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-[9px]">
-                      {config.autoModes.has(m) ? "auto-eligible" : "human review"}
+                      {config.autoModes.has(m) ? "auto-elegível" : "revisão humana"}
                     </Badge>
                     <Switch
                       checked={config.autoModes.has(m)}

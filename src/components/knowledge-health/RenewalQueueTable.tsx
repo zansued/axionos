@@ -53,22 +53,22 @@ export function RenewalQueueTable({ triggers, workflows, proposals, onStartReval
     <Card className="border-border/30">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between flex-wrap gap-2">
-          <CardTitle className="text-base">Renewal Queue</CardTitle>
+          <CardTitle className="text-base">Fila de Renovação</CardTitle>
           <div className="flex gap-2">
             <Select value={filterStatus} onValueChange={setFilterStatus}>
               <SelectTrigger className="h-8 w-[140px] text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="in_progress">In Progress</SelectItem>
-                <SelectItem value="resolved">Resolved</SelectItem>
-                <SelectItem value="dismissed">Dismissed</SelectItem>
+                <SelectItem value="all">Todos os Status</SelectItem>
+                <SelectItem value="pending">Pendente</SelectItem>
+                <SelectItem value="in_progress">Em Progresso</SelectItem>
+                <SelectItem value="resolved">Resolvido</SelectItem>
+                <SelectItem value="dismissed">Descartado</SelectItem>
               </SelectContent>
             </Select>
             <Select value={filterTrigger} onValueChange={setFilterTrigger}>
               <SelectTrigger className="h-8 w-[180px] text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Triggers</SelectItem>
+                <SelectItem value="all">Todos os Gatilhos</SelectItem>
                 {triggerTypes.map(t => <SelectItem key={t} value={t}>{t.replace(/_/g, " ")}</SelectItem>)}
               </SelectContent>
             </Select>
@@ -77,19 +77,19 @@ export function RenewalQueueTable({ triggers, workflows, proposals, onStartReval
       </CardHeader>
       <CardContent>
         {rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">No renewal triggers found.</p>
+          <p className="text-sm text-muted-foreground text-center py-8">Nenhum gatilho de renovação encontrado.</p>
         ) : (
           <div className="overflow-auto max-h-[500px]">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-xs">Target</TableHead>
-                  <TableHead className="text-xs">Trigger</TableHead>
-                  <TableHead className="text-xs">Strength</TableHead>
+                  <TableHead className="text-xs">Alvo</TableHead>
+                  <TableHead className="text-xs">Gatilho</TableHead>
+                  <TableHead className="text-xs">Força</TableHead>
                   <TableHead className="text-xs">Status</TableHead>
                   <TableHead className="text-xs">Workflow</TableHead>
-                  <TableHead className="text-xs">Proposal</TableHead>
-                  <TableHead className="text-xs">Actions</TableHead>
+                  <TableHead className="text-xs">Proposta</TableHead>
+                  <TableHead className="text-xs">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -135,7 +135,7 @@ export function RenewalQueueTable({ triggers, workflows, proposals, onStartReval
                       <TableCell>
                         {t.status === "pending" && !wf && (
                           <Button size="sm" variant="ghost" className="h-6 text-[10px]" onClick={() => onStartRevalidation(t.id)}>
-                            <Play className="h-3 w-3 mr-1" />Start
+                            <Play className="h-3 w-3 mr-1" />Iniciar
                           </Button>
                         )}
                       </TableCell>

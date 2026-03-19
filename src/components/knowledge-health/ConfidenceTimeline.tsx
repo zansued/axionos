@@ -26,11 +26,11 @@ export function ConfidenceTimeline({ history }: Props) {
   return (
     <Card className="border-border/30">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base">Renewal & Confidence Timeline</CardTitle>
+        <CardTitle className="text-base">Linha do Tempo de Renovação e Confiança</CardTitle>
       </CardHeader>
       <CardContent>
         {sorted.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">No renewal history yet.</p>
+          <p className="text-sm text-muted-foreground text-center py-8">Nenhum histórico de renovação ainda.</p>
         ) : (
           <div className="space-y-1 max-h-[500px] overflow-auto">
             {sorted.map((h: any) => {
@@ -57,7 +57,7 @@ export function ConfidenceTimeline({ history }: Props) {
                     <p className="text-xs text-muted-foreground mt-0.5 truncate">{h.summary || h.target_entry_id}</p>
                   </div>
                   <span className="text-[10px] text-muted-foreground shrink-0">
-                    {new Date(h.created_at).toLocaleDateString()}
+                    {new Date(h.created_at).toLocaleDateString("pt-BR")}
                   </span>
                 </div>
               );

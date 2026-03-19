@@ -38,38 +38,36 @@ export function GovernanceBridgePanel({ bridges, onDecide, onBackPropagate, deci
 
   return (
     <div className="space-y-4">
-      {/* Summary */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-        <MiniCard label="Bridge Eligible" value={eligible} variant={eligible > 0 ? "warning" : "default"} />
-        <MiniCard label="Awaiting Review" value={awaitingReview} variant={awaitingReview > 0 ? "accent" : "default"} />
-        <MiniCard label="Approved" value={approved} variant="success" />
-        <MiniCard label="Rejected" value={rejected} variant={rejected > 0 ? "destructive" : "default"} />
-        <MiniCard label="Pending Propagation" value={pendingPropagation} variant={pendingPropagation > 0 ? "warning" : "default"} />
+        <MiniCard label="Elegíveis p/ Bridge" value={eligible} variant={eligible > 0 ? "warning" : "default"} />
+        <MiniCard label="Aguardando Revisão" value={awaitingReview} variant={awaitingReview > 0 ? "accent" : "default"} />
+        <MiniCard label="Aprovados" value={approved} variant="success" />
+        <MiniCard label="Rejeitados" value={rejected} variant={rejected > 0 ? "destructive" : "default"} />
+        <MiniCard label="Propagação Pendente" value={pendingPropagation} variant={pendingPropagation > 0 ? "warning" : "default"} />
       </div>
 
-      {/* Bridge Table */}
       <Card className="border-border/30">
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2">
             <GitBranch className="h-4 w-4 text-primary" />
-            Renewal → Governance Bridge
+            Renovação → Ponte de Governança
           </CardTitle>
         </CardHeader>
         <CardContent>
           {bridges.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">No governance bridge records yet.</p>
+            <p className="text-sm text-muted-foreground text-center py-8">Nenhum registro de ponte de governança ainda.</p>
           ) : (
             <div className="overflow-auto max-h-[450px]">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-xs">Target</TableHead>
-                    <TableHead className="text-xs">Outcome</TableHead>
-                    <TableHead className="text-xs">Gov. Action</TableHead>
-                    <TableHead className="text-xs">Bridge Status</TableHead>
-                    <TableHead className="text-xs">Confidence</TableHead>
-                    <TableHead className="text-xs">Propagation</TableHead>
-                    <TableHead className="text-xs">Actions</TableHead>
+                    <TableHead className="text-xs">Alvo</TableHead>
+                    <TableHead className="text-xs">Resultado</TableHead>
+                    <TableHead className="text-xs">Ação Gov.</TableHead>
+                    <TableHead className="text-xs">Status Bridge</TableHead>
+                    <TableHead className="text-xs">Confiança</TableHead>
+                    <TableHead className="text-xs">Propagação</TableHead>
+                    <TableHead className="text-xs">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -109,22 +107,22 @@ export function GovernanceBridgePanel({ bridges, onDecide, onBackPropagate, deci
                             <>
                               <Button size="sm" variant="ghost" className="h-6 text-[10px]" disabled={deciding}
                                 onClick={() => onDecide(b.id, "approve")}>
-                                <CheckCircle2 className="h-3 w-3 mr-0.5" />Approve
+                                <CheckCircle2 className="h-3 w-3 mr-0.5" />Aprovar
                               </Button>
                               <Button size="sm" variant="ghost" className="h-6 text-[10px]" disabled={deciding}
                                 onClick={() => onDecide(b.id, "reject")}>
-                                <XCircle className="h-3 w-3 mr-0.5" />Reject
+                                <XCircle className="h-3 w-3 mr-0.5" />Rejeitar
                               </Button>
                               <Button size="sm" variant="ghost" className="h-6 text-[10px]" disabled={deciding}
                                 onClick={() => onDecide(b.id, "defer")}>
-                                <Clock className="h-3 w-3 mr-0.5" />Defer
+                                <Clock className="h-3 w-3 mr-0.5" />Adiar
                               </Button>
                             </>
                           )}
                           {b.bridge_status === "governance_approved" && b.back_propagation_status === "pending" && (
                             <Button size="sm" variant="ghost" className="h-6 text-[10px]" disabled={propagating}
                               onClick={() => onBackPropagate(b.id)}>
-                              <ArrowDown className="h-3 w-3 mr-0.5" />Propagate
+                              <ArrowDown className="h-3 w-3 mr-0.5" />Propagar
                             </Button>
                           )}
                         </div>
