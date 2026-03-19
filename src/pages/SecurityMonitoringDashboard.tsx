@@ -85,16 +85,16 @@ export default function SecurityMonitoringDashboard() {
   const handleScan = () => {
     scanMutation.mutate(undefined, {
       onSuccess: (data: any) => {
-        toast.success(`Scan complete: ${data.anomalies?.length ?? 0} anomalies found, ${data.alerts_created ?? 0} alerts created`);
+        toast.success(`Scan concluído: ${data.anomalies?.length ?? 0} anomalias encontradas, ${data.alerts_created ?? 0} alertas criados`);
       },
-      onError: () => toast.error("Scan failed"),
+      onError: () => toast.error("Falha no scan"),
     });
   };
 
   const handleAlertAction = (action: string, alertId: string) => {
     alertAction.mutate({ action, alertId, orgId }, {
-      onSuccess: () => toast.success(`Alert ${action.replace("_alert", "").replace("_", " ")}`),
-      onError: () => toast.error("Action failed"),
+      onSuccess: () => toast.success(`Alerta ${action.replace("_alert", "").replace("_", " ")}`),
+      onError: () => toast.error("Ação falhou"),
     });
   };
 
@@ -106,10 +106,10 @@ export default function SecurityMonitoringDashboard() {
           <div>
             <h1 className="text-2xl font-bold font-['Space_Grotesk'] flex items-center gap-2">
               <ShieldAlert className="h-6 w-6 text-destructive" />
-              Security Monitoring & Alerting
+              Monitoramento e Alertas de Segurança
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Active anomaly detection, security signal ingestion, and alert management
+              Detecção ativa de anomalias, ingestão de sinais de segurança e gestão de alertas
             </p>
           </div>
           <div className="flex gap-2">
@@ -117,12 +117,12 @@ export default function SecurityMonitoringDashboard() {
               variant="outline"
               size="sm"
               onClick={() => correlateMutation.mutate(undefined, {
-                onSuccess: (data: any) => toast.info(`${data.incident_candidates?.length ?? 0} incident candidates found`),
+                onSuccess: (data: any) => toast.info(`${data.incident_candidates?.length ?? 0} candidatos a incidente encontrados`),
               })}
               disabled={correlateMutation.isPending}
             >
               <Search className="h-4 w-4 mr-1" />
-              Correlate
+              Correlacionar
             </Button>
             <Button
               size="sm"
@@ -131,7 +131,7 @@ export default function SecurityMonitoringDashboard() {
               className="bg-destructive/90 hover:bg-destructive text-destructive-foreground"
             >
               <RefreshCw className={`h-4 w-4 mr-1 ${scanMutation.isPending ? "animate-spin" : ""}`} />
-              Run Scan
+              Executar Scan
             </Button>
           </div>
         </div>
@@ -140,24 +140,24 @@ export default function SecurityMonitoringDashboard() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <KpiCard
             value={overview?.active_alerts ?? 0}
-            label="Active Alerts"
+            label="Alertas Ativos"
             icon={Bell}
             warn={(overview?.active_alerts ?? 0) > 0}
           />
           <KpiCard
             value={overview?.critical_alerts ?? 0}
-            label="Critical"
+            label="Críticos"
             icon={AlertTriangle}
             warn={(overview?.critical_alerts ?? 0) > 0}
           />
           <KpiCard
             value={overview?.signals_24h ?? 0}
-            label="Signals (24h)"
+            label="Sinais (24h)"
             icon={Activity}
           />
           <KpiCard
             value={alerts.filter((a: any) => a.status === "resolved").length}
-            label="Resolved"
+            label="Resolvidos"
             icon={CheckCircle2}
           />
         </div>
@@ -168,7 +168,7 @@ export default function SecurityMonitoringDashboard() {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm flex items-center gap-2">
                 <Shield className="h-4 w-4 text-primary" />
-                Active Alert Distribution
+                Distribuição de Alertas Ativos
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -187,8 +187,8 @@ export default function SecurityMonitoringDashboard() {
         {/* Tabs */}
         <Tabs defaultValue="alerts" className="space-y-4">
           <TabsList className="bg-muted/30 border border-border/20">
-            <TabsTrigger value="alerts">Alerts ({alerts.length})</TabsTrigger>
-            <TabsTrigger value="signals">Signals ({signals.length})</TabsTrigger>
+            <TabsTrigger value="alerts">Alertas ({alerts.length})</TabsTrigger>
+            <TabsTrigger value="signals">Sinais ({signals.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="alerts">
@@ -196,11 +196,11 @@ export default function SecurityMonitoringDashboard() {
               <CardContent className="p-0">
                 <ScrollArea className="h-[500px]">
                   {alertsLoading ? (
-                    <div className="p-8 text-center text-muted-foreground">Loading alerts...</div>
+                    <div className="p-8 text-center text-muted-foreground">Carregando alertas...</div>
                   ) : alerts.length === 0 ? (
                     <div className="p-8 text-center text-muted-foreground">
                       <CheckCircle2 className="h-8 w-8 mx-auto mb-2 text-muted-foreground/50" />
-                      No alerts. Run a scan to check for anomalies.
+                      Nenhum alerta. Execute um scan para verificar anomalias.
                     </div>
                   ) : (
                     <div className="divide-y divide-border/20">
@@ -230,7 +230,7 @@ export default function SecurityMonitoringDashboard() {
                                 <Clock className="h-3 w-3" />
                                 {new Date(alert.created_at).toLocaleString()}
                                 {alert.source_category && (
-                                  <span className="ml-2">Source: {alert.source_category}</span>
+                                  <span className="ml-2">Fonte: {alert.source_category}</span>
                                 )}
                               </div>
                             </div>
@@ -242,7 +242,7 @@ export default function SecurityMonitoringDashboard() {
                                   className="text-[10px] h-6"
                                   onClick={() => handleAlertAction("acknowledge_alert", alert.id)}
                                 >
-                                  Acknowledge
+                                  Reconhecer
                                 </Button>
                                 <Button
                                   variant="outline"
@@ -250,7 +250,7 @@ export default function SecurityMonitoringDashboard() {
                                   className="text-[10px] h-6"
                                   onClick={() => handleAlertAction("resolve_alert", alert.id)}
                                 >
-                                  Resolve
+                                  Resolver
                                 </Button>
                                 <Button
                                   variant="ghost"
@@ -258,7 +258,7 @@ export default function SecurityMonitoringDashboard() {
                                   className="text-[10px] h-6 text-muted-foreground"
                                   onClick={() => handleAlertAction("dismiss_alert", alert.id)}
                                 >
-                                  Dismiss
+                                  Dispensar
                                 </Button>
                               </div>
                             )}
@@ -269,7 +269,7 @@ export default function SecurityMonitoringDashboard() {
                                 className="text-[10px] h-6"
                                 onClick={() => handleAlertAction("resolve_alert", alert.id)}
                               >
-                                Resolve
+                                Resolver
                               </Button>
                             )}
                           </div>
@@ -287,11 +287,11 @@ export default function SecurityMonitoringDashboard() {
               <CardContent className="p-0">
                 <ScrollArea className="h-[500px]">
                   {signalsLoading ? (
-                    <div className="p-8 text-center text-muted-foreground">Loading signals...</div>
+                    <div className="p-8 text-center text-muted-foreground">Carregando sinais...</div>
                   ) : signals.length === 0 ? (
                     <div className="p-8 text-center text-muted-foreground">
                       <Activity className="h-8 w-8 mx-auto mb-2 text-muted-foreground/50" />
-                      No signals recorded yet.
+                      Nenhum sinal registrado ainda.
                     </div>
                   ) : (
                     <div className="divide-y divide-border/20">
