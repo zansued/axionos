@@ -668,7 +668,7 @@ async function launchContractedCampaign(sb: any, p: any) {
       escalation_triggers: {},
       abort_posture: {},
       rollback_posture: {},
-      risk_posture: first_task.priority === "critical" ? "high" : "medium",
+      risk_posture: first_task.priority === "critical" ? "high" : "moderate",
       max_branches: contracts.length * 2,
       max_retries: manager.constraints.max_retries,
       status: "active",
