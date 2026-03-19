@@ -3,7 +3,7 @@
 /** Vercel deploy configuration */
 export const DEPLOY_VERCEL_CONFIG = {
   framework: "vite",
-  installCommand: "node scripts/pre-install.js && rm -f package-lock.json && npm install --include=dev --legacy-peer-deps",
+  installCommand: "npm install --include=dev --legacy-peer-deps",
   buildCommand: "npm run build",
   outputDirectory: "dist",
   rewrites: [{ source: "/(.*)", destination: "/index.html" }],
