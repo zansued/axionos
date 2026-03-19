@@ -43,7 +43,7 @@ export function CoverageGaps({ segments }: Props) {
 
       <Card className="bg-card/50 border-border/30">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm text-success">Strongest Segments</CardTitle>
+          <CardTitle className="text-sm text-success">Segmentos Mais Fortes</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {strongSegments.length === 0 ? (
