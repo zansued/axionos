@@ -202,7 +202,7 @@ export function LifecycleHealthCheck() {
                 </Badge>
               ) : (
                 <Badge className="bg-destructive/20 text-destructive border-destructive/30 text-[10px]">
-                  <AlertTriangle className="h-3 w-3 mr-1" /> {data.errors} errors, {data.warnings} warnings
+                  <AlertTriangle className="h-3 w-3 mr-1" /> {data.errors} erros, {data.warnings} alertas
                 </Badge>
               )}
               <span className="text-[10px] text-muted-foreground">
