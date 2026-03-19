@@ -44,9 +44,13 @@ const VALID_CANDIDATE_PROMOTION_TRANSITIONS: Record<CandidatePromotionStatus, Ca
   not_promoted: [],   // terminal
 };
 
-// ─── Entry Lifecycle Transition Matrix (Sprint 204) ───
+// ─── Entry Lifecycle Transition Matrix (aligned with DB enum) ───
 const VALID_ENTRY_LIFECYCLE_TRANSITIONS: Record<EntryLifecycleStatus, EntryLifecycleStatus[]> = {
-  active: ["deprecated", "superseded"],
+  draft: ["proposed", "archived"],
+  proposed: ["approved", "experimental", "deprecated"],
+  approved: ["contested", "deprecated", "superseded"],
+  experimental: ["approved", "deprecated", "archived"],
+  contested: ["approved", "deprecated", "archived"],
   deprecated: ["archived"],
   superseded: ["archived"],
   archived: [],   // terminal
