@@ -457,8 +457,15 @@ Return ONLY JSON:
 
     const fixResult = await callAI(apiKey,
       `You are the "Fix Agent" (Agent 17). Attempt ${fixAttempts}/${MAX_FIX_ATTEMPTS}.
-Fix ALL issues. Return the COMPLETE corrected artifact, no markdown wrapping.`,
-      `## Artifact (score: ${combinedScore}/100)\n${currentText.slice(0, 5000)}\n\n## Issues\n${allIssues}\n\nReturn the COMPLETE corrected output.`
+Fix ALL issues. Return the COMPLETE corrected artifact, no markdown wrapping.
+
+CRITICAL RULES for Supabase Edge Functions:
+- Import Supabase: import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+- Do NOT create custom SupabaseClient interfaces — use the SDK types directly
+- Use serve() from "https://deno.land/std@0.168.0/http/server.ts"
+- Use Deno.env.get() for environment variables
+- CORS headers must include: authorization, x-client-info, apikey, content-type`,
+      `## Artifact (score: ${combinedScore}/100)\n${currentText.slice(0, 4500)}\n\n## Issues\n${allIssues}${projectTypeContext ? `\n\n## Project Context\n${projectTypeContext.slice(0, 1500)}` : ""}\n\nReturn the COMPLETE corrected output.`
     );
 
     const fixedOutput = fixResult.content.replace(/^```[\w]*\n?/, "").replace(/\n?```\s*$/, "").trim();
