@@ -58,8 +58,6 @@ export const KnowledgePortfolioDashboard = lazy(() => import("@/pages/KnowledgeP
 export const SovereignCapabilitiesDashboard = lazy(() => import("@/pages/SovereignCapabilitiesDashboard"));
 export const KnowledgeDemandForecastDashboard = lazy(() => import("@/pages/KnowledgeDemandForecastDashboard"));
 export const KnowledgeAcquisitionDashboard = lazy(() => import("@/pages/KnowledgeAcquisitionDashboard"));
-export const KnowledgeAcquisitionExecutionDashboard = lazy(() => import("@/pages/KnowledgeAcquisitionExecutionDashboard"));
-export const KnowledgeAcquisitionRoiDashboard = lazy(() => import("@/pages/KnowledgeAcquisitionRoiDashboard"));
 
 // ─── Owner: Security Command ───────────────────────────────────────────────
 export const SecurityWarRoom = lazy(() => import("@/pages/SecurityWarRoom"));
