@@ -346,6 +346,13 @@ async function processOneArtifact(artifact: any, deps: any) {
 
 Analyze for: Lint, Types, Imports, Complexity, Patterns, Security, Performance, Resilience.
 ${archContext ? `\nArchitecture context:\n${archContext.slice(0, 800)}` : ""}
+${projectTypeContext ? `\n${projectTypeContext.slice(0, 1500)}` : ""}
+
+IMPORTANT: For Supabase Edge Functions, the correct pattern is:
+- import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+- Do NOT define custom SupabaseClient interfaces — use the SDK's built-in types
+- Use serve() from "https://deno.land/std@0.168.0/http/server.ts"
+- Use Deno.env.get() for secrets
 
 Return ONLY JSON:
 {
