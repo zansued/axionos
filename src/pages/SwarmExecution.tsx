@@ -16,7 +16,7 @@ import { useOrg } from "@/contexts/OrgContext";
 import { toast } from "sonner";
 import {
   Zap, GitBranch, AlertTriangle, CheckCircle2, XCircle,
-  Activity, ShieldAlert, Clock, FileText, Users,
+  Activity, ShieldAlert, Clock, FileText, Users, Sparkles, Loader2,
 } from "lucide-react";
 
 interface Campaign {
@@ -58,10 +58,16 @@ export default function SwarmExecution() {
   const [formName, setFormName] = useState("");
   const [formDesc, setFormDesc] = useState("");
   const [formManagerId, setFormManagerId] = useState("manager-agent-01");
-  const [formManagerGoal, setFormManagerGoal] = useState("Coordinate and review task execution");
+  const [formManagerGoal, setFormManagerGoal] = useState("Coordenar e revisar a execução das tarefas");
   const [formExecutorId, setFormExecutorId] = useState("executor-agent-01");
-  const [formExecutorGoal, setFormExecutorGoal] = useState("Execute the delegated task with high quality");
+  const [formExecutorGoal, setFormExecutorGoal] = useState("Executar a tarefa delegada com alta qualidade");
   const [formTaskDesc, setFormTaskDesc] = useState("");
+
+  // AI Planner state
+  const [showAiPlanner, setShowAiPlanner] = useState(false);
+  const [aiObjective, setAiObjective] = useState("");
+  const [aiPlanning, setAiPlanning] = useState(false);
+  const [aiResult, setAiResult] = useState<string | null>(null);
 
   const loadCampaigns = () => {
     if (!currentOrg) return;
@@ -97,7 +103,7 @@ export default function SwarmExecution() {
 
   const handleCreateContracted = async () => {
     if (!currentOrg || !formName || !formTaskDesc) {
-      toast.error("Campaign name and first task are required");
+      toast.error("Nome da campanha e primeira tarefa são obrigatórios");
       return;
     }
     setCreating(true);
@@ -117,15 +123,62 @@ export default function SwarmExecution() {
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      toast.success(`Contracted campaign created with ${data.contracts_registered} agents`);
+      toast.success(`Campanha criada com ${data.contracts_registered} agentes`);
       setShowCreate(false);
       setFormName(""); setFormDesc(""); setFormTaskDesc("");
       loadCampaigns();
     } catch (e: any) {
-      toast.error(e.message || "Failed to create contracted campaign");
+      toast.error(e.message || "Falha ao criar campanha contratada");
     } finally {
       setCreating(false);
     }
+  };
+
+  const handleAiPlan = async () => {
+    if (!aiObjective.trim()) {
+      toast.error("Descreva o objetivo da campanha");
+      return;
+    }
+    setAiPlanning(true);
+    setAiResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("ai-campaign-planner", {
+        body: { objective: aiObjective },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      setAiResult(data?.plan || data?.result || JSON.stringify(data, null, 2));
+
+      // Auto-fill form if AI returns structured data
+      if (data?.campaign_name) setFormName(data.campaign_name);
+      if (data?.campaign_description) setFormDesc(data.campaign_description);
+      if (data?.first_task) setFormTaskDesc(data.first_task);
+      if (data?.manager_goal) setFormManagerGoal(data.manager_goal);
+      if (data?.executor_goal) setFormExecutorGoal(data.executor_goal);
+
+      toast.success("Plano gerado pela IA com sucesso");
+    } catch (e: any) {
+      // Fallback: show a helpful message even if edge function doesn't exist yet
+      setAiResult(
+        `📋 Sugestão de Campanha para: "${aiObjective}"\n\n` +
+        `• Nome: Campanha — ${aiObjective.slice(0, 50)}\n` +
+        `• Agente Gestor: Coordenar análise e revisão do objetivo\n` +
+        `• Agente Executor: Executar as tarefas planejadas com qualidade\n` +
+        `• Primeira Tarefa: Analisar escopo e requisitos de "${aiObjective.slice(0, 40)}"\n\n` +
+        `💡 Preencha o formulário de criação com base nesta sugestão.`
+      );
+      setFormName(`Campanha — ${aiObjective.slice(0, 50)}`);
+      setFormDesc(aiObjective);
+      setFormTaskDesc(`Analisar escopo e requisitos de: ${aiObjective}`);
+      toast.info("Sugestão local gerada (edge function não disponível)");
+    } finally {
+      setAiPlanning(false);
+    }
+  };
+
+  const handleApplyAiAndCreate = () => {
+    setShowAiPlanner(false);
+    setShowCreate(true);
   };
 
   const filtered = campaigns.filter((c) => {
@@ -147,50 +200,55 @@ export default function SwarmExecution() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Bounded Swarm Execution</h1>
+            <h1 className="text-2xl font-bold text-foreground">Execução de Swarm Governada</h1>
             <p className="text-muted-foreground text-sm mt-1">
-              Coordinated multi-agent campaigns with contracts, delegation, and review.
+              Campanhas multi-agente coordenadas com contratos, delegação e revisão.
             </p>
           </div>
-          <Button onClick={() => setShowCreate(true)} className="gap-2">
-            <FileText className="h-4 w-4" /> New Contracted Campaign
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowAiPlanner(true)} className="gap-2">
+              <Sparkles className="h-4 w-4" /> Planejar com IA
+            </Button>
+            <Button onClick={() => setShowCreate(true)} className="gap-2">
+              <FileText className="h-4 w-4" /> Nova Campanha Contratada
+            </Button>
+          </div>
         </div>
 
         {/* KPIs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card className="border-border bg-card"><CardContent className="pt-4 flex items-center gap-3">
             <Activity className="h-5 w-5 text-primary" />
-            <div><p className="text-2xl font-bold text-foreground">{kpis.active}</p><p className="text-xs text-muted-foreground">Active</p></div>
+            <div><p className="text-2xl font-bold text-foreground">{kpis.active}</p><p className="text-xs text-muted-foreground">Ativas</p></div>
           </CardContent></Card>
           <Card className="border-border bg-card"><CardContent className="pt-4 flex items-center gap-3">
             <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-            <div><p className="text-2xl font-bold text-foreground">{kpis.completed}</p><p className="text-xs text-muted-foreground">Completed</p></div>
+            <div><p className="text-2xl font-bold text-foreground">{kpis.completed}</p><p className="text-xs text-muted-foreground">Concluídas</p></div>
           </CardContent></Card>
           <Card className="border-border bg-card"><CardContent className="pt-4 flex items-center gap-3">
             <ShieldAlert className="h-5 w-5 text-yellow-400" />
-            <div><p className="text-2xl font-bold text-foreground">{kpis.escalated}</p><p className="text-xs text-muted-foreground">Escalated</p></div>
+            <div><p className="text-2xl font-bold text-foreground">{kpis.escalated}</p><p className="text-xs text-muted-foreground">Escaladas</p></div>
           </CardContent></Card>
           <Card className="border-border bg-card"><CardContent className="pt-4 flex items-center gap-3">
             <XCircle className="h-5 w-5 text-destructive" />
-            <div><p className="text-2xl font-bold text-foreground">{kpis.aborted}</p><p className="text-xs text-muted-foreground">Aborted / Rolled Back</p></div>
+            <div><p className="text-2xl font-bold text-foreground">{kpis.aborted}</p><p className="text-xs text-muted-foreground">Abortadas / Revertidas</p></div>
           </CardContent></Card>
         </div>
 
         {/* Tabs */}
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="bg-muted">
-            <TabsTrigger value="active">Active</TabsTrigger>
-            <TabsTrigger value="completed">Completed</TabsTrigger>
-            <TabsTrigger value="failed">Failed / Escalated</TabsTrigger>
-            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="active">Ativas</TabsTrigger>
+            <TabsTrigger value="completed">Concluídas</TabsTrigger>
+            <TabsTrigger value="failed">Falhas / Escaladas</TabsTrigger>
+            <TabsTrigger value="all">Todas</TabsTrigger>
           </TabsList>
 
           <TabsContent value={tab}>
             {loading ? (
               <div className="flex justify-center py-12"><div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" /></div>
             ) : filtered.length === 0 ? (
-              <Card className="border-border bg-card"><CardContent className="py-12 text-center text-muted-foreground">No swarm campaigns in this view.</CardContent></Card>
+              <Card className="border-border bg-card"><CardContent className="py-12 text-center text-muted-foreground">Nenhuma campanha de swarm nesta visualização.</CardContent></Card>
             ) : (
               <div className="space-y-2">
                 {filtered.map((c) => (
@@ -199,8 +257,8 @@ export default function SwarmExecution() {
                       <div className="flex items-center gap-3 min-w-0">
                         <Zap className="h-4 w-4 text-primary shrink-0" />
                         <div className="min-w-0">
-                          <p className="font-medium text-foreground truncate">{c.campaign_name || "Unnamed Campaign"}</p>
-                          <p className="text-xs text-muted-foreground truncate">{c.participating_agent_ids.length} agents · max {c.max_branches} branches</p>
+                          <p className="font-medium text-foreground truncate">{c.campaign_name || "Campanha sem nome"}</p>
+                          <p className="text-xs text-muted-foreground truncate">{c.participating_agent_ids.length} agentes · máx {c.max_branches} ramificações</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
@@ -221,13 +279,13 @@ export default function SwarmExecution() {
             {selected && (
               <>
                 <SheetHeader>
-                  <SheetTitle className="text-foreground">{selected.campaign_name || "Campaign Detail"}</SheetTitle>
+                  <SheetTitle className="text-foreground">{selected.campaign_name || "Detalhe da Campanha"}</SheetTitle>
                 </SheetHeader>
                 <div className="space-y-4 mt-4">
                   <div className="flex gap-2 flex-wrap">
                     <Badge className={STATUS_COLORS[selected.status] || ""}>{selected.status}</Badge>
-                    <Badge variant="outline">{selected.risk_posture} risk</Badge>
-                    {selected.escalated && <Badge className="bg-yellow-500/20 text-yellow-400">Escalated</Badge>}
+                    <Badge variant="outline">Risco: {selected.risk_posture}</Badge>
+                    {selected.escalated && <Badge className="bg-yellow-500/20 text-yellow-400">Escalada</Badge>}
                   </div>
                   {selected.campaign_description && <p className="text-sm text-muted-foreground">{selected.campaign_description}</p>}
                   {selected.escalation_reason && (
@@ -242,7 +300,7 @@ export default function SwarmExecution() {
                   {detail?.agents?.length > 0 && (
                     <>
                       <div>
-                        <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2"><Users className="h-4 w-4" /> Agent Contracts ({detail.agents.length})</h4>
+                        <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2"><Users className="h-4 w-4" /> Contratos de Agentes ({detail.agents.length})</h4>
                         <div className="space-y-2">
                           {detail.agents.map((a: any) => {
                             const contract = a.agent_contract;
@@ -264,7 +322,7 @@ export default function SwarmExecution() {
                                 )}
                                 {contract?.constraints && (
                                   <p className="text-[10px] text-muted-foreground">
-                                    Budget: ${contract.constraints.cost_budget_usd} · Timeout: {Math.round((contract.constraints.timeout_ms || 0) / 1000)}s · Retries: {contract.constraints.max_retries}
+                                    Orçamento: ${contract.constraints.cost_budget_usd} · Timeout: {Math.round((contract.constraints.timeout_ms || 0) / 1000)}s · Tentativas: {contract.constraints.max_retries}
                                   </p>
                                 )}
                               </div>
@@ -278,14 +336,14 @@ export default function SwarmExecution() {
 
                   {/* Branches */}
                   <div>
-                    <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2"><GitBranch className="h-4 w-4" /> Branches ({detail?.branches?.length || 0})</h4>
+                    <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2"><GitBranch className="h-4 w-4" /> Ramificações ({detail?.branches?.length || 0})</h4>
                     {detail?.branches?.length ? (
                       <ScrollArea className="max-h-48">
                         <div className="space-y-1">
                           {detail.branches.map((b: any) => (
                             <div key={b.id} className="flex items-center justify-between p-2 rounded bg-muted/30">
                               <div className="min-w-0">
-                                <span className="text-sm text-foreground">{b.branch_label || "Branch"}</span>
+                                <span className="text-sm text-foreground">{b.branch_label || "Ramificação"}</span>
                                 {b.branch_plan?.delegation && (
                                   <p className="text-[10px] text-muted-foreground truncate">
                                     {b.branch_plan.from_role} → {b.branch_plan.to_role}: {b.branch_plan.delegation.task_description?.slice(0, 60)}
@@ -300,7 +358,7 @@ export default function SwarmExecution() {
                           ))}
                         </div>
                       </ScrollArea>
-                    ) : <p className="text-xs text-muted-foreground">No branches yet.</p>}
+                    ) : <p className="text-xs text-muted-foreground">Nenhuma ramificação ainda.</p>}
                   </div>
 
                   <Separator className="bg-border" />
@@ -319,27 +377,27 @@ export default function SwarmExecution() {
                           ))}
                         </div>
                       </ScrollArea>
-                    ) : <p className="text-xs text-muted-foreground">No checkpoints yet.</p>}
+                    ) : <p className="text-xs text-muted-foreground">Nenhum checkpoint ainda.</p>}
                   </div>
 
                   <Separator className="bg-border" />
 
                   {/* Events */}
                   <div>
-                    <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2"><Activity className="h-4 w-4" /> Recent Events</h4>
+                    <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2"><Activity className="h-4 w-4" /> Eventos Recentes</h4>
                     {detail?.events?.length ? (
                       <ScrollArea className="max-h-48">
                         <div className="space-y-1">
                           {detail.events.map((e: any) => (
                             <div key={e.id} className="p-2 rounded bg-muted/30 text-xs">
                               <span className="font-mono text-primary">{e.event_type}</span>
-                              {e.agent_id && <span className="text-muted-foreground ml-2">by {e.agent_id}</span>}
-                              <span className="text-muted-foreground ml-2">{new Date(e.created_at).toLocaleString()}</span>
+                              {e.agent_id && <span className="text-muted-foreground ml-2">por {e.agent_id}</span>}
+                              <span className="text-muted-foreground ml-2">{new Date(e.created_at).toLocaleString("pt-BR")}</span>
                             </div>
                           ))}
                         </div>
                       </ScrollArea>
-                    ) : <p className="text-xs text-muted-foreground">No events yet.</p>}
+                    ) : <p className="text-xs text-muted-foreground">Nenhum evento ainda.</p>}
                   </div>
                 </div>
               </>
@@ -351,51 +409,103 @@ export default function SwarmExecution() {
         <Dialog open={showCreate} onOpenChange={setShowCreate}>
           <DialogContent className="bg-card border-border max-w-lg">
             <DialogHeader>
-              <DialogTitle className="text-foreground">New Contracted Campaign</DialogTitle>
+              <DialogTitle className="text-foreground">Nova Campanha Contratada</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label className="text-foreground">Campaign Name</Label>
-                <Input value={formName} onChange={e => setFormName(e.target.value)} placeholder="e.g. Architecture Review Sprint" className="bg-muted border-border" />
+                <Label className="text-foreground">Nome da Campanha</Label>
+                <Input value={formName} onChange={e => setFormName(e.target.value)} placeholder="ex: Sprint de Revisão de Arquitetura" className="bg-muted border-border" />
               </div>
               <div>
-                <Label className="text-foreground">Description</Label>
-                <Input value={formDesc} onChange={e => setFormDesc(e.target.value)} placeholder="Optional description" className="bg-muted border-border" />
+                <Label className="text-foreground">Descrição</Label>
+                <Input value={formDesc} onChange={e => setFormDesc(e.target.value)} placeholder="Descrição opcional" className="bg-muted border-border" />
               </div>
               <Separator className="bg-border" />
-              <p className="text-xs text-muted-foreground font-semibold">Manager Agent</p>
+              <p className="text-xs text-muted-foreground font-semibold">Agente Gestor</p>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <Label className="text-foreground text-xs">Agent ID</Label>
+                  <Label className="text-foreground text-xs">ID do Agente</Label>
                   <Input value={formManagerId} onChange={e => setFormManagerId(e.target.value)} className="bg-muted border-border text-sm" />
                 </div>
                 <div>
-                  <Label className="text-foreground text-xs">Goal</Label>
+                  <Label className="text-foreground text-xs">Objetivo</Label>
                   <Input value={formManagerGoal} onChange={e => setFormManagerGoal(e.target.value)} className="bg-muted border-border text-sm" />
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground font-semibold">Executor Agent</p>
+              <p className="text-xs text-muted-foreground font-semibold">Agente Executor</p>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <Label className="text-foreground text-xs">Agent ID</Label>
+                  <Label className="text-foreground text-xs">ID do Agente</Label>
                   <Input value={formExecutorId} onChange={e => setFormExecutorId(e.target.value)} className="bg-muted border-border text-sm" />
                 </div>
                 <div>
-                  <Label className="text-foreground text-xs">Goal</Label>
+                  <Label className="text-foreground text-xs">Objetivo</Label>
                   <Input value={formExecutorGoal} onChange={e => setFormExecutorGoal(e.target.value)} className="bg-muted border-border text-sm" />
                 </div>
               </div>
               <Separator className="bg-border" />
               <div>
-                <Label className="text-foreground">First Task Description</Label>
-                <Textarea value={formTaskDesc} onChange={e => setFormTaskDesc(e.target.value)} placeholder="Describe the task to delegate to the executor..." className="bg-muted border-border" rows={3} />
+                <Label className="text-foreground">Descrição da Primeira Tarefa</Label>
+                <Textarea value={formTaskDesc} onChange={e => setFormTaskDesc(e.target.value)} placeholder="Descreva a tarefa a ser delegada ao executor..." className="bg-muted border-border" rows={3} />
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setShowCreate(false)}>Cancel</Button>
+              <Button variant="outline" onClick={() => setShowCreate(false)}>Cancelar</Button>
               <Button onClick={handleCreateContracted} disabled={creating}>
-                {creating ? "Creating..." : "Launch Campaign"}
+                {creating ? "Criando..." : "Lançar Campanha"}
               </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* AI Campaign Planner Dialog */}
+        <Dialog open={showAiPlanner} onOpenChange={setShowAiPlanner}>
+          <DialogContent className="bg-card border-border max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="text-foreground flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" /> Planejamento de Campanha com IA
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Descreva o objetivo da campanha e a IA irá sugerir a estrutura ideal: agentes, papéis, tarefas e estratégia de execução.
+              </p>
+              <div>
+                <Label className="text-foreground">Objetivo da Campanha</Label>
+                <Textarea
+                  value={aiObjective}
+                  onChange={e => setAiObjective(e.target.value)}
+                  placeholder="ex: Revisar a arquitetura de segurança do módulo de pagamentos e propor melhorias..."
+                  className="bg-muted border-border"
+                  rows={4}
+                />
+              </div>
+              <Button onClick={handleAiPlan} disabled={aiPlanning} className="w-full gap-2">
+                {aiPlanning ? (
+                  <><Loader2 className="h-4 w-4 animate-spin" /> Gerando plano...</>
+                ) : (
+                  <><Sparkles className="h-4 w-4" /> Gerar Plano com IA</>
+                )}
+              </Button>
+              {aiResult && (
+                <div className="space-y-3">
+                  <Separator className="bg-border" />
+                  <div className="rounded-md bg-muted/40 border border-border p-4">
+                    <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-primary" /> Plano Sugerido
+                    </h4>
+                    <ScrollArea className="max-h-[200px]">
+                      <pre className="text-xs text-muted-foreground whitespace-pre-wrap">{aiResult}</pre>
+                    </ScrollArea>
+                  </div>
+                  <Button onClick={handleApplyAiAndCreate} className="w-full gap-2" variant="outline">
+                    <FileText className="h-4 w-4" /> Aplicar e Criar Campanha
+                  </Button>
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAiPlanner(false)}>Fechar</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
