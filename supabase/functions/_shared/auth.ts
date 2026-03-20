@@ -20,8 +20,20 @@ export async function authenticate(req: Request): Promise<AuthContext | Response
     return errorResponse("Unauthorized", 401);
   }
 
+  const token = authHeader.replace("Bearer ", "");
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+  const serviceClient = createClient(supabaseUrl, serviceRoleKey);
+
+  // Allow internal service-to-service calls using service_role key
+  if (token === serviceRoleKey) {
+    const systemUser = { id: "00000000-0000-0000-0000-000000000000", email: "system@internal" };
+    return { user: systemUser, userClient: serviceClient, serviceClient };
+  }
+
   const userClient = createClient(
-    Deno.env.get("SUPABASE_URL")!,
+    supabaseUrl,
     Deno.env.get("SUPABASE_ANON_KEY")!,
     { global: { headers: { Authorization: authHeader } } }
   );
@@ -30,11 +42,6 @@ export async function authenticate(req: Request): Promise<AuthContext | Response
   if (error || !user) {
     return errorResponse("Unauthorized", 401);
   }
-
-  const serviceClient = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-  );
 
   return { user, userClient, serviceClient };
 }
