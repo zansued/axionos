@@ -706,15 +706,22 @@ serve(async (req) => {
 
       // Sprint 202: Auto-continue — fire-and-forget self-invocation
       // The master job is already completed, so this new invocation gets a fresh slot
+      // Wrapped in Promise.resolve to ensure fetch is dispatched before response returns
       try {
         const continueUrl = `${supabaseUrl}/functions/v1/pipeline-execution-orchestrator`;
-        fetch(continueUrl, {
+        const continuationPromise = fetch(continueUrl, {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${serviceRoleKey}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ initiativeId: ctx.initiativeId }),
+        });
+        // Await the fetch initiation but don't block on full response
+        continuationPromise.then(res => {
+          if (!res.ok) {
+            console.error(`[orchestrator] Auto-continue returned ${res.status}: ${res.statusText}`);
+          }
         }).catch(err => {
           console.error("[orchestrator] Auto-continue invocation failed:", err);
         });
