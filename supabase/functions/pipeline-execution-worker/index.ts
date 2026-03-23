@@ -75,6 +75,11 @@ serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 
+  // ── Wall-clock timeout guard: gracefully handle runtime shutdown ──
+  const WALL_CLOCK_LIMIT_MS = 50_000; // 50s safety margin (runtime kills at ~60s)
+  let wallClockExceeded = false;
+  const wallClockTimer = setTimeout(() => { wallClockExceeded = true; }, WALL_CLOCK_LIMIT_MS);
+
   try {
     // Workers are invoked internally by the orchestrator — authenticate via service role
     const authHeader = req.headers.get("Authorization");
@@ -232,6 +237,17 @@ Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
         iteration: 1, tokens: codeArchResult.tokens, model: codeArchResult.model, stage: "execution",
       }).catch(() => {});
 
+      // ── Wall-clock guard: check if we still have time for remaining calls ──
+      if (wallClockExceeded) {
+        // Save partial progress (architect spec) and exit gracefully
+        await serviceClient.from("story_subtasks").update({
+          status: "pending", output: null, executed_by_agent_id: null,
+        }).eq("id", payload.subtaskId);
+        if (jobId) await failJob(ctx, jobId, "Wall-clock timeout: only architect call completed, subtask reset for retry");
+        clearTimeout(wallClockTimer);
+        return jsonResponse({ success: false, error: "Wall-clock timeout after architect call", partial: true }, 200);
+      }
+
       const backendRules = isBackend ? `\nREGRAS BACKEND:\n- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto\n- edge_function: Deno/TS com CORS headers e auth\n- supabase_client: createClient com import.meta.env` : "";
       const devResult = await callAI(apiKey,
         `Você é o Developer "${effectiveDev.name}" no AxionOS.
@@ -262,6 +278,30 @@ REGRAS package.json:
         content: codeContent, messageType: "handoff",
         iteration: 1, tokens: devResult.tokens, model: devResult.model, stage: "execution",
       }).catch(() => {});
+
+      // ── Wall-clock guard: check if we still have time for integration call ──
+      if (wallClockExceeded) {
+        // We have dev code — save it as completed (skip integration review)
+        await Promise.all([
+          serviceClient.from("story_subtasks").update({
+            output: codeContent, status: "completed", executed_at: new Date().toISOString(),
+          }).eq("id", payload.subtaskId),
+          serviceClient.from("agent_outputs").insert({
+            organization_id: payload.organizationId,
+            workspace_id: payload.workspaceId,
+            initiative_id: payload.initiativeId,
+            agent_id: effectiveDev.id || null,
+            subtask_id: payload.subtaskId,
+            type: "code", status: "draft",
+            summary: `${payload.filePath} — ${payload.description.slice(0, 150)} (timeout-saved)`,
+            raw_output: { file_path: payload.filePath, file_type: payload.fileType, language: ext, content: codeContent, chain: ["code_architect", "developer"], wave: payload.waveNum, trace_id: payload.traceId || null },
+            model_used: devModel, tokens_used: totalTokens, cost_estimate: totalCost,
+          }),
+        ]);
+        if (jobId) await completeJob(ctx, jobId, { file_path: payload.filePath, wave: payload.waveNum, timeout_saved: true }, { model: devModel, costUsd: totalCost });
+        clearTimeout(wallClockTimer);
+        return jsonResponse({ success: true, filePath: payload.filePath, tokens: totalTokens, costUsd: totalCost, timeout_saved: true });
+      }
 
       const integrationResult = await callAI(apiKey,
         `Você é o Integration Agent "${effectiveIntegration.name}" no AxionOS.
@@ -544,6 +584,8 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       });
     } catch (_) { /* non-blocking */ }
 
+    clearTimeout(wallClockTimer);
+
     return jsonResponse({
       success: true,
       filePath: payload.filePath,
@@ -557,7 +599,18 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
     });
 
   } catch (e) {
+    clearTimeout(wallClockTimer);
     console.error("Worker error:", e);
+
+    // Graceful cleanup: reset subtask to pending so orchestrator can retry
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const cleanupClient = createClient(supabaseUrl, serviceKey);
+      await cleanupClient.from("story_subtasks").update({
+        status: "pending", executed_by_agent_id: null,
+      }).eq("id", payload.subtaskId).eq("status", "in_progress");
+    } catch (_) { /* best-effort cleanup */ }
 
     // Sprint 208: Record failure metrics
     try {
