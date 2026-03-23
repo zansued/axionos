@@ -279,6 +279,30 @@ REGRAS package.json:
         iteration: 1, tokens: devResult.tokens, model: devResult.model, stage: "execution",
       }).catch(() => {});
 
+      // ── Wall-clock guard: check if we still have time for integration call ──
+      if (wallClockExceeded) {
+        // We have dev code — save it as completed (skip integration review)
+        await Promise.all([
+          serviceClient.from("story_subtasks").update({
+            output: codeContent, status: "completed", executed_at: new Date().toISOString(),
+          }).eq("id", payload.subtaskId),
+          serviceClient.from("agent_outputs").insert({
+            organization_id: payload.organizationId,
+            workspace_id: payload.workspaceId,
+            initiative_id: payload.initiativeId,
+            agent_id: effectiveDev.id || null,
+            subtask_id: payload.subtaskId,
+            type: "code", status: "draft",
+            summary: `${payload.filePath} — ${payload.description.slice(0, 150)} (timeout-saved)`,
+            raw_output: { file_path: payload.filePath, file_type: payload.fileType, language: ext, content: codeContent, chain: ["code_architect", "developer"], wave: payload.waveNum, trace_id: payload.traceId || null },
+            model_used: devModel, tokens_used: totalTokens, cost_estimate: totalCost,
+          }),
+        ]);
+        if (jobId) await completeJob(ctx, jobId, { file_path: payload.filePath, wave: payload.waveNum, timeout_saved: true }, { model: devModel, costUsd: totalCost });
+        clearTimeout(wallClockTimer);
+        return jsonResponse({ success: true, filePath: payload.filePath, tokens: totalTokens, costUsd: totalCost, timeout_saved: true });
+      }
+
       const integrationResult = await callAI(apiKey,
         `Você é o Integration Agent "${effectiveIntegration.name}" no AxionOS.
 Sua função é verificar e corrigir problemas de integração no código gerado:
