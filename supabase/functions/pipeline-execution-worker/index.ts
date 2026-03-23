@@ -75,6 +75,11 @@ serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 
+  // ── Wall-clock timeout guard: gracefully handle runtime shutdown ──
+  const WALL_CLOCK_LIMIT_MS = 50_000; // 50s safety margin (runtime kills at ~60s)
+  let wallClockExceeded = false;
+  const wallClockTimer = setTimeout(() => { wallClockExceeded = true; }, WALL_CLOCK_LIMIT_MS);
+
   try {
     // Workers are invoked internally by the orchestrator — authenticate via service role
     const authHeader = req.headers.get("Authorization");
