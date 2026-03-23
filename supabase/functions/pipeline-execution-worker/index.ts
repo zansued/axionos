@@ -584,6 +584,8 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       });
     } catch (_) { /* non-blocking */ }
 
+    clearTimeout(wallClockTimer);
+
     return jsonResponse({
       success: true,
       filePath: payload.filePath,
@@ -597,7 +599,18 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
     });
 
   } catch (e) {
+    clearTimeout(wallClockTimer);
     console.error("Worker error:", e);
+
+    // Graceful cleanup: reset subtask to pending so orchestrator can retry
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const cleanupClient = createClient(supabaseUrl, serviceKey);
+      await cleanupClient.from("story_subtasks").update({
+        status: "pending", executed_by_agent_id: null,
+      }).eq("id", payload.subtaskId).eq("status", "in_progress");
+    } catch (_) { /* best-effort cleanup */ }
 
     // Sprint 208: Record failure metrics
     try {
