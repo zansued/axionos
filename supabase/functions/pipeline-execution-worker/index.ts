@@ -237,6 +237,17 @@ Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
         iteration: 1, tokens: codeArchResult.tokens, model: codeArchResult.model, stage: "execution",
       }).catch(() => {});
 
+      // ── Wall-clock guard: check if we still have time for remaining calls ──
+      if (wallClockExceeded) {
+        // Save partial progress (architect spec) and exit gracefully
+        await serviceClient.from("story_subtasks").update({
+          status: "pending", output: null, executed_by_agent_id: null,
+        }).eq("id", payload.subtaskId);
+        if (jobId) await failJob(ctx, jobId, "Wall-clock timeout: only architect call completed, subtask reset for retry");
+        clearTimeout(wallClockTimer);
+        return jsonResponse({ success: false, error: "Wall-clock timeout after architect call", partial: true }, 200);
+      }
+
       const backendRules = isBackend ? `\nREGRAS BACKEND:\n- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto\n- edge_function: Deno/TS com CORS headers e auth\n- supabase_client: createClient com import.meta.env` : "";
       const devResult = await callAI(apiKey,
         `Você é o Developer "${effectiveDev.name}" no AxionOS.
