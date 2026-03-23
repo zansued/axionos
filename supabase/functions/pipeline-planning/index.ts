@@ -20,9 +20,93 @@ interface AgentOutput {
 async function runAgent(
   apiKey: string, role: string, systemPrompt: string, userPrompt: string, usePro = false,
 ): Promise<AgentOutput> {
-  const aiResult = await callAI(apiKey, systemPrompt, userPrompt, true, 3, usePro);
-  const result = JSON.parse(aiResult.content);
-  return { role, model: aiResult.model, tokens: aiResult.tokens, costUsd: aiResult.costUsd, durationMs: aiResult.durationMs, result };
+  const attempts: Array<{ model: string; tokens: number; costUsd: number; durationMs: number; content: string }> = [];
+  const requestVariants = [
+    userPrompt,
+    `${userPrompt}\n\nREGRAS CRÍTICAS DE SAÍDA:\n- Retorne SOMENTE um objeto JSON válido\n- Não use markdown, crases ou explicações extras\n- Seja compacto: descrições curtas e listas enxutas\n- Priorize completude estrutural em vez de texto longo`,
+  ];
+
+  let lastParseError: Error | null = null;
+
+  for (const promptVariant of requestVariants) {
+    const aiResult = await callAI(apiKey, systemPrompt, promptVariant, true, 3, usePro);
+    attempts.push(aiResult);
+    try {
+      const result = parseAgentJson(aiResult.content);
+      return summarizeAgentAttempts(role, result, attempts);
+    } catch (error) {
+      lastParseError = error instanceof Error ? error : new Error(String(error));
+      console.warn(`[pipeline-planning] ${role} returned invalid JSON, retrying with stricter output rules`, {
+        model: aiResult.model,
+        error: lastParseError.message,
+      });
+    }
+  }
+
+  const repairSource = attempts.at(-1)?.content || "";
+  const repaired = await callAI(
+    apiKey,
+    `Você é um reparador de JSON. Corrija respostas malformadas sem inventar conteúdo.\nRetorne SOMENTE JSON válido.\nSe o final estiver truncado, remova apenas o trecho incompleto final.`,
+    `Conserte a resposta abaixo para JSON válido, preservando ao máximo o conteúdo confiável:\n\n${repairSource.slice(0, 20000)}`,
+    true,
+    2,
+    false,
+  );
+  attempts.push(repaired);
+
+  try {
+    const result = parseAgentJson(repaired.content);
+    return summarizeAgentAttempts(role, result, attempts);
+  } catch (error) {
+    const repairError = error instanceof Error ? error : new Error(String(error));
+    throw new Error(`Planning JSON inválido para ${role}: ${lastParseError?.message || repairError.message}`);
+  }
+}
+
+function summarizeAgentAttempts(
+  role: string,
+  result: Record<string, unknown>,
+  attempts: Array<{ model: string; tokens: number; costUsd: number; durationMs: number; content: string }>,
+): AgentOutput {
+  const primary = attempts[0];
+  return {
+    role,
+    model: attempts.map((attempt) => attempt.model).filter(Boolean).join(" -> ") || primary?.model || "unknown",
+    tokens: attempts.reduce((sum, attempt) => sum + (attempt.tokens || 0), 0),
+    costUsd: attempts.reduce((sum, attempt) => sum + (attempt.costUsd || 0), 0),
+    durationMs: attempts.reduce((sum, attempt) => sum + (attempt.durationMs || 0), 0),
+    result,
+  };
+}
+
+function parseAgentJson(content: string): Record<string, unknown> {
+  const normalized = normalizeAiJsonPayload(content);
+  const parsed = JSON.parse(normalized);
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error("AI did not return a JSON object");
+  }
+  return parsed as Record<string, unknown>;
+}
+
+function normalizeAiJsonPayload(content: string): string {
+  const trimmed = content.trim();
+  const fenced = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  const unfenced = fenced ? fenced[1].trim() : trimmed;
+
+  try {
+    JSON.parse(unfenced);
+    return unfenced;
+  } catch {
+    // Continue with extraction fallback below.
+  }
+
+  const objectStart = unfenced.indexOf("{");
+  const objectEnd = unfenced.lastIndexOf("}");
+  if (objectStart !== -1 && objectEnd > objectStart) {
+    return unfenced.slice(objectStart, objectEnd + 1);
+  }
+
+  return unfenced;
 }
 
 // ── Normalization helpers ──
@@ -168,7 +252,7 @@ Complexidade: ${initiative.complexity || "medium"}${brainBlock}`;
       const taskPlanner = await runAgent(
         apiKey,
         "task_planner",
-        `Você é o Task Planner Agent — especialista em decomposição de projetos em tarefas executáveis. Transforme a arquitetura e requisitos em um grafo de tarefas ordenado. Retorne APENAS JSON válido.`,
+        `Você é o Task Planner Agent — especialista em decomposição de projetos em tarefas executáveis. Transforme a arquitetura e requisitos em um grafo de tarefas ordenado. Retorne APENAS JSON válido e compacto.`,
         `${projectContext}
 
 REQUISITOS: ${requirementsData}
@@ -176,6 +260,12 @@ ARQUITETURA DE PRODUTO: ${productArchData}
 ARQUITETURA DE SISTEMA: ${systemArchData}
 MODELO DE DADOS: ${dataArchData}
 GRAFO DE DEPENDÊNCIAS: ${depGraphData}
+
+REGRAS EXTRAS:
+- no máximo 12 tarefas
+- description com no máximo 140 caracteres
+- acceptance_criteria com no máximo 3 itens curtos por tarefa
+- prefira títulos curtos e objetivos
 
 Crie o grafo de tarefas:
 {
@@ -235,10 +325,13 @@ REGRAS:
 - A PRIMEIRA story DEVE ser "Scaffold do Projeto"
 - Use paths relativos ao root (ex: src/components/Header.tsx)
 - vercel.json: { "framework": "vite", "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+- No máximo 8 stories
+- No máximo 6 subtasks por story
+- Descrições compactas (até 120 caracteres)
 Retorne APENAS JSON válido.`,
         `${projectContext}
 
-TASK GRAPH: ${JSON.stringify(taskPlanner.result, null, 2)}
+TASK GRAPH: ${JSON.stringify(taskPlanner.result)}
 MODELO DE DADOS: ${dataArchData}
 API: ${apiArchData}
 
@@ -302,12 +395,17 @@ Gere 3-10 stories cobrindo TODO o MVP. Cada subtask = 1 arquivo.`,
       const filePlanner = await runAgent(
         apiKey,
         "file_planner",
-        `Você é o File Planner Agent — define a árvore de arquivos final do projeto, validando completude e consistência. Retorne APENAS JSON válido.`,
+        `Você é o File Planner Agent — define a árvore de arquivos final do projeto, validando completude e consistência. Retorne APENAS JSON válido e compacto.`,
         `${projectContext}
 
-STORIES: ${JSON.stringify(storyGen.result, null, 2)}
+STORIES: ${JSON.stringify(storyGen.result)}
 ARQUITETURA DE SISTEMA: ${systemArchData}
 MODELO DE DADOS: ${dataArchData}
+
+REGRAS EXTRAS:
+- description com no máximo 100 caracteres
+- exports e imports_from com no máximo 5 entradas por arquivo
+- prefira somente os arquivos essenciais para o MVP
 
 Valide e defina a árvore completa de arquivos:
 {
@@ -493,7 +591,11 @@ Valide e defina a árvore completa de arquivos:
   };
 
   // Schedule background work and return immediately
-  EdgeRuntime.waitUntil(backgroundWork());
+  if (typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) {
+    EdgeRuntime.waitUntil(backgroundWork());
+  } else {
+    await backgroundWork();
+  }
 
   return jsonResponse({
     success: true,
