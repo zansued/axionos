@@ -384,6 +384,28 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       );
     }
 
+    // ── Sprint 210: Import Validation Build Gate ──
+    // Only validate source files (not package.json, config, etc.)
+    if (payload.filePath.match(/\.(ts|tsx|js|jsx)$/) && manifestPaths.length > 2) {
+      const importValidation = validateFileImports(codeContent, payload.filePath, manifestPaths);
+      if (!importValidation.valid) {
+        codeContent = importValidation.sanitizedCode;
+        console.warn(`[Sprint 210] ${payload.filePath}: Stripped ${importValidation.invalid.length} broken import(s)`);
+        for (const log of importValidation.removalLog) {
+          console.warn(log);
+        }
+        pipelineLog(ctx, "sprint210_imports_stripped",
+          `Sprint 210: Stripped ${importValidation.invalid.length} broken import(s) from ${payload.filePath}`,
+          {
+            file: payload.filePath,
+            invalid: importValidation.invalid.map(i => ({ path: i.importPath, line: i.line, reason: i.reason })),
+            removalLog: importValidation.removalLog,
+            manifestSize: manifestPaths.length,
+          }
+        ).catch(() => {});
+      }
+    }
+
     // Override deterministic files
     const deterministicFiles: Record<string, string> = { ...DETERMINISTIC_FILES };
     if (deterministicFiles[payload.filePath]) codeContent = deterministicFiles[payload.filePath];
