@@ -37,6 +37,7 @@ export const SettingsPage = lazy(() => import("@/pages/Settings"));
 
 // ─── Builder: Observability ────────────────────────────────────────────────
 export const SystemHealthDashboard = lazy(() => import("@/pages/SystemHealthDashboard"));
+export const QualityDashboard = lazy(() => import("@/pages/QualityDashboard"));
 
 // ─── Builder: Governance (redirected to owner) ─────────────────────────────
 export const ApprovalQueue = lazy(() => import("@/pages/ApprovalQueue"));
