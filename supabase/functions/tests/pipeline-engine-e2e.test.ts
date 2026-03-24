@@ -83,7 +83,7 @@ Deno.test("S211: banned package detected", () => {
     { filePath: "package.json", content: JSON.stringify({ name: "test", dependencies: { react: "^18.3.1", "shadcn/ui": "latest" }, devDependencies: { vite: "^5.4.0", "@vitejs/plugin-react-swc": "^3.0.0", typescript: "^5.0.0" } }) },
   ];
   const report = validateBuildHealth(files);
-  assert(report.checks.some(c => c.status === "fail" && c.detail?.includes("shadcn")));
+  assert(report.checks.some(c => c.status === "fail" && c.id.includes("shadcn")));
 });
 
 // ═══════════════════════════════════════════════════════════════
