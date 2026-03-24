@@ -217,6 +217,21 @@ serve(async (req) => {
       health_check_retries: HEALTH_CHECK_RETRIES,
     });
 
+    // Sprint 216: Deploy Feedback Loop — emit learning signal
+    await emitDeployFeedback(serviceClient, {
+      organization_id: ctx.organizationId,
+      initiative_id: initiativeId,
+      deploy_target: deployTarget,
+      deploy_status: finalStatus,
+      deploy_url: deployResult.deploy_url,
+      error_code: deployResult.error_code,
+      error_message: deployResult.error_message,
+      health_status: finalHealth,
+      publish_contract_valid: pcValidation.valid,
+      security_matcher_passed: matchReport.passed,
+      provider_metadata: deployResult.provider_metadata || null,
+    });
+
     return jsonResponse(response);
 
   } catch (err: any) {
