@@ -20,6 +20,7 @@ import {
 } from "../_shared/dependency-scheduler.ts";
 import { computeIncrementalDiff, simpleHash, type IncrementalStats } from "../_shared/incremental-engine.ts";
 import { semanticSearch, batchEmbedNodes } from "../_shared/embedding-helpers.ts";
+import { computeAdaptiveBudget } from "../_shared/context-budget-manager.ts";
 
 const MAX_WORKERS = 6;
 const MAX_RETRIES = 2;
