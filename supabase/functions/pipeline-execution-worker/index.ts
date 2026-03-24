@@ -339,6 +339,11 @@ Sua função é verificar e corrigir problemas de integração no código gerado
 4. CONEXÕES: APIs, hooks e serviços estão conectados corretamente?
 5. CONSISTÊNCIA: O código segue os padrões dos outros arquivos do projeto?
 
+REGRA CRÍTICA DE IMPORTS (Sprint 210):
+- NUNCA importe de arquivos que NÃO estejam na lista de arquivos do projeto abaixo.
+- Se um import aponta para um arquivo inexistente, REMOVA o import e substitua o uso do componente por uma alternativa inline ou placeholder.
+- Prefira imports de @/ (alias) em vez de relativos profundos.
+
 Se encontrar problemas, retorne o código CORRIGIDO completo.
 Se tudo estiver correto, retorne o código original sem alterações.
 
@@ -347,6 +352,8 @@ REGRA: Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem expl
 ## Especificação do Code Architect:\n${codeArchResult.content.slice(0, 2000)}
 
 ## Código do Developer:\n${codeContent.slice(0, 8000)}
+
+## Arquivos do projeto (SOMENTE estes existem — não importe de outros):\n${manifestFileList}
 
 ## Arquivos já gerados (para verificar imports):\n${contextStr || "(nenhum)"}
 
