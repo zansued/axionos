@@ -79,9 +79,8 @@ export async function executeConsolidatedPath(params: ConsolidatedCallParams): P
   let totalTokens = 0;
   let totalCost = 0;
 
-  const backendRules = params.isBackend
-    ? `\nREGRAS BACKEND:\n- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto\n- edge_function: Deno/TS com CORS headers e auth\n- supabase_client: createClient com import.meta.env`
-    : "";
+  // Sprint 213: Build guardrails
+  const guardrailsBlock = composeGuardrails({ isBackend: params.isBackend });
 
   // ──── Call 1: Merged Architect + Developer ────
   const mergedResult = await callAI(
@@ -91,21 +90,15 @@ export async function executeConsolidatedPath(params: ConsolidatedCallParams): P
 FASE 1 — ESPECIFICAÇÃO (pense internamente, não precisa exibir):
 - Defina interfaces e tipos TypeScript necessários
 - Determine contratos de função (parâmetros, retornos)  
-- Identifique imports necessários e suas origens
+- Identifique imports necessários e suas origens (SOMENTE de arquivos que existem)
 - Considere padrões de design e edge cases
 
 FASE 2 — IMPLEMENTAÇÃO (retorne apenas isto):
 - Implemente o código COMPLETO baseado na especificação acima
 - Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações
 - Código COMPLETO e FUNCIONAL
-- Use shadcn/ui + Tailwind para frontend
-${backendRules}
-
-REGRAS package.json:
-- NÃO inclua "shadcn/ui" como dependência
-- Use "lucide-react" (não "lucide")
-- SEMPRE inclua "type": "module"
-- Use @vitejs/plugin-react-swc`,
+- Use componentes de @/components/ui/* + Tailwind para frontend
+${guardrailsBlock}`,
     params.baseContext,
     false, 3, false, "execution", undefined, undefined, true, // skipEfficiency
   );
