@@ -56,6 +56,12 @@ AxionOS completou 202 sprints em todos os blocos de Foundation até AR. O sistem
 | AS-206 | 206 | Pattern Mining in Daily Cron Pipeline | ✅ Complete |
 | AS-207 | 207 | Automatic Confidence Recalibration | ✅ Complete |
 | AT-208 | 208 | Pipeline Execution Hardening | ✅ Complete |
+| AU-210 | 210 | Import Validation Pre-Commit (Build Gate) | ✅ Complete |
+| AU-211 | 211 | Synthetic Build Validation (Dry-Run) | ✅ Complete |
+| AU-212 | 212 | Global File Manifest | ✅ Complete |
+| AU-213 | 213 | Reinforced Prompt Guardrails | ✅ Complete |
+| AU-214 | 214 | Full Dependency Auto-Fix | ✅ Complete |
+| AU-215 | 215 | Pipeline Engine E2E Tests | ✅ Complete |
 
 ---
 
