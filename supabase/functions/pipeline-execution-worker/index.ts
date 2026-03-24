@@ -137,6 +137,32 @@ serve(async (req) => {
 
     const contextStr = payload.dependencyCode + payload.otherGeneratedCode;
 
+    // ── Sprint 210: Build file manifest for import validation ──
+    const manifestPaths: string[] = [];
+    // Extract from fileTreeContext (lines like "src/components/Foo.tsx")
+    if (payload.fileTreeContext) {
+      const fileLineRegex = /^[\s├└│─]*\s*(src\/[^\s]+|public\/[^\s]+|index\.html)/gm;
+      let fm;
+      while ((fm = fileLineRegex.exec(payload.fileTreeContext)) !== null) {
+        manifestPaths.push(fm[1].trim());
+      }
+    }
+    // Extract from contextStr (headers like "## Arquivo: src/...")
+    if (contextStr) {
+      const ctxFileRegex = /## Arquivo: ([^\n]+)/g;
+      let cm;
+      while ((cm = ctxFileRegex.exec(contextStr)) !== null) {
+        manifestPaths.push(cm[1].trim());
+      }
+    }
+    // Always include current file
+    if (!manifestPaths.includes(payload.filePath)) manifestPaths.push(payload.filePath);
+    // Add deterministic/entry files
+    for (const dp of ["src/main.tsx", "src/App.tsx", "src/index.css", "src/lib/supabase.ts", "src/lib/utils.ts"]) {
+      if (!manifestPaths.includes(dp)) manifestPaths.push(dp);
+    }
+    const manifestFileList = manifestPaths.join("\n");
+
     const baseContext = `## Projeto: ${payload.projectTitle}
 ## Descrição: ${payload.projectDescription}
 ## Estrutura:\n${payload.projectStructure}
