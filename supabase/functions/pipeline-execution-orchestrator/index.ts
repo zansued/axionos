@@ -10,6 +10,7 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob, recordAgentMessage } from "../_shared/pipeline-helpers.ts";
+import { populateManifestFromSubtasks } from "../_shared/file-manifest-helpers.ts";
 import { generateBrainContext, recordError } from "../_shared/brain-helpers.ts";
 import { buildSmartContextWindow, buildSmartContextWithSemantic } from "../_shared/smart-context.ts";
 import {
