@@ -69,6 +69,7 @@ export function QuickActions() {
     { label: "Inspect Agents", icon: Bot, action: () => navigate("/builder/agents") },
     { label: "Runtime", icon: Radio, action: () => navigate("/builder/runtime") },
     { label: "Observability", icon: Eye, action: () => navigate("/builder/execution-observability") },
+    { label: "Quality", icon: BarChart3, action: () => navigate("/builder/quality-dashboard") },
     { label: "Intelligence", icon: Sparkles, action: () => navigate("/builder/system-intelligence") },
   ];
 

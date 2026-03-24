@@ -2,7 +2,7 @@ import { Route } from "react-router-dom";
 import { ProtectedRoute } from "./guards";
 import {
   Initiatives, Stories, Kanban, CodeExplorer, Artifacts, Projects, ProjectDetail,
-  Agents, Squads, Journey, Onboarding, Workspace, Delivery, Pipelines, Runtime,
+  Agents, Squads, Journey, Onboarding, Workspace, Delivery, Pipelines, Runtime, QualityDashboard,
   OrgSettings, SystemHealthDashboard, Connections,
   AgentDetailPage, AgentPerformancePage, AgentMemoryPage, AgentPoliciesPage,
   PipelineDetailPage, ExecutionHistoryPage, RepairLoopPage, PreflightValidationPage,
@@ -52,6 +52,7 @@ export function BuilderRoutes() {
       <Route path="/builder/validation-analytics" element={<ProtectedRoute><ValidationAnalyticsPage /></ProtectedRoute>} />
       <Route path="/builder/throughput-metrics" element={<ProtectedRoute><ThroughputMetricsPage /></ProtectedRoute>} />
       <Route path="/builder/logs-explorer" element={<ProtectedRoute><LogsExplorerPage /></ProtectedRoute>} />
+      <Route path="/builder/quality-dashboard" element={<ProtectedRoute><QualityDashboard /></ProtectedRoute>} />
 
       {/* Settings & Connections */}
       <Route path="/builder/connections" element={<ProtectedRoute><Connections /></ProtectedRoute>} />
