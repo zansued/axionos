@@ -22,6 +22,7 @@ import {
   validatePublishConfirmation,
   type PublishConfirmation,
 } from "../_shared/contracts/publish-confirmation.schema.ts";
+import { emitDeployFeedback } from "../_shared/deploy-feedback-loop.ts";
 
 /**
  * Initiative Deploy Engine — Sprint 206: Reliable Deploy + Publish Contract
