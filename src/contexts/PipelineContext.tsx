@@ -500,20 +500,46 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        // Auto-trigger preventive validation after architecture simulation
-        if (stage === "architecture_simulation" && result.success) {
-          toast({ title: "🛡️ Iniciando Validação Preventiva da Arquitetura..." });
-          setTimeout(() => {
-            runStage(initiativeId, "preventive_validation");
-          }, 1500);
-          return;
-        }
+        // ── Auto-chain: full pipeline stage progression ──
+        const AUTO_CHAIN: Record<string, { fn: string; label: string }> = {
+          // Discovery & Architecture sub-stages
+          comprehension:            { fn: "architecture",              label: "🏗️ Arquitetura" },
+          architecture:             { fn: "architecture_simulation",   label: "🔬 Simulação de Arquitetura" },
+          architecture_simulation:  { fn: "preventive_validation",     label: "🛡️ Validação Preventiva" },
+          preventive_validation:    { fn: "bootstrap_intelligence",    label: "🧠 Bootstrap Intelligence" },
+          bootstrap_intelligence:   { fn: "foundation_scaffold",       label: "🏗️ Foundation Scaffold" },
+          foundation_scaffold:      { fn: "module_graph_simulation",   label: "🔗 Module Graph Simulation" },
+          module_graph_simulation:  { fn: "dependency_intelligence",   label: "📦 Dependency Intelligence" },
+          // Infrastructure chain
+          dependency_intelligence:  { fn: "supabase_schema_bootstrap", label: "🗄️ Schema Bootstrap" },
+          supabase_schema_bootstrap:{ fn: "supabase_provisioning",     label: "🗄️ DB Provisioning" },
+          supabase_provisioning:    { fn: "domain_model_analysis",     label: "🧠 Domain Analysis" },
+          domain_model_analysis:    { fn: "data_model_generation",     label: "🗄️ Data Model Generation" },
+          data_model_generation:    { fn: "business_logic_synthesis",  label: "⚙️ Business Logic Synthesis" },
+          business_logic_synthesis: { fn: "api_generation",            label: "🔌 API Generation" },
+          api_generation:           { fn: "ui_generation",             label: "🖥️ UI Generation" },
+          ui_generation:            { fn: "squad_formation",           label: "👥 Squad Formation" },
+          // Squad & Planning chain
+          squad_formation:          { fn: "planning",                  label: "📋 Planning" },
+          planning:                 { fn: "execution",                 label: "⚡ Execução" },
+          // Post-deploy chain
+          observability:            { fn: "product_analytics",         label: "📊 Product Analytics" },
+          product_analytics:        { fn: "user_behavior_analysis",    label: "🧠 User Behavior Analysis" },
+          user_behavior_analysis:   { fn: "growth_optimization",       label: "🚀 Growth Optimization" },
+          growth_optimization:      { fn: "product_evolution",         label: "🔄 Product Evolution" },
+          product_evolution:        { fn: "architecture_evolution",    label: "🏗️ Architecture Evolution" },
+          architecture_evolution:   { fn: "portfolio_management",      label: "📂 Portfolio Management" },
+          portfolio_management:     { fn: "system_evolution",          label: "🌐 System Evolution" },
+        };
 
-        // Auto-trigger bootstrap intelligence after preventive validation
-        if (stage === "preventive_validation" && result.success) {
-          toast({ title: "🧠 Iniciando Bootstrap Intelligence..." });
+        const nextChain = AUTO_CHAIN[stage];
+        if (nextChain && result.success) {
+          // For stages that can be skipped (e.g., supabase when no connection), still continue
+          const isSkipped = result.skipped === true;
+          const icon = isSkipped ? "⏭️" : "✅";
+          toast({ title: `${icon} ${isSkipped ? "Pulado" : "Concluído"}! ${nextChain.label} — iniciando automaticamente...` });
           setTimeout(() => {
-            runStage(initiativeId, "bootstrap_intelligence");
+            runStage(initiativeId, nextChain.fn);
           }, 1500);
           return;
         }
