@@ -22239,6 +22239,83 @@ export type Database = {
           },
         ]
       }
+      initiative_file_manifest: {
+        Row: {
+          content_hash: string | null
+          created_at: string
+          file_path: string
+          file_type: string | null
+          id: string
+          initiative_id: string
+          node_id: string | null
+          organization_id: string
+          status: string
+          story_id: string | null
+          subtask_id: string | null
+          updated_at: string
+          wave_num: number | null
+        }
+        Insert: {
+          content_hash?: string | null
+          created_at?: string
+          file_path: string
+          file_type?: string | null
+          id?: string
+          initiative_id: string
+          node_id?: string | null
+          organization_id: string
+          status?: string
+          story_id?: string | null
+          subtask_id?: string | null
+          updated_at?: string
+          wave_num?: number | null
+        }
+        Update: {
+          content_hash?: string | null
+          created_at?: string
+          file_path?: string
+          file_type?: string | null
+          id?: string
+          initiative_id?: string
+          node_id?: string | null
+          organization_id?: string
+          status?: string
+          story_id?: string | null
+          subtask_id?: string | null
+          updated_at?: string
+          wave_num?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "initiative_file_manifest_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "initiative_file_manifest_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "initiative_file_manifest_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "stories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "initiative_file_manifest_subtask_id_fkey"
+            columns: ["subtask_id"]
+            isOneToOne: false
+            referencedRelation: "story_subtasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       initiative_jobs: {
         Row: {
           completed_at: string | null
