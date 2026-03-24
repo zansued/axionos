@@ -8,6 +8,7 @@ import { handleCors, corsHeaders, jsonResponse, errorResponse } from "../_shared
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, recordAgentMessage, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { sanitizePackageJson, DETERMINISTIC_FILES, FORBIDDEN_RUNTIME_PACKAGES, validateFileImports } from "../_shared/code-sanitizers.ts";
+import { getManifestPaths, updateManifestStatus } from "../_shared/file-manifest-helpers.ts";
 import { generateBrainContext, upsertNode, getNodeByPath, updateNodeStatus, recordError } from "../_shared/brain-helpers.ts";
 import { updateBrainEdgesFromImports } from "../_shared/dependency-scheduler.ts";
 import { simpleHash } from "../_shared/incremental-engine.ts";
@@ -137,31 +138,43 @@ serve(async (req) => {
 
     const contextStr = payload.dependencyCode + payload.otherGeneratedCode;
 
-    // ── Sprint 210: Build file manifest for import validation ──
-    const manifestPaths: string[] = [];
-    // Extract from fileTreeContext (lines like "src/components/Foo.tsx")
+    // ── Sprint 210/212: Build file manifest for import validation ──
+    let manifestPaths: string[] = [];
+
+    // Sprint 212: Try to load from DB manifest first (authoritative source)
+    try {
+      const dbManifest = await getManifestPaths(serviceClient, payload.initiativeId);
+      if (dbManifest.length > 0) {
+        manifestPaths = dbManifest;
+      }
+    } catch { /* non-blocking fallback to heuristic extraction */ }
+
+    // Fallback/supplement: Extract from fileTreeContext
     if (payload.fileTreeContext) {
       const fileLineRegex = /^[\s├└│─]*\s*(src\/[^\s]+|public\/[^\s]+|index\.html)/gm;
       let fm;
       while ((fm = fileLineRegex.exec(payload.fileTreeContext)) !== null) {
-        manifestPaths.push(fm[1].trim());
+        if (!manifestPaths.includes(fm[1].trim())) manifestPaths.push(fm[1].trim());
       }
     }
-    // Extract from contextStr (headers like "## Arquivo: src/...")
+    // Supplement from contextStr
     if (contextStr) {
       const ctxFileRegex = /## Arquivo: ([^\n]+)/g;
       let cm;
       while ((cm = ctxFileRegex.exec(contextStr)) !== null) {
-        manifestPaths.push(cm[1].trim());
+        if (!manifestPaths.includes(cm[1].trim())) manifestPaths.push(cm[1].trim());
       }
     }
-    // Always include current file
-    if (!manifestPaths.includes(payload.filePath)) manifestPaths.push(payload.filePath);
-    // Add deterministic/entry files
-    for (const dp of ["src/main.tsx", "src/App.tsx", "src/index.css", "src/lib/supabase.ts", "src/lib/utils.ts"]) {
+    // Always include current file + entry files
+    for (const dp of [payload.filePath, "src/main.tsx", "src/App.tsx", "src/index.css", "src/lib/supabase.ts", "src/lib/utils.ts"]) {
       if (!manifestPaths.includes(dp)) manifestPaths.push(dp);
     }
     const manifestFileList = manifestPaths.join("\n");
+
+    // Sprint 212: Mark file as generating
+    updateManifestStatus(serviceClient, payload.initiativeId, payload.filePath, "generating", {
+      nodeId: payload.nodeId, waveNum: payload.waveNum,
+    }).catch(() => {});
 
     const baseContext = `## Projeto: ${payload.projectTitle}
 ## Descrição: ${payload.projectDescription}
@@ -546,6 +559,11 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       }).select("id").single(),
     ]);
     const artifact = artifactResult.data;
+
+    // Sprint 212: Mark file as generated in manifest
+    updateManifestStatus(serviceClient, payload.initiativeId, payload.filePath, "generated", {
+      contentHash: simpleHash(codeContent), waveNum: payload.waveNum,
+    }).catch(() => {});
 
     if (artifact?.id) {
       // Non-blocking — code_artifacts insert is not on critical path
