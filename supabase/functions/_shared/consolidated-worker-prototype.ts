@@ -14,6 +14,7 @@
 
 import { callAI, type AIResult } from "./ai-client.ts";
 import { classifyIntegrationSeverity, type IntegrationSeverity } from "./integration-severity.ts";
+import { composeGuardrails } from "./prompt-guardrails.ts";
 
 export interface ConsolidatedMetrics {
   /** Which path was used */
