@@ -22,6 +22,7 @@ import {
   validatePublishConfirmation,
   type PublishConfirmation,
 } from "../_shared/contracts/publish-confirmation.schema.ts";
+import { emitDeployFeedback } from "../_shared/deploy-feedback-loop.ts";
 
 /**
  * Initiative Deploy Engine — Sprint 206: Reliable Deploy + Publish Contract
@@ -216,6 +217,21 @@ serve(async (req) => {
       health_check_retries: HEALTH_CHECK_RETRIES,
     });
 
+    // Sprint 216: Deploy Feedback Loop — emit learning signal
+    await emitDeployFeedback(serviceClient, {
+      organization_id: ctx.organizationId,
+      initiative_id: initiativeId,
+      deploy_target: deployTarget,
+      deploy_status: finalStatus,
+      deploy_url: deployResult.deploy_url,
+      error_code: deployResult.error_code,
+      error_message: deployResult.error_message,
+      health_status: finalHealth,
+      publish_contract_valid: pcValidation.valid,
+      security_matcher_passed: matchReport.passed,
+      provider_metadata: deployResult.provider_metadata || null,
+    });
+
     return jsonResponse(response);
 
   } catch (err: any) {
@@ -238,6 +254,16 @@ serve(async (req) => {
         last_deploy_check_at: new Date().toISOString(),
       });
     }
+
+    // Sprint 216: Deploy Feedback Loop — emit failure signal
+    await emitDeployFeedback(serviceClient, {
+      organization_id: ctx.organizationId,
+      initiative_id: ctx.initiativeId,
+      deploy_target: deployTarget,
+      deploy_status: "deploy_failed",
+      error_code: "DEPLOY_ENGINE_ERROR",
+      error_message: errorMsg,
+    });
 
     await failJob(ctx, jobId!, errorMsg);
     return errorResponse(errorMsg, 500);
