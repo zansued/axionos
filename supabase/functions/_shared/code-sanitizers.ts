@@ -473,15 +473,13 @@ function extractIdentifiers(statement: string, out: Set<string>): void {
   if (nsMatch) out.add(nsMatch[1]);
 }
 
-/** Curated registry of safe versions (React 18 + Vite 5 compatible) */
-const SAFE_VERSIONS: Record<string, string> = {
+/**
+ * Sprint 214: Auto-adds missing dependencies using CANONICAL_DEPS as
+ * the single source of truth, with SAFE_VERSIONS as fallback for
+ * packages not in the canonical registry.
+ */
+const SAFE_VERSIONS_FALLBACK: Record<string, string> = {
   "sonner":                    "^1.7.4",
-  "framer-motion":             "^11.3.0",
-  "zod":                       "^3.23.8",
-  "react-hook-form":           "^7.53.0",
-  "@hookform/resolvers":       "^3.9.0",
-  "date-fns":                  "^3.6.0",
-  "recharts":                  "^2.13.3",
   "cmdk":                      "^1.0.0",
   "vaul":                      "^0.9.9",
   "next-themes":               "^0.3.0",
@@ -489,24 +487,14 @@ const SAFE_VERSIONS: Record<string, string> = {
   "embla-carousel-react":      "^8.3.0",
   "input-otp":                 "^1.4.1",
   "react-resizable-panels":    "^2.1.7",
-  "zustand":                   "^4.5.5",
   "@dnd-kit/core":             "^6.1.0",
   "@dnd-kit/sortable":         "^8.0.0",
   "@dnd-kit/utilities":        "^3.2.2",
-  "lucide-react":              "^0.462.0",
-  "class-variance-authority":  "^0.7.1",
-  "clsx":                      "^2.1.1",
-  "tailwind-merge":            "^2.5.4",
   "tailwindcss-animate":       "^1.0.7",
   "@supabase/supabase-js":     "^2.98.0",
   "@tanstack/react-query":     "^5.83.0",
-  "react-router-dom":          "^6.30.0",
 };
 
-/**
- * Auto-adds missing dependencies to package.json using a curated
- * safe-version registry. Returns the updated package.json string.
- */
 export function autoFixMissingDependencies(
   packageJsonStr: string,
   missing: string[]
@@ -517,13 +505,26 @@ export function autoFixMissingDependencies(
 
   let anyAdded = false;
   for (const dep of missing) {
-    const safeVersion = SAFE_VERSIONS[dep];
+    // 1. Check canonical registry first
+    const canonical = CANONICAL_DEPS[dep];
+    if (canonical) {
+      const targetKey = canonical.devOnly ? "devDependencies" : "dependencies";
+      if (!pkg[targetKey]) pkg[targetKey] = {};
+      if (!pkg[targetKey][dep]) {
+        pkg[targetKey][dep] = canonical.preferred;
+        console.log(`[Sprint 214] Added missing dep from canonical: ${dep}@${canonical.preferred}`);
+        anyAdded = true;
+      }
+      continue;
+    }
+    // 2. Fallback to safe versions
+    const safeVersion = SAFE_VERSIONS_FALLBACK[dep];
     if (safeVersion && !pkg.dependencies[dep]) {
       pkg.dependencies[dep] = safeVersion;
-      console.log(`[auto-fix] Added missing dependency: ${dep}@${safeVersion}`);
+      console.log(`[Sprint 214] Added missing dep from fallback: ${dep}@${safeVersion}`);
       anyAdded = true;
     } else if (!safeVersion) {
-      console.warn(`[auto-fix] Unknown package "${dep}" — skipping auto-add. Manual review needed.`);
+      console.warn(`[Sprint 214] Unknown package "${dep}" — skipping. Manual review needed.`);
     }
   }
   return anyAdded ? JSON.stringify(pkg, null, 2) : packageJsonStr;
