@@ -560,6 +560,11 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
     ]);
     const artifact = artifactResult.data;
 
+    // Sprint 212: Mark file as generated in manifest
+    updateManifestStatus(serviceClient, payload.initiativeId, payload.filePath, "generated", {
+      contentHash: simpleHash(codeContent), waveNum: payload.waveNum,
+    }).catch(() => {});
+
     if (artifact?.id) {
       // Non-blocking — code_artifacts insert is not on critical path
       serviceClient.from("code_artifacts").insert({
