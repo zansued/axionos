@@ -9,6 +9,7 @@ import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, recordAgentMessage, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { sanitizePackageJson, DETERMINISTIC_FILES, FORBIDDEN_RUNTIME_PACKAGES, validateFileImports } from "../_shared/code-sanitizers.ts";
 import { getManifestPaths, updateManifestStatus } from "../_shared/file-manifest-helpers.ts";
+import { composeGuardrails, validateGuardrails } from "../_shared/prompt-guardrails.ts";
 import { generateBrainContext, upsertNode, getNodeByPath, updateNodeStatus, recordError } from "../_shared/brain-helpers.ts";
 import { updateBrainEdgesFromImports } from "../_shared/dependency-scheduler.ts";
 import { simpleHash } from "../_shared/incremental-engine.ts";
