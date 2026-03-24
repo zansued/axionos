@@ -21,6 +21,7 @@ import { classifyIntegrationSeverity } from "../_shared/integration-severity.ts"
 import { type ExecutionMetrics, type ValidationSignals, type FastPathPolicyRecord, validateSyntax, validateImports, countImports } from "../_shared/execution-metrics-contract.ts";
 import { computeExecutionRiskSignals, type RiskAssessment } from "../_shared/execution-risk-signals.ts";
 import { classifyExecutionRisk, type ExecutionClassification } from "../_shared/execution-risk-classifier.ts";
+import { allocateContextBudget, getDefaultBudgetProfile, computeAdaptiveBudget, formatBudgetLog } from "../_shared/context-budget-manager.ts";
 
 function categorizeError(e: unknown): string {
   const msg = e instanceof Error ? e.message.toLowerCase() : "";
