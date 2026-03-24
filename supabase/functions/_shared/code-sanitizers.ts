@@ -1,4 +1,7 @@
 // Shared code sanitization and deterministic file overrides
+// Sprint 214 — Full Dependency Auto-Fix integrated
+
+import { CANONICAL_DEPS, BLOCKED_PACKAGES, BLOCKED_REPLACEMENTS, type CanonicalDepEntry } from "./canonical-deps.ts";
 
 /** Vercel deploy configuration */
 export const DEPLOY_VERCEL_CONFIG = {
