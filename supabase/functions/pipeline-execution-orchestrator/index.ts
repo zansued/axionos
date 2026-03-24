@@ -84,6 +84,13 @@ serve(async (req) => {
   await updateInitiative(ctx, updateFields);
   pipelineLog(ctx, "orchestrator_start", "Orchestrator iniciado — Agent Swarm + DAG Scheduler").catch(() => {});
 
+  // ── Sprint 212: Populate file manifest from subtasks ──
+  populateManifestFromSubtasks(serviceClient, ctx.initiativeId, ctx.organizationId)
+    .then(r => {
+      if (r.total > 0) pipelineLog(ctx, "sprint212_manifest_populated", `File manifest: ${r.total} entries`, { manifest: r }).catch(() => {});
+    })
+    .catch(e => console.warn("[Sprint 212] Manifest population failed (non-blocking):", e));
+
   try {
     // ── Fetch stories, squad, connections ──
     let { data: stories } = await serviceClient.from("stories")
