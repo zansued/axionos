@@ -255,6 +255,16 @@ serve(async (req) => {
       });
     }
 
+    // Sprint 216: Deploy Feedback Loop — emit failure signal
+    await emitDeployFeedback(serviceClient, {
+      organization_id: ctx.organizationId,
+      initiative_id: ctx.initiativeId,
+      deploy_target: deployTarget,
+      deploy_status: "deploy_failed",
+      error_code: "DEPLOY_ENGINE_ERROR",
+      error_message: errorMsg,
+    });
+
     await failJob(ctx, jobId!, errorMsg);
     return errorResponse(errorMsg, 500);
   }
