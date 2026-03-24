@@ -58,11 +58,11 @@ Deno.test("S211: minimal valid project is deployable", () => {
     { filePath: "index.html", content: `<!DOCTYPE html><html><head></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>` },
     { filePath: "src/main.tsx", content: `import React from "react";\nimport ReactDOM from "react-dom/client";\nimport App from "./App";\nReactDOM.createRoot(document.getElementById("root")!).render(<App />);` },
     { filePath: "src/App.tsx", content: `export default function App() { return <div>Hello</div>; }` },
-    { filePath: "package.json", content: JSON.stringify({ name: "test", dependencies: { react: "^18.3.1", "react-dom": "^18.3.1" }, devDependencies: { vite: "^5.4.0", "@vitejs/plugin-react-swc": "^3.11.0", typescript: "^5.8.0" } }) },
+    { filePath: "package.json", content: JSON.stringify({ name: "test", scripts: { build: "vite build", dev: "vite" }, dependencies: { react: "^18.3.1", "react-dom": "^18.3.1" }, devDependencies: { vite: "^5.4.0", "@vitejs/plugin-react-swc": "^3.11.0", typescript: "^5.8.0" } }) },
     { filePath: "vite.config.ts", content: `import { defineConfig } from "vite";\nimport react from "@vitejs/plugin-react-swc";\nexport default defineConfig({ plugins: [react()] });` },
   ];
   const report = validateBuildHealth(files);
-  assertEquals(report.deployable, true);
+  assertEquals(report.deployable, true, `Should be deployable. Fails: ${report.checks.filter(c => c.status === "fail").map(c => c.id + ": " + (c.detail || c.label)).join(", ")}`);
   assert(report.summary.score >= 80);
 });
 
