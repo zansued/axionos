@@ -2,7 +2,7 @@ import { Route } from "react-router-dom";
 import { ProtectedRoute } from "./guards";
 import {
   Initiatives, Stories, Kanban, CodeExplorer, Artifacts, Projects, ProjectDetail,
-  Agents, Squads, Journey, Onboarding, Workspace, Delivery, Pipelines, Runtime,
+  Agents, Squads, Journey, Onboarding, Workspace, Delivery, Pipelines, Runtime, QualityDashboard,
   OrgSettings, SystemHealthDashboard, Connections,
   AgentDetailPage, AgentPerformancePage, AgentMemoryPage, AgentPoliciesPage,
   PipelineDetailPage, ExecutionHistoryPage, RepairLoopPage, PreflightValidationPage,
