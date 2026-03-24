@@ -99,6 +99,47 @@ export function sanitizePackageJson(content: string): string {
       }
     }
 
+    // ── Sprint 214: Blocked package auto-replacement ──
+    for (const depKey of ["dependencies", "devDependencies"] as const) {
+      const deps = pkg[depKey];
+      if (!deps || typeof deps !== "object") continue;
+      for (const name of Object.keys(deps)) {
+        // Check BLOCKED_REPLACEMENTS first (auto-swap)
+        if (BLOCKED_REPLACEMENTS[name]) {
+          const repl = BLOCKED_REPLACEMENTS[name];
+          delete deps[name];
+          const targetKey = repl.dev ? "devDependencies" : "dependencies";
+          if (!pkg[targetKey]) pkg[targetKey] = {};
+          pkg[targetKey][repl.name] = repl.version;
+          console.log(`[Sprint 214] Auto-replaced blocked "${name}" → "${repl.name}@${repl.version}"`);
+        }
+      }
+    }
+
+    // ── Sprint 214: Canonical version enforcement + devDep migration ──
+    for (const [pkgName, entry] of Object.entries(CANONICAL_DEPS)) {
+      const inDeps = pkg.dependencies?.[pkgName];
+      const inDev = pkg.devDependencies?.[pkgName];
+      const currentVer = inDeps || inDev;
+
+      if (currentVer) {
+        // Enforce preferred version
+        const targetKey = entry.devOnly ? "devDependencies" : "dependencies";
+        const wrongKey = entry.devOnly ? "dependencies" : "devDependencies";
+
+        // Migrate to correct section
+        if ((entry.devOnly && inDeps) || (!entry.devOnly && inDev && !inDeps)) {
+          if (!pkg[targetKey]) pkg[targetKey] = {};
+          pkg[targetKey][pkgName] = entry.preferred;
+          if (pkg[wrongKey]?.[pkgName]) delete pkg[wrongKey][pkgName];
+          console.log(`[Sprint 214] Migrated "${pkgName}" to ${targetKey} @ ${entry.preferred}`);
+        } else {
+          // Update version if below minimum
+          pkg[targetKey][pkgName] = entry.preferred;
+        }
+      }
+    }
+
     // Ensure ESM + scripts
     pkg.type = "module";
     pkg.engines = {
@@ -110,48 +151,24 @@ export function sanitizePackageJson(content: string): string {
     pkg.scripts.build = "vite build";
     pkg.scripts.preview = "vite preview";
 
-    // Ensure base deps
-    const ensureDep = (name: string, version: string) => {
-      if (!pkg.dependencies) pkg.dependencies = {};
-      if (!pkg.dependencies[name] && !pkg.devDependencies?.[name]) {
-        pkg.dependencies[name] = version;
+    // ── Sprint 214: Ensure all canonical deps present ──
+    for (const [pkgName, entry] of Object.entries(CANONICAL_DEPS)) {
+      const targetKey = entry.devOnly ? "devDependencies" : "dependencies";
+      if (!pkg[targetKey]) pkg[targetKey] = {};
+      // Only force-add essential packages (runtime deps that are part of the core stack)
+      if (!entry.devOnly && !pkg.dependencies?.[pkgName] && !pkg.devDependencies?.[pkgName]) {
+        // Don't auto-add optional runtime deps — only the core ones
+        continue;
       }
-    };
-    const forceDevDep = (name: string, version: string) => {
-      if (!pkg.devDependencies) pkg.devDependencies = {};
-      pkg.devDependencies[name] = version;
-      if (pkg.dependencies?.[name]) delete pkg.dependencies[name];
-    };
+      // But always ensure devDeps are present for toolchain
+      if (entry.devOnly && !pkg.devDependencies?.[pkgName]) {
+        pkg.devDependencies[pkgName] = entry.preferred;
+      }
+    }
 
-    ensureDep("react", "^18.3.1");
-    ensureDep("react-dom", "^18.3.1");
-    ensureDep("react-router-dom", "^6.30.0");
-    ensureDep("lucide-react", "^0.462.0");
-    ensureDep("tailwind-merge", "^2.6.0");
-    ensureDep("clsx", "^2.1.1");
-    ensureDep("class-variance-authority", "^0.7.1");
-
-    // Force compatible Vite toolchain
-    forceDevDep("vite", "^5.4.19");
-    forceDevDep("@vitejs/plugin-react-swc", "^3.11.0");
+    // Remove legacy plugin if still present
     if (pkg.devDependencies?.["@vitejs/plugin-react"]) delete pkg.devDependencies["@vitejs/plugin-react"];
     if (pkg.dependencies?.["@vitejs/plugin-react"]) delete pkg.dependencies["@vitejs/plugin-react"];
-
-    forceDevDep("typescript", "^5.8.3");
-    forceDevDep("tailwindcss", "^3.4.17");
-    forceDevDep("autoprefixer", "^10.4.21");
-    forceDevDep("postcss", "^8.5.6");
-    forceDevDep("@types/react", "^18.3.23");
-    forceDevDep("@types/react-dom", "^18.3.7");
-    forceDevDep("@types/node", "^22.13.10");
-    forceDevDep("globals", "^15.15.0");
-
-    // Force ESLint 9.x — v10 breaks peer deps with plugins
-    forceDevDep("eslint", "^9.32.0");
-    forceDevDep("eslint-plugin-react-hooks", "^5.2.0");
-    forceDevDep("eslint-plugin-react-refresh", "^0.4.20");
-    forceDevDep("@eslint/js", "^9.32.0");
-    forceDevDep("typescript-eslint", "^8.38.0");
 
     return JSON.stringify(pkg, null, 2);
   } catch {
