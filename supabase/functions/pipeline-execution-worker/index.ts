@@ -296,7 +296,6 @@ ${guardrailsBlock}`,
         return jsonResponse({ success: false, error: "Wall-clock timeout after architect call", partial: true }, 200);
       }
 
-      const backendRules = isBackend ? `\nREGRAS BACKEND:\n- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto\n- edge_function: Deno/TS com CORS headers e auth\n- supabase_client: createClient com import.meta.env` : "";
       const devResult = await callAI(apiKey,
         `Você é o Developer "${effectiveDev.name}" no AxionOS.
 Recebeu a especificação do Code Architect. Implemente o código COMPLETO.
@@ -305,14 +304,8 @@ REGRAS:
 - Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações
 - Código COMPLETO e FUNCIONAL
 - Siga EXATAMENTE a especificação do Code Architect
-- Use shadcn/ui + Tailwind para frontend
-${backendRules}
-
-REGRAS package.json:
-- NÃO inclua "shadcn/ui" como dependência
-- Use "lucide-react" (não "lucide")
-- SEMPRE inclua "type": "module"
-- Use @vitejs/plugin-react-swc`,
+- Use componentes de @/components/ui/* + Tailwind para frontend
+${guardrailsBlock}`,
         `${baseContext}\n\n## Especificação do Code Architect:\n${codeArchResult.content}`,
         false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
       );
