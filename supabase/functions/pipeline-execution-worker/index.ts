@@ -184,16 +184,31 @@ serve(async (req) => {
       manifestPaths: manifestPaths.length > 2 ? manifestPaths : undefined,
     });
 
+    // ── Sprint 218: Context Budget Manager ──
+    // Compute adaptive budget based on project scale
+    const adaptiveBudget = computeAdaptiveBudget(manifestPaths.length);
+    const budgetProfile = getDefaultBudgetProfile(adaptiveBudget);
+
+    const contextSections: Record<string, string> = {
+      task_spec: `## Arquivo: ${payload.filePath}\n## Tipo: ${payload.fileType || "code"} | Linguagem: ${language}\n## Tarefa: ${payload.description}`,
+      guardrails: guardrailsBlock,
+      dependencies: contextStr || "",
+      manifest: `## Manifesto de Arquivos (${manifestPaths.length}):\n${manifestFileList}`,
+      architecture: payload.architectureSnippet || "",
+      prd: payload.prdSnippet || "",
+      brain_memory: `${payload.memoryContext || ""}${brainBlock}`,
+      supabase_info: `${payload.supabaseConnInfo || ""}${payload.dataArchContext || ""}${payload.apiContext || ""}`,
+      project_tree: payload.fileTreeContext || "",
+      other_context: `## Projeto: ${payload.projectTitle}\n## Descrição: ${payload.projectDescription}`,
+    };
+
+    const budgetResult = allocateContextBudget(contextSections, budgetProfile);
+    console.log(`[S218] ${payload.filePath}: ${formatBudgetLog(budgetResult)}`);
+
     const baseContext = `## Projeto: ${payload.projectTitle}
 ## Descrição: ${payload.projectDescription}
 ## Estrutura:\n${payload.projectStructure}
-## Arquivos gerados:\n${contextStr || "(nenhum)"}
-## Arquivo: ${payload.filePath}
-## Tipo: ${payload.fileType || "code"} | Linguagem: ${language}
-## Tarefa: ${payload.description}
-${payload.prdSnippet ? `## PRD:\n${payload.prdSnippet}` : ""}
-${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}` : ""}${payload.dataArchContext}${payload.apiContext}${payload.fileTreeContext}${payload.supabaseConnInfo}${payload.memoryContext}${brainBlock}
-${guardrailsBlock}`;
+${budgetResult.assembledContext}`;
 
     let totalTokens = 0, totalCost = 0;
     let codeContent = "";
