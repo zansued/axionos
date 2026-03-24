@@ -295,6 +295,164 @@ export function detectMissingDependencies(
   return { missing, packageJson: pkg };
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// Sprint 210 — Import Validation Pre-Commit (Build Gate)
+// ═══════════════════════════════════════════════════════════════════
+
+export interface InvalidImport {
+  /** The raw import path from the source */
+  importPath: string;
+  /** Line number (1-based) where the import was found */
+  line: number;
+  /** The full import statement */
+  statement: string;
+  /** Why it's invalid */
+  reason: "file_not_in_manifest" | "circular_self_import";
+}
+
+export interface ImportValidationResult {
+  valid: boolean;
+  invalid: InvalidImport[];
+  /** Code with broken imports stripped (and their dependent identifiers removed) */
+  sanitizedCode: string;
+  /** Human-readable log of what was removed */
+  removalLog: string[];
+}
+
+/**
+ * Sprint 210: Validate all relative/alias imports in generated code against
+ * the file manifest (list of all planned + already-generated file paths).
+ *
+ * If broken imports are found, they are stripped from the code along with
+ * any JSX/code that references the imported identifiers.
+ */
+export function validateFileImports(
+  code: string,
+  currentFilePath: string,
+  manifestPaths: string[],
+): ImportValidationResult {
+  const lines = code.split("\n");
+  const importRegex = /^import\s+(?:(?:\{[^}]*\}|[\w*]+(?:\s*,\s*\{[^}]*\})?)\s+from\s+)?["']([^"']+)["'];?\s*$/;
+  const sideEffectRegex = /^import\s+["']([^"']+)["'];?\s*$/;
+
+  // Build a lookup set with common extensions resolved
+  const manifestSet = new Set<string>();
+  for (const p of manifestPaths) {
+    manifestSet.add(p);
+    // Also add without extension for matching
+    const noExt = p.replace(/\.(ts|tsx|js|jsx|css|json|sql)$/, "");
+    manifestSet.add(noExt);
+  }
+
+  const invalid: InvalidImport[] = [];
+  const brokenIdentifiers = new Set<string>();
+  const linesToRemove = new Set<number>();
+  const removalLog: string[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim();
+    const match = trimmed.match(importRegex) || trimmed.match(sideEffectRegex);
+    if (!match) continue;
+
+    const importPath = match[1];
+
+    // Only validate relative (./ ../) and alias (@/) imports
+    if (!importPath.startsWith(".") && !importPath.startsWith("@/")) continue;
+
+    // Resolve to a project-relative path
+    let resolved: string;
+    if (importPath.startsWith("@/")) {
+      resolved = "src/" + importPath.slice(2);
+    } else {
+      // Resolve relative to current file's directory
+      const currentDir = currentFilePath.includes("/")
+        ? currentFilePath.substring(0, currentFilePath.lastIndexOf("/"))
+        : "";
+      const parts = currentDir.split("/").filter(Boolean);
+      for (const segment of importPath.split("/")) {
+        if (segment === "..") parts.pop();
+        else if (segment !== ".") parts.push(segment);
+      }
+      resolved = parts.join("/");
+    }
+
+    // Self-import check
+    const currentNoExt = currentFilePath.replace(/\.(ts|tsx|js|jsx)$/, "");
+    const resolvedNoExt = resolved.replace(/\.(ts|tsx|js|jsx)$/, "");
+    if (resolvedNoExt === currentNoExt) {
+      invalid.push({ importPath, line: i + 1, statement: trimmed, reason: "circular_self_import" });
+      linesToRemove.add(i);
+      extractIdentifiers(trimmed, brokenIdentifiers);
+      removalLog.push(`[Sprint 210] L${i + 1}: Removed self-import "${importPath}"`);
+      continue;
+    }
+
+    // Check against manifest (try with common extensions)
+    const candidates = [
+      resolved,
+      `${resolved}.ts`, `${resolved}.tsx`, `${resolved}.js`, `${resolved}.jsx`,
+      `${resolved}/index.ts`, `${resolved}/index.tsx`, `${resolved}/index.js`,
+      `${resolved}.css`, `${resolved}.json`,
+    ];
+    const found = candidates.some(c => manifestSet.has(c));
+
+    if (!found && manifestPaths.length > 0) {
+      invalid.push({ importPath, line: i + 1, statement: trimmed, reason: "file_not_in_manifest" });
+      linesToRemove.add(i);
+      extractIdentifiers(trimmed, brokenIdentifiers);
+      removalLog.push(`[Sprint 210] L${i + 1}: Removed broken import "${importPath}" (not in manifest of ${manifestPaths.length} files)`);
+    }
+  }
+
+  if (invalid.length === 0) {
+    return { valid: true, invalid: [], sanitizedCode: code, removalLog: [] };
+  }
+
+  // Remove broken import lines
+  let sanitizedLines = lines.filter((_, i) => !linesToRemove.has(i));
+
+  // Remove JSX references to broken identifiers (simple heuristic)
+  if (brokenIdentifiers.size > 0) {
+    const identPattern = new RegExp(
+      `<(${[...brokenIdentifiers].join("|")})\\b[^>]*/?>|<(${[...brokenIdentifiers].join("|")})\\b[^>]*>.*?</(${[...brokenIdentifiers].join("|")})>`,
+      "g"
+    );
+    const before = sanitizedLines.join("\n");
+    const after = before.replace(identPattern, (m) => {
+      removalLog.push(`[Sprint 210] Removed JSX usage of broken import: ${m.slice(0, 60)}...`);
+      return `{/* Sprint 210: removed broken component */}`;
+    });
+    sanitizedLines = after.split("\n");
+  }
+
+  return {
+    valid: false,
+    invalid,
+    sanitizedCode: sanitizedLines.join("\n"),
+    removalLog,
+  };
+}
+
+/** Extract imported identifiers from an import statement */
+function extractIdentifiers(statement: string, out: Set<string>): void {
+  // Default import: import Foo from '...'
+  const defaultMatch = statement.match(/^import\s+(\w+)\s/);
+  if (defaultMatch) out.add(defaultMatch[1]);
+
+  // Named imports: import { Foo, Bar as Baz } from '...'
+  const namedMatch = statement.match(/\{([^}]+)\}/);
+  if (namedMatch) {
+    for (const part of namedMatch[1].split(",")) {
+      const name = part.trim().split(/\s+as\s+/).pop()?.trim();
+      if (name && /^[A-Z]/.test(name)) out.add(name); // Only track PascalCase (components)
+    }
+  }
+
+  // Namespace: import * as Foo from '...'
+  const nsMatch = statement.match(/\*\s+as\s+(\w+)/);
+  if (nsMatch) out.add(nsMatch[1]);
+}
+
 /** Curated registry of safe versions (React 18 + Vite 5 compatible) */
 const SAFE_VERSIONS: Record<string, string> = {
   "sonner":                    "^1.7.4",

@@ -7,7 +7,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { handleCors, corsHeaders, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, recordAgentMessage, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { sanitizePackageJson, DETERMINISTIC_FILES, FORBIDDEN_RUNTIME_PACKAGES } from "../_shared/code-sanitizers.ts";
+import { sanitizePackageJson, DETERMINISTIC_FILES, FORBIDDEN_RUNTIME_PACKAGES, validateFileImports } from "../_shared/code-sanitizers.ts";
 import { generateBrainContext, upsertNode, getNodeByPath, updateNodeStatus, recordError } from "../_shared/brain-helpers.ts";
 import { updateBrainEdgesFromImports } from "../_shared/dependency-scheduler.ts";
 import { simpleHash } from "../_shared/incremental-engine.ts";
@@ -136,6 +136,32 @@ serve(async (req) => {
     if (brainBlock) brainBlock = `\n\n${brainBlock}`;
 
     const contextStr = payload.dependencyCode + payload.otherGeneratedCode;
+
+    // ── Sprint 210: Build file manifest for import validation ──
+    const manifestPaths: string[] = [];
+    // Extract from fileTreeContext (lines like "src/components/Foo.tsx")
+    if (payload.fileTreeContext) {
+      const fileLineRegex = /^[\s├└│─]*\s*(src\/[^\s]+|public\/[^\s]+|index\.html)/gm;
+      let fm;
+      while ((fm = fileLineRegex.exec(payload.fileTreeContext)) !== null) {
+        manifestPaths.push(fm[1].trim());
+      }
+    }
+    // Extract from contextStr (headers like "## Arquivo: src/...")
+    if (contextStr) {
+      const ctxFileRegex = /## Arquivo: ([^\n]+)/g;
+      let cm;
+      while ((cm = ctxFileRegex.exec(contextStr)) !== null) {
+        manifestPaths.push(cm[1].trim());
+      }
+    }
+    // Always include current file
+    if (!manifestPaths.includes(payload.filePath)) manifestPaths.push(payload.filePath);
+    // Add deterministic/entry files
+    for (const dp of ["src/main.tsx", "src/App.tsx", "src/index.css", "src/lib/supabase.ts", "src/lib/utils.ts"]) {
+      if (!manifestPaths.includes(dp)) manifestPaths.push(dp);
+    }
+    const manifestFileList = manifestPaths.join("\n");
 
     const baseContext = `## Projeto: ${payload.projectTitle}
 ## Descrição: ${payload.projectDescription}
@@ -313,6 +339,11 @@ Sua função é verificar e corrigir problemas de integração no código gerado
 4. CONEXÕES: APIs, hooks e serviços estão conectados corretamente?
 5. CONSISTÊNCIA: O código segue os padrões dos outros arquivos do projeto?
 
+REGRA CRÍTICA DE IMPORTS (Sprint 210):
+- NUNCA importe de arquivos que NÃO estejam na lista de arquivos do projeto abaixo.
+- Se um import aponta para um arquivo inexistente, REMOVA o import e substitua o uso do componente por uma alternativa inline ou placeholder.
+- Prefira imports de @/ (alias) em vez de relativos profundos.
+
 Se encontrar problemas, retorne o código CORRIGIDO completo.
 Se tudo estiver correto, retorne o código original sem alterações.
 
@@ -321,6 +352,8 @@ REGRA: Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem expl
 ## Especificação do Code Architect:\n${codeArchResult.content.slice(0, 2000)}
 
 ## Código do Developer:\n${codeContent.slice(0, 8000)}
+
+## Arquivos do projeto (SOMENTE estes existem — não importe de outros):\n${manifestFileList}
 
 ## Arquivos já gerados (para verificar imports):\n${contextStr || "(nenhum)"}
 
@@ -349,6 +382,28 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
         codeArchResult, devResult, integrationResult,
         preIntegrationCode, codeContent, integrationModified, workerStartedAt,
       );
+    }
+
+    // ── Sprint 210: Import Validation Build Gate ──
+    // Only validate source files (not package.json, config, etc.)
+    if (payload.filePath.match(/\.(ts|tsx|js|jsx)$/) && manifestPaths.length > 2) {
+      const importValidation = validateFileImports(codeContent, payload.filePath, manifestPaths);
+      if (!importValidation.valid) {
+        codeContent = importValidation.sanitizedCode;
+        console.warn(`[Sprint 210] ${payload.filePath}: Stripped ${importValidation.invalid.length} broken import(s)`);
+        for (const log of importValidation.removalLog) {
+          console.warn(log);
+        }
+        pipelineLog(ctx, "sprint210_imports_stripped",
+          `Sprint 210: Stripped ${importValidation.invalid.length} broken import(s) from ${payload.filePath}`,
+          {
+            file: payload.filePath,
+            invalid: importValidation.invalid.map(i => ({ path: i.importPath, line: i.line, reason: i.reason })),
+            removalLog: importValidation.removalLog,
+            manifestSize: manifestPaths.length,
+          }
+        ).catch(() => {});
+      }
     }
 
     // Override deterministic files

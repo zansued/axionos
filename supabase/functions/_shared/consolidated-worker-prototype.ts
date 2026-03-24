@@ -134,6 +134,10 @@ Sua função é verificar e corrigir problemas de integração no código gerado
 4. CONEXÕES: APIs, hooks e serviços estão conectados corretamente?
 5. CONSISTÊNCIA: O código segue os padrões dos outros arquivos do projeto?
 
+REGRA CRÍTICA DE IMPORTS (Sprint 210):
+- NUNCA importe de arquivos que NÃO estejam na lista de arquivos do projeto.
+- Se um import aponta para um arquivo inexistente, REMOVA o import e substitua o uso por alternativa inline.
+
 Se encontrar problemas, retorne o código CORRIGIDO completo.
 Se tudo estiver correto, retorne o código original sem alterações.
 
