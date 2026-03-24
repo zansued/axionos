@@ -267,11 +267,12 @@ ${guardrailsBlock}`;
 Antes do Developer implementar, você define:
 1. Interfaces e tipos TypeScript necessários
 2. Contratos de função (parâmetros, retornos)
-3. Imports necessários e de onde vêm
+3. Imports necessários e de onde vêm (SOMENTE de arquivos que existem no projeto)
 4. Padrões de design a seguir
 5. Edge cases e validações
 
-Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
+Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.
+${guardrailsBlock}`,
         baseContext,
         false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
       );
