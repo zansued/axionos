@@ -177,6 +177,12 @@ serve(async (req) => {
       nodeId: payload.nodeId, waveNum: payload.waveNum,
     }).catch(() => {});
 
+    // ── Sprint 213: Build guardrails block for prompts ──
+    const guardrailsBlock = composeGuardrails({
+      isBackend,
+      manifestPaths: manifestPaths.length > 2 ? manifestPaths : undefined,
+    });
+
     const baseContext = `## Projeto: ${payload.projectTitle}
 ## Descrição: ${payload.projectDescription}
 ## Estrutura:\n${payload.projectStructure}
@@ -185,7 +191,8 @@ serve(async (req) => {
 ## Tipo: ${payload.fileType || "code"} | Linguagem: ${language}
 ## Tarefa: ${payload.description}
 ${payload.prdSnippet ? `## PRD:\n${payload.prdSnippet}` : ""}
-${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}` : ""}${payload.dataArchContext}${payload.apiContext}${payload.fileTreeContext}${payload.supabaseConnInfo}${payload.memoryContext}${brainBlock}`;
+${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}` : ""}${payload.dataArchContext}${payload.apiContext}${payload.fileTreeContext}${payload.supabaseConnInfo}${payload.memoryContext}${brainBlock}
+${guardrailsBlock}`;
 
     let totalTokens = 0, totalCost = 0;
     let codeContent = "";
