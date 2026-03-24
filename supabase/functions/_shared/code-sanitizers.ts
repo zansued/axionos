@@ -1,4 +1,7 @@
 // Shared code sanitization and deterministic file overrides
+// Sprint 214 — Full Dependency Auto-Fix integrated
+
+import { CANONICAL_DEPS, BLOCKED_PACKAGES, BLOCKED_REPLACEMENTS, type CanonicalDepEntry } from "./canonical-deps.ts";
 
 /** Vercel deploy configuration */
 export const DEPLOY_VERCEL_CONFIG = {
@@ -96,6 +99,47 @@ export function sanitizePackageJson(content: string): string {
       }
     }
 
+    // ── Sprint 214: Blocked package auto-replacement ──
+    for (const depKey of ["dependencies", "devDependencies"] as const) {
+      const deps = pkg[depKey];
+      if (!deps || typeof deps !== "object") continue;
+      for (const name of Object.keys(deps)) {
+        // Check BLOCKED_REPLACEMENTS first (auto-swap)
+        if (BLOCKED_REPLACEMENTS[name]) {
+          const repl = BLOCKED_REPLACEMENTS[name];
+          delete deps[name];
+          const targetKey = repl.dev ? "devDependencies" : "dependencies";
+          if (!pkg[targetKey]) pkg[targetKey] = {};
+          pkg[targetKey][repl.name] = repl.version;
+          console.log(`[Sprint 214] Auto-replaced blocked "${name}" → "${repl.name}@${repl.version}"`);
+        }
+      }
+    }
+
+    // ── Sprint 214: Canonical version enforcement + devDep migration ──
+    for (const [pkgName, entry] of Object.entries(CANONICAL_DEPS)) {
+      const inDeps = pkg.dependencies?.[pkgName];
+      const inDev = pkg.devDependencies?.[pkgName];
+      const currentVer = inDeps || inDev;
+
+      if (currentVer) {
+        // Enforce preferred version
+        const targetKey = entry.devOnly ? "devDependencies" : "dependencies";
+        const wrongKey = entry.devOnly ? "dependencies" : "devDependencies";
+
+        // Migrate to correct section
+        if ((entry.devOnly && inDeps) || (!entry.devOnly && inDev && !inDeps)) {
+          if (!pkg[targetKey]) pkg[targetKey] = {};
+          pkg[targetKey][pkgName] = entry.preferred;
+          if (pkg[wrongKey]?.[pkgName]) delete pkg[wrongKey][pkgName];
+          console.log(`[Sprint 214] Migrated "${pkgName}" to ${targetKey} @ ${entry.preferred}`);
+        } else {
+          // Update version if below minimum
+          pkg[targetKey][pkgName] = entry.preferred;
+        }
+      }
+    }
+
     // Ensure ESM + scripts
     pkg.type = "module";
     pkg.engines = {
@@ -107,48 +151,24 @@ export function sanitizePackageJson(content: string): string {
     pkg.scripts.build = "vite build";
     pkg.scripts.preview = "vite preview";
 
-    // Ensure base deps
-    const ensureDep = (name: string, version: string) => {
-      if (!pkg.dependencies) pkg.dependencies = {};
-      if (!pkg.dependencies[name] && !pkg.devDependencies?.[name]) {
-        pkg.dependencies[name] = version;
+    // ── Sprint 214: Ensure all canonical deps present ──
+    for (const [pkgName, entry] of Object.entries(CANONICAL_DEPS)) {
+      const targetKey = entry.devOnly ? "devDependencies" : "dependencies";
+      if (!pkg[targetKey]) pkg[targetKey] = {};
+      // Only force-add essential packages (runtime deps that are part of the core stack)
+      if (!entry.devOnly && !pkg.dependencies?.[pkgName] && !pkg.devDependencies?.[pkgName]) {
+        // Don't auto-add optional runtime deps — only the core ones
+        continue;
       }
-    };
-    const forceDevDep = (name: string, version: string) => {
-      if (!pkg.devDependencies) pkg.devDependencies = {};
-      pkg.devDependencies[name] = version;
-      if (pkg.dependencies?.[name]) delete pkg.dependencies[name];
-    };
+      // But always ensure devDeps are present for toolchain
+      if (entry.devOnly && !pkg.devDependencies?.[pkgName]) {
+        pkg.devDependencies[pkgName] = entry.preferred;
+      }
+    }
 
-    ensureDep("react", "^18.3.1");
-    ensureDep("react-dom", "^18.3.1");
-    ensureDep("react-router-dom", "^6.30.0");
-    ensureDep("lucide-react", "^0.462.0");
-    ensureDep("tailwind-merge", "^2.6.0");
-    ensureDep("clsx", "^2.1.1");
-    ensureDep("class-variance-authority", "^0.7.1");
-
-    // Force compatible Vite toolchain
-    forceDevDep("vite", "^5.4.19");
-    forceDevDep("@vitejs/plugin-react-swc", "^3.11.0");
+    // Remove legacy plugin if still present
     if (pkg.devDependencies?.["@vitejs/plugin-react"]) delete pkg.devDependencies["@vitejs/plugin-react"];
     if (pkg.dependencies?.["@vitejs/plugin-react"]) delete pkg.dependencies["@vitejs/plugin-react"];
-
-    forceDevDep("typescript", "^5.8.3");
-    forceDevDep("tailwindcss", "^3.4.17");
-    forceDevDep("autoprefixer", "^10.4.21");
-    forceDevDep("postcss", "^8.5.6");
-    forceDevDep("@types/react", "^18.3.23");
-    forceDevDep("@types/react-dom", "^18.3.7");
-    forceDevDep("@types/node", "^22.13.10");
-    forceDevDep("globals", "^15.15.0");
-
-    // Force ESLint 9.x — v10 breaks peer deps with plugins
-    forceDevDep("eslint", "^9.32.0");
-    forceDevDep("eslint-plugin-react-hooks", "^5.2.0");
-    forceDevDep("eslint-plugin-react-refresh", "^0.4.20");
-    forceDevDep("@eslint/js", "^9.32.0");
-    forceDevDep("typescript-eslint", "^8.38.0");
 
     return JSON.stringify(pkg, null, 2);
   } catch {
@@ -453,15 +473,13 @@ function extractIdentifiers(statement: string, out: Set<string>): void {
   if (nsMatch) out.add(nsMatch[1]);
 }
 
-/** Curated registry of safe versions (React 18 + Vite 5 compatible) */
-const SAFE_VERSIONS: Record<string, string> = {
+/**
+ * Sprint 214: Auto-adds missing dependencies using CANONICAL_DEPS as
+ * the single source of truth, with SAFE_VERSIONS as fallback for
+ * packages not in the canonical registry.
+ */
+const SAFE_VERSIONS_FALLBACK: Record<string, string> = {
   "sonner":                    "^1.7.4",
-  "framer-motion":             "^11.3.0",
-  "zod":                       "^3.23.8",
-  "react-hook-form":           "^7.53.0",
-  "@hookform/resolvers":       "^3.9.0",
-  "date-fns":                  "^3.6.0",
-  "recharts":                  "^2.13.3",
   "cmdk":                      "^1.0.0",
   "vaul":                      "^0.9.9",
   "next-themes":               "^0.3.0",
@@ -469,24 +487,14 @@ const SAFE_VERSIONS: Record<string, string> = {
   "embla-carousel-react":      "^8.3.0",
   "input-otp":                 "^1.4.1",
   "react-resizable-panels":    "^2.1.7",
-  "zustand":                   "^4.5.5",
   "@dnd-kit/core":             "^6.1.0",
   "@dnd-kit/sortable":         "^8.0.0",
   "@dnd-kit/utilities":        "^3.2.2",
-  "lucide-react":              "^0.462.0",
-  "class-variance-authority":  "^0.7.1",
-  "clsx":                      "^2.1.1",
-  "tailwind-merge":            "^2.5.4",
   "tailwindcss-animate":       "^1.0.7",
   "@supabase/supabase-js":     "^2.98.0",
   "@tanstack/react-query":     "^5.83.0",
-  "react-router-dom":          "^6.30.0",
 };
 
-/**
- * Auto-adds missing dependencies to package.json using a curated
- * safe-version registry. Returns the updated package.json string.
- */
 export function autoFixMissingDependencies(
   packageJsonStr: string,
   missing: string[]
@@ -497,13 +505,26 @@ export function autoFixMissingDependencies(
 
   let anyAdded = false;
   for (const dep of missing) {
-    const safeVersion = SAFE_VERSIONS[dep];
+    // 1. Check canonical registry first
+    const canonical = CANONICAL_DEPS[dep];
+    if (canonical) {
+      const targetKey = canonical.devOnly ? "devDependencies" : "dependencies";
+      if (!pkg[targetKey]) pkg[targetKey] = {};
+      if (!pkg[targetKey][dep]) {
+        pkg[targetKey][dep] = canonical.preferred;
+        console.log(`[Sprint 214] Added missing dep from canonical: ${dep}@${canonical.preferred}`);
+        anyAdded = true;
+      }
+      continue;
+    }
+    // 2. Fallback to safe versions
+    const safeVersion = SAFE_VERSIONS_FALLBACK[dep];
     if (safeVersion && !pkg.dependencies[dep]) {
       pkg.dependencies[dep] = safeVersion;
-      console.log(`[auto-fix] Added missing dependency: ${dep}@${safeVersion}`);
+      console.log(`[Sprint 214] Added missing dep from fallback: ${dep}@${safeVersion}`);
       anyAdded = true;
     } else if (!safeVersion) {
-      console.warn(`[auto-fix] Unknown package "${dep}" — skipping auto-add. Manual review needed.`);
+      console.warn(`[Sprint 214] Unknown package "${dep}" — skipping. Manual review needed.`);
     }
   }
   return anyAdded ? JSON.stringify(pkg, null, 2) : packageJsonStr;
