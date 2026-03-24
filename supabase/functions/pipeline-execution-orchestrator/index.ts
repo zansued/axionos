@@ -20,6 +20,7 @@ import {
 } from "../_shared/dependency-scheduler.ts";
 import { computeIncrementalDiff, simpleHash, type IncrementalStats } from "../_shared/incremental-engine.ts";
 import { semanticSearch, batchEmbedNodes } from "../_shared/embedding-helpers.ts";
+import { computeAdaptiveBudget } from "../_shared/context-budget-manager.ts";
 
 const MAX_WORKERS = 6;
 const MAX_RETRIES = 2;
@@ -393,9 +394,11 @@ serve(async (req) => {
           .filter((fp): fp is string => !!fp && fp !== node.filePath && !depPaths.includes(fp));
       } catch {}
 
+      // Sprint 218: Adaptive context budget based on project scale
+      const adaptiveTokenBudget = computeAdaptiveBudget(Object.keys(generatedFiles).length + dag.nodes.size);
       const { context: smartDependencyContext, stats: contextStats } = semanticPaths.length > 0
-        ? buildSmartContextWithSemantic(generatedFiles, node.filePath, depPaths, semanticPaths, 12000)
-        : buildSmartContextWindow(generatedFiles, node.filePath, depPaths, 12000);
+        ? buildSmartContextWithSemantic(generatedFiles, node.filePath, depPaths, semanticPaths, adaptiveTokenBudget)
+        : buildSmartContextWindow(generatedFiles, node.filePath, depPaths, adaptiveTokenBudget);
 
       if (executedCount % 5 === 0 && contextStats.compressionRatio > 0) {
         await pipelineLog(ctx, "smart_context_stats",
