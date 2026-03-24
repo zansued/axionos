@@ -421,6 +421,22 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
       }
     }
 
+    // ── Sprint 213: Post-generation Guardrail Validation ──
+    if (payload.filePath.match(/\.(ts|tsx|js|jsx)$/)) {
+      const guardrailResult = validateGuardrails(codeContent, payload.filePath, isBackend);
+      if (guardrailResult.wasFixed) {
+        codeContent = guardrailResult.fixedCode;
+        console.warn(`[Sprint 213] ${payload.filePath}: Auto-fixed ${guardrailResult.violations.filter(v => v.autoFixable).length} guardrail violation(s)`);
+        pipelineLog(ctx, "sprint213_guardrails_fixed",
+          `Sprint 213: Fixed ${guardrailResult.violations.length} guardrail violation(s) in ${payload.filePath}`,
+          {
+            file: payload.filePath,
+            violations: guardrailResult.violations.map(v => ({ rule: v.rule, line: v.line, severity: v.severity })),
+          }
+        ).catch(() => {});
+      }
+    }
+
     // Override deterministic files
     const deterministicFiles: Record<string, string> = { ...DETERMINISTIC_FILES };
     if (deterministicFiles[payload.filePath]) codeContent = deterministicFiles[payload.filePath];
