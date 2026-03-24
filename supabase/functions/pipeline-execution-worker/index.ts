@@ -9,6 +9,7 @@ import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, recordAgentMessage, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { sanitizePackageJson, DETERMINISTIC_FILES, FORBIDDEN_RUNTIME_PACKAGES, validateFileImports } from "../_shared/code-sanitizers.ts";
 import { getManifestPaths, updateManifestStatus } from "../_shared/file-manifest-helpers.ts";
+import { composeGuardrails, validateGuardrails } from "../_shared/prompt-guardrails.ts";
 import { generateBrainContext, upsertNode, getNodeByPath, updateNodeStatus, recordError } from "../_shared/brain-helpers.ts";
 import { updateBrainEdgesFromImports } from "../_shared/dependency-scheduler.ts";
 import { simpleHash } from "../_shared/incremental-engine.ts";
@@ -176,6 +177,12 @@ serve(async (req) => {
       nodeId: payload.nodeId, waveNum: payload.waveNum,
     }).catch(() => {});
 
+    // ── Sprint 213: Build guardrails block for prompts ──
+    const guardrailsBlock = composeGuardrails({
+      isBackend,
+      manifestPaths: manifestPaths.length > 2 ? manifestPaths : undefined,
+    });
+
     const baseContext = `## Projeto: ${payload.projectTitle}
 ## Descrição: ${payload.projectDescription}
 ## Estrutura:\n${payload.projectStructure}
@@ -184,7 +191,8 @@ serve(async (req) => {
 ## Tipo: ${payload.fileType || "code"} | Linguagem: ${language}
 ## Tarefa: ${payload.description}
 ${payload.prdSnippet ? `## PRD:\n${payload.prdSnippet}` : ""}
-${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}` : ""}${payload.dataArchContext}${payload.apiContext}${payload.fileTreeContext}${payload.supabaseConnInfo}${payload.memoryContext}${brainBlock}`;
+${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}` : ""}${payload.dataArchContext}${payload.apiContext}${payload.fileTreeContext}${payload.supabaseConnInfo}${payload.memoryContext}${brainBlock}
+${guardrailsBlock}`;
 
     let totalTokens = 0, totalCost = 0;
     let codeContent = "";
@@ -259,11 +267,12 @@ ${payload.architectureSnippet ? `## Arquitetura:\n${payload.architectureSnippet}
 Antes do Developer implementar, você define:
 1. Interfaces e tipos TypeScript necessários
 2. Contratos de função (parâmetros, retornos)
-3. Imports necessários e de onde vêm
+3. Imports necessários e de onde vêm (SOMENTE de arquivos que existem no projeto)
 4. Padrões de design a seguir
 5. Edge cases e validações
 
-Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
+Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.
+${guardrailsBlock}`,
         baseContext,
         false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
       );
@@ -287,7 +296,6 @@ Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
         return jsonResponse({ success: false, error: "Wall-clock timeout after architect call", partial: true }, 200);
       }
 
-      const backendRules = isBackend ? `\nREGRAS BACKEND:\n- schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto\n- edge_function: Deno/TS com CORS headers e auth\n- supabase_client: createClient com import.meta.env` : "";
       const devResult = await callAI(apiKey,
         `Você é o Developer "${effectiveDev.name}" no AxionOS.
 Recebeu a especificação do Code Architect. Implemente o código COMPLETO.
@@ -296,14 +304,8 @@ REGRAS:
 - Retorne APENAS o conteúdo do arquivo, sem markdown, sem \`\`\`, sem explicações
 - Código COMPLETO e FUNCIONAL
 - Siga EXATAMENTE a especificação do Code Architect
-- Use shadcn/ui + Tailwind para frontend
-${backendRules}
-
-REGRAS package.json:
-- NÃO inclua "shadcn/ui" como dependência
-- Use "lucide-react" (não "lucide")
-- SEMPRE inclua "type": "module"
-- Use @vitejs/plugin-react-swc`,
+- Use componentes de @/components/ui/* + Tailwind para frontend
+${guardrailsBlock}`,
         `${baseContext}\n\n## Especificação do Code Architect:\n${codeArchResult.content}`,
         false, 3, false, "execution", undefined, undefined, execSkipEfficiency,
       );
@@ -414,6 +416,22 @@ Verifique integração e retorne o código final (corrigido se necessário).`,
             invalid: importValidation.invalid.map(i => ({ path: i.importPath, line: i.line, reason: i.reason })),
             removalLog: importValidation.removalLog,
             manifestSize: manifestPaths.length,
+          }
+        ).catch(() => {});
+      }
+    }
+
+    // ── Sprint 213: Post-generation Guardrail Validation ──
+    if (payload.filePath.match(/\.(ts|tsx|js|jsx)$/)) {
+      const guardrailResult = validateGuardrails(codeContent, payload.filePath, isBackend);
+      if (guardrailResult.wasFixed) {
+        codeContent = guardrailResult.fixedCode;
+        console.warn(`[Sprint 213] ${payload.filePath}: Auto-fixed ${guardrailResult.violations.filter(v => v.autoFixable).length} guardrail violation(s)`);
+        pipelineLog(ctx, "sprint213_guardrails_fixed",
+          `Sprint 213: Fixed ${guardrailResult.violations.length} guardrail violation(s) in ${payload.filePath}`,
+          {
+            file: payload.filePath,
+            violations: guardrailResult.violations.map(v => ({ rule: v.rule, line: v.line, severity: v.severity })),
           }
         ).catch(() => {});
       }
