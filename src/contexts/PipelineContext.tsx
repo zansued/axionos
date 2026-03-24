@@ -534,14 +534,23 @@ export function PipelineProvider({ children }: { children: ReactNode }) {
 
         const nextChain = AUTO_CHAIN[stage];
         if (nextChain && result.success) {
-          // For stages that can be skipped (e.g., supabase when no connection), still continue
-          const isSkipped = result.skipped === true;
-          const icon = isSkipped ? "⏭️" : "✅";
-          toast({ title: `${icon} ${isSkipped ? "Pulado" : "Concluído"}! ${nextChain.label} — iniciando automaticamente...` });
-          setTimeout(() => {
-            runStage(initiativeId, nextChain.fn);
-          }, 1500);
-          return;
+          // Guard: planning → execution requires stories
+          if (stage === "planning") {
+            const storiesCount = result.stories?.length || result.stories_created || 0;
+            if (storiesCount === 0) {
+              toast({ variant: "destructive", title: "⚠️ Planning não gerou stories. Execução não iniciada." });
+            } else {
+              toast({ title: `✅ Planning concluído com ${storiesCount} stories! ${nextChain.label} — iniciando automaticamente...` });
+              setTimeout(() => runStage(initiativeId, nextChain.fn), 1500);
+              return;
+            }
+          } else {
+            const isSkipped = result.skipped === true;
+            const icon = isSkipped ? "⏭️" : "✅";
+            toast({ title: `${icon} ${isSkipped ? "Pulado" : "Concluído"}! ${nextChain.label} — iniciando automaticamente...` });
+            setTimeout(() => runStage(initiativeId, nextChain.fn), 1500);
+            return;
+          }
         }
 
         // Auto-continuation after approve: chain into the next runnable stage
