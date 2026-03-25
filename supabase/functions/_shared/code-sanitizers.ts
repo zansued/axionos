@@ -144,7 +144,7 @@ export function sanitizePackageJson(content: string): string {
     pkg.type = "module";
     pkg.engines = {
       ...(pkg.engines && typeof pkg.engines === "object" ? pkg.engines : {}),
-      node: "24.x",
+      node: "20.x",
     };
     if (!pkg.scripts) pkg.scripts = {};
     pkg.scripts.dev = "vite";
