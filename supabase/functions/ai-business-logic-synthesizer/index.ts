@@ -127,18 +127,82 @@ Generate complete services, validations, workflows and access control for ALL en
 
     const aiResult = await callAI("", systemPrompt, userPrompt, true, 3, false);
 
-    // 6. Parse result
+    // 6. Parse result with robust extraction
     let businessLogic: any;
+    const rawContent = (aiResult.content || "").trim();
+    
+    if (!rawContent) {
+      throw new Error("AI returned empty response");
+    }
+
+    // Try direct parse first
     try {
-      businessLogic = JSON.parse(aiResult.content);
+      businessLogic = JSON.parse(rawContent);
     } catch {
-      const jsonMatch = aiResult.content.match(/```(?:json)?\s*([\s\S]*?)```/);
-      if (jsonMatch) {
-        businessLogic = JSON.parse(jsonMatch[1].trim());
-      } else {
+      // Try extracting from markdown code blocks
+      const jsonMatch = rawContent.match(/```(?:json)?\s*([\s\S]*?)```/);
+      let candidate = jsonMatch ? jsonMatch[1].trim() : rawContent;
+
+      // Find JSON boundaries
+      const jsonStart = candidate.search(/[\{\[]/);
+      const lastBrace = candidate.lastIndexOf('}');
+      const lastBracket = candidate.lastIndexOf(']');
+      const jsonEnd = Math.max(lastBrace, lastBracket);
+
+      if (jsonStart === -1 || jsonEnd === -1 || jsonEnd <= jsonStart) {
+        console.error("No JSON found in AI response. First 500 chars:", rawContent.slice(0, 500));
         throw new Error("Failed to parse business logic from AI response");
       }
+
+      candidate = candidate.substring(jsonStart, jsonEnd + 1);
+
+      // Fix common LLM JSON issues
+      candidate = candidate
+        .replace(/,\s*}/g, '}')
+        .replace(/,\s*]/g, ']')
+        .replace(/[\x00-\x1F\x7F]/g, '')
+        .replace(/\n/g, ' ');
+
+      try {
+        businessLogic = JSON.parse(candidate);
+      } catch (e2) {
+        // Detect truncation
+        const openBraces = (candidate.match(/{/g) || []).length;
+        const closeBraces = (candidate.match(/}/g) || []).length;
+        if (openBraces > closeBraces) {
+          // Attempt to close truncated JSON
+          const missing = openBraces - closeBraces;
+          candidate += '}'.repeat(missing);
+          // Also close any open arrays
+          const openBrackets = (candidate.match(/\[/g) || []).length;
+          const closeBrackets = (candidate.match(/\]/g) || []).length;
+          if (openBrackets > closeBrackets) {
+            candidate = candidate.slice(0, -missing) + ']'.repeat(openBrackets - closeBrackets) + '}'.repeat(missing);
+          }
+          try {
+            businessLogic = JSON.parse(candidate);
+            console.warn("Recovered truncated JSON by closing braces");
+          } catch {
+            console.error("JSON recovery failed. Cleaned candidate (first 500):", candidate.slice(0, 500));
+            throw new Error("Failed to parse business logic — response was truncated");
+          }
+        } else {
+          console.error("JSON parse failed:", (e2 as Error).message, "First 500:", candidate.slice(0, 500));
+          throw new Error("Failed to parse business logic from AI response");
+        }
+      }
     }
+
+    // Validate structure
+    if (!businessLogic || typeof businessLogic !== 'object') {
+      throw new Error("AI response is not a valid object");
+    }
+    // Ensure required arrays exist
+    businessLogic.services = businessLogic.services || [];
+    businessLogic.validations = businessLogic.validations || [];
+    businessLogic.workflows = businessLogic.workflows || [];
+    businessLogic.access_control = businessLogic.access_control || [];
+    businessLogic.computed_fields = businessLogic.computed_fields || [];
 
     // 7. Validate: every entity has at least one service
     const entityNames = domainModel?.entities?.map((e: any) => e.name) || [];
