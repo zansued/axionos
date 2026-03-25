@@ -219,16 +219,13 @@ export function getDeterministicFiles(supabaseConnInfo?: { url: string; anonKey:
       },
       include: ["src"],
     }, null, 2),
-    "vite.config.ts": `import { defineConfig } from "vite";\nimport react from "@vitejs/plugin-react-swc";\nimport path from "path";\n\nexport default defineConfig({\n  plugins: [react()],\n  resolve: {\n    alias: {\n      "@": path.resolve(__dirname, "./src"),\n    },\n  },\n});`,
-    "index.html": `<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="UTF-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n    <title>App</title>\n  </head>\n  <body>\n    <div id="root"></div>\n    <script type="module" src="./src/main.tsx"></script>\n  </body>\n</html>`,
     "eslint.config.js": `import js from "@eslint/js";\nimport globals from "globals";\nimport reactHooks from "eslint-plugin-react-hooks";\nimport reactRefresh from "eslint-plugin-react-refresh";\nimport tseslint from "typescript-eslint";\n\nexport default tseslint.config(\n  { ignores: ["dist", "node_modules"] },\n  {\n    extends: [js.configs.recommended, ...tseslint.configs.recommended],\n    files: ["**/*.{ts,tsx}"],\n    languageOptions: {\n      ecmaVersion: 2020,\n      globals: globals.browser,\n    },\n    plugins: {\n      "react-hooks": reactHooks,\n      "react-refresh": reactRefresh,\n    },\n    rules: {\n      ...reactHooks.configs.recommended.rules,\n      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],\n      "@typescript-eslint/no-explicit-any": "warn",\n      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],\n    },\n  }\n);`,
     ".env.example": supabaseConnInfo
       ? `VITE_SUPABASE_URL=${supabaseConnInfo.url}\nVITE_SUPABASE_ANON_KEY=${supabaseConnInfo.anonKey}`
       : `VITE_SUPABASE_URL=https://your-project.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key`,
-    "src/lib/supabase.ts": `import { createClient } from '@supabase/supabase-js';\n\nconst supabaseUrl = import.meta.env.VITE_SUPABASE_URL;\nconst supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;\n\nif (!supabaseUrl || !supabaseAnonKey) {\n  throw new Error('Missing Supabase environment variables. Check .env file.');\n}\n\nexport const supabase = createClient(supabaseUrl, supabaseAnonKey);`,
-    "src/main.tsx": `import React from "react";\nimport ReactDOM from "react-dom/client";\nimport App from "./App";\nimport "./index.css";\n\nReactDOM.createRoot(document.getElementById("root")!).render(\n  <React.StrictMode>\n    <App />\n  </React.StrictMode>\n);`,
-    "src/App.tsx": `import React from "react";\n\nfunction App() {\n  return (\n    <div className="min-h-screen flex items-center justify-center bg-background text-foreground">\n      <div className="text-center space-y-4">\n        <h1 className="text-4xl font-bold">App</h1>\n        <p className="text-muted-foreground">Projeto inicializado com sucesso.</p>\n      </div>\n    </div>\n  );\n}\n\nexport default App;`,
-    "src/index.css": `@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\n:root {\n  --background: 0 0% 100%;\n  --foreground: 222.2 84% 4.9%;\n  --muted: 210 40% 96%;\n  --muted-foreground: 215.4 16.3% 46.9%;\n}\n\nbody {\n  margin: 0;\n  font-family: system-ui, sans-serif;\n}`,
+    // NOTE: Do NOT override src/App.tsx, src/main.tsx, src/index.css, index.html, or vite.config.ts here.
+    // These files come from the actual project repository and must NOT be replaced with generic placeholders.
+    // Only toolchain/config files (vercel.json, tsconfig, postcss, etc.) should be deterministic overrides.
   };
 }
 
