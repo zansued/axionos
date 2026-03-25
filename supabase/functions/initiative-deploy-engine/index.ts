@@ -81,7 +81,7 @@ serve(async (req) => {
     const currentStage = initiative.stage_status;
     const repoUrl = initiative.repo_url;
 
-    const deployableStates = ["published", "deployed", "deploy_failed"];
+    const deployableStates = ["published", "deployed", "deploy_failed", "deploying"];
     if (!deployableStates.includes(currentStage)) {
       throw new Error(`Initiative must be in [${deployableStates.join(", ")}] to deploy. Current: ${currentStage}`);
     }
