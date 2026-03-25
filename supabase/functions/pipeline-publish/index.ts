@@ -226,8 +226,9 @@ serve(async (req) => {
       let content = raw?.content || raw?.text || (typeof raw === "string" ? raw : "");
       if (!content || content === "{}") continue;
 
-      // Apply deterministic overrides
-      if (DETERMINISTIC_FILES[filePath]) content = DETERMINISTIC_FILES[filePath];
+      // Apply deterministic overrides ONLY for config/toolchain files (not source code)
+      const SOURCE_FILES = new Set(["src/main.tsx", "src/App.tsx", "src/index.css", "index.html"]);
+      if (DETERMINISTIC_FILES[filePath] && !SOURCE_FILES.has(filePath)) content = DETERMINISTIC_FILES[filePath];
       // Sanitize package.json
       if (filePath === "package.json") content = sanitizePackageJson(content);
 
