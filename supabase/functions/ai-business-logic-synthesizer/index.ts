@@ -125,7 +125,7 @@ ${domainModel?.business_rules ? `\nBUSINESS RULES:\n${JSON.stringify(domainModel
 
 Generate complete services, validations, workflows and access control for ALL entities.`;
 
-    const aiResult = await callAI("", systemPrompt, userPrompt, true, 3, false, { maxOutputTokens: 8192 });
+    const aiResult = await callAI("", systemPrompt, userPrompt, true, 3, false, "business_logic_synthesis");
 
     // 6. Parse result with robust extraction
     let businessLogic: any;
