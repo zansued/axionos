@@ -144,7 +144,7 @@ export function sanitizePackageJson(content: string): string {
     pkg.type = "module";
     pkg.engines = {
       ...(pkg.engines && typeof pkg.engines === "object" ? pkg.engines : {}),
-      node: "24.x",
+      node: "20.x",
     };
     if (!pkg.scripts) pkg.scripts = {};
     pkg.scripts.dev = "vite";
@@ -183,8 +183,8 @@ export const DETERMINISTIC_FILES: Record<string, string> = getDeterministicFiles
 export function getDeterministicFiles(supabaseConnInfo?: { url: string; anonKey: string } | null): Record<string, string> {
   return {
     "vercel.json": DEPLOY_VERCEL_JSON,
-    ".nvmrc": "24",
-    ".node-version": "24",
+    ".nvmrc": "20",
+    ".node-version": "20",
     "public/_redirects": "/* /index.html 200",
     "netlify.toml": '[build]\n  command = "npm run build"\n  publish = "dist"\n\n[[redirects]]\n  from = "/*"\n  to = "/index.html"\n  status = 200',
     "postcss.config.js": `export default {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n};`,
