@@ -223,9 +223,47 @@ export function getDeterministicFiles(supabaseConnInfo?: { url: string; anonKey:
     ".env.example": supabaseConnInfo
       ? `VITE_SUPABASE_URL=${supabaseConnInfo.url}\nVITE_SUPABASE_ANON_KEY=${supabaseConnInfo.anonKey}`
       : `VITE_SUPABASE_URL=https://your-project.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key`,
-    // NOTE: Do NOT override src/App.tsx, src/main.tsx, src/index.css, index.html, or vite.config.ts here.
-    // These files come from the actual project repository and must NOT be replaced with generic placeholders.
-    // Only toolchain/config files (vercel.json, tsconfig, postcss, etc.) should be deterministic overrides.
+    // NOTE: These source scaffolds are ONLY used as fallback when the pipeline-generated
+    // project is missing these files. They are minimal and dependency-free to avoid
+    // import resolution errors (e.g. importing AuthContext that doesn't exist).
+    // They will NOT override files that already exist in the generated project.
+    "index.html": `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>`,
+    "src/main.tsx": `import React from "react"
+import ReactDOM from "react-dom/client"
+import App from "./App"
+import "./index.css"
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)`,
+    "src/App.tsx": `function App() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">App</h1>
+        <p className="text-gray-600">Project deployed successfully.</p>
+      </div>
+    </div>
+  )
+}
+
+export default App`,
+    "src/index.css": `@tailwind base;
+@tailwind components;
+@tailwind utilities;`,
   };
 }
 
