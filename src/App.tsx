@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-// Build trigger: fix-env-loading-v4
+// Build trigger: fix-node-version-v5
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
