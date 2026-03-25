@@ -57,7 +57,7 @@ export const PROMPT_GUARDRAILS_CORE = `
 - ✅ SEMPRE inclua \`"type": "module"\`
 - ✅ scripts.build deve ser \`"vite build"\` (NUNCA \`"tsc && vite build"\`)
 - ✅ Use \`@vitejs/plugin-react-swc\` em devDependencies
-- ✅ Use Node.js engines \`"24.x"\`
+- ✅ Use Node.js engines \`"20.x"\`
 `;
 
 /**
