@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
@@ -19,7 +18,7 @@ import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, t
 const MAX_FIX_ATTEMPTS = 2;
 const APPROVAL_THRESHOLD = 70;
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-validation");
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey } = result;

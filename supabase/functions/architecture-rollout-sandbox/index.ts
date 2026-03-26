@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { rehearseMigrationSequence } from "../_shared/architecture-rollout/architecture-migration-sequence-rehearsal.ts";
@@ -9,7 +8,7 @@ import { validateSandboxGuardrails } from "../_shared/architecture-rollout/archi
 import { validateSandboxReviewTransition } from "../_shared/architecture-rollout/architecture-rollout-sandbox-review-manager.ts";
 import { explainSandbox } from "../_shared/architecture-rollout/architecture-rollout-sandbox-explainer.ts";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 

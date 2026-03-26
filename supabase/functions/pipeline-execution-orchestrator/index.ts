@@ -5,7 +5,6 @@
 // Sprint 202: Idempotency guards + explicit auto-continuation
 // Sprint 203: Canonical traceability — trace_id, attempt_id, wave_number, agent_role
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
@@ -26,7 +25,7 @@ const MAX_WORKERS = 6;
 const MAX_RETRIES = 2;
 const TIME_BUDGET_MS = 110_000; // 110s — leave 40s buffer before Deno's ~150s timeout
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const startTime = Date.now();
   const result = await bootstrapPipeline(req, "pipeline-execution-orchestrator");
   if (result instanceof Response) return result;

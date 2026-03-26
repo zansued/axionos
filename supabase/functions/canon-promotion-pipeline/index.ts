@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticateWithRateLimit } from "../_shared/auth.ts";
@@ -66,7 +65,7 @@ function getSchemaForAction(action: string): Schema {
 
 // ─── Handler ───
 
-serve(async (req: Request) => {
+Deno.serve(async (req: Request) => {
   const corsRes = handleCors(req);
   if (corsRes) return corsRes;
 

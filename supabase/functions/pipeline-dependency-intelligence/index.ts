@@ -2,7 +2,6 @@
 // Validates external dependencies against npm registry, detects peer dep issues,
 // version conflicts, deprecated packages, and uses Firecrawl for ecosystem research.
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
@@ -242,7 +241,7 @@ async function getCachedOrFetchMeta(
 // MAIN HANDLER
 // ═══════════════════════════════════════════════
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-dependency-intelligence");
   if (result instanceof Response) return result;
   const { initiative, ctx, serviceClient } = result;

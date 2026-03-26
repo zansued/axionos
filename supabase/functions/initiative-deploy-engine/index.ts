@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob, transitionStage } from "../_shared/pipeline-helpers.ts";
@@ -38,7 +37,7 @@ const providerRegistry = createDefaultRegistry();
 const HEALTH_CHECK_RETRIES = 3;
 const HEALTH_CHECK_DELAY_MS = 8000;
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "initiative-deploy-engine");
   if (result instanceof Response) return result;
   const { initiative, ctx, serviceClient, body } = result;

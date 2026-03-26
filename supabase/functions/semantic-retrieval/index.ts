@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { runSemanticRetrieval } from "../_shared/semantic-retrieval/semantic-retrieval-engine.ts";
@@ -18,7 +17,7 @@ import { getIndexStatuses, rebuildIndex, freezeIndex } from "../_shared/semantic
  *   rebuild_index, freeze_index
  */
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 

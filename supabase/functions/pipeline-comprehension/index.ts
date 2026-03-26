@@ -1,6 +1,5 @@
 // Layer 1 — Problem Comprehension
 // Orchestrates: Vision Agent → Market Analyst → Requirements Agent → Product Architect
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
@@ -49,7 +48,7 @@ async function scrapeReference(url: string): Promise<string> {
   } catch { return ""; }
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-comprehension");
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey } = result;

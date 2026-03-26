@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { selectRepairPolicy, type RepairContext } from "../_shared/repair/repair-policy-engine.ts";
@@ -21,7 +20,7 @@ import { explainRepairDecision } from "../_shared/repair/repair-policy-explainer
  *   recompute — recompute a policy profile from evidence
  *   deprecate — deprecate a policy profile
  */
-serve(async (req) => {
+Deno.serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 

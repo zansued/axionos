@@ -1,7 +1,6 @@
 // Layer 3 — Development Planning (Background Processing)
 // Orchestrates: Task Planner → Story Generator → File Planner
 // Uses EdgeRuntime.waitUntil() to avoid timeout on long AI generations.
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
@@ -217,7 +216,7 @@ function normalizeStories(result: Record<string, unknown>): Record<string, unkno
 // Declare EdgeRuntime for Deno edge environment
 declare const EdgeRuntime: { waitUntil: (promise: Promise<unknown>) => void };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-planning");
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey } = result;

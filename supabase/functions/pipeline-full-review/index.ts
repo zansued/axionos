@@ -1,11 +1,10 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
 import { DETERMINISTIC_FILES } from "../_shared/code-sanitizers.ts";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-full-review");
   if (result instanceof Response) return result;
   const { initiative, ctx, serviceClient, body, apiKey } = result;

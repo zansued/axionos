@@ -3,7 +3,6 @@
 // Runs a pre-build simulation to ensure the scaffold compiles.
 // Only proceeds to feature generation once the scaffold successfully validates.
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
@@ -407,7 +406,7 @@ function repairScaffold(scaffold: ScaffoldFile[], issues: string[], projectName:
 // MAIN HANDLER
 // ═══════════════════════════════════════════════
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-foundation-scaffold");
   if (result instanceof Response) return result;
   const { initiative, ctx, serviceClient, apiKey } = result;
