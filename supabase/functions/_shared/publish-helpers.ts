@@ -184,7 +184,7 @@ jobs:
           elif [ "\${{ steps.typecheck.outcome }}" != "success" ]; then
             STATUS="failure"
             BUILD_LOG=$(cat /tmp/tsc.log 2>/dev/null | tail -100)
-            ERRORS=$(echo "$BUILD_LOG" | grep -E "^src/" | head -20 | sed 's/\(([0-9]*\),[0-9]*\)/|\1|/' | awk -F'|' '{print "{\"file\": \""$1"\", \"line\": "$2", \"column\": null, \"message\": \""$3"\", \"category\": \"typescript\"}"}' | jq -s '.' 2>/dev/null || echo "[]")
+            ERRORS=$(echo "$BUILD_LOG" | grep -E "^src/" | head -20 | jq -R -s 'split("\n") | map(select(length > 0)) | map({file: "tsc", line: null, column: null, message: ., category: "typescript"})' 2>/dev/null || echo "[]")
           elif [ "\${{ steps.build.outcome }}" != "success" ]; then
             STATUS="failure"
             BUILD_LOG=$(cat /tmp/build.log 2>/dev/null | tail -50)
