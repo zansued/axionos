@@ -68,6 +68,24 @@ export interface GitTreeItem {
   sha: string;
 }
 
+function findConflictingParentPaths(paths: Iterable<string>): Set<string> {
+  const pathSet = new Set(paths);
+  const conflicts = new Set<string>();
+
+  for (const path of pathSet) {
+    const segments = path.split("/");
+    if (segments.length < 2) continue;
+
+    let prefix = "";
+    for (let i = 0; i < segments.length - 1; i++) {
+      prefix = prefix ? `${prefix}/${segments[i]}` : segments[i];
+      if (pathSet.has(prefix)) conflicts.add(prefix);
+    }
+  }
+
+  return conflicts;
+}
+
 /**
  * Final guard before calling the GitHub Tree API.
  * Sanitizes and deduplicates tree items so no invalid `tree.path` reaches GitHub.
@@ -83,6 +101,12 @@ export function sanitizeGitTreeItems(items: GitTreeItem[]): { valid: GitTreeItem
       continue;
     }
     pathMap.set(cleanedPath, { ...item, path: cleanedPath });
+  }
+
+  const conflictingParents = findConflictingParentPaths(pathMap.keys());
+  for (const conflict of conflictingParents) {
+    pathMap.delete(conflict);
+    removed.push(conflict);
   }
 
   return { valid: [...pathMap.values()], removed };
@@ -102,6 +126,12 @@ export function sanitizeFileEntries(entries: FileEntry[]): { valid: FileEntry[];
       continue;
     }
     pathMap.set(cleaned, { ...entry, path: cleaned });
+  }
+
+  const conflictingParents = findConflictingParentPaths(pathMap.keys());
+  for (const conflict of conflictingParents) {
+    pathMap.delete(conflict);
+    removed.push(conflict);
   }
 
   return { valid: [...pathMap.values()], removed };
