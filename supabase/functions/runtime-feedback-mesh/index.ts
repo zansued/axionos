@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { ingestRuntimeEvent } from "../_shared/runtime-feedback/runtime-feedback-ingestor.ts";
 import { buildLineageLink } from "../_shared/runtime-feedback/runtime-outcome-lineage-builder.ts";
@@ -13,7 +12,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {

@@ -3,7 +3,6 @@
 // Detects structural problems, circular dependencies, missing files,
 // and dependency conflicts — auto-repairing the plan when possible.
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
@@ -554,7 +553,7 @@ function autoRepairArchitecture(
 // MAIN HANDLER
 // ═══════════════════════════════════════════════
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-architecture-simulation");
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey } = result;

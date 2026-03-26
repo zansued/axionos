@@ -1,7 +1,6 @@
 // Ecosystem Drift Intelligence — monitors dependency ecosystems for drift,
 // deprecation, breaking changes, and uses Firecrawl for ecosystem research.
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
@@ -146,7 +145,7 @@ async function researchPackage(pkg: string, driftType: string): Promise<Ecosyste
 // MAIN
 // ═══════════════════════════════════════════════
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "ecosystem-drift-intelligence");
   if (result instanceof Response) return result;
   const { initiative, ctx, serviceClient } = result;

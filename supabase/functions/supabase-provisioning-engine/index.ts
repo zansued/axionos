@@ -2,7 +2,6 @@
 // Provisions base tables, RLS policies, and storage buckets
 // inside the project's dedicated PostgreSQL schema.
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
@@ -142,7 +141,7 @@ async function executeSQL(
 // MAIN HANDLER
 // ═══════════════════════════════════════════════
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "supabase-provisioning-engine");
   if (result instanceof Response) return result;
   const { initiative, ctx, serviceClient } = result;

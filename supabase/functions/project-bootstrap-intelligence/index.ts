@@ -4,7 +4,6 @@
 // Predicts build viability and auto-repairs missing bootstrap files.
 // Injects bootstrap nodes into Project Brain for downstream stages.
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
@@ -378,7 +377,7 @@ function validateBootstrap(
 // MAIN HANDLER
 // ═══════════════════════════════════════════════
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "project-bootstrap-intelligence");
   if (result instanceof Response) return result;
   const { initiative, ctx, serviceClient, apiKey } = result;

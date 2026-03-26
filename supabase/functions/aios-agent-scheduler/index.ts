@@ -9,7 +9,6 @@
  * Translated via AxionOS arch-translator skill.
  */
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 
@@ -35,7 +34,7 @@ const corsHeaders = {
 const DEFAULT_TIME_SLICE = 1000; // 1 second in ms
 const MAX_BATCH_SIZE = 5;       // Number of concurrent syscalls to process
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // 1. Handle CORS Preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });

@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticate, AuthContext } from "../_shared/auth.ts";
 
@@ -38,7 +37,7 @@ const VALID_SOURCE_TYPES = [
 const VALID_SEVERITIES = ["info", "low", "moderate", "high", "critical"];
 const VALID_REVIEW_STATUSES = ["new", "reviewing", "relevant", "not_relevant", "archived"];
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 

@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { normalizeErrorSignature, extractFileTypes, computePatternKey } from "../_shared/repair/error-signature-normalizer.ts";
@@ -17,7 +16,7 @@ import { computeSuccessRate, computeConfidence } from "../_shared/contracts/repa
  *   get_candidates       — return prevention rule candidates
  */
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 

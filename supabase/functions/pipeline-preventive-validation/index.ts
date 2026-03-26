@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
@@ -28,7 +27,7 @@ interface ValidationIssue {
   fix_applied: string | null;
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-preventive-validation");
   if (result instanceof Response) return result;
   const { initiative, ctx, serviceClient, apiKey } = result;

@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 import { aggregateVariantMetrics, compareVariants } from "../_shared/learning/prompt-variant-metrics.ts";
@@ -19,7 +18,7 @@ import { evaluateRollbackDecision, buildRollbackAction, isRollbackBounded } from
  *   action: "activate_promotion" | "advance_rollout_phase" | "rollback_variant"
  *         | "rollout_status" | "promotion_health" | "rollback_history"
  */
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {

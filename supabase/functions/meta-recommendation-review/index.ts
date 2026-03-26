@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticate, AuthContext } from "../_shared/auth.ts";
 import { META_AUDIT_EVENTS, RECOMMENDATION_STATUSES } from "../_shared/meta-agents/types.ts";
@@ -19,7 +18,7 @@ import { scoreQualityRecord } from "../_shared/meta-agents/proposal-quality-scor
  * - Unauthorized org access blocked.
  * - Full audit trail on every action.
  */
-serve(async (req) => {
+Deno.serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 

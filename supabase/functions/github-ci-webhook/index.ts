@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { handleCors, corsHeaders, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { pipelineLog, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
@@ -81,7 +80,7 @@ function extractErrorsFromLogs(logs: string): CIError[] {
   return errors;
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 

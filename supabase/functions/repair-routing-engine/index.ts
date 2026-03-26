@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 import type { DecisionSource, StrategyRanking } from "../_shared/contracts/repair-routing.schema.ts";
@@ -27,7 +26,7 @@ const STATIC_STRATEGY_MAP: Record<string, string[]> = {
   unknown_error: ["ai_contextual_patch"],
 };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }

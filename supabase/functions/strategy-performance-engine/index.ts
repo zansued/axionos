@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 
@@ -8,7 +7,7 @@ import { corsHeaders } from "../_shared/cors.ts";
  * Evaluates repair strategy effectiveness from repair_evidence,
  * repair_routing_log, error_patterns, and prevention_events.
  */
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {

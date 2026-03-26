@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { getCorsHeaders, handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
@@ -21,7 +20,7 @@ Suas ações serão processadas pelo Agendador AIOS (Round Robin).
 Priorize segurança, tipos TypeScript e padrões de design modernos.
 `;
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const corsRes = handleCors(req);
   if (corsRes) return corsRes;
 

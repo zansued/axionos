@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { aggregateAdvisorySignals } from "../_shared/engineering-advisor/engineering-advisory-signal-aggregator.ts";
@@ -9,7 +8,7 @@ import { explainRecommendation } from "../_shared/engineering-advisor/engineerin
 import { clusterRecommendations } from "../_shared/engineering-advisor/engineering-advisory-clustering.ts";
 import { validateReviewTransition, buildReview } from "../_shared/engineering-advisor/engineering-advisory-review-manager.ts";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 

@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders, jsonResponse, errorResponse, handleCors } from "../_shared/cors.ts";
 import { authenticate } from "../_shared/auth.ts";
@@ -12,7 +11,7 @@ import { validateProposalTransition, getAvailableTransitions } from "../_shared/
 import { evaluateJustification } from "../_shared/reflexive-governance/evolution-justification-engine.ts";
 import { explainProposal } from "../_shared/reflexive-governance/evolution-decision-explainer.ts";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 

@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { corsHeaders, jsonResponse, errorResponse, handleCors } from "../_shared/cors.ts";
 import { authenticate } from "../_shared/auth.ts";
 import { classifyMutation } from "../_shared/reflexive-governance/architectural-mutation-classifier.ts";
@@ -11,7 +10,7 @@ import { scoreDriftRisk } from "../_shared/reflexive-governance/mutation-drift-r
 import { explainMutationCase } from "../_shared/reflexive-governance/mutation-control-explainer.ts";
 import { buildLineageEvent, MUTATION_LINEAGE_EVENTS } from "../_shared/reflexive-governance/mutation-lineage-writer.ts";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 

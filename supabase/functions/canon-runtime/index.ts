@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { buildRetrievalFilters, defaultRetrievalQuery } from "../_shared/canon-runtime/canon-runtime-retriever.ts";
 import { buildCanonContext } from "../_shared/canon-runtime/canon-context-builder.ts";
@@ -14,7 +13,7 @@ const corsHeaders = {
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {

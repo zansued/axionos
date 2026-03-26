@@ -3,7 +3,6 @@
 // Each agent runs as an isolated subjob with independent persistence and timeout handling.
 // v3: MVP-scoped prompts + timing breakdown + sequential diagnostic mode
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
@@ -287,7 +286,7 @@ function buildArchitectureContent(results: Record<string, Record<string, unknown
   ].join("\n");
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-architecture");
   if (result instanceof Response) return result;
   const { user, initiative, ctx, serviceClient, apiKey, body } = result;

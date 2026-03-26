@@ -2,7 +2,6 @@
 // Creates an isolated PostgreSQL schema for each generated project
 // inside the connected Supabase instance.
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
@@ -13,7 +12,7 @@ import {
   upsertNode, getBrainNodes, recordDecision, upsertPreventionRule,
 } from "../_shared/brain-helpers.ts";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "supabase-schema-bootstrap");
   if (result instanceof Response) return result;
   const { initiative, ctx, serviceClient } = result;

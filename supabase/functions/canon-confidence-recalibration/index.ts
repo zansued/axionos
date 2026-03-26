@@ -14,7 +14,6 @@
  * Full traceability via confidence_recalibration_log + ledger
  */
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { getCorsHeaders, handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 
@@ -99,7 +98,7 @@ function computeRecalibratedConfidence(
   return { newConf, delta, direction };
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const corsResp = handleCors(req);
   if (corsResp) return corsResp;
 

@@ -2,7 +2,6 @@
 // Simulates bundler (Vite/Rollup) module resolution before build.
 // Detects broken imports, missing dependencies, and circular references.
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
@@ -228,7 +227,7 @@ function generateMinimalTemplate(filePath: string): string {
 // MAIN HANDLER
 // ═══════════════════════════════════════════════
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const result = await bootstrapPipeline(req, "pipeline-module-graph-simulation");
   if (result instanceof Response) return result;
   const { initiative, ctx, serviceClient, body } = result;

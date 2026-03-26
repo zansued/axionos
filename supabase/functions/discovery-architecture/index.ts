@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticate, AuthContext, requireOrgMembership } from "../_shared/auth.ts";
 import { aggregateDiscoverySignals } from "../_shared/discovery-architecture/discovery-signal-aggregator.ts";
@@ -20,7 +19,7 @@ import { validateReviewTransition } from "../_shared/discovery-architecture/disc
  *   reject_recommendation, dismiss_recommendation
  */
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const cors = handleCors(req);
   if (cors) return cors;
 

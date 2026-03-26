@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { authenticateWithRateLimit, requireOrgMembership } from "../_shared/auth.ts";
 import { callAI } from "../_shared/ai-client.ts";
@@ -7,7 +6,7 @@ import { validateInitiativeBrief } from "../_shared/contracts/initiative-brief.s
 import type { InitiativeBrief } from "../_shared/contracts/initiative-brief.schema.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const corsResp = handleCors(req);
   if (corsResp) return corsResp;
 
