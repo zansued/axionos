@@ -7,30 +7,8 @@ import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 import { runDependencyGovernance } from "../_shared/dependency-governance.ts";
 import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
 import type { PublishConfirmation } from "../_shared/contracts/publish-confirmation.schema.ts";
-
-/**
- * Sprint 205 — Structured Publish Error
- */
-interface PublishError {
-  error: string;
-  category: "auth" | "artifact" | "dependency" | "config" | "github" | "unknown";
-  missing_artifact?: string;
-  suggested_action: string;
-}
-
-function buildPublishError(
-  category: PublishError["category"],
-  missingArtifact: string | null,
-  suggestedAction: string,
-): string {
-  const err: PublishError = {
-    error: `Publish bloqueado: [${category}] ${missingArtifact || "erro desconhecido"}`,
-    category,
-    ...(missingArtifact ? { missing_artifact: missingArtifact } : {}),
-    suggested_action: suggestedAction,
-  };
-  return JSON.stringify(err);
-}
+import { buildPublishError, sanitizeFileEntries, persistReview, generateCIWorkflow, type FileEntry } from "../_shared/publish-helpers.ts";
+import { atomicGitHubPush } from "../_shared/publish-github.ts";
 
 /**
  * Camada 6 — Release
@@ -74,7 +52,7 @@ Deno.serve(async (req) => {
     ), 400);
   }
 
-  // ── Sprint 205: Pre-flight — Validate GitHub token before anything else ──
+  // ── Sprint 205: Pre-flight — Validate GitHub token ──
   const GITHUB_API = "https://api.github.com";
   const ghHeaders = {
     Authorization: `Bearer ${resolvedGithubToken}`,
@@ -92,8 +70,7 @@ Deno.serve(async (req) => {
       return errorResponse(buildPublishError("auth", "github_token", hint), 401);
     }
     const ghUser = await tokenCheckResp.json();
-    await pipelineLog(ctx, "github_token_validated",
-      `Token GitHub válido — autenticado como ${ghUser.login}`);
+    await pipelineLog(ctx, "github_token_validated", `Token GitHub válido — autenticado como ${ghUser.login}`);
   } catch (tokenErr) {
     return errorResponse(buildPublishError(
       "auth", "github_token",
@@ -105,8 +82,8 @@ Deno.serve(async (req) => {
     .toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50) || `axion-${ctx.initiativeId.slice(0, 8)}`;
 
-  // ── Idempotency guard: check BEFORE creating a new job ──
-  const STALE_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes
+  // ── Idempotency guard ──
+  const STALE_THRESHOLD_MS = 10 * 60 * 1000;
   const { data: activePublishJobs } = await serviceClient
     .from("initiative_jobs")
     .select("id, created_at")
@@ -117,43 +94,27 @@ Deno.serve(async (req) => {
 
   if (activePublishJobs && activePublishJobs.length > 0) {
     const now = Date.now();
-    const staleJobs = activePublishJobs.filter(
-      (j: any) => now - new Date(j.created_at).getTime() > STALE_THRESHOLD_MS
-    );
-    const freshJobs = activePublishJobs.filter(
-      (j: any) => now - new Date(j.created_at).getTime() <= STALE_THRESHOLD_MS
-    );
+    const staleJobs = activePublishJobs.filter((j: any) => now - new Date(j.created_at).getTime() > STALE_THRESHOLD_MS);
+    const freshJobs = activePublishJobs.filter((j: any) => now - new Date(j.created_at).getTime() <= STALE_THRESHOLD_MS);
 
-    // Auto-expire stale jobs
     if (staleJobs.length > 0) {
       const staleIds = staleJobs.map((j: any) => j.id);
-      await serviceClient
-        .from("initiative_jobs")
-        .update({
-          status: "failed",
-          error: `Auto-expirado após ${STALE_THRESHOLD_MS / 60000}min sem conclusão`,
-          completed_at: new Date().toISOString(),
-        })
-        .in("id", staleIds);
+      await serviceClient.from("initiative_jobs").update({
+        status: "failed",
+        error: `Auto-expirado após ${STALE_THRESHOLD_MS / 60000}min sem conclusão`,
+        completed_at: new Date().toISOString(),
+      }).in("id", staleIds);
       await pipelineLog(ctx, "publish_stale_jobs_expired",
-        `${staleJobs.length} job(s) de publicação expirado(s) automaticamente`,
-        { expired_ids: staleIds }
-      );
+        `${staleJobs.length} job(s) de publicação expirado(s) automaticamente`, { expired_ids: staleIds });
     }
 
-    // Block only if there are still fresh running jobs
     if (freshJobs.length > 0) {
-      return errorResponse(
-        "Uma publicação já está em andamento para esta iniciativa. Aguarde a conclusão antes de publicar novamente.",
-        409
-      );
+      return errorResponse("Uma publicação já está em andamento para esta iniciativa. Aguarde a conclusão.", 409);
     }
   }
 
   const jobId = await createJob(ctx, "publish", { owner: resolvedOwner, repo: repoSlug, base_branch: resolvedBaseBranch, mode: "release_agent" });
   await pipelineLog(ctx, "pipeline_publish_start", "Release Agent iniciando: Pre-flight → Changelog → Push → Verificação...");
-
-  // ghHeaders and GITHUB_API already defined above (Sprint 205 token pre-flight)
 
   let totalTokens = 0, totalCost = 0;
 
@@ -183,15 +144,10 @@ Deno.serve(async (req) => {
     if (!artifacts || artifacts.length === 0) {
       await pipelineLog(ctx, "publish_skip", "Nenhum artefato encontrado — execute o pipeline de execução primeiro");
       await completeJob(ctx, jobId!, { skipped: "no_artifacts", artifacts_found: 0 });
-      return jsonResponse({
-        success: true,
-        skipped: true,
-        message: "Nenhum artefato encontrado para publicar. Execute o pipeline de execução primeiro para gerar código.",
-        artifacts_found: 0,
-      });
+      return jsonResponse({ success: true, skipped: true, message: "Nenhum artefato encontrado para publicar.", artifacts_found: 0 });
     }
 
-    // ═══ Sprint 205: Pre-flight — Validate critical files in agent_outputs ═══
+    // ═══ Sprint 205: Pre-flight — Validate critical files ═══
     const CRITICAL_PUBLISH_FILES = ["index.html", "vite.config.ts", "package.json", "tsconfig.json"];
     const artifactPaths = new Set<string>();
     for (const art of artifacts) {
@@ -200,22 +156,20 @@ Deno.serve(async (req) => {
       const fp = raw?.file_path || si?.file_path;
       if (fp) artifactPaths.add(fp);
     }
-    // Also check deterministic files (auto-injected later)
     for (const df of Object.keys(DETERMINISTIC_FILES)) artifactPaths.add(df);
 
     const missingCritical = CRITICAL_PUBLISH_FILES.filter(f => !artifactPaths.has(f));
     if (missingCritical.length > 0) {
       await pipelineLog(ctx, "publish_critical_files_missing",
-        `Arquivos críticos ausentes nos artefatos: ${missingCritical.join(", ")}. Serão auto-injetados via scaffold.`,
-        { missing: missingCritical });
+        `Arquivos críticos ausentes: ${missingCritical.join(", ")}. Serão auto-injetados.`, { missing: missingCritical });
     }
 
-    // ═══ PHASE 1: Pre-flight Checks (Release Agent) ═══
+    // ═══ PHASE 1: Pre-flight Checks ═══
     await pipelineLog(ctx, "release_preflight_start", "Release Agent: Executando pre-flight checks...");
 
     const approvedArtifacts = artifacts.filter((a: any) => a.status === "approved");
     const nonApproved = artifacts.filter((a: any) => a.status !== "approved");
-    const fileEntries: { path: string; content: string; type: string; summary: string }[] = [];
+    const fileEntries: FileEntry[] = [];
 
     for (const art of approvedArtifacts) {
       const raw = art.raw_output as any;
@@ -225,10 +179,8 @@ Deno.serve(async (req) => {
       let content = raw?.content || raw?.text || (typeof raw === "string" ? raw : "");
       if (!content || content === "{}") continue;
 
-      // Apply deterministic overrides ONLY for config/toolchain files (not source code)
       const SOURCE_FILES = new Set(["src/main.tsx", "src/App.tsx", "src/index.css", "index.html"]);
       if (DETERMINISTIC_FILES[filePath] && !SOURCE_FILES.has(filePath)) content = DETERMINISTIC_FILES[filePath];
-      // Sanitize package.json
       if (filePath === "package.json") content = sanitizePackageJson(content);
 
       fileEntries.push({ path: filePath, content, type: si?.file_type || art.type, summary: si?.description || art.summary || filePath });
@@ -236,7 +188,7 @@ Deno.serve(async (req) => {
 
     if (fileEntries.length === 0) throw new Error("Nenhum arquivo aprovado pronto para publicação");
 
-    // ── Auto-inject deterministic scaffold files BEFORE pre-flight ──
+    // ── Auto-inject deterministic scaffold files ──
     const existingPaths = new Set(fileEntries.map(f => f.path));
     const SCAFFOLD_FILES = [
       "index.html", "vite.config.ts", "tsconfig.json", "tsconfig.node.json",
@@ -251,7 +203,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // ── Import Integrity Check: replace source files with broken imports ──
+    // ── Import Integrity Check ──
     const allPublishedPaths = new Set(fileEntries.map(f => f.path));
     const SOURCE_CHECK_FILES = ["src/main.tsx", "src/App.tsx"];
     for (const srcFile of SOURCE_CHECK_FILES) {
@@ -273,18 +225,13 @@ Deno.serve(async (req) => {
       const { missing } = detectMissingDependencies(fileEntries, packageJsonEntry.content);
       if (missing.length > 0) {
         await pipelineLog(ctx, "dependency_integrity_warning",
-          `Dependências ausentes detectadas: ${missing.join(", ")} — aplicando correção automática...`);
+          `Dependências ausentes: ${missing.join(", ")} — aplicando correção automática...`);
         const fixed = autoFixMissingDependencies(packageJsonEntry.content, missing);
         packageJsonEntry.content = sanitizePackageJson(fixed);
-        const stillMissing = detectMissingDependencies(fileEntries, packageJsonEntry.content).missing;
-        if (stillMissing.length > 0) {
-          await pipelineLog(ctx, "dependency_integrity_unresolved",
-            `Pacotes sem versão segura conhecida (requer review manual): ${stillMissing.join(", ")}`);
-        }
       }
     }
 
-    // AI Pre-flight: check for missing critical files, inconsistencies
+    // AI Pre-flight
     const fileManifest = fileEntries.map(f => `${f.path} (${f.type})`).join("\n");
     const preflightResult = await callAI(apiKey,
       `Você é o "Release Agent" (Agente 18). Execute pre-flight checks no projeto antes da publicação.
@@ -305,12 +252,9 @@ Retorne APENAS JSON:
     try { preflight = JSON.parse(preflightResult.content); }
     catch { preflight = { preflight_pass: true, critical_missing: [], warnings: [], ready_files_count: fileEntries.length, summary: "OK", risk_level: "low" }; }
 
-    // Deterministic override: remove false positives — files that ARE present in fileEntries
+    // Remove false positives
     if (Array.isArray(preflight.critical_missing)) {
-      preflight.critical_missing = preflight.critical_missing.filter(
-        (f: string) => !existingPaths.has(f)
-      );
-      // If all critical files resolved, upgrade to pass
+      preflight.critical_missing = preflight.critical_missing.filter((f: string) => !existingPaths.has(f));
       if (preflight.critical_missing.length === 0 && !preflight.preflight_pass) {
         preflight.preflight_pass = true;
         preflight.risk_level = preflight.warnings?.length > 0 ? "medium" : "low";
@@ -318,266 +262,110 @@ Retorne APENAS JSON:
       }
     }
 
-    await persistReview(serviceClient, artifacts[0].id, user.id, "release_preflight", "approved",
-      JSON.stringify(preflight));
+    await persistReview(serviceClient, artifacts[0].id, user.id, "release_preflight", "approved", JSON.stringify(preflight));
 
     if (!preflight.preflight_pass && (preflight.critical_missing?.length ?? 0) > 0) {
-      // ═══ PATCH REPAIR AGENT: Generate missing files instead of blocking ═══
+      // ═══ PATCH REPAIR AGENT ═══
       await pipelineLog(ctx, "patch_repair_start",
         `Patch Repair Agent: gerando ${preflight.critical_missing.length} arquivo(s) ausente(s): ${preflight.critical_missing.join(", ")}`);
 
-      const existingFilesList = fileEntries.map(f => `${f.path}`).join(", ");
+      const existingFilesList = fileEntries.map(f => f.path).join(", ");
       const pkgContent = fileEntries.find(f => f.path === "package.json")?.content || "{}";
 
       for (const missingFile of preflight.critical_missing) {
         try {
-          // Check if we have a deterministic version first
           if (DETERMINISTIC_FILES[missingFile]) {
-            fileEntries.push({
-              path: missingFile,
-              content: DETERMINISTIC_FILES[missingFile],
-              type: "patch_repair",
-              summary: `Patch Repair Agent: ${missingFile} (deterministic)`
-            });
+            fileEntries.push({ path: missingFile, content: DETERMINISTIC_FILES[missingFile], type: "patch_repair", summary: `Patch Repair: ${missingFile} (deterministic)` });
             existingPaths.add(missingFile);
-            await pipelineLog(ctx, "patch_repair_deterministic",
-              `Patch Repair Agent: ${missingFile} gerado via template determinístico`);
+            await pipelineLog(ctx, "patch_repair_deterministic", `Patch Repair: ${missingFile} via template determinístico`);
             continue;
           }
 
-          // AI-generated repair for non-deterministic files
           const patchResult = await callAI(apiKey,
-            `Você é o "Patch Repair Agent". Um arquivo crítico está faltando no projeto e precisa ser gerado.
-O projeto é: ${initiative.title}
+            `Você é o "Patch Repair Agent". Gere o conteúdo COMPLETO para: ${missingFile}
 Stack: React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui
-Arquivos existentes no projeto: ${existingFilesList}
-package.json atual: ${pkgContent.slice(0, 2000)}
-
-Gere o conteúdo COMPLETO e funcional para o arquivo: ${missingFile}
-
-REGRAS:
-- O arquivo deve ser compatível com os demais arquivos do projeto
-- Use imports corretos baseados nos arquivos existentes
-- Para src/main.tsx: deve importar React, ReactDOM, App, e montar no root
-- Para src/App.tsx: deve importar React Router e as rotas do projeto
-- Para index.html: deve ter div#root e script src=/src/main.tsx
-- NÃO inclua comentários explicativos, apenas código funcional
-
-Retorne APENAS JSON:
-{"file_path": "${missingFile}", "content": "...", "description": "..."}`,
-            `Projeto: ${initiative.title}\nDescrição: ${initiative.description || "N/A"}`,
-            true
+Arquivos existentes: ${existingFilesList}
+package.json: ${pkgContent.slice(0, 2000)}
+Retorne APENAS JSON: {"file_path": "${missingFile}", "content": "...", "description": "..."}`,
+            `Projeto: ${initiative.title}`, true
           );
-          totalTokens += patchResult.tokens;
-          totalCost += patchResult.costUsd;
+          totalTokens += patchResult.tokens; totalCost += patchResult.costUsd;
 
           let patchData: any;
           try { patchData = JSON.parse(patchResult.content); }
-          catch {
-            // Try extracting content directly
-            patchData = { file_path: missingFile, content: patchResult.content, description: `Generated ${missingFile}` };
-          }
+          catch { patchData = { file_path: missingFile, content: patchResult.content, description: `Generated ${missingFile}` }; }
 
           if (patchData?.content && patchData.content.length > 10) {
-            fileEntries.push({
-              path: missingFile,
-              content: patchData.content,
-              type: "patch_repair",
-              summary: `Patch Repair Agent: ${patchData.description || missingFile}`
-            });
+            fileEntries.push({ path: missingFile, content: patchData.content, type: "patch_repair", summary: `Patch Repair: ${patchData.description || missingFile}` });
             existingPaths.add(missingFile);
-            await pipelineLog(ctx, "patch_repair_generated",
-              `Patch Repair Agent: ${missingFile} gerado via IA (${patchResult.tokens} tokens)`);
-          } else {
-            await pipelineLog(ctx, "patch_repair_failed",
-              `Patch Repair Agent: falha ao gerar ${missingFile} — conteúdo insuficiente`);
           }
         } catch (patchErr) {
-          console.error(`[PATCH-REPAIR] Failed to generate ${missingFile}:`, patchErr);
-          await pipelineLog(ctx, "patch_repair_error",
-            `Patch Repair Agent: erro ao gerar ${missingFile}: ${patchErr instanceof Error ? patchErr.message : String(patchErr)}`);
+          console.error(`[PATCH-REPAIR] Failed for ${missingFile}:`, patchErr);
         }
       }
 
-      // Re-evaluate after patch repair
-      const stillMissingAfterPatch = preflight.critical_missing.filter(
-        (f: string) => !existingPaths.has(f)
-      );
-
-      if (stillMissingAfterPatch.length > 0) {
-        await pipelineLog(ctx, "patch_repair_incomplete",
-          `Patch Repair Agent: ${stillMissingAfterPatch.length} arquivo(s) ainda ausente(s) após reparo: ${stillMissingAfterPatch.join(", ")}`);
-        // Only block if risk is truly high AND files are still missing after repair attempt
-        if (preflight.risk_level === "high") {
-          throw new Error(
-            `Publicação bloqueada após tentativa de reparo: arquivos ainda ausentes — ${stillMissingAfterPatch.join(", ")}. ` +
-            `Execute novamente os estágios de geração de código.`
-          );
-        }
-      } else {
-        await pipelineLog(ctx, "patch_repair_complete",
-          `Patch Repair Agent: todos os ${preflight.critical_missing.length} arquivo(s) ausente(s) foram gerados com sucesso`);
+      const stillMissing = preflight.critical_missing.filter((f: string) => !existingPaths.has(f));
+      if (stillMissing.length > 0 && preflight.risk_level === "high") {
+        throw new Error(`Publicação bloqueada: arquivos ausentes — ${stillMissing.join(", ")}`);
       }
     } else if (!preflight.preflight_pass) {
-      // Warnings only — don't block
-      console.warn("Pre-flight warnings (non-blocking):", preflight.warnings);
       await pipelineLog(ctx, "release_preflight_warning",
         `Pre-flight warnings: ${preflight.warnings?.join(", ") || preflight.summary}`);
     }
 
-    // ═══ PHASE 1.5: Dependency Governance Agent ═══
-    await pipelineLog(ctx, "dep_governance_start",
-      "Dependency Governance Agent: verificando e atualizando dependências...");
-
+    // ═══ PHASE 1.5: Dependency Governance ═══
     try {
-      const pkgEntry = fileEntries.find((f) => f.path === "package.json");
+      const pkgEntry = fileEntries.find(f => f.path === "package.json");
       if (pkgEntry) {
         const { updatedContent, report } = await runDependencyGovernance(pkgEntry.content);
-        pkgEntry.content = updatedContent; // apply upgrades in-place before commit
-
+        pkgEntry.content = updatedContent;
         await pipelineLog(ctx, "dep_governance_result",
-          `${report.summary} | upgrades=${report.upgrades.length} deprecated=${report.deprecated.length} blocked=${report.blocked.length} risk=${report.risk} registry=${report.registry_consulted}`);
-
-        // Persist report for observability
-        if (report.upgrades.length > 0 || report.deprecated.length > 0 || report.blocked.length > 0) {
-          await updateInitiative(ctx, {
-            dep_governance_report: JSON.stringify({
-              upgrades: report.upgrades,
-              deprecated: report.deprecated,
-              blocked: report.blocked,
-              unresolved: report.unresolved,
-              risk: report.risk,
-              registry_consulted: report.registry_consulted,
-            }),
-          } as any);
-        }
-
-        // Block publish only for critical risk (blocked packages indicate compromised deps)
+          `${report.summary} | upgrades=${report.upgrades.length} deprecated=${report.deprecated.length} blocked=${report.blocked.length} risk=${report.risk}`);
         if (report.risk === "critical") {
-          throw new Error(
-            `Publicação bloqueada pelo Dependency Governance Agent: pacotes proibidos detectados — ${report.blocked.join(", ")}. ` +
-            `Remova essas dependências do código gerado e tente novamente.`
-          );
+          throw new Error(`Publicação bloqueada pelo Dependency Governance Agent: ${report.blocked.join(", ")}`);
         }
-      } else {
-        await pipelineLog(ctx, "dep_governance_skip", "package.json não encontrado nos artefatos — governança ignorada");
       }
     } catch (govErr) {
-      // Re-throw only if it was a deliberate governance block
       if (govErr instanceof Error && govErr.message.includes("Dependency Governance Agent")) throw govErr;
-      // Otherwise, governance failure is non-blocking — log and continue
-      console.error("[DEP-GOV] Non-fatal error during governance:", govErr);
-      await pipelineLog(ctx, "dep_governance_error",
-        `Dependency Governance Agent encontrou erro não-bloqueante: ${govErr instanceof Error ? govErr.message : String(govErr)}`);
+      console.error("[DEP-GOV] Non-fatal:", govErr);
     }
 
-    // ═══ PHASE 2: Changelog & Commit Messages (Release Agent) ═══
-    await pipelineLog(ctx, "release_changelog_start", "Release Agent: Gerando changelog e commits semânticos...");
+    // ═══ PHASE 2: Changelog ═══
+    await pipelineLog(ctx, "release_changelog_start", "Release Agent: Gerando changelog...");
 
     const changelogResult = await callAI(apiKey,
       `Você é o "Release Agent". Gere:
-1. Um CHANGELOG.md profissional em Markdown (Keep a Changelog format)
-2. Commit messages seguindo Conventional Commits (max 72 chars, inglês, imperativo)
-
+1. CHANGELOG.md (Keep a Changelog format)
+2. Commit messages (Conventional Commits, max 72 chars, inglês)
 Retorne APENAS JSON:
-{"changelog_md": "# Changelog\\n\\n## [1.0.0] - YYYY-MM-DD\\n...", "commit_messages": ["feat: add component X", ...], "version": "1.0.0", "release_title": "...", "release_notes": "..."}`,
-      `## Projeto: ${initiative.title}\n## Descrição: ${initiative.description || "N/A"}\n\n## Arquivos (${fileEntries.length}):\n${fileEntries.map((f, i) => `${i}. ${f.path} — ${f.summary}`).join("\n")}`,
+{"changelog_md": "...", "commit_messages": [...], "version": "1.0.0", "release_title": "...", "release_notes": "..."}`,
+      `## Projeto: ${initiative.title}\n## Arquivos (${fileEntries.length}):\n${fileEntries.map((f, i) => `${i}. ${f.path} — ${f.summary}`).join("\n")}`,
       true
     );
     totalTokens += changelogResult.tokens; totalCost += changelogResult.costUsd;
 
     let changelog: any;
     try { changelog = JSON.parse(changelogResult.content); }
-    catch { changelog = { changelog_md: `# Changelog\n\n## [1.0.0] - ${new Date().toISOString().split("T")[0]}\n\n### Added\n${fileEntries.map(f => `- ${f.summary}`).join("\n")}`, commit_messages: fileEntries.map(f => `feat: add ${f.path}`), version: "1.0.0", release_title: initiative.title, release_notes: "" }; }
+    catch { changelog = { changelog_md: `# Changelog\n\n## [1.0.0] - ${new Date().toISOString().split("T")[0]}\n\n### Added\n${fileEntries.map(f => `- ${f.summary}`).join("\n")}`, commit_messages: fileEntries.map(f => `feat: add ${f.path}`), version: "1.0.0", release_title: initiative.title }; }
 
-    // Add CHANGELOG.md to file entries
-    fileEntries.push({ path: "CHANGELOG.md", content: changelog.changelog_md || "", type: "content", summary: "Changelog gerado pelo Release Agent" });
+    fileEntries.push({ path: "CHANGELOG.md", content: changelog.changelog_md || "", type: "content", summary: "Changelog" });
 
-    // Add GitHub Actions CI workflow for runtime validation
     const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
     const ciWorkflow = generateCIWorkflow(supabaseUrl, ctx.initiativeId, ctx.organizationId);
-    fileEntries.push({ path: ".github/workflows/validate.yml", content: ciWorkflow, type: "config", summary: "CI: npm install + tsc + vite build" });
+    fileEntries.push({ path: ".github/workflows/validate.yml", content: ciWorkflow, type: "config", summary: "CI workflow" });
 
-    const commitMessages = changelog.commit_messages || [];
-
-    // ═══ PHASE 3: GitHub Push (Atomic via Tree API — overwrite existing repo) ═══
-    await pipelineLog(ctx, "release_push_start", `Release Agent: Publicando ${fileEntries.length} arquivos no repositório existente...`);
-
-    let actualOwner = resolvedOwner;
-    let actualRepo = resolvedRepo || repoSlug;
-    let repoHtmlUrl = `https://github.com/${actualOwner}/${actualRepo}`;
-
-    // Ensure repo exists — create only if it doesn't
-    const repoCheckResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}`, { headers: ghHeaders });
-    if (!repoCheckResp.ok) {
-      // Repo doesn't exist, create it
-      let createUrl = `${GITHUB_API}/user/repos`;
-      const createBody: any = { name: actualRepo, description: `${initiative.title} — Gerado pelo AxionOS`, private: false, auto_init: true };
-      const orgCheck = await fetch(`${GITHUB_API}/orgs/${actualOwner}`, { headers: ghHeaders });
-      if (orgCheck.ok) createUrl = `${GITHUB_API}/orgs/${actualOwner}/repos`;
-
-      const createRepoResp = await fetch(createUrl, { method: "POST", headers: ghHeaders, body: JSON.stringify(createBody) });
-      if (createRepoResp.ok) {
-        const repoData = await createRepoResp.json();
-        actualOwner = repoData.owner?.login || actualOwner;
-        actualRepo = repoData.name || actualRepo;
-        repoHtmlUrl = repoData.html_url;
-      } else {
-        const errData = await createRepoResp.json();
-        if (!errData.errors?.[0]?.message?.includes("name already exists")) {
-          throw new Error(`Falha ao criar repositório: ${errData.message}`);
-        }
-      }
-      await new Promise(r => setTimeout(r, 2000));
-    } else {
-      const repoData = await repoCheckResp.json();
-      repoHtmlUrl = repoData.html_url || repoHtmlUrl;
-    }
-
-    // Get base branch SHA
-    const refResp = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/ref/heads/${resolvedBaseBranch}`, { headers: ghHeaders });
-    if (!refResp.ok) {
-      // Branch doesn't exist — seed it
-      await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/contents/README.md`, {
-        method: "PUT", headers: ghHeaders,
-        body: JSON.stringify({ message: "Initial commit", content: btoa(`# ${initiative.title}\n\nGenerated by AxionOS`) }),
-      });
-      await new Promise(r => setTimeout(r, 1500));
-    }
-    const refResp2 = await fetch(`${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/ref/heads/${resolvedBaseBranch}`, { headers: ghHeaders });
-    if (!refResp2.ok) throw new Error(`Branch '${resolvedBaseBranch}' não encontrada após seed.`);
-    const refData = await refResp2.json();
-    const baseSha = refData.object.sha;
-
-    // ── Atomic Tree API: Create blobs → Build tree → Single commit ──
-    const committedFiles: string[] = [];
-    const skippedFiles: string[] = [];
-
-    // Combine all file entries + required files (ensure critical deploy files exist)
-    const criticalFiles = [
-      "vercel.json", "public/_redirects", "index.html", "vite.config.ts",
-      "tsconfig.json", "tsconfig.node.json", "tsconfig.app.json", "postcss.config.js",
-      "tailwind.config.js",
-    ];
+    // ── Ensure critical deploy files ──
+    const criticalFiles = ["vercel.json", "public/_redirects", "index.html", "vite.config.ts", "tsconfig.json", "tsconfig.node.json", "tsconfig.app.json", "postcss.config.js", "tailwind.config.js"];
     const requiredFiles: Record<string, string> = {};
     for (const f of criticalFiles) {
       if (DETERMINISTIC_FILES[f]) requiredFiles[f] = DETERMINISTIC_FILES[f];
     }
-    // Generate package.json if not in artifacts
     if (!fileEntries.some(f => f.path === "package.json")) {
       const defaultPkg = {
         name: repoSlug, version: changelog?.version || "1.0.0", type: "module",
         scripts: { dev: "vite", build: "vite build", preview: "vite preview" },
-        dependencies: {
-          "react": "^18.3.1", "react-dom": "^18.3.1", "react-router-dom": "^6.30.0",
-          "lucide-react": "^0.462.0", "tailwind-merge": "^2.6.0", "clsx": "^2.1.1",
-          "class-variance-authority": "^0.7.1",
-        },
-        devDependencies: {
-          "vite": "^5.4.19", "@vitejs/plugin-react-swc": "^3.11.0", "typescript": "^5.8.3",
-          "tailwindcss": "^3.4.17", "autoprefixer": "^10.4.21", "postcss": "^8.5.6",
-          "@types/react": "^18.3.23", "@types/react-dom": "^18.3.7",
-        },
+        dependencies: { "react": "^18.3.1", "react-dom": "^18.3.1", "react-router-dom": "^6.30.0", "lucide-react": "^0.462.0", "tailwind-merge": "^2.6.0", "clsx": "^2.1.1", "class-variance-authority": "^0.7.1" },
+        devDependencies: { "vite": "^5.4.19", "@vitejs/plugin-react-swc": "^3.11.0", "typescript": "^5.8.3", "tailwindcss": "^3.4.17", "autoprefixer": "^10.4.21", "postcss": "^8.5.6", "@types/react": "^18.3.23", "@types/react-dom": "^18.3.7" },
       };
       requiredFiles["package.json"] = sanitizePackageJson(JSON.stringify(defaultPkg, null, 2));
     }
@@ -587,142 +375,59 @@ Retorne APENAS JSON:
       }
     }
 
-    // Step 1: Create blobs for all files (parallel batches of 5)
-    const BLOB_BATCH = 5;
-    const treeItems: Array<{ path: string; mode: string; type: string; sha: string }> = [];
-
-    for (let i = 0; i < fileEntries.length; i += BLOB_BATCH) {
-      const batch = fileEntries.slice(i, i + BLOB_BATCH);
-      const blobResults = await Promise.allSettled(
-        batch.map(async (file) => {
-          const blobResp = await fetch(
-            `${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/blobs`,
-            {
-              method: "POST",
-              headers: ghHeaders,
-              body: JSON.stringify({
-                content: file.content,
-                encoding: "utf-8",
-              }),
-            }
-          );
-          if (!blobResp.ok) {
-            const errText = await blobResp.text();
-            throw new Error(`Blob creation failed for ${file.path}: ${errText}`);
-          }
-          const blobData = await blobResp.json();
-          return { path: file.path, sha: blobData.sha };
-        })
-      );
-
-      for (let j = 0; j < blobResults.length; j++) {
-        const result = blobResults[j];
-        const file = batch[j];
-        if (result.status === "fulfilled") {
-          treeItems.push({
-            path: result.value.path,
-            mode: "100644",
-            type: "blob",
-            sha: result.value.sha,
-          });
-          committedFiles.push(file.path);
-        } else {
-          console.error(`Blob failed for ${file.path}:`, result.reason);
-          skippedFiles.push(file.path);
-        }
-      }
+    // ★ CRITICAL: Sanitize all file paths before GitHub push
+    const { valid: sanitizedEntries, removed } = sanitizeFileEntries(fileEntries);
+    if (removed.length > 0) {
+      await pipelineLog(ctx, "path_sanitization", `Removidos ${removed.length} paths inválidos: ${removed.join(", ")}`);
     }
 
-    if (treeItems.length === 0) throw new Error("Nenhum blob criado — falha total");
+    // ═══ PHASE 3: GitHub Push (Atomic) ═══
+    await pipelineLog(ctx, "release_push_start", `Release Agent: Publicando ${sanitizedEntries.length} arquivos...`);
 
-    // Step 2: Create a NEW tree (no base_tree = overwrite/clean repo with only our files)
-    const treeResp = await fetch(
-      `${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/trees`,
-      {
-        method: "POST",
-        headers: ghHeaders,
-        body: JSON.stringify({
-          tree: treeItems,
-        }),
-      }
-    );
-    if (!treeResp.ok) {
-      const errText = await treeResp.text();
-      throw new Error(`Tree creation failed: ${errText}`);
-    }
-    const newTree = await treeResp.json();
-
-    // Step 3: Create a single atomic commit
-    const commitMessage = `feat: ${initiative.title} v${changelog.version || "1.0.0"}\n\n${
-      committedFiles.length} files generated by AxionOS Release Agent\n\n${
-      commitMessages.slice(0, 10).map((m: string) => `- ${m}`).join("\n")}`;
-
-    const commitResp = await fetch(
-      `${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/commits`,
-      {
-        method: "POST",
-        headers: ghHeaders,
-        body: JSON.stringify({
-          message: commitMessage,
-          tree: newTree.sha,
-          parents: [baseSha],
-        }),
-      }
-    );
-    if (!commitResp.ok) {
-      const errText = await commitResp.text();
-      throw new Error(`Commit creation failed: ${errText}`);
-    }
-    const newCommit = await commitResp.json();
-
-    // Step 4: Update branch reference to point to new commit
-    const updateRefResp = await fetch(
-      `${GITHUB_API}/repos/${actualOwner}/${actualRepo}/git/refs/heads/${resolvedBaseBranch}`,
-      {
-        method: "PATCH",
-        headers: ghHeaders,
-        body: JSON.stringify({ sha: newCommit.sha, force: true }),
-      }
-    );
-    if (!updateRefResp.ok) {
-      const errText = await updateRefResp.text();
-      throw new Error(`Ref update failed: ${errText}`);
-    }
+    const pushResult = await atomicGitHubPush({
+      ghHeaders,
+      owner: resolvedOwner,
+      repo: resolvedRepo || repoSlug,
+      baseBranch: resolvedBaseBranch,
+      initiativeTitle: initiative.title,
+      fileEntries: sanitizedEntries,
+      commitMessages: changelog.commit_messages || [],
+      version: changelog.version || "1.0.0",
+    });
 
     await pipelineLog(ctx, "release_atomic_commit",
-      `Atomic commit: ${committedFiles.length} arquivos em 1 commit (${newCommit.sha.slice(0, 7)})`);
+      `Atomic commit: ${pushResult.committedFiles.length} arquivos em 1 commit (${pushResult.commitSha.slice(0, 7)})`);
 
-    if (committedFiles.length === 0) throw new Error("Nenhum arquivo foi commitado com sucesso");
+    if (pushResult.committedFiles.length === 0) throw new Error("Nenhum arquivo foi commitado com sucesso");
 
-    // ═══ PHASE 3.5: Security matcher scan on all committed file contents ═══
-    const allContent = fileEntries.map(f => f.content).join("\n").slice(0, 20000);
+    // ═══ PHASE 3.5: Security scan ═══
+    const allContent = sanitizedEntries.map(f => f.content).join("\n").slice(0, 20000);
     const publishMatchInput: MatchInput = { status_code: 200, body: allContent };
     const publishSecReport = evaluateSecurityRules(PIPELINE_SECURITY_RULES, publishMatchInput);
     if (!publishSecReport.passed) {
       const logEntry = buildMatcherLogEntry("pipeline-publish", publishSecReport);
       await pipelineLog(ctx, "security_matcher_flagged",
-        `⚠️ Security matcher flagged publish artifacts: ${logEntry.matched_rule_ids.join(", ")}`,
+        `⚠️ Security matcher flagged: ${logEntry.matched_rule_ids.join(", ")}`,
         logEntry as unknown as Record<string, unknown>);
     }
 
-    // ═══ PHASE 4: Post-deploy Verification (Release Agent) ═══
+    // ═══ PHASE 4: Post-deploy Verification ═══
     await pipelineLog(ctx, "release_verify_start", "Release Agent: Verificando integridade pós-deploy...");
 
     const verifyResult = await callAI(apiKey,
       `Você é o "Release Agent" fazendo verificação pós-deploy. Analise o resultado da publicação.
 Retorne APENAS JSON:
 {"deploy_healthy": true/false, "files_verified": 0, "missing_critical": [], "recommendations": [], "summary": "...", "confidence": 0-100}`,
-      `## Repositório: ${actualOwner}/${actualRepo}\n## Branch: ${resolvedBaseBranch}\n\n## Arquivos commitados (${committedFiles.length}):\n${committedFiles.join("\n")}\n\n## Arquivos pulados (${skippedFiles.length}):\n${skippedFiles.join("\n") || "Nenhum"}\n\n## Pre-flight warnings:\n${(preflight.warnings || []).join("\n") || "Nenhum"}`,
+      `## Repositório: ${pushResult.actualOwner}/${pushResult.actualRepo}\n## Branch: ${resolvedBaseBranch}\n## Commitados (${pushResult.committedFiles.length}):\n${pushResult.committedFiles.join("\n")}\n## Pulados (${pushResult.skippedFiles.length}):\n${pushResult.skippedFiles.join("\n") || "Nenhum"}`,
       true
     );
     totalTokens += verifyResult.tokens; totalCost += verifyResult.costUsd;
 
     let verification: any;
     try { verification = JSON.parse(verifyResult.content); }
-    catch { verification = { deploy_healthy: true, files_verified: committedFiles.length, missing_critical: [], recommendations: [], summary: "OK", confidence: 80 }; }
+    catch { verification = { deploy_healthy: true, files_verified: pushResult.committedFiles.length, missing_critical: [], recommendations: [], summary: "OK", confidence: 80 }; }
 
-    await persistReview(serviceClient, artifacts[0].id, user.id, "release_verification", "approved",
-      JSON.stringify(verification));
+    await persistReview(serviceClient, artifacts[0].id, user.id, "release_verification", "approved", JSON.stringify(verification));
 
     // Save to knowledge base
     await serviceClient.from("org_knowledge_base").insert({
@@ -731,12 +436,12 @@ Retorne APENAS JSON:
       content: changelog.changelog_md || "",
       category: "release_notes",
       source_initiative_id: ctx.initiativeId,
-      tags: ["release", "changelog", actualRepo],
+      tags: ["release", "changelog", pushResult.actualRepo],
     });
 
-    // Update brain nodes to published
+    // Update brain nodes
     try {
-      for (const filePath of committedFiles.slice(0, 50)) {
+      for (const filePath of pushResult.committedFiles.slice(0, 50)) {
         const node = await getNodeByPath(ctx, filePath);
         if (node) await updateNodeStatus(ctx, node.id, "published");
       }
@@ -744,17 +449,17 @@ Retorne APENAS JSON:
 
     await updateInitiative(ctx, { stage_status: "published" });
 
-    // ═══ Sprint 206: Build & persist PublishConfirmation contract ═══
+    // ═══ Sprint 206: PublishConfirmation contract ═══
     const publishConfirmation: PublishConfirmation = {
       schema_version: "1.0",
       initiative_id: ctx.initiativeId,
-      repo_owner: actualOwner,
-      repo_name: actualRepo,
-      repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
+      repo_owner: pushResult.actualOwner,
+      repo_name: pushResult.actualRepo,
+      repo_url: `https://github.com/${pushResult.actualOwner}/${pushResult.actualRepo}`,
       branch: resolvedBaseBranch,
-      commit_sha: newCommit.sha,
-      files_committed: committedFiles.length,
-      skipped_files: skippedFiles,
+      commit_sha: pushResult.commitSha,
+      files_committed: pushResult.committedFiles.length,
+      skipped_files: pushResult.skippedFiles,
       preflight_pass: !!preflight.preflight_pass,
       preflight_risk: preflight.risk_level || "low",
       verification_healthy: !!verification.deploy_healthy,
@@ -767,32 +472,34 @@ Retorne APENAS JSON:
     };
 
     await updateInitiative(ctx, {
-      repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
-      commit_hash: newCommit.sha,
+      repo_url: `https://github.com/${pushResult.actualOwner}/${pushResult.actualRepo}`,
+      commit_hash: pushResult.commitSha,
       build_status: preflight.preflight_pass ? "pass" : "fail",
       deploy_status: "published",
       publish_confirmation: JSON.stringify(publishConfirmation),
     });
 
     if (jobId) await completeJob(ctx, jobId, {
-      branch: resolvedBaseBranch, files_committed: committedFiles.length,
-      owner: actualOwner, repo: actualRepo, version: changelog.version || "1.0.0",
-      repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
+      branch: resolvedBaseBranch, files_committed: pushResult.committedFiles.length,
+      owner: pushResult.actualOwner, repo: pushResult.actualRepo,
+      version: changelog.version || "1.0.0",
+      repo_url: pushResult.repoHtmlUrl,
       preflight: { pass: preflight.preflight_pass, risk: preflight.risk_level },
       verification: { healthy: verification.deploy_healthy, confidence: verification.confidence },
-      skipped_files: skippedFiles,
+      skipped_files: pushResult.skippedFiles,
       publish_confirmation: publishConfirmation,
     }, { model: "routed", costUsd: totalCost, durationMs: 0 });
 
     await pipelineLog(ctx, "pipeline_publish_complete",
-      `Release Agent: ${committedFiles.length} arquivos publicados em ${actualOwner}/${actualRepo} v${changelog.version || "1.0.0"} ✅`,
-      { branch: resolvedBaseBranch, repo: `${actualOwner}/${actualRepo}`, version: changelog.version });
+      `Release Agent: ${pushResult.committedFiles.length} arquivos publicados em ${pushResult.actualOwner}/${pushResult.actualRepo} v${changelog.version || "1.0.0"} ✅`);
 
     return jsonResponse({
-      success: true, branch: resolvedBaseBranch, files_committed: committedFiles.length,
-      skipped_files: skippedFiles, owner: actualOwner, repo: actualRepo,
+      success: true, branch: resolvedBaseBranch,
+      files_committed: pushResult.committedFiles.length,
+      skipped_files: pushResult.skippedFiles,
+      owner: pushResult.actualOwner, repo: pushResult.actualRepo,
       version: changelog.version || "1.0.0",
-      repo_url: `https://github.com/${actualOwner}/${actualRepo}`,
+      repo_url: pushResult.repoHtmlUrl,
       preflight_pass: preflight.preflight_pass,
       deploy_healthy: verification.deploy_healthy,
       job_id: jobId,
@@ -803,92 +510,3 @@ Retorne APENAS JSON:
     return errorResponse(e instanceof Error ? e.message : "Unknown error");
   }
 });
-
-// ── Helpers ──
-
-async function persistReview(client: any, outputId: string, userId: string, action: string, prevStatus: string, comment: string) {
-  await client.from("artifact_reviews").insert({
-    output_id: outputId,
-    reviewer_id: userId,
-    action,
-    previous_status: prevStatus,
-    new_status: prevStatus,
-    comment,
-  });
-}
-
-function generateCIWorkflow(supabaseUrl: string, initiativeId: string, organizationId: string): string {
-  const webhookUrl = `${supabaseUrl}/functions/v1/pipeline-ci-webhook`;
-  return `name: AxionOS Validate
-
-on:
-  push:
-    branches: [main, master]
-
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        id: install
-        run: npm install --legacy-peer-deps 2>&1 | tee /tmp/install.log
-        continue-on-error: true
-
-      - name: TypeScript check
-        id: typecheck
-        if: steps.install.outcome == 'success'
-        run: npx tsc --noEmit 2>&1 | tee /tmp/tsc.log
-        continue-on-error: true
-
-      - name: Build
-        id: build
-        if: steps.typecheck.outcome == 'success'
-        run: npx vite build 2>&1 | tee /tmp/build.log
-        continue-on-error: true
-
-      - name: Parse errors and notify
-        if: always()
-        env:
-          WEBHOOK_SECRET: \${{ secrets.SYNKRAIOS_WEBHOOK_SECRET }}
-        run: |
-          STATUS="success"
-          ERRORS="[]"
-          BUILD_LOG=""
-
-          if [ "\${{ steps.install.outcome }}" != "success" ]; then
-            STATUS="failure"
-            BUILD_LOG=$(cat /tmp/install.log 2>/dev/null | tail -50)
-            ERRORS=$(echo "$BUILD_LOG" | grep -i "ERR\\!" | head -10 | jq -R -s 'split("\\n") | map(select(length > 0)) | map({file: "package.json", line: null, column: null, message: ., category: "dependency"})' 2>/dev/null || echo "[]")
-          elif [ "\${{ steps.typecheck.outcome }}" != "success" ]; then
-            STATUS="failure"
-            BUILD_LOG=$(cat /tmp/tsc.log 2>/dev/null | tail -100)
-            ERRORS=$(echo "$BUILD_LOG" | grep -E "^src/" | head -20 | sed 's/\\(\\([0-9]*\\),[0-9]*\\)/|\\1|/' | awk -F'|' '{print "{\\"file\\": \\""$1"\\", \\"line\\": "$2", \\"column\\": null, \\"message\\": \\""$3"\\", \\"category\\": \\"typescript\\"}"}' | jq -s '.' 2>/dev/null || echo "[]")
-          elif [ "\${{ steps.build.outcome }}" != "success" ]; then
-            STATUS="failure"
-            BUILD_LOG=$(cat /tmp/build.log 2>/dev/null | tail -50)
-            ERRORS=$(echo "$BUILD_LOG" | grep -i "error" | head -10 | jq -R -s 'split("\\n") | map(select(length > 0)) | map({file: "vite.config.ts", line: null, column: null, message: ., category: "build"})' 2>/dev/null || echo "[]")
-          fi
-
-          curl -s -X POST "${webhookUrl}" \\
-            -H "Authorization: Bearer $WEBHOOK_SECRET" \\
-            -H "Content-Type: application/json" \\
-            -d "{
-              \\"initiative_id\\": \\"${initiativeId}\\",
-              \\"organization_id\\": \\"${organizationId}\\",
-              \\"status\\": \\"$STATUS\\",
-              \\"errors\\": $ERRORS,
-              \\"build_log\\": $(echo "$BUILD_LOG" | jq -R -s '.'),
-              \\"duration_ms\\": 0,
-              \\"repo_owner\\": \\"\${{ github.repository_owner }}\\",
-              \\"repo_name\\": \\"\${{ github.event.repository.name }}\\",
-              \\"run_id\\": \\"\${{ github.run_id }}\\",
-              \\"commit_sha\\": \\"\${{ github.sha }}\\"
-            }"
-`;
-}
