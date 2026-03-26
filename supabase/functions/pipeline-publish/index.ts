@@ -378,7 +378,7 @@ Retorne APENAS JSON:
     // ★ CRITICAL: Sanitize all file paths before GitHub push
     const { valid: sanitizedEntries, removed } = sanitizeFileEntries(fileEntries);
     if (removed.length > 0) {
-      await pipelineLog(ctx, "path_sanitization", `Removidos ${removed.length} paths inválidos: ${removed.join(", ")}`);
+      await pipelineLog(ctx, "path_sanitization", `Removidos ${removed.length} paths inválidos ou conflitantes: ${removed.join(", ")}`);
     }
 
     // ═══ PHASE 3: GitHub Push (Atomic) ═══
