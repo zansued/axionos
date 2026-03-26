@@ -72,6 +72,7 @@ The system's moat emerges from accumulated runtime evidence, canonized learning,
 | AP | 193–200 | Security Hardening & Canon Integrity |
 | AQ – AR | 201–202 | Operational Adjustments, Review Authority Consolidation |
 | AS | 203–207 | Canon Intelligence Hub Full Operational Activation |
+| AT | 72–74 | Edge Function Modernization: esm.sh→npm:, deno.land→native Deno.serve(), CI Governance |
 
 *(For deep architectural breakdown, see `docs/ARCHITECTURE.md`)*
 
