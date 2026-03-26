@@ -48,7 +48,7 @@ The system's moat emerges from accumulated runtime evidence, canonized learning,
 
 ## Maturity & Roadmap
 
-**Current Mode:** Governed Adaptive Organism with Fully Operational Canon Intelligence Hub / 207 Sprints Complete
+**Current Mode:** Governed Adaptive Organism with Fully Operational Canon Intelligence Hub / 207 Sprints Complete + Edge Function Modernization (Sprints 72-74)
 
 | Level | Name | Status |
 |-------|------|--------|
