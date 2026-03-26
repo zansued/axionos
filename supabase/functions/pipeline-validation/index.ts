@@ -461,7 +461,7 @@ Fix ALL issues. Return the COMPLETE corrected artifact, no markdown wrapping.
 CRITICAL RULES for Supabase Edge Functions:
 - Import Supabase: import { createClient } from "npm:@supabase/supabase-js@2"
 - Do NOT create custom SupabaseClient interfaces — use the SDK types directly
-- Use serve() from "https://deno.land/std@0.168.0/http/server.ts"
+- Use Deno.serve() (native, no import needed)
 - Use Deno.env.get() for environment variables
 - CORS headers must include: authorization, x-client-info, apikey, content-type`,
       `## Artifact (score: ${combinedScore}/100)\n${currentText.slice(0, 4500)}\n\n## Issues\n${allIssues}${projectTypeContext ? `\n\n## Project Context\n${projectTypeContext.slice(0, 1500)}` : ""}\n\nReturn the COMPLETE corrected output.`

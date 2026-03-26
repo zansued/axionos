@@ -255,7 +255,7 @@ Seja técnico e preciso. Foque em ESPECIFICAÇÃO, não implementação.`,
         const backendRules = isBackend ? `\nREGRAS BACKEND OBRIGATÓRIAS:
 - schema (.sql): CREATE TABLE IF NOT EXISTS + RLS + prefixo de tabelas do projeto
 - edge_function: Deno/TS com CORS headers e auth
-  * USAR: Deno.Deno.serve(async (req) => { ... }) — NÃO usar import serve de deno.land/std
+  * USAR: Deno.serve(async (req) => { ... }) — API nativa, sem imports externos
   * USAR: import { createClient } from "npm:@supabase/supabase-js@2" — NÃO definir interfaces SupabaseClient custom
   * USAR: Deno.env.get() para variáveis de ambiente
   * CORS: const corsHeaders = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version" }

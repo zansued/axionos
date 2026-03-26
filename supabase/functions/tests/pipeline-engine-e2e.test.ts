@@ -5,7 +5,7 @@
  * and dependency auto-fix work correctly together.
  */
 
-import { assertEquals, assertStringIncludes, assert } from "https://deno.land/std@0.224.0/assert/mod.ts";
+import { assertEquals, assertStringIncludes, assert } from "jsr:@std/assert@0.224";
 
 // Import modules under test
 import { validateFileImports, sanitizePackageJson, autoFixMissingDependencies } from "../_shared/code-sanitizers.ts";
