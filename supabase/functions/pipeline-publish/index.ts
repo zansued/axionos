@@ -3,7 +3,7 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, autoFixMissingDependencies, FORBIDDEN_RUNTIME_PACKAGES } from "../_shared/code-sanitizers.ts";
+import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, autoFixMissingDependencies, FORBIDDEN_RUNTIME_PACKAGES, findBrokenRelativeImports } from "../_shared/code-sanitizers.ts";
 import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 import { runDependencyGovernance } from "../_shared/dependency-governance.ts";
 import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
