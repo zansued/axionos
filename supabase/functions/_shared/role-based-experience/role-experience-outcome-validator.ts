@@ -1,7 +1,7 @@
 // Role Experience Outcome Validator
 // Tracks expected vs realized outcomes of role-based experience decisions.
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 import { RoleName } from "./role-experience-model-manager.ts";
 import { computeQualityMetrics } from "./role-experience-quality-analyzer.ts";
 

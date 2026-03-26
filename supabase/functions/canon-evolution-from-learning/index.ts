@@ -1,5 +1,5 @@
 // Using built-in Deno.serve
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { generateProposalsFromSignals } from "../_shared/canon-evolution/canon-evolution-proposal-generator.ts";
 import { aggregateSignals, filterWeakGroups } from "../_shared/canon-evolution/canon-evolution-aggregation.ts";
 import { routeProposal, summarizeProposals } from "../_shared/canon-evolution/canon-evolution-routing.ts";

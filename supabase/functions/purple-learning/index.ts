@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { synthesizeLearning } from "../_shared/purple-learning/purple-learning-synthesizer.ts";
 import { buildPattern } from "../_shared/purple-learning/security-pattern-builder.ts";
 import { detectAntiPatterns } from "../_shared/purple-learning/security-anti-pattern-detector.ts";

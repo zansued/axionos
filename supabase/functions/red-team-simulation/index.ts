@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { runScenario } from "../_shared/red-team/red-team-scenario-runner.ts";
 import { validateSandbox, getDefaultSandboxConfig } from "../_shared/red-team/adversarial-sandbox-engine.ts";
 import { computeFragilityScore } from "../_shared/red-team/fragility-scorer.ts";

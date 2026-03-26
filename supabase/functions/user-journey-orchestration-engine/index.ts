@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { mapInternalStageToVisible, calculateJourneyProgress, getDefaultJourneyModel } from "../_shared/user-journey-orchestration/user-journey-model-manager.ts";
 import { computeJourneyInstanceState } from "../_shared/user-journey-orchestration/user-journey-instance-orchestrator.ts";
 import { evaluateTransition, getBlockedTransitions } from "../_shared/user-journey-orchestration/journey-transition-engine.ts";

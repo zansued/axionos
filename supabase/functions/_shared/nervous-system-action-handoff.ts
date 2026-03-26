@@ -22,7 +22,7 @@
  *   - Full traceability: ns_event_id, ns_decision_id, ns_surfaced_item_id, ns_signal_group_id
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 // ═══════════════════════════════════════════════════
 // Constants

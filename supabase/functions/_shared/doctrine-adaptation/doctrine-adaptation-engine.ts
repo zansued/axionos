@@ -4,7 +4,7 @@
  * compatible, adapted, conflicting, or blocked.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 import { DoctrineRecord } from "./doctrine-core-loader.ts";
 import { ContextProfile } from "./context-doctrine-mapper.ts";
 

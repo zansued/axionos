@@ -7,7 +7,7 @@
  * - Query for import validation
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export interface ManifestEntry {
   file_path: string;

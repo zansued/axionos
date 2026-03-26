@@ -1,7 +1,7 @@
 // Sprint 69 — Onboarding, Templates & Vertical Starters Engine
 // Edge function providing overview, template management, vertical starters, recommendations, and onboarding outcomes.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { getDefaultOnboardingFlow, evaluateOnboardingClarity, buildOnboardingFlowsOverview } from "../_shared/onboarding-templates-vertical-starters/onboarding-flow-manager.ts";
 import { getBuiltInTemplates, findBestTemplate } from "../_shared/onboarding-templates-vertical-starters/initiative-template-library.ts";
 import { getBuiltInVerticals, recommendVertical } from "../_shared/onboarding-templates-vertical-starters/vertical-starter-library.ts";

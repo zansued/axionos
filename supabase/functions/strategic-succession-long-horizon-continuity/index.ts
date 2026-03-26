@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 import { categorizeRoles } from "../_shared/strategic-succession/critical-role-mapper.ts";
 import { detectKnowledgeConcentration } from "../_shared/strategic-succession/knowledge-concentration-detector.ts";

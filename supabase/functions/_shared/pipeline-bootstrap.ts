@@ -1,7 +1,7 @@
 // Shared bootstrap for all pipeline stage functions
 // Handles: CORS, auth, rate limiting, initiative fetch, context creation
 
-import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient, SupabaseClient } from "npm:@supabase/supabase-js@2";
 import { checkRateLimit } from "./rate-limit.ts";
 import { corsHeaders, handleCors, jsonResponse, errorResponse, notFoundOrForbiddenResponse } from "./cors.ts";
 import { PipelineContext } from "./pipeline-helpers.ts";

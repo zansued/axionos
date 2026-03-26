@@ -7,7 +7,7 @@
  * No LLM. No autonomous recalibration. Feedback records only.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 // ═══════════════════════════════════════════════════
 // Constants

@@ -4,7 +4,7 @@
  * and calculates drift_risk_score.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 import { AdaptationResult } from "./doctrine-adaptation-engine.ts";
 
 export interface DriftEvent {

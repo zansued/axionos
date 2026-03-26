@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2';
 import { computeDoctrineProfile, computeDivergence } from '../_shared/tenant-doctrine/tenant-doctrine-profiler.ts';
 import { detectDivergence } from '../_shared/tenant-doctrine/doctrine-divergence-detector.ts';
 import { applyAdjustments } from '../_shared/tenant-doctrine/operating-profile-adjuster.ts';

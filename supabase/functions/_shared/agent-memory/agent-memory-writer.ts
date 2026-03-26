@@ -5,7 +5,7 @@
  * All writes are auditable and preserve lineage.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export interface MemoryWriteInput {
   organization_id: string;

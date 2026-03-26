@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { filterPolicyRelevantSignals, aggregatePolicySignals, filterWeakPolicyGroups } from "../_shared/policy-tuning/policy-tuning-aggregation.ts";
 import { generatePolicyTuningProposals, downgradeWeakProposals } from "../_shared/policy-tuning/policy-tuning-proposal-generator.ts";
 import { validateReviewTransition } from "../_shared/policy-tuning/policy-tuning-proposal-types.ts";

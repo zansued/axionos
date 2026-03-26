@@ -5,7 +5,7 @@
  * SAFETY: Read-only. Non-blocking. Degrades gracefully.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export interface AgentMemoryContext {
   agent_type: string;

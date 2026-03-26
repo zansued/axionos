@@ -16,7 +16,7 @@
  * - NS-06: Learning feedback will close the loop.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 // ═══════════════════════════════════════════════════
 // Allowed Enums (backend-enforced, not just frontend types)

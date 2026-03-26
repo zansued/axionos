@@ -1,7 +1,7 @@
 // Adoption Outcome Validator
 // Tracks whether customer-success recommendations improved actual adoption outcomes.
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export interface AdoptionOutcome {
   initiative_id: string | null;

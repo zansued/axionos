@@ -1,7 +1,7 @@
 // Repair Evidence Recorder — AxionOS Sprint 6
 // Wraps existing repair flows with structured evidence persistence.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import {
   computeErrorSignature,
   type ErrorCategory,

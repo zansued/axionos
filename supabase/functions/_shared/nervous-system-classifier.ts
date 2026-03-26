@@ -15,7 +15,7 @@
  * - NS-06: Learning feedback will refine scores based on action outcomes.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 // ═══════════════════════════════════════════════════
 // Classification Rules (deterministic, rule-based)

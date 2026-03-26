@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { buildRetrievalFilters, defaultRetrievalQuery } from "../_shared/canon-runtime/canon-runtime-retriever.ts";
 import { buildCanonContext } from "../_shared/canon-runtime/canon-context-builder.ts";
 import { rankEntries } from "../_shared/canon-runtime/canon-applicability-ranker.ts";

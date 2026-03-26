@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { runReflectiveValidation } from "../_shared/reflexive-governance/reflective-validation-runner.ts";
 import { explainRevisionAudit } from "../_shared/reflexive-governance/reflective-audit-explainer.ts";
 

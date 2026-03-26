@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { detect, DETECTION_CATEGORIES } from "../_shared/blue-team/blue-team-detector.ts";
 import { correlateAlerts } from "../_shared/blue-team/anomaly-correlator.ts";
 import { getPlaybookActions } from "../_shared/blue-team/response-playbook-engine.ts";

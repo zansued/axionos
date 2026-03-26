@@ -1,6 +1,6 @@
 // Execution Policy Engine — AxionOS Sprint 27 (Auth hardened Sprint 197)
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { classifyExecutionContext } from "../_shared/execution-policy/execution-context-classifier.ts";
 import { selectExecutionPolicy } from "../_shared/execution-policy/execution-policy-selector.ts";
 import { computeFeedbackAction } from "../_shared/execution-policy/execution-policy-feedback.ts";

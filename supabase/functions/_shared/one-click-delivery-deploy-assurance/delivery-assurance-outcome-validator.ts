@@ -1,7 +1,7 @@
 // Delivery Assurance Outcome Validator
 // Tracks whether one-click delivery posture matched realized outcomes.
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export interface DeliveryOutcome {
   initiative_id: string;
