@@ -267,6 +267,51 @@ export default App`,
   };
 }
 
+/**
+ * Validates that relative imports in a source file resolve against the set of
+ * files being published. Returns the list of unresolvable imports.
+ */
+export function findBrokenRelativeImports(
+  filePath: string,
+  content: string,
+  allPaths: Set<string>,
+): string[] {
+  const dir = filePath.includes("/") ? filePath.substring(0, filePath.lastIndexOf("/")) : ".";
+  const importRe = /(?:import|from)\s+["'](\.[^"']+)["']/g;
+  const broken: string[] = [];
+  let m: RegExpExecArray | null;
+  while ((m = importRe.exec(content)) !== null) {
+    const spec = m[1];
+    // Resolve relative to the file's directory
+    const resolved = spec.startsWith("./")
+      ? `${dir}/${spec.slice(2)}`
+      : spec.startsWith("../")
+        ? resolveParent(dir, spec)
+        : `${dir}/${spec}`;
+
+    // Check with and without common extensions
+    const candidates = [resolved];
+    if (!/\.\w+$/.test(resolved)) {
+      for (const ext of [".tsx", ".ts", ".jsx", ".js", ".css"]) candidates.push(resolved + ext);
+      candidates.push(resolved + "/index.tsx", resolved + "/index.ts");
+    }
+    if (!candidates.some(c => allPaths.has(c))) {
+      broken.push(spec);
+    }
+  }
+  return broken;
+}
+
+function resolveParent(dir: string, spec: string): string {
+  const parts = dir.split("/");
+  let s = spec;
+  while (s.startsWith("../")) {
+    parts.pop();
+    s = s.slice(3);
+  }
+  return [...parts, s].join("/");
+}
+
 /** Get post-processors map for generated files */
 export function getPostProcessors(): Record<string, (content: string) => string> {
   return {
