@@ -48,7 +48,7 @@ The system's moat emerges from accumulated runtime evidence, canonized learning,
 
 ## Maturity & Roadmap
 
-**Current Mode:** Governed Adaptive Organism with Fully Operational Canon Intelligence Hub / 207 Sprints Complete
+**Current Mode:** Governed Adaptive Organism with Fully Operational Canon Intelligence Hub / 207 Sprints Complete + Edge Function Modernization (Sprints 72-74)
 
 | Level | Name | Status |
 |-------|------|--------|
@@ -72,6 +72,7 @@ The system's moat emerges from accumulated runtime evidence, canonized learning,
 | AP | 193–200 | Security Hardening & Canon Integrity |
 | AQ – AR | 201–202 | Operational Adjustments, Review Authority Consolidation |
 | AS | 203–207 | Canon Intelligence Hub Full Operational Activation |
+| AT | 72–74 | Edge Function Modernization: esm.sh→npm:, deno.land→native Deno.serve(), CI Governance |
 
 *(For deep architectural breakdown, see `docs/ARCHITECTURE.md`)*
 
@@ -112,7 +113,7 @@ No layer may assume the responsibilities of another.
 
 ## System Architecture
 
-AxionOS runs atop Supabase Edge Functions in a Deno runtime. Each of the 32 pipeline stages is deployed independently. The platform comprises 200+ Edge Functions and 100+ architectural layers. 207 sprints complete across blocks Foundation through AS.
+AxionOS runs atop Supabase Edge Functions in a Deno runtime. Each of the 32 pipeline stages is deployed independently. The platform comprises 200+ Edge Functions and 100+ architectural layers. 207+ sprints complete across blocks Foundation through AT. All Edge Functions use native `Deno.serve()` and `npm:`/`jsr:` imports (zero external CDN dependencies).
 
 **Four Architectural Surfaces:**
 
