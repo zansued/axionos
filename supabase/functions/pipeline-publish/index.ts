@@ -3,7 +3,7 @@ import { bootstrapPipeline } from "../_shared/pipeline-bootstrap.ts";
 import { jsonResponse, errorResponse } from "../_shared/cors.ts";
 import { callAI } from "../_shared/ai-client.ts";
 import { pipelineLog, updateInitiative, createJob, completeJob, failJob } from "../_shared/pipeline-helpers.ts";
-import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, autoFixMissingDependencies, FORBIDDEN_RUNTIME_PACKAGES } from "../_shared/code-sanitizers.ts";
+import { sanitizePackageJson, DETERMINISTIC_FILES, detectMissingDependencies, autoFixMissingDependencies, FORBIDDEN_RUNTIME_PACKAGES, findBrokenRelativeImports } from "../_shared/code-sanitizers.ts";
 import { updateNodeStatus, getNodeByPath } from "../_shared/brain-helpers.ts";
 import { runDependencyGovernance } from "../_shared/dependency-governance.ts";
 import { evaluateSecurityRules, PIPELINE_SECURITY_RULES, buildMatcherLogEntry, type MatchInput } from "../_shared/contracts/security-matcher.schema.ts";
@@ -249,6 +249,22 @@ serve(async (req) => {
       if (!existingPaths.has(sp) && DETERMINISTIC_FILES[sp]) {
         fileEntries.push({ path: sp, content: DETERMINISTIC_FILES[sp], type: "scaffold", summary: `Auto-injected: ${sp}` });
         existingPaths.add(sp);
+      }
+    }
+
+    // ── Import Integrity Check: replace source files with broken imports ──
+    const allPublishedPaths = new Set(fileEntries.map(f => f.path));
+    const SOURCE_CHECK_FILES = ["src/main.tsx", "src/App.tsx"];
+    for (const srcFile of SOURCE_CHECK_FILES) {
+      const entry = fileEntries.find(f => f.path === srcFile);
+      if (entry && DETERMINISTIC_FILES[srcFile]) {
+        const broken = findBrokenRelativeImports(srcFile, entry.content, allPublishedPaths);
+        if (broken.length > 0) {
+          await pipelineLog(ctx, "import_integrity_fix",
+            `${srcFile} tem imports quebrados (${broken.join(", ")}). Substituindo por scaffold seguro.`);
+          entry.content = DETERMINISTIC_FILES[srcFile];
+          entry.type = "scaffold_fallback";
+        }
       }
     }
 
