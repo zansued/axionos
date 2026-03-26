@@ -1,29 +1,31 @@
+# AxionOS — Current Plan
 
+## Last Completed: Sprint 74 (Block AT)
 
-# Sprint Fix — Node.js Version Alignment (24.x → 20.x)
+### Block AT — Edge Function Modernization (Sprints 72–74)
 
-## Problem
-The system has a contradiction: AI prompts instruct `engines.node: "20.x"`, but the sanitizer overwrites it to `"24.x"`. Vercel does not support Node 24, causing build failures.
+| Sprint | Focus | Status |
+|--------|-------|--------|
+| 72 | Migrate all `esm.sh` imports to `npm:` specifiers | ✅ Done |
+| 73 | Migrate `deno.land/x` and `deno.land/std` to native `Deno.serve()` + `npm:`/`jsr:` | ✅ Done |
+| 74 | CI governance & linting to prevent CDN/legacy regressions | ✅ Done |
 
-## Changes (4 files)
+### Key Artifacts
+- `supabase/functions/_shared/edge-import-governance.ts` — programmatic import validator
+- `scripts/lint-edge-imports.sh` — CLI linter (0 violations confirmed)
+- All 225+ Edge Functions use `npm:@supabase/supabase-js@2` and native `Deno.serve()`
 
-### 1. `supabase/functions/_shared/code-sanitizers.ts`
-- Line 147: `node: "24.x"` → `node: "20.x"`
-- Line 186: `.nvmrc: "24"` → `.nvmrc: "20"`
-- Line 187: `.node-version: "24"` → `.node-version: "20"`
+---
 
-### 2. `supabase/functions/_shared/prompt-guardrails.ts`
-- Line 60: `Use Node.js engines "24.x"` → `Use Node.js engines "20.x"`
+## Next Steps (Planned)
 
-### 3. `scripts/pre-install.js`
-- Line 5: `node: '24.x'` → `node: '20.x'`
+### Sprints 75–78 — Advanced Multi-Agent Coordination (Reserved)
+### Sprints 79–82 — Governed Capability Ecosystem & Early Marketplace (Reserved)
+### Sprints 83–86 — Autonomous Delivery Optimization & Outcome Assurance 2.0 (Reserved)
+### Sprints 87–90 — Advanced Distributed Runtime & Scaled Execution (Reserved)
+### Sprints 91–94 — Research Sandbox for Architecture Evolution (Reserved)
 
-### 4. `supabase/functions/_shared/canonical-deps.ts`
-- Update the `engines` comment/reference if present (already checked — no `engines` entry in canonical deps, so no change needed here).
+---
 
-### Post-Change
-- Deploy edge functions that import `code-sanitizers.ts` and `prompt-guardrails.ts` (at minimum: `run-initiative-pipeline`, `pipeline-execution-worker`, `pipeline-build-check`, `pipeline-publish`).
-
-### Impact
-All generated projects will now target Node 20.x across `package.json`, `.nvmrc`, `.node-version`, prompt instructions, and the local pre-install script — fully aligned with Vercel's supported runtime.
-
+## Known Issues
+- `pipeline-publish`: GitHub tree creation fails when paths end with `/` — needs path sanitization in tree builder.

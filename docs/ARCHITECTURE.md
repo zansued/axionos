@@ -2,9 +2,9 @@
 
 > Technical architecture of the autonomous software engineering system.
 >
-> **Last updated:** 2026-03-14
-> **Current state:** Level 18 -- Security-Hardened Governed Adaptive Organism. 200 sprints complete. All blocks (Foundation through AP).
-> **Completed blocks:** Foundation through AP (Sprints 1--200)
+> **Last updated:** 2026-03-26
+> **Current state:** Level 18 -- Security-Hardened Governed Adaptive Organism. 207 sprints complete. All blocks (Foundation through AS). Edge Functions fully modernized (native Deno.serve, npm:/jsr: imports, CI governance).
+> **Completed blocks:** Foundation through AS (Sprints 1--207)
 > **Sprint details:** See `docs/registry/sprints.yml`
 
 ## Document Authority

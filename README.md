@@ -113,7 +113,7 @@ No layer may assume the responsibilities of another.
 
 ## System Architecture
 
-AxionOS runs atop Supabase Edge Functions in a Deno runtime. Each of the 32 pipeline stages is deployed independently. The platform comprises 200+ Edge Functions and 100+ architectural layers. 207 sprints complete across blocks Foundation through AS.
+AxionOS runs atop Supabase Edge Functions in a Deno runtime. Each of the 32 pipeline stages is deployed independently. The platform comprises 200+ Edge Functions and 100+ architectural layers. 207+ sprints complete across blocks Foundation through AT. All Edge Functions use native `Deno.serve()` and `npm:`/`jsr:` imports (zero external CDN dependencies).
 
 **Four Architectural Surfaces:**
 
