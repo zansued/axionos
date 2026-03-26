@@ -41,15 +41,51 @@ export interface FileEntry {
  * - Removes trailing slashes (GitHub rejects them with 422)
  * - Removes leading slashes
  * - Collapses double slashes
- * - Trims whitespace
+ * - Normalizes backslashes
+ * - Rejects empty / dot-segment-only paths
  */
 export function sanitizeTreePath(filePath: string): string {
-  return filePath
+  const cleaned = filePath
     .trim()
-    .replace(/\\/+/g, "/")   // normalize backslashes
-    .replace(/\/+/g, "/")    // collapse double slashes
-    .replace(/^\//, "")      // remove leading slash
-    .replace(/\/$/, "");     // remove trailing slash
+    .replace(/\\+/g, "/")
+    .replace(/\/+/g, "/")
+    .replace(/^\/+|\/+$/g, "");
+
+  if (!cleaned || cleaned === "." || cleaned === "..") return "";
+
+  const segments = cleaned.split("/").filter(Boolean);
+  if (segments.length === 0 || segments.some((segment) => segment === "." || segment === "..")) {
+    return "";
+  }
+
+  return segments.join("/");
+}
+
+export interface GitTreeItem {
+  path: string;
+  mode: string;
+  type: string;
+  sha: string;
+}
+
+/**
+ * Final guard before calling the GitHub Tree API.
+ * Sanitizes and deduplicates tree items so no invalid `tree.path` reaches GitHub.
+ */
+export function sanitizeGitTreeItems(items: GitTreeItem[]): { valid: GitTreeItem[]; removed: string[] } {
+  const removed: string[] = [];
+  const pathMap = new Map<string, GitTreeItem>();
+
+  for (const item of items) {
+    const cleanedPath = sanitizeTreePath(item.path);
+    if (!cleanedPath) {
+      removed.push(item.path);
+      continue;
+    }
+    pathMap.set(cleanedPath, { ...item, path: cleanedPath });
+  }
+
+  return { valid: [...pathMap.values()], removed };
 }
 
 /**
@@ -57,21 +93,15 @@ export function sanitizeTreePath(filePath: string): string {
  */
 export function sanitizeFileEntries(entries: FileEntry[]): { valid: FileEntry[]; removed: string[] } {
   const removed: string[] = [];
-  const valid: FileEntry[] = [];
+  const pathMap = new Map<string, FileEntry>();
 
   for (const entry of entries) {
     const cleaned = sanitizeTreePath(entry.path);
-    if (!cleaned || cleaned === "." || cleaned === "..") {
+    if (!cleaned) {
       removed.push(entry.path);
       continue;
     }
-    valid.push({ ...entry, path: cleaned });
-  }
-
-  // Deduplicate by path (keep last occurrence)
-  const pathMap = new Map<string, FileEntry>();
-  for (const v of valid) {
-    pathMap.set(v.path, v);
+    pathMap.set(cleaned, { ...entry, path: cleaned });
   }
 
   return { valid: [...pathMap.values()], removed };
@@ -154,7 +184,7 @@ jobs:
           elif [ "\${{ steps.typecheck.outcome }}" != "success" ]; then
             STATUS="failure"
             BUILD_LOG=$(cat /tmp/tsc.log 2>/dev/null | tail -100)
-            ERRORS=$(echo "$BUILD_LOG" | grep -E "^src/" | head -20 | sed 's/\(([0-9]*\),[0-9]*\)/|\1|/' | awk -F'|' '{print "{\"file\": \""$1"\", \"line\": "$2", \"column\": null, \"message\": \""$3"\", \"category\": \"typescript\"}"}' | jq -s '.' 2>/dev/null || echo "[]")
+            ERRORS=$(echo "$BUILD_LOG" | grep -E "^src/" | head -20 | jq -R -s 'split("\n") | map(select(length > 0)) | map({file: "tsc", line: null, column: null, message: ., category: "typescript"})' 2>/dev/null || echo "[]")
           elif [ "\${{ steps.build.outcome }}" != "success" ]; then
             STATUS="failure"
             BUILD_LOG=$(cat /tmp/build.log 2>/dev/null | tail -50)
