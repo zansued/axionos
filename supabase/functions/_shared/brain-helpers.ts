@@ -1,7 +1,7 @@
 // Project Brain shared helpers for pipeline stages
 // Provides functions to read/write nodes, edges, decisions, and errors
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 import { PipelineContext } from "./pipeline-helpers.ts";
 
 export type NodeType = "file" | "component" | "hook" | "service" | "api" | "table" | "type" | "schema" | "edge_function" | "page" | "context" | "util";

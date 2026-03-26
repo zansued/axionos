@@ -9,7 +9,7 @@
  * IMPORTANT: All queries are org-scoped to prevent cross-tenant data leakage.
  */
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 export interface UsageLimitCheck {
   allowed: boolean;

@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { explainAdoptionPosture } from "../_shared/adoption-intelligence-customer-success/adoption-intelligence-explainer.ts";
 import { getDefaultAdoptionModel, computeMilestoneCompletionScore } from "../_shared/adoption-intelligence-customer-success/adoption-intelligence-model-manager.ts";
 import { computeSuccessSignals } from "../_shared/adoption-intelligence-customer-success/customer-success-signal-engine.ts";

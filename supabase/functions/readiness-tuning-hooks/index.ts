@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { filterReadinessRelevantSignals, aggregateReadinessSignals, filterWeakReadinessGroups } from "../_shared/readiness-tuning/readiness-tuning-aggregation.ts";
 import { generateReadinessTuningProposals, downgradeWeakProposals } from "../_shared/readiness-tuning/readiness-tuning-proposal-generator.ts";
 import { validateReviewTransition } from "../_shared/readiness-tuning/readiness-tuning-proposal-types.ts";

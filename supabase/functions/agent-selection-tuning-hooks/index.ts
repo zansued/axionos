@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { filterAgentSelectionRelevantSignals, aggregateAgentSelectionSignals, filterWeakAgentGroups } from "../_shared/agent-selection-tuning/agent-selection-tuning-aggregation.ts";
 import { generateAgentSelectionTuningProposals, downgradeWeakProposals } from "../_shared/agent-selection-tuning/agent-selection-tuning-proposal-generator.ts";
 import { validateReviewTransition } from "../_shared/agent-selection-tuning/agent-selection-tuning-proposal-types.ts";

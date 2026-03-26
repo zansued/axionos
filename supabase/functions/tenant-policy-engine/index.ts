@@ -1,6 +1,6 @@
 // Tenant Policy Engine — AxionOS Sprint 29 (Auth hardened Sprint 197)
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { computeTenantTuning } from "../_shared/tenant-policy/tenant-policy-tuning-engine.ts";
 import { guardOverrides } from "../_shared/tenant-policy/tenant-policy-override-guard.ts";
 import { detectTenantDrift } from "../_shared/tenant-policy/tenant-policy-drift-detector.ts";

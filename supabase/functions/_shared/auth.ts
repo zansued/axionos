@@ -1,6 +1,6 @@
 // Shared authentication helpers for edge functions
 
-import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient, SupabaseClient } from "npm:@supabase/supabase-js@2";
 import { errorResponse } from "./cors.ts";
 import { checkRateLimit } from "./rate-limit.ts";
 

@@ -1,5 +1,5 @@
 // Sprint 30 — Platform Intelligence Engine (Edge Function)
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { aggregatePlatformBehavior, type ExecutionRecord } from "../_shared/platform-intelligence/platform-behavior-aggregator.ts";
 import { detectBottlenecks } from "../_shared/platform-intelligence/platform-bottleneck-detector.ts";
 import { analyzePlatformPatterns } from "../_shared/platform-intelligence/platform-pattern-analyzer.ts";

@@ -4,7 +4,7 @@
  * and timing breakdown (provider, parse, persist).
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 // ─── Failure Type Classification ───
 export type FailureType =

@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { evaluateAlignmentPosture, computeAlignmentScores } from "../_shared/mission-integrity/alignment-vs-erosion-engine.ts";
 import { detectPatterns, computeDriftDensity } from "../_shared/mission-integrity/drift-pattern-detector.ts";
 import { assessNormativeErosion } from "../_shared/mission-integrity/normative-erosion-assessor.ts";

@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { normalizeCanonEntry } from "../_shared/canon-stewardship/canon-normalizer.ts";
 import { detectDuplicates } from "../_shared/canon-stewardship/canon-duplicate-detector.ts";
 import { analyzeConflicts } from "../_shared/canon-stewardship/canon-conflict-analyzer.ts";

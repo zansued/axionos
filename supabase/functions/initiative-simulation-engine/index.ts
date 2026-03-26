@@ -5,7 +5,7 @@ import { callAI } from "../_shared/ai-client.ts";
 import { INITIATIVE_SIMULATION_SYSTEM_PROMPT, buildSimulationPrompt } from "../_shared/prompts/initiative-simulation.prompt.ts";
 import { validateSimulationReport } from "../_shared/contracts/initiative-simulation.schema.ts";
 import type { InitiativeSimulation } from "../_shared/contracts/initiative-simulation.schema.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 serve(async (req) => {
   const corsResp = handleCors(req);

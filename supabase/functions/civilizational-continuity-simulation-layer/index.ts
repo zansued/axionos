@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { resolveActiveConstitution, extractHorizonSettings } from "../_shared/continuity-simulation/simulation-constitution-resolver.ts";
 import { computeScenarioSeverity, modelDisruptionPathway } from "../_shared/continuity-simulation/scenario-modeler.ts";
 import { simulateFutureState } from "../_shared/continuity-simulation/future-state-simulator.ts";

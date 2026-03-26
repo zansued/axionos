@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { computeKernelSnapshot } from "../_shared/kernel-integrity/kernel-integrity-snapshotter.ts";
 import { detectCorrosion } from "../_shared/kernel-integrity/corrosion-signal-detector.ts";
 import { analyzeBloat } from "../_shared/kernel-integrity/architectural-bloat-analyzer.ts";

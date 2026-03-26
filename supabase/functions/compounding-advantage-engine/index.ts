@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { computeCompoundingScore } from "../_shared/compounding-advantage/compounding-score-engine.ts";
 import { detectMoat } from "../_shared/compounding-advantage/moat-domain-detector.ts";
 import { packageDoctrineAsset } from "../_shared/compounding-advantage/doctrine-asset-packager.ts";

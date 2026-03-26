@@ -3,7 +3,7 @@
  * Finds similar precedents and measures alignment.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export interface PrecedentMatch {
   id: string;

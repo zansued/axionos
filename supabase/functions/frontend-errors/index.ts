@@ -3,7 +3,7 @@
  * Lightweight ingestion endpoint for client-side error reports.
  * Stores to frontend_error_reports table.
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { handleCors, jsonResponse, errorResponse } from "../_shared/cors.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;

@@ -3,7 +3,7 @@
  * Resolves active horizon constitution and relevant horizons for an organization.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export interface HorizonConstitution {
   id: string;

@@ -1,7 +1,7 @@
 // Observability Bootstrap Engine — AxionOS
 // Generates realistic bootstrap data for empty observability tabs based on existing real data.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

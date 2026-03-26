@@ -1,7 +1,7 @@
 // Execution Policy Portfolio Engine — Sprint 28
 // Edge function for portfolio optimization APIs.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { evaluatePortfolio, evaluatePolicyForContext } from "../_shared/execution-policy/execution-policy-portfolio-evaluator.ts";
 import { rankAllPolicies } from "../_shared/execution-policy/execution-policy-ranking-engine.ts";
 import { detectAllConflicts } from "../_shared/execution-policy/execution-policy-conflict-resolver.ts";

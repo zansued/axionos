@@ -7,7 +7,7 @@
  * SAFETY: Read-only analytics + summary writes. Never mutates proposals.
  */
 
-import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import type { SupabaseClient } from "npm:@supabase/supabase-js@2";
 import { PROPOSAL_QUALITY_AUDIT_EVENTS, type AdvisorySignal } from "./proposal-quality-types.ts";
 
 interface SummaryOptions {

@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -186,7 +186,7 @@ What is the correct implementation? Provide the exact code patterns needed.`,
 Return ONLY the complete corrected code/content. No markdown wrapping, no explanation — just the fixed artifact.
 
 Key rules:
-- Use correct Supabase imports: import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+- Use correct Supabase imports: import { createClient } from "npm:@supabase/supabase-js@2"
 - For Edge Functions: use serve() from std/http, return Response objects
 - Apply CORS headers correctly
 - Use Deno.env.get() for secrets

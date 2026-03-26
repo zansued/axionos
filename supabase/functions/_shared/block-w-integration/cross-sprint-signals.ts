@@ -5,7 +5,7 @@
  * to be consumed as context by another sprint's evaluation logic.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 // ─── Signal Types ───
 

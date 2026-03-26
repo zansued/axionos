@@ -5,7 +5,7 @@ import { callAI } from "../_shared/ai-client.ts";
 import { INITIATIVE_BLUEPRINT_SYSTEM_PROMPT, buildUserPrompt } from "../_shared/prompts/initiative-blueprint.prompt.ts";
 import { validateInitiativeBrief } from "../_shared/contracts/initiative-brief.schema.ts";
 import type { InitiativeBrief } from "../_shared/contracts/initiative-brief.schema.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 serve(async (req) => {
   const corsResp = handleCors(req);

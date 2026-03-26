@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 import { authenticate } from "../_shared/auth.ts";
 import { deriveRoleFromOrgRole, getRoleModel, CANONICAL_ROLES, RoleName } from "../_shared/role-based-experience/role-experience-model-manager.ts";

@@ -8,7 +8,7 @@
  * SAFETY: Read-only. Produces conservative recommendations with expected gains.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 import { MetaRecommendation } from "./types.ts";
 import { scoreRecommendation, generateSignature } from "./scoring.ts";
 import { HistoricalContext } from "./meta-agent-memory-context.ts";

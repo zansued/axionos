@@ -3,7 +3,7 @@
  * Handles DB CRUD for subjobs with lifecycle state transitions.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 import { ARCHITECTURE_SUBJOBS, SubjobRecord, SubjobStatus, SubjobDefinition } from "./types.ts";
 
 export async function createSubjobs(

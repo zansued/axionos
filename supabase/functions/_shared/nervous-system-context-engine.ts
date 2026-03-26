@@ -17,7 +17,7 @@
  * - NS-06: Learning feedback will refine context confidence.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 // ═══════════════════════════════════════════════════
 // Constants

@@ -1,7 +1,7 @@
 // Learning Feedback Loop — AxionOS Sprint 155
 // Edge function for generating, listing, and aggregating learning signals.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { validateLearningSignal } from "../_shared/learning/learning-signal-types.ts";
 import {
   generateFromActionOutcome,

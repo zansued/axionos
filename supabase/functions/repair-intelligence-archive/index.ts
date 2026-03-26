@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { registerFailure } from "../_shared/repair-intelligence/failure-memory-archiver.ts";
 import { normalizeFailureSignature, registerSignature } from "../_shared/repair-intelligence/failure-signature-normalizer.ts";
 import { registerRepairAttempt, extractMitigationPattern } from "../_shared/repair-intelligence/repair-pattern-extractor.ts";

@@ -7,7 +7,7 @@
  * SAFETY: Read-only analytics. No mutations beyond feedback persistence.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export interface RetrievalQualityMetrics {
   total_sessions_7d: number;

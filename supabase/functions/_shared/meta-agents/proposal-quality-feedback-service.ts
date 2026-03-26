@@ -8,7 +8,7 @@
  * SAFETY: Advisory data capture only. Never mutates system behavior.
  */
 
-import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import type { SupabaseClient } from "npm:@supabase/supabase-js@2";
 import {
   type ProposalQualityFeedbackInput,
   type FeedbackScores,

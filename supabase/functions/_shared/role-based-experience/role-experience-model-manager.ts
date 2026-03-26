@@ -1,7 +1,7 @@
 // Role Experience Model Manager
 // Manages role definitions and default experience models for AxionOS surfaces.
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export type RoleName = "default_user" | "operator" | "admin";
 

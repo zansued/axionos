@@ -4,7 +4,7 @@
  * the inheritance chain: core → federated → local → operational.
  */
 
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export interface DoctrineRecord {
   id: string;

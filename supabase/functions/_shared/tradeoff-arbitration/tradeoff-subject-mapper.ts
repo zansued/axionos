@@ -2,7 +2,7 @@
  * tradeoff-subject-mapper.ts
  * Maps decisions, plans, initiatives into tradeoff evaluation subjects.
  */
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export interface TradeoffSubject {
   id: string;
