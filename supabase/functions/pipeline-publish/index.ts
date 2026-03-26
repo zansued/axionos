@@ -252,6 +252,22 @@ serve(async (req) => {
       }
     }
 
+    // ── Import Integrity Check: replace source files with broken imports ──
+    const allPublishedPaths = new Set(fileEntries.map(f => f.path));
+    const SOURCE_CHECK_FILES = ["src/main.tsx", "src/App.tsx"];
+    for (const srcFile of SOURCE_CHECK_FILES) {
+      const entry = fileEntries.find(f => f.path === srcFile);
+      if (entry && DETERMINISTIC_FILES[srcFile]) {
+        const broken = findBrokenRelativeImports(srcFile, entry.content, allPublishedPaths);
+        if (broken.length > 0) {
+          await pipelineLog(ctx, "import_integrity_fix",
+            `${srcFile} tem imports quebrados (${broken.join(", ")}). Substituindo por scaffold seguro.`);
+          entry.content = DETERMINISTIC_FILES[srcFile];
+          entry.type = "scaffold_fallback";
+        }
+      }
+    }
+
     // ── Dependency Integrity Check ──
     const packageJsonEntry = fileEntries.find(f => f.path === "package.json");
     if (packageJsonEntry) {
