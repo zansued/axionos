@@ -192,6 +192,13 @@ Deno.serve(async (req) => {
         return await handleRegisterFeedbackSignal(sc, orgId, body);
       case "ingest_execution_outcome":
         return await handleIngestExecutionOutcome(sc, orgId, body);
+      // ── Temporal Layer ──
+      case "process_temporal_batch":
+        return await handleProcessTemporalBatch(sc, orgId, body);
+      case "get_temporal_state":
+        return await handleGetTemporalState(sc, orgId, body);
+      case "get_temporal_summary":
+        return await handleGetTemporalSummary(sc, orgId);
       default:
         return json({ error: `Unhandled action: ${action}` }, 400);
     }
