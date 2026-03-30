@@ -223,7 +223,8 @@ describe("NS Temporal Engine — determineOperationalState", () => {
 
   it("does NOT fatigue if not previously stressed/pain/fatigued", () => {
     const twoHoursMs = FATIGUE_WINDOW_MS + 1;
-    expect(determineOperationalState(0.55, 2, 0.5, "elevated", twoHoursMs, 0)).toBe("stressed");
+    // charge 0.65 is above stressed threshold but previous state "elevated" prevents fatigue
+    expect(determineOperationalState(0.65, 2, 0.5, "elevated", twoHoursMs, 0)).toBe("stressed");
   });
 
   it("recovering when previously stressed and charge drops below threshold", () => {

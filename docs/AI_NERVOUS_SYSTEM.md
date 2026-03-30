@@ -232,6 +232,41 @@ The Nervous System is part of the **Internal System Architecture** (Layer 4).
 7. **Noise reduction** — surfacing layer filters low-value signals explicitly
 8. **Learning is advisory** — feedback produces calibration hints, not automatic changes
 9. **Handoff traceability** — every handed-off action carries `ns_event_id`, `ns_decision_id`, `ns_surfaced_item_id`
+10. **Temporal layer is advisory** — produces hints for decision/surfacing boost, never triggers actions directly
+
+---
+
+## NS-Temporal: Temporal Accumulation Layer (LIF)
+
+**Table:** `nervous_system_temporal_state`
+**Module:** `_shared/nervous-system-temporal-engine.ts`
+
+A complementary layer inspired by Leaky Integrate-and-Fire (LIF) models that adds temporal awareness to the Nervous System without altering the NS-01 to NS-05 pipeline.
+
+### How It Works
+
+1. **Integrate** — Each classified event contributes charge to its domain's accumulator, weighted by severity, novelty, and confidence
+2. **Leak** — Charge decays exponentially over time: `charge(t) = charge(t-1) × e^(-λ × Δt)`
+3. **Fire** — When accumulated charge exceeds the fire threshold, a spike is recorded and charge is reset to 50% (refractory period)
+4. **State** — Derived operational states based on charge, spikes, and duration:
+
+| State | Condition | Priority Boost |
+|-------|-----------|----------------|
+| `nominal` | charge < 0.3 | 0.0 |
+| `elevated` | charge ≥ 0.3 | 0.05 |
+| `stressed` | charge ≥ 0.6 | 0.15 |
+| `pain` | charge ≥ 0.85 + spikes ≥ 3 + avg_severity ≥ 0.7 | 0.25 |
+| `fatigued` | charge ≥ 0.5 + stressed for 2h+ | 0.20 |
+| `recovering` | was stressed+, charge < 0.2 for 15min | 0.0 |
+| `critical_cascade` | 3+ domains in stressed/pain simultaneously | 0.30 |
+
+### Integration with NS-04 (Decision Engine)
+
+The Decision Engine queries temporal hints before making decisions. If a domain is under stress/pain/cascade, the hint boosts decision confidence and surfacing attention — strictly advisory.
+
+### Rollback
+
+The temporal layer is 100% reversible. Removing it does not affect NS-01 to NS-05. All temporal data is in a separate table and metadata extensions are additive.
 
 ---
 
@@ -247,6 +282,7 @@ The Nervous System is part of the **Internal System Architecture** (Layer 4).
 | `nervous_system_decisions` | NS-04 | Typed advisory decisions |
 | `nervous_system_surfaced_items` | NS-05 | Operator-facing curated items |
 | `nervous_system_learning_feedback` | NS-06 | Execution outcome feedback |
+| `nervous_system_temporal_state` | NS-Temporal | LIF accumulation, decay, operational states |
 | `action_registry_entries` | Action Engine | Governed executable actions |
 | `action_approval_requests` | Action Engine | Approval workflow |
 | `action_audit_events` | Action Engine | Execution audit trail |
