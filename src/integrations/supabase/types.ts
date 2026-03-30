@@ -16045,6 +16045,129 @@ export type Database = {
           },
         ]
       }
+      deploy_audit_events: {
+        Row: {
+          actor: string
+          actor_type: string
+          cause: string
+          created_at: string
+          decision: string
+          deploy_id: string
+          event_type: string
+          evidence_refs: Json | null
+          id: string
+          initiative_id: string
+          organization_id: string
+          result: string
+          severity: string
+        }
+        Insert: {
+          actor?: string
+          actor_type?: string
+          cause?: string
+          created_at?: string
+          decision?: string
+          deploy_id: string
+          event_type: string
+          evidence_refs?: Json | null
+          id?: string
+          initiative_id: string
+          organization_id: string
+          result?: string
+          severity?: string
+        }
+        Update: {
+          actor?: string
+          actor_type?: string
+          cause?: string
+          created_at?: string
+          decision?: string
+          deploy_id?: string
+          event_type?: string
+          evidence_refs?: Json | null
+          id?: string
+          initiative_id?: string
+          organization_id?: string
+          result?: string
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deploy_audit_events_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deploy_audit_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deploy_health_checks: {
+        Row: {
+          checked_at: string
+          created_at: string
+          deploy_id: string
+          health_status: string
+          id: string
+          initiative_id: string
+          organization_id: string
+          overall_score: number
+          probes: Json | null
+          recommendation: Json | null
+          regressions: Json | null
+          stability_window: Json | null
+        }
+        Insert: {
+          checked_at?: string
+          created_at?: string
+          deploy_id: string
+          health_status?: string
+          id?: string
+          initiative_id: string
+          organization_id: string
+          overall_score?: number
+          probes?: Json | null
+          recommendation?: Json | null
+          regressions?: Json | null
+          stability_window?: Json | null
+        }
+        Update: {
+          checked_at?: string
+          created_at?: string
+          deploy_id?: string
+          health_status?: string
+          id?: string
+          initiative_id?: string
+          organization_id?: string
+          overall_score?: number
+          probes?: Json | null
+          recommendation?: Json | null
+          regressions?: Json | null
+          stability_window?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deploy_health_checks_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deploy_health_checks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deploy_outcome_records: {
         Row: {
           created_at: string
@@ -16163,6 +16286,81 @@ export type Database = {
           },
           {
             foreignKeyName: "deploy_recovery_states_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deploy_rollback_decisions: {
+        Row: {
+          action: string
+          approval_level: string
+          confidence: number
+          created_at: string
+          decided_at: string
+          deploy_id: string
+          evidence_summary: Json | null
+          id: string
+          initiative_id: string
+          organization_id: string
+          outcome_notes: string | null
+          outcome_status: string | null
+          reason: string
+          requires_approval: boolean
+          resolved_at: string | null
+          rollback_target: string | null
+          triggered_by: string
+        }
+        Insert: {
+          action: string
+          approval_level?: string
+          confidence?: number
+          created_at?: string
+          decided_at?: string
+          deploy_id: string
+          evidence_summary?: Json | null
+          id?: string
+          initiative_id: string
+          organization_id: string
+          outcome_notes?: string | null
+          outcome_status?: string | null
+          reason?: string
+          requires_approval?: boolean
+          resolved_at?: string | null
+          rollback_target?: string | null
+          triggered_by?: string
+        }
+        Update: {
+          action?: string
+          approval_level?: string
+          confidence?: number
+          created_at?: string
+          decided_at?: string
+          deploy_id?: string
+          evidence_summary?: Json | null
+          id?: string
+          initiative_id?: string
+          organization_id?: string
+          outcome_notes?: string | null
+          outcome_status?: string | null
+          reason?: string
+          requires_approval?: boolean
+          resolved_at?: string | null
+          rollback_target?: string | null
+          triggered_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deploy_rollback_decisions_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deploy_rollback_decisions_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
