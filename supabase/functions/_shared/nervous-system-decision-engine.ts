@@ -17,6 +17,7 @@
  */
 
 import { SupabaseClient } from "npm:@supabase/supabase-js@2";
+import { getTemporalHintForDomain } from "./nervous-system-temporal-engine.ts";
 
 // ═══════════════════════════════════════════════════
 // Constants
