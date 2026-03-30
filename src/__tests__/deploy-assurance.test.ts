@@ -220,6 +220,16 @@ describe("Post-Deploy Health Monitor", () => {
       );
       expect(signals).toHaveLength(1);
       expect(signals[0].signal_type).toBe("error_rate_spike");
+      expect(signals[0].severity).toBe("critical");
+    });
+
+    it("detects high error spike (100-200%)", () => {
+      const signals = detectRegressions(
+        { error_count: 8, avg_latency_ms: 100, error_types: [] },
+        { error_count: 4, avg_latency_ms: 100, error_types: [] },
+        now,
+      );
+      expect(signals).toHaveLength(1);
       expect(signals[0].severity).toBe("high");
     });
 
