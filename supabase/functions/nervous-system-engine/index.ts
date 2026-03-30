@@ -64,12 +64,14 @@ const READ_ACTIONS = new Set([
   "get_decision_feed", "list_decisions",
   "get_surfaced_feed", "list_surfaced_items", "get_surface_summary",
   "get_handoff_status", "get_execution_summary",
+  "get_temporal_state", "get_temporal_summary",
 ]);
 const WRITE_ACTIONS = new Set([
   "emit_event", "process_pending", "process_context_batch", "process_decision_batch",
   "process_surfacing_batch", "acknowledge_surface", "approve_surface", "dismiss_surface",
   "handoff_surface_to_action_engine", "resolve_surface_item", "expire_surface_item",
   "register_feedback_signal", "ingest_execution_outcome",
+  "process_temporal_batch",
 ]);
 const ALL_ACTIONS = new Set([...READ_ACTIONS, ...WRITE_ACTIONS]);
 
