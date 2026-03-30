@@ -46,6 +46,11 @@ import {
   getHandoffStatus,
   ingestExecutionOutcomeToNS,
 } from "../_shared/nervous-system-action-handoff.ts";
+import {
+  processTemporalBatch,
+  getTemporalState,
+  getTemporalSummary,
+} from "../_shared/nervous-system-temporal-engine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -59,12 +64,14 @@ const READ_ACTIONS = new Set([
   "get_decision_feed", "list_decisions",
   "get_surfaced_feed", "list_surfaced_items", "get_surface_summary",
   "get_handoff_status", "get_execution_summary",
+  "get_temporal_state", "get_temporal_summary",
 ]);
 const WRITE_ACTIONS = new Set([
   "emit_event", "process_pending", "process_context_batch", "process_decision_batch",
   "process_surfacing_batch", "acknowledge_surface", "approve_surface", "dismiss_surface",
   "handoff_surface_to_action_engine", "resolve_surface_item", "expire_surface_item",
   "register_feedback_signal", "ingest_execution_outcome",
+  "process_temporal_batch",
 ]);
 const ALL_ACTIONS = new Set([...READ_ACTIONS, ...WRITE_ACTIONS]);
 
@@ -185,6 +192,13 @@ Deno.serve(async (req) => {
         return await handleRegisterFeedbackSignal(sc, orgId, body);
       case "ingest_execution_outcome":
         return await handleIngestExecutionOutcome(sc, orgId, body);
+      // ── Temporal Layer ──
+      case "process_temporal_batch":
+        return await handleProcessTemporalBatch(sc, orgId, body);
+      case "get_temporal_state":
+        return await handleGetTemporalState(sc, orgId, body);
+      case "get_temporal_summary":
+        return await handleGetTemporalSummary(sc, orgId);
       default:
         return json({ error: `Unhandled action: ${action}` }, 400);
     }
@@ -616,4 +630,26 @@ async function handleIngestExecutionOutcome(sc: any, orgId: string, body: Record
   const result = await ingestExecutionOutcomeToNS(sc, orgId, actionId);
   if (!result.success) return json({ error: result.error }, 400);
   return json({ success: true, feedback_id: result.feedback_id });
+}
+
+// ═══════════════════════════════════════════════════
+// TEMPORAL LAYER HANDLERS
+// ═══════════════════════════════════════════════════
+
+async function handleProcessTemporalBatch(sc: any, orgId: string, body: Record<string, unknown>) {
+  const batchSize = Math.min(Number(body.batch_size) || 50, 100);
+  const result = await processTemporalBatch(sc, orgId, batchSize);
+  return json({ success: true, result });
+}
+
+async function handleGetTemporalState(sc: any, orgId: string, body: Record<string, unknown>) {
+  const domain = body.domain as string | undefined;
+  if (domain && !VALID_DOMAINS.has(domain)) return json({ error: `Invalid domain: ${domain}` }, 400);
+  const states = await getTemporalState(sc, orgId, domain);
+  return json({ states, count: states.length });
+}
+
+async function handleGetTemporalSummary(sc: any, orgId: string) {
+  const summary = await getTemporalSummary(sc, orgId);
+  return json({ summary });
 }

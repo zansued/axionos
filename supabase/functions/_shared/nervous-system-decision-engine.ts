@@ -17,6 +17,7 @@
  */
 
 import { SupabaseClient } from "npm:@supabase/supabase-js@2";
+import { getTemporalHintForDomain } from "./nervous-system-temporal-engine.ts";
 
 // ═══════════════════════════════════════════════════
 // Constants
@@ -502,6 +503,37 @@ export async function processDecisionBatch(
       result.processed++;
 
       const decision = decideEvent(event);
+
+      // ── Temporal Layer Integration ──
+      // Fetch temporal hint for this event's domain (advisory only)
+      try {
+        const temporalHint = await getTemporalHintForDomain(
+          sc, orgId,
+          event.event_domain as string,
+          (event.event_subdomain as string) || undefined
+        );
+
+        if (temporalHint && temporalHint.priority_boost > 0) {
+          // Apply temporal boost to decision confidence (capped, advisory)
+          decision.decision_confidence = Math.min(1.0,
+            Math.round((decision.decision_confidence + temporalHint.priority_boost * 0.5) * 10000) / 10000
+          );
+          decision.decision_metadata = {
+            ...decision.decision_metadata,
+            temporal_hint: temporalHint,
+            temporal_boost_applied: true,
+          };
+        } else if (temporalHint) {
+          decision.decision_metadata = {
+            ...decision.decision_metadata,
+            temporal_hint: temporalHint,
+            temporal_boost_applied: false,
+          };
+        }
+      } catch (temporalErr) {
+        // Non-blocking: temporal layer failure must not break decision pipeline
+        console.warn("[NS-04] Temporal hint fetch failed (non-blocking):", temporalErr);
+      }
 
       // Persist decision record
       const { data: decisionRow, error: insertErr } = await sc

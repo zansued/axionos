@@ -27793,6 +27793,96 @@ export type Database = {
           },
         ]
       }
+      nervous_system_temporal_state: {
+        Row: {
+          accumulated_charge: number
+          avg_severity_window: number | null
+          cascade_depth: number
+          cascade_related_domains: string[] | null
+          created_at: string
+          domain: string
+          event_count_window: number
+          fire_threshold: number
+          id: string
+          last_spike_at: string | null
+          leak_rate: number
+          max_severity_window: number | null
+          operational_state: string
+          organization_id: string
+          previous_state: string | null
+          signal_group_id: string | null
+          spike_count: number
+          state_entered_at: string
+          subdomain: string
+          updated_at: string
+          window_duration_ms: number
+          window_start_at: string
+        }
+        Insert: {
+          accumulated_charge?: number
+          avg_severity_window?: number | null
+          cascade_depth?: number
+          cascade_related_domains?: string[] | null
+          created_at?: string
+          domain: string
+          event_count_window?: number
+          fire_threshold?: number
+          id?: string
+          last_spike_at?: string | null
+          leak_rate?: number
+          max_severity_window?: number | null
+          operational_state?: string
+          organization_id: string
+          previous_state?: string | null
+          signal_group_id?: string | null
+          spike_count?: number
+          state_entered_at?: string
+          subdomain?: string
+          updated_at?: string
+          window_duration_ms?: number
+          window_start_at?: string
+        }
+        Update: {
+          accumulated_charge?: number
+          avg_severity_window?: number | null
+          cascade_depth?: number
+          cascade_related_domains?: string[] | null
+          created_at?: string
+          domain?: string
+          event_count_window?: number
+          fire_threshold?: number
+          id?: string
+          last_spike_at?: string | null
+          leak_rate?: number
+          max_severity_window?: number | null
+          operational_state?: string
+          organization_id?: string
+          previous_state?: string | null
+          signal_group_id?: string | null
+          spike_count?: number
+          state_entered_at?: string
+          subdomain?: string
+          updated_at?: string
+          window_duration_ms?: number
+          window_start_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nervous_system_temporal_state_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nervous_system_temporal_state_signal_group_id_fkey"
+            columns: ["signal_group_id"]
+            isOneToOne: false
+            referencedRelation: "nervous_system_signal_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       onboarding_flows: {
         Row: {
           assumptions: Json
