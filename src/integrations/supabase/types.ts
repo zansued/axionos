@@ -25950,6 +25950,106 @@ export type Database = {
           },
         ]
       }
+      memory_consolidation_log: {
+        Row: {
+          applied: boolean
+          consolidation_type: string
+          created_at: string
+          entry_ids: string[]
+          id: string
+          organization_id: string
+          quality_gain: number
+          reason: string
+          similarity_score: number
+          survivor_id: string | null
+        }
+        Insert: {
+          applied?: boolean
+          consolidation_type?: string
+          created_at?: string
+          entry_ids?: string[]
+          id?: string
+          organization_id: string
+          quality_gain?: number
+          reason?: string
+          similarity_score?: number
+          survivor_id?: string | null
+        }
+        Update: {
+          applied?: boolean
+          consolidation_type?: string
+          created_at?: string
+          entry_ids?: string[]
+          id?: string
+          organization_id?: string
+          quality_gain?: number
+          reason?: string
+          similarity_score?: number
+          survivor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_consolidation_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_lifecycle_events: {
+        Row: {
+          access_boost: number
+          created_at: string
+          decay_factor: number
+          effective_score: number
+          event_type: string
+          id: string
+          memory_id: string
+          new_tier: string
+          organization_id: string
+          previous_tier: string
+          reason: string
+          source_table: string
+        }
+        Insert: {
+          access_boost?: number
+          created_at?: string
+          decay_factor?: number
+          effective_score?: number
+          event_type?: string
+          id?: string
+          memory_id: string
+          new_tier?: string
+          organization_id: string
+          previous_tier?: string
+          reason?: string
+          source_table?: string
+        }
+        Update: {
+          access_boost?: number
+          created_at?: string
+          decay_factor?: number
+          effective_score?: number
+          event_type?: string
+          id?: string
+          memory_id?: string
+          new_tier?: string
+          organization_id?: string
+          previous_tier?: string
+          reason?: string
+          source_table?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_lifecycle_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       memory_links: {
         Row: {
           created_at: string

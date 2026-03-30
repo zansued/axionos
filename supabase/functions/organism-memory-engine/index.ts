@@ -1,4 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { assembleUnifiedMemory } from "../_shared/memory-evolution/unified-memory-assembler.ts";
+import { runLifecycleSweep, applyEvictions, DEFAULT_LIFECYCLE_CONFIG } from "../_shared/memory-evolution/memory-lifecycle-engine.ts";
+import { analyzeConsolidation } from "../_shared/memory-evolution/memory-consolidation-engine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -25,6 +28,19 @@ Deno.serve(async (req) => {
         return json(await retrieveMemory(supabase, organization_id, params));
       case "memory_metrics":
         return json(await memoryMetrics(supabase, organization_id));
+
+      // ── Sprint 2: Memory Evolution actions ──
+      case "unified_retrieve":
+        return json(await unifiedRetrieve(supabase, organization_id, params));
+      case "lifecycle_sweep":
+        return json(await lifecycleSweep(supabase, organization_id, params));
+      case "consolidate":
+        return json(await consolidate(supabase, organization_id, params));
+      case "memory_health":
+        return json(await memoryHealth(supabase, organization_id));
+      case "apply_evictions":
+        return json(await executeEvictions(supabase, organization_id, params));
+
       default:
         return json({ error: "Unknown action" }, 400);
     }
@@ -40,7 +56,7 @@ function json(data: unknown, status = 200) {
   });
 }
 
-// ── Store Memory ───────────────────────────────────────────────────────
+// ── Original Actions ───────────────────────────────────────────────
 
 async function storeMemory(supabase: any, orgId: string, params: any) {
   const {
@@ -51,7 +67,6 @@ async function storeMemory(supabase: any, orgId: string, params: any) {
     confidence_score = 0.5,
   } = params;
 
-  // Generate signature using Web Crypto API
   const encoder = new TextEncoder();
   const signatureData = encoder.encode(
     `${orgId}:${memory_type}:${memory_scope}:${JSON.stringify(memory_payload)}`
@@ -63,7 +78,6 @@ async function storeMemory(supabase: any, orgId: string, params: any) {
     .join("")
     .slice(0, 64);
 
-  // Bounded storage: cap at 500 memories per type per org
   const { count } = await supabase
     .from("organism_memory")
     .select("*", { count: "exact", head: true })
@@ -71,7 +85,6 @@ async function storeMemory(supabase: any, orgId: string, params: any) {
     .eq("memory_type", memory_type);
 
   if ((count ?? 0) >= 500) {
-    // Evict oldest low-confidence entries
     const { data: evictCandidates } = await supabase
       .from("organism_memory")
       .select("memory_id")
@@ -105,8 +118,6 @@ async function storeMemory(supabase: any, orgId: string, params: any) {
   return { stored: true, memory: data };
 }
 
-// ── Retrieve Memory ────────────────────────────────────────────────────
-
 async function retrieveMemory(supabase: any, orgId: string, params: any) {
   const { memory_type, memory_scope, limit = 20 } = params;
 
@@ -125,8 +136,6 @@ async function retrieveMemory(supabase: any, orgId: string, params: any) {
   if (error) return { error: error.message };
   return { memories: data || [] };
 }
-
-// ── Memory Metrics ─────────────────────────────────────────────────────
 
 async function memoryMetrics(supabase: any, orgId: string) {
   const { data } = await supabase
@@ -158,7 +167,6 @@ async function memoryMetrics(supabase: any, orgId: string) {
       : 0,
   }));
 
-  // Growth: memories per day over last 7 days
   const now = Date.now();
   const dayMs = 86400000;
   const growth = Array.from({ length: 7 }, (_, i) => {
@@ -169,7 +177,6 @@ async function memoryMetrics(supabase: any, orgId: string) {
     return { date: dayStart, count };
   });
 
-  // Strategic patterns: top strategic memories by confidence
   const strategic = memories
     .filter((m: any) => m.memory_type === "strategic")
     .sort((a: any, b: any) => Number(b.confidence_score) - Number(a.confidence_score))
@@ -181,4 +188,80 @@ async function memoryMetrics(supabase: any, orgId: string) {
     growth,
     strategic_patterns: strategic,
   };
+}
+
+// ── Sprint 2: Memory Evolution Actions ─────────────────────────────
+
+async function unifiedRetrieve(supabase: any, orgId: string, params: any) {
+  const bundle = await assembleUnifiedMemory(supabase, {
+    organization_id: orgId,
+    context_type: params.context_type,
+    context_signature: params.context_signature,
+    agent_type: params.agent_type,
+    stage_key: params.stage_key,
+    memory_types: params.memory_types,
+    tiers: params.tiers,
+    min_relevance: params.min_relevance,
+    max_entries: params.max_entries,
+    layers: params.layers,
+  });
+  return bundle;
+}
+
+async function lifecycleSweep(supabase: any, orgId: string, params: any) {
+  const config = params.config || DEFAULT_LIFECYCLE_CONFIG;
+  const result = await runLifecycleSweep(supabase, orgId, config);
+  return result;
+}
+
+async function consolidate(supabase: any, orgId: string, params: any) {
+  // First, assemble unified memory to get all entries
+  const bundle = await assembleUnifiedMemory(supabase, {
+    organization_id: orgId,
+    max_entries: 100,
+    layers: params.layers,
+  });
+  // Run consolidation analysis
+  const report = analyzeConsolidation(bundle.entries);
+  return report;
+}
+
+async function memoryHealth(supabase: any, orgId: string) {
+  // Assemble unified memory for health check
+  const bundle = await assembleUnifiedMemory(supabase, {
+    organization_id: orgId,
+    max_entries: 100,
+  });
+
+  // Run lifecycle sweep for decay analysis
+  const sweep = await runLifecycleSweep(supabase, orgId);
+
+  // Run consolidation for redundancy analysis
+  const consolidation = analyzeConsolidation(bundle.entries);
+
+  return {
+    snapshot: bundle.health,
+    layer_counts: bundle.layer_counts,
+    lifecycle: {
+      total_evaluated: sweep.total_evaluated,
+      transitions_recommended: sweep.transitions.length,
+      eviction_candidates: sweep.eviction_candidates.length,
+      health_delta: sweep.health_delta,
+    },
+    consolidation: {
+      duplicate_groups: consolidation.duplicate_groups,
+      merge_candidates: consolidation.merge_candidates,
+      prune_candidates: consolidation.prune_candidates,
+      estimated_reduction: consolidation.estimated_reduction,
+    },
+    assessed_at: new Date().toISOString(),
+  };
+}
+
+async function executeEvictions(supabase: any, orgId: string, params: any) {
+  if (!params.candidates || !Array.isArray(params.candidates)) {
+    return { error: "candidates array required" };
+  }
+  const result = await applyEvictions(supabase, orgId, params.candidates, params.max_evictions);
+  return result;
 }

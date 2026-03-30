@@ -304,6 +304,56 @@ Key actions:
 
 ---
 
+## Sprint 2 — Memory Evolution Layer
+
+### Overview
+
+The Memory Evolution layer (Sprint 2) introduces three new modules that complement the existing memory infrastructure:
+
+1. **Unified Memory Context Assembler** (`_shared/memory-evolution/unified-memory-assembler.ts`)
+   - Assembles bounded context from ALL memory layers (agent, engineering, organism, institutional)
+   - Deduplication by `context_signature`
+   - Composite scoring: `relevance * 0.35 + confidence * 0.25 + freshness * 0.25 + access * 0.15`
+   - Tier classification: `ephemeral → operational → historical → archived`
+   - Health snapshot with freshness, stale ratio, tier distribution
+
+2. **Memory Lifecycle & Decay Engine** (`_shared/memory-evolution/memory-lifecycle-engine.ts`)
+   - Time-based decay: `effective = base * e^(-λ * age_days) + access_boost`
+   - Per-type decay rates (λ): `run=0.5`, `episodic=0.02`, `strategic=0.01`, `doctrinal=0.002`
+   - Tier transition thresholds: `archive < 0.1`, `historical < 0.25`, `operational ≥ 0.5`
+   - Advisory sweep: evaluates all entries, recommends transitions
+   - Bounded eviction: max 50 per call, auditable
+
+3. **Memory Consolidation Engine** (`_shared/memory-evolution/memory-consolidation-engine.ts`)
+   - Exact dedup by `context_signature`
+   - Cross-layer merge detection via Jaccard similarity (threshold: 0.6)
+   - Prune detection for entries below composite score 0.15
+   - Advisory-first: produces recommendations, not automatic mutations
+
+### New Edge Function Actions
+
+Added to `organism-memory-engine`:
+- `unified_retrieve` — cross-layer contextual retrieval
+- `lifecycle_sweep` — advisory decay & tier transition analysis
+- `consolidate` — redundancy detection report
+- `memory_health` — comprehensive health assessment
+- `apply_evictions` — bounded, auditable cleanup
+
+### New Tables
+
+- `memory_lifecycle_events` — audit trail for tier transitions
+- `memory_consolidation_log` — records of consolidation actions
+
+### Architectural Invariants Preserved
+
+- Advisory-first: all sweep/consolidation results are recommendations
+- Bounded adaptation: max entries, max evictions, decay caps
+- Tenant isolation: all queries scoped by `organization_id` with RLS
+- Rollback: eviction is the only destructive action, bounded and logged
+- No autonomous architecture mutation
+
+---
+
 ## Source of Truth
 
 This document must stay synchronized with:
