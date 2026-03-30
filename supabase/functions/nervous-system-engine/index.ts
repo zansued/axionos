@@ -631,3 +631,25 @@ async function handleIngestExecutionOutcome(sc: any, orgId: string, body: Record
   if (!result.success) return json({ error: result.error }, 400);
   return json({ success: true, feedback_id: result.feedback_id });
 }
+
+// ═══════════════════════════════════════════════════
+// TEMPORAL LAYER HANDLERS
+// ═══════════════════════════════════════════════════
+
+async function handleProcessTemporalBatch(sc: any, orgId: string, body: Record<string, unknown>) {
+  const batchSize = Math.min(Number(body.batch_size) || 50, 100);
+  const result = await processTemporalBatch(sc, orgId, batchSize);
+  return json({ success: true, result });
+}
+
+async function handleGetTemporalState(sc: any, orgId: string, body: Record<string, unknown>) {
+  const domain = body.domain as string | undefined;
+  if (domain && !VALID_DOMAINS.has(domain)) return json({ error: `Invalid domain: ${domain}` }, 400);
+  const states = await getTemporalState(sc, orgId, domain);
+  return json({ states, count: states.length });
+}
+
+async function handleGetTemporalSummary(sc: any, orgId: string) {
+  const summary = await getTemporalSummary(sc, orgId);
+  return json({ summary });
+}
