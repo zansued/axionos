@@ -686,7 +686,7 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
             <SelectContent>
               {gitConnections.map(conn => (
                 <SelectItem key={conn.id} value={conn.id}>
-                  {conn.repo_owner}/{conn.repo_name} {conn.github_token ? "🔑" : "⚠️"}
+                  {conn.repo_owner}/{conn.repo_name}
                 </SelectItem>
               ))}
             </SelectContent>
