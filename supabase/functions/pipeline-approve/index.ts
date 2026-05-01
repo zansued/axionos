@@ -39,6 +39,7 @@ Deno.serve(async (req) => {
     dependencies_analyzed: { field: "approved_at_discovery", nextStatus: "bootstrapping_schema" },
     // Engineering stages
     schema_bootstrapped: { field: "approved_at_planning", nextStatus: "provisioning_db" },
+    provisioning_db: { field: "approved_at_planning", nextStatus: "db_provisioned" },
     db_provisioned: { field: "approved_at_planning", nextStatus: "analyzing_domain" },
     domain_analyzed: { field: "approved_at_planning", nextStatus: "generating_data_model" },
     data_model_generated: { field: "approved_at_planning", nextStatus: "synthesizing_logic" },
