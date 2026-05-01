@@ -182,10 +182,10 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
     queryFn: async () => {
       const { data } = await supabase
         .from("git_connections")
-        .select("id, repo_owner, repo_name, default_branch, github_token")
+        .select("id, repo_owner, repo_name, default_branch")
         .eq("organization_id", organizationId)
         .eq("status", "active");
-      return (data || []) as Array<{ id: string; repo_owner: string; repo_name: string; default_branch: string; github_token: string | null }>;
+      return (data || []) as Array<{ id: string; repo_owner: string; repo_name: string; default_branch: string }>;
     },
     enabled: !!organizationId,
   });
