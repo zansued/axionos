@@ -368,11 +368,7 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
     setDeployDialogOpen(true);
   };
 
-  const executeDeploy = async (conn: { github_token: string | null; repo_owner: string; repo_name: string; default_branch: string }) => {
-    if (!conn.github_token) {
-      toast({ variant: "destructive", title: "Token não configurado", description: "O token GitHub desta conexão não está salvo. Publique pela tela de iniciativas para configurá-lo." });
-      return;
-    }
+  const executeDeploy = async (conn: { id?: string; repo_owner: string; repo_name: string; default_branch: string }) => {
     setIsDeploying(true);
     setDeployDialogOpen(false);
     try {
@@ -380,7 +376,7 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
         body: {
           initiativeId,
           stage: "publish",
-          github_token: conn.github_token,
+          git_connection_id: conn.id,
           owner: conn.repo_owner,
           repo: conn.repo_name,
           base_branch: conn.default_branch || "main",
