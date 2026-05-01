@@ -1,21 +1,17 @@
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { authenticateWithRateLimit } from "../_shared/auth.ts";
+import { handleCors, getCorsHeaders, jsonResponse, errorResponse } from "../_shared/cors.ts";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
+  const cors = handleCors(req);
+  if (cors) return cors;
 
   try {
+    const authResult = await authenticateWithRateLimit(req, "generate-avatar");
+    if (authResult instanceof Response) return authResult;
+
     const { prompt } = await req.json();
-    if (!prompt) {
-      return new Response(JSON.stringify({ error: "prompt is required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    if (!prompt || typeof prompt !== "string" || prompt.length > 500) {
+      return errorResponse("prompt is required (max 500 chars)", 400, req);
     }
 
     const POLLINATIONS_API_KEY = Deno.env.get("POLLINATIONS_API_KEY");
@@ -31,12 +27,8 @@ Deno.serve(async (req) => {
     const response = await fetch(url, { headers });
 
     if (!response.ok) {
-      const text = await response.text();
-      console.error("Pollinations error:", response.status, text);
-      return new Response(JSON.stringify({ error: "Image generation failed", status: response.status }), {
-        status: 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      console.error("Pollinations error:", response.status);
+      return errorResponse("Image generation failed", 502, req);
     }
 
     const arrayBuffer = await response.arrayBuffer();
@@ -50,14 +42,9 @@ Deno.serve(async (req) => {
     const contentType = response.headers.get("content-type") || "image/jpeg";
     const dataUrl = `data:${contentType};base64,${base64}`;
 
-    return new Response(JSON.stringify({ imageUrl: dataUrl }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return jsonResponse({ imageUrl: dataUrl }, 200, req);
   } catch (error) {
     console.error("generate-avatar error:", error);
-    return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return errorResponse("Internal error", 500, req);
   }
 });

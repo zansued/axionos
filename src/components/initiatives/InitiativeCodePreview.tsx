@@ -182,10 +182,10 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
     queryFn: async () => {
       const { data } = await supabase
         .from("git_connections")
-        .select("id, repo_owner, repo_name, default_branch, github_token")
+        .select("id, repo_owner, repo_name, default_branch")
         .eq("organization_id", organizationId)
         .eq("status", "active");
-      return (data || []) as Array<{ id: string; repo_owner: string; repo_name: string; default_branch: string; github_token: string | null }>;
+      return (data || []) as Array<{ id: string; repo_owner: string; repo_name: string; default_branch: string }>;
     },
     enabled: !!organizationId,
   });
@@ -368,11 +368,7 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
     setDeployDialogOpen(true);
   };
 
-  const executeDeploy = async (conn: { github_token: string | null; repo_owner: string; repo_name: string; default_branch: string }) => {
-    if (!conn.github_token) {
-      toast({ variant: "destructive", title: "Token não configurado", description: "O token GitHub desta conexão não está salvo. Publique pela tela de iniciativas para configurá-lo." });
-      return;
-    }
+  const executeDeploy = async (conn: { id?: string; repo_owner: string; repo_name: string; default_branch: string }) => {
     setIsDeploying(true);
     setDeployDialogOpen(false);
     try {
@@ -380,7 +376,7 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
         body: {
           initiativeId,
           stage: "publish",
-          github_token: conn.github_token,
+          git_connection_id: conn.id,
           owner: conn.repo_owner,
           repo: conn.repo_name,
           base_branch: conn.default_branch || "main",
@@ -690,7 +686,7 @@ export function InitiativeCodePreview({ initiativeId, organizationId }: Initiati
             <SelectContent>
               {gitConnections.map(conn => (
                 <SelectItem key={conn.id} value={conn.id}>
-                  {conn.repo_owner}/{conn.repo_name} {conn.github_token ? "🔑" : "⚠️"}
+                  {conn.repo_owner}/{conn.repo_name}
                 </SelectItem>
               ))}
             </SelectContent>
