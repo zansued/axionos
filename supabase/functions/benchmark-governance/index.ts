@@ -11,7 +11,13 @@ Deno.serve(async (req) => {
     const { user, serviceClient: supabase } = authResult;
 
     const body = await req.json();
-    const { action } = body;
+    const { action, organization_id } = body;
+
+    // Validate org membership for all actions that use organization_id
+    if (organization_id) {
+      const orgCheck = await requireOrgMembership(supabase, user.id, organization_id);
+      if (orgCheck instanceof Response) return orgCheck;
+    }
 
     switch (action) {
       case "enqueue_benchmark": {
