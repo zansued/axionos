@@ -209,10 +209,10 @@ Deno.serve(async (req) => {
       }
 
       default:
-        return new Response(JSON.stringify({ error: `Unknown action: ${action}` }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        return errorResponse(`Unknown action: ${action}`, 400, req);
     }
   } catch (err) {
     console.error("benchmark-governance error:", err);
-    return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return errorResponse("Internal error", 500, req);
   }
 });
