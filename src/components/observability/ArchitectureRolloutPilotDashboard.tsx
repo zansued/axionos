@@ -18,7 +18,6 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 const MODE_LABELS: Record<string, string> = {
-  shadow: "Shadow",
   traffic_slice: "Traffic Slice",
   tenant_limited: "Tenant Limited",
   feature_gated: "Feature Gated",

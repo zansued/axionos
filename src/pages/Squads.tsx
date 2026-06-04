@@ -7,11 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 import { AnimatedTooltip, type TooltipItem } from "@/components/ui/animated-tooltip";
 
-/** Generate a deterministic avatar URL from agent name + role */
-function agentAvatar(name: string, role: string): string {
-  const seed = encodeURIComponent(`${role} AI robot avatar, ${name}, futuristic, minimal`);
-  return `https://image.pollinations.ai/prompt/${seed}?width=128&height=128&nologo=true&seed=${name.length}`;
-}
+// Avatar generation removed
 
 export default function Squads() {
   const { currentOrg } = useOrg();
@@ -63,7 +59,6 @@ export default function Squads() {
                   id: i,
                   name: sm.agents?.name || "Agent",
                   designation: sm.role_in_squad || sm.agents?.role || "member",
-                  image: agentAvatar(sm.agents?.name || "agent", sm.agents?.role || "ai"),
                 })
               );
 

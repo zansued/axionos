@@ -22,7 +22,6 @@ function ModeBadge({ mode }: { mode: string }) {
   const colors: Record<string, string> = {
     dry_run: "bg-blue-500/20 text-blue-400",
     staged_preview: "bg-yellow-500/20 text-yellow-400",
-    shadow_readiness: "bg-primary/20 text-primary",
   };
   return <Badge variant="outline" className={colors[mode] || ""}>{mode}</Badge>;
 }

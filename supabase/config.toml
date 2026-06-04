@@ -636,8 +636,6 @@ verify_jwt = false
 [functions.operating-completion-engine]
 verify_jwt = false
 
-[functions.generate-avatar]
-verify_jwt = false
 
 [functions.organize-stories]
 verify_jwt = false

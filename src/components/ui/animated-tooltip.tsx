@@ -12,7 +12,6 @@ export interface TooltipItem {
   id: number;
   name: string;
   designation: string;
-  image: string;
 }
 
 const ROLE_COLORS: Record<string, string> = {
@@ -38,37 +37,19 @@ function getInitials(name: string) {
 }
 
 function AvatarImage({ item }: { item: TooltipItem }) {
-  const [failed, setFailed] = useState(false);
   const gradient = ROLE_COLORS[item.designation] || "from-primary to-primary/70";
 
-  const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
-    // handled by parent
-  };
-
-  if (failed || !item.image) {
-    return (
-      <div
-        className={cn(
-          "flex items-center justify-center rounded-full h-12 w-12 border-2 border-background",
-          "bg-gradient-to-br text-white font-bold text-sm",
-          "group-hover:scale-105 group-hover:z-30 relative transition duration-500",
-          gradient
-        )}
-      >
-        {getInitials(item.name)}
-      </div>
-    );
-  }
-
   return (
-    <img
-      height={100}
-      width={100}
-      src={item.image}
-      alt={item.name}
-      onError={() => setFailed(true)}
-      className="object-cover !m-0 !p-0 object-top rounded-full h-12 w-12 border-2 group-hover:scale-105 group-hover:z-30 border-background relative transition duration-500"
-    />
+    <div
+      className={cn(
+        "flex items-center justify-center rounded-full h-12 w-12 border-2 border-background",
+        "bg-gradient-to-br text-white font-bold text-sm",
+        "group-hover:scale-105 group-hover:z-30 relative transition duration-500",
+        gradient
+      )}
+    >
+      {getInitials(item.name)}
+    </div>
   );
 }
 
