@@ -5,6 +5,11 @@
     Submit an idea → receive a validated, deployable repository.<br/>
     Architecture, code, validation, repair, and delivery — autonomously.
   </p>
+  <p align="center">
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+    <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+    <a href="CODE_OF_CONDUCT.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" alt="Contributor Covenant"></a>
+  </p>
 </p>
 
 ---
@@ -179,7 +184,14 @@ flowchart TB
 ---
 
 ## License
-MIT License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Contributing
+
+We welcome contributions from the community! Please read our [Contributing Guidelines](CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md) to get started.
 
 ---
 
